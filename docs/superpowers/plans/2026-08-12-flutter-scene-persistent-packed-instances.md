@@ -1,116 +1,75 @@
 # Flutter Scene Persistent Packed Instances Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use
-> `superpowers:subagent-driven-development` to implement this plan task-by-task.
-> Steps use checkbox (`- [ ]`) syntax for tracking. Use `gh-stack` only with
-> non-interactive flags and stop after every PR in this plan has been created.
+> **For agentic workers:** REQUIRED SUB-SKILL: use
+> `superpowers:subagent-driven-development` task-by-task. Every implementation
+> task is one RED → GREEN → review → commit → push cycle. Do not start the
+> next task until a different agent approves the current task.
 
 **Goal:** Issue #1602 向けに、static packed instance data を一度だけ GPU へ
 upload し、GPU submission 完了まで安全に retire できる汎用 Geometry を
-`YumNumm/flutter_scene` fork へ追加する。EQMonitor は公開 API だけを使い、fork の
-immutable commit SHA へ依存を固定する。
+`YumNumm/flutter_scene` fork へ追加する。EQMonitor は公開 API だけを使い、
+fork の immutable commit SHA へ固定する。
 
-**Architecture:** process-global な Flutter GPU context、submission tracker、renderer と
-1対1の registry が context generation/state を所有し、複数 lifecycle owner は同じ global
-state を観測する。その registry 上に immutable な 2-stream Geometry を積み、base vertex と
-instance record は persistent device buffer へ初回だけ書く。描画時は bind と小さな
-`FrameInfo` uniform 更新だけを行い、data change は Scene 差し替えと旧 resource retire で表す。
+**Architecture:** process-global registry が1つの Flutter GPU context、submission
+tracker、generation/state を所有し、複数 lifecycle owner は同じ状態を観測する。
+immutable な vertex/instance 2-stream Geometry は初回だけ persistent buffer へ書き、
+通常・depth・shadow・selection の全経路を既存 full `bind` へ集約する。data change は
+new attach → old detach → old retire で表す。
 
 **Tech Stack:** Flutter `4dacd3fc91d96262a33e5c598e17d816f0b35641`
-(3.47.0-1.0.pre-97)、Dart 3.14.0-29.0.dev、Flutter GPU/Impeller、
-Flutter Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、Dart/Flutter test、
-`mise exec --`、`gh stack`。
+(3.47.0-1.0.pre-97)、Dart 3.14.0-29.0.dev、Flutter GPU/Impeller、Flutter
+Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、`mise exec --`、`gh stack`。
 
 ## Global Constraints
 
-- fork implementation base は exact
-  `7f71993b7e2a0ab1d2f59726a406098709be7291`、Flutter は exact
-  `4dacd3fc91d96262a33e5c598e17d816f0b35641`。floating branch/tag を dependency に使わない。
-- Flutter/Dart command は常に `mise exec --`、fork checkout では exact Flutter tool argument
-  を付けた `mise exec flutter@4dacd3fc... --` で実行する。
-- GPU context generation/state は owner 単位に分裂させない。1 owner の invalidation が同 generation
-  の全 owner resource を fail-closed にし、global retirement 完了まで recreate を拒否する。
-- registry、Scene render、GPU completion callback、lifecycle、Geometry は同じ Dart isolate から
-  操作する。cross-isolate transfer、lock、background-isolate GPU call を設計に入れない。
-- per-frame instance upload/full scan、`InstancedMesh` matrix pack、固定 delay、固定 frames-in-flight、
-  error 時の標準 Geometry fallback は禁止する。
+- fork base は exact `7f71993b7e2a0ab1d2f59726a406098709be7291`、Flutter は
+  exact `4dacd3fc91d96262a33e5c598e17d816f0b35641`。floating ref 禁止。
+- Flutter/Dart は常に `mise exec --`。fork では
+  `mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 --` を付ける。
+- registry、Scene encode、completion callback、lifecycle、Geometry は同一 Dart isolate。
+  lock、cross-isolate transfer、background GPU call は追加しない。
+- owner ごとの context/generation は作らない。任意 owner の invalidation は同 generation
+  の全 owner resource を retire し、全件 settle まで recreate を拒否する。
+- per-frame instance upload/full scan、`InstancedMesh` matrix pack、delay、固定 frames-in-flight、
+  error 時の fallback Geometry は禁止。
 - `DeviceBuffer` reference release と driver resident-memory 解放を区別し、後者を保証しない。
-- fork API は generic packed Geometry と lifecycle に限定する。震源固有の24-byte schema、shader LOD、
-  color/radius は #1604 の consumer に残す。
-- 実機、Simulator、all-E2E は今回実行しない。#1604 の物理 iPhone 13 相当 30fps/5分 memory gate は
-  defer と明記し、non-device test を代替証拠にしない。
-- 各 implementation Task は30–100 handwritten production+test linesを目安に、RED→GREEN→1 commit→
-  push で閉じる。生成 lockfile 行はこの handwritten budget から除く。
-- user の既存 checkout/dirty changes を変更しない。worktree target/branch/remote が曖昧なら停止する。
+- fork API は generic packed Geometry/lifecycle のみ。震源24-byte schema、LOD、color/radius は
+  #1604、app wiring は #1603/#1605。
+- 実機、Simulator、all-E2E は実行しない。iPhone 13相当 30fps/5分 memory gate は #1604。
+- 各 Task は handwritten production+test 30–100 changed lines（generated lock除外）。超える前に
+  taskを分ける。commit は英語1語prefix + 日本語、commit後push。
+- user checkout/dirty changeを変更しない。mismatchなら削除/reset/checkout/force pushせず停止。
 
----
+## Current evidence and reference boundary (2026-08-12)
 
-## 1. 現在地と監査結果（2026-08-12）
-
-- 計画 branch は最新 `origin/develop` の
-  `8120f23446b53f4b3222d32306d4fb576cb9683e` から作る。
-- Issue #1602 は parent #1612 の layer 06。後続 #1603 は scene foundation、#1604 は
-  200万件 static renderer、#1605 は app integration であり、この変更へ混ぜない。
-- `packages/eqmonitor_map/pubspec.yaml` の `flutter_scene` と override `scene`、root
-  `pubspec.lock` の両 package は現在すべて `bdero/flutter_scene` の `7f71993...`。
-- 同じ SHA は `packages/eqmonitor_map/example/pubspec.yaml`、package/example README、
-  toolchain/source-pin knowledge にも存在する。fork pin PR で現役の正本を同時更新する。
-- `bdero/flutter_scene` の現行 master は
-  `ed04205c10991739338fde19563bcf2698057755`。`BillboardGeometry.bind` は現在も毎 draw
-  `instanceTransients.emplace(liveBytes)` し、`InstancedMesh` は `List<Matrix4>` を
-  per-frame pack するため、#1602 の経路には使えない。
-- 現行 master の `2d4decc72e8ee965dbc0995ea678aae9f0405203` には
-  `ResourceGroup.release` と engine cache の memory report があるが、任意 Geometry の
-  buffer retirement、context generation、即時 GPU 解放は提供しない。
-- pin 済み `7f71993...` にも `GpuSubmissionTracker` と全 renderer command buffer の
-  `rendererSubmissions.submit(...)` 経路は存在する。新規 fence を並立させず、これを
-  completion-aware retirement の正本にする。
-- Flutter GPU の `DeviceBuffer` に明示 `dispose` はない。retire の保証は「完了前に
-  Dart reference を落とさない」「完了後に reference を落とす」までであり、driver が
-  実メモリを即時返すとは記述しない。
-- `YumNumm/flutter_scene` は現時点で GitHub 上に存在しない。namespace への repo/fork
-  作成権限は確認できないため、作成は実装開始前の明示 prerequisite とする。
-- #1612 が参照する
-  `docs/superpowers/specs/2026-08-07-eqmonitor-map-seismicity-github-issues.md` は
-  local/remote refs のどちらにも存在しない。Issue 本文と現存 design/delivery docs を
-  current contract とし、この provenance gap は各 PR の Remaining tasks に残す。
-
-## 2. 参考実装から採用する境界
-
+- EQMonitor plan branch base は当時の latest `origin/develop`
+  `8120f23446b53f4b3222d32306d4fb576cb9683e`。
+- #1602 は parent #1612 layer 06。#1603 scene foundation、#1604 2M renderer、
+  #1605 integration はこの plan に混ぜない。
+- active descriptors/lock は `bdero/flutter_scene`
+  `7f71993b7e2a0ab1d2f59726a406098709be7291`。current upstream master
+  `ed04205c10991739338fde19563bcf2698057755` も transient billboard で、任意
+  `DeviceBuffer.dispose` はない。
+- pinned source には process-global `rendererSubmissions` / `GpuSubmissionTracker` があり、
+  全 renderer command buffer は `GpuSubmissionTracker.submit(gpu.CommandBuffer)` を通る。別 fence は作らない。
+- pinned `Geometry.depthOnlyVertex == null` の既存 depth/shadow/selection encoder は
+  `Geometry.bind(gpu.RenderPass, TransientWriter, Matrix4, Matrix4, Vector3)` を呼ぶ。
+  persistent Geometry も null を維持し、両 stream を full bindする。
+  non-null + `bindPositionStream` は superclass private stream を必要とするため採用しない。
 - `bdero/dashmap` `a6ff92edd999e922f81d26d209d8f589faee3fd0` は MIT。
-  `package:flutter_scene/scene.dart` / `gpu.dart` の curated public import、pure projection と
-  Scene adapter の分離を参考にする。一方、tile unload の GPU dispose は TODO のため、
-  その lifecycle を完成例として流用しない。
-- ユーザー指定の `ingen084/KyoshinEewViewer` は存在せず、検索で確認できた対象は MIT の
+  public barrel と pure projection/Scene adapter の分離だけを参考にする。
+- 指定名 `ingen084/KyoshinEewViewer` ではなく確認できた MIT repository は
   `ingen084/KyoshinEewViewerIngen`
-  `23c91f26c0f3bbc47320bf87b409182002e388fa`。点集合を immutable snapshot として一括
-  差し替え、projection cache を data revision 単位で再利用する考え方だけを参考にする。
-- いずれの repository からもソースを copy しない。copy が必要になった場合は、その場で
-  MIT notice の要否を再確認し、無記録で取り込まない。
+  `23c91f26c0f3bbc47320bf87b409182002e388fa`。immutable snapshot/revision reuse
+  の考えだけを参考にする。どちらからも source copy しない。
+- `YumNumm/flutter_scene` は未作成。repo/fork作成はこの計画の権限外であり Gate A の blocker。
+- #1612 が参照する `docs/superpowers/specs/2026-08-07-eqmonitor-map-seismicity-github-issues.md`
+  は local/live refs にない。Issue本文と現存design docsをcontractとし、gapをPRへ残す。
 
-### 採用案と棄却案
+## Public API
 
-1. **採用: exact pin の compatibility branch に generic API を積む。** EQMonitor で既に compile/
-   smoke 実績がある Flutter `4dacd3fc...` + Scene `7f71993...` を保ち、必要な API だけを小さく
-   review できる。後続 stack が参照する SHA も一意になる。
-2. **棄却: bdero current master へ直接実装する。** upstream の cache memory API は利用できるが、
-   EQMonitor pin 以降の多数の変更と current Flutter master 要件を同時に取り込むため、#1602 の
-   static instance 差分と互換性リスクを分離できない。forward-port は fork完成後の別PRにする。
-3. **棄却: EQMonitor adapter で Flutter Scene internal GPU API を呼ぶ。** 最短でも fork upgrade ごとに
-   private symbol へ追従し、Issue の public API 条件を破る。`flutter_gpu` buffer を app が直接所有
-   する案も同じ理由で採らない。
-4. **棄却: per-frame billboard/InstancedMesh、chunking、固定 frames-in-flight。** 200万件の再pack/
-   upload または CPU matrix memory を残し、GPU completion を時間・frame数で推測するため、性能と
-   lifecycle の必須条件を満たさない。
-
-この選択により fork の API は「汎用2-stream packed Geometry + lifecycle」に限定し、震源の座標、
-色、LOD、24-byte record schema は #1604 の EQMonitor consumer 側に残す。
-
-## 3. 固定する公開 API と不変条件
-
-`package:flutter_scene/scene.dart` から次だけを export する。EQMonitor は
-`package:flutter_scene/src/...`、`package:flutter_gpu/...`、internal annotation 付き API を
-import/call しない。
+`package:flutter_scene/scene.dart` から次だけを export する。EQMonitor は `src/`、
+`package:flutter_gpu/`、internal annotation API を import/call しない。
 
 ```dart
 enum PersistentGpuContextState { active, invalidating, invalidated, failed }
@@ -146,6 +105,15 @@ final class PersistentGpuMemoryUsage {
 }
 
 final class PersistentGpuMemorySnapshot {
+  const PersistentGpuMemorySnapshot({
+    required this.contextState,
+    required this.lifecycleState,
+    required this.contextGeneration,
+    required this.latestSubmission,
+    required this.completedThrough,
+    required this.global,
+    required this.owner,
+  });
   final PersistentGpuContextState contextState;
   final PersistentGpuResourceLifecycleState lifecycleState;
   final int contextGeneration;
@@ -180,7 +148,6 @@ final class PersistentPackedInstanceGeometry extends Geometry {
     required vm.Aabb3 localBounds,
     required bool doubleSided,
   });
-
   int get instanceCount;
   int get instanceStrideInBytes;
   int get contextGeneration;
@@ -189,196 +156,245 @@ final class PersistentPackedInstanceGeometry extends Geometry {
 }
 ```
 
-`PersistentGpuResourceLifecycle` は owner handle であり context owner ではない。public constructor
-は process-global registry へ新 owner を attach する。test-only `@internal` constructor だけが
-injected registry を受け取る。すべての owner の `contextState` / `contextGeneration` / `global`
-snapshot は常に同じ値で、`owner` usage だけが handle ごとに異なる。
+public lifecycle constructor は process-global registry へ owner をattachする。test-only
+`@internal PersistentGpuResourceLifecycle.forRegistry(PersistentGpuResourceRegistry registry)` だけ
+injected registry を使う。public/internal Future methods は
+`async` にせず cached Future を直接返し、`identical` を契約に含める。
 
-API review 中に引数名を変える場合も、次の semantics は変えない。
+## Safety invariants
 
-1. layout は slot 0 vertex、slot 1 instance の exactly 2 buffers。buffer/attribute List と
-   mutable `Aabb3` は constructor 冒頭で deep snapshot し、caller の後続 mutation を反映しない。
-2. count、stride、attribute offset、byte length、alignment、finite bounds、index width/value を
-   upload 前に検証する。empty/negative/overflow は `ArgumentError`、fallback は行わない。
-3. allocation policy は1 buffer/total logical allocation とも最大 `0x7fffffff` bytes。multiply、
-   16-byte align、add は除算による checked arithmetic を先に行い、overflow 後の値を使わない。
-4. base vertex と instance は同じ non-index host-visible buffer、instance offset は16-byte aligned。
-   index は WebGL duplicate を避けるため別 buffer。source bytes は各1回 overwrite/1回 flush 後に
-   保持せず、superclass private buffer field にも格納しない。
-5. bind は persistent views と小さい `FrameInfo` だけ。instance transient、camera change upload、
-   per-frame full scan を禁止する。data change は new geometry attach → old detach → old retire。
-6. Geometry は `bindsModelTransformInstance == false`、独自 material variant を使う。nested
-   `InstancedMesh` から `draw(instanceCount != 1)` された場合は `StateError` で fail closed。
-7. resource record は open-frame use と last submitted id を別々に持つ。bind後retireは次 submit の
-   stamp、または endFrame no-submit の確定まで reference を保持する。
-8. generation は process-global で1から開始。任意 owner の invalidation は global state を即時
-   `invalidating` にして全 owner の current-generation resource を retire し、全件 settle 後だけ
-   `invalidated`。recreate はその後に1回だけ generationを増やす。
-9. release callback failure は global `failed`。残る retirement は継続するが bind/register/recreate
-   は拒否し、process/Scene 再構築以外で回復したと推測しない。
-10. snapshot bytes は registry が保持する logical references。global/owner と active/retiring/failed、
-    total/instance を分け、driver resident bytes や即時 reclaim と表現しない。
+1. layout は slot0 vertex / slot1 instance exactly 2 buffers。buffer/attribute list、ByteData、
+   mutable `Aabb3` は caller mutation から防御する。
+2. count/stride/offset/length/alignment/finite bounds/index width/valueをupload前に検証。
+   empty name、duplicate name、attribute overlap、negative、overflow は `ArgumentError`。
+3. per-buffer/total maxは `0x7fffffff`。multiply/add/align/end-offsetは除算/差分で
+   overflow前に検査し、overflow後の値を作らない。
+4. vertex+instance は1 non-index host-visible buffer、instance offsetは16-byte alignment。
+   optional indexは別buffer。
+5. non-indexはvertex/instance各1回overwrite成功後、exact
+   `flush(offsetInBytes: 0, lengthInBytes: nonIndexBytes)` 1回。indexはoverwrite成功後、exact
+   `flush(offsetInBytes: 0, lengthInBytes: indexBytes)` 1回。失敗後は後続write/flushなし。
+6. 両bufferのwrite/flush成功後だけviewsをpublish/registerする。失敗はrefsをclearしてrethrow。
+7. source bytesはupload後保持せず、superclass `setVertices/setVertexStreams/setIndices` を使わない。
+8. bindはcurrent-state check→`markUsed`→slot0→slot1→optional index→small `FrameInfo`。
+   per-frame instance upload/full scanなし。
+9. `FrameInfo` は std140 36 floats exactly: camera transform `[0..15]`、model transform
+   `[16..31]`、camera position `[32..34]`、padding `[35]`。`shaderOverride ?? vertexShader` の
+   `FrameInfo` slotへbindする。consumer shaderはこのblockとlayout/varying contractを宣言する。
+10. `depthOnlyVertex == null`。既存 depth/shadow/selection はfull normal `bind`を再利用する。
+11. `bindsModelTransformInstance == false`。external `draw(instanceCount != 1)` はfail closed。
+12. open-frame markとlast submissionは別管理。bind→retire→submitはcompletionまで保持、
+    no-submitは`endFrame`で確定する。
+13. generationはprocess-globalで1開始。invalidating→全settle→invalidated→recreateだけが+1。
+14. release failureはglobal failed。残りretirementは続けるがbind/register/recreateを拒否。
+15. snapshotはlogical references。global/owner、active/retiring/failed、total/instanceを分ける。
 
-## 4. Required state machines
+## State machines
 
-### Allocation record and open-frame table
+### Allocation record
 
-Internal record states are `active`, `retirementPendingOpenFrame`,
-`retirementPendingSubmission`, `releasing`, `retired`, `retirementFailed`。public state は2つの pending
-を `retirementPending` に collapse する。
+Internal states: `active`, `retirementPendingOpenFrame`,
+`retirementPendingSubmission`, `releasing`, `retired`, `retirementFailed`。
+public は両pendingを `retirementPending` にcollapseする。
 
-| current | event / guard | next | required effect |
+| current | event / guard | next/effect |
+|---|---|---|
+| active | markUsed、frame open/current | active + open mark |
+| active | retire、open mark | pendingOpenFrame、cached Future、retain |
+| pendingOpenFrame | beforeSubmit(id) | pendingSubmission、mark clear、last=id |
+| pendingOpenFrame | endFrame no-submit | releasing、またはpast in-flight待ち |
+| active | beforeSubmit(id) after mark | active、last=max(old,id) |
+| active | retire after watermark | releasing immediately |
+| pendingSubmission | watermark < last | retain |
+| pendingSubmission | watermark >= last | releasing、callback once |
+| releasing | repeated/reentrant retire | same state、identical Future |
+| releasing | callback success | retired、accounting remove、Future success |
+| releasing | callback throws | retirementFailed、failed bytes、global failed |
+| retired/failed | repeated retire | same、original Future |
+
+`beginFrame` nested、closed `endFrame`、closed `markUsed` は `StateError`。invalidationが
+open frame中でも既存marksはbeforeSubmit/endFrame処理を継続し、新規markだけ拒否する。
+completion trackerはpending set更新→watermark計算→listener snapshotをregistration順に呼ぶ。
+unknown/duplicate completionは通知しない。settle順は resource Future → owner FD → global FI。
+
+### Owner/context operations
+
+`FI` はgenerationごとのcached invalidate Future、`FD` はownerごとのdispose Future、
+`FE` はdisposed owner invalid-operation Future。
+
+| owner | context | operation | result |
 |---|---|---|---|
-| active | `markUsed`, frame open/current generation | active + open mark | future bind以外の state は変えない |
-| active | `retire`, open markあり | pendingOpenFrame | 同一 cached retire Future、reference保持 |
-| pendingOpenFrame | before-submit(id) | pendingSubmission | markを消し `lastSubmission=id`、reference保持 |
-| pendingOpenFrame | endFrame、submitなし | releasing または pendingSubmission | markを消し、過去in-flightがなければrelease |
-| active | before-submit後 | active + submitted id | `lastSubmission=max(old,id)` |
-| active | completion後に初めてretire | releasing | watermark済みなので即release開始 |
-| pendingSubmission | completion < lastSubmission | pendingSubmission | releaseしない |
-| pendingSubmission | completion >= lastSubmission | releasing | callbackをちょうど1回呼ぶ |
-| releasing | reentrant/repeated retire | releasing | identical Future、callback再実行なし |
-| releasing | callback success | retired | accountingから除外後にFuture success |
-| releasing | callback throws | retirementFailed | bytesをfailed accountingへ、global failed、Future error |
-| retired/failed | repeated retire | same | original identical Futureを返す |
+| active | active | invalidate | global→invalidating、全owner retire、FI |
+| active | invalidating/invalidated/failed | invalidate | mutationなし、identical FI |
+| disposed | any | invalidate | mutationなし、identical FE |
+| active | invalidated | recreate | failed record 0確認、generation+1、active |
+| active | active/invalidating/failed | recreate | synchronous StateError |
+| disposed | any | recreate | synchronous StateError |
+| active | any | dispose | owner→disposed、owner records retire、FD |
+| disposed | any | dispose | mutationなし、identical FD |
+| either | any | snapshot/getters | read-only |
+| new owner | active | constructor | attach active handle |
+| new owner | invalidated | constructor | recovery owner attach、resource作成拒否、recreateのみ |
+| new owner | invalidating/failed | constructor | synchronous StateError、attachなし |
 
-`beginFrame` は frame closed のときだけ成功し、nested begin は `StateError`。`endFrame` は open の
-ときだけ成功し `finally` から必ず1回呼ぶ。before-submit は pendingOpenFrame も stamp するため、
-bind → retire → submit の command buffer が completion 前に解放されない。global invalidation が
-open frame 中に起きた場合も全 mark は pendingOpenFrame となり、後続 `markUsed` は拒否するが、
-既に encode 済み command の before-submit/endFrame 処理は継続する。
+最後のownerがinvalidating中にdisposeされてもregistry/FIは残り、owner 0でinvalidatedへ進む。
+後からattachしたrecovery ownerだけがrecreateできる。dispose during invalidationはFIをcancelせず、
+FDが先に完了してもFIは他ownerを待つ。最初のrelease errorをcontext causeにし、後続errorは
+test-only ordered logへ保存する。
 
-completion listener は tracker pending set を更新し watermark を計算した後、listener snapshot を
-registration順に呼ぶ。unknown/duplicate id は通知しない。registry は release callback の前に
-`releasing` を設定し、callback success/failure と accounting 更新後に resource Future、owner
-dispose Future、global invalidate Future の順で settle する。
+### Resource operation matrix
 
-### Public owner operation × global state table
+| operation | owner/context/resource | result |
+|---|---|---|
+| construct/register | active/active/new | upload成功後だけregister |
+| construct/register | disposed or non-active context | StateError、register 0 |
+| bind/markUsed | active/active/current active + frame open | mark後にpass mutation |
+| bind/markUsed | 他の全組合せ | StateError、pass event 0 |
+| draw(1) | engine bind→draw契約内のcurrent active | state再検証後stored countsでdraw |
+| draw(!=1) | any | StateError、draw event 0 |
+| retire first | any owner/context、live record | state table、cached Future |
+| retire repeated | pending/releasing/terminal | identical Future、mutationなし |
+| owner dispose | active owner | owner recordsのretire Futureを共有 |
+| invalidation | active owner/active context | context stateを先に変え全records retire |
+| completion | pending、watermark >= last | release exactly once |
+| release failure | releasing | resource/context failed、残り継続 |
 
-owner `dispose()` は global context disposal ではない。global state は process-wide、owner state は
-`active`/`disposed` のみ。`FI` は generationごとの cached invalidate Future、`FD` は ownerごとの
-cached dispose Future、`FE` は disposed owner の cached invalid-operation error Future とする。
+## Exact internal seams (never public-exported)
 
-| owner | global | operation | result / next state |
-|---|---|---|---|
-| active | active | `invalidateContext()` | global→invalidating、全owner resource retire、`FI` |
-| active | invalidating | `invalidateContext()` | mutationなし、identical `FI` |
-| active | invalidated | `invalidateContext()` | mutationなし、完了済み identical `FI` |
-| active | failed | `invalidateContext()` | mutationなし、error完了済み identical `FI` |
-| disposed | any | `invalidateContext()` | global mutationなし、repeated callでidentical `FE` |
-| active | invalidated | `recreateContext()` | failed record 0 を再確認、generation +1、global→active |
-| active | active | `recreateContext()` | synchronous `StateError`、generation不変 |
-| active | invalidating | `recreateContext()` | synchronous `StateError`、retirement継続 |
-| active | failed | `recreateContext()` | synchronous `StateError`、process再構築を要求 |
-| disposed | any | `recreateContext()` | synchronous `StateError` |
-| active | active | `dispose()` | owner→disposed、owner resourceのみretire、`FD` |
-| active | invalidating | `dispose()` | owner→disposed、global retireと共有、owner分settleで`FD` |
-| active | invalidated | `dispose()` | owner→disposed、完了済み `FD` |
-| active | failed | `dispose()` | owner→disposed、残存owner record settle/error後 `FD` |
-| disposed | any | `dispose()` | mutationなし、identical `FD` |
-| either | any | `takeMemorySnapshot()` | read-only、disposed ownerもfinal owner/global usageを取得可 |
-| new owner | active | public constructor | ownerをattachしactive handleを返す |
-| new owner | invalidating/invalidated/failed | public constructor | synchronous `StateError`、ownerを作らない |
-| either | any | state/generation getters | read-only、owner stateとshared global valuesを返す |
+mock frameworkや汎用factoryは追加せず、native GPU objectをtestから除く最小境界だけを置く。
 
-`FI` は同じ generation ではどの owner から取得しても `identical`。recreate 後の次 invalidation は
-新しい `FI`。`FD` は owner 固有で `FI` とは別 object。dispose during invalidation は global
-invalidation をcancelせず、`FD` が先に完了しても `FI` は他 owner を待つ。1 owner の callback
-failure は global→failed とし、`FI`/該当 `FD` は全 records settle 後に同じ最初の errorで完了する。
-Future-returning public/internal methodsは `async` にせず cached Futureを直接returnする。これにより
-完了値だけでなく `identical` identityも契約に含める。
+```dart
+typedef GpuSubmissionCompletionListener = void Function(int completedThrough);
 
-release callback から `retire()`、`dispose()`、`invalidateContext()`、snapshot を reentrant に
-呼べるが、stateを callback 前に進めてあるため二重releaseしない。callback/reentrant operation が
-別 error を投げた場合は最初の release error を context failure cause とし、後続 error は
-`Object.hash` 等で潰さず test log 用 list に順序保持する。production release callback は nullable
-buffer views を clear する同期 no-throw closure に限定する。
+final class PersistentGpuResourceRegistry {
+  PersistentGpuResourceRegistry({
+    required GpuSubmissionTracker submissions,
+    required PersistentGpuExecutionAffinity affinity,
+  });
+}
 
-## 5. File responsibility map
+final PersistentGpuResourceRegistry persistentGpuResourceRegistry =
+    PersistentGpuResourceRegistry(
+      submissions: rendererSubmissions,
+      affinity: PersistentGpuExecutionAffinity(),
+    );
 
-### YumNumm/flutter_scene bottom PR
+@visibleForTesting
+void runPersistentGpuEncodeScope({
+  required void Function() beginFrame,
+  required void Function() encode,
+  required void Function() endFrame,
+});
 
-- `lib/src/render/frame_transients.dart`: submission id、before-submit、completion watermark 通知。
-- `lib/src/render/persistent_gpu_resource_models.dart`: public enums、usage/snapshot immutable values。
-- `lib/src/render/persistent_gpu_execution_affinity.dart`: same-isolate check と mutation reentrancy guard。
-- `lib/src/render/persistent_gpu_resource_registry.dart`: global generation/state、owner/record accounting、
-  frame marks、submission stamps、retirement/failure completion。
-- `lib/src/render/persistent_gpu_resource_lifecycle.dart`: public owner handle と operation state machine。
-- `lib/src/scene.dart`: registry `beginFrame`/`endFrame` を render frame の `try/finally` に接続。
-- `lib/scene.dart`: curated public lifecycle exports。
-- `test/render/gpu_submission_tracker_test.dart`: tracker ordering/listener tests。
-- `test/render/persistent_gpu_resource_registry_test.dart`: record/frame/submission/failure state tests。
-- `test/render/persistent_gpu_resource_lifecycle_test.dart`: multi-owner operation transition tests。
+abstract interface class PersistentPackedGpuSlice {
+  int get lengthInBytes;
+}
 
-### YumNumm/flutter_scene top PR
+abstract interface class PersistentPackedGpuBuffer {
+  bool overwrite(ByteData source, {required int destinationOffsetInBytes});
+  void flush({required int offsetInBytes, required int lengthInBytes});
+  PersistentPackedGpuSlice slice({
+    required int offsetInBytes,
+    required int lengthInBytes,
+  });
+  void release();
+}
 
-- `lib/src/geometry/persistent_packed_instance_plan.dart`: defensive copy、checked arithmetic、layout/bounds/
-  index validation、immutable upload plan。
-- `lib/src/geometry/persistent_packed_instance_storage.dart`: one-shot device allocation/write/flush と
-  nullable views release。
-- `lib/src/geometry/persistent_packed_instance_geometry.dart`: public Geometry、lifecycle lease、bind/draw。
-- `lib/src/material/shader_stage.dart`: exact persistent packed material variant。
-- `lib/src/material/shader_material.dart`: variant lookup without unskinned collapse。
-- `lib/scene.dart` / `README.md`: curated Geometry export と consumer contract。
-- `test/persistent_packed_instance_plan_test.dart`: all input/mutation/overflow/index validation。
-- `test/persistent_packed_instance_storage_test.dart`: write count/failure/release、GPU-gated upload。
-- `test/persistent_packed_instance_geometry_test.dart`: state/bind/draw/material behavior。
-- `test/persistent_packed_instance_public_api_test.dart`: public-import-only compile contract。
+abstract interface class PersistentPackedGpuBackend {
+  PersistentPackedGpuBuffer allocate({required int lengthInBytes});
+}
 
-### YumNumm/EQMonitor pin PR
+abstract interface class PersistentPackedRenderPassAdapter {
+  void bindVertex({
+    required PersistentPackedGpuSlice slice,
+    required int slot,
+    required int vertexCount,
+  });
+  void bindIndex({
+    required PersistentPackedGpuSlice slice,
+    required gpu.IndexType indexType,
+    required int indexCount,
+  });
+  void bindFrameInfo({
+    required gpu.Shader shader,
+    required TransientWriter transients,
+    required vm.Matrix4 modelTransform,
+    required vm.Matrix4 cameraTransform,
+    required vm.Vector3 cameraPosition,
+  });
+  void draw({
+    required int vertexCount,
+    required int indexCount,
+    required int instanceCount,
+  });
+}
+```
 
-- `packages/eqmonitor_map/pubspec.yaml`, `packages/eqmonitor_map/example/pubspec.yaml`, `pubspec.lock`:
-  one fork URL/full SHA across flutter_scene and scene。
-- `tool/verify_flutter_scene_pin.sh`, `scripts/ci/test_verify_flutter_scene_pin.sh`: machine-readable 3 descriptor
-  + 2 lock entry assertion。
-- `packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`: resolved fork API check。
-- package/example README と既存3 knowledge docs: live SHA/provenance/lifecycle boundaries。
+production backend/adapterだけが `gpu.DeviceBuffer`/`gpu.RenderPass` を保持する。Geometry public
+constructorはplan→storage→lease→private `_fromParts`へ委譲する。fork testだけがsrc importの
+`createPersistentPackedInstanceGeometryForTesting({required plan, required storage, required lease, required shader, required doubleSided})`、
+`bindPersistentPackedInstanceGeometryForTesting({required geometry, required adapter, required transients, required modelTransform, required cameraTransform, required cameraPosition, gpu.Shader? shaderOverride})`、
+`drawPersistentPackedInstanceGeometryForTesting({required geometry, required adapter, int instanceCount = 1})`
+を使う。public `bind` は Public API のexact signatureで production adapter をその場で作り、同じprivate bindへ
+委譲する。public `draw` もpassごとにproduction adapterを作り、同じprivate drawへ委譲する。
+helpers/backend/adapter/private constructorはpublic barrelからexportしない。
 
-大きな registry/validation/Geometry file を1 task で完成させない。後述 task はこの責務境界を保ち、
-隣接 task が使う signature を各 `Interfaces` block で固定する。
+| seam | exact owner file | direct consumer |
+|---|---|---|
+| `GpuSubmissionCompletionListener` / `addCompletionListener` | `lib/src/render/frame_transients.dart` | registry constructor |
+| `PersistentGpuResourceRegistry` / `persistentGpuResourceRegistry` | `lib/src/render/persistent_gpu_resource_registry.dart` | lifecycle and Scene wrapper |
+| `runPersistentGpuEncodeScope` | `lib/src/render/persistent_gpu_scene_frame.dart` | `lib/src/scene.dart` |
+| backend/buffer/slice interfaces and device wrappers | `lib/src/geometry/persistent_packed_gpu_backend.dart` | storage transaction |
+| adapter interface and GPU adapter | `lib/src/geometry/persistent_packed_render_pass.dart` | Geometry bind/draw |
+| private `_fromParts` and three test helpers | `lib/src/geometry/persistent_packed_instance_geometry.dart` | public constructor and src-only tests |
 
-## 6. Repository と PR stack
+## Repository / stack
 
-repository を跨ぐ branch は GitHub 上の1本の stack にできない。次の2 stack と immutable
-SHA hand-off を使う。
+repositoryを跨ぐ1 stackは作れない。forkは2 PR stack、EQMonitor pinは#1601の上またはdevelopへの
+standalone PRで、fork top full SHAをhandoffする。
 
 ```text
 YumNumm/flutter_scene
-eqmonitor/flutter-4dacd3fc (7f71993..., compatibility trunk; PRなし)
+eqmonitor/flutter-4dacd3fc (exact 7f71993b7e2a0ab1d2f59726a406098709be7291, PRなし)
 └─ feat/persistent-gpu-lifecycle
    └─ feat/persistent-packed-instance-geometry
-                                      ┐
-                                      └─ top commit SHAを固定
+
 YumNumm/EQMonitor
-... → PR #1620 feat/seismicity-pmtiles-decoder
-      └─ feat/seismicity-flutter-scene-fork-pin
+#1601 decoder OPEN ─└─ feat/seismicity-flutter-scene-fork-pin
+or #1601 MERGED     develop ─└─ same pin branch (standalone PR)
 ```
 
-fork の current master へ直接実装しない。master は upstream current のまま保持し、EQMonitor の
-既存 toolchain と既存 pin を再現する compatibility trunk を `7f71993...` に作る。上流 master
-への forward-port は #1602 の completion 条件にせず、別 follow-up として記録する。
+current upstream masterへ直接実装せず、exact compatibility trunkを作る。forward-portは別follow-up。
 
-## 7. Execution prerequisites（commitを作らないgate）
+## Execution gates (no commit)
 
-### Gate A: fork authority — unresolvedなら必ず停止
+### Gate A: fork authority
 
-この plan は repository/namespace 作成権限を含まない。owner/admin が GitHub UI 等で
-`YumNumm/flutter_scene` を `bdero/flutter_scene` の fork として作成した後だけ続行する。
-agent は `gh repo fork` / `gh repo create` を実行しない。
+このplanはrepo/fork作成権限を含まない。owner/adminが `YumNumm/flutter_scene` を
+`bdero/flutter_scene` のforkとして作成した後だけ続行する。agentは`gh repo fork/create`しない。
 
 ```bash
-gh repo view YumNumm/flutter_scene \
+fork_authority=$(gh repo view YumNumm/flutter_scene \
   --json nameWithOwner,parent,defaultBranchRef,viewerPermission \
-  --jq 'select(.parent.nameWithOwner == "bdero/flutter_scene") |
+  --jq 'select(.nameWithOwner == "YumNumm/flutter_scene") |
+        select(.parent.nameWithOwner == "bdero/flutter_scene") |
+        select(.defaultBranchRef.name != null and .defaultBranchRef.name != "") |
         select(.viewerPermission == "ADMIN" or .viewerPermission == "MAINTAIN" or
-               .viewerPermission == "WRITE")'
+               .viewerPermission == "WRITE") |
+        [.nameWithOwner,.parent.nameWithOwner,.defaultBranchRef.name,.viewerPermission] | @tsv')
+test -n "$fork_authority"
+test "$(printf '%s\n' "$fork_authority" | wc -l | tr -d ' ')" -eq 1
 ```
 
-0件/errorなら authority blocker を報告して停止する。代替 repo や user fork を推測しない。
+空/複数/errorなら停止。`jq select`のexit 0だけを成功扱いせず、代替repoを推測しない。
 
-### Gate B: non-destructive clone/remotes/worktree
+### Gate B: clone, exact refs, reviewed resume
 
-clone target が存在しない場合だけ cloneし、既存ならexact originをassertする。
+clone pathは `/Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene`。不存在時だけclone、
+存在時はgit worktreeかつorigin exact `git@github.com:YumNumm/flutter_scene.git` をassert。
+upstreamは exact `https://github.com/bdero/flutter_scene.git`、base commitをfetch/cat-fileする。
+`.worktrees`はignoreされないのでworktreeはclone外
+`/Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle`。
 
 ```bash
 fork_clone=/Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene
@@ -389,107 +405,111 @@ if [ -e "$fork_clone" ]; then
 else
   git clone --origin origin git@github.com:YumNumm/flutter_scene.git "$fork_clone"
 fi
-```
-
-dirtyでも user change を触らず、worktree追加だけに留める。non-git/wrong originなら停止する。
-`upstream` が未登録の場合だけ追加し、登録済みなら exact URL をassertする。
-
-```bash
 if upstream_url=$(git -C "$fork_clone" remote get-url upstream 2>/dev/null); then
   test "$upstream_url" = https://github.com/bdero/flutter_scene.git
 else
   git -C "$fork_clone" remote add upstream https://github.com/bdero/flutter_scene.git
 fi
 git -C "$fork_clone" fetch upstream master
-git -C "$fork_clone" \
-  cat-file -e 7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
+git -C "$fork_clone" cat-file -e \
+  7f71993b7e2a0ab1d2f59726a406098709be7291^{commit}
+if git -C "$fork_clone" check-ignore -q .worktrees; then
+  exit 1
+else
+  test "$?" -eq 1
+fi
 ```
 
-fork は `.worktrees` をignoreしないため nested worktreeを作らない（次はexit 1が期待値）。
+compat remote ref `eqmonitor/flutter-4dacd3fc` は不存在時だけ exact baseをnon-force push。
+既存ならadvertised SHA exact baseを要求する。feature ref既存時はsupervisorが直前reviewで承認した
+full `reviewed_bottom_resume_sha` と一致するときだけresumeする。
 
 ```bash
-git -C /Users/ryotaro.onoue/dev/github.com/YumNumm/flutter_scene \
-  check-ignore -q .worktrees
-```
-
-compatibility remote branch が既存なら exact SHA をassertし、異なれば停止する。未作成の場合だけ
-new refをpushする。force pushは禁止。
-
-```bash
-if remote_line=$(git -C "$fork_clone" ls-remote --exit-code origin \
-  refs/heads/eqmonitor/flutter-4dacd3fc); then
-  test "${remote_line%%[[:space:]]*}" = \
+compat_ref=refs/heads/eqmonitor/flutter-4dacd3fc
+if compat_line=$(git -C "$fork_clone" ls-remote --exit-code origin "$compat_ref"); then
+  test "$(printf '%s\n' "$compat_line" | wc -l | tr -d ' ')" -eq 1
+  printf '%s\n' "$compat_line" | rg -q \
+    '^[0-9a-f]{40}[[:space:]]+refs/heads/eqmonitor/flutter-4dacd3fc$'
+  test "${compat_line%%[[:space:]]*}" = \
     7f71993b7e2a0ab1d2f59726a406098709be7291
 else
-  remote_status=$?
-  test "$remote_status" -eq 2
+  test "$?" -eq 2
   git -C "$fork_clone" push origin \
-    7f71993b7e2a0ab1d2f59726a406098709be7291:refs/heads/eqmonitor/flutter-4dacd3fc
+    7f71993b7e2a0ab1d2f59726a406098709be7291:"$compat_ref"
 fi
 git -C "$fork_clone" fetch origin \
-  '+refs/heads/*:refs/remotes/origin/*'
+  "$compat_ref:refs/remotes/origin/eqmonitor/flutter-4dacd3fc"
 test "$(git -C "$fork_clone" rev-parse origin/eqmonitor/flutter-4dacd3fc)" = \
   7f71993b7e2a0ab1d2f59726a406098709be7291
-```
 
-上のpushは remote ref不存在のexit 2 routeだけ。その他のerrorは `test` で停止する。local
-compatibility branchも未作成の場合だけremote tracking branchとして作り、既存ならexact SHAをassertする。
-
-```bash
-if git -C "$fork_clone" show-ref --verify --quiet \
-  refs/heads/eqmonitor/flutter-4dacd3fc; then
-  test "$(git -C "$fork_clone" rev-parse eqmonitor/flutter-4dacd3fc)" = \
-    7f71993b7e2a0ab1d2f59726a406098709be7291
+bottom_ref=refs/heads/feat/persistent-gpu-lifecycle
+if remote_line=$(git -C "$fork_clone" ls-remote --exit-code origin "$bottom_ref"); then
+  test "$(printf '%s\n' "$remote_line" | wc -l | tr -d ' ')" -eq 1
+  printf '%s\n' "$remote_line" | rg -q \
+    '^[0-9a-f]{40}[[:space:]]+refs/heads/feat/persistent-gpu-lifecycle$'
+  remote_bottom_head=${remote_line%%[[:space:]]*}
+  printf '%s\n' "$reviewed_bottom_resume_sha" | rg -q '^[0-9a-f]{40}$'
+  test "$remote_bottom_head" = "$reviewed_bottom_resume_sha"
+  git -C "$fork_clone" fetch origin \
+    "$bottom_ref:refs/remotes/origin/feat/persistent-gpu-lifecycle"
+  git -C "$fork_clone" cat-file -e "$remote_bottom_head^{commit}"
 else
-  git -C "$fork_clone" branch --track eqmonitor/flutter-4dacd3fc \
-    origin/eqmonitor/flutter-4dacd3fc
+  test "$?" -eq 2
+  remote_bottom_head=7f71993b7e2a0ab1d2f59726a406098709be7291
 fi
 ```
 
-worktree は fork clone の外に固定する。target が存在しない場合、branch も未作成なら `-b` route、
-branch だけ存在する resume なら branch をそのまま attach する。target が存在する場合は追加・削除
-せず、registered path、branch、origin、clean state をassertする。mismatch/dirtyなら停止し、
-`worktree remove`、`branch -D`、reset、checkout、force pushは行わない。
+target/branch不存在ならexact `$remote_bottom_head`から作る。既存target/branchはregistered path、
+origin、branch、clean、base ancestry、local=remote advertised headをassert。mismatch時は停止。
+`rerere.enabled=true`、`remote.pushDefault=origin`後、metadata不存在時だけ
+`gh stack init --base eqmonitor/flutter-4dacd3fc feat/persistent-gpu-lifecycle`。
+既存metadataは `gh stack view --json` のnon-empty JSONでtrunk/branchをassertする。
 
 ```bash
-mkdir -p /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees
 fork_worktree=/Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
+mkdir -p /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees
 if [ -e "$fork_worktree" ]; then
   git -C "$fork_clone" worktree list --porcelain | \
-    rg -F "worktree $fork_worktree"
+    rg -Fx "worktree $fork_worktree"
 elif git -C "$fork_clone" show-ref --verify --quiet \
   refs/heads/feat/persistent-gpu-lifecycle; then
+  test "$(git -C "$fork_clone" rev-parse feat/persistent-gpu-lifecycle)" = \
+    "$remote_bottom_head"
   git -C "$fork_clone" worktree add "$fork_worktree" \
     feat/persistent-gpu-lifecycle
 else
   git -C "$fork_clone" worktree add -b feat/persistent-gpu-lifecycle \
-    "$fork_worktree" eqmonitor/flutter-4dacd3fc
+    "$fork_worktree" "$remote_bottom_head"
 fi
 test "$(git -C "$fork_worktree" remote get-url origin)" = \
   git@github.com:YumNumm/flutter_scene.git
 test "$(git -C "$fork_worktree" rev-parse --abbrev-ref HEAD)" = \
   feat/persistent-gpu-lifecycle
-git -C "$fork_worktree" \
-  merge-base --is-ancestor 7f71993b7e2a0ab1d2f59726a406098709be7291 HEAD
+test "$(git -C "$fork_worktree" rev-parse HEAD)" = "$remote_bottom_head"
+git -C "$fork_worktree" merge-base --is-ancestor \
+  7f71993b7e2a0ab1d2f59726a406098709be7291 HEAD
 test -z "$(git -C "$fork_worktree" status --porcelain=v1)"
 git -C "$fork_clone" config rerere.enabled true
 git -C "$fork_clone" config remote.pushDefault origin
 cd "$fork_worktree"
-gh stack init --base eqmonitor/flutter-4dacd3fc feat/persistent-gpu-lifecycle
+if stack_json=$(gh stack view --json 2>/dev/null); then
+  test -n "$stack_json"
+  printf '%s\n' "$stack_json" | jq -e \
+    '.trunk == "eqmonitor/flutter-4dacd3fc" and
+     .currentBranch == "feat/persistent-gpu-lifecycle" and
+     (([.branches[].name] == ["feat/persistent-gpu-lifecycle"]) or
+      ([.branches[].name] == ["feat/persistent-gpu-lifecycle",
+                             "feat/persistent-packed-instance-geometry"]))' >/dev/null
+else
+  test "$?" -eq 2
+  gh stack init --base eqmonitor/flutter-4dacd3fc \
+    feat/persistent-gpu-lifecycle
+fi
 ```
 
-`gh stack init` は branch が stack metadata 未登録の場合だけ実行する。既存登録時は
-`gh stack view --json` で base が `eqmonitor/flutter-4dacd3fc` と一致することをassertし、metadataを
-上書きしない。bottom の Task 1 から開始し、top worktree/branchは bottom PR 作成後の delivery
-gate で同じ non-destructive 分岐を使って追加する。
-
-### Gate C: pinned toolchain と baseline
-
-fork 自体は Flutter を pin していないため、全 Flutter/Dart command は EQMonitor と同じ exact
-tool version を指定する。
+### Gate C: toolchain/baseline
 
 ```bash
-cd /Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle
 mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
   flutter --version --machine
 mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
@@ -499,673 +519,971 @@ mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
   flutter test --enable-impeller test/render/frame_transients_test.dart
 ```
 
-version JSON の framework SHA が `4dacd3fc91d96262a33e5c598e17d816f0b35641` でなければ中断する。
-baseline failure は既存失敗と今回差分を分離して PR body に記録し、成功扱いにしない。実機、
-Simulator、smoke-render E2E は今回のユーザー指定により実行しない。fork実装Taskの shell snippet
-は上記 worktree の `packages/flutter_scene` から開始する。
+version JSON framework SHA不一致なら停止。baseline failureは今回差分と分離しpass扱いしない。
 
-## 8. Implementation tasks
+## Task execution protocol
 
-各 Task は fresh subagent 1名へその Task だけを渡し、完了後に別 subagent が spec compliance、
-さらに別 subagent が code quality を reviewする。指摘修正と再reviewまで同じ Task 内で閉じる。
-実装経路は `superpowers:subagent-driven-development` だけを使い、`executing-plans` と併用しない。
-fork Task はすべて
-`/Users/ryotaro.onoue/dev/github.com/YumNumm/.worktrees/flutter-scene-persistent-gpu-lifecycle/packages/flutter_scene`
-で実行し、各 commit の handwritten production+test 差分を `git --no-pager diff --stat HEAD^` で
-30–100行と確認する。範囲を超えたら責務を混ぜず次 Task へ分ける。
+各Taskは記載file以外を変更せず、目標30–100 handwritten changed lines。RED commandは対象test名を
+plain-name filterで実行し記載failureを確認、GREENは最小実装、focused + regression +
+`mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .` +
+`git --no-pager diff --check`。別agentのspec/code reviewで0 findings後、
+記載commit messageでcommitし `git push`。Task間のgenerated formatting driftは戻し、dirtyを残さない。
+Commit前に `git --no-pager diff --numstat HEAD --` の後へそのTaskの `Files` exact pathsを並べて
+結果を保存し、generated lockを除く
+handwritten追加+削除が見積範囲かつ30–100であることをassertする。外れたらcommitせず、隣の責務を
+混ぜずTaskを再分割してfresh reviewする。
 
-### Task 1: completion watermark listener（fork bottom、依存なし）
+Fork task はtableのexact `red_file` とliteral titleを変数へ代入し、次の4 commandを
+そのまま実行する。REDはmissing symbol/behaviorでfail、GREENは同じfile全体がpass、analyzeと
+diff checkもpassを要求する。`Verify/publish` の末尾はそのTaskだけのcommit boundaryである。
+Task N はそのrowの `red_file` を第1引数、literal titleを第2引数として
+`run_fork_red` を呼び、実装後は同じ `red_file` を唯一の引数として `run_fork_green` を呼ぶ。
+
+```bash
+run_fork_red() {
+  test "$#" -eq 2
+  mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+    flutter test --enable-impeller "$1" --plain-name "$2"
+}
+run_fork_green() {
+  test "$#" -eq 1
+  mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+    flutter test --enable-impeller "$1"
+  mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+    dart analyze .
+  git --no-pager diff --check
+}
+```
+
+| Task | exact `red_file` | literal RED title / expected initial failure |
+|---|---|---|
+| 1 | `test/render/gpu_submission_tracker_test.dart` | `completion listeners observe the contiguous watermark in order` / method missing |
+| 2 | `test/render/persistent_gpu_resource_models_test.dart` | `public usage value preserves every logical field` / type missing |
+| 3 | `test/render/persistent_gpu_resource_models_test.dart` | `snapshot is immutable and mutations stay on one isolate` / types missing |
+| 4 | `test/render/persistent_gpu_resource_registry_test.dart` | `allocation registration validates owner and bytes first` / registry missing |
+| 5 | `test/render/persistent_gpu_resource_registry_test.dart` | `snapshot separates global and owner active bytes` / snapshot method missing |
+| 6 | `test/render/persistent_gpu_resource_registry_test.dart` | `open frame without submission retires only at end` / frame API missing |
+| 7 | `test/render/persistent_gpu_resource_registry_test.dart` | `retire during open frame stamps the next submission` / no stamp |
+| 8 | `test/render/persistent_gpu_resource_registry_test.dart` | `completion before retirement releases immediately` / listener not wired |
+| 9 | `test/render/persistent_gpu_resource_registry_test.dart` | `release failure is terminal and preserves error order` / failed state absent |
+| 10 | `test/render/persistent_gpu_resource_registry_test.dart` | `owner disposal leaves other owners active` / disposeOwner missing |
+| 11 | `test/render/persistent_gpu_resource_registry_test.dart` | `one owner invalidates every owner in the generation` / invalidate missing |
+| 12 | `test/render/persistent_gpu_resource_registry_test.dart` | `last disposed owner can be followed by invalidated recovery owner` / attach rejected |
+| 13 | `test/render/persistent_gpu_resource_lifecycle_test.dart` | `lifecycle handles share global state and isolate owner usage` / lifecycle missing |
+| 14 | `test/render/persistent_gpu_resource_lifecycle_test.dart` | `lifecycle operation matrix preserves cached Future identity` / operations missing |
+| 15 | `test/render/persistent_gpu_scene_frame_test.dart` | `encode scope closes after the original encode failure` / seam missing |
+| 16 | `test/render/persistent_gpu_scene_integration_test.dart` | `Scene renderViews owns exactly one persistent encode scope` / wrapper absent |
+| 17 | `test/render/persistent_gpu_lifecycle_public_api_test.dart` | `public lifecycle barrel hides registry internals` / export absent |
+| 18 | `test/render/persistent_gpu_lifecycle_public_api_test.dart` | `README states the terminal lifecycle ordering` / phrases absent |
+| 19 | `test/persistent_packed_instance_plan_test.dart` | `checked arithmetic rejects before overflow` / math missing |
+| 20 | `test/persistent_packed_instance_plan_test.dart` | `layout is deeply snapshotted before caller mutation` / snapshot missing |
+| 21 | `test/persistent_packed_instance_plan_test.dart` | `layout rejects invalid slots names and strides` / policy missing |
+| 22 | `test/persistent_packed_instance_plan_test.dart` | `layout rejects overlapping checked attribute ranges` / overlap accepted |
+| 23 | `test/persistent_packed_instance_plan_test.dart` | `bounds getters cannot mutate the stored snapshot` / bounds missing |
+| 24 | `test/persistent_packed_instance_plan_test.dart` | `index byte shape matches its exact width` / plan missing |
+| 25 | `test/persistent_packed_instance_plan_test.dart` | `every index is smaller than vertexCount` / out-of-range accepted |
+| 26 | `test/persistent_packed_instance_plan_test.dart` | `allocation sizes use checked multiply align and add` / sizing missing |
+| 27 | `test/persistent_packed_instance_plan_test.dart` | `composite plan retains no caller-owned source` / composite missing |
+| 28 | `test/persistent_packed_instance_plan_test.dart` | `upload executor writes each source exactly once` / executor missing |
+| 29 | `test/persistent_packed_gpu_backend_test.dart` | `GPU backend preserves typed offsets ranges and release` / seam missing |
+| 30 | `test/persistent_packed_instance_storage_test.dart` | `non-index upload flushes once before returning the buffer` / transaction missing |
+| 31 | `test/persistent_packed_instance_storage_test.dart` | `indexed upload publishes slices only after both flushes` / storage missing |
+| 32 | `test/persistent_packed_instance_storage_test.dart` | `storage release clears every slice exactly once` / release missing |
+| 33 | `test/persistent_packed_instance_geometry_test.dart` | `Geometry bounds getters return defensive copies` / Geometry missing |
+| 34 | `test/persistent_packed_instance_geometry_test.dart` | `Geometry registers only after successful upload` / constructor missing |
+| 35 | `test/persistent_packed_instance_geometry_test.dart` | `Geometry retirement is the lease Future` / delegation missing |
+| 36 | `test/persistent_packed_render_pass_test.dart` | `RenderPass adapter packs the exact 36-float FrameInfo` / adapter missing |
+| 37 | `test/persistent_packed_instance_geometry_test.dart` | `bind marks use before two persistent buffer slots` / bind missing |
+| 38 | `test/persistent_packed_instance_geometry_test.dart` | `depth shadow and selection choose full bind for packed Geometry` / draw route missing |
+| 39 | `test/shader_material_vertex_test.dart` | `ShaderMaterial keeps the packed instance variant exact` / enum missing |
+| 40 | `test/persistent_packed_instance_public_api_test.dart` | `public Geometry barrel hides storage and adapter seams` / export absent |
+| 41 | `test/persistent_packed_instance_public_api_test.dart` | `README states one upload and the 36-float shader contract` / phrases absent |
+
+Tasks 42–46 use their listed package/shell/doc command because Task42 intentionally changes dependency
+resolution and Tasks43–46 are not fork Dart unit tests。
+
+## Bottom PR tasks: lifecycle and retirement
+
+### Task 1: completion watermark listener (depends Gate C; 35–65 lines)
 
 **Files:** Modify `lib/src/render/frame_transients.dart`; Create
 `test/render/gpu_submission_tracker_test.dart`。
 
-**Interfaces:** Produces
-`void GpuSubmissionTracker.addCompletionListener(void Function(int completedThrough) listener)`。
-listener は registration 順の snapshot で呼び、record/before-submit listener の既存 signature は維持する。
+**Produces:** `addCompletionListener(GpuSubmissionCompletionListener listener)`。
 
-- [ ] **Step 1 — RED:** 次の body を追加する。`record()` は `a=1,b=2`、`complete(b)` は通知せず、
-  `complete(a)` は `['first:2','second:2']`、duplicate/unknown は追加通知なしを期待する。
+- [ ] **RED:** add the exact ordering case below; focused test expects missing method.
 
   ```dart
-  test('completion listeners observe the contiguous watermark in order', () {
-    final tracker = GpuSubmissionTracker();
-    final seen = <String>[];
-    tracker.addCompletionListener((value) => seen.add('first:$value'));
-    tracker.addCompletionListener((value) => seen.add('second:$value'));
-    final a = tracker.record();
-    final b = tracker.record();
-    tracker.complete(b);
-    expect(seen, isEmpty);
-    tracker.complete(a);
-    expect(seen, ['first:2', 'second:2']);
-    tracker..complete(a)..complete(999);
-    expect(seen, ['first:2', 'second:2']);
-  });
+  final a = tracker.record(), b = tracker.record();
+  tracker.complete(b);
+  expect(seen, isEmpty);
+  tracker.complete(a);
+  expect(seen, ['first:2', 'second:2']);
+  tracker..complete(a)..complete(999);
+  expect(seen, ['first:2', 'second:2']);
   ```
 
-- [ ] **Step 2 — verify RED:** `mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/gpu_submission_tracker_test.dart`。
-  expected RED は `addCompletionListener` が未定義。
-- [ ] **Step 3 — GREEN:** `_completionListeners` を追加し、`complete` が pending id を実際に削除し、
-  かつ contiguous watermark が前値より進んだ時だけ更新後値を snapshot iteration で通知する。
-- [ ] **Step 4 — verify:** 上記 focused test と既存 `test/render/frame_transients_test.dart` を通し、
-  `git --no-pager diff --check` を通す。
-- [ ] **Step 5 — publish:** `git add lib/src/render/frame_transients.dart test/render/gpu_submission_tracker_test.dart && git commit -m 'Feature: GPU submission完了通知を追加' && git push`。
+- [ ] **GREEN:** notify a registration-order snapshot only when `_pending.remove(id)` is true and the
+  contiguous watermark advances. Preserve record/before-submit signatures.
+- [ ] **Verify/publish:** tracker + frame transients tests; `Feature: GPU submission完了通知を追加`。
 
-### Task 2: public value models と same-isolate guard（fork bottom、depends Task 1）
+### Task 2: public enums and usage value (depends Task 1; 45–85 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_resource_models.dart`,
-`lib/src/render/persistent_gpu_execution_affinity.dart`,
 `test/render/persistent_gpu_resource_models_test.dart`。
 
-**Interfaces:** Produces section 3 の3 enum/2 immutable value class、および internal
-`PersistentGpuExecutionAffinity({Object Function()? currentIsolateToken})`、`void check()`。
-production default は `Isolate.current.controlPort` をtokenとしてcaptureし `==` 比較、testは可変fake
-tokenを注入する。hash collisionをsame-isolate証拠に使わない。
+**Produces:** exactly 3 enums (`PersistentGpuContextState`,
+`PersistentGpuResourceLifecycleState`, `PersistentGpuResourceState`) and
+`PersistentGpuMemoryUsage` from Public API。
 
-- [ ] **Step 1 — RED:** immutable usage/snapshot の全 field を exact 値で比較する test と次の guard test
-  を追加する。
+- [ ] **RED:** construct usage with values 1..9 and assert every final field; reference all 3 enum types.
+- [ ] **GREEN:** one `@immutable final class`, const named constructor, no equality/factory/codegen.
+- [ ] **Verify/publish:** focused test; `Feature: GPU resource状態値を追加`。
+
+### Task 3: snapshot value and isolate affinity (depends Task 2; 50–95 lines)
+
+**Files:** Modify models; Create `lib/src/render/persistent_gpu_execution_affinity.dart`; Modify models test。
+
+**Produces:** exact const `PersistentGpuMemorySnapshot` constructor from Public API and
+`PersistentGpuExecutionAffinity({Object Function()? currentIsolateToken})`, `void check()`。
+
+- [ ] **RED:** assert every snapshot field and this identity failure:
 
   ```dart
-  test('rejects a registry mutation from a different isolate identity', () {
-    var isolateToken = Object();
-    final affinity = PersistentGpuExecutionAffinity(
-      currentIsolateToken: () => isolateToken,
-    );
-    affinity.check();
-    isolateToken = Object();
-    expect(affinity.check, throwsStateError);
-  });
+  var token = Object();
+  final affinity = PersistentGpuExecutionAffinity(currentIsolateToken: () => token);
+  affinity.check();
+  token = Object();
+  expect(affinity.check, throwsStateError);
   ```
 
-- [ ] **Step 2 — verify RED:** pinned `flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart`。
-  expected RED は両 type file/import が存在しない。
-- [ ] **Step 3 — GREEN:** public values は全 field `final`/`const`、guard は生成 isolate id と現在値を
-  error に含める。lock、SendPort、cross-isolate transfer は追加しない。
-- [ ] **Step 4 — verify:** focused test、`mise exec ... -- dart analyze lib/src/render test/render`、
-  `git --no-pager diff --check`。
-- [ ] **Step 5 — publish:** 3 files を addし
-  `git commit -m 'Feature: GPU resource状態値を追加' && git push`。
+- [ ] **GREEN:** default captures `Isolate.current.controlPort`; compare token, not hash.
+- [ ] **Verify/publish:** models test; `Feature: GPU snapshotとisolate制約を追加`。
 
-### Task 3: resource registration と owner accounting（fork bottom、depends Task 2）
+### Task 4: owner attach and allocation record (depends Task 3; 55–95 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_resource_registry.dart`,
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
-**Interfaces:** Produces internal
-`int attachOwner()`、`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`、
-`PersistentGpuMemorySnapshot snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
-lease exposes `generation/state/Future<void> retire()`; constructor consumes tracker と affinity。
+**Produces:** exact registry constructor seam, `int attachOwner()`, and
+`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`。
 
-- [ ] **Step 1 — RED:** owner A に `(totalBytes: 64, instanceBytes: 24)`、owner B に `(96, 48)` を
-  registerし、global active count/bytes=`2/160/72`、owner A=`1/64/24`、generation=1、
-  latest/completed tracker values を exact 比較する。unknown/disposed owner は `StateError`、負 byte は
-  `ArgumentError`、異 isolate は `StateError` を期待する。
-- [ ] **Step 2 — verify RED:** pinned focused registry test。expected RED は registry/lease 未定義。
-- [ ] **Step 3 — GREEN:** record に ownerId、generation、logical bytes、release closure、cached
-  Completer/Future を持たせる。`totalBytes >= instanceBytes >= 0`、同 generation active 時だけ登録し、
-  snapshot は global と owner を active/retiring/failed で集計する。
-- [ ] **Step 4 — verify:** focused test、models test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files を addし
-  `git commit -m 'Feature: GPU resource登録と集計を追加' && git push`。
+- [ ] **RED:** owner 1/2 are monotonic; unknown owner, `total < instance`, negative bytes, and
+  affinity mismatch throw before record/release mutation.
+- [ ] **GREEN:** record only ownerId/generation/bytes/release/cached completer; require
+  `totalBytes >= instanceBytes >= 0` and active current generation.
+- [ ] **Verify/publish:** registry test; `Feature: GPU allocation recordを追加`。
 
-### Task 4: explicit begin/mark/endFrame（fork bottom、depends Task 3）
+### Task 5: active memory snapshot accounting (depends Task 4; 45–90 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** Produces `void beginFrame()`、`void markUsed(PersistentGpuResourceLease lease)`、
-`void endFrame()`。record 内部に open-frame mark を持ち、public state は増やさない。
+**Produces:**
+`snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
 
-- [ ] **Step 1 — RED:** `beginFrame → markUsed → retire` で release=0/pending、`endFrame` submissionなしで
-  release=1/retiredを期待する。nested begin、closed end、closed-frame mark、retire後mark、別 registry
-  lease、別 isolate mutation はすべて `StateError`。同 lease の2回 mark は1 markとして扱う。
-- [ ] **Step 2 — verify RED:** registry focused test の `open frame without submission` を実行し、
-  expected RED は begin/mark/end API未定義。
-- [ ] **Step 3 — GREEN:** registry は `_frameOpen` と identity Set を所有する。retire が open mark を
-  見たら `retirementPendingOpenFrame`、endFrame は mark を全消去し past in-flight がなければ release。
-  `try/finally` integration はまだ行わない。
-- [ ] **Step 4 — verify:** registry全test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files を addし
-  `git commit -m 'Feature: GPU resource frame記録を追加' && git push`。
+- [ ] **RED:** register A `(64,24)` and B `(96,48)`; assert global count/total/instance
+  `2/160/72`, owner A `1/64/24`, generation 1, tracker latest/completed exact; unknown owner fails.
+- [ ] **GREEN:** fold records once into global and selected-owner active/retiring/failed buckets;
+  return immutable snapshot, never driver bytes.
+- [ ] **Verify/publish:** registry + models; `Feature: GPU memory集計を追加`。
 
-### Task 5: before-submit stamping（fork bottom、depends Task 4）
+### Task 6: explicit begin/mark/end frame (depends Task 5; 55–95 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** registry constructor は Task 1 の before-submit listener を1回だけ登録する。
-record は `int? lastSubmission` を持ち、`markUsed` setを submission idへ atomically stampする。
+**Produces:** `beginFrame()`, `markUsed(PersistentGpuResourceLease lease)`, `endFrame()`。
 
-- [ ] **Step 1 — RED:** `beginFrame → markUsed → retire → tracker.record()` 後に state pending、
-  `lastSubmission=1`、release=0を期待する。active resource も `markUsed → record` で stampされる。
-  1 frame内2 submissionでは最終 id=2、invalidation が open frame 中でも既に mark済み record は
-  stampされ、後続markだけ拒否されることを testする。
-- [ ] **Step 2 — verify RED:** plain-name `retire during open frame stamps next submission`。
-  expected RED は record が submission待ちへ遷移せず早期releaseする assertion failure。
-- [ ] **Step 3 — GREEN:** before-submit は listener呼出時の mark snapshotを clearし、active/pending-open
-  両方へ `max(previous,id)` を記録する。frame は openのまま、release/Future settle は行わない。
-- [ ] **Step 4 — verify:** registry全test + tracker test + diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU submission stampを追加' && git push`。
+- [ ] **RED:** `begin→mark→retire→end(no submit)` releases once; double mark is one mark.
+  Nested begin、closed end/mark、foreign lease、retired lease all throw before mutation.
+- [ ] **GREEN:** own `_frameOpen` and identity set; open retire becomes pending-open;
+  no-submit end clears marks and releases only with no older in-flight id.
+- [ ] **Verify/publish:** registry test; `Feature: GPU resource frame記録を追加`。
 
-### Task 6: completion-gated retirement（fork bottom、depends Task 5）
+### Task 7: before-submit stamping (depends Task 6; 40–80 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** Task 1 completion listener を1回登録。`retire()` は record固有 cached Futureを返し、
-`lastSubmission <= completedThrough` の時だけ synchronous release callbackを1回呼ぶ。
+**Produces:** constructor registers exactly one tracker before-submit listener; record stores nullable
+`lastSubmission`。
 
-- [ ] **Step 1 — RED:** 次の3順序を別testにする。(a) submit→complete→retire は即 release、
-  (b) bind→retire→submit→complete は completionまで保持、(c) submit1/submit2 を2→1順にcompleteし、
-  watermark=0では保持、2へ進んだ時だけrelease。各順序で `identical(lease.retire(), lease.retire())`
-  と callback count=1 を期待する。
-- [ ] **Step 2 — verify RED:** plain-name `completion before retirement releases immediately`。
-  expected RED は completion listener未接続またはFuture未完了。
-- [ ] **Step 3 — GREEN:** release前に内部stateを `releasing`、accountingを retiringへ移す。
-  completion callback中の collection mutationを避けるため eligible record snapshotを作り順にreleaseする。
-- [ ] **Step 4 — verify:** registry/tracker tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU completion後にresourceを解放' && git push`。
+- [ ] **RED:** `begin→mark→retire→record` stays pending with last=1/release=0; two submits use
+  last=2; simulated invalidation rejects new mark but stamps the existing mark.
+- [ ] **GREEN:** listener snapshots+clears marks, applies `max(previous,id)` to active and pending-open
+  records, and never settles a Future.
+- [ ] **Verify/publish:** registry + tracker; `Feature: GPU submission stampを追加`。
 
-### Task 7: release failure/reentrancy ordering（fork bottom、depends Task 6）
+### Task 8: completion-gated successful retirement (depends Task 7; 55–95 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** registry retains ordered `List<Object> failureLog` for tests; first release error is global cause。
-No public recovery API。production callback is later constrained to no-throw view clearing。
+**Produces:** lease `generation/state/Future<void> retire()` with one cached Future; one completion listener。
 
-- [ ] **Step 1 — RED:** injected callbackから同 lease `retire()` と snapshotを reentrant に呼び、
-  callback一回/Future同一を期待する。別testでは callbackが `firstError`、test-only release observerが
-  `secondError` をthrowし、resource=`retirementFailed`、failed bytes保持、global=`failed`、
-  failureLog exact `[firstError, secondError]` を期待する。public dispose/invalidate reentrancyはTask 10で足す。
-- [ ] **Step 2 — verify RED:** plain-name `release failure is terminal and preserves error order`。
-  expected RED は failure accounting/stateが未実装。
-- [ ] **Step 3 — GREEN:** callback前に state/accountingを進め、try/catch後にresource Futureをsettleする。
-  first errorだけを context causeにし、残りは insertion orderで保存。残る records のretirementは継続する。
-- [ ] **Step 4 — verify:** registry全test、同一Future/one-callback assertions、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Fix: GPU release失敗をterminal化' && git push`。
+- [ ] **RED:** cover `(submit→complete→retire)`, `(mark→retire→submit→complete)`, and ids 2→1;
+  each asserts `identical(retire(), retire())`, no early release, callback count 1.
+- [ ] **GREEN:** set `releasing` before callback; release an eligible snapshot only when
+  `lastSubmission == null || lastSubmission <= completedThrough`; success removes accounting then completes.
+- [ ] **Verify/publish:** registry + tracker; `Feature: GPU completion後にresourceを解放`。
 
-### Task 8: global owners と snapshot projection（fork bottom、depends Task 7）
+### Task 9: release failure and reentrant retire (depends Task 8; 55–95 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** Produces `Future<void> disposeOwner(int ownerId)`, generation-global invalidate state storage、
-owner terminal state storage。`snapshotFor` は disposed ownerにもread-onlyで許可する。
+**Produces:** terminal failed accounting and test-only ordered `failureLog`。
 
-- [ ] **Step 1 — RED:** owners A/Bへ各1 recordを登録し、A disposeでAだけretiring、B active、globalは
-  activeを期待する。disposed A snapshotは final owner usageとglobal B usageを返す。Aの再disposeは
-  identical owner Future、unknown owner operationは `StateError`。全snapshot fieldをexact比較する。
-- [ ] **Step 2 — verify RED:** plain-name `owner disposal does not dispose global context`。
-  expected RED は disposeOwner未定義。
-- [ ] **Step 3 — GREEN:** owner state/Futureをregistryで管理し、disposeはそのowner current-generation
-  recordsだけretire。owner Futureはowner records settle後に resource Futureより後でsettleする。
-- [ ] **Step 4 — verify:** registry/models tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU resource owner集計を追加' && git push`。
+- [ ] **RED:** record A release callback calls its own `retire()` and snapshot, then throws `firstError`;
+  record B release callback throws `secondError`. Complete the shared submission and assert each callback once,
+  identical A Future, both resources/context failed, both failed-byte entries retained, ordered log
+  `[firstError, secondError]`.
+- [ ] **GREEN:** state/accounting move before callback; first release error is context cause; later
+  errors append in order; other records keep retiring.
+- [ ] **Verify/publish:** registry test; `Fix: GPU release失敗をterminal化`。
 
-### Task 9: process-global invalidation/recreate（fork bottom、depends Task 8）
+### Task 10: owner disposal (depends Task 9; 50–90 lines)
 
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
-`test/render/persistent_gpu_resource_registry_test.dart`。
+**Files:** Modify registry and registry test。
 
-**Interfaces:** Produces `Future<void> invalidateContext(int ownerId)`、
-`void recreateContext(int ownerId)`。generationごとに cached `FI` を1つ持ち、どのactive ownerにも
-identical objectを返す。Also produces process-global internal
-`final persistentGpuResourceRegistry = PersistentGpuResourceRegistry(submissions: rendererSubmissions)`。
+**Produces:** `Future<void> disposeOwner(int ownerId)` and owner terminal/cached FD storage。
 
-- [ ] **Step 1 — RED:** owners A/Bに current-generation recordを作りAからinvalidateする。即座にglobal
-  invalidating、A/B recordはpending、B bind/register拒否、A/B invalidate Futureはidenticalを期待する。
-  open frameでA record mark後、Bからinvalidate→before-submit→completionの順でも早期releaseしない。
-  全record settle後だけ invalidated、resource→owner dispose→global FI のcompletion順を記録する。
-- [ ] **Step 2 — verify RED:** plain-name `one owner invalidates every owner in the generation`。
-  expected RED はglobal invalidation API未定義。
-- [ ] **Step 3 — GREEN:** invalidation開始時にglobal stateを先に変え、同 generation全recordをretire。
-  recreateは invalidated/failed-record=0 の時だけ generation+1/active、新しいFIをlazy作成する。
-  active/invalidating/failed/repeated recreateは synchronous `StateError`。
-- [ ] **Step 4 — verify:** registry全test、state-machine table全rowをtest名で対応、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: global GPU generationを追加' && git push`。
+- [ ] **RED:** dispose A retires only A while B remains active; disposed A snapshot is readable;
+  repeated dispose is identical; resource Future settles before FD; unknown owner fails.
+- [ ] **GREEN:** owner state changes before retiring a record snapshot; FD waits only that owner's
+  current-generation records and propagates its first error.
+- [ ] **Verify/publish:** registry test; `Feature: GPU resource owner破棄を追加`。
 
-### Task 10: public lifecycle owner operation table（fork bottom、depends Task 9）
+### Task 11: global invalidation (depends Task 10; 55–100 lines)
+
+**Files:** Modify registry and registry test。
+
+**Produces:** `Future<void> invalidateContext(int ownerId)` and generation-cached FI。
+
+- [ ] **RED:** A invalidates resources owned by A/B; global becomes invalidating immediately;
+  register/mark reject; A/B receive identical FI; open mark still stamps/waits; FI settles after
+  all resources and FD in resource→FD→FI order.
+- [ ] **GREEN:** validate active owner, set global state first, retire a snapshot of all current-generation
+  records, cache FI once, finalize invalidated only after every record settles.
+- [ ] **Verify/publish:** registry test; `Feature: global GPU invalidationを追加`。
+
+### Task 12: recreate and last-owner recovery (depends Task 11; 55–100 lines)
+
+**Files:** Modify registry and registry test。
+
+**Produces:** `void recreateContext(int ownerId)`; `attachOwner()` accepts active and invalidated only。
+
+- [ ] **RED:** last owner dispose during invalidating leaves registry/FI alive; owner count 0 reaches
+  invalidated; new recovery owner attaches, cannot register, recreates once generation 1→2, then registers.
+  Attach invalidating/failed and recreate active/invalidating/failed/disposed all fail.
+- [ ] **GREEN:** registry lifetime is process-global; invalidated attach creates recovery handle;
+  recreate verifies no failed record, increments once, clears old FI, activates.
+- [ ] **Verify/publish:** registry test; `Feature: GPU generation再作成を追加`。
+
+### Task 13: public lifecycle handle core (depends Task 12; 55–95 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_resource_lifecycle.dart`,
 `test/render/persistent_gpu_resource_lifecycle_test.dart`。
 
-**Interfaces:** Produces section 3 の `PersistentGpuResourceLifecycle`。public factoryは process-global
-`persistentGpuResourceRegistry`へattachし、`@internal ...forRegistry(PersistentGpuResourceRegistry)`を
-test/Geometry用に持つ。internal `registerAllocation(...)` と `markUsed(lease)` だけをGeometryへ渡す。
+**Produces:** public/global attach constructor using exact `persistentGpuResourceRegistry`,
+`@internal forRegistry`, getters/snapshot, internal `registerAllocation` and `markUsed` delegation。
 
-- [ ] **Step 1 — RED:** section 4 operation×state tableを parameterized test化する。特に dispose during
-  invalidation では `FD` と `FI` は別object、FDはA settleで完了してもFIはBを待つ。disposed後の
-  invalidateは repeated exact `FE`、recreate後の次invalidateだけnew FI、failed時の全operation、
-  snapshot allowed、全 getter shared generation/stateをexact期待する。release callbackから同owner
-  dispose/global invalidate/snapshotを呼ぶ reentrant testでも二重releaseせず、resource→FD→FI順を期待する。
-- [ ] **Step 2 — verify RED:** focused lifecycle test。expected RED は lifecycle type/import不存在。
-- [ ] **Step 3 — GREEN:** handleはownerIdとdisposed-invalid-operation用cached FEだけを持ち、FD/FIは
-  registryのcached objectをそのままreturnする。global state/Futureを複製しない。every public/internal
-  operation first calls affinity。disposed checksはglobal mutationより先に行う。
-- [ ] **Step 4 — verify:** lifecycle/registry/tracker全test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: persistent GPU lifecycleを公開' && git push`。
+- [ ] **RED:** two injected handles share context/generation/global snapshot but have distinct owner
+  usage; public getters match registry; disposed/internal-invalid calls fail before registry mutation.
+- [ ] **GREEN:** handle stores registry/ownerId/cached FE only; process global is exactly one registry
+  using `rendererSubmissions` and one affinity.
+- [ ] **Verify/publish:** lifecycle + registry; `Feature: persistent GPU lifecycleを追加`。
 
-### Task 11: Scene frame boundary integration（fork bottom、depends Task 10）
+### Task 14: lifecycle operation matrix and Future identity (depends Task 13; 60–100 lines)
 
-**Files:** Modify `lib/src/scene.dart`; Create `test/render/persistent_gpu_scene_frame_test.dart`。
+**Files:** Modify lifecycle and lifecycle test。
 
-**Interfaces:** Scene consumes the process-global registry only。render frame entryで
-`beginFrame()`、全 encode/submit bodyを `try`、必ず1回 `finally { endFrame(); }` とする。
+**Produces:** `invalidateContext`, `recreateContext`, `dispose` exact owner table semantics。
 
-- [ ] **Step 1 — RED:** test seamで registry event log と encode closureをinjectし、normal=
-  `begin,encode,end`、encode throw=`begin,encode,end` + original error、submissionなしでもend、
-  nested renderはbeginの `StateError` を期待する。既存 renderer submission順は変えない。
-- [ ] **Step 2 — verify RED:** pinned test plain-name `scene closes resource frame after encode failure`。
-  expected RED は frame hooks 未接続。
-- [ ] **Step 3 — GREEN:** existing transients beginと同じ frame setup位置に registry beginを置く。
-  `finally` はend errorでoriginal encode errorを隠さないよう、closed-state invariantをtest seamで守る。
-- [ ] **Step 4 — verify:** new scene test、全 render tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: SceneへGPU lifecycle frameを接続' && git push`。
+- [ ] **RED:** parameterize every owner/context row. Assert FI shared across owners, next-generation FI
+  differs, FD owner-specific/not FI, disposed invalidate repeats FE, dispose during invalidation waits own
+  records only, release callback reentry `dispose/invalidate/snapshot` releases once.
+- [ ] **GREEN:** return registry FD/FI directly without `async`; disposed check precedes global call;
+  only FE lives on the handle.
+- [ ] **Verify/publish:** lifecycle + registry; `Feature: lifecycle操作表を固定`。
 
-### Task 12: lifecycle curated export/docs（fork bottom、depends Task 11）
+### Task 15: encode-scope try/finally seam (depends Task 14; 35–70 lines)
 
-**Files:** Modify `lib/src/scene.dart`, `lib/scene.dart`, `README.md`; Create
+**Files:** Create `lib/src/render/persistent_gpu_scene_frame.dart`,
+`test/render/persistent_gpu_scene_frame_test.dart`。
+
+**Produces:** exact `runPersistentGpuEncodeScope` seam。
+
+- [ ] **RED:** events normal `begin,encode,end`; encode throw still ends and rethrows same error/stack;
+  end-only throw propagates; begin throw runs neither encode nor end.
+- [ ] **GREEN:** capture `(Object, StackTrace)?` from encode, call end exactly once, use
+  `Error.throwWithStackTrace`; if encode/end both fail preserve encode as primary.
+- [ ] **Verify/publish:** seam test; `Feature: GPU encode scopeを追加`。
+
+### Task 16: Scene frame integration (depends Task 15; 35–80 lines)
+
+**Files:** Modify `lib/src/scene.dart`; Create
+`test/render/persistent_gpu_scene_integration_test.dart`。
+
+**Produces:** public `renderViews` wrapper and renamed private `_renderViewsImpl`; no body reindent。
+
+- [ ] **RED:** injected callbacks around encode assert normal/empty/throw ordering; source contract asserts
+  `renderViews` calls `runPersistentGpuEncodeScope` and only its `encode` calls `_renderViewsImpl`.
+- [ ] **GREEN:** rename existing method only; add <=20-line wrapper passing
+  `persistentGpuResourceRegistry.beginFrame`,
+  `() => _renderViewsImpl(views, canvas, region: region, pixelRatio: pixelRatio)`, and
+  `persistentGpuResourceRegistry.endFrame`.
+  `render` and warm-up keep calling public wrapper.
+- [ ] **Verify/publish:** new test + render graph tests; `Feature: SceneへGPU lifecycleを接続`。
+
+### Task 17: lifecycle curated export contract (depends Task 16; 35–70 lines)
+
+**Files:** Modify `lib/src/scene.dart`, `lib/scene.dart`; Create
 `test/render/persistent_gpu_lifecycle_public_api_test.dart`。
 
-**Interfaces:** Public show-listは section 3 の lifecycle、4 enum、usage/snapshotだけ。
-registry、lease、affinity、test constructorはexportしない。
+**Produces:** lifecycle, exactly 3 enums, usage/snapshot; no registry/lease/affinity/test seam export。
 
-- [ ] **Step 1 — RED:** test imports only `package:flutter_scene/scene.dart` and instantiates lifecycle、reads
-  initial active/generation 1/snapshot zero。compile-fail grepとして public barrelに
-  `PersistentGpuResourceRegistry|PersistentGpuResourceLease` が無いことも source assertionする。
-- [ ] **Step 2 — verify RED:** public API test。expected RED は symbols未export。
-- [ ] **Step 3 — GREEN:** curated exportsを追加。READMEへ stop rendering→detach→invalidate→await→
-  recreate、multi-owner global invalidation、failed terminal、logical bytes≠driver resident bytesを記載する。
-- [ ] **Step 4 — verify:** public/lifecycle/registry tests、full `dart analyze .`、diff-check。
-- [ ] **Step 5 — publish:** 4 files、`git commit -m 'Docs: persistent GPU lifecycle契約を公開' && git push`。
+- [ ] **RED:** public-only import constructs lifecycle, reads active/generation 1/zero snapshot; source
+  assertion rejects internal symbols.
+- [ ] **GREEN:** add curated show-list exports only.
+- [ ] **Verify/publish:** public/lifecycle tests; `Feature: persistent GPU lifecycleを公開`。
 
-### Delivery Gate BOTTOM（commitなし）
+### Task 18: lifecycle README contract (depends Task 17; 30–70 lines)
 
-- [ ] exact Flutter version、`dart format --output=none --set-exit-if-changed lib test`、`dart analyze .`、
-  `flutter test --enable-impeller` を pinned miseで実行し pass/fail/skip件数を保存する。GPU skipをpassへ
-  読み替えず、device/Simulator/E2E/#1604 profileは実施しない。
-- [ ] fresh review subagentが section 3/4 と Task 1–12 diffを照合し、未解決 finding が0になるまで
-  修正Taskを追加する。clean、local HEAD=remote HEADをassertする。
-- [ ] `gh stack submit --auto --open --remote origin` で bottom PRを作成する。body Remaining tasksに
-  top Geometry、EQ pin、automatic context-loss signalなし、driver reclaim未観測、#1603–#1605、
-  #1604 physical 30fps/5min defer、欠落canonical specを列挙する。
-- [ ] top branchが未作成なら clean bottom worktreeで
-  `gh stack add feat/persistent-packed-instance-geometry`。既存なら `gh stack view --json` でowner/baseを
-  assertして `gh stack checkout feat/persistent-packed-instance-geometry`。bottom ancestry不一致、dirty、
-  linked elsewhereなら停止し、branch delete/reset/force pushしない。
+**Files:** Modify `README.md`; Modify public API test。
 
-### Task 13: checked allocation arithmetic（fork top、depends Task 12）
+**Produces:** lifecycle shutdown/recreate sequence and logical/resident-memory documentation contract.
+
+- [ ] **RED:** source expectation fails for exact sequence
+  `stop rendering → detach → invalidate → await → recreate` and `logical bytes`/`resident` distinction.
+- [ ] **GREEN:** document multi-owner global invalidation、terminal failure、logical≠resident、no automatic
+  context-loss signal and no device-performance evidence.
+- [ ] **Verify/publish:** public test + doc grep; `Docs: persistent GPU lifecycle契約を追加`。
+
+### Delivery Gate BOTTOM (no commit)
+
+- [ ] pinned format, `dart analyze .`, full `flutter test --enable-impeller`; record pass/fail/skip and
+  exact framework SHA. GPU skip is not pass; no device/Simulator/E2E/profile.
+- [ ] fresh spec/code reviewers compare API, matrices, Tasks 1–18 and diff; zero findings.
+- [ ] fetch each advertised feature ref, cat-file its full head; assert clean/local=remote.
+- [ ] Do not submit a one-PR "stack". Push bottom with `gh stack push --remote origin` if needed; create
+  both fork PRs together only after top is finished using `gh stack submit --auto --open --remote origin`.
+- [ ] Start top from clean reviewed bottom with `gh stack add feat/persistent-packed-instance-geometry`.
+  Existing top resume requires supervisor-provided `reviewed_top_resume_sha`, advertised ref=head equality,
+  fetch/cat-file, clean local=remote, bottom ancestry, then named `gh stack checkout`. Never reset/delete/force.
+
+## Top PR tasks: persistent packed Geometry
+
+### Task 19: checked allocation arithmetic (depends bottom approval; 45–80 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_plan.dart`,
 `test/persistent_packed_instance_plan_test.dart`。
 
-**Interfaces:** Produces internal `const kMaxPersistentPackedAllocationBytes = 0x7fffffff` and
-`PersistentPackedCheckedMath.multiply({required int left, required int right, required String name})`、
-`add(...)`、`align16({required int value, required String name})`。
+**Produces:** `kMaxPersistentPackedAllocationBytes = 0x7fffffff` and
+`PersistentPackedCheckedMath.multiply/add/align16/endOffset` named-argument methods。
 
-- [ ] **Step 1 — RED:** table test exact cases: `0*max=0`、`max+0=max`、`align16(1)=16`、
-  negative operand、`max*2`、`max+1`、`align16(max)` は `ArgumentError` before wrapped value。
-  error messageは operation name と operandsを含む。
-- [ ] **Step 2 — verify RED:** plan focused test。expected RED は math class/constant不存在。
-- [ ] **Step 3 — GREEN:** multiplyは `left > max ~/ right`、addは `left > max-right`、alignは
-  checked add before bit-mask。すべての input/resultを0..max内に制限し、BigInt/floating pointを使わない。
-- [ ] **Step 4 — verify:** focused test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed allocation計算を検証' && git push`。
+- [ ] **RED:** table exact `0*max=0`, `max+0=max`, `align16(1)=16`, plus negative,
+  `max*2`, `max+1`, `align16(max)`, `endOffset(max,1)` errors containing name/operands.
+- [ ] **GREEN:** multiply uses `left > max ~/ right` after zero case; add/end use
+  `left > max-right`; align performs checked add before mask. No BigInt/float/wrapped intermediate.
+- [ ] **Verify/publish:** plan test; `Feature: packed allocation計算を検証`。
 
-### Task 14: defensive layout snapshot/validation（fork top、depends Task 13）
+### Task 20: deep layout snapshot (depends Task 19; 45–85 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
-`test/persistent_packed_instance_plan_test.dart`。
+**Files:** Modify plan and plan test。
 
-**Interfaces:** Produces internal
-`PersistentPackedLayoutSnapshot.create(VertexLayoutDescriptor source)` with `layout`,
-`vertexStrideInBytes`, `instanceStrideInBytes`。全 buffer/attribute listを `List.unmodifiable` cloneする。
+**Produces:** `PersistentPackedLayoutSnapshot.create(VertexLayoutDescriptor source)` with frozen
+`layout`, vertex stride, instance stride。
 
-- [ ] **Step 1 — RED:** happy path 2 slotと、buffers 0/1/3、slot0 non-vertex、slot1 non-instance、
-  empty attributes、stride <=0、offset <0、duplicate name、end > stride を rejectする。offset alignmentは
-  `gcd(format.bytesPerElement, 4)`、strideはslot最大alignmentの倍数を要求する。constructor後に元の
-  buffers list/attributes listをclear/addしても snapshot equality/strideが不変を期待する。
-- [ ] **Step 2 — verify RED:** plain-name `layout is deeply snapshotted before caller mutation`。
-  expected RED は snapshot class未定義。
-- [ ] **Step 3 — GREEN:** descriptor/attributeをfieldごとに再生成し unmodifiable化してから検証する。
-  `layout.toGpuLayout()` を呼び既存 duplicate/end checkを再利用し、追加policyだけを先に検査する。
-- [ ] **Step 4 — verify:** plan全test、既存 `test/vertex_layout_test.dart`、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed layoutを防御的に固定' && git push`。
+- [ ] **RED:** valid 2-slot layout survives caller clearing/replacing source buffer/attribute lists;
+  returned layout lists reject mutation and remain value equal.
+- [ ] **GREEN:** reconstruct every descriptor/attribute field into `List.unmodifiable` before any
+  validation; never retain caller lists.
+- [ ] **Verify/publish:** plan + existing vertex layout test; `Feature: packed layoutを複製`。
 
-### Task 15: defensive bounds snapshot/validation（fork top、depends Task 14）
+### Task 21: layout slot/name/stride policy (depends Task 20; 45–85 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
-`test/persistent_packed_instance_plan_test.dart`。
+**Files:** Modify plan and plan test。
 
-**Interfaces:** Produces internal `PersistentPackedBoundsSnapshot.create(vm.Aabb3 source)` with copied
-`vm.Aabb3 aabb` and derived copied `vm.Sphere sphere`。
+**Produces:** exactly-two-slot semantic validation。
 
-- [ ] **Step 1 — RED:** finite min/max happy path、NaN、±infinity、各axis min>maxをtable testする。
-  `source.min.setValues(...)` / `source.max.setValues(...)` をcreation後に呼んでも snapshot aabb/sphere
-  center/radiusが変わらず、returned getterをmutateしても次getterが変わらないことを期待する。
-- [ ] **Step 2 — verify RED:** plain-name `bounds are deeply snapshotted`。expected RED は class不存在。
-- [ ] **Step 3 — GREEN:** min/maxを `Vector3.copy` し finite/min<=maxを確認、internal canonical valuesを
-  retainし、getterは `Aabb3.copy` / `Sphere.copy` を返す。caller objectをGeometry/superclassへ渡さない。
-- [ ] **Step 4 — verify:** focused plan tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed boundsを防御的に固定' && git push`。
+- [ ] **RED:** reject buffer count 0/1/3, slot0 non-vertex, slot1 non-instance, empty attribute list,
+  empty/whitespace/surrounding-whitespace attribute name, duplicate name across slots, stride <=0;
+  accept one valid layout.
+- [ ] **GREEN:** require `name.isNotEmpty && name.trim() == name` without renaming; use one `Set<String>`
+  across both slots;
+  invoke existing `layout.toGpuLayout()` after policy checks to reuse duplicate/end lowering checks.
+- [ ] **Verify/publish:** plan + vertex layout; `Feature: packed layout構造を検証`。
 
-### Task 16: exact index validation（fork top、depends Task 15）
+### Task 22: attribute alignment/overlap/checked end (depends Task 21; 55–95 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
-`test/persistent_packed_instance_plan_test.dart`。
+**Files:** Modify plan and plan test。
 
-**Interfaces:** Produces internal
-`PersistentPackedIndexPlan.create({required ByteData? data, required gpu.IndexType type, required int vertexCount})`
-with `indexCount/indexBytes/hasIndices`。non-null bytes are validation input only and are not retained。
+**Produces:** complete per-slot byte-range validation before GPU lowering。
 
-- [ ] **Step 1 — RED:** null index accepts、non-null empty rejects、int16 odd/int32 non-multiple-of-4 rejects、
-  vertexCount<=0 rejects。little-endian values `[0, vertexCount-1]` accept、value==vertexCountとlarger reject。
-  both widthsをtestし、source ByteDataをvalidation後にmutateしても derived count/bytes不変を期待する。
-- [ ] **Step 2 — verify RED:** plain-name `every index is smaller than vertexCount`。expected RED は
-  out-of-range inputが受理される/validator不存在。
-- [ ] **Step 3 — GREEN:** `getUint16/getUint32(offset, Endian.little)` で全値をscanし、width/countは
-  checked math policy内で算出。unsupported enumなら `ArgumentError`、fallback index typeなし。
-- [ ] **Step 4 — verify:** plan全test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed index値を検証' && git push`。
+- [ ] **RED:** reject negative offset, checked `offset + bytesPerElement` overflow/max breach,
+  end > stride, offset misaligned to `gcd(bytesPerElement,4)`, stride not multiple of slot max alignment,
+  exact overlap `[0,12)` with `[8,12)`; accept adjacent `[0,8)` / `[8,12)`.
+- [ ] **GREEN:** compute every end with Task19 `endOffset`, sort local `(start,end,name)` ranges by start,
+  compare adjacent `next.start < current.end`; never form unchecked end before validation.
+- [ ] **Verify/publish:** plan test; `Feature: packed attribute範囲を検証`。
 
-### Task 17: immutable composite upload plan/executor（fork top、depends Task 16）
+### Task 23: defensive bounds snapshot (depends Task 22; 45–85 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
-`test/persistent_packed_instance_plan_test.dart`。
+**Files:** Modify plan and plan test。
 
-**Interfaces:** Produces internal `PersistentPackedInstancePlan.create(...)` with the public constructor's
-data/count/layout/bounds/index inputs, computed `vertexBytes/instanceBytes/instanceOffset/nonIndexBytes/
-indexBytes/totalBytes/indexCount` and frozen layout/bounds。Also produces
-`executePersistentPackedUpload({required plan, required vertexData, required instanceData, required indexData, required bool Function(ByteData,int) overwriteNonIndex, required bool Function(ByteData,int) overwriteIndex})`。
+**Produces:** `PersistentPackedBoundsSnapshot.create(vm.Aabb3)`; getters return fresh copied
+`vm.Aabb3` and `vm.Sphere`。
 
-- [ ] **Step 1 — RED:** exact byte-length happy path and too-short/too-long/zero/negative countsをtest。
-  `vertexBytes=count*stride`、`instanceOffset=align16(vertexBytes)`、padding、each buffer/total maxをassert。
-  fake writersのcallsは base `(data,0)` once、instance `(data,instanceOffset)` once、index null=0/non-null
-  `(data,0)` once。false returnは該当 call名を含む `StateError` で後続callなし。
-- [ ] **Step 2 — verify RED:** plain-name `upload executor writes each source exactly once`。
-  expected RED は composite plan/executor不存在。
-- [ ] **Step 3 — GREEN:** constructor冒頭でlayout/bounds snapshotsを作り、checked math後にexact lengthを
-  検証、index planをcomposeする。executorはallocationせず同期overwrite resultだけ検査しsourceを保持しない。
-- [ ] **Step 4 — verify:** plan全test、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed upload planを合成' && git push`。
+- [ ] **RED:** finite happy case; table NaN/±infinity/axis min>max and finite endpoints whose derived
+  center/radius becomes non-finite. Mutate source min/max after create
+  and mutate each returned Aabb3 min/max and Sphere center/radius; later getters remain canonical.
+- [ ] **GREEN:** copy six scalar bounds, validate finite/order plus finite derived center/radius, retain
+  private canonical vectors/scalar,
+  build a fresh circumscribed sphere and Aabb3 for every getter. Do not expose inherited mutable values.
+- [ ] **Verify/publish:** plan test; `Feature: packed boundsを防御的に固定`。
 
-### Task 18: one-shot GPU storage（fork top、depends Task 17）
+### Task 24: index byte-shape plan (depends Task 23; 35–75 lines)
+
+**Files:** Modify plan and plan test。
+
+**Produces:** `PersistentPackedIndexPlan.create({ByteData? data, gpu.IndexType type, int vertexCount})`
+with `hasIndices/indexCount/indexBytes` and no retained input。
+
+- [ ] **RED:** null accepts; non-null empty, int16 odd, int32 non-multiple-4, vertexCount<=0 reject;
+  both supported enum widths compute exact counts.
+- [ ] **GREEN:** exhaustive index-type switch, Task19 checked size policy, exact divisibility, no fallback type.
+- [ ] **Verify/publish:** plan test; `Feature: packed index形状を検証`。
+
+### Task 25: index value validation (depends Task 24; 40–80 lines)
+
+**Files:** Modify plan and plan test。
+
+**Produces:** every little-endian index constrained to `[0, vertexCount)` before upload。
+
+- [ ] **RED:** for int16/int32 accept `[0,vertexCount-1]`; reject equal/larger and report element index/
+  value/count. Mutating source after create does not change derived fields.
+- [ ] **GREEN:** scan with `indexData.getUint16(byteOffset, Endian.little)` /
+  `indexData.getUint32(byteOffset, Endian.little)` and retain no bytes.
+- [ ] **Verify/publish:** run RED **before** adding scan, expected out-of-range acceptance; then plan tests;
+  `Feature: packed index値を検証`。
+
+### Task 26: checked count and byte sizing (depends Task 25; 45–85 lines)
+
+**Files:** Modify plan and plan test。
+
+**Produces:** internal sizing record with `vertexBytes`, `instanceBytes`, `instanceOffset`,
+`nonIndexBytes`, `indexBytes`, `totalBytes`。
+
+- [ ] **RED:** exact `vertexCount*vertexStride`, `align16(vertexBytes)`, padding, instance multiply,
+  non-index add, index add. Reject zero/negative counts and any per-buffer/total max breach before length compare.
+- [ ] **GREEN:** use Task19 methods for every multiply/align/add; no raw compound arithmetic.
+- [ ] **Verify/publish:** plan test; `Feature: packed byte長を計算`。
+
+### Task 27: immutable composite upload plan (depends Task 26; 50–95 lines)
+
+**Files:** Modify plan and plan test。
+
+**Produces:** `PersistentPackedInstancePlan.create` composing layout/bounds/index/sizing and exact
+source-length validation; exposes copied layout/bounds and scalar fields, retains no ByteData。
+
+- [ ] **RED:** valid indexed/non-index plans; too-short/too-long vertex, instance, index bytes reject.
+  Mutate source layout/bounds/bytes after create; plan scalars/layout/bounds remain fixed and no source getter exists.
+- [ ] **GREEN:** snapshot layout/bounds first, validate counts/sizes/index, compare all exact lengths,
+  return final scalar/subplan references only.
+- [ ] **Verify/publish:** all plan tests; `Feature: packed upload planを合成`。
+
+### Task 28: pure upload write executor (depends Task 27; 45–85 lines)
+
+**Files:** Modify plan and plan test。
+
+**Produces:**
+`executePersistentPackedWrites({required plan, required vertexData, required instanceData, required indexData, required overwriteNonIndex, required overwriteIndex})`。
+
+- [ ] **RED:** event calls are vertex `(0,len)` once, instance `(instanceOffset,len)` once, optional
+  index `(0,len)` once. False at vertex stops instance/index; false at instance stops index; false index reports
+  `index`; each `StateError` names operation/offset/length.
+- [ ] **GREEN:** synchronous three-condition sequence only; no allocation/flush/source retention/catch.
+- [ ] **Verify/publish:** plan test; `Feature: packed write順序を固定`。
+
+### Task 29: minimal production GPU backend seam (depends Task 28; 55–100 lines)
+
+**Files:** Create `lib/src/geometry/persistent_packed_gpu_backend.dart`,
+`test/persistent_packed_gpu_backend_test.dart`。
+
+**Produces:** exact backend/buffer/slice interfaces plus internal
+`DevicePersistentPackedGpuBackend`, `DevicePersistentPackedGpuSlice` wrapping a `gpu.BufferView`。
+
+- [ ] **RED:** fake buffer records allocate/overwrite/flush/slice/release typed calls; after release,
+  production-style wrapper operations throw. Source assertion rejects public barrel export.
+- [ ] **GREEN:** production allocate calls only
+  `gpu.gpuContext.createDeviceBuffer(gpu.StorageMode.hostVisible,length)`; wrapper delegates exact arguments,
+  creates slices, and nulls one device reference idempotently. No factory hierarchy/mock package.
+- [ ] **Verify/publish:** pure seam test (no allocation on unavailable GPU); `Feature: packed GPU backend境界を追加`。
+
+### Task 30: non-index allocation/write/flush transaction (depends Task 29; 55–95 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_storage.dart`,
 `test/persistent_packed_instance_storage_test.dart`。
 
-**Interfaces:** Produces internal
-`PersistentPackedInstanceStorage.upload({required PersistentPackedInstancePlan plan, required ByteData vertexData, required ByteData instanceData, required ByteData? indexData})`、nullable
-`vertexView/instanceView/indexView` getters、synchronous idempotent `void release()`。
+**Produces:** test-visible `uploadPersistentPackedNonIndex` transaction returning one unpublished
+buffer only after vertex+instance overwrite and one flush succeed。
 
-- [ ] **Step 1 — RED:** injected test backendで non-index allocation once、index 0/1、overwrite offsets/counts
-  exact、viewsのlength exactをassert。base/instance/index各 failureでは throw、作成済み refs cleared、
-  later overwriteなし。GPU available時だけ real `DeviceBuffer` pathを1 small fixtureで実行し、unavailableは
-  reason付きskip。source bytes mutation after uploadで recorded uploaded copy不変をexpectする。
-- [ ] **Step 2 — verify RED:** storage focused test。expected RED は storage/backend seam不存在。
-- [ ] **Step 3 — GREEN:** host-visible non-index bufferとoptional index bufferをplan完了後だけ作る。
-  `DeviceBuffer.overwrite`（upload/flush）をexecutor callbacksへ渡し、成功後だけviewsをpublish。
-  `release` は3 viewsと2 device refsをnullにする no-throw closure。superclassへ渡さない。
-- [ ] **Step 4 — verify:** pure tests + GPU conditional test、plan tests、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed GPU storageを追加' && git push`。
+- [ ] **RED:** exact events `allocate(nonIndexBytes), overwrite(vertex,0), overwrite(instance,offset),
+  flush(0,nonIndexBytes)`; assert overwrite counts 1 each and flush count 1. Vertex/instance false and flush throw
+  release once, stop later events, return/publish nothing.
+- [ ] **GREEN:** allocate after complete plan exists; use Task28 executor with index callback unreachable;
+  catch, release, rethrow; return buffer only after flush completes.
+- [ ] **Verify/publish:** storage + plan; `Feature: packed non-index bufferをupload`。
 
-### Task 19: Geometry lifecycle lease/state（fork top、depends Task 18）
+### Task 31: indexed storage transaction and pre-publish ordering (depends Task 30; 60–100 lines)
+
+**Files:** Modify storage and storage test。
+
+**Produces:** `PersistentPackedInstanceStorage.upload` and test-only `uploadWithBackend` supporting
+optional index, but publishing no view until every required write/flush succeeds。
+
+- [ ] **RED:** indexed exact events allocate non-index then index; two non-index overwrites; non-index flush
+  `(0,nonIndexBytes)` once; index overwrite `(0,indexBytes)` once; index flush `(0,indexBytes)` once; only then
+  3 slice events/published getters. Allocation/index overwrite/each flush failures release all created buffers,
+  create no slice/register, and execute no later event.
+- [ ] **GREEN:** hold buffers in locals through both transactions; after both flushes create vertex/instance/index
+  slices and call private storage constructor. Catch releases index then non-index and rethrows original error.
+- [ ] **Verify/publish:** storage + plan; `Feature: packed index bufferをtransaction化`。
+
+### Task 32: storage views, source independence, release (depends Task 31; 45–90 lines)
+
+**Files:** Modify storage and storage test。
+
+**Produces:** nullable `vertexSlice/instanceSlice/indexSlice`, synchronous idempotent `release()` and
+logical byte getters。
+
+- [ ] **RED:** exact slice offsets/lengths; source ByteData mutation after upload does not alter fake's copied
+  uploaded bytes; release clears 3 slices then releases index/non-index once; repeated release no-op; getters null.
+  GPU-available conditional uses one tiny real upload, otherwise skips with captured reason.
+- [ ] **GREEN:** storage retains only plan scalars/slices/buffer wrappers, never source ByteData; release is a
+  no-throw null-and-release sequence.
+- [ ] **Verify/publish:** pure + conditional storage, plan; `Feature: packed GPU storageを解放可能化`。
+
+### Task 33: Geometry injected core and defensive bounds (depends Task 32; 55–95 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_geometry.dart`,
 `test/persistent_packed_instance_geometry_test.dart`。
 
-**Interfaces:** Produces section 3 public constructor/getters/`retire()`。Consumes lifecycle internal
-`registerAllocation` only after storage upload succeeds。Geometry directly owns plan/storage/lease and never calls
-`setVertices`/`setVertexStreams`/`setIndices`。
+**Produces:** private `_fromParts`, exact test creation helper, immutable count/stride/generation getters,
+and overrides of inherited `localBounds` / `localBoundingSphere` returning plan copies。
 
-- [ ] **Step 1 — RED:** fake registry/lifecycleで constructor success registers exact total/instance bytes and
-  generation、upload failure registers zero、retire Future identity/state transitionsをassert。input layout lists、
-  Aabb3、vertex/instance/index ByteDataをconstructor後にmutateしても counts/layout/bounds/uploaded bytes不変。
-  old generation、invalidating、disposed lifecycle constructionは fail-closed。
-- [ ] **Step 2 — verify RED:** geometry focused test。expected RED は public Geometry不存在。
-- [ ] **Step 3 — GREEN:** synchronous plan→storage→register順に構築し、release callbackはstorage.releaseのみ。
-  `setLocalBounds(plan.bounds, plan.sphere)` はcopy gettersを渡す。constructor途中errorはstorage.releaseして
-  rethrowし、fallback Geometryを作らない。
-- [ ] **Step 4 — verify:** geometry/plan/storage tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed Geometry lifecycleを追加' && git push`。
+- [ ] **RED:** injected plan/storage/lease exposes exact scalars; mutate first returned Aabb3 min/max and
+  Sphere center/radius, then assert later getters unchanged. Assert superclass `setVertices/setVertexStreams/
+  setIndices/setLocalBounds` are never called by source/event seam.
+- [ ] **GREEN:** store only plan/storage/lease/shader/doubleSided; override bounds getters using Task23;
+  do not populate superclass mutable bounds or buffer fields.
+- [ ] **Verify/publish:** geometry + plan/storage; `Feature: packed Geometry coreを追加`。
 
-### Task 20: persistent bind/draw（fork top、depends Task 19）
+### Task 34: public construction transaction (depends Task 33; 55–100 lines)
 
-**Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`,
-`test/persistent_packed_instance_geometry_test.dart`。
+**Files:** Modify Geometry and geometry test。
 
-**Interfaces:** Overrides `vertexStreamCount=2`, `instancedVertexLayout`,
-`bindsModelTransformInstance=false`, `isDoubleSided`, `depthOnlyVertex` (same shader/layout), existing
-`bind(...)` and `draw(RenderPass,{int instanceCount=1})` signatures。
+**Produces:** public factory constructor matching Public API and lifecycle internal
+`registerAllocation({totalBytes,instanceBytes,release})` after upload success only。
 
-- [ ] **Step 1 — RED:** fake pass event log exact order: lifecycle current check→markUsed→slot0 vertex→slot1
-  instance→optional index→FrameInfo uniform。indexed/non-index draw use immutable count and instance count from
-  plan。retirementPending/retired/failed/old generationは bind/drawを拒否。external `instanceCount != 1` は
-  `StateError`、state reject時はpass events 0。depth/shadow pathもslot 0/1同layoutをexpectする。
-- [ ] **Step 2 — verify RED:** plain-name `bind marks use before persistent buffer bindings`。
-  expected RED は bind/draw override未実装。
-- [ ] **Step 3 — GREEN:** existing compat bind/draw helpersとFrameInfo packだけを使う。instance transient、
-  source scan、overwriteをbind/drawから呼ばない。markUsed後のfailureもopen-frame retirementで安全に閉じる。
-- [ ] **Step 4 — verify:** geometry tests、`rg -n 'instanceTransients|overwrite\('` audit、diff-check。
-- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed Geometryを永続bind' && git push`。
+- [ ] **RED:** valid constructor order is `plan,upload,register,construct`; plan/upload failure register=0;
+  register failure calls storage.release once and rethrows; invalidating/disposed/old lifecycle fails before
+  GPU allocation. Caller mutation after return does not affect uploaded copy/layout/bounds.
+- [ ] **GREEN:** check lifecycle can-create first, build plan, synchronous storage upload, register exact bytes,
+  return `_fromParts`; catch after storage creation releases then rethrows. No fallback Geometry.
+- [ ] **Verify/publish:** geometry/plan/storage/lifecycle; `Feature: packed Geometryをtransaction構築`。
 
-### Task 21: exact material variant（fork top、depends Task 20）
+### Task 35: Geometry resource lifecycle state (depends Task 34; 35–75 lines)
 
-**Files:** Modify `lib/src/material/shader_stage.dart`, `lib/src/material/shader_material.dart`,
-`lib/src/geometry/persistent_packed_instance_geometry.dart`, `test/shader_material_vertex_test.dart`。
+**Files:** Modify Geometry and geometry test。
 
-**Interfaces:** Adds `MeshVariant.persistentPackedInstances('persistent_packed_instances')` and exact
-`MeshVariant.fromName` mapping。Geometry `materialVertexVariant` returns that exact name。
+**Produces:** `resourceState`, `contextGeneration`, cached `retire()` direct delegation。
 
-- [ ] **Step 1 — RED:** assign shader via `setVertexShader(... variant: persistentPackedInstances)` and expect
-  `materialVertexShader('persistent_packed_instances')` same shader; unskinned/skinned/depth and unknown keep existing
-  behavior。Geometry variant exact stringをassertし、missing custom variant warning names it rather than unskinned。
-- [ ] **Step 2 — verify RED:** shader material focused tests。expected RED は enum member未定義。
-- [ ] **Step 3 — GREEN:** enum/switchへ1 explicit caseを追加し、ShaderMaterial lookupはexact enum keyを使う。
-  implicit fallback、standard shader、position-only shortcutへcollapseさせない。
-- [ ] **Step 4 — verify:** shader/geometry tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 4 files、`git commit -m 'Feature: packed Geometry shader variantを追加' && git push`。
+- [ ] **RED:** active→pending→retired/failed mirrors lease; `identical(geometry.retire(), geometry.retire())`;
+  storage releases only from lease callback after completion, never directly from retire.
+- [ ] **GREEN:** return lease values/Future directly without `async`, state cache, or second completer.
+- [ ] **Verify/publish:** geometry + registry; `Feature: packed Geometry retirementを接続`。
 
-### Task 22: Geometry curated export/docs（fork top、depends Task 21）
+### Task 36: RenderPass production adapter and fake seam (depends Task 35; 55–100 lines)
 
-**Files:** Modify `lib/scene.dart`, `README.md`; Create
+**Files:** Create `lib/src/geometry/persistent_packed_render_pass.dart`,
+`test/persistent_packed_render_pass_test.dart`。
+
+**Produces:** exact adapter interface, `GpuPersistentPackedRenderPassAdapter(gpu.RenderPass)`, and
+test event fake; production unwraps only `DevicePersistentPackedGpuSlice`。
+
+- [ ] **RED:** fake records typed vertex/index/frame/draw events. Production-source contract uses
+`bindVertexBufferCompat`, `bindIndexBufferCompat`, `drawCompat/drawIndexedCompat`; foreign slice fails before pass.
+- [ ] **GREEN:** one final adapter with direct delegation; `bindFrameInfo` packs exactly 36 floats
+camera/model/cameraPosition/pad and uses supplied shader slot. No generic render abstraction.
+- [ ] **Verify/publish:** adapter pure tests; `Feature: packed RenderPass境界を追加`。
+
+### Task 37: full persistent bind (depends Task 36; 55–95 lines)
+
+**Files:** Modify Geometry and geometry test。
+
+**Produces:** public `bind`, test bind helper, `vertexStreamCount=2`, exact layout,
+`bindsModelTransformInstance=false`, `isDoubleSided` from constructor。
+
+- [ ] **RED:** exact events `currentCheck,markUsed,vertex(slot0),instance(slot1),index?,frameInfo`;
+  `shaderOverride ?? vertexShader` chosen exactly. pending/retired/failed/old generation/disposed/non-active context/
+  closed frame each throw with pass event 0. Force adapter failure after mark and assert later retire waits end/submit.
+- [ ] **GREEN:** one private `_bindWithAdapter`; validate all state before first event, mark before adapter calls,
+  bind stored slices only, then 36-float FrameInfo. No overwrite/source scan/transient instance data.
+- [ ] **Verify/publish:** geometry + lifecycle; `Feature: packed Geometryを永続bind`。
+
+### Task 38: draw and depth/shadow/selection route (depends Task 37; 45–90 lines)
+
+**Files:** Modify Geometry and geometry test; Modify
+`test/render/persistent_gpu_scene_integration_test.dart`。
+
+**Produces:** stored-count draw, exact src-only draw helper, and explicit `depthOnlyVertex => null`。
+
+- [ ] **RED:** indexed/non-index fake draws exact stored vertex/index and instance count; zero is impossible by
+  plan. external `instanceCount != 1` and retire/invalidate between bind→draw throw with draw event 0.
+  Assert `depthOnlyVertex == null` and source/route
+  contract in `object_filter.dart`, `shadow_encoder.dart`, `depth_prepass.dart`: null selects `geometry.bind`, not
+  `bindPositionStream`; test adapter then observes both slots for each named route.
+- [ ] **GREEN:** revalidate current active lease before adapter mutation; one branch indexed/non-index in adapter,
+  always stored instance count; override null explicitly.
+  Do not override or call `bindPositionStream` and do not call superclass stream setters.
+- [ ] **Verify/publish:** geometry + three existing render suites/integration seam;
+  `Feature: packed Geometry draw経路を固定`。
+
+### Task 39: exact material vertex variant (depends Task 38; 40–80 lines)
+
+**Files:** Modify `lib/src/material/shader_stage.dart`,
+`lib/src/material/shader_material.dart`, Geometry; Modify `test/shader_material_vertex_test.dart`。
+
+**Produces:** `MeshVariant.persistentPackedInstances('persistent_packed_instances')`, exact
+`fromName` mapping, Geometry `materialVertexVariant`。
+
+- [ ] **RED:** set/retrieve this variant shader; missing warning names it; existing unskinned/skinned/depth and
+  unknown→unskinned remain exact. Geometry returns exact wire name.
+- [ ] **GREEN:** add one enum value/switch case only; no fmat generator or implicit unskinned collapse.
+- [ ] **Verify/publish:** shader + geometry; `Feature: packed Geometry shader variantを追加`。
+
+### Task 40: Geometry curated public export (depends Task 39; 35–75 lines)
+
+**Files:** Modify `lib/scene.dart`; Create
 `test/persistent_packed_instance_public_api_test.dart`。
 
-**Interfaces:** Public barrel adds only `PersistentPackedInstanceGeometry`; layout/lifecycle types remain existing
-curated exports。plan/storage/registry/lease/backends are internal。
+**Produces:** public Geometry only; plan/storage/backend/slice/adapter/lease/helpers remain internal。
 
-- [ ] **Step 1 — RED:** test imports only `dart:typed_data`, `vector_math`,
-  `package:flutter_scene/scene.dart`, `package:flutter_scene/gpu.dart` and assigns
-  `final constructor = PersistentPackedInstanceGeometry.new`、references lifecycle/snapshot/layout/retire types。
-  source assertion rejects any `package:flutter_scene/src/` import and internal type export。
-- [ ] **Step 2 — verify RED:** public API focused test。expected RED は Geometry symbol未export。
-- [ ] **Step 3 — GREEN:** curated exportを追加。README exampleは CPU pack→one construction→per-frame bind→
-  revision時new attach/old detach/old retire→stop/detach/invalidate/await/recreate。custom shaderのFrameInfo、
-  required attributes/varyings、logical memory、no fallback/no per-frame uploadを記載する。
-- [ ] **Step 4 — verify:** public/geometry/material tests、analyze、diff-check。
-- [ ] **Step 5 — publish:** 3 files、`git commit -m 'Docs: packed Geometry公開契約を追加' && git push`。
+- [ ] **RED:** imports only `dart:typed_data`, `vector_math`, public `scene.dart`/`gpu.dart`; takes constructor
+  tear-off and references lifecycle/layout/state/retire types. Source assertions reject `src/` imports/exports.
+- [ ] **GREEN:** add one curated export/show entry.
+- [ ] **Verify/publish:** public + geometry; `Feature: packed Geometry APIを公開`。
 
-### Delivery Gate TOP（commitなし）
+### Task 41: packed Geometry README contract (depends Task 40; 30–75 lines)
 
-- [ ] forbidden auditで `instanceTransients.emplace|List<Matrix4>|Future.delayed|Timer\(|setVertices\(|
-  setIndices\(` が新 filesに0件、constructor/storage以外の `overwrite` が0件、releaseだけが nullable
-  buffer refsをclearすることを確認する。
-- [ ] pinned format/analyze/full `flutter test --enable-impeller` を実行しpass/fail/skipとexact Flutter SHAを
-  保存する。fresh spec/code review subagentsのfindingsを0にし、clean/local=remoteをassertする。
-- [ ] `gh stack submit --auto --open --remote origin`、`gh stack view --json` で bottom/baseとtop/base、OPEN
-  をassert。top PR bodyにEQ pin、#1603/#1604/#1605、physical 30fps/5min defer、driver reclaim未観測、
-  current upstream `ed04205c10991739338fde19563bcf2698057755` forward-portをRemaining tasksとして書く。
-- [ ] `git rev-parse HEAD` のfull 40-char top SHAを immutable hand-offとして記録する。PR作成後に review
-  fix commitが入った場合は古いSHAを破棄し、全gate再実行後の新しいHEADだけをEQ pinへ渡す。
+**Files:** Modify `README.md`; Modify public API test。
 
-### Gate D: #1601 whole-branch approval と EQMonitor worktree（commitなし）
+**Produces:** one-upload consumer flow, exact FrameInfo/layout contract, and deferred-scope documentation.
 
-EQMonitor pinは「Task 22完了」だけでは開始しない。Issue #1601 とそのimplementation PR全体が、同じ
-immutable head SHAで final review/verification済みであることを先に証明する。2026-08-12時点の#1620は
-head `cfdc8516cc21991d41ff6ff20954271f37026d01`、base
-`feat/seismicity-pmtiles-network-reader`、`BEHIND`、approvalなし、analyze/integration/Android/status check
-failureのため、現状のままならこのgateで停止する。
+- [ ] **RED:** doc-source expectation fails for CPU pack→one construction→per-frame bind→revision new attach/
+  old detach+retire→stop/detach/invalidate/await/recreate, exact 36-float FrameInfo order, required layout/varyings,
+  logical memory, no fallback/per-frame upload.
+- [ ] **GREEN:** add only the consumer contract and #1603/#1604/#1605/deferred device boundaries.
+- [ ] **Verify/publish:** public test + forbidden grep; `Docs: packed Geometry契約を追加`。
 
-- [ ] live queryを再実行し、#1601 requirements（non-empty tile enumeration、column chunk、isolate
-  `TransferableTypedData`、manifest count typed failure、missing depth validity bit）が同一 `headRefOid`
-  のwhole-branch reviewで承認済みであることをreview evidenceへ記録する。
+### Delivery Gate TOP (no commit)
 
-  ```bash
-  gh issue view 1601 --repo YumNumm/EQMonitor --json state,body,url
-  gh pr view 1620 --repo YumNumm/EQMonitor \
-    --json state,isDraft,reviewDecision,mergeStateStatus,headRefName,headRefOid,baseRefName,statusCheckRollup,url
-  ```
+- [ ] forbidden audit new files: zero `instanceTransients.emplace|List<Matrix4>|Future.delayed|Timer\(|
+  setVertices\(|setVertexStreams\(|setIndices\(`; overwrite only storage transaction; release only clears refs.
+- [ ] pinned format/analyze/full test; exact Flutter SHA, pass/fail/skip. Fresh spec/code review zero findings.
+- [ ] fetch advertised bottom/top refs, cat-file full heads, assert ancestry/clean/local=remote. Then
+  `gh stack submit --auto --open --remote origin`; `gh stack view --json` must be non-empty and show exactly
+  bottom(base compatibility trunk) then top(base bottom), both OPEN. A one-branch link is invalid.
+- [ ] edit both PR bodies after submit with exact base/head/Issue #1602/#1612, no copied code/licenses, logical vs
+  resident, automatic context-loss missing, #1603–#1605, #1604 physical 30fps/5min defer, upstream forward-port,
+  missing canonical spec. Re-query bodies/base/head/state.
+- [ ] Obtain advertised top ref via `git ls-remote --exit-code origin refs/heads/feat/persistent-packed-instance-geometry`;
+  require non-empty one line, `remote_top_head == git rev-parse HEAD`, fetch to remote-tracking ref, and
+  `git cat-file -e "$remote_top_head^{commit}"`. Record only this 40-char SHA as `fork_top_sha`; any later fix
+  invalidates handoff and requires all gates again.
 
-  OPEN routeの必須条件はnon-draft、head exact decoder、base exact network-reader、reviewDecision
-  `APPROVED`、mergeStateがclean、全required checkがCOMPLETEDかつ `SUCCESS|NEUTRAL|SKIPPED`。
-  MERGED routeはmerge commitを取得し最新`origin/develop`に含まれること、final head SHAへの同じreview/check
-  証拠を要求する。failure/cancel/pending/BEHIND、Issue audit欠落、reviewが古いSHAなら停止する。
-  個別commitだけのapprovalをwhole-branch approvalとみなさない。
-- [ ] `decoder_final_sha` にlive full `headRefOid`を入れ `^[0-9a-f]{40}$` をassert、fetch/cat-file後、
-  exact SHA detached worktreeで `mise exec -- flutter test packages/seismicity_pmtiles
-  packages/pmtiles_v3` と `mise exec -- dart analyze packages/seismicity_pmtiles packages/pmtiles_v3` を実行する。
-  fresh verification failureなら停止し、#1620を直す権限へ拡張しない。
-- [ ] OPEN routeの `pin_base_sha=decoder_final_sha`、MERGED routeの `pin_base_sha=origin/develop` full SHAを
-  記録する。active checkoutを使わず
-  `/Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor/.worktrees/seismicity-flutter-scene-fork-pin`
-  を使用する。target/branch不存在なら
-  `git worktree add -b feat/seismicity-flutter-scene-fork-pin /Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor/.worktrees/seismicity-flutter-scene-fork-pin "$pin_base_sha"`。
-  branchのみ既存ならattach、target既存ならregistered path/origin/branch/clean/
-  `merge-base --is-ancestor "$pin_base_sha" HEAD` をassertする。mismatch/dirtyは停止し、delete/reset/
-  checkout/force pushしない。
+Exact handoff command, run from the clean top worktree after both PRs are OPEN:
 
-### Task 23: fork URL/SHA と lockをatomic更新（EQ top、depends Gate D + Task 22）
+```bash
+top_ref=refs/heads/feat/persistent-packed-instance-geometry
+top_line=$(git ls-remote --exit-code origin "$top_ref")
+test "$(printf '%s\n' "$top_line" | wc -l | tr -d ' ')" -eq 1
+printf '%s\n' "$top_line" | rg -q \
+  '^[0-9a-f]{40}[[:space:]]+refs/heads/feat/persistent-packed-instance-geometry$'
+remote_top_head=${top_line%%[[:space:]]*}
+printf '%s\n' "$remote_top_head" | rg -q '^[0-9a-f]{40}$'
+test "$remote_top_head" = "$(git rev-parse HEAD)"
+git fetch origin \
+  "$top_ref:refs/remotes/origin/feat/persistent-packed-instance-geometry"
+git cat-file -e "$remote_top_head^{commit}"
+test "$(git rev-parse origin/feat/persistent-packed-instance-geometry)" = \
+  "$remote_top_head"
+fork_top_sha=$remote_top_head
+```
 
-**Files:** Modify `packages/eqmonitor_map/pubspec.yaml`,
-`packages/eqmonitor_map/example/pubspec.yaml`, `pubspec.lock`。
+## Gate D: #1601 immutable approval and EQMonitor pin worktree (no commit)
 
-**Interfaces:** All 3 active descriptors use exact URL
-`https://github.com/YumNumm/flutter_scene.git` and the Delivery Gate TOP full SHA; root lock entries
-`flutter_scene`/`scene` each have same exact `description.url/ref/resolved-ref` and existing package path。
+Do not start EQ pin from Task 41 alone. Supervisor supplies the full 40-char
+`reviewed_decoder_sha` produced by #1601 whole-branch spec+code review and final non-device verification.
+It must cover non-empty tile enumeration、column chunks、`TransferableTypedData` isolate transfer、typed
+manifest-count failure、missing-depth validity bit and every #1601 child task—not a single commit review。
 
-- [ ] **Step 1 — RED:** before edit, machine query asserts old bdero URL/ref then deliberately expects new exact
-  URL/SHA, yielding nonzero。`fork_top_sha` must pass 40-char regex and `git ls-remote` exact commit reachability。
-- [ ] **Step 2 — GREEN:** edit only 3 descriptor URL/ref values, then `mise exec -- flutter pub get`; lockfile is
-  resolver-generated, never hand-edited。example is workspace member so no new lockfileを作らない。
-- [ ] **Step 3 — verify:** `mise exec -- flutter pub get --enforce-lockfile`、YAML machine queryで3 descriptor +
-  2 lock entry exact URL/requested/resolved full SHA、`rg`でactive old URL/SHA 0件、diff-check。
-- [ ] **Step 4 — publish:** 3 files、`git commit -m 'Package: Flutter Scene fork SHAへ固定' &&
-  git push -u origin feat/seismicity-flutter-scene-fork-pin`。
+```bash
+decoder_json=$(gh pr view 1620 --repo YumNumm/EQMonitor \
+  --json state,isDraft,reviewDecision,mergeStateStatus,headRefName,headRefOid,baseRefName,statusCheckRollup,mergeCommit,url)
+test -n "$decoder_json"
+printf '%s\n' "$reviewed_decoder_sha" | rg -q '^[0-9a-f]{40}$'
+test "$(printf '%s\n' "$decoder_json" | jq -er '.headRefOid')" = "$reviewed_decoder_sha"
+decoder_state=$(printf '%s\n' "$decoder_json" | jq -r '.state')
+if [ "$decoder_state" = OPEN ]; then
+  git fetch origin \
+    "+refs/heads/feat/seismicity-pmtiles-decoder:refs/remotes/origin/feat/seismicity-pmtiles-decoder"
+  test "$(git rev-parse origin/feat/seismicity-pmtiles-decoder)" = \
+    "$reviewed_decoder_sha"
+  git cat-file -e "$reviewed_decoder_sha^{commit}"
+  printf '%s\n' "$decoder_json" | jq -e \
+    '.isDraft == false and .reviewDecision == "APPROVED" and
+     .mergeStateStatus == "CLEAN" and
+     .headRefName == "feat/seismicity-pmtiles-decoder" and
+     .baseRefName == "feat/seismicity-pmtiles-network-reader" and
+     ([.statusCheckRollup[] |
+       select(.status != "COMPLETED" or
+              (.conclusion != "SUCCESS" and .conclusion != "NEUTRAL" and
+               .conclusion != "SKIPPED"))] | length == 0)' >/dev/null
+elif [ "$decoder_state" = MERGED ]; then
+  git fetch origin \
+    "+refs/pull/1620/head:refs/remotes/origin/pull/1620/head"
+  test "$(git rev-parse refs/remotes/origin/pull/1620/head)" = \
+    "$reviewed_decoder_sha"
+  git cat-file -e "$reviewed_decoder_sha^{commit}"
+  merge_sha=$(printf '%s\n' "$decoder_json" | jq -er '.mergeCommit.oid')
+  git fetch origin develop
+  git cat-file -e "$merge_sha^{commit}"
+  git merge-base --is-ancestor "$merge_sha" origin/develop
+  printf '%s\n' "$decoder_json" | jq -e \
+    '.headRefName == "feat/seismicity-pmtiles-decoder" and
+     .baseRefName == "feat/seismicity-pmtiles-network-reader" and
+     .reviewDecision == "APPROVED" and
+     ([.statusCheckRollup[] |
+       select(.status != "COMPLETED" or
+              (.conclusion != "SUCCESS" and .conclusion != "NEUTRAL" and
+               .conclusion != "SKIPPED"))] | length == 0)' >/dev/null
+else
+  exit 1
+fi
+issue_json=$(gh issue view 1601 --repo YumNumm/EQMonitor --json state,body,url)
+test -n "$issue_json"
+printf '%s\n' "$issue_json" | jq -e \
+  '(.body | type == "string" and length > 0) and (.url | length > 0)' >/dev/null
+```
 
-### Task 24: machine-readable exact pin verifier（EQ top、depends Task 23）
+OPEN route requires non-draft OPEN PR, exact head/base `feat/seismicity-pmtiles-decoder` /
+`feat/seismicity-pmtiles-network-reader`, clean merge state, review bound to this SHA, and every completed
+check `SUCCESS|NEUTRAL|SKIPPED`; pending/failure/cancel/BEHIND stops. MERGED route requires merge commit in
+fresh `origin/develop` plus the same review/check evidence for the final head. Query Issue #1601 live and bind
+the requirements audit to the same SHA. Empty jq output/unknown state stops。
+
+Create a detached verification worktree at exact decoder SHA and invoke one directory per analyze command.
+If a command fails, stop and preserve that worktree as evidence; only the all-pass path removes the exact
+registered worktree and its now-empty temporary parent:
+
+```bash
+decoder_verify_parent=$(mktemp -d /tmp/eqmonitor-decoder-verify.XXXXXX)
+decoder_verify=$decoder_verify_parent/worktree
+git worktree add --detach "$decoder_verify" "$reviewed_decoder_sha"
+(
+  cd "$decoder_verify"
+  mise exec -- flutter test packages/seismicity_pmtiles
+  mise exec -- flutter test packages/pmtiles_v3
+  mise exec -- dart analyze packages/seismicity_pmtiles
+  mise exec -- dart analyze packages/pmtiles_v3
+)
+git worktree remove "$decoder_verify"
+rmdir "$decoder_verify_parent"
+```
+
+Failure stops without expanding this plan to fix #1601. OPEN `pin_base_sha=$reviewed_decoder_sha`; MERGED
+`pin_base_sha=$(git rev-parse origin/develop)` after ancestry proof。
+
+Pin worktree is
+`/Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor/.worktrees/seismicity-flutter-scene-fork-pin`, branch
+`feat/seismicity-flutter-scene-fork-pin`. If both absent create from exact pin base. Existing remote branch
+requires supervisor-provided full `reviewed_pin_resume_sha`, advertised ref equality, fetch/cat-file, clean
+local=remote and base ancestry. Existing local-only branch must equal reviewed SHA. Dirty/mismatch stops; never
+delete/reset/checkout/force. Before creation require
+`git check-ignore -q .worktrees/seismicity-flutter-scene-fork-pin`; if it is not ignored, stop rather than add
+workspace artifacts. For a remote branch, fetch the advertised ref into its remote-tracking ref and require
+`git cat-file -e "$reviewed_pin_resume_sha^{commit}"` before attach. Configure `remote.pushDefault=origin`。
+
+```bash
+eq_root=/Users/ryotaro.onoue/dev/github.com/YumNumm/EQMonitor
+pin_worktree=$eq_root/.worktrees/seismicity-flutter-scene-fork-pin
+pin_ref=refs/heads/feat/seismicity-flutter-scene-fork-pin
+test "$(git -C "$eq_root" remote get-url origin)" = \
+  git@github.com:YumNumm/EQMonitor.git
+git -C "$eq_root" check-ignore -q \
+  .worktrees/seismicity-flutter-scene-fork-pin
+pin_remote_exists=0
+if pin_line=$(git -C "$eq_root" ls-remote --exit-code origin "$pin_ref"); then
+  pin_remote_exists=1
+  test "$(printf '%s\n' "$pin_line" | wc -l | tr -d ' ')" -eq 1
+  printf '%s\n' "$pin_line" | rg -q \
+    '^[0-9a-f]{40}[[:space:]]+refs/heads/feat/seismicity-flutter-scene-fork-pin$'
+  remote_pin_head=${pin_line%%[[:space:]]*}
+  printf '%s\n' "$reviewed_pin_resume_sha" | rg -q '^[0-9a-f]{40}$'
+  test "$remote_pin_head" = "$reviewed_pin_resume_sha"
+  git -C "$eq_root" fetch origin \
+    "$pin_ref:refs/remotes/origin/feat/seismicity-flutter-scene-fork-pin"
+  git -C "$eq_root" cat-file -e "$remote_pin_head^{commit}"
+else
+  test "$?" -eq 2
+  remote_pin_head=$pin_base_sha
+fi
+if [ "$pin_remote_exists" -eq 0 ] && \
+  git -C "$eq_root" show-ref --verify --quiet "$pin_ref"; then
+  printf '%s\n' "$reviewed_pin_resume_sha" | rg -q '^[0-9a-f]{40}$'
+  git -C "$eq_root" cat-file -e "$reviewed_pin_resume_sha^{commit}"
+  test "$(git -C "$eq_root" rev-parse feat/seismicity-flutter-scene-fork-pin)" = \
+    "$reviewed_pin_resume_sha"
+  remote_pin_head=$reviewed_pin_resume_sha
+fi
+if [ -e "$pin_worktree" ]; then
+  git -C "$eq_root" worktree list --porcelain | \
+    rg -Fx "worktree $pin_worktree"
+elif git -C "$eq_root" show-ref --verify --quiet "$pin_ref"; then
+  test "$(git -C "$eq_root" rev-parse feat/seismicity-flutter-scene-fork-pin)" = \
+    "$remote_pin_head"
+  git -C "$eq_root" worktree add "$pin_worktree" \
+    feat/seismicity-flutter-scene-fork-pin
+else
+  git -C "$eq_root" worktree add -b feat/seismicity-flutter-scene-fork-pin \
+    "$pin_worktree" "$pin_base_sha"
+fi
+test "$(git -C "$pin_worktree" rev-parse --abbrev-ref HEAD)" = \
+  feat/seismicity-flutter-scene-fork-pin
+test "$(git -C "$pin_worktree" rev-parse HEAD)" = "$remote_pin_head"
+git -C "$pin_worktree" merge-base --is-ancestor "$pin_base_sha" HEAD
+test -z "$(git -C "$pin_worktree" status --porcelain=v1)"
+git -C "$eq_root" config remote.pushDefault origin
+```
+
+## EQMonitor pin tasks
+
+Tasks 42–46 run from `$pin_worktree`. Their exact RED/GREEN commands are below; the RED failure is the one
+listed by the Task and GREEN requires the same command to pass. Every Task then runs
+`mise exec -- dart analyze packages/eqmonitor_map` and `git --no-pager diff --check` before its named commit.
+
+| Task | exact RED/GREEN command(s) |
+|---|---|
+| 42 | `mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart` |
+| 43 | `bash scripts/ci/test_verify_flutter_scene_pin.sh && bash -n tool/verify_flutter_scene_pin.sh && tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"` |
+| 44 | `bash scripts/ci/test_verify_flutter_scene_pin.sh && tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"` |
+| 45 | `rg -Fq 'https://github.com/YumNumm/flutter_scene.git' packages/eqmonitor_map/README.md && rg -Fq 'https://github.com/YumNumm/flutter_scene.git' packages/eqmonitor_map/example/README.md && rg -Fq "$fork_top_sha" packages/eqmonitor_map/README.md && rg -Fq "$fork_top_sha" packages/eqmonitor_map/example/README.md && tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree" && mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart` |
+| 46 | `rg -Fq "$fork_top_sha" docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md && rg -Fq "$fork_top_sha" docs/knowledge/20260802_flutter_scene_scene_source_pin.md && rg -Fq "$fork_top_sha" docs/knowledge/20260802_flutter_scene_large_static_instances.md && tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree" && mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart` |
+
+### Task 42: public API RED then atomic fork SHA pin (depends Gate D + top gate; 45–90 handwritten lines)
+
+**Files:** Create
+`packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`; Modify
+`packages/eqmonitor_map/pubspec.yaml`, `packages/eqmonitor_map/example/pubspec.yaml`, generated `pubspec.lock`。
+
+**Produces:** all 3 descriptors and lock entries `flutter_scene`/`scene` use exact URL
+`https://github.com/YumNumm/flutter_scene.git`, requested/resolved `fork_top_sha`, existing package paths;
+consumer compile uses public imports only。
+
+- [ ] **RED first:** while old bdero pin is still resolved, add test taking lifecycle/Geometry constructor
+  tear-offs and checking active generation1 zero snapshot; run it and require missing persistent symbol failure.
+  If it passes, stop because dependency state is not the audited base.
+- [ ] **Authority:** obtain top advertised ref again, require one non-empty line, exact `fork_top_sha`, fetch,
+  cat-file, and full 40-char regex. Never accept a SHA reachable only in local object storage.
+- [ ] **GREEN:** edit only URL/ref values in 2 YAML descriptors, run `mise exec -- flutter pub get`; never
+  hand-edit lock. Test must compile/pass without `src/` or `flutter_gpu` import.
+- [ ] **Verify/publish:** `flutter pub get --enforce-lockfile`, public test, package analyze, machine YAML
+  query for 3 descriptors+2 locks; `Package: Flutter Scene fork SHAへ固定`。
+
+### Task 43: descriptor pin verifier core (depends Task 42; 50–95 lines)
 
 **Files:** Create `tool/verify_flutter_scene_pin.sh`,
 `scripts/ci/test_verify_flutter_scene_pin.sh`。
 
-**Interfaces:** `tool/verify_flutter_scene_pin.sh EXPECTED_URL EXPECTED_FULL_SHA [REPO_ROOT]`。
-It validates `.dependencies.flutter_scene.git.{url,ref,path}` and
-`.dependency_overrides.scene.git.{url,ref,path}` in package pubspec, example
-`.dependencies.flutter_scene.git.{url,ref,path}`, and lock
-`.packages.flutter_scene.description.{url,ref,"resolved-ref",path}` / corresponding `.packages.scene` fields,
-using `mise exec -- yq`; exit 0 only when all 5 entries match exact values。Expected paths are respectively
-`packages/flutter_scene`, `packages/scene`, `packages/flutter_scene`, and the same two lock paths。
+**Produces:** `verify_flutter_scene_pin.sh EXPECTED_URL EXPECTED_FULL_SHA [REPO_ROOT]`; first commit validates
+the 3 descriptor entries URL/ref/path with `mise exec -- yq`。
 
-- [ ] **Step 1 — RED:** test uses `mktemp -d`, trap removes only that validated temp path, copies minimal fixtures,
-  and checks happy path plus wrong descriptor URL、requested refだけwrong、resolved-refだけwrong、scene package
-  only wrong、short SHA。Each mutation expects nonzero and error naming exact file/package/field。
-- [ ] **Step 2 — verify RED:** `mise exec -- bash scripts/ci/test_verify_flutter_scene_pin.sh`。
-  expected RED は verifier不存在。
-- [ ] **Step 3 — GREEN:** args count/URL/full-SHA regex/root filesを先にvalidateし、yqでscalarを読む。
-  string grepだけ、floating ref許可、ref==resolved only checkは禁止。3 descriptor and 2 lock entriesを個別assert。
-- [ ] **Step 4 — verify:** shell testと real root verifier、`bash -n`、`git diff --check`。
-- [ ] **Step 5 — publish:** 2 executable files、`git commit -m 'Test: Flutter Scene pin検証を追加' && git push`。
+- [ ] **RED:** fixture happy case and wrong map dependency URL call missing verifier and fail.
+- [ ] **GREEN:** validate arg count, non-empty URL, SHA regex, repo files first; read each scalar and report exact
+  file/package/field mismatch. Expected paths are map flutter_scene package path, scene override path, and example
+  flutter_scene path. No grep/floating ref shortcut. Commit the verifier with executable mode (`chmod +x`).
+- [ ] **Verify/publish:** happy fixture + real root + `bash -n`; `Test: Flutter Scene pin検証を追加`。
 
-### Task 25: EQMonitor public API contract（EQ top、depends Task 24）
+### Task 44: lock pin verifier and corruption matrix (depends Task 43; 55–100 lines)
 
-**Files:** Create
-`packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`。
+**Files:** Modify verifier and its shell test。
 
-**Interfaces:** Consumer imports only `package:flutter_scene/scene.dart` and `gpu.dart`; no flutter_scene `src/`
-or flutter_gpu import。It references lifecycle/snapshot/layout/Geometry constructor and retire Future types without GPU。
+**Produces:** exact requested/resolved lock validation and fail-closed descriptor/lock corruption matrix.
 
-- [ ] **Step 1 — RED:** add compile test and initial lifecycle snapshot expectations active/generation=1/zero bytes。
-  Before Task 23 resolution this would fail on missing symbols; on pinned fork it must compile。Source assertion rejects
-  private imports and verifies public constructor tear-off type。
-- [ ] **Step 2 — verify:** `mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart`。
-  Any missing export is RED and fixed in fork top followed by new immutable SHA/re-pin, not via private EQ import。
-- [ ] **Step 3 — GREEN:** test-only adjustment to public signatures; no adapter/product rendering implementation。
-- [ ] **Step 4 — verify:** focused test + `mise exec -- dart analyze packages/eqmonitor_map` + diff-check。
-- [ ] **Step 5 — publish:** file、`git commit -m 'Test: Flutter Scene公開API境界を固定' && git push`。
+- [ ] **RED:** with Task43 verifier, wrong lock requested ref and wrong `resolved-ref` still pass; require both fail.
+  Add matrix for wrong descriptor URL/ref/path, each lock package URL/requested/resolved/path, short SHA,
+  missing/non-scalar field; each expects nonzero and exact field label.
+- [ ] **GREEN:** validate both `.packages.flutter_scene.description` and `.packages.scene.description` exact
+  URL/ref/`resolved-ref`/path. Keep the 3 descriptor checks. Temp uses `mktemp -d` and validated trap path only.
+- [ ] **Verify/publish:** matrix + real verifier; `Test: Flutter Scene pin破損検知を追加`。
 
-### Task 26: package consumer docs（EQ top、depends Task 25）
+### Task 45: package consumer provenance docs (depends Task 44; 30–75 lines)
 
-**Files:** Modify `packages/eqmonitor_map/README.md`, `packages/eqmonitor_map/example/README.md`。
+**Files:** Modify `packages/eqmonitor_map/README.md`,
+`packages/eqmonitor_map/example/README.md`。
 
-**Interfaces:** Current package docs record both fork PR URLs、top full SHA、upstream base `7f71993...`、
-Flutter full SHA、global multi-owner lifecycle ordering、logical vs resident bytes。Historical plan/draft evidenceは
-rewriteしない。
+**Produces:** current consumer pin/provenance contract for package and example users.
 
-- [ ] **Step 1 — RED:** `rg` inventoryでactive README/knowledgeのold bdero current pinを列挙し、expected
-  fork URL/top SHA queryをfailureとして保存する。
-- [ ] **Step 2 — GREEN:** package/example READMEだけ同期し、#1603/#1604/#1605 boundaries、automatic context-loss
-  なし、#1604 physical 30fps/5min未実施、reference sources are patterns only/no copied codeを明記する。
-- [ ] **Step 3 — verify:** verifier、public test、package READMEのold active pin 0件、diff-check。
-- [ ] **Step 4 — publish:** two files、`git commit -m 'Docs: Flutter Scene package provenanceを同期' && git push`。
+- [ ] **RED:** inventory current-instruction old bdero pins, then exact fork URL/top SHA assertion fails.
+- [ ] **GREEN:** record both fork PR URLs/top/base/Flutter SHAs, 36-float FrameInfo, multi-owner lifecycle,
+  logical≠resident, no copied reference code, #1603/#1604/#1605 boundaries and physical gate deferred.
+- [ ] **Verify/publish:** Task43 verifier + public test + no old active pin; `Docs: Flutter Scene provenanceを同期`。
 
-### Task 27: toolchain/lifecycle knowledge docs（EQ top、depends Task 26）
+### Task 46: toolchain/lifecycle knowledge docs (depends Task 45; 45–95 lines)
 
 **Files:** Modify `docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`,
 `docs/knowledge/20260802_flutter_scene_scene_source_pin.md`,
 `docs/knowledge/20260802_flutter_scene_large_static_instances.md`。
 
-**Interfaces:** Current knowledge records exact fork/top/toolchain SHA and operational lifecycle; source-pin doc
-asserts both lock entries' requested/resolved SHA。Historical entries remain intact and clearly labelled historical。
+**Produces:** current fork toolchain, lifecycle, lock, FrameInfo, and deferred-device-gate knowledge.
 
-- [ ] **Step 1 — RED:** `rg` exact old current pin lines in the 3 files and run expected fork URL/top SHA assertion
-  to nonzero; capture which lines are current instructions versus historical evidence。
-- [ ] **Step 2 — GREEN:** update current instructions only with global multi-owner invalidation、completion-gated
-  retirement、logical bytes≠resident bytes、#1604 device/performance defer、reference provenance/no copied code。
-- [ ] **Step 3 — verify:** Task 24 verifier、Task 25 public test、package analyze、current instruction old pin 0件、
-  `git diff --check`。
-- [ ] **Step 4 — publish:** three files、
-  `git commit -m 'Docs: Flutter Scene lifecycle知見を同期' && git push`。
+- [ ] **RED:** distinguish current instructions from historical evidence; current exact fork/SHA assertion fails.
+- [ ] **GREEN:** update current instructions only: requested+resolved both lock entries, global invalidation/
+  completion retirement, logical≠resident, 36-float contract, #1604 device defer, reference provenance.
+- [ ] **Verify/publish:** verifier/public test/analyze/no stale current instruction; `Docs: Flutter Scene lifecycle知見を同期`。
 
-### Delivery Gate EQ / upstack refresh / PR stop（commitなし）
+### Delivery Gate EQ and PR route (no commit)
 
-- [ ] PR作成直前に Gate D query/audit/check/local testsを再実行する。`decoder_current_sha` が記録済み
-  `decoder_final_sha` と同じならそのbaseを維持する。異なる場合は新SHAでGate Dを最初から通し、
-  passした時だけ次のnon-destructive upstack rebaseを行う。
-- [ ] rebase前に `pin_pre_rebase_head=$(git rev-parse HEAD)` とremote pin headをfull SHAでvalidateし、
-  `git branch "backup/seismicity-flutter-scene-fork-pin-$pin_pre_rebase_head" HEAD` でrecoverable backupを
-  作る。OPEN routeは
-  `git rebase --onto "$decoder_current_sha" "$decoder_final_sha" feat/seismicity-flutter-scene-fork-pin`。
-  #1620がMERGEDへ変わったrouteはmerge commitが最新origin/developに含まれることをassertし、
-  `git rebase --onto origin/develop "$decoder_final_sha" feat/seismicity-flutter-scene-fork-pin`。
-  conflictがpin/docs外へ及ぶ、approval/checkを再証明できない場合はbackupを残して停止する。
-- [ ] rebase後はTask 24 verifier、Task 25 focused test、package analyze、`flutter pub get --enforce-lockfile`、
-  diff-checkを再実行する。remote branch更新が必要な場合だけ、validated remote old SHAを用いて
-  `git push --force-with-lease=refs/heads/feat/seismicity-flutter-scene-fork-pin:$remote_pin_head origin
-  HEAD:refs/heads/feat/seismicity-flutter-scene-fork-pin`。bare `--force`は禁止する。
-- [ ] OPEN decoder routeは
-  `gh stack link --base feat/seismicity-pmtiles-network-reader feat/seismicity-pmtiles-decoder
-  feat/seismicity-flutter-scene-fork-pin --remote origin`。MERGED routeは
-  `gh stack link --base develop feat/seismicity-flutter-scene-fork-pin --remote origin`。
-  いずれも非対話で実行し、既存stack metadataが違えば修復を推測せず停止する。
-- [ ] EQ pin PRをOPENでsubmitし、baseがOPEN routeでは decoder branch、MERGED routeではdevelop、headが
-  pin branch、bodyが fork bottom/top PR URLs、top full SHA、decoder final SHAを含むことを
-  `gh pr view --json` でassertする。Remaining tasksに #1603 lifecycle wiring、#1604 24-byte/LOD/2M upload、
-  #1604 physical iPhone 13相当30fps/5min memory、#1605 integration/loading/error/retry/device smoke、
-  upstream forward-port、欠落canonical specを列挙する。
-- [ ] fork bottom/topとEQ pinの全PRについてURL/base/head/full SHA/checks/skips/blockersを収集し、各worktree
-  `status --porcelain=v1` empty、local=remoteをassertする。この3 PRを一旦すべて作成した時点で必ず停止し、
-  merge、review対応、#1603、実機/Simulator/E2Eへ進まない。
+- [ ] Re-run Gate D live. If decoder SHA changed, discard approval and repeat Gate D. After new approval,
+  create recoverable backup ref, rebase pin branch from old exact base to new exact base, then rerun Tasks42–46
+  gates. Require `validated_old_remote_sha` to match `^[0-9a-f]{40}$`; remote update only with explicit
+  `--force-with-lease=refs/heads/feat/seismicity-flutter-scene-fork-pin:$validated_old_remote_sha`; bare force禁止。
+- [ ] OPEN decoder route uses at least two branches, never one-branch link:
+  `gh stack link --base feat/seismicity-pmtiles-network-reader --open --remote origin feat/seismicity-pmtiles-decoder feat/seismicity-flutter-scene-fork-pin`。
+  Assert resulting decoder→pin order/base/head with non-empty stack/API output。
+- [ ] MERGED decoder route is a valid standalone PR, not `gh stack link`:
+  push pin non-force, write reviewed text to `$pin_worktree/pr-body.md`, then run
+  `gh pr create --repo YumNumm/EQMonitor --base develop --head feat/seismicity-flutter-scene-fork-pin --title 'Package: Flutter Scene fork SHAへ固定' --body-file "$pin_worktree/pr-body.md"`.
+  Assert base/head/state via `gh pr view --json`。
+- [ ] PR body contains fork bottom/top URLs, advertised top SHA, decoder final SHA, #1602/#1612, no copied code,
+  and Remaining: #1603 wiring, #1604 24-byte/LOD/2M + physical 30fps/5min, #1605 UX/device smoke,
+  upstream forward-port, missing canonical spec. Re-query exact body/base/head/state/checks。
+- [ ] Fetch/cat-file advertised fork bottom/top and EQ pin refs; assert each remote head equals handed-off/local
+  full SHA, correct ancestry, every worktree clean/local=remote. Record test/analyze pass/fail/skip/blockers.
+  Plan implementer then hands back to parent; no merge, #1603 implementation, device/Simulator/E2E。
 
-## 9. Completion checklist
+## Completion checklist
 
-- [ ] fork が正しい parent/権限で作成され、compatibility trunk は exact `7f71993...`。
-- [ ] fork bottom PR は completion watermark、retirement、generation、memory snapshot を公開。
-- [ ] fork top PR は instance bytes を初回1回だけ upload し、per-frame bind だけを行う。
-- [ ] retire/context generation が fail-closed で、CPU frame/delay を GPU completion とみなさない。
-- [ ] fork package focused/full test と analyze が non-device 環境で完了し、skip は明示済み。
-- [ ] EQMonitor の dependency/lock/current README は YumNumm fork の同一 full SHA。
-- [ ] pin verifier は lockのflutter_scene/scene双方でURL/requested ref/resolved full SHA/pathをexact assert。
-- [ ] EQMonitor は curated public import だけを compile test で使用。
-- [ ] #1601 whole branch は同一final SHAでapproval/check/focused verification済み、更新時はrebase再検証済み。
-- [ ] 3 PR の Remaining tasks が performance/device gate と後続 Issues を隠していない。
-- [ ] 全 PR 作成後に作業を停止し、merge や後続 layer へ進んでいない。
+- [ ] Gate A proves the authorized real fork; compatibility trunk is exact base.
+- [ ] Fork bottom exposes one global completion-aware lifecycle with full owner/resource matrices.
+- [ ] Last-owner invalidation recovery and release failure are tested/fail closed.
+- [ ] Fork top performs each source overwrite/flush exact once and publishes only after all success.
+- [ ] Geometry binds two persistent streams and 36-float FrameInfo; all normal/depth/shadow/selection use full bind.
+- [ ] Layout names/overlap/alignment/checked arithmetic, index values, mutable bounds getters are tested.
+- [ ] No per-frame instance upload/full scan/fallback/fixed-delay completion exists.
+- [ ] Fork focused/full tests and analyze run with exact toolchain; skips/omitted device gates explicit.
+- [ ] Fork bottom/top form a verified two-PR stack and advertised top SHA is the EQ dependency SHA.
+- [ ] #1601 is approved/verified at the same immutable base SHA used by pin PR.
+- [ ] EQ descriptors/locks/docs use one fork URL/requested/resolved full SHA and verifier detects corruption.
+- [ ] EQ consumer compile uses curated public imports only.
+- [ ] EQ pin uses valid two-branch link when decoder OPEN or standalone PR when decoder MERGED.
+- [ ] All 3 PRs record deferred/device/resident/provenance boundaries; none are merged by this plan.
