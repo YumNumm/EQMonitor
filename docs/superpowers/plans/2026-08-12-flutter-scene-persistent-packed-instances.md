@@ -43,7 +43,11 @@ vertex/instance 2-stream Geometryは通常・depth・shadow・selectionの全経
 
 ## Current evidence and reference boundary
 
-- EQMonitor plan branchの元baseは`8120f23446b53f4b3222d32306d4fb576cb9683e`。
+- EQMonitor plan branchの元baseは`8120f23446b53f4b3222d32306d4fb576cb9683e`。Round5のread-only確認時、
+  local tracking `origin/develop`は`3bf298efe90597beb4dd1402ef4eccf67e440446`で元baseをancestorに含む。
+  このplan-only branch自体はreview provenanceを保つためrebaseしない。実装時はGate Dが必ずfresh fetchし、
+  #1601 MERGED経路だけその時点のexact `origin/develop`を`pin_base_sha`へ採用するため、この観測値をbaseに
+  流用しない。
 - #1602はparent #1612 layer 06。#1603 scene foundation、#1604 2M renderer、#1605
   integrationはこのplanに混ぜない。
 - active descriptor/lockは`bdero/flutter_scene`
@@ -223,6 +227,10 @@ not extend/subclass `gpu.DeviceBuffer`, `gpu.BufferView`, or `gpu.RenderPass`。
 ```dart
 typedef GpuSubmissionCompletionListener = void Function(int completedThrough);
 
+void addCompletionListener(GpuSubmissionCompletionListener listener) {
+  _completionListeners.add(listener);
+}
+
 final class PersistentGpuResourceRegistry {
   PersistentGpuResourceRegistry({
     required GpuSubmissionTracker submissions,
@@ -329,6 +337,33 @@ T executePersistentPackedInstanceTransaction<T>({
 | `lib/src/geometry/persistent_packed_instance_binding.dart` | plain lease-aware bind/draw delegate |
 | `lib/src/geometry/persistent_packed_instance_transaction.dart` | typed pure construction orchestration |
 | `lib/src/geometry/persistent_packed_instance_geometry.dart` | concrete Geometry and public factory |
+
+<!-- affinity-entrypoint-matrix-start -->
+Every registry entry/callback below calls `_affinity.check()` as its first executable statement, before lookup,
+state read used for a decision, mutation, Future creation, or user callback. Each listed task changes the injected
+token, invokes the entry, restores the original token, and proves state/callback counts are unchanged:
+
+| entry/callback | task | rejected-before-mutation evidence |
+|---|---:|---|
+| `attachOwner()` | 4A | owner id/count unchanged |
+| `register(...)` | 4A | allocation/callback count unchanged |
+| lease `requireCurrentActive()` | 4B | record state and release count unchanged |
+| lease/registry `retire()` | 4B | record state, cached Future and release count unchanged |
+| `snapshotFor(...)` | 5 | throws before reading counters; restored-token snapshot unchanged |
+| `disposeOwner(ownerId)` | 6 | owner state/FD/release count unchanged |
+| `invalidateContext(ownerId)` | 7 | context/FI/release count unchanged |
+| `recreateContext(ownerId)` | 8 | generation/context unchanged |
+| `beginFrame()` | 12 | frame-open/mark/record state unchanged |
+| lease/registry `markUsed(lease)` | 12 | frame-open/mark/record state unchanged |
+| `endFrame()` | 12 | frame-open/mark/record state unchanged |
+| tracker before-submit listener | 13 | open marks and submission stamps unchanged |
+| tracker completion listener | 14 | pending state/release count unchanged |
+| immediately before registered release callback | 4B/14/15 | callback count and record state unchanged |
+
+Lifecycle methods delegate to these checked entries; they do not duplicate an independently drifting affinity
+policy。
+
+<!-- affinity-entrypoint-matrix-end -->
 
 ## Repository and stack
 
@@ -472,12 +507,32 @@ git -C "$fork_clone" config remote.pushDefault origin
 cd "$fork_worktree"
 if stack_json=$(gh stack view --json 2>/dev/null); then
   test -n "$stack_json"
-  jq -e '
+  stack_branch_count=$(jq -er '.branches | length' <<<"$stack_json")
+  case "$stack_branch_count" in
+    1) reviewed_top_resume_sha=$remote_bottom_head ;;
+    2)
+      test "${reviewed_top_resume_sha:?supervisor reviewed top SHA required}" != ""
+      printf '%s\n' "$reviewed_top_resume_sha" | rg -q '^[0-9a-f]{40}$'
+      ;;
+    *) exit 1 ;;
+  esac
+  jq -e --arg base "$base_sha" --arg bottom "$remote_bottom_head" \
+    --arg top "$reviewed_top_resume_sha" '
+    def fullsha: type == "string" and test("^[0-9a-f]{40}$");
     .trunk == "eqmonitor/flutter-4dacd3fc" and
     .currentBranch == "feat/persistent-gpu-lifecycle" and
-    (([.branches[].name] == ["feat/persistent-gpu-lifecycle"]) or
+    (.branches[0].base | fullsha) and
+    (.branches[0].head | fullsha) and
+    .branches[0].base == $base and
+    .branches[0].head == $bottom and
+    (([.branches[].name] == ["feat/persistent-gpu-lifecycle"] and
+      $top == $bottom) or
      ([.branches[].name] == ["feat/persistent-gpu-lifecycle",
-                            "feat/persistent-packed-instance-geometry"]))
+                            "feat/persistent-packed-instance-geometry"] and
+      (.branches[1].base | fullsha) and
+      (.branches[1].head | fullsha) and
+      .branches[1].base == $bottom and
+      .branches[1].head == $top))
   ' <<<"$stack_json" >/dev/null
 else
   stack_rc=$?
@@ -508,11 +563,89 @@ Baseline failure is evidence, not pass. Device/Simulator/E2E is not part of this
 
 ## Per-task execution contract
 
-Every RED command below is intentionally expected to return nonzero with the named missing symbol/behavior. Run
-it as its own shell block; nonzero is the proof. After GREEN, run every named focused and regression file in that
-task, then analyze and diff check. Before commit run `git --no-pager diff --numstat HEAD --` with the task's exact
-files and require 30–100 handwritten changed lines. A different agent performs spec review and code review; only
-zero findings permits the exact named commit and `git push`。Generated lock changes are excluded from line count。
+Every task below contains a compilable RED test snippet, a type-checkable GREEN production snippet and an exact
+handwritten line budget. Add only the RED test first. Every fork RED is run through this exact harness in the same
+strict shell; a normal targeted test failure is exit `1`. Exit `0`, an unrelated/toolchain exit such as `99`, a
+missing test title, or a missing task-specific diagnostic all make the gate fail. Do not commit the intentional RED。
+
+Every compile-oriented source-contract RED imports `dart:io` and `package:flutter_test/flutter_test.dart` and uses
+this helper. The `marker` is the exact GREEN production signature/statement named in that task. Behavioral
+assertions stay in the same named test; the source assertion gives the fail-closed harness a deterministic
+task-specific diagnostic even when the pre-task API does not compile yet。
+
+```dart
+void expectRedSourceContract({
+  required String path,
+  required String marker,
+  required String diagnostic,
+}) {
+  final file = File(path);
+  expect(file.existsSync(), isTrue, reason: diagnostic);
+  expect(file.readAsStringSync(), contains(marker), reason: diagnostic);
+}
+```
+
+```bash
+set -euo pipefail
+run_fork_red() (
+  set -euo pipefail
+  test "$#" -eq 3
+  red_file=$1
+  red_title=$2
+  red_diagnostic=$3
+  if red_output=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- \
+    flutter test --enable-impeller "$red_file" --plain-name "$red_title" 2>&1); then
+    printf '%s\n' "$red_output" >&2
+    exit 1
+  else
+    red_rc=$?
+  fi
+  if test "$red_rc" -ne 1; then return 1; fi
+  if test -z "$red_output"; then return 1; fi
+  if ! printf '%s\n' "$red_output" | rg -F -- "$red_title" >/dev/null; then
+    return 1
+  fi
+  if ! printf '%s\n' "$red_output" | rg -F -- "$red_diagnostic" >/dev/null; then
+    return 1
+  fi
+)
+
+probe_title='probe target title'
+probe_diagnostic='RED:PROBE:target diagnostic'
+mise() {
+  printf '%s\n%s\n' "$probe_title" "$probe_diagnostic"
+  return 99
+}
+if run_fork_red ignored.dart "$probe_title" "$probe_diagnostic"; then
+  exit 1
+else
+  probe_rc=$?
+  test "$probe_rc" -ne 0
+fi
+mise() {
+  printf '%s\n' "$probe_title"
+  return 1
+}
+if run_fork_red ignored.dart "$probe_title" "$probe_diagnostic"; then
+  exit 1
+else
+  probe_rc=$?
+  test "$probe_rc" -ne 0
+fi
+unset -f mise
+```
+
+The explicit branches are required because zsh suppresses `errexit` inside a function invoked as an `if`
+condition; bare `test`/`rg` commands could otherwise continue until a later successful command. The first probe
+proves an rc99 toolchain crash is rejected even when it prints both expected strings. The second proves an
+unrelated rc1 is rejected when the diagnostic is absent. The implementation worker must execute both before Task1
+and record their nonzero statuses。
+
+After GREEN, run every named focused and regression file in that task, then analyze and diff check. Before commit
+run `git --no-pager diff --numstat HEAD --` with the task's exact files and reconcile the result with
+`**Handwritten budget:**`; generated locks and formatter-only indentation are excluded, but every handwritten
+production/test/doc line counts. A different agent performs spec review and code review; only zero findings permits
+the exact named commit and `git push`。
 
 The repeated GREEN blocks are the expanded form of this fail-closed harness. If an implementation agent uses the
 harness interactively, define it in that same shell; a failed test, analyze, or diff check is the function's
@@ -545,6 +678,27 @@ run_fork_green() (
 **Implementation shape:** retain `previous = completedThrough`; remove the id; if removal succeeded and the new
 watermark exceeds previous, iterate `List.of(_completionListeners)` in registration order。
 
+**RED test snippet:**
+
+```dart
+test("completion listeners observe the contiguous watermark in order", () {
+  expectRedSourceContract(
+    path: "lib/src/render/frame_transients.dart",
+    marker: "typedef GpuSubmissionCompletionListener = void Function(int completedThrough);",
+    diagnostic: "RED:T01:completion listener missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+typedef GpuSubmissionCompletionListener = void Function(int completedThrough);
+```
+
+**Handwritten budget:** 35–65 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** add test `completion listeners observe the contiguous watermark in order` using:
   ```dart
   final a = tracker.record(), b = tracker.record();
@@ -555,7 +709,7 @@ watermark exceeds previous, iterate `List.of(_completionListeners)` in registrat
   tracker..complete(a)..complete(999);
   expect(seen, ['first:2', 'second:2']);
   ```
-  Run fail-closed: `set -euo pipefail; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/gpu_submission_tracker_test.dart --plain-name 'completion listeners observe the contiguous watermark in order' 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'addCompletionListener' <<<"$out"`。
+  `run_fork_red test/render/gpu_submission_tracker_test.dart 'completion listeners observe the contiguous watermark in order' 'RED:T01:completion listener missing'`。
 - [ ] **GREEN:** notify a registration-order listener snapshot only when `_pending.remove(id)` is true and
   `completedThrough` advances. Run regressions:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/gpu_submission_tracker_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -573,8 +727,51 @@ watermark exceeds previous, iterate `List.of(_completionListeners)` in registrat
 **Implementation shape:** one `@immutable final class` with nine final int fields and the exact const named
 constructor; enums contain only the values under Final public API。
 
+**RED test snippet:**
+
+```dart
+test("public usage preserves nine logical fields and three enums", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_models.dart",
+    marker: "final class PersistentGpuMemoryUsage",
+    diagnostic: "RED:T02:public usage model missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+@immutable
+final class PersistentGpuMemoryUsage {
+  const PersistentGpuMemoryUsage({
+    required this.activeResourceCount,
+    required this.retiringResourceCount,
+    required this.failedResourceCount,
+    required this.activeTotalBytes,
+    required this.retiringTotalBytes,
+    required this.failedTotalBytes,
+    required this.activeInstanceBytes,
+    required this.retiringInstanceBytes,
+    required this.failedInstanceBytes,
+  });
+  final int activeResourceCount;
+  final int retiringResourceCount;
+  final int failedResourceCount;
+  final int activeTotalBytes;
+  final int retiringTotalBytes;
+  final int failedTotalBytes;
+  final int activeInstanceBytes;
+  final int retiringInstanceBytes;
+  final int failedInstanceBytes;
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** construct usage with 1..9 and reference all three enum value sets. Run:
-  `set -euo pipefail; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart --plain-name 'public usage preserves nine logical fields and three enums' 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'PersistentGpuMemoryUsage' <<<"$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_models_test.dart 'public usage preserves nine logical fields and three enums' 'RED:T02:public usage model missing'`。
 - [ ] **GREEN:** implement one `@immutable final class` plus exactly 3 enums. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU resource状態値を追加`。
@@ -593,6 +790,42 @@ constructor; enums contain only the values under Final public API。
 `SendPort` and throws `StateError` when `currentIsolateToken() != capturedToken`, using `SendPort` equality rather
 than assuming repeated `Isolate.current.controlPort` getter results are object-identical。
 
+**RED test snippet:**
+
+```dart
+test("snapshot is exact and mutations stay on one isolate", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_models.dart",
+    marker: "final class PersistentGpuMemorySnapshot",
+    diagnostic: "RED:T03:snapshot affinity contract missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentGpuExecutionAffinity {
+  PersistentGpuExecutionAffinity({SendPort Function()? currentIsolateToken})
+      : _currentIsolateToken =
+            currentIsolateToken ?? (() => Isolate.current.controlPort),
+        _capturedToken =
+            (currentIsolateToken ?? (() => Isolate.current.controlPort))();
+
+  final SendPort Function() _currentIsolateToken;
+  final SendPort _capturedToken;
+
+  void check() {
+    if (_currentIsolateToken() != _capturedToken) {
+      throw StateError('persistent GPU access crossed isolate affinity');
+    }
+  }
+}
+```
+
+**Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** assert every snapshot field and:
   ```dart
   final first = ReceivePort(), second = ReceivePort();
@@ -604,34 +837,140 @@ than assuming repeated `Isolate.current.controlPort` getter results are object-i
   first.close();
   second.close();
   ```
-  Run: `set -euo pipefail; title='snapshot is exact and mutations stay on one isolate'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_models_test.dart 'snapshot is exact and mutations stay on one isolate' 'RED:T03:snapshot affinity contract missing'`。
 - [ ] **GREEN:** default captures `Isolate.current.controlPort`; compare typed `SendPort` equality. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU snapshotとisolate制約を追加`。
 
-### Task 4: owner, allocation and immediate retirement (depends Task 3; 60–100 lines)
+### Task 4A: affinity-checked owner and allocation registration (depends Task 3; 50–85 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_resource_registry.dart`; Create
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
-**Interfaces:** Consumes tracker/affinity/models。Produces
-`int attachOwner()`、
-`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`、
-and lease `int get generation; PersistentGpuResourceState get state; Future<void> retire(); void requireCurrentActive()`。
+**Interfaces:** Consumes tracker/affinity/models。Produces `int attachOwner()` and
+`PersistentGpuResourceLease register({required int ownerId, required int totalBytes, required int instanceBytes, required void Function() release})`。
+Lease initially exposes `int get generation` and `void requireCurrentActive()`; Task4B adds retirement state/API。
 
-**Implementation shape:** `retire()` returns the record's existing completer Future when present; otherwise it
-creates/publishes the completer and sets `releasing` before invoking the stored callback once, changes terminal
-state, then completes that same Future. A callback's reentrant `retire()` therefore cannot allocate another Future。
+**Implementation shape:** registry owns monotonic owner/record IDs and generation1 active state. `attachOwner`,
+`register`, and `requireCurrentActive` call `_affinity.check()` first. Registration validates active owner,
+positive bytes, `instanceBytes <= totalBytes`, and active context before it creates a record or lease。
 
-- [ ] **RED:** owner IDs monotonic; invalid owner/bytes fail before callback; a never-marked lease releases once
-  immediately and repeated/reentrant `retire()` returns an identical Future. Run:
-  `set -euo pipefail; title='unused allocation retirement is immediate and idempotent'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
-- [ ] **GREEN:** create owner/record identity maps, generation1 active registry, and one cached completer per record;
-  set `releasing` before callback. No frame/submission state yet. Run:
+**RED test snippet:**
+
+```dart
+test('owner registration checks affinity before mutation', () {
+  final registryFile = File(
+    'lib/src/render/persistent_gpu_resource_registry.dart',
+  );
+  expect(
+    registryFile.existsSync(),
+    isTrue,
+    reason: 'RED:T04A:attachOwner affinity gate missing',
+  );
+});
+```
+
+This source-contract test compiles before the registry file exists。
+
+**GREEN implementation snippet:** the exact method prefixes are:
+
+```dart
+int attachOwner() {
+  _affinity.check();
+  final ownerId = _nextOwnerId++;
+  _owners[ownerId] = _PersistentGpuOwner.active();
+  return ownerId;
+}
+
+PersistentGpuResourceLease register({
+  required int ownerId,
+  required int totalBytes,
+  required int instanceBytes,
+  required void Function() release,
+}) {
+  _affinity.check();
+  final owner = _requireActiveOwner(ownerId);
+  _validateAllocationBytes(totalBytes, instanceBytes);
+  _requireActiveContext();
+  return _registerValidated(owner: owner, totalBytes: totalBytes,
+      instanceBytes: instanceBytes, release: release);
+}
+```
+
+**Handwritten budget:** production 42 + test 28 = 70 lines。
+
+- [ ] **RED:** owner IDs monotonic; invalid owner/bytes and affinity mismatch fail before record/callback. Restore
+  the original token and prove counts unchanged. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner registration checks affinity before mutation' 'RED:T04A:attachOwner affinity gate missing'`。
+- [ ] **GREEN:** implement the exact prefixes, owner/record maps and validation; no retire/frame/submission code.
+  Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+- [ ] **Commit:** `Feature: GPU allocation登録を追加`。
+
+### Task 4B: immediate idempotent retirement (depends Task 4A; 45–85 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Lease gains `PersistentGpuResourceState get state` and `Future<void> retire()`; registry gains one
+record retirement path reused by later dispose/invalidate/completion tasks。
+
+**Implementation shape:** lease `retire()` calls `_affinity.check()` first. Registry publishes a record completer,
+sets `releasing`, checks affinity again immediately before invoking the release callback, then sets retired and
+completes that same Future. Reentrant/repeated calls return the already-published Future by identity。
+
+**RED test snippet:**
+
+```dart
+test('unused allocation retirement is immediate and idempotent', () {
+  final source = File(
+    'lib/src/render/persistent_gpu_resource_registry.dart',
+  ).readAsStringSync();
+  expect(
+    source,
+    contains('Future<void> retire()'),
+    reason: 'RED:T04B:immediate retirement missing',
+  );
+});
+```
+
+Task4A's file exists, so this RED compiles without referencing the not-yet-added method。
+
+**GREEN implementation snippet:** add the complete lease delegate and synchronous release transition:
+
+```dart
+void requireCurrentActive() {
+  _registry._affinity.check();
+  _registry.requireCurrentActive(this);
+}
+
+Future<void> retire() {
+  _registry._affinity.check();
+  return _registry.retire(this);
+}
+
+Future<void> retire(PersistentGpuResourceLease lease) {
+  _affinity.check();
+  final record = _requireOwnedRecord(lease);
+  final existing = record.retirementCompleter;
+  if (existing != null) return existing.future;
+  final completer = record.retirementCompleter = Completer<void>();
+  record.internalState = _PersistentGpuAllocationState.releasing;
+  _affinity.check();
+  record.release();
+  record.internalState = _PersistentGpuAllocationState.retired;
+  completer.complete();
+  return completer.future;
+}
+```
+
+**Handwritten budget:** production 34 + test 32 = 66 lines。
+
+- [ ] **RED:** never-marked lease releases once immediately; repeated/reentrant `retire()` returns identical
+  Future. An affinity mismatch invokes no release and mutates no state. Run `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'unused allocation retirement is immediate and idempotent' 'RED:T04B:immediate retirement missing'`。
+- [ ] **GREEN:** implement only the immediate cached transition; Task12 later adds pending-open behavior. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
-- [ ] **Commit:** `Feature: GPU allocation leaseを追加`。
+- [ ] **Commit:** `Feature: GPU allocationを即時retire`。
 
-### Task 5: active logical-memory snapshot (depends Task 4; 45–90 lines)
+### Task 5: active logical-memory snapshot (depends Task 4B; 45–90 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`。
@@ -640,11 +979,48 @@ state, then completes that same Future. A callback's reentrant `retire()` theref
 `PersistentGpuMemorySnapshot snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
 
 **Implementation shape:** initialize two nine-counter accumulators, fold each record once into global and into
-owner when IDs match, then construct immutable usages/snapshot from tracker counters。
+owner when IDs match, then construct immutable usages/snapshot from tracker counters. `_affinity.check()` is the
+first executable statement, before owner lookup or counter reads。
+
+**RED test snippet:**
+
+```dart
+test("snapshot separates global and owner active logical bytes", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "PersistentGpuMemorySnapshot snapshotFor({",
+    diagnostic: "RED:T05:snapshot affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+PersistentGpuMemorySnapshot snapshotFor({
+  required int ownerId,
+  required PersistentGpuResourceLifecycleState lifecycleState,
+}) {
+  _affinity.check();
+  final owner = requireOwner(ownerId);
+  return buildPersistentGpuMemorySnapshot(
+    owner: owner,
+    lifecycleState: lifecycleState,
+    records: List.of(_records.values),
+    generation: _contextGeneration,
+    latestSubmission: _tracker.latestSubmission,
+    completedThrough: _tracker.completedThrough,
+  );
+}
+```
+
+**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** register `(64,24)` and `(96,48)` under two owners; assert global `2/160/72`, owner
-  `1/64/24`, generation1, exact tracker counters, unknown owner failure. Run:
-  `set -euo pipefail; title='snapshot separates global and owner active logical bytes'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `1/64/24`, generation1, exact tracker counters, unknown owner failure. Swap the affinity token, assert the exact
+  diagnostic and no getter/record read, restore it, and prove the snapshot is unchanged. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'snapshot separates global and owner active logical bytes' 'RED:T05:snapshot affinity gate missing'`。
 - [ ] **GREEN:** one fold builds global/owner active/retiring/failed buckets; do not report driver bytes. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU memory集計を追加`。
@@ -658,12 +1034,43 @@ owner when IDs match, then construct immutable usages/snapshot from tracker coun
 
 **Implementation shape:** set owner disposed and publish one owner FD completer/Future before calling any retire
 path; then snapshot its records, call each cached retire path, and complete FD from their non-eager `Future.wait`.
-Repeated and release-callback-reentrant calls return FD by identity。
+Repeated and release-callback-reentrant calls return FD by identity. `_affinity.check()` is first, before the
+owner lookup, cached-FD read, state mutation, or callback path。
+
+**RED test snippet:**
+
+```dart
+test("owner disposal shares resource futures and leaves other owners active", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "Future<void> disposeOwner(int ownerId)",
+    diagnostic: "RED:T06:dispose affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+Future<void> disposeOwner(int ownerId) {
+  _affinity.check();
+  final owner = requireOwner(ownerId);
+  return disposePersistentGpuOwner(
+    owner: owner,
+    records: List.of(_records.values),
+    retire: retireRecord,
+  );
+}
+```
+
+**Handwritten budget:** 50–90 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** dispose A retires only A while B remains active; disposed A snapshot remains readable; repeated and
   first-release-callback-reentrant dispose are identical; resource Future completes before FD; unknown owner fails.
+  An affinity mismatch returns no Future, invokes no release, and leaves owner/record state byte-for-byte unchanged.
   Run:
-  `set -euo pipefail; title='owner disposal shares resource futures and leaves other owners active'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'owner disposal shares resource futures and leaves other owners active' 'RED:T06:dispose affinity gate missing'`。
 - [ ] **GREEN:** publish owner state+FD before retiring a record snapshot; FD waits only that owner's records and
   propagates first error after every callback was attempted. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -679,12 +1086,42 @@ Repeated and release-callback-reentrant calls return FD by identity。
 **Implementation shape:** set global invalidating, create and publish one generation FI completer/Future, then
 snapshot and retire every current-generation record. This publication must precede the first synchronous release
 callback so reentrant invalidation sees the same FI. Complete it only after all record Futures and any owner FD
-notifications settle, then set invalidated immediately before successful FI completion。
+notifications settle, then set invalidated immediately before successful FI completion. `_affinity.check()` is
+the first executable statement before owner lookup, FI lookup, state mutation, or callbacks。
+
+**RED test snippet:**
+
+```dart
+test("one owner invalidates all immediate resources in the generation", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "Future<void> invalidateContext(int ownerId)",
+    diagnostic: "RED:T07:invalidate affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+Future<void> invalidateContext(int ownerId) {
+  _affinity.check();
+  requireActiveOwner(ownerId);
+  return invalidatePersistentGpuGeneration(
+    records: List.of(_records.values),
+    generation: _contextGeneration,
+    retire: retireRecord,
+  );
+}
+```
+
+**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** A invalidates A/B records; state and cached FI exist before the first callback; that callback's
   reentrant invalidation and B's call return the identical FI; register rejects; resource→FD→FI order is exact.
   Run:
-  `set -euo pipefail; title='one owner invalidates all immediate resources in the generation'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'one owner invalidates all immediate resources in the generation' 'RED:T07:invalidate affinity gate missing'`。
 - [ ] **GREEN:** validate active owner, publish context+FI before retiring a snapshot, finalize invalidated after
   all record/owner Futures settle. No open-frame references exist yet. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart test/render/persistent_gpu_resource_models_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -699,12 +1136,44 @@ notifications settle, then set invalidated immediately before successful FI comp
 lease `requireCurrentActive()` checks record active, owner active, context active, and record generation==global。
 
 **Implementation shape:** recovery attach creates only an owner entry; recreate verifies invalidated/no failures,
-increments generation once, clears prior FI and sets active; old records retain their original generation。
+increments generation once, clears prior FI and sets active; old records retain their original generation.
+`recreateContext` calls `_affinity.check()` first, before owner/context reads or generation mutation。
+
+**RED test snippet:**
+
+```dart
+test("zero-owner invalidation recovers while old generation leases reject", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "void recreateContext(int ownerId)",
+    diagnostic: "RED:T08:recreate affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void recreateContext(int ownerId) {
+  _affinity.check();
+  requireActiveOwner(ownerId);
+  if (_contextState != PersistentGpuContextState.invalidated ||
+      _failureLog.isNotEmpty) {
+    throw StateError('context is not recreatable');
+  }
+  _contextGeneration++;
+  _invalidationFuture = null;
+  _contextState = PersistentGpuContextState.active;
+}
+```
+
+**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** last owner dispose during invalidating leaves FI alive; owner count0 reaches invalidated; recovery
   owner attaches, cannot register, recreates generation1→2, then registers. Old generation lease rejects via the
   same surviving owner after recreate. Invalidating/failed attach and invalid recreate rows fail. Run:
-  `set -euo pipefail; title='zero-owner invalidation recovers while old generation leases reject'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'zero-owner invalidation recovers while old generation leases reject' 'RED:T08:recreate affinity gate missing'`。
 - [ ] **GREEN:** registry lifetime is process-global; increment only invalidated→active; never mutate old record
   generation. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -723,9 +1192,39 @@ internal exact delegates `void checkCanCreate()` and
 **Implementation shape:** both constructors call `attachOwner`; every getter/delegate forwards with stored ownerId;
 the public constructor alone selects the global registry。
 
+**RED test snippet:**
+
+```dart
+test("lifecycle handles share one registry and distinct owners", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_lifecycle.dart",
+    marker: "final class PersistentGpuResourceLifecycle",
+    diagnostic: "RED:T09:lifecycle handle missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentGpuResourceLifecycle {
+  PersistentGpuResourceLifecycle()
+      : this.forRegistry(persistentGpuResourceRegistry);
+
+  PersistentGpuResourceLifecycle.forRegistry(this._registry)
+      : _ownerId = _registry.attachOwner();
+
+  final PersistentGpuResourceRegistry _registry;
+  final int _ownerId;
+}
+```
+
+**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** two injected handles share context/generation/global snapshot but distinct owner usage; public
   constructor uses the global identity. Run:
-  `set -euo pipefail; title='lifecycle handles share one registry and distinct owners'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_lifecycle_test.dart 'lifecycle handles share one registry and distinct owners' 'RED:T09:lifecycle handle missing'`。
 - [ ] **GREEN:** handle stores registry/ownerId/cached FE only. No operation method is added here. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: persistent GPU lifecycleを追加`。
@@ -741,9 +1240,34 @@ non-`async` `dispose()` matching active-owner rows in Final state contracts。
 **Implementation shape:** methods first check local owner state then directly return/call the registry method;
 they add no `async`, completer or state copy。
 
+**RED test snippet:**
+
+```dart
+test("active lifecycle operations match every context row", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_lifecycle.dart",
+    marker: "Future<void> invalidateContext()",
+    diagnostic: "RED:T10:active operation matrix missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+Future<void> invalidateContext() => _registry.invalidateContext(_ownerId);
+
+void recreateContext() => _registry.recreateContext(_ownerId);
+
+Future<void> dispose() => _registry.disposeOwner(_ownerId);
+```
+
+**Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** parameterize active owner × active/invalidating/invalidated: shared FI, recreate only from
   invalidated, owner-specific FD, and next-generation FI non-identical. Run:
-  `set -euo pipefail; title='active lifecycle operations match every context row'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_lifecycle_test.dart 'active lifecycle operations match every context row' 'RED:T10:active operation matrix missing'`。
 - [ ] **GREEN:** return registry Futures directly; no second completer. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_models_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: lifecycle active操作表を固定`。
@@ -758,11 +1282,39 @@ they add no `async`, completer or state copy。
 **Implementation shape:** dispose stores FD once; disposed invalidate returns one pre-created failed FE;
 recreate throws synchronously; snapshot/getters remain registry reads。
 
+**RED test snippet:**
+
+```dart
+test("disposed lifecycle and release reentry preserve Future identities", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_lifecycle.dart",
+    marker: "_disposedInvalidateFuture",
+    diagnostic: "RED:T11:disposed reentry matrix missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+late final Future<void> _disposedInvalidateFuture = Future<void>.error(
+  StateError('persistent GPU lifecycle is disposed'),
+);
+
+Future<void> invalidateContext() => state ==
+        PersistentGpuResourceLifecycleState.disposed
+    ? _disposedInvalidateFuture
+    : _registry.invalidateContext(_ownerId);
+```
+
+**Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** for active/invalidating/invalidated contexts, disposed invalidate returns identical FE, disposed
   dispose identical FD, disposed recreate throws synchronously, dispose during invalidation waits own records, and
   release callback reenters
   dispose/invalidate/snapshot without duplicate release. Run:
-  `set -euo pipefail; title='disposed lifecycle and release reentry preserve Future identities'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_lifecycle_test.dart 'disposed lifecycle and release reentry preserve Future identities' 'RED:T11:disposed reentry matrix missing'`。
 - [ ] **GREEN:** disposed check precedes global mutation; only FE lives on handle. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: lifecycle disposed操作表を固定`。
@@ -777,14 +1329,58 @@ recreate throws synchronously; snapshot/getters remain registry reads。
 `void markUsed(PersistentGpuResourceLease lease)`、`void endFrame()` and open identity set; lease produces
 `void markUsed()` as its registry-bound direct delegate for Task38。
 
-**Implementation shape:** `PersistentGpuResourceLease.markUsed() => _registry.markUsed(this);`; registry checks
-affinity/frame/lease identity/current generation before inserting the record into `_openFrameMarks`。
+**Implementation shape:** lease `markUsed()` calls `_registry._affinity.check()` before forwarding; registry checks
+affinity/frame/lease identity/current generation before inserting the record into `_openFrameMarks`. `beginFrame`,
+`markUsed`, and `endFrame` each have `_affinity.check()` as the first executable statement; the lease delegate also
+checks registry affinity before forwarding. No check may occur after a frame flag/set read or mutation。
+
+**RED test snippet:**
+
+```dart
+test("open frame without submission retires only at end", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "void beginFrame()",
+    diagnostic: "RED:T12:frame affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void beginFrame() {
+  _affinity.check();
+  if (_frameOpen) throw StateError('frame already open');
+  _frameOpen = true;
+}
+
+void markUsed(PersistentGpuResourceLease lease) {
+  _affinity.check();
+  if (!_frameOpen) throw StateError('frame is closed');
+  final record = requireCurrentActiveRecord(lease);
+  _openFrameMarks.add(record);
+}
+
+void endFrame() {
+  _affinity.check();
+  if (!_frameOpen) throw StateError('frame is closed');
+  _frameOpen = false;
+  settleNoSubmissionMarks(Set.of(_openFrameMarks));
+  _openFrameMarks.clear();
+}
+```
+
+**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** never-submitted `begin→mark→retire→end` releases once; a resource with incomplete prior
   `lastSubmission=1` stays pending through a later no-submit frame until completion1; double mark stays one mark;
-  nested begin, closed end/mark, foreign/terminal/old-generation lease throw before mutation. Run:
-  `set -euo pipefail; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name 'open frame without submission retires only at end' 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'beginFrame' <<<"$out"`。
-- [ ] **GREEN:** mark records by identity; immediate `retire()` path from Task4 becomes pending-open when marked;
+  nested begin, closed end/mark, foreign/terminal/old-generation lease throw before mutation. For each of
+  begin/lease-mark/registry-mark/end, swap the token, assert its diagnostic and unchanged frame/record snapshots,
+  restore the token, then prove the valid call succeeds. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'open frame without submission retires only at end' 'RED:T12:frame affinity gate missing'`。
+- [ ] **GREEN:** mark records by identity; immediate `retire()` path from Task4B becomes pending-open when marked;
   end clears marks and releases only when `lastSubmission == null || completedThrough >= lastSubmission`; otherwise
   it preserves that exact prior stamp as pending-submission. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -796,14 +1392,45 @@ affinity/frame/lease identity/current generation before inserting the record int
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
 **Interfaces:** Registry constructor registers exactly one tracker before-submit listener; record stores nullable
-`lastSubmission`。
+`lastSubmission`; internal directly testable entrypoint is `void handleBeforeSubmit(int submissionId)`。
 
 **Implementation shape:** listener snapshots `_openFrameMarks`, clears it, and assigns each live record
-`lastSubmission = max(lastSubmission ?? id, id)` without settling any Future。
+`lastSubmission = max(lastSubmission ?? id, id)` without settling any Future. Its callback entrypoint calls
+`_affinity.check()` first, before reading the mark set or submission id and before clearing/stamping anything。
+
+**RED test snippet:**
+
+```dart
+test("retire during open frame stamps the next submission after invalidation", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "void handleBeforeSubmit(int submissionId)",
+    diagnostic: "RED:T13:before-submit affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void handleBeforeSubmit(int submissionId) {
+  _affinity.check();
+  final marked = Set<_PersistentGpuResourceRecord>.of(_openFrameMarks);
+  _openFrameMarks.clear();
+  for (final record in marked) {
+    record.lastSubmission = max(record.lastSubmission ?? submissionId,
+        submissionId);
+  }
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** `begin→mark→retire→record` remains pending with last1; two submits produce last2; Task7
-  invalidation rejects new marks but the pre-existing mark still receives its stamp. Run:
-  `set -euo pipefail; title='retire during open frame stamps the next submission after invalidation'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  invalidation rejects new marks but the pre-existing mark still receives its stamp. A callback-affinity mismatch
+  leaves every mark and stamp unchanged; after restoring the token, the same callback stamps normally. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'retire during open frame stamps the next submission after invalidation' 'RED:T13:before-submit affinity gate missing'`。
 - [ ] **GREEN:** listener snapshots+clears marks and writes max(previous,id) for active/pending-open records; it
   never completes retirement. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -815,14 +1442,50 @@ affinity/frame/lease identity/current generation before inserting the record int
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
 **Interfaces:** Registry constructor registers one completion listener; existing lease cached Future/state now
-waits `completedThrough >= lastSubmission`。
+waits `completedThrough >= lastSubmission`; internal directly testable entrypoint is
+`void handleCompletion(int completedThrough)`。
 
-**Implementation shape:** completion listener snapshots eligible pending records and invokes the existing Task4
-release routine only when nullable stamp is absent or at/below watermark。
+**Implementation shape:** completion listener snapshots eligible pending records and invokes the existing Task4B
+release routine only when nullable stamp is absent or at/below watermark. Its callback entrypoint calls
+`_affinity.check()` first, before reading the watermark/records; the release routine checks again immediately before
+every registered release callback invocation。
+
+**RED test snippet:**
+
+```dart
+test("completion watermark releases every stamped retirement exactly once", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "void handleCompletion(int completedThrough)",
+    diagnostic: "RED:T14:completion affinity gate missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void handleCompletion(int completedThrough) {
+  _affinity.check();
+  final eligible = _pendingRecords.where(
+    (record) => switch (record.lastSubmission) {
+      null => true,
+      final submission => submission <= completedThrough,
+    },
+  ).toList(growable: false);
+  for (final record in eligible) {
+    releaseRecord(record);
+  }
+}
+```
+
+**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** cover submit→complete→retire, mark→retire→submit→complete, and completion ids2→1; assert no
-  early callback, release once, identical Future. Run:
-  `set -euo pipefail; title='completion watermark releases every stamped retirement exactly once'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  early callback, release once, identical Future. A completion-callback affinity mismatch invokes no release and
+  changes no record/accounting/Future; restore the token and prove the callback completes normally. Run:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'completion watermark releases every stamped retirement exactly once' 'RED:T14:completion affinity gate missing'`。
 - [ ] **GREEN:** eligible snapshot only; set releasing before callback; success removes accounting then completes.
   Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/frame_transients_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -839,13 +1502,39 @@ release routine only when nullable stamp is absent or at/below watermark。
 
 **Implementation shape:** release routine catches each callback error after marking the record failed, stores the
 first as context cause/terminal Future, appends every error, and continues its precomputed release snapshot;
-`failureLog` returns `List<AsyncError>.unmodifiable(_failureLog)` so tests cannot mutate registry state。
+`failureLog` returns `List<AsyncError>.unmodifiable(_failureLog)` so tests cannot mutate registry state. The
+release routine executes `_affinity.check()` immediately before each registered callback; an affinity failure is
+recorded as that record's release failure without invoking the callback and continuation still follows the
+precomputed snapshot order。
+
+**RED test snippet:**
+
+```dart
+test("release failures are ordered terminal and do not stop later release", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_resource_registry.dart",
+    marker: "List<AsyncError>.unmodifiable(_failureLog)",
+    diagnostic: "RED:T15:ordered release failure missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+@visibleForTesting
+List<AsyncError> get failureLog =>
+    List<AsyncError>.unmodifiable(_failureLog);
+```
+
+**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
 - [ ] **RED:** A callback reenters its retire/snapshot then throws first; B callback throws second. Complete the
   shared submission; assert callbacks once, both resources/context failed, failed bytes retained, later records
   still attempted, `failureLog.map((entry) => entry.error)` is `[first,second]`. Public lifecycle then covers
   active/disposed failed-context rows. Run:
-  `set -euo pipefail; title='release failures are ordered terminal and do not stop later release'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'release failures are ordered terminal and do not stop later release' 'RED:T15:ordered release failure missing'`。
 - [ ] **GREEN:** move state/accounting before callback; first error is cause, all later errors append, continue a
   release snapshot and return the cached terminal context Future for later invalidation. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -881,9 +1570,52 @@ if (primary case final failure) {
 }
 ```
 
+**RED test snippet:**
+
+```dart
+test("encode scope closes and preserves the original failure", () {
+  expectRedSourceContract(
+    path: "lib/src/render/persistent_gpu_scene_frame.dart",
+    marker: "void runPersistentGpuEncodeScope({",
+    diagnostic: "RED:T16:encode failure preservation missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+@visibleForTesting
+void runPersistentGpuEncodeScope({
+  required void Function() beginFrame,
+  required void Function() encode,
+  required void Function() endFrame,
+}) {
+  beginFrame();
+  AsyncError? primary;
+  try {
+    encode();
+  } catch (error, stackTrace) {
+    primary = AsyncError(error, stackTrace);
+  } finally {
+    try {
+      endFrame();
+    } catch (error, stackTrace) {
+      primary ??= AsyncError(error, stackTrace);
+    }
+  }
+  if (primary case final failure) {
+    Error.throwWithStackTrace(failure.error, failure.stackTrace);
+  }
+}
+```
+
+**Handwritten budget:** 35–70 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** normal events are begin/encode/end; encode failure still ends and rethrows identical error/stack;
   begin failure runs neither later callback; encode+end failure preserves encode primary. Run:
-  `set -euo pipefail; title='encode scope closes and preserves the original failure'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_scene_frame_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_scene_frame_test.dart 'encode scope closes and preserves the original failure' 'RED:T16:encode failure preservation missing'`。
 - [ ] **GREEN:** one begin, one `try/finally`, capture one `AsyncError` only to preserve primary via
   `Error.throwWithStackTrace`; no generic framework. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_scene_frame_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -895,17 +1627,58 @@ if (primary case final failure) {
 `test/render/persistent_gpu_scene_integration_test.dart`。
 
 **Interfaces:** Existing `renderViews(List<RenderView> views, ui.Canvas canvas, {ui.Rect? region, double? pixelRatio})`
-remains public wrapper; original body becomes exact private
-`void _renderViewsImpl(List<RenderView> views, ui.Canvas canvas, {ui.Rect? region, double? pixelRatio})`。
+remains the sole implementation entrypoint. It invokes the top-level Task16 seam directly; no private
+`_renderViewsImpl`, private method, subclass, or second render entrypoint is introduced。
 
-**Implementation shape:** wrapper has one expression-level call to Task16 seam with global begin/end and a closure
-calling the renamed body with all four arguments unchanged。
+**Implementation shape:** replace only the opening and closing braces around the existing body so the method has
+one expression-level `runPersistentGpuEncodeScope` call. Its `encode` closure retains
+the old body verbatim; formatter-only indentation is excluded from the handwritten budget. Global begin/end are
+tear-offs. This makes the top-level seam directly testable while preserving the public method as the only Scene
+entrypoint。
+
+**RED test snippet:**
+
+```dart
+test('Scene renderViews owns exactly one persistent encode scope', () {
+  final source = File('lib/src/scene.dart').readAsStringSync();
+  expect(
+    source,
+    allOf(
+      contains('runPersistentGpuEncodeScope('),
+      contains('encode: () {'),
+      isNot(contains('_renderViewsImpl')),
+    ),
+    reason: 'RED:T17:Scene encode scope missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```diff
+-  }) {
++  }) => runPersistentGpuEncodeScope(
++    beginFrame: persistentGpuResourceRegistry.beginFrame,
++    encode: () {
+@@ unchanged renderViews body @@
+-  }
++    },
++    endFrame: persistentGpuResourceRegistry.endFrame,
++  );
+```
+
+This exact structural diff wraps the unchanged, already type-checked method statements inline and introduces no
+callable besides Task16's top-level seam. The `@@` line is diff notation, not source. The final source-contract
+assertion rejects `renderViewsBody` and `_renderViewsImpl` and requires the old first and last statements inside
+`encode`。
+
+**Handwritten budget:** production 8–15 + test 32–50 = 40–65 lines; formatter-only indentation is excluded。
 
 - [ ] **RED:** source/test seam asserts wrapper contains one `runPersistentGpuEncodeScope`, begin/end use global
-  registry, encode calls `_renderViewsImpl` once, and empty/throw routes keep ordering. Run:
-  `set -euo pipefail; title='Scene renderViews owns exactly one persistent encode scope'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_scene_integration_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
-- [ ] **GREEN:** rename old body without reindent; wrapper calls global begin, exact
-  `_renderViewsImpl(views, canvas, region: region, pixelRatio: pixelRatio)`, global end. Run:
+  registry, encode owns the old body inline once, no private/body helper identifier exists, and empty/throw routes
+  keep ordering. Run `run_fork_red test/render/persistent_gpu_scene_integration_test.dart 'Scene renderViews owns exactly one persistent encode scope' 'RED:T17:Scene encode scope missing'`。
+- [ ] **GREEN:** keep the old body inline inside the top-level seam closure and use exact global begin/end tear-offs.
+  Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_scene_integration_test.dart test/render/persistent_gpu_scene_frame_test.dart test/scene_view_test.dart test/render_scale_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: SceneへGPU lifecycleを接続`。
 
@@ -920,9 +1693,37 @@ affinity, global registry and encode seam。
 **Implementation shape:** `lib/src/scene.dart` imports internal files for Scene use; `lib/scene.dart` adds one
 curated export with a `show` list containing only the six public lifecycle symbols。
 
+**RED test snippet:**
+
+```dart
+test("public lifecycle barrel hides registry internals", () {
+  expectRedSourceContract(
+    path: "lib/scene.dart",
+    marker: "show PersistentGpuResourceLifecycle",
+    diagnostic: "RED:T18:curated lifecycle export missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+export 'src/render/persistent_gpu_resource_lifecycle.dart'
+    show
+        PersistentGpuContextState,
+        PersistentGpuMemorySnapshot,
+        PersistentGpuMemoryUsage,
+        PersistentGpuResourceLifecycle,
+        PersistentGpuResourceLifecycleState,
+        PersistentGpuResourceState;
+```
+
+**Handwritten budget:** 35–70 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** public-only import constructs lifecycle and reads active/generation1/zero snapshot; source
   assertions reject each internal symbol. Run:
-  `set -euo pipefail; title='public lifecycle barrel hides registry internals'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_lifecycle_public_api_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_lifecycle_public_api_test.dart 'public lifecycle barrel hides registry internals' 'RED:T18:curated lifecycle export missing'`。
 - [ ] **GREEN:** add curated `show` exports only. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_lifecycle_public_api_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_scene_integration_test.dart test/scene_view_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: persistent GPU lifecycleを公開`。
@@ -938,9 +1739,32 @@ and logical/reference vs resident-memory boundary。
 **Implementation shape:** one README section contains exact sequence and explicit bullets for multi-owner,
 terminal failure, logical/resident and missing automatic/device evidence boundaries。
 
+**RED test snippet:**
+
+```dart
+test("README states terminal lifecycle ordering", () {
+  expectRedSourceContract(
+    path: "README.md",
+    marker: "Persistent GPU resource lifecycle",
+    diagnostic: "RED:T19:lifecycle README contract missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```markdown
+## Persistent GPU resource lifecycle
+
+stop rendering → detach → invalidate → await → recreate
+```
+
+**Handwritten budget:** 30–70 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** source expectation requires sequence plus multi-owner invalidation, terminal failure, no automatic
   context-loss signal, no device evidence. Run:
-  `set -euo pipefail; title='README states terminal lifecycle ordering'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_lifecycle_public_api_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/render/persistent_gpu_lifecycle_public_api_test.dart 'README states terminal lifecycle ordering' 'RED:T19:lifecycle README contract missing'`。
 - [ ] **GREEN:** add only consumer contract. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_lifecycle_public_api_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_scene_integration_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Docs: persistent GPU lifecycle契約を追加`。
@@ -1042,9 +1866,46 @@ fi
 **Implementation shape:** each method validates nonnegative operands and checks using division/difference before
 performing its single multiply/add; align16 calls checked add with 15 before masking。
 
+**RED test snippet:**
+
+```dart
+test("checked arithmetic rejects before overflow", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedCheckedMath",
+    diagnostic: "RED:T20:checked arithmetic missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedCheckedMath {
+  static int multiply({required int left, required int right}) {
+    if (left < 0 || right < 0 ||
+        (right != 0 && left > kMaxPersistentPackedAllocationBytes ~/ right)) {
+      throw ArgumentError('multiply($left,$right)');
+    }
+    return left * right;
+  }
+
+  static int add({required int left, required int right}) {
+    if (left < 0 || right < 0 ||
+        left > kMaxPersistentPackedAllocationBytes - right) {
+      throw ArgumentError('add($left,$right)');
+    }
+    return left + right;
+  }
+}
+```
+
+**Handwritten budget:** 45–80 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** exact happy `0*max=0`, `max+0=max`, `align16(1)=16`; negative, `max*2`, `max+1`,
   `align16(max)`, `endOffset(max,1)` errors include operation/operands. Run:
-  `set -euo pipefail; title='checked arithmetic rejects before overflow'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'checked arithmetic rejects before overflow' 'RED:T20:checked arithmetic missing'`。
 - [ ] **GREEN:** multiply uses zero case then `left > max ~/ right`; add/end use `left > max-right`; align uses
   checked add before mask. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1062,9 +1923,52 @@ performing its single multiply/add; align16 calls checked add with 15 before mas
 **Implementation shape:** map every source buffer and attribute to a new const-compatible descriptor and wrap
 both nested and outer lists with `List.unmodifiable` before storing/validating。
 
+**RED test snippet:**
+
+```dart
+test("layout is deeply snapshotted before caller mutation", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedLayoutSnapshot",
+    diagnostic: "RED:T21:deep layout snapshot missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedLayoutSnapshot {
+  PersistentPackedLayoutSnapshot.create(VertexLayoutDescriptor source)
+      : layout = VertexLayoutDescriptor(
+          buffers: List.unmodifiable(
+            source.buffers.map(
+              (buffer) => VertexBufferDescriptor(
+                strideInBytes: buffer.strideInBytes,
+                stepMode: buffer.stepMode,
+                attributes: List.unmodifiable(
+                  buffer.attributes.map(
+                    (attribute) => VertexAttributeDescriptor(
+                      name: attribute.name,
+                      format: attribute.format,
+                      offsetInBytes: attribute.offsetInBytes,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+  final VertexLayoutDescriptor layout;
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** mutate/clear caller buffer and attribute lists after create; returned nested lists reject mutation
   and remain value equal. Run:
-  `set -euo pipefail; title='layout is deeply snapshotted before caller mutation'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'layout is deeply snapshotted before caller mutation' 'RED:T21:deep layout snapshot missing'`。
 - [ ] **GREEN:** reconstruct every descriptor/attribute with `List.unmodifiable` before validation. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/vertex_layout_test.dart test/interleaved_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed layoutを複製`。
@@ -1080,9 +1984,36 @@ both nested and outer lists with `List.unmodifiable` before storing/validating�
 **Implementation shape:** validate outer slot count/modes/strides, then each attribute name/list using one
 cross-slot name set; call existing `toGpuLayout()` only after these policies pass。
 
+**RED test snippet:**
+
+```dart
+test("layout rejects slots names and strides", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "gpu.VertexStepMode.instance",
+    diagnostic: "RED:T22:slot name stride validation missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void validatePersistentPackedSlots(VertexLayoutDescriptor layout) {
+  if (layout.buffers.length != 2 ||
+      layout.buffers[0].stepMode != gpu.VertexStepMode.vertex ||
+      layout.buffers[1].stepMode != gpu.VertexStepMode.instance) {
+    throw ArgumentError('packed layout requires vertex slot0 and instance slot1');
+  }
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** reject slot count0/1/3, wrong step modes, empty attributes, empty/whitespace/surrounding-whitespace
   name, duplicate names across slots, stride<=0. Run:
-  `set -euo pipefail; title='layout rejects slots names and strides'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'layout rejects slots names and strides' 'RED:T22:slot name stride validation missing'`。
 - [ ] **GREEN:** require `name.isNotEmpty && name.trim() == name` without rename; one name set across slots;
   then invoke existing `toGpuLayout()`. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/vertex_layout_test.dart test/shader_material_vertex_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1098,10 +2029,34 @@ cross-slot name set; call existing `toGpuLayout()` only after these policies pas
 **Implementation shape:** build local `(start, end, name)` records using checked end, validate alignment/stride,
 sort by start and reject only `next.start < current.end`。
 
+**RED test snippet:**
+
+```dart
+test("layout rejects misaligned overlapping checked ranges", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "next.start < current.end",
+    diagnostic: "RED:T23:aligned range validation missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+bool persistentPackedRangesOverlap({
+  required ({int start, int end}) current,
+  required ({int start, int end}) next,
+}) => next.start < current.end;
+```
+
+**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** reject negative offset, checked end overflow/max breach, end>stride, offset misaligned to
   `gcd(bytesPerElement,4)`, stride misaligned to slot maximum, overlap `[0,12)`/`[8,12)`; accept adjacent
   `[0,8)`/`[8,12)`; overlap is accepted before GREEN. Run:
-  `set -euo pipefail; title='layout rejects misaligned overlapping checked ranges'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'layout rejects misaligned overlapping checked ranges' 'RED:T23:aligned range validation missing'`。
 - [ ] **GREEN:** checked ends only; sort local `(start,end,name)` and compare adjacent ranges. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/vertex_layout_test.dart test/geometry_builder_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed attribute範囲を検証`。
@@ -1117,9 +2072,42 @@ sort by start and reject only `next.start < current.end`。
 **Implementation shape:** copy six doubles, validate them and derived center/radius are finite, retain only those
 scalars, and construct new Aabb3/Sphere on every getter call。
 
+**RED test snippet:**
+
+```dart
+test("bounds validate derived values and return defensive copies", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedBoundsSnapshot",
+    diagnostic: "RED:T24:defensive bounds missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedBoundsSnapshot {
+  PersistentPackedBoundsSnapshot.create(vm.Aabb3 source)
+      : _min = vm.Vector3.copy(source.min),
+        _max = vm.Vector3.copy(source.max);
+  final vm.Vector3 _min;
+  final vm.Vector3 _max;
+  vm.Aabb3 get localBounds =>
+      vm.Aabb3.minMax(vm.Vector3.copy(_min), vm.Vector3.copy(_max));
+  vm.Sphere get localBoundingSphere {
+    final center = (_min + _max)..scale(0.5);
+    return vm.Sphere.centerRadius(center, (_max - _min).length * 0.5);
+  }
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** reject NaN/infinity/min>max and finite endpoints yielding non-finite center/radius; mutate source,
   returned Aabb3 and returned Sphere then observe canonical later copies. Run:
-  `set -euo pipefail; title='bounds validate derived values and return defensive copies'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'bounds validate derived values and return defensive copies' 'RED:T24:defensive bounds missing'`。
 - [ ] **GREEN:** retain six finite scalars and finite derived center/radius only; construct fresh objects per getter.
   Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/bounds_test.dart test/cull_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed boundsを防御的に固定`。
@@ -1136,9 +2124,39 @@ with final `hasIndices/indexCount/indexBytes`; retains no data。
 **Implementation shape:** null returns no-index scalars; nonnull chooses width via exhaustive enum switch,
 requires positive divisible length and positive vertex count, and stores count/byte scalars only。
 
+**RED test snippet:**
+
+```dart
+test("index byte shape matches exact enum width", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedIndexPlan",
+    diagnostic: "RED:T25:index byte shape missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedIndexPlan {
+  const PersistentPackedIndexPlan({
+    required this.hasIndices,
+    required this.indexCount,
+    required this.indexBytes,
+  });
+  final bool hasIndices;
+  final int indexCount;
+  final int indexBytes;
+}
+```
+
+**Handwritten budget:** 35–75 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** null accepted; non-null empty, int16 odd, int32 non-multiple4, vertexCount<=0 rejected; supported
   widths produce exact counts. Run:
-  `set -euo pipefail; title='index byte shape matches exact enum width'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'index byte shape matches exact enum width' 'RED:T25:index byte shape missing'`。
 - [ ] **GREEN:** exhaustive index-type switch and exact divisibility; no fallback enum. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/geometry_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed index形状を検証`。
@@ -1153,9 +2171,37 @@ requires positive divisible length and positive vertex count, and stores count/b
 **Implementation shape:** loop from element0 to indexCount-1, derive byte offset from width, read the matching
 little-endian unsigned value, and throw with element/value/count on first invalid value。
 
+**RED test snippet:**
+
+```dart
+test("every index is smaller than vertexCount", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "getUint32(byteOffset, Endian.little)",
+    diagnostic: "RED:T26:index value scan missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+int readPersistentPackedIndex({
+  required ByteData data,
+  required gpu.IndexType type,
+  required int byteOffset,
+}) => switch (type) {
+  gpu.IndexType.int16 => data.getUint16(byteOffset, Endian.little),
+  gpu.IndexType.int32 => data.getUint32(byteOffset, Endian.little),
+};
+```
+
+**Handwritten budget:** 40–80 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** before adding the scan, int16/int32 accept `[0,vertexCount-1]` and erroneously accept equal/larger;
   test expects `ArgumentError` including element/value/count. Run:
-  `set -euo pipefail; title='every index is smaller than vertexCount'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'every index is smaller than vertexCount' 'RED:T26:index value scan missing'`。
 - [ ] **GREEN:** use `getUint16/getUint32(byteOffset, Endian.little)` and retain no input. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/geometry_test.dart test/mesh_data_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed index値を検証`。
@@ -1171,9 +2217,45 @@ little-endian unsigned value, and throw with element/value/count on first invali
 **Implementation shape:** call Task20 multiply for vertex/instance, align16 for instance offset, add for
 non-index/total; compare source lengths only after all checked scalar sizes exist。
 
+**RED test snippet:**
+
+```dart
+test("allocation sizes use checked multiply align and add", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedAllocationSizes",
+    diagnostic: "RED:T27:checked allocation size missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedAllocationSizes {
+  const PersistentPackedAllocationSizes({
+    required this.vertexBytes,
+    required this.instanceBytes,
+    required this.instanceOffset,
+    required this.nonIndexBytes,
+    required this.indexBytes,
+    required this.totalBytes,
+  });
+  final int vertexBytes;
+  final int instanceBytes;
+  final int instanceOffset;
+  final int nonIndexBytes;
+  final int indexBytes;
+  final int totalBytes;
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** assert vertex multiply, align16, padding, instance multiply, non-index/index adds; reject nonpositive
   counts and per-buffer/total max before source-length compare. Run:
-  `set -euo pipefail; title='allocation sizes use checked multiply align and add'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'allocation sizes use checked multiply align and add' 'RED:T27:checked allocation size missing'`。
 - [ ] **GREEN:** every compound operation calls Task20 methods; no raw multiply/add. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/geometry_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed byte長を計算`。
@@ -1190,9 +2272,45 @@ exposes immutable subplans/scalars, retains no ByteData。
 **Implementation shape:** create layout/bounds snapshots, index and sizing in that order; validate exact lengths;
 return a final object containing only those immutable values and scalars。
 
+**RED test snippet:**
+
+```dart
+test("composite plan retains no caller-owned source", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "final class PersistentPackedInstancePlan",
+    diagnostic: "RED:T28:immutable plan missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class PersistentPackedInstancePlan {
+  const PersistentPackedInstancePlan.internal({
+    required this.layout,
+    required this.bounds,
+    required this.index,
+    required this.sizes,
+    required this.vertexCount,
+    required this.instanceCount,
+  });
+  final PersistentPackedLayoutSnapshot layout;
+  final PersistentPackedBoundsSnapshot bounds;
+  final PersistentPackedIndexPlan index;
+  final PersistentPackedAllocationSizes sizes;
+  final int vertexCount;
+  final int instanceCount;
+}
+```
+
+**Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** valid indexed/non-indexed plans, exact length mismatches, and post-create mutation of all source
   objects. Run:
-  `set -euo pipefail; title='composite plan retains no caller-owned source'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'composite plan retains no caller-owned source' 'RED:T28:immutable plan missing'`。
 - [ ] **GREEN:** snapshot layout/bounds first; validate index/sizing; compare exact lengths; retain scalars/subplans.
   Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/bounds_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed upload planを合成`。
@@ -1208,9 +2326,56 @@ return a final object containing only those immutable values and scalars。
 **Implementation shape:** three ordered callback-result checks that throw `StateError` on false using exact destination
 offsets; omit the third entirely when plan has no index; never catch callbacks。
 
+**RED test snippet:**
+
+```dart
+test("upload executor writes each source exactly once", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_plan.dart",
+    marker: "void executePersistentPackedWrites({",
+    diagnostic: "RED:T29:exact write sequence missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void executePersistentPackedWrites({
+  required PersistentPackedInstancePlan plan,
+  required ByteData vertexData,
+  required ByteData instanceData,
+  required ByteData? indexData,
+  required bool Function({
+    required ByteData source,
+    required int destinationOffsetInBytes,
+  }) overwriteNonIndex,
+  required bool Function({
+    required ByteData source,
+    required int destinationOffsetInBytes,
+  }) overwriteIndex,
+}) {
+  if (!overwriteNonIndex(source: vertexData, destinationOffsetInBytes: 0)) {
+    throw StateError('vertex overwrite failed at 0');
+  }
+  if (!overwriteNonIndex(source: instanceData,
+      destinationOffsetInBytes: plan.instanceOffset)) {
+    throw StateError('instance overwrite failed at ${plan.instanceOffset}');
+  }
+  if (indexData case final data) {
+    if (!overwriteIndex(source: data, destinationOffsetInBytes: 0)) {
+      throw StateError('index overwrite failed at 0');
+    }
+  }
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** events vertex `(0,len)` once, instance `(instanceOffset,len)` once, optional index `(0,len)` once;
   false at each write stops later events and error includes operation/offset/length. Run:
-  `set -euo pipefail; title='upload executor writes each source exactly once'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_plan_test.dart 'upload executor writes each source exactly once' 'RED:T29:exact write sequence missing'`。
 - [ ] **GREEN:** synchronous three-condition sequence; no allocation/flush/catch/source retention. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_plan_test.dart test/geometry_test.dart test/vertex_layout_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed write順序を固定`。
@@ -1226,9 +2391,46 @@ offsets; omit the third entirely when plan has no index; never catch callbacks�
 **Implementation shape:** the fake owns `List<String> events`, configurable `bool overwriteResult` and
 `Exception? flushError`; each interface call appends one fully formatted event before returning/throwing。
 
+**RED test snippet:**
+
+```dart
+test("recording backend implements typed calls without GPU subclassing", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_gpu_backend.dart",
+    marker: "abstract interface class PersistentPackedGpuBackend",
+    diagnostic: "RED:T30:typed backend fake missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+abstract interface class PersistentPackedGpuSlice {
+  int get lengthInBytes;
+}
+
+abstract interface class PersistentPackedGpuBuffer {
+  bool overwrite(ByteData source, {required int destinationOffsetInBytes});
+  void flush({required int offsetInBytes, required int lengthInBytes});
+  PersistentPackedGpuSlice slice({
+    required int offsetInBytes,
+    required int lengthInBytes,
+  });
+  void release();
+}
+
+abstract interface class PersistentPackedGpuBackend {
+  PersistentPackedGpuBuffer allocate({required int lengthInBytes});
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** compile fake and assert a scripted buffer's typed event list; source assertion forbids
   `extends gpu.DeviceBuffer` / `extends gpu.BufferView`. Run:
-  `set -euo pipefail; title='recording backend implements typed calls without GPU subclassing'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_gpu_backend_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_gpu_backend_test.dart 'recording backend implements typed calls without GPU subclassing' 'RED:T30:typed backend fake missing'`。
 - [ ] **GREEN:** interfaces contain no GPU concrete type; one minimal configurable fake in test/support. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Test: packed GPU境界とfakeを追加`。
@@ -1248,10 +2450,41 @@ exposes internal `gpu.BufferView get view` for Task36 only。
 `DevicePersistentPackedGpuSlice(gpu.BufferView(device, offsetInBytes: offsetInBytes, lengthInBytes: lengthInBytes))`; `release`
 sets `_device = null` only。
 
+**RED test snippet:**
+
+```dart
+test("device backend wraps one nullable buffer without subclassing", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_gpu_device.dart",
+    marker: "final class DevicePersistentPackedGpuBackend",
+    diagnostic: "RED:T31:device buffer wrapper missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+final class DevicePersistentPackedGpuBackend
+    implements PersistentPackedGpuBackend {
+  @override
+  PersistentPackedGpuBuffer allocate({required int lengthInBytes}) =>
+      DevicePersistentPackedGpuBuffer(
+        gpu.gpuContext.createDeviceBuffer(
+          gpu.StorageMode.hostVisible,
+          lengthInBytes,
+        ),
+      );
+}
+```
+
+**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** source contract requires that exact one host-visible `gpuContext.createDeviceBuffer` call,
   exact overwrite/flush/slice delegation,
   null-on-release, post-release StateError, and no public export. Run:
-  `set -euo pipefail; title='device backend wraps one nullable buffer without subclassing'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_gpu_backend_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_gpu_backend_test.dart 'device backend wraps one nullable buffer without subclassing' 'RED:T31:device buffer wrapper missing'`。
 - [ ] **GREEN:** wrappers implement Task30 interfaces by composition only. `release()` clears the sole device
   reference idempotently; no nonexistent `DeviceBuffer.dispose`. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1268,9 +2501,53 @@ sets `_device = null` only。
 **Implementation shape:** allocate one non-index wrapper, call Task29 with its overwrite closure, flush exact full
 range, return it; catch any failure, release once, rethrow original。
 
+**RED test snippet:**
+
+```dart
+test("non-index upload flushes once before returning buffer", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_storage.dart",
+    marker: "PersistentPackedGpuBuffer uploadPersistentPackedNonIndex({",
+    diagnostic: "RED:T32:non-index upload transaction missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+PersistentPackedGpuBuffer uploadPersistentPackedNonIndex({
+  required PersistentPackedGpuBackend backend,
+  required PersistentPackedInstancePlan plan,
+  required ByteData vertexData,
+  required ByteData instanceData,
+}) {
+  final buffer = backend.allocate(lengthInBytes: plan.nonIndexBytes);
+  try {
+    executePersistentPackedWrites(
+      plan: plan,
+      vertexData: vertexData,
+      instanceData: instanceData,
+      indexData: null,
+      overwriteNonIndex: buffer.overwrite,
+      overwriteIndex: ({required source, required destinationOffsetInBytes}) =>
+          throw StateError('non-index plan invoked index overwrite'),
+    );
+    buffer.flush(offsetInBytes: 0, lengthInBytes: plan.nonIndexBytes);
+    return buffer;
+  } catch (_) {
+    buffer.release();
+    rethrow;
+  }
+}
+```
+
+**Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** exact events allocate, vertex overwrite, instance overwrite, flush `(0,nonIndexBytes)`; each
   overwrite false and flush throw releases once, stops later event, returns nothing. Run:
-  `set -euo pipefail; title='non-index upload flushes once before returning buffer'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_storage_test.dart 'non-index upload flushes once before returning buffer' 'RED:T32:non-index upload transaction missing'`。
 - [ ] **GREEN:** call Task29 executor; index callback is unreachable; catch releases and rethrows original; return
   buffer only after flush. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1287,10 +2564,64 @@ range, return it; catch any failure, release once, rethrow original。
 **Implementation shape:** keep nullable local wrappers; finish non-index then optional index write/flush; create
 all slices only afterward; catch releases index then non-index and rethrows。
 
-- [ ] **RED:** indexed exact events are allocate non-index/index, two non-index writes, non-index flush, index
-  write, index flush, then exactly 3 slices. Allocation/write/each flush failures release every created buffer in
+**RED test snippet:**
+
+```dart
+test("indexed upload publishes slices only after both flushes", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_storage.dart",
+    marker: "static PersistentPackedInstanceStorage uploadWithBackend({",
+    diagnostic: "RED:T33:indexed upload transaction missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+static PersistentPackedInstanceStorage uploadWithBackend({
+  required PersistentPackedGpuBackend backend,
+  required PersistentPackedInstancePlan plan,
+  required ByteData vertexData,
+  required ByteData instanceData,
+  required ByteData? indexData,
+}) {
+  final nonIndex = uploadPersistentPackedNonIndex(backend: backend,
+      plan: plan, vertexData: vertexData, instanceData: instanceData);
+  PersistentPackedGpuBuffer? index;
+  try {
+    if (indexData case final data) {
+      index = backend.allocate(lengthInBytes: plan.indexBytes);
+      if (!index.overwrite(data, destinationOffsetInBytes: 0)) {
+        throw StateError('index overwrite failed at 0');
+      }
+      index.flush(offsetInBytes: 0, lengthInBytes: plan.indexBytes);
+    }
+    return PersistentPackedInstanceStorage.internal(
+      nonIndexBuffer: nonIndex,
+      indexBuffer: index,
+      vertexSlice: nonIndex.slice(offsetInBytes: 0,
+          lengthInBytes: plan.vertexBytes),
+      instanceSlice: nonIndex.slice(offsetInBytes: plan.instanceOffset,
+          lengthInBytes: plan.instanceBytes),
+      indexSlice: index?.slice(offsetInBytes: 0,
+          lengthInBytes: plan.indexBytes),
+    );
+  } catch (_) {
+    index?.release();
+    nonIndex.release();
+    rethrow;
+  }
+}
+```
+
+**Handwritten budget:** 60–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
+- [ ] **RED:** indexed exact events are allocate non-index, two non-index writes, non-index flush, allocate index,
+  index write, index flush, then exactly 3 slices. Allocation/write/each flush failures release every created buffer in
   reverse order, make no slice, run no later event. Run:
-  `set -euo pipefail; title='indexed upload publishes slices only after both flushes'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_storage_test.dart 'indexed upload publishes slices only after both flushes' 'RED:T33:indexed upload transaction missing'`。
 - [ ] **GREEN:** hold wrappers in locals through both flushes; slice only afterward; catch index then non-index
   release and rethrow original. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1307,9 +2638,40 @@ synchronous idempotent `void release()`。
 **Implementation shape:** fields contain only slices/wrappers/scalars; release stores wrapper locals, nulls all
 slice/wrapper fields, then calls index and non-index release once when nonnull。
 
+**RED test snippet:**
+
+```dart
+test("storage releases views and retains no source bytes", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_storage.dart",
+    marker: "void release()",
+    diagnostic: "RED:T34:storage release contract missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void release() {
+  final indexBuffer = _indexBuffer;
+  final nonIndexBuffer = _nonIndexBuffer;
+  _vertexSlice = null;
+  _instanceSlice = null;
+  _indexSlice = null;
+  _indexBuffer = null;
+  _nonIndexBuffer = null;
+  indexBuffer?.release();
+  nonIndexBuffer?.release();
+}
+```
+
+**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** exact slice offsets/lengths; mutate source after upload while fake's copied upload remains fixed;
   release clears slices then index/non-index wrappers once; repeat no-op. Run:
-  `set -euo pipefail; title='storage releases views and retains no source bytes'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_storage_test.dart 'storage releases views and retains no source bytes' 'RED:T34:storage release contract missing'`。
 - [ ] **GREEN:** store only plan scalars/slices/wrappers; release nulls views before wrappers. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_storage_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_plan_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed GPU storageを解放可能化`。
@@ -1327,8 +2689,42 @@ slice/wrapper fields, then calls index and non-index release once when nonnull�
 records the default resolver identity, whether an override was supplied, and copied matrices/vector without
 invoking the resolver or creating a GPU pass/buffer/view。
 
+**RED test snippet:**
+
+```dart
+test("recording render pass implements typed events without GPU subclassing", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_render_pass.dart",
+    marker: "abstract interface class PersistentPackedRenderPassAdapter",
+    diagnostic: "RED:T35:typed render-pass fake missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+abstract interface class PersistentPackedRenderPassAdapter {
+  void bindVertex({required PersistentPackedGpuSlice slice,
+      required int slot, required int vertexCount});
+  void bindIndex({required PersistentPackedGpuSlice slice,
+      required gpu.IndexType indexType, required int indexCount});
+  void bindFrameInfo({required gpu.Shader Function() defaultShader,
+      required gpu.Shader? shaderOverride,
+      required TransientWriter transients,
+      required vm.Matrix4 modelTransform,
+      required vm.Matrix4 cameraTransform,
+      required vm.Vector3 cameraPosition});
+  void draw({required int vertexCount, required int indexCount,
+      required int instanceCount});
+}
+```
+
+**Handwritten budget:** 40–80 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** fake records typed vertex/index/frame/draw arguments; source rejects `extends gpu.RenderPass`.
-  Run: `set -euo pipefail; title='recording render pass implements typed events without GPU subclassing'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_render_pass_test.dart 'recording render pass implements typed events without GPU subclassing' 'RED:T35:typed render-pass fake missing'`。
 - [ ] **GREEN:** interface only in production file; extend the single existing test-support fake file. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_storage_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Test: packed RenderPass境界とfakeを追加`。
@@ -1347,9 +2743,41 @@ invoking the resolver or creating a GPU pass/buffer/view。
 **Implementation shape:** the view function pattern-checks `DevicePersistentPackedGpuSlice` and throws
 `StateError` otherwise; the three functions call existing compat helpers and are never exported。
 
+**RED test snippet:**
+
+```dart
+test("GPU adapter unwraps only device slices for bind and draw", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_render_pass_gpu.dart",
+    marker: "void drawPersistentPackedGpu({",
+    diagnostic: "RED:T36:GPU bind draw adapter missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+void drawPersistentPackedGpu({
+  required gpu.RenderPass pass,
+  required int vertexCount,
+  required int indexCount,
+  required int instanceCount,
+}) {
+  if (indexCount > 0) {
+    drawIndexedCompat(pass, indexCount, instanceCount: instanceCount);
+  } else {
+    drawCompat(pass, vertexCount, instanceCount: instanceCount);
+  }
+}
+```
+
+**Handwritten budget:** 50–95 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** source contract requires `bindVertexBufferCompat`, `bindIndexBufferCompat`,
   `drawCompat/drawIndexedCompat`; a foreign slice fails before pass call; indexed/non-index draw arguments exact.
-  Run: `set -euo pipefail; title='GPU adapter unwraps only device slices for bind and draw'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_render_pass_test.dart 'GPU adapter unwraps only device slices for bind and draw' 'RED:T36:GPU bind draw adapter missing'`。
 - [ ] **GREEN:** implement only the four complete top-level functions. Task37 delegates its complete adapter to
   them; no incomplete interface implementation or temporary throw exists. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_storage_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1370,40 +2798,161 @@ the exact generic `selectPersistentPackedShader<T>` in this plan and
 assign indices32–35, emplace `floats.buffer.asByteData()`, and
 `pass.bindUniform(shader.getUniformSlot('FrameInfo'), view)`。
 
+**RED test snippet:**
+
+```dart
+test("GPU adapter packs exact 36-float FrameInfo", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_render_pass_gpu.dart",
+    marker: "Float32List packPersistentPackedFrameInfo({",
+    diagnostic: "RED:T37:FrameInfo pack missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+Float32List packPersistentPackedFrameInfo({
+  required vm.Matrix4 cameraTransform,
+  required vm.Matrix4 modelTransform,
+  required vm.Vector3 cameraPosition,
+}) => Float32List(36)
+  ..setRange(0, 16, cameraTransform.storage)
+  ..setRange(16, 32, modelTransform.storage)
+  ..[32] = cameraPosition.x
+  ..[33] = cameraPosition.y
+  ..[34] = cameraPosition.z
+  ..[35] = 0;
+```
+
+**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** generic selector returns override without invoking default and otherwise invokes default exactly
   once; pure packed output is exactly 36 float32: camera0..15, model16..31, camera position32..34, zero35; source
   contract requires production to emplace these 144 bytes and bind selected shader's `FrameInfo` slot. Run:
-  `set -euo pipefail; title='GPU adapter packs exact 36-float FrameInfo'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_render_pass_test.dart 'GPU adapter packs exact 36-float FrameInfo' 'RED:T37:FrameInfo pack missing'`。
 - [ ] **GREEN:** allocate one `Float32List(36)`, `setRange` matrices, assign position/pad, emplace and bind exact
   slot. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart test/geometry_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed FrameInfoを36 floatでbind`。
 
-### Task 38: plain lifecycle-aware binding delegate (depends Task 37; 55–100 lines)
+### Task 38A: lifecycle-aware bind delegate (depends Task 37; 50–90 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_binding.dart`; Create
 `test/persistent_packed_instance_binding_test.dart`。
 
 **Interfaces:** Produces non-Geometry final
 `PersistentPackedInstanceBinding({required plan, required storage, required lease, required gpu.Shader Function() defaultShader})` with
-`void bind({required adapter, required transients, required modelTransform, required cameraTransform, required cameraPosition, gpu.Shader? shaderOverride})`
-and `void draw({required adapter, int externalInstanceCount = 1})`。
+`void bind({required adapter, required transients, required modelTransform, required cameraTransform, required cameraPosition, gpu.Shader? shaderOverride})`。
 
 **Implementation shape:** bind calls `lease.requireCurrentActive(); lease.markUsed();`, then adapter slot0/slot1,
 optional index and FrameInfo in that order. It passes the default resolver and nullable override through without
-resolving either; only Task37's production adapter resolves. Draw repeats `requireCurrentActive()`, requires
-external count1, and passes stored vertex/index/instance counts to the adapter。
+resolving either; only Task37's production adapter resolves。
+
+**RED test snippet:**
+
+```dart
+test('binding validates lifecycle before full persistent bind', () {
+  expect(
+    File('lib/src/geometry/persistent_packed_instance_binding.dart')
+        .existsSync(),
+    isTrue,
+    reason: 'RED:T38A:lifecycle bind delegate missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+void bind({
+  required PersistentPackedRenderPassAdapter adapter,
+  required TransientWriter transients,
+  required vm.Matrix4 modelTransform,
+  required vm.Matrix4 cameraTransform,
+  required vm.Vector3 cameraPosition,
+  gpu.Shader? shaderOverride,
+}) {
+  lease.requireCurrentActive();
+  lease.markUsed();
+  final vertexSlice = storage.vertexSlice ?? (throw StateError('released'));
+  final instanceSlice = storage.instanceSlice ?? (throw StateError('released'));
+  adapter.bindVertex(slice: vertexSlice, slot: 0,
+      vertexCount: plan.vertexCount);
+  adapter.bindVertex(slice: instanceSlice, slot: 1,
+      vertexCount: plan.instanceCount);
+  if (storage.indexSlice case final indexSlice) {
+    adapter.bindIndex(slice: indexSlice, indexType: plan.indexType,
+        indexCount: plan.indexCount);
+  }
+  adapter.bindFrameInfo(defaultShader: defaultShader,
+      shaderOverride: shaderOverride, transients: transients,
+      modelTransform: modelTransform, cameraTransform: cameraTransform,
+      cameraPosition: cameraPosition);
+}
+```
+
+**Handwritten budget:** production 38–55 + test 25–35 = 63–90 lines。
 
 - [ ] **RED:** bind exact events requireCurrentActive→markUsed→slot0→slot1→index?→frame; fake records exact
   default resolver identity/override-presence without invoking either;
-  terminal/old-generation/disposed/non-active/closed-frame all have adapter events0. Draw exact counts; external
-  count!=1 and retire between bind/draw fail before event. Run:
-  `set -euo pipefail; title='binding validates lifecycle before full persistent bind and draw'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_binding_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
-- [ ] **GREEN:** one final plain delegate; no superclass calls, source scan, overwrite or instance transients. Run:
+  terminal/old-generation/disposed/non-active/closed-frame all have adapter events0. Run
+  `run_fork_red test/persistent_packed_instance_binding_test.dart 'binding validates lifecycle before full persistent bind' 'RED:T38A:lifecycle bind delegate missing'`。
+- [ ] **GREEN:** one final plain delegate with bind only; no superclass calls, source scan, overwrite or instance
+  transients. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_binding_test.dart test/persistent_packed_render_pass_test.dart test/persistent_packed_instance_storage_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed bind delegateを追加`。
 
-### Task 39: typed construction transaction happy path (depends Task 38; 45–85 lines)
+### Task 38B: validated persistent draw delegate (depends Task 38A; 35–75 lines)
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_binding.dart`; Modify
+`test/persistent_packed_instance_binding_test.dart`。
+
+**Interfaces:** Adds
+`void draw({required PersistentPackedRenderPassAdapter adapter, int externalInstanceCount = 1})`。
+
+**Implementation shape:** draw calls `lease.requireCurrentActive()` before reading counts or touching adapter,
+rejects every external count except one, then passes stored vertex/index/instance counts exactly once。
+
+**RED test snippet:**
+
+```dart
+test('draw rejects external instancing before adapter events', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_binding.dart',
+  ).readAsStringSync();
+  expect(source, contains('externalInstanceCount != 1'),
+      reason: 'RED:T38B:external draw guard missing');
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+void draw({
+  required PersistentPackedRenderPassAdapter adapter,
+  int externalInstanceCount = 1,
+}) {
+  lease.requireCurrentActive();
+  if (externalInstanceCount != 1) {
+    throw ArgumentError.value(externalInstanceCount, 'externalInstanceCount');
+  }
+  adapter.draw(vertexCount: plan.vertexCount, indexCount: plan.indexCount,
+      instanceCount: plan.instanceCount);
+}
+```
+
+**Handwritten budget:** production 12–20 + test 24–38 = 36–58 lines。
+
+- [ ] **RED:** draw exact counts; external count!=1 and retire between bind/draw fail before adapter event. Run
+  `run_fork_red test/persistent_packed_instance_binding_test.dart 'draw rejects external instancing before adapter events' 'RED:T38B:external draw guard missing'`。
+- [ ] **GREEN:** add only the guarded draw method and its matrix. Run:
+  `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_binding_test.dart test/persistent_packed_render_pass_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+- [ ] **Commit:** `Feature: packed draw delegateを追加`。
+
+### Task 39: typed construction transaction happy path (depends Task 38B; 45–85 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_transaction.dart`; Create
 `test/persistent_packed_instance_transaction_test.dart`。
@@ -1415,9 +2964,44 @@ in Exact internal interfaces. No dynamic/object parameter, subclass, service loc
 `final storage = upload(backend: backend, plan: plan)`, registers exact plan bytes with
 `release: storage.release`, and invokes `construct(plan: plan, storage: storage, lease: lease)`。
 
+**RED test snippet:**
+
+```dart
+test("typed transaction constructs only after check upload and register", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_transaction.dart",
+    marker: "T executePersistentPackedInstanceTransaction<T>({",
+    diagnostic: "RED:T39:transaction order missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+T executePersistentPackedInstanceTransaction<T>({
+  required PersistentPackedCanCreate checkCanCreate,
+  required PersistentPackedPlanBuild buildPlan,
+  required PersistentPackedGpuBackend backend,
+  required PersistentPackedStorageUpload upload,
+  required PersistentPackedLeaseRegister register,
+  required PersistentPackedConstruct<T> construct,
+}) {
+  checkCanCreate();
+  final plan = buildPlan();
+  final storage = upload(backend: backend, plan: plan);
+  final lease = register(totalBytes: plan.totalBytes,
+      instanceBytes: plan.instanceBytes, release: storage.release);
+  return construct(plan: plan, storage: storage, lease: lease);
+}
+```
+
+**Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** typed recording closures observe exact order check→plan→upload(backend identity)→register exact
   bytes/release callback→construct exact parts and return sentinel. Run:
-  `set -euo pipefail; title='typed transaction constructs only after check upload and register'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_transaction_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_transaction_test.dart 'typed transaction constructs only after check upload and register' 'RED:T39:transaction order missing'`。
 - [ ] **GREEN:** straight-line typed calls only; retain `storage` local for failure cleanup added Task40. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_transaction_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_instance_storage_test.dart test/persistent_packed_instance_plan_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed構築transactionを追加`。
@@ -1437,48 +3021,191 @@ in `try/on` that calls `storage.release()` and rethrows; wrap only
 `lease.retire().ignore()` and rethrows. The initial
 check/build/upload sequence remains outside both catch regions。
 
+**RED test snippet:**
+
+```dart
+test("typed transaction failure matrix stops and cleans exact owner", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_transaction.dart",
+    marker: "lease.retire().ignore()",
+    diagnostic: "RED:T40:transaction cleanup missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+T executePersistentPackedInstanceTransaction<T>({
+  required PersistentPackedCanCreate checkCanCreate,
+  required PersistentPackedPlanBuild buildPlan,
+  required PersistentPackedGpuBackend backend,
+  required PersistentPackedStorageUpload upload,
+  required PersistentPackedLeaseRegister register,
+  required PersistentPackedConstruct<T> construct,
+}) {
+  checkCanCreate();
+  final plan = buildPlan();
+  final storage = upload(backend: backend, plan: plan);
+  late final PersistentGpuResourceLease lease;
+  try {
+    lease = register(totalBytes: plan.totalBytes,
+        instanceBytes: plan.instanceBytes, release: storage.release);
+  } catch (_) {
+    storage.release();
+    rethrow;
+  }
+  try {
+    return construct(plan: plan, storage: storage, lease: lease);
+  } catch (_) {
+    lease.retire().ignore();
+    rethrow;
+  }
+}
+```
+
+**Handwritten budget:** 60–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** table check/build/upload/register/construct throws distinct sentinel; assert exact stopped event
   prefix, allocation0 on check reject, release0 for pre-storage, storage release1 on register, lease retirement1 on
   construct, returned object0 for every failure. Run:
-  `set -euo pipefail; title='typed transaction failure matrix stops and cleans exact owner'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_transaction_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_transaction_test.dart 'typed transaction failure matrix stops and cleans exact owner' 'RED:T40:transaction cleanup missing'`。
 - [ ] **GREEN:** two narrow try/catch regions: catch register releases storage/rethrows; catch construct starts lease
   retirement/rethrows. Never catch check/build/upload. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_transaction_test.dart test/persistent_packed_instance_storage_test.dart test/persistent_packed_instance_binding_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Fix: packed構築失敗cleanupを固定`。
 
-### Task 41: concrete immutable Geometry from validated parts (depends Task 40; 55–95 lines)
+### Task 41A: immutable validated Geometry parts (depends Task 40; 40–80 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_geometry.dart`; Create
 `test/persistent_packed_instance_geometry_test.dart`。
 
+**Interfaces:** Produces internal immutable
+`PersistentPackedInstanceGeometryParts({required plan, required storage, required lease, required defaultShader, required doubleSided})`
+and getters for those exact typed values. This task does not instantiate or subclass `Geometry`。
+
+**Implementation shape:** the constructor assigns final fields and creates exactly one Task38A/38B binding delegate;
+it retains only copied plan metadata, GPU storage, lifecycle lease and the typed lazy shader resolver. No factory,
+GPU call, shader resolution, or abstract `Geometry` member appears yet。
+
+**RED test snippet:**
+
+```dart
+test('validated parts retain one typed binding without Geometry', () {
+  expect(
+    File('lib/src/geometry/persistent_packed_instance_geometry.dart')
+        .existsSync(),
+    isTrue,
+    reason: 'RED:T41A:immutable Geometry parts missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+@immutable
+final class PersistentPackedInstanceGeometryParts {
+  PersistentPackedInstanceGeometryParts({
+    required this.plan,
+    required this.storage,
+    required this.lease,
+    required this.defaultShader,
+    required this.doubleSided,
+  }) : binding = PersistentPackedInstanceBinding(
+         plan: plan, storage: storage, lease: lease,
+         defaultShader: defaultShader,
+       );
+  final PersistentPackedInstancePlan plan;
+  final PersistentPackedInstanceStorage storage;
+  final PersistentGpuResourceLease lease;
+  final gpu.Shader Function() defaultShader;
+  final bool doubleSided;
+  final PersistentPackedInstanceBinding binding;
+}
+```
+
+**Handwritten budget:** production 24–38 + test 24–36 = 48–74 lines。
+
+- [ ] **RED:** construct parts with recording storage/lease and a throwing shader resolver; assert exact typed
+  identities, one binding identity and shader invocation count0. Source rejects `extends Geometry`. Run
+  `run_fork_red test/persistent_packed_instance_geometry_test.dart 'validated parts retain one typed binding without Geometry' 'RED:T41A:immutable Geometry parts missing'`。
+- [ ] **GREEN:** add the immutable parts holder only. Run:
+  `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_render_pass_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
+- [ ] **Commit:** `Feature: packed Geometry partsを追加`。
+
+### Task 41B: complete concrete immutable Geometry (depends Task 41A; 55–95 lines)
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`; Modify
+`test/persistent_packed_instance_geometry_test.dart`。
+
 **Interfaces:** Produces concrete class private nonthrowing `_fromParts` and internal
 `createPersistentPackedInstanceGeometryFromPartsForTesting({required PersistentPackedInstancePlan plan, required PersistentPackedInstanceStorage storage, required PersistentGpuResourceLease lease, required gpu.Shader Function() defaultShader, required bool doubleSided})`
-and `persistentPackedInstanceBindingForTesting(PersistentPackedInstanceGeometry geometry)`. At first instantiation
-the concrete class implements `bind`, `draw`, `vertexShader`, bounds, `setLocalBounds`, and every
-layout/count/state/retire getter。
+and `persistentPackedInstanceBindingForTesting(PersistentPackedInstanceGeometry geometry)`. The very first
+instantiable revision implements abstract `bind` plus `draw`, `vertexShader`, bounds, `setLocalBounds`, and every
+layout/count/state/retire getter; no temporarily abstract or throwing construction state is committed。
 
-**Implementation shape:** `_fromParts` assigns final fields, retains only the typed shader resolver, and creates
-Task38 binding delegate. Public `vertexShader` resolves it; the one-line internal accessor returns that same delegate.
-`setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere)` always throws `UnsupportedError`; both bounds getters use
-Task24 fresh copies; bind/draw use production Task37 adapter around the supplied pass。
+**Implementation shape:** `_fromParts` consumes a Task41A parts holder. Public `vertexShader` resolves its lazy
+resolver; the internal accessor returns its same binding. `setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere)`
+always throws `UnsupportedError`; both bounds getters return Task24 fresh copies; bind/draw use the Task37
+production adapter around the supplied pass。
 
-- [ ] **RED:** internal parts helper creates the concrete class without resolving its throwing test shader;
-  its exact binding delegate bind/draws through a recording adapter; `setLocalBounds(null,null)` and nonnull
-  arguments throw; mutated returned bounds never alter later copies. Run:
-  `set -euo pipefail; title='concrete Geometry from parts implements bind draw and immutable bounds'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
-- [ ] **GREEN:** override every abstract member now; no temporary throw except the intentional immutable
-  `setLocalBounds` override. Run:
+**RED test snippet:**
+
+```dart
+test('concrete Geometry is complete at first instantiation', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_geometry.dart',
+  ).readAsStringSync();
+  expect(source, contains('extends Geometry'),
+      reason: 'RED:T41B:complete concrete Geometry missing');
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+@override
+void bind(gpu.RenderPass pass, TransientWriter transientsBuffer,
+    vm.Matrix4 modelTransform, vm.Matrix4 cameraTransform,
+    vm.Vector3 cameraPosition, {gpu.Shader? shaderOverride}) {
+  _parts.binding.bind(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+      transients: transientsBuffer, modelTransform: modelTransform,
+      cameraTransform: cameraTransform, cameraPosition: cameraPosition,
+      shaderOverride: shaderOverride);
+}
+
+@override
+void draw(gpu.RenderPass pass, {int instanceCount = 1}) {
+  _parts.binding.draw(adapter: GpuPersistentPackedRenderPassAdapter(pass),
+      externalInstanceCount: instanceCount);
+}
+
+@override
+void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
+    throw UnsupportedError('PersistentPackedInstanceGeometry is immutable');
+```
+
+**Handwritten budget:** production 48–65 + test 30–40 = 78–95 lines。
+
+- [ ] **RED:** internal parts helper creates the concrete class without resolving its throwing test shader; its
+  exact binding delegate bind/draws through a recording adapter; both `setLocalBounds` forms throw and mutated
+  returned bounds never alter later copies. Run
+  `run_fork_red test/persistent_packed_instance_geometry_test.dart 'concrete Geometry is complete at first instantiation' 'RED:T41B:complete concrete Geometry missing'`。
+- [ ] **GREEN:** override every abstract/public contract at the first instantiation; the immutable bounds override
+  is the only intentional throw. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_render_pass_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometry coreを追加`。
 
-### Task 42: shared public factory transaction (depends Task 41; 55–100 lines)
+### Task 42: shared public factory transaction (depends Task 41B; 55–100 lines)
 
 **Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`; Modify
 `test/persistent_packed_instance_geometry_test.dart`。
 
 **Interfaces:** Produces Final public API factory and internal exact
 `createPersistentPackedInstanceGeometry({required PersistentGpuResourceLifecycle lifecycle, required PersistentPackedGpuBackend backend, required ByteData vertexData, required int vertexCount, required ByteData? indexData, required gpu.IndexType indexType, required ByteData instanceData, required int instanceCount, required VertexLayoutDescriptor vertexLayout, required gpu.Shader vertexShader, required vm.Aabb3 localBounds, required bool doubleSided})`。
-Both call Task39 transaction and Task41 `_fromParts`。
+Both call Task39 transaction and Task41B `_fromParts`。
 
 **Implementation shape:** public factory delegates with `DevicePersistentPackedGpuBackend()` and the supplied
 shader unchanged. The internal helper is the only place that supplies lifecycle check/register, source-capturing
@@ -1519,10 +3246,66 @@ return executePersistentPackedInstanceTransaction(
 );
 ```
 
+**RED test snippet:**
+
+```dart
+test("public Geometry factory shares typed lifecycle transaction", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_geometry.dart",
+    marker: "PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({",
+    diagnostic: "RED:T42:shared factory transaction missing",
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+PersistentPackedInstanceGeometry createPersistentPackedInstanceGeometry({
+  required PersistentGpuResourceLifecycle lifecycle,
+  required PersistentPackedGpuBackend backend,
+  required ByteData vertexData,
+  required int vertexCount,
+  required ByteData? indexData,
+  required gpu.IndexType indexType,
+  required ByteData instanceData,
+  required int instanceCount,
+  required VertexLayoutDescriptor vertexLayout,
+  required gpu.Shader vertexShader,
+  required vm.Aabb3 localBounds,
+  required bool doubleSided,
+}) => executePersistentPackedInstanceTransaction(
+  checkCanCreate: lifecycle.checkCanCreate,
+  buildPlan: () => PersistentPackedInstancePlan.create(
+    vertexData: vertexData, vertexCount: vertexCount, indexData: indexData,
+    indexType: indexType, instanceData: instanceData,
+    instanceCount: instanceCount, vertexLayout: vertexLayout,
+    localBounds: localBounds,
+  ),
+  backend: backend,
+  upload: ({required backend, required plan}) =>
+      PersistentPackedInstanceStorage.uploadWithBackend(
+        backend: backend, plan: plan, vertexData: vertexData,
+        instanceData: instanceData, indexData: indexData,
+  ),
+  register: lifecycle.registerAllocation,
+  construct: ({required plan, required storage, required lease}) =>
+      PersistentPackedInstanceGeometry._fromParts(
+        plan: plan, storage: storage, lease: lease,
+        defaultShader: () => vertexShader, doubleSided: doubleSided,
+      ),
+);
+```
+
+This is the sole transaction body; no second helper/body is permitted。
+
+**Handwritten budget:** 55–100 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** source proves the public factory has exactly one call to the backend-injected helper and that helper
   has exactly one call to Task39's transaction; lifecycle rejection event precedes plan/allocation; valid fake
   backend order is check→plan→upload→register→construct; register failure cleanup comes from Task40.
-  Run: `set -euo pipefail; title='public Geometry factory shares typed lifecycle transaction'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_geometry_test.dart 'public Geometry factory shares typed lifecycle transaction' 'RED:T42:shared factory transaction missing'`。
 - [ ] **GREEN:** public and test paths differ only by backend argument. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/persistent_packed_instance_transaction_test.dart test/persistent_packed_instance_binding_test.dart test/persistent_packed_instance_storage_test.dart test/geometry_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometryをtransaction構築`。
@@ -1533,17 +3316,47 @@ return executePersistentPackedInstanceTransaction(
 `test/persistent_packed_instance_geometry_test.dart`; Modify
 `test/render/persistent_gpu_scene_integration_test.dart`。
 
-**Interfaces:** Geometry overrides exact `depthOnlyVertex => null`, `vertexStreamCount => 2`,
+**Interfaces:** Geometry overrides exact
+`({gpu.Shader shader, VertexLayoutDescriptor layout})? get depthOnlyVertex => null`, `vertexStreamCount => 2`,
 `bindsModelTransformInstance => false`, `instancedVertexLayout => copied plan layout`, `isDoubleSided`。
 
 **Implementation shape:** five direct getter overrides only; route behavior is inherited from existing encoders'
 null branch and the already-complete Task41 bind implementation。
 
+**RED test snippet:**
+
+```dart
+test("depth shadow and selection use packed full bind", () {
+  expectRedSourceContract(
+    path: "lib/src/geometry/persistent_packed_instance_geometry.dart",
+    marker: "VertexLayoutDescriptor layout})? get depthOnlyVertex => null;",
+    diagnostic: "RED:T43:full route binding missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+@override
+({gpu.Shader shader, VertexLayoutDescriptor layout})? get depthOnlyVertex =>
+    null;
+
+@override
+int get vertexStreamCount => 2;
+
+@override
+bool get bindsModelTransformInstance => false;
+```
+
+**Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** assert source contracts in `object_filter.dart`, `shadow_encoder.dart`, and `depth_prepass.dart`
   select `geometry.bind` when `depthOnlyVertex` is null and never select `bindPositionStream`; run the concrete
   Geometry's exact internal binding delegate through four named normal/depth/shadow/selection cases and require
   both slots plus FrameInfo each time. Run:
-  `set -euo pipefail; title='depth shadow and selection use packed full bind'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_geometry_test.dart 'depth shadow and selection use packed full bind' 'RED:T43:full route binding missing'`。
 - [ ] **GREEN:** explicit null override only; never override/call position stream or superclass setters. Run
   geometry + scene integration + `shadow_cache_test.dart` + `spot_shadow_test.dart` +
   Run: `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart test/shadow_cache_test.dart test/spot_shadow_test.dart test/scene_semantics_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
@@ -1561,10 +3374,36 @@ case, Geometry `materialVertexVariant` same wire name。
 **Implementation shape:** append one enum case, add one exact string switch arm before default, and return the
 same wire string from Geometry; change no generated fmat code。
 
+**RED test snippet:**
+
+```dart
+test("ShaderMaterial keeps persistent packed instance variant exact", () {
+  expectRedSourceContract(
+    path: "lib/src/material/shader_stage.dart",
+    marker: "persistentPackedInstances('persistent_packed_instances')",
+    diagnostic: "RED:T44:material variant missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+persistentPackedInstances('persistent_packed_instances'),
+```
+
+```dart
+@override
+String get materialVertexVariant => 'persistent_packed_instances';
+```
+
+**Handwritten budget:** 40–80 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** exact enum name/fromName round-trip and Geometry wire name; `setVertexShader(null, variant: ...)`
   accepts the new typed enum without a GPU shader; existing unskinned/skinned/depth and unknown→unskinned remain
   unchanged. Source assertion requires `materialVertexShader` to index `_vertexShaders[kind]`. Run:
-  `set -euo pipefail; title='ShaderMaterial keeps persistent packed instance variant exact'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/shader_material_vertex_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/shader_material_vertex_test.dart 'ShaderMaterial keeps persistent packed instance variant exact' 'RED:T44:material variant missing'`。
 - [ ] **GREEN:** one enum value and one switch case; no generator/default collapse. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/shader_material_vertex_test.dart test/shader_material_test.dart test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometry shader variantを追加`。
@@ -1580,9 +3419,31 @@ lease/transaction/test helpers remain internal。
 **Implementation shape:** add one `show PersistentPackedInstanceGeometry` export entry; public API test scans
 the barrel to reject every internal name listed in Interfaces。
 
+**RED test snippet:**
+
+```dart
+test("public Geometry barrel hides every transaction seam", () {
+  expectRedSourceContract(
+    path: "lib/scene.dart",
+    marker: "show PersistentPackedInstanceGeometry",
+    diagnostic: "RED:T45:curated Geometry export missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```dart
+export 'src/geometry/persistent_packed_instance_geometry.dart'
+    show PersistentPackedInstanceGeometry;
+```
+
+**Handwritten budget:** 35–75 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** public-only imports take factory tear-off and reference lifecycle/layout/state/retire; source rejects
   every internal symbol/export. Run:
-  `set -euo pipefail; title='public Geometry barrel hides every transaction seam'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_public_api_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_public_api_test.dart 'public Geometry barrel hides every transaction seam' 'RED:T45:curated Geometry export missing'`。
 - [ ] **GREEN:** one curated show entry. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_public_api_test.dart test/render/persistent_gpu_lifecycle_public_api_test.dart test/persistent_packed_instance_geometry_test.dart test/shader_material_vertex_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometry APIを公開`。
@@ -1601,9 +3462,31 @@ logical-memory wording and explicit issue/device deferrals. State that the Geome
 `instanceCount`: do not wrap it in `InstancedMesh` or share the identical Geometry across engine-batched Nodes;
 an external `draw(instanceCount != 1)` fails before pass mutation。
 
+**RED test snippet:**
+
+```dart
+test("README states one upload and 36-float shader contract", () {
+  expectRedSourceContract(
+    path: "README.md",
+    marker: "external instancing",
+    diagnostic: "RED:T46:Geometry README contract missing",
+  );
+});
+```
+
+**GREEN implementation snippet:** the exact production signature/statement is:
+
+```markdown
+The Geometry owns its packed instance count. External instancing is rejected:
+do not wrap it in `InstancedMesh` or share one Geometry across batched Nodes.
+```
+
+**Handwritten budget:** 30–75 total lines exactly as scoped in this task heading; test, production,
+and documentation lines are counted, while generated files and formatter-only indentation are excluded。
+
 - [ ] **RED:** source assertions require workflow, logical memory, no fallback/per-frame upload, the explicit
   external-instancing prohibition, #1603/#1604/#1605 and no physical evidence. Run:
-  `set -euo pipefail; title='README states one upload and 36-float shader contract'; if out=$(mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_public_api_test.dart --plain-name "$title" 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; test -n "$out"; printf '%s\n' "$out"`。
+  `run_fork_red test/persistent_packed_instance_public_api_test.dart 'README states one upload and 36-float shader contract' 'RED:T46:Geometry README contract missing'`。
 - [ ] **GREEN:** add only consumer/provenance/deferred boundary. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_instance_public_api_test.dart test/render/persistent_gpu_lifecycle_public_api_test.dart test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart test/shader_material_vertex_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Docs: packed Geometry契約を追加`。
@@ -1612,6 +3495,8 @@ an external `draw(instanceCount != 1)` fails before pass mutation。
 
 ```bash
 set -euo pipefail
+base_sha=7f71993b7e2a0ab1d2f59726a406098709be7291
+printf '%s\n' "$base_sha" | rg -q '^[0-9a-f]{40}$'
 test "${reviewed_bottom_sha:?reviewed bottom SHA required}" != ""
 printf '%s\n' "$reviewed_bottom_sha" | rg -q '^[0-9a-f]{40}$'
 bottom_line=$(git ls-remote --exit-code origin refs/heads/feat/persistent-gpu-lifecycle)
@@ -1651,16 +3536,46 @@ mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .
 mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller
 test -z "$(git status --porcelain=v1)"
 gh stack submit --auto --open --remote origin
+top_head=$(git rev-parse HEAD)
+printf '%s\n' "$top_head" | rg -q '^[0-9a-f]{40}$'
 stack_json=$(gh stack view --json)
 test -n "$stack_json"
-jq -e '
+jq -e --arg base "$base_sha" --arg bottom "$reviewed_bottom_sha" \
+  --arg top "$top_head" '
+  def fullsha: type == "string" and test("^[0-9a-f]{40}$");
   .trunk == "eqmonitor/flutter-4dacd3fc" and
   [.branches[].name] == ["feat/persistent-gpu-lifecycle",
                          "feat/persistent-packed-instance-geometry"] and
+  (.branches[0].base | fullsha) and
+  (.branches[0].head | fullsha) and
+  (.branches[1].base | fullsha) and
+  (.branches[1].head | fullsha) and
+  .branches[0].base == $base and
+  .branches[0].head == $bottom and
+  .branches[1].base == $bottom and
+  .branches[1].head == $top and
   (.branches[0].pr.state == "OPEN") and
-  (.branches[1].pr.state == "OPEN") and
-  (.branches[1].base == .branches[0].head)
+  (.branches[1].pr.state == "OPEN")
 ' <<<"$stack_json" >/dev/null
+
+null_stack='{"trunk":"eqmonitor/flutter-4dacd3fc","branches":[{"name":"feat/persistent-gpu-lifecycle","base":null,"head":null,"pr":{"state":"OPEN"}},{"name":"feat/persistent-packed-instance-geometry","base":null,"head":null,"pr":{"state":"OPEN"}}]}'
+if jq -e --arg base "$base_sha" --arg bottom "$reviewed_bottom_sha" \
+  --arg top "$top_head" '
+    def fullsha: type == "string" and test("^[0-9a-f]{40}$");
+    (.branches[0].base | fullsha) and
+    (.branches[0].head | fullsha) and
+    (.branches[1].base | fullsha) and
+    (.branches[1].head | fullsha) and
+    .branches[0].base == $base and
+    .branches[0].head == $bottom and
+    .branches[1].base == $bottom and
+    .branches[1].head == $top
+  ' <<<"$null_stack" >/dev/null; then
+  exit 1
+else
+  null_stack_rc=$?
+  test "$null_stack_rc" -eq 1
+fi
 ```
 
 Fresh spec/code review must approve Tasks20–46 and full bottom compatibility. Edit both PR bodies with exact
@@ -1859,9 +3774,31 @@ All commands run from `$pin_worktree`. Dart/Flutter uses `mise exec --`。
 **Implementation shape:** add consumer test first; replace only descriptor URL/ref scalars; let one root
 `flutter pub get` regenerate both git lock descriptions and preserve their package paths。
 
+**RED test snippet:**
+
+```dart
+test('consumer sees the persistent packed public API', () {
+  final lifecycle = PersistentGpuResourceLifecycle();
+  expect(lifecycle.contextGeneration, 1,
+      reason: 'RED:T47:fork public API missing');
+  final factory = PersistentPackedInstanceGeometry.new;
+  expect(factory, isNotNull);
+});
+```
+
+**GREEN implementation snippet:** assign the already validated shell variable atomically, then regenerate locks:
+
+```bash
+mise exec -- yq -i '.dependencies.flutter_scene.git.ref = strenv(fork_top_sha)' \
+  packages/eqmonitor_map/pubspec.yaml
+mise exec -- flutter pub get
+```
+
+**Handwritten budget:** descriptor 6–12 + test 30–48 + regenerated-lock review 9–30 = 45–90 lines。
+
 - [ ] **RED:** before pin change, test takes lifecycle/Geometry factory tear-offs and checks generation1 zero
   snapshot. Run fail-closed:
-  `set -euo pipefail; if out=$(mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'PersistentPackedInstanceGeometry' <<<"$out"`。
+  `set -euo pipefail; if out=$(mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'PersistentPackedInstanceGeometry' <<<"$out"`。
 - [ ] **GREEN:** rerun top advertised-ref handoff; modify only URL/ref scalars; run `mise exec -- flutter pub get`,
   never edit lock manually. Run:
   `set -euo pipefail; mise exec -- flutter pub get; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; mise exec -- dart analyze packages/eqmonitor_map/example; git --no-pager diff --check`。
@@ -1881,9 +3818,37 @@ arguments, then captures
 `actual=$(mise exec -- yq -er "$query | select(type == \"string\")" "$file")`, requires exact equality, and
 prints the provided label to stderr before `exit 1` on mismatch. Every test-script fixture helper uses the same
 strict subshell-function shape。
+Each named RED group converts only its expected missing assertion to exit `1` and prints its exact `RED:T48`/
+`T49`/`T50` diagnostic plus group name; command-not-found, parser/toolchain or any other status is propagated and
+therefore rejected by the outer exact-rc gate。
+
+**RED test snippet:**
+
+```bash
+if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor 2>&1); then
+  exit 1
+else
+  rc=$?
+fi
+test "$rc" -eq 1
+rg -F 'RED:T48:descriptor verifier missing' <<<"$output"
+```
+
+**GREEN implementation snippet:**
+
+```bash
+assert_scalar() (
+  set -euo pipefail
+  test "$#" -eq 4
+  actual=$(mise exec -- yq -er "$2 | select(type == \"string\")" "$1")
+  test "$actual" = "$3" || { printf '%s\n' "$4" >&2; exit 1; }
+)
+```
+
+**Handwritten budget:** verifier 28–45 + fixture test 22–50 = 50–95 lines。
 
 - [ ] **RED:** fixture happy/wrong descriptor URL calls missing verifier. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'tool/verify_flutter_scene_pin.sh' <<<"$out"`。
+  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'descriptor' <<<"$out"; rg -F 'RED:T48:descriptor verifier missing' <<<"$out"`。
 - [ ] **GREEN:** script starts `set -euo pipefail`; validates arg count, nonempty URL, `^[0-9a-f]{40}$`, root/files,
   then exact three scalar triples and labels error `file:package:field`; `chmod +x` verifier. Shell test exposes
   `descriptor` group. Run:
@@ -1901,9 +3866,34 @@ URL/ref/`resolved-ref`/path validation; preserves Task48 CLI and descriptor chec
 **Implementation shape:** invoke Task48 `assert_scalar` eight times: four fields for `flutter_scene`, four for
 `scene`; expected paths are `packages/flutter_scene` and `packages/scene` respectively。
 
+**RED test snippet:**
+
+```bash
+if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh lock 2>&1); then
+  exit 1
+else
+  rc=$?
+fi
+test "$rc" -eq 1
+rg -F 'RED:T49:resolved-ref verifier missing' <<<"$output"
+```
+
+**GREEN implementation snippet:**
+
+```bash
+assert_scalar "$repo_root/pubspec.lock" \
+  '.packages.flutter_scene.description."resolved-ref"' \
+  "$expected_sha" 'pubspec.lock:flutter_scene:resolved-ref'
+assert_scalar "$repo_root/pubspec.lock" \
+  '.packages.scene.description."resolved-ref"' \
+  "$expected_sha" 'pubspec.lock:scene:resolved-ref'
+```
+
+**Handwritten budget:** verifier 16–28 + lock fixtures 29–57 = 45–85 lines。
+
 - [ ] **RED:** fixture wrong requested ref and wrong resolved-ref currently pass Task48 verifier; lock group expects
   failure labels. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh lock 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'resolved-ref' <<<"$out"`。
+  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh lock 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'lock' <<<"$out"; rg -F 'RED:T49:resolved-ref verifier missing' <<<"$out"`。
 - [ ] **GREEN:** query each lock scalar with `yq -er`, compare exact expected, include package+field label. Run:
   `set -euo pipefail; bash -n tool/verify_flutter_scene_pin.sh scripts/ci/test_verify_flutter_scene_pin.sh; bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor; bash scripts/ci/test_verify_flutter_scene_pin.sh lock; tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; git --no-pager diff --check`。
 - [ ] **Commit:** `Test: Flutter Scene lock pin検証を追加`。
@@ -1925,9 +3915,39 @@ copies a clean fixture, mutates one scalar with `mise exec -- yq -i`, and calls 
 The strict-subshell `cleanup() (` requires `fixture_root` nonempty and a case match of
 `"${TMPDIR:-/tmp}"/eqmonitor-flutter-scene-pin.*` before `rm -rf -- "$fixture_root"`; any other target exits nonzero。
 
+**RED test snippet:**
+
+```bash
+if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh corruption 2>&1); then
+  exit 1
+else
+  rc=$?
+fi
+test "$rc" -eq 1
+rg -F 'RED:T50:corruption matrix missing' <<<"$output"
+```
+
+**GREEN implementation snippet:**
+
+```bash
+expect_pin_failure() (
+  set -euo pipefail
+  test "$#" -eq 4
+  if output=$(tool/verify_flutter_scene_pin.sh "$2" "$3" "$4" 2>&1); then
+    exit 1
+  else
+    rc=$?
+  fi
+  test "$rc" -ne 0
+  rg -F "$1" <<<"$output"
+)
+```
+
+**Handwritten budget:** strict helpers 22–35 + corruption rows 33–65 = 55–100 lines。
+
 - [ ] **RED:** matrix covers each descriptor URL/ref/path, each lock URL/ref/resolved-ref/path, short SHA,
   missing field, nonscalar field. Before helper/matrix each corrupt case is unasserted. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh corruption 2>&1); then exit 1; else rc=$?; fi; test "$rc" -ne 0; rg -F 'expect_pin_failure' <<<"$out"`。
+  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh corruption 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'corruption' <<<"$out"; rg -F 'RED:T50:corruption matrix missing' <<<"$out"`。
 - [ ] **GREEN:** implement one table-driven loop; every function is a strict subshell, captures verifier status
   via `if`, and fails if status0 or label absent. Run:
   `set -euo pipefail; bash -n tool/verify_flutter_scene_pin.sh scripts/ci/test_verify_flutter_scene_pin.sh; bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor; bash scripts/ci/test_verify_flutter_scene_pin.sh lock; bash scripts/ci/test_verify_flutter_scene_pin.sh corruption; tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; git --no-pager diff --check`。
@@ -1943,6 +3963,30 @@ logical≠resident, no copied reference code, #1603/#1604/#1605 and physical-gat
 
 **Implementation shape:** update only current instruction sections in both READMEs with identical immutable pin
 and provenance paragraph; retain historical pin evidence as explicitly historical。
+
+**RED test snippet:**
+
+```bash
+for file in packages/eqmonitor_map/README.md \
+  packages/eqmonitor_map/example/README.md; do
+  if rg -Fq "$fork_top_sha" "$file"; then exit 1; fi
+done
+```
+
+**GREEN implementation snippet:**
+
+```markdown
+Fork: `https://github.com/YumNumm/flutter_scene.git`
+Revision: `<validated fork_top_sha: 40 lowercase hex>`
+Accounting: logical bytes, not driver-resident bytes
+Provenance: MIT reference only; no source copied
+Deferred: #1603, #1604, #1605
+```
+
+Both current sections contain these same validated values; angle-bracket notation is replaced with the captured
+immutable SHA, not copied literally。
+
+**Handwritten budget:** map README 15–35 + example README 15–40 = 30–75 lines。
 
 - [ ] **RED:** exact fork URL/SHA phrases absent in both current instruction sections. Run fail-closed:
   `set -euo pipefail; if rg -Fq "$fork_top_sha" packages/eqmonitor_map/README.md && rg -Fq "$fork_top_sha" packages/eqmonitor_map/example/README.md; then exit 1; else rc=$?; fi; test "$rc" -eq 1`。
@@ -1961,6 +4005,32 @@ invalidation/completion retirement, logical≠resident, FrameInfo, #1604 device 
 
 **Implementation shape:** replace current operational pin/lifecycle paragraphs in the three exact files; leave
 dated evidence unchanged and label it historical where ambiguity exists。
+
+**RED test snippet:**
+
+```bash
+for file in docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md \
+  docs/knowledge/20260802_flutter_scene_scene_source_pin.md \
+  docs/knowledge/20260802_flutter_scene_large_static_instances.md; do
+  if rg -Fq "$fork_top_sha" "$file"; then exit 1; fi
+done
+```
+
+**GREEN implementation snippet:**
+
+```markdown
+- requested ref and resolved-ref: `<validated fork_top_sha: 40 lowercase hex>`
+- retirement: contiguous GPU submission completion
+- memory metric: logical bytes, not driver-resident bytes
+- FrameInfo: 36 float32 values
+- device validation: deferred to #1604
+- provenance: MIT reference only; no source copied
+```
+
+Every current section uses the captured immutable SHA in place of angle-bracket notation and retains historical
+evidence unchanged。
+
+**Handwritten budget:** three current sections total 45–95 lines; historical evidence is not rewritten。
 
 - [ ] **RED:** each current-instruction section lacks exact `fork_top_sha`; historical blocks are not rewritten.
   Run fail-closed:
@@ -2050,6 +4120,64 @@ test "$(git rev-parse origin/feat/seismicity-flutter-scene-fork-pin)" = "$pin_he
 PR body must contain fork bottom/top URLs, advertised top SHA, decoder final SHA, #1602/#1612, no-copy/license,
 and remaining #1603/#1604/#1605/device/resident/upstream/spec boundaries. Re-query exact body/base/head/state/checks。
 No merge, #1603 implementation, device/Simulator/E2E is authorized by this plan。
+
+## Mechanical plan audit
+
+Run from the EQMonitor plan worktree before requesting plan review. This reports the requested cardinalities rather
+than inferring them visually: 55 split tasks all have snippets/budgets; the bottom has 49 RED mappings (the original
+43 plus the six independent 4A/4B, 38A/38B and 41A/41B gates); the affinity matrix has 14 independently rejected
+entry/callback rows; and a null-equals-null stack cannot pass the SHA predicate。
+
+```bash
+set -euo pipefail
+plan=docs/superpowers/plans/2026-08-12-flutter-scene-persistent-packed-instances.md
+task_count=$(rg -c '^### Task [0-9]+[AB]?:' "$plan")
+red_snippet_count=$(rg -c '^\*\*RED test snippet:\*\*$' "$plan")
+green_snippet_count=$(rg -c '^\*\*GREEN implementation snippet:\*\*' "$plan")
+budget_count=$(rg -c '^\*\*Handwritten budget:\*\*' "$plan")
+test "$task_count" -eq 55
+test "$red_snippet_count" -eq "$task_count"
+test "$green_snippet_count" -eq "$task_count"
+test "$budget_count" -eq "$task_count"
+
+bottom_plan=$(sed '/^### Task 47:/q' "$plan")
+bottom_red_count=$(rg -c 'run_fork_red test/' <<<"$bottom_plan")
+bottom_red_mapping_count=$(rg -o \
+  "run_fork_red [^\x60]+ 'RED:T[0-9]+[AB]?:[^']+'" <<<"$bottom_plan" | \
+  sed -E "s/.*'(RED:T[0-9]+[AB]?):[^']+'.*/\1/" | sort -u | wc -l | tr -d ' ')
+test "$bottom_red_count" -eq 49
+test "$bottom_red_mapping_count" -eq "$bottom_red_count"
+if rg -q 'set -euo pipefail; (title=|if out=).*flutter@4dac' <<<"$bottom_plan"; then
+  exit 1
+else
+  weak_red_rc=$?
+  test "$weak_red_rc" -eq 1
+fi
+
+affinity_matrix=$(sed -n \
+  '/affinity-entrypoint-matrix-start/,/affinity-entrypoint-matrix-end/p' "$plan")
+affinity_entrypoint_count=$(rg -c '^\| (`|lease|tracker|immediately)' \
+  <<<"$affinity_matrix")
+test "$affinity_entrypoint_count" -eq 14
+
+null_stack='{"branches":[{"base":null,"head":null},{"base":null,"head":null}]}'
+if jq -e '
+  def fullsha: type == "string" and test("^[0-9a-f]{40}$");
+  (.branches[0].base | fullsha) and
+  (.branches[0].head | fullsha) and
+  (.branches[1].base | fullsha) and
+  (.branches[1].head | fullsha)
+' <<<"$null_stack" >/dev/null; then
+  exit 1
+else
+  stack_null_negative_exit=$?
+  test "$stack_null_negative_exit" -eq 1
+fi
+
+printf 'task_snippets=%s red_mappings=%s affinity_entrypoints=%s stack_null_exit=%s\n' \
+  "$task_count" "$bottom_red_mapping_count" "$affinity_entrypoint_count" \
+  "$stack_null_negative_exit"
+```
 
 ## Completion checklist
 
