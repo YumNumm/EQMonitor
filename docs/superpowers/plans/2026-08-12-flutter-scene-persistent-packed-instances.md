@@ -159,9 +159,10 @@ API review 中に引数名を変える場合も、次の semantics は変えな�
 6. Geometry は model transform を `FrameInfo` uniform から読むため
    `bindsModelTransformInstance == false`。独自 `MeshVariant.persistentPackedInstances` を追加し、
    material vertex override が誤って unskinned variant に fallback しないようにする。
-7. `retire()`、`invalidateContext()`、`dispose()` は同期的に future bind/draw を拒否し、同じ
-   `Future` を返す idempotent operation とする。最後に参照した submission の completion
-   watermark を越えるまでは buffer references を保持する。
+7. caller は旧 primitive/node を Scene から外してから `retire()` し、context invalidation 前は
+   render scheduling を止める。`retire()`、`invalidateContext()`、`dispose()` は同期的に future
+   bind/draw を拒否し、同じ `Future` を返す idempotent operation とする。最後に参照した
+   submission の completion watermark を越えるまでは buffer references を保持する。
 8. generation は 1 から開始する。`invalidateContext()` は active resources をすべて retire
    して state を即時 invalidated にし、`recreateContext()` は retirement 完了後だけ generation
    を increment して active へ戻る。古い Geometry は terminal のまま再利用しない。
@@ -379,7 +380,8 @@ git push
 
 **Step 1: contract documentation**
 
-README に lifecycle state diagram、`invalidateContext → await → recreateContext` の順序、
+README に lifecycle state diagram、`stop rendering → detach → invalidateContext → await →
+recreateContext` の順序、
 completion が来ない場合は fail-closed であること、snapshot が logical bytes であることを書く。
 「context loss を自動検知」「driver memory を即時 free」とは書かない。
 
@@ -558,8 +560,9 @@ constructor type、retire API が解決し、`src/` import が不要なことを
 **Step 2: README example**
 
 24-byte instance record の例を使い、CPU pack → Geometry 1回生成 → camera draw → data revision
-変更時 retire/replace → lifecycle invalidate/recreate の順を記載する。サンプルに per-frame full
-scan、固定 delay、例外時の標準 Geometry fallback を入れない。
+変更時 new Geometry 作成/Scene 差し替え/old retire → render停止/detach/lifecycle
+invalidate/recreate の順を記載する。サンプルに per-frame full scan、固定 delay、例外時の標準
+Geometry fallback を入れない。
 
 **Step 3: focused GREEN、commit、push**
 
