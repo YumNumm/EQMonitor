@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:eqmonitor/feature/ads/data/ad_unit_id.dart';
 import 'package:eqmonitor/feature/ads/data/provider/should_show_ads_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

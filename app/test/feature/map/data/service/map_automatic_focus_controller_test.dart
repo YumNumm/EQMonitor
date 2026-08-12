@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_instance_owner.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.d
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_station_analysis_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_waveform_parser/knet_waveform_parser.dart';

@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dar
 import 'package:eqmonitor/feature/feed/data/provider/unread_high_urgency_feed_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

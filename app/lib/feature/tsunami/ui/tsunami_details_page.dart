@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_earthquake_card.
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_region_list.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_status_card.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

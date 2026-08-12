@@ -12,7 +12,7 @@
 コード生成系パッケージと `dependency_overrides` の analyzer 系バージョンが食い違う。
 
 | パッケージ | 必要な analyzer |
-|---|---|
+| --- | --- |
 | freezed 3.2.6-dev.1 | `>=12.0.0 <13.0.0` |
 | freezed 4.0.0-dev.3 | `^13.0.0` |
 | riverpod_generator 4.0.8 / riverpod_analyzer_utils | `^13.0.0` |

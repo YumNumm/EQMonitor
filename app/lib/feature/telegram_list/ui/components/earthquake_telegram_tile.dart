@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/telegram_list/ui/components/hypocenter_summary
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 

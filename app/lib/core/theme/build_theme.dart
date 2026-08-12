@@ -3,8 +3,8 @@ import 'package:eqmonitor/core/designsystem/extensions/shape_theme_extension.dar
 import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 ThemeData buildTheme({
   required ThemeColorSet colorSet,

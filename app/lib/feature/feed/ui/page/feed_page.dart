@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
