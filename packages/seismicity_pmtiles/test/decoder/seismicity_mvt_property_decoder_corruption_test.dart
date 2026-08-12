@@ -17,6 +17,7 @@ void main() {
     ('repeated_tags', 'hypocenter_id', 'duplicate_property'),
     ('missing_required_property', 'hypocenter_id', 'missing_required_property'),
     ('unknown_key', 'unknown', 'unknown_property'),
+    ('invalid_uuid', 'hypocenter_id', 'invalid_uuid'),
     ('wrong_scalar', 'magnitude', 'wrong_scalar_type'),
     ('multi_set_scalar', 'magnitude', 'invalid_scalar_cardinality'),
     ('empty_earthquake_event_id', 'earthquake_event_id', 'empty_string'),

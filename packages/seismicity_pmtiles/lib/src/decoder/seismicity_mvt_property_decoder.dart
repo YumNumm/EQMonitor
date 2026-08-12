@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_value_decoder.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_schema_v1_validator.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
@@ -27,6 +29,16 @@ final class SeismicityMvtPropertyDecoder {
     required int featureIndex,
   }) {
     const valueDecoder = SeismicityMvtValueDecoder();
+    Never fail({required String field, required String reason}) =>
+        throw SeismicityPmTilesException.invalidHypocenterFeature(
+          tileId: tileId,
+          featureIndex: featureIndex,
+          field: field,
+          reason: reason,
+        );
+    if (tags.length.isOdd) {
+      fail(field: 'tags', reason: 'odd_tag_count');
+    }
     Uint8List? hypocenterId;
     int? originTime;
     ({double canonicalValue, double storageValue})? magnitude;
@@ -35,10 +47,39 @@ final class SeismicityMvtPropertyDecoder {
     Uint8List? determinationFlag;
     Uint8List? earthquakeEventId;
     bool? geometryClamped;
+    var seenFields = 0;
 
     for (var index = 0; index < tags.length; index += 2) {
-      final field = keys[tags[index]];
-      final value = values[tags[index + 1]];
+      final keyIndex = tags[index];
+      if (keyIndex < 0 || keyIndex >= keys.length) {
+        fail(field: 'tags', reason: 'key_index_out_of_range');
+      }
+      final field = keys[keyIndex];
+      const SeismicitySchemaV1Validator().validatePropertyName(
+        name: field,
+        tileId: tileId,
+        featureIndex: featureIndex,
+      );
+      final fieldBit = switch (field) {
+        'hypocenter_id' => 1,
+        'origin_time_unix_ms' => 2,
+        'magnitude' => 4,
+        'depth_km' => 8,
+        'max_intensity' => 16,
+        'determination_flag' => 32,
+        'earthquake_event_id' => 64,
+        'geometry_clamped' => 128,
+        _ => 0,
+      };
+      if ((seenFields & fieldBit) != 0) {
+        fail(field: field, reason: 'duplicate_property');
+      }
+      seenFields |= fieldBit;
+      final valueIndex = tags[index + 1];
+      if (valueIndex < 0 || valueIndex >= values.length) {
+        fail(field: field, reason: 'value_index_out_of_range');
+      }
+      final value = values[valueIndex];
       String string() => valueDecoder.requireString(
         value: value,
         tileId: tileId,
@@ -55,7 +96,16 @@ final class SeismicityMvtPropertyDecoder {
           );
       switch (field) {
         case 'hypocenter_id':
-          hypocenterId = Uuid.parseAsByteList(string());
+          final source = string();
+          try {
+            final parsed = Uuid.parseAsByteList(source);
+            if (Uuid.unparse(parsed) != source) {
+              fail(field: field, reason: 'invalid_uuid');
+            }
+            hypocenterId = parsed;
+          } on FormatException {
+            fail(field: field, reason: 'invalid_uuid');
+          }
         case 'origin_time_unix_ms':
           originTime = valueDecoder.requireSafeInteger(
             value: value,
@@ -73,6 +123,9 @@ final class SeismicityMvtPropertyDecoder {
           determinationFlag = bytes();
         case 'earthquake_event_id':
           earthquakeEventId = bytes();
+          if (earthquakeEventId.isEmpty) {
+            fail(field: field, reason: 'empty_string');
+          }
         case 'geometry_clamped':
           geometryClamped = valueDecoder.requireBool(
             value: value,
@@ -93,7 +146,14 @@ final class SeismicityMvtPropertyDecoder {
         earthquakeEventIdUtf8: earthquakeEventId,
         geometryClamped: geometryClamped,
       ),
-      _ => throw StateError('Missing required schema-v1 property.'),
+      (null, _) => fail(
+        field: 'hypocenter_id',
+        reason: 'missing_required_property',
+      ),
+      (_, null) => fail(
+        field: 'origin_time_unix_ms',
+        reason: 'missing_required_property',
+      ),
     };
   }
 }
