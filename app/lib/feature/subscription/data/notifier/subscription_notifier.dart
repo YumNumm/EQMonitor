@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
@@ -13,6 +14,12 @@ part 'subscription_notifier.g.dart';
 class SubscriptionNotifier extends _$SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async {
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
+    if (!isProFeaturesEnabled) {
+      return const SubscriptionStatus.inactive();
+    }
     final repository = await ref.watch(subscriptionRepositoryProvider.future);
     return repository.fetchStatus();
   }

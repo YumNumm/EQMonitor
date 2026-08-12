@@ -13,8 +13,8 @@ part of 'is_pro_provider.dart';
 /// Pro ユーザーかどうかを返す。
 ///
 /// [subscriptionProvider] を watch し、active なら true。
-/// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
-/// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
+/// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
+/// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 
 @ProviderFor(isPro)
 final isProProvider = IsProProvider._();
@@ -22,16 +22,16 @@ final isProProvider = IsProProvider._();
 /// Pro ユーザーかどうかを返す。
 ///
 /// [subscriptionProvider] を watch し、active なら true。
-/// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
-/// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
+/// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
+/// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 
 final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Pro ユーザーかどうかを返す。
   ///
   /// [subscriptionProvider] を watch し、active なら true。
-  /// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
-  /// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
+  /// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
+  /// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
   IsProProvider._()
     : super(
         from: null,
@@ -65,4 +65,4 @@ final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isProHash() => r'd2cf08a16b70bbe19f11fb9cfeb8f4d9fbb65ee5';
+String _$isProHash() => r'cd9d34f2a30f069ce325cb0ba46805338fa46000';

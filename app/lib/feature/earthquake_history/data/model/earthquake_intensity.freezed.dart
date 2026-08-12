@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_intensity.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_intensity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$EarthquakeIntensityCopyWithImpl<$Res>
 /// Create a copy of EarthquakeIntensity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? regions = null,Object? intensityTree = null,Object? lpgmIntensityTree = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeIntensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
@@ -213,7 +214,7 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.regions,_that.in
 @JsonSerializable()
 
 class _EarthquakeIntensity implements EarthquakeIntensity {
-  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<IntensityRegion>> regions, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree}): _regions = regions,_intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
+  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required  Map<JmaIntensity, List<IntensityRegion>> regions, required  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree}): _regions = regions,_intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
   factory _EarthquakeIntensity.fromJson(Map<String, dynamic> json) => _$EarthquakeIntensityFromJson(json);
 
 @override final  JmaIntensity maxIntensity;

@@ -1,10 +1,38 @@
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 Future<void> showProUpgradeDialog(BuildContext context) async {
   await showDialog<void>(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => const _ProUpgradeDialog(),
+  );
+}
+
+class _ProUpgradeDialog extends ConsumerWidget {
+  const _ProUpgradeDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
+
+    if (!isProFeaturesEnabled) {
+      return AlertDialog(
+        title: const Text('現在ご利用いただけません'),
+        content: const Text('EQMonitor Pro は現在提供を停止しています。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('閉じる'),
+          ),
+        ],
+      );
+    }
+
+    return AlertDialog(
       title: const Text('Proプランが必要です'),
       content: const Text('この機能を利用するにはProプランへのアップグレードが必要です。'),
       actions: [
@@ -20,6 +48,6 @@ Future<void> showProUpgradeDialog(BuildContext context) async {
           child: const Text('Proを見る'),
         ),
       ],
-    ),
-  );
+    );
+  }
 }

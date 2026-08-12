@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tracked_region.dart';
@@ -9,6 +9,7 @@ part of 'tracked_region.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$TrackedRegionCopyWithImpl<$Res>
 /// Create a copy of TrackedRegion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kind = null,Object? lastKind = null,Object? forecastFirstHeight = null,Object? forecastMaxHeight = null,Object? estimationFirstHeight = null,Object? estimationMaxHeight = null,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(TrackedRegion(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
@@ -214,7 +215,7 @@ return $default(_that.code,_that.name,_that.kind,_that.lastKind,_that.forecastFi
 
 
 class _TrackedRegion implements TrackedRegion {
-  const _TrackedRegion({required this.code, required this.name, required final  Tracked<TsunamiWarningKind> kind, required final  Tracked<TsunamiWarningKind> lastKind, required final  Tracked<TsunamiForecastFirstHeight?> forecastFirstHeight, required final  Tracked<TsunamiForecastMaxHeight?> forecastMaxHeight, required final  Tracked<TsunamiEstimationFirstHeight?> estimationFirstHeight, required final  Tracked<TsunamiEstimationMaxHeight?> estimationMaxHeight, required final  List<TrackedRegionStation> stations}): _kind = kind,_lastKind = lastKind,_forecastFirstHeight = forecastFirstHeight,_forecastMaxHeight = forecastMaxHeight,_estimationFirstHeight = estimationFirstHeight,_estimationMaxHeight = estimationMaxHeight,_stations = stations;
+  const _TrackedRegion({required this.code, required this.name, required  Tracked<TsunamiWarningKind> kind, required  Tracked<TsunamiWarningKind> lastKind, required  Tracked<TsunamiForecastFirstHeight?> forecastFirstHeight, required  Tracked<TsunamiForecastMaxHeight?> forecastMaxHeight, required  Tracked<TsunamiEstimationFirstHeight?> estimationFirstHeight, required  Tracked<TsunamiEstimationMaxHeight?> estimationMaxHeight, required  List<TrackedRegionStation> stations}): _kind = kind,_lastKind = lastKind,_forecastFirstHeight = forecastFirstHeight,_forecastMaxHeight = forecastMaxHeight,_estimationFirstHeight = estimationFirstHeight,_estimationMaxHeight = estimationMaxHeight,_stations = stations;
   
 
 @override final  String code;

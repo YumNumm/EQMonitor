@@ -10,34 +10,27 @@ part of 'lpgm_intensity_tree.dart';
 
 _PrefectureLpgmIntensityNode _$PrefectureLpgmIntensityNodeFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_PrefectureLpgmIntensityNode',
-  json,
-  ($checkedConvert) {
-    final val = _PrefectureLpgmIntensityNode(
-      region: $checkedConvert(
-        'region',
-        (v) => const EarthquakeParameterRegionItemJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+) => $checkedCreate('_PrefectureLpgmIntensityNode', json, ($checkedConvert) {
+  final val = _PrefectureLpgmIntensityNode(
+    region: $checkedConvert(
+      'region',
+      (v) => const EarthquakeParameterRegionItemJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      maxLpgmIntensity: $checkedConvert(
-        'max_lpgm_intensity',
-        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
-      ),
-      cities: $checkedConvert(
-        'cities',
-        (v) => (v as List<dynamic>)
-            .map(
-              (e) => CityLpgmIntensityNode.fromJson(e as Map<String, dynamic>),
-            )
-            .toList(),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'},
-);
+    ),
+    maxLpgmIntensity: $checkedConvert(
+      'max_lpgm_intensity',
+      (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+    ),
+    cities: $checkedConvert(
+      'cities',
+      (v) => (v as List<dynamic>)
+          .map((e) => CityLpgmIntensityNode.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'});
 
 Map<String, dynamic> _$PrefectureLpgmIntensityNodeToJson(
   _PrefectureLpgmIntensityNode instance,
@@ -59,26 +52,21 @@ const _$JmaLpgmIntensityEnumMap = {
 };
 
 _LpgmIntensityRegion _$LpgmIntensityRegionFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_LpgmIntensityRegion',
-      json,
-      ($checkedConvert) {
-        final val = _LpgmIntensityRegion(
-          region: $checkedConvert(
-            'region',
-            (v) => const EarthquakeParameterRegionItemJsonConverter().fromJson(
-              v as Map<String, dynamic>,
-            ),
+    $checkedCreate('_LpgmIntensityRegion', json, ($checkedConvert) {
+      final val = _LpgmIntensityRegion(
+        region: $checkedConvert(
+          'region',
+          (v) => const EarthquakeParameterRegionItemJsonConverter().fromJson(
+            v as Map<String, dynamic>,
           ),
-          maxLpgmIntensity: $checkedConvert(
-            'max_lpgm_intensity',
-            (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'},
-    );
+        ),
+        maxLpgmIntensity: $checkedConvert(
+          'max_lpgm_intensity',
+          (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'});
 
 Map<String, dynamic> _$LpgmIntensityRegionToJson(
   _LpgmIntensityRegion instance,
@@ -91,35 +79,29 @@ Map<String, dynamic> _$LpgmIntensityRegionToJson(
 
 _CityLpgmIntensityNode _$CityLpgmIntensityNodeFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_CityLpgmIntensityNode',
-  json,
-  ($checkedConvert) {
-    final val = _CityLpgmIntensityNode(
-      city: $checkedConvert(
-        'city',
-        (v) => const EarthquakeParameterCityItemJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+) => $checkedCreate('_CityLpgmIntensityNode', json, ($checkedConvert) {
+  final val = _CityLpgmIntensityNode(
+    city: $checkedConvert(
+      'city',
+      (v) => const EarthquakeParameterCityItemJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      maxLpgmIntensity: $checkedConvert(
-        'max_lpgm_intensity',
-        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
-      ),
-      stations: $checkedConvert(
-        'stations',
-        (v) => (v as List<dynamic>)
-            .map(
-              (e) =>
-                  StationLpgmIntensityNode.fromJson(e as Map<String, dynamic>),
-            )
-            .toList(),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'},
-);
+    ),
+    maxLpgmIntensity: $checkedConvert(
+      'max_lpgm_intensity',
+      (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+    ),
+    stations: $checkedConvert(
+      'stations',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => StationLpgmIntensityNode.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'});
 
 Map<String, dynamic> _$CityLpgmIntensityNodeToJson(
   _CityLpgmIntensityNode instance,

@@ -24,6 +24,9 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value;
+    final buildConfig = ref.watch(buildConfigProvider);
+    final isDeveloperUiEnabled = buildConfig.isDeveloperUiEnabled;
+    final isProFeaturesEnabled = buildConfig.isProFeaturesEnabled;
     final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -51,13 +54,15 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 const _AppVersionInformation(),
-                const SettingsSectionHeader(text: 'EQMonitor Pro'),
-                ListTile(
-                  title: const Text('EQMonitor Pro'),
-                  leading: const Icon(Icons.workspace_premium_outlined),
-                  onTap: () async =>
-                      const SubscriptionSettingsRoute().push<void>(context),
-                ),
+                if (isProFeaturesEnabled) ...[
+                  const SettingsSectionHeader(text: 'EQMonitor Pro'),
+                  ListTile(
+                    title: const Text('EQMonitor Pro'),
+                    leading: const Icon(Icons.workspace_premium_outlined),
+                    onTap: () async =>
+                        const SubscriptionSettingsRoute().push<void>(context),
+                  ),
+                ],
                 const SettingsSectionHeader(text: '各種設定'),
                 ListTile(
                   title: const Text('通知設定'),
@@ -125,32 +130,36 @@ class SettingsPage extends ConsumerWidget {
                     (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
                   ),
                 ),
-                const SettingsSectionHeader(text: 'キャッシュ'),
-                ListTile(
-                  title: const Text('HTTPキャッシュ'),
-                  leading: const Icon(Icons.storage_outlined),
-                  subtitle: Text(
-                    cacheSize.when(
-                      data: const ByteSizeFormatter().format,
-                      loading: () => '計算中…',
-                      error: (_, _) => '取得に失敗しました',
+                if (isDeveloperUiEnabled) ...[
+                  const SettingsSectionHeader(text: 'キャッシュ'),
+                  ListTile(
+                    title: const Text('HTTPキャッシュ'),
+                    leading: const Icon(Icons.storage_outlined),
+                    subtitle: Text(
+                      cacheSize.when(
+                        data: const ByteSizeFormatter().format,
+                        loading: () => '計算中…',
+                        error: (_, _) => '取得に失敗しました',
+                      ),
                     ),
                   ),
-                ),
-                ListTile(
-                  title: const Text('HTTPキャッシュを削除'),
-                  leading: const Icon(Icons.delete_outline),
-                  onTap: () async {
-                    final messenger = ScaffoldMessenger.of(context);
-                    final store = await ref.read(httpCacheStoreProvider.future);
-                    await store.clearAll();
-                    await store.vacuum();
-                    ref.invalidate(httpCacheSizeProvider);
-                    messenger.showSnackBar(
-                      const SnackBar(content: Text('HTTPキャッシュを削除しました')),
-                    );
-                  },
-                ),
+                  ListTile(
+                    title: const Text('HTTPキャッシュを削除'),
+                    leading: const Icon(Icons.delete_outline),
+                    onTap: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+                      final store = await ref.read(
+                        httpCacheStoreProvider.future,
+                      );
+                      await store.clearAll();
+                      await store.vacuum();
+                      ref.invalidate(httpCacheSizeProvider);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text('HTTPキャッシュを削除しました')),
+                      );
+                    },
+                  ),
+                ],
                 Center(
                   child: Text(
                     'Powered by Flutter',
@@ -160,7 +169,7 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (isDebugEnabled ?? false) ...[
+                if (isDeveloperUiEnabled && (isDebugEnabled ?? false)) ...[
                   Center(
                     child: Text(
                       'Debug Mode',

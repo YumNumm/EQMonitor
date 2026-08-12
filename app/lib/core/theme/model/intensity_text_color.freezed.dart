@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_text_color.dart';
@@ -9,6 +9,7 @@ part of 'intensity_text_color.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 IntensityTextColor _$IntensityTextColorFromJson(
@@ -201,7 +202,7 @@ return manual(_that.color);case _:
 @JsonSerializable()
 
 class IntensityTextColorAuto implements IntensityTextColor {
-  const IntensityTextColorAuto({final  String? $type}): $type = $type ?? 'auto';
+  const IntensityTextColorAuto({ String? $type}): $type = $type ?? 'auto';
   factory IntensityTextColorAuto.fromJson(Map<String, dynamic> json) => _$IntensityTextColorAutoFromJson(json);
 
 
@@ -240,7 +241,7 @@ String toString() {
 @JsonSerializable()
 
 class IntensityTextColorManual implements IntensityTextColor {
-  const IntensityTextColorManual({@ColorJsonConverter() required this.color, final  String? $type}): $type = $type ?? 'manual';
+  const IntensityTextColorManual({@ColorJsonConverter() required this.color,  String? $type}): $type = $type ?? 'manual';
   factory IntensityTextColorManual.fromJson(Map<String, dynamic> json) => _$IntensityTextColorManualFromJson(json);
 
 @ColorJsonConverter() final  Color color;

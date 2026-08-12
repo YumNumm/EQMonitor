@@ -53,6 +53,9 @@ class DebugLauncher extends HookConsumerWidget {
           return true;
         }
         final buildCfg = ref.read(buildConfigProvider);
+        if (!buildCfg.isDeveloperUiEnabled) {
+          return false;
+        }
         if (buildCfg.isBetaTesting) {
           return true;
         }

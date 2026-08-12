@@ -107,6 +107,16 @@ GoRouter goRouter(Ref ref) => GoRouter(
       return null;
     }
 
+    final buildConfig = ref.read(buildConfigProvider);
+    if (!buildConfig.isDeveloperUiEnabled &&
+        state.matchedLocation.startsWith(const DebugRoute().location)) {
+      return const HomeRoute().location;
+    }
+    if (!buildConfig.isProFeaturesEnabled &&
+        state.matchedLocation.startsWith('/subscription')) {
+      return const HomeRoute().location;
+    }
+
     final isOnboardingCompleted =
         ref.read(onboardingCompletedProvider).value ?? false;
     if (!isOnboardingCompleted) {
