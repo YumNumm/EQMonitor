@@ -6,9 +6,15 @@ import 'dart:typed_data';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityUtf8Arena {
-  SeismicityUtf8Arena({required int maxBytes, required int maxEntries})
-    : _maxBytes = maxBytes,
-      _maxEntries = maxEntries {
+  SeismicityUtf8Arena({
+    required int maxBytes,
+    required int maxEntries,
+    Uint8List Function(int length)? allocateBuildBytes,
+    Uint32List Function(int length)? allocateBuildOffsets,
+  }) : _maxBytes = maxBytes,
+       _maxEntries = maxEntries,
+       _allocateBuildBytes = allocateBuildBytes ?? Uint8List.new,
+       _allocateBuildOffsets = allocateBuildOffsets ?? Uint32List.new {
     if (maxBytes < 0 ||
         maxBytes > 0xffffffff ||
         maxEntries < 0 ||
@@ -21,6 +27,8 @@ final class SeismicityUtf8Arena {
 
   final int _maxBytes;
   final int _maxEntries;
+  final Uint8List Function(int length) _allocateBuildBytes;
+  final Uint32List Function(int length) _allocateBuildOffsets;
   var _bytes = Uint8List(0);
   var _entryOffsets = Uint32List(1);
   var _byteLength = 0;
@@ -91,10 +99,21 @@ final class SeismicityUtf8Arena {
     return true;
   }
 
-  ({Uint8List bytes, Uint32List entryOffsets}) build() => (
-    bytes: Uint8List.fromList(Uint8List.sublistView(_bytes, 0, _byteLength)),
-    entryOffsets: Uint32List.fromList(
-      Uint32List.sublistView(_entryOffsets, 0, _entryCount + 1),
-    ),
-  );
+  ({Uint8List bytes, Uint32List entryOffsets}) build() {
+    try {
+      final bytes = _allocateBuildBytes(_byteLength)
+        ..setRange(0, _byteLength, _bytes);
+      final entryOffsets = _allocateBuildOffsets(_entryCount + 1)
+        ..setRange(0, _entryCount + 1, _entryOffsets);
+      return (bytes: bytes, entryOffsets: entryOffsets);
+    } on OutOfMemoryError {
+      throw const SeismicityPmTilesException.invalidDescriptor(
+        reason: 'Cannot allocate UTF-8 arena output.',
+      );
+    } on RangeError {
+      throw const SeismicityPmTilesException.invalidDescriptor(
+        reason: 'Cannot allocate UTF-8 arena output.',
+      );
+    }
+  }
 }

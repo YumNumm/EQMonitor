@@ -69,4 +69,41 @@ void main() {
     );
     expect(entryLimited.build().entryOffsets, [0, 1]);
   });
+
+  test('translates build allocation failures without changing entries', () {
+    var failBytes = true;
+    final bytesArena = SeismicityUtf8Arena(
+      maxBytes: 1,
+      maxEntries: 1,
+      allocateBuildBytes: (length) {
+        if (failBytes) {
+          failBytes = false;
+          throw const OutOfMemoryError();
+        }
+        return Uint8List(length);
+      },
+    );
+    var failOffsets = true;
+    final offsetsArena = SeismicityUtf8Arena(
+      maxBytes: 1,
+      maxEntries: 1,
+      allocateBuildOffsets: (length) {
+        if (failOffsets) {
+          failOffsets = false;
+          throw RangeError('injected offset allocation failure');
+        }
+        return Uint32List(length);
+      },
+    );
+
+    for (final arena in [bytesArena, offsetsArena]) {
+      final value = Uint8List.fromList([7]);
+      arena.append(valueUtf8: value);
+      expect(arena.build, invalid);
+      expect(arena.equalsAt(index: 0, candidateUtf8: value), isTrue);
+      final output = arena.build();
+      expect(output.bytes, [7]);
+      expect(output.entryOffsets, [0, 1]);
+    }
+  });
 }
