@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -20,6 +21,92 @@ void main() {
       expect(action, returnsNormally);
     }
   });
+
+  test('render public inventory', () {
+    for (final action in renderGeometryInventory()) {
+      expect(action, returnsNormally);
+    }
+  });
+}
+
+List<void Function()> renderGeometryInventory() {
+  final base = createMapRenderPhaseId(value: 'base');
+  final policy = createMapRenderPhasePolicy(
+    version: 1,
+    orderedPhases: [base, MapRenderPhaseId.labelForeground],
+  );
+  final first = MapRenderSortKey(
+    phasePolicyVersion: 1,
+    phase: 0,
+    declarationOrderWithinPhase: 0,
+    sourceOrder: 0,
+    overscaledTileOrder: 0,
+    featureOrder: 0,
+  );
+  final second = MapRenderSortKey(
+    phasePolicyVersion: 1,
+    phase: 0,
+    declarationOrderWithinPhase: 0,
+    sourceOrder: 0,
+    overscaledTileOrder: 0,
+    featureOrder: 1,
+  );
+  final attribute = MapVertexAttributeLayout(
+    semantic: MapVertexAttributeSemantic.featureIdUint32,
+    format: MapVertexAttributeFormat.uint32,
+    offset: 0,
+  );
+  final layout = createMapPackedMeshLayout(
+    version: 1,
+    topology: MapPrimitiveTopology.points,
+    byteOrder: MapPackedByteOrder.little,
+    vertexStride: 4,
+    attributes: [attribute],
+    indexFormat: null,
+  );
+  return [
+    () => consume(createMapRenderPhaseId(value: 'base')),
+    () => consume(MapRenderPhaseId.labelForeground),
+    () => consume(
+      createMapRenderPhasePolicy(
+        version: 1,
+        orderedPhases: [base, MapRenderPhaseId.labelForeground],
+      ),
+    ),
+    () => consume(policy.rankOf(base)),
+    () => consume<MapRenderSortKey>(first),
+    () => consume(compareMapRenderSortKeys(first, second)),
+    () => consume(reverseMapRenderSortKeysForHitTest(first, second)),
+    () => consume(MapVertexAttributeSemantic.values),
+    () => consume(MapVertexAttributeFormat.values),
+    () => consume(MapVertexAttributeFormat.uint32.byteLength),
+    () => consume(MapVertexAttributeFormat.uint32.scalarAlignment),
+    () => consume(attribute),
+    () => consume(MapPrimitiveTopology.values),
+    () => consume(MapPackedByteOrder.values),
+    () => consume(MapIndexFormat.values),
+    () => consume(
+      createMapPackedMeshLayout(
+        version: 1,
+        topology: MapPrimitiveTopology.points,
+        byteOrder: MapPackedByteOrder.little,
+        vertexStride: 4,
+        attributes: [attribute],
+        indexFormat: null,
+      ),
+    ),
+    () => consume(haveCompatibleMapPackedMeshLayouts(layout, layout)),
+    () => consume(
+      createMapPackedMesh(
+        payloadVersion: 1,
+        layout: layout,
+        vertexBytes: Uint8List(4),
+        vertexCount: 1,
+        indexBytes: null,
+        indexCount: null,
+      ),
+    ),
+  ];
 }
 
 List<void Function()> revisionStoreInventory() {
