@@ -41,7 +41,59 @@ void main() {
     for (final action in performancePolicyInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in performanceAggregateInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> performanceAggregateInventory() {
+  final percentile = createMapPercentileValue(percentile: 50, value: 1);
+  final aggregate = createMapMetricAggregate(
+    count: 1,
+    sum: 1,
+    min: 1,
+    max: 1,
+    percentiles: [percentile],
+    percentileSampleCount: 1,
+    percentileDroppedCount: 0,
+  );
+  final accumulator = MapMetricAccumulator(1);
+  const accepted = MapPerformanceRecordResult.accepted();
+  final schema = createMapPerformanceSchemaVersion(value: 1);
+  final domain = createMapClockDomainId(value: 'performance');
+  return [
+    () => consume(createMapPercentileValue(percentile: 50, value: 1)),
+    () => consume(
+      createMapMetricAggregate(
+        count: 1,
+        sum: 1,
+        min: 1,
+        max: 1,
+        percentiles: [percentile],
+        percentileSampleCount: 1,
+        percentileDroppedCount: 0,
+      ),
+    ),
+    () => accumulator.add(1),
+    () => consume(accumulator.snapshot(const [50])),
+    () => consume(const MapPerformanceRecordResult.accepted()),
+    () => consume(const MapPerformanceRecordResult.aggregated()),
+    () => consume(const MapPerformanceRecordResult.ignored()),
+    () => consume(const MapPerformanceRecordResult.rejected()),
+    () => consume(accepted.completedSnapshots),
+    () => consume(
+      createMapPerformanceSnapshot(
+        schemaVersion: schema,
+        clockDomain: domain,
+        windowStartedAt: Duration.zero,
+        windowEndedAt: const Duration(seconds: 1),
+        isPartial: false,
+        metrics: {MapPerformanceMetricKind.cacheHit: aggregate},
+        counters: const {},
+      ),
+    ),
+  ];
 }
 
 List<void Function()> performancePolicyInventory() {
