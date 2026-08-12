@@ -2122,7 +2122,7 @@ one terminal completer from `terminalContextCause` and returns it by identity。
 test('failed invalidation waits late owner FD before identical FI', () {
   expectRedSourceContract(
     path: 'lib/src/render/persistent_gpu_resource_registry.dart',
-    marker: 'fallback: AsyncError(error, stackTrace),',
+    marker: 'Future<void> settlePersistentGpuInvalidationAfterRetirements({',
     diagnostic: 'RED:T15C:quiescent invalidation routing missing',
   );
 });
@@ -2131,6 +2131,24 @@ test('failed invalidation waits late owner FD before identical FI', () {
 **GREEN implementation snippet:**
 
 ```dart
+Future<void> settlePersistentGpuInvalidationAfterRetirements({
+  required PersistentGpuResourceRegistry registry,
+  required List<Future<void>> retirements,
+  required Completer<void> completer,
+}) async {
+  AsyncError? fallback;
+  try {
+    await Future.wait(retirements, eagerError: false);
+  } catch (error, stackTrace) {
+    fallback = AsyncError(error, stackTrace);
+  }
+  await registry.settleInvalidationWhenOwnersQuiescent(
+    completer: completer,
+    fallback: fallback,
+  );
+}
+
+// Registry field and method:
 Completer<void>? terminalFailureInvalidation;
 
 Future<void> invalidateContext(int ownerId) {
@@ -2165,18 +2183,17 @@ Future<void> invalidateContext(int ownerId) {
     PersistentGpuResourceLease(registry: this, recordId: record.id,
         generation: record.generation),
   )).toList(growable: false);
-  Future.wait(retirements, eagerError: false).then<void>(
-    (_) => settleInvalidationWhenOwnersQuiescent(
-      completer: completer, fallback: null,
-    ),
-    onError: (Object error, StackTrace stackTrace) =>
-        settleInvalidationWhenOwnersQuiescent(
-      completer: completer, fallback: AsyncError(error, stackTrace),
-    ),
-  );
+  settlePersistentGpuInvalidationAfterRetirements(
+    registry: this,
+    retirements: retirements,
+    completer: completer,
+  ).ignore();
   return completer.future;
 }
 ```
+
+The settle helper is top-level library scope; `terminalFailureInvalidation` and `invalidateContext` remain registry
+members. The comment is placement notation and is not copied into production。
 
 **Handwritten budget:** production 50–62 + tests 35–38 = 85–100 lines。
 
@@ -4006,7 +4023,7 @@ void draw({
 `test/persistent_packed_instance_transaction_test.dart`。
 
 **Interfaces:** Produces exact typed aliases and generic `executePersistentPackedInstanceTransaction<T>` shown
-in Exact internal interfaces. No dynamic/object parameter, subclass, service locator, or optional callback。
+in Exact internal interfaces. No erased parameter, subclass, service locator, or optional callback。
 
 **Implementation shape:** the function calls `checkCanCreate()` first, assigns `final plan = buildPlan()`, then
 `final storage = upload(backend: backend, plan: plan)`, registers exact plan bytes with
