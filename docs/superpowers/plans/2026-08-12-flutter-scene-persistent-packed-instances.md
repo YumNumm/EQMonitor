@@ -223,6 +223,9 @@ error is context cause; later errors remain in test-only ordered `failureLog`。
 For `mark→submit→retire`, invalidation invoked by any two active owners returns the exact same FI object. It cannot
 settle, succeed or fail until the stamped resource completes and every registered release callback in the batch has
 been attempted; completion failure is cached and never retried by later completion notifications。
+After resource Futures settle, invalidation drains published owner FDs by `ownerDisposalEpoch` until one complete
+event-loop turn observes no newer publication. The stable epoch check and FI settlement are synchronous, so a
+dispose queued in a release-callback microtask is included before FI and cannot fall into a check/complete gap。
 
 ## Exact internal interfaces and file ownership
 
@@ -358,12 +361,12 @@ token, invokes the entry, restores the original token, and proves state/callback
 | `disposeOwner(ownerId)` | 6 | owner state/FD/release count unchanged |
 | `invalidateContext(ownerId)` | 7 | context/FI/release count unchanged |
 | `recreateContext(ownerId)` | 8 | generation/context unchanged |
-| `beginFrame()` | 12 | frame-open/mark/record state unchanged |
-| lease/registry `markUsed(lease)` | 12 | frame-open/mark/record state unchanged |
-| `endFrame()` | 12 | frame-open/mark/record state unchanged |
+| `beginFrame()` | 12B | frame-open/mark/record state unchanged |
+| lease/registry `markUsed(lease)` | 12B | frame-open/mark/record state unchanged |
+| `endFrame()` | 12B | frame-open/mark/record state unchanged |
 | tracker before-submit listener | 13 | open marks and submission stamps unchanged |
 | tracker completion listener | 14 | pending state/release count unchanged |
-| `releaseRecord(...)` before registered callback | 4D/14/15A | callback/log/context/record unchanged; not failed |
+| `releaseRecord(...)` / `releaseRecordsInOrder(...)` | 12A/14 | callback/log/context/record unchanged; not failed |
 
 Lifecycle methods delegate to these checked entries; they do not duplicate an independently drifting affinity
 policy. Affinity failure is an execution-contract error, never a GPU release failure: it appends no `failureLog`,
@@ -569,15 +572,19 @@ Baseline failure is evidence, not pass. Device/Simulator/E2E is not part of this
 
 ## Per-task execution contract
 
-Every task below contains a compilable RED test snippet, a type-checkable GREEN production snippet and an exact
-handwritten line budget. Add only the RED test first. Every fork RED is run through this exact harness in the same
-strict shell; a normal targeted test failure is exit `1`. Exit `0`, an unrelated/toolchain exit such as `99`, a
-missing test title, or a missing task-specific diagnostic all make the gate fail. Do not commit the intentional RED。
+Every task below contains a compilable source-only RED test snippet, a type-checkable GREEN production snippet and
+an exact handwritten line budget. Add only the RED snippet first: its imports are limited to `dart:io` plus the
+test package, and its complete named test reads source text/file existence only. It must not import, construct,
+tear off, invoke, or type-reference the API that is absent before that task. Every fork RED is run through this
+exact harness in the same strict shell; a normal targeted source-contract failure is exit `1`. Exit `0`, an
+unrelated/toolchain exit such as `99`, a compile error, a missing test title, or a missing task-specific diagnostic
+all make the gate fail. Do not commit the intentional RED。
 
-Every compile-oriented source-contract RED imports `dart:io` and `package:flutter_test/flutter_test.dart` and uses
-this helper. The `marker` is the exact GREEN production signature/statement named in that task. Behavioral
-assertions stay in the same named test; the source assertion gives the fail-closed harness a deterministic
-task-specific diagnostic even when the pre-task API does not compile yet。
+Every source-contract RED imports `dart:io` and `package:flutter_test/flutter_test.dart` and uses this helper. The
+`marker` is a literal contiguous substring present in that task's GREEN snippet. After the RED command proves the
+exact title+diagnostic, add production, then replace the source-only body with the task's typed behavioral
+assertions under the same title. Run that behavior test through the task's GREEN/regression command. Never combine
+the source-only assertion with typed references to an API that is still absent。
 
 ```dart
 void expectRedSourceContract({
@@ -647,7 +654,9 @@ proves an rc99 toolchain crash is rejected even when it prints both expected str
 unrelated rc1 is rejected when the diagnostic is absent. The implementation worker must execute both before Task1
 and record their nonzero statuses。
 
-After GREEN, run every named focused and regression file in that task, then analyze and diff check. Before commit
+In every task, the behavior described in its `RED` checklist bullet is the typed test body to install only after
+the production symbol exists; it is executed by `GREEN`, not by `run_fork_red`. After GREEN, run every named
+focused and regression file in that task, then analyze and diff check. Before commit
 run `git --no-pager diff --numstat HEAD --` with the task's exact files and reconcile the result with
 `**Handwritten budget:**`; generated locks and formatter-only indentation are excluded, but every handwritten
 production/test/doc line counts. A different agent performs spec review and code review; only zero findings permits
@@ -827,6 +836,26 @@ test("snapshot is exact and mutations stay on one isolate", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+@immutable
+final class PersistentGpuMemorySnapshot {
+  const PersistentGpuMemorySnapshot({
+    required this.contextState,
+    required this.lifecycleState,
+    required this.contextGeneration,
+    required this.latestSubmission,
+    required this.completedThrough,
+    required this.global,
+    required this.owner,
+  });
+  final PersistentGpuContextState contextState;
+  final PersistentGpuResourceLifecycleState lifecycleState;
+  final int contextGeneration;
+  final int latestSubmission;
+  final int completedThrough;
+  final PersistentGpuMemoryUsage global;
+  final PersistentGpuMemoryUsage owner;
+}
+
 final class PersistentGpuExecutionAffinity {
   PersistentGpuExecutionAffinity({SendPort Function()? currentIsolateToken}) {
     currentToken = currentIsolateToken ?? (() => Isolate.current.controlPort);
@@ -1551,7 +1580,108 @@ and documentation lines are counted, while generated files and formatter-only in
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_lifecycle_test.dart test/render/persistent_gpu_resource_registry_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: lifecycle disposed操作表を固定`。
 
-### Task 12: open-frame mark and no-submit retirement (depends Task 11; 55–95 lines)
+### Task 12A: ordered terminal release coordinator (depends Task 11; 60–100 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Replaces Task4D's callback body with top-level
+`releasePersistentGpuRecordAfterAffinity({required PersistentGpuResourceRegistry registry, required PersistentGpuAllocationRecord record})`.
+Registry produces checked `releaseRecordsInOrder({required List<PersistentGpuAllocationRecord> batch, void Function()? transition})`
+and keeps checked `Future<void> releaseRecord(PersistentGpuAllocationRecord record)` as a one-record adapter.
+It also produces ordered `failureLog` and nullable first `terminalContextCause`。
+
+**Implementation shape:** only the registry entrypoints perform affinity checks. The top-level core is callable
+only after that check, publishes the cached Future/state before the registered callback, catches only callback
+errors, and never retries retired/failed/releasing records. The batch takes a precomputed registration-order list,
+runs its internal state-only `transition` after affinity succeeds, attempts every callback, and publishes the first
+new failure as the terminal context cause only after the loop。
+
+**RED test snippet:**
+
+```dart
+test('ordered release coordinator attempts the complete batch', () {
+  expectRedSourceContract(
+    path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+    marker: 'void releaseRecordsInOrder({',
+    diagnostic: 'RED:T12A:ordered release coordinator missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+final List<AsyncError> releaseFailures = [];
+AsyncError? terminalContextCause;
+
+@visibleForTesting
+List<AsyncError> get failureLog =>
+    List<AsyncError>.unmodifiable(releaseFailures);
+
+void releasePersistentGpuRecordAfterAffinity({
+  required PersistentGpuResourceRegistry registry,
+  required PersistentGpuAllocationRecord record,
+}) {
+  final existing = record.retirement;
+  if (record.state == PersistentGpuAllocationState.retired ||
+      record.state == PersistentGpuAllocationState.failed ||
+      record.state == PersistentGpuAllocationState.releasing) {
+    if (existing == null) throw StateError('terminal record has no retirement');
+    return;
+  }
+  final completer = existing ?? Completer<void>();
+  record.retirement ??= completer;
+  record.state = PersistentGpuAllocationState.releasing;
+  try {
+    record.release();
+    record.state = PersistentGpuAllocationState.retired;
+    registry.records.remove(record.id);
+    completer.complete();
+  } catch (error, stackTrace) {
+    record.state = PersistentGpuAllocationState.failed;
+    registry.releaseFailures.add(AsyncError(error, stackTrace));
+    completer.completeError(error, stackTrace);
+  }
+}
+
+void releaseRecordsInOrder({
+  required List<PersistentGpuAllocationRecord> batch,
+  void Function()? transition,
+}) {
+  affinity.check();
+  transition?.call();
+  final failureStart = releaseFailures.length;
+  for (final record in batch) {
+    releasePersistentGpuRecordAfterAffinity(registry: this, record: record);
+  }
+  if (releaseFailures.length > failureStart) {
+    terminalContextCause ??= releaseFailures[failureStart];
+    contextState = PersistentGpuContextState.failed;
+  }
+}
+
+Future<void> releaseRecord(PersistentGpuAllocationRecord record) {
+  affinity.check();
+  releaseRecordsInOrder(batch: [record]);
+  final retirement = record.retirement;
+  if (retirement == null) throw StateError('release did not publish retirement');
+  return retirement.future;
+}
+```
+
+**Handwritten budget:** production 55–68 + test 30–32 = 85–100 lines。
+
+- [ ] **RED:** run only the source contract first:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'ordered release coordinator attempts the complete batch' 'RED:T12A:ordered release coordinator missing'`。
+- [ ] **GREEN:** replace that body with typed tests: A reenters then throws, B throws; both callbacks run once in
+  registration order, both record Futures fail with their own error, failed bytes remain, `failureLog` is
+  `[A,B]`, terminal cause is A only after B ran, repeated batch/retire does not retry. Affinity failure at
+  `releaseRecord` or `releaseRecordsInOrder` leaves state/Future/log/context/callbacks unchanged; restored retry
+  succeeds. Run registry/lifecycle/tracker tests, analyze and diff-check。
+- [ ] **Commit:** `Fix: GPU release batchをterminal化`。
+
+### Task 12B: open-frame mark and no-submit retirement (depends Task 12A; 55–95 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`; Modify
@@ -1573,7 +1703,7 @@ test("open frame without submission retires only at end", () {
   expectRedSourceContract(
     path: "lib/src/render/persistent_gpu_resource_registry.dart",
     marker: "void beginFrame()",
-    diagnostic: "RED:T12:frame affinity gate missing",
+    diagnostic: "RED:T12B:frame affinity gate missing",
   );
 });
 ```
@@ -1625,19 +1755,29 @@ void endFrame() {
   affinity.check();
   if (!frameOpen) throw StateError('frame is closed');
   final marked = Set<PersistentGpuAllocationRecord>.of(openFrameMarks);
-  frameOpen = false;
-  openFrameMarks.clear();
+  final ready = <PersistentGpuAllocationRecord>[];
+  final pending = <PersistentGpuAllocationRecord>[];
   for (final record in marked) {
     if (record.state != PersistentGpuAllocationState.pendingOpenFrame) {
       continue;
     }
     final last = record.lastSubmission;
     if (last != null && submissions.completedThrough < last) {
-      record.state = PersistentGpuAllocationState.pendingSubmission;
+      pending.add(record);
     } else {
-      releaseRecord(record);
+      ready.add(record);
     }
   }
+  releaseRecordsInOrder(
+    batch: ready,
+    transition: () {
+      frameOpen = false;
+      openFrameMarks.clear();
+      for (final record in pending) {
+        record.state = PersistentGpuAllocationState.pendingSubmission;
+      }
+    },
+  );
 }
 ```
 
@@ -1649,14 +1789,16 @@ and documentation lines are counted, while generated files and formatter-only in
   nested begin, closed end/mark, foreign/terminal/old-generation lease throw before mutation. For each of
   begin/lease-mark/registry-mark/end, swap the token, assert its diagnostic and unchanged frame/record snapshots,
   restore the token, then prove the valid call succeeds. Run:
-  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'open frame without submission retires only at end' 'RED:T12:frame affinity gate missing'`。
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'open frame without submission retires only at end' 'RED:T12B:frame affinity gate missing'`。
 - [ ] **GREEN:** mark records by identity; immediate `retire()` path from Task4D becomes pending-open when marked;
   end clears marks and releases only when `lastSubmission == null || completedThrough >= lastSubmission`; otherwise
-  it preserves that exact prior stamp as pending-submission. Run:
+  it preserves that exact prior stamp as pending-submission. Add release-throw regression proving A/B callbacks
+  remain ordered, failed state/cause is published, no retry occurs, and no direct `releaseRecord` call exists in
+  `endFrame`. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU resource frame記録を追加`。
 
-### Task 13: before-submit stamping after invalidation exists (depends Task 12; 45–85 lines)
+### Task 13: before-submit stamping after invalidation exists (depends Task 12B; 45–85 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`。
@@ -1720,9 +1862,9 @@ waits `completedThrough >= lastSubmission`; internal directly testable entrypoin
 `void handleCompletion(int completedThrough)`。
 
 **Implementation shape:** `retire` is extended so an active record with an incomplete `lastSubmission` becomes
-`pendingSubmission` and retains its buffer/callback. Completion snapshots eligible pending records and invokes
-Task4D `releaseRecord` only at/above the watermark. Both callback and release entry call `affinity.check()` before
-reads or mutation; an affinity error propagates without becoming a GPU release failure。
+`pendingSubmission` and retains its buffer/callback. Completion snapshots eligible pending records and passes the
+whole registration-order list once to Task12A `releaseRecordsInOrder`. Both callback and batch entry call
+`affinity.check()` before reads or mutation; an affinity error propagates without becoming a GPU release failure。
 
 **RED test snippet:**
 
@@ -1766,9 +1908,7 @@ void handleCompletion(int completedThrough) {
       eligible.add(record);
     }
   }
-  for (final record in eligible) {
-    releaseRecord(record);
-  }
+  releaseRecordsInOrder(batch: eligible);
 }
 ```
 
@@ -1782,141 +1922,35 @@ and documentation lines are counted, while generated files and formatter-only in
   owner FDs. Affinity mismatch invokes no release and changes no record/accounting/Future. Run:
   `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'completion watermark releases every stamped retirement exactly once' 'RED:T14:completion affinity gate missing'`。
 - [ ] **GREEN:** route active+incomplete-last directly to pendingSubmission and never call `release` early;
-  eligible completion snapshot only, then Task4D performs the checked releasing transition. Run:
+  pass the eligible snapshot once to Task12A. Add A-throws/B-throws completion regression proving both callbacks,
+  terminal cause, failed accounting, ordered log and no retry on another watermark; forbid a direct
+  `releaseRecord(` call in `handleCompletion`. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/frame_transients_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: GPU completion後にresourceを解放`。
 
-### Task 15A: release failure and ordered continuation (depends Task 14; 55–100 lines)
-
-**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
-`test/render/persistent_gpu_resource_registry_test.dart`。
-
-**Interfaces:** Produces terminal failed accounting, first context cause,
-`@visibleForTesting List<AsyncError> get failureLog`, and cached terminal failure Future returned by later
-active-owner `invalidateContext`; recreate/register/bind reject failed state; disposed-owner FE/FD rules remain
-owner-specific。
-
-**Implementation shape:** `releaseRecord` checks affinity before any state change. Only an exception thrown by the
-registered release callback after the checked transition becomes `failed`; affinity errors propagate with record,
-context, Future and log unchanged. Callback failures append every error, and a precomputed completion batch
-continues in registration order without retrying failed records. Only after the whole batch has run does it store
-the first context cause and mark the context failed. An in-flight invalidation still completes through its Task7
-coordinator after resource Futures and owner FDs; `releaseRecordsInOrder` never completes FI itself。
-
-**RED test snippet:**
-
-```dart
-test("release failures are ordered terminal and do not stop later release", () {
-  expectRedSourceContract(
-    path: "lib/src/render/persistent_gpu_resource_registry.dart",
-    marker: "List<AsyncError>.unmodifiable(releaseFailures)",
-    diagnostic: "RED:T15A:ordered release failure missing",
-  );
-});
-```
-
-**GREEN implementation snippet:**
-
-```dart
-final List<AsyncError> releaseFailures = [];
-AsyncError? terminalContextCause;
-Completer<void>? terminalFailureInvalidation;
-
-@visibleForTesting
-List<AsyncError> get failureLog =>
-    List<AsyncError>.unmodifiable(releaseFailures);
-
-Future<void> releaseRecord(PersistentGpuAllocationRecord record) {
-  affinity.check();
-  final existing = record.retirement;
-  if (record.state == PersistentGpuAllocationState.retired ||
-      record.state == PersistentGpuAllocationState.failed ||
-      record.state == PersistentGpuAllocationState.releasing) {
-    if (existing == null) throw StateError('terminal record has no retirement');
-    return existing.future;
-  }
-  final completer = existing ?? Completer<void>();
-  record.retirement ??= completer;
-  record.state = PersistentGpuAllocationState.releasing;
-  try {
-    record.release();
-    record.state = PersistentGpuAllocationState.retired;
-    records.remove(record.id);
-    completer.complete();
-  } catch (error, stackTrace) {
-    final failure = AsyncError(error, stackTrace);
-    record.state = PersistentGpuAllocationState.failed;
-    releaseFailures.add(failure);
-    completer.completeError(error, stackTrace);
-  }
-  return completer.future;
-}
-
-void releaseRecordsInOrder(List<PersistentGpuAllocationRecord> batch) {
-  affinity.check();
-  final failureStart = releaseFailures.length;
-  for (final record in batch) {
-    releaseRecord(record);
-  }
-  if (releaseFailures.length == failureStart) return;
-  final first = releaseFailures[failureStart];
-  terminalContextCause ??= first;
-  contextState = PersistentGpuContextState.failed;
-}
-```
-
-Task 15A replaces Task 14's per-record completion loop with
-`releaseRecordsInOrder(eligible)`; the eligible list remains the precomputed registration-order snapshot. The
-immediate branch of `retire` similarly calls `releaseRecordsInOrder([record])`, then returns the now-published
-`record.retirement.future` after a null invariant check. Owner disposal and context invalidation precompute their
-record lists before calling the same ordered entry, so all siblings are attempted even if an earlier callback
-throws。
-
-```dart
-releaseRecordsInOrder([record]);
-final retirement = record.retirement;
-if (retirement == null) {
-  throw StateError('release did not publish retirement');
-}
-return retirement.future;
-```
-
-**Handwritten budget:** production 55–70 + test 30–40 = 85–100 lines。
-
-- [ ] **RED:** A callback reenters its retire/snapshot then throws first; B throws second. Complete the shared
-  submission; assert callbacks once, both resources/context failed, failed bytes retained, later records still
-  attempted in registration order, `failureLog` is `[first,second]`, and each resource Future fails with its own
-  callback error. Repeated completion/retire never retries. Separately force affinity failure before
-  `releaseRecord`; assert active/pending state, Future identity, log, context and callback count are unchanged;
-  retry after restoring affinity succeeds. Run:
-  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'release failures are ordered terminal and do not stop later release' 'RED:T15A:ordered release failure missing'`。
-- [ ] **GREEN:** publish state before callback, preserve each resource error, store the first context cause only
-  after the whole ordered snapshot, and never complete FI here. Run focused registry/lifecycle/tracker tests plus
-  analyze/diff-check。
-- [ ] **Commit:** `Fix: GPU release失敗をterminal化`。
-
-### Task 15B: failure FI waits for owner disposal (depends Task 15A; 55–100 lines)
+### Task 15B: dynamically drain owner disposal epochs (depends Task 14; 50–95 lines)
 
 **Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
 `test/render/persistent_gpu_resource_registry_test.dart`; Modify
 `test/render/persistent_gpu_resource_lifecycle_test.dart`。
 
-**Interfaces:** Replaces Task7 `invalidateContext` with the complete failed/in-flight coordinator; a later
-active-owner call on a previously failed context returns one cached terminal Future, while an already in-flight
-invalidation retains its exact FI identity。
+**Interfaces:** Adds registry `int ownerDisposalEpoch = 0` and
+`Future<void> settleInvalidationWhenOwnersQuiescent({required Completer<void> completer, required AsyncError? fallback})`。
+Task6 `disposeOwner` increments the epoch exactly once immediately after publishing a new owner disposal completer。
 
-**Implementation shape:** The local continuation registers
-owner FD waits only after every resource Future settles, and it never reads or mutates registry state before its
-own affinity check:
+**Implementation shape:** Each loop snapshots the epoch and all published owner FDs, waits non-eagerly, yields one
+event-loop turn so a queued disposal microtask can publish, checks affinity before reading the epoch again, and
+restarts when it changed. On a stable epoch it settles context state and FI synchronously without another await,
+so no disposal can publish while context is still invalidating between the final check and FI completion。
 
 **RED test snippet:**
 
 ```dart
-test('failed invalidation waits resource then owner before identical FI', () {
+test('invalidation dynamically drains owner disposal epochs', () {
   expectRedSourceContract(
     path: 'lib/src/render/persistent_gpu_resource_registry.dart',
-    marker: 'void finishAfterOwnerDisposals(AsyncError? fallback)',
-    diagnostic: 'RED:T15B:failure FI ordering missing',
+    marker: 'Future<void> settleInvalidationWhenOwnersQuiescent({',
+    diagnostic: 'RED:T15B:owner disposal epoch drain missing',
   );
 });
 ```
@@ -1924,6 +1958,93 @@ test('failed invalidation waits resource then owner before identical FI', () {
 **GREEN implementation snippet:**
 
 ```dart
+int ownerDisposalEpoch = 0;
+
+Future<void> settleInvalidationWhenOwnersQuiescent({
+  required Completer<void> completer,
+  required AsyncError? fallback,
+}) async {
+  affinity.check();
+  AsyncError? ownerFailure;
+  while (true) {
+    affinity.check();
+    final observedEpoch = ownerDisposalEpoch;
+    final disposals = owners.values
+        .map((owner) => owner.disposal?.future)
+        .whereType<Future<void>>()
+        .toList(growable: false);
+    try {
+      await Future.wait(disposals, eagerError: false);
+    } catch (error, stackTrace) {
+      ownerFailure ??= AsyncError(error, stackTrace);
+    }
+    await Future<void>.delayed(Duration.zero);
+    affinity.check();
+    if (ownerDisposalEpoch != observedEpoch) continue;
+    final failure = terminalContextCause ?? fallback ?? ownerFailure;
+    if (failure != null) {
+      contextState = PersistentGpuContextState.failed;
+      completer.completeError(failure.error, failure.stackTrace);
+    } else {
+      contextState = PersistentGpuContextState.invalidated;
+      completer.complete();
+    }
+    return;
+  }
+}
+```
+
+Task6's publication block becomes:
+
+```dart
+final completer = Completer<void>();
+owner.disposal = completer;
+ownerDisposalEpoch++;
+owner.state = PersistentGpuResourceLifecycleState.disposed;
+```
+
+**Handwritten budget:** production 38–52 + tests 30–40 = 68–92 lines。
+
+- [ ] **RED:** run only the source contract first:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'invalidation dynamically drains owner disposal epochs' 'RED:T15B:owner disposal epoch drain missing'`。
+- [ ] **GREEN:** replace it with typed tests proving each first-time FD publication increments once, repeats do
+  not; an FD published by `scheduleMicrotask` after the first snapshot forces another epoch; FI cannot complete
+  before that FD. An affinity failure after either await fails only that coordinator invocation and leaves
+  context/FI untouched; after restoring affinity, reinvoke it with the same completer and settle once. Run
+  registry/lifecycle/tracker tests, analyze and diff-check。
+- [ ] **Commit:** `Fix: owner disposal epochをdrain`。
+
+### Task 15C: exact invalidation FI identity and quiescent settlement (depends Task 15B; 55–100 lines)
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`; Modify
+`test/render/persistent_gpu_resource_registry_test.dart`; Modify
+`test/render/persistent_gpu_resource_lifecycle_test.dart`。
+
+**Interfaces:** Replaces Task7 `invalidateContext` with the complete in-flight/failed coordinator. A later
+active-owner call on a previously failed context gets one cached `terminalFailureInvalidation`; an in-flight
+invalidation always returns its already-published exact FI。
+
+**Implementation shape:** Publish FI/context before releasing the precomputed generation batch. Await every
+resource Future non-eagerly, then call Task15B; never snapshot owner FDs here. The already-failed branch publishes
+one terminal completer from `terminalContextCause` and returns it by identity。
+
+**RED test snippet:**
+
+```dart
+test('failed invalidation waits late owner FD before identical FI', () {
+  expectRedSourceContract(
+    path: 'lib/src/render/persistent_gpu_resource_registry.dart',
+    marker: 'fallback: AsyncError(error, stackTrace),',
+    diagnostic: 'RED:T15C:quiescent invalidation routing missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+Completer<void>? terminalFailureInvalidation;
+
 Future<void> invalidateContext(int ownerId) {
   affinity.check();
   final owner = owners[ownerId];
@@ -1956,55 +2077,33 @@ Future<void> invalidateContext(int ownerId) {
     PersistentGpuResourceLease(registry: this, recordId: record.id,
         generation: record.generation),
   )).toList(growable: false);
-
-  void finishAfterOwnerDisposals(AsyncError? fallback) {
-    affinity.check();
-    final disposals = owners.values
-        .map((owner) => owner.disposal?.future)
-        .whereType<Future<void>>()
-        .toList(growable: false);
-    Future.wait(disposals, eagerError: false).then<void>((_) {
-      affinity.check();
-      final failure = terminalContextCause ?? fallback;
-      if (failure != null) {
-        contextState = PersistentGpuContextState.failed;
-        completer.completeError(failure.error, failure.stackTrace);
-      } else {
-        contextState = PersistentGpuContextState.invalidated;
-        completer.complete();
-      }
-    }, onError: (Object error, StackTrace stackTrace) {
-      affinity.check();
-      final failure = terminalContextCause ??
-          fallback ?? AsyncError(error, stackTrace);
-      contextState = PersistentGpuContextState.failed;
-      completer.completeError(failure.error, failure.stackTrace);
-    });
-  }
-
   Future.wait(retirements, eagerError: false).then<void>(
-    (_) => finishAfterOwnerDisposals(null),
+    (_) => settleInvalidationWhenOwnersQuiescent(
+      completer: completer, fallback: null,
+    ),
     onError: (Object error, StackTrace stackTrace) =>
-        finishAfterOwnerDisposals(AsyncError(error, stackTrace)),
+        settleInvalidationWhenOwnersQuiescent(
+      completer: completer, fallback: AsyncError(error, stackTrace),
+    ),
   );
   return completer.future;
 }
 ```
 
-**Handwritten budget:** production 65–78 + tests 25–35 = 90–100 lines。
+**Handwritten budget:** production 50–62 + tests 35–38 = 85–100 lines。
 
-- [ ] **RED:** During in-flight invalidation, A callback reentrantly disposes its owner and throws; B throws after
-  it. Assert the exact order callback A→callback B→resource Futures→owner FD→global FI, identical FI from two
-  owners and reentrant/later calls, and FI failure with the first context cause only after all callbacks. For a
-  release failure before invalidation, the first later active-owner invalidation creates one terminal Future and
-  every repeat returns that exact object. Disposed owner still returns its owner-specific FE/FD. Run:
-  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'failed invalidation waits resource then owner before identical FI' 'RED:T15B:failure FI ordering missing'`。
+- [ ] **RED:** run only the source contract first:
+  `run_fork_red test/render/persistent_gpu_resource_registry_test.dart 'failed invalidation waits late owner FD before identical FI' 'RED:T15C:quiescent invalidation routing missing'`。
 - [ ] **GREEN:** let record Futures preserve per-callback errors; wait all record Futures non-eagerly, then all
-  published owner FDs, then settle the single FI from `terminalContextCause`. Run:
+  dynamically published owner FDs, then settle the single FI from `terminalContextCause`. Exact microtask test:
+  A's release callback queues `scheduleMicrotask(() => ownerB.dispose())`; assert callback A→callback B→resource
+  Futures→late FD→FI, FI remains identical from owner A/B/reentrant calls, and failure uses A only after B. For a
+  release failure before invalidation, the first later active-owner call creates the cached terminal Future;
+  disposed owner still returns its owner-specific FE/FD. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/render/persistent_gpu_resource_registry_test.dart test/render/persistent_gpu_resource_lifecycle_test.dart test/render/gpu_submission_tracker_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
-- [ ] **Commit:** `Fix: GPU invalidation失敗順序を固定`。
+- [ ] **Commit:** `Fix: GPU invalidation FI順序を固定`。
 
-### Task 16: encode-scope try/finally seam (depends Task 15B; 35–70 lines)
+### Task 16: encode-scope try/finally seam (depends Task 15C; 35–70 lines)
 
 **Files:** Create `lib/src/render/persistent_gpu_scene_frame.dart`; Create
 `test/render/persistent_gpu_scene_frame_test.dart`。
@@ -2458,7 +2557,7 @@ cross-slot name set; call existing `toGpuLayout()` only after these policies pas
 test("layout rejects slots names and strides", () {
   expectRedSourceContract(
     path: "lib/src/geometry/persistent_packed_instance_plan.dart",
-    marker: "gpu.VertexStepMode.instance",
+    marker: "void validatePersistentPackedSlots(VertexLayoutDescriptor layout)",
     diagnostic: "RED:T22:slot name stride validation missing",
   );
 });
@@ -2468,11 +2567,56 @@ test("layout rejects slots names and strides", () {
 
 ```dart
 void validatePersistentPackedSlots(VertexLayoutDescriptor layout) {
-  if (layout.buffers.length != 2 ||
-      layout.buffers[0].stepMode != gpu.VertexStepMode.vertex ||
-      layout.buffers[1].stepMode != gpu.VertexStepMode.instance) {
+  final buffers = layout.buffers;
+  if (buffers.length != 2) {
     throw ArgumentError('packed layout requires vertex slot0 and instance slot1');
   }
+  if (buffers[0].stepMode != gpu.VertexStepMode.vertex ||
+      buffers[1].stepMode != gpu.VertexStepMode.instance) {
+    throw ArgumentError('packed layout step modes are vertex then instance');
+  }
+  final names = <String>{};
+  for (var slot = 0; slot < buffers.length; slot++) {
+    final buffer = buffers[slot];
+    if (buffer.strideInBytes <= 0) {
+      throw ArgumentError('packed slot $slot stride must be positive');
+    }
+    if (buffer.attributes.isEmpty) {
+      throw ArgumentError('packed slot $slot requires attributes');
+    }
+    for (final attribute in buffer.attributes) {
+      final name = attribute.name;
+      if (name.isEmpty || name.trim() != name) {
+        throw ArgumentError('invalid packed attribute name "$name"');
+      }
+      if (!names.add(name)) {
+        throw ArgumentError('duplicate packed attribute name "$name"');
+      }
+    }
+  }
+  layout.toGpuLayout();
+}
+
+final class PersistentPackedLayoutSnapshot {
+  PersistentPackedLayoutSnapshot.create(VertexLayoutDescriptor source)
+      : layout = VertexLayoutDescriptor(
+          buffers: List.unmodifiable(source.buffers.map((buffer) =>
+            VertexBufferDescriptor(
+              strideInBytes: buffer.strideInBytes,
+              stepMode: buffer.stepMode,
+              attributes: List.unmodifiable(buffer.attributes.map((attribute) =>
+                VertexAttributeDescriptor(name: attribute.name,
+                  format: attribute.format,
+                  offsetInBytes: attribute.offsetInBytes),
+              )),
+            ),
+          )),
+        ) {
+    validatePersistentPackedSlots(layout);
+  }
+  final VertexLayoutDescriptor layout;
+  int get vertexStrideInBytes => layout.buffers[0].strideInBytes;
+  int get instanceStrideInBytes => layout.buffers[1].strideInBytes;
 }
 ```
 
@@ -3251,15 +3395,52 @@ and documentation lines are counted, while generated files and formatter-only in
 test("GPU adapter unwraps only device slices for bind and draw", () {
   expectRedSourceContract(
     path: "lib/src/geometry/persistent_packed_render_pass_gpu.dart",
-    marker: "void drawPersistentPackedGpu({",
+    marker: "gpu.BufferView requireDevicePersistentPackedGpuView(",
     diagnostic: "RED:T36:GPU bind draw adapter missing",
   );
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:** all four complete production functions are:
 
 ```dart
+gpu.BufferView requireDevicePersistentPackedGpuView(
+  PersistentPackedGpuSlice slice,
+) {
+  if (slice is! DevicePersistentPackedGpuSlice) {
+    throw StateError('persistent packed slice is not device-backed');
+  }
+  return slice.view;
+}
+
+void bindPersistentPackedGpuVertex({
+  required gpu.RenderPass pass,
+  required PersistentPackedGpuSlice slice,
+  required int slot,
+  required int vertexCount,
+}) {
+  bindVertexBufferCompat(
+    pass,
+    requireDevicePersistentPackedGpuView(slice),
+    vertexCount,
+    slot: slot,
+  );
+}
+
+void bindPersistentPackedGpuIndex({
+  required gpu.RenderPass pass,
+  required PersistentPackedGpuSlice slice,
+  required gpu.IndexType indexType,
+  required int indexCount,
+}) {
+  bindIndexBufferCompat(
+    pass,
+    requireDevicePersistentPackedGpuView(slice),
+    indexType,
+    indexCount,
+  );
+}
+
 void drawPersistentPackedGpu({
   required gpu.RenderPass pass,
   required int vertexCount,
@@ -3285,29 +3466,26 @@ and documentation lines are counted, while generated files and formatter-only in
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart test/persistent_packed_gpu_backend_test.dart test/persistent_packed_instance_storage_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed RenderPass bind境界を追加`。
 
-### Task 37: exact 36-float production FrameInfo adapter (depends Task 36; 45–90 lines)
+### Task 37A: exact shader selection and 36-float packing (depends Task 36; 45–85 lines)
 
 **Files:** Modify `lib/src/geometry/persistent_packed_render_pass_gpu.dart`; Modify
 `test/persistent_packed_render_pass_test.dart`。
 
-**Interfaces:** Produces concrete final `GpuPersistentPackedRenderPassAdapter(gpu.RenderPass pass)` by delegating
-to Task36 functions and implementing all Task35 methods; `bindFrameInfo` selects its shader lazily. Also produces
-the exact generic `selectPersistentPackedShader<T>` in this plan and
+**Interfaces:** Produces the exact generic `selectPersistentPackedShader<T>` in this plan and
 `@visibleForTesting Float32List packPersistentPackedFrameInfo({required vm.Matrix4 cameraTransform, required vm.Matrix4 modelTransform, required vm.Vector3 cameraPosition})`, both used by production。
 
-**Implementation shape:** select `shaderOverride ?? defaultShader()` through the generic helper. Then use
-`final floats = Float32List(36)..setRange(0, 16, cameraTransform.storage)..setRange(16, 32, modelTransform.storage);`
-assign indices32–35, emplace `floats.buffer.asByteData()`, and
-`pass.bindUniform(shader.getUniformSlot('FrameInfo'), view)`。
+**Implementation shape:** selection returns a nonnull override without evaluating the default resolver; otherwise
+it evaluates that resolver exactly once. Packing writes the two matrices, camera position and explicit zero pad,
+retaining no input。
 
 **RED test snippet:**
 
 ```dart
-test("GPU adapter packs exact 36-float FrameInfo", () {
+test("shader selector and packer produce exact FrameInfo values", () {
   expectRedSourceContract(
     path: "lib/src/geometry/persistent_packed_render_pass_gpu.dart",
     marker: "Float32List packPersistentPackedFrameInfo({",
-    diagnostic: "RED:T37:FrameInfo pack missing",
+    diagnostic: "RED:T37A:FrameInfo pack missing",
   );
 });
 ```
@@ -3315,6 +3493,12 @@ test("GPU adapter packs exact 36-float FrameInfo", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+T selectPersistentPackedShader<T>({
+  required T Function() defaultShader,
+  required T? shaderOverride,
+}) => shaderOverride ?? defaultShader();
+
+@visibleForTesting
 Float32List packPersistentPackedFrameInfo({
   required vm.Matrix4 cameraTransform,
   required vm.Matrix4 modelTransform,
@@ -3331,16 +3515,97 @@ Float32List packPersistentPackedFrameInfo({
 **Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
-- [ ] **RED:** generic selector returns override without invoking default and otherwise invokes default exactly
-  once; pure packed output is exactly 36 float32: camera0..15, model16..31, camera position32..34, zero35; source
-  contract requires production to emplace these 144 bytes and bind selected shader's `FrameInfo` slot. Run:
-  `run_fork_red test/persistent_packed_render_pass_test.dart 'GPU adapter packs exact 36-float FrameInfo' 'RED:T37:FrameInfo pack missing'`。
-- [ ] **GREEN:** allocate one `Float32List(36)`, `setRange` matrices, assign position/pad, emplace and bind exact
-  slot. Run:
+- [ ] **RED:** run only the source contract first:
+  `run_fork_red test/persistent_packed_render_pass_test.dart 'shader selector and packer produce exact FrameInfo values' 'RED:T37A:FrameInfo pack missing'`。
+- [ ] **GREEN:** replace it with typed tests: override avoids default, fallback calls default once, and packed
+  output is exactly camera0..15/model16..31/position32..34/zero35. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/persistent_packed_render_pass_test.dart test/geometry_test.dart test/render/frame_transients_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed FrameInfoを36 floatでbind`。
 
-### Task 38A: lifecycle-aware bind delegate (depends Task 37; 50–90 lines)
+### Task 37B: complete production FrameInfo adapter (depends Task 37A; 55–100 lines)
+
+**Files:** Modify `lib/src/geometry/persistent_packed_render_pass_gpu.dart`; Modify
+`test/persistent_packed_render_pass_test.dart`。
+
+**Interfaces:** Produces final `GpuPersistentPackedRenderPassAdapter(gpu.RenderPass pass)` implementing all four
+Task35 methods by delegating vertex/index/draw to Task36 and FrameInfo selection/packing to Task37A。
+
+**Implementation shape:** `bindFrameInfo` selects the shader lazily, packs exactly once, emplaces exactly 144
+bytes, and binds the resulting view to that selected shader's `FrameInfo` slot。
+
+**RED test snippet:**
+
+```dart
+test('production adapter implements every packed render-pass operation', () {
+  expectRedSourceContract(
+    path: 'lib/src/geometry/persistent_packed_render_pass_gpu.dart',
+    marker: 'final class GpuPersistentPackedRenderPassAdapter',
+    diagnostic: 'RED:T37B:complete GPU adapter missing',
+  );
+});
+```
+
+**GREEN implementation snippet:**
+
+```dart
+final class GpuPersistentPackedRenderPassAdapter
+    implements PersistentPackedRenderPassAdapter {
+  GpuPersistentPackedRenderPassAdapter(this.pass);
+  final gpu.RenderPass pass;
+
+  @override
+  void bindVertex({required PersistentPackedGpuSlice slice,
+      required int slot, required int vertexCount}) {
+    bindPersistentPackedGpuVertex(pass: pass, slice: slice,
+        slot: slot, vertexCount: vertexCount);
+  }
+
+  @override
+  void bindIndex({required PersistentPackedGpuSlice slice,
+      required gpu.IndexType indexType, required int indexCount}) {
+    bindPersistentPackedGpuIndex(pass: pass, slice: slice,
+        indexType: indexType, indexCount: indexCount);
+  }
+
+  @override
+  void bindFrameInfo({required gpu.Shader Function() defaultShader,
+      required gpu.Shader? shaderOverride,
+      required TransientWriter transients,
+      required vm.Matrix4 modelTransform,
+      required vm.Matrix4 cameraTransform,
+      required vm.Vector3 cameraPosition}) {
+    final shader = selectPersistentPackedShader(
+      defaultShader: defaultShader,
+      shaderOverride: shaderOverride,
+    );
+    final floats = packPersistentPackedFrameInfo(
+      cameraTransform: cameraTransform,
+      modelTransform: modelTransform,
+      cameraPosition: cameraPosition,
+    );
+    final view = transients.emplace(floats.buffer.asByteData());
+    pass.bindUniform(shader.getUniformSlot('FrameInfo'), view);
+  }
+
+  @override
+  void draw({required int vertexCount, required int indexCount,
+      required int instanceCount}) {
+    drawPersistentPackedGpu(pass: pass, vertexCount: vertexCount,
+        indexCount: indexCount, instanceCount: instanceCount);
+  }
+}
+```
+
+**Handwritten budget:** production 45–58 + tests 35–40 = 80–98 lines。
+
+- [ ] **RED:** run only the source contract first:
+  `run_fork_red test/persistent_packed_render_pass_test.dart 'production adapter implements every packed render-pass operation' 'RED:T37B:complete GPU adapter missing'`。
+- [ ] **GREEN:** replace it with typed adapter tests for vertex/index/non-index draw/indexed draw and both shader
+  selection paths; assert one 144-byte emplacement and selected `FrameInfo` slot. Run render-pass/geometry/frame
+  transient tests, analyze and diff-check。
+- [ ] **Commit:** `Feature: packed GPU adapterを完成`。
+
+### Task 38A: lifecycle-aware bind delegate (depends Task 37B; 50–90 lines)
 
 **Files:** Create `lib/src/geometry/persistent_packed_instance_binding.dart`; Create
 `test/persistent_packed_instance_binding_test.dart`。
@@ -3848,7 +4113,8 @@ and documentation lines are counted, while generated files and formatter-only in
 
 ### Task 43: full normal/depth/shadow/selection routes (depends Task 42; 45–90 lines)
 
-**Files:** Modify `test/persistent_packed_instance_geometry_test.dart`; Modify
+**Files:** Create `test/support/persistent_packed_route_contract.dart`; Modify
+`test/persistent_packed_instance_geometry_test.dart`; Modify
 `test/render/persistent_gpu_scene_integration_test.dart`。
 
 **Interfaces:** Audits Task41B's exact
@@ -3862,10 +4128,10 @@ depth, shadow and selection route predicates; source assertions pin each existin
 
 ```dart
 test("depth shadow and selection use packed full bind", () {
-  expectRedSourceContract(
-    path: "lib/src/geometry/persistent_packed_instance_geometry.dart",
-    marker: "VertexLayoutDescriptor layout})? get depthOnlyVertex => null;",
-    diagnostic: "RED:T43:full route binding missing",
+  expect(
+    File('test/support/persistent_packed_route_contract.dart').existsSync(),
+    isTrue,
+    reason: 'RED:T43:full route binding missing',
   );
 });
 ```
@@ -3873,19 +4139,34 @@ test("depth shadow and selection use packed full bind", () {
 **GREEN implementation snippet:** the route test uses the same typed expectation for each named route:
 
 ```dart
-for (final path in [
-  'lib/src/render/object_filter.dart',
-  'lib/src/render/shadow_encoder.dart',
-  'lib/src/render/depth_prepass.dart',
-]) {
-  test('$path uses bind for null depthOnlyVertex', () {
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+
+void expectPersistentPackedFullBindRoutes() {
+  final fullBindWhenNoDepthVertex = RegExp(
+    r'if \(depthVertex != null\) \{[\s\S]*?'
+    r'geometry\.bindPositionStream\([\s\S]*?\} else \{[\s\S]*?'
+    r'geometry\.bind\(',
+  );
+  for (final path in [
+    'lib/src/render/object_filter.dart',
+    'lib/src/render/shadow_encoder.dart',
+    'lib/src/render/depth_prepass.dart',
+  ]) {
     final source = File(path).readAsStringSync();
-    expect(source, contains('depthOnlyVertex'));
-    expect(source, contains('.bind('));
-    expect(source, isNot(contains('depthOnlyVertex == null) {\n'
-        '      geometry.bindPositionStream')));
-  });
+    expect(source, contains('geometry.depthOnlyVertex'));
+    expect(source, matches(fullBindWhenNoDepthVertex));
+  }
 }
+```
+
+The existing named test replaces its RED body and consumes the support function:
+
+```dart
+test('depth shadow and selection use packed full bind', () {
+  expectPersistentPackedFullBindRoutes();
+});
 ```
 
 **Handwritten budget:** 45–90 total lines exactly as scoped in this task heading; test, production,
@@ -4007,7 +4288,7 @@ an external `draw(instanceCount != 1)` fails before pass mutation。
 test("README states one upload and 36-float shader contract", () {
   expectRedSourceContract(
     path: "README.md",
-    marker: "external instancing",
+    marker: "External instancing",
     diagnostic: "RED:T46:Geometry README contract missing",
   );
 });
@@ -4386,8 +4667,8 @@ descriptor_specs=(
 read_descriptor_scalars() {
   for spec in "${descriptor_specs[@]}"; do
     IFS='|' read -r file query <<<"$spec"
-    mise exec -- yq -er "$query.url | select(type == \"string\")" "$file"
-    mise exec -- yq -er "$query.ref | select(type == \"string\")" "$file"
+    mise exec -- yq -er "$query.url | select(tag == \"!!str\")" "$file"
+    mise exec -- yq -er "$query.ref | select(tag == \"!!str\")" "$file"
   done
 }
 
@@ -4395,11 +4676,14 @@ before=$(read_descriptor_scalars)
 test "$(wc -l <<<"$before" | tr -d ' ')" -eq 6
 test "$(rg -Fxc "$upstream_url" <<<"$before")" -eq 3
 test "$(rg -Fxc "$upstream_ref" <<<"$before")" -eq 3
-test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependencies.flutter_scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/pubspec.yaml)" = packages/flutter_scene
-test "$(mise exec -- yq -er '.dependency_overrides.scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependency_overrides.scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/pubspec.yaml)" = packages/scene
-test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependencies.flutter_scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/example/pubspec.yaml)" = packages/flutter_scene
 
 mise exec -- yq -i \
@@ -4417,11 +4701,14 @@ after=$(read_descriptor_scalars)
 test "$(wc -l <<<"$after" | tr -d ' ')" -eq 6
 test "$(rg -Fxc "$fork_url" <<<"$after")" -eq 3
 test "$(rg -Fxc "$fork_top_sha" <<<"$after")" -eq 3
-test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependencies.flutter_scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/pubspec.yaml)" = packages/flutter_scene
-test "$(mise exec -- yq -er '.dependency_overrides.scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependency_overrides.scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/pubspec.yaml)" = packages/scene
-test "$(mise exec -- yq -er '.dependencies.flutter_scene.git.path' \
+test "$(mise exec -- yq -er \
+  '.dependencies.flutter_scene.git.path | select(tag == "!!str")' \
   packages/eqmonitor_map/example/pubspec.yaml)" = packages/flutter_scene
 mise exec -- flutter pub get
 ```
@@ -4437,61 +4724,230 @@ mise exec -- flutter pub get
   `set -euo pipefail; mise exec -- flutter pub get; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; mise exec -- dart analyze packages/eqmonitor_map/example; git --no-pager diff --check`。
 - [ ] **Commit:** `Package: Flutter Scene fork SHAへ固定`。
 
-### Task 48: verifier arguments and three descriptors (depends Task 47; 50–95 lines)
+Tasks48–50 use this fail-closed source-shell RED harness. Define the task's `red_tXX()` strict subshell exactly as
+shown, then call `run_eq_source_red DIAGNOSTIC red_tXX`. Only exact `rc=1` plus the task diagnostic passes; success,
+`rc=99`, empty output or an unrelated `rc=1` is rejected。
 
-**Files:** Create `tool/verify_flutter_scene_pin.sh`; Create
-`scripts/ci/test_verify_flutter_scene_pin.sh`。
+```bash
+run_eq_source_red() (
+  set -euo pipefail
+  test "$#" -eq 2
+  diagnostic=$1
+  command_name=$2
+  if output=$("$command_name" 2>&1); then
+    exit 1
+  else
+    rc=$?
+  fi
+  if test "$rc" -ne 1; then return 1; fi
+  if test -z "$output"; then return 1; fi
+  if ! rg -Fx "$diagnostic" <<<"$output" >/dev/null; then return 1; fi
+)
+
+probe_diagnostic=RED:source-shell-probe
+red_probe_success() ( return 0; )
+red_probe_unrelated() ( printf '%s\n' unrelated >&2; return 1; )
+red_probe_rc99() ( printf '%s\n' "$probe_diagnostic" >&2; return 99; )
+for probe in red_probe_success red_probe_unrelated red_probe_rc99; do
+  if run_eq_source_red "$probe_diagnostic" "$probe"; then
+    exit 1
+  else
+    probe_rc=$?
+  fi
+  test "$probe_rc" -ne 0
+done
+```
+
+### Task 48A: verifier arguments and three descriptors (depends Task 47; 50–95 lines)
+
+**Files:** Create `tool/verify_flutter_scene_pin.sh`。
 
 **Interfaces:** Produces executable
 `tool/verify_flutter_scene_pin.sh EXPECTED_URL EXPECTED_FULL_SHA [REPO_ROOT]`; validates exact URL/ref/path for
 map flutter_scene, map scene override, example flutter_scene using `mise exec -- yq -er`。
 
-**Implementation shape:** `assert_scalar() (` starts its subshell with `set -euo pipefail`, validates four
-arguments, then captures
-`actual=$(mise exec -- yq -er "$query | select(type == \"string\")" "$file")`, requires exact equality, and
-prints the provided label to stderr before `exit 1` on mismatch. Every test-script fixture helper uses the same
-strict subshell-function shape。
-Each named RED group converts only its expected missing assertion to exit `1` and prints its exact `RED:T48`/
-`T49`/`T50` diagnostic plus group name; command-not-found, parser/toolchain or any other status is propagated and
-therefore rejected by the outer exact-rc gate。
+**Implementation shape:** The complete executable resolves its optional root relative to itself, validates CLI and
+both descriptor files, and invokes one strict `assert_scalar` for URL/ref/path of each of the three entries. Query failure,
+nonscalar or mismatch always prints the exact supplied field label before returning nonzero。
 
 **RED test snippet:**
 
 ```bash
-if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor 2>&1); then
+red_t48a() (
+  set -euo pipefail
+  if test -e tool/verify_flutter_scene_pin.sh; then exit 1; fi
+  printf '%s\n' 'RED:T48A:descriptor verifier missing' >&2
   exit 1
-else
-  rc=$?
-fi
-test "$rc" -eq 1
-rg -F 'RED:T48:descriptor verifier missing' <<<"$output"
+)
 ```
 
 **GREEN implementation snippet:**
 
 ```bash
+#!/usr/bin/env bash
+set -euo pipefail
+if test "$#" -lt 2 || test "$#" -gt 3; then
+  printf '%s\n' 'usage: verify_flutter_scene_pin.sh URL FULL_SHA [ROOT]' >&2
+  exit 2
+fi
+expected_url=$1
+expected_sha=$2
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+repo_root=${3:-$(cd -- "$script_dir/.." && pwd)}
+test -n "$expected_url" || { printf '%s\n' 'expected URL' >&2; exit 2; }
+printf '%s\n' "$expected_sha" | rg -q '^[0-9a-f]{40}$' || {
+  printf '%s\n' 'expected full SHA' >&2
+  exit 2
+}
+
 assert_scalar() (
   set -euo pipefail
   test "$#" -eq 4
-  actual=$(mise exec -- yq -er "$2 | select(type == \"string\")" "$1")
-  test "$actual" = "$3" || { printf '%s\n' "$4" >&2; exit 1; }
+  file=$1 query=$2 expected=$3 label=$4
+  if ! actual=$(mise exec -- yq -er \
+      "$query | select(tag == \"!!str\")" "$file"); then
+    printf '%s\n' "$label" >&2
+    exit 1
+  fi
+  if test "$actual" != "$expected"; then
+    printf '%s\n' "$label" >&2
+    exit 1
+  fi
+)
+
+map_pubspec=$repo_root/packages/eqmonitor_map/pubspec.yaml
+example_pubspec=$repo_root/packages/eqmonitor_map/example/pubspec.yaml
+test -f "$map_pubspec" || { printf '%s\n' "$map_pubspec" >&2; exit 1; }
+test -f "$example_pubspec" || { printf '%s\n' "$example_pubspec" >&2; exit 1; }
+assert_scalar "$map_pubspec" '.dependencies.flutter_scene.git.url' \
+  "$expected_url" 'map:flutter_scene:url'
+assert_scalar "$map_pubspec" '.dependencies.flutter_scene.git.ref' \
+  "$expected_sha" 'map:flutter_scene:ref'
+assert_scalar "$map_pubspec" '.dependencies.flutter_scene.git.path' \
+  packages/flutter_scene 'map:flutter_scene:path'
+assert_scalar "$map_pubspec" '.dependency_overrides.scene.git.url' \
+  "$expected_url" 'map:scene:url'
+assert_scalar "$map_pubspec" '.dependency_overrides.scene.git.ref' \
+  "$expected_sha" 'map:scene:ref'
+assert_scalar "$map_pubspec" '.dependency_overrides.scene.git.path' \
+  packages/scene 'map:scene:path'
+assert_scalar "$example_pubspec" '.dependencies.flutter_scene.git.url' \
+  "$expected_url" 'example:flutter_scene:url'
+assert_scalar "$example_pubspec" '.dependencies.flutter_scene.git.ref' \
+  "$expected_sha" 'example:flutter_scene:ref'
+assert_scalar "$example_pubspec" '.dependencies.flutter_scene.git.path' \
+  packages/flutter_scene 'example:flutter_scene:path'
+```
+
+**Handwritten budget:** verifier 50–65 + direct gate 15–25 = 65–90 lines。
+
+- [ ] **RED:** run `run_eq_source_red 'RED:T48A:descriptor verifier missing' red_t48a`; reject harness probes for
+  `rc=99` and unrelated `rc=1`。
+- [ ] **GREEN:** create exactly the full script above, `chmod +x`, run `bash -n`, then invoke it against
+  `$pin_worktree` with exact fork URL/SHA. Test bad arg count, short SHA and a nonexistent root separately; run
+  analyze/diff-check。
+- [ ] **Commit:** `Test: Flutter Scene descriptor pin検証を追加`。
+
+### Task 48B: complete descriptor fixture harness (depends Task 48A; 55–100 lines)
+
+**Files:** Create `scripts/ci/test_verify_flutter_scene_pin.sh`。
+
+**Interfaces:** Produces strict executable group `descriptor`, plus strict subshell helpers
+`prepare_pin_fixture DESTINATION` and `run_descriptor_group`; the fixture copies the three real post-Task47 files
+into one validated temporary root and derives the full expected SHA before corruption。
+
+**Implementation shape:** Cleanup accepts only the exact `mktemp` parent prefix. The descriptor group first proves
+the valid fixture passes, mutates one URL, then requires verifier nonzero plus exact `map:flutter_scene:url` label。
+
+**RED test snippet:**
+
+```bash
+red_t48b() (
+  set -euo pipefail
+  if test -e scripts/ci/test_verify_flutter_scene_pin.sh; then exit 1; fi
+  printf '%s\n' 'RED:T48B:descriptor fixture harness missing' >&2
+  exit 1
 )
 ```
 
-**Handwritten budget:** verifier 28–45 + fixture test 22–50 = 50–95 lines。
+**GREEN implementation snippet:**
 
-- [ ] **RED:** fixture happy/wrong descriptor URL calls missing verifier. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'descriptor' <<<"$out"; rg -F 'RED:T48:descriptor verifier missing' <<<"$out"`。
-- [ ] **GREEN:** script starts `set -euo pipefail`; validates arg count, nonempty URL, `^[0-9a-f]{40}$`, root/files,
-  then exact three scalar triples and labels error `file:package:field`; `chmod +x` verifier. Shell test exposes
-  `descriptor` group. Run:
-  `set -euo pipefail; bash -n tool/verify_flutter_scene_pin.sh scripts/ci/test_verify_flutter_scene_pin.sh; bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor; tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"; mise exec -- dart analyze packages/eqmonitor_map; git --no-pager diff --check`。
-- [ ] **Commit:** `Test: Flutter Scene descriptor pin検証を追加`。
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+test "$#" -eq 1
+group=$1
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+repo_root=$(cd -- "$script_dir/../.." && pwd)
+verifier=$repo_root/tool/verify_flutter_scene_pin.sh
+expected_url=https://github.com/YumNumm/flutter_scene.git
+expected_sha=$(mise exec -- yq -er \
+  '.dependencies.flutter_scene.git.ref | select(tag == "!!str")' \
+  "$repo_root/packages/eqmonitor_map/pubspec.yaml")
+printf '%s\n' "$expected_sha" | rg -q '^[0-9a-f]{40}$'
+temp_base=${TMPDIR:-/tmp}
+fixture_parent=$(mktemp -d "$temp_base/eqmonitor-flutter-scene-pin.XXXXXX")
+fixture_root=$fixture_parent/repo
 
-### Task 49: exact two-lock verifier (depends Task 48; 45–85 lines)
+cleanup() (
+  set -euo pipefail
+  test -n "$fixture_parent"
+  case "$fixture_parent" in
+    "$temp_base"/eqmonitor-flutter-scene-pin.*) ;;
+    *) exit 1 ;;
+  esac
+  rm -rf -- "$fixture_parent"
+)
+trap cleanup EXIT
 
-**Files:** Modify `tool/verify_flutter_scene_pin.sh`; Modify
-`scripts/ci/test_verify_flutter_scene_pin.sh`。
+prepare_pin_fixture() (
+  set -euo pipefail
+  test "$#" -eq 1
+  destination=$1
+  mkdir -p "$destination/packages/eqmonitor_map/example"
+  cp "$repo_root/packages/eqmonitor_map/pubspec.yaml" \
+    "$destination/packages/eqmonitor_map/pubspec.yaml"
+  cp "$repo_root/packages/eqmonitor_map/example/pubspec.yaml" \
+    "$destination/packages/eqmonitor_map/example/pubspec.yaml"
+  cp "$repo_root/pubspec.lock" "$destination/pubspec.lock"
+)
+
+run_descriptor_group() (
+  set -euo pipefail
+  case_root=$fixture_root/descriptor
+  prepare_pin_fixture "$case_root"
+  "$verifier" "$expected_url" "$expected_sha" "$case_root"
+  export wrong_url=https://example.invalid/flutter_scene.git
+  mise exec -- yq -i \
+    '.dependencies.flutter_scene.git.url = strenv(wrong_url)' \
+    "$case_root/packages/eqmonitor_map/pubspec.yaml"
+  if output=$("$verifier" "$expected_url" "$expected_sha" \
+      "$case_root" 2>&1); then
+    exit 1
+  else
+    rc=$?
+  fi
+  test "$rc" -eq 1
+  rg -Fx 'map:flutter_scene:url' <<<"$output"
+)
+
+case "$group" in
+  descriptor) run_descriptor_group ;;
+  *) printf 'unknown group: %s\n' "$group" >&2; exit 2 ;;
+esac
+```
+
+**Handwritten budget:** harness 58–72 + RED/gate 18–25 = 76–97 lines。
+
+- [ ] **RED:** run
+  `run_eq_source_red 'RED:T48B:descriptor fixture harness missing' red_t48b`。
+- [ ] **GREEN:** create/chmod the complete script, run `bash -n`, `descriptor`, then the real verifier. Assert a
+  valid fixture passes and the single corrupt URL emits its exact field label. Run analyze/diff-check。
+- [ ] **Commit:** `Test: Flutter Scene descriptor fixtureを追加`。
+
+### Task 49A: exact two-lock verifier (depends Task 48B; 45–85 lines)
+
+**Files:** Modify `tool/verify_flutter_scene_pin.sh`。
 
 **Interfaces:** Adds exact `.packages.flutter_scene.description` and `.packages.scene.description`
 URL/ref/`resolved-ref`/path validation; preserves Task48 CLI and descriptor checks。
@@ -4502,62 +4958,142 @@ URL/ref/`resolved-ref`/path validation; preserves Task48 CLI and descriptor chec
 **RED test snippet:**
 
 ```bash
-if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh lock 2>&1); then
+red_t49a() (
+  set -euo pipefail
+  if rg -Fq 'pubspec.lock:flutter_scene:resolved-ref' \
+      tool/verify_flutter_scene_pin.sh; then exit 1; fi
+  printf '%s\n' 'RED:T49A:lock verifier missing' >&2
   exit 1
-else
-  rc=$?
-fi
-test "$rc" -eq 1
-rg -F 'RED:T49:resolved-ref verifier missing' <<<"$output"
+)
 ```
 
 **GREEN implementation snippet:**
 
 ```bash
-assert_scalar "$repo_root/pubspec.lock" \
+lockfile=$repo_root/pubspec.lock
+test -f "$lockfile" || { printf '%s\n' "$lockfile" >&2; exit 1; }
+assert_scalar "$lockfile" '.packages.flutter_scene.description.url' \
+  "$expected_url" 'pubspec.lock:flutter_scene:url'
+assert_scalar "$lockfile" '.packages.flutter_scene.description.ref' \
+  "$expected_sha" 'pubspec.lock:flutter_scene:ref'
+assert_scalar "$lockfile" \
   '.packages.flutter_scene.description."resolved-ref"' \
   "$expected_sha" 'pubspec.lock:flutter_scene:resolved-ref'
-assert_scalar "$repo_root/pubspec.lock" \
+assert_scalar "$lockfile" '.packages.flutter_scene.description.path' \
+  packages/flutter_scene 'pubspec.lock:flutter_scene:path'
+assert_scalar "$lockfile" '.packages.scene.description.url' \
+  "$expected_url" 'pubspec.lock:scene:url'
+assert_scalar "$lockfile" '.packages.scene.description.ref' \
+  "$expected_sha" 'pubspec.lock:scene:ref'
+assert_scalar "$lockfile" \
   '.packages.scene.description."resolved-ref"' \
   "$expected_sha" 'pubspec.lock:scene:resolved-ref'
+assert_scalar "$lockfile" '.packages.scene.description.path' \
+  packages/scene 'pubspec.lock:scene:path'
 ```
 
 **Handwritten budget:** verifier 16–28 + lock fixtures 29–57 = 45–85 lines。
 
-- [ ] **RED:** fixture wrong requested ref and wrong resolved-ref currently pass Task48 verifier; lock group expects
-  failure labels. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh lock 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'lock' <<<"$out"; rg -F 'RED:T49:resolved-ref verifier missing' <<<"$out"`。
-- [ ] **GREEN:** query each lock scalar with `yq -er`, compare exact expected, include package+field label. Run:
-  `set -euo pipefail; bash -n tool/verify_flutter_scene_pin.sh scripts/ci/test_verify_flutter_scene_pin.sh; bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor; bash scripts/ci/test_verify_flutter_scene_pin.sh lock; tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; git --no-pager diff --check`。
+- [ ] **RED:** run `run_eq_source_red 'RED:T49A:lock verifier missing' red_t49a`。
+- [ ] **GREEN:** append all eight calls above, run `bash -n`, the existing descriptor group, and the real verifier;
+  direct copies with wrong requested/ref-resolved-ref/path must emit the matching label. Run analyze/diff-check。
 - [ ] **Commit:** `Test: Flutter Scene lock pin検証を追加`。
 
-### Task 50: fail-closed corruption matrix (depends Task 49; 55–100 lines)
+### Task 49B: complete two-lock fixture group (depends Task 49A; 50–95 lines)
 
 **Files:** Modify `scripts/ci/test_verify_flutter_scene_pin.sh`。
 
-**Interfaces:** Test helper
-`expect_pin_failure EXPECTED_LABEL EXPECTED_URL EXPECTED_SHA FIXTURE_ROOT` runs verifier, requires nonzero and exact
-label. Fixture temp is
-`mktemp -d "${TMPDIR:-/tmp}/eqmonitor-flutter-scene-pin.XXXXXX"`; trap removes only a validated nonempty path
-matching that exact prefix。
+**Interfaces:** Adds complete strict `run_lock_group` and dispatch case `lock`; preserves `descriptor` unchanged。
 
-**Implementation shape:** `expect_pin_failure() (` starts with `set -euo pipefail`, validates four arguments,
-then uses `if output=$(tool/verify_flutter_scene_pin.sh "$expected_url" "$expected_sha" "$fixture_root" 2>&1);
-then exit 1; else rc=$?; fi`, requires `rc != 0`, then `rg -F "$expected_label" <<<"$output"`; each matrix row
-copies a clean fixture, mutates one scalar with `mise exec -- yq -i`, and calls the helper。
-The strict-subshell `cleanup() (` requires `fixture_root` nonempty and a case match of
-`"${TMPDIR:-/tmp}"/eqmonitor-flutter-scene-pin.*` before `rm -rf -- "$fixture_root"`; any other target exits nonzero。
+**Implementation shape:** Two independent clean fixtures prove wrong requested ref and wrong resolved-ref each fail
+with their exact package+field label; the group also proves a clean fixture passes all descriptor+lock checks。
 
 **RED test snippet:**
 
 ```bash
-if output=$(bash scripts/ci/test_verify_flutter_scene_pin.sh corruption 2>&1); then
+red_t49b() (
+  set -euo pipefail
+  if rg -Fq 'run_lock_group() (' scripts/ci/test_verify_flutter_scene_pin.sh;
+    then exit 1; fi
+  printf '%s\n' 'RED:T49B:lock fixture group missing' >&2
   exit 1
-else
-  rc=$?
-fi
-test "$rc" -eq 1
-rg -F 'RED:T50:corruption matrix missing' <<<"$output"
+)
+```
+
+**GREEN implementation snippet:**
+
+```bash
+run_lock_group() (
+  set -euo pipefail
+  requested_root=$fixture_root/lock-requested
+  prepare_pin_fixture "$requested_root"
+  "$verifier" "$expected_url" "$expected_sha" "$requested_root"
+  export wrong_sha=0000000000000000000000000000000000000000
+  mise exec -- yq -i \
+    '.packages.flutter_scene.description.ref = strenv(wrong_sha)' \
+    "$requested_root/pubspec.lock"
+  if output=$("$verifier" "$expected_url" "$expected_sha" \
+      "$requested_root" 2>&1); then
+    exit 1
+  else
+    rc=$?
+  fi
+  test "$rc" -eq 1
+  rg -Fx 'pubspec.lock:flutter_scene:ref' <<<"$output"
+
+  resolved_root=$fixture_root/lock-resolved
+  prepare_pin_fixture "$resolved_root"
+  mise exec -- yq -i \
+    '.packages.scene.description."resolved-ref" = strenv(wrong_sha)' \
+    "$resolved_root/pubspec.lock"
+  if output=$("$verifier" "$expected_url" "$expected_sha" \
+      "$resolved_root" 2>&1); then
+    exit 1
+  else
+    rc=$?
+  fi
+  test "$rc" -eq 1
+  rg -Fx 'pubspec.lock:scene:resolved-ref' <<<"$output"
+)
+
+case "$group" in
+  descriptor) run_descriptor_group ;;
+  lock) run_lock_group ;;
+  *) printf 'unknown group: %s\n' "$group" >&2; exit 2 ;;
+esac
+```
+
+The final case block replaces Task48B's prior dispatch block; it is not appended as a second dispatch。
+
+**Handwritten budget:** harness 38–48 + tests/gate 25–38 = 63–86 lines。
+
+- [ ] **RED:** run `run_eq_source_red 'RED:T49B:lock fixture group missing' red_t49b`。
+- [ ] **GREEN:** add the complete group and replace dispatch; run `bash -n`, descriptor, lock and real verifier;
+  assert exact requested/ref and resolved-ref labels, analyze and diff-check。
+- [ ] **Commit:** `Test: Flutter Scene lock fixtureを追加`。
+
+### Task 50A: strict corruption helper (depends Task 49B; 45–85 lines)
+
+**Files:** Modify `scripts/ci/test_verify_flutter_scene_pin.sh`。
+
+**Interfaces:** Adds strict subshell test helper
+`expect_pin_failure EXPECTED_LABEL EXPECTED_URL EXPECTED_SHA FIXTURE_ROOT`; it runs the absolute verifier, rejects
+success and requires the exact label. Task48B's validated temp cleanup remains the sole deletion path。
+
+**Implementation shape:** Validate all four args before invoking anything. Capture status only through explicit
+`if`; only exact `rc=1` with the requested exact label is accepted. A fake verifier probe demonstrates
+that success, unrelated `rc=1`, and labeled `rc=99` are all rejected by the surrounding helper gate。
+
+**RED test snippet:**
+
+```bash
+red_t50a() (
+  set -euo pipefail
+  if rg -Fq 'expect_pin_failure() (' scripts/ci/test_verify_flutter_scene_pin.sh;
+    then exit 1; fi
+  printf '%s\n' 'RED:T50A:strict corruption helper missing' >&2
+  exit 1
+)
 ```
 
 **GREEN implementation snippet:**
@@ -4565,28 +5101,148 @@ rg -F 'RED:T50:corruption matrix missing' <<<"$output"
 ```bash
 expect_pin_failure() (
   set -euo pipefail
-  test "$#" -eq 4
-  if output=$(tool/verify_flutter_scene_pin.sh "$2" "$3" "$4" 2>&1); then
+  if test "$#" -ne 4; then return 2; fi
+  expected_label=$1
+  expected_url_arg=$2
+  expected_sha_arg=$3
+  fixture_root_arg=$4
+  if test -z "$expected_label" || test -z "$expected_url_arg"; then
+    return 2
+  fi
+  if ! printf '%s\n' "$expected_sha_arg" | rg -q '^[0-9a-f]{40}$'; then
+    return 2
+  fi
+  if ! test -d "$fixture_root_arg"; then return 2; fi
+  if output=$("$verifier" "$expected_url_arg" "$expected_sha_arg" \
+      "$fixture_root_arg" 2>&1); then
     exit 1
   else
     rc=$?
   fi
-  test "$rc" -ne 0
-  rg -F "$1" <<<"$output"
+  if test "$rc" -ne 1; then return 1; fi
+  if ! rg -Fx "$expected_label" <<<"$output" >/dev/null; then return 1; fi
+)
+
+probe_root=$fixture_root/helper-probe
+prepare_pin_fixture "$probe_root"
+real_verifier=$verifier
+probe_success() { return 0; }
+probe_unrelated() { printf '%s\n' unrelated >&2; return 1; }
+probe_labeled_99() { printf '%s\n' probe-label >&2; return 99; }
+for probe in probe_success probe_unrelated probe_labeled_99; do
+  verifier=$probe
+  if expect_pin_failure probe-label "$expected_url" "$expected_sha" \
+      "$probe_root"; then
+    exit 1
+  else
+    probe_rc=$?
+  fi
+  test "$probe_rc" -ne 0
+done
+verifier=$real_verifier
+```
+
+**Handwritten budget:** helper 22–30 + fail-closed probes 28–45 = 50–75 lines。
+
+- [ ] **RED:** run `run_eq_source_red 'RED:T50A:strict corruption helper missing' red_t50a`。
+- [ ] **GREEN:** add the complete helper. Temporarily point `verifier` at three strict fake commands returning
+  success, unrelated `rc=1`, and labeled `rc=99`; the outer probe must reject all three. Restore the absolute real
+  verifier, run bash syntax, descriptor/lock groups, analyze and diff-check。
+- [ ] **Commit:** `Test: Flutter Scene pin失敗helperを追加`。
+
+### Task 50B: complete descriptor and lock corruption matrix (depends Task 50A; 60–100 lines)
+
+**Files:** Modify `scripts/ci/test_verify_flutter_scene_pin.sh`。
+
+**Interfaces:** Adds complete `run_corruption_group` and `corruption` dispatch. Its table covers nine descriptor
+scalars, eight lock scalars, a missing field and a nonscalar field; the same group separately covers a short
+expected SHA。
+
+**Implementation shape:** Each row gets a fresh copied fixture, mutates exactly one path with a fixed mode, then
+uses Task50A. Query strings and labels are static table data; no eval. The short-SHA row invokes the verifier
+directly because Task50A correctly rejects an invalid expected SHA argument。
+
+**RED test snippet:**
+
+```bash
+red_t50b() (
+  set -euo pipefail
+  if rg -Fq 'run_corruption_group() (' scripts/ci/test_verify_flutter_scene_pin.sh;
+    then exit 1; fi
+  printf '%s\n' 'RED:T50B:corruption matrix missing' >&2
+  exit 1
 )
 ```
 
-**Handwritten budget:** strict helpers 22–35 + corruption rows 33–65 = 55–100 lines。
+**GREEN implementation snippet:**
 
-- [ ] **RED:** matrix covers each descriptor URL/ref/path, each lock URL/ref/resolved-ref/path, short SHA,
-  missing field, nonscalar field. Before helper/matrix each corrupt case is unasserted. Run:
-  `set -euo pipefail; if out=$(bash scripts/ci/test_verify_flutter_scene_pin.sh corruption 2>&1); then exit 1; else rc=$?; fi; test "$rc" -eq 1; test -n "$out"; rg -F 'corruption' <<<"$out"; rg -F 'RED:T50:corruption matrix missing' <<<"$out"`。
-- [ ] **GREEN:** implement one table-driven loop; every function is a strict subshell, captures verifier status
-  via `if`, and fails if status0 or label absent. Run:
-  `set -euo pipefail; bash -n tool/verify_flutter_scene_pin.sh scripts/ci/test_verify_flutter_scene_pin.sh; bash scripts/ci/test_verify_flutter_scene_pin.sh descriptor; bash scripts/ci/test_verify_flutter_scene_pin.sh lock; bash scripts/ci/test_verify_flutter_scene_pin.sh corruption; tool/verify_flutter_scene_pin.sh https://github.com/YumNumm/flutter_scene.git "$fork_top_sha" "$pin_worktree"; mise exec -- flutter test packages/eqmonitor_map/test/flutter_scene/persistent_instance_public_api_test.dart; mise exec -- dart analyze packages/eqmonitor_map; git --no-pager diff --check`。
+```bash
+run_corruption_group() (
+  set -euo pipefail
+  rows=(
+    'map:flutter_scene:url|packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git.url|string'
+    'map:flutter_scene:ref|packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git.ref|string'
+    'map:flutter_scene:path|packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git.path|string'
+    'map:scene:url|packages/eqmonitor_map/pubspec.yaml|.dependency_overrides.scene.git.url|string'
+    'map:scene:ref|packages/eqmonitor_map/pubspec.yaml|.dependency_overrides.scene.git.ref|string'
+    'map:scene:path|packages/eqmonitor_map/pubspec.yaml|.dependency_overrides.scene.git.path|string'
+    'example:flutter_scene:url|packages/eqmonitor_map/example/pubspec.yaml|.dependencies.flutter_scene.git.url|string'
+    'example:flutter_scene:ref|packages/eqmonitor_map/example/pubspec.yaml|.dependencies.flutter_scene.git.ref|string'
+    'example:flutter_scene:path|packages/eqmonitor_map/example/pubspec.yaml|.dependencies.flutter_scene.git.path|string'
+    'pubspec.lock:flutter_scene:url|pubspec.lock|.packages.flutter_scene.description.url|string'
+    'pubspec.lock:flutter_scene:ref|pubspec.lock|.packages.flutter_scene.description.ref|string'
+    'pubspec.lock:flutter_scene:resolved-ref|pubspec.lock|.packages.flutter_scene.description."resolved-ref"|string'
+    'pubspec.lock:flutter_scene:path|pubspec.lock|.packages.flutter_scene.description.path|string'
+    'pubspec.lock:scene:url|pubspec.lock|.packages.scene.description.url|string'
+    'pubspec.lock:scene:ref|pubspec.lock|.packages.scene.description.ref|string'
+    'pubspec.lock:scene:resolved-ref|pubspec.lock|.packages.scene.description."resolved-ref"|string'
+    'pubspec.lock:scene:path|pubspec.lock|.packages.scene.description.path|string'
+    'map:flutter_scene:url|packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git.url|missing'
+    'map:flutter_scene:ref|packages/eqmonitor_map/pubspec.yaml|.dependencies.flutter_scene.git.ref|nonscalar'
+  )
+  index=0
+  for row in "${rows[@]}"; do
+    IFS='|' read -r label relative query mode <<<"$row"
+    case_root=$fixture_root/corruption-$index
+    prepare_pin_fixture "$case_root"
+    target=$case_root/$relative
+    export corrupt_value=corrupt
+    case "$mode" in
+      string) mise exec -- yq -i "$query = strenv(corrupt_value)" "$target" ;;
+      missing) mise exec -- yq -i "del($query)" "$target" ;;
+      nonscalar) mise exec -- yq -i "$query = {\"bad\": true}" "$target" ;;
+      *) exit 2 ;;
+    esac
+    expect_pin_failure "$label" "$expected_url" "$expected_sha" "$case_root"
+    index=$((index + 1))
+  done
+  short_root=$fixture_root/corruption-short-sha
+  prepare_pin_fixture "$short_root"
+  if output=$("$verifier" "$expected_url" deadbeef "$short_root" 2>&1);
+    then exit 1; else rc=$?; fi
+  test "$rc" -eq 2
+  rg -F 'expected full SHA' <<<"$output"
+)
+
+case "$group" in
+  descriptor) run_descriptor_group ;;
+  lock) run_lock_group ;;
+  corruption) run_corruption_group ;;
+  *) printf 'unknown group: %s\n' "$group" >&2; exit 2 ;;
+esac
+```
+
+The final dispatch replaces Task49B's block. Every row is complete; later tasks add no verifier behavior。
+
+**Handwritten budget:** matrix 65–78 + RED/gate 18–22 = 83–100 lines。
+
+- [ ] **RED:** run `run_eq_source_red 'RED:T50B:corruption matrix missing' red_t50b`。
+- [ ] **GREEN:** add the full matrix and replace dispatch. Run syntax, descriptor, lock, corruption and real
+  verifier; prove all 20 rows execute, every corrupt scalar yields its exact label, cleanup target validation
+  rejects empty/out-of-prefix paths, then analyze/diff-check。
 - [ ] **Commit:** `Test: Flutter Scene pin破損matrixを追加`。
 
-### Task 51: package consumer provenance (depends Task 50; 30–75 lines)
+### Task 51: package consumer provenance (depends Task 50B; 30–75 lines)
 
 **Files:** Modify `packages/eqmonitor_map/README.md`; Modify
 `packages/eqmonitor_map/example/README.md`。
@@ -4757,10 +5413,12 @@ No merge, #1603 implementation, device/Simulator/E2E is authorized by this plan�
 ## Mechanical plan audit
 
 Run from the EQMonitor plan worktree before requesting plan review. This reports cardinalities rather than
-inferring them visually: 58 split tasks all have snippets/budgets; the bottom has 52 unique RED mappings; the
-affinity matrix has 14 independently rejected entry/callback rows; Task28 closes every downstream plan field;
-Task18 preserves symbol provenance; no private-method/legacy undefined-helper call remains; Task47 assigns all six
-descriptor scalars after exporting the SHA; and a null-equals-null stack cannot pass the SHA predicate。
+inferring them visually: 63 split tasks all have snippets/budgets; the fork has 54 unique source-only RED mappings
+whose title/diagnostic match and 48 literal markers present in GREEN; Tasks48–50 have six fail-closed shell REDs;
+the affinity matrix has 14 independently rejected entry/callback rows; every newly produced symbol has a shown
+consumer; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
+undefined-helper call remains; Task47 assigns all six descriptor scalars after exporting the SHA; and a
+null-equals-null stack cannot pass the SHA predicate。
 
 ```bash
 set -euo pipefail
@@ -4769,7 +5427,7 @@ task_count=$(rg -c '^### Task [0-9]+[A-D]?:' "$plan")
 red_snippet_count=$(rg -c '^\*\*RED test snippet:\*\*$' "$plan")
 green_snippet_count=$(rg -c '^\*\*GREEN implementation snippet:\*\*' "$plan")
 budget_count=$(rg -c '^\*\*Handwritten budget:\*\*' "$plan")
-test "$task_count" -eq 58
+test "$task_count" -eq 63
 test "$red_snippet_count" -eq "$task_count"
 test "$green_snippet_count" -eq "$task_count"
 test "$budget_count" -eq "$task_count"
@@ -4779,8 +5437,86 @@ bottom_red_count=$(rg -c 'run_fork_red test/' <<<"$bottom_plan")
 bottom_red_mapping_count=$(rg -o \
   "run_fork_red [^\x60]+ 'RED:T[0-9]+[A-D]?:[^']+'" <<<"$bottom_plan" | \
   sed -E "s/.*'(RED:T[0-9]+[A-D]?):[^']+'.*/\1/" | sort -u | wc -l | tr -d ' ')
-test "$bottom_red_count" -eq 52
+test "$bottom_red_count" -eq 54
 test "$bottom_red_mapping_count" -eq "$bottom_red_count"
+
+red_contract_result=$(perl -0777 - "$plan" <<'PERL'
+use strict;
+use warnings;
+my $path = shift @ARGV;
+open my $handle, '<', $path or die "$path: $!\n";
+local $/;
+my $text = <$handle>;
+my ($contracts, $markers) = (0, 0);
+for my $section (split /(?=^### Task )/m, $text) {
+  next unless $section =~ /^### Task ([0-9]+[A-D]?):/m;
+  my $task = $1;
+  next unless $section =~
+    /run_fork_red\s+\S+\s+'([^']+)'\s+'([^']+)'/;
+  my ($run_title, $run_diagnostic) = ($1, $2);
+  $section =~ /\*\*RED test snippet:\*\*\s*```dart\s*(.*?)```/s
+    or die "Task $task has no Dart RED snippet\n";
+  my $red = $1;
+  $red =~ /test\(["']([^"']+)["']/
+    or die "Task $task has no RED title\n";
+  my $title = $1;
+  my ($diagnostic) = $red =~
+    /(?:diagnostic|reason):\s*["']([^"']+)["']/;
+  defined $diagnostic or die "Task $task has no RED diagnostic\n";
+  $title eq $run_title
+    or die "Task $task RED title does not match run_fork_red\n";
+  $diagnostic eq $run_diagnostic
+    or die "Task $task RED diagnostic does not match run_fork_red\n";
+  ($red =~ /expectRedSourceContract/ || $red =~ /File\(/)
+    or die "Task $task RED is not source-only\n";
+  $red !~ /import\s+["']package:flutter_scene/
+    or die "Task $task RED imports an absent production API\n";
+  if ($red =~ /marker:\s*["']([^"']+)["']/) {
+    my $marker = $1;
+    $section =~ /\*\*GREEN implementation snippet:\*\*(.*?)\*\*Handwritten budget:/s
+      or die "Task $task has no GREEN region\n";
+    index($1, $marker) >= 0
+      or die "Task $task RED marker is absent from GREEN\n";
+    $markers++;
+  }
+  $contracts++;
+}
+print "$contracts $markers\n";
+PERL
+)
+read -r red_contract_count positive_marker_count <<<"$red_contract_result"
+test "$red_contract_count" -eq 54
+test "$positive_marker_count" -eq 48
+
+eq_shell_red_diagnostics=(
+  'RED:T48A:descriptor verifier missing'
+  'RED:T48B:descriptor fixture harness missing'
+  'RED:T49A:lock verifier missing'
+  'RED:T49B:lock fixture group missing'
+  'RED:T50A:strict corruption helper missing'
+  'RED:T50B:corruption matrix missing'
+)
+pre_audit_plan=$(sed '/^## Mechanical plan audit$/q' "$plan")
+for diagnostic in "${eq_shell_red_diagnostics[@]}"; do
+  test "$(rg -Fc "$diagnostic" <<<"$pre_audit_plan")" -eq 2
+done
+test "$(rg -c "run_eq_source_red 'RED:T(48|49|50)[AB]:" "$plan")" -eq 6
+source_red_harness=$(awk '
+  found && /^```bash$/ { capture=1; next }
+  capture && /^```$/ { exit }
+  capture { print }
+  /^Tasks48–50 use this fail-closed source-shell RED harness/ { found=1 }
+' "$plan")
+test -n "$source_red_harness"
+bash <<<"$source_red_harness"
+if rg -Fq 'select(type == \"string\")' <<<"$pre_audit_plan"; then
+  exit 1
+else
+  invalid_yq_type_rc=$?
+  test "$invalid_yq_type_rc" -eq 1
+fi
+rg -Fq 'select(tag == \"!!str\")' <<<"$pre_audit_plan"
+rg -Fq '$query = {\"bad\": true}' <<<"$pre_audit_plan"
 if rg -q 'set -euo pipefail; (title=|if out=).*flutter@4dac' <<<"$bottom_plan"; then
   exit 1
 else
@@ -4793,6 +5529,53 @@ affinity_matrix=$(sed -n \
 affinity_entrypoint_count=$(rg -c '^\| (`|lease|tracker|immediately)' \
   <<<"$affinity_matrix")
 test "$affinity_entrypoint_count" -eq 14
+
+task12b=$(sed -n '/^### Task 12B:/,/^### Task 13:/p' "$plan")
+task14=$(sed -n '/^### Task 14:/,/^### Task 15B:/p' "$plan")
+rg -Fq 'releaseRecordsInOrder(' <<<"$task12b"
+rg -Fq 'releaseRecordsInOrder(batch: eligible);' <<<"$task14"
+task12b_green=$(sed -n \
+  '/\*\*GREEN implementation snippet:\*\*/,/\*\*Handwritten budget:/p' \
+  <<<"$task12b")
+task14_green=$(sed -n \
+  '/\*\*GREEN implementation snippet:\*\*/,/\*\*Handwritten budget:/p' \
+  <<<"$task14")
+end_frame_body=$(sed -n '/void endFrame()/,$p' <<<"$task12b_green")
+completion_body=$(sed -n \
+  '/void handleCompletion(int completedThrough)/,$p' <<<"$task14_green")
+if rg -Fq 'releaseRecord(record);' <<<"$end_frame_body$completion_body"; then
+  exit 1
+else
+  direct_release_bypass_rc=$?
+fi
+test "$direct_release_bypass_rc" -eq 1
+
+produced_consumer_pairs=(
+  'void releasePersistentGpuRecordAfterAffinity({|releasePersistentGpuRecordAfterAffinity(registry: this'
+  'void releaseRecordsInOrder({|releaseRecordsInOrder(batch: eligible);'
+  'int ownerDisposalEpoch = 0;|if (ownerDisposalEpoch != observedEpoch) continue;'
+  'validatePersistentPackedSlots(VertexLayoutDescriptor layout)|validatePersistentPackedSlots(layout);'
+  'gpu.BufferView requireDevicePersistentPackedGpuView(|requireDevicePersistentPackedGpuView(slice)'
+  'void bindPersistentPackedGpuVertex({|bindPersistentPackedGpuVertex(pass: pass'
+  'void bindPersistentPackedGpuIndex({|bindPersistentPackedGpuIndex(pass: pass'
+  'void drawPersistentPackedGpu({|drawPersistentPackedGpu(pass: pass'
+  'T selectPersistentPackedShader<T>({|final shader = selectPersistentPackedShader('
+  'Float32List packPersistentPackedFrameInfo({|final floats = packPersistentPackedFrameInfo('
+  'final class GpuPersistentPackedRenderPassAdapter|GpuPersistentPackedRenderPassAdapter(pass)'
+  'void expectPersistentPackedFullBindRoutes() {|expectPersistentPackedFullBindRoutes();'
+  'Future<void> settleInvalidationWhenOwnersQuiescent({|=> settleInvalidationWhenOwnersQuiescent('
+  'assert_scalar() (|assert_scalar "$map_pubspec"'
+  'prepare_pin_fixture() (|prepare_pin_fixture "$case_root"'
+  'run_descriptor_group() (|descriptor) run_descriptor_group ;;'
+  'run_lock_group() (|lock) run_lock_group ;;'
+  'expect_pin_failure() (|expect_pin_failure "$label"'
+  'run_corruption_group() (|corruption) run_corruption_group ;;'
+)
+for pair in "${produced_consumer_pairs[@]}"; do
+  IFS='|' read -r producer consumer <<<"$pair"
+  rg -Fq "$producer" "$plan"
+  rg -Fq "$consumer" "$plan"
+done
 
 task28=$(sed -n '/^### Task 28:/,/^### Task 29:/p' "$plan")
 required_plan_api=(
@@ -4843,7 +5626,7 @@ for legacy_helper in requireOwner buildPersistent requireCurrentActiveRecord \
   test "$helper_rc" -eq 1
 done
 
-task47=$(sed -n '/^### Task 47:/,/^### Task 48:/p' "$plan")
+task47=$(sed -n '/^### Task 47:/,/^### Task 48A:/p' "$plan")
 descriptor_spec_count=$(rg -c \
   "^  'packages/eqmonitor_map(/example)?/pubspec.yaml\\|\\.(dependencies.flutter_scene|dependency_overrides.scene).git'$" \
   <<<"$task47")
@@ -4870,8 +5653,9 @@ else
   test "$stack_null_negative_exit" -eq 1
 fi
 
-printf 'task_snippets=%s red_mappings=%s affinity_entrypoints=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
-  "$task_count" "$bottom_red_mapping_count" "$affinity_entrypoint_count" \
+printf 'task_snippets=%s red_mappings=%s red_markers=%s shell_red=%s affinity_entrypoints=%s plan_fields=%s descriptor_scalars=%s private_methods=%s stack_null_exit=%s\n' \
+  "$task_count" "$red_contract_count" "$positive_marker_count" \
+  "${#eq_shell_red_diagnostics[@]}" "$affinity_entrypoint_count" \
   "${#required_plan_api[@]}" "$((url_assignment_count + ref_assignment_count))" \
   0 "$stack_null_negative_exit"
 ```
