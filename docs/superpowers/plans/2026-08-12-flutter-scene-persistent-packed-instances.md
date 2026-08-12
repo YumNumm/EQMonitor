@@ -4493,6 +4493,49 @@ void setLocalBounds(vm.Aabb3? aabb, vm.Sphere? sphere) =>
 
 ```
 
+The Geometry test adds `import 'dart:io';` and replaces the RED body with this executable surface contract:
+
+```dart
+test('concrete Geometry is complete at first instantiation', () {
+  final source = File(
+    'lib/src/geometry/persistent_packed_instance_geometry.dart',
+  ).readAsStringSync();
+  expect(source, contains(
+    'final PersistentPackedInstanceGeometryParts _parts;',
+  ));
+  expect(source, matches(RegExp(
+    r'@internal\s+PersistentPackedInstanceGeometry\.fromValidatedParts\(',
+  )));
+  for (final forbidden in [
+    ' get parts',
+    ' get plan',
+    ' get storage',
+    ' get lease',
+    ' get binding',
+    ' get defaultShader',
+  ]) {
+    expect(source, isNot(contains(forbidden)));
+  }
+  for (final required in [
+    'get instanceCount =>',
+    'get instanceStrideInBytes =>',
+    'get contextGeneration =>',
+    'get resourceState =>',
+    'Future<void> retire() =>',
+    'get vertexShader =>',
+    'get localBounds =>',
+    'get localBoundingSphere =>',
+    'get instancedVertexLayout =>',
+    'get depthOnlyVertex => null',
+    'void bind(',
+    'void draw(',
+    'void setLocalBounds(',
+  ]) {
+    expect(source, contains(required));
+  }
+});
+```
+
 **Handwritten budget:** production 48–65 + test 30–40 = 78–95 lines。
 
 - [ ] **RED:** internal parts helper creates the concrete class without resolving its throwing test shader; its
@@ -6063,7 +6106,7 @@ Run from the EQMonitor plan worktree before requesting plan review. This reports
 inferring them visually: 63 split tasks all have snippets/budgets; the fork has 54 unique source-only RED mappings
 whose title/diagnostic match and 48 literal markers present in GREEN; Tasks48–50 have six fail-closed shell REDs;
 the affinity matrix has 18 independently rejected entry/callback rows; the 63-row closure ledger covers every
-task and requires a later consumer; the ten reviewed GREEN tests are executable; Dart fences contain no erased
+task and requires a later consumer; the eleven targeted GREEN tests are executable; Dart fences contain no erased
 type, postfix null assertion or retirement-delay call; Task28 closes every downstream plan field; Task18 preserves symbol provenance; no private-method/legacy
 undefined-helper call remains; Task47 assigns all six descriptor scalars after exporting the SHA; and a
 null-equals-null stack cannot pass the SHA predicate。
@@ -6101,7 +6144,7 @@ test "$forbidden_dart_type_count" -eq 0
 test "$postfix_bang_count" -eq 0
 test "$retirement_delay_call_count" -eq 0
 
-executable_green_tasks=(20 23 24 31 33 34 38A 39 42 44)
+executable_green_tasks=(20 23 24 31 33 34 38A 39 41B 42 44)
 for task in "${executable_green_tasks[@]}"; do
   section=$(sed -n "/^### Task $task:/,/^### Task /p" "$plan")
   green=$(sed -n \
