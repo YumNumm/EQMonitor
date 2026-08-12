@@ -862,6 +862,87 @@ with `indexCount/indexBytes/hasIndices`。non-null bytes are validation input on
 - [ ] **Step 4 — verify:** plan全test、analyze、diff-check。
 - [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed index値を検証' && git push`。
 
+### Task 17: immutable composite upload plan/executor（fork top、depends Task 16）
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_plan.dart`,
+`test/persistent_packed_instance_plan_test.dart`。
+
+**Interfaces:** Produces internal `PersistentPackedInstancePlan.create(...)` with the public constructor's
+data/count/layout/bounds/index inputs, computed `vertexBytes/instanceBytes/instanceOffset/nonIndexBytes/
+indexBytes/totalBytes/indexCount` and frozen layout/bounds。Also produces
+`executePersistentPackedUpload({required plan, required vertexData, required instanceData, required indexData, required bool Function(ByteData,int) overwriteNonIndex, required bool Function(ByteData,int) overwriteIndex})`。
+
+- [ ] **Step 1 — RED:** exact byte-length happy path and too-short/too-long/zero/negative countsをtest。
+  `vertexBytes=count*stride`、`instanceOffset=align16(vertexBytes)`、padding、each buffer/total maxをassert。
+  fake writersのcallsは base `(data,0)` once、instance `(data,instanceOffset)` once、index null=0/non-null
+  `(data,0)` once。false returnは該当 call名を含む `StateError` で後続callなし。
+- [ ] **Step 2 — verify RED:** plain-name `upload executor writes each source exactly once`。
+  expected RED は composite plan/executor不存在。
+- [ ] **Step 3 — GREEN:** constructor冒頭でlayout/bounds snapshotsを作り、checked math後にexact lengthを
+  検証、index planをcomposeする。executorはallocationせず同期overwrite resultだけ検査しsourceを保持しない。
+- [ ] **Step 4 — verify:** plan全test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed upload planを合成' && git push`。
+
+### Task 18: one-shot GPU storage（fork top、depends Task 17）
+
+**Files:** Create `lib/src/geometry/persistent_packed_instance_storage.dart`,
+`test/persistent_packed_instance_storage_test.dart`。
+
+**Interfaces:** Produces internal
+`PersistentPackedInstanceStorage.upload({required PersistentPackedInstancePlan plan, required ByteData vertexData, required ByteData instanceData, required ByteData? indexData})`、nullable
+`vertexView/instanceView/indexView` getters、synchronous idempotent `void release()`。
+
+- [ ] **Step 1 — RED:** injected test backendで non-index allocation once、index 0/1、overwrite offsets/counts
+  exact、viewsのlength exactをassert。base/instance/index各 failureでは throw、作成済み refs cleared、
+  later overwriteなし。GPU available時だけ real `DeviceBuffer` pathを1 small fixtureで実行し、unavailableは
+  reason付きskip。source bytes mutation after uploadで recorded uploaded copy不変をexpectする。
+- [ ] **Step 2 — verify RED:** storage focused test。expected RED は storage/backend seam不存在。
+- [ ] **Step 3 — GREEN:** host-visible non-index bufferとoptional index bufferをplan完了後だけ作る。
+  `DeviceBuffer.overwrite`（upload/flush）をexecutor callbacksへ渡し、成功後だけviewsをpublish。
+  `release` は3 viewsと2 device refsをnullにする no-throw closure。superclassへ渡さない。
+- [ ] **Step 4 — verify:** pure tests + GPU conditional test、plan tests、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed GPU storageを追加' && git push`。
+
+### Task 19: Geometry lifecycle lease/state（fork top、depends Task 18）
+
+**Files:** Create `lib/src/geometry/persistent_packed_instance_geometry.dart`,
+`test/persistent_packed_instance_geometry_test.dart`。
+
+**Interfaces:** Produces section 3 public constructor/getters/`retire()`。Consumes lifecycle internal
+`registerAllocation` only after storage upload succeeds。Geometry directly owns plan/storage/lease and never calls
+`setVertices`/`setVertexStreams`/`setIndices`。
+
+- [ ] **Step 1 — RED:** fake registry/lifecycleで constructor success registers exact total/instance bytes and
+  generation、upload failure registers zero、retire Future identity/state transitionsをassert。input layout lists、
+  Aabb3、vertex/instance/index ByteDataをconstructor後にmutateしても counts/layout/bounds/uploaded bytes不変。
+  old generation、invalidating、disposed lifecycle constructionは fail-closed。
+- [ ] **Step 2 — verify RED:** geometry focused test。expected RED は public Geometry不存在。
+- [ ] **Step 3 — GREEN:** synchronous plan→storage→register順に構築し、release callbackはstorage.releaseのみ。
+  `setLocalBounds(plan.bounds, plan.sphere)` はcopy gettersを渡す。constructor途中errorはstorage.releaseして
+  rethrowし、fallback Geometryを作らない。
+- [ ] **Step 4 — verify:** geometry/plan/storage tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed Geometry lifecycleを追加' && git push`。
+
+### Task 20: persistent bind/draw（fork top、depends Task 19）
+
+**Files:** Modify `lib/src/geometry/persistent_packed_instance_geometry.dart`,
+`test/persistent_packed_instance_geometry_test.dart`。
+
+**Interfaces:** Overrides `vertexStreamCount=2`, `instancedVertexLayout`,
+`bindsModelTransformInstance=false`, `isDoubleSided`, `depthOnlyVertex` (same shader/layout), existing
+`bind(...)` and `draw(RenderPass,{int instanceCount=1})` signatures。
+
+- [ ] **Step 1 — RED:** fake pass event log exact order: lifecycle current check→markUsed→slot0 vertex→slot1
+  instance→optional index→FrameInfo uniform。indexed/non-index draw use immutable count and instance count from
+  plan。retirementPending/retired/failed/old generationは bind/drawを拒否。external `instanceCount != 1` は
+  `StateError`、state reject時はpass events 0。depth/shadow pathもslot 0/1同layoutをexpectする。
+- [ ] **Step 2 — verify RED:** plain-name `bind marks use before persistent buffer bindings`。
+  expected RED は bind/draw override未実装。
+- [ ] **Step 3 — GREEN:** existing compat bind/draw helpersとFrameInfo packだけを使う。instance transient、
+  source scan、overwriteをbind/drawから呼ばない。markUsed後のfailureもopen-frame retirementで安全に閉じる。
+- [ ] **Step 4 — verify:** geometry tests、`rg -n 'instanceTransients|overwrite\('` audit、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed Geometryを永続bind' && git push`。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
