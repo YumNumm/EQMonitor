@@ -2578,6 +2578,25 @@ final class PersistentPackedCheckedMath {
 }
 ```
 
+The RED body is replaced by this executable test inside the existing `main`:
+
+```dart
+test('checked arithmetic rejects before overflow', () {
+  expect(PersistentPackedCheckedMath.multiply(left: 0,
+      right: kMaxPersistentPackedAllocationBytes), 0);
+  expect(PersistentPackedCheckedMath.add(left:
+      kMaxPersistentPackedAllocationBytes, right: 0),
+      kMaxPersistentPackedAllocationBytes);
+  expect(PersistentPackedCheckedMath.align16(value: 1), 16);
+  expect(() => PersistentPackedCheckedMath.multiply(left:
+      kMaxPersistentPackedAllocationBytes, right: 2), throwsArgumentError);
+  expect(() => PersistentPackedCheckedMath.add(left:
+      kMaxPersistentPackedAllocationBytes, right: 1), throwsArgumentError);
+  expect(() => PersistentPackedCheckedMath.align16(
+      value: kMaxPersistentPackedAllocationBytes), throwsArgumentError);
+});
+```
+
 **Handwritten budget:** 45–80 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
@@ -2819,6 +2838,34 @@ void validatePersistentPackedAttributeRanges(VertexLayoutDescriptor layout) {
 }
 ```
 
+The RED body is replaced by this executable test inside the existing `main`:
+
+```dart
+test('layout rejects misaligned overlapping checked ranges', () {
+  VertexLayoutDescriptor layout(int secondOffset) => VertexLayoutDescriptor(
+    buffers: [VertexBufferDescriptor(strideInBytes: 12, attributes: [
+      const VertexAttributeDescriptor(name: 'wide',
+          format: gpu.VertexFormat.float32x2),
+      VertexAttributeDescriptor(name: 'tail', format: gpu.VertexFormat.float32,
+          offsetInBytes: secondOffset),
+    ])],
+  );
+  validatePersistentPackedAttributeRanges(layout(8));
+  expect(() => validatePersistentPackedAttributeRanges(layout(4)),
+      throwsArgumentError);
+  expect(() => validatePersistentPackedAttributeRanges(layout(2)),
+      throwsArgumentError);
+  final overflow = VertexLayoutDescriptor(buffers: [VertexBufferDescriptor(
+    strideInBytes: kMaxPersistentPackedAllocationBytes,
+    attributes: const [VertexAttributeDescriptor(name: 'overflow',
+        format: gpu.VertexFormat.float32,
+        offsetInBytes: kMaxPersistentPackedAllocationBytes)],
+  )]);
+  expect(() => validatePersistentPackedAttributeRanges(overflow),
+      throwsArgumentError);
+});
+```
+
 **Handwritten budget:** 55–95 total lines exactly as scoped in this task heading; test, production,
 and documentation lines are counted, while generated files and formatter-only indentation are excluded。
 
@@ -2900,6 +2947,33 @@ final class PersistentPackedBoundsSnapshot {
     return vm.Sphere.centerRadius(minimum + delta * 0.5, delta.length * 0.5);
   }
 }
+```
+
+The RED body is replaced by this executable test inside the existing `main`:
+
+```dart
+test('bounds validate derived values and return defensive copies', () {
+  final source = vm.Aabb3.minMax(vm.Vector3.zero(), vm.Vector3(2, 4, 6));
+  final snapshot = PersistentPackedBoundsSnapshot.create(source);
+  source.min.setValues(20, 20, 20);
+  final firstBounds = snapshot.localBounds;
+  final firstSphere = snapshot.localBoundingSphere;
+  firstBounds.min.setValues(30, 30, 30);
+  firstSphere.center.setValues(40, 40, 40);
+  expect(snapshot.localBounds.min.x, 0);
+  expect(snapshot.localBounds.max.z, 6);
+  expect(snapshot.localBoundingSphere.center.x, 1);
+  expect(identical(firstBounds, snapshot.localBounds), isFalse);
+  expect(identical(firstSphere, snapshot.localBoundingSphere), isFalse);
+  expect(() => PersistentPackedBoundsSnapshot.create(vm.Aabb3.minMax(
+      vm.Vector3(double.nan, 0, 0), vm.Vector3(1, 1, 1))),
+      throwsArgumentError);
+  expect(() => PersistentPackedBoundsSnapshot.create(vm.Aabb3.minMax(
+      vm.Vector3(2, 0, 0), vm.Vector3(1, 1, 1))), throwsArgumentError);
+  expect(() => PersistentPackedBoundsSnapshot.create(vm.Aabb3.minMax(
+      vm.Vector3(-double.maxFinite, 0, 0),
+      vm.Vector3(double.maxFinite, 1, 1))), throwsArgumentError);
+});
 ```
 
 **Handwritten budget:** 45–85 total lines exactly as scoped in this task heading; test, production,
