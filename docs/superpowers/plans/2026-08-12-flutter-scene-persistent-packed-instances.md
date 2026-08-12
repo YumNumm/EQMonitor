@@ -1,25 +1,47 @@
 # Flutter Scene Persistent Packed Instances Implementation Plan
 
-> **For Codex:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` and
-> `superpowers:subagent-driven-development`; use `gh-stack` only with its
-> non-interactive flags. Stop after every PR in this plan has been created.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use
+> `superpowers:subagent-driven-development` to implement this plan task-by-task.
+> Steps use checkbox (`- [ ]`) syntax for tracking. Use `gh-stack` only with
+> non-interactive flags and stop after every PR in this plan has been created.
 
 **Goal:** Issue #1602 向けに、static packed instance data を一度だけ GPU へ
 upload し、GPU submission 完了まで安全に retire できる汎用 Geometry を
 `YumNumm/flutter_scene` fork へ追加する。EQMonitor は公開 API だけを使い、fork の
 immutable commit SHA へ依存を固定する。
 
-**Architecture:** EQMonitor の現行 Flutter Scene pin を compatibility base とし、
-submission tracker の watermark に連動する resource registry、その上の明示的な
-context generation lifecycle、最後に immutable な 2-stream Geometry を積む。
-Geometry は base vertex と instance record を persistent device buffer に初回だけ
-書き込み、描画時は bind と小さな `FrameInfo` uniform 更新だけを行う。更新は in-place
-で行わず、旧 Geometry を retire して新規作成する。
+**Architecture:** process-global な Flutter GPU context、submission tracker、renderer と
+1対1の registry が context generation/state を所有し、複数 lifecycle owner は同じ global
+state を観測する。その registry 上に immutable な 2-stream Geometry を積み、base vertex と
+instance record は persistent device buffer へ初回だけ書く。描画時は bind と小さな
+`FrameInfo` uniform 更新だけを行い、data change は Scene 差し替えと旧 resource retire で表す。
 
 **Tech Stack:** Flutter `4dacd3fc91d96262a33e5c598e17d816f0b35641`
 (3.47.0-1.0.pre-97)、Dart 3.14.0-29.0.dev、Flutter GPU/Impeller、
 Flutter Scene `7f71993b7e2a0ab1d2f59726a406098709be7291`、Dart/Flutter test、
 `mise exec --`、`gh stack`。
+
+## Global Constraints
+
+- fork implementation base は exact
+  `7f71993b7e2a0ab1d2f59726a406098709be7291`、Flutter は exact
+  `4dacd3fc91d96262a33e5c598e17d816f0b35641`。floating branch/tag を dependency に使わない。
+- Flutter/Dart command は常に `mise exec --`、fork checkout では exact Flutter tool argument
+  を付けた `mise exec flutter@4dacd3fc... --` で実行する。
+- GPU context generation/state は owner 単位に分裂させない。1 owner の invalidation が同 generation
+  の全 owner resource を fail-closed にし、global retirement 完了まで recreate を拒否する。
+- registry、Scene render、GPU completion callback、lifecycle、Geometry は同じ Dart isolate から
+  操作する。cross-isolate transfer、lock、background-isolate GPU call を設計に入れない。
+- per-frame instance upload/full scan、`InstancedMesh` matrix pack、固定 delay、固定 frames-in-flight、
+  error 時の標準 Geometry fallback は禁止する。
+- `DeviceBuffer` reference release と driver resident-memory 解放を区別し、後者を保証しない。
+- fork API は generic packed Geometry と lifecycle に限定する。震源固有の24-byte schema、shader LOD、
+  color/radius は #1604 の consumer に残す。
+- 実機、Simulator、all-E2E は今回実行しない。#1604 の物理 iPhone 13 相当 30fps/5分 memory gate は
+  defer と明記し、non-device test を代替証拠にしない。
+- 各 implementation Task は30–100 handwritten production+test linesを目安に、RED→GREEN→1 commit→
+  push で閉じる。生成 lockfile 行はこの handwritten budget から除く。
+- user の既存 checkout/dirty changes を変更しない。worktree target/branch/remote が曖昧なら停止する。
 
 ---
 
