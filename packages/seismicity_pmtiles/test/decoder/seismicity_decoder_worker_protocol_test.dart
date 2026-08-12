@@ -70,11 +70,22 @@ void main() {
       expect(roundTripped.requestId, request.requestId);
       switch (roundTripped) {
         case SeismicityDecoderWorkerInitializeRequest(
+          :final responsePort,
           :final acceptedDescriptor,
           :final chunkCapacity,
         ):
+          expect(responsePort, replies.sendPort);
+          expect(
+            acceptedDescriptor.source,
+            const SeismicityPmTilesSource.file(path: 'archive.pmtiles'),
+          );
+          expect(acceptedDescriptor.schemaVersion, 1);
+          expect(acceptedDescriptor.dataZoom, 14);
+          expect(acceptedDescriptor.expectedSizeBytes, 2048);
           expect(acceptedDescriptor.archiveRevision, 'revision-34');
           expect(acceptedDescriptor.expectedFeatureCount, 31);
+          expect(acceptedDescriptor.periodFrom, DateTime.utc(2020));
+          expect(acceptedDescriptor.periodTo, DateTime.utc(2021));
           expect(chunkCapacity, 128);
         case SeismicityDecoderWorkerDecodeRequest(:final tileBytes):
           expect(tileBytes.materialize().asUint8List(), [3, 4, 5]);
@@ -134,12 +145,26 @@ void main() {
         case SeismicityDecoderWorkerReadyResponse():
           expect(roundTripped.requestId, 1);
         case SeismicityDecoderWorkerProgressResponse(:final progress):
+          expect(progress.decodedTileCount, 1);
+          expect(progress.rawFeatureCount, 2);
           expect(progress.uniqueFeatureCount, 2);
         case SeismicityDecoderWorkerFinishedResponse(:final datasetTransfer):
           expect(datasetTransfer.archiveRevision, 'revision-34');
+          expect(datasetTransfer.schemaVersion, 1);
+          expect(datasetTransfer.dataZoom, 14);
           expect(datasetTransfer.featureCount, 2);
+          expect(datasetTransfer.chunks, isEmpty);
         case SeismicityDecoderWorkerFailureResponse(:final error):
-          expect(error, isA<SeismicityPmTilesInvalidVectorTileException>());
+          expect(
+            error,
+            isA<SeismicityPmTilesInvalidVectorTileException>()
+                .having((exception) => exception.tileId, 'tileId', 9)
+                .having(
+                  (exception) => exception.reason,
+                  'reason',
+                  'bad command',
+                ),
+          );
       }
     }
   });
