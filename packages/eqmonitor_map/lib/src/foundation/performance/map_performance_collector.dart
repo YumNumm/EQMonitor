@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:eqmonitor_map/src/foundation/performance/map_metric_aggregate.dart';
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_event.dart';
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_metric.dart';
@@ -53,15 +55,16 @@ final class MapPerformanceCollector {
   Duration get windowStartedAt => _windowStartedAt;
 
   final Map<MapPerformanceMetricKind, MapMetricAccumulator> _aggregates = {};
+  final Map<MapPerformanceMetricKind, Duration> _lastDeliveredAt = {};
+  final ListQueue<MapPerformanceEvent> _eventBuffer = ListQueue();
   Duration? _lastMonotonicAt;
   Duration? _lastPartialAt;
   var _acceptedCount = 0;
   var _aggregatedCount = 0;
   var _ignoredCount = 0;
   var _rejectedCount = 0;
-  final _rateLimitedCount = 0;
-  final _droppedCount = 0;
-  final _bufferedEventCount = 0;
+  var _rateLimitedCount = 0;
+  var _droppedCount = 0;
 
   int get acceptedCount => _acceptedCount;
 
@@ -75,7 +78,7 @@ final class MapPerformanceCollector {
 
   int get droppedCount => _droppedCount;
 
-  int get bufferedEventCount => _bufferedEventCount;
+  int get bufferedEventCount => _eventBuffer.length;
 
   MapPerformanceRecordResult record(MapPerformanceEvent event) {
     final lastMonotonicAt = _lastMonotonicAt;
@@ -107,11 +110,46 @@ final class MapPerformanceCollector {
       );
     }
 
+    if (event.frameSequence % policy.sampleEveryFrames != 0) {
+      return MapPerformanceRecordResult._(
+        kind: MapPerformanceRecordResultKind.aggregated,
+        completedSnapshots: completedSnapshots,
+      );
+    }
+    final lastDeliveredAt = _lastDeliveredAt[event.sample.kind];
+    if (lastDeliveredAt != null &&
+        event.sample.monotonicAt - lastDeliveredAt <
+            policy.minimumEventInterval) {
+      _rateLimitedCount += 1;
+      return MapPerformanceRecordResult._(
+        kind: MapPerformanceRecordResultKind.aggregated,
+        completedSnapshots: completedSnapshots,
+      );
+    }
+    _lastDeliveredAt[event.sample.kind] = event.sample.monotonicAt;
     _acceptedCount += 1;
+    if (_eventBuffer.length == policy.eventBufferCapacity) {
+      _droppedCount += 1;
+      if (policy.dropPolicy == MapPerformanceDropPolicy.dropOldest) {
+        _eventBuffer.removeFirst();
+      } else {
+        return MapPerformanceRecordResult._(
+          kind: MapPerformanceRecordResultKind.accepted,
+          completedSnapshots: completedSnapshots,
+        );
+      }
+    }
+    _eventBuffer.addLast(event);
     return MapPerformanceRecordResult._(
       kind: MapPerformanceRecordResultKind.accepted,
       completedSnapshots: completedSnapshots,
     );
+  }
+
+  List<MapPerformanceEvent> drainEvents() {
+    final drained = List<MapPerformanceEvent>.of(_eventBuffer);
+    _eventBuffer.clear();
+    return drained;
   }
 
   MapPerformanceSnapshot? takePartialSnapshot(Duration at) {
