@@ -4520,15 +4520,57 @@ test("ShaderMaterial keeps persistent packed instance variant exact", () {
 });
 ```
 
-**GREEN implementation snippet:** the exact production signature/statement is:
+**GREEN implementation snippet:** replace the enum's terminating `depth` entry and `fromName` body with this
+complete form, then add the Geometry override:
 
 ```dart
-persistentPackedInstances('persistent_packed_instances'),
+enum MeshVariant {
+  unskinned('unskinned'),
+  skinned('skinned'),
+  depth('depth'),
+  persistentPackedInstances('persistent_packed_instances');
+
+  const MeshVariant(this.name);
+
+  final String name;
+
+  static MeshVariant fromName(String name) => switch (name) {
+    'skinned' => MeshVariant.skinned,
+    'depth' => MeshVariant.depth,
+    'persistent_packed_instances' => MeshVariant.persistentPackedInstances,
+    _ => MeshVariant.unskinned,
+  };
+}
 ```
 
 ```dart
 @override
 String get materialVertexVariant => 'persistent_packed_instances';
+```
+
+The existing test file adds `import 'dart:io';` and this executable test inside `main`:
+
+```dart
+test('ShaderMaterial keeps persistent packed instance variant exact', () {
+  final variant = MeshVariant.persistentPackedInstances;
+  expect(variant.name, 'persistent_packed_instances');
+  expect(MeshVariant.fromName(variant.name), same(variant));
+  expect(MeshVariant.fromName('something-else'), MeshVariant.unskinned);
+  final material = ShaderMaterial();
+  material.setVertexShader(null, variant: variant);
+  expect(material.vertexShaderFor(variant), isNull);
+  final geometrySource = File(
+    'lib/src/geometry/persistent_packed_instance_geometry.dart',
+  ).readAsStringSync();
+  expect(
+    geometrySource,
+    contains("materialVertexVariant => 'persistent_packed_instances'"),
+  );
+  final materialSource = File(
+    'lib/src/material/shader_material.dart',
+  ).readAsStringSync();
+  expect(materialSource, contains('_vertexShaders[kind]'));
+});
 ```
 
 **Handwritten budget:** 40–80 total lines exactly as scoped in this task heading; test, production,
@@ -4538,7 +4580,9 @@ and documentation lines are counted, while generated files and formatter-only in
   accepts the new typed enum without a GPU shader; existing unskinned/skinned/depth and unknown→unskinned remain
   unchanged. Source assertion requires `materialVertexShader` to index `_vertexShaders[kind]`. Run:
   `run_fork_red test/shader_material_vertex_test.dart 'ShaderMaterial keeps persistent packed instance variant exact' 'RED:T44:material variant missing'`。
-- [ ] **GREEN:** one enum value and one switch case; no generator/default collapse. Run:
+- [ ] **GREEN:** change `depth('depth');` to the comma-terminated entry shown above, append the one new
+  semicolon-terminated enum value and exact switch arm, then run the executable typed/source test above. No
+  generator/default collapse. Run:
   `set -euo pipefail; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- flutter test --enable-impeller test/shader_material_vertex_test.dart test/shader_material_test.dart test/persistent_packed_instance_geometry_test.dart test/render/persistent_gpu_scene_integration_test.dart; mise exec flutter@4dacd3fc91d96262a33e5c598e17d816f0b35641 -- dart analyze .; git --no-pager diff --check`。
 - [ ] **Commit:** `Feature: packed Geometry shader variantを追加`。
 
