@@ -13,7 +13,79 @@ void main() {
     for (final action in frameInventory()) {
       expect(action, returnsNormally);
     }
+    for (final action in revisionInventory()) {
+      expect(action, returnsNormally);
+    }
   });
+}
+
+List<void Function()> revisionInventory() {
+  final source = createMapSourceInstanceId(value: 'base-map');
+  final digest = createMapContentDigest(value: 'sha256:base-map');
+  final committed = createMapCommittedRevision(
+    source: source,
+    revision: 1,
+    digest: digest,
+    state: 1,
+  );
+  final request = createMapFullResyncRequest(
+    source: source,
+    afterRevision: 1,
+  );
+  const MapRevisionStateOwner<int> owner = _StateOwner();
+  return [
+    () => consume(
+      createMapFullRevision(source: source, revision: 1, digest: digest),
+    ),
+    () => consume(
+      createMapDeltaRevision(
+        source: source,
+        baseRevision: 1,
+        targetRevision: 2,
+        targetDigest: digest,
+      ),
+    ),
+    () => consume(
+      createMapCommittedRevision(
+        source: source,
+        revision: 1,
+        digest: digest,
+        state: 1,
+      ),
+    ),
+    () => consume(createMapFullResyncRequest(source: source, afterRevision: 1)),
+    () => consume(MapRevisionRejectReason.values),
+    () => consume(MapRevisionApplyResult<int>.committed(current: committed)),
+    () => consume(
+      MapRevisionApplyResult<int>.idempotentNoOp(current: committed),
+    ),
+    () => consume(
+      MapRevisionApplyResult<int>.rejected(
+        current: committed,
+        reason: MapRevisionRejectReason.staleRevision,
+      ),
+    ),
+    () => consume(
+      MapRevisionApplyResult<int>.rejected(
+        current: committed,
+        reason: MapRevisionRejectReason.revisionGap,
+        fullResyncRequest: request,
+      ).requiresFullResync,
+    ),
+    () => consume(MapRevisionCandidate(state: 1, digest: digest)),
+    () => consume(
+      owner.own(candidate: MapRevisionCandidate(state: 1, digest: digest)),
+    ),
+  ];
+}
+
+final class _StateOwner implements MapRevisionStateOwner<int> {
+  const _StateOwner();
+
+  @override
+  MapRevisionCandidate<int> own({
+    required MapRevisionCandidate<int> candidate,
+  }) => candidate;
 }
 
 List<void Function()> frameInventory() {
