@@ -29,6 +29,28 @@ void main() {
       expect(chunk.matches(localIndex: 0, record: mismatch), isFalse);
     }
   });
+
+  test('distinguishes absent values from present zero false and empty', () {
+    final chunk = SeismicityCanonicalPropertyChunk(capacity: 1)
+      ..add(row: absent());
+
+    expect(chunk.matches(localIndex: 0, record: absent()), isTrue);
+    for (final present in [
+      absent(magnitude: 0),
+      absent(depth: 0),
+      absent(determination: ''),
+      absent(eventId: 'E1'),
+      absent(geometryClamped: false),
+    ]) {
+      expect(chunk.matches(localIndex: 0, record: present), isFalse);
+    }
+    final empty = SeismicityCanonicalPropertyChunk(capacity: 1)
+      ..add(row: absent(determination: ''));
+    expect(
+      empty.matches(localIndex: 0, record: absent(determination: '')),
+      isTrue,
+    );
+  });
 }
 
 SeismicityDecodedHypocenter row({
@@ -57,3 +79,17 @@ SeismicityDecodedHypocenter row({
 
 Uint8List? bytes(String? value) =>
     value == null ? null : Uint8List.fromList(utf8.encode(value));
+
+SeismicityDecodedHypocenter absent({
+  double? magnitude,
+  double? depth,
+  String? determination,
+  String? eventId,
+  bool? geometryClamped,
+}) => row(
+  magnitude: magnitude,
+  depth: depth,
+  determination: determination,
+  eventId: eventId,
+  geometryClamped: geometryClamped,
+);
