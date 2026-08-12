@@ -4,3 +4,11 @@ analyzer:
   errors:
     # Public platform adapter namespaces intentionally retain their static API.
     avoid_classes_with_only_static_members: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
