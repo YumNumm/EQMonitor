@@ -699,6 +699,95 @@ owner terminal state storage。`snapshotFor` は disposed ownerにもread-only�
 - [ ] **Step 4 — verify:** registry/models tests、analyze、diff-check。
 - [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: GPU resource owner集計を追加' && git push`。
 
+### Task 9: process-global invalidation/recreate（fork bottom、depends Task 8）
+
+**Files:** Modify `lib/src/render/persistent_gpu_resource_registry.dart`,
+`test/render/persistent_gpu_resource_registry_test.dart`。
+
+**Interfaces:** Produces `Future<void> invalidateContext(int ownerId)`、
+`void recreateContext(int ownerId)`。generationごとに cached `FI` を1つ持ち、どのactive ownerにも
+identical objectを返す。
+
+- [ ] **Step 1 — RED:** owners A/Bに current-generation recordを作りAからinvalidateする。即座にglobal
+  invalidating、A/B recordはpending、B bind/register拒否、A/B invalidate Futureはidenticalを期待する。
+  open frameでA record mark後、Bからinvalidate→before-submit→completionの順でも早期releaseしない。
+  全record settle後だけ invalidated、resource→owner dispose→global FI のcompletion順を記録する。
+- [ ] **Step 2 — verify RED:** plain-name `one owner invalidates every owner in the generation`。
+  expected RED はglobal invalidation API未定義。
+- [ ] **Step 3 — GREEN:** invalidation開始時にglobal stateを先に変え、同 generation全recordをretire。
+  recreateは invalidated/failed-record=0 の時だけ generation+1/active、新しいFIをlazy作成する。
+  active/invalidating/failed/repeated recreateは synchronous `StateError`。
+- [ ] **Step 4 — verify:** registry全test、state-machine table全rowをtest名で対応、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: global GPU generationを追加' && git push`。
+
+### Task 10: public lifecycle owner operation table（fork bottom、depends Task 9）
+
+**Files:** Create `lib/src/render/persistent_gpu_resource_lifecycle.dart`,
+`test/render/persistent_gpu_resource_lifecycle_test.dart`。
+
+**Interfaces:** Produces section 3 の `PersistentGpuResourceLifecycle`。public factoryは process-global
+`persistentGpuResourceRegistry`へattachし、`@internal ...forRegistry(PersistentGpuResourceRegistry)`を
+test/Geometry用に持つ。internal `registerAllocation(...)` と `markUsed(lease)` だけをGeometryへ渡す。
+
+- [ ] **Step 1 — RED:** section 4 operation×state tableを parameterized test化する。特に dispose during
+  invalidation では `FD` と `FI` は別object、FDはA settleで完了してもFIはBを待つ。disposed後の
+  invalidateは repeated exact `FE`、recreate後の次invalidateだけnew FI、failed時の全operation、
+  snapshot allowed、全 getter shared generation/stateをexact期待する。
+- [ ] **Step 2 — verify RED:** focused lifecycle test。expected RED は lifecycle type/import不存在。
+- [ ] **Step 3 — GREEN:** handleはownerIdとcached FD/FEだけを持ち、global stateを複製しない。
+  every public/internal operation first calls affinity。disposed checksはglobal mutationより先に行う。
+- [ ] **Step 4 — verify:** lifecycle/registry/tracker全test、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: persistent GPU lifecycleを公開' && git push`。
+
+### Task 11: Scene frame boundary integration（fork bottom、depends Task 10）
+
+**Files:** Modify `lib/src/scene.dart`; Create `test/render/persistent_gpu_scene_frame_test.dart`。
+
+**Interfaces:** Scene consumes the process-global registry only。render frame entryで
+`beginFrame()`、全 encode/submit bodyを `try`、必ず1回 `finally { endFrame(); }` とする。
+
+- [ ] **Step 1 — RED:** test seamで registry event log と encode closureをinjectし、normal=
+  `begin,encode,end`、encode throw=`begin,encode,end` + original error、submissionなしでもend、
+  nested renderはbeginの `StateError` を期待する。既存 renderer submission順は変えない。
+- [ ] **Step 2 — verify RED:** pinned test plain-name `scene closes resource frame after encode failure`。
+  expected RED は frame hooks 未接続。
+- [ ] **Step 3 — GREEN:** existing transients beginと同じ frame setup位置に registry beginを置く。
+  `finally` はend errorでoriginal encode errorを隠さないよう、closed-state invariantをtest seamで守る。
+- [ ] **Step 4 — verify:** new scene test、全 render tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: SceneへGPU lifecycle frameを接続' && git push`。
+
+### Task 12: lifecycle curated export/docs（fork bottom、depends Task 11）
+
+**Files:** Modify `lib/src/scene.dart`, `lib/scene.dart`, `README.md`; Create
+`test/render/persistent_gpu_lifecycle_public_api_test.dart`。
+
+**Interfaces:** Public show-listは section 3 の lifecycle、4 enum、usage/snapshotだけ。
+registry、lease、affinity、test constructorはexportしない。
+
+- [ ] **Step 1 — RED:** test imports only `package:flutter_scene/scene.dart` and instantiates lifecycle、reads
+  initial active/generation 1/snapshot zero。compile-fail grepとして public barrelに
+  `PersistentGpuResourceRegistry|PersistentGpuResourceLease` が無いことも source assertionする。
+- [ ] **Step 2 — verify RED:** public API test。expected RED は symbols未export。
+- [ ] **Step 3 — GREEN:** curated exportsを追加。READMEへ stop rendering→detach→invalidate→await→
+  recreate、multi-owner global invalidation、failed terminal、logical bytes≠driver resident bytesを記載する。
+- [ ] **Step 4 — verify:** public/lifecycle/registry tests、full `dart analyze .`、diff-check。
+- [ ] **Step 5 — publish:** 4 files、`git commit -m 'Docs: persistent GPU lifecycle契約を公開' && git push`。
+
+### Delivery Gate BOTTOM（commitなし）
+
+- [ ] exact Flutter version、`dart format --output=none --set-exit-if-changed lib test`、`dart analyze .`、
+  `flutter test --enable-impeller` を pinned miseで実行し pass/fail/skip件数を保存する。GPU skipをpassへ
+  読み替えず、device/Simulator/E2E/#1604 profileは実施しない。
+- [ ] fresh review subagentが section 3/4 と Task 1–12 diffを照合し、未解決 finding が0になるまで
+  修正Taskを追加する。clean、local HEAD=remote HEADをassertする。
+- [ ] `gh stack submit --auto --open --remote origin` で bottom PRを作成する。body Remaining tasksに
+  top Geometry、EQ pin、automatic context-loss signalなし、driver reclaim未観測、#1603–#1605、
+  #1604 physical 30fps/5min defer、欠落canonical specを列挙する。
+- [ ] top branchが未作成なら clean bottom worktreeで
+  `gh stack add feat/persistent-packed-instance-geometry`。既存なら `gh stack view --json` でowner/baseを
+  assertして `gh stack checkout feat/persistent-packed-instance-geometry`。bottom ancestry不一致、dirty、
+  linked elsewhereなら停止し、branch delete/reset/force pushしない。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
