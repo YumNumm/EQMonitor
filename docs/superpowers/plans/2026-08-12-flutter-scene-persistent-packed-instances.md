@@ -1173,7 +1173,8 @@ cached completer. If either entry check throws, completer/state/callback/map all
 `test/render/persistent_gpu_resource_registry_test.dart`。
 
 **Interfaces:** Produces
-`PersistentGpuMemorySnapshot snapshotFor({required int ownerId, required PersistentGpuResourceLifecycleState lifecycleState})`。
+`PersistentGpuMemorySnapshot snapshotFor({required int ownerId})`; lifecycle state is derived from that exact
+owner after the affinity check rather than accepted from the caller。
 
 **Implementation shape:** initialize two nine-counter accumulators, fold each record once into global and into
 owner when IDs match, then construct immutable usages/snapshot from tracker counters. `affinity.check()` is the
@@ -1196,17 +1197,17 @@ test("snapshot separates global and owner active logical bytes", () {
 ```dart
 PersistentGpuMemorySnapshot snapshotFor({
   required int ownerId,
-  required PersistentGpuResourceLifecycleState lifecycleState,
 }) {
   affinity.check();
-  if (!owners.containsKey(ownerId)) throw StateError('unknown owner');
+  final ownerRecord = owners[ownerId];
+  if (ownerRecord == null) throw StateError('unknown owner');
   final global = accumulatePersistentGpuUsage(records.values);
   final owner = accumulatePersistentGpuUsage(
     records.values.where((record) => record.ownerId == ownerId),
   );
   return PersistentGpuMemorySnapshot(
     contextState: contextState,
-    lifecycleState: lifecycleState,
+    lifecycleState: ownerRecord.state,
     contextGeneration: contextGeneration,
     latestSubmission: submissions.latestSubmission,
     completedThrough: submissions.completedThrough,
@@ -1287,6 +1288,18 @@ test("owner disposal shares resource futures and leaves other owners active", ()
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+Future<void> settlePersistentGpuOwnerDisposal({
+  required List<Future<void>> retirements,
+  required Completer<void> completer,
+}) async {
+  try {
+    await Future.wait(retirements, eagerError: false);
+    completer.complete();
+  } catch (error, stackTrace) {
+    completer.completeError(error, stackTrace);
+  }
+}
+
 Future<void> disposeOwner(int ownerId) {
   affinity.check();
   final owner = owners[ownerId];
@@ -1302,11 +1315,10 @@ Future<void> disposeOwner(int ownerId) {
       .map((record) => retire(PersistentGpuResourceLease(registry: this,
           recordId: record.id, generation: record.generation)))
       .toList(growable: false);
-  Future.wait(retirements, eagerError: false).then(
-    (_) => completer.complete(),
-    onError: (Object error, StackTrace stackTrace) =>
-        completer.completeError(error, stackTrace),
-  );
+  settlePersistentGpuOwnerDisposal(
+    retirements: retirements,
+    completer: completer,
+  ).ignore();
   return completer.future;
 }
 ```
@@ -1355,6 +1367,20 @@ test("one owner invalidates all immediate resources in the generation", () {
 **GREEN implementation snippet:** the exact production signature/statement is:
 
 ```dart
+Future<void> settleImmediatePersistentGpuInvalidation({
+  required PersistentGpuResourceRegistry registry,
+  required List<Future<void>> retirements,
+  required Completer<void> completer,
+}) async {
+  try {
+    await Future.wait(retirements, eagerError: false);
+    registry.contextState = PersistentGpuContextState.invalidated;
+    completer.complete();
+  } catch (error, stackTrace) {
+    completer.completeError(error, stackTrace);
+  }
+}
+
 Future<void> invalidateContext(int ownerId) {
   affinity.check();
   final owner = owners[ownerId];
@@ -1373,12 +1399,11 @@ Future<void> invalidateContext(int ownerId) {
       .map((record) => retire(PersistentGpuResourceLease(registry: this,
           recordId: record.id, generation: record.generation)))
       .toList(growable: false);
-  Future.wait(retirements, eagerError: false).then((_) {
-    contextState = PersistentGpuContextState.invalidated;
-    completer.complete();
-  }, onError: (Object error, StackTrace stackTrace) {
-    completer.completeError(error, stackTrace);
-  });
+  settleImmediatePersistentGpuInvalidation(
+    registry: this,
+    retirements: retirements,
+    completer: completer,
+  ).ignore();
   return completer.future;
 }
 
@@ -1496,10 +1521,8 @@ final class PersistentGpuResourceLifecycle {
       _registry.contextStateFor(_ownerId);
   PersistentGpuResourceLifecycleState get state =>
       _registry.ownerStateFor(_ownerId);
-  PersistentGpuMemorySnapshot takeMemorySnapshot() => _registry.snapshotFor(
-        ownerId: _ownerId,
-        lifecycleState: state,
-      );
+  PersistentGpuMemorySnapshot takeMemorySnapshot() =>
+      _registry.snapshotFor(ownerId: _ownerId);
   void checkCanCreate() => _registry.checkCanCreateFor(_ownerId);
   PersistentGpuResourceLease registerAllocation({
     required int totalBytes,
