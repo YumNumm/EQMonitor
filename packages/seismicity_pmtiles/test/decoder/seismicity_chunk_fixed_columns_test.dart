@@ -64,7 +64,54 @@ void main() {
     expect(() => SeismicityChunkFixedColumns(capacity: 0), invalid);
     expect(() => SeismicityChunkFixedColumns(capacity: -1), invalid);
   });
+
+  test('compares UUID bytes and origin time independently', () {
+    final stored = decoded(index: 0);
+    final columns = SeismicityChunkFixedColumns(capacity: 1)..add(row: stored);
+
+    expect(
+      columns.uuidEquals(rowIndex: 0, candidate: stored.hypocenterId),
+      isTrue,
+    );
+    expect(
+      columns.uuidEquals(rowIndex: 0, candidate: Uint8List(16)),
+      isFalse,
+    );
+    expect(
+      columns.uuidEquals(rowIndex: 0, candidate: Uint8List(15)),
+      isFalse,
+    );
+    expect(columns.originTimeEquals(rowIndex: 0, candidate: 1000), isTrue);
+    expect(columns.originTimeEquals(rowIndex: 0, candidate: 1001), isFalse);
+  });
+
+  test('translates constructor and build allocation failures', () {
+    for (final fail in allocationFailures) {
+      expect(
+        () => SeismicityChunkFixedColumns(
+          capacity: 1,
+          allocate: <T>(create) => fail(),
+        ),
+        invalid,
+      );
+      var calls = 0;
+      final columns = SeismicityChunkFixedColumns(
+        capacity: 1,
+        allocate: <T>(create) {
+          if (++calls == 2) fail();
+          return create();
+        },
+      )..add(row: decoded(index: 0));
+      expect(columns.build, invalid);
+      expect(columns.build().latitudes, [35]);
+    }
+  });
 }
+
+final allocationFailures = <Never Function()>[
+  () => throw const OutOfMemoryError(),
+  () => throw RangeError('injected allocation failure'),
+];
 
 SeismicityDecodedHypocenter decoded({
   required int index,
