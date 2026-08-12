@@ -96,4 +96,56 @@ void main() {
     expect(batches.clear, throwsUnsupportedError);
     expect(batches.single.instanceTransforms.clear, throwsUnsupportedError);
   });
+
+  test(
+    'keeps compatible packets separated across an intervening batch key',
+    () {
+      final batches = buildCanonicalRenderBatches(
+        version: 3,
+        policy: policy,
+        packets: [
+          packet(order: 2),
+          packet(order: 0),
+          packet(order: 1, scope: 'B'),
+        ],
+      );
+
+      expect(
+        batches.map((batch) => batch.packets.single.batchKey.scopeKey),
+        ['A', 'B', 'A'],
+      );
+    },
+  );
+
+  test('preserves input order for equal sort keys in separate batches', () {
+    final batches = buildCanonicalRenderBatches(
+      version: 3,
+      policy: policy,
+      packets: [
+        packet(order: 0, scope: 'B'),
+        packet(order: 0),
+      ],
+    );
+
+    expect(
+      batches.map((batch) => batch.packets.single.batchKey.scopeKey),
+      ['B', 'A'],
+    );
+  });
+
+  test('rejects packet phase and policy keys outside the supplied policy', () {
+    for (final invalid in [
+      packet(order: 0, policyVersion: 8),
+      packet(order: 0, phase: 2),
+    ]) {
+      expect(
+        () => buildCanonicalRenderBatches(
+          version: 3,
+          policy: policy,
+          packets: [invalid],
+        ),
+        throwsArgumentError,
+      );
+    }
+  });
 }
