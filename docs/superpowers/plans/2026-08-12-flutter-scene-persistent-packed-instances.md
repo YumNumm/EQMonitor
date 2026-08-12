@@ -943,6 +943,55 @@ indexBytes/totalBytes/indexCount` and frozen layout/bounds。Also produces
 - [ ] **Step 4 — verify:** geometry tests、`rg -n 'instanceTransients|overwrite\('` audit、diff-check。
 - [ ] **Step 5 — publish:** 2 files、`git commit -m 'Feature: packed Geometryを永続bind' && git push`。
 
+### Task 21: exact material variant（fork top、depends Task 20）
+
+**Files:** Modify `lib/src/material/shader_stage.dart`, `lib/src/material/shader_material.dart`,
+`lib/src/geometry/persistent_packed_instance_geometry.dart`, `test/shader_material_vertex_test.dart`。
+
+**Interfaces:** Adds `MeshVariant.persistentPackedInstances('persistent_packed_instances')` and exact
+`MeshVariant.fromName` mapping。Geometry `materialVertexVariant` returns that exact name。
+
+- [ ] **Step 1 — RED:** assign shader via `setVertexShader(... variant: persistentPackedInstances)` and expect
+  `materialVertexShader('persistent_packed_instances')` same shader; unskinned/skinned/depth and unknown keep existing
+  behavior。Geometry variant exact stringをassertし、missing custom variant warning names it rather than unskinned。
+- [ ] **Step 2 — verify RED:** shader material focused tests。expected RED は enum member未定義。
+- [ ] **Step 3 — GREEN:** enum/switchへ1 explicit caseを追加し、ShaderMaterial lookupはexact enum keyを使う。
+  implicit fallback、standard shader、position-only shortcutへcollapseさせない。
+- [ ] **Step 4 — verify:** shader/geometry tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 4 files、`git commit -m 'Feature: packed Geometry shader variantを追加' && git push`。
+
+### Task 22: Geometry curated export/docs（fork top、depends Task 21）
+
+**Files:** Modify `lib/scene.dart`, `README.md`; Create
+`test/persistent_packed_instance_public_api_test.dart`。
+
+**Interfaces:** Public barrel adds only `PersistentPackedInstanceGeometry`; layout/lifecycle types remain existing
+curated exports。plan/storage/registry/lease/backends are internal。
+
+- [ ] **Step 1 — RED:** test imports only `dart:typed_data`, `vector_math`,
+  `package:flutter_scene/scene.dart`, `package:flutter_scene/gpu.dart` and assigns
+  `final constructor = PersistentPackedInstanceGeometry.new`、references lifecycle/snapshot/layout/retire types。
+  source assertion rejects any `package:flutter_scene/src/` import and internal type export。
+- [ ] **Step 2 — verify RED:** public API focused test。expected RED は Geometry symbol未export。
+- [ ] **Step 3 — GREEN:** curated exportを追加。README exampleは CPU pack→one construction→per-frame bind→
+  revision時new attach/old detach/old retire→stop/detach/invalidate/await/recreate。custom shaderのFrameInfo、
+  required attributes/varyings、logical memory、no fallback/no per-frame uploadを記載する。
+- [ ] **Step 4 — verify:** public/geometry/material tests、analyze、diff-check。
+- [ ] **Step 5 — publish:** 3 files、`git commit -m 'Docs: packed Geometry公開契約を追加' && git push`。
+
+### Delivery Gate TOP（commitなし）
+
+- [ ] forbidden auditで `instanceTransients.emplace|List<Matrix4>|Future.delayed|Timer\(|setVertices\(|
+  setIndices\(` が新 filesに0件、constructor/storage以外の `overwrite` が0件、releaseだけが nullable
+  buffer refsをclearすることを確認する。
+- [ ] pinned format/analyze/full `flutter test --enable-impeller` を実行しpass/fail/skipとexact Flutter SHAを
+  保存する。fresh spec/code review subagentsのfindingsを0にし、clean/local=remoteをassertする。
+- [ ] `gh stack submit --auto --open --remote origin`、`gh stack view --json` で bottom/baseとtop/base、OPEN
+  をassert。top PR bodyにEQ pin、#1603/#1604/#1605、physical 30fps/5min defer、driver reclaim未観測、
+  current upstream `ed04205c10991739338fde19563bcf2698057755` forward-portをRemaining tasksとして書く。
+- [ ] `git rev-parse HEAD` のfull 40-char top SHAを immutable hand-offとして記録する。PR作成後に review
+  fix commitが入った場合は古いSHAを破棄し、全gate再実行後の新しいHEADだけをEQ pinへ渡す。
+
 ### Task 1: submission completion listener を追加する（fork bottom）
 
 **Files:**
