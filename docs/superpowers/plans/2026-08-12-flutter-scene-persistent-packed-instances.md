@@ -5984,6 +5984,79 @@ PR body must contain fork bottom/top URLs, advertised top SHA, decoder final SHA
 and remaining #1603/#1604/#1605/device/resident/upstream/spec boundaries. Re-query exact body/base/head/state/checks。
 No merge, #1603 implementation, device/Simulator/E2E is authorized by this plan。
 
+## Producer-consumer closure ledger
+
+Every split task has one concrete product and a later consumer or delivery gate. The mechanical audit treats
+these 63 rows as the exhaustive set; a missing, duplicate, empty or non-later task consumer fails。
+
+<!-- producer-consumer-closure-start -->
+| Task | Product | First checked consumer |
+|---|---|---|
+| 1 | `GpuSubmissionCompletionListener` | Task 14 |
+| 2 | public lifecycle states and usage | Task 3 |
+| 3 | snapshot and execution affinity | Task 4A |
+| 4A | registry owner/allocation records | Task 4B |
+| 4B | typed lifecycle lease | Task 4C |
+| 4C | owner attach and allocation register | Task 4D |
+| 4D | idempotent retirement Future | Task 6 |
+| 5 | owner/global memory snapshot | Task 9 |
+| 6 | owner disposal Future | Task 9 |
+| 7 | context invalidation Future | Task 9 |
+| 8 | context recreation and generation gate | Task 9 |
+| 9 | public lifecycle handle | Task 10 |
+| 10 | active-owner operation matrix | Task 11 |
+| 11 | disposed-owner operation matrix | Task 18 |
+| 12A | ordered terminal release coordinator | Task 12B |
+| 12B | open-frame marks | Task 13 |
+| 13 | before-submit stamps | Task 14 |
+| 14 | completion-gated retirement | Task 15B |
+| 15B | owner-disposal epoch drain | Task 15C |
+| 15C | invalidation coordinator Future | Task 18 |
+| 16 | encode-scope seam | Task 17 |
+| 17 | Scene-owned encode scope | Task 18 |
+| 18 | curated lifecycle export | Task 19 |
+| 19 | lifecycle README contract | Bottom delivery |
+| 20 | checked packed arithmetic | Task 23 |
+| 21 | deep layout snapshot | Task 22 |
+| 22 | slot/name/stride policy | Task 23 |
+| 23 | aligned attribute ranges | Task 28 |
+| 24 | defensive finite bounds | Task 28 |
+| 25 | optional index plan | Task 26 |
+| 26 | checked index scan | Task 28 |
+| 27 | checked allocation sizing | Task 28 |
+| 28 | immutable upload plan | Task 29 |
+| 29 | pure write sequence | Task 32 |
+| 30 | typed GPU backend boundary | Task 31 |
+| 31 | DeviceBuffer wrappers | Task 36 |
+| 32 | non-index upload transaction | Task 33 |
+| 33 | all-or-nothing storage upload | Task 34 |
+| 34 | storage views and release | Task 38A |
+| 35 | typed render-pass adapter boundary | Task 36 |
+| 36 | production GPU bind/draw functions | Task 37B |
+| 37A | shader selection and FrameInfo packer | Task 37B |
+| 37B | production FrameInfo adapter | Task 38A |
+| 38A | lifecycle-aware bind delegate | Task 38B |
+| 38B | validated draw delegate | Task 41A |
+| 39 | typed construction transaction | Task 40 |
+| 40 | construction failure cleanup | Task 42 |
+| 41A | immutable Geometry parts | Task 41B |
+| 41B | complete concrete Geometry | Task 42 |
+| 42 | shared public factory | Task 43 |
+| 43 | all-route full-bind audit | Task 44 |
+| 44 | persistent material variant | Task 45 |
+| 45 | curated Geometry export | Task 46 |
+| 46 | packed Geometry README contract | Top handoff |
+| 47 | atomic fork descriptors | Task 48A |
+| 48A | strict descriptor verifier | Task 48B |
+| 48B | descriptor fixture group | Task 49A |
+| 49A | exact two-lock verifier | Task 49B |
+| 49B | lock fixture group | Task 50A |
+| 50A | strict corruption helper | Task 50B |
+| 50B | full corruption matrix | EQ delivery |
+| 51 | consumer provenance | Task 52 |
+| 52 | current lifecycle knowledge | EQ delivery |
+<!-- producer-consumer-closure-end -->
+
 ## Mechanical plan audit
 
 Run from the EQMonitor plan worktree before requesting plan review. This reports cardinalities rather than
