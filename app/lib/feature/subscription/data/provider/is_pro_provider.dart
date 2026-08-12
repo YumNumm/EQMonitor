@@ -12,9 +12,7 @@ part 'is_pro_provider.g.dart';
 /// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 @Riverpod(keepAlive: true)
 bool isPro(Ref ref) {
-  final isProFeaturesEnabled = ref.watch(
-    buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-  );
+  final isProFeaturesEnabled = ref.watch(buildConfigProvider).isProFeaturesEnabled;
   if (!isProFeaturesEnabled) {
     return false;
   }

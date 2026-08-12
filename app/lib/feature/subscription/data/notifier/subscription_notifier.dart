@@ -14,9 +14,9 @@ part 'subscription_notifier.g.dart';
 class SubscriptionNotifier extends _$SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async {
-    final isProFeaturesEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-    );
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
     if (!isProFeaturesEnabled) {
       return const SubscriptionStatus.inactive();
     }

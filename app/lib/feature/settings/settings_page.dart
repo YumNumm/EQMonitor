@@ -24,12 +24,9 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value;
-    final isDeveloperUiEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isDeveloperUiEnabled),
-    );
-    final isProFeaturesEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-    );
+    final buildConfig = ref.watch(buildConfigProvider);
+    final isDeveloperUiEnabled = buildConfig.isDeveloperUiEnabled;
+    final isProFeaturesEnabled = buildConfig.isProFeaturesEnabled;
     final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;

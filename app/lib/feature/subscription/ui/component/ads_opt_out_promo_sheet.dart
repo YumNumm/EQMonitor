@@ -25,9 +25,9 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final colorTheme = context.designSystem.colorTheme;
     final flow = ref.watch(adsOptOutFlowProvider);
-    final isProFeaturesEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-    );
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
 
     return SafeArea(
       top: false,

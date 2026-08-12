@@ -63,9 +63,9 @@ class _Body extends HookConsumerWidget {
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
 
-    final isProFeaturesEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-    );
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
     final isPro = isProFeaturesEnabled && (constraints?.isPro ?? false);
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;

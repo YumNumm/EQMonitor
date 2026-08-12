@@ -15,9 +15,9 @@ class _ProUpgradeDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isProFeaturesEnabled = ref.watch(
-      buildConfigProvider.select((c) => c.isProFeaturesEnabled),
-    );
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
 
     if (!isProFeaturesEnabled) {
       return AlertDialog(
