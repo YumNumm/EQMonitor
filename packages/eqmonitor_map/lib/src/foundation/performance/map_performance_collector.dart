@@ -2,6 +2,7 @@ import 'package:eqmonitor_map/src/foundation/performance/map_metric_aggregate.da
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_event.dart';
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_metric.dart';
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_policy.dart';
+import 'package:eqmonitor_map/src/foundation/performance/map_performance_snapshot.dart';
 
 enum MapPerformanceRecordResultKind {
   accepted,
@@ -12,25 +13,31 @@ enum MapPerformanceRecordResultKind {
 
 final class MapPerformanceRecordResult {
   const MapPerformanceRecordResult.accepted()
-    : kind = MapPerformanceRecordResultKind.accepted;
+    : this._(kind: MapPerformanceRecordResultKind.accepted);
 
   const MapPerformanceRecordResult.aggregated()
-    : kind = MapPerformanceRecordResultKind.aggregated;
+    : this._(kind: MapPerformanceRecordResultKind.aggregated);
 
   const MapPerformanceRecordResult.ignored()
-    : kind = MapPerformanceRecordResultKind.ignored;
+    : this._(kind: MapPerformanceRecordResultKind.ignored);
 
   const MapPerformanceRecordResult.rejected()
-    : kind = MapPerformanceRecordResultKind.rejected;
+    : this._(kind: MapPerformanceRecordResultKind.rejected);
+
+  const MapPerformanceRecordResult._({
+    required this.kind,
+    this.completedSnapshots = const [],
+  });
 
   final MapPerformanceRecordResultKind kind;
+  final List<MapPerformanceSnapshot> completedSnapshots;
 }
 
 final class MapPerformanceCollector {
   MapPerformanceCollector({
     required this.policy,
-    required this.windowStartedAt,
-  }) {
+    required Duration windowStartedAt,
+  }) : _windowStartedAt = windowStartedAt {
     if (windowStartedAt.isNegative) {
       throw ArgumentError.value(
         windowStartedAt,
@@ -41,10 +48,13 @@ final class MapPerformanceCollector {
   }
 
   final MapPerformancePolicy policy;
-  final Duration windowStartedAt;
+  Duration _windowStartedAt;
+
+  Duration get windowStartedAt => _windowStartedAt;
 
   final Map<MapPerformanceMetricKind, MapMetricAccumulator> _aggregates = {};
   Duration? _lastMonotonicAt;
+  Duration? _lastPartialAt;
   var _acceptedCount = 0;
   var _aggregatedCount = 0;
   var _ignoredCount = 0;
@@ -76,10 +86,14 @@ final class MapPerformanceCollector {
       return const MapPerformanceRecordResult.rejected();
     }
     _lastMonotonicAt = event.sample.monotonicAt;
+    final completedSnapshots = advanceWindows(event.sample.monotonicAt);
 
     if (policy.observationLevel == MapPerformanceObservationLevel.off) {
       _ignoredCount += 1;
-      return const MapPerformanceRecordResult.ignored();
+      return MapPerformanceRecordResult._(
+        kind: MapPerformanceRecordResultKind.ignored,
+        completedSnapshots: completedSnapshots,
+      );
     }
 
     (_aggregates[event.sample.kind] ??= MapMetricAccumulator(
@@ -87,10 +101,67 @@ final class MapPerformanceCollector {
     )).add(event.sample.value);
     _aggregatedCount += 1;
     if (policy.observationLevel == MapPerformanceObservationLevel.aggregate) {
-      return const MapPerformanceRecordResult.aggregated();
+      return MapPerformanceRecordResult._(
+        kind: MapPerformanceRecordResultKind.aggregated,
+        completedSnapshots: completedSnapshots,
+      );
     }
 
     _acceptedCount += 1;
-    return const MapPerformanceRecordResult.accepted();
+    return MapPerformanceRecordResult._(
+      kind: MapPerformanceRecordResultKind.accepted,
+      completedSnapshots: completedSnapshots,
+    );
+  }
+
+  MapPerformanceSnapshot? takePartialSnapshot(Duration at) {
+    final nextPartialAt =
+        (_lastPartialAt ?? windowStartedAt) + policy.snapshotInterval;
+    if (at < nextPartialAt ||
+        at >= windowStartedAt + policy.aggregationWindow ||
+        at <= windowStartedAt) {
+      return null;
+    }
+    _lastPartialAt = at;
+    return _buildMapPerformanceSnapshot(
+      collector: this,
+      windowEndedAt: at,
+      isPartial: true,
+    );
+  }
+
+  List<MapPerformanceSnapshot> advanceWindows(Duration until) {
+    final completed = <MapPerformanceSnapshot>[];
+    while (until >= windowStartedAt + policy.aggregationWindow) {
+      final endedAt = windowStartedAt + policy.aggregationWindow;
+      completed.add(
+        _buildMapPerformanceSnapshot(
+          collector: this,
+          windowEndedAt: endedAt,
+          isPartial: false,
+        ),
+      );
+      _windowStartedAt = endedAt;
+      _aggregates.clear();
+      _lastPartialAt = null;
+    }
+    return List.unmodifiable(completed);
   }
 }
+
+MapPerformanceSnapshot _buildMapPerformanceSnapshot({
+  required MapPerformanceCollector collector,
+  required Duration windowEndedAt,
+  required bool isPartial,
+}) => createMapPerformanceSnapshot(
+  schemaVersion: collector.policy.schemaVersion,
+  clockDomain: collector.policy.clockDomain,
+  windowStartedAt: collector.windowStartedAt,
+  windowEndedAt: windowEndedAt,
+  isPartial: isPartial,
+  metrics: {
+    for (final entry in collector._aggregates.entries)
+      entry.key: entry.value.snapshot(collector.policy.percentiles),
+  },
+  counters: const {},
+);
