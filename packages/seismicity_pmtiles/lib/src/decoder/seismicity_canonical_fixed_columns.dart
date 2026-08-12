@@ -84,6 +84,39 @@ final class SeismicityCanonicalFixedColumns {
     _length++;
   }
 
+  bool matches({
+    required int localIndex,
+    required SeismicityDecodedHypocenter record,
+  }) {
+    final geometryClamped = record.geometryClamped;
+    final geometryValid = SeismicityValidityBitmap.isValid(
+      bytes: _storage.geometryClampedValidity,
+      index: localIndex,
+    );
+    return _storage.globalXs[localIndex] == record.point.globalX &&
+        _storage.globalYs[localIndex] == record.point.globalY &&
+        matchesCanonicalNumber(
+          values: _storage.magnitudes,
+          validity: _storage.magnitudeValidity,
+          index: localIndex,
+          candidate: record.magnitude?.canonicalValue,
+        ) &&
+        matchesCanonicalNumber(
+          values: _storage.depthsKm,
+          validity: _storage.depthValidity,
+          index: localIndex,
+          candidate: record.depthKm?.canonicalValue,
+        ) &&
+        (geometryClamped == null
+            ? !geometryValid
+            : geometryValid &&
+                  SeismicityValidityBitmap.isValid(
+                        bytes: _storage.geometryClampedValues,
+                        index: localIndex,
+                      ) ==
+                      geometryClamped);
+  }
+
   SeismicityCanonicalFixedColumnData build() {
     final bitmapLength = requiredByteLength(valueCount: _length);
     return translateSeismicityCanonicalFixedColumnAllocation(
@@ -110,6 +143,21 @@ final class SeismicityCanonicalFixedColumns {
       ),
     );
   }
+}
+
+bool matchesCanonicalNumber({
+  required Float64List values,
+  required Uint8List validity,
+  required int index,
+  required double? candidate,
+}) {
+  final valid = SeismicityValidityBitmap.isValid(
+    bytes: validity,
+    index: index,
+  );
+  return candidate == null
+      ? !valid
+      : valid && values[index] == (candidate == 0 ? 0 : candidate);
 }
 
 T allocateSeismicityCanonicalFixedColumnData<T>(T Function() create) =>

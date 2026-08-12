@@ -86,6 +86,26 @@ final class SeismicityCanonicalStringColumns {
     _length++;
   }
 
+  bool matches({
+    required int localIndex,
+    required Uint8List? determinationFlagUtf8,
+    required Uint8List? earthquakeEventIdUtf8,
+  }) =>
+      matchesCanonicalUtf8(
+        dictionary: _determinationFlags,
+        indexes: _determinationFlagIndexes,
+        validity: _determinationFlagValidity,
+        index: localIndex,
+        candidate: determinationFlagUtf8,
+      ) &&
+      matchesCanonicalUtf8(
+        dictionary: _earthquakeEventIds,
+        indexes: _earthquakeEventIdIndexes,
+        validity: _earthquakeEventIdValidity,
+        index: localIndex,
+        candidate: earthquakeEventIdUtf8,
+      );
+
   SeismicityCanonicalStringColumnData build() {
     final bitmapLength = requiredByteLength(valueCount: _length);
     final determinationFlags = _determinationFlags.build();
@@ -109,6 +129,26 @@ final class SeismicityCanonicalStringColumns {
       ),
     );
   }
+}
+
+bool matchesCanonicalUtf8({
+  required SeismicityUtf8Dictionary dictionary,
+  required Uint32List indexes,
+  required Uint8List validity,
+  required int index,
+  required Uint8List? candidate,
+}) {
+  final valid = SeismicityValidityBitmap.isValid(
+    bytes: validity,
+    index: index,
+  );
+  return candidate == null
+      ? !valid
+      : valid &&
+            dictionary.equalsAt(
+              index: indexes[index],
+              candidateUtf8: candidate,
+            );
 }
 
 T allocateSeismicityStringColumn<T>(T Function() create) => create();

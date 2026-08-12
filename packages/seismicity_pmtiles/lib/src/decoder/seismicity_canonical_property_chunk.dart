@@ -32,6 +32,17 @@ final class SeismicityCanonicalPropertyChunk {
     );
   }
 
+  bool matches({
+    required int localIndex,
+    required SeismicityDecodedHypocenter record,
+  }) =>
+      _fixed.matches(localIndex: localIndex, record: record) &&
+      _strings.matches(
+        localIndex: localIndex,
+        determinationFlagUtf8: record.determinationFlagUtf8,
+        earthquakeEventIdUtf8: record.earthquakeEventIdUtf8,
+      );
+
   SeismicityCanonicalPropertyChunkData build() => (
     fixed: _fixed.build(),
     strings: _strings.build(),
