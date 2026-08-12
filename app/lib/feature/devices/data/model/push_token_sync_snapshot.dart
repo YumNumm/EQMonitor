@@ -53,7 +53,7 @@ final class PushTokenSyncSnapshot {
         return RetryRunning(attempt: attempt);
       }
     }
-    return const RetryIdle();
+    return  RetryIdle();
   }
 
   Iterable<MapEntry<PushTokenKind, PushTokenKindState>> get kindEntries => [

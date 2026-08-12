@@ -118,9 +118,7 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
-      # AppIntent/Widget Bundle Resources need a slim jma_code_table.json.
-      # Full parameters stay on Managed Background Assets at runtime.
-      - name: Generate GitHub App token (eqmonitor-backend contents:read)
+      - name: Generate GitHub App token
         id: asset-pack-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
@@ -131,7 +129,7 @@ jobs:
             eqmonitor-backend
           permission-contents: read
 
-      - name: Stage iOS native jma_code_table from backend Release
+      - name: Fetch iOS Native jma_code_table from backend Release
         env:
           GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
         run: tool/asset_pack/stage_from_release.sh --target ios-native
@@ -163,16 +161,9 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
-      # Cloud-managed certificates: アーカイブ時は署名しない。
-      # 証明書・プロビジョニングプロファイルはエクスポート時に API Key 経由で自動管理される。
-      # 参考: https://zenn.dev/welchi/articles/flutter-ios-ci-cd-xcode-cloud
       - name: Create XCArchive
         working-directory: app
         run: |
-          # Without pipefail, xcodebuild failures are swallowed by xcbeautify
-          # and the job only fails later when Runner.app is missing.
-          # The pipeline must stay inside `if`, otherwise `bash -e` aborts the
-          # step before the raw log can be dumped.
           set -o pipefail
           if ! xcodebuild archive \
             -workspace ios/Runner.xcworkspace \
@@ -186,14 +177,10 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             VERBOSE_SCRIPT_LOGGING=YES \
             2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions; then
-            # xcbeautify drops actool/ibtoold and Run Script diagnostics,
-            # so surface them explicitly.
             echo "::group::xcodebuild raw errors"
             grep -n -A 5 -E '^(error:|.*\*\* ARCHIVE FAILED)' /tmp/xcodebuild-archive.log || true
             echo "::endgroup::"
             echo "::group::Run Script phase output"
-            # A failing PhaseScriptExecution prints its stdout/stderr right after
-            # the command header; `tail` alone is swallowed by trailing Copy logs.
             awk '/^PhaseScriptExecution/{start = NR} {line[NR] = $0}
                  END {if (start) for (i = start; i <= NR && i < start + 500; i++) print line[i]}' \
               /tmp/xcodebuild-archive.log
@@ -206,7 +193,6 @@ jobs:
             exit 1
           fi
 
-      # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
       - name: Embed entitlements and ad-hoc sign
         working-directory: app
         run: |
@@ -214,7 +200,6 @@ jobs:
             --app build/ios/Runner.xcarchive/Products/Applications/Runner.app \
             --ios-dir ios
 
-      # エクスポート時に App Store Connect API Key で Cloud-managed 署名（証明書はクラウドで管理）
       - name: Create IPA
         working-directory: app
         run: |
@@ -229,11 +214,7 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$KEY_PATH" \
           | xcbeautify --renderer github-actions
-          echo "--------------------------------"
-          ls -lah .
 
-      # Firebase App Distribution 用に ad-hoc(release-testing) 署名の IPA も同じアーカイブから生成。
-      # -allowProvisioningUpdates により Apple Developer 登録済み端末を含む ad-hoc プロファイルが自動生成される。
       - name: Create Ad-Hoc IPA
         working-directory: app
         run: |
@@ -248,8 +229,6 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$KEY_PATH" \
           | xcbeautify --renderer github-actions
-          echo "--------------------------------"
-          ls -lah adhoc
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
@@ -341,7 +320,6 @@ jobs:
               --timeout 30m \
               --output json
           else
-            # asc 3.4.1 の publish testflight は --group 必須のため、アップロードのみの経路では builds upload を使う
             asc builds upload \
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
@@ -353,7 +331,6 @@ jobs:
     needs:
       - build-ios
       - define-matrix
-    # firebase-tools は linux-arm64 バイナリを配布しておらず arm ランナー不可のため x64 を使う
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -397,12 +374,9 @@ jobs:
           name: EQMonitor-ios-adhoc.ipa
           path: build
 
-      - name: List files & rename
+      - name: Rename
         run: |
-          ls -lah build/
           mv build/*.ipa build/app.ipa
-          echo "--------------------------------"
-          ls -lah build/
 
       - name: Output release version
         run: |
@@ -489,10 +463,7 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
-      # Play Asset Delivery install-time pack contents are not committed.
-      # Stage the latest asset-pack-v* Release from eqmonitor-backend into the
-      # Gradle module before building the AAB (see docs/asset-pack-cd.md).
-      - name: Generate GitHub App token (eqmonitor-backend contents:read)
+      - name: Generate GitHub App token
         id: asset-pack-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
@@ -503,7 +474,7 @@ jobs:
             eqmonitor-backend
           permission-contents: read
 
-      - name: Stage Android Asset Pack from backend Release
+      - name: Fetch Android Asset Pack from backend Release
         env:
           GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
         run: tool/asset_pack/stage_from_release.sh --target android
@@ -560,8 +531,6 @@ jobs:
   deploy-android-firebase-app-distribution:
     name: Deploy Android (Firebase App Distribution)
     needs: build-android
-    # firebase-tools は linux-arm64 バイナリを配布しておらず、aqua registry の
-    # supported_envs も amd64 のみ。arm ランナーでは mise --locked が失敗するため x64 を使う
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -605,12 +574,9 @@ jobs:
           name: EQMonitor-android.aab
           path: build
 
-      - name: List files & rename
+      - name: Rename
         run: |
-          ls -lah build/
           mv build/*.aab build/app.aab
-          echo "--------------------------------"
-          ls -lah build/
 
       - name: Output release version
         run: |
@@ -620,15 +586,13 @@ jobs:
 
       - name: Output git log
         run: |
-          # LAST TAG
-           LAST_TAG=$(git describe --tags --abbrev=0)
-           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-           # 最大2000文字
-           head -c 2000 changelog.tmp > changelog.txt
-           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
-             echo '...' >> changelog.txt
-           fi
+          head -c 2000 changelog.tmp > changelog.txt
+          if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
+            echo '...' >> changelog.txt
+          fi
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -719,7 +683,6 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # Google Play API は言語ごとに最大500文字（Unicode）。バイト単位の head では超過し得るため文字数で切る
           python3 << 'PY'
           from pathlib import Path
 
