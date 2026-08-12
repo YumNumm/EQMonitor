@@ -40,6 +40,34 @@ void main() {
       );
     }
   });
+
+  test('reports final descriptor count mismatches separately', () {
+    final under =
+        SeismicityDatasetAccumulator(
+            expectedUniqueCount: 2,
+            chunkCapacity: 2,
+          )
+          ..add(record: row())
+          ..add(record: row());
+    final over = accumulator()..add(record: row());
+
+    expect(
+      under.buildChunks,
+      throwsA(
+        isA<SeismicityPmTilesFeatureCountMismatchException>()
+            .having((error) => error.expected, 'expected', 2)
+            .having((error) => error.actual, 'actual', 1),
+      ),
+    );
+    expect(
+      () => over.add(record: row(id: 2)),
+      throwsA(
+        isA<SeismicityPmTilesFeatureCountMismatchException>()
+            .having((error) => error.expected, 'expected', 1)
+            .having((error) => error.actual, 'actual', 2),
+      ),
+    );
+  });
 }
 
 SeismicityDatasetAccumulator accumulator() => SeismicityDatasetAccumulator(

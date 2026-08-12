@@ -69,8 +69,9 @@ final class SeismicityDatasetAccumulator {
       return false;
     }
     if (_uniqueCount >= _expectedUniqueCount) {
-      throw const SeismicityPmTilesException.invalidDescriptor(
-        reason: 'Dataset unique count exceeds the descriptor.',
+      throw SeismicityPmTilesException.featureCountMismatch(
+        expected: _expectedUniqueCount,
+        actual: _uniqueCount + 1,
       );
     }
 
@@ -100,6 +101,12 @@ final class SeismicityDatasetAccumulator {
 
   List<SeismicityPmTilesChunk> buildChunks() {
     ensureAccumulatorUsable(poisoned: _poisoned);
+    if (_uniqueCount != _expectedUniqueCount) {
+      throw SeismicityPmTilesException.featureCountMismatch(
+        expected: _expectedUniqueCount,
+        actual: _uniqueCount,
+      );
+    }
     return _chunks.map((chunk) => chunk.build()).toList(growable: false);
   }
 }

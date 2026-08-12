@@ -67,7 +67,11 @@ void main() {
 
     expect(
       () => accumulator.add(record: row(id: 4)),
-      throwsA(isA<SeismicityPmTilesInvalidDescriptorException>()),
+      throwsA(
+        isA<SeismicityPmTilesFeatureCountMismatchException>()
+            .having((error) => error.expected, 'expected', 3)
+            .having((error) => error.actual, 'actual', 4),
+      ),
     );
     expect((accumulator.rawCount, accumulator.uniqueCount), (3, 3));
     expect(accumulator.buildChunks().map((chunk) => chunk.latitudes.length), [
