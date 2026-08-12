@@ -33,6 +33,81 @@ void main() {
       expect(action, returnsNormally);
     }
   });
+
+  test('performance public inventory', () {
+    for (final action in performanceSampleInventory()) {
+      expect(action, returnsNormally);
+    }
+  });
+}
+
+List<void Function()> performanceSampleInventory() {
+  final schema = createMapPerformanceSchemaVersion(value: 1);
+  final domain = createMapClockDomainId(value: 'performance');
+  final sample = MapPerformanceSample.duration(
+    schemaVersion: schema,
+    clockDomain: domain,
+    kind: MapPerformanceMetricKind.frameReconciliation,
+    monotonicAt: const Duration(seconds: 1),
+    value: const Duration(microseconds: 1),
+  );
+  final event = createMapPerformanceEvent(frameSequence: 1, sample: sample);
+  return [
+    () => consume(createMapPerformanceSchemaVersion(value: 1)),
+    () => consume(MapPerformanceMetricUnit.values),
+    () => consume(MapPerformanceMetricKind.values),
+    () => consume(
+      mapPerformanceMetricUnitOf(MapPerformanceMetricKind.cacheHit),
+    ),
+    () => consume(
+      MapPerformanceSample.duration(
+        schemaVersion: schema,
+        clockDomain: domain,
+        kind: MapPerformanceMetricKind.frameReconciliation,
+        monotonicAt: Duration.zero,
+        value: Duration.zero,
+      ),
+    ),
+    () => consume(
+      MapPerformanceSample.count(
+        schemaVersion: schema,
+        clockDomain: domain,
+        kind: MapPerformanceMetricKind.cacheHit,
+        monotonicAt: Duration.zero,
+        value: 0,
+      ),
+    ),
+    () => consume(
+      MapPerformanceSample.bytes(
+        schemaVersion: schema,
+        clockDomain: domain,
+        kind: MapPerformanceMetricKind.requestBytes,
+        monotonicAt: Duration.zero,
+        value: 0,
+      ),
+    ),
+    () => consume(createMapPerformanceEvent(frameSequence: 1, sample: sample)),
+    () => consume(event.schemaVersion),
+    () => consume(event.clockDomain),
+    () => consume(
+      mapFrameTimingSamples(
+        timing: FrameTiming(
+          vsyncStart: 0,
+          buildStart: 1,
+          buildFinish: 2,
+          rasterStart: 2,
+          rasterFinish: 3,
+          rasterFinishWallTime: 3,
+        ),
+        schemaVersion: schema,
+        clockDomain: domain,
+        monotonicAt: Duration.zero,
+        frameBudget: createMapFrameBudget(
+          duration: const Duration(microseconds: 3),
+        ),
+      ),
+    ),
+  ];
 }
 
 List<void Function()> renderBatchInventory() {
