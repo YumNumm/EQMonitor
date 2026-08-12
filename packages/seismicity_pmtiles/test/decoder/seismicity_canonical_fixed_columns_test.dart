@@ -50,6 +50,10 @@ void main() {
 
   test('rejects invalid capacity and additions after full', () {
     expect(() => SeismicityCanonicalFixedColumns(capacity: -1), invalid);
+    expect(
+      () => SeismicityCanonicalFixedColumns(capacity: 0x40000000),
+      invalid,
+    );
     final empty = SeismicityCanonicalFixedColumns(capacity: 0);
     expect((empty.length, empty.isFull), (0, true));
     expect(() => empty.add(row: decoded(index: 1)), invalid);
@@ -57,7 +61,76 @@ void main() {
     expect(output.globalXs, isEmpty);
     expect(output.magnitudeValidity, isEmpty);
   });
+
+  test('trims every typed column below capacity', () {
+    final columns = SeismicityCanonicalFixedColumns(capacity: 10)
+      ..add(row: decoded(index: 1));
+
+    expect(columns.isFull, isFalse);
+    final output = columns.build();
+    expect(
+      (
+        globalXs: output.globalXs.length,
+        globalYs: output.globalYs.length,
+        magnitudes: output.magnitudes.length,
+        magnitudeValidity: output.magnitudeValidity.length,
+        depthsKm: output.depthsKm.length,
+        depthValidity: output.depthValidity.length,
+        geometryValues: output.geometryClampedValues.length,
+        geometryValidity: output.geometryClampedValidity.length,
+      ),
+      (
+        globalXs: 1,
+        globalYs: 1,
+        magnitudes: 1,
+        magnitudeValidity: 1,
+        depthsKm: 1,
+        depthValidity: 1,
+        geometryValues: 1,
+        geometryValidity: 1,
+      ),
+    );
+  });
+
+  test('translates constructor allocation errors', () {
+    for (final fail in allocationFailures) {
+      expect(
+        () => SeismicityCanonicalFixedColumns(
+          capacity: 1,
+          allocate: <T>(create) => fail(),
+        ),
+        invalid,
+      );
+    }
+  });
+
+  test('translates build allocation errors without changing rows', () {
+    for (final fail in allocationFailures) {
+      var failNextBuild = true;
+      var allocationCount = 0;
+      final columns = SeismicityCanonicalFixedColumns(
+        capacity: 2,
+        allocate: <T>(create) {
+          allocationCount++;
+          if (allocationCount > 1 && failNextBuild) {
+            failNextBuild = false;
+            fail();
+          }
+          return create();
+        },
+      )..add(row: decoded(index: 1));
+
+      expect(columns.build, invalid);
+      expect(columns.length, 1);
+      expect(columns.build().globalXs, [10]);
+    }
+  });
 }
+
+final allocationFailures = <Never Function()>[
+  () => throw const OutOfMemoryError(),
+  () => throw RangeError('injected allocation failure'),
+];
 
 SeismicityDecodedHypocenter decoded({
   required int index,
