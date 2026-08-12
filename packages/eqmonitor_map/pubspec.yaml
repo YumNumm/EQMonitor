@@ -31,7 +31,7 @@ dev_dependencies:
     path: ../eqmonitor_lints
   flutter_test:
     sdk: flutter
-  freezed: ^3.2.6-dev.1
+  freezed: ^4.0.0-dev.3
 dependency_overrides:
   scene:
     git:
