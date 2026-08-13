@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_icon.dart';
@@ -9,6 +9,7 @@ part of 'intensity_icon.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$IntensityIconDataCopyWithImpl<$Res>
 /// Create a copy of IntensityIconData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? jmaIntensity = null,Object? lpgmIntensity = null,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityIconData(
 jmaIntensity: null == jmaIntensity ? _self.jmaIntensity : jmaIntensity // ignore: cast_nullable_to_non_nullable
 as IntensityIconJmaIntensity,lpgmIntensity: null == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as IntensityIconJmaLpgmIntensity,
@@ -368,7 +369,7 @@ class _$IntensityIconJmaIntensityCopyWithImpl<$Res>
 /// Create a copy of IntensityIconJmaIntensity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? filled = null,Object? small = null,Object? smallWithoutText = null,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityIconJmaIntensity(
 filled: null == filled ? _self.filled : filled // ignore: cast_nullable_to_non_nullable
 as Map<JmaIntensity, Uint8List>,small: null == small ? _self.small : small // ignore: cast_nullable_to_non_nullable
 as Map<JmaIntensity, Uint8List>,smallWithoutText: null == smallWithoutText ? _self.smallWithoutText : smallWithoutText // ignore: cast_nullable_to_non_nullable
@@ -513,7 +514,7 @@ return $default(_that.filled,_that.small,_that.smallWithoutText);case _:
 @JsonSerializable()
 
 class _IntensityIconJmaIntensity implements IntensityIconJmaIntensity {
-  const _IntensityIconJmaIntensity({@MapJmaIntensityUint8ListJsonConverter() required final  Map<JmaIntensity, Uint8List> filled, @MapJmaIntensityUint8ListJsonConverter() required final  Map<JmaIntensity, Uint8List> small, @MapJmaIntensityUint8ListJsonConverter() required final  Map<JmaIntensity, Uint8List> smallWithoutText}): _filled = filled,_small = small,_smallWithoutText = smallWithoutText;
+  const _IntensityIconJmaIntensity({@MapJmaIntensityUint8ListJsonConverter() required  Map<JmaIntensity, Uint8List> filled, @MapJmaIntensityUint8ListJsonConverter() required  Map<JmaIntensity, Uint8List> small, @MapJmaIntensityUint8ListJsonConverter() required  Map<JmaIntensity, Uint8List> smallWithoutText}): _filled = filled,_small = small,_smallWithoutText = smallWithoutText;
   factory _IntensityIconJmaIntensity.fromJson(Map<String, dynamic> json) => _$IntensityIconJmaIntensityFromJson(json);
 
  final  Map<JmaIntensity, Uint8List> _filled;
@@ -655,7 +656,7 @@ class _$IntensityIconJmaLpgmIntensityCopyWithImpl<$Res>
 /// Create a copy of IntensityIconJmaLpgmIntensity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? filled = null,Object? small = null,Object? smallWithoutText = null,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityIconJmaLpgmIntensity(
 filled: null == filled ? _self.filled : filled // ignore: cast_nullable_to_non_nullable
 as Map<JmaLpgmIntensity, Uint8List>,small: null == small ? _self.small : small // ignore: cast_nullable_to_non_nullable
 as Map<JmaLpgmIntensity, Uint8List>,smallWithoutText: null == smallWithoutText ? _self.smallWithoutText : smallWithoutText // ignore: cast_nullable_to_non_nullable
@@ -800,7 +801,7 @@ return $default(_that.filled,_that.small,_that.smallWithoutText);case _:
 @JsonSerializable()
 
 class _IntensityIconJmaLpgmIntensity implements IntensityIconJmaLpgmIntensity {
-  const _IntensityIconJmaLpgmIntensity({@MapJmaLpgmIntensityUint8ListJsonConverter() required final  Map<JmaLpgmIntensity, Uint8List> filled, @MapJmaLpgmIntensityUint8ListJsonConverter() required final  Map<JmaLpgmIntensity, Uint8List> small, @MapJmaLpgmIntensityUint8ListJsonConverter() required final  Map<JmaLpgmIntensity, Uint8List> smallWithoutText}): _filled = filled,_small = small,_smallWithoutText = smallWithoutText;
+  const _IntensityIconJmaLpgmIntensity({@MapJmaLpgmIntensityUint8ListJsonConverter() required  Map<JmaLpgmIntensity, Uint8List> filled, @MapJmaLpgmIntensityUint8ListJsonConverter() required  Map<JmaLpgmIntensity, Uint8List> small, @MapJmaLpgmIntensityUint8ListJsonConverter() required  Map<JmaLpgmIntensity, Uint8List> smallWithoutText}): _filled = filled,_small = small,_smallWithoutText = smallWithoutText;
   factory _IntensityIconJmaLpgmIntensity.fromJson(Map<String, dynamic> json) => _$IntensityIconJmaLpgmIntensityFromJson(json);
 
  final  Map<JmaLpgmIntensity, Uint8List> _filled;

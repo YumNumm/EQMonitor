@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_banner.d
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_fullscreen.dart';
 import 'package:eqmonitor/feature/eew/ui/controller/eew_warning_overlay_back_dispatcher_controller.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_session_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

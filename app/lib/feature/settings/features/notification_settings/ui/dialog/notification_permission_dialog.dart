@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/provider/notification/os_notification_permission.
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

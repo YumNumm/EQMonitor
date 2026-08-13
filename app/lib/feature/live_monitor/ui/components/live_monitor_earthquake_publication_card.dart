@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_publication_time_formatter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorEarthquakePublicationCard extends ConsumerWidget {

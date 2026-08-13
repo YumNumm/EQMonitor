@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_tree.dart';
@@ -9,6 +9,7 @@ part of 'intensity_tree.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$PrefectureIntensityNodeCopyWithImpl<$Res>
 /// Create a copy of PrefectureIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? prefecture = null,Object? cities = null,}) {
-  return _then(_self.copyWith(
+  return _then(PrefectureIntensityNode(
 prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
 as IntensityPrefecture,cities: null == cities ? _self.cities : cities // ignore: cast_nullable_to_non_nullable
 as List<CityIntensityNode>,
@@ -219,7 +220,7 @@ return $default(_that.prefecture,_that.cities);case _:
 @JsonSerializable()
 
 class _PrefectureIntensityNode implements PrefectureIntensityNode {
-  const _PrefectureIntensityNode({required this.prefecture, required final  List<CityIntensityNode> cities}): _cities = cities;
+  const _PrefectureIntensityNode({required this.prefecture, required  List<CityIntensityNode> cities}): _cities = cities;
   factory _PrefectureIntensityNode.fromJson(Map<String, dynamic> json) => _$PrefectureIntensityNodeFromJson(json);
 
 @override final  IntensityPrefecture prefecture;
@@ -356,7 +357,7 @@ class _$IntensityPrefectureCopyWithImpl<$Res>
 /// Create a copy of IntensityPrefecture
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? prefecture = null,Object? maxIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityPrefecture(
 prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterPrefectureItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,
@@ -640,7 +641,7 @@ class _$IntensityRegionCopyWithImpl<$Res>
 /// Create a copy of IntensityRegion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? region = null,Object? maxIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityRegion(
 region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterRegionItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,
@@ -924,7 +925,7 @@ class _$CityIntensityNodeCopyWithImpl<$Res>
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? city = null,Object? maxIntensity = freezed,Object? stations = null,Object? maxLpgmIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CityIntensityNode(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
@@ -1079,7 +1080,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 @JsonSerializable()
 
 class _CityIntensityNode implements CityIntensityNode {
-  const _CityIntensityNode({@EarthquakeParameterCityItemJsonConverter() required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, this.maxLpgmIntensity}): _stations = stations;
+  const _CityIntensityNode({@EarthquakeParameterCityItemJsonConverter() required this.city, required this.maxIntensity, required  List<StationIntensityNode> stations, this.maxLpgmIntensity}): _stations = stations;
   factory _CityIntensityNode.fromJson(Map<String, dynamic> json) => _$CityIntensityNodeFromJson(json);
 
 @override@EarthquakeParameterCityItemJsonConverter() final  EarthquakeParameterCityItem city;
@@ -1220,7 +1221,7 @@ class _$StationIntensityNodeCopyWithImpl<$Res>
 /// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? station = null,Object? intensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StationIntensityNode(
 station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterStationItem,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as IntensityStation?,

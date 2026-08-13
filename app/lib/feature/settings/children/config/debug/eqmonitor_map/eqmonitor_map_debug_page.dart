@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_source_provider.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HypocenterArchiveSelectorSheet extends HookWidget {

@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -128,8 +128,11 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,
-            stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(date: date),
+            stickyHeader: parameter.value.sortBy.showsDateHeader,
+            headerBuilder: (_, date, _) =>
+                parameter.value.sortBy.showsDateHeader
+                ? _DateHeader(date: date)
+                : const SizedBox.shrink(),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [

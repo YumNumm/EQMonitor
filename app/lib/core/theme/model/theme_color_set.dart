@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/theme/model/status_colors.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'theme_color_set.freezed.dart';

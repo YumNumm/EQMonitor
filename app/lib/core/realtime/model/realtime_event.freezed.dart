@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'realtime_event.dart';
@@ -9,6 +9,7 @@ part of 'realtime_event.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 RealtimeEvent _$RealtimeEventFromJson(
@@ -292,7 +293,7 @@ return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that
 @JsonSerializable()
 
 class RealtimeReadyEvent implements RealtimeEvent {
-  const RealtimeReadyEvent({required this.source, final  String? $type}): $type = $type ?? 'ready';
+  const RealtimeReadyEvent({required this.source,  String? $type}): $type = $type ?? 'ready';
   factory RealtimeReadyEvent.fromJson(Map<String, dynamic> json) => _$RealtimeReadyEventFromJson(json);
 
 @override final  RealtimeSource source;
@@ -365,7 +366,7 @@ as RealtimeSource,
 @JsonSerializable()
 
 class RealtimeEewUpsertEvent implements RealtimeEvent {
-  const RealtimeEewUpsertEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'eewUpsert';
+  const RealtimeEewUpsertEvent({required this.record, required this.source,  String? $type}): $type = $type ?? 'eewUpsert';
   factory RealtimeEewUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEewUpsertEventFromJson(json);
 
  final  EewItemWithRelations record;
@@ -449,7 +450,7 @@ $EewItemWithRelationsCopyWith<$Res> get record {
 @JsonSerializable()
 
 class RealtimeEarthquakeUpsertEvent implements RealtimeEvent {
-  const RealtimeEarthquakeUpsertEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'earthquakeUpsert';
+  const RealtimeEarthquakeUpsertEvent({required this.record, required this.source,  String? $type}): $type = $type ?? 'earthquakeUpsert';
   factory RealtimeEarthquakeUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEarthquakeUpsertEventFromJson(json);
 
  final  Earthquake record;
@@ -533,7 +534,7 @@ $EarthquakeCopyWith<$Res> get record {
 @JsonSerializable()
 
 class RealtimeEarthquakeDeleteEvent implements RealtimeEvent {
-  const RealtimeEarthquakeDeleteEvent({required this.eventId, required this.source, final  String? $type}): $type = $type ?? 'earthquakeDelete';
+  const RealtimeEarthquakeDeleteEvent({required this.eventId, required this.source,  String? $type}): $type = $type ?? 'earthquakeDelete';
   factory RealtimeEarthquakeDeleteEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEarthquakeDeleteEventFromJson(json);
 
  final  String eventId;
@@ -608,7 +609,7 @@ as RealtimeSource,
 @JsonSerializable()
 
 class RealtimeTsunamiUpsertEvent implements RealtimeEvent {
-  const RealtimeTsunamiUpsertEvent({required this.eventId, required this.source, this.groupId, final  String? $type}): $type = $type ?? 'tsunamiUpsert';
+  const RealtimeTsunamiUpsertEvent({required this.eventId, required this.source, this.groupId,  String? $type}): $type = $type ?? 'tsunamiUpsert';
   factory RealtimeTsunamiUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeTsunamiUpsertEventFromJson(json);
 
  final  String eventId;
@@ -685,7 +686,7 @@ as String?,
 @JsonSerializable()
 
 class RealtimeTsunamiDeleteEvent implements RealtimeEvent {
-  const RealtimeTsunamiDeleteEvent({required this.eventId, required this.source, this.groupId, final  String? $type}): $type = $type ?? 'tsunamiDelete';
+  const RealtimeTsunamiDeleteEvent({required this.eventId, required this.source, this.groupId,  String? $type}): $type = $type ?? 'tsunamiDelete';
   factory RealtimeTsunamiDeleteEvent.fromJson(Map<String, dynamic> json) => _$RealtimeTsunamiDeleteEventFromJson(json);
 
  final  String eventId;
@@ -762,7 +763,7 @@ as String?,
 @JsonSerializable()
 
 class RealtimeShakeSnapshotEvent implements RealtimeEvent {
-  const RealtimeShakeSnapshotEvent({required this.record, required this.source, final  String? $type}): $type = $type ?? 'shakeSnapshot';
+  const RealtimeShakeSnapshotEvent({required this.record, required this.source,  String? $type}): $type = $type ?? 'shakeSnapshot';
   factory RealtimeShakeSnapshotEvent.fromJson(Map<String, dynamic> json) => _$RealtimeShakeSnapshotEventFromJson(json);
 
  final  RealtimeShakeDetectionSnapshotPayload record;
@@ -846,7 +847,7 @@ $RealtimeShakeDetectionSnapshotPayloadCopyWith<$Res> get record {
 @JsonSerializable()
 
 class RealtimeEstimatedIntensityUpsertEvent implements RealtimeEvent {
-  const RealtimeEstimatedIntensityUpsertEvent({required this.eventId, required this.estimatedIntensityTile, required this.generatedAt, required this.source, final  String? $type}): $type = $type ?? 'estimatedIntensityUpsert';
+  const RealtimeEstimatedIntensityUpsertEvent({required this.eventId, required this.estimatedIntensityTile, required this.generatedAt, required this.source,  String? $type}): $type = $type ?? 'estimatedIntensityUpsert';
   factory RealtimeEstimatedIntensityUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEstimatedIntensityUpsertEventFromJson(json);
 
  final  String eventId;

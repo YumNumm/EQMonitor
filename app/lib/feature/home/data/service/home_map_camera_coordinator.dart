@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart'
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_operation_queue.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

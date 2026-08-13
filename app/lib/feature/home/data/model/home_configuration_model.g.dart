@@ -10,23 +10,18 @@ part of 'home_configuration_model.dart';
 
 _HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_HomeShakeDetectionSettings',
-  json,
-  ($checkedConvert) {
-    final val = _HomeShakeDetectionSettings(
-      show: $checkedConvert('show', (v) => v as bool? ?? true),
-      animationMode: $checkedConvert(
-        'animation_mode',
-        (v) =>
-            $enumDecodeNullable(_$HomeShakeDetectionAnimationModeEnumMap, v) ??
-            HomeShakeDetectionAnimationMode.blink,
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'animationMode': 'animation_mode'},
-);
+) => $checkedCreate('_HomeShakeDetectionSettings', json, ($checkedConvert) {
+  final val = _HomeShakeDetectionSettings(
+    show: $checkedConvert('show', (v) => v as bool? ?? true),
+    animationMode: $checkedConvert(
+      'animation_mode',
+      (v) =>
+          $enumDecodeNullable(_$HomeShakeDetectionAnimationModeEnumMap, v) ??
+          HomeShakeDetectionAnimationMode.blink,
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'animationMode': 'animation_mode'});
 
 Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
   _HomeShakeDetectionSettings instance,

@@ -42,34 +42,29 @@ Map<String, dynamic> _$IntensityIconDataToJson(_IntensityIconData instance) =>
 
 _IntensityIconJmaIntensity _$IntensityIconJmaIntensityFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_IntensityIconJmaIntensity',
-  json,
-  ($checkedConvert) {
-    final val = _IntensityIconJmaIntensity(
-      filled: $checkedConvert(
-        'filled',
-        (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+) => $checkedCreate('_IntensityIconJmaIntensity', json, ($checkedConvert) {
+  final val = _IntensityIconJmaIntensity(
+    filled: $checkedConvert(
+      'filled',
+      (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      small: $checkedConvert(
-        'small',
-        (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+    ),
+    small: $checkedConvert(
+      'small',
+      (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      smallWithoutText: $checkedConvert(
-        'small_without_text',
-        (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+    ),
+    smallWithoutText: $checkedConvert(
+      'small_without_text',
+      (v) => const MapJmaIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'smallWithoutText': 'small_without_text'},
-);
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'smallWithoutText': 'small_without_text'});
 
 Map<String, dynamic> _$IntensityIconJmaIntensityToJson(
   _IntensityIconJmaIntensity instance,
@@ -85,34 +80,29 @@ Map<String, dynamic> _$IntensityIconJmaIntensityToJson(
 
 _IntensityIconJmaLpgmIntensity _$IntensityIconJmaLpgmIntensityFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_IntensityIconJmaLpgmIntensity',
-  json,
-  ($checkedConvert) {
-    final val = _IntensityIconJmaLpgmIntensity(
-      filled: $checkedConvert(
-        'filled',
-        (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+) => $checkedCreate('_IntensityIconJmaLpgmIntensity', json, ($checkedConvert) {
+  final val = _IntensityIconJmaLpgmIntensity(
+    filled: $checkedConvert(
+      'filled',
+      (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      small: $checkedConvert(
-        'small',
-        (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+    ),
+    small: $checkedConvert(
+      'small',
+      (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-      smallWithoutText: $checkedConvert(
-        'small_without_text',
-        (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
-          v as Map<String, dynamic>,
-        ),
+    ),
+    smallWithoutText: $checkedConvert(
+      'small_without_text',
+      (v) => const MapJmaLpgmIntensityUint8ListJsonConverter().fromJson(
+        v as Map<String, dynamic>,
       ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'smallWithoutText': 'small_without_text'},
-);
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'smallWithoutText': 'small_without_text'});
 
 Map<String, dynamic> _$IntensityIconJmaLpgmIntensityToJson(
   _IntensityIconJmaLpgmIntensity instance,

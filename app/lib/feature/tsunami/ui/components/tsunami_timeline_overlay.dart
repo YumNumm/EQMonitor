@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_playback_selecti
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegrams_provider.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_legend.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';

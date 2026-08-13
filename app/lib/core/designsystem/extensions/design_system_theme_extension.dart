@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.d
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 @immutable
 class DesignSystemThemeExtension

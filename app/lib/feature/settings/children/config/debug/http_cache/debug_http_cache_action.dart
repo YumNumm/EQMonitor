@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_entries_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
