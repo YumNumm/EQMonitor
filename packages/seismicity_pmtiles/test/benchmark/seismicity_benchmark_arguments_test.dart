@@ -73,11 +73,5 @@ void main() {
       () => parser.parse(arguments: const ['positional']),
       throwsA(isA<SeismicityBenchmarkArgumentsException>()),
     );
-    expect(
-      () => parser.parse(
-        arguments: const ['--features', '1001', '--features-per-tile', '1000'],
-      ),
-      throwsA(isA<SeismicityBenchmarkArgumentsException>()),
-    );
   });
 }

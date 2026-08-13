@@ -102,15 +102,8 @@ final class SeismicityBenchmarkPositiveIntParser {
         message: 'Invalid integer for $flag: $raw\n$usage',
       );
     }
-    final int value;
-    try {
-      value = int.parse(raw);
-    } on FormatException {
-      throw SeismicityBenchmarkArgumentsException(
-        message: '$flag overflows signed 64-bit: $raw\n$usage',
-      );
-    }
-    if (value <= 0 || value > _maxInt64) {
+    final value = int.tryParse(raw);
+    if (value == null || value <= 0 || value > _maxInt64) {
       throw SeismicityBenchmarkArgumentsException(
         message: '$flag overflows or is non-positive: $raw\n$usage',
       );
