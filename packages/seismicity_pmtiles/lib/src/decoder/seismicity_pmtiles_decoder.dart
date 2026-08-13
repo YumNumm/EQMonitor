@@ -1,6 +1,5 @@
 import 'package:seismicity_pmtiles/src/archive/seismicity_pmtiles_archive.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker.dart';
-import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decode_operation.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decoder_runner.dart';
 
@@ -12,9 +11,6 @@ final class SeismicityPmTilesDecoder {
       );
 
   final SeismicityPmTilesDecoderRunner _runner;
-
-  /// Package-visible default factory for facade contract tests.
-  SeismicityDecoderWorkerFactory get defaultWorkerFactory => _runner.factory;
 
   SeismicityPmTilesDecodeOperation start({
     required SeismicityPmTilesArchive archive,
