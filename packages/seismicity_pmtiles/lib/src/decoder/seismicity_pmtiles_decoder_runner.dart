@@ -7,19 +7,17 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_run_lifecycle.
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decode_operation.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_schema_v1_validator.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_load_state.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 
 /// Non-export runner: archive traversal into an injected worker factory.
 final class SeismicityPmTilesDecoderRunner {
   SeismicityPmTilesDecoderRunner({
-    required SeismicityDecoderWorkerFactory factory,
+    required SeismicityDecoderWorkerFactory this.factory,
     this.schemaValidator = const SeismicitySchemaV1Validator(),
-  }) : _factory = factory;
+  });
 
-  final SeismicityDecoderWorkerFactory _factory;
+  final SeismicityDecoderWorkerFactory factory;
   final SeismicitySchemaV1Validator schemaValidator;
 
   SeismicityPmTilesDecodeOperation start({
@@ -30,12 +28,7 @@ final class SeismicityPmTilesDecoderRunner {
     late final SeismicityPmTilesDecodeOperationController controller;
     controller = SeismicityPmTilesDecodeOperationController(
       onCancel: () async {
-        applyDecision(
-          controller: controller,
-          decision: lifecycle.handle(
-            signal: const SeismicityDecoderRunCancelSignal(),
-          ),
-        );
+        lifecycle.handle(signal: const SeismicityDecoderRunCancelSignal());
       },
     );
     scheduleMicrotask(() {
@@ -61,7 +54,7 @@ final class SeismicityPmTilesDecoderRunner {
       controller.emit(state: const SeismicityPmTilesLoadState.openingSource());
       schemaValidator.validateDescriptor(descriptor: archive.descriptor);
       validateChunkCapacity(chunkCapacity: chunkCapacity);
-      final handle = await _factory.spawn(
+      final handle = await factory.spawn(
         acceptedDescriptor: archive.descriptor,
         chunkCapacity: chunkCapacity,
       );
@@ -80,14 +73,9 @@ final class SeismicityPmTilesDecoderRunner {
         controller.emitProgress(progress: progress);
       }
     } on SeismicityPmTilesException catch (error) {
+      // Task 48: record the sticky failure only. Finish/publish/cleanup come later.
       lifecycle.handle(
         signal: SeismicityDecoderRunSourceFailureSignal(exception: error),
-      );
-      applyDecision(
-        controller: controller,
-        decision: lifecycle.handle(
-          signal: const SeismicityDecoderRunCleanupSucceededSignal(),
-        ),
       );
     }
   }
@@ -106,24 +94,5 @@ final class SeismicityPmTilesDecoderRunner {
       return bytes;
     }
     return Uint8List.fromList(bytes);
-  }
-
-  void applyDecision({
-    required SeismicityPmTilesDecodeOperationController controller,
-    required SeismicityDecoderRunDecision decision,
-  }) {
-    if (!decision.publishResult) {
-      return;
-    }
-    final result = decision.result;
-    if (result == null) {
-      return;
-    }
-    switch (result) {
-      case SeismicityPmTilesSuccess<SeismicityPmTilesDataset>(:final value):
-        controller.completeSuccess(dataset: value);
-      case SeismicityPmTilesFailure<SeismicityPmTilesDataset>(:final exception):
-        controller.completeFailure(exception: exception);
-    }
   }
 }

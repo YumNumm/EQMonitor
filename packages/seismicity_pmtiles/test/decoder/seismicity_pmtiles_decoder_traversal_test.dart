@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decoder_runner.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:test/test.dart';
 
@@ -83,12 +81,12 @@ void main() {
     final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
     final runner = SeismicityPmTilesDecoderRunner(factory: factory);
 
-    final operation = runner.start(archive: archive, chunkCapacity: 1);
+    runner.start(archive: archive, chunkCapacity: 1);
     expect(factory.spawnCount, 0);
-    final result = await operation.result;
-    expect(result, isA<SeismicityPmTilesFailure<SeismicityPmTilesDataset>>());
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     expect(factory.spawnCount, 0);
     expect(handle.decodeCount, 0);
+    expect(archive.readRequests, isEmpty);
   });
 }
 
