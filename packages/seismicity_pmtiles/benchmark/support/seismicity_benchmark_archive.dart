@@ -198,7 +198,7 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
         'determination_flag earthquake_event_id geometry_clamped';
     final values = <VectorTile_Value>[];
     final encodedFeatures = <VectorTile_Feature>[];
-    for (final (featureIndex, feature) in features.indexed) {
+    for (final feature in features) {
       final tags = <int>[];
       void addTag({required int keyIndex, required VectorTile_Value value}) {
         tags
@@ -262,8 +262,9 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
           value: createVectorTileValue(boolValue: geometryClamped),
         );
       }
-      final localX = featureIndex % SeismicityBenchmarkFeatureSource.extent;
-      final localY = tileIndex % SeismicityBenchmarkFeatureSource.extent;
+      final extent = SeismicityBenchmarkFeatureSource.extent;
+      final localX = feature.globalX - tileIndex * extent;
+      final localY = feature.globalY;
       encodedFeatures.add(
         createVectorTileFeature(
           type: VectorTile_GeomType.POINT,

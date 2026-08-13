@@ -1,5 +1,6 @@
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_tile_decoder.dart';
 import 'package:test/test.dart';
 
 import '../../benchmark/support/seismicity_benchmark_archive.dart';
@@ -14,6 +15,12 @@ void main() {
   test(
     'exposes deterministic on-demand archive without retained tiles',
     () async {
+      var expectedTotalPublicBytes = 0;
+      for (var index = 0; index < featureCount; index++) {
+        expectedTotalPublicBytes += featureSource
+            .featureAt(index: index)
+            .expectedPublicBytes;
+      }
       final archive = SeismicityBenchmarkArchive(
         featureCount: featureCount,
         featuresPerTile: featuresPerTile,
@@ -32,7 +39,7 @@ void main() {
         ),
         schemaVersion: 1,
         dataZoom: SeismicityBenchmarkFeatureSource.dataZoom,
-        expectedSizeBytes: archive.expectedTotalPublicBytes,
+        expectedSizeBytes: expectedTotalPublicBytes,
         expectedFeatureCount: featureCount,
         archiveRevision: 'benchmark-$featureCount-$featuresPerTile',
         periodFrom: DateTime.utc(2024),
@@ -49,7 +56,7 @@ void main() {
         archive.lastHypocenterId,
         featureSource.featureAt(index: featureCount - 1).hypocenterId,
       );
-      expect(archive.expectedTotalPublicBytes, greaterThan(featureCount * 52));
+      expect(archive.expectedTotalPublicBytes, expectedTotalPublicBytes);
       expect(
         await archive
             .occupiedTileIdsAtZoom(
@@ -67,6 +74,24 @@ void main() {
       expect(archive.readCount, 2);
       expect(archive.maxRetainedPayloads, 1);
       expect(archive.retainedPayloads, 0);
+
+      final decoded = <({int globalX, int globalY})>[];
+      const SeismicityMvtTileDecoder().decode(
+        tileId: expectedIds[1],
+        dataZoom: SeismicityBenchmarkFeatureSource.dataZoom,
+        tileBytes: archive.tileBytesAt(tileIndex: 1),
+        onHypocenter: (hypocenter) {
+          decoded.add((
+            globalX: hypocenter.point.globalX,
+            globalY: hypocenter.point.globalY,
+          ));
+        },
+      );
+      final sourceFeature = featureSource.featureAt(index: featuresPerTile);
+      expect(
+        decoded.first,
+        (globalX: sourceFeature.globalX, globalY: sourceFeature.globalY),
+      );
 
       for (final tileId in expectedIds) {
         final again = await archive.readTile(tileId: tileId);
