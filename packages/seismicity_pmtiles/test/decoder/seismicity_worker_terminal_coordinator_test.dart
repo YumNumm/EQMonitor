@@ -25,7 +25,7 @@ final class _RecordingProbe implements SeismicityWorkerTerminalProbe {
 }
 
 void main() {
-  test('terminal coordinator covers sticky first-result transition table', () {
+  test('terminal coordinator sticky success then late cleanup', () {
     final probe = _RecordingProbe();
     final coordinator = SeismicityWorkerTerminalCoordinator<String>(
       probe: probe,
@@ -71,6 +71,7 @@ void main() {
     expect(lateCancel.killIsolate, isTrue);
     expect(lateCancel.retire, isFalse);
     expect(lateCancel.preserveFailure, isTrue);
+    expect(lateCancel.probeTransition, isNull);
     expect(lateCancel.outcome, same(success.outcome));
 
     final repeated = coordinator.handle(
@@ -81,105 +82,122 @@ void main() {
     expect(repeated.killIsolate, isFalse);
     expect(repeated.retire, isFalse);
     expect(repeated.preserveFailure, isTrue);
+    expect(repeated.probeTransition, isNull);
     expect(repeated.outcome, same(success.outcome));
   });
 
-  test('terminal coordinator decides crash port-close cancel and failures', () {
-    final probe = _RecordingProbe();
-    final coordinator = SeismicityWorkerTerminalCoordinator<int>(probe: probe);
-
-    final beforeReady = coordinator.handle(
-      signal: const SeismicityWorkerTerminalGracefulExitSignal<int>(),
-    );
-    expect(beforeReady.completePending, isTrue);
-    expect(beforeReady.closePort, isTrue);
-    expect(beforeReady.killIsolate, isFalse);
-    expect(beforeReady.retire, isTrue);
-    expect(
-      beforeReady.outcome,
-      isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
-        (outcome) => outcome.error,
-        'error',
-        isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
-          (error) => error.reason,
-          'reason',
-          'graceful_exit_before_terminal',
-        ),
-      ),
-    );
-    expect(probe.counters.exitCount, 1);
-
-    final sticky = SeismicityWorkerTerminalCoordinator<int>(
-      probe: _RecordingProbe(),
-    );
-    final crash = sticky.handle(
-      signal: const SeismicityWorkerTerminalCrashSignal<int>(message: 'boom'),
-    );
-    expect(crash.killIsolate, isTrue);
-    expect(crash.closePort, isTrue);
-    expect(crash.probeTransition, SeismicityWorkerTerminalTransition.error);
-    expect(
-      crash.outcome,
-      isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
-        (outcome) => outcome.error,
-        'error',
-        isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
-          (error) => error.reason,
-          'reason',
-          'crash:boom',
-        ),
-      ),
+  test('terminal coordinator first-signal matrix', () {
+    const finishError = SeismicityPmTilesException.decoderWorkerFailed(
+      reason: 'finish_failed',
     );
 
-    final portClose =
-        SeismicityWorkerTerminalCoordinator<int>(
-          probe: _RecordingProbe(),
-        ).handle(
-          signal:
-              const SeismicityWorkerTerminalUnexpectedPortCloseSignal<int>(),
-        );
-    expect(portClose.killIsolate, isTrue);
-    expect(portClose.closePort, isTrue);
-    expect(
-      portClose.outcome,
-      isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
-        (outcome) => outcome.error,
-        'error',
-        isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
-          (error) => error.reason,
-          'reason',
-          'unexpected_port_close',
-        ),
-      ),
-    );
-
-    final failure =
-        SeismicityWorkerTerminalCoordinator<int>(
-          probe: _RecordingProbe(),
-        ).handle(
-          signal: const SeismicityWorkerTerminalFailureSignal<int>(
-            error: SeismicityPmTilesException.decoderWorkerFailed(
-              reason: 'finish_failed',
+    final cases =
+        <
+          ({
+            SeismicityWorkerTerminalSignal<int> signal,
+            Matcher outcome,
+            bool killIsolate,
+            SeismicityWorkerTerminalTransition? probeTransition,
+          })
+        >[
+          (
+            signal: const SeismicityWorkerTerminalFailureSignal<int>(
+              error: finishError,
             ),
+            outcome: isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
+              (value) => value.error,
+              'error',
+              same(finishError),
+            ),
+            killIsolate: true,
+            probeTransition: null,
           ),
-        );
-    expect(failure.killIsolate, isTrue);
-    expect(failure.completePending, isTrue);
+          (
+            signal: const SeismicityWorkerTerminalCrashSignal<int>(
+              message: 'boom',
+            ),
+            outcome: isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
+              (value) => value.error,
+              'error',
+              isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
+                (error) => error.reason,
+                'reason',
+                'crash:boom',
+              ),
+            ),
+            killIsolate: true,
+            probeTransition: SeismicityWorkerTerminalTransition.error,
+          ),
+          (
+            signal:
+                const SeismicityWorkerTerminalUnexpectedPortCloseSignal<int>(),
+            outcome: isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
+              (value) => value.error,
+              'error',
+              isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
+                (error) => error.reason,
+                'reason',
+                'unexpected_port_close',
+              ),
+            ),
+            killIsolate: true,
+            probeTransition: null,
+          ),
+          (
+            signal: const SeismicityWorkerTerminalGracefulExitSignal<int>(),
+            outcome: isA<SeismicityWorkerTerminalFailureOutcome<int>>().having(
+              (value) => value.error,
+              'error',
+              isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
+                (error) => error.reason,
+                'reason',
+                'graceful_exit_before_terminal',
+              ),
+            ),
+            killIsolate: false,
+            probeTransition: SeismicityWorkerTerminalTransition.exit,
+          ),
+          (
+            signal: const SeismicityWorkerTerminalCancelSignal<int>(),
+            outcome: isA<SeismicityWorkerTerminalCancelledOutcome<int>>(),
+            killIsolate: true,
+            probeTransition: null,
+          ),
+          (
+            signal: const SeismicityWorkerTerminalCloseSignal<int>(),
+            outcome: isA<SeismicityWorkerTerminalCancelledOutcome<int>>(),
+            killIsolate: true,
+            probeTransition: null,
+          ),
+        ];
 
-    final cancel = SeismicityWorkerTerminalCoordinator<int>(
-      probe: _RecordingProbe(),
-    ).handle(signal: const SeismicityWorkerTerminalCancelSignal<int>());
-    expect(cancel.killIsolate, isTrue);
-    expect(cancel.closePort, isTrue);
-    expect(
-      cancel.outcome,
-      isA<SeismicityWorkerTerminalCancelledOutcome<int>>(),
-    );
-
-    final close = SeismicityWorkerTerminalCoordinator<int>(
-      probe: _RecordingProbe(),
-    ).handle(signal: const SeismicityWorkerTerminalCloseSignal<int>());
-    expect(close.killIsolate, isTrue);
-    expect(close.outcome, isA<SeismicityWorkerTerminalCancelledOutcome<int>>());
+    for (final testCase in cases) {
+      final probe = _RecordingProbe();
+      final decision = SeismicityWorkerTerminalCoordinator<int>(
+        probe: probe,
+      ).handle(signal: testCase.signal);
+      expect(decision.completePending, isTrue);
+      expect(decision.closePort, isTrue);
+      expect(decision.killIsolate, testCase.killIsolate);
+      expect(decision.retire, isTrue);
+      expect(decision.preserveFailure, isFalse);
+      expect(decision.probeTransition, testCase.probeTransition);
+      expect(decision.outcome, testCase.outcome);
+      expect(
+        probe.counters,
+        (
+          errorCount:
+              testCase.probeTransition ==
+                  SeismicityWorkerTerminalTransition.error
+              ? 1
+              : 0,
+          exitCount:
+              testCase.probeTransition ==
+                  SeismicityWorkerTerminalTransition.exit
+              ? 1
+              : 0,
+        ),
+      );
+    }
   });
 }

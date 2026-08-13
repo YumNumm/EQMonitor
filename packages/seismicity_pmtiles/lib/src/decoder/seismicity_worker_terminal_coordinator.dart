@@ -103,38 +103,37 @@ final class SeismicityWorkerTerminalCoordinator<T> {
   }) {
     final prior = _outcome;
     final firstTerminal = prior == null;
-    final SeismicityWorkerTerminalOutcome<T> nextOutcome;
-    if (prior != null) {
-      nextOutcome = prior;
-    } else {
-      nextOutcome = switch (signal) {
-        SeismicityWorkerTerminalSuccessSignal<T>(:final value) =>
-          SeismicityWorkerTerminalSuccessOutcome<T>(value: value),
-        SeismicityWorkerTerminalFailureSignal<T>(:final error) =>
-          SeismicityWorkerTerminalFailureOutcome<T>(error: error),
-        SeismicityWorkerTerminalCrashSignal<T>(:final message) =>
-          SeismicityWorkerTerminalFailureOutcome<T>(
-            error: SeismicityPmTilesException.decoderWorkerFailed(
-              reason: 'crash:$message',
-            ),
+    final nextOutcome = switch ((prior, signal)) {
+      (final existing?, _) => existing,
+      (null, SeismicityWorkerTerminalSuccessSignal<T>(:final value)) =>
+        SeismicityWorkerTerminalSuccessOutcome<T>(value: value),
+      (null, SeismicityWorkerTerminalFailureSignal<T>(:final error)) =>
+        SeismicityWorkerTerminalFailureOutcome<T>(error: error),
+      (null, SeismicityWorkerTerminalCrashSignal<T>(:final message)) =>
+        SeismicityWorkerTerminalFailureOutcome<T>(
+          error: SeismicityPmTilesException.decoderWorkerFailed(
+            reason: 'crash:$message',
           ),
-        SeismicityWorkerTerminalUnexpectedPortCloseSignal<T>() =>
-          SeismicityWorkerTerminalFailureOutcome<T>(
-            error: const SeismicityPmTilesException.decoderWorkerFailed(
-              reason: 'unexpected_port_close',
-            ),
+        ),
+      (null, SeismicityWorkerTerminalUnexpectedPortCloseSignal<T>()) =>
+        SeismicityWorkerTerminalFailureOutcome<T>(
+          error: const SeismicityPmTilesException.decoderWorkerFailed(
+            reason: 'unexpected_port_close',
           ),
-        SeismicityWorkerTerminalGracefulExitSignal<T>() =>
-          SeismicityWorkerTerminalFailureOutcome<T>(
-            error: const SeismicityPmTilesException.decoderWorkerFailed(
-              reason: 'graceful_exit_before_terminal',
-            ),
+        ),
+      (null, SeismicityWorkerTerminalGracefulExitSignal<T>()) =>
+        SeismicityWorkerTerminalFailureOutcome<T>(
+          error: const SeismicityPmTilesException.decoderWorkerFailed(
+            reason: 'graceful_exit_before_terminal',
           ),
+        ),
+      (
+        null,
         SeismicityWorkerTerminalCancelSignal<T>() ||
-        SeismicityWorkerTerminalCloseSignal<T>() =>
-          SeismicityWorkerTerminalCancelledOutcome<T>(),
-      };
-    }
+            SeismicityWorkerTerminalCloseSignal<T>(),
+      ) =>
+        SeismicityWorkerTerminalCancelledOutcome<T>(),
+    };
     _outcome = nextOutcome;
 
     final closePort = !_closedPort;
