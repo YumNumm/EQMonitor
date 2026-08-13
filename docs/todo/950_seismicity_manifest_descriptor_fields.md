@@ -1,6 +1,6 @@
 # 950: Seismicity manifest descriptor fields (stacked backend dependency)
 
-Priority: 950  
+Priority: 950
 Scope: documentation only for #1601. Do **not** implement backend, OpenAPI,
 or app adapter changes in this PR stack.
 

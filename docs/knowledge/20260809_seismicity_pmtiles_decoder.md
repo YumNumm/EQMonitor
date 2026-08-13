@@ -1,6 +1,6 @@
 # Seismicity PMTiles decoder contracts
 
-Date: 2026-08-09  
+Date: 2026-08-09
 Package: `packages/seismicity_pmtiles`
 
 ## Ownership
