@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ErrorCard extends ConsumerWidget {

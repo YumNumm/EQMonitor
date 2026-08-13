@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_app_group_preferences_entries_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_entries_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

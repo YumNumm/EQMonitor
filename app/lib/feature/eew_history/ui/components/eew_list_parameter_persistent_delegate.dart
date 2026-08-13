@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_warning_filter_chip.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EewListParameterPersistentDelegate
     extends SliverPersistentHeaderDelegate {

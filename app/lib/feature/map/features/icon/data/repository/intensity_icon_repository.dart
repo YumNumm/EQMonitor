@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/util/widget_to_image.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_icon_repository.g.dart';

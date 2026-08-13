@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intens
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_icon_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';

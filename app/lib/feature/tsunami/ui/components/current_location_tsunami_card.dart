@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';

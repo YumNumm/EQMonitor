@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DisplaySettingsPage extends StatelessWidget {

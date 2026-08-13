@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';

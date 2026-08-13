@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryConfigPage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [MagnitudeText] の表示バリアント。
 enum MagnitudeTextVariant {

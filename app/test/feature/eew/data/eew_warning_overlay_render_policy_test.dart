@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

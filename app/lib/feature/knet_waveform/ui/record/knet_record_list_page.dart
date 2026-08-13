@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_progress_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_event_stations_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 

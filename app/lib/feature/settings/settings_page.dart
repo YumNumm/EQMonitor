@@ -14,7 +14,7 @@ import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_p
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
