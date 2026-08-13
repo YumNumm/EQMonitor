@@ -125,6 +125,43 @@ source に限って全体を memory に保持します。この挙動を Network
 [PMTiles Version 3 Specification](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
 です。
 
+## Decoder（MVT → typed chunks）
+
+Caller は adapter で `schemaVersion` / `dataZoom` / `archiveRevision` を含む
+descriptor を完成させ、Factory / reader / `SeismicityPmTilesArchive.open` までを
+所有してから decoder を起動します。opened archive は受け入れた
+`archive.descriptor` を唯一の正とし、decoder は archive と `chunkCapacity` だけを
+受け取ります。schema / data zoom の `1` / `14` や URL からの推測は行いません。
+
+```dart
+final operation = SeismicityPmTilesDecoder().start(
+  archive: archive,
+  chunkCapacity: chunkCapacity,
+);
+await for (final state in operation.states) {
+  // openingSource / readingDirectory / decoding / completed / failed / cancelled
+}
+final result = await operation.result;
+await operation.cancel(); // 任意。archive は decoder が閉じる
+```
+
+- schema v1 は 8 プロパティすべてを canonical 比較し、衝突は `duplicateConflict`
+- 数値は finite Float32 スロット、NaN+validity は欠落、明示 0 は valid
+- 同一境界コピーは geometry と全プロパティ一致時のみ dedupe
+- worker は長寿命 isolate で `TransferableTypedData` を受け渡し、公開 facade は
+  実 factory を既定利用する
+- 公開結果は完全 dataset のみ。部分 dataset は返さない
+
+2M 行 correctness harness:
+
+```sh
+mise exec -- dart run packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_decode_benchmark.dart \
+  --features 2000000 --features-per-tile 1000 --chunk-capacity 65536 \
+  --informational-time-threshold-ms 60000
+```
+
+詳細は [`docs/knowledge/20260809_seismicity_pmtiles_decoder.md`](../../docs/knowledge/20260809_seismicity_pmtiles_decoder.md)。
+
 ## 検証
 
 repository root から実行します。
