@@ -1,4 +1,3 @@
-import 'package:seismicity_pmtiles/src/decoder/seismicity_chunk_transfer.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_accumulator.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_transfer.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';

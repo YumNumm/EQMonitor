@@ -51,7 +51,14 @@ void main() {
       ];
 
       final cases =
-          <({String name, SeismicityDatasetTransfer transfer, Matcher error})>[
+          <
+            ({
+              String name,
+              SeismicityDatasetTransfer transfer,
+              SeismicityPmTilesArchiveDescriptor accepted,
+              Matcher error,
+            })
+          >[
             (
               name: 'schema',
               transfer: fixtures.transfer(
@@ -61,6 +68,7 @@ void main() {
                 featureCount: 2,
                 chunks: twoChunks(),
               ),
+              accepted: descriptor,
               error: isA<SeismicityPmTilesDecoderWorkerFailedException>()
                   .having(
                     (error) => error.reason,
@@ -77,6 +85,7 @@ void main() {
                 featureCount: 2,
                 chunks: twoChunks(),
               ),
+              accepted: descriptor,
               error: isA<SeismicityPmTilesDecoderWorkerFailedException>()
                   .having(
                     (error) => error.reason,
@@ -93,6 +102,7 @@ void main() {
                 featureCount: 2,
                 chunks: twoChunks(),
               ),
+              accepted: descriptor,
               error: isA<SeismicityPmTilesDecoderWorkerFailedException>()
                   .having(
                     (error) => error.reason,
@@ -109,6 +119,7 @@ void main() {
                 featureCount: 3,
                 chunks: twoChunks(),
               ),
+              accepted: descriptor,
               error: isA<SeismicityPmTilesFeatureCountMismatchException>(),
             ),
             (
@@ -124,6 +135,7 @@ void main() {
                   ),
                 ],
               ),
+              accepted: descriptor,
               error: isA<SeismicityPmTilesFeatureCountMismatchException>(),
             ),
             (
@@ -139,6 +151,7 @@ void main() {
                   ),
                 ],
               ),
+              accepted: fixtures.descriptor(expectedFeatureCount: 1),
               error: isA<SeismicityPmTilesCorruptArchiveException>(),
             ),
           ];
@@ -147,7 +160,7 @@ void main() {
         expect(
           () => finisher.materialize(
             transfer: testCase.transfer,
-            acceptedDescriptor: descriptor,
+            acceptedDescriptor: testCase.accepted,
           ),
           throwsA(testCase.error),
           reason: testCase.name,
