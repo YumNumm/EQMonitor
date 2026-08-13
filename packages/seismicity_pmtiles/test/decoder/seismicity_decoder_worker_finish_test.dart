@@ -157,9 +157,9 @@ void main() {
       );
       endpoint.send(
         request: SeismicityDecoderWorkerRequest.decode(
-        requestId: 4,
-        tileId: 0,
-        tileBytes: TransferableTypedData.fromList([
+          requestId: 4,
+          tileId: 0,
+          tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(buildSeismicityMvtFixtureCatalog().valid),
           ]),
         ),
@@ -296,9 +296,9 @@ final class _Task41Fixtures {
     for (final tile in tiles) {
       endpoint.send(
         request: SeismicityDecoderWorkerRequest.decode(
-        requestId: requestId,
-        tileId: 0,
-        tileBytes: TransferableTypedData.fromList([
+          requestId: requestId,
+          tileId: 0,
+          tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(tile),
           ]),
         ),

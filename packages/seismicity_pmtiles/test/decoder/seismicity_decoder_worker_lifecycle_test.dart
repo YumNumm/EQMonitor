@@ -28,7 +28,8 @@ void main() {
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
-      () => controlled.sent
+      () =>
+          controlled.sent
               .whereType<SeismicityDecoderWorkerDecodeRequest>()
               .length ==
           1,
@@ -71,7 +72,8 @@ void main() {
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
-      () => controlled.sent
+      () =>
+          controlled.sent
               .whereType<SeismicityDecoderWorkerDecodeRequest>()
               .length ==
           1,
@@ -105,7 +107,8 @@ void main() {
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
-      () => controlled.sent
+      () =>
+          controlled.sent
               .whereType<SeismicityDecoderWorkerDecodeRequest>()
               .length ==
           1,
@@ -132,7 +135,8 @@ void main() {
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
-      () => controlled.sent
+      () =>
+          controlled.sent
               .whereType<SeismicityDecoderWorkerDecodeRequest>()
               .length ==
           1,
@@ -159,7 +163,8 @@ void main() {
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
-      () => closer.sent
+      () =>
+          closer.sent
               .whereType<SeismicityDecoderWorkerDecodeRequest>()
               .length ==
           1,
@@ -178,41 +183,44 @@ void main() {
     expect(closer.closeReceivePortCount, 1);
   });
 
-  test('late exit after success keeps sticky result and retires once', () async {
-    final controlled = ControlledSeismicityIsolateLauncher();
-    final handle = await fixtures.spawnReady(
-      controlled: controlled,
-      expectedFeatureCount: 1,
-    );
-    final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
-    final finish = handle.finish();
-    await fixtures.waitUntil(
-      () => controlled.sent.any(
-        (request) => request is SeismicityDecoderWorkerFinishRequest,
-      ),
-    );
-    final finishId = controlled.sent
-        .whereType<SeismicityDecoderWorkerFinishRequest>()
-        .single
-        .requestId;
-    controlled.emitResponse(
-      response: SeismicityDecoderWorkerResponse.finished(
-        requestId: finishId,
-        datasetTransfer: fixtures.transfer(descriptor: descriptor),
-      ),
-    );
-    final dataset = await finish;
-    await handle.retired;
-    expect(controlled.killCount, 0);
-    expect(controlled.closeReceivePortCount, 1);
+  test(
+    'late exit after success keeps sticky result and retires once',
+    () async {
+      final controlled = ControlledSeismicityIsolateLauncher();
+      final handle = await fixtures.spawnReady(
+        controlled: controlled,
+        expectedFeatureCount: 1,
+      );
+      final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
+      final finish = handle.finish();
+      await fixtures.waitUntil(
+        () => controlled.sent.any(
+          (request) => request is SeismicityDecoderWorkerFinishRequest,
+        ),
+      );
+      final finishId = controlled.sent
+          .whereType<SeismicityDecoderWorkerFinishRequest>()
+          .single
+          .requestId;
+      controlled.emitResponse(
+        response: SeismicityDecoderWorkerResponse.finished(
+          requestId: finishId,
+          datasetTransfer: fixtures.transfer(descriptor: descriptor),
+        ),
+      );
+      final dataset = await finish;
+      await handle.retired;
+      expect(controlled.killCount, 0);
+      expect(controlled.closeReceivePortCount, 1);
 
-    controlled.exit();
-    await handle.cancel();
-    expect(identical(dataset, await finish), isTrue);
-    expect(controlled.killCount, 1);
-    await handle.retired;
-    expect(controlled.killCount, 1);
-  });
+      controlled.exit();
+      await handle.cancel();
+      expect(identical(dataset, await finish), isTrue);
+      expect(controlled.killCount, 1);
+      await handle.retired;
+      expect(controlled.killCount, 1);
+    },
+  );
 }
 
 final class _Task44Fixtures {
@@ -283,7 +291,9 @@ final class _Task44Fixtures {
       probe: controlled,
     );
     final spawnFuture = factory.spawn(
-      acceptedDescriptor: descriptor(expectedFeatureCount: expectedFeatureCount),
+      acceptedDescriptor: descriptor(
+        expectedFeatureCount: expectedFeatureCount,
+      ),
       chunkCapacity: 8,
     );
     await waitUntil(

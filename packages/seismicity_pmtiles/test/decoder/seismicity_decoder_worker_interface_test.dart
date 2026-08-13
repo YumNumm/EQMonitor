@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'dart:typed_data';
+
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 import 'package:test/test.dart';
@@ -26,7 +27,10 @@ void main() {
     final tileBytes = TransferableTypedData.fromList([
       Uint8List.fromList([31]),
     ]);
-    expect(await handle.decode(tileId: 0, tileBytes: tileBytes), same(fake.progress));
+    expect(
+      await handle.decode(tileId: 0, tileBytes: tileBytes),
+      same(fake.progress),
+    );
     expect(fake.tileBytes, same(tileBytes));
     expect(await handle.finish(), same(fake.dataset));
     expect(handle.retired, same(handle.retired));
