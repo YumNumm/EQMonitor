@@ -24,6 +24,7 @@ void main() {
       expectedFeatureCount: 1,
     );
     final pending = handle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
@@ -66,6 +67,7 @@ void main() {
       expectedFeatureCount: 1,
     );
     final pending = handle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
@@ -99,6 +101,7 @@ void main() {
       expectedFeatureCount: 1,
     );
     final pending = handle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
@@ -125,6 +128,7 @@ void main() {
       expectedFeatureCount: 1,
     );
     final pending = handle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(
@@ -151,6 +155,7 @@ void main() {
       expectedFeatureCount: 0,
     );
     final closePending = closeHandle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(

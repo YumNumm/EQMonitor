@@ -1,4 +1,5 @@
 import 'dart:isolate';
+
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
@@ -12,6 +13,7 @@ abstract interface class SeismicityDecoderWorkerFactory {
 
 abstract interface class SeismicityDecoderWorkerHandle {
   Future<SeismicityPmTilesDecodeProgress> decode({
+    required int tileId,
     required TransferableTypedData tileBytes,
   });
   Future<SeismicityPmTilesDataset> finish();

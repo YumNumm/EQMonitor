@@ -69,6 +69,7 @@ final class RecordingWorkerHandle implements SeismicityDecoderWorkerHandle {
 
   @override
   Future<SeismicityPmTilesDecodeProgress> decode({
+    required int tileId,
     required TransferableTypedData tileBytes,
   }) => recordCall();
 

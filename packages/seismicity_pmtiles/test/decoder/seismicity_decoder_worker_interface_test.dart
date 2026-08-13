@@ -26,7 +26,7 @@ void main() {
     final tileBytes = TransferableTypedData.fromList([
       Uint8List.fromList([31]),
     ]);
-    expect(await handle.decode(tileBytes: tileBytes), same(fake.progress));
+    expect(await handle.decode(tileId: 0, tileBytes: tileBytes), same(fake.progress));
     expect(fake.tileBytes, same(tileBytes));
     expect(await handle.finish(), same(fake.dataset));
     expect(handle.retired, same(handle.retired));
@@ -68,6 +68,7 @@ final class WorkerFake
 
   @override
   Future<SeismicityPmTilesDecodeProgress> decode({
+    required int tileId,
     required TransferableTypedData tileBytes,
   }) async {
     this.tileBytes = tileBytes;

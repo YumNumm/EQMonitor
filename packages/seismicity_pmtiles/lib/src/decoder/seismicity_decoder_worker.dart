@@ -257,12 +257,14 @@ final class IsolateSeismicityDecoderWorkerHandle
 
   @override
   Future<SeismicityPmTilesDecodeProgress> decode({
+    required int tileId,
     required TransferableTypedData tileBytes,
   }) {
     final pending = router.registerDecode();
     endpoint.send(
       request: SeismicityDecoderWorkerRequest.decode(
         requestId: pending.requestId,
+        tileId: tileId,
         tileBytes: tileBytes,
       ),
     );

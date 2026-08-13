@@ -57,6 +57,7 @@ final class SeismicityDecoderWorkerSession {
           );
         case SeismicityDecoderWorkerDecodeRequest(
           :final requestId,
+          :final tileId,
           :final tileBytes,
         ):
           if (finished) {
@@ -87,9 +88,8 @@ final class SeismicityDecoderWorkerSession {
             final bytes = Uint8List.fromList(
               tileBytes.materialize().asUint8List(),
             );
-            // Task 38 uses dataZoom 0 / tileId 0; multi-tileId framing lands later.
             decoder.decode(
-              tileId: 0,
+              tileId: tileId,
               dataZoom: descriptor.dataZoom,
               tileBytes: bytes,
               onHypocenter: (record) {

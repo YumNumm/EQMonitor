@@ -17,6 +17,7 @@ sealed class SeismicityDecoderWorkerRequest {
 
   const factory SeismicityDecoderWorkerRequest.decode({
     required int requestId,
+    required int tileId,
     required TransferableTypedData tileBytes,
   }) = SeismicityDecoderWorkerDecodeRequest;
 
@@ -45,9 +46,11 @@ final class SeismicityDecoderWorkerDecodeRequest
     extends SeismicityDecoderWorkerRequest {
   const SeismicityDecoderWorkerDecodeRequest({
     required super.requestId,
+    required this.tileId,
     required this.tileBytes,
   });
 
+  final int tileId;
   final TransferableTypedData tileBytes;
 }
 

@@ -44,7 +44,8 @@ void main() {
       expect(controlled.launchCount, 1);
 
       final firstDecode = handle.decode(
-        tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
+          tileId: 0,
+          tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
       );
       await fixtures.waitUntil(
         () =>
@@ -73,7 +74,8 @@ void main() {
       );
 
       final secondDecode = handle.decode(
-        tileBytes: TransferableTypedData.fromList([Uint8List(2)]),
+          tileId: 0,
+          tileBytes: TransferableTypedData.fromList([Uint8List(2)]),
       );
       await fixtures.waitUntil(
         () =>
@@ -142,6 +144,7 @@ void main() {
       final tileB = fixtures.secondTileBytes();
       expect(
         await handle.decode(
+          tileId: 0,
           tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(tileA),
           ]),
@@ -154,6 +157,7 @@ void main() {
       );
       expect(
         await handle.decode(
+          tileId: 0,
           tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(tileB),
           ]),
@@ -191,6 +195,7 @@ void main() {
     final handle = await spawnFuture;
 
     final pendingDecode = handle.decode(
+      tileId: 0,
       tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
     );
     await fixtures.waitUntil(

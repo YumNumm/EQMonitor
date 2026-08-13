@@ -34,6 +34,7 @@ final class ControlledSeismicityDecoderWorkerHandle
 
   @override
   Future<SeismicityPmTilesDecodeProgress> decode({
+    required int tileId,
     required TransferableTypedData tileBytes,
   }) {
     _decodeCount++;

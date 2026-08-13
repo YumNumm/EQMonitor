@@ -44,6 +44,7 @@ void main() {
       ),
       SeismicityDecoderWorkerRequest.decode(
         requestId: 2,
+        tileId: 0,
         tileBytes: TransferableTypedData.fromList([
           Uint8List.fromList([3, 4, 5]),
         ]),
@@ -87,7 +88,11 @@ void main() {
           expect(acceptedDescriptor.periodFrom, DateTime.utc(2020));
           expect(acceptedDescriptor.periodTo, DateTime.utc(2021));
           expect(chunkCapacity, 128);
-        case SeismicityDecoderWorkerDecodeRequest(:final tileBytes):
+        case SeismicityDecoderWorkerDecodeRequest(
+          :final tileId,
+          :final tileBytes,
+        ):
+          expect(tileId, 0);
           expect(tileBytes.materialize().asUint8List(), [3, 4, 5]);
         case SeismicityDecoderWorkerFinishRequest():
           expect(roundTripped.requestId, 3);

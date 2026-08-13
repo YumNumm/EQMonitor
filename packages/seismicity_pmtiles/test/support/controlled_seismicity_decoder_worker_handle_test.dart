@@ -34,8 +34,8 @@ void main() {
       final secondTileBytes = TransferableTypedData.fromList([
         Uint8List.fromList([2]),
       ]);
-      final decode = handle.decode(tileBytes: firstTileBytes);
-      unawaited(handle.decode(tileBytes: secondTileBytes));
+      final decode = handle.decode(tileId: 0, tileBytes: firstTileBytes);
+      unawaited(handle.decode(tileId: 0, tileBytes: secondTileBytes));
       final finish = handle.finish();
       await Future<void>.delayed(Duration.zero);
 
@@ -60,7 +60,7 @@ void main() {
         Uint8List.fromList([3]),
       ]);
       await expectLater(
-        failingDecode.decode(tileBytes: thirdTileBytes),
+        failingDecode.decode(tileId: 0, tileBytes: thirdTileBytes),
         throwsA(same(failure)),
       );
       expect(failingDecode.capturedTileBytes, isEmpty);

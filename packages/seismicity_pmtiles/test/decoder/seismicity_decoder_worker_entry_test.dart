@@ -49,16 +49,18 @@ void main() {
       );
       endpoint.send(
         request: SeismicityDecoderWorkerRequest.decode(
-          requestId: 2,
-          tileBytes: TransferableTypedData.fromList([
+        requestId: 2,
+        tileId: 0,
+        tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(tileA),
           ]),
         ),
       );
       endpoint.send(
         request: SeismicityDecoderWorkerRequest.decode(
-          requestId: 3,
-          tileBytes: TransferableTypedData.fromList([
+        requestId: 3,
+        tileId: 0,
+        tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(tileB),
           ]),
         ),
@@ -115,8 +117,9 @@ void main() {
 
       endpoint.send(
         request: SeismicityDecoderWorkerRequest.decode(
-          requestId: 10,
-          tileBytes: TransferableTypedData.fromList([
+        requestId: 10,
+        tileId: 0,
+        tileBytes: TransferableTypedData.fromList([
             Uint8List.fromList(buildSeismicityMvtFixtureCatalog().valid),
           ]),
         ),

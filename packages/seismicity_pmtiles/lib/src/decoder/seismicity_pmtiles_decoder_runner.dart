@@ -102,6 +102,7 @@ final class SeismicityPmTilesDecoderRunner {
         final tileBytes = await archive.readTile(tileId: tileId);
         classifyAsWorker = true;
         final progress = await handle.decode(
+          tileId: tileId,
           tileBytes: TransferableTypedData.fromList([
             exactTileBytes(bytes: tileBytes),
           ]),
