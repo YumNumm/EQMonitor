@@ -9,6 +9,7 @@ environment:
 
 resolution: workspace
 dependencies:
+  dio: ^5.11.0
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
   pmtiles_v3:
