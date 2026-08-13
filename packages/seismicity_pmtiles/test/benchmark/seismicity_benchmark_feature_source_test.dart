@@ -13,6 +13,20 @@ void main() {
     final first = source.featureAt(index: 0);
     final middle = source.featureAt(index: 1_000_000);
     final last = source.featureAt(index: 1_999_999);
+    expect(SeismicityBenchmarkFeatureSource.dataZoom, 6);
+    expect(SeismicityBenchmarkFeatureSource.extent, 4096);
+
+    expect((first.globalX, first.globalY), (0, 0));
+    expect(first.longitude, -180.0);
+    expect(first.latitude, closeTo(85.05112877980659, 1e-12));
+
+    expect((middle.globalX, middle.globalY), (213568, 3));
+    expect(middle.longitude, closeTo(113.291015625, 1e-12));
+    expect(middle.latitude, closeTo(85.05077335906596, 1e-12));
+
+    expect((last.globalX, last.globalY), (164991, 7));
+    expect(last.longitude, closeTo(46.580657958984375, 1e-12));
+    expect(last.latitude, closeTo(85.05029942513679, 1e-12));
 
     for (final feature in [first, middle, last]) {
       expect(feature.hypocenterId, Uuid.parse(feature.hypocenterIdText));
