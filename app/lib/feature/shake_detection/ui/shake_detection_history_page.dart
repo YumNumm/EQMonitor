@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_history_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 

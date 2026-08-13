@@ -23,7 +23,7 @@ import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
 import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifi
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

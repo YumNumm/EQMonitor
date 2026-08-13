@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

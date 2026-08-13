@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';

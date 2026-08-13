@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_list_by_e
 import 'package:eqmonitor/feature/telegram_list/ui/components/earthquake_telegram_tile.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';

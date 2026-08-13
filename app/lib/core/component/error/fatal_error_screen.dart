@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FatalErrorScreen extends StatelessWidget {
   const FatalErrorScreen({required this.error, super.key});

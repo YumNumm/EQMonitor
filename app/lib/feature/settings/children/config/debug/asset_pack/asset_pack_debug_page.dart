@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';

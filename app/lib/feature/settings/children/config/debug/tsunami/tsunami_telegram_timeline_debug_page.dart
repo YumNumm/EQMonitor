@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.d
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_meta.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegram_timeline_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 

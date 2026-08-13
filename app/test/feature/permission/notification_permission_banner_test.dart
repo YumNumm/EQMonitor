@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

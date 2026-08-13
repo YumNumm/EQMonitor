@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:eqmonitor/app.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FullScreenCircularProgressIndicator extends StatelessWidget {
   const FullScreenCircularProgressIndicator({super.key});

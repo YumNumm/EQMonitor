@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_to_realtime_notifier.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// タイムシフトで選択できる過去方向のオフセットプリセット。

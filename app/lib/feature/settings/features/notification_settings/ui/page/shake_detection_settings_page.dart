@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:skeletonizer/skeletonizer.dart';

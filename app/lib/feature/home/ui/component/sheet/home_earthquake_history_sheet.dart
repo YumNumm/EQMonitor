@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthqu
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_selector.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

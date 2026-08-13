@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_text_color.freezed.dart';

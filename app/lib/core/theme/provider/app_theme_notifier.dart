@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/theme/migration/theme_migration.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_theme_notifier.g.dart';

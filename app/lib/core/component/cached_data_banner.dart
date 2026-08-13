@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/riverpod.dart';
 
 /// SWR (cache-first) 対象 provider の状態を明示する上部バナー。
