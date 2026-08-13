@@ -21,8 +21,26 @@ void main() {
   final fixtures = _Task60Fixtures();
 
   test('cancel after acknowledgement wins before finish', () async {
-    final setup = fixtures.start();
-    await fixtures.driveThroughAck(setup: setup);
+    final setup = fixtures.start(
+      occupiedTileIds: const [1, 2],
+      tileBytes: {
+        1: Uint8List.fromList([1]),
+        2: Uint8List.fromList([2]),
+      },
+    );
+    await fixtures.waitUntil(() => setup.factory.spawnCount == 1);
+    setup.factory.succeedSpawn();
+    await fixtures.waitUntil(() => setup.handle.decodeCount == 1);
+    setup.archive.pauseBeforeNextRead();
+    setup.handle.succeedDecode(
+      progress: const SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 1,
+        rawFeatureCount: 1,
+        uniqueFeatureCount: 1,
+      ),
+    );
+    await fixtures.waitUntil(() => setup.archive.readRequests.length == 2);
+    expect(setup.handle.finishCount, 0);
 
     final first = setup.operation.cancel();
     final second = setup.operation.cancel();
@@ -38,6 +56,7 @@ void main() {
     expect(setup.archive.closeCount, 1);
     expect(setup.handle.cancelCount, 1);
     expect(setup.handle.closeCount, 1);
+    expect(setup.handle.finishCount, 0);
   });
 
   test('cancel during finish wins before authoritative result', () async {
@@ -254,13 +273,17 @@ final class _Task60Fixtures {
 
   _Task60Setup start({
     void Function(ControlledSeismicityArchive archive)? archiveMutator,
+    List<int> occupiedTileIds = const [1],
+    Map<int, Uint8List>? tileBytes,
   }) {
     final archive = ControlledSeismicityArchive(
       descriptor: descriptor(),
-      occupiedTileIds: const [1],
-      tileBytes: {
-        1: Uint8List.fromList([1]),
-      },
+      occupiedTileIds: occupiedTileIds,
+      tileBytes:
+          tileBytes ??
+          {
+            1: Uint8List.fromList([1]),
+          },
     );
     archiveMutator?.call(archive);
     final handle = ControlledSeismicityDecoderWorkerHandle();
