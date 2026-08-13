@@ -1,7 +1,9 @@
 import 'dart:isolate';
 import 'dart:typed_data';
 
+import 'package:seismicity_pmtiles/src/decoder/seismicity_chunk_transfer.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_accumulator.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_transfer.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protocol.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_tile_decoder.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
@@ -23,6 +25,7 @@ final class SeismicityDecoderWorkerSession {
   SeismicityPmTilesArchiveDescriptor? acceptedDescriptor;
   SeismicityDatasetAccumulator? accumulator;
   var decodedTileCount = 0;
+  var finished = false;
 
   void start() {
     replyTo.send(inbox.sendPort);
@@ -33,7 +36,7 @@ final class SeismicityDecoderWorkerSession {
           acceptedDescriptor: final descriptor,
           :final chunkCapacity,
         ):
-          if (accumulator != null) {
+          if (accumulator != null || finished) {
             replyTo.send(
               SeismicityDecoderWorkerResponse.failure(
                 requestId: requestId,
@@ -56,6 +59,17 @@ final class SeismicityDecoderWorkerSession {
           :final requestId,
           :final tileBytes,
         ):
+          if (finished) {
+            replyTo.send(
+              SeismicityDecoderWorkerResponse.failure(
+                requestId: requestId,
+                error: const SeismicityPmTilesException.decoderWorkerFailed(
+                  reason: 'already_finished',
+                ),
+              ),
+            );
+            break;
+          }
           final activeAccumulator = accumulator;
           final descriptor = acceptedDescriptor;
           if (activeAccumulator == null || descriptor == null) {
@@ -101,9 +115,58 @@ final class SeismicityDecoderWorkerSession {
               ),
             );
           }
-        case SeismicityDecoderWorkerFinishRequest():
-          // Finish/close policy belongs to later terminal tasks.
-          break;
+        case SeismicityDecoderWorkerFinishRequest(:final requestId):
+          if (finished) {
+            replyTo.send(
+              SeismicityDecoderWorkerResponse.failure(
+                requestId: requestId,
+                error: const SeismicityPmTilesException.decoderWorkerFailed(
+                  reason: 'already_finished',
+                ),
+              ),
+            );
+            break;
+          }
+          final activeAccumulator = accumulator;
+          final descriptor = acceptedDescriptor;
+          if (activeAccumulator == null || descriptor == null) {
+            replyTo.send(
+              SeismicityDecoderWorkerResponse.failure(
+                requestId: requestId,
+                error: const SeismicityPmTilesException.decoderWorkerFailed(
+                  reason: 'not_initialized',
+                ),
+              ),
+            );
+            break;
+          }
+          try {
+            final chunks = activeAccumulator.buildValidatedChunks();
+            final transfer = SeismicityDatasetTransfer(
+              archiveRevision: descriptor.archiveRevision,
+              schemaVersion: descriptor.schemaVersion,
+              dataZoom: descriptor.dataZoom,
+              featureCount: descriptor.expectedFeatureCount,
+              chunks: [
+                for (final chunk in chunks)
+                  SeismicityChunkTransfer.fromChunk(chunk: chunk),
+              ],
+            );
+            finished = true;
+            replyTo.send(
+              SeismicityDecoderWorkerResponse.finished(
+                requestId: requestId,
+                datasetTransfer: transfer,
+              ),
+            );
+          } on SeismicityPmTilesException catch (error) {
+            replyTo.send(
+              SeismicityDecoderWorkerResponse.failure(
+                requestId: requestId,
+                error: error,
+              ),
+            );
+          }
       }
     });
   }

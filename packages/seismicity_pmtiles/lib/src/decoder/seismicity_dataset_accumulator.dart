@@ -4,11 +4,13 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_chunk_builder.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoded_hypocenter.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_uuid_index.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SeismicityChunkFactory =
-    SeismicityChunkBuilder Function({required int capacity});
+typedef SeismicityChunkFactory = SeismicityChunkBuilder Function({
+  required int capacity,
+});
 
 final class SeismicityDatasetAccumulator {
   SeismicityDatasetAccumulator({
@@ -108,6 +110,40 @@ final class SeismicityDatasetAccumulator {
       );
     }
     return _chunks.map((chunk) => chunk.build()).toList(growable: false);
+  }
+
+  List<SeismicityPmTilesChunk> buildValidatedChunks() {
+    final chunks = buildChunks();
+    const validator = SeismicityPmTilesChunkValidator();
+    for (final chunk in chunks) {
+      validator.validate(chunk: chunk);
+    }
+    final sum = const SeismicityChunkLengthSummer().sumChecked(chunks: chunks);
+    if (sum != _uniqueCount) {
+      throw SeismicityPmTilesException.featureCountMismatch(
+        expected: _uniqueCount,
+        actual: sum,
+      );
+    }
+    return chunks;
+  }
+}
+
+final class SeismicityChunkLengthSummer {
+  const SeismicityChunkLengthSummer();
+
+  int sumChecked({required List<SeismicityPmTilesChunk> chunks}) {
+    var sum = 0;
+    for (final chunk in chunks) {
+      final length = chunk.latitudes.length;
+      if (length < 0 || length > 0x3fffffff || sum > 0x3fffffff - length) {
+        throw const SeismicityPmTilesException.corruptArchive(
+          reason: 'Chunk length sum overflowed.',
+        );
+      }
+      sum += length;
+    }
+    return sum;
   }
 }
 
