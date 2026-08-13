@@ -65,6 +65,23 @@ void main() {
     expect(cancelCount, 1);
   });
 
+  test('sync cancel failure stays memoized for later calls', () async {
+    var cancelCount = 0;
+    final controller = SeismicityPmTilesDecodeOperationController(
+      onCancel: () {
+        cancelCount += 1;
+        throw StateError('sync-cancel-failure');
+      },
+    );
+    final SeismicityPmTilesDecodeOperation operation = controller.operation;
+    final first = operation.cancel();
+    final second = operation.cancel();
+    await expectLater(first, throwsA(isA<StateError>()));
+    await expectLater(second, throwsA(isA<StateError>()));
+    expect(identical(first, second), isTrue);
+    expect(cancelCount, 1);
+  });
+
   test('failure and cancel complete one terminal result', () async {
     const failure = SeismicityPmTilesException.corruptArchive(reason: 'boom');
     final failed = SeismicityPmTilesDecodeOperationController();

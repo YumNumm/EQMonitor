@@ -94,7 +94,9 @@ final class SeismicityPmTilesDecodeOperationController
       return existing;
     }
     final onCancel = _onCancel;
-    final future = onCancel == null ? Future<void>.value() : onCancel();
+    final future = onCancel == null
+        ? Future<void>.value()
+        : Future<void>.sync(onCancel);
     _cancelFuture = future;
     return future;
   }
