@@ -119,8 +119,8 @@ final class SeismicityPmTilesArchiveOpener {
   }) async {
     try {
       await reader.close();
-      // Reader implementations may throw any error while closing; cleanup must
-      // preserve the original open failure regardless of its type.
+      // Reader implementations may throw unexpected errors while closing;
+      // cleanup must preserve the original open failure regardless of type.
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       // The original open failure and stack are the authoritative failure.
