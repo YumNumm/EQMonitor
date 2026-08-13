@@ -53,17 +53,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 ---
 
-### Task 1: 現状契約の回帰ピン（ローカル verified + 欠損/破損）
-
-**Files:**
-- Test: `packages/eqmonitor_map/test/tile/verified_source_contract_test.dart`（新規）
-- Modify: なし（RED なら既存境界のみ最小修正）
-
-**Interfaces:**
-- Consumes: `VerifiedPmTilesSource`, `BaseMapTileRepository`, MVT typed exceptions
-- Produces: ローカル identity fixture が「欠損=null / 破損=typed」を固定する回帰
-
-- [ ] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
+- [x] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
 - [ ] **Step 2: Run** `mise exec -- dart test packages/eqmonitor_map/test/tile/verified_source_contract_test.dart`
 - [ ] **Step 3: Fix only if RED** at the owning boundary.
 - [ ] **Step 4: Re-run GREEN**
