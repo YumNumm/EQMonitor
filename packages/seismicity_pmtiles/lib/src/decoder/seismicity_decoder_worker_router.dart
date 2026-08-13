@@ -71,6 +71,18 @@ final class SeismicityDecoderWorkerRouter {
     return requestId;
   }
 
+  void failPending({required SeismicityPmTilesException error}) {
+    final pending = List<Completer<SeismicityPmTilesDecodeProgress>>.of(
+      _pending.values,
+    );
+    _pending.clear();
+    for (final completer in pending) {
+      if (!completer.isCompleted) {
+        completer.completeError(error);
+      }
+    }
+  }
+
   void handleResponse({required SeismicityDecoderWorkerResponse response}) {
     switch (response) {
       case SeismicityDecoderWorkerReadyResponse(:final requestId):

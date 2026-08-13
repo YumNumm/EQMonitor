@@ -89,6 +89,7 @@ final class IsolateSeismicityDecoderWorkerHandle
   var _bootstrapped = false;
   var _cancelStarted = false;
   var _closeStarted = false;
+  var _finishRequested = false;
 
   Future<void> bootstrap({required int chunkCapacity}) async {
     if (_bootstrapped) {
@@ -180,6 +181,29 @@ final class IsolateSeismicityDecoderWorkerHandle
     decision,
   }) {
     router.markTerminal();
+    if (decision.completePending) {
+      final error = switch (decision.outcome) {
+        SeismicityWorkerTerminalFailureOutcome<SeismicityPmTilesDataset>(
+          :final error,
+        ) =>
+          error,
+        SeismicityWorkerTerminalCancelledOutcome<SeismicityPmTilesDataset>() =>
+          const SeismicityPmTilesException.decoderWorkerFailed(
+            reason: 'cancelled',
+          ),
+        SeismicityWorkerTerminalSuccessOutcome<SeismicityPmTilesDataset>() =>
+          null,
+      };
+      if (error != null) {
+        if (!_ready.isCompleted) {
+          _ready.completeError(error);
+        }
+        router.failPending(error: error);
+        if (_finishRequested && !_finish.isCompleted) {
+          _finish.completeError(error);
+        }
+      }
+    }
     if (decision.closePort) {
       endpoint.closeReceivePort();
       _initializeReplyPort.close();
@@ -208,6 +232,7 @@ final class IsolateSeismicityDecoderWorkerHandle
 
   @override
   Future<SeismicityPmTilesDataset> finish() {
+    _finishRequested = true;
     final requestId = router.allocateRequestId();
     endpoint.send(
       request: SeismicityDecoderWorkerRequest.finish(requestId: requestId),

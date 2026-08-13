@@ -8,6 +8,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protoco
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:test/test.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
@@ -169,6 +170,55 @@ void main() {
       expect(dataset.chunks.single.latitudes, hasLength(2));
     },
   );
+
+  test('cancel settles pending decode without worker cancel request', () async {
+    final controlled = ControlledSeismicityIsolateLauncher();
+    final factory = IsolateSeismicityDecoderWorkerFactory(
+      launcher: controlled,
+      probe: controlled,
+    );
+    final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
+    final spawnFuture = factory.spawn(
+      acceptedDescriptor: descriptor,
+      chunkCapacity: 8,
+    );
+    await fixtures.waitUntil(
+      () => controlled.sent.any(
+        (request) => request is SeismicityDecoderWorkerInitializeRequest,
+      ),
+    );
+    controlled.emitReady(requestId: 0);
+    final handle = await spawnFuture;
+
+    final pendingDecode = handle.decode(
+      tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
+    );
+    await fixtures.waitUntil(
+      () =>
+          controlled.sent
+              .whereType<SeismicityDecoderWorkerDecodeRequest>()
+              .length ==
+          1,
+    );
+    final pendingExpectation = expectLater(
+      pendingDecode,
+      throwsA(
+        isA<SeismicityPmTilesException>().having(
+          (error) => error.toString(),
+          'toString',
+          contains('cancelled'),
+        ),
+      ),
+    );
+    await handle.cancel();
+    await pendingExpectation;
+    await handle.retired;
+    expect(
+      controlled.sent.whereType<SeismicityDecoderWorkerFinishRequest>(),
+      isEmpty,
+    );
+    expect(controlled.killCount, greaterThan(0));
+  });
 }
 
 final class _Task43Fixtures {
