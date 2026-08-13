@@ -61,6 +61,36 @@ sealed class SeismicityPmTilesException
     required SeismicityPmTilesSource source,
   }) = SeismicityPmTilesClosedException;
 
+  const factory SeismicityPmTilesException.unsupportedSchema({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesUnsupportedSchemaException;
+
+  const factory SeismicityPmTilesException.invalidVectorTile({
+    required int tileId,
+    required String reason,
+  }) = SeismicityPmTilesInvalidVectorTileException;
+
+  const factory SeismicityPmTilesException.invalidHypocenterFeature({
+    required int tileId,
+    required int featureIndex,
+    required String field,
+    required String reason,
+  }) = SeismicityPmTilesInvalidHypocenterFeatureException;
+
+  const factory SeismicityPmTilesException.duplicateConflict({
+    required String hypocenterId,
+  }) = SeismicityPmTilesDuplicateConflictException;
+
+  const factory SeismicityPmTilesException.featureCountMismatch({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesFeatureCountMismatchException;
+
+  const factory SeismicityPmTilesException.decoderWorkerFailed({
+    required String reason,
+  }) = SeismicityPmTilesDecoderWorkerFailedException;
+
   const factory SeismicityPmTilesException.tileNotFound({
     required int tileId,
   }) = SeismicityPmTilesTileNotFoundException;

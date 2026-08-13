@@ -120,6 +120,13 @@ void main() {
       SeismicityPmTilesLoadState.idle(),
       SeismicityPmTilesLoadState.openingSource(),
       SeismicityPmTilesLoadState.readingDirectory(),
+      SeismicityPmTilesLoadState.decoding(
+        progress: const SeismicityPmTilesDecodeProgress(
+          decodedTileCount: 1,
+          rawFeatureCount: 1,
+          uniqueFeatureCount: 1,
+        ),
+      ),
       SeismicityPmTilesLoadState.completed(),
       SeismicityPmTilesLoadState.failed(
         exception: SeismicityPmTilesException.invalidDescriptor(
@@ -136,6 +143,7 @@ void main() {
           SeismicityPmTilesLoadIdle() => 'idle',
           SeismicityPmTilesLoadOpeningSource() => 'openingSource',
           SeismicityPmTilesLoadReadingDirectory() => 'readingDirectory',
+          SeismicityPmTilesLoadDecoding() => 'decoding',
           SeismicityPmTilesLoadCompleted() => 'completed',
           SeismicityPmTilesLoadFailed() => 'failed',
           SeismicityPmTilesLoadCancelled() => 'cancelled',
@@ -145,6 +153,7 @@ void main() {
         'idle',
         'openingSource',
         'readingDirectory',
+        'decoding',
         'completed',
         'failed',
         'cancelled',
@@ -177,5 +186,45 @@ void main() {
     ];
 
     expect(failures, everyElement(isA<Exception>()));
+  });
+
+  test('decoder exception cases expose their concrete public types', () {
+    const unsupported = SeismicityPmTilesException.unsupportedSchema(
+      expected: 1,
+      actual: 2,
+    );
+    const invalidTile = SeismicityPmTilesException.invalidVectorTile(
+      tileId: 42,
+      reason: 'malformed_protobuf',
+    );
+    const invalidFeature = SeismicityPmTilesException.invalidHypocenterFeature(
+      tileId: 42,
+      featureIndex: 3,
+      field: 'hypocenter_id',
+      reason: 'missing_required_field',
+    );
+    const conflict = SeismicityPmTilesException.duplicateConflict(
+      hypocenterId: '123e4567-e89b-12d3-a456-426614174000',
+    );
+    const mismatch = SeismicityPmTilesException.featureCountMismatch(
+      expected: 2,
+      actual: 1,
+    );
+    const workerFailure = SeismicityPmTilesException.decoderWorkerFailed(
+      reason: 'worker_exited',
+    );
+
+    expect(unsupported, isA<SeismicityPmTilesUnsupportedSchemaException>());
+    expect(invalidTile, isA<SeismicityPmTilesInvalidVectorTileException>());
+    expect(
+      invalidFeature,
+      isA<SeismicityPmTilesInvalidHypocenterFeatureException>(),
+    );
+    expect(conflict, isA<SeismicityPmTilesDuplicateConflictException>());
+    expect(mismatch, isA<SeismicityPmTilesFeatureCountMismatchException>());
+    expect(
+      workerFailure,
+      isA<SeismicityPmTilesDecoderWorkerFailedException>(),
+    );
   });
 }

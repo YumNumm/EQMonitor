@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'seismicity_pmtiles_exception.dart';
@@ -9,6 +9,7 @@ part of 'seismicity_pmtiles_exception.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -55,7 +56,7 @@ extension SeismicityPmTilesExceptionPatterns on SeismicityPmTilesException {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult Function( SeismicityPmTilesNetworkRequestFailedException value)?  networkRequestFailed,TResult Function( SeismicityPmTilesInvalidNetworkResponseException value)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesArchiveChangedException value)?  archiveChanged,TResult Function( SeismicityPmTilesCancelledException value)?  cancelled,TResult Function( SeismicityPmTilesClosedException value)?  closed,TResult Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult Function( SeismicityPmTilesNetworkRequestFailedException value)?  networkRequestFailed,TResult Function( SeismicityPmTilesInvalidNetworkResponseException value)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesArchiveChangedException value)?  archiveChanged,TResult Function( SeismicityPmTilesCancelledException value)?  cancelled,TResult Function( SeismicityPmTilesClosedException value)?  closed,TResult Function( SeismicityPmTilesUnsupportedSchemaException value)?  unsupportedSchema,TResult Function( SeismicityPmTilesInvalidVectorTileException value)?  invalidVectorTile,TResult Function( SeismicityPmTilesInvalidHypocenterFeatureException value)?  invalidHypocenterFeature,TResult Function( SeismicityPmTilesDuplicateConflictException value)?  duplicateConflict,TResult Function( SeismicityPmTilesFeatureCountMismatchException value)?  featureCountMismatch,TResult Function( SeismicityPmTilesDecoderWorkerFailedException value)?  decoderWorkerFailed,TResult Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
@@ -69,7 +70,13 @@ return networkRequestFailed(_that);case SeismicityPmTilesInvalidNetworkResponseE
 return invalidNetworkResponse(_that);case SeismicityPmTilesArchiveChangedException() when archiveChanged != null:
 return archiveChanged(_that);case SeismicityPmTilesCancelledException() when cancelled != null:
 return cancelled(_that);case SeismicityPmTilesClosedException() when closed != null:
-return closed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
+return closed(_that);case SeismicityPmTilesUnsupportedSchemaException() when unsupportedSchema != null:
+return unsupportedSchema(_that);case SeismicityPmTilesInvalidVectorTileException() when invalidVectorTile != null:
+return invalidVectorTile(_that);case SeismicityPmTilesInvalidHypocenterFeatureException() when invalidHypocenterFeature != null:
+return invalidHypocenterFeature(_that);case SeismicityPmTilesDuplicateConflictException() when duplicateConflict != null:
+return duplicateConflict(_that);case SeismicityPmTilesFeatureCountMismatchException() when featureCountMismatch != null:
+return featureCountMismatch(_that);case SeismicityPmTilesDecoderWorkerFailedException() when decoderWorkerFailed != null:
+return decoderWorkerFailed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
 return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that);case _:
   return orElse();
@@ -89,7 +96,7 @@ return invalidTileId(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesInvalidDescriptorException value)  invalidDescriptor,required TResult Function( SeismicityPmTilesInvalidRangeException value)  invalidRange,required TResult Function( SeismicityPmTilesCorruptArchiveException value)  corruptArchive,required TResult Function( SeismicityPmTilesUnsupportedCompressionException value)  unsupportedCompression,required TResult Function( SeismicityPmTilesUnsupportedSourceException value)  unsupportedSource,required TResult Function( SeismicityPmTilesSourceReadFailedException value)  sourceReadFailed,required TResult Function( SeismicityPmTilesNetworkRequestFailedException value)  networkRequestFailed,required TResult Function( SeismicityPmTilesInvalidNetworkResponseException value)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesArchiveChangedException value)  archiveChanged,required TResult Function( SeismicityPmTilesCancelledException value)  cancelled,required TResult Function( SeismicityPmTilesClosedException value)  closed,required TResult Function( SeismicityPmTilesTileNotFoundException value)  tileNotFound,required TResult Function( SeismicityPmTilesInvalidTileIdException value)  invalidTileId,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesInvalidDescriptorException value)  invalidDescriptor,required TResult Function( SeismicityPmTilesInvalidRangeException value)  invalidRange,required TResult Function( SeismicityPmTilesCorruptArchiveException value)  corruptArchive,required TResult Function( SeismicityPmTilesUnsupportedCompressionException value)  unsupportedCompression,required TResult Function( SeismicityPmTilesUnsupportedSourceException value)  unsupportedSource,required TResult Function( SeismicityPmTilesSourceReadFailedException value)  sourceReadFailed,required TResult Function( SeismicityPmTilesNetworkRequestFailedException value)  networkRequestFailed,required TResult Function( SeismicityPmTilesInvalidNetworkResponseException value)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesArchiveChangedException value)  archiveChanged,required TResult Function( SeismicityPmTilesCancelledException value)  cancelled,required TResult Function( SeismicityPmTilesClosedException value)  closed,required TResult Function( SeismicityPmTilesUnsupportedSchemaException value)  unsupportedSchema,required TResult Function( SeismicityPmTilesInvalidVectorTileException value)  invalidVectorTile,required TResult Function( SeismicityPmTilesInvalidHypocenterFeatureException value)  invalidHypocenterFeature,required TResult Function( SeismicityPmTilesDuplicateConflictException value)  duplicateConflict,required TResult Function( SeismicityPmTilesFeatureCountMismatchException value)  featureCountMismatch,required TResult Function( SeismicityPmTilesDecoderWorkerFailedException value)  decoderWorkerFailed,required TResult Function( SeismicityPmTilesTileNotFoundException value)  tileNotFound,required TResult Function( SeismicityPmTilesInvalidTileIdException value)  invalidTileId,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException():
@@ -103,7 +110,13 @@ return networkRequestFailed(_that);case SeismicityPmTilesInvalidNetworkResponseE
 return invalidNetworkResponse(_that);case SeismicityPmTilesArchiveChangedException():
 return archiveChanged(_that);case SeismicityPmTilesCancelledException():
 return cancelled(_that);case SeismicityPmTilesClosedException():
-return closed(_that);case SeismicityPmTilesTileNotFoundException():
+return closed(_that);case SeismicityPmTilesUnsupportedSchemaException():
+return unsupportedSchema(_that);case SeismicityPmTilesInvalidVectorTileException():
+return invalidVectorTile(_that);case SeismicityPmTilesInvalidHypocenterFeatureException():
+return invalidHypocenterFeature(_that);case SeismicityPmTilesDuplicateConflictException():
+return duplicateConflict(_that);case SeismicityPmTilesFeatureCountMismatchException():
+return featureCountMismatch(_that);case SeismicityPmTilesDecoderWorkerFailedException():
+return decoderWorkerFailed(_that);case SeismicityPmTilesTileNotFoundException():
 return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException():
 return invalidTileId(_that);}
 }
@@ -119,7 +132,7 @@ return invalidTileId(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult? Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult? Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult? Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult? Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult? Function( SeismicityPmTilesNetworkRequestFailedException value)?  networkRequestFailed,TResult? Function( SeismicityPmTilesInvalidNetworkResponseException value)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesArchiveChangedException value)?  archiveChanged,TResult? Function( SeismicityPmTilesCancelledException value)?  cancelled,TResult? Function( SeismicityPmTilesClosedException value)?  closed,TResult? Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult? Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesInvalidDescriptorException value)?  invalidDescriptor,TResult? Function( SeismicityPmTilesInvalidRangeException value)?  invalidRange,TResult? Function( SeismicityPmTilesCorruptArchiveException value)?  corruptArchive,TResult? Function( SeismicityPmTilesUnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( SeismicityPmTilesUnsupportedSourceException value)?  unsupportedSource,TResult? Function( SeismicityPmTilesSourceReadFailedException value)?  sourceReadFailed,TResult? Function( SeismicityPmTilesNetworkRequestFailedException value)?  networkRequestFailed,TResult? Function( SeismicityPmTilesInvalidNetworkResponseException value)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesArchiveChangedException value)?  archiveChanged,TResult? Function( SeismicityPmTilesCancelledException value)?  cancelled,TResult? Function( SeismicityPmTilesClosedException value)?  closed,TResult? Function( SeismicityPmTilesUnsupportedSchemaException value)?  unsupportedSchema,TResult? Function( SeismicityPmTilesInvalidVectorTileException value)?  invalidVectorTile,TResult? Function( SeismicityPmTilesInvalidHypocenterFeatureException value)?  invalidHypocenterFeature,TResult? Function( SeismicityPmTilesDuplicateConflictException value)?  duplicateConflict,TResult? Function( SeismicityPmTilesFeatureCountMismatchException value)?  featureCountMismatch,TResult? Function( SeismicityPmTilesDecoderWorkerFailedException value)?  decoderWorkerFailed,TResult? Function( SeismicityPmTilesTileNotFoundException value)?  tileNotFound,TResult? Function( SeismicityPmTilesInvalidTileIdException value)?  invalidTileId,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
@@ -133,7 +146,13 @@ return networkRequestFailed(_that);case SeismicityPmTilesInvalidNetworkResponseE
 return invalidNetworkResponse(_that);case SeismicityPmTilesArchiveChangedException() when archiveChanged != null:
 return archiveChanged(_that);case SeismicityPmTilesCancelledException() when cancelled != null:
 return cancelled(_that);case SeismicityPmTilesClosedException() when closed != null:
-return closed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
+return closed(_that);case SeismicityPmTilesUnsupportedSchemaException() when unsupportedSchema != null:
+return unsupportedSchema(_that);case SeismicityPmTilesInvalidVectorTileException() when invalidVectorTile != null:
+return invalidVectorTile(_that);case SeismicityPmTilesInvalidHypocenterFeatureException() when invalidHypocenterFeature != null:
+return invalidHypocenterFeature(_that);case SeismicityPmTilesDuplicateConflictException() when duplicateConflict != null:
+return duplicateConflict(_that);case SeismicityPmTilesFeatureCountMismatchException() when featureCountMismatch != null:
+return featureCountMismatch(_that);case SeismicityPmTilesDecoderWorkerFailedException() when decoderWorkerFailed != null:
+return decoderWorkerFailed(_that);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
 return tileNotFound(_that);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that);case _:
   return null;
@@ -152,7 +171,7 @@ return invalidTileId(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult Function( SeismicityPmTilesSource source)?  cancelled,TResult Function( SeismicityPmTilesSource source)?  closed,TResult Function( int tileId)?  tileNotFound,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult Function( SeismicityPmTilesSource source)?  cancelled,TResult Function( SeismicityPmTilesSource source)?  closed,TResult Function( int expected,  int actual)?  unsupportedSchema,TResult Function( int tileId,  String reason)?  invalidVectorTile,TResult Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult Function( String hypocenterId)?  duplicateConflict,TResult Function( int expected,  int actual)?  featureCountMismatch,TResult Function( String reason)?  decoderWorkerFailed,TResult Function( int tileId)?  tileNotFound,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
@@ -165,7 +184,13 @@ return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTile
 return invalidNetworkResponse(_that.source,_that.statusCode,_that.reason);case SeismicityPmTilesArchiveChangedException() when archiveChanged != null:
 return archiveChanged(_that.source,_that.expectedEtag,_that.receivedEtag,_that.statusCode);case SeismicityPmTilesCancelledException() when cancelled != null:
 return cancelled(_that.source);case SeismicityPmTilesClosedException() when closed != null:
-return closed(_that.source);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
+return closed(_that.source);case SeismicityPmTilesUnsupportedSchemaException() when unsupportedSchema != null:
+return unsupportedSchema(_that.expected,_that.actual);case SeismicityPmTilesInvalidVectorTileException() when invalidVectorTile != null:
+return invalidVectorTile(_that.tileId,_that.reason);case SeismicityPmTilesInvalidHypocenterFeatureException() when invalidHypocenterFeature != null:
+return invalidHypocenterFeature(_that.tileId,_that.featureIndex,_that.field,_that.reason);case SeismicityPmTilesDuplicateConflictException() when duplicateConflict != null:
+return duplicateConflict(_that.hypocenterId);case SeismicityPmTilesFeatureCountMismatchException() when featureCountMismatch != null:
+return featureCountMismatch(_that.expected,_that.actual);case SeismicityPmTilesDecoderWorkerFailedException() when decoderWorkerFailed != null:
+return decoderWorkerFailed(_that.reason);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
 return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
   return orElse();
@@ -185,7 +210,7 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( SeismicityPmTilesSource source,  int? statusCode)  networkRequestFailed,required TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)  archiveChanged,required TResult Function( SeismicityPmTilesSource source)  cancelled,required TResult Function( SeismicityPmTilesSource source)  closed,required TResult Function( int tileId)  tileNotFound,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( SeismicityPmTilesSource source,  int? statusCode)  networkRequestFailed,required TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)  archiveChanged,required TResult Function( SeismicityPmTilesSource source)  cancelled,required TResult Function( SeismicityPmTilesSource source)  closed,required TResult Function( int expected,  int actual)  unsupportedSchema,required TResult Function( int tileId,  String reason)  invalidVectorTile,required TResult Function( int tileId,  int featureIndex,  String field,  String reason)  invalidHypocenterFeature,required TResult Function( String hypocenterId)  duplicateConflict,required TResult Function( int expected,  int actual)  featureCountMismatch,required TResult Function( String reason)  decoderWorkerFailed,required TResult Function( int tileId)  tileNotFound,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException():
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException():
@@ -198,7 +223,13 @@ return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTile
 return invalidNetworkResponse(_that.source,_that.statusCode,_that.reason);case SeismicityPmTilesArchiveChangedException():
 return archiveChanged(_that.source,_that.expectedEtag,_that.receivedEtag,_that.statusCode);case SeismicityPmTilesCancelledException():
 return cancelled(_that.source);case SeismicityPmTilesClosedException():
-return closed(_that.source);case SeismicityPmTilesTileNotFoundException():
+return closed(_that.source);case SeismicityPmTilesUnsupportedSchemaException():
+return unsupportedSchema(_that.expected,_that.actual);case SeismicityPmTilesInvalidVectorTileException():
+return invalidVectorTile(_that.tileId,_that.reason);case SeismicityPmTilesInvalidHypocenterFeatureException():
+return invalidHypocenterFeature(_that.tileId,_that.featureIndex,_that.field,_that.reason);case SeismicityPmTilesDuplicateConflictException():
+return duplicateConflict(_that.hypocenterId);case SeismicityPmTilesFeatureCountMismatchException():
+return featureCountMismatch(_that.expected,_that.actual);case SeismicityPmTilesDecoderWorkerFailedException():
+return decoderWorkerFailed(_that.reason);case SeismicityPmTilesTileNotFoundException():
 return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException():
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);}
 }
@@ -214,7 +245,7 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult? Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult? Function( SeismicityPmTilesSource source)?  cancelled,TResult? Function( SeismicityPmTilesSource source)?  closed,TResult? Function( int tileId)?  tileNotFound,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult? Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult? Function( SeismicityPmTilesSource source)?  cancelled,TResult? Function( SeismicityPmTilesSource source)?  closed,TResult? Function( int expected,  int actual)?  unsupportedSchema,TResult? Function( int tileId,  String reason)?  invalidVectorTile,TResult? Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult? Function( String hypocenterId)?  duplicateConflict,TResult? Function( int expected,  int actual)?  featureCountMismatch,TResult? Function( String reason)?  decoderWorkerFailed,TResult? Function( int tileId)?  tileNotFound,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
@@ -227,7 +258,13 @@ return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTile
 return invalidNetworkResponse(_that.source,_that.statusCode,_that.reason);case SeismicityPmTilesArchiveChangedException() when archiveChanged != null:
 return archiveChanged(_that.source,_that.expectedEtag,_that.receivedEtag,_that.statusCode);case SeismicityPmTilesCancelledException() when cancelled != null:
 return cancelled(_that.source);case SeismicityPmTilesClosedException() when closed != null:
-return closed(_that.source);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
+return closed(_that.source);case SeismicityPmTilesUnsupportedSchemaException() when unsupportedSchema != null:
+return unsupportedSchema(_that.expected,_that.actual);case SeismicityPmTilesInvalidVectorTileException() when invalidVectorTile != null:
+return invalidVectorTile(_that.tileId,_that.reason);case SeismicityPmTilesInvalidHypocenterFeatureException() when invalidHypocenterFeature != null:
+return invalidHypocenterFeature(_that.tileId,_that.featureIndex,_that.field,_that.reason);case SeismicityPmTilesDuplicateConflictException() when duplicateConflict != null:
+return duplicateConflict(_that.hypocenterId);case SeismicityPmTilesFeatureCountMismatchException() when featureCountMismatch != null:
+return featureCountMismatch(_that.expected,_that.actual);case SeismicityPmTilesDecoderWorkerFailedException() when decoderWorkerFailed != null:
+return decoderWorkerFailed(_that.reason);case SeismicityPmTilesTileNotFoundException() when tileNotFound != null:
 return tileNotFound(_that.tileId);case SeismicityPmTilesInvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
   return null;
@@ -1042,6 +1079,414 @@ $SeismicityPmTilesSourceCopyWith<$Res> get source {
     return _then(_self.copyWith(source: value));
   });
 }
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesUnsupportedSchemaException implements SeismicityPmTilesException {
+  const SeismicityPmTilesUnsupportedSchemaException({required this.expected, required this.actual});
+
+
+ final  int expected;
+ final  int actual;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesUnsupportedSchemaExceptionCopyWith<SeismicityPmTilesUnsupportedSchemaException> get copyWith => _$SeismicityPmTilesUnsupportedSchemaExceptionCopyWithImpl<SeismicityPmTilesUnsupportedSchemaException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesUnsupportedSchemaException&&(identical(other.expected, expected) || other.expected == expected)&&(identical(other.actual, actual) || other.actual == actual));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,expected,actual);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.unsupportedSchema(expected: $expected, actual: $actual)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesUnsupportedSchemaExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesUnsupportedSchemaExceptionCopyWith(SeismicityPmTilesUnsupportedSchemaException value, $Res Function(SeismicityPmTilesUnsupportedSchemaException) _then) = _$SeismicityPmTilesUnsupportedSchemaExceptionCopyWithImpl;
+@useResult
+$Res call({
+ int expected, int actual
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesUnsupportedSchemaExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesUnsupportedSchemaExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesUnsupportedSchemaExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesUnsupportedSchemaException _self;
+  final $Res Function(SeismicityPmTilesUnsupportedSchemaException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? expected = null,Object? actual = null,}) {
+  return _then(SeismicityPmTilesUnsupportedSchemaException(
+expected: null == expected ? _self.expected : expected // ignore: cast_nullable_to_non_nullable
+as int,actual: null == actual ? _self.actual : actual // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesInvalidVectorTileException implements SeismicityPmTilesException {
+  const SeismicityPmTilesInvalidVectorTileException({required this.tileId, required this.reason});
+
+
+ final  int tileId;
+ final  String reason;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesInvalidVectorTileExceptionCopyWith<SeismicityPmTilesInvalidVectorTileException> get copyWith => _$SeismicityPmTilesInvalidVectorTileExceptionCopyWithImpl<SeismicityPmTilesInvalidVectorTileException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesInvalidVectorTileException&&(identical(other.tileId, tileId) || other.tileId == tileId)&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tileId,reason);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.invalidVectorTile(tileId: $tileId, reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesInvalidVectorTileExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesInvalidVectorTileExceptionCopyWith(SeismicityPmTilesInvalidVectorTileException value, $Res Function(SeismicityPmTilesInvalidVectorTileException) _then) = _$SeismicityPmTilesInvalidVectorTileExceptionCopyWithImpl;
+@useResult
+$Res call({
+ int tileId, String reason
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesInvalidVectorTileExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesInvalidVectorTileExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesInvalidVectorTileExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesInvalidVectorTileException _self;
+  final $Res Function(SeismicityPmTilesInvalidVectorTileException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tileId = null,Object? reason = null,}) {
+  return _then(SeismicityPmTilesInvalidVectorTileException(
+tileId: null == tileId ? _self.tileId : tileId // ignore: cast_nullable_to_non_nullable
+as int,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesInvalidHypocenterFeatureException implements SeismicityPmTilesException {
+  const SeismicityPmTilesInvalidHypocenterFeatureException({required this.tileId, required this.featureIndex, required this.field, required this.reason});
+
+
+ final  int tileId;
+ final  int featureIndex;
+ final  String field;
+ final  String reason;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWith<SeismicityPmTilesInvalidHypocenterFeatureException> get copyWith => _$SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWithImpl<SeismicityPmTilesInvalidHypocenterFeatureException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesInvalidHypocenterFeatureException&&(identical(other.tileId, tileId) || other.tileId == tileId)&&(identical(other.featureIndex, featureIndex) || other.featureIndex == featureIndex)&&(identical(other.field, field) || other.field == field)&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tileId,featureIndex,field,reason);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.invalidHypocenterFeature(tileId: $tileId, featureIndex: $featureIndex, field: $field, reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWith(SeismicityPmTilesInvalidHypocenterFeatureException value, $Res Function(SeismicityPmTilesInvalidHypocenterFeatureException) _then) = _$SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWithImpl;
+@useResult
+$Res call({
+ int tileId, int featureIndex, String field, String reason
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesInvalidHypocenterFeatureExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesInvalidHypocenterFeatureException _self;
+  final $Res Function(SeismicityPmTilesInvalidHypocenterFeatureException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? tileId = null,Object? featureIndex = null,Object? field = null,Object? reason = null,}) {
+  return _then(SeismicityPmTilesInvalidHypocenterFeatureException(
+tileId: null == tileId ? _self.tileId : tileId // ignore: cast_nullable_to_non_nullable
+as int,featureIndex: null == featureIndex ? _self.featureIndex : featureIndex // ignore: cast_nullable_to_non_nullable
+as int,field: null == field ? _self.field : field // ignore: cast_nullable_to_non_nullable
+as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesDuplicateConflictException implements SeismicityPmTilesException {
+  const SeismicityPmTilesDuplicateConflictException({required this.hypocenterId});
+
+
+ final  String hypocenterId;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesDuplicateConflictExceptionCopyWith<SeismicityPmTilesDuplicateConflictException> get copyWith => _$SeismicityPmTilesDuplicateConflictExceptionCopyWithImpl<SeismicityPmTilesDuplicateConflictException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesDuplicateConflictException&&(identical(other.hypocenterId, hypocenterId) || other.hypocenterId == hypocenterId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,hypocenterId);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.duplicateConflict(hypocenterId: $hypocenterId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesDuplicateConflictExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesDuplicateConflictExceptionCopyWith(SeismicityPmTilesDuplicateConflictException value, $Res Function(SeismicityPmTilesDuplicateConflictException) _then) = _$SeismicityPmTilesDuplicateConflictExceptionCopyWithImpl;
+@useResult
+$Res call({
+ String hypocenterId
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesDuplicateConflictExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesDuplicateConflictExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesDuplicateConflictExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesDuplicateConflictException _self;
+  final $Res Function(SeismicityPmTilesDuplicateConflictException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? hypocenterId = null,}) {
+  return _then(SeismicityPmTilesDuplicateConflictException(
+hypocenterId: null == hypocenterId ? _self.hypocenterId : hypocenterId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesFeatureCountMismatchException implements SeismicityPmTilesException {
+  const SeismicityPmTilesFeatureCountMismatchException({required this.expected, required this.actual});
+
+
+ final  int expected;
+ final  int actual;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesFeatureCountMismatchExceptionCopyWith<SeismicityPmTilesFeatureCountMismatchException> get copyWith => _$SeismicityPmTilesFeatureCountMismatchExceptionCopyWithImpl<SeismicityPmTilesFeatureCountMismatchException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesFeatureCountMismatchException&&(identical(other.expected, expected) || other.expected == expected)&&(identical(other.actual, actual) || other.actual == actual));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,expected,actual);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.featureCountMismatch(expected: $expected, actual: $actual)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesFeatureCountMismatchExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesFeatureCountMismatchExceptionCopyWith(SeismicityPmTilesFeatureCountMismatchException value, $Res Function(SeismicityPmTilesFeatureCountMismatchException) _then) = _$SeismicityPmTilesFeatureCountMismatchExceptionCopyWithImpl;
+@useResult
+$Res call({
+ int expected, int actual
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesFeatureCountMismatchExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesFeatureCountMismatchExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesFeatureCountMismatchExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesFeatureCountMismatchException _self;
+  final $Res Function(SeismicityPmTilesFeatureCountMismatchException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? expected = null,Object? actual = null,}) {
+  return _then(SeismicityPmTilesFeatureCountMismatchException(
+expected: null == expected ? _self.expected : expected // ignore: cast_nullable_to_non_nullable
+as int,actual: null == actual ? _self.actual : actual // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SeismicityPmTilesDecoderWorkerFailedException implements SeismicityPmTilesException {
+  const SeismicityPmTilesDecoderWorkerFailedException({required this.reason});
+
+
+ final  String reason;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesDecoderWorkerFailedExceptionCopyWith<SeismicityPmTilesDecoderWorkerFailedException> get copyWith => _$SeismicityPmTilesDecoderWorkerFailedExceptionCopyWithImpl<SeismicityPmTilesDecoderWorkerFailedException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesDecoderWorkerFailedException&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,reason);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesException.decoderWorkerFailed(reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesDecoderWorkerFailedExceptionCopyWith<$Res> implements $SeismicityPmTilesExceptionCopyWith<$Res> {
+  factory $SeismicityPmTilesDecoderWorkerFailedExceptionCopyWith(SeismicityPmTilesDecoderWorkerFailedException value, $Res Function(SeismicityPmTilesDecoderWorkerFailedException) _then) = _$SeismicityPmTilesDecoderWorkerFailedExceptionCopyWithImpl;
+@useResult
+$Res call({
+ String reason
+});
+
+
+
+
+}
+/// @nodoc
+class _$SeismicityPmTilesDecoderWorkerFailedExceptionCopyWithImpl<$Res>
+    implements $SeismicityPmTilesDecoderWorkerFailedExceptionCopyWith<$Res> {
+  _$SeismicityPmTilesDecoderWorkerFailedExceptionCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesDecoderWorkerFailedException _self;
+  final $Res Function(SeismicityPmTilesDecoderWorkerFailedException) _then;
+
+/// Create a copy of SeismicityPmTilesException
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
+  return _then(SeismicityPmTilesDecoderWorkerFailedException(
+reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 /// @nodoc
