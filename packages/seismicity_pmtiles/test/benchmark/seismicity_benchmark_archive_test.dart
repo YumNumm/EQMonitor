@@ -25,14 +25,14 @@ void main() {
         featureCount: featureCount,
         featuresPerTile: featuresPerTile,
       );
-    final expectedIds = [
-      for (var tileIndex = 0; tileIndex < 10; tileIndex++)
-        tileIdCodec.tileIdForZxy(
-          z: SeismicityBenchmarkFeatureSource.dataZoom,
-          x: tileIndex % 64,
-          y: tileIndex ~/ 64,
-        ),
-    ];
+      final expectedIds = [
+        for (var tileIndex = 0; tileIndex < 10; tileIndex++)
+          tileIdCodec.tileIdForZxy(
+            z: SeismicityBenchmarkFeatureSource.dataZoom,
+            x: tileIndex % 64,
+            y: tileIndex ~/ 64,
+          ),
+      ];
       final expectedDescriptor = SeismicityPmTilesArchiveDescriptor(
         source: const SeismicityPmTilesSource.asset(
           assetKey: 'benchmark.seismicity.pmtiles',

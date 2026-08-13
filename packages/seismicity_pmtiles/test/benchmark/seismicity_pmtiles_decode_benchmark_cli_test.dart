@@ -29,6 +29,22 @@ void main() {
     expect(code, 0);
     expect(stderr.toString(), isEmpty);
     final json = jsonDecode(stdout.toString().trim()) as Map<String, dynamic>;
+    expect(json.keys.toList(), [
+      'feature_count',
+      'tile_count',
+      'chunk_capacity',
+      'raw_feature_count',
+      'unique_feature_count',
+      'chunk_feature_sum',
+      'typed_column_bytes',
+      'expected_typed_column_bytes',
+      'worker_spawn_count',
+      'archive_close_count',
+      'elapsed_ms',
+      'rss_bytes',
+      'informational_time_threshold_ms',
+      'within_target',
+    ]);
     expect(json['feature_count'], 10_000);
     expect(json['tile_count'], 10);
     expect(json['chunk_capacity'], 1_024);
@@ -43,6 +59,29 @@ void main() {
     expect(json['rss_bytes'], 99);
     expect(json['informational_time_threshold_ms'], 60_000);
     expect(json['within_target'], isTrue);
+  });
+
+  test('emits null threshold and within_target without flag', () async {
+    final stdout = StringBuffer();
+    final code = await runSeismicityDecodeBenchmarkCli(
+      arguments: const [
+        '--features',
+        '1000',
+        '--features-per-tile',
+        '1000',
+        '--chunk-capacity',
+        '1000',
+      ],
+      stdout: stdout,
+      stderr: StringBuffer(),
+      runBenchmark: _fakeSuccess,
+    );
+    expect(code, 0);
+    final json = jsonDecode(stdout.toString().trim()) as Map<String, dynamic>;
+    expect(json.containsKey('informational_time_threshold_ms'), isTrue);
+    expect(json.containsKey('within_target'), isTrue);
+    expect(json['informational_time_threshold_ms'], isNull);
+    expect(json['within_target'], isNull);
   });
 
   test('maps correctness failure nonzero and threshold miss zero', () async {
