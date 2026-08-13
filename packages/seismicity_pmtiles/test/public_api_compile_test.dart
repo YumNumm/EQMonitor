@@ -68,6 +68,18 @@ void main() {
       ).uniqueFeatureCount,
       0,
     );
+    expect(
+      const SeismicityPmTilesLoadState.decoding(
+        progress: SeismicityPmTilesDecodeProgress(
+          decodedTileCount: 1,
+          rawFeatureCount: 1,
+          uniqueFeatureCount: 1,
+        ),
+      ),
+      isA<SeismicityPmTilesLoadState>(),
+    );
+    SeismicityPmTilesDecodeOperation? operation;
+    expect(operation, isNull);
     expect(entry.runLength, 1);
   });
 }

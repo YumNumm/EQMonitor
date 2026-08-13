@@ -3,6 +3,8 @@ export 'package:pmtiles_v3/pmtiles_v3.dart'
 
 export 'src/archive/seismicity_pmtiles_archive.dart'
     show SeismicityPmTilesArchive;
+export 'src/decoder/seismicity_pmtiles_decode_operation.dart'
+    show SeismicityPmTilesDecodeOperation;
 export 'src/model/seismicity_pmtiles_archive_descriptor.dart';
 export 'src/model/seismicity_pmtiles_bounds.dart';
 export 'src/model/seismicity_pmtiles_chunk.dart';
