@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
 
@@ -22,6 +23,15 @@ void main() {
       controlled: controlled,
       expectedFeatureCount: 1,
     );
+    final pending = handle.decode(
+      tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
+    );
+    await fixtures.waitUntil(
+      () => controlled.sent
+              .whereType<SeismicityDecoderWorkerDecodeRequest>()
+              .length ==
+          1,
+    );
     final finish = handle.finish();
     await fixtures.waitUntil(
       () => controlled.sent.any(
@@ -32,15 +42,15 @@ void main() {
         .whereType<SeismicityDecoderWorkerFinishRequest>()
         .single
         .requestId;
-    final invalid = expectLater(
-      finish,
-      throwsA(isA<SeismicityPmTilesException>()),
-    );
+    final settled = Future.wait<void>([
+      expectLater(pending, throwsA(isA<SeismicityPmTilesException>())),
+      expectLater(finish, throwsA(isA<SeismicityPmTilesException>())),
+    ]);
     controlled.emitInvalidTransfer(
       requestId: finishId,
       invalidChunk: fixtures.corruptOffsetChunk(),
     );
-    await invalid;
+    await settled;
     await handle.retired;
     expect(controlled.closeReceivePortCount, 1);
     expect(controlled.killCount, 1);
@@ -49,7 +59,8 @@ void main() {
   });
 
   test('crash settles pending decode and retires after exited', () async {
-    final controlled = ControlledSeismicityIsolateLauncher();
+    final controlled = ControlledSeismicityIsolateLauncher()
+      ..deferExitedUntilReleased = true;
     final handle = await fixtures.spawnReady(
       controlled: controlled,
       expectedFeatureCount: 1,
@@ -67,11 +78,18 @@ void main() {
       pending,
       throwsA(isA<SeismicityPmTilesException>()),
     );
+    var retiredCompleted = false;
+    unawaited(handle.retired.then((_) => retiredCompleted = true));
     controlled.crash(message: 'boom');
     await crashed;
-    await handle.retired;
     expect(controlled.closeReceivePortCount, 1);
     expect(controlled.killCount, 1);
+    expect(controlled.exitedIsCompleted, isFalse);
+    await Future<void>.delayed(Duration.zero);
+    expect(retiredCompleted, isFalse);
+    controlled.releaseExited();
+    await handle.retired;
+    expect(retiredCompleted, isTrue);
   });
 
   test('unexpected port close settles and retires once', () async {
@@ -132,8 +150,25 @@ void main() {
       controlled: closer,
       expectedFeatureCount: 0,
     );
-    await Future.wait<void>([closeHandle.close(), closeHandle.close()]);
-    await closeHandle.retired;
+    final closePending = closeHandle.decode(
+      tileBytes: TransferableTypedData.fromList([Uint8List(1)]),
+    );
+    await fixtures.waitUntil(
+      () => closer.sent
+              .whereType<SeismicityDecoderWorkerDecodeRequest>()
+              .length ==
+          1,
+    );
+    final closeSettled = expectLater(
+      closePending,
+      throwsA(isA<SeismicityPmTilesException>()),
+    );
+    await Future.wait<void>([
+      closeHandle.close(),
+      closeHandle.close(),
+      closeSettled,
+      closeHandle.retired,
+    ]);
     expect(closer.killCount, 1);
     expect(closer.closeReceivePortCount, 1);
   });

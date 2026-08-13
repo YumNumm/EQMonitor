@@ -25,10 +25,12 @@ final class ControlledSeismicityIsolateLauncher
   var _launchCount = 0;
   var _closeReceivePortCount = 0;
   var _killCount = 0;
+  var deferExitedUntilReleased = false;
 
   int get launchCount => _launchCount;
   int get closeReceivePortCount => _closeReceivePortCount;
   int get killCount => _killCount;
+  bool get exitedIsCompleted => _exited.isCompleted;
 
   @override
   SeismicityWorkerTerminalCounters get counters => _counters;
@@ -70,6 +72,12 @@ final class ControlledSeismicityIsolateLauncher
   void kill() {
     _killCount++;
     events.add('kill');
+    if (!deferExitedUntilReleased && !_exited.isCompleted) {
+      _exited.complete();
+    }
+  }
+
+  void releaseExited() {
     if (!_exited.isCompleted) {
       _exited.complete();
     }
