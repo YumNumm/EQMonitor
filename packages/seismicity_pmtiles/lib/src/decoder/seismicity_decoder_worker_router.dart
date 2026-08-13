@@ -102,7 +102,7 @@ final class SeismicityDecoderWorkerRouter {
             reason: 'acknowledgement_before_ready',
           );
         }
-        final pending = _pending.remove(requestId);
+        final pending = _pending[requestId];
         if (pending == null) {
           throw const SeismicityPmTilesException.decoderWorkerFailed(
             reason: 'unknown_or_duplicate_request_id',
@@ -117,6 +117,7 @@ final class SeismicityDecoderWorkerRouter {
             reason: 'progress_regression',
           );
         }
+        _pending.remove(requestId);
         _lastProgress = progress;
         forwardedProgress.add(progress);
         pending.complete(progress);
