@@ -101,6 +101,25 @@ void main() {
     );
     expect(await archive.readTile(tileId: 1), Uint8List.fromList([1]));
   });
+
+  test('pause blocks only the next read', () async {
+    final archive = ControlledSeismicityArchive(
+      descriptor: fixtures.descriptor(),
+      occupiedTileIds: const [1, 2],
+      tileBytes: {
+        1: Uint8List.fromList([11]),
+        2: Uint8List.fromList([22]),
+      },
+    )..pauseBeforeNextRead();
+
+    final blocked = archive.readTile(tileId: 1);
+    await fixtures.waitUntil(() => archive.readRequests.contains(1));
+    final second = archive.readTile(tileId: 2);
+    expect(await second, Uint8List.fromList([22]));
+    archive.releaseRead();
+    expect(await blocked, Uint8List.fromList([11]));
+    expect(archive.readRequests, [1, 2]);
+  });
 }
 
 final class _Task45Fixtures {

@@ -63,8 +63,10 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   final zoomRequests = <int>[];
   final readRequests = <int>[];
 
-  Completer<void>? _enumerationGate;
-  Completer<void>? _readGate;
+  Completer<void>? _pendingEnumerationGate;
+  Completer<void>? _blockedEnumerationGate;
+  Completer<void>? _pendingReadGate;
+  Completer<void>? _blockedReadGate;
   Completer<void>? _closeCompleter;
   SeismicityPmTilesException? _queuedEnumerationFailure;
   SeismicityPmTilesException? _queuedReadFailure;
@@ -75,11 +77,11 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   bool get isClosed => _closed;
 
   void pauseBeforeNextEnumeration() {
-    _enumerationGate = Completer<void>();
+    _pendingEnumerationGate = Completer<void>();
   }
 
   void pauseBeforeNextRead() {
-    _readGate = Completer<void>();
+    _pendingReadGate = Completer<void>();
   }
 
   void queueEnumerationFailure({required SeismicityPmTilesException error}) {
@@ -91,14 +93,14 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   }
 
   void releaseEnumeration() {
-    final gate = _enumerationGate;
+    final gate = _pendingEnumerationGate ?? _blockedEnumerationGate;
     if (gate != null && !gate.isCompleted) {
       gate.complete();
     }
   }
 
   void releaseRead() {
-    final gate = _readGate;
+    final gate = _pendingReadGate ?? _blockedReadGate;
     if (gate != null && !gate.isCompleted) {
       gate.complete();
     }
@@ -107,9 +109,12 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   @override
   Stream<int> occupiedTileIdsAtZoom({required int zoom}) async* {
     zoomRequests.add(zoom);
-    final gate = _enumerationGate;
-    if (gate != null && !gate.isCompleted) {
-      await gate.future;
+    final pending = _pendingEnumerationGate;
+    if (pending != null) {
+      _pendingEnumerationGate = null;
+      _blockedEnumerationGate = pending;
+      await pending.future;
+      _blockedEnumerationGate = null;
     }
     final queuedFailure = _queuedEnumerationFailure;
     if (queuedFailure != null) {
@@ -127,9 +132,12 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   @override
   Future<Uint8List> readTile({required int tileId}) async {
     readRequests.add(tileId);
-    final gate = _readGate;
-    if (gate != null && !gate.isCompleted) {
-      await gate.future;
+    final pending = _pendingReadGate;
+    if (pending != null) {
+      _pendingReadGate = null;
+      _blockedReadGate = pending;
+      await pending.future;
+      _blockedReadGate = null;
     }
     final queuedFailure = _queuedReadFailure;
     if (queuedFailure != null) {
@@ -156,15 +164,17 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
     _closeCompleter = completer;
     _closed = true;
     _closeCount = 1;
-    final enumerationGate = _enumerationGate;
-    if (enumerationGate != null && !enumerationGate.isCompleted) {
-      enumerationGate.completeError(closeReleaseFailure);
-    }
-    final readGate = _readGate;
-    if (readGate != null && !readGate.isCompleted) {
-      readGate.completeError(closeReleaseFailure);
-    }
+    failOpenGate(_pendingEnumerationGate);
+    failOpenGate(_blockedEnumerationGate);
+    failOpenGate(_pendingReadGate);
+    failOpenGate(_blockedReadGate);
     completer.complete();
     return completer.future;
+  }
+
+  void failOpenGate(Completer<void>? gate) {
+    if (gate != null && !gate.isCompleted) {
+      gate.completeError(closeReleaseFailure);
+    }
   }
 }
