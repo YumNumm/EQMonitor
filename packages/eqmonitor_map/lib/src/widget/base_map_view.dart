@@ -8,16 +8,10 @@ import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/geo/tile_matrix.dart';
+import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
-// `mvtDefaultExtent`だけを使う。`BaseMapTileGeometry`はどの`extent`で
-// decodeしたかを保持しない([BaseMapTileLayerGeometry]参照)ため、Task 10は
-// tile側と同じ既定値をtile行列へそのまま渡すしかない
-// ([mvtDefaultExtent]のdoc comment、`docs/map_spec_v3.md`が前提とする
-// tippecanoe既定出力と一致)。
-import 'package:eqmonitor_map/src/tile/mvt/mvt_decoder.dart'
-    show mvtDefaultExtent;
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:flutter/material.dart';
@@ -256,7 +250,8 @@ class _BaseMapController extends ChangeNotifier {
 
   final sceneGraph = scene.Scene();
 
-  // camera/projectionは各tileのnodeへ焼き込む(`_combinedTransformFor`)ため、
+  // camera/projectionは各tileのnodeへ焼き込む
+  // (`baseMapTileViewProjectionMatrixFor`)ため、
   // Scene側のcameraは何も変換しない恒等camera一つで足りる
   // (`_IdentityCameraProjection`のdoc comment参照)。
   final camera = scene.NodeCamera(
@@ -476,100 +471,53 @@ class _BaseMapController extends ChangeNotifier {
     if (materialsByStyleLayerId == null) {
       return;
     }
-    final resolved = [
-      for (final tile in cover)
-        (
-          tile: tile,
-          result: _cache.lookupWithFallback(
-            sourceInstanceId: source.sourceInstanceId,
-            tileId: tile.canonical,
-            maxParentSteps: limits.maxParentFallbackSteps,
-          ),
-        ),
-    ];
-    final transformCache = <(int, CanonicalTileId), scene_math.Matrix4>{};
-    scene_math.Matrix4 transformFor(int wrap, CanonicalTileId tileId) =>
+    final plans = buildBaseMapRenderPlans(
+      requestedCover: cover,
+      sourceInstanceId: source.sourceInstanceId,
+      cache: _cache,
+      maxParentSteps: limits.maxParentFallbackSteps,
+      zoom: _camera.zoom,
+    );
+    final transformCache = <(UnwrappedTileId, int), scene_math.Matrix4>{};
+    scene_math.Matrix4 transformFor(BaseMapTileTransformInput input) =>
         transformCache.putIfAbsent(
-          (wrap, tileId),
-          () => _combinedTransformFor(
-            wrap: wrap,
-            tileId: tileId,
-            viewport: viewport,
+          (input.tileId, input.extent),
+          () => scene_math.Matrix4.fromList(
+            baseMapTileViewProjectionMatrixFor(
+              camera: _camera,
+              viewport: viewport,
+              tileId: input.tileId,
+              zoom: input.zoom,
+              extent: input.extent,
+            ).storage,
           ),
         );
-
-    // 描画順はlayer順を外側、tile順を内側にする(`docs/map_spec_v3.md`の
-    // layer順に従う。tile側のsortには依存しない)。
-    final nodes = <scene.Node>[];
-    for (final spec in baseMapLayerSpecs) {
-      if (spec.kind == BaseMapLayerKind.background) {
-        // backgroundはtileを持たない全画面色であり、`ColoredBox`側で描く。
-        continue;
-      }
-      for (final entry in resolved) {
-        switch (entry.result) {
-          case BaseMapTileFallbackMiss():
-            continue;
-          case BaseMapTileFallbackExact(:final geometry):
-            nodes.addAll(
-              _nodesFor(
-                spec: spec,
-                wrap: entry.tile.wrap,
-                tileId: entry.tile.canonical,
-                geometry: geometry,
-                materialsByStyleLayerId: materialsByStyleLayerId,
-                transform: transformFor(entry.tile.wrap, entry.tile.canonical),
-              ),
-            );
-          case BaseMapTileFallbackParent(:final geometry, :final tileId):
-            nodes.addAll(
-              _nodesFor(
-                spec: spec,
-                wrap: entry.tile.wrap,
-                tileId: tileId,
-                geometry: geometry,
-                materialsByStyleLayerId: materialsByStyleLayerId,
-                transform: transformFor(entry.tile.wrap, tileId),
-              ),
-            );
-          case BaseMapTileFallbackChildren(:final children):
-            final childIds = entry.tile.canonical.children();
-            for (var i = 0; i < children.length; i++) {
-              nodes.addAll(
-                _nodesFor(
-                  spec: spec,
-                  wrap: entry.tile.wrap,
-                  tileId: childIds[i],
-                  geometry: children[i],
-                  materialsByStyleLayerId: materialsByStyleLayerId,
-                  transform: transformFor(entry.tile.wrap, childIds[i]),
-                ),
-              );
-            }
-        }
-      }
-    }
+    final nodes = <scene.Node>[
+      for (final plan in plans)
+        ..._nodesFor(
+          plan: plan,
+          materialsByStyleLayerId: materialsByStyleLayerId,
+          transform: transformFor(plan.transformInput),
+        ),
+    ];
     sceneGraph
       ..removeAll()
       ..addAll(nodes);
   }
 
   Iterable<scene.Node> _nodesFor({
-    required BaseMapLayerSpec spec,
-    required int wrap,
-    required CanonicalTileId tileId,
-    required BaseMapTileGeometry geometry,
+    required BaseMapLayerRenderPlan plan,
     required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
     required scene_math.Matrix4 transform,
   }) {
     final meshesByLayer = _sceneMeshCache.getOrBuild(
       sourceInstanceId: source.sourceInstanceId,
-      tileId: tileId,
-      geometry: geometry,
+      tileId: plan.transformInput.tileId.canonical,
+      geometry: plan.tileGeometry,
       geometryFactory: _geometryFactory,
       materialsByStyleLayerId: materialsByStyleLayerId,
     );
-    final meshes = meshesByLayer[spec.styleLayerId];
+    final meshes = meshesByLayer[plan.layerGeometry.styleLayerId];
     if (meshes == null || meshes.isEmpty) {
       return const [];
     }
@@ -577,26 +525,6 @@ class _BaseMapController extends ChangeNotifier {
       for (final mesh in meshes)
         scene.Node(localTransform: transform, mesh: mesh),
     ];
-  }
-
-  scene_math.Matrix4 _combinedTransformFor({
-    required int wrap,
-    required CanonicalTileId tileId,
-    required MapViewport viewport,
-  }) {
-    final combined =
-        viewProjectionMatrixFor(camera: _camera, viewport: viewport).multiplied(
-          tileMatrixFor(
-            tileId: UnwrappedTileId(wrap: wrap, canonical: tileId),
-            zoom: _camera.zoom,
-            extent: mvtDefaultExtent,
-          ),
-        );
-    // double精度のまま合成した後に一度だけfloat32へ丸める
-    // (`geo/tile_matrix.dart`のdoc comment「tile側だけを先にfloat32へ丸める
-    // と...rebasingの意味が失われる」)。`Matrix4.fromList`は
-    // `FlutterSceneOrthographicProjection`と同じ変換方法。
-    return scene_math.Matrix4.fromList(combined.storage);
   }
 
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
@@ -676,7 +604,8 @@ class _BaseMapController extends ChangeNotifier {
 }
 
 /// 何も変換しないcamera projection。各tileのnodeにcamera/projectionを
-/// 焼き込んだ完成済みのclip座標(`_combinedTransformFor`)を持たせるため、
+/// 焼き込んだ完成済みのclip座標(`baseMapTileViewProjectionMatrixFor`)を
+/// 持たせるため、
 /// Scene側のcameraが二重に変換をかけないようにする。
 class _IdentityCameraProjection implements scene.CameraProjection {
   const _IdentityCameraProjection();

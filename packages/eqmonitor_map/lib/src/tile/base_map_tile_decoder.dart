@@ -124,14 +124,23 @@ const baseMapLayerSpecs = <BaseMapLayerSpec>[
 /// `MvtTile`/`FillMesh`/`LineMesh`と同じ理由でFreezedにはしない。
 @immutable
 sealed class BaseMapTileLayerGeometry {
-  const BaseMapTileLayerGeometry({required this.styleLayerId});
+  const BaseMapTileLayerGeometry({
+    required this.styleLayerId,
+    required this.extent,
+  });
 
   final String styleLayerId;
+
+  /// 対応するMVT source layerが存在する場合に、そのlayerが宣言したextent。
+  ///
+  /// `null`はsparse tileでsource layer自体が欠損している場合のみを表す。
+  final int? extent;
 }
 
 final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
   const BaseMapTileFillLayerGeometry({
     required super.styleLayerId,
+    required super.extent,
     required this.meshes,
   });
 
@@ -141,6 +150,7 @@ final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
 final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
   const BaseMapTileLineLayerGeometry({
     required super.styleLayerId,
+    required super.extent,
     required this.meshes,
   });
 
@@ -224,23 +234,33 @@ BaseMapTileGeometry decodeBaseMapTileSync(
       case BaseMapLayerKind.background:
         continue;
       case BaseMapLayerKind.fill:
+        final sourceLayerName = spec.sourceLayerName;
+        if (sourceLayerName == null) {
+          throw StateError('${spec.styleLayerId} has no source layer.');
+        }
+        final sourceLayer = _findLayer(tile, sourceLayerName);
         layers.add(
           BaseMapTileFillLayerGeometry(
             styleLayerId: spec.styleLayerId,
+            extent: sourceLayer?.extent,
             meshes: _buildFillMeshes(
-              tile: tile,
-              sourceLayerName: spec.sourceLayerName!,
+              layer: sourceLayer,
               builder: fillBuilder,
             ),
           ),
         );
       case BaseMapLayerKind.line:
+        final sourceLayerName = spec.sourceLayerName;
+        if (sourceLayerName == null) {
+          throw StateError('${spec.styleLayerId} has no source layer.');
+        }
+        final sourceLayer = _findLayer(tile, sourceLayerName);
         layers.add(
           BaseMapTileLineLayerGeometry(
             styleLayerId: spec.styleLayerId,
+            extent: sourceLayer?.extent,
             meshes: _buildLineMeshes(
-              tile: tile,
-              sourceLayerName: spec.sourceLayerName!,
+              layer: sourceLayer,
               builder: lineBuilder,
             ),
           ),
@@ -260,11 +280,9 @@ MvtLayer? _findLayer(MvtTile tile, String name) {
 }
 
 List<FillMesh> _buildFillMeshes({
-  required MvtTile tile,
-  required String sourceLayerName,
+  required MvtLayer? layer,
   required FillMeshBuilder builder,
 }) {
-  final layer = _findLayer(tile, sourceLayerName);
   if (layer == null) {
     // sparse archiveの欠損、または`areaInformationCityQuake`のz6未満のように
     // このzoomにそのsource layerが存在しない場合。空meshで表現し、
@@ -281,11 +299,9 @@ List<FillMesh> _buildFillMeshes({
 }
 
 List<LineMesh> _buildLineMeshes({
-  required MvtTile tile,
-  required String sourceLayerName,
+  required MvtLayer? layer,
   required LineMeshBuilder builder,
 }) {
-  final layer = _findLayer(tile, sourceLayerName);
   if (layer == null) {
     return const [];
   }

@@ -32,10 +32,9 @@ class SceneSpikeAsyncGenerationOwner {
 
 class SceneSpikeAsyncGenerationToken {
   const SceneSpikeAsyncGenerationToken._({
-    required SceneSpikeAsyncGenerationOwner owner,
-    required int generation,
-  }) : _owner = owner,
-       _generation = generation;
+    required this._owner,
+    required this._generation,
+  });
 
   final SceneSpikeAsyncGenerationOwner _owner;
   final int _generation;

@@ -107,6 +107,37 @@ void main() {
   });
 
   group('decodeBaseMapTileSync', () {
+    test('preserves each source layer extent on every derived style layer', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.buildLayer(
+            name: 'countries',
+            extent: 2048,
+            features: [_buildFeatureTriangle()],
+          ),
+          _builder.buildLayer(
+            name: 'areaForecastLocalE',
+            extent: 8192,
+            features: [_buildFeatureTriangle()],
+          ),
+        ],
+      );
+
+      final geometry = decodeBaseMapTileSync(tile, _limits);
+      final extents = {
+        for (final layer in geometry.layers) layer.styleLayerId: layer.extent,
+      };
+
+      expect(extents, {
+        'countriesFill': 2048,
+        'countriesLine': 2048,
+        'areaForecastLocalEFill': 8192,
+        'areaForecastLocalEewLine': null,
+        'areaForecastLocalELine': 8192,
+        'areaInformationCityQuakeLine': null,
+      });
+    });
+
     test('produces one entry per non-background spec, in spec order', () {
       final tile = _builder.buildTile(
         layers: [
