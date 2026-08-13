@@ -90,6 +90,8 @@ final class IsolateSeismicityDecoderWorkerHandle
   var _cancelStarted = false;
   var _closeStarted = false;
   var _finishRequested = false;
+  var _terminalApplied = false;
+  var _retireScheduled = false;
 
   Future<void> bootstrap({required int chunkCapacity}) async {
     if (_bootstrapped) {
@@ -97,44 +99,56 @@ final class IsolateSeismicityDecoderWorkerHandle
     }
     _bootstrapped = true;
     _subscriptions.add(
-      endpoint.responses.listen((response) {
-        switch (response) {
-          case SeismicityDecoderWorkerReadyResponse():
-          case SeismicityDecoderWorkerProgressResponse():
-            try {
-              router.handleResponse(response: response);
-              if (response is SeismicityDecoderWorkerReadyResponse &&
-                  !_ready.isCompleted) {
-                _ready.complete();
+      endpoint.responses.listen(
+        (response) {
+          switch (response) {
+            case SeismicityDecoderWorkerReadyResponse():
+            case SeismicityDecoderWorkerProgressResponse():
+              try {
+                router.handleResponse(response: response);
+                if (response is SeismicityDecoderWorkerReadyResponse &&
+                    !_ready.isCompleted) {
+                  _ready.complete();
+                }
+              } on SeismicityPmTilesException catch (error) {
+                failFinish(error: error);
               }
-            } on SeismicityPmTilesException catch (error) {
-              failFinish(error: error);
-            }
-          case SeismicityDecoderWorkerFinishedResponse(
-            :final datasetTransfer,
-          ):
-            try {
-              final dataset = finisher.materialize(
-                transfer: datasetTransfer,
-                acceptedDescriptor: acceptedDescriptor,
-              );
-              if (!_finish.isCompleted) {
-                _finish.complete(dataset);
-              }
-              applyTerminalDecision(
-                decision: coordinator.handle(
-                  signal: SeismicityWorkerTerminalSuccessSignal(
-                    value: dataset,
+            case SeismicityDecoderWorkerFinishedResponse(
+              :final datasetTransfer,
+            ):
+              try {
+                final dataset = finisher.materialize(
+                  transfer: datasetTransfer,
+                  acceptedDescriptor: acceptedDescriptor,
+                );
+                if (!_finish.isCompleted) {
+                  _finish.complete(dataset);
+                }
+                applyTerminalDecision(
+                  decision: coordinator.handle(
+                    signal: SeismicityWorkerTerminalSuccessSignal(
+                      value: dataset,
+                    ),
                   ),
-                ),
-              );
-            } on SeismicityPmTilesException catch (error) {
+                );
+              } on SeismicityPmTilesException catch (error) {
+                failFinish(error: error);
+              }
+            case SeismicityDecoderWorkerFailureResponse(:final error):
               failFinish(error: error);
-            }
-          case SeismicityDecoderWorkerFailureResponse(:final error):
-            failFinish(error: error);
-        }
-      }),
+          }
+        },
+        onDone: () {
+          if (_terminalApplied) {
+            return;
+          }
+          applyTerminalDecision(
+            decision: coordinator.handle(
+              signal: const SeismicityWorkerTerminalUnexpectedPortCloseSignal(),
+            ),
+          );
+        },
+      ),
     );
     _subscriptions.add(
       endpoint.errors.listen((error) {
@@ -184,6 +198,7 @@ final class IsolateSeismicityDecoderWorkerHandle
     required SeismicityWorkerTerminalDecision<SeismicityPmTilesDataset>
     decision,
   }) {
+    _terminalApplied = true;
     router.markTerminal();
     if (decision.completePending) {
       final error = switch (decision.outcome) {
@@ -215,9 +230,29 @@ final class IsolateSeismicityDecoderWorkerHandle
     if (decision.killIsolate) {
       endpoint.kill();
     }
-    if (decision.retire && !_retired.isCompleted) {
-      _retired.complete();
+    if (decision.retire) {
+      scheduleRetirement(awaitExited: decision.killIsolate);
     }
+  }
+
+  void scheduleRetirement({required bool awaitExited}) {
+    if (_retireScheduled) {
+      return;
+    }
+    _retireScheduled = true;
+    if (!awaitExited) {
+      if (!_retired.isCompleted) {
+        _retired.complete();
+      }
+      return;
+    }
+    unawaited(
+      endpoint.exited.then((_) {
+        if (!_retired.isCompleted) {
+          _retired.complete();
+        }
+      }),
+    );
   }
 
   @override
@@ -246,30 +281,28 @@ final class IsolateSeismicityDecoderWorkerHandle
 
   @override
   Future<void> cancel() {
-    if (_cancelStarted) {
-      return Future<void>.value();
+    if (!_cancelStarted) {
+      _cancelStarted = true;
+      applyTerminalDecision(
+        decision: coordinator.handle(
+          signal: const SeismicityWorkerTerminalCancelSignal(),
+        ),
+      );
     }
-    _cancelStarted = true;
-    applyTerminalDecision(
-      decision: coordinator.handle(
-        signal: const SeismicityWorkerTerminalCancelSignal(),
-      ),
-    );
-    return Future<void>.value();
+    return retired;
   }
 
   @override
   Future<void> close() {
-    if (_closeStarted) {
-      return Future<void>.value();
+    if (!_closeStarted) {
+      _closeStarted = true;
+      applyTerminalDecision(
+        decision: coordinator.handle(
+          signal: const SeismicityWorkerTerminalCloseSignal(),
+        ),
+      );
     }
-    _closeStarted = true;
-    applyTerminalDecision(
-      decision: coordinator.handle(
-        signal: const SeismicityWorkerTerminalCloseSignal(),
-      ),
-    );
-    return Future<void>.value();
+    return retired;
   }
 
   @override
