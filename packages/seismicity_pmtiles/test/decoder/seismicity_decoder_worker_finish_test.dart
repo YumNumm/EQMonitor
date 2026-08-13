@@ -5,11 +5,14 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_accumulator.da
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_isolate_launcher.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_entry.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protocol.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_point_decoder.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_validity_bitmap.dart';
 import 'package:test/test.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
 import '../support/seismicity_mvt_fixture_mutator.dart';
@@ -49,7 +52,46 @@ void main() {
       expect(transfer.featureCount, 2);
       expect(transfer.chunks, hasLength(1));
       final materialized = transfer.chunks.single.materialize();
-      expect(materialized.latitudes, hasLength(2));
+      final point = const SeismicityMvtPointDecoder().decode(
+        geometry: const [9, 2, 2],
+        z: 0,
+        x: 0,
+        y: 0,
+        extent: 4096,
+        tileId: 0,
+        featureIndex: 0,
+      );
+      expect(
+        materialized.hypocenterIds,
+        Uint8List.fromList([
+          ...Uuid.parse('00000000-0000-4000-8000-000000000001'),
+          ...Uuid.parse('00000000-0000-4000-8000-000000000002'),
+        ]),
+      );
+      expect(materialized.latitudes, [point.latitude, point.latitude]);
+      expect(materialized.longitudes, [point.longitude, point.longitude]);
+      expect(materialized.originTimeUnixMilliseconds, [
+        1700000000000,
+        1700000000000,
+      ]);
+      expect(materialized.magnitudes[0], closeTo(5.1, 1e-5));
+      expect(materialized.magnitudes[1], closeTo(5.1, 1e-5));
+      expect(
+        SeismicityValidityBitmap.isValid(
+          bytes: materialized.magnitudeValidity,
+          index: 0,
+        ),
+        isTrue,
+      );
+      expect(
+        SeismicityValidityBitmap.isValid(
+          bytes: materialized.depthValidity,
+          index: 0,
+        ),
+        isFalse,
+      );
+      expect(materialized.depthsKm[0].isNaN, isTrue);
+      expect(materialized.maxIntensityDictionaryUtf8, isEmpty);
       expect(
         const SeismicityChunkLengthSummer().sumChecked(
           chunks: [materialized],
@@ -59,113 +101,101 @@ void main() {
     },
   );
 
-  test('worker finish rejects count mismatch finish-twice decode-after '
-      'and unchecked sum', () async {
-    final mismatch = await fixtures.runFinish(
-      expectedFeatureCount: 2,
-      tiles: [buildSeismicityMvtFixtureCatalog().valid],
-    );
-    expect(
-      mismatch,
-      isA<SeismicityDecoderWorkerFailureResponse>().having(
-        (response) => response.error,
-        'error',
-        isA<SeismicityPmTilesFeatureCountMismatchException>(),
-      ),
-    );
-
-    final endpoint = await fixtures.launch();
-    final responses = <SeismicityDecoderWorkerResponse>[];
-    final subscription = endpoint.responses.listen(responses.add);
-    addTearDown(subscription.cancel);
-    final replyPort = ReceivePort();
-    addTearDown(replyPort.close);
-    final descriptor = fixtures.acceptedDescriptor(expectedFeatureCount: 0);
-    endpoint.send(
-      request: SeismicityDecoderWorkerRequest.initialize(
-        requestId: 1,
-        responsePort: replyPort.sendPort,
-        acceptedDescriptor: descriptor,
-        chunkCapacity: 8,
-      ),
-    );
-    endpoint.send(
-      request: const SeismicityDecoderWorkerRequest.finish(requestId: 2),
-    );
-    endpoint.send(
-      request: const SeismicityDecoderWorkerRequest.finish(requestId: 3),
-    );
-    endpoint.send(
-      request: SeismicityDecoderWorkerRequest.decode(
-        requestId: 4,
-        tileBytes: TransferableTypedData.fromList([
-          Uint8List.fromList(buildSeismicityMvtFixtureCatalog().valid),
-        ]),
-      ),
-    );
-    await fixtures.waitUntil(() => responses.length >= 4);
-    expect(responses[0], isA<SeismicityDecoderWorkerReadyResponse>());
-    expect(responses[1], isA<SeismicityDecoderWorkerFinishedResponse>());
-    expect(
-      responses[2],
-      isA<SeismicityDecoderWorkerFailureResponse>().having(
-        (response) => response.error,
-        'error',
-        isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
-          (error) => error.reason,
-          'reason',
-          'already_finished',
+  test(
+    'worker finish rejects count mismatch finish-twice decode-after '
+    'and unchecked sum',
+    () async {
+      final mismatch = await fixtures.runFinish(
+        expectedFeatureCount: 2,
+        tiles: [buildSeismicityMvtFixtureCatalog().valid],
+      );
+      expect(
+        mismatch,
+        isA<SeismicityDecoderWorkerFailureResponse>().having(
+          (response) => response.error,
+          'error',
+          isA<SeismicityPmTilesFeatureCountMismatchException>(),
         ),
-      ),
-    );
-    expect(
-      responses[3],
-      isA<SeismicityDecoderWorkerFailureResponse>().having(
-        (response) => response.error,
-        'error',
-        isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
-          (error) => error.reason,
-          'reason',
-          'already_finished',
-        ),
-      ),
-    );
+      );
 
-    expect(
-      const SeismicityChunkLengthSummer().sumChecked(chunks: const []),
-      0,
-    );
-    expect(
-      const SeismicityChunkLengthSummer().sumChecked(
-        chunks: [_lengthOnlyChunk(length: 2)],
-      ),
-      2,
-    );
-    expect(
-      () => SeismicityDatasetAccumulator(
-        expectedUniqueCount: 1,
-        chunkCapacity: 1,
-      ).buildValidatedChunks(),
-      throwsA(isA<SeismicityPmTilesFeatureCountMismatchException>()),
-    );
-  });
+      final endpoint = await fixtures.launch();
+      final responses = <SeismicityDecoderWorkerResponse>[];
+      final subscription = endpoint.responses.listen(responses.add);
+      addTearDown(subscription.cancel);
+      final replyPort = ReceivePort();
+      addTearDown(replyPort.close);
+      final descriptor = fixtures.acceptedDescriptor(expectedFeatureCount: 0);
+      endpoint.send(
+        request: SeismicityDecoderWorkerRequest.initialize(
+          requestId: 1,
+          responsePort: replyPort.sendPort,
+          acceptedDescriptor: descriptor,
+          chunkCapacity: 8,
+        ),
+      );
+      endpoint.send(
+        request: const SeismicityDecoderWorkerRequest.finish(requestId: 2),
+      );
+      endpoint.send(
+        request: const SeismicityDecoderWorkerRequest.finish(requestId: 3),
+      );
+      endpoint.send(
+        request: SeismicityDecoderWorkerRequest.decode(
+          requestId: 4,
+          tileBytes: TransferableTypedData.fromList([
+            Uint8List.fromList(buildSeismicityMvtFixtureCatalog().valid),
+          ]),
+        ),
+      );
+      await fixtures.waitUntil(() => responses.length >= 4);
+      expect(responses[0], isA<SeismicityDecoderWorkerReadyResponse>());
+      expect(responses[1], isA<SeismicityDecoderWorkerFinishedResponse>());
+      expect(
+        responses[2],
+        isA<SeismicityDecoderWorkerFailureResponse>().having(
+          (response) => response.error,
+          'error',
+          isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
+            (error) => error.reason,
+            'reason',
+            'already_finished',
+          ),
+        ),
+      );
+      expect(
+        responses[3],
+        isA<SeismicityDecoderWorkerFailureResponse>().having(
+          (response) => response.error,
+          'error',
+          isA<SeismicityPmTilesDecoderWorkerFailedException>().having(
+            (error) => error.reason,
+            'reason',
+            'already_finished',
+          ),
+        ),
+      );
+
+      expect(
+        () => const SeismicityDatasetChunkSumGate().ensureMatches(
+          chunks: [fixtures.lengthOnlyChunk(length: 1)],
+          expectedFeatureCount: 2,
+        ),
+        throwsA(
+          isA<SeismicityPmTilesFeatureCountMismatchException>()
+              .having((error) => error.expected, 'expected', 2)
+              .having((error) => error.actual, 'actual', 1),
+        ),
+      );
+      expect(
+        () => SeismicityDatasetAccumulator(
+          expectedUniqueCount: 1,
+          chunkCapacity: 1,
+        ).buildValidatedChunks(),
+        throwsA(isA<SeismicityPmTilesFeatureCountMismatchException>()),
+      );
+    },
+  );
 }
-
-SeismicityPmTilesChunk _lengthOnlyChunk({required int length}) =>
-    SeismicityPmTilesChunk(
-      hypocenterIds: Uint8List(length * 16),
-      latitudes: Float64List(length),
-      longitudes: Float64List(length),
-      depthsKm: Float32List(length),
-      depthValidity: Uint8List((length + 7) ~/ 8),
-      magnitudes: Float32List(length),
-      magnitudeValidity: Uint8List((length + 7) ~/ 8),
-      originTimeUnixMilliseconds: Int64List(length),
-      maxIntensityDictionaryIndexes: Uint32List(length),
-      maxIntensityValidity: Uint8List((length + 7) ~/ 8),
-      maxIntensityDictionaryUtf8: Uint8List(0),
-      maxIntensityDictionaryOffsets: Uint32List.fromList([0]),
-    );
 
 final class _Task41Fixtures {
   SeismicityPmTilesArchiveDescriptor acceptedDescriptor({
@@ -182,6 +212,22 @@ final class _Task41Fixtures {
     periodFrom: DateTime.utc(2024),
     periodTo: DateTime.utc(2025),
   );
+
+  SeismicityPmTilesChunk lengthOnlyChunk({required int length}) =>
+      SeismicityPmTilesChunk(
+        hypocenterIds: Uint8List(length * 16),
+        latitudes: Float64List(length),
+        longitudes: Float64List(length),
+        depthsKm: Float32List(length),
+        depthValidity: Uint8List((length + 7) ~/ 8),
+        magnitudes: Float32List(length),
+        magnitudeValidity: Uint8List((length + 7) ~/ 8),
+        originTimeUnixMilliseconds: Int64List(length),
+        maxIntensityDictionaryIndexes: Uint32List(length),
+        maxIntensityValidity: Uint8List((length + 7) ~/ 8),
+        maxIntensityDictionaryUtf8: Uint8List(0),
+        maxIntensityDictionaryOffsets: Uint32List.fromList([0]),
+      );
 
   List<int> secondTileBytes() {
     final tile = VectorTile.fromBuffer(

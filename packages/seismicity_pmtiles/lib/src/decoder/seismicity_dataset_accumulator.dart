@@ -118,13 +118,10 @@ final class SeismicityDatasetAccumulator {
     for (final chunk in chunks) {
       validator.validate(chunk: chunk);
     }
-    final sum = const SeismicityChunkLengthSummer().sumChecked(chunks: chunks);
-    if (sum != _uniqueCount) {
-      throw SeismicityPmTilesException.featureCountMismatch(
-        expected: _uniqueCount,
-        actual: sum,
-      );
-    }
+    const SeismicityDatasetChunkSumGate().ensureMatches(
+      chunks: chunks,
+      expectedFeatureCount: _expectedUniqueCount,
+    );
     return chunks;
   }
 }
@@ -144,6 +141,23 @@ final class SeismicityChunkLengthSummer {
       sum += length;
     }
     return sum;
+  }
+}
+
+final class SeismicityDatasetChunkSumGate {
+  const SeismicityDatasetChunkSumGate();
+
+  void ensureMatches({
+    required List<SeismicityPmTilesChunk> chunks,
+    required int expectedFeatureCount,
+  }) {
+    final sum = const SeismicityChunkLengthSummer().sumChecked(chunks: chunks);
+    if (sum != expectedFeatureCount) {
+      throw SeismicityPmTilesException.featureCountMismatch(
+        expected: expectedFeatureCount,
+        actual: sum,
+      );
+    }
   }
 }
 
