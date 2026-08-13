@@ -101,10 +101,14 @@ final class IsolateSeismicityDecoderWorkerHandle
         switch (response) {
           case SeismicityDecoderWorkerReadyResponse():
           case SeismicityDecoderWorkerProgressResponse():
-            router.handleResponse(response: response);
-            if (response is SeismicityDecoderWorkerReadyResponse &&
-                !_ready.isCompleted) {
-              _ready.complete();
+            try {
+              router.handleResponse(response: response);
+              if (response is SeismicityDecoderWorkerReadyResponse &&
+                  !_ready.isCompleted) {
+                _ready.complete();
+              }
+            } on SeismicityPmTilesException catch (error) {
+              failFinish(error: error);
             }
           case SeismicityDecoderWorkerFinishedResponse(
             :final datasetTransfer,
