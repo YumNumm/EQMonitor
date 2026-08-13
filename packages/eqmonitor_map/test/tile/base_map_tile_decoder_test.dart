@@ -178,11 +178,9 @@ void main() {
       );
 
       final geometry = decodeBaseMapTileSync(tile, _limits);
-      final fill =
-          geometry.layers.singleWhere(
-                (l) => l.styleLayerId == 'countriesFill',
-              )
-              as BaseMapTileFillLayerGeometry;
+      final fill = geometry.layers.singleWhere(
+        (l) => l.styleLayerId == 'countriesFill',
+      ) as BaseMapTileFillLayerGeometry;
 
       expect(fill.meshes, hasLength(1));
       final mesh = fill.meshes.single;
@@ -207,11 +205,9 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         expect(line.meshes, hasLength(1));
         final mesh = line.meshes.single;
@@ -238,11 +234,9 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'areaForecastLocalEewLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'areaForecastLocalEewLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         expect(line.meshes, hasLength(1));
         final mesh = line.meshes.single;
@@ -285,16 +279,12 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final fill =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesFill',
-                )
-                as BaseMapTileFillLayerGeometry;
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final fill = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesFill',
+        ) as BaseMapTileFillLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         // FillはPolygon featureだけを見るので、三角形1枚ぶんの頂点(3)のまま。
         expect(fill.meshes.single.vertexCount, 3);
@@ -318,11 +308,9 @@ void main() {
 
       const decoder = BaseMapTileDecoder();
       final geometry = await decoder.decode(tileBytes: tile, limits: _limits);
-      final fill =
-          geometry.layers.singleWhere(
-                (l) => l.styleLayerId == 'countriesFill',
-              )
-              as BaseMapTileFillLayerGeometry;
+      final fill = geometry.layers.singleWhere(
+        (l) => l.styleLayerId == 'countriesFill',
+      ) as BaseMapTileFillLayerGeometry;
 
       expect(fill.meshes.single.vertexCount, 3);
     });

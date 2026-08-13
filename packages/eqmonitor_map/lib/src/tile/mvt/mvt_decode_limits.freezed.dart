@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mvt_decode_limits.dart';
@@ -9,6 +9,7 @@ part of 'mvt_decode_limits.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -73,7 +74,7 @@ class _$MvtDecodeLimitsCopyWithImpl<$Res>
 /// Create a copy of MvtDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxLayers = null,Object? maxFeaturesPerLayer = null,Object? maxRingsPerFeature = null,Object? maxVerticesPerRing = null,Object? maxCommandsPerFeature = null,Object? maxLayerNameBytes = null,}) {
-  return _then(_self.copyWith(
+  return _then(MvtDecodeLimits(
 maxLayers: null == maxLayers ? _self.maxLayers : maxLayers // ignore: cast_nullable_to_non_nullable
 as int,maxFeaturesPerLayer: null == maxFeaturesPerLayer ? _self.maxFeaturesPerLayer : maxFeaturesPerLayer // ignore: cast_nullable_to_non_nullable
 as int,maxRingsPerFeature: null == maxRingsPerFeature ? _self.maxRingsPerFeature : maxRingsPerFeature // ignore: cast_nullable_to_non_nullable
@@ -222,7 +223,7 @@ return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeatu
 
 class _MvtDecodeLimits implements MvtDecodeLimits {
   const _MvtDecodeLimits({required this.maxLayers, required this.maxFeaturesPerLayer, required this.maxRingsPerFeature, required this.maxVerticesPerRing, required this.maxCommandsPerFeature, required this.maxLayerNameBytes});
-  
+
 
 /// 1つのtileに含められるlayer数の上限。
 @override final  int maxLayers;

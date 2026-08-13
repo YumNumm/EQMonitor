@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'verified_pm_tiles_source.dart';
@@ -9,6 +9,7 @@ part of 'verified_pm_tiles_source.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$VerifiedPmTilesSourceCopyWithImpl<$Res>
 /// Create a copy of VerifiedPmTilesSource
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? sourceInstanceId = null,Object? absolutePath = null,Object? sizeBytes = null,Object? sha256 = null,}) {
-  return _then(_self.copyWith(
+  return _then(VerifiedPmTilesSource(
 sourceInstanceId: null == sourceInstanceId ? _self.sourceInstanceId : sourceInstanceId // ignore: cast_nullable_to_non_nullable
 as String,absolutePath: null == absolutePath ? _self.absolutePath : absolutePath // ignore: cast_nullable_to_non_nullable
 as String,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
@@ -210,7 +211,7 @@ return $default(_that.sourceInstanceId,_that.absolutePath,_that.sizeBytes,_that.
 
 class _VerifiedPmTilesSource implements VerifiedPmTilesSource {
   const _VerifiedPmTilesSource({required this.sourceInstanceId, required this.absolutePath, required this.sizeBytes, required this.sha256});
-  
+
 
 @override final  String sourceInstanceId;
 @override final  String absolutePath;
