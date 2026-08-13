@@ -23,7 +23,9 @@ void main() {
     final archive = ControlledSeismicityArchive(
       descriptor: descriptor,
       occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([1])},
+      tileBytes: {
+        1: Uint8List.fromList([1]),
+      },
     );
     final handle = ControlledSeismicityDecoderWorkerHandle();
     final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
@@ -60,51 +62,64 @@ void main() {
         same(dataset),
       ),
     );
-    expect(await states, contains(const SeismicityPmTilesLoadState.completed()));
-    expect(handle.finishCount, 1);
-  });
-
-  test('rejects malformed finish dataset without completed publication', () async {
-    final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
-    final archive = ControlledSeismicityArchive(
-      descriptor: descriptor,
-      occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([1])},
-    );
-    final handle = ControlledSeismicityDecoderWorkerHandle();
-    final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
-    final runner = SeismicityPmTilesDecoderRunner(factory: factory);
-    final operation = runner.start(archive: archive, chunkCapacity: 4);
-    final states = fixtures.collect(stream: operation.states);
-
-    await fixtures.waitUntil(() => factory.spawnCount == 1);
-    factory.succeedSpawn();
-    await fixtures.waitUntil(() => handle.decodeCount == 1);
-    handle.succeedDecode(
-      progress: const SeismicityPmTilesDecodeProgress(
-        decodedTileCount: 1,
-        rawFeatureCount: 1,
-        uniqueFeatureCount: 1,
-      ),
-    );
-    await fixtures.waitUntil(() => handle.finishCount == 1);
-    handle.succeedFinish(
-      dataset: fixtures.dataset(
-        descriptor: descriptor,
-        chunks: [fixtures.corruptOffsetChunk()],
-      ),
-    );
-
-    final result = await operation.result;
-    expect(result, isA<SeismicityPmTilesFailure<SeismicityPmTilesDataset>>());
-    final observed = await states;
-    expect(observed, isNot(contains(const SeismicityPmTilesLoadState.completed())));
     expect(
-      observed.whereType<SeismicityPmTilesLoadFailed>().length,
-      1,
+      await states,
+      contains(const SeismicityPmTilesLoadState.completed()),
     );
     expect(handle.finishCount, 1);
   });
+
+  test(
+    'rejects malformed finish dataset without completed publication',
+    () async {
+      final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
+      final archive = ControlledSeismicityArchive(
+        descriptor: descriptor,
+        occupiedTileIds: const [1],
+        tileBytes: {
+          1: Uint8List.fromList([1]),
+        },
+      );
+      final handle = ControlledSeismicityDecoderWorkerHandle();
+      final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
+      final runner = SeismicityPmTilesDecoderRunner(factory: factory);
+      final operation = runner.start(archive: archive, chunkCapacity: 4);
+      final states = fixtures.collect(stream: operation.states);
+
+      await fixtures.waitUntil(() => factory.spawnCount == 1);
+      factory.succeedSpawn();
+      await fixtures.waitUntil(() => handle.decodeCount == 1);
+      handle.succeedDecode(
+        progress: const SeismicityPmTilesDecodeProgress(
+          decodedTileCount: 1,
+          rawFeatureCount: 1,
+          uniqueFeatureCount: 1,
+        ),
+      );
+      await fixtures.waitUntil(() => handle.finishCount == 1);
+      handle.succeedFinish(
+        dataset: fixtures.dataset(
+          descriptor: descriptor,
+          chunks: [fixtures.corruptOffsetChunk()],
+        ),
+      );
+      handle.succeedClose();
+      handle.succeedRetired();
+
+      final result = await operation.result;
+      expect(result, isA<SeismicityPmTilesFailure<SeismicityPmTilesDataset>>());
+      final observed = await states;
+      expect(
+        observed,
+        isNot(contains(const SeismicityPmTilesLoadState.completed())),
+      );
+      expect(
+        observed.whereType<SeismicityPmTilesLoadFailed>().length,
+        1,
+      );
+      expect(handle.finishCount, 1);
+    },
+  );
 }
 
 final class _Task50Fixtures {

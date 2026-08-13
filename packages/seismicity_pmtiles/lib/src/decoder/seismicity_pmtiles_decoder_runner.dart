@@ -70,6 +70,7 @@ final class SeismicityPmTilesDecoderRunner {
     required SeismicityDecoderRunLifecycle lifecycle,
     required _RunnerCleanupMemo cleanup,
   }) async {
+    var classifyAsWorker = false;
     try {
       controller.emit(state: const SeismicityPmTilesLoadState.openingSource());
       schemaValidator.validateDescriptor(descriptor: archive.descriptor);
@@ -86,14 +87,18 @@ final class SeismicityPmTilesDecoderRunner {
         zoom: archive.descriptor.dataZoom,
       )) {
         final tileBytes = await archive.readTile(tileId: tileId);
+        classifyAsWorker = true;
         final progress = await handle.decode(
           tileBytes: TransferableTypedData.fromList([
             exactTileBytes(bytes: tileBytes),
           ]),
         );
+        classifyAsWorker = false;
         controller.emitProgress(progress: progress);
       }
+      classifyAsWorker = true;
       final dataset = await handle.finish();
+      classifyAsWorker = false;
       publicationValidator.validate(
         dataset: dataset,
         acceptedDescriptor: archive.descriptor,
@@ -113,7 +118,22 @@ final class SeismicityPmTilesDecoderRunner {
         ),
       );
     } on SeismicityPmTilesException catch (error) {
-      controller.completeFailure(exception: error);
+      final decision = lifecycle.handle(
+        signal: classifyAsWorker
+            ? SeismicityDecoderRunWorkerFailureSignal(exception: error)
+            : SeismicityDecoderRunSourceFailureSignal(exception: error),
+      );
+      await ensureCleanup(
+        memo: cleanup,
+        archive: archive,
+        decision: decision,
+      );
+      publishDecision(
+        controller: controller,
+        decision: lifecycle.handle(
+          signal: const SeismicityDecoderRunCleanupSucceededSignal(),
+        ),
+      );
     }
   }
 
