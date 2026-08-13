@@ -17,10 +17,28 @@ final class SeismicityDecoderWorkerPendingDecode {
 final class SeismicityDecoderWorkerRouter {
   final _pending = <int, Completer<SeismicityPmTilesDecodeProgress>>{};
   final forwardedProgress = <SeismicityPmTilesDecodeProgress>[];
-  var _nextRequestId = 1;
+  var _nextRequestId = 0;
+  int? _initializeRequestId;
   var _ready = false;
   var _terminal = false;
   SeismicityPmTilesDecodeProgress? _lastProgress;
+
+  int registerInitialize() {
+    if (_terminal) {
+      throw const SeismicityPmTilesException.decoderWorkerFailed(
+        reason: 'registration_after_terminal',
+      );
+    }
+    if (_initializeRequestId != null) {
+      throw const SeismicityPmTilesException.decoderWorkerFailed(
+        reason: 'unknown_or_duplicate_request_id',
+      );
+    }
+    final requestId = _nextRequestId;
+    _nextRequestId += 1;
+    _initializeRequestId = requestId;
+    return requestId;
+  }
 
   SeismicityDecoderWorkerPendingDecode registerDecode() {
     if (_terminal) {
@@ -44,7 +62,13 @@ final class SeismicityDecoderWorkerRouter {
 
   void handleResponse({required SeismicityDecoderWorkerResponse response}) {
     switch (response) {
-      case SeismicityDecoderWorkerReadyResponse():
+      case SeismicityDecoderWorkerReadyResponse(:final requestId):
+        final expected = _initializeRequestId;
+        if (_ready || expected == null || requestId != expected) {
+          throw const SeismicityPmTilesException.decoderWorkerFailed(
+            reason: 'unknown_or_duplicate_request_id',
+          );
+        }
         _ready = true;
       case SeismicityDecoderWorkerProgressResponse(
         :final requestId,

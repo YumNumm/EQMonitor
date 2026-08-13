@@ -9,14 +9,18 @@ void main() {
     'router completes matching decode futures in order after ready',
     () async {
       final router = SeismicityDecoderWorkerRouter();
+      final initializeRequestId = router.registerInitialize();
       final first = router.registerDecode();
       final second = router.registerDecode();
 
+      expect(initializeRequestId, 0);
       expect(first.requestId, 1);
       expect(second.requestId, 2);
 
       router.handleResponse(
-        response: const SeismicityDecoderWorkerResponse.ready(requestId: 0),
+        response: SeismicityDecoderWorkerResponse.ready(
+          requestId: initializeRequestId,
+        ),
       );
       router.handleResponse(
         response: SeismicityDecoderWorkerResponse.progress(
@@ -72,6 +76,7 @@ void main() {
 
   test('router rejects invalid routing transitions', () {
     final router = SeismicityDecoderWorkerRouter();
+    final initializeRequestId = router.registerInitialize();
     final pending = router.registerDecode();
 
     expect(
@@ -87,10 +92,31 @@ void main() {
       ),
       throwsA(isA<SeismicityPmTilesDecoderWorkerFailedException>()),
     );
+    expect(
+      () => router.handleResponse(
+        response: const SeismicityDecoderWorkerResponse.ready(requestId: 99),
+      ),
+      throwsA(isA<SeismicityPmTilesDecoderWorkerFailedException>()),
+    );
 
     router.handleResponse(
-      response: const SeismicityDecoderWorkerResponse.ready(requestId: 0),
+      response: SeismicityDecoderWorkerResponse.ready(
+        requestId: initializeRequestId,
+      ),
     );
+    expect(
+      () => router.handleResponse(
+        response: SeismicityDecoderWorkerResponse.ready(
+          requestId: initializeRequestId,
+        ),
+      ),
+      throwsA(isA<SeismicityPmTilesDecoderWorkerFailedException>()),
+    );
+    expect(
+      router.registerInitialize,
+      throwsA(isA<SeismicityPmTilesDecoderWorkerFailedException>()),
+    );
+
     router.handleResponse(
       response: SeismicityDecoderWorkerResponse.progress(
         requestId: pending.requestId,
@@ -146,7 +172,7 @@ void main() {
 
     router.markTerminal();
     expect(
-      () => router.registerDecode(),
+      router.registerDecode,
       throwsA(isA<SeismicityPmTilesDecoderWorkerFailedException>()),
     );
   });
