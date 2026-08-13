@@ -24,15 +24,17 @@ void main() {
   });
 
   test('records zoom and returns exact tile bytes after release', () async {
-    final archive = ControlledSeismicityArchive(
-      descriptor: fixtures.descriptor(),
-      occupiedTileIds: const [7, 8],
-      tileBytes: {
-        7: Uint8List.fromList([1, 2, 3]),
-        8: Uint8List.fromList([4]),
-      },
-    )..pauseBeforeNextEnumeration()
-      ..pauseBeforeNextRead();
+    final archive =
+        ControlledSeismicityArchive(
+            descriptor: fixtures.descriptor(),
+            occupiedTileIds: const [7, 8],
+            tileBytes: {
+              7: Uint8List.fromList([1, 2, 3]),
+              8: Uint8List.fromList([4]),
+            },
+          )
+          ..pauseBeforeNextEnumeration()
+          ..pauseBeforeNextRead();
 
     final idsFuture = archive.occupiedTileIdsAtZoom(zoom: 3).toList();
     await fixtures.waitUntil(() => archive.zoomRequests.isNotEmpty);
@@ -51,13 +53,17 @@ void main() {
     final failure = SeismicityPmTilesException.corruptArchive(
       reason: 'closed-while-paused',
     );
-    final archive = ControlledSeismicityArchive(
-      descriptor: fixtures.descriptor(),
-      occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([9])},
-      closeReleaseFailure: failure,
-    )..pauseBeforeNextEnumeration()
-      ..pauseBeforeNextRead();
+    final archive =
+        ControlledSeismicityArchive(
+            descriptor: fixtures.descriptor(),
+            occupiedTileIds: const [1],
+            tileBytes: {
+              1: Uint8List.fromList([9]),
+            },
+            closeReleaseFailure: failure,
+          )
+          ..pauseBeforeNextEnumeration()
+          ..pauseBeforeNextRead();
 
     final ids = expectLater(
       archive.occupiedTileIdsAtZoom(zoom: 0).toList(),
@@ -83,13 +89,16 @@ void main() {
       reason: 'enum-fail',
     );
     final readFailure = SeismicityPmTilesException.tileNotFound(tileId: 99);
-    final archive = ControlledSeismicityArchive(
-      descriptor: fixtures.descriptor(),
-      occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([1])},
-    )
-      ..queueEnumerationFailure(error: enumFailure)
-      ..queueReadFailure(error: readFailure);
+    final archive =
+        ControlledSeismicityArchive(
+            descriptor: fixtures.descriptor(),
+            occupiedTileIds: const [1],
+            tileBytes: {
+              1: Uint8List.fromList([1]),
+            },
+          )
+          ..queueEnumerationFailure(error: enumFailure)
+          ..queueReadFailure(error: readFailure);
 
     await expectLater(
       archive.occupiedTileIdsAtZoom(zoom: 1).toList(),

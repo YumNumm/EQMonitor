@@ -18,8 +18,9 @@ typedef SeismicityChunkFixedColumnData = ({
   Int64List originTimeUnixMilliseconds,
 });
 
-typedef SeismicityChunkFixedColumnAllocator =
-    T Function<T>(T Function() create);
+typedef SeismicityChunkFixedColumnAllocator = T Function<T>(
+  T Function() create,
+);
 
 final class SeismicityChunkFixedColumns {
   SeismicityChunkFixedColumns({

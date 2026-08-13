@@ -22,7 +22,9 @@ void main() {
     final archive = ControlledSeismicityArchive(
       descriptor: descriptor,
       occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([1])},
+      tileBytes: {
+        1: Uint8List.fromList([1]),
+      },
     )..deferCloseCompletion = true;
     final handle = ControlledSeismicityDecoderWorkerHandle();
     final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);

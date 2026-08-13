@@ -7,48 +7,53 @@ import 'package:test/test.dart';
 void main() {
   final fixtures = _Task46Fixtures();
 
-  test('public view exposes ordered progress one result and closed stream', () async {
-    final controller = SeismicityPmTilesDecodeOperationController();
-    final SeismicityPmTilesDecodeOperation operation = controller.operation;
-    final states = fixtures.collect(stream: operation.states);
+  test(
+    'public view exposes ordered progress one result and closed stream',
+    () async {
+      final controller = SeismicityPmTilesDecodeOperationController();
+      final SeismicityPmTilesDecodeOperation operation = controller.operation;
+      final states = fixtures.collect(stream: operation.states);
 
-    const firstProgress = SeismicityPmTilesDecodeProgress(
-      decodedTileCount: 1,
-      rawFeatureCount: 2,
-      uniqueFeatureCount: 2,
-    );
-    const secondProgress = SeismicityPmTilesDecodeProgress(
-      decodedTileCount: 2,
-      rawFeatureCount: 3,
-      uniqueFeatureCount: 3,
-    );
-    const dataset = SeismicityPmTilesDataset(
-      archiveRevision: 'rev-46',
-      schemaVersion: 1,
-      dataZoom: 0,
-      featureCount: 0,
-      chunks: [],
-    );
+      const firstProgress = SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 1,
+        rawFeatureCount: 2,
+        uniqueFeatureCount: 2,
+      );
+      const secondProgress = SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 2,
+        rawFeatureCount: 3,
+        uniqueFeatureCount: 3,
+      );
+      const dataset = SeismicityPmTilesDataset(
+        archiveRevision: 'rev-46',
+        schemaVersion: 1,
+        dataZoom: 0,
+        featureCount: 0,
+        chunks: [],
+      );
 
-    controller.emit(state: const SeismicityPmTilesLoadState.openingSource());
-    controller.emit(state: const SeismicityPmTilesLoadState.readingDirectory());
-    controller.emitProgress(progress: firstProgress);
-    controller.emitProgress(progress: secondProgress);
-    controller.completeSuccess(dataset: dataset);
-    controller.completeSuccess(dataset: dataset);
+      controller.emit(state: const SeismicityPmTilesLoadState.openingSource());
+      controller.emit(
+        state: const SeismicityPmTilesLoadState.readingDirectory(),
+      );
+      controller.emitProgress(progress: firstProgress);
+      controller.emitProgress(progress: secondProgress);
+      controller.completeSuccess(dataset: dataset);
+      controller.completeSuccess(dataset: dataset);
 
-    expect(await states, [
-      const SeismicityPmTilesLoadState.openingSource(),
-      const SeismicityPmTilesLoadState.readingDirectory(),
-      const SeismicityPmTilesLoadState.decoding(progress: firstProgress),
-      const SeismicityPmTilesLoadState.decoding(progress: secondProgress),
-      const SeismicityPmTilesLoadState.completed(),
-    ]);
-    expect(
-      await operation.result,
-      const SeismicityPmTilesResult.success(value: dataset),
-    );
-  });
+      expect(await states, [
+        const SeismicityPmTilesLoadState.openingSource(),
+        const SeismicityPmTilesLoadState.readingDirectory(),
+        const SeismicityPmTilesLoadState.decoding(progress: firstProgress),
+        const SeismicityPmTilesLoadState.decoding(progress: secondProgress),
+        const SeismicityPmTilesLoadState.completed(),
+      ]);
+      expect(
+        await operation.result,
+        const SeismicityPmTilesResult.success(value: dataset),
+      );
+    },
+  );
 
   test('cancel is idempotent and only delegates once', () async {
     var cancelCount = 0;

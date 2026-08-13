@@ -6,7 +6,8 @@ sealed class SeismicityDecoderRunSignal {
   const SeismicityDecoderRunSignal();
 }
 
-final class SeismicityDecoderRunSuccessSignal extends SeismicityDecoderRunSignal {
+final class SeismicityDecoderRunSuccessSignal
+    extends SeismicityDecoderRunSignal {
   const SeismicityDecoderRunSuccessSignal({required this.dataset});
 
   final SeismicityPmTilesDataset dataset;
@@ -26,7 +27,8 @@ final class SeismicityDecoderRunWorkerFailureSignal
   final SeismicityPmTilesException exception;
 }
 
-final class SeismicityDecoderRunCancelSignal extends SeismicityDecoderRunSignal {
+final class SeismicityDecoderRunCancelSignal
+    extends SeismicityDecoderRunSignal {
   const SeismicityDecoderRunCancelSignal();
 }
 
@@ -105,9 +107,10 @@ final class SeismicityDecoderRunLifecycle {
       ),
       SeismicityDecoderRunCleanupFailedSignal(:final exception) =>
         decideCleanupFinished(
-          replacement: SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
-            exception: exception,
-          ),
+          replacement:
+              SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+                exception: exception,
+              ),
         ),
     };
   }

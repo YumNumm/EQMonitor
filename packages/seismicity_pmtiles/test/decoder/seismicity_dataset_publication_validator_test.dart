@@ -144,6 +144,6 @@ final class _Task49Fixtures {
     depthValidity: Uint8List(1),
   );
 
-  SeismicityPmTilesChunk corruptFixedColumnLengthChunk() => chunk(id: 1)
-      .copyWith(longitudes: Float64List.fromList([139, 140]));
+  SeismicityPmTilesChunk corruptFixedColumnLengthChunk() =>
+      chunk(id: 1).copyWith(longitudes: Float64List.fromList([139, 140]));
 }

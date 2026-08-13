@@ -1,4 +1,5 @@
 import 'package:vector_tile/raw/raw_vector_tile.dart';
+
 import 'seismicity_mvt_fixture_builder.dart';
 import 'seismicity_mvt_mutation.dart';
 

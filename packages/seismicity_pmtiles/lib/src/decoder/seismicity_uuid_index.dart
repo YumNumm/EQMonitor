@@ -5,8 +5,10 @@ import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-typedef SeismicityUuidEquals =
-    bool Function({required int rowIndex, required Uint8List candidate});
+typedef SeismicityUuidEquals = bool Function({
+  required int rowIndex,
+  required Uint8List candidate,
+});
 
 final class SeismicityUuidIndex {
   SeismicityUuidIndex({

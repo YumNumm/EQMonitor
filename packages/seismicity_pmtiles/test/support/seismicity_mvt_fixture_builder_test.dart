@@ -2,6 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:test/test.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
+
 import 'seismicity_mvt_fixture_builder.dart';
 
 void main() {
@@ -14,9 +15,8 @@ void main() {
       featureTags: const [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7],
       featureType: VectorTile_GeomType.POINT,
       point: (x: -3, y: 4),
-      keys:
-          'hypocenter_id origin_time_unix_ms magnitude depth_km max_intensity determination_flag earthquake_event_id geometry_clamped'
-              .split(' '),
+      keys: 'hypocenter_id origin_time_unix_ms magnitude depth_km max_intensity determination_flag earthquake_event_id geometry_clamped'
+          .split(' '),
       values: [
         SeismicityFixtureScalar.string('h-1'),
         SeismicityFixtureScalar.signed('1700'),
