@@ -80,6 +80,8 @@ void main() {
     );
     SeismicityPmTilesDecodeOperation? operation;
     expect(operation, isNull);
+    final decoder = SeismicityPmTilesDecoder();
+    expect(decoder.start, isA<Function>());
     expect(entry.runLength, 1);
   });
 }
