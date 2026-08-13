@@ -43,9 +43,11 @@ final class SeismicityPmTilesDecoderRunner {
           signal: const SeismicityDecoderRunCancelSignal(),
         );
         try {
-          await ensureCleanup(
+          await settleCleanup(
             memo: cleanup,
             archive: archive,
+            lifecycle: lifecycle,
+            controller: controller,
             decision: decision,
           );
         } on SeismicityPmTilesException {
@@ -84,6 +86,13 @@ final class SeismicityPmTilesDecoderRunner {
         chunkCapacity: chunkCapacity,
       );
       cleanup.handle = handle;
+      if (cleanup.future != null) {
+        // Cancel already settled without this handle — retire it once.
+        await handle.cancel();
+        await handle.close();
+        await handle.retired;
+        return;
+      }
       controller.emit(
         state: const SeismicityPmTilesLoadState.readingDirectory(),
       );
@@ -201,7 +210,14 @@ final class SeismicityPmTilesDecoderRunner {
       case SeismicityPmTilesSuccess<SeismicityPmTilesDataset>(:final value):
         controller.completeSuccess(dataset: value);
       case SeismicityPmTilesFailure<SeismicityPmTilesDataset>(:final exception):
-        controller.completeFailure(exception: exception);
+        switch (exception) {
+          case SeismicityPmTilesDecoderWorkerFailedException(
+            reason: 'cancelled',
+          ):
+            controller.completeCancelled(exception: exception);
+          case _:
+            controller.completeFailure(exception: exception);
+        }
       case null:
         break;
     }
