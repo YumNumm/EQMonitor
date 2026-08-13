@@ -12,7 +12,7 @@ final class ControlledSeismicityDecoderWorkerHandle
   ControlledSeismicityDecoderWorkerHandle({this.captureTileBytes = false});
 
   final bool captureTileBytes;
-  final _decode = Completer<SeismicityPmTilesDecodeProgress>();
+  final _pendingDecodes = <Completer<SeismicityPmTilesDecodeProgress>>[];
   final _finish = Completer<SeismicityPmTilesDataset>();
   final _cancel = Completer<void>();
   final _close = Completer<void>();
@@ -30,6 +30,7 @@ final class ControlledSeismicityDecoderWorkerHandle
   int get finishCount => _finishCount;
   int get cancelCount => _cancelCount;
   int get closeCount => _closeCount;
+  int get pendingDecodeCount => _pendingDecodes.length;
 
   @override
   Future<SeismicityPmTilesDecodeProgress> decode({
@@ -42,9 +43,12 @@ final class ControlledSeismicityDecoderWorkerHandle
       );
     }
     final error = _decodeError;
-    return error == null
-        ? _decode.future
-        : Future<SeismicityPmTilesDecodeProgress>.error(error);
+    if (error != null) {
+      return Future<SeismicityPmTilesDecodeProgress>.error(error);
+    }
+    final pending = Completer<SeismicityPmTilesDecodeProgress>();
+    _pendingDecodes.add(pending);
+    return pending.future;
   }
 
   @override
@@ -72,16 +76,18 @@ final class ControlledSeismicityDecoderWorkerHandle
   Future<void> get retired => _retired.future;
 
   void succeedDecode({required SeismicityPmTilesDecodeProgress progress}) {
-    if (!_decode.isCompleted) {
-      _decode.complete(progress);
+    if (_pendingDecodes.isEmpty) {
+      return;
     }
+    _pendingDecodes.removeAt(0).complete(progress);
   }
 
   void failDecode({required SeismicityPmTilesException error}) {
     _decodeError = error;
-    if (_decodeCount > 0 && !_decode.isCompleted) {
-      _decode.completeError(error);
+    if (_pendingDecodes.isEmpty) {
+      return;
     }
+    _pendingDecodes.removeAt(0).completeError(error);
   }
 
   void succeedFinish({required SeismicityPmTilesDataset dataset}) {
