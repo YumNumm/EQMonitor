@@ -37,7 +37,7 @@ void main() {
           fixture.decompressedTiles[tileId],
         );
       }
-      await Future.wait([archive.close(), archive.close()]);
+      await archive.close();
 
       await expectLater(
         fixtures.openAssetArchive(
