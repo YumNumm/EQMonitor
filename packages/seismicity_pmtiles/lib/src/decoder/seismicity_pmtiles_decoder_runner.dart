@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/archive/seismicity_pmtiles_archive.dart';
+import 'package:seismicity_pmtiles/src/decoder/seismicity_dataset_publication_validator.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_run_lifecycle.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decode_operation.dart';
@@ -15,10 +16,12 @@ final class SeismicityPmTilesDecoderRunner {
   SeismicityPmTilesDecoderRunner({
     required SeismicityDecoderWorkerFactory this.factory,
     this.schemaValidator = const SeismicitySchemaV1Validator(),
+    this.publicationValidator = const SeismicityDatasetPublicationValidator(),
   });
 
   final SeismicityDecoderWorkerFactory factory;
   final SeismicitySchemaV1Validator schemaValidator;
+  final SeismicityDatasetPublicationValidator publicationValidator;
 
   SeismicityPmTilesDecodeOperation start({
     required SeismicityPmTilesArchive archive,
@@ -72,11 +75,15 @@ final class SeismicityPmTilesDecoderRunner {
         );
         controller.emitProgress(progress: progress);
       }
-    } on SeismicityPmTilesException catch (error) {
-      // Task 48: record the sticky failure only. Finish/publish/cleanup come later.
-      lifecycle.handle(
-        signal: SeismicityDecoderRunSourceFailureSignal(exception: error),
+      final dataset = await handle.finish();
+      publicationValidator.validate(
+        dataset: dataset,
+        acceptedDescriptor: archive.descriptor,
       );
+      // Task 51 owns success cleanup + delayed settle via lifecycle.
+      controller.completeSuccess(dataset: dataset);
+    } on SeismicityPmTilesException catch (error) {
+      controller.completeFailure(exception: error);
     }
   }
 

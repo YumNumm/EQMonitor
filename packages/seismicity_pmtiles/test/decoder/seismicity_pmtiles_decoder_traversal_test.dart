@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decoder_runner.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:test/test.dart';
@@ -65,9 +66,18 @@ void main() {
       uniqueFeatureCount: 2,
     );
     handle.succeedDecode(progress: secondProgress);
-    await fixtures.waitUntil(() => handle.pendingDecodeCount == 0);
+    await fixtures.waitUntil(() => handle.finishCount == 1);
     expect(factory.spawnCount, 1);
-    expect(handle.finishCount, 0);
+    expect(handle.finishCount, 1);
+    handle.succeedFinish(
+      dataset: SeismicityPmTilesDataset(
+        archiveRevision: descriptor.archiveRevision,
+        schemaVersion: descriptor.schemaVersion,
+        dataZoom: descriptor.dataZoom,
+        featureCount: 0,
+        chunks: const [],
+      ),
+    );
   });
 
   test('invalid descriptor fails before spawn', () async {
@@ -101,7 +111,7 @@ final class _Task48Fixtures {
     schemaVersion: schemaVersion,
     dataZoom: dataZoom,
     expectedSizeBytes: 64,
-    expectedFeatureCount: 2,
+    expectedFeatureCount: 0,
     archiveRevision: 'rev-task-48',
     periodFrom: DateTime.utc(2024),
     periodTo: DateTime.utc(2025),
