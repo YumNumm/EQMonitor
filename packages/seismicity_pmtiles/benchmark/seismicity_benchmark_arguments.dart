@@ -72,11 +72,6 @@ final class SeismicityBenchmarkArgumentsParser {
           );
       }
     }
-    if (featureCount % featuresPerTile != 0) {
-      throw SeismicityBenchmarkArgumentsException(
-        message: '--features must divide evenly by --features-per-tile\n$usage',
-      );
-    }
     return SeismicityBenchmarkArguments(
       featureCount: featureCount,
       featuresPerTile: featuresPerTile,
