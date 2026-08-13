@@ -18,10 +18,11 @@ void main() {
     'rejects malformed later MVT without publishing earlier rows',
     () async {
       final built = fixtures.buildArchive();
-      final archive = await fixtures.openAssetArchive(
+      final inner = await fixtures.openAssetArchive(
         bytes: built.bytes,
         descriptor: built.descriptor,
       );
+      final archive = _CountingArchive(inner: inner);
       final operation = SeismicityPmTilesDecoder().start(
         archive: archive,
         chunkCapacity: 1,
@@ -71,15 +72,53 @@ void main() {
         states,
         isNot(contains(const SeismicityPmTilesLoadState.completed())),
       );
-      expect(states.whereType<SeismicityPmTilesLoadCompleted>(), isEmpty);
+      expect(states.whereType<SeismicityPmTilesLoadFailed>(), hasLength(1));
 
+      // Result settles only after memoized cleanup (archive close + worker
+      // retire). Exactly-once close is counted; late cancel must not reopen it.
+      expect(archive.closeCount, 1);
+      await operation.cancel();
+      expect(archive.closeCount, 1);
+      await archive.close();
+      expect(archive.closeCount, 1);
       await expectLater(
         archive.readTile(tileId: built.validTileId),
         throwsA(isA<SeismicityPmTilesException>()),
       );
-      await archive.close();
     },
   );
+}
+
+final class _CountingArchive implements SeismicityPmTilesArchive {
+  _CountingArchive({required this.inner});
+
+  final SeismicityPmTilesArchive inner;
+  Future<void>? _close;
+  var closeCount = 0;
+
+  @override
+  SeismicityPmTilesArchiveDescriptor get descriptor => inner.descriptor;
+
+  @override
+  PmTilesV3Header get header => inner.header;
+
+  @override
+  Stream<int> occupiedTileIdsAtZoom({required int zoom}) =>
+      inner.occupiedTileIdsAtZoom(zoom: zoom);
+
+  @override
+  Future<Uint8List> readTile({required int tileId}) =>
+      inner.readTile(tileId: tileId);
+
+  @override
+  Future<void> close() {
+    final existing = _close;
+    if (existing != null) {
+      return existing;
+    }
+    closeCount = 1;
+    return _close = inner.close();
+  }
 }
 
 final class _Task62BuiltArchive {
