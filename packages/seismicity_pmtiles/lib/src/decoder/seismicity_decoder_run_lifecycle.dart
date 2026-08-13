@@ -73,22 +73,28 @@ final class SeismicityDecoderRunLifecycle {
   }) {
     return switch (signal) {
       SeismicityDecoderRunSuccessSignal(:final dataset) => decideTerminal(
-        next: SeismicityPmTilesResult.success(value: dataset),
+        next: SeismicityPmTilesResult<SeismicityPmTilesDataset>.success(
+          value: dataset,
+        ),
         cancelWorker: false,
       ),
       SeismicityDecoderRunSourceFailureSignal(:final exception) =>
         decideTerminal(
-          next: SeismicityPmTilesResult.failure(exception: exception),
+          next: SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+            exception: exception,
+          ),
           cancelWorker: false,
         ),
       SeismicityDecoderRunWorkerFailureSignal(:final exception) =>
         decideTerminal(
-          next: SeismicityPmTilesResult.failure(exception: exception),
+          next: SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+            exception: exception,
+          ),
           cancelWorker: false,
         ),
       SeismicityDecoderRunCancelSignal() => decideTerminal(
-        next: SeismicityPmTilesResult.failure(
-          exception: const SeismicityPmTilesException.decoderWorkerFailed(
+        next: const SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+          exception: SeismicityPmTilesException.decoderWorkerFailed(
             reason: 'cancelled',
           ),
         ),
@@ -99,7 +105,9 @@ final class SeismicityDecoderRunLifecycle {
       ),
       SeismicityDecoderRunCleanupFailedSignal(:final exception) =>
         decideCleanupFinished(
-          replacement: SeismicityPmTilesResult.failure(exception: exception),
+          replacement: SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+            exception: exception,
+          ),
         ),
     };
   }
@@ -135,11 +143,6 @@ final class SeismicityDecoderRunLifecycle {
   SeismicityDecoderRunDecision decideCleanupFinished({
     required SeismicityPmTilesResult<SeismicityPmTilesDataset>? replacement,
   }) {
-    final current = _result;
-    if (replacement != null &&
-        current is SeismicityPmTilesSuccess<SeismicityPmTilesDataset>) {
-      _result = replacement;
-    }
     if (_statesCompleted) {
       return SeismicityDecoderRunDecision(
         result: _result,
@@ -150,6 +153,11 @@ final class SeismicityDecoderRunLifecycle {
         publishResult: false,
         completeStates: false,
       );
+    }
+    final current = _result;
+    if (replacement != null &&
+        current is SeismicityPmTilesSuccess<SeismicityPmTilesDataset>) {
+      _result = replacement;
     }
     _statesCompleted = true;
     return SeismicityDecoderRunDecision(

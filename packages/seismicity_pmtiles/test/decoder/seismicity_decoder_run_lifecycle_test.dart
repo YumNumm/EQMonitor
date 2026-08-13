@@ -143,4 +143,23 @@ void main() {
     expect(kept.completeStates, isTrue);
     expect(kept.result, same(primary.result));
   });
+
+  test('late cleanup failure after publish does not replace success', () {
+    final lifecycle = SeismicityDecoderRunLifecycle();
+    final success = lifecycle.handle(
+      signal: const SeismicityDecoderRunSuccessSignal(dataset: dataset),
+    );
+    final published = lifecycle.handle(
+      signal: const SeismicityDecoderRunCleanupSucceededSignal(),
+    );
+    expect(published.result, same(success.result));
+    final late = lifecycle.handle(
+      signal: const SeismicityDecoderRunCleanupFailedSignal(
+        exception: cleanupFailure,
+      ),
+    );
+    expect(late.publishResult, isFalse);
+    expect(late.completeStates, isFalse);
+    expect(late.result, same(success.result));
+  });
 }
