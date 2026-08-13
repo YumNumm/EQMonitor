@@ -41,13 +41,12 @@ final class DartSeismicityDecoderIsolateLauncher
     final responsePort = ReceivePort();
     final errorPort = ReceivePort();
     final exitPort = ReceivePort();
-    final workerPort = Completer<SendPort>();
+    final workerPort = Completer<SendPort?>();
     final exited = Completer<void>();
     // ignore: close_sinks - the endpoint owns this controller after launch.
-    final responses =
-        StreamController<SeismicityDecoderWorkerResponse>.broadcast();
-    final errors = StreamController<SeismicityDecoderWorkerError>.broadcast();
-    final exits = StreamController<SeismicityDecoderWorkerExit>.broadcast();
+    final responses = StreamController<SeismicityDecoderWorkerResponse>();
+    final errors = StreamController<SeismicityDecoderWorkerError>();
+    final exits = StreamController<SeismicityDecoderWorkerExit>();
     responsePort.listen((message) {
       switch (message) {
         case SendPort() when !workerPort.isCompleted:
@@ -61,9 +60,15 @@ final class DartSeismicityDecoderIsolateLauncher
         [final error, ...] => error.toString(),
         _ => message.toString(),
       };
+      if (!workerPort.isCompleted) {
+        workerPort.complete(null);
+      }
       errors.add(SeismicityDecoderWorkerError(message: errorMessage));
     });
     exitPort.listen((_) {
+      if (!workerPort.isCompleted) {
+        workerPort.complete(null);
+      }
       exits.add(const SeismicityDecoderWorkerExit());
       if (!exited.isCompleted) {
         exited.complete();
@@ -80,9 +85,9 @@ final class DartSeismicityDecoderIsolateLauncher
       onExit: exitPort.sendPort,
     );
 
-    return DartSeismicityDecoderWorkerEndpoint(
+    return _DartSeismicityDecoderWorkerEndpoint(
       isolate: isolate,
-      workerPort: await workerPort.future,
+      workerPort: workerPort.future,
       responsePort: responsePort,
       responsesController: responses,
       errors: errors.stream,
@@ -92,22 +97,22 @@ final class DartSeismicityDecoderIsolateLauncher
   }
 }
 
-final class DartSeismicityDecoderWorkerEndpoint
+final class _DartSeismicityDecoderWorkerEndpoint
     implements SeismicityDecoderWorkerEndpoint {
-  DartSeismicityDecoderWorkerEndpoint({
-    required this.isolate,
-    required this.workerPort,
-    required this.responsePort,
-    required this.responsesController,
+  _DartSeismicityDecoderWorkerEndpoint({
+    required this._isolate,
+    required this._workerPort,
+    required this._responsePort,
+    required this._responsesController,
     required this.errors,
     required this.exits,
     required this.exited,
   });
 
-  final Isolate isolate;
-  final SendPort workerPort;
-  final ReceivePort responsePort;
-  final StreamController<SeismicityDecoderWorkerResponse> responsesController;
+  final Isolate _isolate;
+  final Future<SendPort?> _workerPort;
+  final ReceivePort _responsePort;
+  final StreamController<SeismicityDecoderWorkerResponse> _responsesController;
   @override
   final Stream<SeismicityDecoderWorkerError> errors;
   @override
@@ -119,11 +124,17 @@ final class DartSeismicityDecoderWorkerEndpoint
 
   @override
   Stream<SeismicityDecoderWorkerResponse> get responses =>
-      responsesController.stream;
+      _responsesController.stream;
 
   @override
   void send({required SeismicityDecoderWorkerRequest request}) {
-    workerPort.send(request);
+    unawaited(
+      _workerPort.then((port) {
+        if (port != null) {
+          port.send(request);
+        }
+      }),
+    );
   }
 
   @override
@@ -132,8 +143,8 @@ final class DartSeismicityDecoderWorkerEndpoint
       return;
     }
     _receivePortClosed = true;
-    responsePort.close();
-    unawaited(responsesController.close());
+    _responsePort.close();
+    unawaited(_responsesController.close());
   }
 
   @override
@@ -142,6 +153,6 @@ final class DartSeismicityDecoderWorkerEndpoint
       return;
     }
     _killed = true;
-    isolate.kill(priority: Isolate.immediate);
+    _isolate.kill(priority: Isolate.immediate);
   }
 }

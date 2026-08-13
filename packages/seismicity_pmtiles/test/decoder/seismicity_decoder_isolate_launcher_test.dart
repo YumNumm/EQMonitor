@@ -6,6 +6,28 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protoco
 import 'package:test/test.dart';
 
 void main() {
+  test('dart launcher exposes worker failure before handshake', () async {
+    final launcher = DartSeismicityDecoderIsolateLauncher();
+    final endpoint = await launcher
+        .launch(workerMain: ThrowingBeforeHandshakeIsolate.run)
+        .timeout(const Duration(seconds: 1));
+    addTearDown(() async {
+      endpoint.closeReceivePort();
+      endpoint.kill();
+      await endpoint.exited;
+    });
+
+    expect(
+      (await endpoint.errors.first.timeout(const Duration(seconds: 3))).message,
+      contains('handshake failed'),
+    );
+    expect(
+      await endpoint.exits.first.timeout(const Duration(seconds: 3)),
+      isA<SeismicityDecoderWorkerExit>(),
+    );
+    await endpoint.exited.timeout(const Duration(seconds: 3));
+  });
+
   test('dart launcher forwards typed response and exit once', () async {
     final launcher = DartSeismicityDecoderIsolateLauncher();
     final endpoint = await launcher.launch(workerMain: EchoWorkerIsolate.run);
@@ -70,5 +92,14 @@ final class EchoWorkerIsolate {
           Isolate.exit();
       }
     }
+  }
+}
+
+// Isolate.spawn needs a static entrypoint, while project rules avoid
+// top-level helpers.
+// ignore: avoid_classes_with_only_static_members
+final class ThrowingBeforeHandshakeIsolate {
+  static void run(SendPort initialReplyTo) {
+    throw StateError('handshake failed');
   }
 }
