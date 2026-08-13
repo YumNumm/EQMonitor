@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'target_union.dart';
@@ -9,6 +9,7 @@ part of 'target_union.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 TargetUnion _$TargetUnionFromJson(
@@ -23,7 +24,7 @@ TargetUnion _$TargetUnionFromJson(
           return TargetUnionVariant2.fromJson(
             json
           );
-
+        
           default:
             throw CheckedFromJsonException(
   json,
@@ -32,7 +33,7 @@ TargetUnion _$TargetUnionFromJson(
   'Invalid union type "${json['runtimeType']}"!'
 );
         }
-
+      
 }
 
 /// @nodoc
@@ -233,7 +234,7 @@ return variant2(_that.type,_that.token,_that.environment);case _:
 
 @JsonSerializable()
 class TargetUnionVariant1 implements TargetUnion {
-  const TargetUnionVariant1({required this.type, required this.deviceId, final  String? $type}): $type = $type ?? 'variant1';
+  const TargetUnionVariant1({required this.type, required this.deviceId,  String? $type}): $type = $type ?? 'variant1';
   factory TargetUnionVariant1.fromJson(Map<String, dynamic> json) => _$TargetUnionVariant1FromJson(json);
 
 /// const: "DEVICE_ID"
@@ -309,7 +310,7 @@ as String,
 
 @JsonSerializable()
 class TargetUnionVariant2 implements TargetUnion {
-  const TargetUnionVariant2({required this.type, required this.token, required this.environment, final  String? $type}): $type = $type ?? 'variant2';
+  const TargetUnionVariant2({required this.type, required this.token, required this.environment,  String? $type}): $type = $type ?? 'variant2';
   factory TargetUnionVariant2.fromJson(Map<String, dynamic> json) => _$TargetUnionVariant2FromJson(json);
 
 /// const: "PUSH_TO_START_TOKEN"

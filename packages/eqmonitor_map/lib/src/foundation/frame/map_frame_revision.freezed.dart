@@ -45,7 +45,7 @@ String toString() {
 
 class _MapFrameRevisionStamp implements MapFrameRevisionStamp {
   const _MapFrameRevisionStamp({required this.scope, required this.sourceInstanceId, required this.revision, this.contentDigest, this.ownerKey});
-
+  
 
 @override final  MapFrameRevisionScope scope;
 @override final  MapSourceInstanceId sourceInstanceId;

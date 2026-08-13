@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'feed_item_data_union.dart';
@@ -9,6 +9,7 @@ part of 'feed_item_data_union.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 FeedItemDataUnion _$FeedItemDataUnionFromJson(
@@ -283,7 +284,7 @@ return feedDeveloperMessageData(_that.type,_that.url);case _:
 
 @JsonSerializable()
 class FeedItemDataUnionFeedEarthquakeNoticeData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedEarthquakeNoticeData({required this.type, required this.text, final  String? $type}): $type = $type ?? 'feedEarthquakeNoticeData';
+  const FeedItemDataUnionFeedEarthquakeNoticeData({required this.type, required this.text,  String? $type}): $type = $type ?? 'feedEarthquakeNoticeData';
   factory FeedItemDataUnionFeedEarthquakeNoticeData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeNoticeDataFromJson(json);
 
 /// const: "EARTHQUAKE_NOTICE"
@@ -359,7 +360,7 @@ as String,
 
 @JsonSerializable()
 class FeedItemDataUnionFeedEarthquakeExplanationData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedEarthquakeExplanationData({required this.type, required this.infoType, required this.text, @JsonKey(includeIfNull: false) this.naming, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): $type = $type ?? 'feedEarthquakeExplanationData';
+  const FeedItemDataUnionFeedEarthquakeExplanationData({required this.type, required this.infoType, required this.text, @JsonKey(includeIfNull: false) this.naming, @JsonKey(includeIfNull: false) this.comments,  String? $type}): $type = $type ?? 'feedEarthquakeExplanationData';
   factory FeedItemDataUnionFeedEarthquakeExplanationData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeExplanationDataFromJson(json);
 
 /// const: "EARTHQUAKE_EXPLANATION"
@@ -465,7 +466,7 @@ $FeedCommentsCopyWith<$Res>? get comments {
 
 @JsonSerializable()
 class FeedItemDataUnionFeedEarthquakeCountsData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedEarthquakeCountsData({required this.type, required this.infoType, @JsonKey(includeIfNull: false) final  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments, final  String? $type}): _earthquakeCounts = earthquakeCounts,$type = $type ?? 'feedEarthquakeCountsData';
+  const FeedItemDataUnionFeedEarthquakeCountsData({required this.type, required this.infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments,  String? $type}): _earthquakeCounts = earthquakeCounts,$type = $type ?? 'feedEarthquakeCountsData';
   factory FeedItemDataUnionFeedEarthquakeCountsData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeCountsDataFromJson(json);
 
 /// const: "EARTHQUAKE_COUNTS"
@@ -569,7 +570,7 @@ $FeedCommentsCopyWith<$Res>? get comments {
 
 @JsonSerializable()
 class FeedItemDataUnionFeedEarthquakeNankaiData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedEarthquakeNankaiData({required this.type, required this.infoType, required this.telegramType, @JsonKey(includeIfNull: false) this.earthquakeInfo, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, final  String? $type}): $type = $type ?? 'feedEarthquakeNankaiData';
+  const FeedItemDataUnionFeedEarthquakeNankaiData({required this.type, required this.infoType, required this.telegramType, @JsonKey(includeIfNull: false) this.earthquakeInfo, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text,  String? $type}): $type = $type ?? 'feedEarthquakeNankaiData';
   factory FeedItemDataUnionFeedEarthquakeNankaiData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(json);
 
 /// const: "EARTHQUAKE_NANKAI"
@@ -666,7 +667,7 @@ $FeedNankaiEarthquakeInfoCopyWith<$Res>? get earthquakeInfo {
 
 @JsonSerializable()
 class FeedItemDataUnionFeedAppUpdateData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedAppUpdateData({required this.type, @JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedAppUpdateData';
+  const FeedItemDataUnionFeedAppUpdateData({required this.type, @JsonKey(includeIfNull: false) this.version, @JsonKey(includeIfNull: false) this.url,  String? $type}): $type = $type ?? 'feedAppUpdateData';
   factory FeedItemDataUnionFeedAppUpdateData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedAppUpdateDataFromJson(json);
 
 /// const: "APP_UPDATE"
@@ -744,7 +745,7 @@ as String?,
 
 @JsonSerializable()
 class FeedItemDataUnionFeedIncidentData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedIncidentData({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedIncidentData';
+  const FeedItemDataUnionFeedIncidentData({required this.type, @JsonKey(includeIfNull: false) this.url,  String? $type}): $type = $type ?? 'feedIncidentData';
   factory FeedItemDataUnionFeedIncidentData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedIncidentDataFromJson(json);
 
 /// const: "INCIDENT"
@@ -820,7 +821,7 @@ as String?,
 
 @JsonSerializable()
 class FeedItemDataUnionFeedDeveloperMessageData implements FeedItemDataUnion {
-  const FeedItemDataUnionFeedDeveloperMessageData({required this.type, @JsonKey(includeIfNull: false) this.url, final  String? $type}): $type = $type ?? 'feedDeveloperMessageData';
+  const FeedItemDataUnionFeedDeveloperMessageData({required this.type, @JsonKey(includeIfNull: false) this.url,  String? $type}): $type = $type ?? 'feedDeveloperMessageData';
   factory FeedItemDataUnionFeedDeveloperMessageData.fromJson(Map<String, dynamic> json) => _$FeedItemDataUnionFeedDeveloperMessageDataFromJson(json);
 
 /// const: "DEVELOPER_MESSAGE"

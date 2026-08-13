@@ -45,26 +45,21 @@ const _$ReplayDataTypeEnumMap = {
 
 _JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_JmaBinaryTelegramReplayData',
-  json,
-  ($checkedConvert) {
-    final val = _JmaBinaryTelegramReplayData(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
-      ),
-      time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
-      telegramType: $checkedConvert('telegram_type', (v) => v as String),
-      data: $checkedConvert(
-        'data',
-        (v) => (v as List<dynamic>).map((e) => (e as num).toInt()).toList(),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'telegramType': 'telegram_type'},
-);
+) => $checkedCreate('_JmaBinaryTelegramReplayData', json, ($checkedConvert) {
+  final val = _JmaBinaryTelegramReplayData(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+    ),
+    time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
+    telegramType: $checkedConvert('telegram_type', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>).map((e) => (e as num).toInt()).toList(),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'telegramType': 'telegram_type'});
 
 Map<String, dynamic> _$JmaBinaryTelegramReplayDataToJson(
   _JmaBinaryTelegramReplayData instance,

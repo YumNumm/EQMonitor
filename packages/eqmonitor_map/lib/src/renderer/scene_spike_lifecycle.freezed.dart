@@ -168,7 +168,7 @@ return internal(_that.phase,_that.appResourceGeneration,_that.mayTick,_that.mayU
 
 class _SceneSpikeLifecycleState implements SceneSpikeLifecycleState {
   const _SceneSpikeLifecycleState({required this.phase, required this.appResourceGeneration, required this.mayTick, required this.mayUpload, required this.requiresResourceRebuild});
-
+  
 
 @override final  SceneSpikeLifecyclePhase phase;
 @override final  int appResourceGeneration;
@@ -391,7 +391,7 @@ return disposed();case _:
 
 class _Attached implements SceneSpikeLifecycleEvent {
   const _Attached();
-
+  
 
 
 
@@ -423,7 +423,7 @@ String toString() {
 
 class _Backgrounded implements SceneSpikeLifecycleEvent {
   const _Backgrounded();
-
+  
 
 
 
@@ -455,7 +455,7 @@ String toString() {
 
 class _Foregrounded implements SceneSpikeLifecycleEvent {
   const _Foregrounded();
-
+  
 
 
 
@@ -487,7 +487,7 @@ String toString() {
 
 class _SurfaceRecreated implements SceneSpikeLifecycleEvent {
   const _SurfaceRecreated();
-
+  
 
 
 
@@ -519,7 +519,7 @@ String toString() {
 
 class _RebuildCompleted implements SceneSpikeLifecycleEvent {
   const _RebuildCompleted();
-
+  
 
 
 
@@ -551,7 +551,7 @@ String toString() {
 
 class _Detached implements SceneSpikeLifecycleEvent {
   const _Detached();
-
+  
 
 
 
@@ -583,7 +583,7 @@ String toString() {
 
 class _Disposed implements SceneSpikeLifecycleEvent {
   const _Disposed();
-
+  
 
 
 

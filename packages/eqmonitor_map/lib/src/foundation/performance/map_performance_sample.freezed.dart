@@ -45,7 +45,7 @@ String toString() {
 
 class _MapPerformanceSample implements MapPerformanceSample {
   const _MapPerformanceSample({required this.schemaVersion, required this.clockDomain, required this.kind, required this.monotonicAt, required this.value});
-
+  
 
 @override final  MapPerformanceSchemaVersion schemaVersion;
 @override final  MapClockDomainId clockDomain;

@@ -212,7 +212,7 @@ return $default(_that.maxVerticesPerSegment);case _:
 
 class _LineMeshBuilderLimits implements LineMeshBuilderLimits {
   const _LineMeshBuilderLimits({required this.maxVerticesPerSegment});
-
+  
 
 /// 1つの`LineMesh` segmentに積める頂点数の上限。index bufferが
 /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない

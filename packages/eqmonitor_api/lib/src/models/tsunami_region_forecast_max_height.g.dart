@@ -10,27 +10,22 @@ part of 'tsunami_region_forecast_max_height.dart';
 
 _TsunamiRegionForecastMaxHeight _$TsunamiRegionForecastMaxHeightFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_TsunamiRegionForecastMaxHeight',
-  json,
-  ($checkedConvert) {
-    final val = _TsunamiRegionForecastMaxHeight(
-      value: $checkedConvert('value', (v) => v as num?),
-      isOver: $checkedConvert('is_over', (v) => v as bool?),
-      qualitative: $checkedConvert(
-        'qualitative',
-        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
-      ),
-      isImportant: $checkedConvert('is_important', (v) => v as bool?),
-      revise: $checkedConvert(
-        'revise',
-        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'isOver': 'is_over', 'isImportant': 'is_important'},
-);
+) => $checkedCreate('_TsunamiRegionForecastMaxHeight', json, ($checkedConvert) {
+  final val = _TsunamiRegionForecastMaxHeight(
+    value: $checkedConvert('value', (v) => v as num?),
+    isOver: $checkedConvert('is_over', (v) => v as bool?),
+    qualitative: $checkedConvert(
+      'qualitative',
+      (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
+    ),
+    isImportant: $checkedConvert('is_important', (v) => v as bool?),
+    revise: $checkedConvert(
+      'revise',
+      (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'isOver': 'is_over', 'isImportant': 'is_important'});
 
 Map<String, dynamic> _$TsunamiRegionForecastMaxHeightToJson(
   _TsunamiRegionForecastMaxHeight instance,

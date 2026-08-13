@@ -210,7 +210,7 @@ return $default(_that.centerLongitude,_that.centerLatitude,_that.zoom);case _:
 
 class _MapCamera extends MapCamera {
   const _MapCamera({required this.centerLongitude, required this.centerLatitude, required this.zoom}): super._();
-
+  
 
 @override final  double centerLongitude;
 @override final  double centerLatitude;
