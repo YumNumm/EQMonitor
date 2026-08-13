@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settin
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_pane.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_split_viewport_observer.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum ThemeColorFieldCategory {
   primary,

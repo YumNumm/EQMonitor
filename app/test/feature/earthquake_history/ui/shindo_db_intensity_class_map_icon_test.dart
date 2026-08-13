@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

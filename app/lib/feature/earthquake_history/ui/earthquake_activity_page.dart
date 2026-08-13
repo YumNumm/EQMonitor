@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activ
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_activity_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';

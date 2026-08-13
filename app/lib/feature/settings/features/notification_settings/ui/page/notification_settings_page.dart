@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
@@ -23,6 +24,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/r
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -30,7 +32,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -61,8 +63,11 @@ class _Body extends HookConsumerWidget {
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
 
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
-    final isPro = constraints?.isPro ?? false;
+    final isPro = isProFeaturesEnabled && (constraints?.isPro ?? false);
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
@@ -397,7 +402,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const SoundInterruptionSettingsPage(),
                     ),
                   )
-                : () => const PaywallRoute().push<void>(context),
+                : () async => showProUpgradeDialog(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(
@@ -410,7 +415,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const PerIntensitySoundSettingsPage(),
                     ),
                   )
-                : () => const PaywallRoute().push<void>(context),
+                : () async => showProUpgradeDialog(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(

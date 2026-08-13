@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_hist
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';

@@ -16,7 +16,7 @@ import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_connec
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_control_panel.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_split_view.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

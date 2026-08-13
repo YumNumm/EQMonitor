@@ -89,7 +89,7 @@ import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide LicensePage;
+import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
@@ -105,6 +105,16 @@ GoRouter goRouter(Ref ref) => GoRouter(
   redirect: (context, state) {
     if (state.matchedLocation == '/splash') {
       return null;
+    }
+
+    final buildConfig = ref.read(buildConfigProvider);
+    if (!buildConfig.isDeveloperUiEnabled &&
+        state.matchedLocation.startsWith(const DebugRoute().location)) {
+      return const HomeRoute().location;
+    }
+    if (!buildConfig.isProFeaturesEnabled &&
+        state.matchedLocation.startsWith('/subscription')) {
+      return const HomeRoute().location;
     }
 
     final isOnboardingCompleted =

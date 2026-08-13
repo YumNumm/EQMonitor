@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'feed_items.dart';
@@ -9,6 +9,7 @@ part of 'feed_items.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$FeedListResponseCopyWithImpl<$Res>
 /// Create a copy of FeedListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? feeds = null,Object? nextCursor = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedListResponse(
 feeds: null == feeds ? _self.feeds : feeds // ignore: cast_nullable_to_non_nullable
 as List<FeedItem>,nextCursor: freezed == nextCursor ? _self.nextCursor : nextCursor // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -207,7 +208,7 @@ return $default(_that.feeds,_that.nextCursor);case _:
 
 
 class _FeedListResponse implements FeedListResponse {
-  const _FeedListResponse({required final  List<FeedItem> feeds, required this.nextCursor}): _feeds = feeds;
+  const _FeedListResponse({required  List<FeedItem> feeds, required this.nextCursor}): _feeds = feeds;
   
 
  final  List<FeedItem> _feeds;
@@ -329,7 +330,7 @@ class _$FeedItemCopyWithImpl<$Res>
 /// Create a copy of FeedItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? data = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
 as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
@@ -628,7 +629,7 @@ class _$FeedDetailCopyWithImpl<$Res>
 /// Create a copy of FeedDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? feedType = null,Object? priority = null,Object? isImportant = null,Object? publishedAt = null,Object? expiresAt = freezed,Object? title = freezed,Object? summary = freezed,Object? body = freezed,Object? data = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,feedType: null == feedType ? _self.feedType : feedType // ignore: cast_nullable_to_non_nullable
 as FeedType,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
@@ -1234,7 +1235,7 @@ $FeedCommentsCopyWith<$Res>? get comments {
 
 
 class FeedItemDataEarthquakeCounts implements FeedItemData {
-  const FeedItemDataEarthquakeCounts({required this.infoType, final  List<FeedEarthquakeCount>? earthquakeCounts, this.nextAdvisory, this.text, this.comments}): _earthquakeCounts = earthquakeCounts;
+  const FeedItemDataEarthquakeCounts({required this.infoType,  List<FeedEarthquakeCount>? earthquakeCounts, this.nextAdvisory, this.text, this.comments}): _earthquakeCounts = earthquakeCounts;
   
 
  final  FeedInfoType infoType;
@@ -1660,7 +1661,7 @@ class _$FeedCommentsCopyWithImpl<$Res>
 /// Create a copy of FeedComments
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? free = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedComments(
 free: null == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -1917,7 +1918,7 @@ class _$FeedNamingCopyWithImpl<$Res>
 /// Create a copy of FeedNaming
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? text = null,Object? en = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedNaming(
 text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,en: freezed == en ? _self.en : en // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -2177,7 +2178,7 @@ class _$FeedEarthquakeCountCopyWithImpl<$Res>
 /// Create a copy of FeedEarthquakeCount
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? targetTime = null,Object? values = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedEarthquakeCount(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as FeedTelegramType,targetTime: null == targetTime ? _self.targetTime : targetTime // ignore: cast_nullable_to_non_nullable
 as FeedEarthquakeCountTargetTime,values: null == values ? _self.values : values // ignore: cast_nullable_to_non_nullable
@@ -2476,7 +2477,7 @@ class _$FeedEarthquakeCountTargetTimeCopyWithImpl<$Res>
 /// Create a copy of FeedEarthquakeCountTargetTime
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? start = null,Object? end = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedEarthquakeCountTargetTime(
 start: null == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
 as String,end: null == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String,
@@ -2736,7 +2737,7 @@ class _$FeedEarthquakeCountValuesCopyWithImpl<$Res>
 /// Create a copy of FeedEarthquakeCountValues
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? all = freezed,Object? felt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedEarthquakeCountValues(
 all: freezed == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
 as String?,felt: freezed == felt ? _self.felt : felt // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -2996,7 +2997,7 @@ class _$FeedNankaiEarthquakeInfoCopyWithImpl<$Res>
 /// Create a copy of FeedNankaiEarthquakeInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? text = null,Object? kind = freezed,Object? appendix = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedNankaiEarthquakeInfo(
 text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,kind: freezed == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as FeedNankaiEarthquakeInfoKind?,appendix: freezed == appendix ? _self.appendix : appendix // ignore: cast_nullable_to_non_nullable
@@ -3283,7 +3284,7 @@ class _$FeedNankaiEarthquakeInfoKindCopyWithImpl<$Res>
 /// Create a copy of FeedNankaiEarthquakeInfoKind
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedNankaiEarthquakeInfoKind(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,

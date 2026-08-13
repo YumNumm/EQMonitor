@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_warning_overlay_display_model.dart';
@@ -9,6 +9,7 @@ part of 'eew_warning_overlay_display_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$EewWarningOverlayDisplayModelCopyWithImpl<$Res>
 /// Create a copy of EewWarningOverlayDisplayModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? source = null,Object? eventIds = null,Object? representativeEventId = null,Object? serialNo = null,Object? alertCount = null,Object? reportLabel = null,Object? hypocenterHeadline = freezed,Object? strongMotionHeadline = null,Object? currentRegionName = null,Object? localIntensity = null,Object? localIntensityIsOver = null,Object? arrivalState = null,Object? secondsUntilArrival = freezed,Object? hypocenterName = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EewWarningOverlayDisplayModel(
 source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as EewWarningOverlaySource,eventIds: null == eventIds ? _self.eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,representativeEventId: null == representativeEventId ? _self.representativeEventId : representativeEventId // ignore: cast_nullable_to_non_nullable
@@ -221,7 +222,7 @@ return $default(_that.source,_that.eventIds,_that.representativeEventId,_that.se
 
 
 class _EewWarningOverlayDisplayModel implements EewWarningOverlayDisplayModel {
-  const _EewWarningOverlayDisplayModel({required this.source, required final  List<String> eventIds, required this.representativeEventId, required this.serialNo, required this.alertCount, required this.reportLabel, required this.hypocenterHeadline, required this.strongMotionHeadline, required this.currentRegionName, required this.localIntensity, required this.localIntensityIsOver, required this.arrivalState, required this.secondsUntilArrival, required this.hypocenterName, required this.magnitude, required this.depth}): _eventIds = eventIds;
+  const _EewWarningOverlayDisplayModel({required this.source, required  List<String> eventIds, required this.representativeEventId, required this.serialNo, required this.alertCount, required this.reportLabel, required this.hypocenterHeadline, required this.strongMotionHeadline, required this.currentRegionName, required this.localIntensity, required this.localIntensityIsOver, required this.arrivalState, required this.secondsUntilArrival, required this.hypocenterName, required this.magnitude, required this.depth}): _eventIds = eventIds;
   
 
 @override final  EewWarningOverlaySource source;

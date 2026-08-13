@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 

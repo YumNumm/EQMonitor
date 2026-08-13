@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';

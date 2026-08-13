@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/core/util/widget_to_image.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shindo_db_intensity_icon_provider.g.dart';

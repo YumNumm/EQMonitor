@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiRegionList extends StatelessWidget {

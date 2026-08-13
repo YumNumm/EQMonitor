@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_test/flutter_test.dart';
 

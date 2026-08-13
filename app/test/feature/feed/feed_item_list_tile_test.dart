@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 FeedItem _item({

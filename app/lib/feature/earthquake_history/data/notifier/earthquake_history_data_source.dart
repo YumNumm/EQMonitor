@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_realtime_list_reconciler.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

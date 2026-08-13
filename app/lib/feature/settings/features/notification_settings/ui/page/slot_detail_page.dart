@@ -2,15 +2,15 @@ import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -216,7 +216,7 @@ class _NotificationConditionCard extends StatelessWidget {
               title: '震度別設定',
               subtitle: 'Proで利用できます',
               locked: true,
-              onTap: () => const PaywallRoute().push<void>(context),
+              onTap: () async => showProUpgradeDialog(context),
             ),
         ],
       ),

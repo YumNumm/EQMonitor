@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_eve
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:test/test.dart';

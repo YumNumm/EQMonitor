@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 Color? feedUrgencyColor(FeedItem item) {

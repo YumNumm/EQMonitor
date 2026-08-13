@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 一覧で取得済みの [FeedItem] を表示するお知らせ詳細ページ。

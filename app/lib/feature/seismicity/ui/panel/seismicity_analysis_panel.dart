@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_cumulative_histogram_chart.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_depth_section_chart.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_mt_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 矩形選択で得られたイベント一覧の分析パネル(3タブ)。
 class SeismicityAnalysisPanel extends StatelessWidget {

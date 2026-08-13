@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 通知権限が未許可の場合にホームシートへ表示するバナー。

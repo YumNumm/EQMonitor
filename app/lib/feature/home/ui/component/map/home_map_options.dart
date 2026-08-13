@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// ホーム設定から全マップ共通の maxZoom と gestures を取り出す

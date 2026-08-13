@@ -4,8 +4,8 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: ^3.11.0
-  flutter: ^3.44.0
+  sdk: ^3.14.0-29.0.dev
+  flutter: ^3.47.0-1.0.pre-97
 
 resolution: workspace
 
@@ -31,7 +31,7 @@ dev_dependencies:
     path: ../eqmonitor_lints
   flutter_test:
     sdk: flutter
-  freezed: ^3.2.6-dev.1
+  freezed: ^4.0.0-dev.3
 dependency_overrides:
   scene:
     git:

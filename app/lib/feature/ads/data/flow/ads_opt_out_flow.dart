@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

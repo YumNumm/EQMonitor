@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_magnitude.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_magnitude.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 EarthquakeMagnitude _$EarthquakeMagnitudeFromJson(
@@ -211,7 +212,7 @@ return overM8();case _:
 @JsonSerializable()
 
 class EarthquakeMagnitudeValue implements EarthquakeMagnitude {
-  const EarthquakeMagnitudeValue({required this.value, final  String? $type}): $type = $type ?? 'value';
+  const EarthquakeMagnitudeValue({required this.value,  String? $type}): $type = $type ?? 'value';
   factory EarthquakeMagnitudeValue.fromJson(Map<String, dynamic> json) => _$EarthquakeMagnitudeValueFromJson(json);
 
  final  double value;
@@ -284,7 +285,7 @@ as double,
 @JsonSerializable()
 
 class EarthquakeMagnitudeUnknown implements EarthquakeMagnitude {
-  const EarthquakeMagnitudeUnknown({final  String? $type}): $type = $type ?? 'unknown';
+  const EarthquakeMagnitudeUnknown({ String? $type}): $type = $type ?? 'unknown';
   factory EarthquakeMagnitudeUnknown.fromJson(Map<String, dynamic> json) => _$EarthquakeMagnitudeUnknownFromJson(json);
 
 
@@ -323,7 +324,7 @@ String toString() {
 @JsonSerializable()
 
 class EarthquakeMagnitudeOverM8 implements EarthquakeMagnitude {
-  const EarthquakeMagnitudeOverM8({final  String? $type}): $type = $type ?? 'overM8';
+  const EarthquakeMagnitudeOverM8({ String? $type}): $type = $type ?? 'overM8';
   factory EarthquakeMagnitudeOverM8.fromJson(Map<String, dynamic> json) => _$EarthquakeMagnitudeOverM8FromJson(json);
 
 

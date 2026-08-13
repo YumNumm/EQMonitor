@@ -26,7 +26,7 @@ import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/playback_mode/ui/playback_mode_modal.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
