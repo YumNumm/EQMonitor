@@ -30,6 +30,10 @@ android {
     }
 
     buildTypes {
+        profile {
+            // CI profile APK has no release keystore; use debug signing.
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
