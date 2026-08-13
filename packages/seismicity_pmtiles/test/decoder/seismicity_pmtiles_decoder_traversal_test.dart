@@ -78,6 +78,8 @@ void main() {
         chunks: const [],
       ),
     );
+    handle.succeedClose();
+    handle.succeedRetired();
   });
 
   test('invalid descriptor fails before spawn', () async {

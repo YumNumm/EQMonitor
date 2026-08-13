@@ -8,8 +8,15 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_run_lifecycle.
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decode_operation.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_schema_v1_validator.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_load_state.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
+
+final class _RunnerCleanupMemo {
+  Future<void>? future;
+  SeismicityDecoderWorkerHandle? handle;
+}
 
 /// Non-export runner: archive traversal into an injected worker factory.
 final class SeismicityPmTilesDecoderRunner {
@@ -28,10 +35,18 @@ final class SeismicityPmTilesDecoderRunner {
     required int chunkCapacity,
   }) {
     final lifecycle = SeismicityDecoderRunLifecycle();
+    final cleanup = _RunnerCleanupMemo();
     late final SeismicityPmTilesDecodeOperationController controller;
     controller = SeismicityPmTilesDecodeOperationController(
       onCancel: () async {
-        lifecycle.handle(signal: const SeismicityDecoderRunCancelSignal());
+        final decision = lifecycle.handle(
+          signal: const SeismicityDecoderRunCancelSignal(),
+        );
+        await ensureCleanup(
+          memo: cleanup,
+          archive: archive,
+          decision: decision,
+        );
       },
     );
     scheduleMicrotask(() {
@@ -41,6 +56,7 @@ final class SeismicityPmTilesDecoderRunner {
           chunkCapacity: chunkCapacity,
           controller: controller,
           lifecycle: lifecycle,
+          cleanup: cleanup,
         ),
       );
     });
@@ -52,6 +68,7 @@ final class SeismicityPmTilesDecoderRunner {
     required int chunkCapacity,
     required SeismicityPmTilesDecodeOperationController controller,
     required SeismicityDecoderRunLifecycle lifecycle,
+    required _RunnerCleanupMemo cleanup,
   }) async {
     try {
       controller.emit(state: const SeismicityPmTilesLoadState.openingSource());
@@ -61,6 +78,7 @@ final class SeismicityPmTilesDecoderRunner {
         acceptedDescriptor: archive.descriptor,
         chunkCapacity: chunkCapacity,
       );
+      cleanup.handle = handle;
       controller.emit(
         state: const SeismicityPmTilesLoadState.readingDirectory(),
       );
@@ -80,10 +98,67 @@ final class SeismicityPmTilesDecoderRunner {
         dataset: dataset,
         acceptedDescriptor: archive.descriptor,
       );
-      // Task 51 owns success cleanup + delayed settle via lifecycle.
-      controller.completeSuccess(dataset: dataset);
+      final decision = lifecycle.handle(
+        signal: SeismicityDecoderRunSuccessSignal(dataset: dataset),
+      );
+      await ensureCleanup(
+        memo: cleanup,
+        archive: archive,
+        decision: decision,
+      );
+      publishDecision(
+        controller: controller,
+        decision: lifecycle.handle(
+          signal: const SeismicityDecoderRunCleanupSucceededSignal(),
+        ),
+      );
     } on SeismicityPmTilesException catch (error) {
       controller.completeFailure(exception: error);
+    }
+  }
+
+  Future<void> ensureCleanup({
+    required _RunnerCleanupMemo memo,
+    required SeismicityPmTilesArchive archive,
+    required SeismicityDecoderRunDecision decision,
+  }) {
+    final existing = memo.future;
+    if (existing != null) {
+      return existing;
+    }
+    final handle = memo.handle;
+    final future = () async {
+      if (decision.closeArchive) {
+        await archive.close();
+      }
+      if (decision.cancelWorker && handle != null) {
+        await handle.cancel();
+      }
+      if (decision.closeWorker && handle != null) {
+        await handle.close();
+      }
+      if (decision.waitRetired && handle != null) {
+        await handle.retired;
+      }
+    }();
+    memo.future = future;
+    return future;
+  }
+
+  void publishDecision({
+    required SeismicityPmTilesDecodeOperationController controller,
+    required SeismicityDecoderRunDecision decision,
+  }) {
+    if (!decision.publishResult) {
+      return;
+    }
+    switch (decision.result) {
+      case SeismicityPmTilesSuccess<SeismicityPmTilesDataset>(:final value):
+        controller.completeSuccess(dataset: value);
+      case SeismicityPmTilesFailure<SeismicityPmTilesDataset>(:final exception):
+        controller.completeFailure(exception: exception);
+      case null:
+        break;
     }
   }
 

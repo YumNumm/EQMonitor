@@ -6,7 +6,6 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_load_state.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:test/test.dart';
@@ -16,66 +15,22 @@ import '../support/controlled_seismicity_decoder_worker_factory.dart';
 import '../support/controlled_seismicity_decoder_worker_handle.dart';
 
 void main() {
-  final fixtures = _Task50Fixtures();
+  final fixtures = _Task51Fixtures();
 
-  test('publishes completed result only after finish gate passes', () async {
+  test('runs archive close then worker close/retired before settle', () async {
     final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
     final archive = ControlledSeismicityArchive(
       descriptor: descriptor,
       occupiedTileIds: const [1],
       tileBytes: {1: Uint8List.fromList([1])},
-    );
+    )..deferCloseCompletion = true;
     final handle = ControlledSeismicityDecoderWorkerHandle();
     final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
     final runner = SeismicityPmTilesDecoderRunner(factory: factory);
     final operation = runner.start(archive: archive, chunkCapacity: 4);
-    final states = fixtures.collect(stream: operation.states);
 
-    await fixtures.waitUntil(() => factory.spawnCount == 1);
-    factory.succeedSpawn();
-    await fixtures.waitUntil(() => handle.decodeCount == 1);
-    handle.succeedDecode(
-      progress: const SeismicityPmTilesDecodeProgress(
-        decodedTileCount: 1,
-        rawFeatureCount: 1,
-        uniqueFeatureCount: 1,
-      ),
-    );
-    await fixtures.waitUntil(() => handle.finishCount == 1);
-    expect(handle.finishCount, 1);
-    final dataset = fixtures.dataset(
-      descriptor: descriptor,
-      chunks: [fixtures.chunk(id: 1)],
-    );
-    handle.succeedFinish(dataset: dataset);
-    handle.succeedClose();
-    handle.succeedRetired();
-
-    final result = await operation.result;
-    expect(
-      result,
-      isA<SeismicityPmTilesSuccess<SeismicityPmTilesDataset>>().having(
-        (value) => value.value,
-        'value',
-        same(dataset),
-      ),
-    );
-    expect(await states, contains(const SeismicityPmTilesLoadState.completed()));
-    expect(handle.finishCount, 1);
-  });
-
-  test('rejects malformed finish dataset without completed publication', () async {
-    final descriptor = fixtures.descriptor(expectedFeatureCount: 1);
-    final archive = ControlledSeismicityArchive(
-      descriptor: descriptor,
-      occupiedTileIds: const [1],
-      tileBytes: {1: Uint8List.fromList([1])},
-    );
-    final handle = ControlledSeismicityDecoderWorkerHandle();
-    final factory = ControlledSeismicityDecoderWorkerFactory(handle: handle);
-    final runner = SeismicityPmTilesDecoderRunner(factory: factory);
-    final operation = runner.start(archive: archive, chunkCapacity: 4);
-    final states = fixtures.collect(stream: operation.states);
+    var resultCompleted = false;
+    unawaited(operation.result.then((_) => resultCompleted = true));
 
     await fixtures.waitUntil(() => factory.spawnCount == 1);
     factory.succeedSpawn();
@@ -91,23 +46,39 @@ void main() {
     handle.succeedFinish(
       dataset: fixtures.dataset(
         descriptor: descriptor,
-        chunks: [fixtures.corruptOffsetChunk()],
+        chunks: [fixtures.chunk(id: 1)],
       ),
     );
 
+    await fixtures.waitUntil(() => archive.closeCount == 1);
+    expect(handle.closeCount, 0);
+    expect(resultCompleted, isFalse);
+
+    archive.releaseClose();
+    await fixtures.waitUntil(() => handle.closeCount == 1);
+    expect(resultCompleted, isFalse);
+
+    handle.succeedClose();
+    await Future<void>.delayed(Duration.zero);
+    expect(resultCompleted, isFalse);
+
+    handle.succeedRetired();
     final result = await operation.result;
-    expect(result, isA<SeismicityPmTilesFailure<SeismicityPmTilesDataset>>());
-    final observed = await states;
-    expect(observed, isNot(contains(const SeismicityPmTilesLoadState.completed())));
-    expect(
-      observed.whereType<SeismicityPmTilesLoadFailed>().length,
-      1,
-    );
-    expect(handle.finishCount, 1);
+    expect(result, isA<SeismicityPmTilesSuccess<SeismicityPmTilesDataset>>());
+    expect(resultCompleted, isTrue);
+    expect(archive.closeCount, 1);
+    expect(handle.closeCount, 1);
+    expect(handle.cancelCount, 0);
+
+    await operation.cancel();
+    await archive.close();
+    expect(archive.closeCount, 1);
+    expect(handle.closeCount, 1);
+    expect(handle.cancelCount, 0);
   });
 }
 
-final class _Task50Fixtures {
+final class _Task51Fixtures {
   SeismicityPmTilesArchiveDescriptor descriptor({
     required int expectedFeatureCount,
   }) => SeismicityPmTilesArchiveDescriptor(
@@ -118,7 +89,7 @@ final class _Task50Fixtures {
     dataZoom: 2,
     expectedSizeBytes: 64,
     expectedFeatureCount: expectedFeatureCount,
-    archiveRevision: 'rev-task-50',
+    archiveRevision: 'rev-task-51',
     periodFrom: DateTime.utc(2024),
     periodTo: DateTime.utc(2025),
   );
@@ -149,36 +120,11 @@ final class _Task50Fixtures {
     maxIntensityDictionaryOffsets: Uint32List.fromList([0]),
   );
 
-  SeismicityPmTilesChunk corruptOffsetChunk() => chunk(id: 1).copyWith(
-    maxIntensityDictionaryOffsets: Uint32List.fromList([1]),
-  );
-
-  Future<List<SeismicityPmTilesLoadState>> collect({
-    required Stream<SeismicityPmTilesLoadState> stream,
-  }) {
-    final values = <SeismicityPmTilesLoadState>[];
-    final done = Completer<List<SeismicityPmTilesLoadState>>();
-    stream.listen(
-      values.add,
-      onDone: () {
-        if (!done.isCompleted) {
-          done.complete(values);
-        }
-      },
-      onError: (Object error, StackTrace stackTrace) {
-        if (!done.isCompleted) {
-          done.completeError(error, stackTrace);
-        }
-      },
-    );
-    return done.future;
-  }
-
   Future<void> waitUntil(bool Function() predicate) async {
     final deadline = DateTime.now().add(const Duration(seconds: 3));
     while (!predicate()) {
       if (DateTime.now().isAfter(deadline)) {
-        throw StateError('Timed out waiting for publication signal.');
+        throw StateError('Timed out waiting for cleanup signal.');
       }
       await Future<void>.delayed(const Duration(milliseconds: 10));
     }
