@@ -42,11 +42,15 @@ final class SeismicityPmTilesDecoderRunner {
         final decision = lifecycle.handle(
           signal: const SeismicityDecoderRunCancelSignal(),
         );
-        await ensureCleanup(
-          memo: cleanup,
-          archive: archive,
-          decision: decision,
-        );
+        try {
+          await ensureCleanup(
+            memo: cleanup,
+            archive: archive,
+            decision: decision,
+          );
+        } on SeismicityPmTilesException {
+          // Memoized or cancel-path cleanup failures must not escape cancel().
+        }
       },
     );
     scheduleMicrotask(() {
@@ -106,8 +110,39 @@ final class SeismicityPmTilesDecoderRunner {
       final decision = lifecycle.handle(
         signal: SeismicityDecoderRunSuccessSignal(dataset: dataset),
       );
-      await ensureCleanup(
+      await settleCleanup(
         memo: cleanup,
+        archive: archive,
+        lifecycle: lifecycle,
+        controller: controller,
+        decision: decision,
+      );
+    } on SeismicityPmTilesException catch (error) {
+      final decision = lifecycle.handle(
+        signal: classifyAsWorker
+            ? SeismicityDecoderRunWorkerFailureSignal(exception: error)
+            : SeismicityDecoderRunSourceFailureSignal(exception: error),
+      );
+      await settleCleanup(
+        memo: cleanup,
+        archive: archive,
+        lifecycle: lifecycle,
+        controller: controller,
+        decision: decision,
+      );
+    }
+  }
+
+  Future<void> settleCleanup({
+    required _RunnerCleanupMemo memo,
+    required SeismicityPmTilesArchive archive,
+    required SeismicityDecoderRunLifecycle lifecycle,
+    required SeismicityPmTilesDecodeOperationController controller,
+    required SeismicityDecoderRunDecision decision,
+  }) async {
+    try {
+      await ensureCleanup(
+        memo: memo,
         archive: archive,
         decision: decision,
       );
@@ -118,20 +153,10 @@ final class SeismicityPmTilesDecoderRunner {
         ),
       );
     } on SeismicityPmTilesException catch (error) {
-      final decision = lifecycle.handle(
-        signal: classifyAsWorker
-            ? SeismicityDecoderRunWorkerFailureSignal(exception: error)
-            : SeismicityDecoderRunSourceFailureSignal(exception: error),
-      );
-      await ensureCleanup(
-        memo: cleanup,
-        archive: archive,
-        decision: decision,
-      );
       publishDecision(
         controller: controller,
         decision: lifecycle.handle(
-          signal: const SeismicityDecoderRunCleanupSucceededSignal(),
+          signal: SeismicityDecoderRunCleanupFailedSignal(exception: error),
         ),
       );
     }

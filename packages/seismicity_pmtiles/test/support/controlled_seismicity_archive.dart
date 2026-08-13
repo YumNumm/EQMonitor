@@ -71,6 +71,7 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   Completer<void>? _closeRelease;
   SeismicityPmTilesException? _queuedEnumerationFailure;
   SeismicityPmTilesException? _queuedReadFailure;
+  SeismicityPmTilesException? _queuedCloseFailure;
   var _closed = false;
   var _closeCount = 0;
   var deferCloseCompletion = false;
@@ -92,6 +93,10 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
 
   void queueReadFailure({required SeismicityPmTilesException error}) {
     _queuedReadFailure = error;
+  }
+
+  void queueCloseFailure({required SeismicityPmTilesException error}) {
+    _queuedCloseFailure = error;
   }
 
   void releaseEnumeration() {
@@ -170,6 +175,12 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
     failOpenGate(_blockedEnumerationGate);
     failOpenGate(_pendingReadGate);
     failOpenGate(_blockedReadGate);
+    final queuedCloseFailure = _queuedCloseFailure;
+    if (queuedCloseFailure != null) {
+      _queuedCloseFailure = null;
+      completer.completeError(queuedCloseFailure);
+      return completer.future;
+    }
     if (deferCloseCompletion) {
       final release = Completer<void>();
       _closeRelease = release;

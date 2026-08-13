@@ -115,9 +115,21 @@ final class ControlledSeismicityDecoderWorkerHandle
     }
   }
 
+  void failClose({required SeismicityPmTilesException error}) {
+    if (!_close.isCompleted) {
+      _close.completeError(error);
+    }
+  }
+
   void succeedRetired() {
     if (!_retired.isCompleted) {
       _retired.complete();
+    }
+  }
+
+  void failRetired({required SeismicityPmTilesException error}) {
+    if (!_retired.isCompleted) {
+      _retired.completeError(error);
     }
   }
 }
