@@ -24,6 +24,17 @@ void main() {
       expect(launcher.launchCount, 1);
       expect(launcher.sent.single.requestId, 3);
 
+      final readyResponse = endpoint.responses.first;
+      launcher.emitReady(requestId: 1);
+      expect(
+        await readyResponse,
+        isA<SeismicityDecoderWorkerReadyResponse>().having(
+          (response) => response.requestId,
+          'requestId',
+          1,
+        ),
+      );
+
       final progressResponse = endpoint.responses.first;
       launcher.emitResponse(
         response: const SeismicityDecoderWorkerResponse.progress(
@@ -44,22 +55,35 @@ void main() {
         ),
       );
 
+      const failure = SeismicityPmTilesException.invalidVectorTile(
+        tileId: 9,
+        reason: 'bad command',
+      );
+      final failureResponse = endpoint.responses.first;
+      launcher.emitFailure(requestId: 6, error: failure);
+      expect(
+        await failureResponse,
+        isA<SeismicityDecoderWorkerFailureResponse>()
+            .having((response) => response.requestId, 'requestId', 6)
+            .having((response) => response.error, 'error', same(failure)),
+      );
+
       final invalidTransferResponse = endpoint.responses.first;
       launcher.emitInvalidTransfer(
         requestId: 5,
         invalidChunk: SeismicityPmTilesChunk(
-          hypocenterIds: Uint8List.fromList(List.filled(16, 1)),
-          latitudes: Float64List.fromList([35]),
-          longitudes: Float64List.fromList([139, 140]),
-          depthsKm: Float32List.fromList([10]),
-          depthValidity: Uint8List.fromList([1]),
-          magnitudes: Float32List.fromList([4.5]),
-          magnitudeValidity: Uint8List.fromList([1]),
-          originTimeUnixMilliseconds: Int64List.fromList([1]),
-          maxIntensityDictionaryIndexes: Uint32List.fromList([0]),
-          maxIntensityValidity: Uint8List.fromList([1]),
+          hypocenterIds: Uint8List(16),
+          latitudes: Float64List(1),
+          longitudes: Float64List(2),
+          depthsKm: Float32List(1),
+          depthValidity: Uint8List(1),
+          magnitudes: Float32List(1),
+          magnitudeValidity: Uint8List(1),
+          originTimeUnixMilliseconds: Int64List(1),
+          maxIntensityDictionaryIndexes: Uint32List(1),
+          maxIntensityValidity: Uint8List(1),
           maxIntensityDictionaryUtf8: Uint8List(0),
-          maxIntensityDictionaryOffsets: Uint32List.fromList([0]),
+          maxIntensityDictionaryOffsets: Uint32List(1),
         ),
       );
       final invalidResponse = await invalidTransferResponse;
@@ -104,7 +128,9 @@ void main() {
       expect(launcher.events, [
         'launch',
         'send:3',
+        'response:1',
         'response:4',
+        'response:6',
         'response:5',
         'error:boom',
         'exit',

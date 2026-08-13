@@ -6,6 +6,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_isolate_launch
 import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_protocol.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_worker_terminal_probe.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
+import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class ControlledSeismicityIsolateLauncher
     implements
@@ -21,16 +22,13 @@ final class ControlledSeismicityIsolateLauncher
   final events = <String>[];
 
   SeismicityWorkerTerminalCounters _counters = (errorCount: 0, exitCount: 0);
-  SeismicityDecoderWorkerMain? _workerMain;
   var _launchCount = 0;
   var _closeReceivePortCount = 0;
   var _killCount = 0;
-  var _portsClosed = false;
 
   int get launchCount => _launchCount;
   int get closeReceivePortCount => _closeReceivePortCount;
   int get killCount => _killCount;
-  SeismicityDecoderWorkerMain? get workerMain => _workerMain;
 
   @override
   SeismicityWorkerTerminalCounters get counters => _counters;
@@ -52,7 +50,6 @@ final class ControlledSeismicityIsolateLauncher
     required SeismicityDecoderWorkerMain workerMain,
   }) async {
     _launchCount++;
-    _workerMain = workerMain;
     events.add('launch');
     return this;
   }
@@ -99,6 +96,24 @@ final class ControlledSeismicityIsolateLauncher
     _responses.add(response);
   }
 
+  void emitReady({required int requestId}) {
+    emitResponse(
+      response: SeismicityDecoderWorkerResponse.ready(requestId: requestId),
+    );
+  }
+
+  void emitFailure({
+    required int requestId,
+    required SeismicityPmTilesException error,
+  }) {
+    emitResponse(
+      response: SeismicityDecoderWorkerResponse.failure(
+        requestId: requestId,
+        error: error,
+      ),
+    );
+  }
+
   void emitInvalidTransfer({
     required int requestId,
     required SeismicityPmTilesChunk invalidChunk,
@@ -135,10 +150,6 @@ final class ControlledSeismicityIsolateLauncher
   }
 
   Future<void> closePorts() async {
-    if (_portsClosed) {
-      return;
-    }
-    _portsClosed = true;
     events.add('portsClosed');
     await Future.wait<void>([
       _responses.close(),
