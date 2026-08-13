@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_decoder.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:test/test.dart';
 
 import 'seismicity_pmtiles_directory_writer.dart';
@@ -115,6 +116,24 @@ void main() {
         runLengths: const [1],
         lengths: const [1],
         offsets: const [SeismicityPmTilesDirectoryWriter.maxUnsignedVarint],
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => writer.write(
+        tileIds: const [1, 2],
+        runLengths: const [2, 1],
+        lengths: const [1, 1],
+        offsets: const [0, 1],
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => writer.write(
+        tileIds: const [PmTilesV3TileId.maxValue],
+        runLengths: const [2],
+        lengths: const [1],
+        offsets: const [0],
       ),
       throwsArgumentError,
     );

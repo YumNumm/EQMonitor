@@ -1,10 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
+
 /// Test-only checked encoder for PMTiles v3 root-directory bytes.
 final class SeismicityPmTilesDirectoryWriter {
   const SeismicityPmTilesDirectoryWriter();
 
   static const maxUnsignedVarint = 0x7FFFFFFFFFFFFFFF;
+  static const maxTileIdExclusive = PmTilesV3TileId.maxValue + 1;
 
   Uint8List write({
     required List<int> tileIds,
@@ -19,6 +22,7 @@ final class SeismicityPmTilesDirectoryWriter {
         offsets.length != count) {
       throw ArgumentError('Directory columns must be non-empty and aligned.');
     }
+    validateRuns(tileIds: tileIds, runLengths: runLengths);
     final output = BytesBuilder(copy: false)
       ..add(encodeUnsignedVarint(value: count));
     var previousTileId = 0;
@@ -71,6 +75,30 @@ final class SeismicityPmTilesDirectoryWriter {
       );
     }
     return output.toBytes();
+  }
+
+  void validateRuns({
+    required List<int> tileIds,
+    required List<int> runLengths,
+  }) {
+    for (var index = 0; index < tileIds.length; index++) {
+      final runLength = runLengths[index];
+      rejectNegative(value: runLength, field: 'runLength');
+      if (runLength == 0) {
+        continue;
+      }
+      final runEnd = checkedAdd(
+        left: tileIds[index],
+        right: runLength,
+        field: 'tile run',
+      );
+      if (runEnd > maxTileIdExclusive) {
+        throw ArgumentError('A directory tile run exceeds the tile ID range.');
+      }
+      if (index + 1 < tileIds.length && runEnd > tileIds[index + 1]) {
+        throw ArgumentError('Directory tile runs must not overlap.');
+      }
+    }
   }
 
   Uint8List encodeUnsignedVarint({required int value}) {
