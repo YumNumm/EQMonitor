@@ -205,7 +205,7 @@ return $default(_that.archiveRevision,_that.schemaVersion,_that.dataZoom,_that.f
 
 class _SeismicityPmTilesDataset implements SeismicityPmTilesDataset {
   const _SeismicityPmTilesDataset({required this.archiveRevision, required this.schemaVersion, required this.dataZoom, required this.featureCount, required  List<SeismicityPmTilesChunk> chunks}): _chunks = chunks;
-
+  
 
 @override final  String archiveRevision;
 @override final  int schemaVersion;

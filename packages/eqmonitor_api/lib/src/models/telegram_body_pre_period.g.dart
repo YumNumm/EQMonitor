@@ -10,19 +10,14 @@ part of 'telegram_body_pre_period.dart';
 
 _TelegramBodyPrePeriod _$TelegramBodyPrePeriodFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_TelegramBodyPrePeriod',
-  json,
-  ($checkedConvert) {
-    final val = _TelegramBodyPrePeriod(
-      band: $checkedConvert('band', (v) => v as num),
-      lpgmIntensity: $checkedConvert('lpgm_intensity', (v) => v as String?),
-      sva: $checkedConvert('sva', (v) => v as num?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'lpgmIntensity': 'lpgm_intensity'},
-);
+) => $checkedCreate('_TelegramBodyPrePeriod', json, ($checkedConvert) {
+  final val = _TelegramBodyPrePeriod(
+    band: $checkedConvert('band', (v) => v as num),
+    lpgmIntensity: $checkedConvert('lpgm_intensity', (v) => v as String?),
+    sva: $checkedConvert('sva', (v) => v as num?),
+  );
+  return val;
+}, fieldKeyMap: const {'lpgmIntensity': 'lpgm_intensity'});
 
 Map<String, dynamic> _$TelegramBodyPrePeriodToJson(
   _TelegramBodyPrePeriod instance,

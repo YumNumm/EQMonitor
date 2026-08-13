@@ -11,27 +11,23 @@ part of 'parameter_data_response_union.dart';
 ParameterDataResponseUnionJmaCodeTableParameter
 _$ParameterDataResponseUnionJmaCodeTableParameterFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'ParameterDataResponseUnionJmaCodeTableParameter',
-  json,
-  ($checkedConvert) {
-    final val = ParameterDataResponseUnionJmaCodeTableParameter(
-      metadata: $checkedConvert(
-        'metadata',
-        (v) =>
-            JmaCodeTableParameterMetadata.fromJson(v as Map<String, dynamic>),
-      ),
-      codeTables: $checkedConvert(
-        'code_tables',
-        (v) =>
-            JmaCodeTableParameterCodeTables.fromJson(v as Map<String, dynamic>),
-      ),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'codeTables': 'code_tables', r'$type': 'runtimeType'},
-);
+) => $checkedCreate('ParameterDataResponseUnionJmaCodeTableParameter', json, (
+  $checkedConvert,
+) {
+  final val = ParameterDataResponseUnionJmaCodeTableParameter(
+    metadata: $checkedConvert(
+      'metadata',
+      (v) => JmaCodeTableParameterMetadata.fromJson(v as Map<String, dynamic>),
+    ),
+    codeTables: $checkedConvert(
+      'code_tables',
+      (v) =>
+          JmaCodeTableParameterCodeTables.fromJson(v as Map<String, dynamic>),
+    ),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'codeTables': 'code_tables', r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$ParameterDataResponseUnionJmaCodeTableParameterToJson(
   ParameterDataResponseUnionJmaCodeTableParameter instance,

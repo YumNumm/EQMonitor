@@ -210,7 +210,7 @@ return $default(_that.decodedTileCount,_that.rawFeatureCount,_that.uniqueFeature
 
 class _SeismicityPmTilesDecodeProgress implements SeismicityPmTilesDecodeProgress {
   const _SeismicityPmTilesDecodeProgress({required this.decodedTileCount, required this.rawFeatureCount, required this.uniqueFeatureCount});
-
+  
 
 @override final  int decodedTileCount;
 @override final  int rawFeatureCount;

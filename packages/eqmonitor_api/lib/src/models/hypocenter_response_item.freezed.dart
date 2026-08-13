@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'hypocenter_response_item.dart';
@@ -9,6 +9,7 @@ part of 'hypocenter_response_item.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$HypocenterResponseItemCopyWithImpl<$Res>
 /// Create a copy of HypocenterResponseItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? hypocenterId = null,Object? originTime = null,Object? originTimePrecision = null,Object? latitude = null,Object? longitude = null,Object? originTimeSecondStderr = freezed,Object? latitudeMinStderr = freezed,Object? longitudeMinStderr = freezed,Object? depthKm = freezed,Object? depthIsFree = freezed,Object? depthStderrKm = freezed,Object? magnitude = freezed,Object? magnitudeType = freezed,Object? secondaryMagnitude = freezed,Object? secondaryMagnitudeType = freezed,Object? maxIntensity = freezed,Object? determinationFlag = freezed,Object? recordType = freezed,Object? travelTimeTable = freezed,Object? hypocenterEvaluation = freezed,Object? hypocenterAuxiliaryInfo = freezed,Object? damageScale = freezed,Object? tsunamiScale = freezed,Object? stationCount = freezed,Object? largeAreaCode = freezed,Object? smallAreaCode = freezed,Object? epicenterName = freezed,Object? earthquakeEventId = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(HypocenterResponseItem(
 hypocenterId: null == hypocenterId ? _self.hypocenterId : hypocenterId // ignore: cast_nullable_to_non_nullable
 as String,originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime,originTimePrecision: null == originTimePrecision ? _self.originTimePrecision : originTimePrecision // ignore: cast_nullable_to_non_nullable

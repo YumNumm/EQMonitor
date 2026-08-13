@@ -207,7 +207,7 @@ return cancelled();case _:
 
 class SeismicityPmTilesLoadIdle implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadIdle();
-
+  
 
 
 
@@ -239,7 +239,7 @@ String toString() {
 
 class SeismicityPmTilesLoadOpeningSource implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadOpeningSource();
-
+  
 
 
 
@@ -271,7 +271,7 @@ String toString() {
 
 class SeismicityPmTilesLoadReadingDirectory implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadReadingDirectory();
-
+  
 
 
 
@@ -303,7 +303,7 @@ String toString() {
 
 class SeismicityPmTilesLoadDecoding implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadDecoding({required this.progress});
-
+  
 
  final  SeismicityPmTilesDecodeProgress progress;
 
@@ -366,7 +366,7 @@ as SeismicityPmTilesDecodeProgress,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesDecodeProgressCopyWith<$Res> get progress {
-
+  
   return $SeismicityPmTilesDecodeProgressCopyWith<$Res>(_self.progress, (value) {
     return _then(_self.copyWith(progress: value));
   });
@@ -378,7 +378,7 @@ $SeismicityPmTilesDecodeProgressCopyWith<$Res> get progress {
 
 class SeismicityPmTilesLoadCompleted implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadCompleted();
-
+  
 
 
 
@@ -410,7 +410,7 @@ String toString() {
 
 class SeismicityPmTilesLoadFailed implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadFailed({required this.exception});
-
+  
 
  final  SeismicityPmTilesException exception;
 
@@ -473,7 +473,7 @@ as SeismicityPmTilesException,
 @override
 @pragma('vm:prefer-inline')
 $SeismicityPmTilesExceptionCopyWith<$Res> get exception {
-
+  
   return $SeismicityPmTilesExceptionCopyWith<$Res>(_self.exception, (value) {
     return _then(_self.copyWith(exception: value));
   });
@@ -485,7 +485,7 @@ $SeismicityPmTilesExceptionCopyWith<$Res> get exception {
 
 class SeismicityPmTilesLoadCancelled implements SeismicityPmTilesLoadState {
   const SeismicityPmTilesLoadCancelled();
-
+  
 
 
 

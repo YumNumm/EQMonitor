@@ -189,7 +189,7 @@ return limitExceeded(_that.reason);case _:
 
 class MvtMalformedProtobufException implements MvtDecodeException {
   const MvtMalformedProtobufException({required this.reason});
-
+  
 
  final  String reason;
 
@@ -255,7 +255,7 @@ as String,
 
 class MvtUnsupportedLayerVersionException implements MvtDecodeException {
   const MvtUnsupportedLayerVersionException({required this.version});
-
+  
 
  final  int version;
 
@@ -321,7 +321,7 @@ as int,
 
 class MvtInvalidGeometryCommandException implements MvtDecodeException {
   const MvtInvalidGeometryCommandException({required this.reason});
-
+  
 
  final  String reason;
 
@@ -387,7 +387,7 @@ as String,
 
 class MvtLimitExceededException implements MvtDecodeException {
   const MvtLimitExceededException({required this.reason});
-
+  
 
  final  String reason;
 

@@ -10,26 +10,21 @@ part of 'realtime_tsunami_upsert_payload.dart';
 
 _RealtimeTsunamiUpsertPayload _$RealtimeTsunamiUpsertPayloadFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_RealtimeTsunamiUpsertPayload',
-  json,
-  ($checkedConvert) {
-    final val = _RealtimeTsunamiUpsertPayload(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadTypeEnumMap, v),
-      ),
-      operation: $checkedConvert(
-        'operation',
-        (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadOperationEnumMap, v),
-      ),
-      eventId: $checkedConvert('event_id', (v) => v as String),
-      groupId: $checkedConvert('group_id', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'eventId': 'event_id', 'groupId': 'group_id'},
-);
+) => $checkedCreate('_RealtimeTsunamiUpsertPayload', json, ($checkedConvert) {
+  final val = _RealtimeTsunamiUpsertPayload(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadTypeEnumMap, v),
+    ),
+    operation: $checkedConvert(
+      'operation',
+      (v) => $enumDecode(_$RealtimeTsunamiUpsertPayloadOperationEnumMap, v),
+    ),
+    eventId: $checkedConvert('event_id', (v) => v as String),
+    groupId: $checkedConvert('group_id', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'eventId': 'event_id', 'groupId': 'group_id'});
 
 Map<String, dynamic> _$RealtimeTsunamiUpsertPayloadToJson(
   _RealtimeTsunamiUpsertPayload instance,

@@ -223,7 +223,7 @@ return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeatu
 
 class _MvtDecodeLimits implements MvtDecodeLimits {
   const _MvtDecodeLimits({required this.maxLayers, required this.maxFeaturesPerLayer, required this.maxRingsPerFeature, required this.maxVerticesPerRing, required this.maxCommandsPerFeature, required this.maxLayerNameBytes});
-
+  
 
 /// 1つのtileに含められるlayer数の上限。
 @override final  int maxLayers;

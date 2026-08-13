@@ -10,26 +10,22 @@ part of 'realtime_earthquake_delete_payload.dart';
 
 _RealtimeEarthquakeDeletePayload _$RealtimeEarthquakeDeletePayloadFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_RealtimeEarthquakeDeletePayload',
-  json,
-  ($checkedConvert) {
-    final val = _RealtimeEarthquakeDeletePayload(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$RealtimeEarthquakeDeletePayloadTypeEnumMap, v),
-      ),
-      operation: $checkedConvert(
-        'operation',
-        (v) =>
-            $enumDecode(_$RealtimeEarthquakeDeletePayloadOperationEnumMap, v),
-      ),
-      eventId: $checkedConvert('event_id', (v) => v as String),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'eventId': 'event_id'},
-);
+) =>
+    $checkedCreate('_RealtimeEarthquakeDeletePayload', json, ($checkedConvert) {
+      final val = _RealtimeEarthquakeDeletePayload(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$RealtimeEarthquakeDeletePayloadTypeEnumMap, v),
+        ),
+        operation: $checkedConvert(
+          'operation',
+          (v) =>
+              $enumDecode(_$RealtimeEarthquakeDeletePayloadOperationEnumMap, v),
+        ),
+        eventId: $checkedConvert('event_id', (v) => v as String),
+      );
+      return val;
+    }, fieldKeyMap: const {'eventId': 'event_id'});
 
 Map<String, dynamic> _$RealtimeEarthquakeDeletePayloadToJson(
   _RealtimeEarthquakeDeletePayload instance,

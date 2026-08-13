@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'catalog_hypocenter.dart';
@@ -9,6 +9,7 @@ part of 'catalog_hypocenter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -69,7 +70,7 @@ class _$CatalogHypocenterCopyWithImpl<$Res>
 /// Create a copy of CatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? seq = null,Object? recordType = null,Object? magnitudes = null,Object? epicenterName = null,Object? stationCount = null,Object? originTime = freezed,Object? originTimeStderrSeconds = freezed,Object? coordinates = freezed,Object? depth = freezed,Object? maxIntensity = freezed,Object? largeAreaCode = freezed,Object? smallAreaCode = freezed,Object? determinationFlag = freezed,Object? evaluation = freezed,Object? auxiliaryInfo = freezed,Object? travelTimeTable = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CatalogHypocenter(
 seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
 as int,recordType: null == recordType ? _self.recordType : recordType // ignore: cast_nullable_to_non_nullable
 as CatalogHypocenterRecordType,magnitudes: null == magnitudes ? _self.magnitudes : magnitudes // ignore: cast_nullable_to_non_nullable
@@ -251,7 +252,7 @@ return $default(_that.seq,_that.recordType,_that.magnitudes,_that.epicenterName,
 @JsonSerializable()
 
 class _CatalogHypocenter implements CatalogHypocenter {
-  const _CatalogHypocenter({required this.seq, @JsonKey(name: 'record_type') required this.recordType, required final  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name') required this.epicenterName, @JsonKey(name: 'station_count') required this.stationCount, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') this.originTimeStderrSeconds, @JsonKey(includeIfNull: false) this.coordinates, @JsonKey(includeIfNull: false) this.depth, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code') this.largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code') this.smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag') this.determinationFlag, @JsonKey(includeIfNull: false) this.evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info') this.auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table') this.travelTimeTable}): _magnitudes = magnitudes;
+  const _CatalogHypocenter({required this.seq, @JsonKey(name: 'record_type') required this.recordType, required  List<CatalogHypocenterMagnitude> magnitudes, @JsonKey(name: 'epicenter_name') required this.epicenterName, @JsonKey(name: 'station_count') required this.stationCount, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'origin_time_stderr_seconds') this.originTimeStderrSeconds, @JsonKey(includeIfNull: false) this.coordinates, @JsonKey(includeIfNull: false) this.depth, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'large_area_code') this.largeAreaCode, @JsonKey(includeIfNull: false, name: 'small_area_code') this.smallAreaCode, @JsonKey(includeIfNull: false, name: 'determination_flag') this.determinationFlag, @JsonKey(includeIfNull: false) this.evaluation, @JsonKey(includeIfNull: false, name: 'auxiliary_info') this.auxiliaryInfo, @JsonKey(includeIfNull: false, name: 'travel_time_table') this.travelTimeTable}): _magnitudes = magnitudes;
   factory _CatalogHypocenter.fromJson(Map<String, dynamic> json) => _$CatalogHypocenterFromJson(json);
 
 /// 0が代表震源

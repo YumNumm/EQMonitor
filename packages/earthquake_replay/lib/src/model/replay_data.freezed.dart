@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'replay_data.dart';
@@ -9,6 +9,7 @@ part of 'replay_data.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -62,7 +63,7 @@ class _$JmaXmlTelegramReplayDataCopyWithImpl<$Res>
 /// Create a copy of JmaXmlTelegramReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? title = null,Object? telegram = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaXmlTelegramReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -326,7 +327,7 @@ class _$JmaBinaryTelegramReplayDataCopyWithImpl<$Res>
 /// Create a copy of JmaBinaryTelegramReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? telegramType = null,Object? data = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaBinaryTelegramReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
@@ -472,7 +473,7 @@ return $default(_that.type,_that.time,_that.telegramType,_that.data);case _:
 @JsonSerializable()
 
 class _JmaBinaryTelegramReplayData extends JmaBinaryTelegramReplayData {
-  const _JmaBinaryTelegramReplayData({required this.type, required this.time, required this.telegramType, required final  List<int> data}): _data = data,super._();
+  const _JmaBinaryTelegramReplayData({required this.type, required this.time, required this.telegramType, required  List<int> data}): _data = data,super._();
   factory _JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) => _$JmaBinaryTelegramReplayDataFromJson(json);
 
 @override final  ReplayDataType type;
@@ -596,7 +597,7 @@ class _$KyoshinMonitorImageReplayDataCopyWithImpl<$Res>
 /// Create a copy of KyoshinMonitorImageReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? images = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinMonitorImageReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
@@ -741,7 +742,7 @@ return $default(_that.type,_that.time,_that.images);case _:
 @JsonSerializable()
 
 class _KyoshinMonitorImageReplayData extends KyoshinMonitorImageReplayData {
-  const _KyoshinMonitorImageReplayData({required this.type, required this.time, required final  Map<ImageType, List<int>> images}): _images = images,super._();
+  const _KyoshinMonitorImageReplayData({required this.type, required this.time, required  Map<ImageType, List<int>> images}): _images = images,super._();
   factory _KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorImageReplayDataFromJson(json);
 
 @override final  ReplayDataType type;
@@ -863,7 +864,7 @@ class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<$Res>
 /// Create a copy of KyoshinMonitorEewJsonReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinMonitorEewJsonReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
@@ -1124,7 +1125,7 @@ class _$KeviJsonReplayDataCopyWithImpl<$Res>
 /// Create a copy of KeviJsonReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? jsonType = null,Object? json = null,}) {
-  return _then(_self.copyWith(
+  return _then(KeviJsonReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,jsonType: null == jsonType ? _self.jsonType : jsonType // ignore: cast_nullable_to_non_nullable
@@ -1388,7 +1389,7 @@ class _$SnpLogEntryReplayDataCopyWithImpl<$Res>
 /// Create a copy of SnpLogEntryReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? message = null,}) {
-  return _then(_self.copyWith(
+  return _then(SnpLogEntryReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
@@ -1649,7 +1650,7 @@ class _$AxisJsonReplayDataCopyWithImpl<$Res>
 /// Create a copy of AxisJsonReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
-  return _then(_self.copyWith(
+  return _then(AxisJsonReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
@@ -1910,7 +1911,7 @@ class _$EqMonitorEewReplayDataCopyWithImpl<$Res>
 /// Create a copy of EqMonitorEewReplayData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
-  return _then(_self.copyWith(
+  return _then(EqMonitorEewReplayData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'catalog.dart';
@@ -9,6 +9,7 @@ part of 'catalog.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$CatalogCopyWithImpl<$Res>
 /// Create a copy of Catalog
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? hypocenters = null,Object? stationRecords = null,Object? damageScale = freezed,Object? tsunamiScale = freezed,Object? link = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Catalog(
 hypocenters: null == hypocenters ? _self.hypocenters : hypocenters // ignore: cast_nullable_to_non_nullable
 as List<CatalogHypocenter>,stationRecords: null == stationRecords ? _self.stationRecords : stationRecords // ignore: cast_nullable_to_non_nullable
 as List<CatalogStationRecord>,damageScale: freezed == damageScale ? _self.damageScale : damageScale // ignore: cast_nullable_to_non_nullable
@@ -225,7 +226,7 @@ return $default(_that.hypocenters,_that.stationRecords,_that.damageScale,_that.t
 @JsonSerializable()
 
 class _Catalog implements Catalog {
-  const _Catalog({required final  List<CatalogHypocenter> hypocenters, @JsonKey(name: 'station_records') required final  List<CatalogStationRecord> stationRecords, @JsonKey(includeIfNull: false, name: 'damage_scale') this.damageScale, @JsonKey(includeIfNull: false, name: 'tsunami_scale') this.tsunamiScale, @JsonKey(includeIfNull: false) this.link}): _hypocenters = hypocenters,_stationRecords = stationRecords;
+  const _Catalog({required  List<CatalogHypocenter> hypocenters, @JsonKey(name: 'station_records') required  List<CatalogStationRecord> stationRecords, @JsonKey(includeIfNull: false, name: 'damage_scale') this.damageScale, @JsonKey(includeIfNull: false, name: 'tsunami_scale') this.tsunamiScale, @JsonKey(includeIfNull: false) this.link}): _hypocenters = hypocenters,_stationRecords = stationRecords;
   factory _Catalog.fromJson(Map<String, dynamic> json) => _$CatalogFromJson(json);
 
  final  List<CatalogHypocenter> _hypocenters;

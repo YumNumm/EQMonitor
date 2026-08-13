@@ -45,7 +45,7 @@ String toString() {
 
 class _MapRenderPipelineKey implements MapRenderPipelineKey {
   const _MapRenderPipelineKey({required this.version, required this.key});
-
+  
 
 @override final  int version;
 @override final  String key;
@@ -106,7 +106,7 @@ String toString() {
 
 class _MapRenderBatchKey implements MapRenderBatchKey {
   const _MapRenderBatchKey({required this.version, required this.nodeKey, required this.scopeKey, required this.materialKey, required this.phasePolicyVersion, required this.phase});
-
+  
 
 @override final  int version;
 @override final  MapNodeKey nodeKey;

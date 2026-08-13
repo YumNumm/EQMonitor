@@ -212,7 +212,7 @@ return $default(_that.hypocenterIds,_that.latitudes,_that.longitudes,_that.depth
 
 class _SeismicityPmTilesChunk implements SeismicityPmTilesChunk {
   const _SeismicityPmTilesChunk({required this.hypocenterIds, required this.latitudes, required this.longitudes, required this.depthsKm, required this.depthValidity, required this.magnitudes, required this.magnitudeValidity, required this.originTimeUnixMilliseconds, required this.maxIntensityDictionaryIndexes, required this.maxIntensityValidity, required this.maxIntensityDictionaryUtf8, required this.maxIntensityDictionaryOffsets});
-
+  
 
 @override final  Uint8List hypocenterIds;
 @override final  Float64List latitudes;

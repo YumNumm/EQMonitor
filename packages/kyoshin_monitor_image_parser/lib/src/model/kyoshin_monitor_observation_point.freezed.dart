@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'kyoshin_monitor_observation_point.dart';
@@ -9,6 +9,7 @@ part of 'kyoshin_monitor_observation_point.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$KyoshinMonitorObservationPointCopyWithImpl<$Res>
 /// Create a copy of KyoshinMonitorObservationPoint
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? x = null,Object? y = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinMonitorObservationPoint(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,x: null == x ? _self.x : x // ignore: cast_nullable_to_non_nullable
 as int,y: null == y ? _self.y : y // ignore: cast_nullable_to_non_nullable
@@ -335,7 +336,7 @@ class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res>
 /// Create a copy of KyoshinMonitorObservationAnalyzedPoint
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? point = null,Object? scale = null,Object? r = null,Object? g = null,Object? b = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinMonitorObservationAnalyzedPoint(
 point: null == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
 as KyoshinMonitorObservationPoint,scale: null == scale ? _self.scale : scale // ignore: cast_nullable_to_non_nullable
 as double,r: null == r ? _self.r : r // ignore: cast_nullable_to_non_nullable
@@ -628,7 +629,7 @@ class _$NamedObservationPointCopyWithImpl<$Res>
 /// Create a copy of NamedObservationPoint
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,Object? x = null,Object? y = null,}) {
-  return _then(_self.copyWith(
+  return _then(NamedObservationPoint(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable

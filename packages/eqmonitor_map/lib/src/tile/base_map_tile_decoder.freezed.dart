@@ -83,7 +83,7 @@ as double,
 @override
 @pragma('vm:prefer-inline')
 $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
-
+  
   return $MvtDecodeLimitsCopyWith<$Res>(_self.mvtLimits, (value) {
     return _then(_self.copyWith(mvtLimits: value));
   });
@@ -92,7 +92,7 @@ $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
 @override
 @pragma('vm:prefer-inline')
 $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
-
+  
   return $FillMeshBuilderLimitsCopyWith<$Res>(_self.fillLimits, (value) {
     return _then(_self.copyWith(fillLimits: value));
   });
@@ -101,7 +101,7 @@ $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
 @override
 @pragma('vm:prefer-inline')
 $LineMeshBuilderLimitsCopyWith<$Res> get lineLimits {
-
+  
   return $LineMeshBuilderLimitsCopyWith<$Res>(_self.lineLimits, (value) {
     return _then(_self.copyWith(lineLimits: value));
   });
@@ -244,7 +244,7 @@ return $default(_that.mvtLimits,_that.fillLimits,_that.lineLimits,_that.lineMite
 
 class _BaseMapTileDecodeLimits with DiagnosticableTreeMixin implements BaseMapTileDecodeLimits {
   const _BaseMapTileDecodeLimits({required this.mvtLimits, required this.fillLimits, required this.lineLimits, required this.lineMiterLimit});
-
+  
 
 @override final  MvtDecodeLimits mvtLimits;
 @override final  FillMeshBuilderLimits fillLimits;
@@ -319,7 +319,7 @@ as double,
 @override
 @pragma('vm:prefer-inline')
 $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
-
+  
   return $MvtDecodeLimitsCopyWith<$Res>(_self.mvtLimits, (value) {
     return _then(_self.copyWith(mvtLimits: value));
   });
@@ -328,7 +328,7 @@ $MvtDecodeLimitsCopyWith<$Res> get mvtLimits {
 @override
 @pragma('vm:prefer-inline')
 $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
-
+  
   return $FillMeshBuilderLimitsCopyWith<$Res>(_self.fillLimits, (value) {
     return _then(_self.copyWith(fillLimits: value));
   });
@@ -337,7 +337,7 @@ $FillMeshBuilderLimitsCopyWith<$Res> get fillLimits {
 @override
 @pragma('vm:prefer-inline')
 $LineMeshBuilderLimitsCopyWith<$Res> get lineLimits {
-
+  
   return $LineMeshBuilderLimitsCopyWith<$Res>(_self.lineLimits, (value) {
     return _then(_self.copyWith(lineLimits: value));
   });

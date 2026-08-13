@@ -10,30 +10,26 @@ part of 'realtime_earthquake_upsert_payload.dart';
 
 _RealtimeEarthquakeUpsertPayload _$RealtimeEarthquakeUpsertPayloadFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_RealtimeEarthquakeUpsertPayload',
-  json,
-  ($checkedConvert) {
-    final val = _RealtimeEarthquakeUpsertPayload(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$RealtimeEarthquakeUpsertPayloadTypeEnumMap, v),
-      ),
-      operation: $checkedConvert(
-        'operation',
-        (v) =>
-            $enumDecode(_$RealtimeEarthquakeUpsertPayloadOperationEnumMap, v),
-      ),
-      eventId: $checkedConvert('event_id', (v) => v as String),
-      record: $checkedConvert(
-        'record',
-        (v) => Earthquake.fromJson(v as Map<String, dynamic>),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'eventId': 'event_id'},
-);
+) =>
+    $checkedCreate('_RealtimeEarthquakeUpsertPayload', json, ($checkedConvert) {
+      final val = _RealtimeEarthquakeUpsertPayload(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$RealtimeEarthquakeUpsertPayloadTypeEnumMap, v),
+        ),
+        operation: $checkedConvert(
+          'operation',
+          (v) =>
+              $enumDecode(_$RealtimeEarthquakeUpsertPayloadOperationEnumMap, v),
+        ),
+        eventId: $checkedConvert('event_id', (v) => v as String),
+        record: $checkedConvert(
+          'record',
+          (v) => Earthquake.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'eventId': 'event_id'});
 
 Map<String, dynamic> _$RealtimeEarthquakeUpsertPayloadToJson(
   _RealtimeEarthquakeUpsertPayload instance,

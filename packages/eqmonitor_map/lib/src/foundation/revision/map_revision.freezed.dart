@@ -45,7 +45,7 @@ String toString() {
 
 class _MapFullRevision implements MapFullRevision {
   const _MapFullRevision({required this.source, required this.revision, required this.digest});
-
+  
 
 @override final  MapSourceInstanceId source;
 @override final  int revision;
@@ -107,7 +107,7 @@ String toString() {
 
 class _MapDeltaRevision implements MapDeltaRevision {
   const _MapDeltaRevision({required this.source, required this.baseRevision, required this.targetRevision, required this.targetDigest});
-
+  
 
 @override final  MapSourceInstanceId source;
 @override final  int baseRevision;
@@ -170,7 +170,7 @@ String toString() {
 
 class _MapCommittedRevision<TState> implements MapCommittedRevision<TState> {
   const _MapCommittedRevision({required this.source, required this.revision, required this.digest, required this.state});
-
+  
 
 @override final  MapSourceInstanceId source;
 @override final  int revision;
@@ -233,7 +233,7 @@ String toString() {
 
 class _MapFullResyncRequest implements MapFullResyncRequest {
   const _MapFullResyncRequest({required this.source, required this.afterRevision});
-
+  
 
 @override final  MapSourceInstanceId source;
 @override final  int? afterRevision;
@@ -294,7 +294,7 @@ String toString() {
 
 class _MapRevisionApplyResultCommitted<TState> implements MapRevisionApplyResult<TState> {
   const _MapRevisionApplyResultCommitted({required this.current, this.reason, this.fullResyncRequest});
-
+  
 
 @override final  MapCommittedRevision<TState> current;
 @override final  MapRevisionRejectReason? reason;
@@ -328,7 +328,7 @@ String toString() {
 
 class _MapRevisionApplyResultIdempotentNoOp<TState> implements MapRevisionApplyResult<TState> {
   const _MapRevisionApplyResultIdempotentNoOp({required this.current, this.reason, this.fullResyncRequest});
-
+  
 
 @override final  MapCommittedRevision<TState> current;
 @override final  MapRevisionRejectReason? reason;
@@ -362,7 +362,7 @@ String toString() {
 
 class _MapRevisionApplyResultRejected<TState> implements MapRevisionApplyResult<TState> {
   const _MapRevisionApplyResultRejected({required this.current, required this.reason, this.fullResyncRequest});
-
+  
 
 @override final  MapCommittedRevision<TState>? current;
 @override final  MapRevisionRejectReason reason;

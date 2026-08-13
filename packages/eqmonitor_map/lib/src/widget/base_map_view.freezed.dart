@@ -110,7 +110,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $PmTilesV3LimitsCopyWith<$Res> get pmTilesLimits {
-
+  
   return $PmTilesV3LimitsCopyWith<$Res>(_self.pmTilesLimits, (value) {
     return _then(_self.copyWith(pmTilesLimits: value));
   });
@@ -119,7 +119,7 @@ $PmTilesV3LimitsCopyWith<$Res> get pmTilesLimits {
 @override
 @pragma('vm:prefer-inline')
 $BaseMapTileDecodeLimitsCopyWith<$Res> get decodeLimits {
-
+  
   return $BaseMapTileDecodeLimitsCopyWith<$Res>(_self.decodeLimits, (value) {
     return _then(_self.copyWith(decodeLimits: value));
   });
@@ -262,7 +262,7 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 
 class _MapBaseLayerLimits implements MapBaseLayerLimits {
   const _MapBaseLayerLimits({required this.minZoom, required this.maxZoom, required this.pmTilesLimits, required this.decodeLimits, required this.maxCachedTileGeometries, required this.maxParentFallbackSteps});
-
+  
 
 /// pan/pinch zoom gestureが許すcamera zoomの下限、および
 /// [TileCoverCalculator.cover]へそのまま渡すtile zoomの下限。
@@ -366,7 +366,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $PmTilesV3LimitsCopyWith<$Res> get pmTilesLimits {
-
+  
   return $PmTilesV3LimitsCopyWith<$Res>(_self.pmTilesLimits, (value) {
     return _then(_self.copyWith(pmTilesLimits: value));
   });
@@ -375,7 +375,7 @@ $PmTilesV3LimitsCopyWith<$Res> get pmTilesLimits {
 @override
 @pragma('vm:prefer-inline')
 $BaseMapTileDecodeLimitsCopyWith<$Res> get decodeLimits {
-
+  
   return $BaseMapTileDecodeLimitsCopyWith<$Res>(_self.decodeLimits, (value) {
     return _then(_self.copyWith(decodeLimits: value));
   });
