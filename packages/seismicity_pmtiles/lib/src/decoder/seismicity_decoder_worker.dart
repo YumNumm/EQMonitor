@@ -166,7 +166,7 @@ final class IsolateSeismicityDecoderWorkerHandle
   }
 
   void failFinish({required SeismicityPmTilesException error}) {
-    if (!_finish.isCompleted) {
+    if (_finishRequested && !_finish.isCompleted) {
       _finish.completeError(error);
     }
     applyTerminalDecision(
