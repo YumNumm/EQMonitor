@@ -19,7 +19,8 @@ void main() {
   final fixtures = _Task43Fixtures();
 
   test(
-    'controlled handle routes ready two progress acks and finish materialization',
+    'controlled handle routes ready two progress acks and '
+    'finish materialization',
     () async {
       final controlled = ControlledSeismicityIsolateLauncher();
       final factory = IsolateSeismicityDecoderWorkerFactory(
