@@ -125,8 +125,14 @@ Future<SeismicityDecodeBenchmarkResult> runSeismicityDecodeBenchmark({
   final lastHypocenterId = Uint8List.fromList(
     lastIds.sublist(lastIds.lengthInBytes - 16),
   );
-  if (firstHypocenterId != archive.firstHypocenterId ||
-      lastHypocenterId != archive.lastHypocenterId) {
+  if (!const _BenchmarkUuidBytes().equal(
+        left: firstHypocenterId,
+        right: archive.firstHypocenterId,
+      ) ||
+      !const _BenchmarkUuidBytes().equal(
+        left: lastHypocenterId,
+        right: archive.lastHypocenterId,
+      )) {
     throw StateError('Benchmark first/last UUID mismatch.');
   }
   if (counting.spawnCount != 1 || archive.closeCount != 1) {
@@ -165,4 +171,20 @@ Future<SeismicityDecodeBenchmarkResult> runSeismicityDecodeBenchmark({
     lastHypocenterId: lastHypocenterId,
     descriptor: archive.descriptor,
   );
+}
+
+final class _BenchmarkUuidBytes {
+  const _BenchmarkUuidBytes();
+
+  bool equal({required Uint8List left, required Uint8List right}) {
+    if (left.lengthInBytes != right.lengthInBytes) {
+      return false;
+    }
+    for (var index = 0; index < left.lengthInBytes; index++) {
+      if (left[index] != right[index]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
