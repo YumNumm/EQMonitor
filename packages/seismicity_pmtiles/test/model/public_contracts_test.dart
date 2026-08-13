@@ -120,6 +120,13 @@ void main() {
       SeismicityPmTilesLoadState.idle(),
       SeismicityPmTilesLoadState.openingSource(),
       SeismicityPmTilesLoadState.readingDirectory(),
+      SeismicityPmTilesLoadState.decoding(
+        progress: const SeismicityPmTilesDecodeProgress(
+          decodedTileCount: 1,
+          rawFeatureCount: 1,
+          uniqueFeatureCount: 1,
+        ),
+      ),
       SeismicityPmTilesLoadState.completed(),
       SeismicityPmTilesLoadState.failed(
         exception: SeismicityPmTilesException.invalidDescriptor(
@@ -136,6 +143,7 @@ void main() {
           SeismicityPmTilesLoadIdle() => 'idle',
           SeismicityPmTilesLoadOpeningSource() => 'openingSource',
           SeismicityPmTilesLoadReadingDirectory() => 'readingDirectory',
+          SeismicityPmTilesLoadDecoding() => 'decoding',
           SeismicityPmTilesLoadCompleted() => 'completed',
           SeismicityPmTilesLoadFailed() => 'failed',
           SeismicityPmTilesLoadCancelled() => 'cancelled',
@@ -145,6 +153,7 @@ void main() {
         'idle',
         'openingSource',
         'readingDirectory',
+        'decoding',
         'completed',
         'failed',
         'cancelled',

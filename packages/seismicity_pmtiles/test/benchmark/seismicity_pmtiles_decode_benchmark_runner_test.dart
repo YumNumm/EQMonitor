@@ -1,4 +1,3 @@
-import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
 import '../../benchmark/seismicity_pmtiles_decode_benchmark_runner.dart';
