@@ -27,12 +27,19 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
       );
     }
     final tileCount = featureCount ~/ featuresPerTile;
+    final tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
+    if (tileCount > tileSide * tileSide) {
+      throw ArgumentError(
+        'tileCount $tileCount exceeds zoom '
+        '${SeismicityBenchmarkFeatureSource.dataZoom} capacity.',
+      );
+    }
     final occupiedTileIds = List<int>.unmodifiable([
       for (var tileIndex = 0; tileIndex < tileCount; tileIndex++)
         tileIdCodec.tileIdForZxy(
           z: SeismicityBenchmarkFeatureSource.dataZoom,
-          x: tileIndex,
-          y: 0,
+          x: tileIndex % tileSide,
+          y: tileIndex ~/ tileSide,
         ),
     ]);
     var totalBytes = 0;
@@ -263,8 +270,11 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
         );
       }
       final extent = SeismicityBenchmarkFeatureSource.extent;
-      final localX = feature.globalX - tileIndex * extent;
-      final localY = feature.globalY;
+      final tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
+      final tileX = tileIndex % tileSide;
+      final tileY = tileIndex ~/ tileSide;
+      final localX = feature.globalX - tileX * extent;
+      final localY = feature.globalY - tileY * extent;
       encodedFeatures.add(
         createVectorTileFeature(
           type: VectorTile_GeomType.POINT,
