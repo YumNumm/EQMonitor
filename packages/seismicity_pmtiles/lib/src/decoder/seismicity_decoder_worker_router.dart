@@ -60,6 +60,17 @@ final class SeismicityDecoderWorkerRouter {
     _terminal = true;
   }
 
+  int allocateRequestId() {
+    if (_terminal) {
+      throw const SeismicityPmTilesException.decoderWorkerFailed(
+        reason: 'registration_after_terminal',
+      );
+    }
+    final requestId = _nextRequestId;
+    _nextRequestId += 1;
+    return requestId;
+  }
+
   void handleResponse({required SeismicityDecoderWorkerResponse response}) {
     switch (response) {
       case SeismicityDecoderWorkerReadyResponse(:final requestId):
