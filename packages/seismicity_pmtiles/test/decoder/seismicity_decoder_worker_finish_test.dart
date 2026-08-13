@@ -92,6 +92,22 @@ void main() {
       );
       expect(materialized.depthsKm[0].isNaN, isTrue);
       expect(materialized.maxIntensityDictionaryUtf8, isEmpty);
+      expect(materialized.maxIntensityDictionaryOffsets, [0]);
+      expect(materialized.maxIntensityDictionaryIndexes, [0, 0]);
+      expect(
+        SeismicityValidityBitmap.isValid(
+          bytes: materialized.maxIntensityValidity,
+          index: 0,
+        ),
+        isFalse,
+      );
+      expect(
+        SeismicityValidityBitmap.isValid(
+          bytes: materialized.maxIntensityValidity,
+          index: 1,
+        ),
+        isFalse,
+      );
       expect(
         const SeismicityChunkLengthSummer().sumChecked(
           chunks: [materialized],
