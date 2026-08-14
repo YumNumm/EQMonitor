@@ -122,11 +122,34 @@ resolve_base_sha_for_ios() {
 	echo ""
 }
 
+resolve_base_sha_for_android() {
+	local fetch_script candidate
+	fetch_script="$SCRIPT_DIR/fetch_android_play_base_sha.sh"
+	[ -x "$fetch_script" ] || die "fetch_android_play_base_sha.sh が見つかりません: $fetch_script"
+	: "${GOOGLE_PLAY_ACCESS_TOKEN:?GOOGLE_PLAY_ACCESS_TOKEN is required for PLATFORM=android}"
+	: "${PACKAGE_NAME:?PACKAGE_NAME is required for PLATFORM=android}"
+	: "${TRACK_NAME:?TRACK_NAME is required for PLATFORM=android}"
+
+	candidate="$("$fetch_script" || true)"
+	candidate="${candidate//$'\n'/}"
+	[ -n "$candidate" ] || {
+		echo ""
+		return 0
+	}
+	if ! git -C "$REPO_ROOT" cat-file -e "$candidate^{commit}" 2>/dev/null; then
+		log "Google Play の rev ($candidate) は手元に存在しないため無視します"
+		echo ""
+		return 0
+	fi
+	log "Google Play トラック $TRACK_NAME を前回の配信とみなします (rev: $candidate)"
+	echo "$candidate"
+}
+
 resolve_base_sha_for_platform() {
 	local platform="$1"
 	case "$platform" in
 	ios) resolve_base_sha_for_ios ;;
-	android) echo "" ;;
+	android) resolve_base_sha_for_android ;;
 	*) die "未対応の PLATFORM です: $platform" ;;
 	esac
 }

@@ -38,19 +38,6 @@ grep -F '・#42 feat: hello' "$OUT"
 grep -E 'その他 1 件' "$OUT"
 grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
 
-# BASE_SHA unset -> cannot resolve previous build
-REPO=$(new_repo)
-git -C "$REPO" commit --allow-empty -m 'only' -q
-OUT="$REPO/unresolved.txt"
-run_gen "$REPO" android "$OUT"
-
-grep -F '前回の配信ビルドを特定できなかった' "$OUT"
-grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
-if grep -F '・#' "$OUT" || grep -E 'その他 [0-9]+ 件' "$OUT"; then
-	echo 'unresolved BASE_SHA must not list changes' >&2
-	exit 1
-fi
-
 # BASE_SHA == HEAD -> no changes
 REPO=$(new_repo)
 git -C "$REPO" commit --allow-empty -m 'base' -q
@@ -138,3 +125,21 @@ FAKE_ASC_BUILDS_JSON='{"data":[{"attributes":{"version":"201"}},{"attributes":{"
 
 grep -F '・#8 fix: follow-up' "$OUT"
 grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
+
+# BASE_SHA unset + empty ASC builds -> cannot resolve previous build
+REPO=$(new_repo)
+git -C "$REPO" commit --allow-empty -m 'only' -q
+FAKE_ASC_DIR=$(new_fake_asc)
+OUT="$REPO/unresolved.txt"
+FAKE_ASC_BUILDS_JSON='{"data":[]}' \
+	ASC_BIN="$FAKE_ASC_DIR/asc" \
+	run_gen "$REPO" ios "$OUT"
+
+grep -F '前回の配信ビルドを特定できなかった' "$OUT"
+grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
+if grep -F '・#' "$OUT" || grep -E 'その他 [0-9]+ 件' "$OUT"; then
+	echo 'unresolved BASE_SHA must not list changes' >&2
+	exit 1
+fi
+
+echo "generate release note tests passed"
