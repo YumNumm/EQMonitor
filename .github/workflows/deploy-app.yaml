@@ -23,6 +23,11 @@ on:
         required: false
         default: false
         type: boolean
+      is_beta_testing:
+        description: "Set IS_BETA_TESTING dart-define"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -44,6 +49,7 @@ jobs:
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
       android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
+      is-beta-testing: ${{ steps.define-environment-matrix.outputs.is-beta-testing }}
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -61,6 +67,7 @@ jobs:
           INPUT_IOS: ${{ inputs.ios || false }}
           INPUT_ANDROID: ${{ inputs.android || false }}
           INPUT_EXTERNAL: ${{ inputs.external || false }}
+          INPUT_IS_BETA_TESTING: ${{ inputs.is_beta_testing || false }}
         run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
 
   build-ios:
