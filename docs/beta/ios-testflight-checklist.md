@@ -119,7 +119,8 @@ codesign -d --entitlements :- "$APP_PATH/PlugIns/AppIntentExtension.appex" | plu
 ### 4.1 アプリ内デバッグページで確認する
 
 > [!IMPORTANT]
-> 通常の TestFlight ビルドは `.env.prod`(`FLAVOR=prod`)+ `IS_BETA_TESTING=true`
+> develop push の TestFlight ビルドは `.env.prod`(`FLAVOR=prod`) のみ（`IS_BETA_TESTING` なし）。  
+> `v*-beta.*` / 手動で `is_beta_testing=true` のときだけ `IS_BETA_TESTING=true`。
 > でビルドされる。この組み合わせでは `buildConfig.isDeveloperUiEnabled` が
 > **false** になり(`app/lib/core/model/environment.dart`)、デバッグメニュー・
 > HTTP キャッシュ表示・`DebugLauncher` のシェイク/ショートカット起動が
