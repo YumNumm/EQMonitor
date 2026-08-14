@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level_parser.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_snapshot_reducer.dart';
@@ -75,7 +76,10 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
                       createdAt: event.createdAt,
                       updatedAt: event.updatedAt,
                       expiresAt: event.expiresAt,
-                      level: event.level.toJson().toShakeDetectionLevel(),
+                      level: event.level
+                          .toJson()
+                          .toShakeDetectionLevel()
+                          .toShakeDetectionLevelModel,
                       pointCount: event.pointCount,
                       minLat: event.region.bottomRight.latitude.toDouble(),
                       maxLat: event.region.topLeft.latitude.toDouble(),

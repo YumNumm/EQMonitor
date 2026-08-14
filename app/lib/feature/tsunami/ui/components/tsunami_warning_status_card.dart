@@ -1,9 +1,11 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_meta.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_history_overlay.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -96,7 +98,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
     );
   }
 
-  static String? _resolveHeadline(List<LatestTelegram> telegrams) {
+  static String? _resolveHeadline(List<TsunamiTelegramMeta> telegrams) {
     for (final t in telegrams) {
       if (t.type == TelegramType.vtse41 && t.headline != null) {
         return t.headline;

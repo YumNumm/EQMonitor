@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_tsunami_timeline.dart';
+import 'package:eqmonitor/feature/tsunami/data/logic/tsunami_telegrams_response_to_tracked_timeline_builder.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_estimation_first_height.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/first_height_condition.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/qualitative_height.dart';

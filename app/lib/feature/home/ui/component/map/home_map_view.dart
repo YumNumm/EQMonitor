@@ -27,6 +27,7 @@ import 'package:eqmonitor/feature/playback_mode/ui/playback_mode_modal.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
@@ -155,9 +156,9 @@ class _MapContent extends ConsumerWidget {
 /// [MapLibreMap] 本体を保持する Widget。
 ///
 /// [ValueKey] による remount（設定トグル・スタイル変更等）が発生すると
-/// この Widget 自体が unmount→remount されるため、`dispose()` で
+/// この Widget 自体が unmount→remount されるため、破棄時に
 /// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
-class _MapLibreMapHost extends ConsumerStatefulWidget {
+class _MapLibreMapHost extends HookConsumerWidget {
   const _MapLibreMapHost({
     required this.mapOptions,
     required this.showLocation,
@@ -170,50 +171,44 @@ class _MapLibreMapHost extends ConsumerStatefulWidget {
   final List<Widget> children;
 
   @override
-  ConsumerState<_MapLibreMapHost> createState() => _MapLibreMapHostState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controllerRef = useRef<MapController?>(null);
+    final cameraNotifier = ref.read(homeMapCameraStateProvider.notifier);
 
-class _MapLibreMapHostState extends ConsumerState<_MapLibreMapHost> {
-  MapController? _controller;
+    // Hook の破棄コールバックは Element が unmount された後に呼ばれるため、
+    // その時点で ref.read() を呼ぶと StateError になる。build 時点で取得した
+    // notifier を closure で保持しておく。
+    useEffect(
+      () => () {
+        final controller = controllerRef.value;
+        if (controller != null) {
+          cameraNotifier.clearController(controller: controller);
+        }
+      },
+      [cameraNotifier],
+    );
 
-  // dispose() は Element が unmount された後に呼ばれるため、その時点で
-  // ref.read() を呼ぶと StateError になる。Element がactiveな間（build時）
-  // に notifier への参照を取得し、フィールドへ保持しておく。
-  late HomeMapCameraState _cameraNotifier;
-
-  @override
-  void dispose() {
-    final controller = _controller;
-    if (controller != null) {
-      _cameraNotifier.clearController(controller: controller);
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _cameraNotifier = ref.read(homeMapCameraStateProvider.notifier);
     return LayoutBuilder(
       builder: (context, constraints) => MapLibreMap(
         key: ValueKey(constraints.biggest),
-        options: widget.mapOptions,
+        options: mapOptions,
         onMapCreated: (controller) async {
-          if (!mounted) {
+          if (!context.mounted) {
             return;
           }
-          _controller = controller;
+          controllerRef.value = controller;
           await ref
               .read(homeMapCameraStateProvider.notifier)
               .setController(
                 controller: controller,
                 viewportSize: constraints.biggest,
               );
-          if (widget.showLocation) {
+          if (showLocation) {
             await controller.enableLocation();
           }
         },
         onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
-        children: widget.children,
+        children: children,
       ),
     );
   }

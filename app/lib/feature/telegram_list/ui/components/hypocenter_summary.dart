@@ -1,7 +1,6 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +11,7 @@ import 'package:intl/intl.dart';
 class HypocenterSummary extends StatelessWidget {
   const HypocenterSummary({required this.quake, this.diff, super.key});
 
-  final EarthquakeTelegramBodyQuake quake;
+  final EarthquakeTelegramBodyQuakeModel quake;
   final HypocenterDiff? diff;
 
   @override

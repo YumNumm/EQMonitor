@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_split_ratio.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
@@ -16,9 +17,8 @@ class LiveMonitorSplitView extends HookConsumerWidget {
     final mediaQuery = MediaQuery.of(context);
     final orientation = mediaQuery.orientation;
     final isPortrait = orientation == Orientation.portrait;
-    final avoidBounds = DisplayFeatureSubScreen.avoidBounds(
-      mediaQuery,
-    ).toList(growable: false);
+    final avoidBounds = DisplayFeatureSubScreen.avoidBounds(mediaQuery)
+        .toList(growable: false);
     final settings =
         ref.watch(liveMonitorSettingsProvider).value ??
         const LiveMonitorSettings();
@@ -144,7 +144,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
                 ? adaptiveDividerExtent
                 : standardDividerExtent;
             final secondaryExtent = totalExtent - primaryExtent - dividerExtent;
-            final colorScheme = Theme.of(context).colorScheme;
+            final colorScheme = context.designSystem.colorTheme;
             final divider = Semantics(
               label: hasSplitDisplayFeature ? '画面の折りたたみ領域' : 'リアルタイム表示の分割割合',
               value: hasSplitDisplayFeature

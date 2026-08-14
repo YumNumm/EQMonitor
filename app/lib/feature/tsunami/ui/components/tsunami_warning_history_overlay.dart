@@ -1,46 +1,40 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-class TsunamiWarningHistoryButton extends StatefulWidget {
+class TsunamiWarningHistoryButton extends HookWidget {
   const TsunamiWarningHistoryButton({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 
   @override
-  State<TsunamiWarningHistoryButton> createState() =>
-      _TsunamiWarningHistoryButtonState();
-}
-
-class _TsunamiWarningHistoryButtonState
-    extends State<TsunamiWarningHistoryButton> {
-  final _overlayController = OverlayPortalController();
-  final _link = LayerLink();
-
-  @override
   Widget build(BuildContext context) {
+    final overlayController = useMemoized(OverlayPortalController.new);
+    final link = useMemoized(LayerLink.new);
+
     return CompositedTransformTarget(
-      link: _link,
+      link: link,
       child: OverlayPortal(
-        controller: _overlayController,
+        controller: overlayController,
         overlayChildBuilder: (context) {
           return _HistoryOverlay(
-            link: _link,
-            tsunami: widget.tsunami,
-            onDismiss: _overlayController.hide,
+            link: link,
+            tsunami: tsunami,
+            onDismiss: overlayController.hide,
           );
         },
         child: IconButton(
           icon: const Icon(Icons.history),
           color: Colors.white,
           onPressed: () {
-            if (_overlayController.isShowing) {
-              _overlayController.hide();
+            if (overlayController.isShowing) {
+              overlayController.hide();
             } else {
-              _overlayController.show();
+              overlayController.show();
             }
           },
         ),
@@ -125,7 +119,7 @@ class _HistoryOverlay extends StatelessWidget {
         tsunami.latestTelegrams
             .where((t) => t.type == TelegramType.vtse41)
             .toList()
-          ..sort((a, b) => a.pressedAt.compareTo(b.pressedAt));
+          ..sort((a, b) => a.publishedAt.compareTo(b.publishedAt));
 
     if (vtse41Telegrams.isEmpty) {
       return [];
@@ -134,7 +128,7 @@ class _HistoryOverlay extends StatelessWidget {
     final entries = <_WarningTimelineEntry>[];
 
     for (final telegram in vtse41Telegrams) {
-      final pressAt = telegram.pressedAt;
+      final pressAt = telegram.publishedAt;
       final description = telegram.headline ?? telegram.title;
 
       entries.add(
@@ -179,9 +173,7 @@ class _TimelineEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = context.designSystem.colorTheme;
-    final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(
-      entry.time.toLocal(),
-    );
+    final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(entry.time.toLocal());
 
     return IntrinsicHeight(
       child: Row(
@@ -235,10 +227,7 @@ class _TimelineEntry extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(
-                    entry.description,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                  Text(entry.description, style: const TextStyle(fontSize: 14)),
                 ],
               ),
             ),

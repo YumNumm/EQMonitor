@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final _reportedAt = DateTime.utc(2026, 7, 27, 12);

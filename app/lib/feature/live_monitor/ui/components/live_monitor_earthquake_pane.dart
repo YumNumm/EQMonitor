@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -124,7 +125,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Material(
-                    color: Theme.of(context).colorScheme.errorContainer,
+                    color: context.designSystem.colorTheme.errorContainer,
                     borderRadius: BorderRadius.circular(20),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level_parser.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -52,7 +53,10 @@ final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
                   createdAt: event.createdAt,
                   updatedAt: event.updatedAt,
                   expiresAt: event.expiresAt,
-                  level: event.level.toJson().toShakeDetectionLevel(),
+                  level: event.level
+                      .toJson()
+                      .toShakeDetectionLevel()
+                      .toShakeDetectionLevelModel,
                   pointCount: event.pointCount,
                   minLat: event.region.bottomRight.latitude.toDouble(),
                   maxLat: event.region.topLeft.latitude.toDouble(),

@@ -5,6 +5,9 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_jma_intensity.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/repository/intensity_icon_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,4 +1,4 @@
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'shake_detection_settings.freezed.dart';
@@ -9,7 +9,7 @@ abstract class ShakeDetectionEntry with _$ShakeDetectionEntry {
     required String id,
     required String? subRegionId,
     required String? subRegionName,
-    required api.ShakeDetectionLevel minLevel,
+    required ShakeDetectionLevel minLevel,
     required bool isCurrentLocation,
     String? prefectureCode,
     String? cityCode,

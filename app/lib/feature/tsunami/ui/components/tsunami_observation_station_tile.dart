@@ -1,6 +1,9 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_observation_first_height.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_observation_max_height.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region_station.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/observation_max_height_condition.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/wave_initial.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -54,10 +57,10 @@ class TsunamiObservationStationTile extends StatelessWidget {
     );
   }
 
-  static bool _isFirstHeightMissing(TsunamiStationObservationFirstHeight fh) =>
+  static bool _isFirstHeightMissing(TsunamiObservationFirstHeight fh) =>
       fh.isMissing ?? false;
 
-  static String _formatFirstHeight(TsunamiStationObservationFirstHeight fh) {
+  static String _formatFirstHeight(TsunamiObservationFirstHeight fh) {
     if (fh.isUnidentifiable ?? false) {
       return '第一波: 識別不能';
     }
@@ -72,7 +75,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
     return '第一波: $timePart到達$initialPart';
   }
 
-  static String _formatMaxHeight(TsunamiStationObservationMaxHeight mh) {
+  static String _formatMaxHeight(TsunamiObservationMaxHeight mh) {
     final parts = <String>['最大波:'];
     if (mh.value != null) {
       final valueStr = '${mh.value}m';
@@ -84,8 +87,8 @@ class TsunamiObservationStationTile extends StatelessWidget {
         ObservationMaxHeightCondition.important => '重要',
       });
     }
-    if (mh.observedAt != null) {
-      parts.add('(${DateFormat('HH:mm').format(mh.observedAt!.toLocal())})');
+    if (mh.dateTime != null) {
+      parts.add('(${DateFormat('HH:mm').format(mh.dateTime!.toLocal())})');
     }
     if (mh.isRising == true) {
       parts.add('上昇中');
@@ -93,6 +96,6 @@ class TsunamiObservationStationTile extends StatelessWidget {
     return parts.join(' ');
   }
 
-  static bool _isImportant(TsunamiStationObservationMaxHeight mh) =>
+  static bool _isImportant(TsunamiObservationMaxHeight mh) =>
       mh.condition == ObservationMaxHeightCondition.important;
 }

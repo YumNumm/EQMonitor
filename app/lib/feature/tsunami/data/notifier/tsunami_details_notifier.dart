@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tsunami_details_notifier.g.dart';
@@ -25,19 +25,16 @@ class TsunamiDetailsNotifier extends _$TsunamiDetailsNotifier {
     final response = await client.tsunami.getV2TsunamiTsunamiId(
       tsunamiId: tsunamiId,
     );
-    return response.data;
+    return response.data.toDomain();
   }
 
   void _startPolling() {
     _refreshTimer?.cancel();
-    _refreshTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) async {
-        state = await AsyncValue.guard(_fetch);
-        if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
-          _refreshTimer?.cancel();
-        }
-      },
-    );
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      state = await AsyncValue.guard(_fetch);
+      if (state case AsyncData(value: final tsunami) when !tsunami.isActive) {
+        _refreshTimer?.cancel();
+      }
+    });
   }
 }
