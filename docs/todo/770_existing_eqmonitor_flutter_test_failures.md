@@ -43,3 +43,30 @@ repository rootから`flutter test app/test`を呼ぶと`assets/tjma2001.csv`の
 
 生命に関わるapp behaviorをtest都合で変更せず、production contractを確認してから
 test fixtureを修正する。
+
+## 追記 (2026-08-14): 通知設定リデザインに伴う既存不良
+
+Analyzer 診断ゼロ化 (PR #1639) の develop マージ時点で、以下が既に破損していた。
+
+- `override_edit_page_test.dart`: 1件
+  - develop 上でこのテストは `OverrideType.earthquake` を参照していたが、
+    `OverrideType` はリポジトリ内のどこにも定義されておらず**コンパイルエラー**だった
+    （通知設定リデザイン系 PR のマージ順序によるもの）。
+  - Analyzer の ERROR 解消のため `overrideType` 引数の実際の型である
+    `NotificationKind.earthquake` に修正した。これでコンパイルは通るようになったが、
+    リデザイン後の UI が最小震度を `震度0以上` 形式で一覧表示しなくなったため、
+    `expect(find.text('震度0以上'), findsOneWidget)`（テスト名:
+    「追加ダイアログで通知音と割り込みレベルを選んで追加すると一覧に反映される」）が
+    runtime で失敗する。
+  - **これは Analyzer 修正が壊したものではなく、リデザイン PR がテストを更新し忘れた
+    既存不良である。** 一覧表示の正しい仕様（リデザイン後に最小震度をどう表示するか）を
+    リデザイン担当と確認してから test fixture を更新すること。
+    ダイアログ操作・保存結果の assertion（sound / interruptionLevel）は成功しており、
+    壊れているのは一覧表示テキストの assertion のみ。
+
+現時点の `flutter test` 失敗は 6 件で、内訳は次のとおり（いずれも本 Analyzer 作業の前から
+非成功。develop 直系の baseline と一致し、新規の回帰はない）。
+
+- `live_monitor_detected_event_notifier_test.dart`: 2件
+- `theme_editor_page_test.dart`: 3件
+- `override_edit_page_test.dart`: 1件（上記）
