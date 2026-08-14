@@ -1,8 +1,12 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region_station.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/first_height_condition.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/qualitative_height.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -94,9 +98,10 @@ class _ForecastRegionCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final observedStations = region.stations
         .where(
-          (s) =>
-              s.observation != null &&
-              !(s.observation!.firstHeight.isMissing ?? false),
+          (s) => switch (s.observation) {
+            final observation? => observation.firstHeight.isMissing != true,
+            null => false,
+          },
         )
         .toList();
 
