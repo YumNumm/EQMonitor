@@ -54,7 +54,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 ---
 
 - [x] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
-- [ ] **Step 2: Run** `mise exec -- dart test packages/eqmonitor_map/test/tile/verified_source_contract_test.dart`
+- [x] **Step 2: Run** `mise exec -- flutter test packages/eqmonitor_map/test/tile/verified_source_contract_test.dart`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。`docs/todo/700_melos_dart_test_package_filter.md` / CI の `wc-check-dart-test.yaml` と同じく `flutter test` を使う）
 - [ ] **Step 3: Fix only if RED** at the owning boundary.
 - [ ] **Step 4: Re-run GREEN**
 - [ ] **Step 5: Commit** `test: ローカル verified source 契約をピン留め`
@@ -71,6 +71,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 **Interfaces:**
 - Produces: `AsyncGenerationOwner` / `AsyncGenerationToken`（cancel は非 error、stale put 無視）
+- **世代は `begin()` では進めない**（review 指摘 P1）。1 incarnation = 1 camera 状態とし、その中で発行した token はすべて等しく有効にする。`begin()` ごとに世代を進めると、Task 12 が `maxInFlightDecodes > 1` で並行 decode を始めた瞬間、最後に開始した1件以外の結果が `put` で黙って捨てられる。世代を進めるのは `cancel()` / `dispose()` のみ。
 
 - [ ] **Step 1: Write failing tests** for begin/cancel/dispose/stale ignore.
 - [ ] **Step 2: Run RED**
@@ -107,6 +108,8 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 **Interfaces:**
 - Produces: version 付き `MapTilePipelineBudget`（max in-flight decodes、max cache entries、pin 上限、CPU work units、optional GPU upload bytes/frame）。hidden default なし。
+
+**残要件（review 指摘 P2、未実装）:** 件数だけでなく **retained CPU/GPU byte の集計上限** を持たせる。per-tile decode 上限内でも tile ごとの vertex/index/property/string の実サイズは大きく異なるため、`maxCacheEntries` だけでは Task 14 の「no unbounded growth」を byte 単位で保証できない。`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md` 参照。
 
 - [ ] **Step 1: Write failing construction/validation tests**
 - [ ] **Step 2: Run RED**
@@ -179,7 +182,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Consumes: Task 5–7 validators + `VerifiedRemotePmTilesSource`
 - Produces: `Future<Uint8List> readAt({required int offset, required int length})` with LRU、in-flight coalesce、generation cancel、close/retire。No asset fallback.
 
-- [ ] **Step 1: Write failing reader tests** (happy 206 path, 200-on-range reject, etag drift, cancel)
+**必須の追加要件（review 指摘 P1。Task 5–6 の validator だけでは満たせない）:**
+- **expected digest への束縛**: strong ETag は「リクエスト間の整合性」しか保証せず、attested asset との対応は保証しない。CDN/origin が安定した ETag のまま古い/別の archive を返す場合を検出するため、`VerifiedRemotePmTilesSource.sha256` / `sizeBytes` と実データを突き合わせる（archive 全体の digest 検証、または header/root directory を含む検証済み範囲との照合）。digest 不一致は typed exception で fail closed。
+- **redirect 方針の強制**: app の事前検証は初期 URL のみ。reader は redirect を無効化するか、host/scheme(https)/回数を検証して allowlist 外・HTTPS→HTTP へ出た時点で fail closed する。controlled redirect fixture で test する。
+
+- [ ] **Step 1: Write failing reader tests** (happy 206 path, 200-on-range reject, etag drift, cancel, digest mismatch, redirect)
 - [ ] **Step 2: Run RED**
 - [ ] **Step 3: Implement reader (Dio or http — follow existing map deps; do not add seismicity_pmtiles dep)**
 - [ ] **Step 4: Run GREEN**
@@ -212,6 +219,8 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 **Interfaces:**
 - Produces: versioned payload header + vertex/index/offset/string/error sections suitable for `TransferableTypedData`. No Freezed object graph of features in the hot path return.
+
+**必須の追加要件（review 指摘 P1）:** payload 全体の総 byte 上限と、section/table ごとの件数上限を、**確保・転送の前に**呼び出し側の設定として検証する。per-tile の MVT decode 上限だけでは、巨大な untrusted tile が cache/backpressure の効く前に vertex/index/offset/property/string section を肥大化させられる。上限超過は typed exception（空 payload へ丸めない）。
 
 - [ ] **Step 1: Write failing encode/decode roundtrip tests**
 - [ ] **Step 2: Run RED**
@@ -268,6 +277,8 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: `basemap` allows parent/previous within same revision; `hazard` forbids cross-revision last-good and fails closed on miss/expiry
 
+**残要件（review 指摘 P1、未実装）:** cache key に revision / content digest を含める。現在の key は `(sourceInstanceId, CanonicalTileId)` だけで、source が `sourceInstanceId` を据え置いたまま `sourceRevision` を上げた場合、policy を通る前の **exact lookup が前 revision の geometry を返し得る**。renderer 設計の `TileKey` 契約（`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`）とも矛盾する。`docs/todo/820_eqmonitor_map_tile_cache_key_revision.md` 参照。
+
 - [ ] **Step 1: Write failing policy matrix tests**
 - [ ] **Step 2: Run RED**
 - [ ] **Step 3: Implement + wire cache**
@@ -303,10 +314,12 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: end-to-end local verified + remote identity range fixture covering cancel/incarnation; documents focused gate commands
 
+**必須の追加要件（review 指摘 P1）:** `packages/eqmonitor_map/lib/src/widget/base_map_view.dart` の production 経路を、新しい scheduler / decode worker client 経由へ **実際に差し替える**（現状は repository と `BaseMapTileDecoder` を直接呼んでいる）。差し替えないと、scheduler も worker も standalone contract test だけ緑のまま renderer から未使用になり、UI Isolate decode 禁止・backpressure の目的が達成されない。`base_map_view.dart` を Files に加え、production wiring の widget test を追加する。
+
 - [ ] **Step 1: Write failing integration contract tests**
 - [ ] **Step 2: Run RED**
 - [ ] **Step 3: Wire remaining seams; update README**
-- [ ] **Step 4: Run** `mise exec -- dart test packages/eqmonitor_map/test/tile` and `mise exec -- dart analyze packages/eqmonitor_map --fatal-infos`
+- [ ] **Step 4: Run** `mise exec -- flutter test packages/eqmonitor_map/test/tile` and `mise exec -- dart analyze packages/eqmonitor_map --fatal-infos`
 - [ ] **Step 5: Commit** `test: tile pipeline 本番契約の統合テストを追加`
 
 ---

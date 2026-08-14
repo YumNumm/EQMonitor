@@ -40,18 +40,32 @@ mise exec -- dart analyze --fatal-infos \
 
 ## 製品側の focused gate（これで stack を判定する）
 
+`eqmonitor_map` は Flutter SDK 依存のため `dart test` では `dart:ui` を解決できない
+（`docs/todo/700_melos_dart_test_package_filter.md`）。`flutter test` を使う。
+
 ```bash
 # map tip
 mise exec -- dart analyze --fatal-infos packages/eqmonitor_map
-mise exec -- dart test packages/eqmonitor_map
+mise exec -- flutter test packages/eqmonitor_map
 
 # seismicity tip
 mise exec -- dart analyze --fatal-infos packages/seismicity_pmtiles packages/pmtiles_v3
-mise exec -- dart test packages/seismicity_pmtiles packages/pmtiles_v3
+mise exec -- flutter test packages/seismicity_pmtiles packages/pmtiles_v3
 ```
 
 ## 運用
 
-- 共有 Flutter Status Check が赤でも、上記 focused gate が緑なら **stack 製品としては merge 判断材料にする**（branch protection が status check 必須なら、baseline 修正 PR が別途必要）。
-- baseline 修正は primary constructor の通常コンストラクタ化、または SDK/Freezed 整合。地図・震源 PR に混ぜない。
+- **waiver は「赤なら baseline」ではなく、既知の失敗集合に一致した場合だけ**適用する。
+  primary constructor 由来の失敗は `f0b3bd37`（#1628）で解消済みで、その理由での
+  waiver はもう使えない。
+- 2026-08-14 時点で `flutter test packages/eqmonitor_map` に残る develop 由来の
+  既知失敗は次の5件のみ。これ以外が赤くなったら **回帰として扱う**。
+  - `foundation/frame/map_frame_revision_model_test.dart`（unchecked copyWith）
+  - `foundation/revision/map_revision_metadata_test.dart`（同上）
+  - `foundation/revision/map_revision_result_model_test.dart`（同上）
+  - `tile/mvt/mvt_decoder_test.dart` の real PMTiles fixtures 2件
+- 判定手順: 失敗 test の対象ファイルが `origin/develop` と diff 無しであることを
+  `git diff origin/develop -- <path>` で確認してから baseline 扱いにする。
+- baseline 修正は SDK / Freezed / analyzer の整合合わせ。地図・震源 PR に混ぜない。
+  詳細は `docs/knowledge/20260814_cloud_agent_flutter_toolchain_bootstrap.md`。
 - #1602（flutter_scene fork）権限待ちのまま。勝手に merge しない。
