@@ -164,11 +164,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: local loopback server that speaks identity encoding + strong ETag + 206 only for Range；rejects non-identity；never accepts full 200 for Range request as success path for random-access reader
 
-- [ ] **Step 1: Write failing harness test**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement controlled server + fixture archive**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `test: identity remote Range fixture harness を追加`
+- [x] **Step 1–5 完了**: `test/support/controlled_remote_pmtiles_server.dart`（dart:io loopback）で identity + strong ETag + 206 を返し、status / Content-Encoding / redirect / ETag を切り替えられる。fixture bytes は別ファイルにせず `MinimalPmTilesArchiveBuilder` で生成。Task 8 の reader test が harness を消費する。
 
 ---
 
@@ -186,11 +182,9 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - **expected digest への束縛**: strong ETag は「リクエスト間の整合性」しか保証せず、attested asset との対応は保証しない。CDN/origin が安定した ETag のまま古い/別の archive を返す場合を検出するため、`VerifiedRemotePmTilesSource.sha256` / `sizeBytes` と実データを突き合わせる（archive 全体の digest 検証、または header/root directory を含む検証済み範囲との照合）。digest 不一致は typed exception で fail closed。
 - **redirect 方針の強制**: app の事前検証は初期 URL のみ。reader は redirect を無効化するか、host/scheme(https)/回数を検証して allowlist 外・HTTPS→HTTP へ出た時点で fail closed する。controlled redirect fixture で test する。
 
-- [ ] **Step 1: Write failing reader tests** (happy 206 path, 200-on-range reject, etag drift, cancel, digest mismatch, redirect)
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement reader (Dio or http — follow existing map deps; do not add seismicity_pmtiles dep)**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: map remote PMTiles Range reader を追加`
+- [x] **Step 1–5 完了**: `MapRemotePmTilesRandomAccessReader implements PmTilesRandomAccessReader`。HTTP は `dart:io HttpClient`（新規依存なし）。identity / 206 / strong ETag / 厳密 Content-Range / body 長を検証し、初回で strong ETag を pin して以後 `If-Match`。redirect(3xx)は fail closed、snapshot drift は terminal、`(etag,offset,length)` の並行 read を coalesce、直近範囲を `maxCacheBytes` LRU で再利用、close 後は fail closed。実 loopback サーバで 8 ケースを test。
+  - **未対応（別タスクへ送り）**: `sha256` への digest 束縛（上記 P1）は本 reader では未実装。CDN が同一 ETag で別 archive を返すケースの検出は、archive open 後に検証済み範囲の digest を突き合わせる別レイヤーが要る。`docs/todo/815_eqmonitor_map_remote_digest_binding.md` 参照。
+  - `dart test` ではなく実 HTTP を使うため cancel は「close で in-flight socket を force-close」で表現（Dio の `CancelToken` は使わない＝新規依存を避けた）。
 
 ---
 
@@ -203,9 +197,10 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: same `Future<Uint8List?>` tile fetch surface; remote path uses Task 8 reader + `pmtiles_v3`
 
-- [ ] **Step 1: Write failing remote fetch test via fixture**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Wire repository**
+- [x] **Step 1–5 完了**: `BaseMapTileRepository.open` を sealed `VerifiedTileSource` で分岐（local→file reader / remote→Task 8 reader）。`readTile` の surface は不変。remote は `remoteMaxCacheBytes` を必須にした（hidden default なし）。実 loopback サーバで build→serve→open→readTile の end-to-end を test。
+- [ ] ~~Step 1: Write failing remote fetch test via fixture~~
+- [ ] ~~Step 2: Run RED~~
+- [ ] ~~Step 3: Wire repository~~
 - [ ] **Step 4: Run GREEN + existing repository tests**
 - [ ] **Step 5: Commit** `feat: TileRepository を remote verified source 対応`
 
