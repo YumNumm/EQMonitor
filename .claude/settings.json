@@ -2,6 +2,7 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "claude-security@claude-plugins-official": true,
-    "asc@rorkai": true
+    "asc@rorkai": true,
+    "ponytail@ponytail": true
   }
 }
