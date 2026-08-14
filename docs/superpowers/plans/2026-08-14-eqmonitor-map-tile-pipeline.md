@@ -55,9 +55,9 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 - [x] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
 - [x] **Step 2: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile/verified_source_contract_test.dart)`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。加えて **package ディレクトリから**実行しないと fixture 解決 root がずれる。`docs/todo/700_melos_dart_test_package_filter.md` / CI の `wc-check-dart-test.yaml` 参照）
-- [ ] **Step 3: Fix only if RED** at the owning boundary.
-- [ ] **Step 4: Re-run GREEN**
-- [ ] **Step 5: Commit** `test: ローカル verified source 契約をピン留め`
+- [x] **Step 3: Fix only if RED** at the owning boundary.
+- [x] **Step 4: Re-run GREEN**
+- [x] **Step 5: Commit** `test: ローカル verified source 契約をピン留め`
 
 ---
 
@@ -73,11 +73,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Produces: `AsyncGenerationOwner` / `AsyncGenerationToken`（cancel は非 error、stale put 無視）
 - **世代は `begin()` では進めない**（review 指摘 P1）。1 incarnation = 1 camera 状態とし、その中で発行した token はすべて等しく有効にする。`begin()` ごとに世代を進めると、Task 12 が `maxInFlightDecodes > 1` で並行 decode を始めた瞬間、最後に開始した1件以外の結果が `put` で黙って捨てられる。世代を進めるのは `cancel()` / `dispose()` のみ。
 
-- [ ] **Step 1: Write failing tests** for begin/cancel/dispose/stale ignore.
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement domain token; rewire cache**
-- [ ] **Step 4: Run GREEN + cache existing tests**
-- [ ] **Step 5: Commit** `refactor: incarnation token を foundation へ昇格`
+- [x] **Step 1: Write failing tests** for begin/cancel/dispose/stale ignore.
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement domain token; rewire cache**
+- [x] **Step 4: Run GREEN + cache existing tests**
+- [x] **Step 5: Commit** `refactor: incarnation token を foundation へ昇格`
 
 ---
 
@@ -92,11 +92,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Produces: local `VerifiedPmTilesSource` + remote `VerifiedRemotePmTilesSource`（https URL、allowlist 済み host 前提の descriptor、expected size/digest、`sourceInstanceId`、`sourceRevision`）
 - package は URL の DNS/TLS を再検証しない（app が検証済み）
 
-- [ ] **Step 1: Write failing model/equality tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement Freezed models + generate/normalize**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: remote verified PMTiles descriptor を追加`
+- [x] **Step 1: Write failing model/equality tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement Freezed models + generate/normalize**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: remote verified PMTiles descriptor を追加`
 
 ---
 
@@ -111,11 +111,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 
 **残要件（review 指摘 P2、未実装）:** 件数だけでなく **retained CPU/GPU byte の集計上限** を持たせる。per-tile decode 上限内でも tile ごとの vertex/index/property/string の実サイズは大きく異なるため、`maxCacheEntries` だけでは Task 14 の「no unbounded growth」を byte 単位で保証できない。`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md` 参照。
 
-- [ ] **Step 1: Write failing construction/validation tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: tile pipeline budget 設定モデルを追加`
+- [x] **Step 1: Write failing construction/validation tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: tile pipeline budget 設定モデルを追加`
 
 ---
 
@@ -129,11 +129,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Consumes: response headers
 - Produces: accept only missing/`identity` Content-Encoding; reject gzip/br/etc with typed error
 
-- [ ] **Step 1: Write failing table tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: remote identity encoding validator を追加`
+- [x] **Step 1: Write failing table tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: remote identity encoding validator を追加`
 
 ---
 
@@ -146,11 +146,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: validators requiring 206、exact Content-Range、stable total length、strong ETag（weak `W/` 拒否）、body length match。412 / mismatch → discard all bytes + typed snapshot mismatch。
 
-- [ ] **Step 1: Write failing contract table**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: remote Range/ETag 契約 validator を追加`
+- [x] **Step 1: Write failing contract table**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: remote Range/ETag 契約 validator を追加`
 
 ---
 
@@ -198,11 +198,11 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Produces: same `Future<Uint8List?>` tile fetch surface; remote path uses Task 8 reader + `pmtiles_v3`
 
 - [x] **Step 1–5 完了**: `BaseMapTileRepository.open` を sealed `VerifiedTileSource` で分岐（local→file reader / remote→Task 8 reader）。`readTile` の surface は不変。remote は `remoteMaxCacheBytes` を必須にした（hidden default なし）。実 loopback サーバで build→serve→open→readTile の end-to-end を test。
-- [ ] ~~Step 1: Write failing remote fetch test via fixture~~
-- [ ] ~~Step 2: Run RED~~
-- [ ] ~~Step 3: Wire repository~~
-- [ ] **Step 4: Run GREEN + existing repository tests**
-- [ ] **Step 5: Commit** `feat: TileRepository を remote verified source 対応`
+- [x] ~~Step 1: Write failing remote fetch test via fixture~~
+- [x] ~~Step 2: Run RED~~
+- [x] ~~Step 3: Wire repository~~
+- [x] **Step 4: Run GREEN + existing repository tests**
+- [x] **Step 5: Commit** `feat: TileRepository を remote verified source 対応`
 
 ---
 
@@ -227,11 +227,11 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 上限）が既に同じ役割**を果たしている。将来 packed 化が必要になった場合の残課題は
 `docs/todo/840_eqmonitor_map_packed_worker_payload.md`。
 
-- [ ] **Step 1: Write failing encode/decode roundtrip tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: tile worker packed payload を追加`
+- [x] ~~**Step 1: Write failing encode/decode roundtrip tests**~~（Task 10 は実装しない判定）
+- [x] ~~**Step 2: Run RED**~~（Task 10 は実装しない判定）
+- [x] ~~**Step 3: Implement**~~（Task 10 は実装しない判定）
+- [x] ~~**Step 4: Run GREEN**~~（Task 10 は実装しない判定）
+- [x] ~~**Step 5: Commit** `feat: tile worker packed payload を追加`~~（Task 10 は実装しない判定）
 
 ---
 
@@ -271,11 +271,11 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 - Consumes: budget max in-flight、tile keys、incarnation
 - Produces: center-near priority、duplicate identity coalesce、camera move cancel、queue backpressure
 
-- [ ] **Step 1: Write failing scheduler tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: tile scheduler を追加`
+- [x] **Step 1: Write failing scheduler tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: tile scheduler を追加`
 
 ---
 
@@ -291,11 +291,11 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 
 **cache key の内容束縛（review 指摘 P1、対応済み）:** cache は`(identity, CanonicalTileId)`で引くが、identity に `VerifiedTileSourceCacheIdentity.cacheIdentity`（`sourceInstanceId` + 内容 digest）を渡すことで、source が `sourceInstanceId` を据え置いたまま中身を差し替えても exact lookup が前 revision の geometry を返さないようにした。digest は revision 番号より強い保証になる。
 
-- [ ] **Step 1: Write failing policy matrix tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement + wire cache**
-- [ ] **Step 4: Run GREEN + existing fallback tests**
-- [ ] **Step 5: Commit** `feat: basemap/hazard tile fallback policy を分離`
+- [x] **Step 1: Write failing policy matrix tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement + wire cache**
+- [x] **Step 4: Run GREEN + existing fallback tests**
+- [x] **Step 5: Commit** `feat: basemap/hazard tile fallback policy を分離`
 
 ---
 
@@ -309,11 +309,11 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 - Consumes: `MapTilePipelineBudget`
 - Produces: explicit pin set + LRU eviction respecting pins; no unbounded growth
 
-- [ ] **Step 1: Write failing pin/eviction tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: cache pin/eviction を budget 接続`
+- [x] **Step 1: Write failing pin/eviction tests**
+- [x] **Step 2: Run RED**
+- [x] **Step 3: Implement**
+- [x] **Step 4: Run GREEN**
+- [x] **Step 5: Commit** `feat: cache pin/eviction を budget 接続`
 
 ---
 
@@ -341,11 +341,9 @@ drain ループにした。UI Isolate decode 禁止は `BaseMapTileDecoder`(`Iso
   `map_tile_scheduler_test.dart` で単体 test 済みで、配線は tested な `selectNext`
   への薄い glue。
 
-- [ ] **Step 1: Write failing integration contract tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Wire remaining seams; update README**
-- [ ] **Step 4: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile)` and `mise exec -- dart analyze packages/eqmonitor_map --fatal-infos`（**package ディレクトリから**実行する。repository root から呼ぶと fixture 解決 root がずれ、fixture 依存の tile/MVT test が誤って赤くなる。`docs/knowledge/20260814_cloud_agent_flutter_toolchain_bootstrap.md` 参照）
-- [ ] **Step 5: Commit** `test: tile pipeline 本番契約の統合テストを追加`
+- [x] **Step 1–3 完了**: `test/tile/tile_pipeline_contract_test.dart` で local verified / remote identity fixture の両 source を `repository → decoder → cache` へ通し、欠損 tile の `null` 維持・cancel 済み incarnation の破棄・basemap 親 fallback と hazard fail closed を end-to-end で固定した。README へ「Tile pipeline contract」節（契約・focused 検証コマンド・残課題 todo）を追加。MVT は実 fixture ではなく `MvtFixtureBuilder` の合成 tile を使う（実 fixture の layer 名は `baseMapLayerSpecs` と別系統で mesh が空になり、geometry が運べたことを確認できないため）。
+- [x] **Step 4: GREEN**（`test/tile` 156 tests green、`dart analyze . --fatal-infos` は No issues。いずれも `packages/eqmonitor_map` から実行）
+- [x] **Step 5: Commit** `test: tile pipeline 本番契約の統合テストを追加` / `docs: tile pipeline の契約と focused 検証コマンドを README へ記載`
 
 ---
 
@@ -355,20 +353,31 @@ drain ループにした。UI Isolate decode 禁止は `BaseMapTileDecoder`(`Iso
 - Modify: Issue #1591 checkboxes via PR body
 - Optional: `docs/knowledge/20260814_eqmonitor_map_tile_pipeline.md`（remote 契約の運用注意があれば）
 
-- [ ] **Step 1: Confirm checklist** identity remote fixture + local verified + cancel/incarnation tests green
-- [ ] **Step 2: Confirm no #1592/#1593/#1602 scope leaked**
-- [ ] **Step 3: Push tip; ensure PR base remains `feat/eqmonitor-map-foundation`**
-- [ ] **Step 4: Record shared Flutter gate failures as baseline（do not “fix” by weakening analyze）**
-- [ ] **Step 5: Mark #1591 ready for review only after Tasks 1–15 green**
+- [x] **Step 1: Confirm checklist** identity remote fixture + local verified + cancel/incarnation tests green
+- [x] **Step 2: Confirm no #1592/#1593/#1602 scope leaked**（本 branch の diff は `test/tile/tile_pipeline_contract_test.dart` と README/plan のみ）
+- [x] **Step 3: Push tip**（#1617 / #1616 は develop へマージ済みのため、本 branch の base は `develop`）
+- [x] **Step 4: Record shared Flutter gate failures as baseline**（`docs/knowledge/20260814_stacked_pr_flutter_gate_baseline.md` を正本とする。analyze を弱めない）
+- [x] **Step 5: Mark #1591 ready for review only after Tasks 1–15 green**
 
 ## Completion Checklist
 
-- [ ] identity-encoded remote fixture + local verified source の contract test
-- [ ] cancel / incarnation の unit test
-- [ ] hazard fail-closed / basemap parent fallback がテストで分離
-- [ ] budget/pin/eviction が設定モデル経由
-- [ ] UI Isolate decode 経路が worker 経由のみ
-- [ ] focused `eqmonitor_map` analyze/test green（共有 app gate は別 issue）
+- [x] identity-encoded remote fixture + local verified source の contract test
+- [x] cancel / incarnation の unit test
+- [x] hazard fail-closed / basemap parent fallback がテストで分離
+- [x] budget/pin/eviction が設定モデル経由
+- [x] UI Isolate decode 経路が worker 経由のみ（`BaseMapTileDecoder.decode` の `Isolate.run`。永続 worker 化は todo 845 で defer）
+- [x] focused `eqmonitor_map` analyze/test green（共有 app gate は別 issue）
+
+## 本 Issue 完了後の残課題
+
+`#1591` のスコープ外として todo へ送ったもの。
+
+| todo | 内容 |
+|---|---|
+| 810 | tile budget へ retained CPU/GPU byte の集計上限 |
+| 815 | remote 応答を `VerifiedRemotePmTilesSource.sha256` へ束縛（P1） |
+| 830 | cover 変更時の in-flight decode 明示 cancel（priority/coalesce/backpressure は配線済み） |
+| 840 / 845 | packed worker payload / 永続 decode worker（計測待ち） |
 
 ## References
 

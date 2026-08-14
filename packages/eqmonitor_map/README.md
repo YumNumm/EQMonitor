@@ -41,7 +41,7 @@ Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラ�
 - camera controller、fitBounds、座標変換、hit test
 - 性能イベントとsnapshot
 
-remote PMTilesのidentity encoding/strong validator付きrange合成、appがsigned sidecarまで検証したAsset Pack descriptor、producerのglobal semantic検証とruntimeのbounded per-tile検証は、実装stackで追加する計画です。現行manifestがsemantic validationを提供済みという意味ではありません。source revisionを跨いだtile fallbackは行いません。
+remote PMTilesのidentity encoding/strong validator付きrange合成は#1591で実装済みです（下記「Tile pipeline contract」）。appがsigned sidecarまで検証したAsset Pack descriptor、producerのglobal semantic検証とruntimeのbounded per-tile検証は、実装stackで追加する計画です。現行manifestがsemantic validationを提供済みという意味ではありません。source revisionを跨いだtile fallbackは行いません。
 
 設計の正本は[`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../../docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md)です。
 
@@ -54,6 +54,45 @@ version付きpacked render batch、bounded performance観測だけを所有し�
 platform確認は
 [`docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`](../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md)
 を参照してください。
+
+## Tile pipeline contract
+
+#1591のtile pipelineは`VerifiedTileSource → BaseMapTileRepository →
+BaseMapTileDecoder → BaseMapTileCache`の経路を持ちます。callerが守る契約は次の
+とおりです。
+
+- sourceはappが検証済みの`VerifiedPmTilesSource`（local file）または
+  `VerifiedRemotePmTilesSource`（https URL、loopbackのみhttp可）だけを渡します。
+  packageはpath/URL/size/digestを再検証しません。
+- 欠損tileは`null`です。破損・上限超過・schema不整合は`PmTilesV3Exception` /
+  `MvtDecodeException` / `MapRemoteTileException`として送出し、空tileへ丸めません。
+- remoteは`Accept-Encoding: identity`・206・strong ETag・厳密な`Content-Range`を
+  必須にし、初回応答のETagを固定して以後`If-Match`を付けます。3xxはfail closedです。
+- MVT decodeとmesh構築は`BaseMapTileDecoder.decode`（`Isolate.run`）でUI isolateの
+  外へ出します。cancelは`BaseMapTileCache.cancelInFlight`で表現し、例外にはしません。
+  cancel後のtokenでの`put`は無視されます。
+- `MapTileFallbackPolicy.basemap`は同一cache identity内の親/子fallbackを許し、
+  `MapTileFallbackPolicy.hazard`はexact hit以外をmissにします。cache keyは
+  `VerifiedTileSourceCacheIdentity.cacheIdentity`（`sourceInstanceId` + 内容digest）
+  を含むため、revision跨ぎのlast-goodはどちらのpolicyでも起きません。
+- 上限は`MapTilePipelineBudget`と各`*Limits`でcallerが明示します。decoder/cache側に
+  隠れた既定値はありません。
+
+契約の実行可能な正本は
+[`test/tile/tile_pipeline_contract_test.dart`](test/tile/tile_pipeline_contract_test.dart)
+です。検証は**このpackageディレクトリから**実行します（repository rootから呼ぶと
+fixtureの解決rootがずれます）。
+
+```bash
+cd packages/eqmonitor_map
+mise exec -- flutter test test/tile
+mise exec -- dart analyze . --fatal-infos
+```
+
+未対応の残課題は`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md`（保持
+byteの集計上限）、`docs/todo/815_eqmonitor_map_remote_digest_binding.md`（remote応答
+の`sha256`束縛）、`docs/todo/830_eqmonitor_map_scheduler_wiring.md`（cover変更時の
+in-flight cancel）です。
 
 ## 設計原則
 
