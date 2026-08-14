@@ -58,9 +58,9 @@ class HypocenterSummary extends StatelessWidget {
             ],
           ),
         ),
-        if (quake.originTime != null) ...[
+        if (quake.originTime case final originTime?) ...[
           const SizedBox(height: 2),
-          _OriginTimeLine(originTime: quake.originTime!),
+          _OriginTimeLine(originTime: originTime),
         ],
         if (diffChips.isNotEmpty) ...[
           const SizedBox(height: 4),
