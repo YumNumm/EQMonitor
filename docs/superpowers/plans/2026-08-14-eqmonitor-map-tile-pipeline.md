@@ -326,7 +326,20 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 **Interfaces:**
 - Produces: end-to-end local verified + remote identity range fixture covering cancel/incarnation; documents focused gate commands
 
-**必須の追加要件（review 指摘 P1）:** `packages/eqmonitor_map/lib/src/widget/base_map_view.dart` の production 経路を、新しい scheduler / decode worker client 経由へ **実際に差し替える**（現状は repository と `BaseMapTileDecoder` を直接呼んでいる）。差し替えないと、scheduler も worker も standalone contract test だけ緑のまま renderer から未使用になり、UI Isolate decode 禁止・backpressure の目的が達成されない。`base_map_view.dart` を Files に加え、production wiring の widget test を追加する。
+**production 配線（review 指摘 P1）: scheduler は配線済み。**
+`MapBaseLayerLimits.maxInFlightDecodes` を追加し、`BaseMapView._requestMissingDecodes`
+を `MapTileScheduler.selectNext` 駆動へ差し替えた。cover 内の欠損 tile を無制限に
+`Isolate.run` していたのを、中心近傍優先・canonical 単位 coalesce・
+`maxInFlightDecodes` の backpressure で頭打ちにし、decode 完了ごとに
+`_decodeTile` の finally → `_refresh` → `_requestMissingDecodes` が次を開始する
+drain ループにした。UI Isolate decode 禁止は `BaseMapTileDecoder`(`Isolate.run`)で
+既に達成済み（Task 10-11 の判定参照）。
+- **未対応（todo 830）**: cover 変更時の in-flight decode の明示 cancel。per-frame の
+  再 selection で off-cover tile は再 issue されないため実害は限定的だが、走り始めた
+  decode の結果が cache に入る点は残る（`Isolate.run` は中断不可）。
+- widget test は追加しない（Global Constraints）。scheduler の decision は
+  `map_tile_scheduler_test.dart` で単体 test 済みで、配線は tested な `selectNext`
+  への薄い glue。
 
 - [ ] **Step 1: Write failing integration contract tests**
 - [ ] **Step 2: Run RED**

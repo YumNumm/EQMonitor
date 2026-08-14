@@ -1,5 +1,11 @@
 # eqmonitor_map: decode 並行度を MapTileScheduler で制御する（backpressure）
 
+## 状態（2026-08-14 更新）
+
+**backpressure / priority / coalesce は配線済み**（PR #1627）。残るのは cover 変更時の
+in-flight cancel（下記「やること」3）のみ。`MapBaseLayerLimits.maxInFlightDecodes` を
+追加し、`_requestMissingDecodes` を `MapTileScheduler.selectNext` 駆動にした。
+
 ## 背景・根本原因
 
 `BaseMapView._requestMissingDecodes`（`base_map_view.dart`）は、cover 内の
