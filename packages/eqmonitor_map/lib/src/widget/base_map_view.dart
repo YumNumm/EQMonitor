@@ -473,7 +473,7 @@ class _BaseMapController extends ChangeNotifier {
     }
     final plans = buildBaseMapRenderPlans(
       requestedCover: cover,
-      sourceInstanceId: source.sourceInstanceId,
+      sourceInstanceId: source.cacheIdentity,
       cache: _cache,
       maxParentSteps: limits.maxParentFallbackSteps,
       zoom: _camera.zoom,
@@ -511,7 +511,7 @@ class _BaseMapController extends ChangeNotifier {
     required scene_math.Matrix4 transform,
   }) {
     final meshesByLayer = _sceneMeshCache.getOrBuild(
-      sourceInstanceId: source.sourceInstanceId,
+      sourceInstanceId: source.cacheIdentity,
       tileId: plan.transformInput.tileId.canonical,
       geometry: plan.tileGeometry,
       geometryFactory: _geometryFactory,
@@ -539,7 +539,7 @@ class _BaseMapController extends ChangeNotifier {
         continue;
       }
       if (_cache.get(
-            sourceInstanceId: source.sourceInstanceId,
+            sourceInstanceId: source.cacheIdentity,
             tileId: tileId,
           ) !=
           null) {
@@ -569,7 +569,7 @@ class _BaseMapController extends ChangeNotifier {
         limits: limits.decodeLimits,
       );
       _cache.put(
-        sourceInstanceId: source.sourceInstanceId,
+        sourceInstanceId: source.cacheIdentity,
         tileId: tileId,
         geometry: geometry,
         token: token,

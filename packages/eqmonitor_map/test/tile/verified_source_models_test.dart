@@ -69,6 +69,34 @@ void main() {
       expect(() => build(sha256: 'abc'), throwsArgumentError);
     });
 
+    test('cacheIdentity changes when content changes under a stable id', () {
+      // revision だけ上げて sourceInstanceId を据え置いた source。identity が
+      // 変わらないと exact lookup が前 revision の tile を返してしまう。
+      final before = build();
+      final after = createVerifiedRemotePmTilesSource(
+        sourceInstanceId: before.sourceInstanceId,
+        sourceRevision: 4,
+        url: before.url,
+        sizeBytes: before.sizeBytes,
+        sha256: 'b' * 64,
+      );
+      expect(before.sourceInstanceId, after.sourceInstanceId);
+      expect(before.cacheIdentity, isNot(after.cacheIdentity));
+
+      // 同じ内容なら identity も同じ（無駄な再 decode を増やさない）。
+      expect(build().cacheIdentity, before.cacheIdentity);
+    });
+
+    test('local and remote sources share the cacheIdentity rule', () {
+      final local = VerifiedPmTilesSource(
+        sourceInstanceId: 'x',
+        absolutePath: '/tmp/base.pmtiles',
+        sizeBytes: 128,
+        sha256: _sha256,
+      );
+      expect(local.cacheIdentity, 'x@$_sha256');
+    });
+
     test('sealed dispatch distinguishes local from remote sources', () {
       final VerifiedTileSource remote = build();
       final VerifiedTileSource local = VerifiedPmTilesSource(

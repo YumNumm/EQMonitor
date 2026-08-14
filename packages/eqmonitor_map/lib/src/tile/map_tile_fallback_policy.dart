@@ -19,10 +19,10 @@ enum MapTileLayerKind {
 ///   して fail closed する(`allowsSpatialFallback == false`)。
 ///
 /// revision 跨ぎの last-good は**どちらのレイヤーでも禁止**
-/// ([allowsCrossRevisionLastGood]は常に`false`)。これは
-/// `BaseMapTileCache` の cache key が `sourceInstanceId`(revision ごとに変わる
-/// archive 実体 ID)を含むことで構造的に担保されており、別 revision の entry は
-/// そもそも lookup で一致しない。
+/// ([allowsCrossRevisionLastGood]は常に`false`)。これは `BaseMapTileCache` の
+/// cache key が `VerifiedTileSourceCacheIdentity.cacheIdentity`
+/// (`sourceInstanceId` + 内容 digest)を含むことで担保される。中身が変われば
+/// digest が変わるので、別 revision の entry は exact lookup でも一致しない。
 @immutable
 final class MapTileFallbackPolicy {
   const MapTileFallbackPolicy._({

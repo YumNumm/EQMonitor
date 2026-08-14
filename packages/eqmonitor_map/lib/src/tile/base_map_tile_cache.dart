@@ -9,7 +9,12 @@ import 'package:flutter/foundation.dart';
 ///
 /// # cache key
 ///
-/// keyは`(sourceInstanceId, CanonicalTileId)`の組。`CanonicalTileId.z`は
+/// keyは`(sourceInstanceId, CanonicalTileId)`の組。この`sourceInstanceId`は
+/// cacheにとっては不透明な識別子文字列であり、呼び出し側は
+/// `VerifiedTileSourceCacheIdentity.cacheIdentity`(内容digestを含む)を渡す
+/// 責務を負う。そうしないと、source が`sourceInstanceId`を据え置いたまま
+/// 中身を差し替えたときにexact lookupが前revisionのgeometryを返す。
+/// `CanonicalTileId.z`は
 /// tileが属するpyramid上の整数zoomであり、camera側の連続値`zoom`
 /// (`MapCamera.zoom`)はkeyに一切含めない。camera zoomが小数だけ動いても
 /// 要求する[CanonicalTileId]が変わらない限り(`TileCoverCalculator.cover`が

@@ -14,6 +14,25 @@ sealed class VerifiedTileSource {
   /// archiveの実体を区別する識別子。同一URL/pathでも中身が更新された別の
   /// downloadを別物として扱うために使う。
   String get sourceInstanceId;
+
+  /// 検証済み archive の内容 digest(64桁hex)。
+  String get sha256;
+}
+
+/// tile cache の key に使う、**内容で決まる** source identity。
+///
+/// cache は`(identity, CanonicalTileId)`で引くため、identity が
+/// [VerifiedTileSource.sourceInstanceId]だけだと、source が
+/// `sourceInstanceId`を据え置いたまま中身(revision)を差し替えた場合に
+/// **exact lookup が前 revision の geometry を返してしまう**
+/// (fallback policy はexact hitの後段なので hazard の fail closed も効かない)。
+///
+/// [VerifiedTileSource.sha256]は内容の digest なので、中身が変われば必ず
+/// identity も変わる。revision 番号を key に混ぜるより強い保証になる
+/// (revision だけ上がって内容が同じなら cache を共有してよく、内容が変われば
+/// revision 据え置きでも別 key になる)。
+extension VerifiedTileSourceCacheIdentity on VerifiedTileSource {
+  String get cacheIdentity => '$sourceInstanceId@$sha256';
 }
 
 /// appが検証済みのPMTiles archiveをpackageへ渡すための契約。
