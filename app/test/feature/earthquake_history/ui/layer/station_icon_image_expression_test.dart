@@ -14,7 +14,7 @@ void main() {
 
   test('auto はズーム step 式で切り替える', () {
     expect(
-      stationIconImageExpression(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: StationDisplayMode.auto,
         stationTextZoom: 9,
       ),
@@ -30,7 +30,7 @@ void main() {
 
   test('maxFocused は isMax 分岐のみ', () {
     expect(
-      stationIconImageExpression(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: StationDisplayMode.maxFocused,
         stationTextZoom: 9,
       ),
@@ -40,7 +40,7 @@ void main() {
 
   test('normal は常に数字入り', () {
     expect(
-      stationIconImageExpression(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: StationDisplayMode.normal,
         stationTextZoom: 9,
       ),
@@ -50,7 +50,7 @@ void main() {
 
   test('allMinimized は常に色のみ', () {
     expect(
-      stationIconImageExpression(
+      const StationIconImageExpressionBuilder().build(
         stationDisplayMode: StationDisplayMode.allMinimized,
         stationTextZoom: 9,
       ),

@@ -452,7 +452,7 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
       sourceId: sourceId,
       minZoom: parameter.stationMinZoom,
       layout: {
-        'icon-image': stationIconImageExpression(
+        'icon-image': const StationIconImageExpressionBuilder().build(
           stationDisplayMode: stationDisplayMode,
           stationTextZoom: parameter.stationTextZoom,
         ),
