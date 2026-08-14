@@ -44,7 +44,9 @@ class EstimatedIntensityDataSource {
         (0.58 * momentMagnitude +
                 0.0038 * depth -
                 1.29 -
-                log10(x + 0.0028 * (math.pow(10, 0.5 * momentMagnitude)))) -
+                MathUtil.log10(
+                  x + 0.0028 * (math.pow(10, 0.5 * momentMagnitude)),
+                )) -
             0.002 * x,
       );
 
@@ -56,10 +58,15 @@ class EstimatedIntensityDataSource {
       final pgv = pgv400 * arv;
 
       //* 予測する地点の地表面推定最大速度から計測震度への変換
-      final intensity = 2.68 + 1.72 * log10(pgv);
+      final intensity = 2.68 + 1.72 * MathUtil.log10(pgv);
       yield intensity;
     }
   }
 }
 
-double log10(num x) => math.log(x) / math.ln10;
+/// 汎用の数学ユーティリティ。
+class MathUtil {
+  const MathUtil._();
+
+  static double log10(num x) => math.log(x) / math.ln10;
+}
