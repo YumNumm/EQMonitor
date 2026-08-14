@@ -1,10 +1,10 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
+import 'package:eqmonitor/feature/start/data/model/store_url_model.dart';
+import 'package:eqmonitor/feature/start/data/provider/forced_update_info_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,13 +28,13 @@ class ForcedUpdateRequirementMatcher {
 
   final PackageInfo packageInfo;
 
-  bool isUpdateRequired(api.RequiredVersion requiredVersion) {
+  bool isUpdateRequired(RequiredVersionModel requiredVersion) {
     final versionUpdateRequired = isVersionUpdateRequired(requiredVersion);
     final buildUpdateRequired = isBuildNumberUpdateRequired(requiredVersion);
     return versionUpdateRequired || buildUpdateRequired;
   }
 
-  bool isVersionUpdateRequired(api.RequiredVersion requiredVersion) {
+  bool isVersionUpdateRequired(RequiredVersionModel requiredVersion) {
     final requiredVersionString = requiredVersion.version;
     if (requiredVersionString == null) {
       return false;
@@ -51,7 +51,7 @@ class ForcedUpdateRequirementMatcher {
     return current < required;
   }
 
-  bool isBuildNumberUpdateRequired(api.RequiredVersion requiredVersion) {
+  bool isBuildNumberUpdateRequired(RequiredVersionModel requiredVersion) {
     final requiredBuildNumber = requiredVersion.buildNumber;
     if (requiredBuildNumber == null) {
       return false;
@@ -79,7 +79,7 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
   @override
   Widget build(BuildContext context) {
     // Start APIが更新されたときにも再チェックする
-    ref.listen(startProvider, (_, next) {
+    ref.listen(forcedUpdateInfoProvider, (_, next) {
       if (next.value != null && !_dialogShown) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           unawaited(_checkAndShow());
@@ -94,12 +94,12 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
       return;
     }
 
-    final startData = ref.read(startProvider).value;
-    if (startData == null) {
+    final forcedUpdateInfo = ref.read(forcedUpdateInfoProvider).value;
+    if (forcedUpdateInfo == null) {
       return;
     }
 
-    final requiredVersions = startData.app.version.requiredVersions;
+    final requiredVersions = forcedUpdateInfo.requiredVersions;
     if (requiredVersions.isEmpty) {
       return;
     }
@@ -113,7 +113,11 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
           return;
         }
         setState(() => _dialogShown = true);
-        await _showDialog(context, req: req, storeUrl: startData.app.storeUrl);
+        await _showDialog(
+          context,
+          req: req,
+          storeUrl: forcedUpdateInfo.storeUrl,
+        );
         return;
       }
     }
@@ -121,8 +125,8 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
 
   Future<void> _showDialog(
     BuildContext context, {
-    required api.RequiredVersion req,
-    required api.StoreUrl storeUrl,
+    required RequiredVersionModel req,
+    required StoreUrlModel storeUrl,
   }) {
     final url = _resolveStoreUrl(storeUrl);
     return showDialog<void>(
@@ -155,7 +159,7 @@ class _ForcedUpdateWrapperState extends ConsumerState<ForcedUpdateWrapper> {
     );
   }
 
-  String? _resolveStoreUrl(api.StoreUrl storeUrl) {
+  String? _resolveStoreUrl(StoreUrlModel storeUrl) {
     if (kIsWeb) {
       return null;
     }
