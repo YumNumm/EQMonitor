@@ -28,9 +28,8 @@ class SplashPage extends HookConsumerWidget {
       // 個別にローディング/エラーを表示する。
       ref
         ..read(travelTimeInternalProvider.future).ignore()
-        ..read(
-          kyoshinMonitorInternalObservationPointsConvertedProvider.future,
-        ).ignore()
+        ..read(kyoshinMonitorInternalObservationPointsConvertedProvider.future)
+            .ignore()
         ..read(earthquakeHistoryConfigProvider)
         ..read(startProvider);
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -45,7 +44,7 @@ class SplashPage extends HookConsumerWidget {
         // 非同期のため、解決前に pending を読むと null のまま Home に留まる。
         await Future.wait([
           ref.read(onboardingCompletedProvider.future),
-          awaitInitialAppLinkResolved(),
+          ref.read(appLinksColdStartGateProvider).whenResolved,
         ]);
         if (ref.read(buildConfigProvider).isBetaTesting) {
           await ref.read(betaTestingAgreedProvider.future);
@@ -55,7 +54,10 @@ class SplashPage extends HookConsumerWidget {
         }
         const HomeRoute().go(context);
         final pending =
-            consumePendingNotificationDeepLink() ?? consumePendingAppLink();
+            ref
+                .read(pendingNotificationDeepLinkGateProvider)
+                .consumePending() ??
+            ref.read(appLinksColdStartGateProvider).consumePending();
         switch (pending) {
           case NotificationRouteLink(:final location):
             await GoRouter.of(context).push<void>(location);

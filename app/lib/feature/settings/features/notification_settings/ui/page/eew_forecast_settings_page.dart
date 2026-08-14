@@ -25,24 +25,41 @@ class EewForecastSettingsPage extends HookConsumerWidget {
     final slots = [...?slotsAsync.value]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
-    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
-    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) async {
+    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
-    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (_, next) async {
+    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
     ref.listen(NotificationSlotsNotifier.updateRegionMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -68,10 +85,7 @@ class EewForecastSettingsPage extends HookConsumerWidget {
             ),
             const SettingsSectionHeader(text: '地域ごとの最小震度'),
             for (final slot in slots)
-              _SlotEewTile(
-                slot: slot,
-                enabled: globalEnabled,
-              ),
+              _SlotEewTile(slot: slot, enabled: globalEnabled),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
@@ -89,10 +103,7 @@ class EewForecastSettingsPage extends HookConsumerWidget {
 }
 
 class _MasterEewControl extends StatelessWidget {
-  const _MasterEewControl({
-    required this.value,
-    required this.onChanged,
-  });
+  const _MasterEewControl({required this.value, required this.onChanged});
 
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -118,7 +129,9 @@ class _MasterEewControl extends StatelessWidget {
               vertical: spacing.md,
             ),
             decoration: BoxDecoration(
-              color: value ? colorTheme.surfaceContainerHighest : colorTheme.surfaceContainerHigh,
+              color: value
+                  ? colorTheme.surfaceContainerHighest
+                  : colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(shape.pill),
               border: Border.all(color: colorTheme.outlineVariant),
             ),
@@ -144,10 +157,7 @@ class _MasterEewControl extends StatelessWidget {
 }
 
 class _SlotEewTile extends ConsumerWidget {
-  const _SlotEewTile({
-    required this.slot,
-    required this.enabled,
-  });
+  const _SlotEewTile({required this.slot, required this.enabled});
 
   final NotificationSlot slot;
   final bool enabled;
@@ -178,11 +188,9 @@ class _SlotEewTile extends ConsumerWidget {
             enabled: enabled,
             width: 110,
             onChanged: (intensity) async {
-              await ref.read(slotUpdateActionProvider).execute(
-                ref,
-                slot,
-                eewMinIntensity: intensity,
-              );
+              await ref
+                  .read(slotUpdateActionProvider)
+                  .execute(ref, slot, eewMinIntensity: intensity);
             },
           ),
           const SizedBox(width: 8),
@@ -190,11 +198,9 @@ class _SlotEewTile extends ConsumerWidget {
             value: slot.eewEnabled,
             onChanged: enabled
                 ? (value) async {
-                    await ref.read(slotUpdateActionProvider).execute(
-                      ref,
-                      slot,
-                      eewEnabled: value,
-                    );
+                    await ref
+                        .read(slotUpdateActionProvider)
+                        .execute(ref, slot, eewEnabled: value);
                   }
                 : null,
           ),

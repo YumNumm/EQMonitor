@@ -21,26 +21,19 @@ class DepthText extends StatelessWidget {
       EarthquakeDepthUnknown() || null => ('調査中', null, true),
     };
 
-    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall!);
+    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall);
 
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(
-            text: '深さ',
-            style: subTextStyle,
-          ),
+          TextSpan(text: '深さ', style: subTextStyle),
           TextSpan(
             text: text,
             style: textTheme.valueStyle(
-              isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
+              isSpecial ? textTheme.headlineMedium : textTheme.headlineLarge,
             ),
           ),
-          if (trailing != null)
-            TextSpan(
-              text: trailing,
-              style: subTextStyle,
-            ),
+          if (trailing != null) TextSpan(text: trailing, style: subTextStyle),
         ],
       ),
     );

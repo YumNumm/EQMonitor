@@ -199,13 +199,13 @@ Future<void> _syncCurrentLocationToAppGroup(
   }
   try {
     final prefs = await ref.read(appGroupPreferencesProvider.future);
-    final changed = await writeCurrentLocationRegionToAppGroup(
+    final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
       prefs,
       regionCode: resolution?.regionCode,
       regionName: resolution?.regionName,
     );
     if (changed) {
-      await reloadWidgetTimelines();
+      await WidgetTimelineReloader.reload();
     }
   } on Object catch (e, st) {
     talker.error('[BackgroundLocation] sync app group failed', e, st);
@@ -232,13 +232,14 @@ Future<void> _fireDebugNotifications(
   required String? shakeError,
 }) async {
   try {
-    final debugSettings =
-        ref.read(backgroundLocationDebugSettingsProvider).value;
+    final debugSettings = ref
+        .read(backgroundLocationDebugSettingsProvider)
+        .value;
     if (debugSettings == null ||
         (!debugSettings.notifyLatLng &&
-        !debugSettings.notifyRegion &&
-        !debugSettings.notifyPrefecture &&
-        !debugSettings.notifyApiUpdate)) {
+            !debugSettings.notifyRegion &&
+            !debugSettings.notifyPrefecture &&
+            !debugSettings.notifyApiUpdate)) {
       return;
     }
 

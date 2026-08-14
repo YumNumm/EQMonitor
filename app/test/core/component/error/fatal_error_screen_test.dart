@@ -22,7 +22,7 @@ void main() {
     tester,
   ) async {
     final details = FlutterErrorDetails(exception: Exception('boom'));
-    await tester.pumpWidget(buildFatalErrorWidget(details));
+    await tester.pumpWidget(FatalErrorWidgetBuilder.build(details));
     expect(tester.takeException(), isNull);
   });
 }

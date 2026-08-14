@@ -41,7 +41,9 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
                   tileMode: .mirror,
                 ),
                 inner: ColorFilter.mode(
-                  designSystem.colorTheme.surfaceContainerLow.withValues(alpha: 0.7),
+                  designSystem.colorTheme.surfaceContainerLow.withValues(
+                    alpha: 0.7,
+                  ),
                   .srcATop,
                 ),
               ),
@@ -100,7 +102,7 @@ class _LocationSettingCards extends ConsumerWidget {
                     title: '非表示',
                     icon: Icons.location_off_outlined,
                     isSelected: !config.common.showLocation,
-                    onTap: () => lightHapticFunction(
+                    onTap: () => HapticUtil.light(
                       () => HomeConfigurationNotifier.saveMutation.run(
                         ref,
                         (tsx) async => tsx
@@ -121,7 +123,7 @@ class _LocationSettingCards extends ConsumerWidget {
                     title: '表示',
                     icon: Icons.location_on_outlined,
                     isSelected: config.common.showLocation,
-                    onTap: () => lightHapticFunction(() async {
+                    onTap: () => HapticUtil.light(() async {
                       var p = await Geolocator.checkPermission();
                       if (p == LocationPermission.denied) {
                         p = await Geolocator.requestPermission();

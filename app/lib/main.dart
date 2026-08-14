@@ -60,7 +60,7 @@ import 'package:telemetry_store/telemetry_store.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await _main();
+    await AppBootstrap.run();
   } on Object catch (error, stackTrace) {
     unawaited(() async {
       if (kIsWeb || Firebase.apps.isEmpty) {
@@ -96,228 +96,242 @@ Future<void> main() async {
   }
 }
 
-Future<void> _main() async {
-  final profiler = StartupProfiler();
+/// アプリの起動シーケンス本体。`main()` から一度だけ呼ばれる。
+class AppBootstrap {
+  const AppBootstrap._();
 
-  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    await BackgroundLocationTracker.initialize();
-  }
+  static Future<void> run() async {
+    final profiler = StartupProfiler();
 
-  await SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge,
-    overlays: [SystemUiOverlay.top],
-  );
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarContrastEnforced: true,
-    ),
-  );
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  profiler.mark('firebase_init');
-
-  talker = TalkerFlutter.init(
-    settings: TalkerSettings(
-      // ignore: avoid_redundant_argument_values
-      useConsoleLogs: kDebugMode,
-    ),
-    logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
-  );
-  if (!kIsWeb && !kDebugMode) {
-    talker.configure(observer: CrashlyticsTalkerObserver());
-  }
-
-  FlutterError.onError = (error) {
-    final exception = error.exception;
-    if (exception is ParallelWaitError) {
-      talker
-        ..handle(exception, error.stack, 'Uncaught fatal exception')
-        ..log(exception.errors.toString());
-      final stackTrace = error.stack;
-      if (stackTrace != null) {
-        talker.log(stackTrace.toString());
-      }
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      await BackgroundLocationTracker.initialize();
     }
-    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
-  };
-  if (!kDebugMode) {
-    ErrorWidget.builder = buildFatalErrorWidget;
-  }
-  PlatformDispatcher.instance.onError = (exception, stackTrace) {
-    talker.handle(exception, stackTrace, 'Uncaught async exception');
-    log(
-      'Uncaught async exception: ${exception.runtimeType} $exception',
-      name: 'main',
+
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+      overlays: [SystemUiOverlay.top],
     );
-    if (exception is ParallelWaitError) {
-      talker
-        ..log(exception.errors.toString())
-        ..log(exception.stackTrace.toString());
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarContrastEnforced: true,
+      ),
+    );
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    profiler.mark('firebase_init');
+
+    talker = TalkerFlutter.init(
+      settings: TalkerSettings(
+        // ignore: avoid_redundant_argument_values
+        useConsoleLogs: kDebugMode,
+      ),
+      logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
+    );
+    if (!kIsWeb && !kDebugMode) {
+      talker.configure(observer: CrashlyticsTalkerObserver());
     }
-    return true;
-  };
 
-  await FirebaseAppCheck.instance.activate(
-    providerAndroid: kDebugMode
-        ? const AndroidDebugProvider()
-        : const AndroidPlayIntegrityProvider(),
-    providerApple: kDebugMode
-        ? const AppleDebugProvider()
-        : const AppleAppAttestProvider(),
-  );
-
-  final deviceInfo = DeviceInfoPlugin();
-
-  final results = await (
-    (
-      SharedPreferences.getInstance(),
-      PackageInfo.fromPlatform(),
-      (!kIsWeb && Platform.isAndroid
-          ? deviceInfo.androidInfo
-          : Future<Null>.value()),
-      (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-      kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-    ).wait,
-    (
-      kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
-      core.initializeTimeZones(),
-    ).wait,
-  ).wait;
-  profiler.mark('parallel_init');
-  initLicenses();
-
-  final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
-
-  if (!kIsWeb) {
-    unawaited(
-      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
-    );
-  }
-
-  final container = ProviderContainer(
-    overrides: [
-      data_prefs.sharedPreferencesProvider.overrideWithValue(
-        AsyncValue.data(results.$1.$1),
-      ),
-      sharedPreferencesProvider.overrideWithValue(
-        SharedPreferencesAsync(results.$1.$1),
-      ),
-      packageInfoProvider.overrideWithValue(results.$1.$2),
-      if (results.$1.$3 case final androidInfo?)
-        androidDeviceInfoProvider.overrideWithValue(androidInfo),
-      if (results.$1.$4 case final iosInfo?)
-        iosDeviceInfoProvider.overrideWithValue(iosInfo),
-      if (results.$1.$5 case final appDir?)
-        applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
-      if (results.$2.$1 case final colorMap?)
-        kyoshinColorMapProvider.overrideWithValue(colorMap),
-      if (telemetryDbPath case final dbPath?)
-        telemetryDbPathProvider.overrideWithValue(dbPath),
-      startupProfilerProvider.overrideWithValue(profiler),
-    ],
-    observers: [if (kDebugMode) CustomProviderObserver(talker)],
-    retry: (_, _) => null,
-  );
-
-  container.read(eqMonitorWsStatusProvider);
-  container.read(realtimeEventsProvider);
-  container.listen(autoReturnWatcherProvider, (_, _) {});
-  container.listen(backgroundLocationServiceProvider, (_, _) {});
-  container.listen(firebaseMessagingInteractionProvider, (_, _) {});
-  container.listen(appLinksInteractionProvider, (_, _) {});
-  container.listen(pushTokenSyncStartupProvider, (_, _) {});
-  if (!kIsWeb) {
-    unawaited(() async {
-      try {
-        final uploader = container.read(telemetryUploaderProvider);
-        await uploader.flush();
-      } on Exception catch (exception, stackTrace) {
-        talker.error(exception, stackTrace);
+    FlutterError.onError = (error) {
+      final exception = error.exception;
+      if (exception is ParallelWaitError) {
+        talker
+          ..handle(exception, error.stack, 'Uncaught fatal exception')
+          ..log(exception.errors.toString());
+        final stackTrace = error.stack;
+        if (stackTrace != null) {
+          talker.log(stackTrace.toString());
+        }
       }
-    }());
-    container.read(appLaunchWatcherProvider);
-  }
+      talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
+    };
+    if (!kDebugMode) {
+      ErrorWidget.builder = FatalErrorWidgetBuilder.build;
+    }
+    PlatformDispatcher.instance.onError = (exception, stackTrace) {
+      talker.handle(exception, stackTrace, 'Uncaught async exception');
+      log(
+        'Uncaught async exception: ${exception.runtimeType} $exception',
+        name: 'main',
+      );
+      if (exception is ParallelWaitError) {
+        talker
+          ..log(exception.errors.toString())
+          ..log(exception.stackTrace.toString());
+      }
+      return true;
+    };
 
-  profiler.mark('before_run_app');
-  runApp(UncontrolledProviderScope(container: container, child: const App()));
-
-  // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
-  // 例外が発生しても起動フローを止めず talker に記録する。
-  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    guardedUnawaited(
-      () => MobileAds.instance.initialize(),
-      onError: (error, stack) => talker.error(error, stack),
+    await FirebaseAppCheck.instance.activate(
+      providerAndroid: kDebugMode
+          ? const AndroidDebugProvider()
+          : const AndroidPlayIntegrityProvider(),
+      providerApple: kDebugMode
+          ? const AppleDebugProvider()
+          : const AppleAppAttestProvider(),
     );
-  }
-  if (!kIsWeb) {
-    guardedUnawaited(() async {
-      await _registerNotificationChannelIfNeeded();
-      await FlutterLocalNotificationsPlugin().initialize(
-        settings: const InitializationSettings(
-          iOS: DarwinInitializationSettings(
-            requestAlertPermission: false,
-            requestSoundPermission: false,
-            requestBadgePermission: false,
-          ),
-          android: AndroidInitializationSettings('mipmap/ic_launcher'),
-          macOS: DarwinInitializationSettings(
-            requestAlertPermission: false,
-            requestSoundPermission: false,
-            requestBadgePermission: false,
-          ),
+
+    final deviceInfo = DeviceInfoPlugin();
+
+    final results = await (
+      (
+        SharedPreferences.getInstance(),
+        PackageInfo.fromPlatform(),
+        (!kIsWeb && Platform.isAndroid
+            ? deviceInfo.androidInfo
+            : Future<Null>.value()),
+        (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
+        kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
+      ).wait,
+      (
+        kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+        core.initializeTimeZones(),
+      ).wait,
+    ).wait;
+    profiler.mark('parallel_init');
+    LicenseInitializer.init();
+
+    final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
+
+    if (!kIsWeb) {
+      unawaited(
+        FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          !kDebugMode,
         ),
       );
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-            alert: true,
-            sound: true,
-            badge: true,
-          );
-    }, onError: (error, stack) => talker.error(error, stack));
-  }
+    }
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    profiler.mark('home_first_frame');
+    final container = ProviderContainer(
+      overrides: [
+        data_prefs.sharedPreferencesProvider.overrideWithValue(
+          AsyncValue.data(results.$1.$1),
+        ),
+        sharedPreferencesProvider.overrideWithValue(
+          SharedPreferencesAsync(results.$1.$1),
+        ),
+        packageInfoProvider.overrideWithValue(results.$1.$2),
+        if (results.$1.$3 case final androidInfo?)
+          androidDeviceInfoProvider.overrideWithValue(androidInfo),
+        if (results.$1.$4 case final iosInfo?)
+          iosDeviceInfoProvider.overrideWithValue(iosInfo),
+        if (results.$1.$5 case final appDir?)
+          applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
+        if (results.$2.$1 case final colorMap?)
+          kyoshinColorMapProvider.overrideWithValue(colorMap),
+        if (telemetryDbPath case final dbPath?)
+          telemetryDbPathProvider.overrideWithValue(dbPath),
+        startupProfilerProvider.overrideWithValue(profiler),
+      ],
+      observers: [if (kDebugMode) CustomProviderObserver(talker)],
+      retry: (_, _) => null,
+    );
+
+    container.read(eqMonitorWsStatusProvider);
+    container.read(realtimeEventsProvider);
+    container.listen(autoReturnWatcherProvider, (_, _) {});
+    container.listen(backgroundLocationServiceProvider, (_, _) {});
+    container.listen(firebaseMessagingInteractionProvider, (_, _) {});
+    container.listen(appLinksInteractionProvider, (_, _) {});
+    container.listen(pushTokenSyncStartupProvider, (_, _) {});
     if (!kIsWeb) {
-      // バックグラウンドで完了する travel_time_load / parameter_load が
-      // timingsMicros に記録されてからテレメトリを送信する。
-      // 各ロードの失敗は計測の欠落として許容し、record() の失敗は talker に委ねる。
-      Future<void> awaitQuietly(Future<Object?> f) async {
+      unawaited(() async {
         try {
-          await f;
-        } catch (_) {}
-      }
+          final uploader = container.read(telemetryUploaderProvider);
+          await uploader.flush();
+        } on Exception catch (exception, stackTrace) {
+          talker.error(exception, stackTrace);
+        }
+      }());
+      container.read(appLaunchWatcherProvider);
+    }
 
-      guardedUnawaited(() async {
-        await awaitQuietly(container.read(travelTimeInternalProvider.future));
-        await awaitQuietly(container.read(parameterSetProvider.future));
-        final recorder = container.read(telemetryRecorderProvider);
-        await recorder.record(
-          TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
+    profiler.mark('before_run_app');
+    runApp(UncontrolledProviderScope(container: container, child: const App()));
+
+    // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
+    // 例外が発生しても起動フローを止めず talker に記録する。
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      GuardedUnawaitedUtil.run(
+        () => MobileAds.instance.initialize(),
+        onError: (error, stack) => talker.error(error, stack),
+      );
+    }
+    if (!kIsWeb) {
+      GuardedUnawaitedUtil.run(() async {
+        await NotificationChannelRegistrar.registerIfNeeded();
+        await FlutterLocalNotificationsPlugin().initialize(
+          settings: const InitializationSettings(
+            iOS: DarwinInitializationSettings(
+              requestAlertPermission: false,
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+            ),
+            android: AndroidInitializationSettings('mipmap/ic_launcher'),
+            macOS: DarwinInitializationSettings(
+              requestAlertPermission: false,
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+            ),
+          ),
         );
+        await FirebaseMessaging.instance
+            .setForegroundNotificationPresentationOptions(
+              alert: true,
+              sound: true,
+              badge: true,
+            );
       }, onError: (error, stack) => talker.error(error, stack));
     }
-  });
 
-  if (!kIsWeb && Platform.isIOS) {
-    container.listen(appGroupSettingsWriterProvider, (_, _) {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      profiler.mark('home_first_frame');
+      if (!kIsWeb) {
+        // バックグラウンドで完了する travel_time_load / parameter_load が
+        // timingsMicros に記録されてからテレメトリを送信する。
+        // 各ロードの失敗は計測の欠落として許容し、record() の失敗は talker に委ねる。
+        Future<void> awaitQuietly(Future<Object?> f) async {
+          try {
+            await f;
+          } catch (_) {}
+        }
+
+        GuardedUnawaitedUtil.run(() async {
+          await awaitQuietly(container.read(travelTimeInternalProvider.future));
+          await awaitQuietly(container.read(parameterSetProvider.future));
+          final recorder = container.read(telemetryRecorderProvider);
+          await recorder.record(
+            TelemetryEvent.startupTiming(phasesMicros: profiler.timingsMicros),
+          );
+        }, onError: (error, stack) => talker.error(error, stack));
+      }
+    });
+
+    if (!kIsWeb && Platform.isIOS) {
+      container.listen(appGroupSettingsWriterProvider, (_, _) {});
+    }
   }
 }
 
-Future<void> _registerNotificationChannelIfNeeded() async {
-  final androidNotificationPlugin = FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >();
-  if (androidNotificationPlugin == null) {
-    return;
-  }
-  for (final group in notificationChannelGroups) {
-    await androidNotificationPlugin.createNotificationChannelGroup(group);
-  }
-  for (final channel in notificationChannels) {
-    await androidNotificationPlugin.createNotificationChannel(channel);
+/// Android の通知チャンネル/チャンネルグループを初回起動時に登録する。
+class NotificationChannelRegistrar {
+  const NotificationChannelRegistrar._();
+
+  static Future<void> registerIfNeeded() async {
+    final androidNotificationPlugin = FlutterLocalNotificationsPlugin()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    if (androidNotificationPlugin == null) {
+      return;
+    }
+    for (final group in notificationChannelGroups) {
+      await androidNotificationPlugin.createNotificationChannelGroup(group);
+    }
+    for (final channel in notificationChannels) {
+      await androidNotificationPlugin.createNotificationChannel(channel);
+    }
   }
 }

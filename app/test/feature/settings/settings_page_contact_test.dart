@@ -62,7 +62,9 @@ void main() {
           ),
           adsOptOutProvider.overrideWithBuild((ref, notifier) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
-          openContactProvider.overrideWithValue((_, _) async => opened = true),
+          openContactProvider.overrideWithValue(
+            _FakeOpenContactAction(() => opened = true),
+          ),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
         child: const _TestApp(home: SettingsPage()),
@@ -102,6 +104,17 @@ final _packageInfo = PackageInfo(
   version: '1.2.3',
   buildNumber: '456',
 );
+
+class _FakeOpenContactAction extends OpenContactAction {
+  const _FakeOpenContactAction(this._onCall);
+
+  final void Function() _onCall;
+
+  @override
+  Future<void> call(WidgetRef ref, BuildContext context) async {
+    _onCall();
+  }
+}
 
 class _TestApp extends StatelessWidget {
   const _TestApp({required this.home});

@@ -42,7 +42,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     List<EewTelegramItem> eews,
     EarthquakeParameter parameter,
   ) {
-    _cachedPoints ??= _generateCachedPoints(parameter);
+    final cachedPoints = _cachedPoints ??= _generateCachedPoints(parameter);
 
     final targetEews = _targetHypocenters(eews);
     if (targetEews.isEmpty) {
@@ -51,24 +51,23 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
     final intensities = _computeMaxIntensitiesOnMain(
       eews: targetEews,
-      calculationPoints: _calculationPointsFromCached(_cachedPoints!),
+      calculationPoints: _calculationPointsFromCached(cachedPoints),
     );
 
-    return _buildPoints(_cachedPoints!, intensities);
+    return _buildPoints(cachedPoints, intensities);
   }
 
   Future<Iterable<EstimatedIntensityPoint>> calcInIsolate(
     List<EewTelegramItem> eews,
     EarthquakeParameter parameter,
   ) async {
-    _cachedPoints ??= _generateCachedPoints(parameter);
+    final cachedPoints = _cachedPoints ??= _generateCachedPoints(parameter);
 
     final targetEews = _targetHypocenters(eews);
     if (targetEews.isEmpty) {
       return [];
     }
 
-    final cachedPoints = _cachedPoints!;
     final isolate = await ref.read(estimatedIntensityIsolateProvider.future);
     final intensities = await isolate.computeMax(eews: targetEews);
 
@@ -78,25 +77,25 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   List<EstimatedIntensityHypocenterInput> _targetHypocenters(
     List<EewTelegramItem> eews,
   ) => eews
-      .where(
-        (e) =>
-            !e.isCanceled &&
-            (e.hypocenter?.latitude != null && e.hypocenter?.longitude != null),
-      )
-      .where((e) {
-        final hypocenter = e.hypocenter!;
-        return hypocenter.magnitude != null && hypocenter.depth != null;
-      })
-      .map((e) {
-        final hypocenter = e.hypocenter!;
-        return (
-          jmaMagnitude: hypocenter.magnitude!,
-          depth: hypocenter.depth!,
-          lat: hypocenter.latitude!,
-          lon: hypocenter.longitude!,
-        );
-      })
+      .where((e) => !e.isCanceled)
+      .map(_toHypocenterInput)
+      .nonNulls
       .toList();
+
+  EstimatedIntensityHypocenterInput? _toHypocenterInput(EewTelegramItem e) {
+    final hypocenter = e.hypocenter;
+    if (hypocenter == null) {
+      return null;
+    }
+    final magnitude = hypocenter.magnitude;
+    final depth = hypocenter.depth;
+    final lat = hypocenter.latitude;
+    final lon = hypocenter.longitude;
+    if (magnitude == null || depth == null || lat == null || lon == null) {
+      return null;
+    }
+    return (jmaMagnitude: magnitude, depth: depth, lat: lat, lon: lon);
+  }
 
   List<EstimatedIntensityPoint> _buildPoints(
     List<_CachedPoint> cachedPoints,

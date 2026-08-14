@@ -80,7 +80,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [EarthquakeHistoryHypocenterLayerBuilder.layerId],
               sourceIds: const [

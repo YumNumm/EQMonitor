@@ -303,9 +303,9 @@ void main() {
         .controller
         ?.text;
     final decoded = json == null ? null : jsonDecode(json);
-    final draft =
-        EarthquakeVxseDebugDraft.fromJson(decoded as Map<String, dynamic>)
-            as EarthquakeVxse62DebugDraft;
+    final draft = EarthquakeVxseDebugDraft.fromJson(
+      decoded as Map<String, dynamic>,
+    ) as EarthquakeVxse62DebugDraft;
 
     expect(draft.hypocenter.detailedCode, 'detail-999');
     expect(
@@ -354,12 +354,10 @@ void main() {
 
   testWidgets('先頭rowを実ボタンで削除すると後続rowの表示identityを維持する', (tester) async {
     await _pumpEditor(tester);
-    final initial =
-        const EarthquakeVxseDebugDraftFactory().create(
-              current: _currentEarthquake(),
-              type: EarthquakeTelegramType.vxse53,
-            )
-            as EarthquakeVxse53DebugDraft;
+    final initial = const EarthquakeVxseDebugDraftFactory().create(
+      current: _currentEarthquake(),
+      type: EarthquakeTelegramType.vxse53,
+    ) as EarthquakeVxse53DebugDraft;
     final first = earthquakeVxseDebugSampleIntensityRegion.copyWith(
       region: earthquakeVxseDebugSampleIntensityRegion.region.copyWith(
         code: 'first-code',
@@ -1206,7 +1204,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.intensityTree.keys.single;
       final first =
           value.intensityTree[level]?.single ??
-          intensityTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .intensityTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       return value.copyWith(
         intensityTree: {
           level: [
@@ -1244,7 +1246,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.intensityTree.keys.single;
       final prefecture =
           value.intensityTree[level]?.single ??
-          intensityTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .intensityTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       final first = prefecture.cities.single;
       return value.copyWith(
         intensityTree: {
@@ -1277,7 +1283,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.intensityTree.keys.single;
       final prefecture =
           value.intensityTree[level]?.single ??
-          intensityTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .intensityTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       final city = prefecture.cities.single;
       final first = city.stations.single;
       return value.copyWith(
@@ -1324,7 +1334,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.lpgmIntensityTree.keys.single;
       final first =
           value.lpgmIntensityTree[level]?.single ??
-          lpgmTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .lpgmTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       return value.copyWith(
         lpgmIntensityTree: {
           level: [
@@ -1358,7 +1372,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.lpgmIntensityTree.keys.single;
       final prefecture =
           value.lpgmIntensityTree[level]?.single ??
-          lpgmTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .lpgmTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       final city = prefecture.cities.single;
       final first = city.stations.single;
       return value.copyWith(
@@ -1404,7 +1422,11 @@ EarthquakeVxseDebugDraft _twoRowDraft({
       final level = value.intensityTree.keys.single;
       final prefecture =
           value.intensityTree[level]?.single ??
-          intensityTreeOrSample(tree: null).values.single.single;
+          const EarthquakeVxseDebugDraftFactory()
+              .intensityTreeOrSample(tree: null)
+              .values
+              .single
+              .single;
       final city = prefecture.cities.single;
       final station = city.stations.single;
       final intensity =

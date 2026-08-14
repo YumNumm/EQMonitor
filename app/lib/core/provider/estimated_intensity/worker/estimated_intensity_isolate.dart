@@ -64,11 +64,13 @@ final class EstimatedIntensityIsolate {
         if (completer == null) {
           return;
         }
-        if (message.intensities != null) {
-          completer.complete(message.intensities!);
+        final intensities = message.intensities;
+        if (intensities != null) {
+          completer.complete(intensities);
         } else {
-          final stackTrace = message.errorStack != null
-              ? StackTrace.fromString(message.errorStack!)
+          final errorStack = message.errorStack;
+          final stackTrace = errorStack != null
+              ? StackTrace.fromString(errorStack)
               : StackTrace.empty;
           completer.completeError(
             EstimatedIntensityWorkerException(
@@ -221,7 +223,7 @@ void _workerEntryPoint(SendPort mainSendPort) {
     }
     if (message is _ComputeSingleMessage) {
       chain = chain.then(
-        (_) => _runComputeSingle(
+        (_) => EstimatedIntensityWorkerRunner.runComputeSingle(
           mainSendPort,
           calculator,
           calculationPoints,
@@ -232,7 +234,7 @@ void _workerEntryPoint(SendPort mainSendPort) {
     }
     if (message is _ComputeMaxMessage) {
       chain = chain.then(
-        (_) => _runComputeMax(
+        (_) => EstimatedIntensityWorkerRunner.runComputeMax(
           mainSendPort,
           calculator,
           calculationPoints,
@@ -243,72 +245,80 @@ void _workerEntryPoint(SendPort mainSendPort) {
   });
 }
 
-Future<void> _runComputeSingle(
-  SendPort mainSendPort,
-  EstimatedIntensityDataSource calculator,
-  List<CalculationPoint> calculationPoints,
-  _ComputeSingleMessage message,
-) async {
-  try {
-    final intensities = calculator
-        .getEstimatedIntensity(
-          points: calculationPoints,
-          jmaMagnitude: message.jmaMagnitude,
-          depth: message.depth,
-          hypocenter: (lat: message.lat, lon: message.lon),
-        )
-        .toList();
-    mainSendPort.send(
-      _ComputeResponseMessage(id: message.id, intensities: intensities),
-    );
-  } on Object catch (error, stackTrace) {
-    mainSendPort.send(
-      _ComputeResponseMessage(
-        id: message.id,
-        errorMessage: error.toString(),
-        errorStack: stackTrace.toString(),
-      ),
-    );
-  }
-}
+/// Worker Isolate 内で推定震度計算を実行し、結果をメイン Isolate へ送り返す。
+///
+/// [_workerEntryPoint] の spawn 先 Isolate 内で呼ばれるため、
+/// インスタンス状態をキャプチャしない static method として定義する。
+class EstimatedIntensityWorkerRunner {
+  const EstimatedIntensityWorkerRunner._();
 
-Future<void> _runComputeMax(
-  SendPort mainSendPort,
-  EstimatedIntensityDataSource calculator,
-  List<CalculationPoint> calculationPoints,
-  _ComputeMaxMessage message,
-) async {
-  try {
-    final results = <List<double>>[];
-    for (final eew in message.eews) {
-      final result = calculator
+  static Future<void> runComputeSingle(
+    SendPort mainSendPort,
+    EstimatedIntensityDataSource calculator,
+    List<CalculationPoint> calculationPoints,
+    _ComputeSingleMessage message,
+  ) async {
+    try {
+      final intensities = calculator
           .getEstimatedIntensity(
             points: calculationPoints,
-            jmaMagnitude: eew.jmaMagnitude,
-            depth: eew.depth,
-            hypocenter: (lat: eew.lat, lon: eew.lon),
+            jmaMagnitude: message.jmaMagnitude,
+            depth: message.depth,
+            hypocenter: (lat: message.lat, lon: message.lon),
           )
           .toList();
-      results.add(result);
+      mainSendPort.send(
+        _ComputeResponseMessage(id: message.id, intensities: intensities),
+      );
+    } on Object catch (error, stackTrace) {
+      mainSendPort.send(
+        _ComputeResponseMessage(
+          id: message.id,
+          errorMessage: error.toString(),
+          errorStack: stackTrace.toString(),
+        ),
+      );
     }
+  }
 
-    final intensities = results.isEmpty
-        ? <double>[]
-        : [
-            for (var i = 0; i < results.first.length; i++)
-              results.map((result) => result[i]).reduce(math.max),
-          ];
+  static Future<void> runComputeMax(
+    SendPort mainSendPort,
+    EstimatedIntensityDataSource calculator,
+    List<CalculationPoint> calculationPoints,
+    _ComputeMaxMessage message,
+  ) async {
+    try {
+      final results = <List<double>>[];
+      for (final eew in message.eews) {
+        final result = calculator
+            .getEstimatedIntensity(
+              points: calculationPoints,
+              jmaMagnitude: eew.jmaMagnitude,
+              depth: eew.depth,
+              hypocenter: (lat: eew.lat, lon: eew.lon),
+            )
+            .toList();
+        results.add(result);
+      }
 
-    mainSendPort.send(
-      _ComputeResponseMessage(id: message.id, intensities: intensities),
-    );
-  } on Object catch (error, stackTrace) {
-    mainSendPort.send(
-      _ComputeResponseMessage(
-        id: message.id,
-        errorMessage: error.toString(),
-        errorStack: stackTrace.toString(),
-      ),
-    );
+      final intensities = results.isEmpty
+          ? <double>[]
+          : [
+              for (var i = 0; i < results.first.length; i++)
+                results.map((result) => result[i]).reduce(math.max),
+            ];
+
+      mainSendPort.send(
+        _ComputeResponseMessage(id: message.id, intensities: intensities),
+      );
+    } on Object catch (error, stackTrace) {
+      mainSendPort.send(
+        _ComputeResponseMessage(
+          id: message.id,
+          errorMessage: error.toString(),
+          errorStack: stackTrace.toString(),
+        ),
+      );
+    }
   }
 }

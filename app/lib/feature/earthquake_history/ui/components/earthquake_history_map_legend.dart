@@ -26,18 +26,20 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (shindoDbTree != null) {
+    final tree = shindoDbTree;
+    if (tree != null) {
       return Card(
         color: context.designSystem.colorTheme.surface.withValues(alpha: 0.85),
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: _ShindoDbLegend(tree: shindoDbTree!),
+          child: _ShindoDbLegend(tree: tree),
         ),
       );
     }
 
-    if (intensity == null) {
+    final currentIntensity = intensity;
+    if (currentIntensity == null) {
       return const SizedBox.shrink();
     }
 
@@ -47,8 +49,8 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: showingLpgmIntensity
-            ? _LpgmLegend(intensity: intensity!)
-            : _JmaLegend(intensity: intensity!),
+            ? _LpgmLegend(intensity: currentIntensity)
+            : _JmaLegend(intensity: currentIntensity),
       ),
     );
   }

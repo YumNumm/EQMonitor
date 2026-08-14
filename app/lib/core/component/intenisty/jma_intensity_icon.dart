@@ -33,7 +33,7 @@ class JmaIntensityIcon extends StatelessWidget {
         ? '+'
         : '';
     final intensitySubText = intensity.suffix;
-    final borderColor = Color.lerp(bg, fg, 0.3)!;
+    final borderColor = Color.lerp(bg, fg, 0.3) ?? bg;
     return switch (type) {
       .small => SizedBox(
         height: size,

@@ -45,10 +45,7 @@ class DebugSharedPreferencesPage extends HookConsumerWidget {
           bottom: tabs.length > 1 ? TabBar(tabs: tabs) : null,
         ),
         body: TabBarView(
-          children: [
-            const _SharedView(),
-            if (isIOS) const _AppGroupView(),
-          ],
+          children: [const _SharedView(), if (isIOS) const _AppGroupView()],
         ),
         floatingActionButton: Builder(
           builder: (context) {
@@ -58,7 +55,11 @@ class DebugSharedPreferencesPage extends HookConsumerWidget {
                 final kind = (isIOS && index == 1)
                     ? _StoreKind.appGroup
                     : _StoreKind.shared;
-                unawaited(_showAddDialog(context, ref, kind));
+                unawaited(
+                  ref
+                      .read(_debugPreferencesEditorActionProvider)
+                      .showAddDialog(context, kind),
+                );
               },
               child: const Icon(Icons.add),
             );
@@ -134,22 +135,24 @@ class _EntriesList extends ConsumerWidget {
               return ListTile(
                 title: Text(entry.key),
                 subtitle: Text(
-                  _preview(entry.value),
+                  const _DebugPreferenceValueFormatter().preview(entry.value),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: FontFamily.googleSansCode,
-                  ),
+                  style: const TextStyle(fontFamily: FontFamily.googleSansCode),
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline),
                   tooltip: '削除',
                   onPressed: () async {
-                    await _remove(ref, kind, entry.key);
+                    await ref
+                        .read(_debugPreferencesEditorActionProvider)
+                        .remove(ref, kind, entry.key);
                     onRefresh();
                   },
                 ),
-                onTap: () => _showEditDialog(context, ref, kind, entry),
+                onTap: () => ref
+                    .read(_debugPreferencesEditorActionProvider)
+                    .showEditDialog(context, kind, entry),
               );
             },
           ),
@@ -159,138 +162,149 @@ class _EntriesList extends ConsumerWidget {
   }
 }
 
-String _typeName(Object? value) => switch (value) {
-  bool() => 'bool',
-  int() => 'int',
-  double() => 'double',
-  String() => 'String',
-  List<String>() => 'List<String>',
-  _ => value.runtimeType.toString(),
-};
+/// SharedPreferences / AppGroup Preferences のエントリ値をデバッグ表示用の
+/// 文字列へ変換する。
+class _DebugPreferenceValueFormatter {
+  const _DebugPreferenceValueFormatter();
 
-String _preview(Object? value) => '${_typeName(value)}: $value';
+  String typeName(Object? value) => switch (value) {
+    bool() => 'bool',
+    int() => 'int',
+    double() => 'double',
+    String() => 'String',
+    List<String>() => 'List<String>',
+    _ => value.runtimeType.toString(),
+  };
 
-Future<void> _remove(WidgetRef ref, _StoreKind kind, String key) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.remove(key);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.remove(key);
+  String preview(Object? value) => '${typeName(value)}: $value';
+}
+
+final _debugPreferencesEditorActionProvider = Provider(
+  (ref) => const _DebugPreferencesEditorAction(),
+);
+
+/// デバッグ画面から SharedPreferences / AppGroup Preferences の
+/// 読み書き・削除・編集ダイアログ表示を行う。
+class _DebugPreferencesEditorAction {
+  const _DebugPreferencesEditorAction();
+
+  Future<void> remove(WidgetRef ref, _StoreKind kind, String key) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.remove(key);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.remove(key);
+    }
   }
-}
 
-void _invalidate(WidgetRef ref, _StoreKind kind) {
-  switch (kind) {
-    case _StoreKind.shared:
-      ref.invalidate(debugSharedPreferencesEntriesProvider);
-    case _StoreKind.appGroup:
-      ref.invalidate(debugAppGroupPreferencesEntriesProvider);
+  void invalidate(WidgetRef ref, _StoreKind kind) {
+    switch (kind) {
+      case _StoreKind.shared:
+        ref.invalidate(debugSharedPreferencesEntriesProvider);
+      case _StoreKind.appGroup:
+        ref.invalidate(debugAppGroupPreferencesEntriesProvider);
+    }
   }
-}
 
-Future<void> _setBool(
-  WidgetRef ref,
-  _StoreKind kind,
-  String key, {
-  required bool value,
-}) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.setBool(key, value);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.setBool(key, value);
+  Future<void> setBool(
+    WidgetRef ref,
+    _StoreKind kind,
+    String key, {
+    required bool value,
+  }) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.setBool(key, value);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.setBool(key, value);
+    }
   }
-}
 
-Future<void> _setInt(
-  WidgetRef ref,
-  _StoreKind kind,
-  String key,
-  int value,
-) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.setInt(key, value);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.setInt(key, value);
+  Future<void> setInt(
+    WidgetRef ref,
+    _StoreKind kind,
+    String key,
+    int value,
+  ) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.setInt(key, value);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.setInt(key, value);
+    }
   }
-}
 
-Future<void> _setDouble(
-  WidgetRef ref,
-  _StoreKind kind,
-  String key,
-  double value,
-) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.setDouble(key, value);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.setDouble(key, value);
+  Future<void> setDouble(
+    WidgetRef ref,
+    _StoreKind kind,
+    String key,
+    double value,
+  ) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.setDouble(key, value);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.setDouble(key, value);
+    }
   }
-}
 
-Future<void> _setString(
-  WidgetRef ref,
-  _StoreKind kind,
-  String key,
-  String value,
-) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.setString(key, value);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.setString(key, value);
+  Future<void> setString(
+    WidgetRef ref,
+    _StoreKind kind,
+    String key,
+    String value,
+  ) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.setString(key, value);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.setString(key, value);
+    }
   }
-}
 
-Future<void> _setStringList(
-  WidgetRef ref,
-  _StoreKind kind,
-  String key,
-  List<String> value,
-) async {
-  switch (kind) {
-    case _StoreKind.shared:
-      final prefs = await ref.read(sharedPreferencesProvider.future);
-      await prefs.setStringList(key, value);
-    case _StoreKind.appGroup:
-      final prefs = await ref.read(appGroupPreferencesProvider.future);
-      await prefs.setStringList(key, value);
+  Future<void> setStringList(
+    WidgetRef ref,
+    _StoreKind kind,
+    String key,
+    List<String> value,
+  ) async {
+    switch (kind) {
+      case _StoreKind.shared:
+        final prefs = await ref.read(sharedPreferencesProvider.future);
+        await prefs.setStringList(key, value);
+      case _StoreKind.appGroup:
+        final prefs = await ref.read(appGroupPreferencesProvider.future);
+        await prefs.setStringList(key, value);
+    }
   }
-}
 
-Future<void> _showEditDialog(
-  BuildContext context,
-  WidgetRef ref,
-  _StoreKind kind,
-  _Entry entry,
-) async {
-  await showDialog<void>(
-    context: context,
-    builder: (context) => _EditDialog(kind: kind, entry: entry),
-  );
-}
+  Future<void> showEditDialog(
+    BuildContext context,
+    _StoreKind kind,
+    _Entry entry,
+  ) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => _EditDialog(kind: kind, entry: entry),
+    );
+  }
 
-Future<void> _showAddDialog(
-  BuildContext context,
-  WidgetRef ref,
-  _StoreKind kind,
-) async {
-  await showDialog<void>(
-    context: context,
-    builder: (context) => _AddDialog(kind: kind),
-  );
+  Future<void> showAddDialog(BuildContext context, _StoreKind kind) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => _AddDialog(kind: kind),
+    );
+  }
 }
 
 class _EditDialog extends HookConsumerWidget {
@@ -342,22 +356,24 @@ class _ValueEditor extends HookConsumerWidget {
     final value = initialValue;
     final key = keyName;
 
+    final editorAction = ref.read(_debugPreferencesEditorActionProvider);
+
     // UI コールバックから呼ぶため void 戻り。内部で fire-and-forget する。
     void save(Future<void> Function(String key) setter) {
-      if (guard != null && !guard!()) {
+      final guardFn = guard;
+      if (guardFn != null && !guardFn()) {
         return;
       }
       unawaited(() async {
         await setter(key());
-        _invalidate(ref, kind);
+        editorAction.invalidate(ref, kind);
         onSaved();
       }());
     }
 
     void showError(String message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     }
 
     switch (value) {
@@ -373,7 +389,8 @@ class _ValueEditor extends HookConsumerWidget {
             ),
             _SaveButton(
               onPressed: () => save(
-                (key) => _setBool(ref, kind, key, value: state.value),
+                (key) =>
+                    editorAction.setBool(ref, kind, key, value: state.value),
               ),
             ),
           ],
@@ -389,7 +406,7 @@ class _ValueEditor extends HookConsumerWidget {
               showError('int としてパースできません');
               return;
             }
-            save((key) => _setInt(ref, kind, key, parsed));
+            save((key) => editorAction.setInt(ref, kind, key, parsed));
           },
         );
       case final double doubleValue:
@@ -405,7 +422,7 @@ class _ValueEditor extends HookConsumerWidget {
               showError('double としてパースできません');
               return;
             }
-            save((key) => _setDouble(ref, kind, key, parsed));
+            save((key) => editorAction.setDouble(ref, kind, key, parsed));
           },
         );
       case final String stringValue:
@@ -414,15 +431,14 @@ class _ValueEditor extends HookConsumerWidget {
           controller: controller,
           maxLines: 8,
           onSave: () => save(
-            (key) => _setString(ref, kind, key, controller.text),
+            (key) => editorAction.setString(ref, kind, key, controller.text),
           ),
         );
       case final List<String> listValue:
         return _StringListEditor(
           initial: listValue,
-          onSave: (list) => save(
-            (key) => _setStringList(ref, kind, key, list),
-          ),
+          onSave: (list) =>
+              save((key) => editorAction.setStringList(ref, kind, key, list)),
         );
       case null:
         return const Text('null 値は編集できません');
@@ -522,10 +538,7 @@ class _SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: onPressed,
-      child: const Text('保存'),
-    );
+    return FilledButton(onPressed: onPressed, child: const Text('保存'));
   }
 }
 
@@ -600,9 +613,9 @@ class _AddDialog extends HookConsumerWidget {
               initialValue: defaultValueFor(type.value),
               guard: () {
                 if (keyController.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('キー名を入力してください')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('キー名を入力してください')));
                   return false;
                 }
                 return true;

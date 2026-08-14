@@ -70,7 +70,7 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [iconLayerId],
               sourceIds: const [sourceId],

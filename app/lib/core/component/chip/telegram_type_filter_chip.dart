@@ -11,7 +11,8 @@ class TelegramTypeFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = telegramTypes != null && telegramTypes!.isNotEmpty;
+    final telegramTypes = this.telegramTypes;
+    final isActive = telegramTypes != null && telegramTypes.isNotEmpty;
 
     return RawChip(
       onSelected: (_) async {

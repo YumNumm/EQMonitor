@@ -235,10 +235,10 @@ class _MaxAccelTable extends StatelessWidget {
             ),
           ],
         ),
-        if (maxAccelTime != null) ...[
+        if (maxAccelTime case final accelTime?) ...[
           const SizedBox(height: 4),
           Text(
-            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(maxAccelTime!.toLocal())}',
+            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(accelTime.toLocal())}',
             style: theme.textTheme.labelSmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,

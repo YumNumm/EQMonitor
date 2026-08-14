@@ -26,14 +26,14 @@ final class IntensityIconRepository {
     required ThemeColorSet colorSet,
     required Brightness brightness,
   }) async {
-    final bytes = await renderWidgetToImageBytes(
+    final bytes = await WidgetImageRenderer.render(
       logicalSize: const Size(50, 50),
       widget: Theme(
-        data: buildTheme(colorSet: colorSet, brightness: brightness),
-        child: JmaIntensityIcon(
-          intensity: intensity,
-          type: type,
+        data: AppThemeDataBuilder.build(
+          colorSet: colorSet,
+          brightness: brightness,
         ),
+        child: JmaIntensityIcon(intensity: intensity, type: type),
       ),
     );
     if (bytes == null) {
@@ -48,14 +48,14 @@ final class IntensityIconRepository {
     required ThemeColorSet colorSet,
     required Brightness brightness,
   }) async {
-    final bytes = await renderWidgetToImageBytes(
+    final bytes = await WidgetImageRenderer.render(
       logicalSize: const Size(50, 50),
       widget: Theme(
-        data: buildTheme(colorSet: colorSet, brightness: brightness),
-        child: JmaLpgmIntensityIcon(
-          intensity: intensity,
-          type: type,
+        data: AppThemeDataBuilder.build(
+          colorSet: colorSet,
+          brightness: brightness,
         ),
+        child: JmaLpgmIntensityIcon(intensity: intensity, type: type),
       ),
     );
     if (bytes == null) {

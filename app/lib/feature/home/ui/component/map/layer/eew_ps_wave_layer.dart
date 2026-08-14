@@ -154,7 +154,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
         isInitialized.value = false;
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [
                 EewPsWaveLayer.layerId.pWaveLine,

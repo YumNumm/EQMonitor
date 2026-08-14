@@ -41,8 +41,11 @@ class App extends HookConsumerWidget {
         backButtonDispatcher: routerConfig.backButtonDispatcher,
         child: DebugLauncher(child: child ?? const SizedBox.shrink()),
       ),
-      theme: buildTheme(colorSet: lightColorSet, brightness: Brightness.light),
-      darkTheme: buildTheme(
+      theme: AppThemeDataBuilder.build(
+        colorSet: lightColorSet,
+        brightness: Brightness.light,
+      ),
+      darkTheme: AppThemeDataBuilder.build(
         colorSet: darkColorSet,
         brightness: Brightness.dark,
       ),

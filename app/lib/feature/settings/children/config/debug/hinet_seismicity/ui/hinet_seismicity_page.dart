@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
@@ -263,11 +264,11 @@ class _FetchBody extends HookConsumerWidget {
           ),
         Expanded(
           child: switch (mapConfiguration) {
-            AsyncData(:final value) when value.styleString != null => Stack(
+            AsyncData(value: MapConfiguration(:final styleString?)) => Stack(
               children: [
                 MapLibreMap(
                   options: MapOptions(
-                    initStyle: value.styleString!,
+                    initStyle: styleString,
                     initCenter: const Geographic(lon: 137.0, lat: 36.5),
                     initZoom: 4.5,
                   ),

@@ -163,7 +163,7 @@ class SettingsPage extends ConsumerWidget {
                 Center(
                   child: Text(
                     'Powered by Flutter',
-                    style: textTheme.bodySmall!.copyWith(
+                    style: textTheme.bodySmall?.copyWith(
                       color: context.designSystem.colorTheme.onSurface
                           .withValues(alpha: 0.8),
                     ),
@@ -173,7 +173,7 @@ class SettingsPage extends ConsumerWidget {
                   Center(
                     child: Text(
                       'Debug Mode',
-                      style: textTheme.bodySmall!.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
                         color: context.designSystem.colorTheme.onSurface
                             .withValues(alpha: 0.8),
                       ),

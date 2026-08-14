@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/extensions/spacing_theme_extension.d
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:material_ui/material_ui.dart';
 
 @immutable
@@ -16,15 +17,23 @@ class DesignSystemThemeExtension
   });
 
   /// テスト用: EQMonitor Default テーマのライトカラーで構築する。
+  ///
+  /// eqmonitorDefault() は light を必ず設定するファクトリであるという前提。
   factory DesignSystemThemeExtension.light() =>
       DesignSystemThemeExtension._fromColorTheme(
-        AppTheme.eqmonitorDefault().light!,
+        AppTheme.eqmonitorDefault().light.orFailBecause(
+          'AppTheme.eqmonitorDefault() は light を必ず設定する前提のため',
+        ),
       );
 
   /// テスト用: EQMonitor Default テーマのダークカラーで構築する。
+  ///
+  /// eqmonitorDefault() は dark を必ず設定するファクトリであるという前提。
   factory DesignSystemThemeExtension.dark() =>
       DesignSystemThemeExtension._fromColorTheme(
-        AppTheme.eqmonitorDefault().dark!,
+        AppTheme.eqmonitorDefault().dark.orFailBecause(
+          'AppTheme.eqmonitorDefault() は dark を必ず設定する前提のため',
+        ),
       );
 
   factory DesignSystemThemeExtension._fromColorTheme(
@@ -85,13 +94,8 @@ class DesignSystemThemeExtension
   }
 
   @override
-  int get hashCode => Object.hash(
-        runtimeType,
-        colorTheme,
-        spacing,
-        shape,
-        typography,
-      );
+  int get hashCode =>
+      Object.hash(runtimeType, colorTheme, spacing, shape, typography);
 
   static DesignSystemThemeExtension? of(BuildContext context) {
     return Theme.of(context).extension<DesignSystemThemeExtension>();

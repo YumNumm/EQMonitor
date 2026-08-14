@@ -12,7 +12,7 @@ void main() {
     final style = FakeStyleController(throwOnDuplicateLayerIds: true);
     await style.addLayer(staleLayer);
 
-    await replaceMapStyleLayers(
+    await MapStyleLayerReplacer.replace(
       styleController: style,
       layerIds: const ['target'],
       layers: const [
@@ -34,7 +34,7 @@ void main() {
     await style.addLayer(const FillStyleLayer(id: 'fill', sourceId: 'source'));
     await style.addLayer(const LineStyleLayer(id: 'line', sourceId: 'source'));
 
-    await replaceMapStyleLayers(
+    await MapStyleLayerReplacer.replace(
       styleController: style,
       layerIds: const ['fill', 'line'],
       layers: const [

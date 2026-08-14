@@ -699,6 +699,7 @@ class _StartApiDebugSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startAsync = ref.watch(startProvider);
+    final startValue = startAsync.value;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -728,8 +729,8 @@ class _StartApiDebugSection extends ConsumerWidget {
             title: const Text('エラー'),
             subtitle: Text(error.toString()),
           ),
-          _ when startAsync.hasValue => _StartApiDebugContent(
-            data: startAsync.value!,
+          _ when startValue != null => _StartApiDebugContent(
+            data: startValue,
             hasError: startAsync.hasError,
             error: startAsync.error,
           ),
@@ -775,11 +776,11 @@ class _StartApiDebugContent extends ConsumerWidget {
             ),
           ),
         ),
-        if (data.flags.maintenance.message != null)
+        if (data.flags.maintenance.message case final message?)
           ListTile(
             dense: true,
             title: const Text('maintenance.message'),
-            subtitle: Text(data.flags.maintenance.message!),
+            subtitle: Text(message),
           ),
         AppSwitchListTile(
           title: 'planConstraints.isPro',
@@ -808,25 +809,29 @@ class _StartApiDebugContent extends ConsumerWidget {
           title: const Text('latest.version'),
           trailing: Text(data.app.version.latest?.version ?? '(なし)'),
         ),
-        AppSwitchListTile(
-          title: 'latest.showWhatsNew',
-          subtitle: "What's New バナー表示",
-          value: data.app.version.latest?.showWhatsNew ?? false,
-          onChanged: data.app.version.latest != null
-              ? (v) => _override(
-                  ref,
-                  data.copyWith(
-                    app: data.app.copyWith(
-                      version: data.app.version.copyWith(
-                        latest: data.app.version.latest!.copyWith(
-                          showWhatsNew: v,
-                        ),
-                      ),
-                    ),
+        switch (data.app.version.latest) {
+          final latest? => AppSwitchListTile(
+            title: 'latest.showWhatsNew',
+            subtitle: "What's New バナー表示",
+            value: latest.showWhatsNew,
+            onChanged: (v) => _override(
+              ref,
+              data.copyWith(
+                app: data.app.copyWith(
+                  version: data.app.version.copyWith(
+                    latest: latest.copyWith(showWhatsNew: v),
                   ),
-                )
-              : null,
-        ),
+                ),
+              ),
+            ),
+          ),
+          null => const AppSwitchListTile(
+            title: 'latest.showWhatsNew',
+            subtitle: "What's New バナー表示",
+            value: false,
+            onChanged: null,
+          ),
+        },
         ListTile(
           dense: true,
           title: const Text('requiredVersions'),

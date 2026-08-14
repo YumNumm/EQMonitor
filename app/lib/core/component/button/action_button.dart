@@ -88,7 +88,7 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabledWidget = BorderedContainer(
-      accentColor: accentColor ?? Colors.blue[800]!,
+      accentColor: accentColor ?? Colors.blue.shade800,
       onPressed: onPressed,
       child: Padding(padding: padding, child: child),
     );

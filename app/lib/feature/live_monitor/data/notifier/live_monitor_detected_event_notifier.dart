@@ -260,10 +260,7 @@ class LiveMonitorDetectedEventNotifier
         if (!ref.mounted) {
           return;
         }
-        final earthquake = earthquakeFromRealtimeRecord(
-          record: record,
-          repository: repository,
-        );
+        final earthquake = repository.toEarthquakeFromRealtimeRecord(record);
         if (!detector.hasEarthquakeBaseline(earthquake.eventId)) {
           detector.seedEarthquake(
             initialEarthquakeBoundary.baselineSnapshot(earthquake),

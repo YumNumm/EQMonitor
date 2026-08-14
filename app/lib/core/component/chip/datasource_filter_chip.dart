@@ -10,6 +10,7 @@ class DatasourceFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final datasource = this.datasource;
     final isActive = datasource != null;
 
     return RawChip(
@@ -24,9 +25,9 @@ class DatasourceFilterChip extends StatelessWidget {
           onChanged?.call(result.value);
         }
       },
-      label: isActive
+      label: datasource != null
           ? Text(
-              datasource!.label,
+              datasource.label,
               style: const TextStyle(fontWeight: FontWeight.bold),
             )
           : const Text('データソース'),
@@ -92,9 +93,9 @@ class _DatasourceFilterModal extends StatelessWidget {
               trailing: current == null
                   ? Icon(Icons.check, color: designSystem.colorTheme.primary)
                   : null,
-              onTap: () => Navigator.of(
-                context,
-              ).pop((value: null as EarthquakeDataSource?)),
+              onTap: () =>
+                  Navigator.of(context)
+                      .pop((value: null as EarthquakeDataSource?)),
             ),
             const SizedBox(height: 8),
           ],

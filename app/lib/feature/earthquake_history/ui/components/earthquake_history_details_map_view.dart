@@ -30,6 +30,7 @@ import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart'
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
@@ -60,11 +61,11 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null =>
+      AsyncData(value: MapConfiguration(styleString: final styleString?)) =>
         MapOperationQueueScope(
           child: MapLibreEventProvider(
             child: _MapContent(
-              styleString: value.styleString!,
+              styleString: styleString,
               earthquake: earthquake,
               displayMode: displayMode,
               showingDb: showingDb,
@@ -77,10 +78,15 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   }
 }
 
-bool shouldShowEarthquakeHistoryDebugger({
-  required bool isDebugBuild,
-  required AsyncValue<bool> debugPreference,
-}) => isDebugBuild || (debugPreference.value ?? false);
+/// 地震履歴地図画面でデバッグ操作を表示するか判定する。
+class EarthquakeHistoryDebuggerVisibility {
+  const EarthquakeHistoryDebuggerVisibility();
+
+  bool shouldShow({
+    required bool isDebugBuild,
+    required AsyncValue<bool> debugPreference,
+  }) => isDebugBuild || (debugPreference.value ?? false);
+}
 
 class _MapContent extends HookConsumerWidget {
   const _MapContent({
@@ -112,7 +118,7 @@ class _MapContent extends HookConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final isDebugger = shouldShowEarthquakeHistoryDebugger(
+    final isDebugger = const EarthquakeHistoryDebuggerVisibility().shouldShow(
       isDebugBuild: kDebugMode,
       debugPreference: ref.watch(debugProvider),
     );
@@ -132,7 +138,10 @@ class _MapContent extends HookConsumerWidget {
       if (controller == null) {
         return;
       }
-      final geo = geographicForEarthquakeIntensityFocus(earthquake, next);
+      final geo = const EarthquakeHistoryMapCamera().focusGeographic(
+        earthquake,
+        next,
+      );
       if (geo == null) {
         return;
       }
@@ -156,8 +165,9 @@ class _MapContent extends HookConsumerWidget {
     final showingLpgmIntensity = displayMode == IntensityDisplayMode.lpgm;
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
 
-    final center = initialGeographicForEarthquake(earthquake);
-    final zoom = initialZoomForEarthquake(earthquake);
+    const mapCamera = EarthquakeHistoryMapCamera();
+    final center = mapCamera.initialCenter(earthquake);
+    final zoom = mapCamera.initialZoom(earthquake);
     final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
     final mapOptions = MapOptions(
       initCenter: center,
@@ -303,13 +313,15 @@ class _MapContent extends HookConsumerWidget {
         return;
       }
       final (station, cls) = result;
-      await showStationPopup(
-        context,
-        stationName: station.name,
-        intensity: cls.exactJmaIntensity,
-        lpgmIntensity: null,
-        intensityLabel: cls.exactJmaIntensity == null ? cls.label : null,
-      );
+      await ref
+          .read(earthquakeHistoryMapPopupActionProvider)
+          .showStation(
+            context,
+            stationName: station.name,
+            intensity: cls.exactJmaIntensity,
+            lpgmIntensity: null,
+            intensityLabel: cls.exactJmaIntensity == null ? cls.label : null,
+          );
       return;
     }
 
@@ -318,12 +330,14 @@ class _MapContent extends HookConsumerWidget {
       if (stationNode == null) {
         return;
       }
-      await showStationPopup(
-        context,
-        stationName: stationNode.station.name.ja,
-        intensity: stationNode.intensity?.maxIntensity,
-        lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
-      );
+      await ref
+          .read(earthquakeHistoryMapPopupActionProvider)
+          .showStation(
+            context,
+            stationName: stationNode.station.name.ja,
+            intensity: stationNode.intensity?.maxIntensity,
+            lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
+          );
       return;
     }
 
@@ -359,24 +373,28 @@ class _MapContent extends HookConsumerWidget {
       final intensityHistoryRoute = prefCode != null
           ? IntensityHistoryRoute(prefectureCode: prefCode, cityCode: code)
           : null;
-      await showAreaPopup(
-        context,
-        areaName: name,
-        maxIntensity: cityNode?.maxIntensity,
-        intensityHistoryRoute: intensityHistoryRoute,
-      );
+      await ref
+          .read(earthquakeHistoryMapPopupActionProvider)
+          .showArea(
+            context,
+            areaName: name,
+            maxIntensity: cityNode?.maxIntensity,
+            intensityHistoryRoute: intensityHistoryRoute,
+          );
     } else {
       final region = _findRegionByCode(code);
       final prefInfo = prefectureOfRegionCode(code, prefectures);
       final intensityHistoryRoute = prefInfo != null
           ? IntensityHistoryRoute(prefectureCode: prefInfo.code)
           : null;
-      await showAreaPopup(
-        context,
-        areaName: name,
-        maxIntensity: region?.maxIntensity,
-        intensityHistoryRoute: intensityHistoryRoute,
-      );
+      await ref
+          .read(earthquakeHistoryMapPopupActionProvider)
+          .showArea(
+            context,
+            areaName: name,
+            maxIntensity: region?.maxIntensity,
+            intensityHistoryRoute: intensityHistoryRoute,
+          );
     }
   }
 
@@ -448,10 +466,12 @@ class _MapContent extends HookConsumerWidget {
       }
     }
 
-    if (nearest == null || nearestClass == null) {
+    final resolvedNearest = nearest;
+    final resolvedNearestClass = nearestClass;
+    if (resolvedNearest == null || resolvedNearestClass == null) {
       return null;
     }
-    return (nearest!, nearestClass!);
+    return (resolvedNearest, resolvedNearestClass);
   }
 
   CityIntensityNode? _findCityByCode(String code) {

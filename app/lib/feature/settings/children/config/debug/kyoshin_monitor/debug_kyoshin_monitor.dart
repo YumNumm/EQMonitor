@@ -35,21 +35,19 @@ class _Body extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
 
-    final titleTextStyle = textTheme.titleMedium!.copyWith(
+    final titleTextStyle = textTheme.titleMedium?.copyWith(
       fontWeight: FontWeight.bold,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
-    final bodyTextStyle = textTheme.bodySmall!.copyWith(
+    final bodyTextStyle = textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w400,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
-    final kyoshinMonitorTimerState = ref.watch(
-      kyoshinMonitorTimerProvider,
-    );
+    final kyoshinMonitorTimerState = ref.watch(kyoshinMonitorTimerProvider);
 
     return Column(
       spacing: 8,
@@ -62,9 +60,7 @@ class _Body extends ConsumerWidget {
               Text('KyoshinMonitorTimerNotifier', style: titleTextStyle),
               Text(switch (kyoshinMonitorTimerState) {
                 AsyncData(:final value) =>
-                  const JsonEncoder.withIndent(
-                    '  ',
-                  ).convert({
+                  const JsonEncoder.withIndent('  ').convert({
                     ...value.toJson(),
                     'delay_from_device': value.delayFromDevice.toString(),
                   }),
@@ -101,9 +97,7 @@ class _Body extends ConsumerWidget {
                 ),
                 Text(switch (state) {
                   AsyncData(:final value) =>
-                    const JsonEncoder.withIndent(
-                      '  ',
-                    ).convert({
+                    const JsonEncoder.withIndent('  ').convert({
                       ...() {
                         final j = Map<String, dynamic>.from(value.toJson())
                           ..remove('geo_json');
@@ -122,11 +116,11 @@ class _Body extends ConsumerWidget {
                   AsyncError(:final error) => error.toString(),
                   _ => 'Loading...',
                 }, style: bodyTextStyle),
-                if (state.value?.currentImageRaw != null)
+                if (state.value?.currentImageRaw case final currentImageRaw?)
                   ColoredBox(
                     color: Colors.white,
                     child: Image.memory(
-                      Uint8List.fromList(state.value!.currentImageRaw!),
+                      Uint8List.fromList(currentImageRaw),
                       height: 200,
                       width: 200,
                     ),
@@ -161,9 +155,7 @@ class _Body extends ConsumerWidget {
             children: [
               Text('KyoshinMonitorSettings', style: titleTextStyle),
               Text(
-                const JsonEncoder.withIndent(
-                  '  ',
-                ).convert(
+                const JsonEncoder.withIndent('  ').convert(
                   ref
                       .watch(kyoshinMonitorSettingsProvider)
                       .requireValue

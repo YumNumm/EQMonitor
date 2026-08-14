@@ -90,9 +90,10 @@ class _WsStatusCard extends HookWidget {
       WsPhase.disconnected => context.designSystem.colorTheme.error,
     };
 
-    final pingLabel = wsStatus.lastPingAt == null
+    final lastPingAt = wsStatus.lastPingAt;
+    final pingLabel = lastPingAt == null
         ? 'なし'
-        : _elapsedLabel(DateTime.now().difference(wsStatus.lastPingAt!));
+        : _elapsedLabel(DateTime.now().difference(lastPingAt));
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -106,10 +107,10 @@ class _WsStatusCard extends HookWidget {
               Text(statusLabel, style: theme.textTheme.titleMedium),
             ],
           ),
-          if (wsStatus.currentUrl != null) ...[
+          if (wsStatus.currentUrl case final currentUrl?) ...[
             const SizedBox(height: 8),
             SelectableText(
-              wsStatus.currentUrl!,
+              currentUrl,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontFamily: FontFamily.googleSansCode,
               ),
@@ -117,10 +118,10 @@ class _WsStatusCard extends HookWidget {
           ],
           const SizedBox(height: 4),
           Text('最終 ping: $pingLabel', style: theme.textTheme.bodySmall),
-          if (wsStatus.pingRtt != null) ...[
+          if (wsStatus.pingRtt case final pingRtt?) ...[
             const SizedBox(height: 2),
             Text(
-              'Ping RTT: ${wsStatus.pingRtt!.inMilliseconds}ms',
+              'Ping RTT: ${pingRtt.inMilliseconds}ms',
               style: theme.textTheme.bodySmall,
             ),
           ],
