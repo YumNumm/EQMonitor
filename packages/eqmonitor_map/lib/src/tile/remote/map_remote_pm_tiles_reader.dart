@@ -206,6 +206,19 @@ final class MapRemotePmTilesRandomAccessReader
       rethrow;
     }
 
+    // ここへ来るまでに、並行して走った別の post-pin request が 412/drift を
+    // 検出して terminal 化・cache clear している可能性がある。その後に本 request
+    // が「成功」しても、古い ETag を pin し直して bytes を cache へ書き戻し
+    // 返してしまうと、terminal 宣言後に poison 後の byte が漏れる。書き込み・
+    // 返却の直前に terminal / closed を再確認する。
+    final terminalFailure = _terminalFailure;
+    if (terminalFailure != null) {
+      throw terminalFailure;
+    }
+    if (_closed) {
+      throw const MapRemoteTileClosedException();
+    }
+
     _pinnedEtag = validatedEtag;
     _cache.write(validatedEtag, offset, length, bytes);
     return bytes;

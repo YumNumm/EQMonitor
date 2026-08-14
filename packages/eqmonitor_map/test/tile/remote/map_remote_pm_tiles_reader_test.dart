@@ -139,6 +139,30 @@ void main() {
     );
   });
 
+  test('no post-poison bytes escape once a peer read terminalizes', () async {
+    final reader = await readerOf();
+    addTearDown(reader.close);
+
+    await reader.readAt(offset: 0, length: 8); // pins "v1"
+    server.etag = '"v2"'; // archive replaced under the same URL
+
+    // Two concurrent post-pin (If-Match "v1") reads: the server answers each
+    // with 412. Whichever detects it first terminalizes; neither may return
+    // bytes or leave a repinned/cached range behind.
+    Future<Object> outcomeOf(int offset) => reader
+        .readAt(offset: offset, length: 8)
+        .then<Object>((bytes) => bytes, onError: (Object e) => e);
+    final outcomes = await Future.wait([outcomeOf(16), outcomeOf(24)]);
+    for (final outcome in outcomes) {
+      expect(outcome, isA<MapRemoteTileException>());
+    }
+    // The originally cached range must not survive the poison either.
+    await expectLater(
+      reader.readAt(offset: 0, length: 8),
+      throwsA(isA<MapRemoteTileException>()),
+    );
+  });
+
   test('rejects reads after close', () async {
     final reader = await readerOf();
     await reader.close();
