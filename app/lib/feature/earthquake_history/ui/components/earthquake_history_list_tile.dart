@@ -105,7 +105,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
       onTap: onTap,
       title: Text(
         title.toHalfWidth,
-        style: theme.textTheme.titleSmall!.copyWith(
+        style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.bold,
           color: titleTextColor,
         ),
