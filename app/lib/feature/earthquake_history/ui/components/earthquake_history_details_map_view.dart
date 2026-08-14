@@ -168,7 +168,9 @@ class _MapContent extends HookConsumerWidget {
     const mapCamera = EarthquakeHistoryMapCamera();
     final center = mapCamera.initialCenter(earthquake);
     final zoom = mapCamera.initialZoom(earthquake);
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: zoom,

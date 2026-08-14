@@ -79,7 +79,9 @@ class _MapContent extends ConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: initialCenter,
       initZoom: initZoom,

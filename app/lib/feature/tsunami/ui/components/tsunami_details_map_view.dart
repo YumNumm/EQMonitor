@@ -83,7 +83,9 @@ class _MapContent extends HookConsumerWidget {
     );
 
     final center = _initialCenter();
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: _kDefaultZoom,

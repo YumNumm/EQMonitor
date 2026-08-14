@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/connection_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
@@ -43,8 +44,8 @@ class HomeMapView extends ConsumerWidget {
     final typography = designSystem.typography;
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null => _MapContent(
-        styleString: value.styleString!,
+      AsyncData(value: MapConfiguration(:final styleString?)) => _MapContent(
+        styleString: styleString,
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => Center(
@@ -83,7 +84,7 @@ class _MapContent extends ConsumerWidget {
     final mapSettings = homeAsync.value?.map ?? const HomeMapSettings();
     final showLocation = homeAsync.value?.common.showLocation ?? false;
 
-    final mapOptions = homeMapOptionsFromSettings(
+    final mapOptions = const HomeMapOptionsBuilder().build(
       context: context,
       styleString: styleString,
       map: mapSettings,
