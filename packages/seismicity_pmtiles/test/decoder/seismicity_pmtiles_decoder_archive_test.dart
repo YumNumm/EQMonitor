@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
-import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_point_decoder.dart';
 import 'package:test/test.dart';
@@ -324,7 +323,7 @@ final class _Task61Fixtures {
     required SeismicityPmTilesArchiveDescriptor descriptor,
   }) async {
     final factory = SeismicityRandomAccessReaderFactory(
-      assetLoader: ({required String assetKey}) async {
+      assetLoader: ({required assetKey}) async {
         expect(assetKey, SeismicityArchiveFixtureBuilder.assetKey);
         return bytes;
       },

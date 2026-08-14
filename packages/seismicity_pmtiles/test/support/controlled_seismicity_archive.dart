@@ -19,7 +19,8 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
        header = header ?? ControlledSeismicityArchive.stubHeader(),
        closeReleaseFailure =
            closeReleaseFailure ??
-           SeismicityPmTilesException.closed(source: descriptor.source);
+           SeismicityPmTilesException.closed(source: descriptor.source),
+       deferCloseCompletion = false;
 
   static PmTilesV3Header stubHeader({
     int minZoom = 0,
@@ -74,7 +75,7 @@ final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
   SeismicityPmTilesException? _queuedCloseFailure;
   var _closed = false;
   var _closeCount = 0;
-  var deferCloseCompletion = false;
+  bool deferCloseCompletion;
 
   int get closeCount => _closeCount;
   bool get isClosed => _closed;

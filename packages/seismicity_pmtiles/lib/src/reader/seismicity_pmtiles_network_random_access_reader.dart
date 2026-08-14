@@ -17,16 +17,11 @@ final class SeismicityPmTilesNetworkRandomAccessReader
     required this.sizeBytes,
     required this.cancelToken,
     required int maxCacheBytes,
-    SeismicityPmTilesHttpRangeRequestBuilder requestBuilder =
-        const SeismicityPmTilesHttpRangeRequestBuilder(),
-    SeismicityPmTilesHttpIdentityValidator identityValidator =
-        const SeismicityPmTilesHttpIdentityValidator(),
-    SeismicityPmTilesContentRangeValidator contentRangeValidator =
+    this._requestBuilder = const SeismicityPmTilesHttpRangeRequestBuilder(),
+    this._identityValidator = const SeismicityPmTilesHttpIdentityValidator(),
+    this._contentRangeValidator =
         const SeismicityPmTilesContentRangeValidator(),
   }) : _callerCancellationWasPreexisting = cancelToken.isCancelled,
-       _requestBuilder = requestBuilder,
-       _identityValidator = identityValidator,
-       _contentRangeValidator = contentRangeValidator,
        _cache = SeismicityPmTilesNetworkRangeLruCache(
          maxBytes: maxCacheBytes,
        ) {

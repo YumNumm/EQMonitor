@@ -14,8 +14,6 @@ class _EqmonitorCustomLintsPlugin extends Plugin {
 
   @override
   Future<void> register(PluginRegistry registry) async {
-    <AnalysisRule>[
-      AvoidDirectColorScheme(),
-    ].forEach(registry.registerLintRule);
+    <AnalysisRule>[AvoidDirectColorScheme()].forEach(registry.registerLintRule);
   }
 }

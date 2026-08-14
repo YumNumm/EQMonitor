@@ -11,7 +11,7 @@ void main() {
     'public view exposes ordered progress one result and closed stream',
     () async {
       final controller = SeismicityPmTilesDecodeOperationController();
-      final SeismicityPmTilesDecodeOperation operation = controller.operation;
+      final operation = controller.operation;
       final states = fixtures.collect(stream: operation.states);
 
       const firstProgress = SeismicityPmTilesDecodeProgress(
@@ -62,7 +62,7 @@ void main() {
         cancelCount += 1;
       },
     );
-    final SeismicityPmTilesDecodeOperation operation = controller.operation;
+    final operation = controller.operation;
     final first = operation.cancel();
     final second = operation.cancel();
     await Future.wait<void>([first, second]);
@@ -78,7 +78,7 @@ void main() {
         throw StateError('sync-cancel-failure');
       },
     );
-    final SeismicityPmTilesDecodeOperation operation = controller.operation;
+    final operation = controller.operation;
     final first = operation.cancel();
     final second = operation.cancel();
     await expectLater(first, throwsA(isA<StateError>()));
@@ -103,8 +103,8 @@ void main() {
       ),
     );
 
-    final cancelledException = SeismicityPmTilesException.cancelled(
-      source: const SeismicityPmTilesSource.file(path: 'archive.pmtiles'),
+    const cancelledException = SeismicityPmTilesException.cancelled(
+      source: SeismicityPmTilesSource.file(path: 'archive.pmtiles'),
     );
     final cancelled = SeismicityPmTilesDecodeOperationController();
     final cancelledStates = fixtures.collect(stream: cancelled.states);
@@ -114,7 +114,7 @@ void main() {
     ]);
     expect(
       await cancelled.result,
-      SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
+      const SeismicityPmTilesResult<SeismicityPmTilesDataset>.failure(
         exception: cancelledException,
       ),
     );

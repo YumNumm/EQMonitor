@@ -13,6 +13,8 @@ final class ControlledSeismicityIsolateLauncher
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
+  ControlledSeismicityIsolateLauncher() : deferExitedUntilReleased = false;
+
   final _responses =
       StreamController<SeismicityDecoderWorkerResponse>.broadcast();
   final _errors = StreamController<SeismicityDecoderWorkerError>.broadcast();
@@ -25,7 +27,7 @@ final class ControlledSeismicityIsolateLauncher
   var _launchCount = 0;
   var _closeReceivePortCount = 0;
   var _killCount = 0;
-  var deferExitedUntilReleased = false;
+  bool deferExitedUntilReleased;
 
   int get launchCount => _launchCount;
   int get closeReceivePortCount => _closeReceivePortCount;

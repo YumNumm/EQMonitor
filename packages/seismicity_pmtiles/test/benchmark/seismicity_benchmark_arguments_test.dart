@@ -36,7 +36,8 @@ void main() {
     );
   });
 
-  test('rejects missing unknown duplicate zero negative fraction overflow positional', () {
+  test('rejects missing unknown duplicate zero negative fraction overflow '
+      'positional', () {
     expect(
       () => parser.parse(arguments: const ['--features']),
       throwsA(isA<SeismicityBenchmarkArgumentsException>()),

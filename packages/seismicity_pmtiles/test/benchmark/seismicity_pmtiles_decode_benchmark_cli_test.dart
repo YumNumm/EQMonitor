@@ -93,11 +93,11 @@ void main() {
       stderr: failStderr,
       runBenchmark:
           ({
-            required int featureCount,
-            required int tileCount,
-            required int chunkCapacity,
-            Duration? informationalTimeThreshold,
-          }) async {
+            required featureCount,
+            required tileCount,
+            required chunkCapacity,
+            informationalTimeThreshold,
+          }) {
             throw StateError('worker count mismatch');
           },
     );
@@ -119,10 +119,10 @@ void main() {
       stderr: StringBuffer(),
       runBenchmark:
           ({
-            required int featureCount,
-            required int tileCount,
-            required int chunkCapacity,
-            Duration? informationalTimeThreshold,
+            required featureCount,
+            required tileCount,
+            required chunkCapacity,
+            informationalTimeThreshold,
           }) async => _result(
             featureCount: featureCount,
             tileCount: tileCount,
