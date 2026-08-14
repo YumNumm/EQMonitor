@@ -61,7 +61,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
         (configuration) => configuration.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final homeMapBounds = lngLatBoundsForHomeMapSettings(mapSettings);
+    final homeMapBounds = const HomeMapBoundsResolver().resolve(mapSettings);
     final homeBounds = LiveMonitorGeoBounds(
       minLat: homeMapBounds.latitudeSouth,
       maxLat: homeMapBounds.latitudeNorth,
@@ -69,7 +69,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
       maxLng: homeMapBounds.longitudeEast,
     );
     final systemInsets = MediaQuery.paddingOf(context);
-    final obscuredInsets = liveMonitorMapObscuredInsets(
+    final obscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: topCardHeight.value,

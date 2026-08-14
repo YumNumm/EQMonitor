@@ -31,7 +31,7 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         (configuration) => configuration.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final homeMapBounds = lngLatBoundsForHomeMapSettings(mapSettings);
+    final homeMapBounds = const HomeMapBoundsResolver().resolve(mapSettings);
     final homeBounds = LiveMonitorGeoBounds(
       minLat: homeMapBounds.latitudeSouth,
       maxLat: homeMapBounds.latitudeNorth,
@@ -42,13 +42,13 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
     final earthquakeTopCardHeight = useState(0.0);
     final earthquakeBottomCardHeight = useState(0.0);
     final systemInsets = MediaQuery.paddingOf(context);
-    final realtimeObscuredInsets = liveMonitorMapObscuredInsets(
+    final realtimeObscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: 0,
       bottomCardHeight: realtimeCardHeight.value,
     );
-    final earthquakeObscuredInsets = liveMonitorMapObscuredInsets(
+    final earthquakeObscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: earthquakeTopCardHeight.value,
