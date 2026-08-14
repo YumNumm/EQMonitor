@@ -80,7 +80,7 @@ as Earthquake,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeCopyWith<$Res> get record {
-  
+
   return $EarthquakeCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });
@@ -295,7 +295,7 @@ as Earthquake,
 @override
 @pragma('vm:prefer-inline')
 $EarthquakeCopyWith<$Res> get record {
-  
+
   return $EarthquakeCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });

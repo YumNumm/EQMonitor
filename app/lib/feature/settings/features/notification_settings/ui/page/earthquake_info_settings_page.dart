@@ -1,12 +1,13 @@
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -174,9 +175,12 @@ class _SlotEarthquakeTile extends ConsumerWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _IntensityDropdown(
+          NotificationMinIntensityField(
+            slotType: slot.slotType,
+            kind: NotificationKind.earthquake,
             value: slot.earthquakeMinIntensity,
             enabled: enabled,
+            width: 110,
             onChanged: (intensity) async {
               await ref.read(slotUpdateActionProvider).execute(
                 ref,
@@ -200,45 +204,6 @@ class _SlotEarthquakeTile extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _IntensityDropdown extends StatelessWidget {
-  const _IntensityDropdown({
-    required this.value,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  final JmaIntensity? value;
-  final bool enabled;
-  final ValueChanged<JmaIntensity> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final resolved =
-        value != null && JmaIntensity.selectableValues.contains(value)
-            ? value
-            : JmaIntensity.three;
-
-    return DropdownMenu<JmaIntensity>(
-      initialSelection: resolved,
-      enabled: enabled,
-      requestFocusOnTap: false,
-      width: 110,
-      onSelected: (next) {
-        if (next != null) {
-          onChanged(next);
-        }
-      },
-      dropdownMenuEntries: [
-        for (final intensity in JmaIntensity.selectableValues)
-          DropdownMenuEntry(
-            value: intensity,
-            label: '震度${intensity.label}',
-          ),
-      ],
     );
   }
 }

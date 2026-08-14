@@ -12,6 +12,7 @@ part of 'notification_override.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$NotificationOverride {
 
@@ -22,6 +23,8 @@ mixin _$NotificationOverride {
 @pragma('vm:prefer-inline')
 $NotificationOverrideCopyWith<NotificationOverride> get copyWith => _$NotificationOverrideCopyWithImpl<NotificationOverride>(this as NotificationOverride, _$identity);
 
+  /// Serializes this NotificationOverride to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationOverride&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.sound, sound) || other.sound == sound)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,minJmaIntensity,sound,interruptionLevel);
 
@@ -206,11 +209,11 @@ return $default(_that.minJmaIntensity,_that.sound,_that.interruptionLevel);case 
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _NotificationOverride implements NotificationOverride {
   const _NotificationOverride({required this.minJmaIntensity, required this.sound, required this.interruptionLevel});
-  
+  factory _NotificationOverride.fromJson(Map<String, dynamic> json) => _$NotificationOverrideFromJson(json);
 
 @override final  JmaIntensity minJmaIntensity;
 @override final  String sound;
@@ -222,14 +225,17 @@ class _NotificationOverride implements NotificationOverride {
 @pragma('vm:prefer-inline')
 _$NotificationOverrideCopyWith<_NotificationOverride> get copyWith => __$NotificationOverrideCopyWithImpl<_NotificationOverride>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$NotificationOverrideToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationOverride&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.sound, sound) || other.sound == sound)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,minJmaIntensity,sound,interruptionLevel);
 

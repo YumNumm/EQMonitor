@@ -3,6 +3,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew_warning_settings.freezed.dart';
+part 'eew_warning_settings.g.dart';
 
 enum EewWarningTarget { currentLocationOnly, currentLocationAndNationwide }
 
@@ -12,6 +13,9 @@ abstract class EewWarningSettings with _$EewWarningSettings {
     required EewWarningTarget target,
     required InterruptionLevel? nationwideInterruptionLevel,
   }) = _EewWarningSettings;
+
+  factory EewWarningSettings.fromJson(Map<String, dynamic> json) =>
+      _$EewWarningSettingsFromJson(json);
 }
 
 extension ApiEewWarningConfigResponseConverter on api.EewWarningConfigResponse {

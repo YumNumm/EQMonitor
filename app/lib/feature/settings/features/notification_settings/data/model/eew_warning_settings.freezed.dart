@@ -12,6 +12,7 @@ part of 'eew_warning_settings.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$EewWarningSettings {
 
@@ -22,6 +23,8 @@ mixin _$EewWarningSettings {
 @pragma('vm:prefer-inline')
 $EewWarningSettingsCopyWith<EewWarningSettings> get copyWith => _$EewWarningSettingsCopyWithImpl<EewWarningSettings>(this as EewWarningSettings, _$identity);
 
+  /// Serializes this EewWarningSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningSettings&&(identical(other.target, target) || other.target == target)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,target,nationwideInterruptionLevel);
 
@@ -205,11 +208,11 @@ return $default(_that.target,_that.nationwideInterruptionLevel);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _EewWarningSettings implements EewWarningSettings {
   const _EewWarningSettings({required this.target, required this.nationwideInterruptionLevel});
-  
+  factory _EewWarningSettings.fromJson(Map<String, dynamic> json) => _$EewWarningSettingsFromJson(json);
 
 @override final  EewWarningTarget target;
 @override final  InterruptionLevel? nationwideInterruptionLevel;
@@ -220,14 +223,17 @@ class _EewWarningSettings implements EewWarningSettings {
 @pragma('vm:prefer-inline')
 _$EewWarningSettingsCopyWith<_EewWarningSettings> get copyWith => __$EewWarningSettingsCopyWithImpl<_EewWarningSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EewWarningSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningSettings&&(identical(other.target, target) || other.target == target)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,target,nationwideInterruptionLevel);
 

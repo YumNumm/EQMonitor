@@ -3,8 +3,10 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,12 +30,13 @@ class NotificationSlotRepository {
     return response.data.map((s) => s.toNotificationSlot()).toList();
   }
 
+  /// 現在地スロットを upsert する
+  ///
+  /// 最小震度は固定値のため引数で受け取らない。
   Future<NotificationSlot> putCurrentLocation({
     bool? eewEnabled,
-    JmaIntensity? eewMinIntensity,
     List<NotificationOverride>? eewOverrides,
     bool? earthquakeEnabled,
-    JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final resolvedEewEnabled = eewEnabled ?? false;
@@ -42,24 +45,34 @@ class NotificationSlotRepository {
         .putV2DeviceMeSettingsSlotsCurrentLocation(
           body: api.UpsertSingletonSlotRequest(
             eewEnabled: resolvedEewEnabled,
-            eewMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: resolvedEewEnabled,
-              minIntensity: eewMinIntensity,
-            )?.toApiJmaIntensity,
+            eewMinIntensity: resolvedEewEnabled
+                ? currentLocationEewMinIntensity.toApiJmaIntensity
+                : null,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
             earthquakeEnabled: resolvedEarthquakeEnabled,
-            earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: resolvedEarthquakeEnabled,
-              minIntensity: earthquakeMinIntensity,
-            )?.toApiJmaIntensity,
+            earthquakeMinIntensity: resolvedEarthquakeEnabled
+                ? currentLocationEarthquakeMinIntensity.toApiJmaIntensity
+                : null,
             earthquakeOverrides: earthquakeOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
           ),
         );
     return response.data.toNotificationSlot();
+  }
+
+  /// 通知スロットを全件置換する
+  ///
+  /// 既存スロットはサーバ側で削除されるため、渡した構成がそのまま反映される。
+  Future<List<NotificationSlot>> replaceSlots(
+    List<NotificationSlotDraft> slots,
+  ) async {
+    final response = await _api.device.putV2DeviceMeSettingsSlots(
+      body: slots.map((slot) => slot.toApiReplaceSlotEntry()).toList(),
+    );
+    return response.data.map((s) => s.toNotificationSlot()).toList();
   }
 
   Future<void> deleteCurrentLocation() async {

@@ -129,7 +129,14 @@ _$FeedItemDataUnionFeedEarthquakeNankaiDataFromJson(
       'infoType',
       (v) => $enumDecode(_$InfoTypeEnumMap, v),
     ),
-    telegramType: $checkedConvert('telegramType', (v) => v as String),
+    telegramType: $checkedConvert(
+      'telegramType',
+      (v) => $enumDecode(_$NankaiTelegramTypeEnumMap, v),
+    ),
+    telegramCode: $checkedConvert(
+      'telegramCode',
+      (v) => $enumDecodeNullable(_$NankaiTelegramCodeEnumMap, v),
+    ),
     earthquakeInfo: $checkedConvert(
       'earthquakeInfo',
       (v) => v == null
@@ -149,10 +156,24 @@ Map<String, dynamic> _$FeedItemDataUnionFeedEarthquakeNankaiDataToJson(
   'type': instance.type,
   'infoType': instance.infoType,
   'telegramType': instance.telegramType,
+  'telegramCode': ?instance.telegramCode,
   'earthquakeInfo': ?instance.earthquakeInfo,
   'nextAdvisory': ?instance.nextAdvisory,
   'text': ?instance.text,
   'runtimeType': instance.$type,
+};
+
+const _$NankaiTelegramTypeEnumMap = {
+  NankaiTelegramType.undefined0: '南海トラフ地震臨時情報',
+  NankaiTelegramType.undefined1: '南海トラフ地震関連解説情報',
+  NankaiTelegramType.undefined2: '北海道・三陸沖後発地震注意情報',
+};
+
+const _$NankaiTelegramCodeEnumMap = {
+  NankaiTelegramCode.vyse50: 'VYSE50',
+  NankaiTelegramCode.vyse51: 'VYSE51',
+  NankaiTelegramCode.vyse52: 'VYSE52',
+  NankaiTelegramCode.vyse60: 'VYSE60',
 };
 
 FeedItemDataUnionFeedAppUpdateData _$FeedItemDataUnionFeedAppUpdateDataFromJson(

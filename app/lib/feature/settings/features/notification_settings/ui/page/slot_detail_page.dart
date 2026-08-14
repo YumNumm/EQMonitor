@@ -4,9 +4,11 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
@@ -65,6 +67,8 @@ class SlotDetailPage extends HookConsumerWidget {
               children: [
                 const SettingsSectionHeader(text: '緊急地震速報（予報）'),
                 _NotificationConditionCard(
+                  slotType: slot.slotType,
+                  kind: NotificationKind.eew,
                   enabled: slot.eewEnabled,
                   minIntensity: slot.eewMinIntensity,
                   isPro: isPro,
@@ -80,7 +84,7 @@ class SlotDetailPage extends HookConsumerWidget {
                       builder: (_) => OverrideEditPage(
                         slotId: slot.id,
                         slotType: slot.slotType,
-                        overrideType: OverrideType.eew,
+                        overrideType: NotificationKind.eew,
                         currentOverrides: slot.eewOverrides ?? [],
                       ),
                     ),
@@ -88,6 +92,8 @@ class SlotDetailPage extends HookConsumerWidget {
                 ),
                 const SettingsSectionHeader(text: '地震情報'),
                 _NotificationConditionCard(
+                  slotType: slot.slotType,
+                  kind: NotificationKind.earthquake,
                   enabled: slot.earthquakeEnabled,
                   minIntensity: slot.earthquakeMinIntensity,
                   isPro: isPro,
@@ -103,7 +109,7 @@ class SlotDetailPage extends HookConsumerWidget {
                       builder: (_) => OverrideEditPage(
                         slotId: slot.id,
                         slotType: slot.slotType,
-                        overrideType: OverrideType.earthquake,
+                        overrideType: NotificationKind.earthquake,
                         currentOverrides: slot.earthquakeOverrides ?? [],
                       ),
                     ),
@@ -145,6 +151,8 @@ extension NotificationSlotTypeLabel on NotificationSlotType {
 
 class _NotificationConditionCard extends StatelessWidget {
   const _NotificationConditionCard({
+    required this.slotType,
+    required this.kind,
     required this.enabled,
     required this.minIntensity,
     required this.isPro,
@@ -154,6 +162,8 @@ class _NotificationConditionCard extends StatelessWidget {
     required this.onOverrideTap,
   });
 
+  final NotificationSlotType slotType;
+  final NotificationKind kind;
   final bool enabled;
   final JmaIntensity? minIntensity;
   final bool isPro;
@@ -195,7 +205,9 @@ class _NotificationConditionCard extends StatelessWidget {
           ListTile(
             enabled: enabled,
             title: const Text('最小震度'),
-            trailing: _IntensityDropdown(
+            trailing: NotificationMinIntensityField(
+              slotType: slotType,
+              kind: kind,
               value: minIntensity,
               enabled: enabled,
               onChanged: onMinIntensityChanged,
@@ -220,45 +232,6 @@ class _NotificationConditionCard extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-}
-
-class _IntensityDropdown extends StatelessWidget {
-  const _IntensityDropdown({
-    required this.value,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  final JmaIntensity? value;
-  final bool enabled;
-  final ValueChanged<JmaIntensity> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final resolved =
-        value != null && JmaIntensity.selectableValues.contains(value)
-        ? value
-        : JmaIntensity.three;
-
-    return DropdownMenu<JmaIntensity>(
-      initialSelection: resolved,
-      enabled: enabled,
-      requestFocusOnTap: false,
-      width: 160,
-      onSelected: (next) {
-        if (next != null) {
-          onChanged(next);
-        }
-      },
-      dropdownMenuEntries: [
-        for (final intensity in JmaIntensity.selectableValues)
-          DropdownMenuEntry(
-            value: intensity,
-            label: '震度${intensity.label}',
-          ),
-      ],
     );
   }
 }

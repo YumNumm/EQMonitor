@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/notification/data/repository/push_notification
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -26,6 +27,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/custom_preset_reset_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -108,11 +110,21 @@ class _Body extends HookConsumerWidget {
           NotificationPresetSelector(
             selectedPreset: selectedPreset,
             onChanged: (preset) async {
-              await ref.read(notificationPresetApplierProvider).apply(preset);
-              if (preset == NotificationPreset.custom) {
-                await ref
-                    .read(notificationPresetProvider.notifier)
-                    .select(NotificationPreset.custom);
+              if (selectedPreset == NotificationPreset.custom &&
+                  preset != NotificationPreset.custom) {
+                final confirmed = await showCustomPresetResetConfirmDialog(
+                  context,
+                );
+                if (!confirmed) {
+                  return;
+                }
+              }
+              try {
+                await ref.read(notificationPresetApplierProvider).apply(preset);
+              } on Object catch (error) {
+                if (context.mounted) {
+                  await showErrorDialog(context, error: error);
+                }
               }
             },
             style: NotificationPresetSelectorStyle.settings,
@@ -855,10 +867,11 @@ class _SlotListTile extends StatelessWidget {
     };
 
     final eewText = slot.eewEnabled
-        ? 'EEW: 震度${slot.eewMinIntensity?.label ?? '-'}以上'
+        ? 'EEW: ${slot.eewMinIntensity?.minIntensityThresholdLabel ?? '-'}'
         : 'EEW: 無効';
     final earthquakeText = slot.earthquakeEnabled
-        ? '地震情報: 震度${slot.earthquakeMinIntensity?.label ?? '-'}以上'
+        ? '地震情報: '
+              '${slot.earthquakeMinIntensity?.minIntensityThresholdLabel ?? '-'}'
         : '地震情報: 無効';
 
     final textColor = isActive ? null : Theme.of(context).disabledColor;
