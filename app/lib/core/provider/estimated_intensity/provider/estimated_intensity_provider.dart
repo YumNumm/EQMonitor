@@ -2,15 +2,14 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/model/estimated_intensity_point.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/worker/estimated_intensity_isolate.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'estimated_intensity_provider.freezed.dart';
 part 'estimated_intensity_provider.g.dart';
 
 typedef _CachedPoint = ({
@@ -218,14 +217,4 @@ Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
     }
     yield map;
   }
-}
-
-@Freezed(toJson: false)
-abstract class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
-  const factory EstimatedIntensityPoint({
-    required String regionCode,
-    required String cityCode,
-    required EarthquakeParameterStationItem station,
-    required double intensity,
-  }) = _EstimatedIntensityPoint;
 }
