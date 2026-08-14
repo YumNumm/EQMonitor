@@ -3,7 +3,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 
 /// Benchmark-only spawn counter that delegates unchanged to [delegate].
 ///
-/// Increments [spawnCount] once immediately before each [delegate.spawn] call,
+/// Increments [spawnCount] once immediately before each delegate.spawn call,
 /// including attempts that later fail.
 final class CountingDecoderWorkerFactory
     implements SeismicityDecoderWorkerFactory {

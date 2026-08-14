@@ -7,7 +7,7 @@ final class SeismicityPmTilesDirectoryWriter {
   const SeismicityPmTilesDirectoryWriter();
 
   static const maxUnsignedVarint = 0x7FFFFFFFFFFFFFFF;
-  static const maxTileIdExclusive = PmTilesV3TileId.maxValue + 1;
+  static const int maxTileIdExclusive = PmTilesV3TileId.maxValue + 1;
 
   Uint8List write({
     required List<int> tileIds,

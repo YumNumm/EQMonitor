@@ -121,7 +121,7 @@ void main() {
       SeismicityPmTilesLoadState.openingSource(),
       SeismicityPmTilesLoadState.readingDirectory(),
       SeismicityPmTilesLoadState.decoding(
-        progress: const SeismicityPmTilesDecodeProgress(
+        progress: SeismicityPmTilesDecodeProgress(
           decodedTileCount: 1,
           rawFeatureCount: 1,
           uniqueFeatureCount: 1,

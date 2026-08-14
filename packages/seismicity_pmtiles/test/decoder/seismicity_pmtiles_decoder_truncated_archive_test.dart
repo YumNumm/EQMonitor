@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -67,11 +66,11 @@ final class _Task63Case {
 }
 
 final class _CountingReader implements PmTilesRandomAccessReader {
-  _CountingReader({required this.inner});
+  _CountingReader({required this.inner}) : closeCount = 0;
 
   final PmTilesRandomAccessReader inner;
   Future<void>? _close;
-  var closeCount = 0;
+  int closeCount;
 
   @override
   int get sizeBytes => inner.sizeBytes;
@@ -150,7 +149,7 @@ final class _Task63Fixtures {
     required SeismicityPmTilesArchiveDescriptor descriptor,
   }) async {
     final factory = SeismicityRandomAccessReaderFactory(
-      assetLoader: ({required String assetKey}) async {
+      assetLoader: ({required assetKey}) async {
         expect(assetKey, SeismicityArchiveFixtureBuilder.assetKey);
         return bytes;
       },

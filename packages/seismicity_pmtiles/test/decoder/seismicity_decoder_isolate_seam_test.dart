@@ -38,11 +38,13 @@ final class RecordingWorkerSeam
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
+  RecordingWorkerSeam() : receivePortClosed = false;
+
   final sent = <SeismicityDecoderWorkerRequest>[];
   final exitCompleter = Completer<void>();
   @override
-  var counters = (errorCount: 0, exitCount: 0);
-  var receivePortClosed = false;
+  ({int errorCount, int exitCount}) counters = (errorCount: 0, exitCount: 0);
+  bool receivePortClosed;
 
   @override
   Future<SeismicityDecoderWorkerEndpoint> launch({
