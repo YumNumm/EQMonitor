@@ -1,5 +1,4 @@
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
-import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 
 /// tile decode 要求の重複排除・backpressure・cancel 判定を担う純粋な計画
 /// コンポーネント。
@@ -17,8 +16,7 @@ import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 ///   定義を2箇所に持つと必ず drift するので、cover 側を単一の情報源とする。
 /// - 重複排除(coalesce): 既に in-flight / decode 済み / 要求内重複の tile は
 ///   開始しない。
-/// - backpressure: 同時 in-flight 数は[MapTilePipelineBudget.maxInFlightDecodes]
-///   を超えない。
+/// - backpressure: 同時 in-flight 数は[maxInFlightDecodes]を超えない。
 /// - cancel: camera 移動後にもう要求されていない in-flight tile を打ち切る。
 ///
 /// **順序・描画位置は[UnwrappedTileId]、decode の同一性は[CanonicalTileId]**で
@@ -29,9 +27,12 @@ import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 /// まだ持っていない tile の decode を遅らせる。よって in-flight / decode 済みの
 /// 判定は canonical で行い、返す値は描画位置を保つため unwrapped のままにする。
 final class MapTileScheduler {
-  const MapTileScheduler({required this.budget});
+  const MapTileScheduler({required this.maxInFlightDecodes})
+    : assert(maxInFlightDecodes > 0, 'maxInFlightDecodes must be > 0');
 
-  final MapTilePipelineBudget budget;
+  /// 同時に走らせてよい decode 数の上限(呼び出し側が明示。
+  /// `MapTilePipelineBudget.maxInFlightDecodes` 由来の運用値)。
+  final int maxInFlightDecodes;
 
   /// 今 frame で新規開始すべき tile を、優先順・coalesce・backpressure を適用して
   /// 返す。返る件数は残 in-flight budget(`maxInFlightDecodes - inFlight.length`)を
@@ -48,7 +49,7 @@ final class MapTileScheduler {
     required Set<CanonicalTileId> inFlight,
     required Set<CanonicalTileId> completed,
   }) {
-    final remaining = budget.maxInFlightDecodes - inFlight.length;
+    final remaining = maxInFlightDecodes - inFlight.length;
     if (remaining <= 0) {
       return const [];
     }
