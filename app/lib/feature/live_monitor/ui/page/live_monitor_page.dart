@@ -26,6 +26,8 @@ class LiveMonitorPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const durationValidator = LiveMonitorDurationValidator();
+    const exitPolicy = LiveMonitorExitPolicy();
     useEffect(() {
       final notifier = ref.read(liveMonitorSessionProvider.notifier);
       final lease = notifier.acquire();
@@ -56,7 +58,7 @@ class LiveMonitorPage extends HookConsumerWidget {
       if (raw == null) {
         return true;
       }
-      final seconds = validateLiveMonitorDuration(raw).seconds;
+      final seconds = durationValidator.validate(raw).seconds;
       if (seconds == null) {
         return false;
       }
@@ -98,7 +100,7 @@ class LiveMonitorPage extends HookConsumerWidget {
         return didCommit;
       }
       final currentDraft = durationDraft.value;
-      if (shouldClearLiveMonitorDurationDraft(
+      if (durationValidator.shouldClearDraft(
         didCommit: didCommit,
         currentRaw: currentDraft?.raw,
         currentRevision: currentDraft?.revision,
@@ -153,7 +155,7 @@ class LiveMonitorPage extends HookConsumerWidget {
               return;
             }
             final currentDraft = durationDraft.value;
-            final draftDecision = resolveLiveMonitorExitDraft(
+            final draftDecision = exitPolicy.resolveExitDraft(
               didCommit: didCommit,
               exitingRaw: exitingDraft?.raw,
               exitingRevision: exitingDraft?.revision,
@@ -163,7 +165,7 @@ class LiveMonitorPage extends HookConsumerWidget {
             if (draftDecision == LiveMonitorExitDraftDecision.cancel) {
               return;
             }
-            if (!shouldContinueLiveMonitorExit(
+            if (!exitPolicy.shouldContinueExit(
               source: source,
               isPanelOpen: ref.read(liveMonitorControlPanelProvider),
             )) {

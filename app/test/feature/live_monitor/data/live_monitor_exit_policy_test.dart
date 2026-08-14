@@ -2,16 +2,18 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_exit_poli
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const policy = LiveMonitorExitPolicy();
+
   test('panel起点の終了確認はpanelが閉じたら継続しない', () {
     expect(
-      shouldContinueLiveMonitorExit(
+      policy.shouldContinueExit(
         source: LiveMonitorExitRequestSource.panel,
         isPanelOpen: true,
       ),
       isTrue,
     );
     expect(
-      shouldContinueLiveMonitorExit(
+      policy.shouldContinueExit(
         source: LiveMonitorExitRequestSource.panel,
         isPanelOpen: false,
       ),
@@ -21,7 +23,7 @@ void main() {
 
   test('system back起点の終了確認はpanel状態に依存しない', () {
     expect(
-      shouldContinueLiveMonitorExit(
+      policy.shouldContinueExit(
         source: LiveMonitorExitRequestSource.systemBack,
         isPanelOpen: false,
       ),
@@ -29,10 +31,10 @@ void main() {
     );
   });
 
-  group('resolveLiveMonitorExitDraft', () {
+  group('resolveExitDraft', () {
     test('draftなしまたは保存済みなら通常の終了確認へ進む', () {
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: true,
           exitingRaw: null,
           exitingRevision: null,
@@ -42,7 +44,7 @@ void main() {
         LiveMonitorExitDraftDecision.continueExit,
       );
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: true,
           exitingRaw: '12',
           exitingRevision: 1,
@@ -55,7 +57,7 @@ void main() {
 
     test('現在のdraftを保存できなければ破棄終了確認を要求する', () {
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: false,
           exitingRaw: '12',
           exitingRevision: 1,
@@ -68,7 +70,7 @@ void main() {
 
     test('保存待機中にdraftが更新されたら新しい入力を破棄せず終了を中止する', () {
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: false,
           exitingRaw: '12',
           exitingRevision: 1,
@@ -78,7 +80,7 @@ void main() {
         LiveMonitorExitDraftDecision.cancel,
       );
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: true,
           exitingRaw: '12',
           exitingRevision: 1,
@@ -91,7 +93,7 @@ void main() {
 
     test('別経路ですでにdraftが破棄された場合は保存失敗でも終了確認へ進む', () {
       expect(
-        resolveLiveMonitorExitDraft(
+        policy.resolveExitDraft(
           didCommit: false,
           exitingRaw: '12',
           exitingRevision: 1,
