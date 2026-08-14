@@ -55,6 +55,22 @@ void main() {
       );
     });
 
+    test('allows http only for loopback hosts (dev/test servers)', () {
+      expect(
+        () => build(url: 'http://127.0.0.1:8080/base.pmtiles'),
+        returnsNormally,
+      );
+      expect(
+        () => build(url: 'http://localhost:8080/base.pmtiles'),
+        returnsNormally,
+      );
+      // non-loopback http stays rejected.
+      expect(
+        () => build(url: 'http://127x0.0.1/base.pmtiles'),
+        throwsArgumentError,
+      );
+    });
+
     test('rejects a scheme-only URL that has no validated host', () {
       expect(() => build(url: 'https:base.pmtiles'), throwsArgumentError);
       expect(() => build(url: 'https:///base.pmtiles'), throwsArgumentError);

@@ -105,7 +105,16 @@ VerifiedRemotePmTilesSource createVerifiedRemotePmTilesSource({
       'must not be blank',
     );
   }
-  if (!url.isScheme('https')) {
+  // https を必須にする。ただし loopback(端末内で完結し TLS の脅威モデルが
+  // 無い)だけは http を許す。これで開発/テスト用のローカル PMTiles サーバへ
+  // つなげつつ、外部 host は必ず https に保てる。`Uri.host` は `[::1]` の
+  // 角括弧を外した形を返すので、そのまま `127.0.0.0/8` / `::1` / `localhost`
+  // を判定する。
+  final isLoopback =
+      url.host == 'localhost' ||
+      url.host == '::1' ||
+      url.host.startsWith('127.');
+  if (!url.isScheme('https') && !isLoopback) {
     throw ArgumentError.value(url, 'url', 'must be an https URL');
   }
   // `Uri.parse('https:base.pmtiles')` は scheme だけを持ち authority を持たない。
