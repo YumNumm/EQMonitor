@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre/maplibre.dart';
 
