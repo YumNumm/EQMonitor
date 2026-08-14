@@ -82,6 +82,15 @@ void main() {
         () => build(url: 'http://127.0.0.999/base.pmtiles'),
         throwsArgumentError,
       );
+      // loopback でも http 以外の scheme は弾く。
+      expect(
+        () => build(url: 'file://localhost/base.pmtiles'),
+        throwsArgumentError,
+      );
+      expect(
+        () => build(url: 'ftp://127.0.0.1/base.pmtiles'),
+        throwsArgumentError,
+      );
     });
 
     test('rejects a scheme-only URL that has no validated host', () {

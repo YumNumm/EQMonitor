@@ -124,8 +124,16 @@ VerifiedRemotePmTilesSource createVerifiedRemotePmTilesSource({
       url.host == 'localhost' ||
       url.host == '::1' ||
       _loopbackIpv4.hasMatch(url.host);
-  if (!url.isScheme('https') && !isLoopback) {
-    throw ArgumentError.value(url, 'url', 'must be an https URL');
+  // 例外は「loopback かつ **http**」だけ。`file://localhost` や `ftp://localhost`
+  // のような他 scheme は loopback でも弾く。
+  final isAllowedScheme =
+      url.isScheme('https') || (url.isScheme('http') && isLoopback);
+  if (!isAllowedScheme) {
+    throw ArgumentError.value(
+      url,
+      'url',
+      'must be an https (or loopback http) URL',
+    );
   }
   // `Uri.parse('https:base.pmtiles')` は scheme だけを持ち authority を持たない。
   // app が DNS/TLS/allowlist を検証したのは host であって、host の無い URI は
