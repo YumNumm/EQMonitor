@@ -387,7 +387,10 @@ class _SettingDropdownField<T> extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) ...[SizedBox(width: spacing.sm), trailing!],
+              if (trailing case final trailing?) ...[
+                SizedBox(width: spacing.sm),
+                trailing,
+              ],
             ],
           ),
           SizedBox(height: spacing.md),
