@@ -515,7 +515,7 @@ jobs:
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
-          install_args: "firebase yq python"
+          install_args: "firebase yq"
 
       - name: Set environment variables
         run: |
@@ -543,7 +543,7 @@ jobs:
 
       - name: Prepare release notes
         run: |
-          mise exec -- python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
             < notes/release-notes-ios.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
@@ -715,7 +715,7 @@ jobs:
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
-          install_args: "firebase yq python"
+          install_args: "firebase yq"
 
       - name: Set environment variables
         run: |
@@ -743,7 +743,7 @@ jobs:
 
       - name: Prepare release notes
         run: |
-          mise exec -- python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
             < notes/release-notes-android.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
@@ -820,7 +820,7 @@ jobs:
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
-          install_args: "github:YumNumm/google-play-cli yq python"
+          install_args: "github:YumNumm/google-play-cli yq"
 
       - name: Set environment variables
         run: |
@@ -838,7 +838,7 @@ jobs:
 
       - name: Prepare release notes
         run: |
-          mise exec -- python3 scripts/ci/truncate_release_note.py --max-chars 500 \
+          python3 scripts/ci/truncate_release_note.py --max-chars 500 \
             < notes/release-notes-android.txt > changelog.txt
           jq -Rs '[{language: "ja-JP", text: .}]' changelog.txt > release-notes.json
           jq . release-notes.json
