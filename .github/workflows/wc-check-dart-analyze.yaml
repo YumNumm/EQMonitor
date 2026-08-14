@@ -51,3 +51,11 @@ jobs:
         run: |
           mise exec -- dart pub get
           mise exec -- dart test
+
+      # tools/ は melos workspace 外のため `melos run test` の対象にならない。
+      # ルール実装の回帰防止としてここで実行する。
+      - name: Test eqmonitor_lints_plugin
+        working-directory: tools/eqmonitor_lints_plugin
+        run: |
+          mise exec -- dart pub get
+          mise exec -- dart test

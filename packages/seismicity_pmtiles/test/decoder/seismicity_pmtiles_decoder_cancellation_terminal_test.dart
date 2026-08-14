@@ -98,7 +98,7 @@ void main() {
   });
 
   test('spawn failure is not masked by late cancel', () async {
-    final primary = const SeismicityPmTilesException.decoderWorkerFailed(
+    const primary = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'spawn primary',
     );
     final setup = fixtures.start();
@@ -118,7 +118,7 @@ void main() {
   });
 
   test('cancel before spawn failure keeps cancelled', () async {
-    final primary = const SeismicityPmTilesException.decoderWorkerFailed(
+    const primary = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'spawn late',
     );
     final setup = fixtures.start();
@@ -163,7 +163,7 @@ void main() {
   });
 
   test('worker finish failure is not masked by late cancel', () async {
-    final primary = const SeismicityPmTilesException.decoderWorkerFailed(
+    const primary = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'finish primary',
     );
     final setup = fixtures.start();

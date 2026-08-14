@@ -339,13 +339,6 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async => const PlaygroundRoute().push(context),
             ),
             ListTile(
-              title: const Text('揺れ検知履歴'),
-              subtitle: const Text('このセッション中の揺れ検知イベント一覧'),
-              leading: const Icon(Icons.sensors_rounded),
-              onTap: () async =>
-                  const ShakeDetectionHistoryRoute().push<void>(context),
-            ),
-            ListTile(
               title: const Text('震度アイコン確認'),
               subtitle: Text(
                 '全震度・全タイプのアイコンをプレビュー',

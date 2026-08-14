@@ -1,17 +1,7 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_playback_selection_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'tsunami_playback_selection_notifier.freezed.dart';
 part 'tsunami_playback_selection_notifier.g.dart';
-
-@freezed
-abstract class TsunamiPlaybackSelectionState
-    with _$TsunamiPlaybackSelectionState {
-  const factory TsunamiPlaybackSelectionState({
-    @Default(null) int? selectedIndex,
-    @Default(true) bool isExpanded,
-  }) = _TsunamiPlaybackSelectionState;
-}
 
 @riverpod
 class TsunamiPlaybackSelection extends _$TsunamiPlaybackSelection {

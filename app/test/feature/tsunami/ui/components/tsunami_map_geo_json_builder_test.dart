@@ -5,8 +5,8 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart'
     as parameter;
 import 'package:eqmonitor/feature/parameter/data/model/tsunami/tsunami_parameter.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_details_map_view.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jma_map/jma_map.dart';
 
@@ -36,7 +36,7 @@ void main() {
 
   test('観測点データが空なら空 FeatureCollection を返す', () {
     final geoJson = builder.buildObservationStations(
-      tsunami: api.TsunamiState(
+      tsunami: TsunamiState(
         id: 'test',
         eventIds: const [],
         isActive: true,

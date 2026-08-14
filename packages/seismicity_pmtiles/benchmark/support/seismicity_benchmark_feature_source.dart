@@ -4,7 +4,8 @@ import 'dart:typed_data';
 
 import 'package:uuid/uuid.dart';
 
-/// One transient deterministic benchmark hypocenter derived from a global index.
+/// One transient deterministic benchmark hypocenter derived from a global
+/// index.
 final class SeismicityBenchmarkFeature {
   const SeismicityBenchmarkFeature({
     required this.index,
@@ -47,7 +48,7 @@ final class SeismicityBenchmarkFeatureSource {
 
   static const dataZoom = 6;
   static const extent = 4096;
-  static const fixedPublicBytesPerRow = 16 + 8 + 8 + 4 + 4 + 8 + 4;
+  static const int fixedPublicBytesPerRow = 16 + 8 + 8 + 4 + 4 + 8 + 4;
 
   SeismicityBenchmarkFeature featureAt({required int index}) {
     if (index < 0) {
@@ -87,10 +88,10 @@ final class SeismicityBenchmarkFeatureSource {
     final hi = index >> 32;
     final lo = index & 0xffffffff;
     final bytes = ByteData(16)
-      ..setUint32(0, hi, Endian.big)
-      ..setUint32(4, lo, Endian.big)
-      ..setUint32(8, hi ^ 0xa5a5a5a5, Endian.big)
-      ..setUint32(12, lo ^ 0x5a5a5a5a, Endian.big);
+      ..setUint32(0, hi)
+      ..setUint32(4, lo)
+      ..setUint32(8, hi ^ 0xa5a5a5a5)
+      ..setUint32(12, lo ^ 0x5a5a5a5a);
     bytes.setUint8(6, (bytes.getUint8(6) & 0x0f) | 0x40);
     bytes.setUint8(8, (bytes.getUint8(8) & 0x3f) | 0x80);
     return Uuid.unparse(bytes.buffer.asUint8List());
@@ -99,8 +100,8 @@ final class SeismicityBenchmarkFeatureSource {
   ({int globalX, int globalY, double longitude, double latitude}) pointFor({
     required int index,
   }) {
-    final tileCount = 1 << dataZoom;
-    final worldWidth = extent * tileCount;
+    const tileCount = 1 << dataZoom;
+    const worldWidth = extent * tileCount;
     final globalX = index % worldWidth;
     final globalY = (index ~/ worldWidth) % worldWidth;
     final longitude = globalX / worldWidth * 360 - 180;

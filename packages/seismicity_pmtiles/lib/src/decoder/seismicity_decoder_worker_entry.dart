@@ -17,15 +17,17 @@ void seismicityDecoderWorkerEntry(SendPort initialReplyTo) {
 }
 
 final class SeismicityDecoderWorkerSession {
-  SeismicityDecoderWorkerSession({required this.replyTo});
+  SeismicityDecoderWorkerSession({required this.replyTo})
+    : decodedTileCount = 0,
+      finished = false;
 
   final SendPort replyTo;
   final inbox = ReceivePort();
   final decoder = const SeismicityMvtTileDecoder();
   SeismicityPmTilesArchiveDescriptor? acceptedDescriptor;
   SeismicityDatasetAccumulator? accumulator;
-  var decodedTileCount = 0;
-  var finished = false;
+  int decodedTileCount;
+  bool finished;
 
   void start() {
     replyTo.send(inbox.sendPort);

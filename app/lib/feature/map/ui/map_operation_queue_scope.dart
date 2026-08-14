@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// MapLibre の source/layer 操作をマップ単位で直列化するキュー。
 ///
@@ -34,7 +35,7 @@ class MapOperationQueue {
 ///
 /// そのため、この Scope は MapLibreMap 本体（`ValueKey` による remount の
 /// 影響を受けるWidget）よりも外側に配置すること。
-class MapOperationQueueScope extends StatefulWidget {
+class MapOperationQueueScope extends HookWidget {
   const MapOperationQueueScope({required this.child, super.key});
 
   final Widget child;
@@ -47,15 +48,9 @@ class MapOperationQueueScope extends StatefulWidget {
       ?.queue;
 
   @override
-  State<MapOperationQueueScope> createState() => _MapOperationQueueScopeState();
-}
-
-class _MapOperationQueueScopeState extends State<MapOperationQueueScope> {
-  final _queue = MapOperationQueue();
-
-  @override
   Widget build(BuildContext context) {
-    return _InheritedMapOperationQueueScope(queue: _queue, child: widget.child);
+    final queue = useMemoized(MapOperationQueue.new);
+    return _InheritedMapOperationQueueScope(queue: queue, child: child);
   }
 }
 

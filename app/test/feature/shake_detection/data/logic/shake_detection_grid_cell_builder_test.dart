@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -101,13 +102,13 @@ void main() {
   });
 }
 
-Points _point({required double lat, required double lng, num? intensity}) =>
-    Points(
+api.Points _point({required double lat, required double lng, num? intensity}) =>
+    api.Points(
       code: 'code',
       name: 'name',
       region: 'region',
       type: 'type',
-      location: Location(latitude: lat, longitude: lng),
+      location: api.Location(latitude: lat, longitude: lng),
       intensity: intensity,
       cityCode: null,
       prefectureCode: null,

@@ -14,7 +14,7 @@ void main() {
       tileCount: tileCount,
       chunkCapacity: chunkCapacity,
     );
-    final source = const SeismicityBenchmarkFeatureSource();
+    const source = SeismicityBenchmarkFeatureSource();
     expect(result.workerSpawnCount, 1);
     expect(result.archiveCloseCount, 1);
     expect(result.featureCount, featureCount);

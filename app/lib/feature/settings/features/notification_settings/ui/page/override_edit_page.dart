@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -85,10 +86,7 @@ class OverrideEditPage extends HookConsumerWidget {
       NotificationSlotsNotifier.putNationwideMutation,
       '設定の保存に失敗しました',
     );
-    listenError(
-      NotificationSlotsNotifier.updateRegionMutation,
-      '設定の保存に失敗しました',
-    );
+    listenError(NotificationSlotsNotifier.updateRegionMutation, '設定の保存に失敗しました');
 
     final usedIntensities = sorted.map((o) => o.minJmaIntensity).toSet();
     final canAdd = sorted.length < _maxOverrides;
@@ -97,13 +95,8 @@ class OverrideEditPage extends HookConsumerWidget {
       appBar: AppBar(title: Text(title)),
       floatingActionButton: canAdd
           ? FloatingActionButton(
-              onPressed: () => _showAddDialog(
-                context,
-                ref,
-                slot,
-                sorted,
-                usedIntensities,
-              ),
+              onPressed: () =>
+                  _showAddDialog(context, ref, slot, sorted, usedIntensities),
               child: const Icon(Icons.add),
             )
           : null,
@@ -120,16 +113,14 @@ class OverrideEditPage extends HookConsumerWidget {
                   const SizedBox(height: 16),
                   Text(
                     '震度別設定がありません',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).disabledColor,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge
+                        ?.copyWith(color: Theme.of(context).disabledColor),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '右下の＋ボタンから追加できます',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).disabledColor,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: Theme.of(context).disabledColor),
                   ),
                 ],
               ),
@@ -141,19 +132,9 @@ class OverrideEditPage extends HookConsumerWidget {
                 final entry = sorted[index];
                 return _OverrideTile(
                   entry: entry,
-                  onTap: () => _showEditDialog(
-                    context,
-                    ref,
-                    slot,
-                    sorted,
-                    index,
-                  ),
-                  onDismissed: () => _deleteOverride(
-                    ref,
-                    slot,
-                    sorted,
-                    index,
-                  ),
+                  onTap: () =>
+                      _showEditDialog(context, ref, slot, sorted, index),
+                  onDismissed: () => _deleteOverride(ref, slot, sorted, index),
                 );
               },
             ),
@@ -254,42 +235,39 @@ class OverrideEditPage extends HookConsumerWidget {
     try {
       switch (slotType) {
         case NotificationSlotType.currentLocation:
-          await NotificationSlotsNotifier.putCurrentLocationMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .putCurrentLocation(
-                    eewOverrides: eewOverrides,
-                    earthquakeOverrides: earthquakeOverrides,
-                  );
-            },
-          );
+          await NotificationSlotsNotifier.putCurrentLocationMutation.run(ref, (
+            tsx,
+          ) async {
+            await tsx
+                .get(notificationSlotsProvider.notifier)
+                .putCurrentLocation(
+                  eewOverrides: eewOverrides,
+                  earthquakeOverrides: earthquakeOverrides,
+                );
+          });
         case NotificationSlotType.nationwide:
-          await NotificationSlotsNotifier.putNationwideMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .putNationwide(
-                    eewOverrides: eewOverrides,
-                    earthquakeOverrides: earthquakeOverrides,
-                  );
-            },
-          );
+          await NotificationSlotsNotifier.putNationwideMutation.run(ref, (
+            tsx,
+          ) async {
+            await tsx
+                .get(notificationSlotsProvider.notifier)
+                .putNationwide(
+                  eewOverrides: eewOverrides,
+                  earthquakeOverrides: earthquakeOverrides,
+                );
+          });
         case NotificationSlotType.region:
-          await NotificationSlotsNotifier.updateRegionMutation.run(
-            ref,
-            (tsx) async {
-              await tsx
-                  .get(notificationSlotsProvider.notifier)
-                  .updateRegion(
-                    slotId: slotId,
-                    eewOverrides: eewOverrides,
-                    earthquakeOverrides: earthquakeOverrides,
-                  );
-            },
-          );
+          await NotificationSlotsNotifier.updateRegionMutation.run(ref, (
+            tsx,
+          ) async {
+            await tsx
+                .get(notificationSlotsProvider.notifier)
+                .updateRegion(
+                  slotId: slotId,
+                  eewOverrides: eewOverrides,
+                  earthquakeOverrides: earthquakeOverrides,
+                );
+          });
       }
     } on Object {
       return;
@@ -389,7 +367,7 @@ class _IntensityBadge extends StatelessWidget {
   }
 }
 
-class _OverrideFormDialog extends StatefulWidget {
+class _OverrideFormDialog extends HookWidget {
   const _OverrideFormDialog({
     required this.availableIntensities,
     required this.initialIntensity,
@@ -405,48 +383,32 @@ class _OverrideFormDialog extends StatefulWidget {
   final bool isEditing;
 
   @override
-  State<_OverrideFormDialog> createState() => _OverrideFormDialogState();
-}
-
-class _OverrideFormDialogState extends State<_OverrideFormDialog> {
-  late JmaIntensity _selectedIntensity;
-  late NotificationSound _selectedSound;
-  late InterruptionLevel _selectedInterruptionLevel;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIntensity = widget.initialIntensity;
-    _selectedSound = widget.initialSound;
-    _selectedInterruptionLevel = widget.initialInterruptionLevel;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final selectedIntensity = useState(initialIntensity);
+    final selectedSound = useState(initialSound);
+    final selectedInterruptionLevel = useState(initialInterruptionLevel);
+
     return AlertDialog(
-      title: Text(widget.isEditing ? '震度別設定を編集' : '震度別設定を追加'),
+      title: Text(isEditing ? '震度別設定を編集' : '震度別設定を追加'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '最小震度',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            Text('最小震度', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
             DropdownButton<JmaIntensity>(
-              value: _selectedIntensity,
+              value: selectedIntensity.value,
               isExpanded: true,
-              onChanged: widget.isEditing
+              onChanged: isEditing
                   ? null
                   : (next) {
                       if (next != null) {
-                        setState(() => _selectedIntensity = next);
+                        selectedIntensity.value = next;
                       }
                     },
               items: [
-                for (final intensity in widget.availableIntensities)
+                for (final intensity in availableIntensities)
                   DropdownMenuItem(
                     value: intensity,
                     child: Text(intensity.minIntensityLabel),
@@ -454,17 +416,14 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
               ],
             ),
             const SizedBox(height: 16),
-            Text(
-              '通知音',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            Text('通知音', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
             DropdownButton<NotificationSound>(
-              value: _selectedSound,
+              value: selectedSound.value,
               isExpanded: true,
               onChanged: (next) {
                 if (next != null) {
-                  setState(() => _selectedSound = next);
+                  selectedSound.value = next;
                 }
               },
               items: [
@@ -476,16 +435,13 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
               ],
             ),
             const SizedBox(height: 16),
-            Text(
-              '割り込みレベル',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            Text('割り込みレベル', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
             RadioGroup<InterruptionLevel>(
-              groupValue: _selectedInterruptionLevel,
+              groupValue: selectedInterruptionLevel.value,
               onChanged: (next) {
                 if (next != null) {
-                  setState(() => _selectedInterruptionLevel = next);
+                  selectedInterruptionLevel.value = next;
                 }
               },
               child: Column(
@@ -512,12 +468,12 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
         FilledButton(
           onPressed: () => Navigator.of(context).pop(
             NotificationOverride(
-              minJmaIntensity: _selectedIntensity,
-              sound: _selectedSound.apiValue,
-              interruptionLevel: _selectedInterruptionLevel,
+              minJmaIntensity: selectedIntensity.value,
+              sound: selectedSound.value.apiValue,
+              interruptionLevel: selectedInterruptionLevel.value,
             ),
           ),
-          child: Text(widget.isEditing ? '保存' : '追加'),
+          child: Text(isEditing ? '保存' : '追加'),
         ),
       ],
     );

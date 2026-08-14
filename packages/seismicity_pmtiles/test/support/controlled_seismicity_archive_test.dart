@@ -50,7 +50,7 @@ void main() {
   });
 
   test('close releases blocked ops once with configured failure', () async {
-    final failure = SeismicityPmTilesException.corruptArchive(
+    const failure = SeismicityPmTilesException.corruptArchive(
       reason: 'closed-while-paused',
     );
     final archive =
@@ -85,10 +85,10 @@ void main() {
   });
 
   test('queues typed failures for enumeration and read', () async {
-    final enumFailure = SeismicityPmTilesException.corruptArchive(
+    const enumFailure = SeismicityPmTilesException.corruptArchive(
       reason: 'enum-fail',
     );
-    final readFailure = SeismicityPmTilesException.tileNotFound(tileId: 99);
+    const readFailure = SeismicityPmTilesException.tileNotFound(tileId: 99);
     final archive =
         ControlledSeismicityArchive(
             descriptor: fixtures.descriptor(),

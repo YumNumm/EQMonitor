@@ -16,12 +16,10 @@ final class SeismicityDatasetAccumulator {
   SeismicityDatasetAccumulator({
     required int expectedUniqueCount,
     required int chunkCapacity,
-    SeismicityChunkFactory createChunk = SeismicityChunkBuilder.new,
-    void Function()? beforeIndexInsert,
+    this._createChunk = SeismicityChunkBuilder.new,
+    this._beforeIndexInsert,
   }) : _expectedUniqueCount = expectedUniqueCount,
        _chunkCapacity = chunkCapacity,
-       _createChunk = createChunk,
-       _beforeIndexInsert = beforeIndexInsert,
        _index = SeismicityUuidIndex(expectedUniqueCount: expectedUniqueCount) {
     if (chunkCapacity <= 0 || chunkCapacity > 0x3fffffff) {
       throw const SeismicityPmTilesException.invalidDescriptor(

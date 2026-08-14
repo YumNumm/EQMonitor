@@ -117,8 +117,10 @@ final class SeismicityArchiveFixtureBuilder {
     );
   }
 
-  List<String> get schemaKeys => 'hypocenter_id origin_time_unix_ms magnitude depth_km max_intensity determination_flag earthquake_event_id geometry_clamped'
-      .split(' ');
+  List<String> get schemaKeys =>
+      'hypocenter_id origin_time_unix_ms magnitude depth_km max_intensity '
+              'determination_flag earthquake_event_id geometry_clamped'
+          .split(' ');
 
   List<SeismicityFixtureScalar> schemaValues({
     required String hypocenterId,

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
-import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -90,11 +89,11 @@ void main() {
 }
 
 final class _CountingArchive implements SeismicityPmTilesArchive {
-  _CountingArchive({required this.inner});
+  _CountingArchive({required this.inner}) : closeCount = 0;
 
   final SeismicityPmTilesArchive inner;
   Future<void>? _close;
-  var closeCount = 0;
+  int closeCount;
 
   @override
   SeismicityPmTilesArchiveDescriptor get descriptor => inner.descriptor;
@@ -188,7 +187,7 @@ final class _Task62Fixtures {
     required SeismicityPmTilesArchiveDescriptor descriptor,
   }) async {
     final factory = SeismicityRandomAccessReaderFactory(
-      assetLoader: ({required String assetKey}) async {
+      assetLoader: ({required assetKey}) async {
         expect(assetKey, SeismicityArchiveFixtureBuilder.assetKey);
         return bytes;
       },
