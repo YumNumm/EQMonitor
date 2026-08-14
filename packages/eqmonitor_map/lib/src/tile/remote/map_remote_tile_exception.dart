@@ -130,3 +130,50 @@ final class MapRemoteTileBodyLengthMismatchException
   @override
   String toString() => 'MapRemoteTileBodyLengthMismatchException: $message';
 }
+
+/// Range 要求に対してサーバが redirect(3xx)を返した場合。
+///
+/// app が検証したのは初期 URL のみで、redirect 先は検証済み信頼境界の外。
+/// reader は redirect を追わず fail closed する。
+final class MapRemoteTileRedirectRejectedException
+    extends MapRemoteTileException {
+  const MapRemoteTileRedirectRejectedException({
+    required this.statusCode,
+    required this.location,
+  });
+
+  final int statusCode;
+  final String? location;
+
+  @override
+  String get message =>
+      'Refused to follow a redirect (status=$statusCode, location=$location) '
+      'outside the verified URL.';
+
+  @override
+  String toString() => 'MapRemoteTileRedirectRejectedException: $message';
+}
+
+/// ネットワーク層の失敗(接続不可・切断など)。
+final class MapRemoteTileNetworkException extends MapRemoteTileException {
+  const MapRemoteTileNetworkException({required this.reason});
+
+  final String reason;
+
+  @override
+  String get message => 'Remote PMTiles request failed: $reason';
+
+  @override
+  String toString() => 'MapRemoteTileNetworkException: $message';
+}
+
+/// close 済みの reader へ read が来た場合。
+final class MapRemoteTileClosedException extends MapRemoteTileException {
+  const MapRemoteTileClosedException();
+
+  @override
+  String get message => 'The remote PMTiles reader is closed.';
+
+  @override
+  String toString() => 'MapRemoteTileClosedException: $message';
+}
