@@ -4,6 +4,15 @@ part 'verified_pm_tiles_source.freezed.dart';
 
 final _sha256Hex = RegExp(r'^[0-9a-fA-F]{64}$');
 
+/// `127.0.0.0/8` の IPv4 loopback だけに厳密一致する。各 octet を 0–255 に
+/// 制限し、`127.evil.example` や `127.0.0.1.evil` のような DNS 名を弾く。
+final _loopbackIpv4 = RegExp(
+  r'^127\.'
+  r'(25[0-5]|2[0-4]\d|1?\d?\d)\.'
+  r'(25[0-5]|2[0-4]\d|1?\d?\d)\.'
+  r'(25[0-5]|2[0-4]\d|1?\d?\d)$',
+);
+
 /// appが検証済みのPMTiles archive(local file / remote URL)をpackageへ渡す
 /// ための sealed marker。`BaseMapTileRepository`は本型で local/remote を
 /// 網羅的に判別する。sealedのため subtype は本 library(このファイルと
@@ -108,12 +117,13 @@ VerifiedRemotePmTilesSource createVerifiedRemotePmTilesSource({
   // https を必須にする。ただし loopback(端末内で完結し TLS の脅威モデルが
   // 無い)だけは http を許す。これで開発/テスト用のローカル PMTiles サーバへ
   // つなげつつ、外部 host は必ず https に保てる。`Uri.host` は `[::1]` の
-  // 角括弧を外した形を返すので、そのまま `127.0.0.0/8` / `::1` / `localhost`
-  // を判定する。
+  // 角括弧を外した形を返す。DNS 名(`127.evil.example` 等)を loopback と
+  // 誤判定しないよう、IPv4 は正規表現で 0–255 octet の `127.0.0.0/8` に厳密
+  // 一致させ、あとは `::1` / `localhost` の完全一致だけを許す。
   final isLoopback =
       url.host == 'localhost' ||
       url.host == '::1' ||
-      url.host.startsWith('127.');
+      _loopbackIpv4.hasMatch(url.host);
   if (!url.isScheme('https') && !isLoopback) {
     throw ArgumentError.value(url, 'url', 'must be an https URL');
   }

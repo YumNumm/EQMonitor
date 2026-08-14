@@ -64,9 +64,22 @@ void main() {
         () => build(url: 'http://localhost:8080/base.pmtiles'),
         returnsNormally,
       );
-      // non-loopback http stays rejected.
+      // DNS 名を loopback と誤認しない。
       expect(
         () => build(url: 'http://127x0.0.1/base.pmtiles'),
+        throwsArgumentError,
+      );
+      expect(
+        () => build(url: 'http://127.evil.example/base.pmtiles'),
+        throwsArgumentError,
+      );
+      expect(
+        () => build(url: 'http://127.0.0.1.evil.example/base.pmtiles'),
+        throwsArgumentError,
+      );
+      // octet 範囲外も弾く。
+      expect(
+        () => build(url: 'http://127.0.0.999/base.pmtiles'),
         throwsArgumentError,
       );
     });
