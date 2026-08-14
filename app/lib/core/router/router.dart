@@ -77,9 +77,6 @@ import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
-import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
@@ -114,6 +111,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
     if (!buildConfig.isProFeaturesEnabled &&
         state.matchedLocation.startsWith('/subscription')) {
+      return const HomeRoute().location;
+    }
+    if (!buildConfig.isShakeDetectionEnabled &&
+        state.matchedLocation.startsWith(
+          const ShakeDetectionSettingsRoute().location,
+        )) {
       return const HomeRoute().location;
     }
 
@@ -267,34 +270,6 @@ class EarthquakeActivityRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeActivityPage(initialQuery: $extra);
-}
-
-@TypedGoRoute<ShakeDetectionHistoryRoute>(path: '/shake-detection-history')
-class ShakeDetectionHistoryRoute extends GoRouteData
-    with $ShakeDetectionHistoryRoute {
-  const ShakeDetectionHistoryRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ShakeDetectionHistoryPage();
-}
-
-@TypedGoRoute<ShakeDetectionHistoryDetailsRoute>(
-  path: '/shake-detection-history-details/:eventId',
-)
-class ShakeDetectionHistoryDetailsRoute extends GoRouteData
-    with $ShakeDetectionHistoryDetailsRoute {
-  const ShakeDetectionHistoryDetailsRoute({
-    required this.eventId,
-    required this.$extra,
-  });
-
-  final String eventId;
-  final ShakeDetectionEvent $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      ShakeDetectionHistoryDetailsPage(event: $extra);
 }
 
 @TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
@@ -22,6 +23,10 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
 
   @override
   ShakeDetectionSnapshot? build() {
+    if (!ref.watch(buildConfigProvider).isShakeDetectionEnabled) {
+      return null;
+    }
+
     ref.onDispose(invalidateSynchronization);
 
     ref.listen(eqMonitorWsStatusProvider, (_, next) {
@@ -162,6 +167,9 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
   }
 
   void applySnapshot(ShakeDetectionSnapshot incoming) {
+    if (!ref.read(buildConfigProvider).isShakeDetectionEnabled) {
+      return;
+    }
     final reducer = ref.read(shakeDetectionSnapshotReducerProvider);
     final current = state;
     final selected = reducer.selectNewer(current: current, incoming: incoming);

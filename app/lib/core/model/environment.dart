@@ -28,6 +28,7 @@ abstract class BuildConfig with _$BuildConfig {
     required String revenueCatApiKeyAndroid,
     @Default(false) bool isBetaTesting,
     @Default(false) bool isProFeaturesEnabled,
+    @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
 
   factory BuildConfig.fromJson(Map<String, dynamic> json) =>
@@ -54,6 +55,10 @@ abstract class BuildConfig with _$BuildConfig {
     ),
     isBetaTesting: const bool.fromEnvironment('IS_BETA_TESTING'),
     isProFeaturesEnabled: const bool.fromEnvironment('IS_PRO_FEATURES_ENABLED'),
+    isShakeDetectionEnabled: const bool.fromEnvironment(
+      'IS_SHAKE_DETECTION_ENABLED',
+      defaultValue: true,
+    ),
   );
 
   const BuildConfig._();
