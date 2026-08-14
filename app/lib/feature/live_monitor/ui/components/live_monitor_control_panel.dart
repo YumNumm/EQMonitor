@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
@@ -109,7 +110,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     }, [settings.earthquakeDisplaySeconds]);
 
     final panelHeight = MediaQuery.sizeOf(context).height * 0.9;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
     return SafeArea(
       minimum: const EdgeInsets.all(8),
       child: ConstrainedBox(
