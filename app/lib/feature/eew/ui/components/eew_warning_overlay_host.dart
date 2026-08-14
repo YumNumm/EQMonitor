@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/feature/eew/data/logic/eew_warning_overlay_render_policy.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart';
 import 'package:eqmonitor/feature/eew/data/notifier/eew_warning_overlay_notifier.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_banner.dart';
@@ -8,33 +9,6 @@ import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_sessio
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-bool shouldRenderEewWarningOverlay({
-  required AppLifecycleState lifecycle,
-  required EewWarningOverlayMode mode,
-  required bool hasDisplayModel,
-  required bool liveMonitorActive,
-}) {
-  return lifecycle == AppLifecycleState.resumed &&
-      mode != EewWarningOverlayMode.hidden &&
-      hasDisplayModel &&
-      !liveMonitorActive;
-}
-
-bool shouldInterceptEewWarningOverlayBack({
-  required AppLifecycleState lifecycle,
-  required EewWarningOverlayMode mode,
-  required bool hasDisplayModel,
-  required bool liveMonitorActive,
-}) {
-  return mode == EewWarningOverlayMode.fullscreen &&
-      shouldRenderEewWarningOverlay(
-        lifecycle: lifecycle,
-        mode: mode,
-        hasDisplayModel: hasDisplayModel,
-        liveMonitorActive: liveMonitorActive,
-      );
-}
 
 class EewWarningOverlayHost extends HookConsumerWidget {
   const EewWarningOverlayHost({
@@ -52,7 +26,8 @@ class EewWarningOverlayHost extends HookConsumerWidget {
     final state = ref.watch(eewWarningOverlayNotifierProvider);
     final liveMonitorActive = ref.watch(liveMonitorSessionProvider);
     final displayModel = state.displayModel;
-    final shouldInterceptBack = shouldInterceptEewWarningOverlayBack(
+    final renderPolicy = ref.watch(eewWarningOverlayRenderPolicyProvider);
+    final shouldInterceptBack = renderPolicy.shouldInterceptBack(
       lifecycle: lifecycle,
       mode: state.mode,
       hasDisplayModel: displayModel != null,
@@ -78,7 +53,7 @@ class EewWarningOverlayHost extends HookConsumerWidget {
       return null;
     }, [backDispatcherController, shouldInterceptBack]);
 
-    if (!shouldRenderEewWarningOverlay(
+    if (!renderPolicy.shouldRender(
       lifecycle: lifecycle,
       mode: state.mode,
       hasDisplayModel: displayModel != null,
