@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_region.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_tsunami_timeline.dart';
@@ -14,6 +15,7 @@ void main() {
   TsunamiTelegramMeta meta(String id, {required DateTime publishedAt}) =>
       TsunamiTelegramMeta(
         telegramId: id,
+        type: TelegramType.vtse41,
         serialNo: 1,
         title: 'title-$id',
         headline: null,
@@ -32,10 +34,7 @@ void main() {
           code: '100',
           name: '宮城',
           kind: [
-            TrackedValue(
-              value: TsunamiWarningKind.warning,
-              telegramId: 't1',
-            ),
+            TrackedValue(value: TsunamiWarningKind.warning, telegramId: 't1'),
           ],
           lastKind: [],
           forecastFirstHeight: [],

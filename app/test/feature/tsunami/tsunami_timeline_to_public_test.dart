@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_offshore_station.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_region.dart';
@@ -31,6 +32,7 @@ void main() {
     DateTime? revokedAt,
   }) => TsunamiTelegramMeta(
     telegramId: id,
+    type: TelegramType.vtse41,
     serialNo: 1,
     title: title,
     headline: headline,
@@ -61,10 +63,7 @@ void main() {
             code: '100',
             name: '宮城',
             kind: [
-              TrackedValue(
-                value: TsunamiWarningKind.warning,
-                telegramId: 't1',
-              ),
+              TrackedValue(value: TsunamiWarningKind.warning, telegramId: 't1'),
             ],
             lastKind: [],
             forecastFirstHeight: [],
@@ -108,10 +107,7 @@ void main() {
                 value: TsunamiWarningKind.advisory,
                 telegramId: 't1',
               ),
-              TrackedValue(
-                value: TsunamiWarningKind.warning,
-                telegramId: 't2',
-              ),
+              TrackedValue(value: TsunamiWarningKind.warning, telegramId: 't2'),
             ],
             lastKind: [],
             forecastFirstHeight: [],
@@ -152,10 +148,7 @@ void main() {
             code: '100',
             name: '宮城',
             kind: [
-              TrackedValue(
-                value: TsunamiWarningKind.warning,
-                telegramId: 't1',
-              ),
+              TrackedValue(value: TsunamiWarningKind.warning, telegramId: 't1'),
             ],
             lastKind: [
               TrackedValue(
@@ -228,9 +221,7 @@ void main() {
             name: '宮城',
             kind: [],
             lastKind: [],
-            forecastFirstHeight: [
-              TrackedValue(value: null, telegramId: 't1'),
-            ],
+            forecastFirstHeight: [TrackedValue(value: null, telegramId: 't1')],
             forecastMaxHeight: [],
             estimationFirstHeight: [],
             estimationMaxHeight: [],
@@ -298,9 +289,7 @@ void main() {
             kind: [],
             lastKind: [],
             forecastFirstHeight: [],
-            forecastMaxHeight: [
-              TrackedValue(value: null, telegramId: 't1'),
-            ],
+            forecastMaxHeight: [TrackedValue(value: null, telegramId: 't1')],
             estimationFirstHeight: [],
             estimationMaxHeight: [],
             stations: [],
@@ -496,9 +485,7 @@ void main() {
             forecastFirstHeight: [],
             forecastMaxHeight: [],
             estimationFirstHeight: [],
-            estimationMaxHeight: [
-              TrackedValue(value: null, telegramId: 't1'),
-            ],
+            estimationMaxHeight: [TrackedValue(value: null, telegramId: 't1')],
             stations: [],
           ),
         ],
@@ -625,9 +612,7 @@ void main() {
               TrackedRegionStation(
                 code: 'S1',
                 name: '石巻',
-                forecast: [
-                  TrackedValue(value: null, telegramId: 't1'),
-                ],
+                forecast: [TrackedValue(value: null, telegramId: 't1')],
                 observation: [],
               ),
             ],
@@ -708,10 +693,7 @@ void main() {
       expect(entry.maxHeightValue, 2.5);
       expect(entry.maxHeightIsOver, isFalse);
       expect(entry.maxHeightIsRising, isTrue);
-      expect(
-        entry.maxHeightCondition,
-        ObservationMaxHeightCondition.observing,
-      );
+      expect(entry.maxHeightCondition, ObservationMaxHeightCondition.observing);
       expect(entry.maxHeightIsMissing, isFalse);
       expect(entry.maxHeightRevise, Revise.update);
       expect(entry.telegramId, 't1');
@@ -792,9 +774,7 @@ void main() {
                 code: 'S1',
                 name: '石巻',
                 forecast: [],
-                observation: [
-                  TrackedValue(value: null, telegramId: 't1'),
-                ],
+                observation: [TrackedValue(value: null, telegramId: 't1')],
               ),
             ],
           ),
@@ -1020,10 +1000,7 @@ void main() {
             code: '100',
             name: '宮城',
             kind: [
-              TrackedValue(
-                value: TsunamiWarningKind.warning,
-                telegramId: 't1',
-              ),
+              TrackedValue(value: TsunamiWarningKind.warning, telegramId: 't1'),
             ],
             lastKind: [
               TrackedValue(
@@ -1083,9 +1060,7 @@ void main() {
     });
 
     test('空の追跡リストでは空の公開タイムラインが返る', () {
-      final result = tracked(
-        telegrams: const [],
-      ).toPublic();
+      final result = tracked(telegrams: const []).toPublic();
 
       expect(result.telegrams, isEmpty);
       expect(result.regions, isEmpty);
@@ -1417,9 +1392,7 @@ void main() {
                   name: '宮城',
                   kind: api.TsunamiWarningKind.warning,
                   lastKind: api.TsunamiWarningKind.warning,
-                  stations: [
-                    api.TsunamiRegionStation(code: 'S1', name: '石巻'),
-                  ],
+                  stations: [api.TsunamiRegionStation(code: 'S1', name: '石巻')],
                 ),
               ],
             ),
