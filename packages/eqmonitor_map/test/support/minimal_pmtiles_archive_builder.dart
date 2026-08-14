@@ -30,6 +30,8 @@ final class MinimalPmTilesArchiveBuilder {
   /// ASCII `PMTiles`。
   static const _magic = <int>[0x50, 0x4D, 0x54, 0x69, 0x6C, 0x65, 0x73];
 
+  static const _varint = PmTilesVarintEncoder();
+
   /// [tileId]1件だけを root directory に持つ clustered archive を返す。
   Uint8List buildSingleTile({
     required int tileId,
@@ -38,11 +40,11 @@ final class MinimalPmTilesArchiveBuilder {
     required int maxZoom,
   }) {
     final directory = Uint8List.fromList([
-      ..._varint(1), // entry count
-      ..._varint(tileId), // tileId delta (previous is 0)
-      ..._varint(1), // runLength
-      ..._varint(tileBytes.length), // content length
-      ..._varint(1), // content offset 0 は `offset + 1` として符号化する
+      ..._varint.encode(1), // entry count
+      ..._varint.encode(tileId), // tileId delta (previous is 0)
+      ..._varint.encode(1), // runLength
+      ..._varint.encode(tileBytes.length), // content length
+      ..._varint.encode(1), // content offset 0 は `offset + 1` として符号化する
     ]);
     final metadata = Uint8List.fromList(utf8.encode('{}'));
 
@@ -86,8 +88,16 @@ final class MinimalPmTilesArchiveBuilder {
           ..add(Uint8List.fromList(tileBytes)))
         .toBytes();
   }
+}
 
-  List<int> _varint(int value) {
+/// PMTiles v3 の directory が使う LEB128 可変長整数の符号化。
+///
+/// リポジトリ規約により top-level 関数もクラス内 private メソッドも使えないため、
+/// 単体で test 可能な公開クラスとして切り出している。
+final class PmTilesVarintEncoder {
+  const PmTilesVarintEncoder();
+
+  List<int> encode(int value) {
     final output = <int>[];
     var remaining = value;
     do {
