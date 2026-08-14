@@ -1,5 +1,5 @@
+import 'package:eqmonitor/feature/start/data/logic/forced_update_requirement_matcher.dart';
 import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
-import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
