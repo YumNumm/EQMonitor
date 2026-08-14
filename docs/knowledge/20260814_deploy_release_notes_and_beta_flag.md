@@ -13,6 +13,7 @@
   - Android: Google Play 対象トラックの release notes
 - 内部 TestFlight でも notes を書き、`rev` 連鎖を維持する
 - Google Play / Firebase へ渡す前に `truncate_release_note.py` で切り詰め、`rev:` 行は残す
+- deploy Job のノート切り詰めは **runner の `python3` を直接使う**（`mise exec -- python3` は arm64 で不要ツール解決に失敗しうる）
 
 ## 確認コマンド
 
