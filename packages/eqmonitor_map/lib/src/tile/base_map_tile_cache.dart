@@ -2,6 +2,7 @@ import 'package:eqmonitor_map/src/foundation/async_generation_token.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/map_tile_fallback_policy.dart';
+import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 import 'package:flutter/foundation.dart';
 
 /// decode済み[BaseMapTileGeometry]のcache。
@@ -89,6 +90,7 @@ final class BaseMapTileCache {
     required this.maxEntries,
     required this.maxParentFallbackSteps,
     this.fallbackPolicy = MapTileFallbackPolicy.basemap,
+    this.budget,
   }) : assert(maxEntries > 0, 'maxEntries must be positive'),
        assert(
          maxParentFallbackSteps >= 0,
@@ -110,9 +112,18 @@ final class BaseMapTileCache {
   /// cache は[MapTileFallbackPolicy.hazard]を明示的に渡し、fail closed にする。
   final MapTileFallbackPolicy fallbackPolicy;
 
+  /// pin 上限などの資源上限。[pin]を使う場合は必須(pin 数の上限を呼び出し側が
+  /// 明示するため)。`null`のときは pinning 不可(Global Constraints「上限は
+  /// 呼び出し側が渡す」に従い、暗黙の pin 上限を持たない)。
+  final MapTilePipelineBudget? budget;
+
   final _generationOwner = AsyncGenerationOwner();
 
   final Map<(String, CanonicalTileId), BaseMapTileGeometry> _entries = {};
+
+  /// LRU / zoom 窓 eviction から保護する entry の key 集合。上限は
+  /// [budget]`.maxPinnedEntries`。
+  final Set<(String, CanonicalTileId)> _pinned = {};
   int? _activeZoom;
 
   /// 現在のentry件数(test用)。
@@ -121,6 +132,44 @@ final class BaseMapTileCache {
 
   /// 新しいdecode試行のtokenを発行する。
   AsyncGenerationToken beginDecode() => _generationOwner.begin();
+
+  /// [tileId]の entry を eviction から保護する。既に put 済みでなければならず、
+  /// pin 数は[budget]`.maxPinnedEntries`を超えられない。
+  ///
+  /// - [budget]未設定: [StateError](暗黙の pin 上限を持たないため)。
+  /// - 未 cache の key: [ArgumentError]。
+  /// - pin 上限超過: [StateError]。
+  void pin({
+    required String sourceInstanceId,
+    required CanonicalTileId tileId,
+  }) {
+    final budget = this.budget;
+    if (budget == null) {
+      throw StateError('pinning requires a MapTilePipelineBudget.');
+    }
+    final key = (sourceInstanceId, tileId);
+    if (!_entries.containsKey(key)) {
+      throw ArgumentError.value(
+        tileId,
+        'tileId',
+        'cannot pin a tile that is not cached',
+      );
+    }
+    if (!_pinned.contains(key) && _pinned.length >= budget.maxPinnedEntries) {
+      throw StateError(
+        'pin budget exceeded (max ${budget.maxPinnedEntries}).',
+      );
+    }
+    _pinned.add(key);
+  }
+
+  /// [tileId]の pin を解除する。以後、通常の LRU / zoom 窓 eviction の対象へ戻る。
+  void unpin({
+    required String sourceInstanceId,
+    required CanonicalTileId tileId,
+  }) {
+    _pinned.remove((sourceInstanceId, tileId));
+  }
 
   /// 進行中のdecodeを無効化する。camera変更時などに呼ぶ。
   void cancelInFlight() => _generationOwner.cancel();
@@ -171,16 +220,25 @@ final class BaseMapTileCache {
       return;
     }
     _entries.removeWhere((key, value) {
+      if (_pinned.contains(key)) {
+        return false;
+      }
       final z = key.$2.z;
       return z > activeZoom + 1 || z < activeZoom - maxParentFallbackSteps;
     });
   }
 
   /// `_entries`の先頭(挿入順で最古、かつ[get]がhitするたびに末尾へ
-  /// 移動させているため実質「最も長く未参照のentry」)から破棄する。
+  /// 移動させているため実質「最も長く未参照のentry」)から破棄する。pin された
+  /// entry は保護し、破棄しない(pin 数は[budget]で上限が課されているため、
+  /// pin だけで無制限に膨らむことはない)。
   void _evictOverCapacity() {
     while (_entries.length > maxEntries) {
-      _entries.remove(_entries.keys.first);
+      final evictable = _entries.keys.where((key) => !_pinned.contains(key));
+      if (evictable.isEmpty) {
+        break;
+      }
+      _entries.remove(evictable.first);
     }
   }
 
@@ -236,6 +294,7 @@ final class BaseMapTileCache {
   void dispose() {
     _generationOwner.dispose();
     _entries.clear();
+    _pinned.clear();
   }
 }
 
