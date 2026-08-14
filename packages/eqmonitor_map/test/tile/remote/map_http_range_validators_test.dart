@@ -101,6 +101,22 @@ void main() {
       );
     });
 
+    test('rejects an ETag containing characters outside RFC 9110 etagc', () {
+      for (final etag in ['"bad tag"', '"bad\u0001tag"', '"tab\ttag"']) {
+        expect(
+          () => validate(
+            expectedEtag: null,
+            rawHeaders: {
+              'ETag': [etag],
+              'Content-Range': ['bytes 100-115/4096'],
+            },
+          ),
+          throwsA(isA<MapRemoteTileWeakValidatorException>()),
+          reason: 'etag $etag must be rejected',
+        );
+      }
+    });
+
     test('rejects an ETag that drifted from the expected snapshot', () {
       expect(
         () => validate(

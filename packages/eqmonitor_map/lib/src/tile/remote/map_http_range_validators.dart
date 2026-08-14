@@ -3,10 +3,16 @@ import 'package:eqmonitor_map/src/tile/remote/map_remote_tile_exception.dart';
 
 final _contentRange = RegExp(r'^bytes ([0-9]+)-([0-9]+)/([0-9]+)$');
 
-/// ちょうど1つの strong entity-tag(`"..."`)だけに一致する。`"` を内部に含む
-/// 値を弾くことで、`"old", "new"` のように comma 連結された複数 tag が
-/// 1つの strong validator として通ってしまうのを防ぐ。
-final _singleStrongEtag = RegExp(r'^"[^"]*"$');
+/// ちょうど1つの strong entity-tag(`"..."`)だけに一致する。
+///
+/// 文字集合は RFC 9110 の `etagc`(`%x21 / %x23-7E / obs-text`)に合わせる。
+/// これにより:
+/// - `"` を内部に含めないので、`"old", "new"` のように comma 連結された
+///   複数 tag が1つの strong validator として通らない。
+/// - SP / CTL を含む `"bad tag"` のような不正な validator も弾ける。
+///   ここで返る値は後続 Range 読み出しの `If-Match` に使うため、信頼境界で
+///   受理せず fail closed する。
+final _singleStrongEtag = RegExp(r'^"[\x21\x23-\x7E\x80-\xFF]*"$');
 
 /// strong ETag(RFC 9110)の判定。weak validator は `W/` prefix を持つ。
 ///
