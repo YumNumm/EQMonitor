@@ -6,22 +6,27 @@
 /// pipeline(cache / worker / scheduler)は本 domain 型を参照し、spike 実装へ
 /// 依存しない。
 ///
-/// [begin]で発行した[AsyncGenerationToken]は、その後[cancel]・[dispose]・
-/// または新たな[begin]が呼ばれるまで`isCurrent`が`true`のままになる。
-/// [cancel]は例外を投げない(古い結果を「捨てる」だけで、待機中の呼び出し側を
-/// エラーにしない)。
+/// [begin]で発行した[AsyncGenerationToken]は、その後[cancel]または[dispose]が
+/// 呼ばれるまで`isCurrent`が`true`のままになる。[cancel]は例外を投げない
+/// (古い結果を「捨てる」だけで、待機中の呼び出し側をエラーにしない)。
+///
+/// **世代は[begin]では進まない**。1 incarnation(例: 1つの camera 状態)の中で
+/// 複数の非同期処理を並行実行できるようにするため、[begin]は現在の世代を指す
+/// token を返すだけで、同一 incarnation 内で発行された token はすべて等しく
+/// 有効である。世代を進める(=進行中の処理をまとめて無効化する)のは[cancel]
+/// だけ。[begin]ごとに世代を進めると、`maxInFlightDecodes > 1` の並行 decode で
+/// 最後に開始した1件以外の結果がすべて黙って破棄されてしまう。
 final class AsyncGenerationOwner {
   var _generation = 0;
   var _isDisposed = false;
 
-  /// 新しい世代を開始し、その世代を指す token を返す。
+  /// 現在の世代(incarnation)を指す token を発行する。世代は進めない。
   ///
   /// [dispose]済みの owner から呼ぶと[StateError]。
   AsyncGenerationToken begin() {
     if (_isDisposed) {
       throw StateError('Disposed async generation owner cannot start work.');
     }
-    _generation += 1;
     return AsyncGenerationToken._(owner: this, generation: _generation);
   }
 

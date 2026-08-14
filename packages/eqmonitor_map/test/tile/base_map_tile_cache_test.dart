@@ -484,6 +484,35 @@ void main() {
       );
     });
 
+    test('concurrent decodes in one incarnation all write to the cache', () {
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
+      const first = CanonicalTileId(z: 5, x: 0, y: 0);
+      const second = CanonicalTileId(z: 5, x: 1, y: 0);
+
+      // scheduler が maxInFlightDecodes > 1 で並行に開始した2件を模す。
+      final firstToken = cache.beginDecode();
+      final secondToken = cache.beginDecode();
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: second,
+        geometry: _geometry(2),
+        token: secondToken,
+      );
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: first,
+        geometry: _geometry(1),
+        token: firstToken,
+      );
+
+      expect(
+        cache.get(sourceInstanceId: 'a', tileId: first),
+        isNotNull,
+        reason: 'starting a second decode must not retire the first one',
+      );
+      expect(cache.get(sourceInstanceId: 'a', tileId: second), isNotNull);
+    });
+
     test('a token issued after cancellation still writes normally', () {
       final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 0, y: 0);
