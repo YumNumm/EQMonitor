@@ -80,7 +80,7 @@ as EewItemWithRelations,
 @override
 @pragma('vm:prefer-inline')
 $EewItemWithRelationsCopyWith<$Res> get record {
-  
+
   return $EewItemWithRelationsCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });
@@ -295,7 +295,7 @@ as EewItemWithRelations,
 @override
 @pragma('vm:prefer-inline')
 $EewItemWithRelationsCopyWith<$Res> get record {
-  
+
   return $EewItemWithRelationsCopyWith<$Res>(_self.record, (value) {
     return _then(_self.copyWith(record: value));
   });

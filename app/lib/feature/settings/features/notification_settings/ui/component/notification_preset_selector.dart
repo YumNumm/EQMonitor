@@ -270,9 +270,18 @@ class _OnboardingPresetDescription extends StatelessWidget {
           ),
         ],
       ),
-      NotificationPreset.all => _PresetBulletItem(
-        text: '推奨設定に加え、全国の緊急地震速報・地震情報も通知します',
-        designSystem: designSystem,
+      NotificationPreset.all => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _PresetBulletItem(
+            text: '推奨設定に加え、全国のすべての緊急地震速報・地震情報も通知します',
+            designSystem: designSystem,
+          ),
+          _PresetBulletItem(
+            text: '南海トラフ地震関連情報も通知します',
+            designSystem: designSystem,
+          ),
+        ],
       ),
       NotificationPreset.custom => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -581,7 +590,7 @@ String _settingsSubtitle(NotificationPreset preset) {
     NotificationPreset.recommended =>
       '現在地の震度に応じて、EEWと地震情報を自動で通知します',
     NotificationPreset.all =>
-      '推奨設定に加え、全国の緊急地震速報・地震情報も通知します',
+      '推奨設定に加え、全国のすべての地震・南海トラフ地震関連情報も通知します',
     NotificationPreset.custom => '通知の種類ごとに条件を細かく設定します',
     NotificationPreset.none => '通知を受け取りません。後から設定で変更できます',
   };

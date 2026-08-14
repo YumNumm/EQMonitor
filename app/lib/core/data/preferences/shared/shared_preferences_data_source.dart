@@ -14,9 +14,8 @@ Future<SharedPreferencesDataSource> sharedPreferencesDataSource(Ref ref) async {
 
 class SharedPreferencesDataSource
     implements PreferencesDataSource<SharedPreferencesKey> {
-  SharedPreferencesDataSource({
-    required SharedPreferences sharedPreferences,
-  }) : _sharedPreferences = sharedPreferences;
+  SharedPreferencesDataSource({required SharedPreferences sharedPreferences})
+    : _sharedPreferences = sharedPreferences;
 
   final SharedPreferences _sharedPreferences;
 

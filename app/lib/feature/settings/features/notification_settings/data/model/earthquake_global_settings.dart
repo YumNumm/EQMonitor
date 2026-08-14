@@ -3,6 +3,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_global_settings.freezed.dart';
+part 'earthquake_global_settings.g.dart';
 
 @freezed
 abstract class EarthquakeGlobalSettings with _$EarthquakeGlobalSettings {
@@ -13,6 +14,9 @@ abstract class EarthquakeGlobalSettings with _$EarthquakeGlobalSettings {
     required bool estimatedIntensityEnabled,
     required bool collapseNotification,
   }) = _EarthquakeGlobalSettings;
+
+  factory EarthquakeGlobalSettings.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeGlobalSettingsFromJson(json);
 }
 
 extension EarthquakeSettingsResponseConverter

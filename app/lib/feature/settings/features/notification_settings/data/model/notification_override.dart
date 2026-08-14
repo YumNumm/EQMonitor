@@ -3,6 +3,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_override.freezed.dart';
+part 'notification_override.g.dart';
 
 @freezed
 abstract class NotificationOverride with _$NotificationOverride {
@@ -11,6 +12,9 @@ abstract class NotificationOverride with _$NotificationOverride {
     required String sound,
     required InterruptionLevel interruptionLevel,
   }) = _NotificationOverride;
+
+  factory NotificationOverride.fromJson(Map<String, dynamic> json) =>
+      _$NotificationOverrideFromJson(json);
 }
 
 // InterruptionLevel のアプリ側 enum

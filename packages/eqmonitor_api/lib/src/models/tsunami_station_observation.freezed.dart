@@ -80,7 +80,7 @@ as TsunamiStationObservationMaxHeight?,
 @override
 @pragma('vm:prefer-inline')
 $TsunamiStationObservationFirstHeightCopyWith<$Res> get firstHeight {
-  
+
   return $TsunamiStationObservationFirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });
@@ -306,7 +306,7 @@ as TsunamiStationObservationMaxHeight?,
 @override
 @pragma('vm:prefer-inline')
 $TsunamiStationObservationFirstHeightCopyWith<$Res> get firstHeight {
-  
+
   return $TsunamiStationObservationFirstHeightCopyWith<$Res>(_self.firstHeight, (value) {
     return _then(_self.copyWith(firstHeight: value));
   });

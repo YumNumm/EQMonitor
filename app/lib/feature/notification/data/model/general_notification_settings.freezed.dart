@@ -12,6 +12,7 @@ part of 'general_notification_settings.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$GeneralNotificationSettings {
 
@@ -22,6 +23,8 @@ mixin _$GeneralNotificationSettings {
 @pragma('vm:prefer-inline')
 $GeneralNotificationSettingsCopyWith<GeneralNotificationSettings> get copyWith => _$GeneralNotificationSettingsCopyWithImpl<GeneralNotificationSettings>(this as GeneralNotificationSettings, _$identity);
 
+  /// Serializes this GeneralNotificationSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is GeneralNotificationSettings&&(identical(other.notificationEnabled, notificationEnabled) || other.notificationEnabled == notificationEnabled)&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.vyse60Enabled, vyse60Enabled) || other.vyse60Enabled == vyse60Enabled)&&(identical(other.earthquakeNoticeEnabled, earthquakeNoticeEnabled) || other.earthquakeNoticeEnabled == earthquakeNoticeEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,notificationEnabled,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,vyse60Enabled,earthquakeNoticeEnabled);
 
@@ -210,11 +213,11 @@ return $default(_that.notificationEnabled,_that.tsunamiEnabled,_that.trainingEna
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _GeneralNotificationSettings implements GeneralNotificationSettings {
   const _GeneralNotificationSettings({required this.notificationEnabled, required this.tsunamiEnabled, required this.trainingEnabled, required this.nankaiExtraordinaryEnabled, required this.nankaiRegularEnabled, required this.vyse60Enabled, required this.earthquakeNoticeEnabled});
-  
+  factory _GeneralNotificationSettings.fromJson(Map<String, dynamic> json) => _$GeneralNotificationSettingsFromJson(json);
 
 @override final  bool notificationEnabled;
 @override final  bool tsunamiEnabled;
@@ -230,14 +233,17 @@ class _GeneralNotificationSettings implements GeneralNotificationSettings {
 @pragma('vm:prefer-inline')
 _$GeneralNotificationSettingsCopyWith<_GeneralNotificationSettings> get copyWith => __$GeneralNotificationSettingsCopyWithImpl<_GeneralNotificationSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$GeneralNotificationSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneralNotificationSettings&&(identical(other.notificationEnabled, notificationEnabled) || other.notificationEnabled == notificationEnabled)&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.vyse60Enabled, vyse60Enabled) || other.vyse60Enabled == vyse60Enabled)&&(identical(other.earthquakeNoticeEnabled, earthquakeNoticeEnabled) || other.earthquakeNoticeEnabled == earthquakeNoticeEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,notificationEnabled,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,vyse60Enabled,earthquakeNoticeEnabled);
 

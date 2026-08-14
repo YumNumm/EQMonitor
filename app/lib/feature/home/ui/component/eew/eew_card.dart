@@ -21,14 +21,17 @@ class EewCard extends ConsumerWidget {
     required this.eew,
     required this.index,
     this.nowOverride,
-    this.userRegionEstimate,
+    this.estimatedRegions,
     super.key,
   });
 
   final EewTelegramItem eew;
   final String? index;
   final DateTime? nowOverride;
-  final EewEstimatedRegion? userRegionEstimate;
+
+  /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
+  /// フォールバックとして利用する。
+  final List<EewEstimatedRegion>? estimatedRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +75,9 @@ class EewCard extends ConsumerWidget {
     final localRegion = localForecastRegion(eew, regionCode);
 
     // JMAのlocalRegionがない場合、推定値をフォールバック
-    final estimate = userRegionEstimate;
+    final estimate = regionCode != null
+        ? estimatedRegions?.firstWhereOrNull((e) => e.regionCode == regionCode)
+        : null;
     final effectiveLocalIntensity =
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;

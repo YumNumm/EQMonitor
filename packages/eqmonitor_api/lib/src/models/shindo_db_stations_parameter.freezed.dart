@@ -78,7 +78,7 @@ as List<ShindoDbStation>,
 @override
 @pragma('vm:prefer-inline')
 $ShindoDbStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ShindoDbStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });
@@ -295,7 +295,7 @@ as List<ShindoDbStation>,
 @override
 @pragma('vm:prefer-inline')
 $ShindoDbStationsParameterMetadataCopyWith<$Res> get metadata {
-  
+
   return $ShindoDbStationsParameterMetadataCopyWith<$Res>(_self.metadata, (value) {
     return _then(_self.copyWith(metadata: value));
   });

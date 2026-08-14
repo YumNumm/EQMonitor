@@ -55,7 +55,9 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
     final resolvedName =
         (selectedCode.value != null && selectedCode.value!.isNotEmpty)
         ? ref
-              .watch(regionNameProvider(selectedType.value, selectedCode.value!))
+              .watch(
+                regionNameProvider(selectedType.value, selectedCode.value!),
+              )
               .value
         : null;
     final displayName = selectedName.value ?? resolvedName;
@@ -114,8 +116,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
         actions: [
           if (canApply)
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pop(buildParameter()),
+              onPressed: () => Navigator.of(context).pop(buildParameter()),
               child: const Text('決定'),
             ),
         ],
