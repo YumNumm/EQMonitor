@@ -1307,18 +1307,36 @@ git commit -m "Refactor: StatefulWidget を Hook 化し ColorScheme 直接参照
 
 **注意:** `app/lib/core/hook/use_*.dart` の `useXxx()` は flutter_hooks の
 規約でトップレベル関数である必要がある。クラス化すると hooks が機能しない。
-これらは Task 3 の除外条件に含まれていないため、次のいずれかで対応する。
 
-1. `// ignore: eqmonitor_lints_plugin/avoid_top_level_functions` を理由コメント付きで置く
-2. `TopLevelFunctionExemption` に hooks の除外条件を足す（Task 3 の変更を拡張）
+これらは **ルールの除外条件に足さず、抑制コメントで対応する**。
+「`use` で始まる関数」を一律に許可すると、hooks と無関係な関数名でも
+ルールを回避できてしまうため、除外条件には入れない。
 
-**判断が必要なため、Step 1 で必ず報告して指示を仰ぐこと。**
+- [ ] **Step 1: `core/hook` に抑制コメントを置く**
 
-- [ ] **Step 1: `core/hook` の扱いを確認して報告する**
+`app/lib/core/hook/use_map_operation_queue.dart:54` と
+`app/lib/core/hook/use_sheet_controller.dart:5` の 2 件に、
+理由コメント付きで抑制コメントを置く。
 
-`app/lib/core/hook/use_map_operation_queue.dart` と
-`app/lib/core/hook/use_sheet_controller.dart` の 2 件について、
-上記 1 と 2 のどちらを採るか NEEDS_CONTEXT として報告し、指示を待つ。
+```dart
+// flutter_hooks の Hook はトップレベル関数として定義する規約であり、
+// クラスのメソッドにすると Hook の登録順序が壊れて動作しない。
+// ignore: eqmonitor_lints_plugin/avoid_top_level_functions
+MapOperationScheduler useMapOperationQueue() {
+```
+
+抑制コメントを置いた後、診断が消えることを確認する。
+
+```bash
+cd /workspace
+mise exec -- dart analyze app/lib/core/hook --fatal-infos
+```
+
+Expected: `No issues found!`
+
+抑制コメントが効かない場合は、ルール名の指定形式が違う可能性がある。
+`// ignore: avoid_top_level_functions`（プラグイン名なし）も試し、
+どちらが効くかを報告に書くこと。
 
 - [ ] **Step 2: `core/util` のトップレベル関数をクラス化する（11 件）**
 
