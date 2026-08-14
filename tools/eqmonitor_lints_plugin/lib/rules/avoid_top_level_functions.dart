@@ -5,6 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
+import 'package:eqmonitor_lints_plugin/src/top_level_function_exemption.dart';
 
 class AvoidTopLevelFunctions extends AnalysisRule {
   AvoidTopLevelFunctions()
@@ -42,26 +43,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final AnalysisRule rule;
 
-  static const _riverpodNames = {'riverpod', 'Riverpod'};
-
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.parent is! CompilationUnit) {
       return;
     }
-    // @riverpod / @Riverpod 付き関数プロバイダは慣用的なため自動で除外する。
-    if (_hasRiverpodAnnotation(node.metadata)) {
+    if (TopLevelFunctionExemption.isExempt(node: node)) {
       return;
     }
     rule.reportAtToken(node.name);
-  }
-
-  bool _hasRiverpodAnnotation(NodeList<Annotation> metadata) {
-    for (final annotation in metadata) {
-      if (_riverpodNames.contains(annotation.name.name)) {
-        return true;
-      }
-    }
-    return false;
   }
 }
