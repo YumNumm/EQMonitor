@@ -23,6 +23,11 @@ on:
         required: false
         default: false
         type: boolean
+      is_beta_testing:
+        description: "Set IS_BETA_TESTING dart-define"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -44,6 +49,7 @@ jobs:
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
       android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
+      is-beta-testing: ${{ steps.define-environment-matrix.outputs.is-beta-testing }}
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -61,7 +67,132 @@ jobs:
           INPUT_IOS: ${{ inputs.ios || false }}
           INPUT_ANDROID: ${{ inputs.android || false }}
           INPUT_EXTERNAL: ${{ inputs.external || false }}
+          INPUT_IS_BETA_TESTING: ${{ inputs.is_beta_testing || false }}
         run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
+
+  generate-release-note-ios:
+    name: Generate Release Note (iOS)
+    needs: define-matrix
+    if: ${{ needs.define-matrix.outputs.deploy-ios }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    environment:
+      name: EQMonitor-iOS
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          cache: false
+          install_args: '"github:rorkai/App-Store-Connect-CLI"'
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Generate iOS release notes
+        env:
+          ASC_APP_ID: "6447546703"
+          ASC_BYPASS_KEYCHAIN: "1"
+          PLATFORM: ios
+          OUTPUT_PATH: release-notes-ios.txt
+        run: |
+          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
+          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
+          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          scripts/ci/generate_release_note.sh
+
+      - name: Upload iOS release notes
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: release-notes-ios.txt
+          if-no-files-found: error
+
+  generate-release-note-android:
+    name: Generate Release Note (Android)
+    needs: define-matrix
+    if: ${{ needs.define-matrix.outputs.deploy-android }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: EQMonitor-Android
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        with:
+          cache: false
+          install_args: "yq"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Authenticate to Google Cloud Platform
+        id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
+          token_format: access_token
+
+      - name: Generate Android release notes
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+          TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
+          PLATFORM: android
+          OUTPUT_PATH: release-notes-android.txt
+        run: scripts/ci/generate_release_note.sh
+
+      - name: Upload Android release notes
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: release-notes-android.txt
+          if-no-files-found: error
 
   build-ios:
     name: Build iOS
@@ -142,9 +273,14 @@ jobs:
         working-directory: app
         env:
           COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          BETA_ARGS=()
+          if [ "$IS_BETA_TESTING" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
           flutter build ios --config-only \
             --no-codesign \
             --no-pub \
@@ -153,7 +289,7 @@ jobs:
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            --dart-define IS_BETA_TESTING="true"
+            "${BETA_ARGS[@]}"
 
       - name: Extract App Store Connect API Key
         run: |
@@ -251,6 +387,7 @@ jobs:
     needs:
       - build-ios
       - define-matrix
+      - generate-release-note-ios
     runs-on: macos-26
     permissions:
       contents: read
@@ -271,6 +408,12 @@ jobs:
         with:
           name: EQMonitor-ios.ipa
           path: build
+
+      - name: Download iOS release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: notes
 
       - name: Extract SOPS Age Key File
         run: |
@@ -307,8 +450,8 @@ jobs:
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          TEST_NOTES="$(cat notes/release-notes-ios.txt)"
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
-            TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"
             asc publish testflight \
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
@@ -324,6 +467,19 @@ jobs:
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
               --output json
+            if ! asc builds test-notes create \
+              --app "$ASC_APP_ID" \
+              --latest \
+              --platform IOS \
+              --locale ja \
+              --whats-new "$TEST_NOTES"; then
+              asc builds test-notes update \
+                --app "$ASC_APP_ID" \
+                --latest \
+                --platform IOS \
+                --locale ja \
+                --whats-new "$TEST_NOTES"
+            fi
           fi
 
   deploy-ios-firebase-app-distribution:
@@ -331,6 +487,7 @@ jobs:
     needs:
       - build-ios
       - define-matrix
+      - generate-release-note-ios
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -374,27 +531,20 @@ jobs:
           name: EQMonitor-ios-adhoc.ipa
           path: build
 
+      - name: Download iOS release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: notes
+
       - name: Rename
         run: |
           mv build/*.ipa build/app.ipa
 
-      - name: Output release version
+      - name: Prepare release notes
         run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
-          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "[$VERSION - $REF_NAME]" > changelog.tmp
-
-      - name: Output git log
-        run: |
-          # LAST TAG
-           LAST_TAG=$(git describe --tags --abbrev=0)
-           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-           # 最大2000文字
-           head -c 2000 changelog.tmp > changelog.txt
-           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
-             echo '...' >> changelog.txt
-           fi
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+            < notes/release-notes-ios.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -502,9 +652,14 @@ jobs:
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          BETA_ARGS=()
+          if [ "$IS_BETA_TESTING" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
           flutter build appbundle \
             --release \
             --no-pub \
@@ -513,7 +668,7 @@ jobs:
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            --dart-define IS_BETA_TESTING="true"
+            "${BETA_ARGS[@]}"
 
       - name: Copy AAB to expected location
         run: |
@@ -530,7 +685,9 @@ jobs:
 
   deploy-android-firebase-app-distribution:
     name: Deploy Android (Firebase App Distribution)
-    needs: build-android
+    needs:
+      - build-android
+      - generate-release-note-android
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -574,25 +731,20 @@ jobs:
           name: EQMonitor-android.aab
           path: build
 
+      - name: Download Android release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: notes
+
       - name: Rename
         run: |
           mv build/*.aab build/app.aab
 
-      - name: Output release version
+      - name: Prepare release notes
         run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
-          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "[$VERSION - $REF_NAME]" > changelog.tmp
-
-      - name: Output git log
-        run: |
-          LAST_TAG=$(git describe --tags --abbrev=0)
-          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-          head -c 2000 changelog.tmp > changelog.txt
-          if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
-            echo '...' >> changelog.txt
-          fi
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+            < notes/release-notes-android.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -618,6 +770,7 @@ jobs:
     needs:
       - build-android
       - define-matrix
+      - generate-release-note-android
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
@@ -639,6 +792,12 @@ jobs:
         with:
           name: EQMonitor-android.aab
           path: download
+
+      - name: Download Android release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: notes
 
       - name: Move AAB to root
         run: mv download/*.aab app.aab
@@ -676,26 +835,11 @@ jobs:
         run: |
           VERSION=$(yq .version app/pubspec.yaml -r)
           echo "release_version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "[$VERSION]" > changelog.tmp
 
-      - name: Output git log
+      - name: Prepare release notes
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
-          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-          python3 << 'PY'
-          from pathlib import Path
-
-          text = Path("changelog.tmp").read_text(encoding="utf-8")
-          max_len = 500
-          if len(text) > max_len:
-              text = text[: max_len - 3] + "..."
-          Path("changelog.txt").write_text(text, encoding="utf-8")
-          print(f"release notes length (chars): {len(text)}")
-          PY
-
-      - name: Generate release notes JSON
-        run: |
+          python3 scripts/ci/truncate_release_note.py --max-chars 500 \
+            < notes/release-notes-android.txt > changelog.txt
           jq -Rs '[{language: "ja-JP", text: .}]' changelog.txt > release-notes.json
           jq . release-notes.json
 
