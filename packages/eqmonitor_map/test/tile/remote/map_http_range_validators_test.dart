@@ -125,6 +125,21 @@ void main() {
       );
     });
 
+    test('rejects a range that runs past the verified archive size', () {
+      expect(
+        () => validate(requestedOffset: 4090),
+        throwsArgumentError,
+      );
+      expect(() => validate(requestedOffset: -1), throwsArgumentError);
+    });
+
+    test('rejects a zero-length range before trusting any body', () {
+      expect(
+        () => validate(requestedLength: 0, bodyLength: 0),
+        throwsArgumentError,
+      );
+    });
+
     test('rejects a body length that does not match the requested range', () {
       expect(
         () => validate(bodyLength: 8),

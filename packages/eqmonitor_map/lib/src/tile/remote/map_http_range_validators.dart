@@ -41,6 +41,9 @@ final class MapHttpStrongEtagValidator {
 ///   [MapRemoteTileContentRangeMismatchException]。
 /// - body 長が `requestedLength` と異なる:
 ///   [MapRemoteTileBodyLengthMismatchException]。
+///
+/// 要求 Range 自体が検証済み archive size の外側、または長さ0の場合は、応答を
+/// 見る前に[ArgumentError]で弾く(呼び出し側のバグ / directory 破損)。
 final class MapHttpRangeResponseValidator {
   const MapHttpRangeResponseValidator({
     this.etagValidator = const MapHttpStrongEtagValidator(),
@@ -57,6 +60,27 @@ final class MapHttpRangeResponseValidator {
     required int expectedTotalSize,
     required String? expectedEtag,
   }) {
+    // 応答を見る前に要求自体の妥当性を検査する。検証済み archive size の外側や
+    // 長さ0の Range は、archive directory の破損か呼び出し側のバグでしか
+    // 発生せず、そのまま進めると attested な範囲外の byte を archive の一部と
+    // して受理してしまう。HTTP body を信用する前に fail closed する。
+    if (requestedLength <= 0) {
+      throw ArgumentError.value(
+        requestedLength,
+        'requestedLength',
+        'must be > 0',
+      );
+    }
+    if (requestedOffset < 0 ||
+        requestedOffset > expectedTotalSize - requestedLength) {
+      throw ArgumentError.value(
+        requestedOffset,
+        'requestedOffset',
+        'range must stay within the verified archive size '
+            '($expectedTotalSize)',
+      );
+    }
+
     final receivedEtag = headers.singleValueOf('etag');
     if (statusCode == 412) {
       throw MapRemoteTileSnapshotMismatchException(
