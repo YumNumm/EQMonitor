@@ -47,6 +47,7 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
     ),
     maxCachedTileGeometries: 64,
     maxParentFallbackSteps: 4,
+    maxInFlightDecodes: 6,
   );
 
   @override

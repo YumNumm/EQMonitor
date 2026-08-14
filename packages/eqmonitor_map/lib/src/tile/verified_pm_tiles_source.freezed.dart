@@ -278,4 +278,68 @@ as String,
 
 }
 
+/// @nodoc
+mixin _$VerifiedRemotePmTilesSource {
+
+ String get sourceInstanceId; int get sourceRevision; Uri get url; int get sizeBytes; String get sha256;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerifiedRemotePmTilesSource&&(identical(other.sourceInstanceId, sourceInstanceId) || other.sourceInstanceId == sourceInstanceId)&&(identical(other.sourceRevision, sourceRevision) || other.sourceRevision == sourceRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
+
+@override
+String toString() {
+  return 'VerifiedRemotePmTilesSource(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
+}
+
+
+}
+
+
+
+
+
+/// @nodoc
+
+
+class _VerifiedRemotePmTilesSource implements VerifiedRemotePmTilesSource {
+  const _VerifiedRemotePmTilesSource({required this.sourceInstanceId, required this.sourceRevision, required this.url, required this.sizeBytes, required this.sha256});
+  
+
+@override final  String sourceInstanceId;
+@override final  int sourceRevision;
+@override final  Uri url;
+@override final  int sizeBytes;
+@override final  String sha256;
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VerifiedRemotePmTilesSource&&(identical(other.sourceInstanceId, sourceInstanceId) || other.sourceInstanceId == sourceInstanceId)&&(identical(other.sourceRevision, sourceRevision) || other.sourceRevision == sourceRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
+
+@override
+String toString() {
+  return 'VerifiedRemotePmTilesSource._(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
+}
+
+
+}
+
+
+
+
 // dart format on

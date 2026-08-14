@@ -47,6 +47,8 @@ export 'src/renderer/map_render_batch_adapter.dart';
 export 'src/renderer/map_scene_renderer_adapter.dart';
 export 'src/renderer/spike_mesh_frame.dart';
 export 'src/tile/base_map_tile_decoder.dart' show BaseMapTileDecodeLimits;
+export 'src/tile/map_tile_fallback_policy.dart';
+export 'src/tile/map_tile_pipeline_budget.dart';
 export 'src/tile/mvt/mvt_decode_limits.dart';
 export 'src/tile/verified_pm_tiles_source.dart';
 export 'src/widget/base_map_view.dart';
