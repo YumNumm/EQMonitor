@@ -196,7 +196,9 @@ class AppBootstrap {
     profiler.mark('parallel_init');
     LicenseInitializer.init();
 
-    final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
+    final telemetryDbPath = kIsWeb
+        ? null
+        : await TelemetryDbPathResolver.resolve();
 
     if (!kIsWeb) {
       unawaited(
