@@ -46,21 +46,20 @@ class NotificationPresetSelector extends HookConsumerWidget {
     };
     final isOsGranted = permission?.isOsNotificationGranted ?? false;
 
-    useEffect(
-      () {
-        if (permission != null &&
-            !permission.isOsNotificationGranted &&
-            selectedPreset != NotificationPreset.none) {
-          onChanged(NotificationPreset.none);
-        }
-        return null;
-      },
-      [permission, selectedPreset],
-    );
+    useEffect(() {
+      if (permission != null &&
+          !permission.isOsNotificationGranted &&
+          selectedPreset != NotificationPreset.none) {
+        onChanged(NotificationPreset.none);
+      }
+      return null;
+    }, [permission, selectedPreset]);
 
     void handlePresetTap(NotificationPreset preset) {
       if (!isOsGranted && preset != NotificationPreset.none) {
-        showOsNotificationPermissionDialog(context, ref);
+        ref
+            .read(notificationPermissionDialogActionProvider)
+            .showOsPermission(context, ref);
         return;
       }
 
@@ -96,8 +95,9 @@ class NotificationPresetSelector extends HookConsumerWidget {
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,
         onPresetTap: handlePresetTap,
-        onCriticalWarningTap: () =>
-            showCriticalAlertPermissionDialog(context, ref),
+        onCriticalWarningTap: () => ref
+            .read(notificationPermissionDialogActionProvider)
+            .showCriticalAlertPermission(context, ref),
       ),
       NotificationPresetSelectorStyle.settings => _SettingsPresetGroup(
         presets: _settingsPresetOrder,
@@ -106,8 +106,9 @@ class NotificationPresetSelector extends HookConsumerWidget {
         shouldShowCriticalWarning: shouldShowCriticalWarning,
         onPresetTap: handlePresetTap,
         onCustomSettingsTap: onCustomSettingsTap,
-        onCriticalWarningTap: () =>
-            showCriticalAlertPermissionDialog(context, ref),
+        onCriticalWarningTap: () => ref
+            .read(notificationPermissionDialogActionProvider)
+            .showCriticalAlertPermission(context, ref),
       ),
     };
   }
@@ -203,15 +204,13 @@ class _OnboardingPresetCard extends StatelessWidget {
                     isSelected
                         ? Icons.radio_button_checked
                         : Icons.radio_button_unchecked,
-                    color: isSelected
-                        ? colorTheme.primary
-                        : colorTheme.outline,
+                    color: isSelected ? colorTheme.primary : colorTheme.outline,
                     size: 20,
                   ),
                   SizedBox(width: designSystem.spacing.sm),
                   Expanded(
                     child: Text(
-                      _presetTitle(preset),
+                      const _NotificationPresetLabel().title(preset),
                       style: designSystem.typography.titleMedium,
                     ),
                   ),
@@ -230,9 +229,7 @@ class _OnboardingPresetCard extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: designSystem.spacing.lg + designSystem.spacing.xs,
                   ),
-                  child: _CriticalAlertWarningLink(
-                    onTap: onCriticalWarningTap,
-                  ),
+                  child: _CriticalAlertWarningLink(onTap: onCriticalWarningTap),
                 ),
               ],
             ],
@@ -256,10 +253,7 @@ class _OnboardingPresetDescription extends StatelessWidget {
       NotificationPreset.recommended => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _PresetBulletItem(
-            text: '現在地の緊急地震速報(警報)',
-            designSystem: designSystem,
-          ),
+          _PresetBulletItem(text: '現在地の緊急地震速報(警報)', designSystem: designSystem),
           _PresetBulletItem(
             text: '現在地で予想震度4以上の緊急地震速報(予報)',
             designSystem: designSystem,
@@ -305,10 +299,7 @@ class _OnboardingPresetDescription extends StatelessWidget {
 }
 
 class _PresetBulletItem extends StatelessWidget {
-  const _PresetBulletItem({
-    required this.text,
-    required this.designSystem,
-  });
+  const _PresetBulletItem({required this.text, required this.designSystem});
 
   final String text;
   final DesignSystemThemeExtension designSystem;
@@ -431,6 +422,7 @@ class _SettingsPresetTile extends StatelessWidget {
     final subtitleColor = isEnabled
         ? colorTheme.onSurfaceVariant
         : Theme.of(context).disabledColor;
+    final customSettingsTap = onCustomSettingsTap;
 
     return InkWell(
       onTap: onTap,
@@ -449,7 +441,7 @@ class _SettingsPresetTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _presetTitle(preset),
+                    const _NotificationPresetLabel().title(preset),
                     style: designSystem.typography.titleMedium.copyWith(
                       color: titleColor,
                       fontWeight: FontWeight.w700,
@@ -457,7 +449,7 @@ class _SettingsPresetTile extends StatelessWidget {
                   ),
                   SizedBox(height: spacing.xs),
                   Text(
-                    _settingsSubtitle(preset),
+                    const _NotificationPresetLabel().settingsSubtitle(preset),
                     style: designSystem.typography.bodySmall.copyWith(
                       color: subtitleColor,
                     ),
@@ -470,11 +462,11 @@ class _SettingsPresetTile extends StatelessWidget {
               ),
             ),
             if (preset == NotificationPreset.custom &&
-                onCustomSettingsTap != null) ...[
+                customSettingsTap != null) ...[
               SizedBox(width: spacing.sm),
               _CustomPresetTrailing(
                 enabled: isSelected && isEnabled,
-                onTap: onCustomSettingsTap!,
+                onTap: customSettingsTap,
               ),
             ],
           ],
@@ -509,10 +501,7 @@ class _PresetSelectionMark extends StatelessWidget {
 }
 
 class _CustomPresetTrailing extends StatelessWidget {
-  const _CustomPresetTrailing({
-    required this.enabled,
-    required this.onTap,
-  });
+  const _CustomPresetTrailing({required this.enabled, required this.onTap});
 
   final bool enabled;
   final VoidCallback onTap;
@@ -555,13 +544,10 @@ class _CriticalAlertWarningLink extends HookWidget {
     final designSystem = context.designSystem;
     final recognizer = useMemoized(TapGestureRecognizer.new);
 
-    useEffect(
-      () {
-        recognizer.onTap = onTap;
-        return recognizer.dispose;
-      },
-      [recognizer, onTap],
-    );
+    useEffect(() {
+      recognizer.onTap = onTap;
+      return recognizer.dispose;
+    }, [recognizer, onTap]);
 
     return Text.rich(
       TextSpan(
@@ -576,21 +562,20 @@ class _CriticalAlertWarningLink extends HookWidget {
   }
 }
 
-String _presetTitle(NotificationPreset preset) {
-  return switch (preset) {
+/// [NotificationPreset] の表示ラベルを組み立てる。
+class _NotificationPresetLabel {
+  const _NotificationPresetLabel();
+
+  String title(NotificationPreset preset) => switch (preset) {
     NotificationPreset.recommended => '推奨設定',
     NotificationPreset.all => 'すべて',
     NotificationPreset.custom => 'カスタム',
     NotificationPreset.none => '通知しない',
   };
-}
 
-String _settingsSubtitle(NotificationPreset preset) {
-  return switch (preset) {
-    NotificationPreset.recommended =>
-      '現在地の震度に応じて、EEWと地震情報を自動で通知します',
-    NotificationPreset.all =>
-      '推奨設定に加え、全国のすべての地震・南海トラフ地震関連情報も通知します',
+  String settingsSubtitle(NotificationPreset preset) => switch (preset) {
+    NotificationPreset.recommended => '現在地の震度に応じて、EEWと地震情報を自動で通知します',
+    NotificationPreset.all => '推奨設定に加え、全国のすべての地震・南海トラフ地震関連情報も通知します',
     NotificationPreset.custom => '通知の種類ごとに条件を細かく設定します',
     NotificationPreset.none => '通知を受け取りません。後から設定で変更できます',
   };
