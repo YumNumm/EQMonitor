@@ -28,10 +28,7 @@ final _valSetRamUbxRxmSfrbxUart1On = Uint8List.fromList([
 ]);
 
 class QzssSerialPortService {
-  QzssSerialPortService({
-    required this.portName,
-    required this.baudRate,
-  });
+  QzssSerialPortService({required this.portName, required this.baudRate});
 
   final String portName;
   final int baudRate;
@@ -57,20 +54,22 @@ class QzssSerialPortService {
     }
 
     // ポートを開く
-    _port = SerialPort(portName);
+    final port = SerialPort(portName);
+    _port = port;
 
     // ポートを開く
-    _port!.open();
+    port.open();
 
     // ボーレートを設定
-    _port!.setConfig(SerialPortConfig(baudRate: baudRate));
+    port.setConfig(SerialPortConfig(baudRate: baudRate));
 
     // UBX-RXM-SFRBXを有効化
-    _port!.write(_valSetRamUbxRxmSfrbxUart1On);
+    port.write(_valSetRamUbxRxmSfrbxUart1On);
 
     // リーダーを作成してデータを読み取る
-    _reader = SerialPortReader(_port!);
-    _subscription = _reader!.stream.listen(_onData);
+    final reader = SerialPortReader(port);
+    _reader = reader;
+    _subscription = reader.stream.listen(_onData);
   }
 
   /// 切断
