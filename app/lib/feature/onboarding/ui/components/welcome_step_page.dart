@@ -56,6 +56,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
         unawaited(
           _showDeviceRegistrationErrorDialog(
             context: context,
+            ref: ref,
             message: 'デバイスの状態確認に失敗しました',
             error: error,
             stackTrace: stackTrace,
@@ -74,6 +75,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
         unawaited(
           _showDeviceRegistrationErrorDialog(
             context: context,
+            ref: ref,
             message: errorMessage,
             error: next.error,
             stackTrace: next.stackTrace,
@@ -160,6 +162,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
 
 Future<void> _showDeviceRegistrationErrorDialog({
   required BuildContext context,
+  required WidgetRef ref,
   required String message,
   required Object error,
   required StackTrace? stackTrace,
@@ -186,11 +189,9 @@ Future<void> _showDeviceRegistrationErrorDialog({
           child: const Text('再試行'),
         ),
         TextButton(
-          onPressed: () => showErrorDetailsSheet(
-            context,
-            error: error,
-            stackTrace: stackTrace,
-          ),
+          onPressed: () => ref
+              .read(errorDetailsSheetActionProvider)
+              .show(context, error: error, stackTrace: stackTrace),
           child: const Text('詳細'),
         ),
       ],

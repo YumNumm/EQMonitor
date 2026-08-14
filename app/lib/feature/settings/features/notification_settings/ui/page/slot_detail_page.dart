@@ -15,11 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SlotDetailPage extends HookConsumerWidget {
-  const SlotDetailPage({
-    required this.slotId,
-    required this.isPro,
-    super.key,
-  });
+  const SlotDetailPage({required this.slotId, required this.isPro, super.key});
 
   final String slotId;
   final bool isPro;
@@ -35,7 +31,9 @@ class SlotDetailPage extends HookConsumerWidget {
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showErrorDialog(context, error: next.error);
+          await ref
+              .read(errorDialogActionProvider)
+              .show(context, error: next.error);
         }
       });
     }
@@ -132,7 +130,6 @@ class SlotDetailPage extends HookConsumerWidget {
             ),
     );
   }
-
 }
 
 extension NotificationSlotTypeLabel on NotificationSlotType {
@@ -254,10 +251,7 @@ class _IntensityDropdown extends StatelessWidget {
       },
       dropdownMenuEntries: [
         for (final intensity in JmaIntensity.selectableValues)
-          DropdownMenuEntry(
-            value: intensity,
-            label: '震度${intensity.label}',
-          ),
+          DropdownMenuEntry(value: intensity, label: '震度${intensity.label}'),
       ],
     );
   }
@@ -274,10 +268,7 @@ class _DeleteRegionTile extends StatelessWidget {
 
     return ListTile(
       leading: Icon(Icons.delete_outline, color: colorTheme.error),
-      title: Text(
-        'この地域を削除',
-        style: TextStyle(color: colorTheme.error),
-      ),
+      title: Text('この地域を削除', style: TextStyle(color: colorTheme.error)),
       onTap: onTap,
     );
   }

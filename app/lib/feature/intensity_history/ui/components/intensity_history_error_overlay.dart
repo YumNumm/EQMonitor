@@ -13,11 +13,14 @@ class IntensityHistoryErrorOverlayAction {
   const IntensityHistoryErrorOverlayAction();
 
   Future<void> showDetails({
+    required WidgetRef ref,
     required BuildContext context,
     required Object error,
     required StackTrace? stackTrace,
   }) {
-    return showErrorDetailsSheet(context, error: error, stackTrace: stackTrace);
+    return ref
+        .read(errorDetailsSheetActionProvider)
+        .show(context, error: error, stackTrace: stackTrace);
   }
 }
 
@@ -78,6 +81,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                     visualDensity: VisualDensity.compact,
                   ),
                   onPressed: () => action.showDetails(
+                    ref: ref,
                     context: context,
                     error: error,
                     stackTrace: stackTrace,

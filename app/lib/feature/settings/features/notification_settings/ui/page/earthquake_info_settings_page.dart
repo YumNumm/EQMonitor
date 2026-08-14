@@ -24,27 +24,41 @@ class EarthquakeInfoSettingsPage extends HookConsumerWidget {
     final slots = [...?slotsAsync.value]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
-    ref.listen(
-      EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
-      (_, next) async {
-        if (next is MutationError && context.mounted) {
-          await showErrorDialog(context, error: next.error);
-        }
-      },
-    );
-    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) async {
+    ref.listen(EarthquakeGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
-    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (_, next) async {
+    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
+      }
+    });
+    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (
+      _,
+      next,
+    ) async {
+      if (next is MutationError && context.mounted) {
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
     ref.listen(NotificationSlotsNotifier.updateRegionMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -59,22 +73,16 @@ class EarthquakeInfoSettingsPage extends HookConsumerWidget {
               value: globalEnabled,
               onChanged: (value) async {
                 await EarthquakeGlobalSettingsNotifier.updateSettingsMutation
-                    .run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(earthquakeGlobalSettingsProvider.notifier)
-                        .updateSettings(enabled: value);
-                  },
-                );
+                    .run(ref, (tsx) async {
+                      await tsx
+                          .get(earthquakeGlobalSettingsProvider.notifier)
+                          .updateSettings(enabled: value);
+                    });
               },
             ),
             const SettingsSectionHeader(text: '地域ごとの最小震度'),
             for (final slot in slots)
-              _SlotEarthquakeTile(
-                slot: slot,
-                enabled: globalEnabled,
-              ),
+              _SlotEarthquakeTile(slot: slot, enabled: globalEnabled),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
@@ -121,7 +129,9 @@ class _MasterEarthquakeControl extends StatelessWidget {
               vertical: spacing.md,
             ),
             decoration: BoxDecoration(
-              color: value ? colorTheme.surfaceContainerHighest : colorTheme.surfaceContainerHigh,
+              color: value
+                  ? colorTheme.surfaceContainerHighest
+                  : colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(shape.pill),
               border: Border.all(color: colorTheme.outlineVariant),
             ),
@@ -147,10 +157,7 @@ class _MasterEarthquakeControl extends StatelessWidget {
 }
 
 class _SlotEarthquakeTile extends ConsumerWidget {
-  const _SlotEarthquakeTile({
-    required this.slot,
-    required this.enabled,
-  });
+  const _SlotEarthquakeTile({required this.slot, required this.enabled});
 
   final NotificationSlot slot;
   final bool enabled;
@@ -178,11 +185,9 @@ class _SlotEarthquakeTile extends ConsumerWidget {
             value: slot.earthquakeMinIntensity,
             enabled: enabled,
             onChanged: (intensity) async {
-              await ref.read(slotUpdateActionProvider).execute(
-                ref,
-                slot,
-                earthquakeMinIntensity: intensity,
-              );
+              await ref
+                  .read(slotUpdateActionProvider)
+                  .execute(ref, slot, earthquakeMinIntensity: intensity);
             },
           ),
           const SizedBox(width: 8),
@@ -190,11 +195,9 @@ class _SlotEarthquakeTile extends ConsumerWidget {
             value: slot.earthquakeEnabled,
             onChanged: enabled
                 ? (value) async {
-                    await ref.read(slotUpdateActionProvider).execute(
-                      ref,
-                      slot,
-                      earthquakeEnabled: value,
-                    );
+                    await ref
+                        .read(slotUpdateActionProvider)
+                        .execute(ref, slot, earthquakeEnabled: value);
                   }
                 : null,
           ),
@@ -219,8 +222,8 @@ class _IntensityDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolved =
         value != null && JmaIntensity.selectableValues.contains(value)
-            ? value
-            : JmaIntensity.three;
+        ? value
+        : JmaIntensity.three;
 
     return DropdownMenu<JmaIntensity>(
       initialSelection: resolved,
@@ -234,10 +237,7 @@ class _IntensityDropdown extends StatelessWidget {
       },
       dropdownMenuEntries: [
         for (final intensity in JmaIntensity.selectableValues)
-          DropdownMenuEntry(
-            value: intensity,
-            label: '震度${intensity.label}',
-          ),
+          DropdownMenuEntry(value: intensity, label: '震度${intensity.label}'),
       ],
     );
   }

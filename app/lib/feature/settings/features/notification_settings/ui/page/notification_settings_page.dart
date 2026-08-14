@@ -76,7 +76,9 @@ class _Body extends HookConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -85,7 +87,9 @@ class _Body extends HookConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -244,7 +248,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
     ref.listen(EarthquakeGlobalSettingsNotifier.updateSettingsMutation, (
@@ -252,7 +258,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -424,9 +432,8 @@ class _CustomSettingsSection extends StatelessWidget {
             subtitle: '100gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
             locked: !isPro,
             onTap: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('この機能は現在準備中です')));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('この機能は現在準備中です')));
             },
           ),
         ],
@@ -529,7 +536,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
     ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -538,7 +547,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -712,7 +723,9 @@ class _SlotListSection extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -940,8 +953,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
-            subtitleText:
-                '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
+            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
             value: settings.vyse60Enabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -955,8 +967,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「北海道・三陸沖後発地震注意情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nceq/info_guide.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nceq/info_guide.html',
               ),
               InfoLink(
                 title: '配信資料に関する仕様 No.40701 ～北海道・三陸沖後発地震注意情報～',
@@ -966,8 +977,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
           ),
           InfoNotificationTile(
             title: '南海トラフ地震関連解説情報(定例外)',
-            subtitleText:
-                '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
+            subtitleText: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
             value: settings.nankaiExtraordinaryEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -981,13 +991,11 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
               ),
               InfoLink(
                 title: '「南海トラフ地震臨時情報」が発表されたときの防災対応',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/bosai.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/bosai.html',
               ),
             ],
           ),
@@ -1007,20 +1015,17 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
               ),
               InfoLink(
                 title: '南海トラフ沿いの地震に関する評価検討会とは',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/assessment.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/assessment.html',
               ),
             ],
           ),
           InfoNotificationTile(
             title: '地震・津波に関するお知らせ',
-            subtitleText:
-                '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
+            subtitleText: '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
             value: settings.earthquakeNoticeEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
