@@ -14,27 +14,40 @@ void main() {
         maxGpuUploadBytesPerFrame: null,
       );
 
-  CanonicalTileId tile(int x, int y) => CanonicalTileId(z: 5, x: x, y: y);
+  UnwrappedTileId tile(int x, int y, {int wrap = 0}) => UnwrappedTileId(
+    wrap: wrap,
+    canonical: CanonicalTileId(z: 5, x: x, y: y),
+  );
 
   group('MapTileScheduler.selectNext', () {
-    test('prefers tiles nearest to the camera center', () {
+    test('keeps the wrap-aware order produced by the cover calculator', () {
       final scheduler = MapTileScheduler(budget: budget());
+      // date line 跨ぎ: 視覚的に中心の隣なのは wrap:-1 の x=31 で、
+      // canonical x の差だけで測ると最遠と誤判定される並び。
       final selected = scheduler.selectNext(
-        requested: [tile(10, 10), tile(2, 2), tile(6, 6)],
+        coverOrdered: [tile(0, 0), tile(31, 0, wrap: -1), tile(8, 0)],
         inFlight: const {},
         completed: const {},
-        center: tile(1, 1),
       );
-      expect(selected, [tile(2, 2), tile(6, 6)]);
+      expect(selected, [tile(0, 0), tile(31, 0, wrap: -1)]);
+    });
+
+    test('treats another world copy of a canonical tile as distinct', () {
+      final scheduler = MapTileScheduler(budget: budget());
+      final selected = scheduler.selectNext(
+        coverOrdered: [tile(3, 3), tile(3, 3, wrap: 1)],
+        inFlight: {tile(3, 3)},
+        completed: const {},
+      );
+      expect(selected, [tile(3, 3, wrap: 1)]);
     });
 
     test('coalesces tiles already in flight or completed', () {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 4));
       final selected = scheduler.selectNext(
-        requested: [tile(1, 1), tile(2, 2), tile(3, 3), tile(1, 1)],
+        coverOrdered: [tile(1, 1), tile(2, 2), tile(3, 3), tile(1, 1)],
         inFlight: {tile(2, 2)},
         completed: {tile(3, 3)},
-        center: tile(0, 0),
       );
       expect(selected, [tile(1, 1)]);
     });
@@ -42,22 +55,19 @@ void main() {
     test('applies backpressure using the remaining in-flight budget', () {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 3));
       final selected = scheduler.selectNext(
-        requested: [tile(1, 0), tile(2, 0), tile(3, 0), tile(4, 0)],
+        coverOrdered: [tile(1, 0), tile(2, 0), tile(3, 0), tile(4, 0)],
         inFlight: {tile(9, 9)},
         completed: const {},
-        center: tile(0, 0),
       );
-      expect(selected.length, 2);
       expect(selected, [tile(1, 0), tile(2, 0)]);
     });
 
     test('returns nothing when the in-flight budget is saturated', () {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 1));
       final selected = scheduler.selectNext(
-        requested: [tile(1, 0)],
+        coverOrdered: [tile(1, 0)],
         inFlight: {tile(9, 9)},
         completed: const {},
-        center: tile(0, 0),
       );
       expect(selected, isEmpty);
     });
