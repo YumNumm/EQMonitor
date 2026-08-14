@@ -6,20 +6,17 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../src/color_scheme_violation_finder.dart';
+import '../src/lint_target_scope.dart';
 
 class AvoidDirectColorScheme extends AnalysisRule {
   AvoidDirectColorScheme()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_direct_color_scheme',
     'Theme.of(context).colorScheme を直接参照せず、'
         'designSystem.colorTheme を使用してください。',
-    correctionMessage:
-        'context.designSystem.colorTheme 経由でカラーを参照してください。',
+    correctionMessage: 'context.designSystem.colorTheme 経由でカラーを参照してください。',
     severity: DiagnosticSeverity.WARNING,
   );
 
@@ -38,7 +35,8 @@ class AvoidDirectColorScheme extends AnalysisRule {
     RuleContext context,
   ) {
     final path = context.definingUnit.unit.declaredFragment?.source.fullName;
-    if (path != null && _isAllowed(path)) {
+    if (path != null &&
+        (LintTargetScope.isExcluded(path: path) || _isAllowed(path))) {
       return;
     }
     final visitor = _Visitor(this);
