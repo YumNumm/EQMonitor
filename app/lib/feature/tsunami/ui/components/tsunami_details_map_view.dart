@@ -13,6 +13,7 @@ import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
@@ -41,13 +42,10 @@ class TsunamiDetailsMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null =>
+      AsyncData(value: MapConfiguration(:final styleString?)) =>
         MapOperationQueueScope(
           child: MapLibreEventProvider(
-            child: _MapContent(
-              styleString: value.styleString!,
-              tsunami: tsunami,
-            ),
+            child: _MapContent(styleString: styleString, tsunami: tsunami),
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),

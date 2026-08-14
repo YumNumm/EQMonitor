@@ -64,9 +64,10 @@ class TsunamiObservationStationTile extends StatelessWidget {
     if (fh.isUnidentifiable ?? false) {
       return '第一波: 識別不能';
     }
-    final timePart = fh.arrivalTime != null
-        ? DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())
-        : '--:--';
+    final timePart = switch (fh.arrivalTime) {
+      final arrivalTime? => DateFormat('HH:mm').format(arrivalTime.toLocal()),
+      null => '--:--',
+    };
     final initialPart = switch (fh.initial) {
       WaveInitial.push => ' (押し)',
       WaveInitial.pull => ' (引き)',
@@ -77,18 +78,20 @@ class TsunamiObservationStationTile extends StatelessWidget {
 
   static String _formatMaxHeight(TsunamiObservationMaxHeight mh) {
     final parts = <String>['最大波:'];
+    final condition = mh.condition;
     if (mh.value != null) {
       final valueStr = '${mh.value}m';
       parts.add((mh.isOver ?? false) ? '$valueStr超' : valueStr);
-    } else if (mh.condition != null) {
-      parts.add(switch (mh.condition!) {
+    } else if (condition != null) {
+      parts.add(switch (condition) {
         ObservationMaxHeightCondition.minor => '微弱',
         ObservationMaxHeightCondition.observing => '観測中',
         ObservationMaxHeightCondition.important => '重要',
       });
     }
-    if (mh.dateTime != null) {
-      parts.add('(${DateFormat('HH:mm').format(mh.dateTime!.toLocal())})');
+    final dateTime = mh.dateTime;
+    if (dateTime != null) {
+      parts.add('(${DateFormat('HH:mm').format(dateTime.toLocal())})');
     }
     if (mh.isRising == true) {
       parts.add('上昇中');
