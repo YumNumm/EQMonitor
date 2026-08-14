@@ -219,7 +219,7 @@ return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVe
 
 class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
   const _FillMeshBuilderLimits({required this.maxHolesPerPolygon, required this.maxVerticesPerFeature, required this.maxVerticesPerSegment});
-
+  
 
 /// 1つのpolygon(1つの外形とその穴の組)に含められる穴数の上限。
 /// MapLibre Nativeの`fill_generator.cpp`が`limitHoles(polygon, 500)`で

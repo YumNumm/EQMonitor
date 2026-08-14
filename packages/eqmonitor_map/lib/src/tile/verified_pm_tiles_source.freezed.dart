@@ -211,7 +211,7 @@ return $default(_that.sourceInstanceId,_that.absolutePath,_that.sizeBytes,_that.
 
 class _VerifiedPmTilesSource implements VerifiedPmTilesSource {
   const _VerifiedPmTilesSource({required this.sourceInstanceId, required this.absolutePath, required this.sizeBytes, required this.sha256});
-
+  
 
 @override final  String sourceInstanceId;
 @override final  String absolutePath;

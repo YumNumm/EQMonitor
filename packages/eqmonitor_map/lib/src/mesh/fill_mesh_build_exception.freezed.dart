@@ -214,7 +214,7 @@ return limitExceeded(_that.reason);case _:
 
 class FillMeshDegenerateRingException implements FillMeshBuildException {
   const FillMeshDegenerateRingException({required this.reason});
-
+  
 
 @override final  String reason;
 
@@ -280,7 +280,7 @@ as String,
 
 class FillMeshHoleBeforeExteriorException implements FillMeshBuildException {
   const FillMeshHoleBeforeExteriorException({required this.reason});
-
+  
 
 @override final  String reason;
 
@@ -346,7 +346,7 @@ as String,
 
 class FillMeshLimitExceededException implements FillMeshBuildException {
   const FillMeshLimitExceededException({required this.reason});
-
+  
 
 @override final  String reason;
 

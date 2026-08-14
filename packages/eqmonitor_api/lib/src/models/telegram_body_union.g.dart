@@ -10,66 +10,61 @@ part of 'telegram_body_union.dart';
 
 TelegramBodyUnionEarthquakeTelegramBody
 _$TelegramBodyUnionEarthquakeTelegramBodyFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'TelegramBodyUnionEarthquakeTelegramBody',
-      json,
-      ($checkedConvert) {
-        final val = TelegramBodyUnionEarthquakeTelegramBody(
-          type: $checkedConvert('type', (v) => v as String),
-          earthquake: $checkedConvert(
-            'earthquake',
-            (v) => v == null
-                ? null
-                : EarthquakeTelegramBodyQuake.fromJson(
-                    v as Map<String, dynamic>,
-                  ),
-          ),
-          intensityRegions: $checkedConvert(
-            'intensityRegions',
-            (v) => (v as List<dynamic>?)
-                ?.map(
-                  (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
-          ),
-          intensityPrefectures: $checkedConvert(
-            'intensityPrefectures',
-            (v) => (v as List<dynamic>?)
-                ?.map(
-                  (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
-          ),
-          intensityCities: $checkedConvert(
-            'intensityCities',
-            (v) => (v as List<dynamic>?)
-                ?.map(
-                  (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
-          ),
-          intensityStations: $checkedConvert(
-            'intensityStations',
-            (v) => (v as List<dynamic>?)
-                ?.map(
-                  (e) => EarthquakeTelegramBodyIntensityStation.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
-          ),
-          $type: $checkedConvert('runtimeType', (v) => v as String?),
-        );
-        return val;
-      },
-      fieldKeyMap: const {r'$type': 'runtimeType'},
-    );
+    $checkedCreate('TelegramBodyUnionEarthquakeTelegramBody', json, (
+      $checkedConvert,
+    ) {
+      final val = TelegramBodyUnionEarthquakeTelegramBody(
+        type: $checkedConvert('type', (v) => v as String),
+        earthquake: $checkedConvert(
+          'earthquake',
+          (v) => v == null
+              ? null
+              : EarthquakeTelegramBodyQuake.fromJson(v as Map<String, dynamic>),
+        ),
+        intensityRegions: $checkedConvert(
+          'intensityRegions',
+          (v) => (v as List<dynamic>?)
+              ?.map(
+                (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        ),
+        intensityPrefectures: $checkedConvert(
+          'intensityPrefectures',
+          (v) => (v as List<dynamic>?)
+              ?.map(
+                (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        ),
+        intensityCities: $checkedConvert(
+          'intensityCities',
+          (v) => (v as List<dynamic>?)
+              ?.map(
+                (e) => EarthquakeTelegramBodyIntensityRegion.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        ),
+        intensityStations: $checkedConvert(
+          'intensityStations',
+          (v) => (v as List<dynamic>?)
+              ?.map(
+                (e) => EarthquakeTelegramBodyIntensityStation.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        ),
+        $type: $checkedConvert('runtimeType', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionEarthquakeTelegramBodyToJson(
   TelegramBodyUnionEarthquakeTelegramBody instance,
@@ -85,35 +80,31 @@ Map<String, dynamic> _$TelegramBodyUnionEarthquakeTelegramBodyToJson(
 
 TelegramBodyUnionEewTelegramBody _$TelegramBodyUnionEewTelegramBodyFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'TelegramBodyUnionEewTelegramBody',
-  json,
-  ($checkedConvert) {
-    final val = TelegramBodyUnionEewTelegramBody(
-      type: $checkedConvert('type', (v) => v as String),
-      eew: $checkedConvert('eew', (v) => v),
-      eewIntensityRegions: $checkedConvert(
-        'eewIntensityRegions',
-        (v) => v as List<dynamic>,
-      ),
-      eewWarningZones: $checkedConvert(
-        'eewWarningZones',
-        (v) => v as List<dynamic>,
-      ),
-      eewWarningPrefectures: $checkedConvert(
-        'eewWarningPrefectures',
-        (v) => v as List<dynamic>,
-      ),
-      eewWarningRegions: $checkedConvert(
-        'eewWarningRegions',
-        (v) => v as List<dynamic>,
-      ),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {r'$type': 'runtimeType'},
-);
+) =>
+    $checkedCreate('TelegramBodyUnionEewTelegramBody', json, ($checkedConvert) {
+      final val = TelegramBodyUnionEewTelegramBody(
+        type: $checkedConvert('type', (v) => v as String),
+        eew: $checkedConvert('eew', (v) => v),
+        eewIntensityRegions: $checkedConvert(
+          'eewIntensityRegions',
+          (v) => v as List<dynamic>,
+        ),
+        eewWarningZones: $checkedConvert(
+          'eewWarningZones',
+          (v) => v as List<dynamic>,
+        ),
+        eewWarningPrefectures: $checkedConvert(
+          'eewWarningPrefectures',
+          (v) => v as List<dynamic>,
+        ),
+        eewWarningRegions: $checkedConvert(
+          'eewWarningRegions',
+          (v) => v as List<dynamic>,
+        ),
+        $type: $checkedConvert('runtimeType', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionEewTelegramBodyToJson(
   TelegramBodyUnionEewTelegramBody instance,
@@ -130,18 +121,15 @@ Map<String, dynamic> _$TelegramBodyUnionEewTelegramBodyToJson(
 TelegramBodyUnionEarthquakeNoticeTelegramBody
 _$TelegramBodyUnionEarthquakeNoticeTelegramBodyFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'TelegramBodyUnionEarthquakeNoticeTelegramBody',
-  json,
-  ($checkedConvert) {
-    final val = TelegramBodyUnionEarthquakeNoticeTelegramBody(
-      type: $checkedConvert('type', (v) => v as String),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {r'$type': 'runtimeType'},
-);
+) => $checkedCreate('TelegramBodyUnionEarthquakeNoticeTelegramBody', json, (
+  $checkedConvert,
+) {
+  final val = TelegramBodyUnionEarthquakeNoticeTelegramBody(
+    type: $checkedConvert('type', (v) => v as String),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionEarthquakeNoticeTelegramBodyToJson(
   TelegramBodyUnionEarthquakeNoticeTelegramBody instance,
@@ -175,18 +163,15 @@ Map<String, dynamic> _$TelegramBodyUnionEarthquakeExplanationTelegramBodyToJson(
 TelegramBodyUnionEarthquakeCountsTelegramBody
 _$TelegramBodyUnionEarthquakeCountsTelegramBodyFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'TelegramBodyUnionEarthquakeCountsTelegramBody',
-  json,
-  ($checkedConvert) {
-    final val = TelegramBodyUnionEarthquakeCountsTelegramBody(
-      type: $checkedConvert('type', (v) => v as String),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {r'$type': 'runtimeType'},
-);
+) => $checkedCreate('TelegramBodyUnionEarthquakeCountsTelegramBody', json, (
+  $checkedConvert,
+) {
+  final val = TelegramBodyUnionEarthquakeCountsTelegramBody(
+    type: $checkedConvert('type', (v) => v as String),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionEarthquakeCountsTelegramBodyToJson(
   TelegramBodyUnionEarthquakeCountsTelegramBody instance,
@@ -195,18 +180,15 @@ Map<String, dynamic> _$TelegramBodyUnionEarthquakeCountsTelegramBodyToJson(
 TelegramBodyUnionEarthquakeNankaiTelegramBody
 _$TelegramBodyUnionEarthquakeNankaiTelegramBodyFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'TelegramBodyUnionEarthquakeNankaiTelegramBody',
-  json,
-  ($checkedConvert) {
-    final val = TelegramBodyUnionEarthquakeNankaiTelegramBody(
-      type: $checkedConvert('type', (v) => v as String),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {r'$type': 'runtimeType'},
-);
+) => $checkedCreate('TelegramBodyUnionEarthquakeNankaiTelegramBody', json, (
+  $checkedConvert,
+) {
+  final val = TelegramBodyUnionEarthquakeNankaiTelegramBody(
+    type: $checkedConvert('type', (v) => v as String),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionEarthquakeNankaiTelegramBodyToJson(
   TelegramBodyUnionEarthquakeNankaiTelegramBody instance,
@@ -214,18 +196,15 @@ Map<String, dynamic> _$TelegramBodyUnionEarthquakeNankaiTelegramBodyToJson(
 
 TelegramBodyUnionFallbackTelegramBody
 _$TelegramBodyUnionFallbackTelegramBodyFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'TelegramBodyUnionFallbackTelegramBody',
-      json,
-      ($checkedConvert) {
-        final val = TelegramBodyUnionFallbackTelegramBody(
-          type: $checkedConvert('type', (v) => v as String),
-          $type: $checkedConvert('runtimeType', (v) => v as String?),
-        );
-        return val;
-      },
-      fieldKeyMap: const {r'$type': 'runtimeType'},
-    );
+    $checkedCreate('TelegramBodyUnionFallbackTelegramBody', json, (
+      $checkedConvert,
+    ) {
+      final val = TelegramBodyUnionFallbackTelegramBody(
+        type: $checkedConvert('type', (v) => v as String),
+        $type: $checkedConvert('runtimeType', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$TelegramBodyUnionFallbackTelegramBodyToJson(
   TelegramBodyUnionFallbackTelegramBody instance,

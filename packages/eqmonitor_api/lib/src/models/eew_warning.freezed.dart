@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_warning.dart';
@@ -9,6 +9,7 @@ part of 'eew_warning.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$EewWarningCopyWithImpl<$Res>
 /// Create a copy of EewWarning
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? zones = null,Object? prefectures = null,Object? regions = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewWarning(
 zones: null == zones ? _self.zones : zones // ignore: cast_nullable_to_non_nullable
 as List<EewWarningZoneItem>,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<EewWarningZoneItem>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
@@ -211,7 +212,7 @@ return $default(_that.zones,_that.prefectures,_that.regions);case _:
 @JsonSerializable()
 
 class _EewWarning implements EewWarning {
-  const _EewWarning({required final  List<EewWarningZoneItem> zones, required final  List<EewWarningZoneItem> prefectures, required final  List<EewWarningZoneItem> regions}): _zones = zones,_prefectures = prefectures,_regions = regions;
+  const _EewWarning({required  List<EewWarningZoneItem> zones, required  List<EewWarningZoneItem> prefectures, required  List<EewWarningZoneItem> regions}): _zones = zones,_prefectures = prefectures,_regions = regions;
   factory _EewWarning.fromJson(Map<String, dynamic> json) => _$EewWarningFromJson(json);
 
  final  List<EewWarningZoneItem> _zones;

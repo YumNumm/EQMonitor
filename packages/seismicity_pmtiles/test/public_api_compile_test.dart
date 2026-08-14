@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -30,10 +31,21 @@ Future<SeismicityPmTilesArchive> openPublicApiArchive({
   );
 }
 
+SeismicityPmTilesArchiveDescriptor readPublicApiArchiveDescriptor({
+  required SeismicityPmTilesArchive archive,
+}) => archive.descriptor;
+
+SeismicityPmTilesDataset replacePublicApiChunks({
+  required SeismicityPmTilesDataset dataset,
+  required List<SeismicityPmTilesChunk> chunks,
+}) => dataset.copyWith(chunks: chunks);
+
 void main() {
   test('stable reader and archive contracts compile through the barrel', () {
-    const factory = SeismicityRandomAccessReaderFactory(
+    final factory = SeismicityRandomAccessReaderFactory(
       assetLoader: loadPublicApiAsset,
+      dio: Dio(),
+      networkMaxCacheBytes: 1024,
     );
     final reader = PublicApiReader();
     const entry = PmTilesV3DirectoryEntry(
@@ -46,6 +58,30 @@ void main() {
     expect(factory.assetLoader, loadPublicApiAsset);
     expect(reader.sizeBytes, 1);
     expect(openPublicApiArchive, isA<Function>());
+    expect(readPublicApiArchiveDescriptor, isA<Function>());
+    expect(replacePublicApiChunks, isA<Function>());
+    expect(
+      const SeismicityPmTilesDecodeProgress(
+        decodedTileCount: 0,
+        rawFeatureCount: 0,
+        uniqueFeatureCount: 0,
+      ).uniqueFeatureCount,
+      0,
+    );
+    expect(
+      const SeismicityPmTilesLoadState.decoding(
+        progress: SeismicityPmTilesDecodeProgress(
+          decodedTileCount: 1,
+          rawFeatureCount: 1,
+          uniqueFeatureCount: 1,
+        ),
+      ),
+      isA<SeismicityPmTilesLoadState>(),
+    );
+    SeismicityPmTilesDecodeOperation? operation;
+    expect(operation, isNull);
+    final decoder = SeismicityPmTilesDecoder();
+    expect(decoder.start, isA<Function>());
     expect(entry.runLength, 1);
   });
 }

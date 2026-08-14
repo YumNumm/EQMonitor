@@ -202,7 +202,7 @@ return limitExceeded(_that.reason);case _:
 
 class LineMeshLimitExceededException implements LineMeshBuildException {
   const LineMeshLimitExceededException({required this.reason});
-
+  
 
 @override final  String reason;
 

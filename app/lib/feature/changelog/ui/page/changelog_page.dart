@@ -95,10 +95,7 @@ class ChangelogEntryCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           if (content != null && content.isNotEmpty)
-            MarkdownBody(
-              data: content,
-              styleSheet: MarkdownStyleSheet.fromTheme(theme),
-            )
+            _ThemedMarkdownBody(data: content)
           else
             for (final section in entry.sections)
               _SectionWidget(section: section),
@@ -116,15 +113,43 @@ class _SectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final markdownContent =
         '### ${section.title}\n\n${section.items.map((i) => '- $i').join('\n')}';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: MarkdownBody(
-        data: markdownContent,
-        styleSheet: MarkdownStyleSheet.fromTheme(theme),
+      child: _ThemedMarkdownBody(data: markdownContent),
+    );
+  }
+}
+
+/// `flutter_markdown` は Flutter 本体の `ThemeData` を要求するため、
+/// material_ui へ移行したアプリのテーマを直接渡せない。
+/// テキストスタイルのみを明示的に受け渡して配色崩れを防ぐ。
+class _ThemedMarkdownBody extends StatelessWidget {
+  const _ThemedMarkdownBody({required this.data});
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return MarkdownBody(
+      data: data,
+      styleSheet: MarkdownStyleSheet(
+        p: textTheme.bodyMedium,
+        h1: textTheme.headlineSmall,
+        h2: textTheme.titleLarge,
+        h3: textTheme.titleMedium,
+        h4: textTheme.titleSmall,
+        h5: textTheme.titleSmall,
+        h6: textTheme.titleSmall,
+        listBullet: textTheme.bodyMedium,
+        strong: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+        em: textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+        a: textTheme.bodyMedium?.copyWith(decoration: TextDecoration.underline),
+        code: textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
       ),
     );
   }
