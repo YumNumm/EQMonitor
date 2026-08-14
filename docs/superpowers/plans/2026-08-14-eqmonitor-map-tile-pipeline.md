@@ -215,7 +215,17 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: versioned payload header + vertex/index/offset/string/error sections suitable for `TransferableTypedData`. No Freezed object graph of features in the hot path return.
 
-**必須の追加要件（review 指摘 P1）:** payload 全体の総 byte 上限と、section/table ごとの件数上限を、**確保・転送の前に**呼び出し側の設定として検証する。per-tile の MVT decode 上限だけでは、巨大な untrusted tile が cache/backpressure の効く前に vertex/index/offset/property/string section を肥大化させられる。上限超過は typed exception（空 payload へ丸めない）。
+**判定: 本 Issue では実装しない（YAGNI / 計測済みの決定と矛盾する）。**
+`BaseMapTileDecoder.decode` は既に `Isolate.run` で UI isolate 外で decode し、
+その doc（`base_map_tile_decoder.dart` 194–205 行）で `TransferableTypedData` を
+**使わない**ことを実測付きで決めている（realistic tile で decode+mesh ~2.6ms /
+出力 ~112KB、SendPort コピーは <1ms で計測誤差の範囲、packed 化の複雑さの方が
+上回る）。したがって packed flat-buffer payload を新設するのは「根拠なく重い機構を
+入れない」という Global Constraints に反する。review 指摘の「payload section の
+byte 上限」は、packed payload 前提の要件であり、Freezed object graph を SendPort で
+そのまま渡す現行方式では **decode 側の `MvtDecodeLimits`（layer/feature/vertex 数の
+上限）が既に同じ役割**を果たしている。将来 packed 化が必要になった場合の残課題は
+`docs/todo/840_eqmonitor_map_packed_worker_payload.md`。
 
 - [ ] **Step 1: Write failing encode/decode roundtrip tests**
 - [ ] **Step 2: Run RED**
@@ -236,11 +246,18 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - Consumes: payload + incarnation token + budget
 - Produces: client that runs decode off UI isolate; cancel closes port / retires worker without erroring callers waiting on stale work
 
-- [ ] **Step 1: Write failing worker/cancel/incarnation tests**
-- [ ] **Step 2: Run RED**
-- [ ] **Step 3: Implement**
-- [ ] **Step 4: Run GREEN**
-- [ ] **Step 5: Commit** `feat: MVT decode worker と cancel 契約を追加`
+**判定: hard 制約は既に達成済み。永続 worker 化は計測待ちで defer。**
+「UI Isolate で MVT decode / mesh 構築禁止」は `BaseMapTileDecoder.decode` の
+`Isolate.run` で既に満たしている（decode は毎回 UI 外 isolate で走る）。Task 11 が
+追加で狙うのは **per-call `Isolate.run` を永続 worker に替えて isolate 起動コストを
+削る**最適化だが、decoder doc は per-call のコストを `compute` と同等として問題視して
+いない。多数 tile を同時 decode するときの起動コストが実測で問題になって初めて
+永続化する。残課題は `docs/todo/845_eqmonitor_map_persistent_decode_worker.md`。
+- incarnation の stale 破棄は `BaseMapTileCache`（`AsyncGenerationToken`）が既に担う。
+- **並行度の制御（backpressure）は別問題で、こちらは未達**。現行の
+  `_requestMissingDecodes` は cover 内の欠損 tile 全部へ無制限に `Isolate.run` を
+  張る。ここに Task 12 の `MapTileScheduler` を挿すのが Task 15 の主眼
+  （`docs/todo/830_eqmonitor_map_scheduler_wiring.md`）。
 
 ---
 
