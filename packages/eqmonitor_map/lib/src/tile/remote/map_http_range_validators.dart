@@ -3,11 +3,20 @@ import 'package:eqmonitor_map/src/tile/remote/map_remote_tile_exception.dart';
 
 final _contentRange = RegExp(r'^bytes ([0-9]+)-([0-9]+)/([0-9]+)$');
 
+/// ちょうど1つの strong entity-tag(`"..."`)だけに一致する。`"` を内部に含む
+/// 値を弾くことで、`"old", "new"` のように comma 連結された複数 tag が
+/// 1つの strong validator として通ってしまうのを防ぐ。
+final _singleStrongEtag = RegExp(r'^"[^"]*"$');
+
 /// strong ETag(RFC 9110)の判定。weak validator は `W/` prefix を持つ。
 ///
 /// random-access Range 取得では、同一 archive snapshot を跨いだ byte 整合性を
 /// 保証するため strong validator を要求する(weak は byte 単位の同一性を
 /// 保証しない)。
+///
+/// HTTP adapter が重複 `ETag` ヘッダを1つの comma 連結値
+/// (`"old", "new"`)として渡してくる可能性があるため、**単一の** entity-tag で
+/// あることまで検証する。曖昧な snapshot をそのまま受理しない。
 final class MapHttpStrongEtagValidator {
   const MapHttpStrongEtagValidator();
 
@@ -16,9 +25,7 @@ final class MapHttpStrongEtagValidator {
     if (trimmed.startsWith('W/') || trimmed.startsWith('w/')) {
       return false;
     }
-    return trimmed.length >= 2 &&
-        trimmed.startsWith('"') &&
-        trimmed.endsWith('"');
+    return _singleStrongEtag.hasMatch(trimmed);
   }
 }
 

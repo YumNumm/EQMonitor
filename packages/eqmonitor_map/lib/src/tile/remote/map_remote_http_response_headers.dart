@@ -6,13 +6,21 @@ import 'package:flutter/foundation.dart';
 /// 契約を移植または共有最小型のみ」)。
 ///
 /// HTTP ヘッダ名は case-insensitive([RFC 9110])なので、lookup は小文字化して
-/// 突き合わせる。
+/// 突き合わせる。`ETag` と `etag` のように **同名ヘッダが異なる casing で
+/// 複数回渡された場合は値を結合** する(後勝ちで上書きしない)。上書きすると
+/// 「単一の strong validator が来た」と誤認し、validator の「欠損・複数は
+/// fail closed」契約を迂回してしまうため。
 @immutable
 final class MapRemoteHttpResponseHeaders {
   MapRemoteHttpResponseHeaders(Map<String, List<String>> raw)
     : _byLowerName = {
-        for (final entry in raw.entries)
-          entry.key.toLowerCase(): List.unmodifiable(entry.value),
+        for (final lowerName in {
+          for (final key in raw.keys) key.toLowerCase(),
+        })
+          lowerName: List.unmodifiable([
+            for (final entry in raw.entries)
+              if (entry.key.toLowerCase() == lowerName) ...entry.value,
+          ]),
       };
 
   final Map<String, List<String>> _byLowerName;

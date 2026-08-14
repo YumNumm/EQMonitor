@@ -74,6 +74,33 @@ void main() {
       );
     });
 
+    test('rejects a comma-joined pair of ETags as an ambiguous snapshot', () {
+      expect(
+        () => validate(
+          expectedEtag: null,
+          rawHeaders: {
+            'ETag': ['"v3-abc", "v4-xyz"'],
+            'Content-Range': ['bytes 100-115/4096'],
+          },
+        ),
+        throwsA(isA<MapRemoteTileWeakValidatorException>()),
+      );
+    });
+
+    test('rejects duplicate ETag headers that differ only by casing', () {
+      expect(
+        () => validate(
+          expectedEtag: null,
+          rawHeaders: {
+            'ETag': [strongEtag],
+            'etag': ['"v4-xyz"'],
+            'Content-Range': ['bytes 100-115/4096'],
+          },
+        ),
+        throwsA(isA<MapRemoteTileWeakValidatorException>()),
+      );
+    });
+
     test('rejects an ETag that drifted from the expected snapshot', () {
       expect(
         () => validate(
