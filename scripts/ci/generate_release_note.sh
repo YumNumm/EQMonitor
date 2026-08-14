@@ -3,11 +3,15 @@
 # 配布ノート本文を生成する。末尾に rev: <HEAD SHA> を必ず付与する。
 #
 # 環境変数:
-#   PLATFORM   ios | android (必須)
-#   OUTPUT_PATH  出力先 (必須)
-#   BASE_SHA     差分の起点 (任意。指定時は ASC / Play へ問い合わせない)
-#   MAX_LENGTH   本文の文字数上限 (既定 4000)
-#   REPO_ROOT    git リポジトリのルート (既定: このスクリプトから 2 階層上)
+#   PLATFORM          ios | android (必須)
+#   OUTPUT_PATH       出力先 (必須)
+#   BASE_SHA          差分の起点 (任意。指定時は ASC / Play へ問い合わせない)
+#   MAX_LENGTH        本文の文字数上限 (既定 4000)
+#   REPO_ROOT         git リポジトリのルート (既定: このスクリプトから 2 階層上)
+#   ASC_APP_ID        App Store Connect アプリ ID (既定 6447546703、ios のみ)
+#   TESTFLIGHT_LOCALE TestFlight test-notes の locale (既定 ja、ios のみ)
+#   LOOKBACK          遡るビルド数 (既定 5、ios のみ)
+#   ASC_BIN           asc CLI のパス (任意)
 #
 set -euo pipefail
 
@@ -17,6 +21,10 @@ OUTPUT_PATH="${OUTPUT_PATH:-}"
 PLATFORM="${PLATFORM:-}"
 MAX_LENGTH="${MAX_LENGTH:-4000}"
 BASE_SHA="${BASE_SHA:-}"
+ASC_APP_ID="${ASC_APP_ID:-6447546703}"
+TESTFLIGHT_LOCALE="${TESTFLIGHT_LOCALE:-ja}"
+LOOKBACK="${LOOKBACK:-5}"
+ASC_BIN="${ASC_BIN:-}"
 
 log() { printf '\033[1;34m==>\033[0m %s\n' "$*" >&2; }
 die() {
@@ -49,12 +57,78 @@ fetch_pr_title() {
 	gh pr view "$number" --repo "$gh_repo" --json title -q .title 2>/dev/null || true
 }
 
-# Task 3/4 で ASC / Play から rev を読み戻す。現時点では空を返す。
+resolve_asc() {
+	if [ -n "$ASC_BIN" ]; then
+		echo "$ASC_BIN"
+		return
+	fi
+	if command -v mise >/dev/null 2>&1; then
+		local from_mise
+		if from_mise="$(mise which asc 2>/dev/null)" && [ -x "$from_mise" ]; then
+			echo "$from_mise"
+			return
+		fi
+	fi
+	if command -v asc >/dev/null 2>&1; then
+		command -v asc
+		return
+	fi
+	die "asc CLI が見つかりません。mise install を実行するか ASC_BIN を指定してください。"
+}
+
+resolve_base_sha_for_ios() {
+	local asc app_id locale lookback builds_json build_numbers
+	asc="$(resolve_asc)"
+	app_id="$ASC_APP_ID"
+	locale="$TESTFLIGHT_LOCALE"
+	lookback="$LOOKBACK"
+
+	if ! builds_json="$(
+		"$asc" builds list \
+			--app "$app_id" \
+			--platform IOS \
+			--sort -uploadedDate \
+			--limit "$lookback" \
+			--output json
+	)"; then
+		die "App Store Connect のビルド一覧を取得できませんでした。"
+	fi
+
+	build_numbers="$(printf '%s' "$builds_json" | grep -Eo '"version":"[0-9]+"' | cut -d'"' -f4 || true)"
+
+	for build_number in $build_numbers; do
+		local notes_json candidate
+		if ! notes_json="$(
+			"$asc" builds test-notes list \
+				--app "$app_id" \
+				--build-number "$build_number" \
+				--platform IOS \
+				--locale "$locale" \
+				--output json 2>/dev/null
+		)"; then
+			continue
+		fi
+		candidate="$(printf '%s' "$notes_json" | grep -Eo 'rev: [0-9a-f]{40}' | tail -1 | cut -d' ' -f2 || true)"
+		[ -n "$candidate" ] || continue
+		if ! git -C "$REPO_ROOT" cat-file -e "$candidate^{commit}" 2>/dev/null; then
+			log "ビルド $build_number の rev ($candidate) は手元に存在しないため読み飛ばします"
+			continue
+		fi
+		log "ビルド $build_number を前回の配信とみなします (rev: $candidate)"
+		echo "$candidate"
+		return 0
+	done
+
+	echo ""
+}
+
 resolve_base_sha_for_platform() {
 	local platform="$1"
-	# shellcheck disable=SC2034
-	platform="$platform"
-	echo ""
+	case "$platform" in
+	ios) resolve_base_sha_for_ios ;;
+	android) echo "" ;;
+	*) die "未対応の PLATFORM です: $platform" ;;
+	esac
 }
 
 [ -n "$PLATFORM" ] || die "PLATFORM を指定してください (ios | android)"

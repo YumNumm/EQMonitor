@@ -69,3 +69,72 @@ if REPO_ROOT="$REPO" PLATFORM=windows OUTPUT_PATH="$OUT" bash "$GEN"; then
 	echo 'invalid PLATFORM must fail' >&2
 	exit 1
 fi
+
+# fake asc: resolve BASE_SHA from TestFlight test-notes rev marker
+new_fake_asc() {
+	local dir
+	dir=$(mktemp -d)
+	CLEANUP_DIRS+=("$dir")
+	cat >"$dir/asc" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+if [ "$1" = builds ] && [ "$2" = list ]; then
+	printf '%s\n' "${FAKE_ASC_BUILDS_JSON:?FAKE_ASC_BUILDS_JSON is required}"
+	exit 0
+fi
+if [ "$1" = builds ] && [ "$2" = test-notes ] && [ "$3" = list ]; then
+	build_number=
+	shift 3
+	while [ $# -gt 0 ]; do
+		case "$1" in
+		--build-number)
+			build_number=$2
+			shift 2
+			;;
+		*) shift ;;
+		esac
+	done
+	var="FAKE_ASC_NOTES_${build_number}"
+	notes_json=${!var:-}
+	if [ -z "$notes_json" ]; then
+		exit 1
+	fi
+	printf '%s\n' "$notes_json"
+	exit 0
+fi
+printf 'unexpected asc invocation: %s\n' "$*" >&2
+exit 1
+EOF
+	chmod +x "$dir/asc"
+	echo "$dir"
+}
+
+REPO=$(new_repo)
+git -C "$REPO" commit --allow-empty -m 'base' -q
+BASE=$(git -C "$REPO" rev-parse HEAD)
+git -C "$REPO" commit --allow-empty -m 'feat: ios change (#7)' -q
+FAKE_ASC_DIR=$(new_fake_asc)
+OUT="$REPO/ios-resolved.txt"
+FAKE_ASC_BUILDS_JSON='{"data":[{"attributes":{"version":"200"}}]}' \
+	FAKE_ASC_NOTES_200="{\"data\":[{\"attributes\":{\"whatToTest\":\"前回の配信から変更はありません。\\n\\nrev: ${BASE}\"}}]}" \
+	ASC_BIN="$FAKE_ASC_DIR/asc" \
+	run_gen "$REPO" ios "$OUT"
+
+grep -F '・#7 feat: ios change' "$OUT"
+grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
+
+# fake asc: skip rev that does not exist locally, use older build
+REPO=$(new_repo)
+git -C "$REPO" commit --allow-empty -m 'base' -q
+BASE=$(git -C "$REPO" rev-parse HEAD)
+git -C "$REPO" commit --allow-empty -m 'fix: follow-up (#8)' -q
+FAKE_ASC_DIR=$(new_fake_asc)
+OUT="$REPO/ios-skip-missing.txt"
+FAKE_ASC_BUILDS_JSON='{"data":[{"attributes":{"version":"201"}},{"attributes":{"version":"200"}}]}' \
+	FAKE_ASC_NOTES_201='{"data":[{"attributes":{"whatToTest":"rev: 0000000000000000000000000000000000000000"}}]}' \
+	FAKE_ASC_NOTES_200="{\"data\":[{\"attributes\":{\"whatToTest\":\"rev: ${BASE}\"}}]}" \
+	ASC_BIN="$FAKE_ASC_DIR/asc" \
+	run_gen "$REPO" ios "$OUT"
+
+grep -F '・#8 fix: follow-up' "$OUT"
+grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
