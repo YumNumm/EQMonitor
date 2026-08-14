@@ -24,6 +24,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const durationValidator = LiveMonitorDurationValidator();
     final durationController = useTextEditingController(
       text: settings.earthquakeDisplaySeconds.toString(),
     );
@@ -33,7 +34,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
 
     final Future<bool> Function({required String raw, required int? revision})
     saveDuration = ({required raw, required revision}) async {
-      final validation = validateLiveMonitorDuration(raw);
+      final validation = durationValidator.validate(raw);
       final seconds = validation.seconds;
       if (seconds == null) {
         durationError.value = '3〜300の整数を入力してください';
@@ -45,7 +46,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
         return false;
       }
       if (!didCommit &&
-          isCurrentLiveMonitorDurationGeneration(
+          durationValidator.isCurrentGeneration(
             currentRaw: durationController.text,
             currentRevision: durationRevision.value,
             committedRaw: raw,
@@ -68,7 +69,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
           if (!context.mounted) {
             return;
           }
-          if (!shouldApplyCommittedLiveMonitorDuration(
+          if (!durationValidator.shouldApplyCommitted(
             didCommit: didCommit,
             hasFocus: durationFocusNode.hasFocus,
             currentRaw: durationController.text,
@@ -142,7 +143,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                       );
                       if (!context.mounted ||
                           !didCommit ||
-                          !isCurrentLiveMonitorDurationGeneration(
+                          !durationValidator.isCurrentGeneration(
                             currentRaw: durationController.text,
                             currentRevision: durationRevision.value,
                             committedRaw: committedRaw,
@@ -204,7 +205,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 onChanged: (raw) {
                   durationRevision.value = onDurationChanged(raw);
                   durationError.value =
-                      validateLiveMonitorDuration(raw).error == null
+                      durationValidator.validate(raw).error == null
                       ? null
                       : '3〜300の整数を入力してください';
                 },
@@ -250,7 +251,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                       );
                       if (!context.mounted ||
                           !didCommit ||
-                          !isCurrentLiveMonitorDurationGeneration(
+                          !durationValidator.isCurrentGeneration(
                             currentRaw: durationController.text,
                             currentRevision: durationRevision.value,
                             committedRaw: committedRaw,
