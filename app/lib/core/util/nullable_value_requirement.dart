@@ -6,7 +6,7 @@ extension NullableValueRequirement<T extends Object> on T? {
   /// `Null check operator used on a null value` と違い、
   /// クラッシュログから前提条件を特定できる。
   ///
-  /// `?.` によるnull 伝播・フロー解析・型の見直しで解決できる箇所では
+  /// `?.` による null 伝播・フロー解析・型の見直しで解決できる箇所では
   /// これを使わないこと。
   T orFailBecause(String because) {
     final value = this;
