@@ -1,11 +1,10 @@
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/double_to_jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_isolate_provider.dart';
-import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/eew/data/logic/s_wave_travel_time_lookup.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
@@ -20,16 +19,19 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
 ) async {
   final hypocenter = eew.hypocenter;
   final accuracy = eew.accuracy;
-  final depth = hypocenter?.depth;
-  if (hypocenter == null ||
-      hypocenter.latitude == null ||
-      hypocenter.longitude == null ||
-      hypocenter.magnitude == null ||
-      hypocenter.depth == null ||
-      eew.isPlum ||
-      accuracy == null ||
-      accuracy.epicenter == 1 ||
+  if (hypocenter == null || accuracy == null) {
+    return [];
+  }
+  final latitude = hypocenter.latitude;
+  final longitude = hypocenter.longitude;
+  final magnitude = hypocenter.magnitude;
+  final depth = hypocenter.depth;
+  if (latitude == null ||
+      longitude == null ||
+      magnitude == null ||
       depth == null ||
+      eew.isPlum ||
+      accuracy.epicenter == 1 ||
       depth >= 150) {
     return [];
   }
@@ -43,12 +45,13 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
 
   final isolate = await ref.watch(estimatedIntensityIsolateProvider.future);
   final travelTimeTables = await ref.watch(travelTimeInternalProvider.future);
+  final sWaveTravelTimeLookup = ref.watch(sWaveTravelTimeLookupProvider);
 
   final intensities = await isolate.computeSingle(
-    jmaMagnitude: hypocenter.magnitude!,
-    depth: hypocenter.depth!,
-    lat: hypocenter.latitude!,
-    lon: hypocenter.longitude!,
+    jmaMagnitude: magnitude,
+    depth: depth,
+    lat: latitude,
+    lon: longitude,
   );
 
   final stations = stationIndex.regionStations;
@@ -88,17 +91,17 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
         final epicenterDistanceKm = distanceCalc.as(
           latlong2.LengthUnit.Kilometer,
           latlong2.LatLng(point.lat, point.lon),
-          latlong2.LatLng(hypocenter.latitude!, hypocenter.longitude!),
+          latlong2.LatLng(latitude, longitude),
         );
         final hypoDistanceKm = math.sqrt(
           math.pow(depth, 2) + math.pow(epicenterDistanceKm, 2),
         );
 
         // 走時テーブルからS波到達時間(秒)を逆引き
-        final sTimeSec = _lookupSWaveTravelTime(
-          travelTimeTables,
-          depth,
-          hypoDistanceKm,
+        final sTimeSec = sWaveTravelTimeLookup.lookup(
+          tables: travelTimeTables,
+          depth: depth,
+          distanceKm: hypoDistanceKm,
         );
         if (sTimeSec != null) {
           sWaveArrivalTime = originTime.add(
@@ -116,33 +119,4 @@ Future<List<EewEstimatedRegion>> eewEstimatedRegionIntensity(
       sWaveArrivalTime: sWaveArrivalTime,
     );
   }).toList();
-}
-
-/// 走時テーブルからS波到達時間(秒)を距離(km)から逆引き
-double? _lookupSWaveTravelTime(
-  TravelTimeTables tables,
-  int depth,
-  double distanceKm,
-) {
-  final depthTables = tables.table.where((t) => t.depth == depth).toList()
-    ..sort((a, b) => a.distance.compareTo(b.distance));
-
-  if (depthTables.isEmpty) {
-    return null;
-  }
-
-  final d1 = depthTables.lastWhereOrNull((t) => t.distance <= distanceKm);
-  final d2 = depthTables.firstWhereOrNull((t) => t.distance >= distanceKm);
-
-  if (d1 == null || d2 == null) {
-    return null;
-  }
-
-  if (d1.distance == d2.distance) {
-    return d1.s;
-  }
-
-  // 線形補間
-  final ratio = (distanceKm - d1.distance) / (d2.distance - d1.distance);
-  return d1.s + ratio * (d2.s - d1.s);
 }
