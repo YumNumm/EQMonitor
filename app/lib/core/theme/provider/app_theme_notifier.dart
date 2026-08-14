@@ -31,7 +31,9 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       SharedPreferencesKey.appThemeDark,
     );
     if (savedLight == null && savedDark == null) {
-      final migrated = await migrateFromLegacyIntensityColors(dataSource);
+      final migrated = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
       if (migrated != null) {
         // 新形式の保存が完了してから旧キーを削除する。
         // 途中でプロセスが終了しても旧キーが残るため、

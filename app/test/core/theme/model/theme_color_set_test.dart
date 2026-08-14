@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
+import 'package:eqmonitor/core/theme/util/contrast_color_util.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -96,11 +97,17 @@ void main() {
 
   group('onColorForBackground', () {
     test('明るい背景色の場合は黒を返す', () {
-      expect(onColorForBackground(Colors.white), Colors.black);
+      expect(
+        ContrastColorUtil.onColorForBackground(Colors.white),
+        Colors.black,
+      );
     });
 
     test('暗い背景色の場合は白を返す', () {
-      expect(onColorForBackground(Colors.black), Colors.white);
+      expect(
+        ContrastColorUtil.onColorForBackground(Colors.black),
+        Colors.white,
+      );
     });
 
     test(
@@ -108,7 +115,7 @@ void main() {
       () {
         // 輝度 ≈ 0.469。白とのコントラスト比 ≈ 2.0:1、黒とのコントラスト比 ≈ 10:1。
         const midtone = Color(0xFF8FB7FF);
-        expect(onColorForBackground(midtone), Colors.black);
+        expect(ContrastColorUtil.onColorForBackground(midtone), Colors.black);
       },
     );
   });
