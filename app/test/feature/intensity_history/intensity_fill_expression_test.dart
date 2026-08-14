@@ -14,7 +14,7 @@ void main() {
     });
 
     test('空の pairs は透明色のみのフォールバックを返す', () {
-      final result = buildIntensityMatchExpression([], colorModel);
+      final result = IntensityMatchExpressionBuilder.build([], colorModel);
 
       expect(result, hasLength(3));
       expect(result[0], equals('match'));
@@ -23,11 +23,9 @@ void main() {
     });
 
     test('1 つのペアで match 式が正しく生成される', () {
-      const pairs = [
-        (code: '010', intensity: JmaIntensity.four),
-      ];
+      const pairs = [(code: '010', intensity: JmaIntensity.four)];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       // ['match', ['get', 'code'], '010', '#color', 'rgba(0,0,0,0)']
       expect(result[0], equals('match'));
@@ -50,7 +48,7 @@ void main() {
         (code: '030', intensity: JmaIntensity.seven),
       ];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       // ['match', ['get','code'], '010', c1, '020', c2, '030', c3, 'rgba(0,0,0,0)']
       expect(result, hasLength(2 + pairs.length * 2 + 1));
@@ -72,11 +70,9 @@ void main() {
     });
 
     test('色は #RRGGBB 形式の文字列である', () {
-      const pairs = [
-        (code: 'ABC', intensity: JmaIntensity.sixLower),
-      ];
+      const pairs = [(code: 'ABC', intensity: JmaIntensity.sixLower)];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       final color = result[3] as String;
       // '#' + 6 hex chars
@@ -84,11 +80,9 @@ void main() {
     });
 
     test('unknown 震度でも正しく色が返る', () {
-      const pairs = [
-        (code: '000', intensity: JmaIntensity.unknown),
-      ];
+      const pairs = [(code: '000', intensity: JmaIntensity.unknown)];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       expect(result, hasLength(5));
       final color = result[3] as String;
@@ -100,11 +94,9 @@ void main() {
     });
 
     test('propertyKey を省略した場合は code が使われる', () {
-      const pairs = [
-        (code: '010', intensity: JmaIntensity.four),
-      ];
+      const pairs = [(code: '010', intensity: JmaIntensity.four)];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       expect(result[1], equals(<Object>['get', 'code']));
     });
@@ -117,7 +109,7 @@ void main() {
         (code: '020', intensity: JmaIntensity.one),
       ];
 
-      final result = buildIntensityMatchExpression(pairs, colorModel);
+      final result = IntensityMatchExpressionBuilder.build(pairs, colorModel);
 
       // ['match', ['get','code'], '010', c(5+), '020', c(1), 'rgba(0,0,0,0)']
       expect(result, hasLength(7));
@@ -141,7 +133,7 @@ void main() {
         (code: '0110200', intensity: JmaIntensity.fiveLower),
       ];
 
-      final result = buildIntensityMatchExpression(
+      final result = IntensityMatchExpressionBuilder.build(
         pairs,
         colorModel,
         propertyKey: 'regioncode',

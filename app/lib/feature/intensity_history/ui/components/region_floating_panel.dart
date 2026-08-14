@@ -128,7 +128,7 @@ class _CityPanel extends ConsumerWidget {
           child: InkWell(
             onTap: () async {
               if (selectedCity != null) {
-                await showCityDetailModal(
+                await AreaDetailModalAction().showCity(
                   context,
                   cityCode: selectedCity.code,
                   cityName: selectedCity.name,
@@ -137,7 +137,7 @@ class _CityPanel extends ConsumerWidget {
                 );
                 return;
               }
-              await showPrefectureDetailModal(
+              await AreaDetailModalAction().showPrefecture(
                 context,
                 prefectureCode: prefectureCode,
                 prefectureName: prefectureName,
