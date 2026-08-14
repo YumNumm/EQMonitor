@@ -14,10 +14,10 @@ void main() {
         maxGpuUploadBytesPerFrame: null,
       );
 
-  UnwrappedTileId tile(int x, int y, {int wrap = 0}) => UnwrappedTileId(
-    wrap: wrap,
-    canonical: CanonicalTileId(z: 5, x: x, y: y),
-  );
+  CanonicalTileId canonical(int x, int y) => CanonicalTileId(z: 5, x: x, y: y);
+
+  UnwrappedTileId tile(int x, int y, {int wrap = 0}) =>
+      UnwrappedTileId(wrap: wrap, canonical: canonical(x, y));
 
   group('MapTileScheduler.selectNext', () {
     test('keeps the wrap-aware order produced by the cover calculator', () {
@@ -32,22 +32,36 @@ void main() {
       expect(selected, [tile(0, 0), tile(31, 0, wrap: -1)]);
     });
 
-    test('treats another world copy of a canonical tile as distinct', () {
+    test('decodes a canonical tile once even across world copies', () {
       final scheduler = MapTileScheduler(budget: budget());
       final selected = scheduler.selectNext(
-        coverOrdered: [tile(3, 3), tile(3, 3, wrap: 1)],
-        inFlight: {tile(3, 3)},
+        coverOrdered: [tile(3, 3), tile(3, 3, wrap: 1), tile(4, 4)],
+        inFlight: const {},
         completed: const {},
       );
-      expect(selected, [tile(3, 3, wrap: 1)]);
+      expect(
+        selected,
+        [tile(3, 3), tile(4, 4)],
+        reason: 'the second world copy shares the same PMTiles bytes',
+      );
+    });
+
+    test('skips a world copy whose canonical decode is already in flight', () {
+      final scheduler = MapTileScheduler(budget: budget());
+      final selected = scheduler.selectNext(
+        coverOrdered: [tile(3, 3, wrap: 1), tile(4, 4)],
+        inFlight: {canonical(3, 3)},
+        completed: const {},
+      );
+      expect(selected, [tile(4, 4)]);
     });
 
     test('coalesces tiles already in flight or completed', () {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 4));
       final selected = scheduler.selectNext(
         coverOrdered: [tile(1, 1), tile(2, 2), tile(3, 3), tile(1, 1)],
-        inFlight: {tile(2, 2)},
-        completed: {tile(3, 3)},
+        inFlight: {canonical(2, 2)},
+        completed: {canonical(3, 3)},
       );
       expect(selected, [tile(1, 1)]);
     });
@@ -56,7 +70,7 @@ void main() {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 3));
       final selected = scheduler.selectNext(
         coverOrdered: [tile(1, 0), tile(2, 0), tile(3, 0), tile(4, 0)],
-        inFlight: {tile(9, 9)},
+        inFlight: {canonical(9, 9)},
         completed: const {},
       );
       expect(selected, [tile(1, 0), tile(2, 0)]);
@@ -66,7 +80,7 @@ void main() {
       final scheduler = MapTileScheduler(budget: budget(maxInFlight: 1));
       final selected = scheduler.selectNext(
         coverOrdered: [tile(1, 0)],
-        inFlight: {tile(9, 9)},
+        inFlight: {canonical(9, 9)},
         completed: const {},
       );
       expect(selected, isEmpty);
@@ -74,20 +88,20 @@ void main() {
   });
 
   group('MapTileScheduler.tilesToCancel', () {
-    test('cancels in-flight tiles no longer requested after a camera move', () {
+    test('cancels in-flight decodes dropped by a camera move', () {
       final scheduler = MapTileScheduler(budget: budget());
       final cancelled = scheduler.tilesToCancel(
-        inFlight: {tile(1, 1), tile(2, 2), tile(3, 3)},
-        stillRequested: {tile(2, 2)},
+        inFlight: {canonical(1, 1), canonical(2, 2), canonical(3, 3)},
+        stillRequested: {canonical(2, 2)},
       );
-      expect(cancelled, {tile(1, 1), tile(3, 3)});
+      expect(cancelled, {canonical(1, 1), canonical(3, 3)});
     });
 
-    test('cancels nothing when every in-flight tile is still requested', () {
+    test('cancels nothing when every in-flight decode is still requested', () {
       final scheduler = MapTileScheduler(budget: budget());
       final cancelled = scheduler.tilesToCancel(
-        inFlight: {tile(1, 1)},
-        stillRequested: {tile(1, 1), tile(2, 2)},
+        inFlight: {canonical(1, 1)},
+        stillRequested: {canonical(1, 1), canonical(2, 2)},
       );
       expect(cancelled, isEmpty);
     });

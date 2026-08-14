@@ -21,9 +21,13 @@ import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 ///   を超えない。
 /// - cancel: camera 移動後にもう要求されていない in-flight tile を打ち切る。
 ///
-/// tile の identity は world copy を含む[UnwrappedTileId]で扱う。canonical
-/// `z/x/y` だけにすると、date line を挟んで隣り合う別 world copy の tile が
-/// 同一視され、coalesce と cancel の判定を誤る。
+/// **順序・描画位置は[UnwrappedTileId]、decode の同一性は[CanonicalTileId]**で
+/// 扱う。date line 付近では同じ canonical tile が複数の world copy として cover に
+/// 現れるが、repository / geometry cache は `CanonicalTileId` で読み書きしており
+/// 実体は同じ PMTiles bytes である。world copy 単位で decode を張ると、
+/// `maxInFlightDecodes` が小さいときに同じ bytes の重複 decode が slot を占有し、
+/// まだ持っていない tile の decode を遅らせる。よって in-flight / decode 済みの
+/// 判定は canonical で行い、返す値は描画位置を保つため unwrapped のままにする。
 final class MapTileScheduler {
   const MapTileScheduler({required this.budget});
 
@@ -35,26 +39,31 @@ final class MapTileScheduler {
   ///
   /// [coverOrdered]は`TileCoverCalculator.cover`が返した順序(camera 中心
   /// 近傍優先)であることを前提とし、その相対順序を保ったまま絞り込む。
+  ///
+  /// [inFlight]/[completed]は decode 単位である[CanonicalTileId]の集合。
+  /// 返る各要素の `canonical` は互いに重複しない(同じ canonical の別 world copy
+  /// は、最も優先度の高い1件だけを decode 対象にする)。
   List<UnwrappedTileId> selectNext({
     required List<UnwrappedTileId> coverOrdered,
-    required Set<UnwrappedTileId> inFlight,
-    required Set<UnwrappedTileId> completed,
+    required Set<CanonicalTileId> inFlight,
+    required Set<CanonicalTileId> completed,
   }) {
     final remaining = budget.maxInFlightDecodes - inFlight.length;
     if (remaining <= 0) {
       return const [];
     }
 
-    final seen = <UnwrappedTileId>{};
+    final seen = <CanonicalTileId>{};
     final selected = <UnwrappedTileId>[];
     for (final tile in coverOrdered) {
       if (selected.length >= remaining) {
         break;
       }
-      if (inFlight.contains(tile) || completed.contains(tile)) {
+      final canonical = tile.canonical;
+      if (inFlight.contains(canonical) || completed.contains(canonical)) {
         continue;
       }
-      if (!seen.add(tile)) {
+      if (!seen.add(canonical)) {
         continue;
       }
       selected.add(tile);
@@ -62,9 +71,12 @@ final class MapTileScheduler {
     return List.unmodifiable(selected);
   }
 
-  /// camera 移動後にもう要求されていない in-flight tile(打ち切り対象)を返す。
-  Set<UnwrappedTileId> tilesToCancel({
-    required Set<UnwrappedTileId> inFlight,
-    required Set<UnwrappedTileId> stillRequested,
+  /// camera 移動後にもう要求されていない in-flight decode(打ち切り対象)を返す。
+  ///
+  /// decode 単位なので canonical で判定する。ある canonical tile は、どれか1つの
+  /// world copy がまだ要求されている限り打ち切らない。
+  Set<CanonicalTileId> tilesToCancel({
+    required Set<CanonicalTileId> inFlight,
+    required Set<CanonicalTileId> stillRequested,
   }) => inFlight.difference(stillRequested);
 }
