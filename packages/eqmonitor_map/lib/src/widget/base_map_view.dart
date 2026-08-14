@@ -12,6 +12,7 @@ import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
+import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,14 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
     /// 渡す。
     required int maxParentFallbackSteps,
+
+    /// 同時に走らせる tile decode の上限([MapTileScheduler]へ渡す)。
+    ///
+    /// 1 frame の cover に含まれる欠損 tile 全部へ無制限に `Isolate.run` decode を
+    /// 張ると、cover が大きく変わった瞬間に多数の isolate を同時 spawn して
+    /// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
+    /// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
+    required int maxInFlightDecodes,
   }) = _MapBaseLayerLimits;
 }
 
@@ -265,6 +274,9 @@ class _BaseMapController extends ChangeNotifier {
   );
   late final _sceneMeshCache = _TileSceneMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
+  );
+  late final _scheduler = MapTileScheduler(
+    maxInFlightDecodes: limits.maxInFlightDecodes,
   );
   static const _decoder = BaseMapTileDecoder();
   static const _geometryFactory = BaseMapGeometryFactory();
@@ -532,19 +544,27 @@ class _BaseMapController extends ChangeNotifier {
     if (repository == null) {
       return;
     }
-    for (final tile in cover) {
+    // 既に decode 済み(cache hit)/欠損確定の tile は scheduler の対象外にする。
+    final completed = <CanonicalTileId>{
+      for (final tile in cover)
+        if (_knownAbsentTiles.contains(tile.canonical) ||
+            _cache.get(
+                  sourceInstanceId: source.cacheIdentity,
+                  tileId: tile.canonical,
+                ) !=
+                null)
+          tile.canonical,
+    };
+    // scheduler が中心近傍優先・canonical 単位の coalesce・backpressure を適用し、
+    // 今 frame で開始してよい分だけ返す。残りは decode 完了ごとに `_refresh`→
+    // `_requestMissingDecodes` が再評価して順に開始する(drain ループ)。
+    final toStart = _scheduler.selectNext(
+      coverOrdered: [for (final tile in cover) tile.toUnwrapped()],
+      inFlight: _pendingDecodes,
+      completed: completed,
+    );
+    for (final tile in toStart) {
       final tileId = tile.canonical;
-      if (_pendingDecodes.contains(tileId) ||
-          _knownAbsentTiles.contains(tileId)) {
-        continue;
-      }
-      if (_cache.get(
-            sourceInstanceId: source.cacheIdentity,
-            tileId: tileId,
-          ) !=
-          null) {
-        continue;
-      }
       _pendingDecodes.add(tileId);
       unawaited(_decodeTile(repository: repository, tileId: tileId));
     }
