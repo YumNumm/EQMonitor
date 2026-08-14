@@ -48,6 +48,13 @@ final class MapRemotePmTilesRandomAccessReader
   var _closed = false;
   MapRemoteTileSnapshotMismatchException? _terminalSnapshot;
 
+  /// strong ETag をまだ pin していない間に走る「最初の read」。並行して複数の
+  /// 初回 read を `If-Match` なしで投げると、その間に origin が差し替わった際に
+  /// 双方が `expectedEtag == null` で通り、別 archive の byte を混ぜて pin を
+  /// 上書きし得る。よって初回 read は 1 本だけ走らせ、他は完了を待ってから
+  /// retry する(その頃には etag が pin 済み、または terminal になっている)。
+  Future<Uint8List>? _initialRead;
+
   @override
   int get sizeBytes => source.sizeBytes;
 
@@ -75,6 +82,17 @@ final class MapRemotePmTilesRandomAccessReader
     if (cached != null) {
       return Future.value(cached);
     }
+
+    // 初回 read を直列化する: etag 未 pin かつ既に初回 read が走っているなら、
+    // それを待ってから retry する(重複した If-Match なし request を出さない)。
+    final initialRead = _initialRead;
+    if (etag == null && initialRead != null) {
+      return initialRead.then(
+        (_) => readAt(offset: offset, length: length),
+        onError: (Object _) => readAt(offset: offset, length: length),
+      );
+    }
+
     final key = (etag, offset, length);
     final existing = _inFlight[key];
     if (existing != null) {
@@ -82,12 +100,18 @@ final class MapRemotePmTilesRandomAccessReader
     }
     final request = _fetch(offset: offset, length: length, etag: etag);
     _inFlight[key] = request;
+    if (etag == null) {
+      _initialRead = request;
+    }
     // `.ignore()` は cleanup チェーン側のエラーを握り潰す(呼び出し側は返り値の
     // `request` を await して同じエラーを受け取る)。`unawaited` だと未処理
     // async エラーとして再送出されてしまうため使わない。
     request.whenComplete(() {
       if (identical(_inFlight[key], request)) {
         _inFlight.remove(key)?.ignore();
+      }
+      if (identical(_initialRead, request)) {
+        _initialRead = null;
       }
     }).ignore();
     return request;
@@ -128,7 +152,7 @@ final class MapRemotePmTilesRandomAccessReader
 
     final headers = _headersOf(response);
     _identityValidator.validate(headers: headers);
-    final bytes = await _collect(response);
+    final bytes = await _collect(response, maxBytes: length);
 
     final String validatedEtag;
     try {
@@ -158,11 +182,27 @@ final class MapRemotePmTilesRandomAccessReader
     return MapRemoteHttpResponseHeaders(raw);
   }
 
-  Future<Uint8List> _collect(HttpClientResponse response) async {
-    final builder = await response.fold<BytesBuilder>(
-      BytesBuilder(copy: false),
-      (builder, chunk) => builder..add(chunk),
-    );
+  /// 応答 body を集めるが、要求 Range 長を超えた分は読まない。hostile/bug の
+  /// サーバが要求より大きい body を返しても、`readAt` 1 回で無制限に memory を
+  /// 確保しないための上限。`maxBytes` を超えたら読み取りを止め、超過した長さの
+  /// まま返す(呼び出し側の Content-Range / body 長 validator が
+  /// [MapRemoteTileBodyLengthMismatchException] で弾く)。
+  Future<Uint8List> _collect(
+    HttpClientResponse response, {
+    required int maxBytes,
+  }) async {
+    final builder = BytesBuilder(copy: false);
+    final subscription = StreamIterator(response);
+    try {
+      while (await subscription.moveNext()) {
+        builder.add(subscription.current);
+        if (builder.length > maxBytes) {
+          break;
+        }
+      }
+    } finally {
+      await subscription.cancel();
+    }
     return builder.toBytes();
   }
 

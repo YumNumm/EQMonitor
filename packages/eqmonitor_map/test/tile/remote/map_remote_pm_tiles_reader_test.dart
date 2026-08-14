@@ -110,6 +110,31 @@ void main() {
     );
   });
 
+  test('serializes concurrent first reads (one omits If-Match)', () async {
+    final reader = await readerOf();
+    addTearDown(reader.close);
+
+    final results = await Future.wait([
+      reader.readAt(offset: 0, length: 8),
+      reader.readAt(offset: 8, length: 8),
+    ]);
+    expect(results[0], archive.sublist(0, 8));
+    expect(results[1], archive.sublist(8, 16));
+    // 最初の read だけ If-Match 無しで走り、2 本目は pin 済み ETag で追従する。
+    expect(server.ifMatchRequests, [null, '"v1"']);
+  });
+
+  test('rejects an oversized body without buffering it unbounded', () async {
+    server.oversizeBodyBy = 4;
+    final reader = await readerOf();
+    addTearDown(reader.close);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 8),
+      throwsA(isA<MapRemoteTileBodyLengthMismatchException>()),
+    );
+  });
+
   test('rejects a range beyond the verified archive size', () async {
     final reader = await readerOf();
     addTearDown(reader.close);

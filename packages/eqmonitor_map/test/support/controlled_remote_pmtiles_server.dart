@@ -31,8 +31,15 @@ final class ControlledRemotePmTilesServer {
   /// 非 null のとき、302 redirect を返す。
   Uri? redirectTo;
 
+  /// 非 null のとき、要求 Range より N byte 多い body を返す(oversized body の
+  /// 拒否を検証するため)。
+  int? oversizeBodyBy;
+
   /// 受信した `Range` ヘッダの記録(coalesce / 再取得の検証用)。
   final List<String> rangeRequests = [];
+
+  /// 受信した `If-Match` ヘッダの記録(初回 read 直列化の検証用。欠損は null)。
+  final List<String?> ifMatchRequests = [];
 
   Uri get url => Uri.parse(
     'http://${_server.address.host}:${_server.port}/base.pmtiles',
@@ -73,6 +80,7 @@ final class ControlledRemotePmTilesServer {
     rangeRequests.add(rangeHeader);
 
     final ifMatch = request.headers.value(HttpHeaders.ifMatchHeader);
+    ifMatchRequests.add(ifMatch);
     if (ifMatch != null && ifMatch != etag) {
       response
         ..statusCode = HttpStatus.preconditionFailed
@@ -89,7 +97,10 @@ final class ControlledRemotePmTilesServer {
     }
     final start = int.parse(match.group(1)!);
     final end = int.parse(match.group(2)!);
-    final slice = archiveBytes.sublist(start, end + 1);
+    final slice = <int>[
+      ...archiveBytes.sublist(start, end + 1),
+      ...List.filled(oversizeBodyBy ?? 0, 0),
+    ];
 
     response
       ..statusCode = statusOverride ?? HttpStatus.partialContent
