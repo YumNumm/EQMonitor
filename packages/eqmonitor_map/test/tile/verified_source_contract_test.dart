@@ -10,9 +10,9 @@ import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 
-import '../../../pmtiles_v3/test/support/pmtiles_v3_fixture_builder.dart';
+import '../support/minimal_pmtiles_archive_builder.dart';
 
-const _builder = PmTilesV3FixtureBuilder();
+const _builder = MinimalPmTilesArchiveBuilder();
 
 const _archiveLimits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
@@ -33,10 +33,9 @@ void main() {
     'VerifiedPmTilesSource repository returns null for sparse gaps and '
     'typed errors for invalid coordinates, never empty tile bytes',
     () async {
-      final fixture = _builder.build(
-        rootEntries: const [
-          PmTilesV3FixtureTile(tileId: 1, bytes: [1, 2, 3]),
-        ],
+      final archiveBytes = _builder.buildSingleTile(
+        tileId: 1,
+        tileBytes: const [1, 2, 3],
         minZoom: 1,
         maxZoom: 1,
       );
@@ -44,7 +43,7 @@ void main() {
         '${Directory.systemTemp.path}/eqmonitor_map_verified_source_'
         '${DateTime.now().microsecondsSinceEpoch}.pmtiles',
       );
-      await file.writeAsBytes(fixture.bytes, flush: true);
+      await file.writeAsBytes(archiveBytes, flush: true);
       addTearDown(file.deleteSync);
 
       // package は sha256 を再検証しない（app 検証済み前提）。契約ピン用の固定値。
@@ -52,7 +51,7 @@ void main() {
         source: VerifiedPmTilesSource(
           sourceInstanceId: 'contract-local-1',
           absolutePath: file.path,
-          sizeBytes: fixture.bytes.length,
+          sizeBytes: archiveBytes.length,
           sha256: '0' * 64,
         ),
         limits: _archiveLimits,
