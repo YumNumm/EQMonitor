@@ -274,12 +274,17 @@ jobs:
         env:
           COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
           IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
+          DEPLOY_IOS_EXTERNAL: ${{ needs.define-matrix.outputs.deploy-ios-external }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           BETA_ARGS=()
           if [ "$IS_BETA_TESTING" = "true" ]; then
             BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
+          # 公開テスト(TestFlight external)配布のビルドでは揺れ検知を無効にする
+          if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
           fi
           flutter build ios --config-only \
             --no-codesign \
@@ -653,12 +658,17 @@ jobs:
           BUILD_NUMBER: ${{ github.run_number }}
           COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
           IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
+          ANDROID_TRACK: ${{ needs.define-matrix.outputs.android-track }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           BETA_ARGS=()
           if [ "$IS_BETA_TESTING" = "true" ]; then
             BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
+          # 公開テスト(Google Play external)配布のビルドでは揺れ検知を無効にする
+          if [ "$ANDROID_TRACK" = "external" ]; then
+            BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
           fi
           flutter build appbundle \
             --release \
