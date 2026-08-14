@@ -7,48 +7,58 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// 観測点タップ時のポップアップ
-///
-/// [intensityLabel] は [intensity] が null のときにラベルテキストで震度を表示する
-/// フォールバック (震度DBの歴史的階級など JmaIntensity に対応しない階級向け)。
-Future<void> showStationPopup(
-  BuildContext context, {
-  required String stationName,
-  required JmaIntensity? intensity,
-  required JmaLpgmIntensity? lpgmIntensity,
-  String? intensityLabel,
-}) {
-  return showModalBottomSheet(
-    context: context,
-    clipBehavior: Clip.antiAlias,
-    builder: (context) => _StationPopupBody(
-      stationName: stationName,
-      intensity: intensity,
-      lpgmIntensity: lpgmIntensity,
-      intensityLabel: intensityLabel,
-    ),
-  );
-}
+final earthquakeHistoryMapPopupActionProvider = Provider(
+  (ref) => const EarthquakeHistoryMapPopupAction(),
+);
 
-/// 区域タップ時のポップアップ
-///
-/// [intensityHistoryRoute] を指定すると「この地域の最大震度履歴」ボタンを表示する。
-Future<void> showAreaPopup(
-  BuildContext context, {
-  required String areaName,
-  required JmaIntensity? maxIntensity,
-  IntensityHistoryRoute? intensityHistoryRoute,
-}) {
-  return showModalBottomSheet(
-    context: context,
-    clipBehavior: Clip.antiAlias,
-    builder: (context) => _AreaPopupBody(
-      areaName: areaName,
-      maxIntensity: maxIntensity,
-      intensityHistoryRoute: intensityHistoryRoute,
-    ),
-  );
+/// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
+class EarthquakeHistoryMapPopupAction {
+  const EarthquakeHistoryMapPopupAction();
+
+  /// 観測点タップ時のポップアップ
+  ///
+  /// [intensityLabel] は [intensity] が null のときにラベルテキストで震度を表示する
+  /// フォールバック (震度DBの歴史的階級など JmaIntensity に対応しない階級向け)。
+  Future<void> showStation(
+    BuildContext context, {
+    required String stationName,
+    required JmaIntensity? intensity,
+    required JmaLpgmIntensity? lpgmIntensity,
+    String? intensityLabel,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      clipBehavior: Clip.antiAlias,
+      builder: (context) => _StationPopupBody(
+        stationName: stationName,
+        intensity: intensity,
+        lpgmIntensity: lpgmIntensity,
+        intensityLabel: intensityLabel,
+      ),
+    );
+  }
+
+  /// 区域タップ時のポップアップ
+  ///
+  /// [intensityHistoryRoute] を指定すると「この地域の最大震度履歴」ボタンを表示する。
+  Future<void> showArea(
+    BuildContext context, {
+    required String areaName,
+    required JmaIntensity? maxIntensity,
+    IntensityHistoryRoute? intensityHistoryRoute,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      clipBehavior: Clip.antiAlias,
+      builder: (context) => _AreaPopupBody(
+        areaName: areaName,
+        maxIntensity: maxIntensity,
+        intensityHistoryRoute: intensityHistoryRoute,
+      ),
+    );
+  }
 }
 
 class _StationPopupBody extends StatelessWidget {
@@ -91,31 +101,31 @@ class _StationPopupBody extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                if (intensity != null) ...[
+                if (intensity case final currentIntensity?) ...[
                   JmaIntensityIcon(
-                    intensity: intensity!,
+                    intensity: currentIntensity,
                     type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '震度 ${intensity!.label}',
+                    '震度 ${currentIntensity.label}',
                     style: theme.textTheme.bodyLarge,
                   ),
                 ] else if (intensityLabel != null) ...[
                   Text('震度 $intensityLabel', style: theme.textTheme.bodyLarge),
                 ],
-                if (lpgmIntensity != null &&
-                    lpgmIntensity != JmaLpgmIntensity.zero) ...[
+                if (lpgmIntensity case final currentLpgmIntensity?
+                    when currentLpgmIntensity != JmaLpgmIntensity.zero) ...[
                   const SizedBox(width: 16),
                   JmaLpgmIntensityIcon(
-                    intensity: lpgmIntensity!,
+                    intensity: currentLpgmIntensity,
                     type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '長周期 ${lpgmIntensity!.label}',
+                    '長周期 ${currentLpgmIntensity.label}',
                     style: theme.textTheme.bodyLarge,
                   ),
                 ],
@@ -164,17 +174,17 @@ class _AreaPopupBody extends StatelessWidget {
             const SizedBox(height: 12),
             Text(areaName, style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
-            if (maxIntensity != null)
+            if (maxIntensity case final currentMaxIntensity?)
               Row(
                 children: [
                   JmaIntensityIcon(
-                    intensity: maxIntensity!,
+                    intensity: currentMaxIntensity,
                     type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '最大震度 ${maxIntensity!.label}',
+                    '最大震度 ${currentMaxIntensity.label}',
                     style: theme.textTheme.bodyLarge,
                   ),
                 ],
@@ -188,12 +198,12 @@ class _AreaPopupBody extends StatelessWidget {
                   ),
                 ),
               ),
-            if (intensityHistoryRoute != null) ...[
+            if (intensityHistoryRoute case final route?) ...[
               const SizedBox(height: 8),
               TextButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  unawaited(intensityHistoryRoute!.push<void>(context));
+                  unawaited(route.push<void>(context));
                 },
                 icon: const Icon(Icons.bar_chart_outlined),
                 label: const Text('この地域の最大震度履歴'),
