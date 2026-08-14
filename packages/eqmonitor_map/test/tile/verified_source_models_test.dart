@@ -55,6 +55,11 @@ void main() {
       );
     });
 
+    test('rejects a scheme-only URL that has no validated host', () {
+      expect(() => build(url: 'https:base.pmtiles'), throwsArgumentError);
+      expect(() => build(url: 'https:///base.pmtiles'), throwsArgumentError);
+    });
+
     test('rejects negative revision and non-positive size', () {
       expect(() => build(revision: -1), throwsArgumentError);
       expect(() => build(sizeBytes: 0), throwsArgumentError);

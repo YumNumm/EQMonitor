@@ -89,6 +89,12 @@ VerifiedRemotePmTilesSource createVerifiedRemotePmTilesSource({
   if (!url.isScheme('https')) {
     throw ArgumentError.value(url, 'url', 'must be an https URL');
   }
+  // `Uri.parse('https:base.pmtiles')` は scheme だけを持ち authority を持たない。
+  // app が DNS/TLS/allowlist を検証したのは host であって、host の無い URI は
+  // その検証を通っていない。descriptor へ入れる前に弾く。
+  if (!url.hasAuthority || url.host.isEmpty) {
+    throw ArgumentError.value(url, 'url', 'must have a host');
+  }
   if (sourceRevision.isNegative) {
     throw ArgumentError.value(
       sourceRevision,
