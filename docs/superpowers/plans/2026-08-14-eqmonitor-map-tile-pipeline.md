@@ -19,7 +19,7 @@
 - 上限・budget は呼び出し側が渡す version 付き設定。decoder 内部の隠れた固定 fallback 禁止。
 - 本 Issue は Scene Fill/Line 一般化（#1593）、label asset（#1592）、Home 切替（#1596）を実装しない。
 - Backend / Asset Pack producer は触らない。attestation sidecar 検証は #1592。
-- 共有 Flutter gate（devices primary constructor / freezed `final`）は develop baseline。本 PR の成功判定は `packages/eqmonitor_map`（と追加 fixture package）の focused analyze/test。
+- 本 PR の成功判定は `packages/eqmonitor_map`（と追加 fixture package）の focused analyze/test。共有 Flutter gate が赤い場合は **無条件に baseline 扱いしない**。devices primary constructor / freezed `final` を理由とする waiver は `f0b3bd37`（#1628）で解消済みのため既に無効。現在 waive してよい既知失敗の一覧と判定手順は `docs/knowledge/20260814_stacked_pr_flutter_gate_baseline.md` を正本とし、そこに載っていない赤は回帰として調査する。
 - 各タスクの本番+手書き test は 30–100 行目安。生成物は別計上。コミット prefix は英語1語+日本語1行。
 
 ## Baseline（#1589 / #1590 で既にあるもの）

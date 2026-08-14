@@ -13,9 +13,16 @@ Dart/Flutter パッケージの focused test を回すための手順と、ハ�
 ```bash
 curl -fsSL https://mise.run | sh
 export PATH="$HOME/.local/bin:$PATH"
-mise trust /workspace/mise.toml
+
+# clone した repository の root で実行する（絶対パスを決め打ちしない。
+# checkout 先は環境ごとに違う）
+cd "$(git rev-parse --show-toplevel)"
+mise trust ./mise.toml
 mise install flutter          # pinned SHA (mise-flutter) を取得。Dart 同梱
 ```
+
+`mise trust` の対象を取り違えると設定が untrusted のままになり、以降の
+`mise exec -- ...` が実行前に失敗する。
 
 `mise exec -- dart ...` は **swift まで自動 install しようとして失敗** する
 （下記 2 参照）。回避のため、Flutter 同梱の bin を直接 PATH に通して使う:
