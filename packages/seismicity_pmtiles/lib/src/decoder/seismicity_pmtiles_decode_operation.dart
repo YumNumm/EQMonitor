@@ -19,8 +19,8 @@ abstract interface class SeismicityPmTilesDecodeOperation {
 final class SeismicityPmTilesDecodeOperationController
     implements SeismicityPmTilesDecodeOperation {
   SeismicityPmTilesDecodeOperationController({
-    Future<void> Function()? onCancel,
-  }) : _onCancel = onCancel;
+    this._onCancel,
+  });
 
   final Future<void> Function()? _onCancel;
   final _result =

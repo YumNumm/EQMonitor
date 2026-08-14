@@ -11,11 +11,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 final class SeismicityChunkBuilder {
   SeismicityChunkBuilder({
     required int capacity,
-    void Function()? beforeCanonicalAdd,
-    void Function()? beforeIntensityAdd,
-  }) : _beforeCanonicalAdd = beforeCanonicalAdd,
-       _beforeIntensityAdd = beforeIntensityAdd,
-       _fixed = SeismicityChunkFixedColumns(capacity: capacity),
+    this._beforeCanonicalAdd,
+    this._beforeIntensityAdd,
+  }) : _fixed = SeismicityChunkFixedColumns(capacity: capacity),
        _canonical = SeismicityCanonicalPropertyChunk(capacity: capacity),
        _intensities = SeismicityChunkIntensityDictionary(capacity: capacity);
 
