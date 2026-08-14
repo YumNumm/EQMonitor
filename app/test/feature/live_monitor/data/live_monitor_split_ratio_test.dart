@@ -3,9 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const calculator = LiveMonitorSplitRatioCalculator();
+
   test('drag deltaをPane比率へ変換する', () {
     expect(
-      updateLiveMonitorSplitRatio(
+      calculator.updateRatio(
         current: 0.5,
         primaryDelta: 100,
         availableExtent: 1000,
@@ -16,7 +18,7 @@ void main() {
 
   test('drag後のPane比率を0.2〜0.8へ制限する', () {
     expect(
-      updateLiveMonitorSplitRatio(
+      calculator.updateRatio(
         current: 0.75,
         primaryDelta: 200,
         availableExtent: 1000,
@@ -24,7 +26,7 @@ void main() {
       0.8,
     );
     expect(
-      updateLiveMonitorSplitRatio(
+      calculator.updateRatio(
         current: 0.25,
         primaryDelta: -200,
         availableExtent: 1000,
@@ -35,7 +37,7 @@ void main() {
 
   test('利用可能範囲が0以下なら現在比率を制限して維持する', () {
     expect(
-      updateLiveMonitorSplitRatio(
+      calculator.updateRatio(
         current: 0.9,
         primaryDelta: -100,
         availableExtent: 0,
@@ -43,7 +45,7 @@ void main() {
       0.8,
     );
     expect(
-      updateLiveMonitorSplitRatio(
+      calculator.updateRatio(
         current: 0.1,
         primaryDelta: 100,
         availableExtent: -1000,
@@ -54,7 +56,7 @@ void main() {
 
   test('portrait SafeArea下のdisplay featureをSplitView local座標へ変換する', () {
     expect(
-      liveMonitorDisplayFeatureLocalBounds(
+      calculator.displayFeatureLocalBounds(
         screenBounds: const Rect.fromLTRB(0, 400, 800, 420),
         splitViewGlobalOrigin: const Offset(0, 24),
         splitViewSize: const Size(800, 752),
@@ -65,7 +67,7 @@ void main() {
 
   test('landscape SafeArea下のdisplay featureをSplitView local座標へ変換する', () {
     expect(
-      liveMonitorDisplayFeatureLocalBounds(
+      calculator.displayFeatureLocalBounds(
         screenBounds: const Rect.fromLTRB(640, 0, 672, 800),
         splitViewGlobalOrigin: const Offset(48, 0),
         splitViewSize: const Size(1232, 800),
@@ -76,7 +78,7 @@ void main() {
 
   test('SplitView外のdisplay featureはlocal boundsを返さない', () {
     expect(
-      liveMonitorDisplayFeatureLocalBounds(
+      calculator.displayFeatureLocalBounds(
         screenBounds: const Rect.fromLTRB(0, 0, 800, 20),
         splitViewGlobalOrigin: const Offset(0, 24),
         splitViewSize: const Size(800, 752),
@@ -87,14 +89,14 @@ void main() {
 
   test('現在のviewportと一致するpost-frame measurementだけを利用する', () {
     expect(
-      isLiveMonitorSplitViewportMeasurementCurrent(
+      calculator.isMeasurementCurrent(
         measuredViewportSize: const Size(800, 752),
         currentViewportSize: const Size(800, 752),
       ),
       isTrue,
     );
     expect(
-      isLiveMonitorSplitViewportMeasurementCurrent(
+      calculator.isMeasurementCurrent(
         measuredViewportSize: const Size(800, 752),
         currentViewportSize: const Size(752, 800),
       ),
@@ -112,7 +114,7 @@ void main() {
       orientation: Orientation.landscape,
     );
     expect(
-      shouldReportLiveMonitorSplitViewportMeasurement(
+      calculator.shouldReportMeasurement(
         previous: previous,
         current: (
           globalOrigin: Offset.zero,
@@ -137,7 +139,7 @@ void main() {
       orientation: Orientation.landscape,
     );
     expect(
-      shouldReportLiveMonitorSplitViewportMeasurement(
+      calculator.shouldReportMeasurement(
         previous: previous,
         current: (
           globalOrigin: previous.globalOrigin,
@@ -162,7 +164,7 @@ void main() {
       orientation: Orientation.landscape,
     );
     expect(
-      shouldReportLiveMonitorSplitViewportMeasurement(
+      calculator.shouldReportMeasurement(
         previous: measurement,
         current: measurement,
       ),
