@@ -41,20 +41,17 @@ class EewHistoryListTile extends StatelessWidget {
         ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
-    final magnitude = hypocenter?.magnitude != null
-        ? EarthquakeMagnitude.value(value: hypocenter!.magnitude!)
-        : null;
+    final magnitude = switch (hypocenter?.magnitude) {
+      final magnitudeValue? => EarthquakeMagnitude.value(value: magnitudeValue),
+      null => null,
+    };
 
     return ListTile(
       visualDensity: visualDensity,
       tileColor: maxIntensityColor?.withValues(alpha: 0.4),
       onTap: onTap,
       leading: maxIntensity != null
-          ? JmaIntensityIcon(
-              intensity: maxIntensity,
-              type: .filled,
-              size: 40,
-            )
+          ? JmaIntensityIcon(intensity: maxIntensity, type: .filled, size: 40)
           : null,
       title: Row(
         spacing: 4,
@@ -78,7 +75,7 @@ class EewHistoryListTile extends StatelessWidget {
           Flexible(
             child: Text(
               title.toHalfWidth,
-              style: theme.textTheme.titleSmall!.copyWith(
+              style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
