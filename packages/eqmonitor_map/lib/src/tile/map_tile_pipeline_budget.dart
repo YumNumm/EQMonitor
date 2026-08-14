@@ -14,7 +14,13 @@ part 'map_tile_pipeline_budget.freezed.dart';
 /// [maxGpuUploadBytesPerFrame]のみ optional。GPU アップロード上限を課さない
 /// 環境(未計測・非対象プラットフォーム)では`null`を渡す。存在する場合は
 /// 正の値でなければならない。
-@freezed
+///
+/// `copyWith`は生成しない。生成すると
+/// `budget.copyWith(maxInFlightDecodes: 0)`のように
+/// [createMapTilePipelineBudget]の検証を迂回した budget を作れてしまい、
+/// scheduler / cache がこの型の保証外の上限を受け取るため。値を変えるときは
+/// 必ず[createMapTilePipelineBudget]から作り直す。
+@Freezed(copyWith: false)
 abstract class MapTilePipelineBudget with _$MapTilePipelineBudget {
   const factory MapTilePipelineBudget._({
     required int schemaVersion,

@@ -16,11 +16,6 @@ T _$identity<T>(T value) => value;
 mixin _$MapTilePipelineBudget {
 
  int get schemaVersion; int get maxInFlightDecodes; int get maxCacheEntries; int get maxPinnedEntries; int get cpuWorkUnitsPerFrame; int? get maxGpuUploadBytesPerFrame;
-/// Create a copy of MapTilePipelineBudget
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$MapTilePipelineBudgetCopyWith<MapTilePipelineBudget> get copyWith => _$MapTilePipelineBudgetCopyWithImpl<MapTilePipelineBudget>(this as MapTilePipelineBudget, _$identity);
 
 
 
@@ -41,41 +36,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class $MapTilePipelineBudgetCopyWith<$Res>  {
-  factory $MapTilePipelineBudgetCopyWith(MapTilePipelineBudget value, $Res Function(MapTilePipelineBudget) _then) = _$MapTilePipelineBudgetCopyWithImpl;
-@useResult
-$Res call({
- int schemaVersion, int maxInFlightDecodes, int maxCacheEntries, int maxPinnedEntries, int cpuWorkUnitsPerFrame, int? maxGpuUploadBytesPerFrame
-});
 
-
-
-
-}
-/// @nodoc
-class _$MapTilePipelineBudgetCopyWithImpl<$Res>
-    implements $MapTilePipelineBudgetCopyWith<$Res> {
-  _$MapTilePipelineBudgetCopyWithImpl(this._self, this._then);
-
-  final MapTilePipelineBudget _self;
-  final $Res Function(MapTilePipelineBudget) _then;
-
-/// Create a copy of MapTilePipelineBudget
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? schemaVersion = null,Object? maxInFlightDecodes = null,Object? maxCacheEntries = null,Object? maxPinnedEntries = null,Object? cpuWorkUnitsPerFrame = null,Object? maxGpuUploadBytesPerFrame = freezed,}) {
-  return _then(MapTilePipelineBudget._(
-schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
-as int,maxCacheEntries: null == maxCacheEntries ? _self.maxCacheEntries : maxCacheEntries // ignore: cast_nullable_to_non_nullable
-as int,maxPinnedEntries: null == maxPinnedEntries ? _self.maxPinnedEntries : maxPinnedEntries // ignore: cast_nullable_to_non_nullable
-as int,cpuWorkUnitsPerFrame: null == cpuWorkUnitsPerFrame ? _self.cpuWorkUnitsPerFrame : cpuWorkUnitsPerFrame // ignore: cast_nullable_to_non_nullable
-as int,maxGpuUploadBytesPerFrame: freezed == maxGpuUploadBytesPerFrame ? _self.maxGpuUploadBytesPerFrame : maxGpuUploadBytesPerFrame // ignore: cast_nullable_to_non_nullable
-as int?,
-  ));
-}
-
-}
 
 
 
@@ -93,11 +54,6 @@ class _MapTilePipelineBudget implements MapTilePipelineBudget {
 @override final  int cpuWorkUnitsPerFrame;
 @override final  int? maxGpuUploadBytesPerFrame;
 
-/// Create a copy of MapTilePipelineBudget
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$MapTilePipelineBudgetCopyWith<_MapTilePipelineBudget> get copyWith => __$MapTilePipelineBudgetCopyWithImpl<_MapTilePipelineBudget>(this, _$identity);
 
 
 
@@ -118,41 +74,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class _$MapTilePipelineBudgetCopyWith<$Res> implements $MapTilePipelineBudgetCopyWith<$Res> {
-  factory _$MapTilePipelineBudgetCopyWith(_MapTilePipelineBudget value, $Res Function(_MapTilePipelineBudget) _then) = __$MapTilePipelineBudgetCopyWithImpl;
-@override @useResult
-$Res call({
- int schemaVersion, int maxInFlightDecodes, int maxCacheEntries, int maxPinnedEntries, int cpuWorkUnitsPerFrame, int? maxGpuUploadBytesPerFrame
-});
 
 
-
-
-}
-/// @nodoc
-class __$MapTilePipelineBudgetCopyWithImpl<$Res>
-    implements _$MapTilePipelineBudgetCopyWith<$Res> {
-  __$MapTilePipelineBudgetCopyWithImpl(this._self, this._then);
-
-  final _MapTilePipelineBudget _self;
-  final $Res Function(_MapTilePipelineBudget) _then;
-
-/// Create a copy of MapTilePipelineBudget
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? schemaVersion = null,Object? maxInFlightDecodes = null,Object? maxCacheEntries = null,Object? maxPinnedEntries = null,Object? cpuWorkUnitsPerFrame = null,Object? maxGpuUploadBytesPerFrame = freezed,}) {
-  return _then(_MapTilePipelineBudget(
-schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
-as int,maxCacheEntries: null == maxCacheEntries ? _self.maxCacheEntries : maxCacheEntries // ignore: cast_nullable_to_non_nullable
-as int,maxPinnedEntries: null == maxPinnedEntries ? _self.maxPinnedEntries : maxPinnedEntries // ignore: cast_nullable_to_non_nullable
-as int,cpuWorkUnitsPerFrame: null == cpuWorkUnitsPerFrame ? _self.cpuWorkUnitsPerFrame : cpuWorkUnitsPerFrame // ignore: cast_nullable_to_non_nullable
-as int,maxGpuUploadBytesPerFrame: freezed == maxGpuUploadBytesPerFrame ? _self.maxGpuUploadBytesPerFrame : maxGpuUploadBytesPerFrame // ignore: cast_nullable_to_non_nullable
-as int?,
-  ));
-}
-
-
-}
 
 // dart format on

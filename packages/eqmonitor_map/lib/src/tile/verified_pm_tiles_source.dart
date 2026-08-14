@@ -51,7 +51,13 @@ abstract class VerifiedPmTilesSource
 ///
 /// [sourceRevision]は同一 source の basemap/hazard fallback policy
 /// (revision 跨ぎの last-good 可否)を判断するための単調増加 revision。
-@freezed
+///
+/// `copyWith`は生成しない。生成すると
+/// `source.copyWith(url: Uri.parse('http://...'))`のように
+/// [createVerifiedRemotePmTilesSource]の検証を迂回して不正な descriptor を
+/// 作れてしまい、remote reader が信頼する https/digest 境界が崩れるため。
+/// 値を変えるときは必ず[createVerifiedRemotePmTilesSource]から作り直す。
+@Freezed(copyWith: false)
 abstract class VerifiedRemotePmTilesSource
     with _$VerifiedRemotePmTilesSource
     implements VerifiedTileSource {
