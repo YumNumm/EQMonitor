@@ -29,16 +29,46 @@
 
 ### 検証コマンド
 
+**最重要:** 自作 analyzer plugin は **パッケージのルートを解析対象に指定したときしか動かない**。
+`dart analyze app/lib/feature/settings` のようにサブディレクトリを指定すると
+plugin のルールが 1 件も発火せず、`No issues found!` と表示されてしまう。
+これは実測で確認済みである（`dart analyze app` = 647 件、`dart analyze app/lib` = 0 件）。
+
+したがって `app` の診断を確認するときは、必ず次の形を使う。
+
+```bash
+cd /workspace && mise exec -- dart analyze app --fatal-infos
+```
+
+特定の feature だけを見たい場合は、全体を解析してから絞り込む。
+
+```bash
+cd /workspace && mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/settings'
+```
+
+件数を数える場合は machine 形式を使う。
+
+```bash
+cd /workspace
+mise exec -- dart analyze app --format machine --fatal-infos > /tmp/analyze.txt 2>&1
+grep -c '^\(ERROR\|WARNING\|INFO\)|' /tmp/analyze.txt
+grep -c 'lib/feature/settings' /tmp/analyze.txt
+```
+
+`app` 全体の解析には約 60〜90 秒かかる。これは避けられないので、
+1 箇所直すたびに実行せず、まとめて直してから確認すること。
+
 全体検証（最終確認用、約 2〜3 分）:
 
 ```bash
 cd /workspace && mise exec -- dart run melos exec -c 1 -- dart analyze . --fatal-infos
 ```
 
-パッケージ単位の検証（タスク中に使う）:
+`packages/seismicity_pmtiles` には plugin が適用されていないため、
+こちらはサブディレクトリ指定でも標準 lint が正しく出る。
 
 ```bash
-cd /workspace/app && mise exec -- dart analyze lib/feature/<name> --fatal-infos
+cd /workspace/packages/seismicity_pmtiles && mise exec -- dart analyze lib --fatal-infos
 ```
 
 テスト実行:
@@ -511,14 +541,14 @@ Expected: 全テスト PASS、`No issues found!`
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/main.dart --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/main.dart'
 ```
 
 Expected: `main` に対する `avoid_top_level_functions` が消え、
 `_main` と `_registerNotificationChannelIfNeeded` の 2 件だけが残る。
 
 ```bash
-mise exec -- dart analyze app/lib/feature/location/data/jma_map_isolate.dart --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'jma_map_isolate.dart'
 ```
 
 Expected: `jmaMapWorkerEntryPoint` の診断が消える。
@@ -622,7 +652,7 @@ git commit -m "Fix: avoid_direct_color_scheme をテストコードに適用し�
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/core/component/chip --fatal-infos 2>&1 | tail -20
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/core/component/chip'
 ```
 
 Expected: `avoid_null_assertion_operator` が複数件出る。この件数を控える。
@@ -661,7 +691,7 @@ analyzer:
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/core/component/chip --fatal-infos 2>&1 | tail -20
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/core/component/chip'
 ```
 
 Expected: Step 1 と同じ `avoid_null_assertion_operator` の件数が出る。
@@ -801,8 +831,8 @@ Expected: `No issues found!` かつ Step 2 と同じテスト結果。
 - [ ] **Step 7: 利用側のビルドが壊れていないことを確認**
 
 ```bash
-cd /workspace/app
-mise exec -- dart analyze lib/feature/seismicity --fatal-infos 2>&1 | grep -c 'error' || true
+cd /workspace
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -c 'error' || true
 ```
 
 Expected: `error` が 0 件（plugin の warning は Task 8 以降で扱うため残ってよい）。
@@ -1019,11 +1049,11 @@ Expected: 3 テスト PASS。
 - [ ] **Step 5: 解析を確認**
 
 ```bash
-cd /workspace/app
-mise exec -- dart analyze lib/core/util/nullable_value_requirement.dart --fatal-infos
+cd /workspace
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'nullable_value_requirement'
 ```
 
-Expected: `No issues found!`
+Expected: 出力なし（この新規ファイルに対する診断が 1 件も無い）。
 
 - [ ] **Step 6: コミット**
 
@@ -1058,7 +1088,7 @@ git commit -m "Feat: 不変条件を明示して非 null 値を取り出す exte
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | grep avoid_eqmonitor_api_in_ui
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep avoid_eqmonitor_api_in_ui
 ```
 
 - [ ] **Step 1: 違反箇所を分類する**
@@ -1116,7 +1146,7 @@ Expected: 全 PASS。
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | grep -c avoid_eqmonitor_api_in_ui || echo 0
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -c avoid_eqmonitor_api_in_ui || echo 0
 ```
 
 Expected: `0`
@@ -1155,7 +1185,7 @@ Riverpod プロバイダと同一ファイルに定義できない」という�
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | grep avoid_mixed_declaration_categories
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep avoid_mixed_declaration_categories
 ```
 
 - [ ] **Step 2: freezed モデルを専用ファイルへ移す**
@@ -1177,7 +1207,7 @@ mise exec -- dart run build_runner build --delete-conflicting-outputs
 
 ```bash
 cd /workspace/app
-mise exec -- dart analyze lib --fatal-infos 2>&1 | grep -E 'undefined|uri_does_not_exist' || echo "import OK"
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -E 'undefined|uri_does_not_exist' || echo "import OK"
 ```
 
 - [ ] **Step 5: テストを実行**
@@ -1193,7 +1223,7 @@ Expected: 全 PASS。
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | grep -c avoid_mixed_declaration_categories || echo 0
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -c avoid_mixed_declaration_categories || echo 0
 ```
 
 Expected: `0`
@@ -1268,7 +1298,7 @@ Expected: 変換前に全 PASS すること。
 cd /workspace/app
 mise exec -- flutter test test/feature/tsunami test/feature/home test/feature/settings test/feature/map test/feature/live_monitor
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | grep -cE 'avoid_stateful_widget|avoid_direct_color_scheme' || echo 0
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -cE 'avoid_stateful_widget|avoid_direct_color_scheme' || echo 0
 ```
 
 Expected: テスト全 PASS、診断 `0`。
@@ -1329,7 +1359,7 @@ MapOperationScheduler useMapOperationQueue() {
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/core/hook --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/core/hook'
 ```
 
 Expected: `No issues found!`
@@ -1391,7 +1421,7 @@ class MathUtil {
 cd /workspace/app
 mise exec -- flutter test test/core
 cd /workspace
-mise exec -- dart analyze app/lib/core app/lib/main.dart --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -E 'lib/core/|lib/main.dart'
 ```
 
 Expected: テスト全 PASS、`No issues found!`
@@ -1432,7 +1462,7 @@ git commit -m "Refactor: core/util のトップレベル関数をクラス化"
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/feature/earthquake_history/data --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/earthquake_history/data'
 ```
 
 - [ ] **Step 2: 既存テストのベースラインを取る**
@@ -1467,7 +1497,7 @@ Expected: 全 PASS。件数を控える。
 cd /workspace/app
 mise exec -- flutter test test/feature/earthquake_history
 cd /workspace
-mise exec -- dart analyze app/lib/feature/earthquake_history/data --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/earthquake_history/data'
 ```
 
 Expected: Step 2 と同じテスト結果、`No issues found!`
@@ -1514,7 +1544,7 @@ style: theme.textTheme.titleSmall?.copyWith(color: foo)
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/feature/earthquake_history/ui --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/earthquake_history/ui'
 ```
 
 - [ ] **Step 2: `?.` で解決できるものを先に処理する**
@@ -1549,7 +1579,7 @@ if (property != null) {
 cd /workspace/app
 mise exec -- flutter test test/feature/earthquake_history
 cd /workspace
-mise exec -- dart analyze app/lib/feature/earthquake_history --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/earthquake_history'
 ```
 
 Expected: テスト全 PASS、`No issues found!`
@@ -1587,7 +1617,7 @@ git commit -m "Refactor: 地震履歴 UI の null アサーションを解消"
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/feature/settings --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/settings'
 ```
 
 - [ ] **Step 2: ベースラインのテストを実行**
@@ -1607,7 +1637,7 @@ mise exec -- flutter test test/feature/settings
 cd /workspace/app
 mise exec -- flutter test test/feature/settings
 cd /workspace
-mise exec -- dart analyze app/lib/feature/settings --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep 'lib/feature/settings'
 ```
 
 Expected: テスト全 PASS、`No issues found!`
@@ -1665,7 +1695,7 @@ mise exec -- flutter test test/feature/tsunami/tracked_tsunami_timeline_test.dar
 cd /workspace/app
 mise exec -- flutter test test/feature/tsunami test/feature/eew
 cd /workspace
-mise exec -- dart analyze app/lib/feature/tsunami app/lib/feature/eew --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -E 'lib/feature/(tsunami|eew)/'
 ```
 
 Expected: Step 1 と同じテスト結果、`No issues found!`
@@ -1696,7 +1726,7 @@ git commit -m "Refactor: 津波電文追跡の null アサーションを解消"
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib/feature/home app/lib/feature/map app/lib/feature/live_monitor --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -E 'lib/feature/(home|map|live_monitor)/'
 ```
 
 - [ ] **Step 2: ベースラインのテストを実行**
@@ -1719,7 +1749,7 @@ mise exec -- flutter test test/feature/home test/feature/map test/feature/live_m
 cd /workspace/app
 mise exec -- flutter test test/feature/home test/feature/map test/feature/live_monitor
 cd /workspace
-mise exec -- dart analyze app/lib/feature/home app/lib/feature/map app/lib/feature/live_monitor --fatal-infos
+mise exec -- dart analyze app --fatal-infos 2>&1 | grep -E 'lib/feature/(home|map|live_monitor)/'
 ```
 
 Expected: テスト全 PASS、`No issues found!`
@@ -1764,7 +1794,7 @@ Task 3 で除外済みである。移動してはならない。
 
 ```bash
 cd /workspace
-mise exec -- dart analyze app/lib --fatal-infos 2>&1 | tee /tmp/remaining.txt | tail -3
+mise exec -- dart analyze app --fatal-infos 2>&1 | tee /tmp/remaining.txt | tail -3
 ```
 
 Task 9〜17 の結果次第で残件が変わるため、ここで実測する。
@@ -1785,8 +1815,8 @@ Expected: 全 PASS。テスト数を報告に記録する。
 - [ ] **Step 4: app 全体の解析が通ることを確認**
 
 ```bash
-cd /workspace/app
-mise exec -- dart analyze . --fatal-infos
+cd /workspace
+mise exec -- dart analyze app --fatal-infos
 ```
 
 Expected: `No issues found!`
