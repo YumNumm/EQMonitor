@@ -13,17 +13,22 @@ part 'home_map_camera_coordinator.g.dart';
 
 enum HomeMapCameraUpdateAction { fitToRealtime, returnToHome, none }
 
-HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
-  required bool hasRealtimeTargets,
-  required bool isAtHome,
-}) {
-  if (hasRealtimeTargets) {
-    return HomeMapCameraUpdateAction.fitToRealtime;
+/// リアルタイム描画対象とホーム復帰要求からカメラ更新アクションを解決するクラス
+class HomeMapCameraUpdateActionResolver {
+  const HomeMapCameraUpdateActionResolver();
+
+  HomeMapCameraUpdateAction resolve({
+    required bool hasRealtimeTargets,
+    required bool isAtHome,
+  }) {
+    if (hasRealtimeTargets) {
+      return HomeMapCameraUpdateAction.fitToRealtime;
+    }
+    if (!isAtHome) {
+      return HomeMapCameraUpdateAction.returnToHome;
+    }
+    return HomeMapCameraUpdateAction.none;
   }
-  if (!isAtHome) {
-    return HomeMapCameraUpdateAction.returnToHome;
-  }
-  return HomeMapCameraUpdateAction.none;
 }
 
 class HomeMapCameraCoordinator {
@@ -68,7 +73,7 @@ class HomeMapCameraCoordinator {
       eews: eews,
       shakes: shakes,
     );
-    return switch (resolveHomeMapCameraUpdateAction(
+    return switch (const HomeMapCameraUpdateActionResolver().resolve(
       hasRealtimeTargets: targets.isNotEmpty,
       isAtHome: _isHomeFocusRequested,
     )) {
@@ -105,7 +110,7 @@ class HomeMapCameraCoordinator {
 
     _isHomeFocusRequested = false;
     final bounds = const SeismicMapFocusBuilder().forRealtime(
-      fallbackBounds: lngLatBoundsForHomeMapSettings(configuration.map),
+      fallbackBounds: const HomeMapBoundsResolver().resolve(configuration.map),
       eews: eews,
       shakes: shakes,
     );
@@ -141,7 +146,7 @@ class HomeMapCameraCoordinator {
     final completedCurrent = await _operationQueue.schedule(
       operation: () => const MapAutomaticFocusController().fit(
         controller: controller,
-        bounds: lngLatBoundsForHomeMapSettings(configuration.map),
+        bounds: const HomeMapBoundsResolver().resolve(configuration.map),
         viewportSize: viewportSize,
         isCurrent: isCurrent,
         nativeDuration: const Duration(milliseconds: 200),
