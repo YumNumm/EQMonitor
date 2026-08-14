@@ -53,19 +53,51 @@ dart run build_runner build   # --delete-conflicting-outputs は新版で無視�
 `W SDK language version 3.14.0 is newer than analyzer language version 3.13.0`
 の警告が出るが生成自体は成功する。
 
-## 4. `eqmonitor_map` の既存 baseline test 失敗（develop 由来・回帰ではない）
+## 4. package test は **必ず package ディレクトリから** 実行する
 
-`flutter test packages/eqmonitor_map` は develop 時点で以下が **既に失敗** する
-（`origin/develop` と該当ファイルの diff は無し＝こちらの変更が原因ではない）。
-新規変更の回帰と混同しないこと。
+repository root から `flutter test packages/<name>` を呼ぶと、asset / fixture の
+解決 root がずれて **本来通るテストが落ちる**。CI（`wc-check-dart-test.yaml` /
+`melos exec`）は各 package ディレクトリ内で `flutter test` を実行しており、
+こちらが正。
+
+```bash
+# ❌ 誤り: repository root から呼ぶ（fixture 解決がずれて false failure）
+flutter test packages/eqmonitor_map
+
+# ✅ 正しい: package ディレクトリで呼ぶ（CI と同じ）
+cd packages/eqmonitor_map && flutter test
+```
+
+実測（2026-08-14, `feat/eqmonitor-map-tile-pipeline`）:
+
+| 実行方法 | 結果 |
+| --- | --- |
+| root から `flutter test packages/eqmonitor_map` | 438 passed / **5 failed** |
+| `cd packages/eqmonitor_map && flutter test` | **443 passed / 0 failed** |
+| CI `flutter-test` job | `[eqmonitor_map]: 🎉 443 tests passed.` |
+
+root 実行時だけ落ちていたのは次の5件で、いずれも **baseline 失敗ではなく
+実行方法による false failure** だった。baseline 扱いして waive しないこと。
 
 - `foundation/frame/map_frame_revision_model_test.dart`
-  「does not generate an unchecked copyWith API」
-- `foundation/revision/map_revision_metadata_test.dart` 同上
-- `foundation/revision/map_revision_result_model_test.dart` 同上
+- `foundation/revision/map_revision_metadata_test.dart`
+- `foundation/revision/map_revision_result_model_test.dart`
 - `tile/mvt/mvt_decoder_test.dart` real PMTiles fixtures 2 件
 
-前者3件は freezed 4.0.0-dev.3 / analyzer 13 skew（`20260813_freezed4_build_runner.md`）
-に由来する copyWith 生成差、後者は fixture 解決。focused な tile/foundation/remote/
-scheduler test はすべて green。develop baseline が赤なので、製品 PR で無理に緑化せず
-baseline 修正は別 PR に分離する方針（`20260814_stacked_pr_flutter_gate_baseline.md`）。
+同種の注意は `docs/todo/770_existing_eqmonitor_flutter_test_failures.md`
+（`app/` を working directory にする理由）にも記録がある。
+
+## 5. 共有 Flutter gate の実際の赤（develop 由来）
+
+`flutter-analyze` / `flutter-test` / `eqmonitor-map-scene-spike (Android)` /
+`Flutter Status Check` は develop baseline で赤。merged PR #1628 / #1617 でも
+まったく同じ4つが赤（iOS build のみ green）なので、地図・震源 PR の回帰ではない。
+
+- `flutter-analyze`: `app/test/feature/tsunami/**` などの custom lint 警告 1439 件
+  （error は 0）。`docs/todo/760_existing_eqmonitor_custom_lint_debt.md`
+- `flutter-test`: `app` の `theme_editor_page_test.dart` ほか。
+  `docs/todo/770_existing_eqmonitor_flutter_test_failures.md`
+- `eqmonitor-map-scene-spike (Android)`: `packages/eqmonitor_map/example/android/app/
+  build.gradle.kts` が AGP 9.0 の `android.newDsl` 既定化に追随できておらず
+  Gradle script compilation error 3件（`android {}` deprecated、`profile {}` /
+  `signingConfig` unresolved）。Dart 変更とは無関係。

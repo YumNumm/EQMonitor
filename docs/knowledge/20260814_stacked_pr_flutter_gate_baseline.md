@@ -43,14 +43,20 @@ mise exec -- dart analyze --fatal-infos \
 `eqmonitor_map` は Flutter SDK 依存のため `dart test` では `dart:ui` を解決できない
 （`docs/todo/700_melos_dart_test_package_filter.md`）。`flutter test` を使う。
 
+**必ず package ディレクトリから実行する。** repository root から
+`flutter test packages/<name>` を呼ぶと fixture 解決 root がずれ、本来通る test が
+落ちて baseline を誤認する（実測: root 実行 438 passed / 5 failed、package 実行
+443 passed / 0 failed、CI も 443 passed）。
+
 ```bash
 # map tip
 mise exec -- dart analyze --fatal-infos packages/eqmonitor_map
-mise exec -- flutter test packages/eqmonitor_map
+(cd packages/eqmonitor_map && mise exec -- flutter test)
 
 # seismicity tip
 mise exec -- dart analyze --fatal-infos packages/seismicity_pmtiles packages/pmtiles_v3
-mise exec -- flutter test packages/seismicity_pmtiles packages/pmtiles_v3
+(cd packages/seismicity_pmtiles && mise exec -- flutter test)
+(cd packages/pmtiles_v3 && mise exec -- flutter test)
 ```
 
 ## 運用
@@ -58,14 +64,19 @@ mise exec -- flutter test packages/seismicity_pmtiles packages/pmtiles_v3
 - **waiver は「赤なら baseline」ではなく、既知の失敗集合に一致した場合だけ**適用する。
   primary constructor 由来の失敗は `f0b3bd37`（#1628）で解消済みで、その理由での
   waiver はもう使えない。
-- 2026-08-14 時点で `flutter test packages/eqmonitor_map` に残る develop 由来の
-  既知失敗は次の5件のみ。これ以外が赤くなったら **回帰として扱う**。
-  - `foundation/frame/map_frame_revision_model_test.dart`（unchecked copyWith）
-  - `foundation/revision/map_revision_metadata_test.dart`（同上）
-  - `foundation/revision/map_revision_result_model_test.dart`（同上）
-  - `tile/mvt/mvt_decoder_test.dart` の real PMTiles fixtures 2件
-- 判定手順: 失敗 test の対象ファイルが `origin/develop` と diff 無しであることを
-  `git diff origin/develop -- <path>` で確認してから baseline 扱いにする。
-- baseline 修正は SDK / Freezed / analyzer の整合合わせ。地図・震源 PR に混ぜない。
-  詳細は `docs/knowledge/20260814_cloud_agent_flutter_toolchain_bootstrap.md`。
+- 2026-08-14 時点で共有 Flutter gate が赤い**実際の**内訳は次の3つ。merged PR
+  #1628 / #1617 でも同じ4 check（+ 集約の Flutter Status Check）が赤く、iOS build
+  のみ green である。これ以外が赤くなったら **回帰として扱う**。
+  - `flutter-analyze`: `app/test/feature/tsunami/**` ほかの custom lint 警告 1439 件
+    （analyzer error は 0）。`docs/todo/760_existing_eqmonitor_custom_lint_debt.md`
+  - `flutter-test`: `app` の `theme_editor_page_test.dart` ほか。
+    `docs/todo/770_existing_eqmonitor_flutter_test_failures.md`
+  - `eqmonitor-map-scene-spike (Android)`: `packages/eqmonitor_map/example/android/
+    app/build.gradle.kts` が AGP 9.0 の `android.newDsl` 既定化に未追随で Gradle
+    script compilation error 3件。Dart 変更とは無関係。
+- **package 単位の結果を必ず確認する。** CI ログの `[<package>]: 🎉 N tests passed.`
+  行を見れば、自分の package が緑かどうかを app の既存赤と切り分けられる。
+- baseline 修正は上記3つそれぞれの todo で扱い、地図・震源 PR に混ぜない。
+  環境構築と実行方法の詳細は
+  `docs/knowledge/20260814_cloud_agent_flutter_toolchain_bootstrap.md`。
 - #1602（flutter_scene fork）権限待ちのまま。勝手に merge しない。
