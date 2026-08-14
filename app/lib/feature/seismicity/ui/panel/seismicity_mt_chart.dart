@@ -21,10 +21,11 @@ class SeismicityMtChart extends StatelessWidget {
     final firstTime = withMagnitude.first.originTime;
     final spots = [
       for (final event in withMagnitude)
-        ScatterSpot(
-          event.originTime.difference(firstTime).inHours.toDouble(),
-          event.magnitude!,
-        ),
+        if (event.magnitude case final magnitude?)
+          ScatterSpot(
+            event.originTime.difference(firstTime).inHours.toDouble(),
+            magnitude,
+          ),
     ];
     final colorScheme = context.designSystem.colorTheme;
 

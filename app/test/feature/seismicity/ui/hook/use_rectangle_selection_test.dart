@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(
       HookBuilder(
         builder: (context) {
-          selection = useRectangleSelection();
+          selection = RectangleSelectionHook.use();
           return const SizedBox.expand();
         },
       ),
@@ -22,33 +22,30 @@ void main() {
     expect(rect, Rect.fromLTRB(0, 0, 100, 100));
   });
 
-  testWidgets(
-    '退化した(ほぼ動いていない)矩形の場合 endDrag は null を返す',
-    (tester) async {
-      late RectangleSelectionState selection;
-      await tester.pumpWidget(
-        HookBuilder(
-          builder: (context) {
-            selection = useRectangleSelection();
-            return const SizedBox.expand();
-          },
-        ),
-      );
+  testWidgets('退化した(ほぼ動いていない)矩形の場合 endDrag は null を返す', (tester) async {
+    late RectangleSelectionState selection;
+    await tester.pumpWidget(
+      HookBuilder(
+        builder: (context) {
+          selection = RectangleSelectionHook.use();
+          return const SizedBox.expand();
+        },
+      ),
+    );
 
-      selection.startDrag(const Offset(50, 50));
-      selection.updateDrag(const Offset(51, 50));
-      final rect = selection.endDrag();
+    selection.startDrag(const Offset(50, 50));
+    selection.updateDrag(const Offset(51, 50));
+    final rect = selection.endDrag();
 
-      expect(rect, isNull);
-    },
-  );
+    expect(rect, isNull);
+  });
 
   testWidgets('endDrag はドラッグ開始前は null を返す', (tester) async {
     late RectangleSelectionState selection;
     await tester.pumpWidget(
       HookBuilder(
         builder: (context) {
-          selection = useRectangleSelection();
+          selection = RectangleSelectionHook.use();
           return const SizedBox.expand();
         },
       ),

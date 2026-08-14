@@ -24,7 +24,7 @@ class SeismicitySelectionOverlay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selection = useRectangleSelection();
+    final selection = RectangleSelectionHook.use();
 
     return IgnorePointer(
       ignoring: !enabled,
@@ -45,7 +45,7 @@ class SeismicitySelectionOverlay extends HookWidget {
   }
 
   void _handleDragEnd(RectangleSelectionState selection) {
-    // 退化した(ほぼ動いていない)矩形は useRectangleSelection.endDrag が
+    // 退化した(ほぼ動いていない)矩形は RectangleSelectionHook.use().endDrag が
     // null を返すため、ここでは選択なしとして扱う。
     final rect = selection.endDrag();
     if (rect == null) {
