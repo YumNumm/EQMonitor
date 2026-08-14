@@ -2,6 +2,22 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "claude-security@claude-plugins-official": true,
-    "asc@rorkai": true
+    "asc@rorkai": true,
+    "ponytail@ponytail": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(gh *)",
+            "command": "c=$(jq -r \".tool_input.command\"); printf \"%s\" \"$c\" | grep -Eq \"gh[[:space:]]+(pr|issue)[[:space:]]+create\" && ! printf \"%s\" \"$c\" | grep -Eq \"(--repo|-R)[[:space:]]+YumNumm/\" && printf \"%s\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"PR/Issue の作成先は YumNumm org のみです。--repo YumNumm/<repo> を明示してください。third_party/flutter_scene のような fork 配下では gh が upstream(bdero/flutter_scene 等)を既定にするため、明示しないと upstream へ送られます。\\\"}}\"; exit 0",
+            "statusMessage": "PR/Issue の作成先を検証中"
+          }
+        ]
+      }
+    ]
   }
 }
