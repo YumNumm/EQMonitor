@@ -1,6 +1,7 @@
 import 'package:eqmonitor_map/src/foundation/async_generation_token.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
+import 'package:eqmonitor_map/src/tile/map_tile_fallback_policy.dart';
 import 'package:flutter/foundation.dart';
 
 /// decode済み[BaseMapTileGeometry]のcache。
@@ -87,6 +88,7 @@ final class BaseMapTileCache {
   BaseMapTileCache({
     required this.maxEntries,
     required this.maxParentFallbackSteps,
+    this.fallbackPolicy = MapTileFallbackPolicy.basemap,
   }) : assert(maxEntries > 0, 'maxEntries must be positive'),
        assert(
          maxParentFallbackSteps >= 0,
@@ -102,6 +104,11 @@ final class BaseMapTileCache {
   /// を両方へ渡す)。cache自身が`lookupWithFallback`の引数を検査して
   /// 一致を強制することはしない(cacheとlookupは疎結合なままにする)。
   final int maxParentFallbackSteps;
+
+  /// 欠損 tile の代替可否を決める policy。既定は背景地図向けの
+  /// [MapTileFallbackPolicy.basemap](親/子 fallback を許可)。hazard レイヤーの
+  /// cache は[MapTileFallbackPolicy.hazard]を明示的に渡し、fail closed にする。
+  final MapTileFallbackPolicy fallbackPolicy;
 
   final _generationOwner = AsyncGenerationOwner();
 
@@ -186,6 +193,11 @@ final class BaseMapTileCache {
     final exact = get(sourceInstanceId: sourceInstanceId, tileId: tileId);
     if (exact != null) {
       return BaseMapTileFallbackExact(exact);
+    }
+
+    // hazard レイヤーは古い/別解像度の tile でごまかさず fail closed する。
+    if (!fallbackPolicy.allowsSpatialFallback) {
+      return const BaseMapTileFallbackMiss();
     }
 
     final childIds = tileId.children();
