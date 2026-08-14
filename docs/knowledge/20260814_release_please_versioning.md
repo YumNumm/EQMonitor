@@ -27,6 +27,22 @@ Release-As: 3.0.0
   忘れると次回以降も同じバージョンを提案し続けるので、原則 footer 方式を使う
 - squash merge するとメッセージから footer が落ちる可能性がある。merge commit で develop に入れる
 
+### 落とし穴: footer は 500 コミットで期限切れになる
+
+release-please の `commit-search-depth` の既定値は **500**（`release-search-depth` は 400）。
+tip から 500 コミットより深い位置にある `Release-As` は読まれない。
+
+実例: 2026-07-25 の `185511d4`（`chore: release 3.0.0` / `Release-As: 3.0.0`）は
+develop の tip から 822 コミット深くなっていたため無視され、Release PR は `2.7.0` を提案していた。
+
+リリースまでに 500 コミット以上積まれてしまった場合は、footer 付きコミットを積み直す。
+
+```bash
+git commit --allow-empty -m "chore: 次のリリースを3.0.0に固定する" -m "Release-As: 3.0.0"
+```
+
+深さを増やす（`commit-search-depth`）ことも可能だが、CHANGELOG に取り込む範囲も広がるため安易に変えない。
+
 ## Release PR ブランチを手で編集しないこと
 
 `release-please` は develop への push ごとに実行され、Release PR のブランチを force push で作り直す。
