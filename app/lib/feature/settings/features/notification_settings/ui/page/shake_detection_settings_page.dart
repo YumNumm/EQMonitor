@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -187,7 +186,7 @@ class _ShakeEntryCard extends StatelessWidget {
   final ShakeDetectionEntry entry;
   final bool isBusy;
   final VoidCallback onDelete;
-  final ValueChanged<api.ShakeDetectionLevel> onLevelChanged;
+  final ValueChanged<ShakeDetectionLevel> onLevelChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -200,19 +199,19 @@ class _ShakeEntryCard extends StatelessWidget {
       subtitle: isBusy
           ? const LinearProgressIndicator()
           : DropdownButtonHideUnderline(
-              child: DropdownButton<api.ShakeDetectionLevel>(
+              child: DropdownButton<ShakeDetectionLevel>(
                 value: entry.minLevel,
                 isDense: true,
-                items: api.ShakeDetectionLevel.values
+                items: ShakeDetectionLevel.values
                     .map(
                       (level) => DropdownMenuItem(
                         value: level,
                         child: Text(switch (level) {
-                          api.ShakeDetectionLevel.weaker => '最小（Weaker）',
-                          api.ShakeDetectionLevel.weak => '小（Weak）',
-                          api.ShakeDetectionLevel.medium => '中（Medium）',
-                          api.ShakeDetectionLevel.strong => '大（Strong）',
-                          api.ShakeDetectionLevel.stronger => '最大（Stronger）',
+                          ShakeDetectionLevel.weaker => '最小（Weaker）',
+                          ShakeDetectionLevel.weak => '小（Weak）',
+                          ShakeDetectionLevel.medium => '中（Medium）',
+                          ShakeDetectionLevel.strong => '大（Strong）',
+                          ShakeDetectionLevel.stronger => '最大（Stronger）',
                         }),
                       ),
                     )

@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -78,7 +79,7 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
   }
 
   Future<void> addCurrentLocation({
-    api.ShakeDetectionLevel level = api.ShakeDetectionLevel.medium,
+    ShakeDetectionLevel level = ShakeDetectionLevel.medium,
   }) async {
     final current = state.requireValue;
     if (current.entries.any((e) => e.isCurrentLocation)) {
@@ -140,10 +141,7 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
     }
   }
 
-  Future<void> updateLevel(
-    String entryId,
-    api.ShakeDetectionLevel newLevel,
-  ) async {
+  Future<void> updateLevel(String entryId, ShakeDetectionLevel newLevel) async {
     final current = state.requireValue;
     final apiClient = await ref.read(apiClientProvider.future);
     final updated = current.entries.map((e) {
@@ -179,7 +177,7 @@ ShakeDetectionEntry _shakeEntryFromResponse(
   subRegionName: null,
   prefectureCode: r.prefectureCode,
   cityCode: r.cityCode,
-  minLevel: r.minLevel,
+  minLevel: r.minLevel.toShakeDetectionLevelModel,
   isCurrentLocation: r.isCurrentLocation,
 );
 
@@ -188,6 +186,6 @@ api.ShakeDetectionSettingRequest _toApiRequest(ShakeDetectionEntry e) =>
       subRegionId: e.subRegionId,
       prefectureCode: e.prefectureCode,
       cityCode: e.cityCode,
-      minLevel: e.minLevel,
+      minLevel: e.minLevel.toApiShakeDetectionLevel,
       isCurrentLocation: e.isCurrentLocation,
     );
