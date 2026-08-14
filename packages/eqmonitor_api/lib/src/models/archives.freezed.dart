@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Archives {
 
- Partition get partition; HypocenterCoverage get period;@JsonKey(name: 'query_revision') String get queryRevision; String get url;@JsonKey(name: 'feature_count') int get featureCount;@JsonKey(name: 'size_bytes') int get sizeBytes;
+ Partition get partition; HypocenterCoverage get period;@JsonKey(name: 'query_revision') String get queryRevision;@JsonKey(name: 'archive_revision') String get archiveRevision; String get url;@JsonKey(name: 'feature_count') int get featureCount;@JsonKey(name: 'size_bytes') int get sizeBytes;/// const: 14
+@JsonKey(includeIfNull: false, name: 'data_zoom') int? get dataZoom;@JsonKey(includeIfNull: false) Bounds? get bounds;
 /// Create a copy of Archives
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $ArchivesCopyWith<Archives> get copyWith => _$ArchivesCopyWithImpl<Archives>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Archives&&(identical(other.partition, partition) || other.partition == partition)&&(identical(other.period, period) || other.period == period)&&(identical(other.queryRevision, queryRevision) || other.queryRevision == queryRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.featureCount, featureCount) || other.featureCount == featureCount)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Archives&&(identical(other.partition, partition) || other.partition == partition)&&(identical(other.period, period) || other.period == period)&&(identical(other.queryRevision, queryRevision) || other.queryRevision == queryRevision)&&(identical(other.archiveRevision, archiveRevision) || other.archiveRevision == archiveRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.featureCount, featureCount) || other.featureCount == featureCount)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.dataZoom, dataZoom) || other.dataZoom == dataZoom)&&(identical(other.bounds, bounds) || other.bounds == bounds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,partition,period,queryRevision,url,featureCount,sizeBytes);
+int get hashCode => Object.hash(runtimeType,partition,period,queryRevision,archiveRevision,url,featureCount,sizeBytes,dataZoom,bounds);
 
 @override
 String toString() {
-  return 'Archives(partition: $partition, period: $period, queryRevision: $queryRevision, url: $url, featureCount: $featureCount, sizeBytes: $sizeBytes)';
+  return 'Archives(partition: $partition, period: $period, queryRevision: $queryRevision, archiveRevision: $archiveRevision, url: $url, featureCount: $featureCount, sizeBytes: $sizeBytes, dataZoom: $dataZoom, bounds: $bounds)';
 }
 
 
@@ -49,11 +50,11 @@ abstract mixin class $ArchivesCopyWith<$Res>  {
   factory $ArchivesCopyWith(Archives value, $Res Function(Archives) _then) = _$ArchivesCopyWithImpl;
 @useResult
 $Res call({
- Partition partition, HypocenterCoverage period,@JsonKey(name: 'query_revision') String queryRevision, String url,@JsonKey(name: 'feature_count') int featureCount,@JsonKey(name: 'size_bytes') int sizeBytes
+ Partition partition, HypocenterCoverage period,@JsonKey(name: 'query_revision') String queryRevision,@JsonKey(name: 'archive_revision') String archiveRevision, String url,@JsonKey(name: 'feature_count') int featureCount,@JsonKey(name: 'size_bytes') int sizeBytes,@JsonKey(includeIfNull: false, name: 'data_zoom') int? dataZoom,@JsonKey(includeIfNull: false) Bounds? bounds
 });
 
 
-$HypocenterCoverageCopyWith<$Res> get period;
+$HypocenterCoverageCopyWith<$Res> get period;$BoundsCopyWith<$Res>? get bounds;
 
 }
 /// @nodoc
@@ -66,15 +67,18 @@ class _$ArchivesCopyWithImpl<$Res>
 
 /// Create a copy of Archives
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? partition = null,Object? period = null,Object? queryRevision = null,Object? url = null,Object? featureCount = null,Object? sizeBytes = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? partition = null,Object? period = null,Object? queryRevision = null,Object? archiveRevision = null,Object? url = null,Object? featureCount = null,Object? sizeBytes = null,Object? dataZoom = freezed,Object? bounds = freezed,}) {
   return _then(Archives(
 partition: null == partition ? _self.partition : partition // ignore: cast_nullable_to_non_nullable
 as Partition,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as HypocenterCoverage,queryRevision: null == queryRevision ? _self.queryRevision : queryRevision // ignore: cast_nullable_to_non_nullable
+as String,archiveRevision: null == archiveRevision ? _self.archiveRevision : archiveRevision // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,featureCount: null == featureCount ? _self.featureCount : featureCount // ignore: cast_nullable_to_non_nullable
 as int,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
-as int,
+as int,dataZoom: freezed == dataZoom ? _self.dataZoom : dataZoom // ignore: cast_nullable_to_non_nullable
+as int?,bounds: freezed == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
+as Bounds?,
   ));
 }
 /// Create a copy of Archives
@@ -82,9 +86,21 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get period {
-  
+
   return $HypocenterCoverageCopyWith<$Res>(_self.period, (value) {
     return _then(_self.copyWith(period: value));
+  });
+}/// Create a copy of Archives
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BoundsCopyWith<$Res>? get bounds {
+    if (_self.bounds == null) {
+    return null;
+  }
+
+  return $BoundsCopyWith<$Res>(_self.bounds!, (value) {
+    return _then(_self.copyWith(bounds: value));
   });
 }
 }
@@ -168,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision, @JsonKey(name: 'archive_revision')  String archiveRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes, @JsonKey(includeIfNull: false, name: 'data_zoom')  int? dataZoom, @JsonKey(includeIfNull: false)  Bounds? bounds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Archives() when $default != null:
-return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that.featureCount,_that.sizeBytes);case _:
+return $default(_that.partition,_that.period,_that.queryRevision,_that.archiveRevision,_that.url,_that.featureCount,_that.sizeBytes,_that.dataZoom,_that.bounds);case _:
   return orElse();
 
 }
@@ -189,10 +205,10 @@ return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision, @JsonKey(name: 'archive_revision')  String archiveRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes, @JsonKey(includeIfNull: false, name: 'data_zoom')  int? dataZoom, @JsonKey(includeIfNull: false)  Bounds? bounds)  $default,) {final _that = this;
 switch (_that) {
 case _Archives():
-return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that.featureCount,_that.sizeBytes);case _:
+return $default(_that.partition,_that.period,_that.queryRevision,_that.archiveRevision,_that.url,_that.featureCount,_that.sizeBytes,_that.dataZoom,_that.bounds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +225,10 @@ return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Partition partition,  HypocenterCoverage period, @JsonKey(name: 'query_revision')  String queryRevision, @JsonKey(name: 'archive_revision')  String archiveRevision,  String url, @JsonKey(name: 'feature_count')  int featureCount, @JsonKey(name: 'size_bytes')  int sizeBytes, @JsonKey(includeIfNull: false, name: 'data_zoom')  int? dataZoom, @JsonKey(includeIfNull: false)  Bounds? bounds)?  $default,) {final _that = this;
 switch (_that) {
 case _Archives() when $default != null:
-return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that.featureCount,_that.sizeBytes);case _:
+return $default(_that.partition,_that.period,_that.queryRevision,_that.archiveRevision,_that.url,_that.featureCount,_that.sizeBytes,_that.dataZoom,_that.bounds);case _:
   return null;
 
 }
@@ -224,15 +240,19 @@ return $default(_that.partition,_that.period,_that.queryRevision,_that.url,_that
 @JsonSerializable()
 
 class _Archives implements Archives {
-  const _Archives({required this.partition, required this.period, @JsonKey(name: 'query_revision') required this.queryRevision, required this.url, @JsonKey(name: 'feature_count') required this.featureCount, @JsonKey(name: 'size_bytes') required this.sizeBytes});
+  const _Archives({required this.partition, required this.period, @JsonKey(name: 'query_revision') required this.queryRevision, @JsonKey(name: 'archive_revision') required this.archiveRevision, required this.url, @JsonKey(name: 'feature_count') required this.featureCount, @JsonKey(name: 'size_bytes') required this.sizeBytes, @JsonKey(includeIfNull: false, name: 'data_zoom') this.dataZoom, @JsonKey(includeIfNull: false) this.bounds});
   factory _Archives.fromJson(Map<String, dynamic> json) => _$ArchivesFromJson(json);
 
 @override final  Partition partition;
 @override final  HypocenterCoverage period;
 @override@JsonKey(name: 'query_revision') final  String queryRevision;
+@override@JsonKey(name: 'archive_revision') final  String archiveRevision;
 @override final  String url;
 @override@JsonKey(name: 'feature_count') final  int featureCount;
 @override@JsonKey(name: 'size_bytes') final  int sizeBytes;
+/// const: 14
+@override@JsonKey(includeIfNull: false, name: 'data_zoom') final  int? dataZoom;
+@override@JsonKey(includeIfNull: false) final  Bounds? bounds;
 
 /// Create a copy of Archives
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +267,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Archives&&(identical(other.partition, partition) || other.partition == partition)&&(identical(other.period, period) || other.period == period)&&(identical(other.queryRevision, queryRevision) || other.queryRevision == queryRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.featureCount, featureCount) || other.featureCount == featureCount)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Archives&&(identical(other.partition, partition) || other.partition == partition)&&(identical(other.period, period) || other.period == period)&&(identical(other.queryRevision, queryRevision) || other.queryRevision == queryRevision)&&(identical(other.archiveRevision, archiveRevision) || other.archiveRevision == archiveRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.featureCount, featureCount) || other.featureCount == featureCount)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.dataZoom, dataZoom) || other.dataZoom == dataZoom)&&(identical(other.bounds, bounds) || other.bounds == bounds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,partition,period,queryRevision,url,featureCount,sizeBytes);
+int get hashCode => Object.hash(runtimeType,partition,period,queryRevision,archiveRevision,url,featureCount,sizeBytes,dataZoom,bounds);
 
 @override
 String toString() {
-  return 'Archives(partition: $partition, period: $period, queryRevision: $queryRevision, url: $url, featureCount: $featureCount, sizeBytes: $sizeBytes)';
+  return 'Archives(partition: $partition, period: $period, queryRevision: $queryRevision, archiveRevision: $archiveRevision, url: $url, featureCount: $featureCount, sizeBytes: $sizeBytes, dataZoom: $dataZoom, bounds: $bounds)';
 }
 
 
@@ -267,11 +287,11 @@ abstract mixin class _$ArchivesCopyWith<$Res> implements $ArchivesCopyWith<$Res>
   factory _$ArchivesCopyWith(_Archives value, $Res Function(_Archives) _then) = __$ArchivesCopyWithImpl;
 @override @useResult
 $Res call({
- Partition partition, HypocenterCoverage period,@JsonKey(name: 'query_revision') String queryRevision, String url,@JsonKey(name: 'feature_count') int featureCount,@JsonKey(name: 'size_bytes') int sizeBytes
+ Partition partition, HypocenterCoverage period,@JsonKey(name: 'query_revision') String queryRevision,@JsonKey(name: 'archive_revision') String archiveRevision, String url,@JsonKey(name: 'feature_count') int featureCount,@JsonKey(name: 'size_bytes') int sizeBytes,@JsonKey(includeIfNull: false, name: 'data_zoom') int? dataZoom,@JsonKey(includeIfNull: false) Bounds? bounds
 });
 
 
-@override $HypocenterCoverageCopyWith<$Res> get period;
+@override $HypocenterCoverageCopyWith<$Res> get period;@override $BoundsCopyWith<$Res>? get bounds;
 
 }
 /// @nodoc
@@ -284,15 +304,18 @@ class __$ArchivesCopyWithImpl<$Res>
 
 /// Create a copy of Archives
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? partition = null,Object? period = null,Object? queryRevision = null,Object? url = null,Object? featureCount = null,Object? sizeBytes = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? partition = null,Object? period = null,Object? queryRevision = null,Object? archiveRevision = null,Object? url = null,Object? featureCount = null,Object? sizeBytes = null,Object? dataZoom = freezed,Object? bounds = freezed,}) {
   return _then(_Archives(
 partition: null == partition ? _self.partition : partition // ignore: cast_nullable_to_non_nullable
 as Partition,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as HypocenterCoverage,queryRevision: null == queryRevision ? _self.queryRevision : queryRevision // ignore: cast_nullable_to_non_nullable
+as String,archiveRevision: null == archiveRevision ? _self.archiveRevision : archiveRevision // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,featureCount: null == featureCount ? _self.featureCount : featureCount // ignore: cast_nullable_to_non_nullable
 as int,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
-as int,
+as int,dataZoom: freezed == dataZoom ? _self.dataZoom : dataZoom // ignore: cast_nullable_to_non_nullable
+as int?,bounds: freezed == bounds ? _self.bounds : bounds // ignore: cast_nullable_to_non_nullable
+as Bounds?,
   ));
 }
 
@@ -301,9 +324,21 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get period {
-  
+
   return $HypocenterCoverageCopyWith<$Res>(_self.period, (value) {
     return _then(_self.copyWith(period: value));
+  });
+}/// Create a copy of Archives
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BoundsCopyWith<$Res>? get bounds {
+    if (_self.bounds == null) {
+    return null;
+  }
+
+  return $BoundsCopyWith<$Res>(_self.bounds!, (value) {
+    return _then(_self.copyWith(bounds: value));
   });
 }
 }

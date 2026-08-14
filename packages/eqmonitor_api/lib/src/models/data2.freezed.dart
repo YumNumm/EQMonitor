@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Data2 {
 
- List<Archives> get archives;
+@JsonKey(name: 'schema_version') SchemaVersion get schemaVersion;@JsonKey(name: 'generated_at') DateTime get generatedAt; List<Archives> get archives;
 /// Create a copy of Data2
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $Data2CopyWith<Data2> get copyWith => _$Data2CopyWithImpl<Data2>(this as Data2, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Data2&&const DeepCollectionEquality().equals(other.archives, archives));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Data2&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other.archives, archives));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(archives));
+int get hashCode => Object.hash(runtimeType,schemaVersion,generatedAt,const DeepCollectionEquality().hash(archives));
 
 @override
 String toString() {
-  return 'Data2(archives: $archives)';
+  return 'Data2(schemaVersion: $schemaVersion, generatedAt: $generatedAt, archives: $archives)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $Data2CopyWith<$Res>  {
   factory $Data2CopyWith(Data2 value, $Res Function(Data2) _then) = _$Data2CopyWithImpl;
 @useResult
 $Res call({
- List<Archives> archives
+@JsonKey(name: 'schema_version') SchemaVersion schemaVersion,@JsonKey(name: 'generated_at') DateTime generatedAt, List<Archives> archives
 });
 
 
@@ -66,9 +66,11 @@ class _$Data2CopyWithImpl<$Res>
 
 /// Create a copy of Data2
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? archives = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? schemaVersion = null,Object? generatedAt = null,Object? archives = null,}) {
   return _then(Data2(
-archives: null == archives ? _self.archives : archives // ignore: cast_nullable_to_non_nullable
+schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
+as SchemaVersion,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,archives: null == archives ? _self.archives : archives // ignore: cast_nullable_to_non_nullable
 as List<Archives>,
   ));
 }
@@ -154,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Archives> archives)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'schema_version')  SchemaVersion schemaVersion, @JsonKey(name: 'generated_at')  DateTime generatedAt,  List<Archives> archives)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Data2() when $default != null:
-return $default(_that.archives);case _:
+return $default(_that.schemaVersion,_that.generatedAt,_that.archives);case _:
   return orElse();
 
 }
@@ -175,10 +177,10 @@ return $default(_that.archives);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Archives> archives)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'schema_version')  SchemaVersion schemaVersion, @JsonKey(name: 'generated_at')  DateTime generatedAt,  List<Archives> archives)  $default,) {final _that = this;
 switch (_that) {
 case _Data2():
-return $default(_that.archives);case _:
+return $default(_that.schemaVersion,_that.generatedAt,_that.archives);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +197,10 @@ return $default(_that.archives);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Archives> archives)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'schema_version')  SchemaVersion schemaVersion, @JsonKey(name: 'generated_at')  DateTime generatedAt,  List<Archives> archives)?  $default,) {final _that = this;
 switch (_that) {
 case _Data2() when $default != null:
-return $default(_that.archives);case _:
+return $default(_that.schemaVersion,_that.generatedAt,_that.archives);case _:
   return null;
 
 }
@@ -210,9 +212,11 @@ return $default(_that.archives);case _:
 @JsonSerializable()
 
 class _Data2 implements Data2 {
-  const _Data2({required  List<Archives> archives}): _archives = archives;
+  const _Data2({@JsonKey(name: 'schema_version') required this.schemaVersion, @JsonKey(name: 'generated_at') required this.generatedAt, required  List<Archives> archives}): _archives = archives;
   factory _Data2.fromJson(Map<String, dynamic> json) => _$Data2FromJson(json);
 
+@override@JsonKey(name: 'schema_version') final  SchemaVersion schemaVersion;
+@override@JsonKey(name: 'generated_at') final  DateTime generatedAt;
  final  List<Archives> _archives;
 @override List<Archives> get archives {
   if (_archives is EqualUnmodifiableListView) return _archives;
@@ -234,16 +238,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Data2&&const DeepCollectionEquality().equals(other._archives, _archives));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Data2&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other._archives, _archives));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_archives));
+int get hashCode => Object.hash(runtimeType,schemaVersion,generatedAt,const DeepCollectionEquality().hash(_archives));
 
 @override
 String toString() {
-  return 'Data2(archives: $archives)';
+  return 'Data2(schemaVersion: $schemaVersion, generatedAt: $generatedAt, archives: $archives)';
 }
 
 
@@ -254,7 +258,7 @@ abstract mixin class _$Data2CopyWith<$Res> implements $Data2CopyWith<$Res> {
   factory _$Data2CopyWith(_Data2 value, $Res Function(_Data2) _then) = __$Data2CopyWithImpl;
 @override @useResult
 $Res call({
- List<Archives> archives
+@JsonKey(name: 'schema_version') SchemaVersion schemaVersion,@JsonKey(name: 'generated_at') DateTime generatedAt, List<Archives> archives
 });
 
 
@@ -271,9 +275,11 @@ class __$Data2CopyWithImpl<$Res>
 
 /// Create a copy of Data2
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? archives = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? schemaVersion = null,Object? generatedAt = null,Object? archives = null,}) {
   return _then(_Data2(
-archives: null == archives ? _self._archives : archives // ignore: cast_nullable_to_non_nullable
+schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
+as SchemaVersion,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,archives: null == archives ? _self._archives : archives // ignore: cast_nullable_to_non_nullable
 as List<Archives>,
   ));
 }

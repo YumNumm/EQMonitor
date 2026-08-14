@@ -1,6 +1,6 @@
 {
   "data": {
-    "schema_version": 2,
+    "schema_version": 1,
     "generated_at": "2026-07-31T08:00:00.000Z",
     "archives": [
       {
@@ -13,14 +13,7 @@
         "archive_revision": "1234567890abcdef",
         "url": "https://tiles.eqmonitor.app/hypocenters/year/2024/1234567890abcdef.pmtiles",
         "feature_count": 251234,
-        "size_bytes": 18234567,
-        "data_zoom": 14,
-        "bounds": {
-          "min_longitude": 139.6917,
-          "min_latitude": 35.6895,
-          "max_longitude": 140.1235,
-          "max_latitude": 36.7654
-        }
+        "size_bytes": 18234567
       }
     ]
   },

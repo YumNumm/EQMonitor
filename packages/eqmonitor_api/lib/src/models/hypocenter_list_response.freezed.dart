@@ -78,7 +78,7 @@ as HypocenterMeta,
 @override
 @pragma('vm:prefer-inline')
 $Data3CopyWith<$Res> get data {
-  
+
   return $Data3CopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });
@@ -87,7 +87,7 @@ $Data3CopyWith<$Res> get data {
 @override
 @pragma('vm:prefer-inline')
 $HypocenterMetaCopyWith<$Res> get meta {
-  
+
   return $HypocenterMetaCopyWith<$Res>(_self.meta, (value) {
     return _then(_self.copyWith(meta: value));
   });
@@ -298,7 +298,7 @@ as HypocenterMeta,
 @override
 @pragma('vm:prefer-inline')
 $Data3CopyWith<$Res> get data {
-  
+
   return $Data3CopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });
@@ -307,7 +307,7 @@ $Data3CopyWith<$Res> get data {
 @override
 @pragma('vm:prefer-inline')
 $HypocenterMetaCopyWith<$Res> get meta {
-  
+
   return $HypocenterMetaCopyWith<$Res>(_self.meta, (value) {
     return _then(_self.copyWith(meta: value));
   });

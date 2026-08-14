@@ -80,7 +80,7 @@ as List<EarthquakeStationCity>,
 @override
 @pragma('vm:prefer-inline')
 $LocalizedNameCopyWith<$Res> get name {
-  
+
   return $LocalizedNameCopyWith<$Res>(_self.name, (value) {
     return _then(_self.copyWith(name: value));
   });
@@ -301,7 +301,7 @@ as List<EarthquakeStationCity>,
 @override
 @pragma('vm:prefer-inline')
 $LocalizedNameCopyWith<$Res> get name {
-  
+
   return $LocalizedNameCopyWith<$Res>(_self.name, (value) {
     return _then(_self.copyWith(name: value));
   });
