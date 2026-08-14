@@ -51,6 +51,10 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'is_pro_features_enabled',
         (v) => v as bool? ?? false,
       ),
+      isShakeDetectionEnabled: $checkedConvert(
+        'is_shake_detection_enabled',
+        (v) => v as bool? ?? true,
+      ),
     );
     return val;
   },
@@ -68,6 +72,7 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
     'revenueCatApiKeyAndroid': 'revenue_cat_api_key_android',
     'isBetaTesting': 'is_beta_testing',
     'isProFeaturesEnabled': 'is_pro_features_enabled',
+    'isShakeDetectionEnabled': 'is_shake_detection_enabled',
   },
 );
 
@@ -87,6 +92,7 @@ Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
       'revenue_cat_api_key_android': instance.revenueCatApiKeyAndroid,
       'is_beta_testing': instance.isBetaTesting,
       'is_pro_features_enabled': instance.isProFeaturesEnabled,
+      'is_shake_detection_enabled': instance.isShakeDetectionEnabled,
     };
 
 const _$FlavorEnumMap = {Flavor.dev: 'dev', Flavor.prod: 'prod'};

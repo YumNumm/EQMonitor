@@ -5,6 +5,7 @@ BuildConfig _buildConfig({
   required Flavor flavor,
   required bool isBetaTesting,
   bool isProFeaturesEnabled = false,
+  bool isShakeDetectionEnabled = true,
 }) => BuildConfig(
   restApiUrl: '',
   appIdSuffix: '',
@@ -20,6 +21,7 @@ BuildConfig _buildConfig({
   revenueCatApiKeyAndroid: '',
   isBetaTesting: isBetaTesting,
   isProFeaturesEnabled: isProFeaturesEnabled,
+  isShakeDetectionEnabled: isShakeDetectionEnabled,
 );
 
 void main() {
@@ -75,6 +77,35 @@ void main() {
       );
       expect(config.isProFeaturesEnabled, isFalse);
       expect(config.isBetaTesting, isFalse);
+    });
+
+    test('isShakeDetectionEnabled は既定で true', () {
+      const config = BuildConfig(
+        restApiUrl: '',
+        appIdSuffix: '',
+        appName: 'EQMonitor',
+        commitInformation: 'test',
+        flavor: Flavor.dev,
+        wsApiUrl: '',
+        googleIosClientId: '',
+        googleAndroidClientId: '',
+        buildTimestamp: '',
+        buildCommitMessage: '',
+        revenueCatApiKeyIos: '',
+        revenueCatApiKeyAndroid: '',
+      );
+      expect(config.isShakeDetectionEnabled, isTrue);
+    });
+
+    test('isShakeDetectionEnabled は false を指定できる', () {
+      expect(
+        _buildConfig(
+          flavor: Flavor.prod,
+          isBetaTesting: true,
+          isShakeDetectionEnabled: false,
+        ).isShakeDetectionEnabled,
+        isFalse,
+      );
     });
   });
 }
