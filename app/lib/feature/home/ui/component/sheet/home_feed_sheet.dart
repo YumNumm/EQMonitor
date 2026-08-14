@@ -183,7 +183,7 @@ class _UnreadFeedBanner extends ConsumerWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final color = feedUrgencyColor(item) ?? const Color(0xFFF57C00);
+    final color = item.urgencyColor ?? const Color(0xFFF57C00);
 
     return Material(
       color: color,

@@ -3,32 +3,34 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
-String feedItemDataText(FeedItemData data) => switch (data) {
-  FeedItemDataEarthquakeNotice(:final text) => text,
-  FeedItemDataEarthquakeExplanation(:final text) => text,
-  FeedItemDataEarthquakeCounts(:final text) => text ?? '',
-  FeedItemDataEarthquakeNankai(:final text) => text ?? '',
-  FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
-  FeedItemDataIncident() => '障害情報',
-  FeedItemDataDeveloperMessage() => '開発者メッセージ',
-};
+extension FeedItemDataDisplay on FeedItemData {
+  String get text => switch (this) {
+    FeedItemDataEarthquakeNotice(:final text) => text,
+    FeedItemDataEarthquakeExplanation(:final text) => text,
+    FeedItemDataEarthquakeCounts(:final text) => text ?? '',
+    FeedItemDataEarthquakeNankai(:final text) => text ?? '',
+    FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
+    FeedItemDataIncident() => '障害情報',
+    FeedItemDataDeveloperMessage() => '開発者メッセージ',
+  };
 
-String? feedItemUrl(FeedItemData data) => switch (data) {
-  FeedItemDataAppUpdate(:final url) => url,
-  FeedItemDataIncident(:final url) => url,
-  FeedItemDataDeveloperMessage(:final url) => url,
-  _ => null,
-};
+  String? get url => switch (this) {
+    FeedItemDataAppUpdate(:final url) => url,
+    FeedItemDataIncident(:final url) => url,
+    FeedItemDataDeveloperMessage(:final url) => url,
+    _ => null,
+  };
 
-String _feedTypeLabel(FeedItemData data) => switch (data) {
-  FeedItemDataEarthquakeNotice() => '地震情報',
-  FeedItemDataEarthquakeExplanation() => '地震解説',
-  FeedItemDataEarthquakeCounts() => '地震回数',
-  FeedItemDataEarthquakeNankai() => '南海トラフ',
-  FeedItemDataAppUpdate() => 'アップデート',
-  FeedItemDataIncident() => '障害情報',
-  FeedItemDataDeveloperMessage() => 'お知らせ',
-};
+  String get typeLabel => switch (this) {
+    FeedItemDataEarthquakeNotice() => '地震情報',
+    FeedItemDataEarthquakeExplanation() => '地震解説',
+    FeedItemDataEarthquakeCounts() => '地震回数',
+    FeedItemDataEarthquakeNankai() => '南海トラフ',
+    FeedItemDataAppUpdate() => 'アップデート',
+    FeedItemDataIncident() => '障害情報',
+    FeedItemDataDeveloperMessage() => 'お知らせ',
+  };
+}
 
 class FeedItemListTileContent extends StatelessWidget {
   const FeedItemListTileContent({required this.item, super.key});
@@ -82,10 +84,9 @@ class FeedTypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      _feedTypeLabel(data),
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-        color: context.designSystem.colorTheme.onSurfaceVariant,
-      ),
+      data.typeLabel,
+      style: Theme.of(context).textTheme.labelSmall
+          ?.copyWith(color: context.designSystem.colorTheme.onSurfaceVariant),
     );
   }
 }
