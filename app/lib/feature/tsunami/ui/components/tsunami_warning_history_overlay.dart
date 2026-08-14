@@ -3,44 +3,38 @@ import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-class TsunamiWarningHistoryButton extends StatefulWidget {
+class TsunamiWarningHistoryButton extends HookWidget {
   const TsunamiWarningHistoryButton({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 
   @override
-  State<TsunamiWarningHistoryButton> createState() =>
-      _TsunamiWarningHistoryButtonState();
-}
-
-class _TsunamiWarningHistoryButtonState
-    extends State<TsunamiWarningHistoryButton> {
-  final _overlayController = OverlayPortalController();
-  final _link = LayerLink();
-
-  @override
   Widget build(BuildContext context) {
+    final overlayController = useMemoized(OverlayPortalController.new);
+    final link = useMemoized(LayerLink.new);
+
     return CompositedTransformTarget(
-      link: _link,
+      link: link,
       child: OverlayPortal(
-        controller: _overlayController,
+        controller: overlayController,
         overlayChildBuilder: (context) {
           return _HistoryOverlay(
-            link: _link,
-            tsunami: widget.tsunami,
-            onDismiss: _overlayController.hide,
+            link: link,
+            tsunami: tsunami,
+            onDismiss: overlayController.hide,
           );
         },
         child: IconButton(
           icon: const Icon(Icons.history),
           color: Colors.white,
           onPressed: () {
-            if (_overlayController.isShowing) {
-              _overlayController.hide();
+            if (overlayController.isShowing) {
+              overlayController.hide();
             } else {
-              _overlayController.show();
+              overlayController.show();
             }
           },
         ),
