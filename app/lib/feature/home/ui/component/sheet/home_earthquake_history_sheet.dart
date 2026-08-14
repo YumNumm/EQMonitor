@@ -155,9 +155,9 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     // 上の HomeScopeUnavailableBody が担当する）。
                     onPressed: paramAsync.value == null
                         ? null
-                        : () async => EarthquakeHistoryRoute(
-                            $extra: paramAsync.value,
-                          ).push<void>(context),
+                        : () async =>
+                              EarthquakeHistoryRoute($extra: paramAsync.value)
+                                  .push<void>(context),
                     child: const Text('さらに表示'),
                   ),
                 ),

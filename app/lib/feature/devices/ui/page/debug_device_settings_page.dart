@@ -195,9 +195,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             children: [
               Text(
                 'リトライ状態: ',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorTheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorTheme.onSurfaceVariant),
               ),
               const SizedBox(width: 4),
               retryChip,
@@ -207,9 +206,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             const SizedBox(height: 4),
             Text(
               (retryState.value as RetryWaiting).lastError.userMessage,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorTheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: colorTheme.onSurfaceVariant),
             ),
           ],
           if (isLoading) ...[
@@ -280,9 +278,8 @@ class _StatusChip extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: textColor),
+              style: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: textColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),

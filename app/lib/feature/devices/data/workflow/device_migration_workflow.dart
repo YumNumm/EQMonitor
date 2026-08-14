@@ -66,38 +66,15 @@ Future<void> runV3MigrationWorkflow({
 
       // Step 2 — register only when absent
       if (!alreadyRegistered) {
-        await step<void>(
-          'registerDevice',
-          () async {
-            final result = await repository.registerDevice(
-              deviceId: deviceId,
-              devicePlatform: kIsWeb
-                  ? .ios
-                  : Platform.isIOS
-                  ? .ios
-                  : .android,
-              deviceLocale: .ja,
-            );
-            switch (result) {
-              case Success():
-                break;
-              case Failure(:final exception, :final stackTrace):
-                Error.throwWithStackTrace(
-                  exception,
-                  stackTrace ?? StackTrace.empty,
-                );
-            }
-          },
-        );
-      }
-
-      // Step 3 — migrate legacy settings
-      await step<void>(
-        'migrateLegacySettings',
-        () async {
-          final result = await repository.migrateFromLegacy(
+        await step<void>('registerDevice', () async {
+          final result = await repository.registerDevice(
             deviceId: deviceId,
-            oldDeviceId: oldDeviceId,
+            devicePlatform: kIsWeb
+                ? .ios
+                : Platform.isIOS
+                ? .ios
+                : .android,
+            deviceLocale: .ja,
           );
           switch (result) {
             case Success():
@@ -108,8 +85,25 @@ Future<void> runV3MigrationWorkflow({
                 stackTrace ?? StackTrace.empty,
               );
           }
-        },
-      );
+        });
+      }
+
+      // Step 3 — migrate legacy settings
+      await step<void>('migrateLegacySettings', () async {
+        final result = await repository.migrateFromLegacy(
+          deviceId: deviceId,
+          oldDeviceId: oldDeviceId,
+        );
+        switch (result) {
+          case Success():
+            break;
+          case Failure(:final exception, :final stackTrace):
+            Error.throwWithStackTrace(
+              exception,
+              stackTrace ?? StackTrace.empty,
+            );
+        }
+      });
 
       // Step 4 — persist completion flag
       await step<bool>(_kMarkComplete, () => true);

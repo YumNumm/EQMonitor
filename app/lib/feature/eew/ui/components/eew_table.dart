@@ -67,7 +67,9 @@ class EewTable extends StatelessWidget {
                     return designSystem.colorTheme.primaryContainer;
                   }
                   return eew.isWarning ?? false
-                      ? designSystem.colorTheme.errorContainer.withValues(alpha: 0.7)
+                      ? designSystem.colorTheme.errorContainer.withValues(
+                          alpha: 0.7,
+                        )
                       : designSystem.colorTheme.surfaceContainer;
                 }),
                 cells: _EewTableColumn.values
@@ -204,10 +206,7 @@ extension _EewTableColumnEx on _EewTableColumn {
       value: '${eew.accuracy!.depth}',
       isNumeric: true,
     ),
-    .accuracy => const _EewTableColumnValue(
-      value: '',
-      isNumeric: false,
-    ),
+    .accuracy => const _EewTableColumnValue(value: '', isNumeric: false),
     .type => _EewTableColumnValue(
       value: (eew.isWarning ?? false) ? '緊急地震速報 (警報)' : '緊急地震速報 (予報)',
       isNumeric: false,
