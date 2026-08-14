@@ -366,7 +366,7 @@ class LiveMonitorDetectedEventNotifier
     final fullUrl = earthquake?.estimatedIntensityTileUrl;
     if (earthquake == null ||
         fullUrl == null ||
-        !liveMonitorEstimatedIntensityUrlMatchesIdentifier(
+        !LiveMonitorEventDetector.estimatedIntensityUrlMatchesIdentifier(
           fullUrl: fullUrl,
           identifier: event.identifier,
         )) {
