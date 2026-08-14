@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
@@ -179,7 +180,7 @@ Future<ProviderContainer> _pumpPage(
         home: OverrideEditPage(
           slotId: slotId,
           slotType: NotificationSlotType.region,
-          overrideType: OverrideType.earthquake,
+          overrideType: NotificationKind.earthquake,
           currentOverrides: overrides,
         ),
       ),

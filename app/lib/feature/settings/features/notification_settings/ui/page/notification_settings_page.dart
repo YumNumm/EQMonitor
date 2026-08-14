@@ -127,7 +127,9 @@ class _Body extends HookConsumerWidget {
                 await ref.read(notificationPresetApplierProvider).apply(preset);
               } on Object catch (error) {
                 if (context.mounted) {
-                  await showErrorDialog(context, error: error);
+                  await ref
+                      .read(errorDialogActionProvider)
+                      .show(context, error: error);
                 }
               }
             },
