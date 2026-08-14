@@ -95,9 +95,10 @@ class _EewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final originTime = eew.originTime != null
-        ? dateFormat.format(eew.originTime!)
-        : '不明';
+    final originTime = switch (eew.originTime) {
+      final originTime? => dateFormat.format(originTime),
+      null => '不明',
+    };
     final reportTime = dateFormat.format(eew.reportTime);
     final hypocenter = eew.hypocenter;
 
