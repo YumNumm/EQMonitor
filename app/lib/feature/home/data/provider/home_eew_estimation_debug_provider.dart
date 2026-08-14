@@ -22,13 +22,13 @@ Future<bool> isHomeEewEstimationDebugAvailable(Ref ref) async {
 /// ホーム画面のEEWカードに推計震度・到達予想時刻を表示するかどうか。
 ///
 /// 設定が有効でも、変更権限を失った場合は表示しない。
+/// EEW 受信中にロール取得の API 呼び出しを発生させないため、
+/// ローカルに保存された設定を先に確認する。
 @riverpod
 Future<bool> isHomeEewEstimationVisible(Ref ref) async {
-  final isAvailable = await ref.watch(
-    isHomeEewEstimationDebugAvailableProvider.future,
-  );
-  if (!isAvailable) {
+  final isEnabled = await ref.watch(homeEewEstimationDebugProvider.future);
+  if (!isEnabled) {
     return false;
   }
-  return ref.watch(homeEewEstimationDebugProvider.future);
+  return ref.watch(isHomeEewEstimationDebugAvailableProvider.future);
 }

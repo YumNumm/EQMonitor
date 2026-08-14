@@ -30,11 +30,15 @@ ProviderContainer _container({
   required bool isDebugEnabled,
   required DeviceRole? role,
   required bool isSettingEnabled,
+  List<DeviceRole?>? roleReads,
 }) {
   final container = ProviderContainer(
     overrides: [
       debugProvider.overrideWith(() => _StubDebug(isEnabled: isDebugEnabled)),
-      deviceRoleProvider.overrideWith((ref) async => role),
+      deviceRoleProvider.overrideWith((ref) async {
+        roleReads?.add(role);
+        return role;
+      }),
       homeEewEstimationDebugProvider.overrideWith(
         () => _StubHomeEewEstimationDebug(isEnabled: isSettingEnabled),
       ),
@@ -137,6 +141,22 @@ void main() {
         container.read(isHomeEewEstimationVisibleProvider.future),
         completion(isFalse),
       );
+    });
+
+    test('設定が無効ならロールを取得しない', () async {
+      final roleReads = <DeviceRole?>[];
+      final container = _container(
+        isDebugEnabled: true,
+        role: DeviceRole.admin,
+        isSettingEnabled: false,
+        roleReads: roleReads,
+      );
+
+      await expectLater(
+        container.read(isHomeEewEstimationVisibleProvider.future),
+        completion(isFalse),
+      );
+      expect(roleReads, isEmpty);
     });
   });
 }
