@@ -28,7 +28,7 @@ final class SeismicityPmTilesArchiveWriter {
   final SeismicityPmTilesDirectoryWriter directoryWriter;
 
   static const metadataJson = '{}';
-  static const mvtTileType = PmTilesV3HeaderDecoder.mvtTileType;
+  static const int mvtTileType = PmTilesV3HeaderDecoder.mvtTileType;
 
   Uint8List write({
     required List<SeismicityPmTilesArchiveTilePayload> payloads,

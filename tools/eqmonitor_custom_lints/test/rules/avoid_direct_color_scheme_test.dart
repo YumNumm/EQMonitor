@@ -34,10 +34,6 @@ void main() {
 
     final violations = findColorSchemeViolations(result.unit);
 
-    expect(
-      violations,
-      isEmpty,
-      reason: 'ok.dart で誤検出が発生しています',
-    );
+    expect(violations, isEmpty, reason: 'ok.dart で誤検出が発生しています');
   });
 }

@@ -42,7 +42,7 @@ void main() {
   });
 
   test('worker close failure replaces success only', () async {
-    final cleanupFailure = const SeismicityPmTilesException.decoderWorkerFailed(
+    const cleanupFailure = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'close failed',
     );
     final setup = fixtures.startSuccessPath();
@@ -61,7 +61,7 @@ void main() {
   });
 
   test('retirement failure replaces success only', () async {
-    final cleanupFailure = const SeismicityPmTilesException.decoderWorkerFailed(
+    const cleanupFailure = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'retired failed',
     );
     final setup = fixtures.startSuccessPath();
@@ -109,10 +109,10 @@ void main() {
   });
 
   test('cleanup failure never masks primary worker failure', () async {
-    final primary = const SeismicityPmTilesException.decoderWorkerFailed(
+    const primary = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'decode primary',
     );
-    final cleanupFailure = const SeismicityPmTilesException.decoderWorkerFailed(
+    const cleanupFailure = SeismicityPmTilesException.decoderWorkerFailed(
       reason: 'close secondary',
     );
     final setup = fixtures.startSuccessPath();

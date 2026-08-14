@@ -1,4 +1,9 @@
-include: package:eqmonitor_lints/analysis_options.yaml
+# plugins は pub workspace のルートでしか宣言できない（宣言すると
+# plugins_in_inner_options 警告になる）。ルートの analysis_options.yaml を
+# include することで、そこで宣言された自作 analyzer plugin を引き継ぐ。
+# exclude は宣言元ファイルからの相対パスで解決されるため、app 配下の
+# ネイティブディレクトリを除くには以下の宣言を残す必要がある。
+include: ../analysis_options.yaml
 analyzer:
   errors:
     avoid_implementing_value_types: ignore
@@ -18,18 +23,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-
-plugins:
-  eqmonitor_lints_plugin:
-    path: ../tools/eqmonitor_lints_plugin
-    diagnostics:
-      avoid_stateful_widget: true
-      avoid_null_assertion_operator: true
-      avoid_top_level_functions: true
-      avoid_print: true
-      avoid_eqmonitor_api_in_ui: true
-      avoid_mixed_declaration_categories: true
-  eqmonitor_custom_lints:
-    path: ../tools/eqmonitor_custom_lints
-    diagnostics:
-      avoid_direct_color_scheme: true

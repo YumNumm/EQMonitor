@@ -34,7 +34,7 @@ Future<int> runSeismicityDecodeBenchmarkCli({
   } on SeismicityBenchmarkArgumentsException catch (error) {
     stderr.writeln(error.message);
     return 64;
-  } catch (error, stackTrace) {
+  } on Object catch (error, stackTrace) {
     stderr
       ..writeln(error)
       ..writeln(stackTrace);

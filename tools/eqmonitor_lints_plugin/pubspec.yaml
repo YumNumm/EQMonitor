@@ -8,3 +8,5 @@ environment:
 dependencies:
   analysis_server_plugin: ^0.3.8
   analyzer: ^13.0.0
+dev_dependencies:
+  test: ^1.31.2

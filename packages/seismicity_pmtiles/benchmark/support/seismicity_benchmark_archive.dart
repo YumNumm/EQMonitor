@@ -27,7 +27,7 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
       );
     }
     final tileCount = featureCount ~/ featuresPerTile;
-    final tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
+    const tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
     if (tileCount > tileSide * tileSide) {
       throw ArgumentError(
         'tileCount $tileCount exceeds zoom '
@@ -112,7 +112,11 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
     required this.expectedTotalPublicBytes,
     required this.descriptor,
     required this.header,
-  });
+  }) : readCount = 0,
+       closeCount = 0,
+       maxRetainedPayloads = 0,
+       _retainedPayloads = 0,
+       _closed = false;
 
   final int featureCount;
   final int featuresPerTile;
@@ -130,11 +134,11 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
   final Uint8List lastHypocenterId;
   final int expectedTotalPublicBytes;
 
-  var readCount = 0;
-  var closeCount = 0;
-  var maxRetainedPayloads = 0;
-  var _retainedPayloads = 0;
-  var _closed = false;
+  int readCount;
+  int closeCount;
+  int maxRetainedPayloads;
+  int _retainedPayloads;
+  bool _closed;
   Future<void>? _close;
 
   Uint8List tileBytesAt({required int tileIndex}) {
@@ -269,8 +273,8 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
           value: createVectorTileValue(boolValue: geometryClamped),
         );
       }
-      final extent = SeismicityBenchmarkFeatureSource.extent;
-      final tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
+      const extent = SeismicityBenchmarkFeatureSource.extent;
+      const tileSide = 1 << SeismicityBenchmarkFeatureSource.dataZoom;
       final tileX = tileIndex % tileSide;
       final tileY = tileIndex ~/ tileSide;
       final localX = feature.globalX - tileX * extent;

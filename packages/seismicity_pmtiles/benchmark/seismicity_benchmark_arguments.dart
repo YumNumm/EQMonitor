@@ -19,7 +19,8 @@ final class SeismicityBenchmarkArguments {
   int get tileCount => featureCount ~/ featuresPerTile;
 }
 
-/// Strict typed parser for benchmark CLI flags. Parsing only — no benchmark run.
+/// Strict typed parser for benchmark CLI flags.
+/// Parsing only — no benchmark run.
 final class SeismicityBenchmarkArgumentsParser {
   const SeismicityBenchmarkArgumentsParser();
 

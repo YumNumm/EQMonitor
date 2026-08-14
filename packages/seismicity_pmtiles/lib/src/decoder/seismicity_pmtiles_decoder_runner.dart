@@ -13,7 +13,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_load_state.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 
-final class _RunnerCleanupMemo {
+final class SeismicityDecoderRunnerCleanupMemo {
   Future<void>? future;
   SeismicityDecoderWorkerHandle? handle;
 }
@@ -21,7 +21,7 @@ final class _RunnerCleanupMemo {
 /// Non-export runner: archive traversal into an injected worker factory.
 final class SeismicityPmTilesDecoderRunner {
   SeismicityPmTilesDecoderRunner({
-    required SeismicityDecoderWorkerFactory this.factory,
+    required this.factory,
     this.schemaValidator = const SeismicitySchemaV1Validator(),
     this.publicationValidator = const SeismicityDatasetPublicationValidator(),
   });
@@ -35,7 +35,7 @@ final class SeismicityPmTilesDecoderRunner {
     required int chunkCapacity,
   }) {
     final lifecycle = SeismicityDecoderRunLifecycle();
-    final cleanup = _RunnerCleanupMemo();
+    final cleanup = SeismicityDecoderRunnerCleanupMemo();
     late final SeismicityPmTilesDecodeOperationController controller;
     controller = SeismicityPmTilesDecodeOperationController(
       onCancel: () async {
@@ -74,7 +74,7 @@ final class SeismicityPmTilesDecoderRunner {
     required int chunkCapacity,
     required SeismicityPmTilesDecodeOperationController controller,
     required SeismicityDecoderRunLifecycle lifecycle,
-    required _RunnerCleanupMemo cleanup,
+    required SeismicityDecoderRunnerCleanupMemo cleanup,
   }) async {
     var classifyAsWorker = false;
     try {
@@ -144,7 +144,7 @@ final class SeismicityPmTilesDecoderRunner {
   }
 
   Future<void> settleCleanup({
-    required _RunnerCleanupMemo memo,
+    required SeismicityDecoderRunnerCleanupMemo memo,
     required SeismicityPmTilesArchive archive,
     required SeismicityDecoderRunLifecycle lifecycle,
     required SeismicityPmTilesDecodeOperationController controller,
@@ -173,7 +173,7 @@ final class SeismicityPmTilesDecoderRunner {
   }
 
   Future<void> ensureCleanup({
-    required _RunnerCleanupMemo memo,
+    required SeismicityDecoderRunnerCleanupMemo memo,
     required SeismicityPmTilesArchive archive,
     required SeismicityDecoderRunDecision decision,
   }) {
