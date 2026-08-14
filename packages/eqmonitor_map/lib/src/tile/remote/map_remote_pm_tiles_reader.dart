@@ -151,6 +151,29 @@ final class MapRemotePmTilesRandomAccessReader
     }
 
     final headers = _headersOf(response);
+
+    // status を Content-Encoding / body 収集より先に分類する。412(snapshot 差し替え)
+    // が gzip の error page で返ってきた場合でも、identity validator より先に
+    // terminal 化しないと「snapshot drift 後も古い cache が読める」状態になる。
+    // 206 以外の body は読まずに drain する(巨大 error body の防止にもなる)。
+    if (response.statusCode == 412) {
+      await response.drain<void>();
+      final error = MapRemoteTileSnapshotMismatchException(
+        expectedEtag: etag,
+        receivedEtag: headers.singleValueOf('etag'),
+        statusCode: response.statusCode,
+      );
+      _terminalSnapshot = error;
+      _cache.clear();
+      throw error;
+    }
+    if (response.statusCode != 206) {
+      await response.drain<void>();
+      throw MapRemoteTileUnexpectedStatusException(
+        statusCode: response.statusCode,
+      );
+    }
+
     _identityValidator.validate(headers: headers);
     final bytes = await _collect(response, maxBytes: length);
 

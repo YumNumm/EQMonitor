@@ -100,6 +100,27 @@ void main() {
     );
   });
 
+  test('classifies a 412 as snapshot mismatch even with a gzip page', () async {
+    final reader = await readerOf();
+    addTearDown(reader.close);
+
+    await reader.readAt(offset: 0, length: 8); // pins "v1"
+    server
+      ..etag =
+          '"v2"' // archive replaced → If-Match "v1" now yields 412
+      ..contentEncodingOverride = 'gzip'; // 412 error page is gzip-encoded
+
+    // The 412 must win over the non-identity encoding check and go terminal.
+    await expectLater(
+      reader.readAt(offset: 32, length: 8),
+      throwsA(isA<MapRemoteTileSnapshotMismatchException>()),
+    );
+    await expectLater(
+      reader.readAt(offset: 64, length: 8),
+      throwsA(isA<MapRemoteTileSnapshotMismatchException>()),
+    );
+  });
+
   test('rejects reads after close', () async {
     final reader = await readerOf();
     await reader.close();
