@@ -26,7 +26,7 @@ class DeviceProvisioningBanner extends ConsumerWidget {
 
     final notifier = ref.watch(deviceProvisioningProvider.notifier);
     final provisionRetry = notifier.retryState;
-    final syncRetry = syncSnapshot?.value?.retryState ??  RetryIdle();
+    final syncRetry = syncSnapshot?.value?.retryState ?? RetryIdle();
 
     // アクティブなリトライ状態（provisioning 優先）
     final activeRetry = provisionRetry is! RetryIdle
@@ -215,9 +215,8 @@ class _BannerTile extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: foregroundColor),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: foregroundColor),
               ),
             ),
             if (trailing != null) ...[const SizedBox(width: 8), trailing!],

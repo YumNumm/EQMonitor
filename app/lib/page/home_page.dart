@@ -7,7 +7,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/home_eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
@@ -87,7 +87,7 @@ class _SheetBody extends ConsumerWidget {
         .mapIndexed(
           (index, element) => Padding(
             padding: EdgeInsets.only(bottom: spacing.md),
-            child: EewCard(
+            child: HomeEewCard(
               eew: element,
               index: (state.length > 1) ? '${index + 1}' : null,
             ),
@@ -246,16 +246,14 @@ class _LocationPermissionBanner extends ConsumerWidget {
                   children: [
                     Text(
                       message.$1,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: colorTheme.onPrimaryContainer,
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall
+                          ?.copyWith(color: colorTheme.onPrimaryContainer),
                     ),
                     if (message.$2.isNotEmpty)
                       Text(
                         message.$2,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorTheme.onPrimaryContainer,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall
+                            ?.copyWith(color: colorTheme.onPrimaryContainer),
                       ),
                   ],
                 ),

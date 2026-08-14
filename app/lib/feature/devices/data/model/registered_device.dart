@@ -15,16 +15,9 @@ abstract class RegisteredDevice with _$RegisteredDevice {
   }) = _RegisteredDevice;
 }
 
-enum DevicePlatform {
-  ios,
-  android,
-}
+enum DevicePlatform { ios, android }
 
-enum DeviceLocale {
-  ja,
-  en,
-  zh,
-}
+enum DeviceLocale { ja, en, zh }
 
 extension DevicePlatformDisplay on DevicePlatform {
   String get displayLabel => switch (this) {

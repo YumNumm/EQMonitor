@@ -90,11 +90,7 @@ final class AuthorizationException extends DeviceProvisioningException {
 
 /// 429 レート制限。[retryAfter] が非 null の場合は優先的に使用する。
 final class RateLimitedException extends DeviceProvisioningException {
-  const RateLimitedException({
-    this.retryAfter,
-    super.cause,
-    super.stackTrace,
-  });
+  const RateLimitedException({this.retryAfter, super.cause, super.stackTrace});
   final Duration? retryAfter;
 
   @override

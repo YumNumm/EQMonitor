@@ -9,8 +9,11 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
+import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -236,6 +239,7 @@ class _DebugWidget extends ConsumerWidget {
                 );
               },
             ),
+            const _HomeEewEstimationTile(),
             ListTile(
               title: const Text('EEW Card'),
               subtitle: Text(
@@ -483,15 +487,13 @@ class _AppCheckSection extends ConsumerWidget {
               final token = await FirebaseAppCheck.instance
                   .getLimitedUseToken();
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Token: $token')));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Token: $token')));
               }
             } on Exception catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('エラー: $e')));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('エラー: $e')));
               }
             }
           },
@@ -596,6 +598,49 @@ class _ParameterDebugSection extends HookConsumerWidget {
           ),
         },
       ],
+    );
+  }
+}
+
+class _HomeEewEstimationTile extends ConsumerWidget {
+  const _HomeEewEstimationTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDebugEnabled = ref.watch(debugProvider).value ?? false;
+    final roleAsync = ref.watch(deviceRoleProvider);
+    final isAvailable =
+        ref.watch(isHomeEewEstimationDebugAvailableProvider).value ?? false;
+    final isEnabled = ref.watch(homeEewEstimationDebugProvider).value ?? false;
+
+    final subtitle = isAvailable
+        ? 'JMAが現在地の予想震度を発表していない場合に、推計震度とS波到達予想時刻をホームのEEWカードへ表示'
+        : switch ((isDebugEnabled, roleAsync)) {
+            (false, _) => 'デバッグモードが無効のため変更できません',
+            (_, AsyncLoading()) => 'デバイスのロールを確認中です',
+            (_, AsyncError()) => 'デバイスのロールを取得できませんでした',
+            (_, AsyncData(:final value)) =>
+              'Admin ロールのデバイスのみ変更できます'
+                  '(現在のロール: ${value?.value ?? '未提供'})',
+          };
+
+    return ListTile(
+      title: const Text('ホームに推計震度・到達予想時刻を表示'),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+      leading: const Icon(Icons.speed),
+      trailing: AppSwitch(
+        value: isEnabled && isAvailable,
+        onChanged: isAvailable
+            ? (value) async => ref
+                  .read(homeEewEstimationDebugProvider.notifier)
+                  .save(isEnabled: value)
+            : null,
+      ),
+      onTap: isAvailable
+          ? () async => ref
+                .read(homeEewEstimationDebugProvider.notifier)
+                .save(isEnabled: !isEnabled)
+          : null,
     );
   }
 }

@@ -14,12 +14,9 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
-import 'package:eqmonitor/feature/location/data/location.dart';
-import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:maplibre/maplibre.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -184,29 +181,6 @@ class _SimulationView extends HookConsumerWidget {
       return estimatedRegions.additionalForecastRegionsFor(eew: currentEew);
     }, [estimatedRegions, currentEew]);
 
-    // ユーザー現在地regionの推定値
-    final positionAsync = ref.watch(locationStreamProvider);
-    final position = positionAsync.value;
-    final regionItem = position != null
-        ? ref
-              .watch(
-                jmaMapAreaForecastLocalEInsideProvider(
-                  lat_lng.LatLng(position.latitude, position.longitude),
-                ),
-              )
-              .value
-        : null;
-    final userRegionCode = regionItem?.property?.code;
-
-    final userEstimate = useMemoized(() {
-      if (estimatedRegions == null || userRegionCode == null) {
-        return null;
-      }
-      return estimatedRegions.firstWhereOrNull(
-        (e) => e.regionCode == userRegionCode,
-      );
-    }, [estimatedRegions, userRegionCode]);
-
     return Stack(
       children: [
         Positioned.fill(
@@ -228,7 +202,7 @@ class _SimulationView extends HookConsumerWidget {
               eew: currentEew,
               index: null,
               nowOverride: virtualNow,
-              userRegionEstimate: isEstimatedAllowed ? userEstimate : null,
+              estimatedRegions: isEstimatedAllowed ? estimatedRegions : null,
             ),
           ),
       ],
