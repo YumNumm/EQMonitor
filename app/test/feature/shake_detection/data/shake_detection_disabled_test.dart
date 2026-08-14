@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_debug_overlay.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,7 +18,7 @@ ShakeDetectionEvent _event(String eventId) => ShakeDetectionEvent(
   createdAt: _now,
   updatedAt: _now,
   expiresAt: _now.add(const Duration(minutes: 1)),
-  level: api.ShakeDetectionLevel.medium,
+  level: ShakeDetectionLevel.medium,
   pointCount: 1,
   minLat: 35,
   maxLat: 36,
