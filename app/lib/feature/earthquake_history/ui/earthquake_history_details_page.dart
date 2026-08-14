@@ -198,8 +198,8 @@ class _LoadedContent extends HookConsumerWidget {
                         source: effectiveSource,
                         showDatabaseBadge: isDbOnly,
                       ),
-                      if (earthquake.originTime != null &&
-                          DateTime.now().difference(earthquake.originTime!) >
+                      if (earthquake.originTime case final originTime?
+                          when DateTime.now().difference(originTime) >
                               const Duration(hours: 24))
                         const AdBanner(),
                       EarthquakeActivityCard(earthquake: earthquake),
@@ -225,8 +225,8 @@ class _LoadedContent extends HookConsumerWidget {
                                 ),
                               ],
                             ),
-                            style: Theme.of(context).textTheme.bodySmall!
-                                .copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   color:
                                       designSystem.colorTheme.onSurfaceVariant,
                                   fontSize: 11,
