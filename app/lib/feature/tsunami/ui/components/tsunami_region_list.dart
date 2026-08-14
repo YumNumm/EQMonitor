@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiRegionList extends StatelessWidget {
@@ -202,23 +203,17 @@ class _ForecastDetails extends StatelessWidget {
   }
 }
 
-class _ObservationExpansion extends StatefulWidget {
+class _ObservationExpansion extends HookWidget {
   const _ObservationExpansion({required this.stations});
 
   final List<TsunamiRegionStation> stations;
 
   @override
-  State<_ObservationExpansion> createState() => _ObservationExpansionState();
-}
-
-class _ObservationExpansionState extends State<_ObservationExpansion> {
-  var _expanded = false;
-
-  @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
+    final expanded = useState(false);
 
-    if (widget.stations.isEmpty) {
+    if (stations.isEmpty) {
       return const SizedBox(height: 8);
     }
 
@@ -226,19 +221,19 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         InkWell(
-          onTap: () => setState(() => _expanded = !_expanded),
+          onTap: () => expanded.value = !expanded.value,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
                 Icon(
-                  _expanded ? Icons.expand_less : Icons.expand_more,
+                  expanded.value ? Icons.expand_less : Icons.expand_more,
                   size: 18,
                   color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '観測点を表示 (${widget.stations.length})',
+                  '観測点を表示 (${stations.length})',
                   style: TextStyle(
                     fontSize: 13,
                     color: designSystem.colorTheme.onSurfaceVariant,
@@ -248,13 +243,13 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
             ),
           ),
         ),
-        if (_expanded)
+        if (expanded.value)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final station in widget.stations)
+                for (final station in stations)
                   TsunamiObservationStationTile(station: station),
               ],
             ),
