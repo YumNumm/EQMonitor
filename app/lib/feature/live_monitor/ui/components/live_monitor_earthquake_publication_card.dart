@@ -23,7 +23,10 @@ class LiveMonitorEarthquakePublicationCard extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Text(
-          formatLiveMonitorPublicationTime(reportedAt: reportedAt, now: now),
+          const LiveMonitorPublicationTimeFormatter().format(
+            reportedAt: reportedAt,
+            now: now,
+          ),
         ),
       ),
     );
