@@ -219,7 +219,10 @@ class _BannerTile extends StatelessWidget {
                     ?.copyWith(color: foregroundColor),
               ),
             ),
-            if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+            if (trailing case final trailing?) ...[
+              const SizedBox(width: 8),
+              trailing,
+            ],
           ],
         ),
       ),

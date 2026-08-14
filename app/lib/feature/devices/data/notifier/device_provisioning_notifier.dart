@@ -63,7 +63,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
             '[Provisioning] legacy device detected; '
             'running v2→v3 migration workflow',
           );
-          await runV3MigrationWorkflow(
+          await const DeviceMigrationWorkflow().run(
             runner: repo.buildRunner(),
             repository: deviceRepo,
             deviceId: deviceId,
@@ -96,7 +96,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
         talker.error('[Provisioning] failed', e, st);
         rethrow;
       } on DioException catch (e, st) {
-        final mapped = mapDioToProvisioningException(e, st);
+        final mapped = DioExceptionMapper.map(e, st);
         talker.error('[Provisioning] failed', mapped, st);
         throw mapped;
       } catch (e, st) {
