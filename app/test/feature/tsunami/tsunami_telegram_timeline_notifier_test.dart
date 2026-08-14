@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
-import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.dart';
+import 'package:eqmonitor/feature/tsunami/data/logic/tracked_tsunami_timeline_to_public_mapper.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_region.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_tsunami_timeline.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tracking/tracked_value.dart';
