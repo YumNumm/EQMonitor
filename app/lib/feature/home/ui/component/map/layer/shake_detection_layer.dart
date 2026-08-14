@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
@@ -10,7 +9,7 @@ import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart'
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
