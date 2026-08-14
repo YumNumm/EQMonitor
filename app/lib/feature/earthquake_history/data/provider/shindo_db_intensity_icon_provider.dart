@@ -28,10 +28,13 @@ Future<Map<ShindoDbIntensityClass, Uint8List>> shindoDbIntensityIcon(
     (cls) => cls.exactJmaIntensity == null,
   )) {
     futures.add(() async {
-      final bytes = await renderWidgetToImageBytes(
+      final bytes = await WidgetImageRenderer.render(
         logicalSize: const Size(50, 50),
         widget: Theme(
-          data: buildTheme(colorSet: colorSet, brightness: brightness),
+          data: AppThemeDataBuilder.build(
+            colorSet: colorSet,
+            brightness: brightness,
+          ),
           child: ShindoDbIntensityClassMapIcon(intensityClass: cls),
         ),
       );

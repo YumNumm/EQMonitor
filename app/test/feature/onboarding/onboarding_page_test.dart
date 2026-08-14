@@ -50,7 +50,7 @@ FilledButton _nextButton(WidgetTester tester) =>
     tester.widget<FilledButton>(find.byType(FilledButton).last);
 
 Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
-  final theme = buildTheme(
+  final theme = AppThemeDataBuilder.build(
     colorSet: AppTheme.eqmonitorDefault().light!,
     brightness: Brightness.light,
   );

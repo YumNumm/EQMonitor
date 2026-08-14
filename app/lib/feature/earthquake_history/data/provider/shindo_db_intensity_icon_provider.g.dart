@@ -64,4 +64,4 @@ final class ShindoDbIntensityIconProvider
 }
 
 String _$shindoDbIntensityIconHash() =>
-    r'b0f1ed3844f4a80635728c6a5c04c25c3076eea0';
+    r'ca91bef790b29e935f1ffb3015b1f02705f9ad32';
