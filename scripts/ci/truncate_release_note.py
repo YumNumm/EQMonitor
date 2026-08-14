@@ -18,6 +18,8 @@ def truncate_release_note(text: str, max_chars: int) -> str:
     if match is None:
         if len(text) <= max_chars:
             return text
+        if max_chars <= 3:
+            return "." * max_chars
         return text[: max_chars - 3] + "..."
 
     rev_line = match.group(1)
