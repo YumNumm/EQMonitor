@@ -207,4 +207,23 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  // 既知の境界をピン留めする。RED になったら digest 束縛が入った合図なので、
+  // expectation を緩めずに reader の doc と todo 815 を併せて更新すること。
+  test(
+    'does not bind response bytes to source.sha256 (known gap #1592)',
+    () async {
+      final reader = await readerOf();
+      addTearDown(reader.close);
+
+      // ETag は据え置いたまま archive の中身だけ差し替える。
+      server.archiveBytes.setAll(0, List.filled(16, 0xEE));
+
+      expect(
+        await reader.readAt(offset: 0, length: 16),
+        everyElement(0xEE),
+        reason: 'sha256 束縛が入るまでは差し替えられた byte も受理される',
+      );
+    },
+  );
 }

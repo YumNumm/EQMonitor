@@ -21,6 +21,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+          submodules: true
 
       - name: Fetch base for diff tests
         env:

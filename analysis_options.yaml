@@ -12,6 +12,8 @@ analyzer:
     - "**/DerivedData/**"
     - "**/build/**"
     - "build/**"
+    # fork した上流コード。lint はこのリポジトリの規約ではなく上流に従う。
+    - third_party/**
     - android/**
     - ios/**
     - web/**
