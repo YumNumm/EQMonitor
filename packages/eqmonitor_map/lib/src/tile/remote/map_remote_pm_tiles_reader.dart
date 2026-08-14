@@ -23,6 +23,14 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 ///   直近の範囲は `maxCacheBytes` の LRU で再利用する。
 /// - snapshot drift(ETag 不一致 / 412)は terminal 失敗にして cache を捨てる。
 /// - [close] 後の read は [MapRemoteTileClosedException]。
+///
+/// **保証しないこと**: 受信 byte を[VerifiedRemotePmTilesSource.sha256]と
+/// 照合しない。全体 digest は全 `sizeBytes` を読まないと計算できず、部分取得と
+/// 両立しないため。保証は「pin した ETag が同一の間、各 range が同一 snapshot に
+/// 属すること」までで、その snapshot が attest された archive そのものである
+/// ことは保証しない(ETag 据え置きの差し替えは検出できない)。全体束縛には
+/// per-chunk attestation が要る。
+/// `docs/todo/815_eqmonitor_map_remote_digest_binding.md`
 final class MapRemotePmTilesRandomAccessReader
     implements PmTilesRandomAccessReader {
   MapRemotePmTilesRandomAccessReader({

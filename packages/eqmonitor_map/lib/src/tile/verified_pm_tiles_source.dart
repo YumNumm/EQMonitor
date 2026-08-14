@@ -24,7 +24,11 @@ sealed class VerifiedTileSource {
   /// downloadを別物として扱うために使う。
   String get sourceInstanceId;
 
-  /// 検証済み archive の内容 digest(64桁hex)。
+  /// app が attest した archive 全体の内容 digest(64桁hex)。
+  ///
+  /// **package はこの値と実データを突き合わせない。** package 内の用途は
+  /// [VerifiedTileSourceCacheIdentity.cacheIdentity]だけである。remote で
+  /// 照合できない理由は`MapRemotePmTilesRandomAccessReader`の doc を参照。
   String get sha256;
 }
 
