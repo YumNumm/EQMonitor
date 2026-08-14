@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_intensity_notice_notifier.dart';
@@ -54,9 +54,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 '各地の震度データを取得中...',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -129,9 +128,8 @@ class _LoadedContent extends HookConsumerWidget {
 
     final designSystem = context.designSystem;
 
-    final telegramCommentLines = selectTelegramCommentLines(
-      earthquake.telegramComments,
-    );
+    final telegramCommentLines = const EarthquakeTelegramCommentSelector()
+        .selectLines(earthquake.telegramComments);
 
     return Scaffold(
       body: Stack(
