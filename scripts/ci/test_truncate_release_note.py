@@ -25,6 +25,11 @@ class TruncateReleaseNoteTest(unittest.TestCase):
         self.assertEqual(len(out), 50)
         self.assertTrue(out.endswith("..."))
 
+        for n in (1, 2, 3):
+            with self.subTest(max_chars=n):
+                out = truncate_release_note(text, n)
+                self.assertEqual(out, "." * n)
+
 
 if __name__ == "__main__":
     unittest.main()
