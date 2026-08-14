@@ -54,7 +54,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 ---
 
 - [x] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
-- [x] **Step 2: Run** `mise exec -- flutter test packages/eqmonitor_map/test/tile/verified_source_contract_test.dart`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。`docs/todo/700_melos_dart_test_package_filter.md` / CI の `wc-check-dart-test.yaml` と同じく `flutter test` を使う）
+- [x] **Step 2: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile/verified_source_contract_test.dart)`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。加えて **package ディレクトリから**実行しないと fixture 解決 root がずれる。`docs/todo/700_melos_dart_test_package_filter.md` / CI の `wc-check-dart-test.yaml` 参照）
 - [ ] **Step 3: Fix only if RED** at the owning boundary.
 - [ ] **Step 4: Re-run GREEN**
 - [ ] **Step 5: Commit** `test: ローカル verified source 契約をピン留め`
@@ -319,7 +319,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - [ ] **Step 1: Write failing integration contract tests**
 - [ ] **Step 2: Run RED**
 - [ ] **Step 3: Wire remaining seams; update README**
-- [ ] **Step 4: Run** `mise exec -- flutter test packages/eqmonitor_map/test/tile` and `mise exec -- dart analyze packages/eqmonitor_map --fatal-infos`
+- [ ] **Step 4: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile)` and `mise exec -- dart analyze packages/eqmonitor_map --fatal-infos`（**package ディレクトリから**実行する。repository root から呼ぶと fixture 解決 root がずれ、fixture 依存の tile/MVT test が誤って赤くなる。`docs/knowledge/20260814_cloud_agent_flutter_toolchain_bootstrap.md` 参照）
 - [ ] **Step 5: Commit** `test: tile pipeline 本番契約の統合テストを追加`
 
 ---
