@@ -1,5 +1,5 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
+import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_hook.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,7 +19,7 @@ class HomeEewCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isEstimationVisible =
         ref.watch(isHomeEewEstimationVisibleProvider).value ?? false;
-    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+    final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: eew,
       isEnabled: isEstimationVisible,

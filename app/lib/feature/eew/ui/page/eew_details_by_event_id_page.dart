@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
@@ -12,7 +11,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
-import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
+import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_hook.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -92,11 +91,17 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               eews
                   .map((eew) => eew.hypocenter)
                   .nonNulls
-                  .where((h) => h.latitude != null && h.longitude != null)
-                  .firstOrNull
-                  ?.let(
-                    (h) => Geographic(lat: h.latitude!, lon: h.longitude!),
-                  ) ??
+                  .map(
+                    (h) => switch ((h.latitude, h.longitude)) {
+                      (final lat?, final lon?) => Geographic(
+                        lat: lat,
+                        lon: lon,
+                      ),
+                      _ => null,
+                    },
+                  )
+                  .nonNulls
+                  .firstOrNull ??
               const Geographic(lat: 35.6895, lon: 139.6917);
 
           if (simulation != null) {
@@ -168,7 +173,7 @@ class _SimulationView extends HookConsumerWidget {
       virtualNow = firstReportTime.add(elapsed);
     }
 
-    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+    final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: currentEew,
       isEnabled: isEstimatedAllowed,
@@ -286,17 +291,18 @@ class _ResponsiveLayout extends HookConsumerWidget {
     final isEstimatedAllowed =
         ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ?? false;
 
-    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+    final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: selectedEew,
       isEnabled: isEstimatedAllowed,
     );
 
     final additionalRegions = useMemoized(() {
-      if (estimatedRegions == null || selectedEew == null) {
+      final eew = selectedEew;
+      if (estimatedRegions == null || eew == null) {
         return null;
       }
-      return estimatedRegions.additionalForecastRegionsFor(eew: selectedEew!);
+      return estimatedRegions.additionalForecastRegionsFor(eew: eew);
     }, [estimatedRegions, selectedEew]);
 
     return LayoutBuilder(
