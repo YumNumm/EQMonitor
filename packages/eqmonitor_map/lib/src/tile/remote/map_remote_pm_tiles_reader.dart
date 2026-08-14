@@ -46,7 +46,13 @@ final class MapRemotePmTilesRandomAccessReader
 
   String? _pinnedEtag;
   var _closed = false;
-  MapRemoteTileSnapshotMismatchException? _terminalSnapshot;
+
+  /// 一度 strong ETag を pin した後に random-access 契約が壊れたら、その失敗を
+  /// terminal にして以後の read をすべて失敗させる(古い cache を返さない)。
+  /// snapshot 差し替え(412 / ETag drift)だけでなく、pin 後の If-Match 応答で
+  /// weak/欠損 ETag・Content-Range 不一致・body 長不一致が起きた場合も、その
+  /// archive をもう一貫して読めないため terminal 化する。
+  MapRemoteTileException? _terminalFailure;
 
   /// strong ETag をまだ pin していない間に走る「最初の read」。並行して複数の
   /// 初回 read を `If-Match` なしで投げると、その間に origin が差し替わった際に
@@ -63,9 +69,9 @@ final class MapRemotePmTilesRandomAccessReader
     if (_closed) {
       return Future.error(const MapRemoteTileClosedException());
     }
-    final terminalSnapshot = _terminalSnapshot;
-    if (terminalSnapshot != null) {
-      return Future.error(terminalSnapshot);
+    final terminalFailure = _terminalFailure;
+    if (terminalFailure != null) {
+      return Future.error(terminalFailure);
     }
     if (length <= 0 || offset < 0 || offset > sizeBytes - length) {
       return Future.error(
@@ -163,7 +169,7 @@ final class MapRemotePmTilesRandomAccessReader
         receivedEtag: headers.singleValueOf('etag'),
         statusCode: response.statusCode,
       );
-      _terminalSnapshot = error;
+      _terminalFailure = error;
       _cache.clear();
       throw error;
     }
@@ -188,9 +194,15 @@ final class MapRemotePmTilesRandomAccessReader
         expectedTotalSize: sizeBytes,
         expectedEtag: etag,
       );
-    } on MapRemoteTileSnapshotMismatchException catch (error) {
-      _terminalSnapshot = error;
-      _cache.clear();
+    } on MapRemoteTileException catch (error) {
+      // 一度 pin した後(expectedEtag != null)に range 契約が壊れた場合、および
+      // snapshot 差し替え(ETag drift)は、その archive をもう一貫して読めない
+      // ため terminal 化して cache を捨てる。pin 前(初回 read)の契約失敗は
+      // retry 余地を残して terminal にしない。
+      if (etag != null || error is MapRemoteTileSnapshotMismatchException) {
+        _terminalFailure = error;
+        _cache.clear();
+      }
       rethrow;
     }
 

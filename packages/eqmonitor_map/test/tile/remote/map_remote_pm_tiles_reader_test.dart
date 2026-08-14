@@ -121,6 +121,24 @@ void main() {
     );
   });
 
+  test('terminalizes a post-pin range-contract break', () async {
+    final reader = await readerOf();
+    addTearDown(reader.close);
+
+    await reader.readAt(offset: 0, length: 8); // pins "v1", caches [0, 8)
+    server.oversizeBodyBy = 4; // later If-Match 206 breaks the body length
+
+    await expectLater(
+      reader.readAt(offset: 32, length: 8),
+      throwsA(isA<MapRemoteTileBodyLengthMismatchException>()),
+    );
+    // terminal: even the previously cached range now fails closed.
+    await expectLater(
+      reader.readAt(offset: 0, length: 8),
+      throwsA(isA<MapRemoteTileBodyLengthMismatchException>()),
+    );
+  });
+
   test('rejects reads after close', () async {
     final reader = await readerOf();
     await reader.close();
