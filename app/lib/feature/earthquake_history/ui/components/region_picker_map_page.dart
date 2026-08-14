@@ -30,30 +30,29 @@ class RegionPickerMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resolvedCode = useState<String?>(null);
-    final resolvedName = useState<String?>(null);
+    final resolved = useState<RegionPickerResult?>(null);
     final isResolving = useState(false);
 
     Future<void> resolveLocation(double lat, double lon) async {
       isResolving.value = true;
-      resolvedCode.value = null;
-      resolvedName.value = null;
+      resolved.value = null;
       try {
         final latLng = LatLng(lat, lon);
         if (selectedType == 'city') {
           final city = await ref.read(
             jmaMapAreaInformationCityInsideProvider(latLng).future,
           );
-          if (city?.property != null) {
-            resolvedCode.value = city!.property!.code;
-            resolvedName.value = city.property!.name;
+          final property = city?.property;
+          if (property != null) {
+            resolved.value = (code: property.code, name: property.name);
           }
         } else {
           final city = await ref.read(
             jmaMapAreaInformationCityInsideProvider(latLng).future,
           );
-          if (city?.property != null) {
-            final cityCode = city!.property!.code;
+          final property = city?.property;
+          if (property != null) {
+            final cityCode = property.code;
             final prefix = cityCode.length >= 2
                 ? cityCode.substring(0, 2)
                 : cityCode;
@@ -61,12 +60,12 @@ class RegionPickerMapPage extends HookConsumerWidget {
             final prefecture = jmaCodeTable
                 ?.codeTables
                 .areaInformationPrefectureEarthquake
-                .firstWhereOrNull(
-                  (p) => p.code.startsWith(prefix),
-                );
+                .firstWhereOrNull((p) => p.code.startsWith(prefix));
             if (prefecture != null) {
-              resolvedCode.value = prefecture.code;
-              resolvedName.value = prefecture.name.ja;
+              resolved.value = (
+                code: prefecture.code,
+                name: prefecture.name.ja,
+              );
             }
           }
         }
@@ -81,6 +80,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
     final hint = selectedType == 'prefecture'
         ? '地図をタップして都道府県を選択'
         : '地図をタップして市区町村を選択';
+    final resolvedValue = resolved.value;
 
     if (styleString == null) {
       return Scaffold(
@@ -93,12 +93,9 @@ class RegionPickerMapPage extends HookConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          if (resolvedCode.value != null)
+          if (resolvedValue != null)
             TextButton(
-              onPressed: () => Navigator.of(context).pop((
-                code: resolvedCode.value!,
-                name: resolvedName.value!,
-              )),
+              onPressed: () => Navigator.of(context).pop(resolvedValue),
               child: const Text('決定'),
             ),
         ],
@@ -115,7 +112,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
           ),
           if (isResolving.value)
             const Center(child: CircularProgressIndicator.adaptive()),
-          if (resolvedCode.value == null && !isResolving.value)
+          if (resolvedValue == null && !isResolving.value)
             Positioned(
               bottom: 32,
               left: 16,
@@ -131,7 +128,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
                 ),
               ),
             ),
-          if (resolvedName.value != null && !isResolving.value)
+          if (resolvedValue != null && !isResolving.value)
             Positioned(
               bottom: 32,
               left: 16,
@@ -148,15 +145,13 @@ class RegionPickerMapPage extends HookConsumerWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          resolvedName.value!,
+                          resolvedValue.name,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop((
-                          code: resolvedCode.value!,
-                          name: resolvedName.value!,
-                        )),
+                        onPressed: () =>
+                            Navigator.of(context).pop(resolvedValue),
                         child: const Text('決定'),
                       ),
                     ],
