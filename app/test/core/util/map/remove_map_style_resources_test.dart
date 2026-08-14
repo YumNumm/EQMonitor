@@ -16,7 +16,7 @@ void main() {
   test('先頭 layer の削除失敗後も残りの resource を削除する', () async {
     final style = FakeStyleController(failingLayerIds: {'first'});
 
-    await removeMapStyleResources(
+    await MapStyleResourceRemover.remove(
       styleController: style,
       layerIds: const ['first', 'second'],
       sourceIds: const ['source'],
@@ -31,7 +31,7 @@ void main() {
   test('source の削除失敗後も残りの source と image を削除する', () async {
     final style = FakeStyleController(failingSourceIds: {'first-source'});
 
-    await removeMapStyleResources(
+    await MapStyleResourceRemover.remove(
       styleController: style,
       sourceIds: const ['first-source', 'second-source'],
       imageIds: const ['image'],
@@ -47,7 +47,7 @@ void main() {
       failingSourceIds: {'first-source'},
     );
 
-    await removeMapStyleResources(
+    await MapStyleResourceRemover.remove(
       styleController: style,
       layerIds: const ['first-layer', 'second-layer', 'third-layer'],
       sourceIds: const ['first-source', 'second-source'],
