@@ -329,7 +329,13 @@ class _OverrideTile extends StatelessWidget {
             leading: _IntensityBadge(intensity: entry.minJmaIntensity),
             title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
             subtitle: Text(
-              '${_soundLabel(entry.sound)} / ${entry.interruptionLevel.name}',
+              '${switch (entry.sound) {
+                'default' => 'デフォルト',
+                'eew_warning' => 'EEW警報',
+                'eew_forecast' => 'EEW予報',
+                'earthquake' => '地震情報',
+                _ => entry.sound,
+              }} / ${entry.interruptionLevel.name}',
             ),
             trailing: const Icon(Icons.chevron_right),
           ),
@@ -479,11 +485,3 @@ class _OverrideFormDialog extends HookWidget {
     );
   }
 }
-
-String _soundLabel(String sound) => switch (sound) {
-  'default' => 'デフォルト',
-  'eew_warning' => 'EEW警報',
-  'eew_forecast' => 'EEW予報',
-  'earthquake' => '地震情報',
-  _ => sound,
-};
