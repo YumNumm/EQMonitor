@@ -3,11 +3,16 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-Future<void> showProUpgradeDialog(BuildContext context) async {
-  await showDialog<void>(
-    context: context,
-    builder: (context) => const _ProUpgradeDialog(),
-  );
+/// Pro プランへのアップグレード案内ダイアログの表示を担う。
+class ProUpgradeDialogAction {
+  const ProUpgradeDialogAction();
+
+  Future<void> show(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => const _ProUpgradeDialog(),
+    );
+  }
 }
 
 class _ProUpgradeDialog extends ConsumerWidget {

@@ -225,7 +225,7 @@ class _NotificationConditionCard extends StatelessWidget {
               title: '震度別設定',
               subtitle: 'Proで利用できます',
               locked: true,
-              onTap: () async => showProUpgradeDialog(context),
+              onTap: () async => const ProUpgradeDialogAction().show(context),
             ),
         ],
       ),

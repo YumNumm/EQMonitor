@@ -26,26 +26,22 @@ class CityPickerPage extends HookConsumerWidget {
     final searchController = useTextEditingController();
     final searchText = useState('');
 
-    useEffect(
-      () {
-        void listener() => searchText.value = searchController.text;
-        searchController.addListener(listener);
-        return () => searchController.removeListener(listener);
-      },
-      [searchController],
-    );
+    useEffect(() {
+      void listener() => searchText.value = searchController.text;
+      searchController.addListener(listener);
+      return () => searchController.removeListener(listener);
+    }, [searchController]);
 
     final jmaCodeTableAsync = ref.watch(jmaCodeTableProvider);
     final cities = jmaCodeTableAsync.value?.codeTables.areaInformationCity;
 
-    final filteredCities =
-        _filterCities(cities, regionCode, searchText.value);
+    final filteredCities = _filterCities(cities, regionCode, searchText.value);
 
     ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) {
       if (next is MutationError) {
         final error = next.error;
         if (error is DioException && error.response?.statusCode == 402) {
-          unawaited(showProUpgradeDialog(context));
+          unawaited(const ProUpgradeDialogAction().show(context));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -62,9 +58,9 @@ class CityPickerPage extends HookConsumerWidget {
       }
     });
 
-    final isAdding =
-        ref.watch(NotificationSlotsNotifier.addRegionMutation)
-            is MutationPending;
+    final isAdding = ref.watch(
+      NotificationSlotsNotifier.addRegionMutation,
+    ) is MutationPending;
 
     return Scaffold(
       appBar: AppBar(title: Text('$regionName - 市区町村を選択')),
@@ -168,17 +164,16 @@ class _WholeRegionTile extends ConsumerWidget {
       trailing: const Icon(Icons.add),
       onTap: enabled
           ? () async {
-              await NotificationSlotsNotifier.addRegionMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(notificationSlotsProvider.notifier)
-                      .addRegion(
-                        regionId: int.parse(regionCode),
-                        regionName: regionName,
-                      );
-                },
-              );
+              await NotificationSlotsNotifier.addRegionMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(notificationSlotsProvider.notifier)
+                    .addRegion(
+                      regionId: int.parse(regionCode),
+                      regionName: regionName,
+                    );
+              });
             }
           : null,
     );
@@ -205,18 +200,17 @@ class _CityListTile extends ConsumerWidget {
       trailing: const Icon(Icons.add),
       onTap: enabled
           ? () async {
-              await NotificationSlotsNotifier.addRegionMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(notificationSlotsProvider.notifier)
-                      .addRegion(
-                        regionId: int.parse(regionCode),
-                        cityCode: city.code,
-                        cityName: city.name.ja,
-                      );
-                },
-              );
+              await NotificationSlotsNotifier.addRegionMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(notificationSlotsProvider.notifier)
+                    .addRegion(
+                      regionId: int.parse(regionCode),
+                      cityCode: city.code,
+                      cityName: city.name.ja,
+                    );
+              });
             }
           : null,
     );

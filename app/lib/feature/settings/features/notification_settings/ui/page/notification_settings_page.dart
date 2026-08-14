@@ -116,9 +116,10 @@ class _Body extends HookConsumerWidget {
             onChanged: (preset) async {
               if (selectedPreset == NotificationPreset.custom &&
                   preset != NotificationPreset.custom) {
-                final confirmed = await showCustomPresetResetConfirmDialog(
-                  context,
-                );
+                final confirmed =
+                    await const CustomPresetResetConfirmDialogAction().show(
+                      context,
+                    );
                 if (!confirmed) {
                   return;
                 }
@@ -425,7 +426,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const SoundInterruptionSettingsPage(),
                     ),
                   )
-                : () async => showProUpgradeDialog(context),
+                : () async => const ProUpgradeDialogAction().show(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(
@@ -438,7 +439,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const PerIntensitySoundSettingsPage(),
                     ),
                   )
-                : () async => showProUpgradeDialog(context),
+                : () async => const ProUpgradeDialogAction().show(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(
