@@ -24,9 +24,7 @@ class AquaCatalogPage extends HookConsumerWidget {
     final selectedMonth = useState<Month?>(null);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('メカニズム解カタログ'),
-      ),
+      appBar: AppBar(title: const Text('メカニズム解カタログ')),
       body: Column(
         children: [
           _MonthSelector(
@@ -35,9 +33,7 @@ class AquaCatalogPage extends HookConsumerWidget {
               selectedMonth.value = month;
             },
           ),
-          Expanded(
-            child: _AquaCatalogList(selectedMonth: selectedMonth.value),
-          ),
+          Expanded(child: _AquaCatalogList(selectedMonth: selectedMonth.value)),
         ],
       ),
     );
@@ -55,25 +51,17 @@ class _AquaCatalogList extends HookConsumerWidget {
     final designSystem = context.designSystem;
     final niedApiClient = ref.watch(niedApiClientProvider);
 
-    final future = useMemoized(
-      () async {
-        final response = await niedApiClient.hinet.aqua.catalog.getCatalogHtml(
-          year: selectedMonth?.year.toString(),
-          month: selectedMonth?.month.toString().padLeft(2, '0'),
-          onReceiveProgress: (received, total) {
-            log(
-              'received: $received, total: $total',
-              name: 'onReceiveProgress',
-            );
-          },
-        );
-        final parser = AquaHtmlParser();
-        return parser.parseCatalog(
-          bytes: Uint8List.fromList(response.data),
-        );
-      },
-      [selectedMonth],
-    );
+    final future = useMemoized(() async {
+      final response = await niedApiClient.hinet.aqua.catalog.getCatalogHtml(
+        year: selectedMonth?.year.toString(),
+        month: selectedMonth?.month.toString().padLeft(2, '0'),
+        onReceiveProgress: (received, total) {
+          log('received: $received, total: $total', name: 'onReceiveProgress');
+        },
+      );
+      final parser = AquaHtmlParser();
+      return parser.parseCatalog(bytes: Uint8List.fromList(response.data));
+    }, [selectedMonth]);
 
     final snapshot = useFuture(future);
 
@@ -119,7 +107,7 @@ class _AquaCatalogList extends HookConsumerWidget {
         SliverSafeArea(
           sliver: SliverMainAxisGroup(
             slivers: [
-              for (final date in groupedByDate.keys) ...[
+              for (final entry in groupedByDate.entries) ...[
                 SliverStickyHeader(
                   header: ColoredBox(
                     color: designSystem.colorTheme.surfaceContainerHighest,
@@ -129,8 +117,8 @@ class _AquaCatalogList extends HookConsumerWidget {
                         vertical: 8,
                       ),
                       child: Text(
-                        '${date.year}/${date.month}/${date.day}',
-                        style: theme.textTheme.titleSmall!.copyWith(
+                        '${entry.key.year}/${entry.key.month}/${entry.key.day}',
+                        style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: designSystem.colorTheme.onSurface,
                           fontFamily: FontFamily.googleSansCode,
@@ -139,9 +127,9 @@ class _AquaCatalogList extends HookConsumerWidget {
                     ),
                   ),
                   sliver: SliverList.builder(
-                    itemCount: groupedByDate[date]!.length,
+                    itemCount: entry.value.length,
                     itemBuilder: (context, index) {
-                      final event = groupedByDate[date]![index];
+                      final event = entry.value[index];
                       return _EventCard(event: event);
                     },
                   ),
@@ -196,28 +184,23 @@ class _MonthSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: designSystem.colorTheme.surfaceContainerHighest,
         border: Border(
-          bottom: BorderSide(
-            color: designSystem.colorTheme.outlineVariant,
-          ),
+          bottom: BorderSide(color: designSystem.colorTheme.outlineVariant),
         ),
       ),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              selectedMonth == null
-                  ? '対象月: 最新'
-                  : '対象月: ${selectedMonth!.year}年${selectedMonth!.month}月',
-              style: theme.textTheme.titleSmall,
-            ),
+            child: Text(switch (selectedMonth) {
+              null => '対象月: 最新',
+              final month => '対象月: ${month.year}年${month.month}月',
+            }, style: theme.textTheme.titleSmall),
           ),
           OutlinedButton.icon(
             onPressed: () async {
               final result = await showAdaptiveDialog<Month?>(
                 context: context,
-                builder: (context) => _MonthPickerDialog(
-                  initialMonth: selectedMonth,
-                ),
+                builder: (context) =>
+                    _MonthPickerDialog(initialMonth: selectedMonth),
               );
               if (result != null) {
                 onMonthChanged(result);
@@ -280,10 +263,7 @@ class _MonthPickerDialog extends HookWidget {
               label: const Text('年'),
               dropdownMenuEntries: years
                   .map(
-                    (year) => DropdownMenuEntry(
-                      value: year,
-                      label: '$year年',
-                    ),
+                    (year) => DropdownMenuEntry(value: year, label: '$year年'),
                   )
                   .toList(),
               onSelected: (value) {
@@ -300,10 +280,8 @@ class _MonthPickerDialog extends HookWidget {
               label: const Text('月'),
               dropdownMenuEntries: availableMonths
                   .map(
-                    (month) => DropdownMenuEntry(
-                      value: month,
-                      label: '$month月',
-                    ),
+                    (month) =>
+                        DropdownMenuEntry(value: month, label: '$month月'),
                   )
                   .toList(),
               onSelected: (value) {
@@ -322,12 +300,9 @@ class _MonthPickerDialog extends HookWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(
-              Month(
-                year: selectedYear.value,
-                month: selectedMonth.value,
-              ),
-            );
+            Navigator.of(
+              context,
+            ).pop(Month(year: selectedYear.value, month: selectedMonth.value));
           },
           child: const Text('OK'),
         ),
@@ -358,8 +333,8 @@ class _EventCard extends HookWidget {
     final originTime = tz.TZDateTime.from(event.originTime, jst);
     return ListTile(
       title: Text(event.region),
-      subtitle: DefaultTextStyle(
-        style: theme.textTheme.bodyMedium!.copyWith(
+      subtitle: DefaultTextStyle.merge(
+        style: theme.textTheme.bodyMedium?.copyWith(
           fontFamily: FontFamily.googleSansCode,
           fontFamilyFallback: [FontFamily.notoSansJP],
         ),
@@ -374,13 +349,9 @@ class _EventCard extends HookWidget {
             Text(
               '緯度 ${event.latitude.toStringAsFixed(1)}° / 経度 ${event.longitude.toStringAsFixed(1)}°',
             ),
-            Text(
-              '${event.type.fullName} / 観測点数: ${event.stationCount}',
-            ),
-            if (event.varianceReduction != null)
-              Text(
-                '品質: ${event.varianceReduction!.toStringAsFixed(1)}%',
-              ),
+            Text('${event.type.fullName} / 観測点数: ${event.stationCount}'),
+            if (event.varianceReduction case final varianceReduction?)
+              Text('品質: ${varianceReduction.toStringAsFixed(1)}%'),
           ],
         ),
       ),
