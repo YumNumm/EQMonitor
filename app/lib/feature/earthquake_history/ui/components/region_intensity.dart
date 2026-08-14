@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_trailing_icon_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -413,7 +414,7 @@ class _PrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
     );
@@ -458,7 +459,7 @@ class _LpgmPrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
     );
@@ -503,7 +504,7 @@ class _CityTile extends HookWidget {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
@@ -545,7 +546,7 @@ class _LpgmCityTile extends HookWidget {
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
@@ -604,15 +605,4 @@ class _LpgmCityTile extends HookWidget {
       ],
     );
   }
-}
-
-Widget? _buildTrailing({required bool hasChildren, required bool isExpanded}) {
-  if (!hasChildren) {
-    return null;
-  }
-  return AnimatedRotation(
-    turns: isExpanded ? 0.5 : 0.0,
-    duration: const Duration(milliseconds: 200),
-    child: const Icon(Icons.expand_more),
-  );
 }
