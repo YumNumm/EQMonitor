@@ -33,3 +33,100 @@ final class MapRemoteTileNonIdentityEncodingException
   @override
   String toString() => 'MapRemoteTileNonIdentityEncodingException: $message';
 }
+
+/// Range 要求に対して 206 でも 412 でもない status を受信した場合
+/// (200 で全体を返された等)。random-access reader は 206 以外を成功として
+/// 扱わない。
+final class MapRemoteTileUnexpectedStatusException
+    extends MapRemoteTileException {
+  const MapRemoteTileUnexpectedStatusException({required this.statusCode});
+
+  final int statusCode;
+
+  @override
+  String get message =>
+      'Expected HTTP 206 Partial Content but received $statusCode.';
+
+  @override
+  String toString() => 'MapRemoteTileUnexpectedStatusException: $message';
+}
+
+/// archive が `If-Match` で守られた snapshot から差し替わった場合(412、または
+/// strong ETag が期待値と一致しない)。受信済み byte はすべて破棄する。
+final class MapRemoteTileSnapshotMismatchException
+    extends MapRemoteTileException {
+  const MapRemoteTileSnapshotMismatchException({
+    required this.expectedEtag,
+    required this.receivedEtag,
+    required this.statusCode,
+  });
+
+  final String? expectedEtag;
+  final String? receivedEtag;
+  final int statusCode;
+
+  @override
+  String get message =>
+      'Remote archive snapshot changed '
+      '(status=$statusCode, expected=$expectedEtag, received=$receivedEtag). '
+      'All received bytes are discarded.';
+
+  @override
+  String toString() => 'MapRemoteTileSnapshotMismatchException: $message';
+}
+
+/// strong validator(強い ETag)が欠損・複数・weak(`W/` prefix)だった場合。
+/// Range の再取得整合性を保証できないため fail closed する。
+final class MapRemoteTileWeakValidatorException extends MapRemoteTileException {
+  const MapRemoteTileWeakValidatorException({required this.receivedEtag});
+
+  /// 受信した ETag(欠損時は`null`、複数時は結合表現)。
+  final String? receivedEtag;
+
+  @override
+  String get message =>
+      'A single strong ETag is required but received: $receivedEtag';
+
+  @override
+  String toString() => 'MapRemoteTileWeakValidatorException: $message';
+}
+
+/// `Content-Range` が要求した `bytes offset-end/total` と厳密一致しない場合
+/// (total が期待 archive size と異なる場合を含む)。
+final class MapRemoteTileContentRangeMismatchException
+    extends MapRemoteTileException {
+  const MapRemoteTileContentRangeMismatchException({
+    required this.expected,
+    required this.received,
+  });
+
+  final String expected;
+  final String? received;
+
+  @override
+  String get message =>
+      'Content-Range must equal "$expected" but received "$received".';
+
+  @override
+  String toString() => 'MapRemoteTileContentRangeMismatchException: $message';
+}
+
+/// 応答 body の長さが要求した Range 長と一致しない場合。受信済み byte は
+/// 破棄する。
+final class MapRemoteTileBodyLengthMismatchException
+    extends MapRemoteTileException {
+  const MapRemoteTileBodyLengthMismatchException({
+    required this.expectedLength,
+    required this.actualLength,
+  });
+
+  final int expectedLength;
+  final int actualLength;
+
+  @override
+  String get message =>
+      'Expected $expectedLength body bytes but received $actualLength.';
+
+  @override
+  String toString() => 'MapRemoteTileBodyLengthMismatchException: $message';
+}
