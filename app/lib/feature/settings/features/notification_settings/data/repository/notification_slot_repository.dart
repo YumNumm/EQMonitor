@@ -18,10 +18,32 @@ const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
     NotificationSlotRepository(await ref.watch(apiClientProvider.future));
 
+/// 通知スロットの最小震度を決定する。
+///
+/// [enabled] が true かつ [minIntensity] が未指定の場合のみ、通知が
+/// 無条件発火しないよう [defaultNotificationSlotMinIntensity] を補う。
+/// [enabled] が false/未指定のときは [minIntensity] をそのまま返す
+/// (無効スロットの震度指定は意味を持たないため補完しない)。
+class NotificationSlotMinIntensityResolver {
+  const NotificationSlotMinIntensityResolver();
+
+  JmaIntensity? resolve({
+    required bool? enabled,
+    required JmaIntensity? minIntensity,
+  }) {
+    if (enabled != true) {
+      return minIntensity;
+    }
+    return minIntensity ?? defaultNotificationSlotMinIntensity;
+  }
+}
+
 class NotificationSlotRepository {
   NotificationSlotRepository(this._api);
 
   final api.ApiClient _api;
+
+  static const _minIntensityResolver = NotificationSlotMinIntensityResolver();
 
   // ─── Slots ───
 
@@ -104,16 +126,17 @@ class NotificationSlotRepository {
     final response = await _api.device.putV2DeviceMeSettingsSlotsNationwide(
       body: api.UpsertSingletonSlotRequest(
         eewEnabled: resolvedEewEnabled,
-        eewMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: resolvedEewEnabled,
-          minIntensity: eewMinIntensity,
-        )?.toApiJmaIntensity,
+        eewMinIntensity: _minIntensityResolver
+            .resolve(enabled: resolvedEewEnabled, minIntensity: eewMinIntensity)
+            ?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: resolvedEarthquakeEnabled,
-        earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: resolvedEarthquakeEnabled,
-          minIntensity: earthquakeMinIntensity,
-        )?.toApiJmaIntensity,
+        earthquakeMinIntensity: _minIntensityResolver
+            .resolve(
+              enabled: resolvedEarthquakeEnabled,
+              minIntensity: earthquakeMinIntensity,
+            )
+            ?.toApiJmaIntensity,
         earthquakeOverrides: earthquakeOverrides
             ?.map((o) => o.toApiSlotOverride())
             .toList(),
@@ -145,16 +168,17 @@ class NotificationSlotRepository {
         cityCode: cityCode,
         cityName: cityName,
         eewEnabled: eewEnabled,
-        eewMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: eewEnabled,
-          minIntensity: eewMinIntensity,
-        )?.toApiJmaIntensity,
+        eewMinIntensity: _minIntensityResolver
+            .resolve(enabled: eewEnabled, minIntensity: eewMinIntensity)
+            ?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: earthquakeEnabled,
-        earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-          enabled: earthquakeEnabled,
-          minIntensity: earthquakeMinIntensity,
-        )?.toApiJmaIntensity,
+        earthquakeMinIntensity: _minIntensityResolver
+            .resolve(
+              enabled: earthquakeEnabled,
+              minIntensity: earthquakeMinIntensity,
+            )
+            ?.toApiJmaIntensity,
         earthquakeOverrides: earthquakeOverrides
             ?.map((o) => o.toApiSlotOverride())
             .toList(),
@@ -183,18 +207,19 @@ class NotificationSlotRepository {
             cityCode: cityCode,
             cityName: cityName,
             eewEnabled: eewEnabled,
-            eewMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: eewEnabled,
-              minIntensity: eewMinIntensity,
-            )?.toApiJmaIntensity,
+            eewMinIntensity: _minIntensityResolver
+                .resolve(enabled: eewEnabled, minIntensity: eewMinIntensity)
+                ?.toApiJmaIntensity,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
             earthquakeEnabled: earthquakeEnabled,
-            earthquakeMinIntensity: resolveNotificationSlotMinIntensity(
-              enabled: earthquakeEnabled,
-              minIntensity: earthquakeMinIntensity,
-            )?.toApiJmaIntensity,
+            earthquakeMinIntensity: _minIntensityResolver
+                .resolve(
+                  enabled: earthquakeEnabled,
+                  minIntensity: earthquakeMinIntensity,
+                )
+                ?.toApiJmaIntensity,
             earthquakeOverrides: earthquakeOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
@@ -285,14 +310,4 @@ class NotificationSlotRepository {
     );
     return response.data.toEarthquakeGlobalSettings();
   }
-}
-
-JmaIntensity? resolveNotificationSlotMinIntensity({
-  required bool? enabled,
-  required JmaIntensity? minIntensity,
-}) {
-  if (enabled != true) {
-    return minIntensity;
-  }
-  return minIntensity ?? defaultNotificationSlotMinIntensity;
 }
