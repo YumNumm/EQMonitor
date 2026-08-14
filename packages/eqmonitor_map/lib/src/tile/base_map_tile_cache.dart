@@ -1,4 +1,4 @@
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
+import 'package:eqmonitor_map/src/foundation/async_generation_token.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:flutter/foundation.dart';
@@ -65,14 +65,13 @@ import 'package:flutter/foundation.dart';
 /// # incarnation token
 ///
 /// 進行中のdecodeをcamera変更でcancelできるよう、
-/// `flutter_scene/flutter_scene_async_generation.dart`の
-/// `SceneSpikeAsyncGenerationOwner`/`SceneSpikeAsyncGenerationToken`を
-/// 再利用する(spike期に実装済みの汎用incarnation token機構であり、Scene
-/// 固有の要素を持たないため、Task 1の逐語コピー差し戻しとは異なりこの
-/// packageの別レイヤーから素直に再利用できる)。[beginDecode]で発行した
+/// `foundation/async_generation_token.dart`の
+/// [AsyncGenerationOwner]/[AsyncGenerationToken]を利用する(spike期に
+/// `flutter_scene/`へ置いていた汎用incarnation token機構を、Scene 非依存の
+/// foundation レイヤーへ昇格させたもの)。[beginDecode]で発行した
 /// tokenを[put]へ渡すと、[cancelInFlight]が呼ばれた後のtokenでの[put]は
 /// 黙って無視される(古い結果をcacheへ入れない)。cancelはエラーにしない
-/// ([SceneSpikeAsyncGenerationOwner]自体が例外を投げない設計)。
+/// ([AsyncGenerationOwner]自体が例外を投げない設計)。
 ///
 /// # 子→親fallback
 ///
@@ -104,7 +103,7 @@ final class BaseMapTileCache {
   /// 一致を強制することはしない(cacheとlookupは疎結合なままにする)。
   final int maxParentFallbackSteps;
 
-  final _generationOwner = SceneSpikeAsyncGenerationOwner();
+  final _generationOwner = AsyncGenerationOwner();
 
   final Map<(String, CanonicalTileId), BaseMapTileGeometry> _entries = {};
   int? _activeZoom;
@@ -114,7 +113,7 @@ final class BaseMapTileCache {
   int get length => _entries.length;
 
   /// 新しいdecode試行のtokenを発行する。
-  SceneSpikeAsyncGenerationToken beginDecode() => _generationOwner.begin();
+  AsyncGenerationToken beginDecode() => _generationOwner.begin();
 
   /// 進行中のdecodeを無効化する。camera変更時などに呼ぶ。
   void cancelInFlight() => _generationOwner.cancel();
@@ -141,7 +140,7 @@ final class BaseMapTileCache {
     required String sourceInstanceId,
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
-    required SceneSpikeAsyncGenerationToken token,
+    required AsyncGenerationToken token,
   }) {
     if (!token.isCurrent) {
       return;
