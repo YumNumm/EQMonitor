@@ -25,14 +25,20 @@ mise install flutter          # pinned SHA (mise-flutter) を取得。Dart 同�
 `mise exec -- ...` が実行前に失敗する。
 
 `mise exec -- dart ...` は **swift まで自動 install しようとして失敗** する
-（下記 2 参照）。回避のため、Flutter 同梱の bin を直接 PATH に通して使う:
+（下記 2 参照）。回避は **`MISE_DISABLE_TOOLS=swift` を付けたまま `mise exec --`
+を使う**のが正。repo 規約（AGENTS.md「Flutter/Dart は必ず `mise exec --` 経由」）を
+守りつつ、trusted な mise 環境から外れない:
 
 ```bash
-FLBIN="$HOME/.local/share/mise/installs/flutter/<PINNED_SHA>/bin"
-export PATH="$FLBIN:$HOME/.local/bin:$PATH"
-dart --version && flutter --version
-flutter pub get               # workspace(resolution: workspace)を root で解決
+export MISE_DISABLE_TOOLS=swift   # session 全体に効かせる（下記 2 参照）
+MISE_DISABLE_TOOLS=swift mise exec -- flutter --version
+MISE_DISABLE_TOOLS=swift mise exec -- flutter pub get   # workspace を root で解決
 ```
+
+> フォールバック（`mise exec` 自体が壊れている等、最後の手段）: Flutter 同梱 bin を
+> 直接 PATH に通す。ただし repo gate と結果が食い違い得るので常用しない。
+> `FLBIN="$HOME/.local/share/mise/installs/flutter/<PINNED_SHA>/bin";
+> export PATH="$FLBIN:$HOME/.local/bin:$PATH"`
 
 ## 2. `mise` が swift 6.3.3 を自動 install して落ちる
 
@@ -54,7 +60,8 @@ flutter pub get               # workspace(resolution: workspace)を root で解�
 
 ```bash
 cd packages/eqmonitor_map
-dart run build_runner build   # --delete-conflicting-outputs は新版で無視される警告のみ
+# --delete-conflicting-outputs は新版で無視される警告のみ
+MISE_DISABLE_TOOLS=swift mise exec -- dart run build_runner build
 ```
 
 `W SDK language version 3.14.0 is newer than analyzer language version 3.13.0`
@@ -69,10 +76,10 @@ repository root から `flutter test packages/<name>` を呼ぶと、asset / fix
 
 ```bash
 # ❌ 誤り: repository root から呼ぶ（fixture 解決がずれて false failure）
-flutter test packages/eqmonitor_map
+MISE_DISABLE_TOOLS=swift mise exec -- flutter test packages/eqmonitor_map
 
 # ✅ 正しい: package ディレクトリで呼ぶ（CI と同じ）
-cd packages/eqmonitor_map && flutter test
+cd packages/eqmonitor_map && MISE_DISABLE_TOOLS=swift mise exec -- flutter test
 ```
 
 実測（2026-08-14, `feat/eqmonitor-map-tile-pipeline`）:
