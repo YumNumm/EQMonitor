@@ -4,6 +4,7 @@
     "claude-security@claude-plugins-official": true,
     "asc@rorkai": true,
     "ponytail@ponytail": true
+<<<<<<< HEAD
   },
   "hooks": {
     "PreToolUse": [
@@ -19,5 +20,7 @@
         ]
       }
     ]
+=======
+>>>>>>> 0aceb9f15 (add: ponytail)
   }
 }
