@@ -277,7 +277,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: `basemap` allows parent/previous within same revision; `hazard` forbids cross-revision last-good and fails closed on miss/expiry
 
-**残要件（review 指摘 P1、未実装）:** cache key に revision / content digest を含める。現在の key は `(sourceInstanceId, CanonicalTileId)` だけで、source が `sourceInstanceId` を据え置いたまま `sourceRevision` を上げた場合、policy を通る前の **exact lookup が前 revision の geometry を返し得る**。renderer 設計の `TileKey` 契約（`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`）とも矛盾する。`docs/todo/820_eqmonitor_map_tile_cache_key_revision.md` 参照。
+**cache key の内容束縛（review 指摘 P1、対応済み）:** cache は`(identity, CanonicalTileId)`で引くが、identity に `VerifiedTileSourceCacheIdentity.cacheIdentity`（`sourceInstanceId` + 内容 digest）を渡すことで、source が `sourceInstanceId` を据え置いたまま中身を差し替えても exact lookup が前 revision の geometry を返さないようにした。digest は revision 番号より強い保証になる。
 
 - [ ] **Step 1: Write failing policy matrix tests**
 - [ ] **Step 2: Run RED**
