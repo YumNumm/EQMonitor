@@ -134,7 +134,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
@@ -192,7 +192,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 latestLayerConfiguration.value == configuration) {
               return;
             }
-            await removeMapStyleResources(
+            await MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
@@ -408,8 +408,7 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
             10,
             parameter.stationCircleRadiusMax,
           ],
-          StationDisplayMode.auto ||
-          StationDisplayMode.maxFocused => [
+          StationDisplayMode.auto || StationDisplayMode.maxFocused => [
             'interpolate',
             ['linear'],
             ['zoom'],

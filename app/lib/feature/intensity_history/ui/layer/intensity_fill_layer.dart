@@ -76,7 +76,7 @@ class IntensityFillLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() async {
             try {
-              await replaceMapStyleLayers(
+              await MapStyleLayerReplacer.replace(
                 styleController: styleController,
                 layerIds: IntensityFillLayerBuilder.layerIds,
                 layers: layers,

@@ -80,7 +80,7 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [layerId],
               sourceIds: const [sourceId],

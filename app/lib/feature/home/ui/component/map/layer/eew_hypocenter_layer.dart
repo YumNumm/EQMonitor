@@ -210,7 +210,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() {
             isInitialized.value = false;
-            return removeMapStyleResources(
+            return MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [layerId.normal, layerId.lowPrecise],
               sourceIds: [sourceId.normal, sourceId.lowPrecise],

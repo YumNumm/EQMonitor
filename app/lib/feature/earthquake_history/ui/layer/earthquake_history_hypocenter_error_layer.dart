@@ -77,7 +77,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
@@ -148,7 +148,7 @@ class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
 
   String build({required Coordinate? coordinates, required int decimalPlaces}) {
     final polygon = switch (coordinates) {
-      CoordinateLatLng() => hypocenterErrorPolygon(
+      CoordinateLatLng() => HypocenterErrorRangeUtil.errorPolygon(
         lat: coordinates.latitude,
         lon: coordinates.longitude,
         decimalPlaces: decimalPlaces,

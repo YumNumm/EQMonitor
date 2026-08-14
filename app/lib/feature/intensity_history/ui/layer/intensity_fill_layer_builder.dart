@@ -219,7 +219,7 @@ class IntensityFillLayerBuilder {
 
   /// 細分区域の境界線より下に挿入する。
   ///
-  /// [replaceMapStyleLayers] は与えられた順に「同じアンカーの直下」へ挿入する
+  /// [MapStyleLayerReplacer.replace] は与えられた順に「同じアンカーの直下」へ挿入する
   /// ため、先に渡したものが下、後に渡したものが上になる。
   MapStyleLayerEntry belowRegionLine(StyleLayer layer) => (
     layer: layer,

@@ -82,7 +82,7 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
         }
         unawaited(
           enqueue(() {
-            return removeMapStyleResources(
+            return MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [KyoshinMonitorObservationLayer._layerId],
               sourceIds: const [KyoshinMonitorObservationLayer._sourceId],

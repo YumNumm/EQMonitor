@@ -108,7 +108,7 @@ class EarthquakeHistoryEstimatedIntensityStyle {
       return;
     }
     final color = colorExpression(colors: colors);
-    await replaceMapStyleLayers(
+    await MapStyleLayerReplacer.replace(
       styleController: styleController,
       layerIds: const [lineLayerId, fillLayerId],
       layers: [
@@ -139,7 +139,7 @@ class EarthquakeHistoryEstimatedIntensityStyle {
   }
 
   Future<void> remove({required StyleController styleController}) =>
-      removeMapStyleResources(
+      MapStyleResourceRemover.remove(
         styleController: styleController,
         layerIds: const [lineLayerId, fillLayerId],
         sourceIds: const [sourceId],

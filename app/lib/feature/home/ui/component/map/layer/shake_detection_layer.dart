@@ -97,7 +97,7 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         isInitialized.value = false;
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [ShakeDetectionLayer._lineLayerId],
               sourceIds: const [ShakeDetectionLayer.sourceId],

@@ -231,7 +231,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: layerIds.reversed.toList(),
               sourceIds: const [_MapContent._tsunamiLineSourceId],
@@ -325,7 +325,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [_MapContent._hypocenterLayerId],
               sourceIds: const [_MapContent._hypocenterSourceId],
@@ -422,7 +422,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 _MapContent._stationLabelLayerId,
