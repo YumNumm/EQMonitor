@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
+import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/changelog/data/provider/changelog_entries_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +12,7 @@ class ChangelogPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(changelogProvider);
+    final state = ref.watch(changelogEntriesProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('変更履歴')),
@@ -40,7 +41,7 @@ class ChangelogPage extends ConsumerWidget {
             ],
           ),
         ),
-        AsyncData(:final value) => _ChangelogList(entries: value.entries),
+        AsyncData(:final value) => _ChangelogList(entries: value),
       },
     );
   }
@@ -49,7 +50,7 @@ class ChangelogPage extends ConsumerWidget {
 class _ChangelogList extends StatelessWidget {
   const _ChangelogList({required this.entries});
 
-  final List<api.ChangelogEntry> entries;
+  final List<ChangelogEntryModel> entries;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class _ChangelogList extends StatelessWidget {
 class ChangelogEntryCard extends StatelessWidget {
   const ChangelogEntryCard({required this.entry, super.key});
 
-  final api.ChangelogEntry entry;
+  final ChangelogEntryModel entry;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +110,7 @@ class ChangelogEntryCard extends StatelessWidget {
 class _SectionWidget extends StatelessWidget {
   const _SectionWidget({required this.section});
 
-  final api.ChangelogSection section;
+  final ChangelogSectionModel section;
 
   @override
   Widget build(BuildContext context) {
