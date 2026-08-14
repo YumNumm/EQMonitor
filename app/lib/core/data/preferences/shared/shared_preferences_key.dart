@@ -39,6 +39,7 @@ enum SharedPreferencesKey {
     'notification_permission_banner_dismissed',
   ),
   notificationPreset('notification_preset'),
+  notificationCustomSnapshot('notification_custom_snapshot'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
 
