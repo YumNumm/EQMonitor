@@ -187,7 +187,9 @@ class AppBootstrap {
         kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
       ).wait,
       (
-        kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+        kIsWeb
+            ? Future<Null>.value()
+            : const KyoshinColorMapDataSource().load(),
         core.initializeTimeZones(),
       ).wait,
     ).wait;
