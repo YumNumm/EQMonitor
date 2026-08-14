@@ -15,6 +15,8 @@ final eewForecastRegionIntensityFilterUpdaterProvider =
 class EewForecastRegionIntensityFilterUpdater {
   const EewForecastRegionIntensityFilterUpdater();
 
+  static const _areaFilterBuilder = EewAreaFilterBuilder();
+
   static const List<JmaIntensity> intensityLevels = [
     JmaIntensity.one,
     JmaIntensity.two,
@@ -42,7 +44,7 @@ class EewForecastRegionIntensityFilterUpdater {
           .toList();
       return styleController.updateFilter(
         id: detailLayerId(intensity),
-        filter: buildEewAreaCodeFilter(codes),
+        filter: _areaFilterBuilder.build(codes),
       );
     }).wait;
   }

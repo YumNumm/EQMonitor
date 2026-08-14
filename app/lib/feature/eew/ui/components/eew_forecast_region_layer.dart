@@ -34,6 +34,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   static const _sourceLayerId = 'areaForecastLocalE';
   static const _warningLayerId = 'eew-details-warning-fill';
   static const _warningLineLayerId = 'eew-details-warning-line';
+  static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +90,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
                 id: intensityFilterUpdater.detailLayerId(intensity),
                 sourceId: _sourceId,
                 sourceLayerId: _sourceLayerId,
-                filter: buildEewAreaCodeFilter(codes),
+                filter: _areaFilterBuilder.build(codes),
                 paint: {'fill-color': color.toHexString(), 'fill-opacity': 0.7},
               ),
               belowLayerId: BaseLayer.areaForecastLocalELine.name,
