@@ -142,9 +142,9 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               ),
             ],
           ),
-          if (verifyResult.value != null) ...[
+          if (verifyResult.value case final verifySuccess?) ...[
             const SizedBox(height: 12),
-            _VerifyResultBanner(success: verifyResult.value!),
+            _VerifyResultBanner(success: verifySuccess),
           ],
           const SizedBox(height: 24),
           credentials.when(
