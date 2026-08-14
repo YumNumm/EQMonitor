@@ -22,6 +22,41 @@ extension TsunamiTelegramsResponseApiExt on api.TsunamiTelegramsResponse {
       _TrackedTimelineBuilder(this).build();
 }
 
+/// region.code ごとの追跡状態を保持するアキュムレータ。
+///
+/// `Map`（`LinkedHashMap`）はキーの挿入順を保持するため、
+/// 別途「出現順のリスト」を持つ必要がない。
+class _RegionAccumulator {
+  _RegionAccumulator({required this.name});
+
+  String name;
+  final Tracked<TsunamiWarningKind> kind = [];
+  final Tracked<TsunamiWarningKind> lastKind = [];
+  final Tracked<TsunamiForecastFirstHeight?> forecastFirstHeight = [];
+  final Tracked<TsunamiForecastMaxHeight?> forecastMaxHeight = [];
+  final Tracked<TsunamiEstimationFirstHeight?> estimationFirstHeight = [];
+  final Tracked<TsunamiEstimationMaxHeight?> estimationMaxHeight = [];
+  final Map<String, _StationAccumulator> stations = {};
+}
+
+/// region 内の station.code ごとの追跡状態を保持するアキュムレータ。
+class _StationAccumulator {
+  _StationAccumulator({required this.name});
+
+  String name;
+  final Tracked<TsunamiStationForecast?> forecast = [];
+  final Tracked<TsunamiStationObservation?> observation = [];
+}
+
+/// offshore.code ごとの追跡状態を保持するアキュムレータ。
+class _OffshoreAccumulator {
+  _OffshoreAccumulator({required this.name});
+
+  String name;
+  final Tracked<TsunamiObservationFirstHeight> firstHeight = [];
+  final Tracked<TsunamiObservationMaxHeight?> maxHeight = [];
+}
+
 class _TrackedTimelineBuilder {
   _TrackedTimelineBuilder(this._response);
 
@@ -39,103 +74,87 @@ class _TrackedTimelineBuilder {
 
     final telegrams = [for (final t in sorted) t.telegram.toTelegramMeta()];
 
-    // region.code -> 各追跡項目のアキュムレータ
-    final regionCodes = <String>[];
-    final kind = <String, Tracked<TsunamiWarningKind>>{};
-    final lastKind = <String, Tracked<TsunamiWarningKind>>{};
-    final fcFirst = <String, Tracked<TsunamiForecastFirstHeight?>>{};
-    final fcMax = <String, Tracked<TsunamiForecastMaxHeight?>>{};
-    final esFirst = <String, Tracked<TsunamiEstimationFirstHeight?>>{};
-    final esMax = <String, Tracked<TsunamiEstimationMaxHeight?>>{};
-    final regionName = <String, String>{};
-    // region.code -> station.code -> アキュムレータ
-    final stationOrder = <String, List<String>>{};
-    final stationName = <String, Map<String, String>>{};
-    final stFc = <String, Map<String, Tracked<TsunamiStationForecast?>>>{};
-    final stOb = <String, Map<String, Tracked<TsunamiStationObservation?>>>{};
-    // offshore.code -> アキュムレータ
-    final offshoreCodes = <String>[];
-    final offshoreName = <String, String>{};
-    final offFirst = <String, Tracked<TsunamiObservationFirstHeight>>{};
-    final offMax = <String, Tracked<TsunamiObservationMaxHeight?>>{};
+    final regions = <String, _RegionAccumulator>{};
+    final offshoreStations = <String, _OffshoreAccumulator>{};
 
     for (final t in sorted) {
       final id = t.telegram.id;
       for (final r in t.state.regions) {
-        if (!regionCodes.contains(r.code)) {
-          regionCodes.add(r.code);
-          kind[r.code] = [];
-          lastKind[r.code] = [];
-          fcFirst[r.code] = [];
-          fcMax[r.code] = [];
-          esFirst[r.code] = [];
-          esMax[r.code] = [];
-          stationOrder[r.code] = [];
-          stationName[r.code] = {};
-          stFc[r.code] = {};
-          stOb[r.code] = {};
-        }
-        regionName[r.code] = r.name;
-        _push(kind[r.code]!, r.kind.toDomain(), id);
-        _push(lastKind[r.code]!, r.lastKind.toDomain(), id);
-        _push(fcFirst[r.code]!, r.forecast?.firstHeight?.toDomain(), id);
-        _push(fcMax[r.code]!, r.forecast?.maxHeight?.toDomain(), id);
-        _push(esFirst[r.code]!, r.estimation?.firstHeight.toDomain(), id);
-        _push(esMax[r.code]!, r.estimation?.maxHeight.toDomain(), id);
+        final region = regions.putIfAbsent(
+          r.code,
+          () => _RegionAccumulator(name: r.name),
+        );
+        region.name = r.name;
+        _push(region.kind, r.kind.toDomain(), id);
+        _push(region.lastKind, r.lastKind.toDomain(), id);
+        _push(
+          region.forecastFirstHeight,
+          r.forecast?.firstHeight?.toDomain(),
+          id,
+        );
+        _push(region.forecastMaxHeight, r.forecast?.maxHeight?.toDomain(), id);
+        _push(
+          region.estimationFirstHeight,
+          r.estimation?.firstHeight.toDomain(),
+          id,
+        );
+        _push(
+          region.estimationMaxHeight,
+          r.estimation?.maxHeight.toDomain(),
+          id,
+        );
         for (final s in r.stations) {
-          if (!stationOrder[r.code]!.contains(s.code)) {
-            stationOrder[r.code]!.add(s.code);
-            stFc[r.code]![s.code] = [];
-            stOb[r.code]![s.code] = [];
-          }
-          stationName[r.code]![s.code] = s.name;
-          _push(stFc[r.code]![s.code]!, s.forecast?.toDomain(), id);
-          _push(stOb[r.code]![s.code]!, s.observation?.toDomain(), id);
+          final station = region.stations.putIfAbsent(
+            s.code,
+            () => _StationAccumulator(name: s.name),
+          );
+          station.name = s.name;
+          _push(station.forecast, s.forecast?.toDomain(), id);
+          _push(station.observation, s.observation?.toDomain(), id);
         }
       }
       for (final o in t.state.offshoreStations) {
-        if (!offshoreCodes.contains(o.code)) {
-          offshoreCodes.add(o.code);
-          offFirst[o.code] = [];
-          offMax[o.code] = [];
-        }
-        offshoreName[o.code] = o.name;
-        _push(offFirst[o.code]!, o.firstHeight.toDomain(), id);
-        _push(offMax[o.code]!, o.maxHeight?.toDomain(), id);
+        final offshore = offshoreStations.putIfAbsent(
+          o.code,
+          () => _OffshoreAccumulator(name: o.name),
+        );
+        offshore.name = o.name;
+        _push(offshore.firstHeight, o.firstHeight.toDomain(), id);
+        _push(offshore.maxHeight, o.maxHeight?.toDomain(), id);
       }
     }
 
     return TrackedTsunamiTimeline(
       telegrams: telegrams,
       regions: [
-        for (final code in regionCodes)
+        for (final entry in regions.entries)
           TrackedRegion(
-            code: code,
-            name: regionName[code]!,
-            kind: kind[code]!,
-            lastKind: lastKind[code]!,
-            forecastFirstHeight: fcFirst[code]!,
-            forecastMaxHeight: fcMax[code]!,
-            estimationFirstHeight: esFirst[code]!,
-            estimationMaxHeight: esMax[code]!,
+            code: entry.key,
+            name: entry.value.name,
+            kind: entry.value.kind,
+            lastKind: entry.value.lastKind,
+            forecastFirstHeight: entry.value.forecastFirstHeight,
+            forecastMaxHeight: entry.value.forecastMaxHeight,
+            estimationFirstHeight: entry.value.estimationFirstHeight,
+            estimationMaxHeight: entry.value.estimationMaxHeight,
             stations: [
-              for (final sc in stationOrder[code]!)
+              for (final stationEntry in entry.value.stations.entries)
                 TrackedRegionStation(
-                  code: sc,
-                  name: stationName[code]![sc]!,
-                  forecast: stFc[code]![sc]!,
-                  observation: stOb[code]![sc]!,
+                  code: stationEntry.key,
+                  name: stationEntry.value.name,
+                  forecast: stationEntry.value.forecast,
+                  observation: stationEntry.value.observation,
                 ),
             ],
           ),
       ],
       offshoreStations: [
-        for (final code in offshoreCodes)
+        for (final entry in offshoreStations.entries)
           TrackedOffshoreStation(
-            code: code,
-            name: offshoreName[code]!,
-            firstHeight: offFirst[code]!,
-            maxHeight: offMax[code]!,
+            code: entry.key,
+            name: entry.value.name,
+            firstHeight: entry.value.firstHeight,
+            maxHeight: entry.value.maxHeight,
           ),
       ],
     );
