@@ -9,34 +9,15 @@
 
 ## 共有 Flutter Status Check が赤になる主因（baseline）
 
-`PR Flutter Check` の `flutter-analyze` / `integration-test` は、**本スタック固有ではなく develop 上のコードでも再現**する。
+> **重要（2026-08-14 更新）**: 以前ここに「1. primary constructor が analyzer に
+> フィールドとして見えない」「2. Freezed 生成物の `final` modifier エラー」を
+> baseline として列挙していたが、**どちらも `f0b3bd37`（#1628）で解消済み**であり
+> baseline ではない。これらを根拠に共有 gate の赤を waive してはいけない
+> （下記「運用」を参照）。この段落は誤運用防止のための訂正であり、旧記述は削除した。
 
-### 1. Primary constructor が analyzer にフィールドとして見えない
-
-再現（seismicity tip / develop 同等）:
-
-```bash
-mise exec -- dart analyze --fatal-infos \
-  app/lib/feature/devices/data/retry/retry_controller.dart \
-  app/lib/feature/devices/ui/component/device_provisioning_banner.dart
-```
-
-`RetryRunning({required int attempt})` 形式の primary constructor に対し、`RetryRunning(:final attempt)` が `undefined_getter` になる。Dart 3.14.0-29.0.dev（Flutter `4dacd3fc91`）の analyzer 側不整合。地図・震源差分ではない。
-
-### 2. Freezed 生成物の `final` modifier エラー
-
-`integration-test` は `*.freezed.dart` で `Can't have modifier 'final' here` が多発。toolchain / Freezed 4 dev と SDK の組み合わせ問題。地図・震源差分ではない。
-
-### 判定
-
-| Check | 製品（stack）失敗? | 備考 |
-|---|---|---|
-| flutter-analyze（devices/knet 等） | No（baseline） | develop でも同系統 |
-| integration-test（freezed final） | No（baseline） | develop でも同系統 |
-| flutter-test | 多くは cascade / baseline | analyze 失敗後 cancel もあり |
-| eqmonitor-map-scene-spike / iOS | Yes 寄与なし（pass） | |
-| eqmonitor-map-scene-spike / Android | **develop baseline** の `prefer_initializing_formals` | map tip（#1617）では修正済。seismicity tip は develop の spike をそのまま持つため赤。#1616/#1617 merge 後に消える見込み |
-| actionlint / gitleaks / zizmor / pinact | pass | |
+**waive してよい既知失敗の唯一の正本は下記「運用」節の列挙**とする。そこに載って
+いない赤は回帰として調査する。判定手順は `git diff origin/develop -- <path>` で対象
+ファイルに差分が無いことを確認してから baseline 扱いにすること。
 
 ## 製品側の focused gate（これで stack を判定する）
 
