@@ -16,9 +16,11 @@ cmd=$(jq -r '.tool_input.command')
 # The trailing newline matters: without it `read` fails on the final fragment
 # and a single-command line is never checked at all.
 printf '%s\n' "$cmd" | tr ';|&\n' '\n\n\n\n' | while IFS= read -r seg; do
-  # gh, a pr/issue noun, and a create verb must all be present in this one
-  # fragment — in any order, since flags may precede the subcommand.
-  printf '%s' "$seg" | grep -Eq '(^|[[:space:]])gh([[:space:]]|$)' || continue
+  # The fragment must *begin* with gh: that is what an invocation looks like.
+  # Matching gh anywhere instead flags prose that merely mentions these
+  # commands — a --body containing a markdown table of examples, say — which
+  # then splits on its own pipes into fragments that look like invocations.
+  printf '%s' "$seg" | grep -Eq '^[[:space:]]*gh([[:space:]]|$)' || continue
   printf '%s' "$seg" | grep -Eq '(^|[[:space:]])(pr|issue)([[:space:]]|$)' || continue
   printf '%s' "$seg" | grep -Eq '(^|[[:space:]])(create|new)([[:space:]]|$)' || continue
   # `--repo YumNumm/x`, `--repo=YumNumm/x` and `-R YumNumm/x` all count.
