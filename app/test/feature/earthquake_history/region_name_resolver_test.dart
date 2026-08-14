@@ -54,7 +54,7 @@ const _testParameter = EarthquakeParameter(
 void main() {
   group('resolveRegionName', () {
     test('1. prefecture コードで都道府県名が引ける', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.prefecture,
         code: '010',
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('2. region コードで細分化地域名が引ける', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.region,
         code: '010100',
@@ -72,7 +72,7 @@ void main() {
     });
 
     test('3. city コードで市区町村名が引ける', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.city,
         code: '01100',
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('4. station コードで観測点名が引ける', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.station,
         code: '0110100',
@@ -90,7 +90,7 @@ void main() {
     });
 
     test('5. 存在しないコードで null', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.prefecture,
         code: '999',
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('5b. 存在しないコード (region) で null', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.region,
         code: '999999',
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('5c. 存在しないコード (city) で null', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.city,
         code: '99999',
@@ -117,7 +117,7 @@ void main() {
     });
 
     test('5d. 存在しないコード (station) で null', () {
-      final result = resolveRegionName(
+      final result = const RegionNameResolver().resolve(
         parameter: _testParameter,
         searchType: RegionSearchType.station,
         code: '9999999',
