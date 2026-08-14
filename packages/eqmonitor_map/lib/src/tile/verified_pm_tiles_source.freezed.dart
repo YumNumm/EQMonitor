@@ -278,4 +278,144 @@ as String,
 
 }
 
+/// @nodoc
+mixin _$VerifiedRemotePmTilesSource {
+
+ String get sourceInstanceId; int get sourceRevision; Uri get url; int get sizeBytes; String get sha256;
+/// Create a copy of VerifiedRemotePmTilesSource
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$VerifiedRemotePmTilesSourceCopyWith<VerifiedRemotePmTilesSource> get copyWith => _$VerifiedRemotePmTilesSourceCopyWithImpl<VerifiedRemotePmTilesSource>(this as VerifiedRemotePmTilesSource, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerifiedRemotePmTilesSource&&(identical(other.sourceInstanceId, sourceInstanceId) || other.sourceInstanceId == sourceInstanceId)&&(identical(other.sourceRevision, sourceRevision) || other.sourceRevision == sourceRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
+
+@override
+String toString() {
+  return 'VerifiedRemotePmTilesSource(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $VerifiedRemotePmTilesSourceCopyWith<$Res>  {
+  factory $VerifiedRemotePmTilesSourceCopyWith(VerifiedRemotePmTilesSource value, $Res Function(VerifiedRemotePmTilesSource) _then) = _$VerifiedRemotePmTilesSourceCopyWithImpl;
+@useResult
+$Res call({
+ String sourceInstanceId, int sourceRevision, Uri url, int sizeBytes, String sha256
+});
+
+
+
+
+}
+/// @nodoc
+class _$VerifiedRemotePmTilesSourceCopyWithImpl<$Res>
+    implements $VerifiedRemotePmTilesSourceCopyWith<$Res> {
+  _$VerifiedRemotePmTilesSourceCopyWithImpl(this._self, this._then);
+
+  final VerifiedRemotePmTilesSource _self;
+  final $Res Function(VerifiedRemotePmTilesSource) _then;
+
+/// Create a copy of VerifiedRemotePmTilesSource
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? sourceInstanceId = null,Object? sourceRevision = null,Object? url = null,Object? sizeBytes = null,Object? sha256 = null,}) {
+  return _then(VerifiedRemotePmTilesSource._(
+sourceInstanceId: null == sourceInstanceId ? _self.sourceInstanceId : sourceInstanceId // ignore: cast_nullable_to_non_nullable
+as String,sourceRevision: null == sourceRevision ? _self.sourceRevision : sourceRevision // ignore: cast_nullable_to_non_nullable
+as int,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as Uri,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
+as int,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+
+/// @nodoc
+
+
+class _VerifiedRemotePmTilesSource implements VerifiedRemotePmTilesSource {
+  const _VerifiedRemotePmTilesSource({required this.sourceInstanceId, required this.sourceRevision, required this.url, required this.sizeBytes, required this.sha256});
+  
+
+@override final  String sourceInstanceId;
+@override final  int sourceRevision;
+@override final  Uri url;
+@override final  int sizeBytes;
+@override final  String sha256;
+
+/// Create a copy of VerifiedRemotePmTilesSource
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$VerifiedRemotePmTilesSourceCopyWith<_VerifiedRemotePmTilesSource> get copyWith => __$VerifiedRemotePmTilesSourceCopyWithImpl<_VerifiedRemotePmTilesSource>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VerifiedRemotePmTilesSource&&(identical(other.sourceInstanceId, sourceInstanceId) || other.sourceInstanceId == sourceInstanceId)&&(identical(other.sourceRevision, sourceRevision) || other.sourceRevision == sourceRevision)&&(identical(other.url, url) || other.url == url)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.sha256, sha256) || other.sha256 == sha256));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
+
+@override
+String toString() {
+  return 'VerifiedRemotePmTilesSource._(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$VerifiedRemotePmTilesSourceCopyWith<$Res> implements $VerifiedRemotePmTilesSourceCopyWith<$Res> {
+  factory _$VerifiedRemotePmTilesSourceCopyWith(_VerifiedRemotePmTilesSource value, $Res Function(_VerifiedRemotePmTilesSource) _then) = __$VerifiedRemotePmTilesSourceCopyWithImpl;
+@override @useResult
+$Res call({
+ String sourceInstanceId, int sourceRevision, Uri url, int sizeBytes, String sha256
+});
+
+
+
+
+}
+/// @nodoc
+class __$VerifiedRemotePmTilesSourceCopyWithImpl<$Res>
+    implements _$VerifiedRemotePmTilesSourceCopyWith<$Res> {
+  __$VerifiedRemotePmTilesSourceCopyWithImpl(this._self, this._then);
+
+  final _VerifiedRemotePmTilesSource _self;
+  final $Res Function(_VerifiedRemotePmTilesSource) _then;
+
+/// Create a copy of VerifiedRemotePmTilesSource
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? sourceInstanceId = null,Object? sourceRevision = null,Object? url = null,Object? sizeBytes = null,Object? sha256 = null,}) {
+  return _then(_VerifiedRemotePmTilesSource(
+sourceInstanceId: null == sourceInstanceId ? _self.sourceInstanceId : sourceInstanceId // ignore: cast_nullable_to_non_nullable
+as String,sourceRevision: null == sourceRevision ? _self.sourceRevision : sourceRevision // ignore: cast_nullable_to_non_nullable
+as int,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as Uri,sizeBytes: null == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
+as int,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 // dart format on

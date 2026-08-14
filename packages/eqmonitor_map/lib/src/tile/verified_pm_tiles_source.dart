@@ -2,6 +2,20 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'verified_pm_tiles_source.freezed.dart';
 
+final _sha256Hex = RegExp(r'^[0-9a-fA-F]{64}$');
+
+/// appが検証済みのPMTiles archive(local file / remote URL)をpackageへ渡す
+/// ための sealed marker。`BaseMapTileRepository`は本型で local/remote を
+/// 網羅的に判別する。sealedのため subtype は本 library(このファイルと
+/// 生成 part)に閉じている。
+sealed class VerifiedTileSource {
+  const VerifiedTileSource();
+
+  /// archiveの実体を区別する識別子。同一URL/pathでも中身が更新された別の
+  /// downloadを別物として扱うために使う。
+  String get sourceInstanceId;
+}
+
 /// appが検証済みのPMTiles archiveをpackageへ渡すための契約。
 ///
 /// `eqmonitor_map`は`app`に依存せず、Asset Pack APIやmanifestも知らない
@@ -16,11 +30,78 @@ part 'verified_pm_tiles_source.freezed.dart';
 /// 一部として使い、archiveが差し替わった際に古いtileのcacheを暗黙に無効化
 /// する目的だけに使う(値そのものの生成規則はappが決める)。
 @freezed
-abstract class VerifiedPmTilesSource with _$VerifiedPmTilesSource {
+abstract class VerifiedPmTilesSource
+    with _$VerifiedPmTilesSource
+    implements VerifiedTileSource {
   const factory VerifiedPmTilesSource({
     required String sourceInstanceId,
     required String absolutePath,
     required int sizeBytes,
     required String sha256,
   }) = _VerifiedPmTilesSource;
+}
+
+/// appが検証済みの remote PMTiles archive をpackageへ渡すための契約。
+///
+/// [VerifiedPmTilesSource](local file)と対になる remote descriptor。
+/// `eqmonitor_map`は[url]のDNS/TLS/allowlistを**再検証しない**(app側が既に
+/// 検証済みの host だけを渡す前提)。package側は https scheme・非負 revision・
+/// 正の size・64桁hex digest という構造不変条件だけを
+/// [createVerifiedRemotePmTilesSource]で保証する。
+///
+/// [sourceRevision]は同一 source の basemap/hazard fallback policy
+/// (revision 跨ぎの last-good 可否)を判断するための単調増加 revision。
+@freezed
+abstract class VerifiedRemotePmTilesSource
+    with _$VerifiedRemotePmTilesSource
+    implements VerifiedTileSource {
+  const factory VerifiedRemotePmTilesSource._({
+    required String sourceInstanceId,
+    required int sourceRevision,
+    required Uri url,
+    required int sizeBytes,
+    required String sha256,
+  }) = _VerifiedRemotePmTilesSource;
+}
+
+/// [VerifiedRemotePmTilesSource]を構造不変条件付きで生成する。違反時は
+/// [ArgumentError](assertと違いreleaseでも必ず送出)。
+VerifiedRemotePmTilesSource createVerifiedRemotePmTilesSource({
+  required String sourceInstanceId,
+  required int sourceRevision,
+  required Uri url,
+  required int sizeBytes,
+  required String sha256,
+}) {
+  if (sourceInstanceId.trim().isEmpty) {
+    throw ArgumentError.value(
+      sourceInstanceId,
+      'sourceInstanceId',
+      'must not be blank',
+    );
+  }
+  if (!url.isScheme('https')) {
+    throw ArgumentError.value(url, 'url', 'must be an https URL');
+  }
+  if (sourceRevision.isNegative) {
+    throw ArgumentError.value(
+      sourceRevision,
+      'sourceRevision',
+      'must not be negative',
+    );
+  }
+  if (sizeBytes <= 0) {
+    throw ArgumentError.value(sizeBytes, 'sizeBytes', 'must be positive');
+  }
+  if (!_sha256Hex.hasMatch(sha256)) {
+    throw ArgumentError.value(sha256, 'sha256', 'must be 64 hex characters');
+  }
+
+  return VerifiedRemotePmTilesSource._(
+    sourceInstanceId: sourceInstanceId,
+    sourceRevision: sourceRevision,
+    url: url,
+    sizeBytes: sizeBytes,
+    sha256: sha256,
+  );
 }
