@@ -118,9 +118,6 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
 
         if (preset == NotificationPreset.custom) {
           isProcessing.value = false;
-          await ref
-              .read(notificationPresetProvider.notifier)
-              .select(NotificationPreset.custom);
           await Navigator.of(context).push<void>(
             MaterialPageRoute<void>(
               builder: (_) => const _OnboardingCustomSettingsWrapper(),

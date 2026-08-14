@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
@@ -7,8 +9,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
-
-enum OverrideType { eew, earthquake }
 
 const List<JmaIntensity> _overrideIntensities = [
   JmaIntensity.zero,
@@ -36,7 +36,7 @@ class OverrideEditPage extends HookConsumerWidget {
 
   final String slotId;
   final NotificationSlotType slotType;
-  final OverrideType overrideType;
+  final NotificationKind overrideType;
   final List<NotificationOverride> currentOverrides;
 
   @override
@@ -49,8 +49,8 @@ class OverrideEditPage extends HookConsumerWidget {
 
     final overrides =
         switch (overrideType) {
-          OverrideType.eew => slot?.eewOverrides,
-          OverrideType.earthquake => slot?.earthquakeOverrides,
+          NotificationKind.eew => slot?.eewOverrides,
+          NotificationKind.earthquake => slot?.earthquakeOverrides,
         } ??
         currentOverrides;
 
@@ -60,8 +60,8 @@ class OverrideEditPage extends HookConsumerWidget {
       );
 
     final title = switch (overrideType) {
-      OverrideType.eew => 'EEW 震度別設定',
-      OverrideType.earthquake => '地震情報 震度別設定',
+      NotificationKind.eew => 'EEW 震度別設定',
+      NotificationKind.earthquake => '地震情報 震度別設定',
     };
 
     void listenError(Mutation<void> mutation, String message) {
@@ -244,10 +244,10 @@ class OverrideEditPage extends HookConsumerWidget {
     NotificationSlot slot,
     List<NotificationOverride> overrides,
   ) async {
-    final eewOverrides = overrideType == OverrideType.eew
+    final eewOverrides = overrideType == NotificationKind.eew
         ? overrides
         : slot.eewOverrides;
-    final earthquakeOverrides = overrideType == OverrideType.earthquake
+    final earthquakeOverrides = overrideType == NotificationKind.earthquake
         ? overrides
         : slot.earthquakeOverrides;
 
@@ -349,7 +349,7 @@ class _OverrideTile extends StatelessWidget {
           child: ListTile(
             onTap: onTap,
             leading: _IntensityBadge(intensity: entry.minJmaIntensity),
-            title: Text('震度${entry.minJmaIntensity.label}以上'),
+            title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
             subtitle: Text(
               '${_soundLabel(entry.sound)} / ${entry.interruptionLevel.name}',
             ),
@@ -449,7 +449,7 @@ class _OverrideFormDialogState extends State<_OverrideFormDialog> {
                 for (final intensity in widget.availableIntensities)
                   DropdownMenuItem(
                     value: intensity,
-                    child: Text('震度${intensity.label}'),
+                    child: Text(intensity.minIntensityLabel),
                   ),
               ],
             ),
