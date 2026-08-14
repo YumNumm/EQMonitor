@@ -148,9 +148,9 @@ class _SortFilterModal extends HookWidget {
                   child: const Text('キャンセル'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).pop((sortBy.value, sortOrder.value)),
+                  onPressed: () =>
+                      Navigator.of(context)
+                          .pop((sortBy.value, sortOrder.value)),
                   child: const Text('完了'),
                 ),
               ],

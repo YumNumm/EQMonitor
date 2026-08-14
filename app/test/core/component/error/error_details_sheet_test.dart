@@ -29,12 +29,11 @@ Future<void> _pumpAndOpenSheet(WidgetTester tester) async {
           ],
         ),
         home: Scaffold(
-          body: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => showErrorDetailsSheet(
-                context,
-                error: Exception('boom'),
-              ),
+          body: Consumer(
+            builder: (context, ref, _) => ElevatedButton(
+              onPressed: () => ref
+                  .read(errorDetailsSheetActionProvider)
+                  .show(context, error: Exception('boom')),
               child: const Text('open'),
             ),
           ),

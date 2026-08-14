@@ -14,6 +14,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final earthquakeType = this.earthquakeType;
     final isDefault = earthquakeType == null;
 
     return RawChip(
@@ -28,10 +29,10 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
           onChanged?.call(result.value);
         }
       },
-      label: isDefault
+      label: earthquakeType == null
           ? const Text('種別')
           : Text(
-              earthquakeType!.displayLabel,
+              earthquakeType.displayLabel,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null),

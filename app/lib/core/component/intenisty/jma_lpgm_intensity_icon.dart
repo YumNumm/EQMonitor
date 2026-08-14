@@ -21,6 +21,7 @@ class JmaLpgmIntensityIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final customText = this.customText;
     final colorEntry = context.designSystem.colorTheme.intensity
         .fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorEntry.resolvedForeground, colorEntry.background);
@@ -34,10 +35,7 @@ class JmaLpgmIntensityIcon extends StatelessWidget {
           decoration: BoxDecoration(
             shape: .circle,
             color: bg,
-            border: .all(
-              color: borderColor,
-              width: 5,
-            ),
+            border: .all(color: borderColor, width: 5),
           ),
           child: Center(
             child: FittedBox(
@@ -67,10 +65,7 @@ class JmaLpgmIntensityIcon extends StatelessWidget {
           decoration: BoxDecoration(
             shape: .circle,
             color: bg,
-            border: Border.all(
-              color: borderColor,
-              width: 5,
-            ),
+            border: Border.all(color: borderColor, width: 5),
           ),
         ),
       ),
@@ -81,16 +76,14 @@ class JmaLpgmIntensityIcon extends StatelessWidget {
           decoration: BoxDecoration(
             color: bg,
             // 角丸にする
-            borderRadius: .circular(
-              size / 5,
-            ),
+            borderRadius: .circular(size / 5),
           ),
           child: Center(
             child: FittedBox(
               fit: .scaleDown,
               child: (customText != null)
                   ? Text(
-                      customText!,
+                      customText,
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,

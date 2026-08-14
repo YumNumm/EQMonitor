@@ -123,9 +123,9 @@ class _StatusFilterModal extends HookWidget {
                   child: const Text('キャンセル'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).pop(selectedStatuses.value.toList()),
+                  onPressed: () =>
+                      Navigator.of(context)
+                          .pop(selectedStatuses.value.toList()),
                   child: const Text('完了'),
                 ),
               ],

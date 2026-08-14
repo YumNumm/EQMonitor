@@ -56,45 +56,54 @@ class FatalErrorScreen extends StatelessWidget {
   }
 }
 
-/// [ErrorWidget.builder] 用。MaterialApp 祖先が無い状況でも安全に描画する。
-Widget buildFatalErrorWidget(FlutterErrorDetails details) {
-  return Directionality(
-    textDirection: TextDirection.ltr,
-    child: Container(
-      color: const Color(0xFF1C1B1F),
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            size: 40,
-            color: Color(0xFFB0AEB8),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            '問題が発生しました',
-            style: TextStyle(
-              color: Color(0xFFE6E1E5),
-              fontSize: 16,
-              decoration: TextDecoration.none,
+/// [ErrorWidget.builder] 用のフォールバック画面を組み立てるファクトリ。
+///
+/// `ErrorWidget.builder` は static method（インスタンス状態を
+/// キャプチャしないもの）へのトップレベル参照のみ受け付けるため、
+/// static method として定義する。
+class FatalErrorWidgetBuilder {
+  const FatalErrorWidgetBuilder._();
+
+  /// MaterialApp 祖先が無い状況でも安全に描画する。
+  static Widget build(FlutterErrorDetails details) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        color: const Color(0xFF1C1B1F),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 40,
+              color: Color(0xFFB0AEB8),
             ),
-          ),
-          if (kDebugMode) ...[
-            const SizedBox(height: 8),
-            Text(
-              '${details.exception}',
-              style: const TextStyle(
-                color: Color(0xFFB0AEB8),
-                fontSize: 12,
+            const SizedBox(height: 12),
+            const Text(
+              '問題が発生しました',
+              style: TextStyle(
+                color: Color(0xFFE6E1E5),
+                fontSize: 16,
                 decoration: TextDecoration.none,
               ),
-              textAlign: TextAlign.center,
             ),
+            if (kDebugMode) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${details.exception}',
+                style: const TextStyle(
+                  color: Color(0xFFB0AEB8),
+                  fontSize: 12,
+                  decoration: TextDecoration.none,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

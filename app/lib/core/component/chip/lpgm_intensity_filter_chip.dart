@@ -155,9 +155,8 @@ class _LpgmIntensityFilterModal extends HookWidget {
                   onPressed: () {
                     final isDefault =
                         min.value == _values.first && max.value == _values.last;
-                    Navigator.of(
-                      context,
-                    ).pop(isDefault ? (null, null) : (min.value, max.value));
+                    Navigator.of(context)
+                        .pop(isDefault ? (null, null) : (min.value, max.value));
                   },
                   child: const Text('完了'),
                 ),

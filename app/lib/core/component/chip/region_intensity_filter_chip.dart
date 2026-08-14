@@ -79,19 +79,13 @@ class RegionIntensityFilterChip extends StatelessWidget {
   String? _intensityRangeLabel() {
     final gte = regionIntensityGte;
     final lte = regionIntensityLte;
-    if (gte == null && lte == null) {
-      return null;
-    }
-    if (gte != null && lte != null) {
-      if (gte == lte) {
-        return '震度${gte.label}';
-      }
-      return '震度${gte.label}~${lte.label}';
-    }
-    if (gte != null) {
-      return '震度${gte.label}以上';
-    }
-    return '震度${lte!.label}以下';
+    return switch ((gte, lte)) {
+      (null, null) => null,
+      (final gte?, final lte?) when gte == lte => '震度${gte.label}',
+      (final gte?, final lte?) => '震度${gte.label}~${lte.label}',
+      (final gte?, null) => '震度${gte.label}以上',
+      (null, final lte?) => '震度${lte.label}以下',
+    };
   }
 }
 
@@ -134,18 +128,17 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
       initialIntensityGte != null || initialIntensityLte != null,
     );
 
-    final canApply =
-        selectedCode.value != null && selectedCode.value!.isNotEmpty;
+    final selectedCodeValue = selectedCode.value;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('地域の震度で絞り込み'),
         actions: [
           TextButton(
-            onPressed: canApply
+            onPressed: selectedCodeValue != null && selectedCodeValue.isNotEmpty
                 ? () => Navigator.of(context).pop((
                     searchType: searchType.value,
-                    code: selectedCode.value!,
+                    code: selectedCodeValue,
                     name: selectedName.value ?? '',
                     intensityGte: useIntensityFilter.value
                         ? intensityGte.value
@@ -223,13 +216,13 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
                   }
                 },
               ),
-            if (selectedName.value != null &&
-                selectedName.value!.isNotEmpty) ...[
+            if (selectedName.value case final selectedNameValue?
+                when selectedNameValue.isNotEmpty) ...[
               const SizedBox(height: 12),
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.place_outlined),
-                  title: Text(selectedName.value!),
+                  title: Text(selectedNameValue),
                   subtitle: Text(
                     searchType.value == RegionSearchType.prefecture
                         ? '都道府県'

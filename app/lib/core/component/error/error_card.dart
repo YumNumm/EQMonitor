@@ -76,18 +76,19 @@ class ErrorCard extends ConsumerWidget {
               children: [
                 if (onReload case final reload?)
                   FilledButton.tonalIcon(
-                    onPressed: () => FullScreenCircularProgressIndicator
-                        .showUntil(context, reload),
+                    onPressed: () =>
+                        FullScreenCircularProgressIndicator.showUntil(
+                          context,
+                          reload,
+                        ),
                     icon: const Icon(Icons.refresh_rounded, size: 18),
                     label: const Text('再試行'),
                   ),
                 if (showDetails)
                   TextButton(
-                    onPressed: () => showErrorDetailsSheet(
-                      context,
-                      error: error,
-                      stackTrace: stackTrace,
-                    ),
+                    onPressed: () => ref
+                        .read(errorDetailsSheetActionProvider)
+                        .show(context, error: error, stackTrace: stackTrace),
                     child: const Text('詳細'),
                   ),
                 if (showContact)
