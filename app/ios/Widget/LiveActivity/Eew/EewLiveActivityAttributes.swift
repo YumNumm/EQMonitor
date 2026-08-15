@@ -51,21 +51,17 @@ struct EewContentState: Codable, Hashable {
         return (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
 
-    /// 取消報。震源・規模・震度・到達予想はすべて無効な値として扱い、表示しない。
-    var isCanceledReport: Bool {
-        isCanceled == true
-    }
-
-    /// Dynamic Island の限られた面積に出す震度。
-    /// 現在地の予想震度を優先し、無ければ全国の最大震度にフォールバックする。
-    var displayIntensity: IntensityValue? {
-        guard !isCanceledReport else { return nil }
-        return location?.forecastIntensityValue ?? intensityValue
-    }
-
-    /// [displayIntensity] がどちらの震度かを示すラベル
-    var displayIntensityLabel: String {
-        location?.forecastIntensityValue != nil ? "予想震度" : "最大震度"
+    /// 表示判定と文言生成。取消報での抑止ルールは [EewDisplay] に集約している。
+    var display: EewDisplay {
+        EewDisplay(
+            isCanceled: isCanceled == true,
+            isWarning: isWarning == true,
+            isFinal: isFinal == true,
+            serialNo: serialNo,
+            maxIntensity: intensityValue,
+            forecastIntensity: location?.forecastIntensityValue,
+            arrivalDate: location?.arrivalDate
+        )
     }
 }
 

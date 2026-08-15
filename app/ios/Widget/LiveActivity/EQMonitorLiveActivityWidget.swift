@@ -16,11 +16,15 @@ struct EewLiveActivityWidget: Widget {
             EewLockScreenView(state: context.state)
         } dynamicIsland: { context in
             DynamicIsland {
+                // leading / trailing は TrueDepth カメラ脇の細い L 字領域で、
+                // 収まらないと切り取られる。belowIfTooWide でカメラ下へ回り込ませる。
                 DynamicIslandExpandedRegion(.leading) {
                     EewExpandedLeadingView(state: context.state)
+                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     EewExpandedTrailingView(state: context.state)
+                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     EewExpandedBottomView(state: context.state)
@@ -42,10 +46,10 @@ struct EewLiveActivityWidget: Widget {
 
 @available(iOS 16.1, *)
 private func eewKeylineTint(for state: EewContentState) -> Color {
-    if state.isCanceledReport {
+    if state.display.isCanceled {
         return .gray
     }
-    return state.isWarning == true ? .red : .orange
+    return state.display.isWarning ? .red : .orange
 }
 
 // MARK: - Shake Detection Live Activity Widget
@@ -59,9 +63,11 @@ struct ShakeDetectionLiveActivityWidget: Widget {
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     ShakeExpandedLeadingView(state: context.state)
+                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     ShakeExpandedTrailingView(state: context.state)
+                        .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     ShakeExpandedBottomView(state: context.state)
@@ -88,7 +94,7 @@ struct EewCompactLeadingView: View {
     let state: EewContentState
 
     var body: some View {
-        if let intensity = state.displayIntensity {
+        if let intensity = state.display.intensity {
             DynamicIslandIntensityBadge(intensity: intensity, size: 24)
         } else {
             Image("AppIconForeground")
@@ -106,8 +112,8 @@ struct EewCompactTrailingView: View {
 
     var body: some View {
         EewStatusPill(
-            isWarning: state.isWarning ?? false,
-            isCanceled: state.isCanceledReport,
+            isWarning: state.display.isWarning,
+            isCanceled: state.display.isCanceled,
             compact: true
         )
     }
@@ -118,7 +124,7 @@ struct EewMinimalView: View {
     let state: EewContentState
 
     var body: some View {
-        if let intensity = state.displayIntensity {
+        if let intensity = state.display.intensity {
             DynamicIslandIntensityBadge(intensity: intensity, size: 22)
         } else {
             Image("AppIconForeground")
@@ -135,14 +141,18 @@ struct EewExpandedLeadingView: View {
     let state: EewContentState
 
     var body: some View {
-        if let intensity = state.displayIntensity {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(state.displayIntensityLabel)
+        if let intensity = state.display.intensity {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(state.display.intensityLabel)
                     .font(AppFonts.flex(size: 9, weight: .medium))
                     .foregroundStyle(Color.eqTextSecondary)
-                DynamicIslandIntensityBadge(intensity: intensity, size: 36)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                DynamicIslandIntensityBadge(
+                    intensity: intensity,
+                    size: DynamicIslandMetrics.expandedBadgeSize
+                )
             }
-            .padding(.leading, 4)
         }
     }
 }
@@ -153,28 +163,19 @@ struct EewExpandedTrailingView: View {
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 6) {
-            if state.isCanceledReport {
-                EewStatusPill(isWarning: false, isCanceled: true)
-            } else if let isWarning = state.isWarning {
-                EewStatusPill(isWarning: isWarning, isCanceled: false)
-            }
-            if let serialNo = state.serialNo, serialNo > 0 {
-                HStack(alignment: .firstTextBaseline, spacing: 0) {
-                    if state.isFinal == true {
-                        Text("最終 ")
-                            .font(AppFonts.flex(size: 9, weight: .medium))
-                            .foregroundStyle(Color.eqTextTertiary)
-                    }
-                    Text("第")
-                        .font(AppFonts.flex(size: 9, weight: .medium))
-                        .foregroundStyle(Color.eqTextTertiary)
-                    Text("\(serialNo)")
-                        .font(AppFonts.code(size: 14, weight: .bold))
-                        .monospacedDigit()
-                    Text("報")
-                        .font(AppFonts.flex(size: 9, weight: .medium))
-                        .foregroundStyle(Color.eqTextTertiary)
-                }
+            EewStatusPill(
+                isWarning: state.display.isWarning,
+                isCanceled: state.display.isCanceled
+            )
+            // 「最終 第32報」を 4 つの Text に分けると細い trailing 領域で
+            // 折り返し・切り取りが起きるため、1 つの Text にまとめて縮小させる
+            if let serialLabel = state.display.serialLabel {
+                Text(serialLabel)
+                    .font(AppFonts.code(size: 11, weight: .bold))
+                    .monospacedDigit()
+                    .foregroundStyle(Color.eqTextTertiary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
         }
     }
@@ -185,7 +186,7 @@ struct EewExpandedCenterView: View {
     let state: EewContentState
 
     var body: some View {
-        if state.isCanceledReport {
+        if state.display.isCanceled {
             Text("緊急地震速報は取り消されました")
                 .font(AppFonts.flex(size: 13, weight: .bold))
                 .foregroundStyle(Color.eqTextPrimary)
@@ -211,8 +212,8 @@ struct EewExpandedBottomView: View {
     let state: EewContentState
 
     var body: some View {
-        // 取消報では震源・規模・到達予想がすべて無効なため、ヘッダーの取消表示に任せる
-        if state.isCanceledReport {
+        // 取消報では震源・規模・到達予想がすべて無効なため、trailing の取消バッジに任せる
+        if state.display.isCanceled {
             EmptyView()
         } else {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -255,7 +256,6 @@ struct EewExpandedBottomView: View {
                     ArrivalInfoView(location: location)
                 }
             }
-            .padding(.leading, 4)
         }
     }
 
@@ -307,13 +307,16 @@ struct ShakeExpandedLeadingView: View {
     let state: ShakeDetectionContentState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             Text("揺れ")
                 .font(AppFonts.flex(size: 9, weight: .medium))
                 .foregroundStyle(Color.eqTextSecondary)
-            ShakeLevelBadge(level: state.shakeLevel, size: 36)
+                .lineLimit(1)
+            ShakeLevelBadge(
+                level: state.shakeLevel,
+                size: DynamicIslandMetrics.expandedBadgeSize
+            )
         }
-        .padding(.leading, 4)
     }
 }
 
@@ -415,11 +418,20 @@ struct ShakeExpandedBottomView: View {
                     .foregroundStyle(Color.eqTextPrimary)
             }
         }
-        .padding(.leading, 4)
     }
 }
 
 // MARK: - Common Views
+
+/// Dynamic Island の寸法。
+///
+/// 展開時の leading / trailing は TrueDepth カメラ脇の細い L 字領域で、
+/// 領域側に独自の余白を足すと内容がその分だけ切り取られる。ここで一括管理し、
+/// 各 View では `padding` を足さない。
+enum DynamicIslandMetrics {
+    /// 展開時のバッジ寸法。leading 領域の幅に収まる大きさに抑える。
+    static let expandedBadgeSize: CGFloat = 32
+}
 
 @available(iOS 16.1, *)
 struct DynamicIslandIntensityBadge: View {

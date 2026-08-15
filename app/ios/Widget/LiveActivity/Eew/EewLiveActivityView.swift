@@ -26,12 +26,8 @@ extension View {
 
 @available(iOS 16.1, *)
 struct HeaderContainer: View {
-    let isWarning: Bool
-    let isCanceled: Bool
+    let display: EewDisplay
     let headline: String?
-    let serialNo: Int?
-    let isFinal: Bool
-    let arrivalDate: Date?
 
     private let stripeHeight: CGFloat = 8
 
@@ -42,8 +38,8 @@ struct HeaderContainer: View {
 
             HStack(alignment: .center, spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                // 「緊急地震速報(警報|予報|取消) 第N報」または「… 最終 第N報」
-                    Text(eewTypeLabelWithSerial)
+                    // 「緊急地震速報(警報|予報|取消) 第N報」または「… 最終 第N報」
+                    Text(display.headerLabel)
                         .font(
                             .system(
                                 size: 12,
@@ -52,9 +48,11 @@ struct HeaderContainer: View {
                             )
                         )
                         .foregroundColor(eewHeaderSecondaryTextColor)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
 
                     // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
-                    if let headline = headline, !headline.isEmpty, !isCanceled {
+                    if let headline = display.headline(from: headline) {
                         Text(headline)
                             .font(.system(size: 15, weight: .heavy))
                             .foregroundColor(.primary)
@@ -65,7 +63,7 @@ struct HeaderContainer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // 主要動到達までのカウントダウン / 到達済み
-                if let remaining = ArrivalCountdown.remaining(until: arrivalDate) {
+                if let remaining = ArrivalCountdown.remaining(until: display.countdownArrivalDate) {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("主要動到達まで")
                             .eewLabelStyle(.header)
@@ -90,7 +88,7 @@ struct HeaderContainer: View {
                                     .tracking(-0.5)
                             }
                     }
-                } else if arrivalDate != nil {
+                } else if display.countdownArrivalDate != nil {
                     Text("主要動到達済み")
                         .font(.system(size: 14, weight: .heavy))
                         .foregroundColor(.white)
@@ -104,36 +102,19 @@ struct HeaderContainer: View {
     }
 
     private var stripePattern: StripePattern {
-        if isCanceled {
+        if display.isCanceled {
             return StripePattern(colors: [
                 Color(red: 0.5, green: 0.5, blue: 0.5),
                 Color(red: 0.25, green: 0.25, blue: 0.25),
             ])
         }
-        return StripePattern(isWarning: isWarning)
-    }
-
-    private var eewTypeLabelWithSerial: String {
-        let typeLabel: String
-        if isCanceled {
-            typeLabel = "緊急地震速報(取消)"
-        } else {
-            typeLabel = isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
-        }
-        if let serialNo = serialNo, serialNo > 0 {
-            if isFinal {
-                return "\(typeLabel) 最終 第\(serialNo)報"
-            } else {
-                return "\(typeLabel) 第\(serialNo)報"
-            }
-        }
-        return typeLabel
+        return StripePattern(isWarning: display.isWarning)
     }
 
     private var backgroundColor: Color {
-        if isCanceled {
+        if display.isCanceled {
             return Color(red: 0.4, green: 0.4, blue: 0.4)
-        } else if isWarning {
+        } else if display.isWarning {
             return Color(red: 0.7, green: 0.1, blue: 0.1)
         } else {
             return Color(red: 0.8, green: 0.4, blue: 0.05)
@@ -149,24 +130,17 @@ struct EewLockScreenView: View {
     private let standardMargin: CGFloat = 14
 
     var body: some View {
+        let display = state.display
         VStack(spacing: 0) {
-            HeaderContainer(
-                isWarning: state.isWarning ?? false,
-                isCanceled: state.isCanceledReport,
-                headline: state.headline,
-                serialNo: state.serialNo,
-                isFinal: state.isFinal ?? false,
-                // 取消報では到達予想は無効。カウントダウンを出すと誤情報になる。
-                arrivalDate: state.isCanceledReport ? nil : state.location?.arrivalDate
-            )
-            .padding(.horizontal, standardMargin)
-            .padding(.top, standardMargin)
-            .padding(.bottom, 4)
+            HeaderContainer(display: display, headline: state.headline)
+                .padding(.horizontal, standardMargin)
+                .padding(.top, standardMargin)
+                .padding(.bottom, 4)
 
             // メインコンテンツ
             HStack(alignment: .bottom, spacing: 10) {
                 // 左側: 最大震度（正方形）。取消報では予想震度自体が無効
-                if !state.isCanceledReport, let intensity = state.intensityValue {
+                if display.showsEarthquakeDetails, let intensity = display.maxIntensity {
                     VStack(spacing: 2) {
                         Text("最大震度")
                             .font(.system(size: 12, weight: .semibold))
@@ -181,12 +155,12 @@ struct EewLockScreenView: View {
                 detailsView
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                if !state.isCanceledReport,
-                   let location = state.location,
-                   let intensity = location.forecastIntensityValue,
-                   !location.regionName.isEmpty {
+                if display.showsEarthquakeDetails,
+                   let intensity = display.forecastIntensity,
+                   let regionName = state.location?.regionName,
+                   !regionName.isEmpty {
                     forecastIntensityView(
-                        regionName: location.regionName,
+                        regionName: regionName,
                         intensity: intensity
                     )
                 }
@@ -200,7 +174,7 @@ struct EewLockScreenView: View {
 
     @ViewBuilder
     private var detailsView: some View {
-        if state.isCanceledReport {
+        if state.display.isCanceled {
             Text("緊急地震速報は取り消されました")
                 .font(.system(size: 14, weight: .bold))
                 .foregroundColor(.primary)
