@@ -51,8 +51,8 @@ struct HeaderContainer: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
 
-                    // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
-                    if let headline = display.headline(from: headline) {
+                    // headline: "XXXで地震" / 警報時 "XX YYで強い揺れ" / 取消時 "取り消されました"
+                    if let headline = display.headerHeadline(from: headline) {
                         Text(headline)
                             .font(.system(size: 15, weight: .heavy))
                             .foregroundColor(.primary)
@@ -67,26 +67,11 @@ struct HeaderContainer: View {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("主要動到達まで")
                             .eewLabelStyle(.header)
-                        // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
-                        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-                        Text("00:00")
-                            .font(
-                                .system(
-                                    size: 18,
-                                    weight: .black,
-                                    design: .monospaced
-                                )
-                            )
-                            .tracking(-0.5)
-                            .hidden()
-                            .overlay(alignment: .trailing) {
-                                Text(timerInterval: remaining, countsDown: true)
-                                    .contentTransition(.numericText(countsDown: true))
-                                    .font(.system(size: 18, weight: .black))
-                                    .foregroundColor(.white)
-                                    .monospacedDigit()
-                                    .tracking(-0.5)
-                            }
+                        ArrivalCountdownText(
+                            remaining: remaining,
+                            size: 20,
+                            color: .white
+                        )
                     }
                 } else if display.countdownArrivalDate != nil {
                     Text("主要動到達済み")
@@ -135,53 +120,66 @@ struct EewLockScreenView: View {
             HeaderContainer(display: display, headline: state.headline)
                 .padding(.horizontal, standardMargin)
                 .padding(.top, standardMargin)
-                .padding(.bottom, 4)
+                .padding(.bottom, display.isCanceled ? 8 : 4)
 
-            // メインコンテンツ
-            HStack(alignment: .bottom, spacing: 10) {
-                // 左側: 最大震度（正方形）。取消報では予想震度自体が無効
-                if display.showsEarthquakeDetails, let intensity = display.maxIntensity {
-                    VStack(spacing: 2) {
-                        Text("最大震度")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(eewSecondaryTextColor)
-                        SquareIntensityBadge(
-                            intensity: intensity,
-                            size: .normal
-                        )
-                    }
-                }
-
-                detailsView
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                if display.showsEarthquakeDetails,
-                   let intensity = display.forecastIntensity,
-                   let regionName = state.location?.regionName,
-                   !regionName.isEmpty {
-                    forecastIntensityView(
-                        regionName: regionName,
-                        intensity: intensity
-                    )
-                }
-            }
-            .padding(.horizontal, standardMargin)
-            .padding(.bottom, standardMargin)
+            contentView
+                .padding(.horizontal, standardMargin)
+                .padding(.bottom, standardMargin)
         }
     }
 
-    // MARK: - Details (震源地, M, 深さ, 発生時刻)
-
     @ViewBuilder
-    private var detailsView: some View {
+    private var contentView: some View {
         if state.display.isCanceled {
-            Text("緊急地震速報は取り消されました")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundColor(.primary)
-                .lineLimit(2)
-                .minimumScaleFactor(0.75)
+            canceledContentView
         } else {
+            earthquakeContentView
+        }
+    }
+
+    // MARK: - 取消報
+
+    /// 取消報では震源・予想震度・到達予想がすべて無効。
+    /// 主文はヘッダーの見出し行に出しているため、ここは値を出していない理由だけを添える。
+    private var canceledContentView: some View {
+        HStack(alignment: .center, spacing: 8) {
+            EewCanceledSymbol(size: 24)
+            Text(EewDisplay.canceledDescription)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(eewSecondaryTextColor)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 0)
+        }
+    }
+
+    // MARK: - 通常報
+
+    private var earthquakeContentView: some View {
+        HStack(alignment: .bottom, spacing: 10) {
+            if let intensity = state.display.maxIntensity {
+                VStack(spacing: 2) {
+                    Text("最大震度")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(eewSecondaryTextColor)
+                    SquareIntensityBadge(
+                        intensity: intensity,
+                        size: .normal
+                    )
+                }
+            }
+
             uncanceledDetailsView
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let intensity = state.display.forecastIntensity,
+               let regionName = state.location?.regionName,
+               !regionName.isEmpty {
+                forecastIntensityView(
+                    regionName: regionName,
+                    intensity: intensity
+                )
+            }
         }
     }
 
@@ -433,7 +431,15 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
             .previewContext(.canceledWithStaleValues, viewKind: .dynamicIsland(.expanded))
             .previewDisplayName("Expanded - 取消(値が残存)")
 
+        attributes
+            .previewContext(.countingDown(), viewKind: .content)
+            .previewDisplayName("Lock Screen - 到達カウントダウン")
+
         // Dynamic Island - Compact
+        attributes
+            .previewContext(.countingDown(), viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 到達カウントダウン")
+
         attributes
             .previewContext(.noto32, viewKind: .dynamicIsland(.compact))
             .previewDisplayName("Compact - 警報")
@@ -442,7 +448,15 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
             .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.compact))
             .previewDisplayName("Compact - 予報")
 
+        attributes
+            .previewContext(.canceled, viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 取消")
+
         // Dynamic Island - Expanded
+        attributes
+            .previewContext(.countingDown(), viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 到達カウントダウン")
+
         attributes
             .previewContext(.noto32, viewKind: .dynamicIsland(.expanded))
             .previewDisplayName("Expanded - 警報")
@@ -450,6 +464,18 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.expanded))
             .previewDisplayName("Expanded - 予報")
+
+        attributes
+            .previewContext(.notoFinal, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 最終報(到達予想なし)")
+
+        attributes
+            .previewContext(.plum, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - PLUM法")
+
+        attributes
+            .previewContext(.canceled, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 取消")
 
         // Dynamic Island - Minimal
         attributes
