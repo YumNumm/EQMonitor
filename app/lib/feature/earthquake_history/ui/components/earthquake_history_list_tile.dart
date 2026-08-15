@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
@@ -89,11 +90,8 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
 
-    final tileBaseColor = switch (earthquake.earthquakeType) {
-      EarthquakeType.distant => _distantColor,
-      EarthquakeType.volcano => _volcanoColor,
-      EarthquakeType.normal => maxIntensityColor,
-    };
+    final tileBaseColor =
+        earthquake.earthquakeType.baseColor ?? maxIntensityColor;
 
     final magnitude = hypocenter?.magnitude;
 
@@ -169,15 +167,9 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ],
       ),
       leading: switch (earthquake.earthquakeType) {
-        EarthquakeType.distant => _ForeignEarthquakeIcon(
+        EarthquakeType.distant || EarthquakeType.volcano => EarthquakeTypeIcon(
+          type: earthquake.earthquakeType,
           size: intensityIconSize,
-          color: _distantColor,
-          icon: Icons.public,
-        ),
-        EarthquakeType.volcano => _ForeignEarthquakeIcon(
-          size: intensityIconSize,
-          color: _volcanoColor,
-          icon: Icons.volcano,
         ),
         EarthquakeType.normal when maxIntensity != null => JmaIntensityIcon(
           intensity: maxIntensity,
@@ -221,44 +213,6 @@ class _AreaIntensityChip extends StatelessWidget {
           color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,
           fontSize: 12,
-        ),
-      ),
-    );
-  }
-}
-
-/// 遠地地震 (海外地震情報) のベースカラー(青)。
-const _distantColor = Color(0xFF1976D2);
-
-/// 火山噴火 (海外の大規模な噴火) のベースカラー(赤)。
-const _volcanoColor = Color(0xFFD32F2F);
-
-/// 海外地震情報・火山噴火用のアイコン。
-/// 震度アイコン([JmaIntensityIcon]の`.filled`)と同じ角丸矩形の見た目に揃え、
-/// ベースカラーの中にアイコンを白で表示する。
-class _ForeignEarthquakeIcon extends StatelessWidget {
-  const _ForeignEarthquakeIcon({
-    required this.size,
-    required this.color,
-    required this.icon,
-  });
-
-  final double size;
-  final Color color;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: size,
-      width: size,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(size / 5),
-        ),
-        child: Center(
-          child: Icon(icon, color: Colors.white, size: size * 0.7),
         ),
       ),
     );
