@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -6,7 +8,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
-import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthquake_list.dart';
@@ -14,6 +15,7 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_s
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -29,7 +31,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     return homeAsync.when(
       data: (home) {
         final scope = home.common.earthquakeHistoryScope;
-        // 地域コードから名称を解決する。解決できない場合はコードをそのまま表示。
         final selection = paramAsync.value?.regionSelection;
         final locationName = selection != null
             ? ref.watch(regionNameProvider(selection.$1, selection.$2)).value ??
@@ -47,7 +48,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           await HomeConfigurationNotifier.saveMutation.run(ref, (tsx) async {
             final notifier = tsx.get(homeConfigurationProvider.notifier);
             if (result is EarthquakeHistoryParameterAll) {
-              // クリアされた場合は parameter のみ消し、スコープは保持する
               await notifier.clearCustomEarthquakeHistoryParameter();
             } else {
               await notifier.setCustomEarthquakeHistoryParameter(result);
@@ -62,8 +62,8 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               action: HomeScopeSelector(
                 scope: scope,
                 onScopeChanged: (newScope) async {
-                  if (newScope == HomeEarthquakeHistoryScope.custom &&
-                      home.common.parameter == null) {
+                  await HapticFeedback.lightImpact();
+                  if (newScope == .custom && home.common.parameter == null) {
                     await openRegionPicker();
                   } else {
                     await HomeConfigurationNotifier.saveMutation.run(
@@ -87,8 +87,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                       homeEarthquakeHistoryParameterProvider,
                       asReload: true,
                     ),
-                    onConfigureRegion:
-                        scope == HomeEarthquakeHistoryScope.custom
+                    onConfigureRegion: scope == .custom
                         ? openRegionPicker
                         : null,
                   );

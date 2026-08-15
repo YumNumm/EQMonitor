@@ -127,7 +127,7 @@ class _ScopeChip extends StatelessWidget {
                   locationName ?? scope.label,
                   style: designSystem.typography.labelLarge,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
               Icon(

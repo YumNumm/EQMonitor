@@ -1,3 +1,5 @@
+import 'package:cupertino_ui/cupertino_ui.dart'
+    show GlobalCupertinoLocalizations;
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -8,8 +10,6 @@ import 'package:eqmonitor/feature/debug/launcher/debug_launcher.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dart';
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_wake_lock_controller.dart';
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
-import 'package:cupertino_ui/cupertino_ui.dart'
-    show GlobalCupertinoLocalizations;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'
     show GlobalWidgetsLocalizations;
@@ -17,7 +17,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class App extends HookConsumerWidget {
-  const App({super.key});
+  const new({super.key});
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -54,7 +54,7 @@ class App extends HookConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('ja', 'JP'),],
+      supportedLocales: const [Locale('ja', 'JP')],
     );
     final buildConfig = ref.watch(buildConfigProvider);
     Widget result = ForcedUpdateWrapper(child: app);

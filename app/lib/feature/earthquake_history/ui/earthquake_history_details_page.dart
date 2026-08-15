@@ -13,20 +13,19 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/estimated_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_segmented_control.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_activity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/estimated_intensity_notice_dialog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_event_notes.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -66,7 +65,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _LoadedContent extends HookConsumerWidget {
-  const _LoadedContent({required this.earthquake});
+  const new({required this.earthquake});
 
   final Earthquake earthquake;
 
@@ -202,7 +201,6 @@ class _LoadedContent extends HookConsumerWidget {
                           when DateTime.now().difference(originTime) >
                               const Duration(hours: 24))
                         const AdBanner(),
-                      EarthquakeActivityCard(earthquake: earthquake),
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)
@@ -271,7 +269,7 @@ class _LoadedContent extends HookConsumerWidget {
 }
 
 class _TelegramListButton extends StatelessWidget {
-  const _TelegramListButton({required this.eventId});
+  const new({required this.eventId});
 
   final String eventId;
 

@@ -70,9 +70,12 @@ class HomeFeedSheet extends ConsumerWidget {
           ),
           _ => const _HomeFeedSkeleton(),
         },
-        TextButton(
-          onPressed: () async => const FeedRoute().push<void>(context),
-          child: Text('さらに表示'),
+        Align(
+          alignment: .centerEnd,
+          child: TextButton(
+            onPressed: () async => const FeedRoute().push<void>(context),
+            child: Text('さらに表示'),
+          ),
         ),
       ],
     );

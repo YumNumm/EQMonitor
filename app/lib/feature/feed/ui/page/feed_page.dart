@@ -7,13 +7,14 @@ import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class FeedPage extends HookConsumerWidget {
-  const FeedPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +52,7 @@ class FeedPage extends HookConsumerWidget {
 }
 
 class _PagingBody extends StatelessWidget {
-  const _PagingBody({required this.dataSource});
+  const new({required this.dataSource});
 
   final FeedDataSource dataSource;
 
@@ -76,11 +77,11 @@ class _PagingBody extends StatelessWidget {
                 $extra: item,
               ).push<void>(context),
             ),
-            initialLoadingWidget: FeedItemListTile(
-              item: FeedLoadingDummyItem.create('1'),
+            initialLoadingWidget: Center(
+              child: CircularProgressIndicator.adaptive(),
             ),
-            appendLoadingWidget: FeedItemListTile(
-              item: FeedLoadingDummyItem.create('2'),
+            appendLoadingWidget: Skeletonizer(
+              child: FeedItemListTile(item: FeedLoadingDummyItem.create('2')),
             ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
@@ -111,7 +112,7 @@ class _PagingBody extends StatelessWidget {
 }
 
 class FeedLoadingDummyItem {
-  const FeedLoadingDummyItem._();
+  const new _();
 
   static FeedItem create(String id) => FeedItem(
     id: id,

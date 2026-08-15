@@ -5,19 +5,17 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:extensions/extensions.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryListTile extends StatelessWidget {
-  const EarthquakeHistoryListTile({
+  const new({
     required this.item,
     required this.searchParameter,
     this.onTap,
@@ -132,20 +130,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4),
               child: Consumer(
                 builder: (context, ref, _) {
-                  final regionSel = searchParameter.regionSelection;
-                  final areaName = regionSel != null
-                      ? ref
-                                .watch(
-                                  regionNameProvider(
-                                    regionSel.$1,
-                                    regionSel.$2,
-                                  ),
-                                )
-                                .whenOrNull(data: (name) => name) ??
-                            regionSel.$2
-                      : '';
                   return _AreaIntensityChip(
-                    areaName: areaName,
                     intensity: switch (item) {
                       EarthquakePartialPrefecture(:final prefectureIntensity) =>
                         prefectureIntensity,
@@ -188,27 +173,23 @@ class EarthquakeHistoryListTile extends StatelessWidget {
 /// 検索対象地域の震度情報を表示する小さなチップ。
 /// 「(地域名) 震度N」を、その震度の色で塗りつぶして表示する。
 class _AreaIntensityChip extends StatelessWidget {
-  const _AreaIntensityChip({
-    required this.areaName,
-    required this.intensity,
-    required this.intensityColors,
-  });
+  const new({required this.intensity, required this.intensityColors});
 
-  final String areaName;
   final JmaIntensity intensity;
   final IntensityColors intensityColors;
 
   @override
   Widget build(BuildContext context) {
     final entry = intensityColors.fromJmaIntensity(intensity);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       decoration: BoxDecoration(
         color: entry.background,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        '$areaName 震度${intensity.label}',
+        '震度${intensity.label}',
         style: TextStyle(
           color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,

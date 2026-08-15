@@ -13,14 +13,14 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_hook.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -145,7 +145,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 }
 
 class _SimulationView extends HookConsumerWidget {
-  const _SimulationView({
+  const new({
     required this.selectedEew,
     required this.displayMode,
     required this.initialCenter,
@@ -216,7 +216,7 @@ class _SimulationView extends HookConsumerWidget {
 }
 
 class _EewDetailsByEventIdSkeleton extends StatelessWidget {
-  const _EewDetailsByEventIdSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -237,10 +237,7 @@ class _EewDetailsByEventIdSkeleton extends StatelessWidget {
 }
 
 class _DisplayModeSelector extends StatelessWidget {
-  const _DisplayModeSelector({
-    required this.displayMode,
-    required this.onChanged,
-  });
+  const new({required this.displayMode, required this.onChanged});
 
   final EewDisplayMode displayMode;
   final void Function(EewDisplayMode) onChanged;
@@ -268,7 +265,7 @@ class _DisplayModeSelector extends StatelessWidget {
 }
 
 class _ResponsiveLayout extends HookConsumerWidget {
-  const _ResponsiveLayout({
+  const new({
     required this.eews,
     required this.selectedIndex,
     required this.onSelect,
@@ -344,13 +341,14 @@ class _ResponsiveLayout extends HookConsumerWidget {
 }
 
 class _SimulationStartBanner extends StatelessWidget {
-  const _SimulationStartBanner({required this.onStart});
+  const new({required this.onStart});
 
   final VoidCallback onStart;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
+
     return Material(
       color: designSystem.colorTheme.primaryContainer,
       child: InkWell(
@@ -366,7 +364,7 @@ class _SimulationStartBanner extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'シミュレーション再生: 各報を実際の時間間隔で再生します',
+                  'シミュレーション再生',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: designSystem.colorTheme.onPrimaryContainer,
                   ),

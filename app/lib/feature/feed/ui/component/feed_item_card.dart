@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension FeedItemDataDisplay on FeedItemData {
   String get text => switch (this) {
@@ -33,7 +33,7 @@ extension FeedItemDataDisplay on FeedItemData {
 }
 
 class FeedItemListTileContent extends StatelessWidget {
-  const FeedItemListTileContent({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final FeedItem item;
 
@@ -42,14 +42,16 @@ class FeedItemListTileContent extends StatelessWidget {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
 
+    final summary = item.summary ?? '';
+
     return Row(
       children: [
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
-                (item.summary ?? '').replaceAll("◆", ""),
+                (item.title ?? "").replaceAll("◆", "").replaceAll("\n", ""),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -77,7 +79,7 @@ class FeedItemListTileContent extends StatelessWidget {
 }
 
 class FeedTypeBadge extends StatelessWidget {
-  const FeedTypeBadge({required this.data, super.key});
+  const new({required this.data, super.key});
 
   final FeedItemData data;
 
