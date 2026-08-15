@@ -28,17 +28,25 @@ void main() {
     expect(find.text('本文'), findsOneWidget);
   });
 
-  testWidgets('ヘッダーとカード内容の左端の余白が揃う', (tester) async {
+  testWidgets('ヘッダーのタイトルとフッターの文字がカード内容の余白に揃う', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        const HomeSheetCard(children: [HomeSheetCardHeader(title: 'カードタイトル')]),
+        HomeSheetCard(
+          children: [
+            const HomeSheetCardHeader(title: 'カードタイトル'),
+            HomeSheetCardFooter(onPressed: () {}),
+          ],
+        ),
       ),
     );
 
     final spacing = DesignSystemThemeExtension.light().spacing.lg;
     final card = tester.getRect(find.byType(HomeSheetCard));
     final title = tester.getRect(find.text('カードタイトル'));
+    final footerLabel = tester.getRect(find.text('さらに表示'));
     expect(title.left - card.left, spacing);
+    // TextButton は自身の内側余白を持つため、文字の右端が揃うかを見る
+    expect(card.right - footerLabel.right, spacing);
   });
 
   testWidgets('フッターは onPressed が null なら無効化される', (tester) async {
