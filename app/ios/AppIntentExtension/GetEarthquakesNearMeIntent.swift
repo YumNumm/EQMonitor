@@ -7,6 +7,8 @@
 
 import AppIntents
 
+/// `ShowsSnippetIntent` は iOS 26 以降。
+@available(iOS 26.0, *)
 struct GetEarthquakesNearMeIntent: AppIntent {
     static let title: LocalizedStringResource = "現在地の地震情報を確認"
     static let description = IntentDescription(
