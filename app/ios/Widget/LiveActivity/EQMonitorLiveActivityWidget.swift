@@ -191,18 +191,16 @@ struct EewExpandedCenterView: View {
                 .foregroundStyle(Color.eqTextPrimary)
                 .lineLimit(2)
                 .minimumScaleFactor(0.75)
-        } else {
+        } else if let hypocenterName = state.hypocenterName {
             VStack(alignment: .leading, spacing: 2) {
                 Text(state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地")
                     .font(AppFonts.flex(size: 9, weight: .medium))
                     .foregroundStyle(Color.eqTextSecondary)
-                if let hypocenterName = state.hypocenterName {
-                    Text(hypocenterName)
-                        .font(AppFonts.flex(size: 16, weight: .bold))
-                        .foregroundStyle(Color.eqTextPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                }
+                Text(hypocenterName)
+                    .font(AppFonts.flex(size: 16, weight: .bold))
+                    .foregroundStyle(Color.eqTextPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
         }
     }
@@ -287,7 +285,7 @@ struct ShakeCompactTrailingView: View {
 
     var body: some View {
         if let date = state.detectedDate {
-            Text(date, style: .time)
+            Text(JSTDateFormat.timeShort(date))
                 .font(AppFonts.code(size: 11, weight: .semibold))
                 .monospacedDigit()
                 .foregroundStyle(Color.eqTextPrimary)
@@ -350,7 +348,7 @@ struct ShakeExpandedTrailingView: View {
                 Text("検知")
                     .font(AppFonts.flex(size: 9, weight: .medium))
                     .foregroundStyle(Color.eqTextSecondary)
-                Text(date, style: .time)
+                Text(JSTDateFormat.timeShort(date))
                     .font(AppFonts.code(size: 13, weight: .bold))
                     .monospacedDigit()
                     .foregroundStyle(Color.eqTextPrimary)
@@ -411,7 +409,7 @@ struct ShakeExpandedBottomView: View {
                         .foregroundStyle(Color.eqTextPrimary)
                 }
             } else if let date = state.detectedDate {
-                Text(date, style: .time)
+                Text(JSTDateFormat.timeShort(date))
                     .font(AppFonts.code(size: 13, weight: .bold))
                     .monospacedDigit()
                     .foregroundStyle(Color.eqTextPrimary)

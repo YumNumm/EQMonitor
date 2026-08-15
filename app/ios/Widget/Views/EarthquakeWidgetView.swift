@@ -161,7 +161,8 @@ private struct WidgetHeader: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
-                Text("更新 \(formattedTime)")
+                // 行に並ぶ発生時刻が JST 固定なので、更新時刻も JST に揃える
+                Text("更新 \(JSTDateFormat.timeShort(updateTime))")
                     .font(AppFonts.code(size: compact ? 9 : 10))
                     .foregroundStyle(.white.opacity(0.7))
             }
@@ -172,14 +173,6 @@ private struct WidgetHeader: View {
         .padding(.vertical, compact ? 8 : 10)
         .frame(width: width, alignment: .leading)
         .background(Color.eqBrand)
-    }
-
-    private var formattedTime: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        formatter.locale = Locale(identifier: "ja_JP")
-        formatter.timeZone = TimeZone.current
-        return formatter.string(from: updateTime)
     }
 }
 

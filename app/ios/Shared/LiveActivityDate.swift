@@ -88,6 +88,11 @@ enum JSTDateFormat {
         string(from: date, format: "HH:mm:ss")
     }
 
+    /// `HH:mm`（Dynamic Island など幅が限られる場所向け）
+    static func timeShort(_ date: Date) -> String {
+        string(from: date, format: "HH:mm")
+    }
+
     private static func string(from date: Date, format: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format
