@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// [HomeEarthquakeHistoryScope] の表示用ラベルとアイコン。
@@ -22,7 +25,7 @@ extension HomeEarthquakeHistoryScopeDisplay on HomeEarthquakeHistoryScope {
 /// タップでメニューを開き、全国 / 現在地 / 指定地域を選択する。
 /// [onEditRegion] を渡した場合は、指定地域の選び直しもメニューから行える。
 class HomeScopeSelector extends StatelessWidget {
-  const HomeScopeSelector({
+  const new({
     required this.scope,
     required this.onScopeChanged,
     this.onEditRegion,
@@ -70,7 +73,7 @@ class HomeScopeSelector extends StatelessWidget {
           MenuItemButton(
             leadingIcon: const Icon(Icons.edit_location_alt_outlined, size: 20),
             onPressed: onEditRegion,
-            child: Text('地域を選び直す', style: typography.bodyLarge),
+            child: Text('地域を再選択', style: typography.bodyLarge),
           ),
         ],
       ],
@@ -78,6 +81,7 @@ class HomeScopeSelector extends StatelessWidget {
         scope: scope,
         locationName: locationName,
         onTap: () {
+          unawaited(HapticFeedback.lightImpact());
           if (controller.isOpen) {
             controller.close();
           } else {
@@ -90,11 +94,7 @@ class HomeScopeSelector extends StatelessWidget {
 }
 
 class _ScopeChip extends StatelessWidget {
-  const _ScopeChip({
-    required this.scope,
-    required this.onTap,
-    this.locationName,
-  });
+  const new({required this.scope, required this.onTap, this.locationName});
 
   final HomeEarthquakeHistoryScope scope;
   final VoidCallback onTap;
@@ -118,7 +118,7 @@ class _ScopeChip extends StatelessWidget {
             vertical: spacing.sm,
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             spacing: spacing.xs,
             children: [
               Icon(scope.icon, size: 16, color: colorTheme.onSurfaceVariant),

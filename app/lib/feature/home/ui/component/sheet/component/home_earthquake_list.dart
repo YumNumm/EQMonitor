@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:material_ui/material_ui.dart';
 
 class HomeEarthquakeList extends StatelessWidget {
-  const HomeEarthquakeList({
+  const new({
     required this.earthquakes,
     this.showCurrentLocationIntensity = false,
     super.key,

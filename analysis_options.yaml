@@ -12,7 +12,6 @@ analyzer:
     - "**/DerivedData/**"
     - "**/build/**"
     - "build/**"
-    # fork した上流コード。lint はこのリポジトリの規約ではなく上流に従う。
     - third_party/**
     - android/**
     - ios/**
@@ -31,7 +30,17 @@ plugins:
       avoid_print: true
       avoid_eqmonitor_api_in_ui: true
       avoid_mixed_declaration_categories: true
-  eqmonitor_custom_lints:
-    path: tools/eqmonitor_custom_lints
-    diagnostics:
-      avoid_direct_color_scheme: true
+
+linter:
+  rules:
+    # Introduced in Dart 3.13
+    # See: https://dart.dev/blog/announcing-dart-3-13#primary-constructors
+    empty_container_bodies: true
+    initialize_in_field_declaration: true
+    unnecessary_const_in_enum_constructor: true
+    unnecessary_primary_constructor_body: true
+    unnecessary_type_name_in_constructor: true
+    use_declaring_parameters: true
+
+formatter:
+  trailing_commas: preserve

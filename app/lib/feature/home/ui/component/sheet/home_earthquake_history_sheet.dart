@@ -14,12 +14,12 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_s
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeEarthquakeHistorySheet extends HookConsumerWidget {
-  const HomeEarthquakeHistorySheet({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -129,16 +129,16 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 ),
               ),
             ),
-            HomeSheetCardFooter(
-              // スコープに対応する検索パラメータが解決できないときは
-              // 「全国」が開いてしまい一覧の表示条件と一致しないため、
-              // 一覧ボタン自体を無効化する（未設定/未解決の案内は
-              // 上の HomeScopeUnavailableBody が担当する）。
-              onPressed: paramAsync.value == null
-                  ? null
-                  : () async =>
-                        EarthquakeHistoryRoute($extra: paramAsync.value)
-                            .push<void>(context),
+            Align(
+              alignment: .centerEnd,
+              child: TextButton(
+                onPressed: paramAsync.value == null
+                    ? null
+                    : () async =>
+                          EarthquakeHistoryRoute($extra: paramAsync.value)
+                              .push<void>(context),
+                child: Text('さらに表示'),
+              ),
             ),
           ],
         );
@@ -164,7 +164,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
 }
 
 class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
-  const _HomeEarthquakeHistorySheetSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {

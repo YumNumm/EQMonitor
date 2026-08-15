@@ -24,13 +24,12 @@ import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
-import 'package:eqmonitor/feature/playback_mode/ui/playback_mode_modal.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeMapView extends ConsumerWidget {
   const HomeMapView({super.key});
@@ -258,7 +257,7 @@ class _MapHeader extends ConsumerWidget {
       onLabelDebugButtonTap: isDebug
           ? () => HomeMapLabelDebugModal.show(context: context)
           : null,
-      onDebugButtonTap: isDebug ? () => PlaybackModeModal.show(context) : null,
+      onDebugButtonTap: null,
     );
 
     return Padding(

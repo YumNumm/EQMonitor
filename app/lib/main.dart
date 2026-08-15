@@ -34,7 +34,6 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_so
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
@@ -45,11 +44,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'
@@ -235,7 +234,6 @@ class AppBootstrap {
 
     container.read(eqMonitorWsStatusProvider);
     container.read(realtimeEventsProvider);
-    container.listen(autoReturnWatcherProvider, (_, _) {});
     container.listen(backgroundLocationServiceProvider, (_, _) {});
     container.listen(firebaseMessagingInteractionProvider, (_, _) {});
     container.listen(appLinksInteractionProvider, (_, _) {});

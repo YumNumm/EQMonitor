@@ -10,12 +10,12 @@ import 'package:eqmonitor/feature/feed/data/provider/unread_high_urgency_feed_pr
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeFeedSheet extends ConsumerWidget {
-  const HomeFeedSheet({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,8 +70,9 @@ class HomeFeedSheet extends ConsumerWidget {
           ),
           _ => const _HomeFeedSkeleton(),
         },
-        HomeSheetCardFooter(
+        TextButton(
           onPressed: () async => const FeedRoute().push<void>(context),
+          child: Text('さらに表示'),
         ),
       ],
     );
@@ -79,7 +80,7 @@ class HomeFeedSheet extends ConsumerWidget {
 }
 
 class _HomeFeedEmpty extends StatelessWidget {
-  const _HomeFeedEmpty();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +114,7 @@ class _HomeFeedEmpty extends StatelessWidget {
 }
 
 class _HomeFeedListTile extends StatelessWidget {
-  const _HomeFeedListTile({required this.item});
+  const new({required this.item});
 
   final FeedItem item;
 
@@ -136,7 +137,7 @@ class _HomeFeedListTile extends StatelessWidget {
 }
 
 class _HomeFeedSkeleton extends StatelessWidget {
-  const _HomeFeedSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +171,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
 /// 未読の緊急度の高いお知らせを知らせるバナー。
 /// タップで詳細へ遷移して既読化、×ボタンで既読化のみ行う。
 class _UnreadFeedBanner extends ConsumerWidget {
-  const _UnreadFeedBanner({required this.item});
+  const new({required this.item});
 
   final FeedItem item;
 
