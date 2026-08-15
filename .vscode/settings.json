@@ -1,10 +1,8 @@
 {
 	"dart.runPubGetOnPubspecChanges": "never",
 	"dart.flutterSdkPath": ".vscode/mise-tools/flutter",
-	"dart.sdkPath": ".vscode/mise-tools/dart",
   "mise.configureExtensionsAutomatically": true,
   "mise.configureExtensionsAutomaticallyIncludeList": [
-    "Dart-Code.dart-code",
     "dart-code.flutter"
   ],
   "mise.configureExtensionsUseSymLinks": true,
