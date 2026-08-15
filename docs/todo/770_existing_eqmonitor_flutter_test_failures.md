@@ -73,10 +73,11 @@ Analyzer 診断ゼロ化 (PR #1639) の develop マージ時点で、以下が�
 
 ## 追記 (2026-08-15): timeout で隠れていた eqmonitor_api の 2 件
 
-`flutter-test` は `docs/todo/700_flutter_test_ci_10min_timeout.md` の通り 10 分で
-cancel されており、`app` より後に実行される package の結果が CI に出ていなかった。
-timeout を一時的に緩めて完走させたところ（run 31859725902）、上記 6 件に加えて
-`packages/eqmonitor_api` で 2 件失敗する（`84 tests passed, 2 failed, 16 skipped`）。
+`flutter-test` は `docs/todo/700_flutter_test_ci_10min_timeout.md` の通り 10 分の
+timeout に張り付いており、cancel された run では結果が出ていなかった。完走させると
+（run 31859725902 / 31860359349）上記 6 件に加えて `packages/eqmonitor_api` で
+2 件失敗する（`eqmonitor` は 1664 passed / 6 failed、
+`eqmonitor_api` は 84 passed / 2 failed / 16 skipped）。
 
 `packages/eqmonitor_api/test/feed_nankai_parse_test.dart`
 

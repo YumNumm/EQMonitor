@@ -35,20 +35,27 @@
 `timeout-minutes` を一時的に 25 分へ上げて計測した（PR #1648 で計測後 revert 済み。
 方針に反する単純な引き上げは行わない）。
 
-run 31859725902 / job の実測値:
+同一ブランチの連続 run での job 所要時間（`Flutter Test` job）:
 
-- job 全体: 約 13 分（setup 約 2 分 + テスト実行 約 11 分）
-- 10 分の内訳では setup に約 2 分かかるため、テストの持ち時間は実質 8 分しかない
-- テストは hang しておらず、cancel 直前まで結果を出力し続けていた
+| run | timeout | 所要時間 | 結果 |
+| --- | --- | --- | --- |
+| 31858584545 | 10 分 | 10m18s | cancelled（テスト実行の途中） |
+| 31859725902 | 25 分 | 9m50s | 完走してテスト失敗を報告 |
+| 31860359349 | 10 分 | 9m37s | 完走してテスト失敗を報告 |
 
-**10 分では原理的に完走できない**ため、`timeout-minutes` を触らない限り
-`flutter-test` は常に cancel され、テスト結果を CI で確認できない。
+**所要時間が 10 分ちょうどに張り付いており、runner の速度差で完走するかどうかが
+変わる**。テストは hang しておらず、cancel 直前まで結果を出力し続けていた。
+つまり `flutter-test` は現状 **間欠的に** timeout し、赤の理由が
+「テスト失敗」か「時間切れ」か run ごとに変わる。
+
 上記「対応方針」の 1 → 2 を実施し、その結果として 3 を決めること。
 
-また、timeout で打ち切られていた区間に既存の失敗が隠れていた。
-`packages/eqmonitor_api/test/feed_nankai_parse_test.dart` の 2 件は
-`docs/todo/770_existing_eqmonitor_flutter_test_failures.md` に未記載だったが、
-完走させると失敗する（詳細は 770 の追記を参照）。
+完走させたときの失敗内訳は `eqmonitor` が 1664 passed / 6 failed、
+`eqmonitor_api` が 84 passed / 2 failed / 16 skipped。
+`eqmonitor_api` の 2 件は
+`docs/todo/770_existing_eqmonitor_flutter_test_failures.md` に未記載だった
+（timeout で打ち切られる run では結果が出ないため見落とされていた）。
+詳細は 770 の追記を参照。
 
 ## 関連
 
