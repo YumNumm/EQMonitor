@@ -3,10 +3,13 @@ description: Custom analyzer plugin (lint rules) for EQMonitor. Standalone (not 
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.14.0-29.0.dev
+
+resolution: workspace
 
 dependencies:
   analysis_server_plugin: ^0.3.8
   analyzer: ^13.0.0
+
 dev_dependencies:
-  test: ^1.31.2
+  test: ^1.15.0

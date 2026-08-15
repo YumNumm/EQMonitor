@@ -9,6 +9,8 @@ workspace:
   - packages/*
   - packages/eqmonitor_map/example
   - packages/assets_util/example
+  # ignore: path_does_not_exist
+  - tools/*
 dependencies:
   melos: ^7.4.0
 dev_dependencies:
