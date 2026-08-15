@@ -480,26 +480,24 @@ struct ArrivalInfoView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
 
-            if let arrivalDate = location.arrivalDate {
-                if arrivalDate > Date() {
-                    // Workaround: timerInterval が横方向に広がるのを防ぐ
-                    Text("00:00")
-                        .font(AppFonts.code(size: 12, weight: .bold))
-                        .hidden()
-                        .overlay(alignment: .trailing) {
-                            Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                                .font(AppFonts.code(size: 12, weight: .bold))
-                                .monospacedDigit()
-                                .foregroundStyle(Color.eqTextPrimary)
-                                .contentTransition(.numericText(countsDown: true))
-                        }
-                } else {
-                    Text("主要動到達済み")
-                        .font(AppFonts.flex(size: 12, weight: .bold))
-                        .foregroundStyle(Color.eqTextPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                }
+            if let remaining = ArrivalCountdown.remaining(until: location.arrivalDate) {
+                // Workaround: timerInterval が横方向に広がるのを防ぐ
+                Text("00:00")
+                    .font(AppFonts.code(size: 12, weight: .bold))
+                    .hidden()
+                    .overlay(alignment: .trailing) {
+                        Text(timerInterval: remaining, countsDown: true)
+                            .font(AppFonts.code(size: 12, weight: .bold))
+                            .monospacedDigit()
+                            .foregroundStyle(Color.eqTextPrimary)
+                            .contentTransition(.numericText(countsDown: true))
+                    }
+            } else if location.arrivalDate != nil {
+                Text("主要動到達済み")
+                    .font(AppFonts.flex(size: 12, weight: .bold))
+                    .foregroundStyle(Color.eqTextPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
         }
     }

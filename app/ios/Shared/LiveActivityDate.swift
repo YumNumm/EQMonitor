@@ -57,6 +57,20 @@ enum LiveActivityDate {
     }
 }
 
+// MARK: - 到達カウントダウン
+
+enum ArrivalCountdown {
+    /// `Text(timerInterval:)` に渡す残り時間の範囲。到達済み・未設定なら nil。
+    ///
+    /// `now > arrivalDate` の範囲を作ると `ClosedRange` の事前条件違反でクラッシュする。
+    /// 「到達したか」の判定と範囲生成で別々に `Date()` を取ると、ちょうど到達した
+    /// 瞬間（ユーザが最も画面を見ているタイミング）に踏み抜くため、同じ時刻で判定する。
+    static func remaining(until arrivalDate: Date?, now: Date = Date()) -> ClosedRange<Date>? {
+        guard let arrivalDate, arrivalDate > now else { return nil }
+        return now...arrivalDate
+    }
+}
+
 // MARK: - 表示用フォーマット
 
 /// JMA が発表する日時は JST を正とするため、端末のタイムゾーンに依存させない。

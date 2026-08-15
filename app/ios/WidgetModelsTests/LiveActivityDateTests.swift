@@ -56,3 +56,27 @@ struct LiveActivityDateTests {
         #expect(JSTDateFormat.timeWithSeconds(date) == "16:10:05")
     }
 }
+
+struct ArrivalCountdownTests {
+    @Test func returnsRangeWhileMainShockIsStillApproaching() throws {
+        let now = Date(timeIntervalSince1970: 1_704_093_000)
+        let range = try #require(
+            ArrivalCountdown.remaining(until: now.addingTimeInterval(30), now: now)
+        )
+        #expect(range.lowerBound == now)
+        #expect(range.upperBound == now.addingTimeInterval(30))
+    }
+
+    /// 到達時刻を過ぎた瞬間に `now...arrival` を作ると ClosedRange の事前条件違反で
+    /// クラッシュする。境界（同時刻・過去）で必ず nil になることを保証する。
+    @Test func returnsNilOnceMainShockHasArrived() {
+        let now = Date(timeIntervalSince1970: 1_704_093_000)
+        #expect(ArrivalCountdown.remaining(until: now, now: now) == nil)
+        #expect(ArrivalCountdown.remaining(until: now.addingTimeInterval(-0.001), now: now) == nil)
+        #expect(ArrivalCountdown.remaining(until: now.addingTimeInterval(-60), now: now) == nil)
+    }
+
+    @Test func returnsNilWhenArrivalTimeIsUnknown() {
+        #expect(ArrivalCountdown.remaining(until: nil) == nil)
+    }
+}

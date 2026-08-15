@@ -65,40 +65,35 @@ struct HeaderContainer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // 主要動到達までのカウントダウン / 到達済み
-                if let arrivalDate = arrivalDate {
-                    if arrivalDate > Date() {
-                        VStack(alignment: .trailing, spacing: 0) {
-                            Text("主要動到達まで")
-                                .eewLabelStyle(.header)
-                            // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
-                            // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
-                            Text("00:00")
-                                .font(
-                                    .system(
-                                        size: 18,
-                                        weight: .black,
-                                        design: .monospaced
-                                    )
+                if let remaining = ArrivalCountdown.remaining(until: arrivalDate) {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Text("主要動到達まで")
+                            .eewLabelStyle(.header)
+                        // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
+                        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
+                        Text("00:00")
+                            .font(
+                                .system(
+                                    size: 18,
+                                    weight: .black,
+                                    design: .monospaced
                                 )
-                                .tracking(-0.5)
-                                .hidden()
-                                .overlay(alignment: .trailing) {
-                                    Text(
-                                        timerInterval: Date()...arrivalDate,
-                                        countsDown: true
-                                    )
+                            )
+                            .tracking(-0.5)
+                            .hidden()
+                            .overlay(alignment: .trailing) {
+                                Text(timerInterval: remaining, countsDown: true)
                                     .contentTransition(.numericText(countsDown: true))
                                     .font(.system(size: 18, weight: .black))
                                     .foregroundColor(.white)
                                     .monospacedDigit()
                                     .tracking(-0.5)
-                                }
-                        }
-                    } else {
-                        Text("主要動到達済み")
-                            .font(.system(size: 14, weight: .heavy))
-                            .foregroundColor(.white)
+                            }
                     }
+                } else if arrivalDate != nil {
+                    Text("主要動到達済み")
+                        .font(.system(size: 14, weight: .heavy))
+                        .foregroundColor(.white)
                 }
             }
             .padding(.horizontal, 12)
