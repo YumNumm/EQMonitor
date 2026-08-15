@@ -223,13 +223,22 @@ url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0
 [tools.gcloud."platforms.linux-x64"]
 url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-linux-x86_64.tar.gz"
 
+[tools.gcloud."platforms.linux-x64-baseline"]
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-linux-x86_64.tar.gz"
+
 [tools.gcloud."platforms.linux-x64-musl"]
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-linux-x86_64.tar.gz"
+
+[tools.gcloud."platforms.linux-x64-musl-baseline"]
 url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-linux-x86_64.tar.gz"
 
 [tools.gcloud."platforms.macos-arm64"]
 url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-darwin-arm.tar.gz"
 
 [tools.gcloud."platforms.macos-x64"]
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-darwin-x86_64.tar.gz"
+
+[tools.gcloud."platforms.macos-x64-baseline"]
 url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-570.0.0-darwin-x86_64.tar.gz"
 
 [tools.gcloud."platforms.windows-x64"]
@@ -865,13 +874,6 @@ checksum = "blake3:59936ad2e0cf9b5b0127c605d24182b2209d4e13ae2c652bfbab25a8c0a5b
 
 [tools.swift."platforms.macos-arm64"]
 checksum = "blake3:2a9e6afeb9f796a60fb8183f4063960c2ff683476f5cf94464332586a9e86cd3"
-
-[[tools.swift]]
-version = "6.3.3"
-backend = "core:swift"
-
-[tools.swift.options]
-swift_platform = "ubuntu24.04"
 
 [[tools.swiftformat]]
 version = "0.62.1"
