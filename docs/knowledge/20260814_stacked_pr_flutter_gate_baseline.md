@@ -55,6 +55,13 @@ mise exec -- dart analyze --fatal-infos packages/seismicity_pmtiles packages/pmt
   - `eqmonitor-map-scene-spike (Android)`: `packages/eqmonitor_map/example/android/
     app/build.gradle.kts` が AGP 9.0 の `android.newDsl` 既定化に未追随で Gradle
     script compilation error 3件。Dart 変更とは無関係。
+- **追記 (2026-08-15)**: 上記 3 つのうち `flutter-analyze` は **green になった**
+  （#1644 で解消。run 31859725902 で success を確認）。したがって
+  `flutter-analyze` の赤を `760` を根拠に waive してはならず、赤くなったら回帰である。
+  残る baseline は `flutter-test`（`770`）と
+  `eqmonitor-map-scene-spike (Android)`（`880`）の 2 つ。
+  なお `flutter-test` は `700` の 10 分 timeout で完走していなかったため、
+  `770` に載っていない `eqmonitor_api` の 2 件が隠れていた（`770` の追記参照）。
 - **package 単位の結果を必ず確認する。** CI ログの `[<package>]: 🎉 N tests passed.`
   行を見れば、自分の package が緑かどうかを app の既存赤と切り分けられる。
 - baseline 修正は上記3つそれぞれの todo で扱い、地図・震源 PR に混ぜない。

@@ -209,8 +209,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
-          submodules: true
+
+      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+      - name: Init flutter_scene submodule
+        uses: ./.github/actions/init-flutter-scene-submodule
 
       - name: Extract SOPS Age Key File
         run: |
@@ -586,8 +588,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
-          submodules: true
+
+      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+      - name: Init flutter_scene submodule
+        uses: ./.github/actions/init-flutter-scene-submodule
 
       - name: Extract SOPS Age Key File
         run: |
