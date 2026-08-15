@@ -15,8 +15,10 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct EewContentState: Codable, Hashable {
     let eventId: String
-    /// イベント種別（backendは常に "eew" を送る）
-    let type: String
+    /// イベント種別（backend は "eew" を送る）。
+    /// UI では使わないため optional。必須にすると backend が欠落させた瞬間に
+    /// content-state 全体のデコードが失敗し Live Activity が表示されなくなる。
+    let type: String?
     let hypocenterName: String?
     let magnitude: Double?
     let depth: Double?
@@ -39,8 +41,7 @@ struct EewContentState: Codable, Hashable {
     }
 
     var timeDate: Date? {
-        guard let time = time else { return nil }
-        return ISO8601DateFormatter().date(from: time)
+        LiveActivityDate.parse(time)
     }
 
     var timeLabel: String {
@@ -49,8 +50,23 @@ struct EewContentState: Codable, Hashable {
         }
         return (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
-    
-    
+
+    /// 取消報。震源・規模・震度・到達予想はすべて無効な値として扱い、表示しない。
+    var isCanceledReport: Bool {
+        isCanceled == true
+    }
+
+    /// Dynamic Island の限られた面積に出す震度。
+    /// 現在地の予想震度を優先し、無ければ全国の最大震度にフォールバックする。
+    var displayIntensity: IntensityValue? {
+        guard !isCanceledReport else { return nil }
+        return location?.forecastIntensityValue ?? intensityValue
+    }
+
+    /// [displayIntensity] がどちらの震度かを示すラベル
+    var displayIntensityLabel: String {
+        location?.forecastIntensityValue != nil ? "予想震度" : "最大震度"
+    }
 }
 
 extension EewLiveActivityAttributes {
@@ -176,6 +192,54 @@ extension EewContentState {
             forecastIntensity: "3",
             forecastLpgmIntensity: nil,
             arrivalTime: nil,
+            intensity: nil
+        )
+    )
+
+    static let canceled = EewContentState(
+        eventId: "20240106123456",
+        type: "eew",
+        hypocenterName: nil,
+        magnitude: nil,
+        depth: nil,
+        time: nil,
+        isOriginTime: false,
+        maxIntensity: nil,
+        serialNo: 2,
+        isFinal: true,
+        isWarning: false,
+        isCanceled: true,
+        headline: "地震発生",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: nil
+    )
+
+    /// 取消報だが backend が震源・予想震度・到達予想を残したまま送ってきたケース。
+    /// 取消なのに「最大震度6強」「到達まで」が出ないことを確認するためのプレビュー。
+    static let canceledWithStaleValues = EewContentState(
+        eventId: "20240106123456",
+        type: "eew",
+        hypocenterName: "石川県能登地方",
+        magnitude: 7.6,
+        depth: 10,
+        time: "2024-01-06T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: "6+",
+        serialNo: 2,
+        isFinal: true,
+        isWarning: true,
+        isCanceled: true,
+        headline: "石川県で地震 北陸で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: LocationInfo(
+            regionName: "東京都23区",
+            forecastIntensity: "5-",
+            forecastLpgmIntensity: "2",
+            arrivalTime: "2024-01-06T16:12:30+09:00",
             intensity: nil
         )
     )
