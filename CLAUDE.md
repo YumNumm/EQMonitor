@@ -8,7 +8,10 @@ EQMonitor is a Flutter-based earthquake monitoring and early warning app for Jap
 
 ## GitHub / Pull Requests（厳守）
 
-- PR は **常に YumNumm（このリポジトリの `origin`）** のみ。`gh pr create` では `--repo YumNumm/EQMonitor` を明示する。
+- **PR と Issue を作成してよいのは YumNumm org のリポジトリのみ。upstream へは絶対に作成しない。**
+- `gh pr create` / `gh issue create` では `--repo YumNumm/<repo>` を**必ず明示する**。省略禁止。
+- 特に `third_party/flutter_scene` のような fork 配下では、`gh` は既定の送信先を **upstream（`bdero/flutter_scene`）** にする。明示しないと upstream へ PR が飛ぶ。
+- このルールは `.claude/settings.json` の PreToolUse フックでも機械的に強制している（`--repo YumNumm/` を含まない `gh pr create` / `gh issue create` は deny）。フックを迂回しない。
 - メインブランチは `develop`。PR のベースブランチは `develop` を指定する。
 
 ## Setup

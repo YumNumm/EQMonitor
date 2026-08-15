@@ -1,0 +1,39 @@
+# gh-repo-guard.sh の期待表。`<期待>::<Bash コマンド>` 形式。
+#
+# 実行:
+#   while IFS= read -r l; do
+#     case $l in \#*|'') continue;; esac
+#     exp=${l%%::*}; c=${l#*::}
+#     r=$(printf '{"tool_input":{"command":%s}}' "$(printf '%s' "$c" | jq -Rs .)" \
+#         | sh .claude/hooks/gh-repo-guard.sh)
+#     [ -n "$r" ] && got=DENY || got=ALLOW
+#     [ "$got" = "$exp" ] || echo "FAIL exp=$exp got=$got  $c"
+#   done < .claude/hooks/gh-repo-guard-cases.txt
+#
+# ケースを Bash のコマンドラインへ直接書くと、ガード自身が自分のテスト入力を
+# 拒否する。必ずこのファイル経由で流すこと。
+#
+# 区切りが `::` なのも同じ理由。`|` を使うとガードがそこで分割し、
+# 各ケースが本物の呼び出しに見えてしまう。
+
+DENY::gh pr create --title x
+DENY::gh issue create -t x
+DENY::gh pr create --repo bdero/flutter_scene
+# フラグがサブコマンドより前（gh はこれを受理する）
+DENY::gh pr --repo bdero/flutter_scene create
+# create のエイリアス
+DENY::gh pr new
+DENY::gh issue new -R bdero/flutter_scene
+# 複合コマンド: 1つ目の許可が2つ目を通してはならない
+DENY::gh pr create -R YumNumm/EQMonitor && gh issue create -R bdero/flutter_scene
+DENY::gh issue create -R YumNumm/x; gh pr create
+
+ALLOW::gh pr create --repo YumNumm/EQMonitor --base develop
+ALLOW::gh pr create --repo=YumNumm/EQMonitor
+ALLOW::gh issue create -R YumNumm/flutter_scene -t x
+ALLOW::gh pr create -R YumNumm/EQMonitor && gh issue create -R YumNumm/flutter_scene
+ALLOW::gh pr view 1640 --repo YumNumm/EQMonitor
+ALLOW::gh pr checks 1643 --repo YumNumm/EQMonitor
+ALLOW::gh auth status
+# 本文が作成コマンドに言及するだけのケースを誤検知しない
+ALLOW::gh pr comment 1 --repo YumNumm/EQMonitor --body "table row mentioning creation commands"
