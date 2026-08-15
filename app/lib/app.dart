@@ -54,7 +54,7 @@ class App extends HookConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('ja', 'JP')],
+      supportedLocales: const [Locale('ja', 'JP'),],
     );
     final buildConfig = ref.watch(buildConfigProvider);
     Widget result = ForcedUpdateWrapper(child: app);
