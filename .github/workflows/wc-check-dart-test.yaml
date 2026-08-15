@@ -11,7 +11,9 @@ jobs:
   flutter-test:
     name: Flutter Test
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    # テスト本体だけで 8 分以上かかるようになり 10 分では job timeout で
+    # cancel されるため、hang 検知用の安全網として余裕を持たせた値にする。
+    timeout-minutes: 25
     permissions:
       contents: read
       checks: write
