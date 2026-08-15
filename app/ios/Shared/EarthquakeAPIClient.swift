@@ -12,25 +12,38 @@ import OpenAPIRuntime
 // MARK: - API Error Types
 
 enum APIError: Error, LocalizedError {
-    case networkError(Error)
-    case invalidResponse
-    case decodingError(String)
+    case networkError(URLError)
     case serverError(Int)
-    case invalidURL
+    /// 通信・デコードのいずれとも判別できなかった失敗
+    case unexpected
 
+    /// ウィジェットに表示する文言。開発者向けの詳細は含めない。
     var errorDescription: String? {
         switch self {
         case .networkError(let error):
-            return "ネットワークエラー: \(error.localizedDescription)"
-        case .invalidResponse:
-            return "無効なレスポンス"
-        case .decodingError(let detail):
-            return "データ解析エラー: \(detail)"
+            return WidgetErrorMessage.network(error.code)
         case .serverError(let code):
-            return "サーバーエラー (\(code))"
-        case .invalidURL:
-            return "無効なURL"
+            return WidgetErrorMessage.server(statusCode: code)
+        case .unexpected:
+            return WidgetErrorMessage.unknown
         }
+    }
+
+    /// 任意の Error を APIError へ正規化する。
+    /// swift-openapi-runtime は transport の失敗を `ClientError` で包むため、
+    /// 中の `URLError` を取り出して圏外・タイムアウトを判別できるようにする。
+    static func from(_ error: Error) -> APIError {
+        if let apiError = error as? APIError {
+            return apiError
+        }
+        if let urlError = error as? URLError {
+            return .networkError(urlError)
+        }
+        if let clientError = error as? ClientError,
+           let urlError = clientError.underlyingError as? URLError {
+            return .networkError(urlError)
+        }
+        return .unexpected
     }
 }
 
