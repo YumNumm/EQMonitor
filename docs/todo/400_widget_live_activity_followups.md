@@ -1,44 +1,39 @@
 # ホーム画面ウィジェット / Live Activity の残課題
 
-調査（Live Activity・ホーム画面ウィジェットのバグ / デザイン不備の洗い出し）で見つけたが、
-今回は影響が小さいと判断して手を付けなかったもの。
+Live Activity・ホーム画面ウィジェットのバグ / デザイン不備の洗い出しで見つかった項目のうち、
+まだ残っているもの。解決済みの項目は履歴として末尾に残す。
 
-## 1. Widget Extension が API ベース URL をプロセス内でキャッシュし続ける
+## 1. Widget Extension の UI に対する回帰テストがない
 
-`EarthquakeAPIService.shared` は `static let` なので、拡張プロセスが生きている間は
-`ConfigReader.getAPIBaseURL()` の結果（= App Group の `apiServerUrl`）を再読み込みしない。
+`WidgetModelsTests` はモデル・表記・レイアウト件数・表示判定（`EewDisplay` /
+`WidgetRegionResolver`）を検証しているが、SwiftUI View のスナップショットテストは無い。
 
-```swift
-extension EarthquakeAPIService {
-    static let shared = EarthquakeAPIService(baseURL: ConfigReader.getAPIBaseURL())
-}
-```
+取消報での抑止や未入電バッジの収まり、Dynamic Island 展開時の切れ具合は Xcode Preview で
+目視確認する運用（`docs/knowledge/20260717_home_widget_worktree_validation.md`）。
 
-アプリ側でデバッグ用 API URL を切り替えても、`WidgetCenter.reloadAllTimelines()` は走るが
-Client のベース URL は古いままになる。Widget Extension は OS に頻繁に kill されるため実害は
-自然回復するが、デバッグ時に「切り替えたのに反映されない」と誤解しやすい。
+判断ロジックはできる限り Foundation のみに依存する型へ切り出し、
+`WidgetModelsTests` から検証する方針を継続する。View そのものの検証を入れるなら
+`swift-snapshot-testing` の導入を検討する（macOS ランナーが必要）。
 
-対応するなら、ベース URL をキーにしたキャッシュへ変更する（Swift 6 の並行性チェックに
-合わせて `NSLock` などで保護する必要がある）。
+## 2. Android のホーム画面ウィジェットは未実装
 
-## 2. `WidgetRegionResolver` が `region` / `station` の searchType を解釈しない
+`AppWidgetProvider` / Glance の実装は無い。テンプレート由来の未使用リソース
+（`Widget.Android.AppWidget.*` / `Theme.Android.AppWidgetContainer` / `AppWidgetAttrs` /
+`widget_margin`）は削除済み。実装する場合は iOS 側と同じ
+`WidgetRegionResolver` 相当の解決規則（Pro 未加入・未設定時は全国へフォールバック）を
+踏襲すること。
 
-`RegionSearchType`（Dart 側）は `prefecture` / `region` / `city` / `station` の 4 値だが、
-Swift 側は `prefecture` / `city` のみを扱い、他は全国へフォールバックする。
+## 3. iOS extension の CFBundleVersion が親アプリと不一致
 
-現在の任意地域ピッカー（`home_widget_settings_page.dart`）は都道府県・市区町村しか
-選ばせないため到達しないが、ピッカーを拡張したときに「設定したのに全国が出る」形で
-静かに壊れる。ピッカーを拡張する場合は Swift 側の `plan(forSearchType:)` も同時に更新する。
+`docs/todo/300_ios_extension_bundle_version_mismatch.md` を参照。
 
-## 3. Widget Extension の UI に対する回帰テストがない
+---
 
-`WidgetModelsTests` はモデル・表記・レイアウト件数のみを検証しており、SwiftUI View の
-スナップショットテストは無い。取消報での抑止や未入電バッジの収まりは Xcode Preview で
-目視確認する運用になっている（`docs/knowledge/20260717_home_widget_worktree_validation.md`）。
+## 解決済み
 
-## 4. Android のホーム画面ウィジェットは未実装
-
-`app/android/app/src/main/res/values/` にテンプレート由来の AppWidget スタイル定義だけが
-残っており、`AppWidgetProvider` / Glance の実装は無い。実装しないなら未使用の
-`Widget.Android.AppWidget.*` / `Theme.Android.AppWidgetContainer` / `AppWidgetAttrs` /
-`widget_margin` を削除して誤解を防ぐ。
+- **Widget Extension の deployment target が iOS 26.0** で、iOS 17.6〜25 の端末では
+  ウィジェットも Live Activity も利用できなかった → 17.6 へ引き下げ。
+  ビルド検証が残っているため `docs/todo/920_verify_widget_extension_deployment_target.md` を参照。
+- **API ベース URL のプロセス内キャッシュ** → ベース URL をキーにしたキャッシュへ変更。
+- **`WidgetRegionResolver` が `region` / `station` を解釈しない** → `region` を対応、
+  `station` は対応 API が無いため明示的に非対応とし、テストで固定。

@@ -76,6 +76,10 @@
 		D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
+		EQ000000000000000000006E /* EewDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000005 /* EewDisplay.swift */; };
+		EQ000000000000000000006F /* EewDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000005 /* EewDisplay.swift */; };
+		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
 		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
 		EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
 		EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000002 /* WidgetErrorMessage.swift */; };
@@ -214,6 +218,9 @@
 		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
 		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000001 /* LiveActivityDate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDate.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000005 /* EewDisplay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplay.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000002 /* WidgetErrorMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessage.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000003 /* LiveActivityDateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDateTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessageTests.swift; sourceTree = "<group>"; };
@@ -344,6 +351,8 @@
 				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
 				EQ0000000000000000000003 /* LiveActivityDateTests.swift */,
 				EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */,
+				EQ0000000000000000000006 /* EewDisplayTests.swift */,
+				EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -463,6 +472,7 @@
 				E11222222222222222222222 /* EarthquakeDetailURL.swift */,
 				EQ0000000000000000000001 /* LiveActivityDate.swift */,
 				EQ0000000000000000000002 /* WidgetErrorMessage.swift */,
+				EQ0000000000000000000005 /* EewDisplay.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -817,6 +827,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */,
+				EQ000000000000000000006F /* EewDisplay.swift in Sources */,
+				EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */,
 				EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000068 /* WidgetErrorMessage.swift in Sources */,
 				EQ000000000000000000006A /* LiveActivityDateTests.swift in Sources */,
@@ -838,6 +851,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ000000000000000000006E /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */,
 				2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */,
@@ -1342,7 +1356,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1394,7 +1408,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1443,7 +1457,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

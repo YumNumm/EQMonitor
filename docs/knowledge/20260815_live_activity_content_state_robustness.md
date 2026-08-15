@@ -76,11 +76,55 @@ backend は `null` を送る仕様だが、値が残って届いた場合でも�
 ロック画面の Live Activity は `.white` 固定の前景色だと明るい背景で不可視になる。
 ヘッダーのように背景色を自前で塗っている領域以外では `.primary` ベースの色を使う。
 
-## 7. 未知の enum 値で Dynamic Island が空にならないようにする
+## 7. Dynamic Island の leading / trailing に独自の余白を足さない
+
+展開時の `.leading` / `.trailing` は TrueDepth カメラ脇の細い L 字領域で、
+`.center` はカメラの下、`.bottom` はさらにその下に置かれる。
+leading / trailing に `padding` を足すとその分だけ内容が切り取られる。
+
+```swift
+// ❌ 悪い例: 領域側に余白を足して内容が切れる
+DynamicIslandExpandedRegion(.leading) {
+    VStack { ... }.padding(.leading, 4)
+}
+
+// ✅ 良い例: 余白は足さず、収まらない場合はカメラ下へ回り込ませる
+DynamicIslandExpandedRegion(.leading) {
+    VStack { ... }
+        .dynamicIsland(verticalPlacement: .belowIfTooWide)
+}
+```
+
+細い領域では Text を複数に割らないこと。`Text("最終 ") + Text("第") + Text("32") +
+Text("報")` のように分けると折り返し・切り取りが起きる。1 つの Text にまとめて
+`lineLimit(1)` + `minimumScaleFactor` で縮小させる。
+
+## 8. 未知の enum 値で Dynamic Island が空にならないようにする
 
 `ShakeDetectionLevel(rawValue:)` のように文字列から enum へ変換する箇所は、
 backend が値を追加すると nil になる。`compactLeading` / `minimal` を
 `if let` だけで組むと Dynamic Island が真っ白になるため、必ずフォールバック表示を置く。
+
+## 9. App Extension の deployment target を本体アプリより上げない
+
+App Extension は自身の `MinimumOSVersion` より古い OS では読み込まれない。
+Widget Extension の `IPHONEOS_DEPLOYMENT_TARGET` を上げると、その OS 未満の端末では
+**ホーム画面ウィジェットも Live Activity も丸ごと消える**（ギャラリーに出ず、
+push-to-start も着弾しない）。新しい OS 専用 API を使いたい場合は、
+ターゲットの設定を上げるのではなく型へ `@available` を付ける。
+
+```swift
+// ✅ ControlWidget は iOS 18、SnippetIntent は iOS 26。型側で明示する
+@available(iOS 18.0, *)
+struct OpenEarthquakeHistoryControl: ControlWidget { ... }
+```
+
+未使用のヘルパー 1 つ（`glassEffect` を使う `eqGlass`）が拡張全体を iOS 26 に
+固定していた実例がある。デッドコードでも deployment target を引き上げる圧力になる。
+
+なお PR CI（`pr-flutter-check.yaml`）は iOS をビルドしない。`xcodebuild archive` が
+走るのは develop への push 時だけなので、`app/ios/` のビルド設定や availability を
+触ったら手元で必ずビルドすること。
 
 ## 検証方法
 

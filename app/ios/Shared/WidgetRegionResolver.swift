@@ -29,10 +29,40 @@ struct ResolvedWidgetRegion: Equatable {
     let compactTitle: String
 }
 
-enum WidgetRegionResolver {
-    private static let suiteName = "group.net.yumnumm.eqmonitor"
+/// App Group から読み出したウィジェット表示範囲の設定値。
+///
+/// `UserDefaults` を直接触ると単体テストから検証できないため、読み出し結果を
+/// この値型に落としてから解決ロジックへ渡す。
+struct WidgetRegionSettings: Equatable {
+    var isPro: Bool
+    /// Flutter の `RegionSearchType` の enum 名（`prefecture` / `region` / `city` / `station`）
+    var searchType: String?
+    var regionCode: String?
+    var regionName: String?
+    var currentLocationRegionCode: String?
+    var currentLocationRegionName: String?
 
-    // App Group キー（Flutter 側と共有。名称厳守）
+    init(
+        isPro: Bool = false,
+        searchType: String? = nil,
+        regionCode: String? = nil,
+        regionName: String? = nil,
+        currentLocationRegionCode: String? = nil,
+        currentLocationRegionName: String? = nil
+    ) {
+        self.isPro = isPro
+        self.searchType = searchType
+        self.regionCode = regionCode
+        self.regionName = regionName
+        self.currentLocationRegionCode = currentLocationRegionCode
+        self.currentLocationRegionName = currentLocationRegionName
+    }
+}
+
+enum WidgetRegionResolver {
+    static let appGroupSuiteName = "group.net.yumnumm.eqmonitor"
+
+    // App Group キー（Flutter 側の AppGroupKeys と共有。名称厳守）
     private enum Key {
         static let isPro = "isPro"
         static let widgetRegionSearchType = "widgetRegionSearchType"
@@ -49,55 +79,85 @@ enum WidgetRegionResolver {
     )
 
     static func resolve(regionType: RegionType) -> ResolvedWidgetRegion {
-        let defaults = UserDefaults(suiteName: suiteName)
+        resolve(
+            regionType: regionType,
+            settings: settings(from: UserDefaults(suiteName: appGroupSuiteName))
+        )
+    }
 
+    static func resolve(
+        regionType: RegionType,
+        settings: WidgetRegionSettings
+    ) -> ResolvedWidgetRegion {
         switch regionType {
         case .nationwide:
             return nationwide
 
         case .currentLocation:
-            guard let code = nonEmptyString(defaults, Key.currentLocationRegionCode) else {
+            guard let code = nonEmpty(settings.currentLocationRegionCode) else {
                 return nationwide
             }
+            // 現在地は端末で変わるため、実際に使っている地域名を出して
+            // どこの履歴を見ているのか分かるようにする。
+            let name = nonEmpty(settings.currentLocationRegionName)
             return ResolvedWidgetRegion(
                 plan: .region(code: code),
-                title: "現在地の地震履歴",
-                compactTitle: "現在地"
+                title: name.map { "現在地(\($0))の地震履歴" } ?? "現在地の地震履歴",
+                compactTitle: name.map(shorten) ?? "現在地"
             )
 
         case .specificRegion:
-            guard defaults?.bool(forKey: Key.isPro) == true,
-                  let code = nonEmptyString(defaults, Key.widgetRegionCode),
-                  let searchType = nonEmptyString(defaults, Key.widgetRegionSearchType),
+            guard settings.isPro,
+                  let code = nonEmpty(settings.regionCode),
+                  let searchType = nonEmpty(settings.searchType),
                   let plan = plan(forSearchType: searchType, code: code)
             else {
                 return nationwide
             }
-            let name = nonEmptyString(defaults, Key.widgetRegionName)
-            let title = name.map { "\($0)の地震履歴" } ?? "地震履歴"
+            let name = nonEmpty(settings.regionName)
             return ResolvedWidgetRegion(
                 plan: plan,
-                title: title,
+                title: name.map { "\($0)の地震履歴" } ?? "地震履歴",
                 compactTitle: name.map(shorten) ?? "地震履歴"
             )
         }
     }
 
-    private static func plan(forSearchType searchType: String, code: String) -> WidgetFetchPlan? {
+    /// Flutter の `RegionSearchType`（`app/lib/feature/earthquake_history/data/model/
+    /// earthquake_history_parameter.dart`）と対応させる。
+    ///
+    /// `station`（観測点）は対応する地震履歴 API が無いため解決できない。
+    /// 任意地域ピッカーに新しい種別を追加するときは、ここも必ず更新すること。
+    static func plan(forSearchType searchType: String, code: String) -> WidgetFetchPlan? {
         switch searchType {
         case "prefecture":
             return .prefecture(code: code)
         case "city":
             return .city(code: code)
+        case "region":
+            return .region(code: code)
+        case "station":
+            return nil
         default:
             return nil
         }
     }
 
-    private static func nonEmptyString(_ defaults: UserDefaults?, _ key: String) -> String? {
-        guard let value = defaults?.string(forKey: key), !value.isEmpty else {
-            return nil
-        }
+    private static func settings(from defaults: UserDefaults?) -> WidgetRegionSettings {
+        WidgetRegionSettings(
+            isPro: defaults?.bool(forKey: Key.isPro) == true,
+            searchType: defaults?.string(forKey: Key.widgetRegionSearchType),
+            regionCode: defaults?.string(forKey: Key.widgetRegionCode),
+            regionName: defaults?.string(forKey: Key.widgetRegionName),
+            currentLocationRegionCode: defaults?
+                .string(forKey: Key.currentLocationRegionCode),
+            currentLocationRegionName: defaults?
+                .string(forKey: Key.currentLocationRegionName)
+        )
+    }
+
+    private static func nonEmpty(_ value: String?) -> String? {
+        guard let value, !value.isEmpty else { return nil }
         return value
     }
 
