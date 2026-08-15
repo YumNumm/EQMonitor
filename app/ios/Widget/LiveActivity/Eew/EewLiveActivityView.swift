@@ -182,9 +182,13 @@ struct EewLockScreenView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 if !state.isCanceledReport,
-                   let intensity = state.location?.forecastIntensityValue,
-                   let regionName = state.location?.regionName {
-                    forecastIntensityView(regionName: regionName, intensity: intensity)
+                   let location = state.location,
+                   let intensity = location.forecastIntensityValue,
+                   !location.regionName.isEmpty {
+                    forecastIntensityView(
+                        regionName: location.regionName,
+                        intensity: intensity
+                    )
                 }
             }
             .padding(.horizontal, standardMargin)
@@ -194,17 +198,16 @@ struct EewLockScreenView: View {
 
     // MARK: - Details (震源地, M, 深さ, 発生時刻)
 
+    @ViewBuilder
     private var detailsView: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if state.isCanceledReport {
-                Text("緊急地震速報は取り消されました")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.75)
-            } else {
-                uncanceledDetailsView
-            }
+        if state.isCanceledReport {
+            Text("緊急地震速報は取り消されました")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.primary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.75)
+        } else {
+            uncanceledDetailsView
         }
     }
 
@@ -443,6 +446,18 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.onePoint, viewKind: .content)
             .previewDisplayName("Lock Screen - 1点検知")
+
+        attributes
+            .previewContext(.canceled, viewKind: .content)
+            .previewDisplayName("Lock Screen - 取消")
+
+        attributes
+            .previewContext(.canceledWithStaleValues, viewKind: .content)
+            .previewDisplayName("Lock Screen - 取消(値が残存)")
+
+        attributes
+            .previewContext(.canceledWithStaleValues, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 取消(値が残存)")
 
         // Dynamic Island - Compact
         attributes

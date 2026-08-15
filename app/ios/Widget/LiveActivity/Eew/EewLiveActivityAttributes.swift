@@ -196,6 +196,54 @@ extension EewContentState {
         )
     )
 
+    static let canceled = EewContentState(
+        eventId: "20240106123456",
+        type: "eew",
+        hypocenterName: nil,
+        magnitude: nil,
+        depth: nil,
+        time: nil,
+        isOriginTime: false,
+        maxIntensity: nil,
+        serialNo: 2,
+        isFinal: true,
+        isWarning: false,
+        isCanceled: true,
+        headline: "地震発生",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: nil
+    )
+
+    /// 取消報だが backend が震源・予想震度・到達予想を残したまま送ってきたケース。
+    /// 取消なのに「最大震度6強」「到達まで」が出ないことを確認するためのプレビュー。
+    static let canceledWithStaleValues = EewContentState(
+        eventId: "20240106123456",
+        type: "eew",
+        hypocenterName: "石川県能登地方",
+        magnitude: 7.6,
+        depth: 10,
+        time: "2024-01-06T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: "6+",
+        serialNo: 2,
+        isFinal: true,
+        isWarning: true,
+        isCanceled: true,
+        headline: "石川県で地震 北陸で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: LocationInfo(
+            regionName: "東京都23区",
+            forecastIntensity: "5-",
+            forecastLpgmIntensity: "2",
+            arrivalTime: "2024-01-06T16:12:30+09:00",
+            intensity: nil
+        )
+    )
+
     static let onePoint = EewContentState(
         eventId: "20240105123456",
         type: "eew",
