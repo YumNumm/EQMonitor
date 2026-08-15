@@ -157,11 +157,12 @@ struct EewLockScreenView: View {
         VStack(spacing: 0) {
             HeaderContainer(
                 isWarning: state.isWarning ?? false,
-                isCanceled: state.isCanceled == true,
+                isCanceled: state.isCanceledReport,
                 headline: state.headline,
                 serialNo: state.serialNo,
                 isFinal: state.isFinal ?? false,
-                arrivalDate: state.location?.arrivalDate
+                // 取消報では到達予想は無効。カウントダウンを出すと誤情報になる。
+                arrivalDate: state.isCanceledReport ? nil : state.location?.arrivalDate
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
@@ -169,8 +170,8 @@ struct EewLockScreenView: View {
 
             // メインコンテンツ
             HStack(alignment: .bottom, spacing: 10) {
-                // 左側: 最大震度（正方形）
-                if let intensity = state.intensityValue {
+                // 左側: 最大震度（正方形）。取消報では予想震度自体が無効
+                if !state.isCanceledReport, let intensity = state.intensityValue {
                     VStack(spacing: 2) {
                         Text("最大震度")
                             .font(.system(size: 12, weight: .semibold))
@@ -185,8 +186,10 @@ struct EewLockScreenView: View {
                 detailsView
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                if let location = state.location {
-                    arrivalView(location: location)
+                if !state.isCanceledReport,
+                   let intensity = state.location?.forecastIntensityValue,
+                   let regionName = state.location?.regionName {
+                    forecastIntensityView(regionName: regionName, intensity: intensity)
                 }
             }
             .padding(.horizontal, standardMargin)
@@ -194,32 +197,25 @@ struct EewLockScreenView: View {
         }
     }
 
-    // MARK: - Date Formatter
-
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd"
-        formatter.locale = Locale(identifier: "ja_JP")
-        return formatter.string(from: date)
-    }
-
-    private func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        formatter.locale = Locale(identifier: "ja_JP")
-        return formatter.string(from: date)
-    }
-
     // MARK: - Details (震源地, M, 深さ, 発生時刻)
 
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if state.isCanceled == true {
+            if state.isCanceledReport {
                 Text("緊急地震速報は取り消されました")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.primary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.75)
+            } else {
+                uncanceledDetailsView
             }
+        }
+    }
 
+    /// 取消報以外で表示する震源・規模・時刻。取消報ではこれらの値がすべて無効なため出さない。
+    private var uncanceledDetailsView: some View {
+        VStack(alignment: .leading, spacing: 4) {
             if let hypocenterName = state.hypocenterName {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(
@@ -270,7 +266,7 @@ struct EewLockScreenView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(state.timeLabel)
                         .eewLabelStyle()
-                    Text(formatDate(date))
+                    Text(JSTDateFormat.monthDay(date))
                         .font(
                             .system(
                                 size: 12,
@@ -280,7 +276,7 @@ struct EewLockScreenView: View {
                         )
                         .foregroundColor(.primary)
                         .tracking(-1)
-                    Text(formatTime(date))
+                    Text(JSTDateFormat.timeWithSeconds(date))
                         .font(
                             .system(
                                 size: 14,
@@ -317,29 +313,25 @@ struct EewLockScreenView: View {
         }
     }
 
-    // MARK: - Arrival Info
+    // MARK: - 現在地の予想震度
 
-    private func arrivalView(location: LocationInfo) -> some View {
-        VStack(alignment: .trailing, spacing: 4) {
-            // 現在地予想震度（地名と結合）
-            if let intensity = location.forecastIntensityValue {
-                VStack(spacing: 2) {
-                    // 地名の予想震度（アイコン付き）
-                    HStack(spacing: 2) {
-                        Image(systemName: "location.fill")
-                            .font(.system(size: 9, weight: .semibold))
-                            .foregroundColor(eewSecondaryTextColor)
-                            .symbolEffect(.pulse)
-                        Text("\(location.regionName)")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(.primary)
-                    }
-                    SquareIntensityBadge(intensity: intensity, size: .normal)
-                }
+    private func forecastIntensityView(
+        regionName: String,
+        intensity: IntensityValue
+    ) -> some View {
+        VStack(spacing: 2) {
+            HStack(spacing: 2) {
+                Image(systemName: "location.fill")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundColor(eewSecondaryTextColor)
+                    .symbolEffect(.pulse)
+                Text(regionName)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
-
-            // 上揃えにするためのSpacer
-            Spacer(minLength: 0)
+            SquareIntensityBadge(intensity: intensity, size: .normal)
         }
     }
 }
@@ -423,29 +415,6 @@ struct SquareIntensityBadge: View {
                 style: .continuous
             )
         )
-    }
-}
-
-// MARK: - Arrival Countdown View
-
-@available(iOS 16.1, *)
-struct ArrivalCountdownView: View {
-    let arrivalDate: Date
-
-    var body: some View {
-
-        VStack(alignment: .trailing, spacing: 0) {
-            Text("到達まで")
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundColor(eewSecondaryTextColor)
-            Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                .font(.system(size: 16, weight: .bold, design: .monospaced))
-                .foregroundColor(.primary)
-                .multilineTextAlignment(.trailing)
-                .contentTransition(.numericText(countsDown: true))
-        }
-        .frame(alignment: .trailing)
-
     }
 }
 

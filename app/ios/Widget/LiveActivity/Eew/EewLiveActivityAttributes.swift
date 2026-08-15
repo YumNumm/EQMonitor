@@ -15,8 +15,10 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct EewContentState: Codable, Hashable {
     let eventId: String
-    /// イベント種別（backendは常に "eew" を送る）
-    let type: String
+    /// イベント種別（backend は "eew" を送る）。
+    /// UI では使わないため optional。必須にすると backend が欠落させた瞬間に
+    /// content-state 全体のデコードが失敗し Live Activity が表示されなくなる。
+    let type: String?
     let hypocenterName: String?
     let magnitude: Double?
     let depth: Double?
@@ -39,8 +41,7 @@ struct EewContentState: Codable, Hashable {
     }
 
     var timeDate: Date? {
-        guard let time = time else { return nil }
-        return ISO8601DateFormatter().date(from: time)
+        LiveActivityDate.parse(time)
     }
 
     var timeLabel: String {
@@ -49,8 +50,23 @@ struct EewContentState: Codable, Hashable {
         }
         return (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
-    
-    
+
+    /// 取消報。震源・規模・震度・到達予想はすべて無効な値として扱い、表示しない。
+    var isCanceledReport: Bool {
+        isCanceled == true
+    }
+
+    /// Dynamic Island の限られた面積に出す震度。
+    /// 現在地の予想震度を優先し、無ければ全国の最大震度にフォールバックする。
+    var displayIntensity: IntensityValue? {
+        guard !isCanceledReport else { return nil }
+        return location?.forecastIntensityValue ?? intensityValue
+    }
+
+    /// [displayIntensity] がどちらの震度かを示すラベル
+    var displayIntensityLabel: String {
+        location?.forecastIntensityValue != nil ? "予想震度" : "最大震度"
+    }
 }
 
 extension EewLiveActivityAttributes {
