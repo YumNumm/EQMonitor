@@ -24,8 +24,8 @@ class PermissionState {
         ? PermissionItemDecision.granted
         : PermissionItemDecision.notRequested;
     final foregroundLocationDecision = switch (location) {
-      LocationPermission.always ||
-      LocationPermission.whileInUse => PermissionItemDecision.granted,
+      LocationPermission.always || LocationPermission.whileInUse =>
+        PermissionItemDecision.granted,
       _ => PermissionItemDecision.notRequested,
     };
     final backgroundLocationDecision = location == LocationPermission.always

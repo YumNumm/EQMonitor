@@ -14,8 +14,9 @@ class OnboardingPermissionFlow {
   Future<void> requestNotification(WidgetRef ref, BuildContext context) async {
     final isGranted = await PermissionNotifier.requestNotificationMutation.run(
       ref,
-      (transaction) async =>
-          transaction.get(permissionProvider.notifier).requestNotification(),
+      (transaction) async => transaction
+          .get(permissionProvider.notifier)
+          .requestNotification(),
     );
     if (!context.mounted || isGranted) {
       return;
@@ -24,11 +25,13 @@ class OnboardingPermissionFlow {
   }
 
   Future<void> requestCriticalAlert(WidgetRef ref, BuildContext context) async {
-    final isGranted = await PermissionNotifier.requestCriticalAlertMutation.run(
-      ref,
-      (transaction) async =>
-          transaction.get(permissionProvider.notifier).requestCriticalAlert(),
-    );
+    final isGranted =
+        await PermissionNotifier.requestCriticalAlertMutation.run(
+          ref,
+          (transaction) async => transaction
+              .get(permissionProvider.notifier)
+              .requestCriticalAlert(),
+        );
     if (!context.mounted || isGranted) {
       return;
     }
@@ -39,8 +42,8 @@ class OnboardingPermissionFlow {
     WidgetRef ref,
     BuildContext context,
   ) async {
-    final isGranted = await PermissionNotifier.requestForegroundLocationMutation
-        .run(
+    final isGranted =
+        await PermissionNotifier.requestForegroundLocationMutation.run(
           ref,
           (transaction) async => transaction
               .get(permissionProvider.notifier)
@@ -56,8 +59,8 @@ class OnboardingPermissionFlow {
     WidgetRef ref,
     BuildContext context,
   ) async {
-    final isGranted = await PermissionNotifier.requestBackgroundLocationMutation
-        .run(
+    final isGranted =
+        await PermissionNotifier.requestBackgroundLocationMutation.run(
           ref,
           (transaction) async => transaction
               .get(permissionProvider.notifier)
