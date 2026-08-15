@@ -25,50 +25,52 @@ enum _AreaDetailType {
   final String label;
 }
 
-Future<void> showPrefectureDetailModal(
-  BuildContext context, {
-  required String prefectureCode,
-  required String prefectureName,
-  HighestIntensityEntry? summary,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  clipBehavior: Clip.antiAlias,
-  builder: (context) => _AreaDetailModal(
-    areaType: _AreaDetailType.prefecture,
-    areaName: prefectureName,
-    parentAreaName: null,
-    parameter: EarthquakeHistoryParameter.prefecture(
-      prefectureCode: prefectureCode,
-      sortBy: EarthquakeSortBy.eventId,
-      sortOrder: SortOrder.desc,
+class AreaDetailModalAction {
+  Future<void> showPrefecture(
+    BuildContext context, {
+    required String prefectureCode,
+    required String prefectureName,
+    HighestIntensityEntry? summary,
+  }) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    clipBehavior: Clip.antiAlias,
+    builder: (context) => _AreaDetailModal(
+      areaType: _AreaDetailType.prefecture,
+      areaName: prefectureName,
+      parentAreaName: null,
+      parameter: EarthquakeHistoryParameter.prefecture(
+        prefectureCode: prefectureCode,
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      ),
+      summary: summary,
     ),
-    summary: summary,
-  ),
-);
+  );
 
-Future<void> showCityDetailModal(
-  BuildContext context, {
-  required String cityCode,
-  required String cityName,
-  required String regionName,
-  HighestIntensityEntry? summary,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  clipBehavior: Clip.antiAlias,
-  builder: (context) => _AreaDetailModal(
-    areaType: _AreaDetailType.city,
-    areaName: cityName,
-    parentAreaName: regionName,
-    parameter: EarthquakeHistoryParameter.city(
-      cityCode: cityCode,
-      sortBy: EarthquakeSortBy.eventId,
-      sortOrder: SortOrder.desc,
+  Future<void> showCity(
+    BuildContext context, {
+    required String cityCode,
+    required String cityName,
+    required String regionName,
+    HighestIntensityEntry? summary,
+  }) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    clipBehavior: Clip.antiAlias,
+    builder: (context) => _AreaDetailModal(
+      areaType: _AreaDetailType.city,
+      areaName: cityName,
+      parentAreaName: regionName,
+      parameter: EarthquakeHistoryParameter.city(
+        cityCode: cityCode,
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      ),
+      summary: summary,
     ),
-    summary: summary,
-  ),
-);
+  );
+}
 
 class _AreaDetailModal extends ConsumerWidget {
   const _AreaDetailModal({
@@ -119,9 +121,8 @@ class _AreaDetailModal extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
                   '観測した地震',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -213,7 +214,9 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
                         activeCursor.value = nextToken;
                         try {
                           await ref
-                              .read(earthquakeHistoryProvider(parameter).notifier)
+                              .read(
+                                earthquakeHistoryProvider(parameter).notifier,
+                              )
                               .fetchNextData();
                         } finally {
                           if (activeCursor.value == nextToken) {

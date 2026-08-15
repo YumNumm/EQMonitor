@@ -1338,10 +1338,10 @@ class _SectionCard extends StatelessWidget {
                           title,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        if (subtitle != null) ...[
+                        if (subtitle case final subtitle?) ...[
                           const SizedBox(height: 4),
                           Text(
-                            subtitle!,
+                            subtitle,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: colorTheme.onSurfaceVariant),
                           ),

@@ -4,28 +4,28 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 
-Uri? liveMonitorEstimatedIntensityUri(String? fullUrl) {
-  if (fullUrl == null) {
-    return null;
-  }
-  final uri = Uri.tryParse(fullUrl);
-  if (uri == null || !uri.isAbsolute || !uri.hasAuthority) {
-    return null;
-  }
-  return uri;
-}
-
-bool liveMonitorEstimatedIntensityUrlMatchesIdentifier({
-  required String fullUrl,
-  required String identifier,
-}) {
-  final uri = liveMonitorEstimatedIntensityUri(fullUrl);
-  return identifier.isNotEmpty &&
-      uri != null &&
-      uri.pathSegments.join('/') == identifier;
-}
-
 class LiveMonitorEventDetector {
+  static Uri? estimatedIntensityUri(String? fullUrl) {
+    if (fullUrl == null) {
+      return null;
+    }
+    final uri = Uri.tryParse(fullUrl);
+    if (uri == null || !uri.isAbsolute || !uri.hasAuthority) {
+      return null;
+    }
+    return uri;
+  }
+
+  static bool estimatedIntensityUrlMatchesIdentifier({
+    required String fullUrl,
+    required String identifier,
+  }) {
+    final uri = estimatedIntensityUri(fullUrl);
+    return identifier.isNotEmpty &&
+        uri != null &&
+        uri.pathSegments.join('/') == identifier;
+  }
+
   final Map<String, int> _eewSerials = {};
   final Map<String, int> _shakeSerials = {};
   final Set<(String, EarthquakeTelegramType, DateTime)> _telegrams = {};
@@ -123,7 +123,7 @@ class LiveMonitorEventDetector {
     final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
     _estimatedUrls.putIfAbsent(
       earthquake.eventId,
-      () => liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+      () => estimatedIntensityUri(estimatedIntensityTileUrl) == null
           ? null
           : estimatedIntensityTileUrl,
     );
@@ -168,8 +168,7 @@ class LiveMonitorEventDetector {
     }
 
     final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
-    final nextUrl =
-        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+    final nextUrl = estimatedIntensityUri(estimatedIntensityTileUrl) == null
         ? null
         : estimatedIntensityTileUrl;
     final previousUrl = _estimatedUrls[earthquake.eventId];
@@ -200,8 +199,7 @@ class LiveMonitorEventDetector {
     required Earthquake earthquake,
   }) {
     final estimatedIntensityTileUrl = earthquake.estimatedIntensityTileUrl;
-    final nextUrl =
-        liveMonitorEstimatedIntensityUri(estimatedIntensityTileUrl) == null
+    final nextUrl = estimatedIntensityUri(estimatedIntensityTileUrl) == null
         ? null
         : estimatedIntensityTileUrl;
     final previousUrl = _estimatedUrls[eventId];

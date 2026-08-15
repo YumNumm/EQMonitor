@@ -137,7 +137,7 @@ class _MapContent extends HookConsumerWidget {
                   mapController.value = controller;
                   isMapCreated.value = true;
                 },
-                options: calculateJapanViewMapOptions(
+                options: const MapZoomCalculator().japanViewMapOptions(
                   context: context,
                   styleString: styleString,
                 ),

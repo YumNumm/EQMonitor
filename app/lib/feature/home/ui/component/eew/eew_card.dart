@@ -114,7 +114,7 @@ class EewCard extends ConsumerWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (index != null) _BackgroundIndexText(index: index!),
+        if (index case final index?) _BackgroundIndexText(index: index),
         _EewMainCard(
           eew: eew,
           isWarning: isWarning,
@@ -188,12 +188,13 @@ class _EewMainCard extends StatelessWidget {
         ? _warningHeaderColor
         : _forecastHeaderColor;
 
+    final regionDisplayName = this.regionDisplayName;
     final showLocalForecast =
         (localForecastIntensity != null ||
             secondsUntilArrival != null ||
             showArrived) &&
         regionDisplayName != null &&
-        regionDisplayName!.isNotEmpty &&
+        regionDisplayName.isNotEmpty &&
         localForecastIntensity != null;
 
     return Card(
@@ -249,7 +250,7 @@ class _EewMainCard extends StatelessWidget {
                       if (showLocalForecast)
                         _EewLocalForecastSection(
                           intensity: localForecastIntensity,
-                          regionDisplayName: regionDisplayName!,
+                          regionDisplayName: regionDisplayName,
                         ),
                     ],
                   ),
@@ -553,9 +554,9 @@ class _EewLocalForecastSection extends StatelessWidget {
             ),
           ],
         ),
-        if (intensity != null) ...[
+        if (intensity case final intensity?) ...[
           const SizedBox(height: 2),
-          JmaIntensityIcon(intensity: intensity!, type: .filled),
+          JmaIntensityIcon(intensity: intensity, type: .filled),
         ],
       ],
     );

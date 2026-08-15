@@ -80,10 +80,10 @@ class HomeScopeSelector extends StatelessWidget {
               ],
             ),
           ),
-          if (locationName != null)
+          if (locationName case final locationName?)
             Expanded(
               child: Text(
-                locationName!,
+                locationName,
                 style: typography.bodyMedium.copyWith(
                   color: designSystem.colorTheme.onSurfaceVariant,
                 ),

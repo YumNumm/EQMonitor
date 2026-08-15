@@ -15,6 +15,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
   final List<EewTelegramItem> eews;
 
   static const _layerId = 'eew-warning-regions-fill';
+  static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,14 +54,14 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
               id: _layerId,
               sourceId: 'eqmonitor_map',
               sourceLayerId: 'areaForecastLocalEew',
-              filter: buildEewAreaCodeFilter(codes),
+              filter: _areaFilterBuilder.build(codes),
               paint: const {'fill-color': '#FF0000', 'fill-opacity': 0.25},
             ),
           );
           isInitialized.value = true;
           await styleController.updateFilter(
             id: _layerId,
-            filter: buildEewAreaCodeFilter(latestCodes.value),
+            filter: _areaFilterBuilder.build(latestCodes.value),
           );
         }),
       );
@@ -83,7 +84,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
         enqueue(
           () => styleController.updateFilter(
             id: _layerId,
-            filter: buildEewAreaCodeFilter(codes),
+            filter: _areaFilterBuilder.build(codes),
           ),
         ),
       );

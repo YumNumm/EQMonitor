@@ -14,18 +14,17 @@ class SeismicityDepthProjection {
     required List<SeismicityEvent> events,
     required SeismicityDepthProjectionAxis axis,
   }) {
-    return events
-        .where((e) => e.depth != null)
-        .map(
-          (e) => SeismicityDepthPoint(
+    return [
+      for (final e in events)
+        if (e.depth case final depth?)
+          SeismicityDepthPoint(
             axisValue: axis == SeismicityDepthProjectionAxis.latitude
                 ? e.latitude
                 : e.longitude,
-            depth: e.depth!,
+            depth: depth,
             magnitude: e.magnitude,
             eventId: e.eventId,
           ),
-        )
-        .toList();
+    ];
   }
 }

@@ -77,9 +77,11 @@ class _PagingBody extends StatelessWidget {
               ).push<void>(context),
             ),
             initialLoadingWidget: FeedItemListTile(
-              item: _loadingDummyItem('1'),
+              item: FeedLoadingDummyItem.create('1'),
             ),
-            appendLoadingWidget: FeedItemListTile(item: _loadingDummyItem('2')),
+            appendLoadingWidget: FeedItemListTile(
+              item: FeedLoadingDummyItem.create('2'),
+            ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
               onReload: () async => dataSource.refresh(),
@@ -108,14 +110,18 @@ class _PagingBody extends StatelessWidget {
   }
 }
 
-FeedItem _loadingDummyItem(String id) => FeedItem(
-  id: id,
-  feedType: FeedType.appUpdate,
-  priority: FeedPriority.normal,
-  isImportant: false,
-  title: 'アップデート',
-  summary: 'アップデートがあります',
-  data: const FeedItemData.appUpdate(),
-  publishedAt: DateTime.now(),
-  expiresAt: DateTime.now().add(const Duration(days: 30)),
-);
+class FeedLoadingDummyItem {
+  const FeedLoadingDummyItem._();
+
+  static FeedItem create(String id) => FeedItem(
+    id: id,
+    feedType: FeedType.appUpdate,
+    priority: FeedPriority.normal,
+    isImportant: false,
+    title: 'アップデート',
+    summary: 'アップデートがあります',
+    data: const FeedItemData.appUpdate(),
+    publishedAt: DateTime.now(),
+    expiresAt: DateTime.now().add(const Duration(days: 30)),
+  );
+}

@@ -97,15 +97,19 @@ class _IntensityRow extends StatelessWidget {
           const SizedBox(width: 8),
           // 地域名リスト
           Expanded(
-            child: prefectureMap != null
-                ? _buildPrefectureGrouped(theme)
-                : Wrap(
-                    spacing: 4,
-                    runSpacing: 2,
-                    children: [
-                      for (final entry in entries) _RegionChip(entry: entry),
-                    ],
-                  ),
+            child: switch (prefectureMap) {
+              final prefectureMap? => _buildPrefectureGrouped(
+                theme,
+                prefectureMap,
+              ),
+              null => Wrap(
+                spacing: 4,
+                runSpacing: 2,
+                children: [
+                  for (final entry in entries) _RegionChip(entry: entry),
+                ],
+              ),
+            },
           ),
         ],
       ),
@@ -113,7 +117,10 @@ class _IntensityRow extends StatelessWidget {
   }
 
   /// 都道府県でグループ化して表示
-  Widget _buildPrefectureGrouped(ThemeData theme) {
+  Widget _buildPrefectureGrouped(
+    ThemeData theme,
+    Map<String, String> prefectureMap,
+  ) {
     final byPrefecture = <String, List<IntensityRegionDiffEntry>>{};
     for (final entry in entries) {
       final prefCode = entry.code.length >= 2 ? entry.code.substring(0, 2) : '';
@@ -121,21 +128,21 @@ class _IntensityRow extends StatelessWidget {
     }
 
     // 都道府県コード順にソート
-    final sortedPrefCodes = byPrefecture.keys.toList()..sort();
+    final sortedPrefEntries = byPrefecture.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
 
     return Wrap(
       spacing: 4,
       runSpacing: 2,
       children: [
-        for (final prefCode in sortedPrefCodes) ...[
+        for (final prefEntry in sortedPrefEntries) ...[
           Text(
-            prefectureMap![prefCode] ?? prefCode,
+            prefectureMap[prefEntry.key] ?? prefEntry.key,
             style: theme.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          for (final entry in byPrefecture[prefCode]!)
-            _RegionChip(entry: entry),
+          for (final entry in prefEntry.value) _RegionChip(entry: entry),
         ],
       ],
     );

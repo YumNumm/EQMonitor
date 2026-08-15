@@ -159,17 +159,16 @@ ProviderContainer _container({
 }
 
 void main() {
-  group('resolveHomeMapCameraUpdateAction', () {
+  group('HomeMapCameraUpdateActionResolver.resolve', () {
+    const resolver = HomeMapCameraUpdateActionResolver();
+
     test('realtime targetがありhomeならfitToRealtime', () {
-      final action = resolveHomeMapCameraUpdateAction(
-        hasRealtimeTargets: true,
-        isAtHome: true,
-      );
+      final action = resolver.resolve(hasRealtimeTargets: true, isAtHome: true);
       expect(action, HomeMapCameraUpdateAction.fitToRealtime);
     });
 
     test('realtime targetがなくhome外ならreturnToHome', () {
-      final action = resolveHomeMapCameraUpdateAction(
+      final action = resolver.resolve(
         hasRealtimeTargets: false,
         isAtHome: false,
       );
@@ -177,7 +176,7 @@ void main() {
     });
 
     test('realtime targetがなくhomeならnone', () {
-      final action = resolveHomeMapCameraUpdateAction(
+      final action = resolver.resolve(
         hasRealtimeTargets: false,
         isAtHome: true,
       );

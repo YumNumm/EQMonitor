@@ -1,12 +1,14 @@
+import 'package:eqmonitor/feature/eew/data/logic/eew_warning_overlay_render_policy.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart';
-import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const policy = EewWarningOverlayRenderPolicy();
+
   test('LiveMonitor active中だけoverlay描画を抑止する', () {
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
@@ -15,7 +17,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
@@ -27,7 +29,7 @@ void main() {
 
   test('LiveMonitor activeで最小化されたoverlayも描画しない', () {
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.minimized,
         hasDisplayModel: true,
@@ -39,7 +41,7 @@ void main() {
 
   test('LiveMonitor active中はfullscreen EEWの戻る操作を奪わない', () {
     expect(
-      shouldInterceptEewWarningOverlayBack(
+      policy.shouldInterceptBack(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
@@ -48,7 +50,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldInterceptEewWarningOverlayBack(
+      policy.shouldInterceptBack(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
@@ -60,7 +62,7 @@ void main() {
 
   test('既存のlifecycleと表示modelの描画条件を保つ', () {
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.paused,
         mode: EewWarningOverlayMode.fullscreen,
         hasDisplayModel: true,
@@ -69,7 +71,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.hidden,
         hasDisplayModel: true,
@@ -78,7 +80,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldRenderEewWarningOverlay(
+      policy.shouldRender(
         lifecycle: AppLifecycleState.resumed,
         mode: EewWarningOverlayMode.minimized,
         hasDisplayModel: false,

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer_geojson_updater.dart';
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_grid_cell_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
@@ -45,6 +45,8 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
 
   final List<ShakeDetectionEvent> events;
   final HomeShakeDetectionSettings settings;
+
+  static const _geoJsonUpdater = ShakeDetectionLayerGeoJsonUpdater();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -141,8 +143,9 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           if (wasActive.value && isInitialized.value) {
             unawaited(
               enqueue(
-                () => _updateGeoJsonIfChanged(
-                  styleController,
+                () => _geoJsonUpdater.updateIfChanged(
+                  styleController: styleController,
+                  sourceId: ShakeDetectionLayer.sourceId,
                   geoJson: _emptyGeoJson,
                   latestGeoJson: latestGeoJson,
                   initFuture: initFuture,
@@ -192,8 +195,9 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
             gridCellBuilder,
           );
           unawaited(
-            _updateGeoJsonIfChanged(
-              styleController,
+            _geoJsonUpdater.updateIfChanged(
+              styleController: styleController,
+              sourceId: ShakeDetectionLayer.sourceId,
               geoJson: geoJson,
               latestGeoJson: latestGeoJson,
               initFuture: initFuture,
@@ -273,31 +277,3 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
 }
 
 const _emptyGeoJson = '{"type":"FeatureCollection","features":[]}';
-
-Future<void> _updateGeoJsonIfChanged(
-  StyleController styleController, {
-  required String geoJson,
-  required ObjectRef<String?> latestGeoJson,
-  required ObjectRef<Future<void>?> initFuture,
-  required ObjectRef<bool> disposed,
-}) async {
-  // 初期化(source/layer 追加)の完了を待つ。この await 中に破棄処理
-  // (source/layer 削除)が完了する可能性があるため、await 後に必ず
-  // disposed を再チェックしてから styleController を操作する。
-  await initFuture.value;
-  if (disposed.value) {
-    return;
-  }
-  if (latestGeoJson.value == geoJson) {
-    return;
-  }
-  try {
-    await styleController.updateGeoJsonSource(
-      id: ShakeDetectionLayer.sourceId,
-      data: geoJson,
-    );
-    latestGeoJson.value = geoJson;
-  } catch (e, stackTrace) {
-    talker.handle(e, stackTrace);
-  }
-}

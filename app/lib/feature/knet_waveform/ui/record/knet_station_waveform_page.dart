@@ -191,20 +191,20 @@ class _MetricsHeader extends StatelessWidget {
                         label: 'PGA',
                         value: '${result.maxAccelGal.toStringAsFixed(2)} gal',
                       ),
-                      if (analysis != null) ...[
+                      if (analysis case final analysis?) ...[
                         _MetricChip(
                           label: 'PGV',
                           value:
-                              '${_maxOf(analysis!.pgv).toStringAsFixed(2)} cm/s',
+                              '${_maxOf(analysis.pgv).toStringAsFixed(2)} cm/s',
                         ),
                         _MetricChip(
                           label: 'PGD',
                           value:
-                              '${_maxOf(analysis!.pgd).toStringAsFixed(2)} cm',
+                              '${_maxOf(analysis.pgd).toStringAsFixed(2)} cm',
                         ),
                         _MetricChip(
                           label: 'SI',
-                          value: '${analysis!.siValue.toStringAsFixed(2)} cm/s',
+                          value: '${analysis.siValue.toStringAsFixed(2)} cm/s',
                         ),
                       ] else
                         const _MetricChip(label: 'PGV/PGD/SI', value: '計算中…'),

@@ -155,9 +155,9 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final hypocenter = eew.hypocenter;
-    if (hypocenter == null ||
-        hypocenter.latitude == null ||
-        hypocenter.longitude == null) {
+    final latitude = hypocenter?.latitude;
+    final longitude = hypocenter?.longitude;
+    if (hypocenter == null || latitude == null || longitude == null) {
       await _clearLayers(styleController);
       return;
     }
@@ -173,8 +173,8 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     final elapsed = eew.reportTime.difference(originTime).inMilliseconds / 1000;
     final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
-    final lat = hypocenter.latitude!;
-    final lng = hypocenter.longitude!;
+    final lat = latitude;
+    final lng = longitude;
 
     final isWarning = eew.isWarning ?? false;
     final lineColor = isWarning ? '#FF0000' : '#FFA500';
@@ -183,27 +183,25 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     final pWaveFeatures = <Map<String, dynamic>>[];
     final sWaveFeatures = <Map<String, dynamic>>[];
 
-    if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
+    final pDistance = travelTime.pDistance;
+    if (pDistance != null && pDistance > 0) {
       pWaveFeatures.add({
         'type': 'Feature',
         'geometry': {
           'type': 'Polygon',
-          'coordinates': [
-            _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
-          ],
+          'coordinates': [_generateCircleCoordinates(lat, lng, pDistance)],
         },
         'properties': <String, dynamic>{},
       });
     }
 
-    if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
+    final sDistance = travelTime.sDistance;
+    if (sDistance != null && sDistance > 0) {
       sWaveFeatures.add({
         'type': 'Feature',
         'geometry': {
           'type': 'Polygon',
-          'coordinates': [
-            _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
-          ],
+          'coordinates': [_generateCircleCoordinates(lat, lng, sDistance)],
         },
         'properties': {'lineColor': lineColor, 'fillColor': fillColor},
       });

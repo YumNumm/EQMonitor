@@ -13,9 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// shouldShowAdsProvider が false の場合は何も表示しない。
 /// Web・デスクトップでは表示しない。
 class AdBanner extends HookConsumerWidget {
-  const AdBanner({
-    super.key,
-  });
+  const AdBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,42 +63,33 @@ class _BannerAdWidget extends HookConsumerWidget {
 
     const adSize = AdSize.banner;
 
-    useEffect(
-      () {
-        final ad = BannerAd(
-          size: adSize,
-          adUnitId: adUnitIdBanner,
-          listener: BannerAdListener(
-            onAdLoaded: (_) => isLoaded.value = true,
-            onAdFailedToLoad: (ad, error) async {
-              adState.value = null;
-              await ad.dispose();
-            },
-          ),
-          request: const AdRequest(),
-        );
-        unawaited(
-          ad.load(),
-        );
-        adState.value = ad;
-        return ad.dispose;
-      },
-      [],
-    );
+    useEffect(() {
+      final ad = BannerAd(
+        size: adSize,
+        adUnitId: AdUnitId.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (_) => isLoaded.value = true,
+          onAdFailedToLoad: (ad, error) async {
+            adState.value = null;
+            await ad.dispose();
+          },
+        ),
+        request: const AdRequest(),
+      );
+      unawaited(ad.load());
+      adState.value = ad;
+      return ad.dispose;
+    }, []);
 
     final ad = adState.value;
     if (ad == null || !isLoaded.value) {
-      return SizedBox(
-        height: adSize.height.toDouble(),
-      );
+      return SizedBox(height: adSize.height.toDouble());
     }
 
     return SafeArea(
       child: SizedBox(
         height: adSize.height.toDouble(),
-        child: AdWidget(
-          ad: ad,
-        ),
+        child: AdWidget(ad: ad),
       ),
     );
   }

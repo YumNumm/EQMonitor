@@ -168,7 +168,9 @@ class _MapContent extends HookConsumerWidget {
     const mapCamera = EarthquakeHistoryMapCamera();
     final center = mapCamera.initialCenter(earthquake);
     final zoom = mapCamera.initialZoom(earthquake);
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: zoom,
@@ -369,7 +371,10 @@ class _MapContent extends HookConsumerWidget {
 
     if (isCity) {
       final cityNode = _findCityByCode(code);
-      final prefCode = prefectureCodeOfCity(code, prefectures);
+      final prefCode = RegionCodeMapping.prefectureCodeOfCity(
+        code,
+        prefectures,
+      );
       final intensityHistoryRoute = prefCode != null
           ? IntensityHistoryRoute(prefectureCode: prefCode, cityCode: code)
           : null;
@@ -383,7 +388,10 @@ class _MapContent extends HookConsumerWidget {
           );
     } else {
       final region = _findRegionByCode(code);
-      final prefInfo = prefectureOfRegionCode(code, prefectures);
+      final prefInfo = RegionCodeMapping.prefectureOfRegionCode(
+        code,
+        prefectures,
+      );
       final intensityHistoryRoute = prefInfo != null
           ? IntensityHistoryRoute(prefectureCode: prefInfo.code)
           : null;

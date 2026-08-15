@@ -54,7 +54,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
     ref.listen(deviceProvisioningProvider, (_, next) {
       if (next case AsyncError(:final error, :final stackTrace)) {
         unawaited(
-          _showDeviceRegistrationErrorDialog(
+          DeviceRegistrationErrorDialogAction().show(
             context: context,
             ref: ref,
             message: 'デバイスの状態確認に失敗しました',
@@ -73,7 +73,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
           _ => next.error.toString(),
         };
         unawaited(
-          _showDeviceRegistrationErrorDialog(
+          DeviceRegistrationErrorDialogAction().show(
             context: context,
             ref: ref,
             message: errorMessage,
@@ -160,41 +160,44 @@ class _WelcomeStepPage extends HookConsumerWidget {
   }
 }
 
-Future<void> _showDeviceRegistrationErrorDialog({
-  required BuildContext context,
-  required WidgetRef ref,
-  required String message,
-  required Object error,
-  required StackTrace? stackTrace,
-  required VoidCallback onRetry,
-}) async {
-  if (!context.mounted) {
-    return;
+/// デバイス登録・状態確認失敗時のエラーダイアログを表示する。
+class DeviceRegistrationErrorDialogAction {
+  Future<void> show({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String message,
+    required Object error,
+    required StackTrace? stackTrace,
+    required VoidCallback onRetry,
+  }) async {
+    if (!context.mounted) {
+      return;
+    }
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('デバイスの登録に失敗しました'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('閉じる'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              onRetry();
+            },
+            child: const Text('再試行'),
+          ),
+          TextButton(
+            onPressed: () => ref
+                .read(errorDetailsSheetActionProvider)
+                .show(context, error: error, stackTrace: stackTrace),
+            child: const Text('詳細'),
+          ),
+        ],
+      ),
+    );
   }
-  await showDialog<void>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('デバイスの登録に失敗しました'),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('閉じる'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            onRetry();
-          },
-          child: const Text('再試行'),
-        ),
-        TextButton(
-          onPressed: () => ref
-              .read(errorDetailsSheetActionProvider)
-              .show(context, error: error, stackTrace: stackTrace),
-          child: const Text('詳細'),
-        ),
-      ],
-    ),
-  );
 }

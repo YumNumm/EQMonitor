@@ -24,7 +24,7 @@ class LiveMonitorRealtimePane extends HookConsumerWidget {
         (configuration) => configuration.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final homeMapBounds = lngLatBoundsForHomeMapSettings(mapSettings);
+    final homeMapBounds = const HomeMapBoundsResolver().resolve(mapSettings);
     final homeBounds = LiveMonitorGeoBounds(
       minLat: homeMapBounds.latitudeSouth,
       maxLat: homeMapBounds.latitudeNorth,
@@ -33,7 +33,7 @@ class LiveMonitorRealtimePane extends HookConsumerWidget {
     );
     final cardHeight = useState(0.0);
     final systemInsets = MediaQuery.paddingOf(context);
-    final obscuredInsets = liveMonitorMapObscuredInsets(
+    final obscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: 0,

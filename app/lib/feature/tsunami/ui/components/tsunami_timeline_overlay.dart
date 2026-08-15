@@ -262,9 +262,10 @@ class _CollapsedOverlay extends StatelessWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
 
-    final label = selection.selectedIndex != null
-        ? '${selection.selectedIndex! + 1} / ${telegrams.length}'
-        : '最新 (${telegrams.length}件)';
+    final label = switch (selection.selectedIndex) {
+      final selectedIndex? => '${selectedIndex + 1} / ${telegrams.length}',
+      null => '最新 (${telegrams.length}件)',
+    };
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

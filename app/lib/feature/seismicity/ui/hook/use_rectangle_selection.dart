@@ -28,32 +28,42 @@ class RectangleSelectionState {
   static const minimumDragExtent = 4.0;
 }
 
-RectangleSelectionState useRectangleSelection() {
-  final dragStart = useState<Offset?>(null);
-  final dragCurrent = useState<Offset?>(null);
+/// [RectangleSelectionState] を構築するカスタム Hook。
+///
+/// flutter_hooks の `useState` 等は呼び出し元が static メソッドか
+/// トップレベル関数かを区別しないため、クラスの static メソッドとして
+/// 定義しても Hook の登録順序は変わらない
+/// (`docs/knowledge/20260814_flutter_hooks_top_level_function_alternative.md`)。
+class RectangleSelectionHook {
+  const RectangleSelectionHook._();
 
-  return RectangleSelectionState(
-    dragStart: dragStart.value,
-    dragCurrent: dragCurrent.value,
-    startDrag: (offset) {
-      dragStart.value = offset;
-      dragCurrent.value = offset;
-    },
-    updateDrag: (offset) => dragCurrent.value = offset,
-    endDrag: () {
-      final start = dragStart.value;
-      final current = dragCurrent.value;
-      dragStart.value = null;
-      dragCurrent.value = null;
-      if (start == null || current == null) {
-        return null;
-      }
-      final rect = Rect.fromPoints(start, current);
-      if (rect.width.abs() < RectangleSelectionState.minimumDragExtent ||
-          rect.height.abs() < RectangleSelectionState.minimumDragExtent) {
-        return null;
-      }
-      return rect;
-    },
-  );
+  static RectangleSelectionState use() {
+    final dragStart = useState<Offset?>(null);
+    final dragCurrent = useState<Offset?>(null);
+
+    return RectangleSelectionState(
+      dragStart: dragStart.value,
+      dragCurrent: dragCurrent.value,
+      startDrag: (offset) {
+        dragStart.value = offset;
+        dragCurrent.value = offset;
+      },
+      updateDrag: (offset) => dragCurrent.value = offset,
+      endDrag: () {
+        final start = dragStart.value;
+        final current = dragCurrent.value;
+        dragStart.value = null;
+        dragCurrent.value = null;
+        if (start == null || current == null) {
+          return null;
+        }
+        final rect = Rect.fromPoints(start, current);
+        if (rect.width.abs() < RectangleSelectionState.minimumDragExtent ||
+            rect.height.abs() < RectangleSelectionState.minimumDragExtent) {
+          return null;
+        }
+        return rect;
+      },
+    );
+  }
 }

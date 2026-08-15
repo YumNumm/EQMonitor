@@ -154,7 +154,7 @@ class _LiveMonitorMapContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MapLibreMap(
       key: ValueKey((slotId, styleString, mapSettings)),
-      options: homeMapOptionsFromSettings(
+      options: const HomeMapOptionsBuilder().build(
         context: context,
         styleString: styleString,
         map: mapSettings,

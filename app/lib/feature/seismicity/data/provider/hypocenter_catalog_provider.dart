@@ -65,9 +65,7 @@ Future<void> hypocenterArchiveAvailable(
 @riverpod
 class HypocenterAnalysis extends _$HypocenterAnalysis {
   @override
-  Future<List<SeismicityEvent>> build(
-    HypocenterAnalysisRequest request,
-  ) async {
+  Future<List<SeismicityEvent>> build(HypocenterAnalysisRequest request) async {
     if (request.archiveIds.isEmpty) {
       return const [];
     }
@@ -107,16 +105,15 @@ class HypocenterAnalysis extends _$HypocenterAnalysis {
       }
     }
 
-    final result = await loadHypocenterArchives(
+    final result = await HypocenterAnalysisRunner.loadArchives(
       request: request,
       archives: archives,
       apiClient: apiClient,
       cancelToken: cancelToken,
       onProgress: onProgress,
     );
-    if (result case Failure(
-      :final exception,
-    ) when exception.isRevisionChanged) {
+    if (result case Failure(:final exception)
+        when exception.isRevisionChanged) {
       talker.info('[HypocenterAnalysis] revision changed; refresh manifest');
       final manifest = await ref
           .read(hypocenterManifestProvider.notifier)
@@ -141,16 +138,16 @@ class HypocenterAnalysis extends _$HypocenterAnalysis {
           fetchedEvents: 0,
         ),
       );
-      final retry = await loadHypocenterArchives(
+      final retry = await HypocenterAnalysisRunner.loadArchives(
         request: request,
         archives: remapped,
         apiClient: apiClient,
         cancelToken: cancelToken,
         onProgress: onProgress,
       );
-      return unwrapHypocenterAnalysisResult(retry);
+      return HypocenterAnalysisRunner.unwrap(retry);
     }
-    return unwrapHypocenterAnalysisResult(result);
+    return HypocenterAnalysisRunner.unwrap(result);
   }
 }
 
@@ -168,32 +165,37 @@ class HypocenterAnalysisProgressNotifier
   void update(HypocenterAnalysisProgress progress) => state = progress;
 }
 
-Future<Result<List<SeismicityEvent>, HypocenterApiException>>
-loadHypocenterArchives({
-  required HypocenterAnalysisRequest request,
-  required List<HypocenterArchive> archives,
-  required api.ApiClient apiClient,
-  required CancelToken cancelToken,
-  required void Function(HypocenterAnalysisProgress progress) onProgress,
-}) =>
-    HypocenterAnalysisLoader(
-      repository: HypocenterAnalysisRepository(
-        client: apiClient.hypocenters,
-        logger: talker,
-      ),
-    ).load(
-      archives: archives,
-      bounds: request.bounds,
-      cancelToken: cancelToken,
-      onProgress: onProgress,
-    );
+/// [HypocenterAnalysis.build] から呼び出す震源分析取得処理をまとめる。
+class HypocenterAnalysisRunner {
+  const HypocenterAnalysisRunner._();
 
-List<SeismicityEvent> unwrapHypocenterAnalysisResult(
-  Result<List<SeismicityEvent>, HypocenterApiException> result,
-) => switch (result) {
-  Success(:final value) => value,
-  Failure(:final exception, :final stackTrace) => Error.throwWithStackTrace(
-    exception,
-    stackTrace ?? StackTrace.current,
-  ),
-};
+  static Future<Result<List<SeismicityEvent>, HypocenterApiException>>
+  loadArchives({
+    required HypocenterAnalysisRequest request,
+    required List<HypocenterArchive> archives,
+    required api.ApiClient apiClient,
+    required CancelToken cancelToken,
+    required void Function(HypocenterAnalysisProgress progress) onProgress,
+  }) =>
+      HypocenterAnalysisLoader(
+        repository: HypocenterAnalysisRepository(
+          client: apiClient.hypocenters,
+          logger: talker,
+        ),
+      ).load(
+        archives: archives,
+        bounds: request.bounds,
+        cancelToken: cancelToken,
+        onProgress: onProgress,
+      );
+
+  static List<SeismicityEvent> unwrap(
+    Result<List<SeismicityEvent>, HypocenterApiException> result,
+  ) => switch (result) {
+    Success(:final value) => value,
+    Failure(:final exception, :final stackTrace) => Error.throwWithStackTrace(
+      exception,
+      stackTrace ?? StackTrace.current,
+    ),
+  };
+}

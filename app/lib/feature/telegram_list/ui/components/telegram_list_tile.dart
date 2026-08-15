@@ -44,10 +44,10 @@ class TelegramListTile extends StatelessWidget {
             value: dateFormat.format(telegram.pressAt.toLocal()),
           ),
           _InfoRow(label: '発表元', value: telegram.publishingOffice.join(', ')),
-          if (telegram.headline != null) ...[
+          if (telegram.headline case final headline?) ...[
             const SizedBox(height: 4),
             Text(
-              telegram.headline!,
+              headline,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: designSystem.colorTheme.onSurfaceVariant,
                 fontSize: 12,

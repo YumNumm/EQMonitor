@@ -153,9 +153,10 @@ class _ForecastDetails extends StatelessWidget {
     if (forecast != null) {
       final mh = forecast.maxHeight;
       if (mh != null) {
-        if (mh.qualitative != null) {
+        final qualitative = mh.qualitative;
+        if (qualitative != null) {
           parts.add(
-            '予想最大波高: ${switch (mh.qualitative!) {
+            '予想最大波高: ${switch (qualitative) {
               QualitativeHeight.enormous => '巨大',
               QualitativeHeight.high => '高い',
             }}',
@@ -170,17 +171,19 @@ class _ForecastDetails extends StatelessWidget {
 
       final fh = forecast.firstHeight;
       if (fh != null) {
-        if (fh.condition != null) {
+        final condition = fh.condition;
+        final arrivalTime = fh.arrivalTime;
+        if (condition != null) {
           parts.add(
-            '到達予想: ${switch (fh.condition!) {
+            '到達予想: ${switch (condition) {
               FirstHeightCondition.arriving => '第一波到達中',
               FirstHeightCondition.firstWaveConfirmed => '第一波確認',
               FirstHeightCondition.imminent => 'まもなく到達',
             }}',
           );
-        } else if (fh.arrivalTime != null) {
+        } else if (arrivalTime != null) {
           parts.add(
-            '到達予想: ${DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())}頃',
+            '到達予想: ${DateFormat('HH:mm').format(arrivalTime.toLocal())}頃',
           );
         }
       }

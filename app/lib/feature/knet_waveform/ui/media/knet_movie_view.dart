@@ -73,13 +73,10 @@ class _MovieContent extends HookWidget {
     }
 
     // 動画タイプが変わったら再ロード
-    useEffect(
-      () {
-        unawaited(loadVideo(selectedType.value));
-        return null;
-      },
-      [selectedType.value],
-    );
+    useEffect(() {
+      unawaited(loadVideo(selectedType.value));
+      return null;
+    }, [selectedType.value]);
 
     // ページ離脱時にコントローラーを解放
     useEffect(
@@ -109,10 +106,7 @@ class _MovieContent extends HookWidget {
 }
 
 class _MovieTypeSelector extends StatelessWidget {
-  const _MovieTypeSelector({
-    required this.selected,
-    required this.onChanged,
-  });
+  const _MovieTypeSelector({required this.selected, required this.onChanged});
 
   final KnetMovieType selected;
   final ValueChanged<KnetMovieType> onChanged;
@@ -151,8 +145,8 @@ class _VideoArea extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (errorMessage != null) {
-      return _ErrorView(message: errorMessage!, onRetry: onRetry);
+    if (errorMessage case final errorMessage?) {
+      return _ErrorView(message: errorMessage, onRetry: onRetry);
     }
 
     final ctrl = controller;

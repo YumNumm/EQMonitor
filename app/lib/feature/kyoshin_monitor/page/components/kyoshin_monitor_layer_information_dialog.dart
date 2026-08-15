@@ -89,7 +89,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
                   Icon(Icons.open_in_new, size: 12, color: hyperLinkColor),
                   Text(
                     '強震モニタについて - 防災科研',
-                    style: textTheme.bodyMedium!.copyWith(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: hyperLinkColor,
                     ),
                   ),
@@ -123,12 +123,12 @@ class _DataTypeInfo extends StatelessWidget {
         children: [
           Text(
             title,
-            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
             description,
-            style: textTheme.bodyMedium!.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),

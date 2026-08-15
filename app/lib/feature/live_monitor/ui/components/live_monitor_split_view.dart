@@ -14,6 +14,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const splitRatioCalculator = LiveMonitorSplitRatioCalculator();
     final mediaQuery = MediaQuery.of(context);
     final orientation = mediaQuery.orientation;
     final isPortrait = orientation == Orientation.portrait;
@@ -74,7 +75,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
             final measurement = viewportMeasurement.value;
             final measurementIsCurrent =
                 measurement != null &&
-                isLiveMonitorSplitViewportMeasurementCurrent(
+                splitRatioCalculator.isMeasurementCurrent(
                   measuredViewportSize: measurement.viewportSize,
                   currentViewportSize: constraints.biggest,
                 ) &&
@@ -90,11 +91,12 @@ class LiveMonitorSplitView extends HookConsumerWidget {
             Rect? splitDisplayFeatureBounds;
             for (final screenBounds in avoidBounds) {
               final bounds = switch (splitViewGlobalOrigin) {
-                final Offset origin => liveMonitorDisplayFeatureLocalBounds(
-                  screenBounds: screenBounds,
-                  splitViewGlobalOrigin: origin,
-                  splitViewSize: constraints.biggest,
-                ),
+                final Offset origin =>
+                  splitRatioCalculator.displayFeatureLocalBounds(
+                    screenBounds: screenBounds,
+                    splitViewGlobalOrigin: origin,
+                    splitViewSize: constraints.biggest,
+                  ),
                 null => null,
               };
               if (bounds == null) {
@@ -164,7 +166,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
                           final primaryDelta = isPortrait
                               ? details.delta.dy
                               : details.delta.dx;
-                          localRatio.value = updateLiveMonitorSplitRatio(
+                          localRatio.value = splitRatioCalculator.updateRatio(
                             current: localRatio.value,
                             primaryDelta: primaryDelta,
                             availableExtent: availableExtent,

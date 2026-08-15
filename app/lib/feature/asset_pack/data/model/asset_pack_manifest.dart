@@ -92,9 +92,18 @@ class AssetPackManifest {
   /// compatibility gate for everything else, so any other mismatch (bad
   /// `sha256`, unknown `kind` for a known id, missing field) still throws.
   factory AssetPackManifest.fromJson(Map<String, dynamic> json) {
-    final packVersion = _requireString(json, 'pack_version');
-    final schemaVersion = _requireInt(json, 'schema_version');
-    final generatedAt = _requireString(json, 'generated_at');
+    final packVersion = AssetPackManifestJsonValidator.requireString(
+      json,
+      'pack_version',
+    );
+    final schemaVersion = AssetPackManifestJsonValidator.requireInt(
+      json,
+      'schema_version',
+    );
+    final generatedAt = AssetPackManifestJsonValidator.requireString(
+      json,
+      'generated_at',
+    );
     final assetsJson = json['assets'];
     if (assetsJson is! List) {
       throw const FormatException('assets must be a list');
@@ -117,7 +126,10 @@ class AssetPackManifest {
 
     final assets = <AssetPackManifestItem>[];
     for (var i = 0; i < assetsJson.length; i++) {
-      final itemJson = _requireObject(assetsJson[i], 'assets[$i]');
+      final itemJson = AssetPackManifestJsonValidator.requireObject(
+        assetsJson[i],
+        'assets[$i]',
+      );
       if (!_assetIdByJsonValue.containsKey(itemJson['id'])) {
         continue;
       }
@@ -201,17 +213,26 @@ class AssetPackManifestItem {
         'Unknown Asset Pack asset kind for $id: $kindValue',
       );
     }
-    final path = _requireString(json, 'path');
-    final schemaVersion = _requireInt(json, 'schema_version');
-    final sourceVersion = _requireString(json, 'source_version');
+    final path = AssetPackManifestJsonValidator.requireString(json, 'path');
+    final schemaVersion = AssetPackManifestJsonValidator.requireInt(
+      json,
+      'schema_version',
+    );
+    final sourceVersion = AssetPackManifestJsonValidator.requireString(
+      json,
+      'source_version',
+    );
     final sourceUpdatedAt = json['source_updated_at'] as String?;
     final sourceUrlsJson = json['source_urls'];
     if (sourceUrlsJson is! List) {
       throw FormatException('source_urls must be a list for asset $id');
     }
     final sourceUrls = sourceUrlsJson.map((e) => e as String).toList();
-    final sha256 = _requireString(json, 'sha256');
-    final sizeBytes = _requireInt(json, 'size_bytes');
+    final sha256 = AssetPackManifestJsonValidator.requireString(json, 'sha256');
+    final sizeBytes = AssetPackManifestJsonValidator.requireInt(
+      json,
+      'size_bytes',
+    );
 
     if (schemaVersion != 1) {
       throw FormatException(
@@ -268,28 +289,33 @@ class AssetPackManifestItem {
   Map<String, dynamic> toJson() => _$AssetPackManifestItemToJson(this);
 }
 
-String _requireString(Map<String, dynamic> json, String key) {
-  final value = json[key];
-  if (value is String) {
-    return value;
-  }
-  throw FormatException('$key must be a string, got: $value');
-}
+/// asset_pack_manifest.json のパース時に、必須フィールドの型を検証しつつ取得する。
+class AssetPackManifestJsonValidator {
+  const AssetPackManifestJsonValidator._();
 
-int _requireInt(Map<String, dynamic> json, String key) {
-  final value = json[key];
-  if (value is num) {
-    return value.toInt();
+  static String requireString(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is String) {
+      return value;
+    }
+    throw FormatException('$key must be a string, got: $value');
   }
-  throw FormatException('$key must be a number, got: $value');
-}
 
-Map<String, dynamic> _requireObject(Object? value, String context) {
-  if (value is Map<String, dynamic>) {
-    return value;
+  static int requireInt(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is num) {
+      return value.toInt();
+    }
+    throw FormatException('$key must be a number, got: $value');
   }
-  if (value is Map) {
-    return value.map((key, v) => MapEntry(key as String, v));
+
+  static Map<String, dynamic> requireObject(Object? value, String context) {
+    if (value is Map<String, dynamic>) {
+      return value;
+    }
+    if (value is Map) {
+      return value.map((key, v) => MapEntry(key as String, v));
+    }
+    throw FormatException('$context must be an object, got: $value');
   }
-  throw FormatException('$context must be an object, got: $value');
 }

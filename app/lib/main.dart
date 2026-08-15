@@ -187,14 +187,18 @@ class AppBootstrap {
         kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
       ).wait,
       (
-        kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+        kIsWeb
+            ? Future<Null>.value()
+            : const KyoshinColorMapDataSource().load(),
         core.initializeTimeZones(),
       ).wait,
     ).wait;
     profiler.mark('parallel_init');
     LicenseInitializer.init();
 
-    final telemetryDbPath = kIsWeb ? null : await resolveTelemetryDbPath();
+    final telemetryDbPath = kIsWeb
+        ? null
+        : await TelemetryDbPathResolver.resolve();
 
     if (!kIsWeb) {
       unawaited(

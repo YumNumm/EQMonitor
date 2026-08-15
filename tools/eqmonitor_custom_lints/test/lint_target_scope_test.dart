@@ -60,5 +60,29 @@ void main() {
         isTrue,
       );
     });
+
+    test('test という名前の祖先ディレクトリ配下でも lib 配下は除外しない', () {
+      expect(
+        LintTargetScope.isExcluded(
+          path: '/home/test/EQMonitor/app/lib/feature/eew/eew_page.dart',
+        ),
+        isFalse,
+      );
+      expect(
+        LintTargetScope.isExcluded(
+          path: '/work/test_driver/EQMonitor/app/lib/main.dart',
+        ),
+        isFalse,
+      );
+    });
+
+    test('祖先が test でも test/ 配下の実テストは除外する', () {
+      expect(
+        LintTargetScope.isExcluded(
+          path: '/home/test/EQMonitor/app/test/feature/a_test.dart',
+        ),
+        isTrue,
+      );
+    });
   });
 }

@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/a
 import 'package:eqmonitor/feature/permission/data/flow/onboarding_permission_flow.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
+import 'package:eqmonitor/feature/permission/data/provider/permission_request_processing_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
@@ -33,8 +34,9 @@ part '../components/permissions_step_page.dart';
 part '../components/welcome_step_page.dart';
 part '../model/onboarding_step.dart';
 
-typedef _OnboardingNavigationRegistrar =
-    void Function(_StepNavigationState state);
+typedef _OnboardingNavigationRegistrar = void Function(
+  _StepNavigationState state,
+);
 
 class _OnboardingStepNavigation {
   const _OnboardingStepNavigation({
@@ -77,26 +79,23 @@ class OnboardingPage extends HookConsumerWidget {
 
     final currentStep = _steps[currentPage.value];
 
-    final stepControls = Map.fromEntries(
-      _steps.map(
-        (step) => MapEntry(
-          step,
-          _OnboardingStepNavigation(
-            isActive: currentStep == step,
-            nextPage: animateToNext,
-            previousPage: goToPrevious,
-            register: (state) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!context.mounted || step != _steps[currentPage.value]) {
-                  return;
-                }
-                stepNavigation.value = state;
-              });
-            },
-          ),
+    // _steps と同じ順序・要素数で構築するため、index アクセスは常に成立する。
+    final stepControls = [
+      for (final step in _steps)
+        _OnboardingStepNavigation(
+          isActive: currentStep == step,
+          nextPage: animateToNext,
+          previousPage: goToPrevious,
+          register: (state) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!context.mounted || step != _steps[currentPage.value]) {
+                return;
+              }
+              stepNavigation.value = state;
+            });
+          },
         ),
-      ),
-    );
+    ];
 
     void onPageChanged(int index) {
       currentPage.value = index;
@@ -132,7 +131,7 @@ class OnboardingPage extends HookConsumerWidget {
                   itemCount: _steps.length,
                   itemBuilder: (context, index) => _OnboardingStepPage(
                     step: _steps[index],
-                    navigation: stepControls[_steps[index]]!,
+                    navigation: stepControls[index],
                   ),
                 ),
               ),

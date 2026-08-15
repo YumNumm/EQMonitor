@@ -12,7 +12,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
     final designSystem = context.designSystem;
     final permissionFlow = ref.watch(onboardingPermissionFlowProvider);
     final permissionState = ref.watch(permissionProvider);
-    final isProcessing = _isPermissionRequestProcessing(ref);
+    final isProcessing = ref.watch(permissionRequestProcessingProvider);
 
     void openWebView({required String title}) {
       OnboardingWebViewRoute(
@@ -64,8 +64,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
                   SizedBox(height: designSystem.spacing.md),
                   _PermissionActionCard(
                     title: '重大な通知を許可',
-                    description:
-                        '現在地を警報地域とする緊急地震速報(警報)が発表されたときに、おやすみモードやマナーモードを無視して強制的に通知を配信します。',
+                    description: '現在地を警報地域とする緊急地震速報(警報)が発表されたときに、おやすみモードやマナーモードを無視して強制的に通知を配信します。',
                     decision: state.criticalAlert,
                     isEnabled: !isProcessing && state.canRequestCriticalAlert,
                     disabledReason: state.canRequestCriticalAlert
@@ -102,8 +101,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
               children: [
                 _PermissionActionCard(
                   title: 'アプリを開いている時の位置情報',
-                  description:
-                      '緊急地震速報発表時に現在地の予想震度と到達までの時間を表示します。気象庁が現在地の予想震度と到達予想時刻を発表した場合に限ります。詳しい情報\n地震情報を開いた時に、現在地付近で観測した震度を表示します',
+                  description: '緊急地震速報発表時に現在地の予想震度と到達までの時間を表示します。気象庁が現在地の予想震度と到達予想時刻を発表した場合に限ります。詳しい情報\n地震情報を開いた時に、現在地付近で観測した震度を表示します',
                   decision: state.foregroundLocation,
                   isEnabled: !isProcessing,
                   onSkip: () => permissionFlow.skipForegroundLocation(ref),
@@ -115,8 +113,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 SizedBox(height: designSystem.spacing.md),
                 _PermissionActionCard(
                   title: 'アプリを開いていない時の位置情報',
-                  description:
-                      '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意!: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
+                  description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意!: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
                   decision: state.backgroundLocation,
                   isEnabled:
                       !isProcessing && state.canRequestBackgroundLocation,
@@ -135,17 +132,6 @@ class _PermissionsStepPage extends HookConsumerWidget {
       ),
     );
   }
-}
-
-bool _isPermissionRequestProcessing(WidgetRef ref) {
-  return ref.watch(PermissionNotifier.requestNotificationMutation)
-          is MutationPending ||
-      ref.watch(PermissionNotifier.requestCriticalAlertMutation)
-          is MutationPending ||
-      ref.watch(PermissionNotifier.requestForegroundLocationMutation)
-          is MutationPending ||
-      ref.watch(PermissionNotifier.requestBackgroundLocationMutation)
-          is MutationPending;
 }
 
 class _PermissionSection extends StatelessWidget {
@@ -241,10 +227,11 @@ class _PermissionActionCard extends StatelessWidget {
             linkLabel: linkLabel,
             onLinkTap: onLinkTap,
           ),
-          if (disabledReason != null && !isEnabled && !isSkipped) ...[
+          if (disabledReason case final disabledReason?
+              when !isEnabled && !isSkipped) ...[
             SizedBox(height: designSystem.spacing.sm),
             Text(
-              disabledReason!,
+              disabledReason,
               style: designSystem.typography.bodySmall.copyWith(
                 color: designSystem.colorTheme.outline,
               ),

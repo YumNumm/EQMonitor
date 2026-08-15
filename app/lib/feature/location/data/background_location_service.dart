@@ -23,312 +23,329 @@ part 'background_location_service.g.dart';
 /// `keepAlive: true` のため、boot 時に `ref.read` で1度だけ起動する想定。
 @Riverpod(keepAlive: true)
 Stream<void> backgroundLocationService(Ref ref) async* {
+  const coordinator = BackgroundLocationSyncCoordinator();
   // killed状態で永続化された位置を最優先で反映する。
-  await _applyPendingLocation(ref);
+  await coordinator.applyPendingLocation(ref);
   yield null;
 
   // 現在地リージョンが既に登録されているなら毎回 startMonitoring を再宣言し、
   // 端末再起動などで監視が落ちていても復帰させる。
-  await _ensureMonitoring(ref);
+  await coordinator.ensureMonitoring(ref);
 
   await for (final update in BackgroundLocationTracker.locationStream) {
-    await _applyLocation(ref, update.latitude, update.longitude);
+    await coordinator.applyLocation(ref, update.latitude, update.longitude);
     yield null;
   }
 }
 
-Future<void> _ensureMonitoring(Ref ref) async {
-  try {
-    final slots = await (() async {
-      try {
-        return await ref.read(notificationSlotsProvider.future);
-      } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] read slots failed', e, st);
-        return <NotificationSlot>[];
+/// 位置情報の更新を通知スロット・揺れ検知設定・App Group・デバッグ通知へ
+/// 反映するコーディネーター。
+///
+/// [Ref] はコンストラクタではなく各メソッドの引数として受け取る。
+class BackgroundLocationSyncCoordinator {
+  const BackgroundLocationSyncCoordinator();
+
+  Future<void> ensureMonitoring(Ref ref) async {
+    try {
+      final slots = await (() async {
+        try {
+          return await ref.read(notificationSlotsProvider.future);
+        } on Object catch (e, st) {
+          talker.error('[BackgroundLocation] read slots failed', e, st);
+          return <NotificationSlot>[];
+        }
+      })();
+      final shakeDetectionState = await (() async {
+        try {
+          return await ref.read(shakeDetectionSettingsProvider.future);
+        } on Object catch (e, st) {
+          talker.error(
+            '[BackgroundLocation] read shake detection settings failed',
+            e,
+            st,
+          );
+          return null;
+        }
+      })();
+      final hasCurrentLocation = slots.any(
+        (s) => s.slotType == NotificationSlotType.currentLocation,
+      );
+      final hasShakeCurrentLocation =
+          shakeDetectionState?.entries.any((e) => e.isCurrentLocation) ?? false;
+      if (!hasCurrentLocation && !hasShakeCurrentLocation) {
+        return;
       }
-    })();
-    final shakeDetectionState = await (() async {
+      await BackgroundLocationTracker.startMonitoring();
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
+    }
+  }
+
+  Future<void> applyPendingLocation(Ref ref) async {
+    try {
+      final pending = await BackgroundLocationTracker.consumePendingLocation();
+      if (pending == null) {
+        return;
+      }
+      await applyLocation(ref, pending.latitude, pending.longitude);
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] applyPendingLocation failed', e, st);
+    }
+  }
+
+  Future<void> applyLocation(Ref ref, double latitude, double longitude) async {
+    try {
+      final slots = await (() async {
+        try {
+          return await ref.read(notificationSlotsProvider.future);
+        } on Object catch (e, st) {
+          talker.error('[BackgroundLocation] read slots failed', e, st);
+          return <NotificationSlot>[];
+        }
+      })();
+      final currentLocationSlot = slots
+          .where((s) => s.slotType == NotificationSlotType.currentLocation)
+          .firstOrNull;
+      final prevRegionCode = currentLocationSlot?.regionId;
+      final prevRegionName = currentLocationSlot?.regionName;
+      // 統合スロットモデルでは EEW / 地震情報のリージョンが1つに統合されているため、
+      // city 情報も同じ current_location スロットから取得する。
+      final prevCityCode = currentLocationSlot?.cityCode;
+      final prevCityName = currentLocationSlot?.cityName;
+
+      final resolver = await ref.read(jmaRegionResolverProvider.future);
+      // EEW 用の area_forecast_local_eew コード
+      final code = resolver.resolveRegionCode(latitude, longitude);
+      if (code == null) {
+        return;
+      }
+      final name = resolver.resolveRegionName(latitude, longitude);
+      const retry = BackgroundLocationUpdateRetry();
+      // 地震 (VXSE53) 用の市区町村 + 親一次細分化地域コード
+      final earthquakeResolution = resolver.resolveEarthquakeRegion(
+        latitude,
+        longitude,
+      );
+      // 揺れ検知は市区町村コード (area_information_city) のみ必要。
+      // earthquakeResolution は親 region 解決に失敗すると null になるため、
+      // 揺れ検知用の cityCode は resolver から直接取得する。
+      final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
+
+      // スロットリージョン更新（EEW と地震情報が統合されたので1回で済む）
+      var didUpdateEew = false;
+      String? eewError;
       try {
-        return await ref.read(shakeDetectionSettingsProvider.future);
+        didUpdateEew = await retry.run(
+          action: () async {
+            return ref
+                .read(notificationSlotsProvider.notifier)
+                .updateCurrentLocationRegion(
+                  regionCode: code,
+                  regionName: name,
+                  cityCode: earthquakeResolution?.cityCode,
+                );
+          },
+        );
+      } on Object catch (e, st) {
+        talker.error('[BackgroundLocation] update slot location failed', e, st);
+        eewError = e.toString();
+      }
+
+      // 地震情報は統合スロットで一緒に更新されるため、個別更新不要。
+      final didUpdateEarthquake = didUpdateEew;
+      const String? earthquakeError = null;
+
+      // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の
+      // 一次細分化地域を反映する（iOS のみ）。
+      await syncCurrentLocationToAppGroup(ref, earthquakeResolution);
+
+      // 揺れ検知 sub_region 更新
+      var didUpdateShake = false;
+      String? shakeError;
+      try {
+        didUpdateShake = await retry.run(
+          action: () => ref
+              .read(shakeDetectionSettingsProvider.notifier)
+              .updateCurrentLocationSubRegion(shakeCityCode),
+        );
       } on Object catch (e, st) {
         talker.error(
-          '[BackgroundLocation] read shake detection settings failed',
+          '[BackgroundLocation] update shake location failed',
           e,
           st,
         );
-        return null;
+        shakeError = e.toString();
       }
-    })();
-    final hasCurrentLocation = slots.any(
-      (s) => s.slotType == NotificationSlotType.currentLocation,
-    );
-    final hasShakeCurrentLocation =
-        shakeDetectionState?.entries.any((e) => e.isCurrentLocation) ?? false;
-    if (!hasCurrentLocation && !hasShakeCurrentLocation) {
-      return;
-    }
-    await BackgroundLocationTracker.startMonitoring();
-  } on Object catch (e, st) {
-    talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
-  }
-}
 
-Future<void> _applyPendingLocation(Ref ref) async {
-  try {
-    final pending = await BackgroundLocationTracker.consumePendingLocation();
-    if (pending == null) {
-      return;
-    }
-    await _applyLocation(ref, pending.latitude, pending.longitude);
-  } on Object catch (e, st) {
-    talker.error('[BackgroundLocation] applyPendingLocation failed', e, st);
-  }
-}
-
-Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
-  try {
-    final slots = await (() async {
-      try {
-        return await ref.read(notificationSlotsProvider.future);
-      } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] read slots failed', e, st);
-        return <NotificationSlot>[];
-      }
-    })();
-    final currentLocationSlot = slots
-        .where((s) => s.slotType == NotificationSlotType.currentLocation)
-        .firstOrNull;
-    final prevRegionCode = currentLocationSlot?.regionId;
-    final prevRegionName = currentLocationSlot?.regionName;
-    // 統合スロットモデルでは EEW / 地震情報のリージョンが1つに統合されているため、
-    // city 情報も同じ current_location スロットから取得する。
-    final prevCityCode = currentLocationSlot?.cityCode;
-    final prevCityName = currentLocationSlot?.cityName;
-
-    final resolver = await ref.read(jmaRegionResolverProvider.future);
-    // EEW 用の area_forecast_local_eew コード
-    final code = resolver.resolveRegionCode(latitude, longitude);
-    if (code == null) {
-      return;
-    }
-    final name = resolver.resolveRegionName(latitude, longitude);
-    const retry = BackgroundLocationUpdateRetry();
-    // 地震 (VXSE53) 用の市区町村 + 親一次細分化地域コード
-    final earthquakeResolution = resolver.resolveEarthquakeRegion(
-      latitude,
-      longitude,
-    );
-    // 揺れ検知は市区町村コード (area_information_city) のみ必要。
-    // earthquakeResolution は親 region 解決に失敗すると null になるため、
-    // 揺れ検知用の cityCode は resolver から直接取得する。
-    final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
-
-    // スロットリージョン更新（EEW と地震情報が統合されたので1回で済む）
-    var didUpdateEew = false;
-    String? eewError;
-    try {
-      didUpdateEew = await retry.run(
-        action: () async {
-          return ref
-              .read(notificationSlotsProvider.notifier)
-              .updateCurrentLocationRegion(
-                regionCode: code,
-                regionName: name,
-                cityCode: earthquakeResolution?.cityCode,
-              );
-        },
+      // デバッグ通知
+      await fireDebugNotifications(
+        ref,
+        latitude: latitude,
+        longitude: longitude,
+        prevRegionCode: prevRegionCode,
+        prevRegionName: prevRegionName,
+        newRegionCode: code,
+        newRegionName: name,
+        prevCityCode: prevCityCode,
+        prevCityName: prevCityName,
+        cityCode: earthquakeResolution?.cityCode,
+        cityName: earthquakeResolution?.cityName,
+        didUpdateEew: didUpdateEew,
+        didUpdateEarthquake: didUpdateEarthquake,
+        didUpdateShake: didUpdateShake,
+        eewError: eewError,
+        earthquakeError: earthquakeError,
+        shakeError: shakeError,
       );
     } on Object catch (e, st) {
-      talker.error('[BackgroundLocation] update slot location failed', e, st);
-      eewError = e.toString();
+      talker.error('[BackgroundLocation] applyLocation failed', e, st);
     }
-
-    // 地震情報は統合スロットで一緒に更新されるため、個別更新不要。
-    final didUpdateEarthquake = didUpdateEew;
-    const String? earthquakeError = null;
-
-    // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の
-    // 一次細分化地域を反映する（iOS のみ）。
-    await _syncCurrentLocationToAppGroup(ref, earthquakeResolution);
-
-    // 揺れ検知 sub_region 更新
-    var didUpdateShake = false;
-    String? shakeError;
-    try {
-      didUpdateShake = await retry.run(
-        action: () => ref
-            .read(shakeDetectionSettingsProvider.notifier)
-            .updateCurrentLocationSubRegion(shakeCityCode),
-      );
-    } on Object catch (e, st) {
-      talker.error('[BackgroundLocation] update shake location failed', e, st);
-      shakeError = e.toString();
-    }
-
-    // デバッグ通知
-    await _fireDebugNotifications(
-      ref,
-      latitude: latitude,
-      longitude: longitude,
-      prevRegionCode: prevRegionCode,
-      prevRegionName: prevRegionName,
-      newRegionCode: code,
-      newRegionName: name,
-      prevCityCode: prevCityCode,
-      prevCityName: prevCityName,
-      cityCode: earthquakeResolution?.cityCode,
-      cityName: earthquakeResolution?.cityName,
-      didUpdateEew: didUpdateEew,
-      didUpdateEarthquake: didUpdateEarthquake,
-      didUpdateShake: didUpdateShake,
-      eewError: eewError,
-      earthquakeError: earthquakeError,
-      shakeError: shakeError,
-    );
-  } on Object catch (e, st) {
-    talker.error('[BackgroundLocation] applyLocation failed', e, st);
   }
-}
 
-Future<void> _syncCurrentLocationToAppGroup(
-  Ref ref,
-  EarthquakeRegionResolution? resolution,
-) async {
-  if (!Platform.isIOS) {
-    return;
-  }
-  try {
-    final prefs = await ref.read(appGroupPreferencesProvider.future);
-    final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
-      prefs,
-      regionCode: resolution?.regionCode,
-      regionName: resolution?.regionName,
-    );
-    if (changed) {
-      await WidgetTimelineReloader.reload();
-    }
-  } on Object catch (e, st) {
-    talker.error('[BackgroundLocation] sync app group failed', e, st);
-  }
-}
-
-Future<void> _fireDebugNotifications(
-  Ref ref, {
-  required double latitude,
-  required double longitude,
-  required int? prevRegionCode,
-  required String? prevRegionName,
-  required int newRegionCode,
-  required String? newRegionName,
-  required String? prevCityCode,
-  required String? prevCityName,
-  required String? cityCode,
-  required String? cityName,
-  required bool didUpdateEew,
-  required bool didUpdateEarthquake,
-  required bool didUpdateShake,
-  required String? eewError,
-  required String? earthquakeError,
-  required String? shakeError,
-}) async {
-  try {
-    final debugSettings = ref
-        .read(backgroundLocationDebugSettingsProvider)
-        .value;
-    if (debugSettings == null ||
-        (!debugSettings.notifyLatLng &&
-            !debugSettings.notifyRegion &&
-            !debugSettings.notifyPrefecture &&
-            !debugSettings.notifyApiUpdate)) {
+  Future<void> syncCurrentLocationToAppGroup(
+    Ref ref,
+    EarthquakeRegionResolution? resolution,
+  ) async {
+    if (!Platform.isIOS) {
       return;
     }
-
-    final plugin = FlutterLocalNotificationsPlugin();
-    var notifId = DateTime.now().millisecondsSinceEpoch & 0xFFFF;
-    const details = NotificationDetails(
-      android: AndroidNotificationDetails(
-        'bgl_debug',
-        'バックグラウンド位置デバッグ',
-        importance: Importance.low,
-        priority: Priority.low,
-      ),
-      iOS: DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: false,
-        presentSound: false,
-      ),
-    );
-
-    if (debugSettings.notifyLatLng) {
-      await plugin.show(
-        id: notifId++,
-        title: '[Debug] 位置更新',
-        body:
-            'lat=${latitude.toStringAsFixed(4)}, lon=${longitude.toStringAsFixed(4)}',
-        notificationDetails: details,
+    try {
+      final prefs = await ref.read(appGroupPreferencesProvider.future);
+      final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
+        prefs,
+        regionCode: resolution?.regionCode,
+        regionName: resolution?.regionName,
       );
-    }
-
-    if (debugSettings.notifyRegion) {
-      if (prevRegionCode != newRegionCode) {
-        await plugin.show(
-          id: notifId++,
-          title: '[Debug] 細分区域 変化',
-          body:
-              '$prevRegionCode ($prevRegionName)\n'
-              '→ $newRegionCode ($newRegionName)',
-          notificationDetails: details,
-        );
+      if (changed) {
+        await WidgetTimelineReloader.reload();
       }
-      if (prevCityCode != cityCode) {
-        await plugin.show(
-          id: notifId++,
-          title: '[Debug] 市区町村 変化',
-          body:
-              '$prevCityCode ($prevCityName)\n'
-              '→ $cityCode ($cityName)',
-          notificationDetails: details,
-        );
-      }
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] sync app group failed', e, st);
     }
-
-    if (debugSettings.notifyPrefecture) {
-      final prevPref = prevRegionCode != null ? prevRegionCode ~/ 1000 : null;
-      final newPref = newRegionCode ~/ 1000;
-      if (prevPref != newPref) {
-        await plugin.show(
-          id: notifId++,
-          title: '[Debug] 都道府県コード 変化',
-          body: '$prevPref → $newPref',
-          notificationDetails: details,
-        );
-      }
-    }
-
-    if (debugSettings.notifyApiUpdate) {
-      String statusMark({required bool didUpdate, String? error}) =>
-          error != null ? '✗' : (didUpdate ? '✓' : '-');
-      final summary =
-          'EEW:${statusMark(didUpdate: didUpdateEew, error: eewError)} '
-          '地震:${statusMark(didUpdate: didUpdateEarthquake, error: earthquakeError)} '
-          '揺れ:${statusMark(didUpdate: didUpdateShake, error: shakeError)}';
-      final errors = [
-        if (eewError != null) 'EEW: $eewError',
-        if (earthquakeError != null) '地震: $earthquakeError',
-        if (shakeError != null) '揺れ: $shakeError',
-      ];
-      await plugin.show(
-        id: notifId,
-        title: '[Debug] 通知API 更新',
-        body:
-            'region=$newRegionCode ($newRegionName)\n'
-            'city=${cityCode ?? 'null'} (${cityName ?? ''})\n'
-            '$summary'
-            '${errors.isNotEmpty ? '\n${errors.join('\n')}' : ''}',
-        notificationDetails: details,
-      );
-    }
-  } on Object catch (e, st) {
-    talker.error('[BackgroundLocation] fireDebugNotifications failed', e, st);
   }
+
+  Future<void> fireDebugNotifications(
+    Ref ref, {
+    required double latitude,
+    required double longitude,
+    required int? prevRegionCode,
+    required String? prevRegionName,
+    required int newRegionCode,
+    required String? newRegionName,
+    required String? prevCityCode,
+    required String? prevCityName,
+    required String? cityCode,
+    required String? cityName,
+    required bool didUpdateEew,
+    required bool didUpdateEarthquake,
+    required bool didUpdateShake,
+    required String? eewError,
+    required String? earthquakeError,
+    required String? shakeError,
+  }) async {
+    try {
+      final debugSettings = ref
+          .read(backgroundLocationDebugSettingsProvider)
+          .value;
+      if (debugSettings == null ||
+          (!debugSettings.notifyLatLng &&
+              !debugSettings.notifyRegion &&
+              !debugSettings.notifyPrefecture &&
+              !debugSettings.notifyApiUpdate)) {
+        return;
+      }
+
+      final plugin = FlutterLocalNotificationsPlugin();
+      var notifId = DateTime.now().millisecondsSinceEpoch & 0xFFFF;
+      const details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'bgl_debug',
+          'バックグラウンド位置デバッグ',
+          importance: Importance.low,
+          priority: Priority.low,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: false,
+          presentSound: false,
+        ),
+      );
+
+      if (debugSettings.notifyLatLng) {
+        await plugin.show(
+          id: notifId++,
+          title: '[Debug] 位置更新',
+          body:
+              'lat=${latitude.toStringAsFixed(4)}, lon=${longitude.toStringAsFixed(4)}',
+          notificationDetails: details,
+        );
+      }
+
+      if (debugSettings.notifyRegion) {
+        if (prevRegionCode != newRegionCode) {
+          await plugin.show(
+            id: notifId++,
+            title: '[Debug] 細分区域 変化',
+            body:
+                '$prevRegionCode ($prevRegionName)\n'
+                '→ $newRegionCode ($newRegionName)',
+            notificationDetails: details,
+          );
+        }
+        if (prevCityCode != cityCode) {
+          await plugin.show(
+            id: notifId++,
+            title: '[Debug] 市区町村 変化',
+            body:
+                '$prevCityCode ($prevCityName)\n'
+                '→ $cityCode ($cityName)',
+            notificationDetails: details,
+          );
+        }
+      }
+
+      if (debugSettings.notifyPrefecture) {
+        final prevPref = prevRegionCode != null ? prevRegionCode ~/ 1000 : null;
+        final newPref = newRegionCode ~/ 1000;
+        if (prevPref != newPref) {
+          await plugin.show(
+            id: notifId++,
+            title: '[Debug] 都道府県コード 変化',
+            body: '$prevPref → $newPref',
+            notificationDetails: details,
+          );
+        }
+      }
+
+      if (debugSettings.notifyApiUpdate) {
+        final summary =
+            'EEW:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateEew, error: eewError)} '
+            '地震:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateEarthquake, error: earthquakeError)} '
+            '揺れ:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateShake, error: shakeError)}';
+        final errors = [
+          if (eewError != null) 'EEW: $eewError',
+          if (earthquakeError != null) '地震: $earthquakeError',
+          if (shakeError != null) '揺れ: $shakeError',
+        ];
+        await plugin.show(
+          id: notifId,
+          title: '[Debug] 通知API 更新',
+          body:
+              'region=$newRegionCode ($newRegionName)\n'
+              'city=${cityCode ?? 'null'} (${cityName ?? ''})\n'
+              '$summary'
+              '${errors.isNotEmpty ? '\n${errors.join('\n')}' : ''}',
+          notificationDetails: details,
+        );
+      }
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] fireDebugNotifications failed', e, st);
+    }
+  }
+}
+
+/// デバッグ通知本文の更新状況マーク（✓/✗/-）を組み立てる。
+class BackgroundLocationDebugStatusMark {
+  static String mark({required bool didUpdate, String? error}) =>
+      error != null ? '✗' : (didUpdate ? '✓' : '-');
 }
