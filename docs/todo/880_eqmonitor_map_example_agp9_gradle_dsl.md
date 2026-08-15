@@ -48,7 +48,31 @@ Kotlin DSL 拡張が公開 extension として使われなくなった。その�
    AGP 10.0 で削除されるため恒久対応にはしない。
 4. `app/android` 側が同じ旧 DSL を使っていないか併せて確認する。
 
+## 追記 (2026-08-15): AGP 8 系へ戻す回避策は行き止まり
+
+「やること」4 の確認結果として、`app/android` は AGP 8.13.1 / Kotlin 2.2.21 /
+Gradle 8.14.3 で、example だけが AGP 9.1.0 / Kotlin 2.4.0 / Gradle 9.3.1 だった。
+example を app と同じ組み合わせへ揃える回避策を PR #1648 で試して計測した
+（方針 1 に沿わないため revert 済み）。
+
+- `gradle.properties` には既に `android.newDsl=false` が入っている。それでも
+  AGP 9.1.0 は legacy DSL の `android { }` accessor を deprecation **error** に
+  するため、「やること」3 の回避策は AGP 9 では成立しない。
+- AGP 8.13.1 へ揃えると script compilation は通る（症状の 3 errors は解消）。
+  `profile` は Flutter Gradle Plugin が登録する build type で KTS の生成 accessor が
+  無いため、AGP のバージョンに関わらず `named("profile")` で参照する必要がある。
+- ただしその先で `:app:validateSigningProfile` が失敗する（run 31859310385）。
+  `$HOME/.android/debug.keystore` を事前生成しても解消しなかった
+  （run 31859725902。例外メッセージが空なので `--stacktrace` での切り分けが必要）。
+- 加えて、pin している Flutter は Gradle 8.14.3 / AGP 8.13.1 / Kotlin 2.2.21 の
+  いずれについても「support will soon be dropped」と警告する。
+
+したがって**「やること」1 の新 DSL 移行が本筋**で、ダウングレードでの回避は
+signing 検証の壁に当たるうえ Flutter の対応バージョンからも外れる。
+移行時は `validateSigningProfile` を先に切り分けること。
+
 ## 参照
 
 - PR #1627 の CI（run 31791372614, job 94738949419）
+- PR #1648 の CI（run 31859310385 / 31859725902）
 - `docs/knowledge/20260814_stacked_pr_flutter_gate_baseline.md`

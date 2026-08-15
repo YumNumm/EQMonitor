@@ -30,6 +30,26 @@
 
 「落ちているテストを通す」目的で `timeout-minutes` だけを緩める変更は行わない。
 
+## 追記 (2026-08-15): 所要時間の実測
+
+`timeout-minutes` を一時的に 25 分へ上げて計測した（PR #1648 で計測後 revert 済み。
+方針に反する単純な引き上げは行わない）。
+
+run 31859725902 / job の実測値:
+
+- job 全体: 約 13 分（setup 約 2 分 + テスト実行 約 11 分）
+- 10 分の内訳では setup に約 2 分かかるため、テストの持ち時間は実質 8 分しかない
+- テストは hang しておらず、cancel 直前まで結果を出力し続けていた
+
+**10 分では原理的に完走できない**ため、`timeout-minutes` を触らない限り
+`flutter-test` は常に cancel され、テスト結果を CI で確認できない。
+上記「対応方針」の 1 → 2 を実施し、その結果として 3 を決めること。
+
+また、timeout で打ち切られていた区間に既存の失敗が隠れていた。
+`packages/eqmonitor_api/test/feed_nankai_parse_test.dart` の 2 件は
+`docs/todo/770_existing_eqmonitor_flutter_test_failures.md` に未記載だったが、
+完走させると失敗する（詳細は 770 の追記を参照）。
+
 ## 関連
 
 - `docs/todo/770_existing_eqmonitor_flutter_test_failures.md`（既存のテスト失敗 18 件）

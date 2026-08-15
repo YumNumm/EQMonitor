@@ -70,3 +70,29 @@ Analyzer 診断ゼロ化 (PR #1639) の develop マージ時点で、以下が�
 - `live_monitor_detected_event_notifier_test.dart`: 2件
 - `theme_editor_page_test.dart`: 3件
 - `override_edit_page_test.dart`: 1件（上記）
+
+## 追記 (2026-08-15): timeout で隠れていた eqmonitor_api の 2 件
+
+`flutter-test` は `docs/todo/700_flutter_test_ci_10min_timeout.md` の通り 10 分で
+cancel されており、`app` より後に実行される package の結果が CI に出ていなかった。
+timeout を一時的に緩めて完走させたところ（run 31859725902）、上記 6 件に加えて
+`packages/eqmonitor_api` で 2 件失敗する（`84 tests passed, 2 failed, 16 skipped`）。
+
+`packages/eqmonitor_api/test/feed_nankai_parse_test.dart`
+
+- 「telegramType "NANKAI" を含む payload をパースできる」
+- 「省略可能フィールド無しでもパースできる」
+
+```text
+CheckedFromJsonException
+Could not create `FeedItemDataUnionFeedEarthquakeNankaiData`.
+There is a problem with "telegramType".
+`NANKAI` is not one of the supported values:
+南海トラフ地震臨時情報, 南海トラフ地震関連解説情報, 北海道・三陸沖後発地震注意情報
+```
+
+テストは `telegramType` にコード値 `NANKAI` を渡すが、生成された enum は JMA の
+日本語標題のみを受け付ける。**南海トラフ地震臨時情報のパースに関わるため、
+テスト fixture を直す前に実 API が返す `telegramType` の値を確認すること。**
+API がコード値を返すならモデル側の欠陥（本番で南海トラフ電文をパースできない）で、
+日本語標題を返すならテスト fixture の誤りである。どちらかを確定させてから直す。
