@@ -75,6 +75,7 @@
 		D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
 		EQ000000000000000000006E /* EewDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000005 /* EewDisplay.swift */; };
 		EQ000000000000000000006F /* EewDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000005 /* EewDisplay.swift */; };
 		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
@@ -215,6 +216,7 @@
 		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
 		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000001 /* LiveActivityDate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDate.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000005 /* EewDisplay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplay.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000002 /* WidgetErrorMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessage.swift; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				EQ0000000000000000000003 /* LiveActivityDateTests.swift */,
 				EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */,
 				EQ0000000000000000000006 /* EewDisplayTests.swift */,
+				EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -821,6 +824,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */,
 				EQ000000000000000000006F /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */,
 				EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */,
