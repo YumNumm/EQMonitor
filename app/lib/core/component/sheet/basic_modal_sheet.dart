@@ -52,10 +52,7 @@ class BasicModalSheet extends HookWidget {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
-                    top: spacing.sm,
-                    bottom: spacing.xs,
-                  ),
+                  margin: EdgeInsets.symmetric(vertical: spacing.sm),
                   width: 36,
                   height: 4,
                   alignment: Alignment.center,

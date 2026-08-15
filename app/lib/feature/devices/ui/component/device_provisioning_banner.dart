@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
@@ -193,39 +194,11 @@ class _BannerTile extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    final shape = designSystem.shape;
-    final colorTheme = designSystem.colorTheme;
-
-    return Material(
-      color: backgroundColor,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
-      ),
-      clipBehavior: .antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Icon(icon, color: foregroundColor, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: foregroundColor),
-              ),
-            ),
-            if (trailing case final trailing?) ...[
-              const SizedBox(width: 8),
-              trailing,
-            ],
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppBanner(
+    icon: icon,
+    title: message,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    trailing: trailing,
+  );
 }

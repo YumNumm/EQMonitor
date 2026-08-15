@@ -21,7 +21,7 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
           ),
           stationMinZoom: $checkedConvert(
             'station_min_zoom',
-            (v) => (v as num?)?.toDouble() ?? 8,
+            (v) => (v as num?)?.toDouble() ?? 6,
           ),
           stationLabelMinZoom: $checkedConvert(
             'station_label_min_zoom',
@@ -53,23 +53,23 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
           ),
           stationCircleRadiusMin: $checkedConvert(
             'station_circle_radius_min',
-            (v) => (v as num?)?.toDouble() ?? 2,
+            (v) => (v as num?)?.toDouble() ?? 0.8,
           ),
           stationCircleRadiusMax: $checkedConvert(
             'station_circle_radius_max',
-            (v) => (v as num?)?.toDouble() ?? 8,
+            (v) => (v as num?)?.toDouble() ?? 6.7,
           ),
           stationIconSizeMin: $checkedConvert(
             'station_icon_size_min',
-            (v) => (v as num?)?.toDouble() ?? 0.025,
+            (v) => (v as num?)?.toDouble() ?? 0.03,
           ),
           stationIconSizeMid: $checkedConvert(
             'station_icon_size_mid',
-            (v) => (v as num?)?.toDouble() ?? 0.18,
+            (v) => (v as num?)?.toDouble() ?? 0.13,
           ),
           stationIconSizeMax: $checkedConvert(
             'station_icon_size_max',
-            (v) => (v as num?)?.toDouble() ?? 0.6,
+            (v) => (v as num?)?.toDouble() ?? 0.5,
           ),
           hypocenterIconSizeMin: $checkedConvert(
             'hypocenter_icon_size_min',
