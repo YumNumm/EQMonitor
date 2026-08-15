@@ -19,6 +19,7 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/startup/debug_startup_timing_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -134,6 +135,17 @@ class _DebugWidget extends ConsumerWidget {
                 subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
                 leading: const Icon(Icons.widgets_outlined),
                 onTap: () => const DebugAppGroupRoute().push<void>(context),
+              ),
+            if (Platform.isIOS)
+              ListTile(
+                title: const Text('Live Activity テスト'),
+                subtitle: const Text('アプリ内から EEW / 揺れ検知の Live Activity を開始・更新・終了'),
+                leading: const Icon(Icons.bolt_outlined),
+                onTap: () => Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (_) => const DebugLiveActivityPage(),
+                  ),
+                ),
               ),
             ListTile(
               title: const Text('Asset Pack'),
