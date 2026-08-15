@@ -166,6 +166,7 @@ class BaseMapView extends HookWidget {
               onScaleUpdate: (details) => controller.updateGesture(
                 cumulativeScale: details.scale,
                 focalPointDelta: details.focalPointDelta,
+                focalPoint: details.localFocalPoint,
               ),
               onScaleEnd: (_) => controller.endGesture(),
               child: scene.SceneView(
@@ -431,6 +432,7 @@ class _BaseMapController extends ChangeNotifier {
   void updateGesture({
     required double cumulativeScale,
     required Offset focalPointDelta,
+    required Offset focalPoint,
   }) {
     final gestureStartZoom = _gestureStartZoom;
     if (gestureStartZoom == null) {
@@ -441,6 +443,8 @@ class _BaseMapController extends ChangeNotifier {
       gestureStartZoom: gestureStartZoom,
       cumulativeScale: cumulativeScale,
       focalPointDelta: focalPointDelta,
+      focalPoint: focalPoint,
+      viewportLogicalSize: _viewport?.logicalSize,
       minZoom: limits.minZoom,
       maxZoom: limits.maxZoom,
     );
@@ -711,6 +715,17 @@ class _TileSceneMeshCache {
 /// (`base_map_material_library.dart`の`halfLineWidthWorldFor`のdoc
 /// comment参照)を使い、[focalPointDelta]を[camera]のzoomにおけるworld
 /// pixel量としてそのままworld中心へ加算する。
+///
+/// [focalPoint]は`ScaleUpdateDetails.localFocalPoint`(2本指の中間点、
+/// widget-local座標)、[viewportLogicalSize]はその widget の logical size。
+/// **両方を渡したときだけ zoom が焦点基準になる。** [MapCamera]は中心と
+/// zoomでしか定義されないため、焦点を渡さないと zoom は必然的に画面中央
+/// 基準になり、指の下の地点が中央へ滑る。
+///
+/// 焦点固定は正規化world座標(zoom非依存)で行う。pan適用後の焦点直下の
+/// 地点を求め、**clamp後の**zoomにおけるworldサイズで、その地点が同じ
+/// 画面位置に来るような中心を逆算する。clamp前のzoomでアンカーを計算
+/// すると、zoom上限に張り付いたまま指を動かしたときに地図が滑る。
 MapCamera cameraAfterGestureUpdate({
   required MapCamera camera,
   required double gestureStartZoom,
@@ -718,6 +733,8 @@ MapCamera cameraAfterGestureUpdate({
   required Offset focalPointDelta,
   required int minZoom,
   required int maxZoom,
+  Offset? focalPoint,
+  Size? viewportLogicalSize,
   MapMercatorProjection projection = const MapMercatorProjection(),
 }) {
   final worldSize = projection.worldSizeForZoom(camera.zoom);
@@ -726,18 +743,39 @@ MapCamera cameraAfterGestureUpdate({
     x: worldCenter.x - focalPointDelta.dx,
     y: worldCenter.y - focalPointDelta.dy,
   );
-  final pannedLngLat = projection.normalizedToLngLat(
-    x: pannedWorldCenter.x / worldSize,
-    y: pannedWorldCenter.y / worldSize,
-  );
   final unclampedZoom = gestureStartZoom + _log2(cumulativeScale);
   final clampedZoom = unclampedZoom.clamp(
     minZoom.toDouble(),
     maxZoom.toDouble(),
   );
+
+  // 焦点の画面中央からのずれ。1 logical pixel == 1 world pixel なので
+  // そのまま world 上のずれとして扱える。
+  final fromCenter = (focalPoint == null || viewportLogicalSize == null)
+      ? Offset.zero
+      : focalPoint -
+            Offset(
+              viewportLogicalSize.width / 2,
+              viewportLogicalSize.height / 2,
+            );
+
+  final anchorNormalized = (
+    x: (pannedWorldCenter.x + fromCenter.dx) / worldSize,
+    y: (pannedWorldCenter.y + fromCenter.dy) / worldSize,
+  );
+  final zoomedWorldSize = projection.worldSizeForZoom(clampedZoom);
+  final zoomedWorldCenter = (
+    x: anchorNormalized.x * zoomedWorldSize - fromCenter.dx,
+    y: anchorNormalized.y * zoomedWorldSize - fromCenter.dy,
+  );
+
+  final lngLat = projection.normalizedToLngLat(
+    x: zoomedWorldCenter.x / zoomedWorldSize,
+    y: zoomedWorldCenter.y / zoomedWorldSize,
+  );
   return MapCamera(
-    centerLongitude: pannedLngLat.longitude,
-    centerLatitude: pannedLngLat.latitude,
+    centerLongitude: lngLat.longitude,
+    centerLatitude: lngLat.latitude,
     zoom: clampedZoom,
   );
 }
