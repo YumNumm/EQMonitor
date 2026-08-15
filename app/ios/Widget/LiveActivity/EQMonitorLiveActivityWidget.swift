@@ -246,8 +246,9 @@ struct EewExpandedCenterView: View {
            let regionName = state.location?.regionName,
            !regionName.isEmpty {
             HStack(spacing: 2) {
+                // SF Symbol はカスタムフォントのメトリクスに引っ張られるためシステムフォントで描く
                 Image(systemName: "location.fill")
-                    .font(AppFonts.flex(size: 9, weight: .semibold))
+                    .font(.system(size: 9, weight: .semibold))
                 Text(regionName)
                     .font(AppFonts.flex(size: 11, weight: .semibold))
                     .lineLimit(1)
