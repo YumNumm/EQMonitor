@@ -34,27 +34,6 @@ jobs:
       - name: Precache Flutter Android artifacts
         run: mise exec -- flutter precache --android
 
-      # example は release keystore を持たず profile / release も debug 署名を使う。
-      # runner には debug keystore が無く validateSigning<Variant> が失敗するため、
-      # Android SDK 既定と同じパラメータで先に生成する。
-      - name: Ensure Android debug keystore
-        run: |
-          keystore="$HOME/.android/debug.keystore"
-          if [ -f "$keystore" ]; then
-            echo "debug keystore already exists"
-            exit 0
-          fi
-          mkdir -p "$HOME/.android"
-          mise exec -- keytool -genkeypair \
-            -keystore "$keystore" \
-            -storepass android \
-            -keypass android \
-            -alias androiddebugkey \
-            -dname "CN=Android Debug,O=Android,C=US" \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000
-
       - name: Resolve example dependencies
         working-directory: packages/eqmonitor_map/example
         run: mise exec -- flutter pub get --enforce-lockfile

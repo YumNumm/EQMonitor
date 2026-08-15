@@ -19,11 +19,8 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    // app/android と同じ組み合わせに揃える。AGP 9 系は legacy DSL の
-    // `android { }` accessor を deprecation error にするため、KTS の
-    // script compilation が通らない。
-    id("com.android.application") version "8.13.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.2.21" apply false
+    id("com.android.application") version "9.1.0" apply false
+    id("org.jetbrains.kotlin.android") version "2.4.0" apply false
 }
 
 include(":app")

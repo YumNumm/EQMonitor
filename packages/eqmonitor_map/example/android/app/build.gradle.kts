@@ -30,9 +30,7 @@ android {
     }
 
     buildTypes {
-        // profile は Flutter Gradle Plugin が登録する build type なので
-        // KTS の生成 accessor が無い。名前で参照する必要がある。
-        named("profile") {
+        profile {
             // CI profile APK has no release keystore; use debug signing.
             signingConfig = signingConfigs.getByName("debug")
         }
