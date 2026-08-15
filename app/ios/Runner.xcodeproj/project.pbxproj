@@ -74,6 +74,14 @@
 		D11222222222222222222222 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
 		D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
+		EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000002 /* WidgetErrorMessage.swift */; };
+		EQ0000000000000000000068 /* WidgetErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000002 /* WidgetErrorMessage.swift */; };
+		EQ0000000000000000000069 /* WidgetErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000002 /* WidgetErrorMessage.swift */; };
+		EQ000000000000000000006A /* LiveActivityDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000003 /* LiveActivityDateTests.swift */; };
+		EQ000000000000000000006B /* WidgetErrorMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */; };
 		D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11333333333333333333333 /* WidgetBehaviorTests.swift */; };
 		E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
 /* End PBXBuildFile section */
@@ -203,6 +211,10 @@
 		CEF843E9B82869CED39772C0 /* DesignTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
 		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000001 /* LiveActivityDate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDate.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000002 /* WidgetErrorMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessage.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000003 /* LiveActivityDateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDateTests.swift; sourceTree = "<group>"; };
+		EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessageTests.swift; sourceTree = "<group>"; };
 		E11333333333333333333333 /* WidgetBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBehaviorTests.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -328,6 +340,8 @@
 			children = (
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
 				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
+				EQ0000000000000000000003 /* LiveActivityDateTests.swift */,
+				EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -444,6 +458,8 @@
 				4569B747204EE74872C7E9DB /* IntensityBadge.swift */,
 				E11111111111111111111111 /* WidgetLayoutPolicy.swift */,
 				E11222222222222222222222 /* EarthquakeDetailURL.swift */,
+				EQ0000000000000000000001 /* LiveActivityDate.swift */,
+				EQ0000000000000000000002 /* WidgetErrorMessage.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -773,6 +789,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */,
+				EQ0000000000000000000069 /* WidgetErrorMessage.swift in Sources */,
 				010DC8E64C7C76B8F4F166D5 /* EarthquakeDisplayItem.swift in Sources */,
 				BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */,
 				7BECFE11CAB325714CACA5EC /* TelegramStatus.swift in Sources */,
@@ -796,6 +814,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */,
+				EQ0000000000000000000068 /* WidgetErrorMessage.swift in Sources */,
+				EQ000000000000000000006A /* LiveActivityDateTests.swift in Sources */,
+				EQ000000000000000000006B /* WidgetErrorMessageTests.swift in Sources */,
 				06C54F953E3BD230BCDE7A3F /* EarthquakeDisplayItem.swift in Sources */,
 				A47F6602271A89052A753BD0 /* IntensityValue.swift in Sources */,
 				8EF4AB3495DB7B973CA66ECE /* TelegramStatus.swift in Sources */,
@@ -813,6 +835,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */,
+				EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */,
 				2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */,
 				0653ECA8737307C2CA836FC7 /* IntensityValue.swift in Sources */,
 				47E5E897BFDE09208D2DBE5F /* TelegramStatus.swift in Sources */,
