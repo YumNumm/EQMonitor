@@ -106,4 +106,38 @@ struct EewDisplayTests {
         #expect(display().headline(from: nil) == nil)
         #expect(display().headline(from: "") == nil)
     }
+
+    /// 取消報ではヘッダーの見出し行を取消の主文に差し替える
+    @Test func headerHeadlineReplacesStaleHeadlineOnCanceledReport() {
+        #expect(display(isCanceled: true).headerHeadline(from: "地震発生")
+                == EewDisplay.canceledTitle)
+        #expect(display().headerHeadline(from: "石川県で地震") == "石川県で地震")
+        #expect(display().headerHeadline(from: nil) == nil)
+    }
+
+    // MARK: - Dynamic Island のレイアウト選択
+
+    /// 到達予想があるときは主要動到達カウントダウンを主役にする
+    @Test func dynamicIslandEmphasizesCountdownWhenArrivalIsKnown() {
+        #expect(display().dynamicIslandLayout == .countdown)
+    }
+
+    /// 到達予想が無いときは予想最大震度と震源要素の要約にする
+    @Test func dynamicIslandFallsBackToSummaryWithoutArrival() {
+        let withoutArrival = EewDisplay(
+            isCanceled: false,
+            isWarning: true,
+            isFinal: false,
+            serialNo: 3,
+            maxIntensity: .sixUpper,
+            forecastIntensity: nil,
+            arrivalDate: nil
+        )
+        #expect(withoutArrival.dynamicIslandLayout == .summary)
+    }
+
+    /// 取消報では到達予想が残っていてもカウントダウンを主役にしない
+    @Test func dynamicIslandUsesCanceledLayoutEvenWithStaleArrival() {
+        #expect(display(isCanceled: true).dynamicIslandLayout == .canceled)
+    }
 }

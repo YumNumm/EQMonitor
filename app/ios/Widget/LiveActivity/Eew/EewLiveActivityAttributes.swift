@@ -240,6 +240,39 @@ extension EewContentState {
         )
     )
 
+    /// 主要動到達カウントダウンを主役にするレイアウトのプレビュー。
+    /// 固定日時では常に「到達済み」になってしまうため、実行時刻から到達予想を作る。
+    static func countingDown(secondsUntilArrival: TimeInterval = 30) -> EewContentState {
+        let formatter = ISO8601DateFormatter()
+        return EewContentState(
+            eventId: "20240101123456",
+            type: "eew",
+            hypocenterName: "石川県能登地方",
+            magnitude: 7.6,
+            depth: 10,
+            time: formatter.string(from: Date()),
+            isOriginTime: true,
+            maxIntensity: "6+",
+            serialNo: 32,
+            isFinal: false,
+            isWarning: true,
+            isCanceled: false,
+            headline: "石川県で地震 北陸で強い揺れ",
+            isPlum: false,
+            isLevel: false,
+            isOnePoint: false,
+            location: LocationInfo(
+                regionName: "東京都23区",
+                forecastIntensity: "5-",
+                forecastLpgmIntensity: "2",
+                arrivalTime: formatter.string(
+                    from: Date().addingTimeInterval(secondsUntilArrival)
+                ),
+                intensity: nil
+            )
+        )
+    }
+
     static let onePoint = EewContentState(
         eventId: "20240105123456",
         type: "eew",

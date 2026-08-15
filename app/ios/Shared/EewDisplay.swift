@@ -11,6 +11,20 @@
 
 import Foundation
 
+/// Dynamic Island 展開時のレイアウト。
+///
+/// 展開領域は狭く、要素を並べるほど切り取られて読めなくなる。
+/// Apple のタイマー / アラームと同じく「主役を 1 つに絞る」方針で、
+/// 状況ごとにどの情報を主役にするかをここで決める。
+enum EewDynamicIslandLayout: Equatable {
+    /// 取消報。取消の事実だけを伝える。
+    case canceled
+    /// 主要動到達までのカウントダウンを主役にする（現在地の予想震度と対で見せる）。
+    case countdown
+    /// 到達予想が無い場合。予想最大震度と震源要素を見せる。
+    case summary
+}
+
 struct EewDisplay: Equatable {
     let isCanceled: Bool
     let isWarning: Bool
@@ -44,6 +58,14 @@ struct EewDisplay: Equatable {
         isCanceled ? nil : arrivalDate
     }
 
+    /// Dynamic Island 展開時に何を主役にするか
+    var dynamicIslandLayout: EewDynamicIslandLayout {
+        if isCanceled {
+            return .canceled
+        }
+        return countdownArrivalDate != nil ? .countdown : .summary
+    }
+
     // MARK: - 文言
 
     /// 「緊急地震速報(警報)」「緊急地震速報(予報)」「緊急地震速報(取消)」
@@ -66,9 +88,23 @@ struct EewDisplay: Equatable {
         return "\(typeLabel) \(serialLabel)"
     }
 
-    /// ヘッダーに出す headline。取消報では「地震発生」等が残るため出さない。
+    /// backend の headline をそのまま出してよいか判断する。
+    /// 取消報では「地震発生」等が残るため出さない。
     func headline(from raw: String?) -> String? {
         guard !isCanceled, let raw, !raw.isEmpty else { return nil }
         return raw
     }
+
+    /// ヘッダーの見出し行。取消報では backend の headline を捨て、取消の主文に差し替える。
+    func headerHeadline(from raw: String?) -> String? {
+        isCanceled ? Self.canceledTitle : headline(from: raw)
+    }
+
+    // MARK: - 取消報の文言
+
+    /// 取消報の主文。Lock Screen と Dynamic Island で文言を揃える。
+    static let canceledTitle = "緊急地震速報は取り消されました"
+
+    /// 取消報の補足。震度や到達予想を出していない理由を伝える。
+    static let canceledDescription = "予想震度・主要動到達の予想は無効です"
 }
