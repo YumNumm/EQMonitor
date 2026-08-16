@@ -21,12 +21,12 @@
 workflow で matcher を登録した後、次のコマンドをリポジトリルートから実行する。
 
 ```shell
-mise exec -- dart analyze app --fatal-infos
+mise exec -- dart analyze app --fatal-infos --format machine
 ```
 
-matcher は Dart 公式 `dart-lang/setup-dart` の matcher と同様に、
-現在使用されるハイフン区切りと従来の中黒区切りの両形式を扱う。
-診断の severity、ファイル、行、列、メッセージ、診断コードを抽出する。
+machine 形式は診断ファイルを絶対パスで出力するため、`app` 配下のファイルを
+GitHub が確実に解決できる。matcher は severity、ファイル、行、列、
+メッセージ、診断コードを抽出する。
 
 ## Workflow の権限
 
@@ -44,9 +44,9 @@ SDK の導入、依存解決、plugin の起動に失敗した場合も、その
 ## 検証
 
 - problem matcher JSON が有効な JSON であることを確認する。
-- analyzer の代表的な両出力形式が matcher の正規表現に一致することを確認する。
+- analyzer の machine 形式が matcher の正規表現に一致することを確認する。
 - `actionlint` で変更後の workflow を検証する。
-- mise 経由で実際の `dart analyze app --fatal-infos` を実行し、解析経路を確認する。
+- mise 経由で実際の machine 形式の解析を実行し、解析経路を確認する。
 - workflow から Invertase Action と Node 20 一時許可設定が消えていることを検索する。
 
 既存の analyzer debt によって解析が失敗する場合は、置換とは分離して結果を報告する。

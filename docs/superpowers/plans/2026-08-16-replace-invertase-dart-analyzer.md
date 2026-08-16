@@ -20,7 +20,7 @@
 - Modify: `.github/workflows/wc-check-dart-analyze.yaml`
 
 **Interfaces:**
-- Consumes: `dart analyze` のハイフン区切りまたは中黒区切り diagnostics
+- Consumes: `dart analyze --format machine` の絶対パス付き diagnostics
 - Produces: GitHub の error、warning、info ファイル注釈と analyzer の終了コード
 
 - [ ] **Step 1: 置換前の検査が失敗することを確認する**
@@ -35,7 +35,7 @@ Expected: matcher は未作成で、workflow から Invertase Action と `checks
 - [ ] **Step 2: Dart analyzer problem matcher を追加する**
 
 `problemMatcher` 配列に severity、位置、メッセージ、診断コードを抽出する
-`dart-analyzer-bullet` と `dart-analyzer-dash` を定義する。
+`dart-analyzer-machine` を定義する。
 
 - [ ] **Step 3: workflow を直接解析へ置換する**
 
@@ -46,15 +46,15 @@ Expected: matcher は未作成で、workflow から Invertase Action と `checks
         run: echo "::add-matcher::.github/problem-matchers/dart-analyzer.json"
 
       - name: Analyze app
-        run: mise exec -- dart analyze app --fatal-infos
+        run: mise exec -- dart analyze app --fatal-infos --format machine
 ```
 
 - [ ] **Step 4: matcher と workflow を検証する**
 
 ```shell
-jq -e '.problemMatcher | length == 2' .github/problem-matchers/dart-analyzer.json
+jq -e '.problemMatcher | length == 1' .github/problem-matchers/dart-analyzer.json
 mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml
-mise exec -- dart analyze app --fatal-infos
+mise exec -- dart analyze app --fatal-infos --format machine
 ! rg -n "invertase/github-action-dart-analyzer|ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION|checks: write" .github/workflows/wc-check-dart-analyze.yaml
 ```
 
