@@ -16,7 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
   final Widget home;
 
   @override
@@ -29,7 +29,7 @@ class _TestApp extends StatelessWidget {
 }
 
 class _ThemedRouterApp extends ConsumerWidget {
-  const _ThemedRouterApp({required this.router});
+  const new({required this.router});
 
   final GoRouter router;
 
@@ -38,7 +38,10 @@ class _ThemedRouterApp extends ConsumerWidget {
     final colorSet = ref.watch(colorSetForBrightnessProvider(Brightness.light));
     return MaterialApp.router(
       routerConfig: router,
-      theme: buildTheme(colorSet: colorSet, brightness: Brightness.light),
+      theme: AppThemeDataBuilder.build(
+        colorSet: colorSet,
+        brightness: Brightness.light,
+      ),
     );
   }
 }

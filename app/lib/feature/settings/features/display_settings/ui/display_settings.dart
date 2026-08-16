@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DisplaySettingsPage extends StatelessWidget {
-  const DisplaySettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DisplaySettingsPage extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _Body extends StatelessWidget {
 }
 
 class _ThemeSelector extends ConsumerWidget {
-  const _ThemeSelector();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
