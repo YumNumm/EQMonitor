@@ -107,7 +107,11 @@ class _RecordingEewGlobalNotifier extends EewGlobalSettingsNotifier {
     bool? collapseNotification,
     bool? warningEnabled,
   }) async {
-    calls.add({'enabled': enabled, 'warningEnabled': warningEnabled});
+    calls.add({
+      'enabled': enabled,
+      'startLiveActivity': startLiveActivity,
+      'warningEnabled': warningEnabled,
+    });
   }
 }
 
@@ -173,7 +177,9 @@ Future<ProviderContainer> _container({
   final prefs = await SharedPreferences.getInstance();
   return ProviderContainer(
     overrides: [
-      sharedPreferencesProvider.overrideWithValue(SharedPreferencesAsync(prefs)),
+      sharedPreferencesProvider.overrideWithValue(
+        SharedPreferencesAsync(prefs),
+      ),
       notificationSlotsProvider.overrideWith(() => slots),
       generalNotificationSettingsProvider.overrideWith(() => general),
       eewGlobalSettingsProvider.overrideWith(() => eewGlobal),
@@ -217,6 +223,7 @@ void main() {
       expect(applied.single.earthquakeMinIntensity, JmaIntensity.one);
       expect(general.calls.single['notificationEnabled'], isTrue);
       expect(eewGlobal.calls.single['enabled'], isTrue);
+      expect(eewGlobal.calls.single['startLiveActivity'], isTrue);
       expect(eewGlobal.calls.single['warningEnabled'], isTrue);
       expect(earthquakeGlobal.calls.single, isTrue);
       expect(preset.selected, [NotificationPreset.recommended]);
@@ -253,10 +260,11 @@ void main() {
       expect(general.calls.single['notificationEnabled'], isTrue);
       expect(general.calls.single['nankaiExtraordinaryEnabled'], isTrue);
       expect(general.calls.single['nankaiRegularEnabled'], isTrue);
+      expect(eewGlobal.calls.single['startLiveActivity'], isTrue);
       expect(preset.selected, [NotificationPreset.all]);
     });
 
-    test('none: 全スロット削除・通知無効・グローバル据え置き', () async {
+    test('none: 全スロット削除・通知無効・Live Activity無効', () async {
       final slots = _RecordingSlotsNotifier(const []);
       final general = _RecordingGeneralNotifier();
       final eewGlobal = _RecordingEewGlobalNotifier();
@@ -279,8 +287,9 @@ void main() {
 
       expect(slots.replaceCalls.single, isEmpty);
       expect(general.calls.single['notificationEnabled'], isFalse);
-      expect(eewGlobal.calls, isEmpty);
-      expect(earthquakeGlobal.calls, isEmpty);
+      expect(eewGlobal.calls.single['enabled'], isTrue);
+      expect(eewGlobal.calls.single['startLiveActivity'], isFalse);
+      expect(earthquakeGlobal.calls.single, isTrue);
       expect(preset.selected, [NotificationPreset.none]);
     });
 
@@ -308,6 +317,9 @@ void main() {
       final applied = slots.replaceCalls.single;
       expect(applied, hasLength(1));
       expect(applied.single.slotType, NotificationSlotType.currentLocation);
+      expect(eewGlobal.calls.single['enabled'], isTrue);
+      expect(eewGlobal.calls.single['startLiveActivity'], isTrue);
+      expect(earthquakeGlobal.calls.single, isTrue);
       expect(eewWarning.calls, isEmpty);
       expect(preset.selected, [NotificationPreset.custom]);
     });
@@ -364,6 +376,9 @@ void main() {
       expect(applied, hasLength(1));
       expect(applied.single.slotType, NotificationSlotType.region);
       expect(applied.single.regionId, 10);
+      expect(eewGlobal.calls.single['enabled'], isTrue);
+      expect(eewGlobal.calls.single['startLiveActivity'], isTrue);
+      expect(earthquakeGlobal.calls.single, isTrue);
       expect(eewWarning.calls, [EewWarningTarget.currentLocationAndNationwide]);
       expect(preset.selected, [NotificationPreset.custom]);
     });

@@ -52,13 +52,13 @@ class NotificationSlotRepository {
     return response.data.map((s) => s.toNotificationSlot()).toList();
   }
 
-  /// 現在地スロットを upsert する
-  ///
-  /// 最小震度は固定値のため引数で受け取らない。
+  /// 現在地スロットを upsert する。
   Future<NotificationSlot> putCurrentLocation({
     bool? eewEnabled,
+    JmaIntensity? eewMinIntensity,
     List<NotificationOverride>? eewOverrides,
     bool? earthquakeEnabled,
+    JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final resolvedEewEnabled = eewEnabled ?? false;
@@ -68,14 +68,17 @@ class NotificationSlotRepository {
           body: api.UpsertSingletonSlotRequest(
             eewEnabled: resolvedEewEnabled,
             eewMinIntensity: resolvedEewEnabled
-                ? currentLocationEewMinIntensity.toApiJmaIntensity
+                ? (eewMinIntensity ?? currentLocationEewMinIntensity)
+                      .toApiJmaIntensity
                 : null,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
             earthquakeEnabled: resolvedEarthquakeEnabled,
             earthquakeMinIntensity: resolvedEarthquakeEnabled
-                ? currentLocationEarthquakeMinIntensity.toApiJmaIntensity
+                ? (earthquakeMinIntensity ??
+                          currentLocationEarthquakeMinIntensity)
+                      .toApiJmaIntensity
                 : null,
             earthquakeOverrides: earthquakeOverrides
                 ?.map((o) => o.toApiSlotOverride())
