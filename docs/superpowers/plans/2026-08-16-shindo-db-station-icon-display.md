@@ -4,7 +4,7 @@
 
 **Goal:** 震度DB観測点へXML観測点と同じfull/plain/最大震度のアイコン表示要件を適用する。
 
-**Architecture:** 震度階級からラベルなしアイコンIDを解決する責務を既存のアイコンID extensionへ追加する。震度DB GeoJSONを表示モード非依存のfull/plain/isMax契約に変更し、MapLibreレイヤーではXMLと同じ `stationIconImageExpression` を利用する。
+**Architecture:** 震度階級からラベルなしアイコンIDを解決する責務を既存のアイコンID extensionへ追加する。震度DB GeoJSONを表示モード非依存のfull/plain/isMax契約に変更し、MapLibreレイヤーではXMLと同じ `StationIconImageExpressionBuilder` を利用する。
 
 **Tech Stack:** Flutter、Dart、MapLibre style expressions、flutter_test
 
@@ -66,7 +66,7 @@ Commit: `Fix: 震度DB階級にラベルなしアイコンIDを追加`
 - Test: `app/test/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_station_layer_lifecycle_test.dart`
 
 **Interfaces:**
-- Consumes: `mapIconId`、`plainMapIconId`、`stationIconImageExpression`
+- Consumes: `mapIconId`、`plainMapIconId`、`StationIconImageExpressionBuilder`
 - Produces: GeoJSON properties `iconIdFull`、`iconIdPlain`、`isMax`、`sortKey`
 
 - [ ] **Step 1: GeoJSON契約の失敗テストを書く**
@@ -92,7 +92,7 @@ Expected: `iconIdFull` / `iconIdPlain` / `isMax` が無くFAIL。
 全観測階級から `orderIndex` 最大の階級を導出し、各featureへfull/plain/isMaxを格納する。`EarthquakeHistoryShindoDbStationLayer` とBuilderへ既定値 `.auto` の `StationDisplayMode` を渡し、`icon-image` を次へ変更する。
 
 ```dart
-'icon-image': stationIconImageExpression(
+'icon-image': const StationIconImageExpressionBuilder().build(
   stationDisplayMode: stationDisplayMode,
   stationTextZoom: parameter.stationTextZoom,
 ),

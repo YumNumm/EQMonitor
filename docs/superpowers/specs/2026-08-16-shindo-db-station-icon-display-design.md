@@ -4,11 +4,11 @@
 
 地震履歴詳細マップでは、防災情報XML由来の観測点が `StationDisplayMode.auto` に従い、ズーム閾値未満では最大震度の観測点だけに震度ラベルを表示し、閾値以上では全観測点に表示する。
 
-震度データベース由来の観測点は単一の `iconId` を常に参照しており、この表示要件が適用されていない。XML観測点を `iconIdFull`、`iconIdPlain`、`isMax` と共通の `stationIconImageExpression` へ移行した際、震度DBレイヤーが移行対象から漏れたことが原因である。
+震度データベース由来の観測点は単一の `iconId` を常に参照しており、この表示要件が適用されていない。XML観測点を `iconIdFull`、`iconIdPlain`、`isMax` と共通の `StationIconImageExpressionBuilder` へ移行した際、震度DBレイヤーが移行対象から漏れたことが原因である。
 
 ## 方針
 
-震度DB観測点にもXML観測点と同じ `stationIconImageExpression` を適用する。震度DB用GeoJSONは各観測点に次のプロパティを持たせる。
+震度DB観測点にもXML観測点と同じ `StationIconImageExpressionBuilder` を適用する。震度DB用GeoJSONは各観測点に次のプロパティを持たせる。
 
 - `iconIdFull`: 震度階級ラベル入りアイコン
 - `iconIdPlain`: ラベルなしアイコン
