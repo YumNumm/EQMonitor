@@ -16,6 +16,7 @@ import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -116,13 +117,15 @@ class BaseMapView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tickerProvider = useSingleTickerProvider();
     final controller = useMemoized(
       () => _BaseMapController(
         source: source,
         limits: limits,
         initialCamera: initialCamera,
+        vsync: tickerProvider,
       ),
-      [source, limits],
+      [source, limits, tickerProvider],
     );
     useEffect(() => controller.dispose, [controller]);
     useListenable(controller);
@@ -168,7 +171,7 @@ class BaseMapView extends HookWidget {
                 focalPointDelta: details.focalPointDelta,
                 focalPoint: details.localFocalPoint,
               ),
-              onScaleEnd: (_) => controller.endGesture(),
+              onScaleEnd: (details) => controller.endGesture(details.velocity),
               child: scene.SceneView(
                 controller.sceneGraph,
                 camera: controller.camera,
@@ -253,7 +256,9 @@ class _BaseMapController extends ChangeNotifier {
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
-  }) : _camera = initialCamera;
+    required TickerProvider vsync,
+  }) : _camera = initialCamera,
+       _flingController = AnimationController(vsync: vsync);
 
   final VerifiedPmTilesSource source;
   final MapBaseLayerLimits limits;
@@ -425,7 +430,18 @@ class _BaseMapController extends ChangeNotifier {
     }
   }
 
+  /// 慣性を駆動するcontroller。`0..1`を進み、[Curves.decelerate]で補間した
+  /// 変位を毎frame差分としてcameraへ渡す(`InteractiveViewer`と同じ形)。
+  final AnimationController _flingController;
+  Animation<Offset>? _flingAnimation;
+
+  /// 慣性のうち既にcameraへ適用済みの変位。frame間の差分を出すために持つ。
+  Offset _flingApplied = Offset.zero;
+
   void beginGesture() {
+    // 慣性中に指を置いたらその場で止める。止めないと指の動きと慣性が
+    // 二重に効いて、掴んだ地点が指から逃げる。
+    _stopFling();
     _gestureStartZoom = _camera.zoom;
   }
 
@@ -452,8 +468,54 @@ class _BaseMapController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void endGesture() {
+  void endGesture(Velocity velocity) {
     _gestureStartZoom = null;
+    final fling = mapFlingAfterGesture(velocity: velocity);
+    if (fling == null) {
+      return;
+    }
+    _flingApplied = Offset.zero;
+    _flingAnimation =
+        Tween<Offset>(begin: Offset.zero, end: fling.translation).animate(
+          CurvedAnimation(parent: _flingController, curve: Curves.decelerate),
+        )..addListener(_onFlingTick);
+    _flingController
+      ..duration = fling.duration
+      ..forward(from: 0);
+  }
+
+  void _onFlingTick() {
+    final animation = _flingAnimation;
+    if (animation == null) {
+      return;
+    }
+    final delta = animation.value - _flingApplied;
+    _flingApplied = animation.value;
+    if (delta == Offset.zero) {
+      return;
+    }
+    // scale 1 なので zoom は変わらず、焦点固定も恒等になる。指が無いので
+    // focalPoint は渡さない。
+    _camera = cameraAfterGestureUpdate(
+      camera: _camera,
+      gestureStartZoom: _camera.zoom,
+      cumulativeScale: 1,
+      focalPointDelta: delta,
+      minZoom: limits.minZoom,
+      maxZoom: limits.maxZoom,
+    );
+    _refresh();
+    notifyListeners();
+  }
+
+  void _stopFling() {
+    if (!_flingController.isAnimating && _flingAnimation == null) {
+      return;
+    }
+    _flingController.stop();
+    _flingAnimation?.removeListener(_onFlingTick);
+    _flingAnimation = null;
+    _flingApplied = Offset.zero;
   }
 
   void _refresh() {
@@ -619,6 +681,8 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _isDisposed = true;
+    _stopFling();
+    _flingController.dispose();
     _cache.dispose();
     _sceneMeshCache.clear();
     unawaited(_repository?.close());
@@ -781,6 +845,57 @@ MapCamera cameraAfterGestureUpdate({
 }
 
 double _log2(double value) => math.log(value) / math.ln2;
+
+/// 慣性の減衰係数。`InteractiveViewer`の`_kDrag`と同じ値で、Flutter標準の
+/// スクロールと指の離し方に対する体感を揃えるためにそのまま採る。
+///
+/// **これは摩擦の強さではなく「1秒あたりの速度保持率」**で、0に近いほど
+/// 強く減衰する([FrictionSimulation]は`finalX = -v / log(drag)`)。
+/// 慣性を短くしたいなら値を**下げる**。上げると伸びる。
+const kMapFlingDrag = 0.0000135;
+
+/// この速度未満のflickは慣性を起こさない。指を止めて離す操作で地図が
+/// ずるずる動かないようにするための下限。
+const kMapFlingMinVelocityPixelsPerSecond = 50.0;
+
+/// 慣性が止まったとみなす速度。所要時間の算出にだけ使う。
+const _kMapFlingMotionlessPixelsPerSecond = 10.0;
+
+/// gesture終了時の[velocity]から、慣性で進む総移動量と所要時間を返す。
+/// [velocity]が[minVelocityPixelsPerSecond]未満なら`null`(慣性なし)。
+///
+/// `InteractiveViewer`と同じく軸ごとの[FrictionSimulation]で最終変位を
+/// 求め、所要時間は速度が[_kMapFlingMotionlessPixelsPerSecond]まで
+/// 落ちるまでの時間とする。呼び出し側は返った`translation`へ
+/// `Curves.decelerate`で補間しながら、frameごとの差分を
+/// [cameraAfterGestureUpdate]の`focalPointDelta`として渡す想定。
+///
+/// [drag]と[minVelocityPixelsPerSecond]は実機の体感で調整する余地を
+/// 残すため引数にしている(既定値は`InteractiveViewer`準拠)。
+({Offset translation, Duration duration})? mapFlingAfterGesture({
+  required Velocity velocity,
+  double drag = kMapFlingDrag,
+  double minVelocityPixelsPerSecond = kMapFlingMinVelocityPixelsPerSecond,
+}) {
+  final pixelsPerSecond = velocity.pixelsPerSecond;
+  final speed = pixelsPerSecond.distance;
+  if (speed < minVelocityPixelsPerSecond) {
+    return null;
+  }
+  final translation = Offset(
+    FrictionSimulation(drag, 0, pixelsPerSecond.dx).finalX,
+    FrictionSimulation(drag, 0, pixelsPerSecond.dy).finalX,
+  );
+  // 速度が「止まった」とみなせる値まで落ちるまでの時間。
+  // `InteractiveViewer._getFinalTime`と同じ式。
+  final seconds =
+      math.log(_kMapFlingMotionlessPixelsPerSecond / speed) /
+      math.log(drag / 100);
+  return (
+    translation: translation,
+    duration: Duration(microseconds: (seconds * 1000000).round()),
+  );
+}
 
 /// [TileCoverCalculator.cover]が内部で使うのと同じ、
 /// 「floorしたcamera zoomをtile zoom範囲へclampする」計算。`cover`の結果に

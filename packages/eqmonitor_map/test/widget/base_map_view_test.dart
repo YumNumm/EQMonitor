@@ -212,6 +212,72 @@ void main() {
     });
   });
 
+  group('mapFlingAfterGesture', () {
+    test('a slow flick produces no fling', () {
+      expect(
+        mapFlingAfterGesture(
+          velocity: const Velocity(pixelsPerSecond: Offset(10, 10)),
+        ),
+        isNull,
+      );
+    });
+
+    test('a fast flick travels in the direction of the flick', () {
+      final fling = mapFlingAfterGesture(
+        velocity: const Velocity(pixelsPerSecond: Offset(2000, -1000)),
+      );
+
+      expect(fling, isNotNull);
+      expect(fling!.translation.dx, greaterThan(0));
+      expect(fling.translation.dy, lessThan(0));
+      expect(fling.duration, greaterThan(Duration.zero));
+    });
+
+    test('a faster flick travels further and longer', () {
+      final slow = mapFlingAfterGesture(
+        velocity: const Velocity(pixelsPerSecond: Offset(800, 0)),
+      )!;
+      final fast = mapFlingAfterGesture(
+        velocity: const Velocity(pixelsPerSecond: Offset(3200, 0)),
+      )!;
+
+      expect(fast.translation.dx, greaterThan(slow.translation.dx));
+      expect(fast.duration, greaterThan(slow.duration));
+    });
+
+    test('a smaller drag coefficient shortens the travel', () {
+      // drag は「1秒あたりの速度保持率」であって摩擦の強さではない。
+      // 0 に近いほど強く減衰する(finalX = -v / log(drag))。逆向きに
+      // 調整されるのを防ぐためピン留めしておく。
+      const velocity = Velocity(pixelsPerSecond: Offset(2000, 0));
+      final sticky = mapFlingAfterGesture(velocity: velocity, drag: 1e-6)!;
+      final loose = mapFlingAfterGesture(velocity: velocity, drag: 0.001)!;
+
+      expect(sticky.translation.dx, lessThan(loose.translation.dx));
+    });
+
+    test('the threshold is a caller-tunable knob', () {
+      const velocity = Velocity(pixelsPerSecond: Offset(30, 0));
+
+      expect(mapFlingAfterGesture(velocity: velocity), isNull);
+      expect(
+        mapFlingAfterGesture(
+          velocity: velocity,
+          minVelocityPixelsPerSecond: 1,
+        ),
+        isNotNull,
+      );
+    });
+
+    test('an exactly-zero velocity produces no fling', () {
+      // log(0) を踏まないこと。指を止めて離す一番よくある操作。
+      expect(
+        mapFlingAfterGesture(velocity: Velocity.zero),
+        isNull,
+      );
+    });
+  });
+
   group('canonicalZoomFor', () {
     test('floors a fractional zoom within range', () {
       expect(canonicalZoomFor(zoom: 5.9, minZoom: 0, maxZoom: 10), 5);
