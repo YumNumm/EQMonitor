@@ -1,11 +1,8 @@
-// ignore_for_file: avoid_top_level_functions
-
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/model/earthquake_history_list_display.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// ignore: avoid_top_level_functions
 void main() {
   test('背景塗りつぶし設定を一覧表示へ反映する', () {
     final display = EarthquakeHistoryListDisplay.resolve(
