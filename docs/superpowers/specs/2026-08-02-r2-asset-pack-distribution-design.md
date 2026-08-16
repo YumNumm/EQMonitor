@@ -38,29 +38,38 @@ production の論理 base URL は
 `https://assets.eqmonitor.app/v1/assets` とし、アプリには build-time 設定として渡す。
 クライアントに R2 credential、GitHub token、署名秘密鍵は含めない。
 
+home8s の `terraform/cloudflare` で `eqmonitor-assets` bucket と
+`assets.eqmonitor.app` の `cloudflare_r2_custom_domain` を管理する。この hostname は
+R2 custom domain として直接公開し、Cloudflare Tunnel ingress、Worker route、
+`api/api` endpoint には追加しない。`/v1/assets/...` はそのまま R2 object key とする。
+
+backend の release workflow は Wrangler を object uploader として使う。認証には
+R2 Object Read & Write に限定した `CLOUDFLARE_API_TOKEN` と account ID を GitHub Actions
+secret / variable から渡し、bucket 作成や custom domain 管理は行わない。署名秘密鍵は
+PKCS#8 DER の base64 を `ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64`、対応する識別子を
+`ASSET_PACK_SIGNING_KEY_ID` として CI にだけ保持する。アプリには対応する SPKI 公開鍵だけを
+埋め込む。
+
 R2 には次の object を配置する。
 
 ```text
 v1/assets/
-  catalog.json
-  catalog.sig
+  manifest.json
+  manifest.sig
   packs/
     0.0.2/
-      manifest.json
-      manifest.sig
-      map/all.pmtiles
-      parameters/jma_code_table.json
-      parameters/earthquake_stations.json
-      parameters/tsunami_stations.json
-      parameters/kyoshin_observation_points.json
-      parameters/shindo_db_stations.json
+      asset-pack-v0.0.2.zip
     0.0.3/
-      ...
+      asset-pack-v0.0.3.zip
 ```
 
 `packs/{version}/` 以下は immutable とし、公開後の上書きを禁止する。
-更新が必要な場合は必ず新しい SemVer を発行する。`catalog.json` だけが mutable な
+更新が必要な場合は必ず新しい SemVer を発行する。`manifest.json` だけが mutable な
 latest pointer と累積履歴を兼ねる。
+
+ZIP の直下には Pack 内 `manifest.json`、`map/`、`parameters/` を配置する。アプリは
+署名済みトップレベル manifest に記録された ZIP 全体の SHA-256 を検証してから展開し、
+展開後に Pack 内 manifest の各 Asset の size と SHA-256 を検証する。
 
 ## 信頼モデルと署名
 
@@ -68,10 +77,7 @@ latest pointer と累積履歴を兼ねる。
 secret としてのみ保持する。鍵ローテーションでは、旧・新公開鍵を含むアプリを先に
 配布してから、新しい `key_id` で署名を開始する。
 
-次の 2 つを個別に署名する。
-
-1. `catalog.json` の配信された UTF-8 byte 列
-2. 各 version の `manifest.json` の配信された UTF-8 byte 列
+トップレベル `manifest.json` の配信された UTF-8 byte 列を署名する。
 
 アプリは JSON を parse・再 serialize して署名検証しない。取得した byte 列をそのまま
 検証し、成功後にだけ JSON として parse する。
@@ -91,13 +97,15 @@ secret としてのみ保持する。鍵ローテーションでは、旧・新�
 `content_sha256` は配信・cache の組合せ違いを診断するための値であり、真正性は
 Ed25519 署名で判定する。未知の `key_id`、algorithm、signature schema は拒否する。
 
-各 Asset binary は `manifest.json` に記録された size と SHA-256 で検証する。
-すなわち信頼連鎖は「アプリ内公開鍵 → manifest 署名 → Asset SHA-256」であり、
-binary ごとの署名 file は不要とする。
+各 ZIP はトップレベル manifest の `archive_size_bytes` と `archive_sha256` で検証し、
+各 Asset binary は ZIP 内 manifest に記録された size と SHA-256 で検証する。
+すなわち信頼連鎖は「アプリ内公開鍵 → トップレベル manifest 署名 → ZIP SHA-256 →
+Pack 内 manifest → Asset SHA-256」であり、ZIP や binary ごとの署名 file は不要とする。
 
-## Catalog
+## トップレベル Manifest
 
-`catalog.json` は最新 version と全 Change log 履歴を新しい順で保持する。
+`manifest.json` は最新 version、各 immutable ZIP の検証情報、全 Change log 履歴を
+新しい順で保持する。
 
 ```json
 {
@@ -110,9 +118,9 @@ binary ごとの署名 file は不要とする。
       "version": "0.0.3",
       "published_at": "2026-08-02",
       "minimum_app_version": "3.0.0",
-      "download_size_bytes": 17301504,
-      "manifest_path": "packs/0.0.3/manifest.json",
-      "signature_path": "packs/0.0.3/manifest.sig",
+      "archive_path": "packs/0.0.3/asset-pack-v0.0.3.zip",
+      "archive_size_bytes": 17301504,
+      "archive_sha256": "<lowercase hex>",
       "localizations": {
         "ja": {
           "sections": [
@@ -137,21 +145,22 @@ binary ごとの署名 file は不要とする。
 ```
 
 version は prerelease を含まない `MAJOR.MINOR.PATCH` に限定する。`revision` は
-catalog 公開ごとに増加する正の整数とする。`latest_version` は `packs` の先頭かつ
+manifest 公開ごとに増加する正の整数とする。`latest_version` は `packs` の先頭かつ
 最大 version と一致しなければならない。各 entry の version は一意とし、日本語・英語の
-両方に 1 件以上の section と item を要求する。
+両方に 1 件以上の section と item を要求する。`archive_path` は version と一致する
+固定形式の relative path だけを受け入れ、absolute URL や path traversal を拒否する。
 
-手書き元は repository の `tool/asset_pack/changelog.json` とする。この JSON は
+手書き元は backend repository の `tools/asset-pack/changelog.json` とする。この JSON は
 version、公開日、minimum app version、日本語・英語の sections を累積保持する。
-release CI は Pack の manifest から `download_size_bytes` と version 固定 path を加え、
-配信用 `catalog.json` を生成する。過去 entry は append-only とし、CI は現在 R2 にある
-署名済み catalog と比較して、過去 entry の削除・変更、revision の巻き戻し、version の
+release CI は生成した ZIP から `archive_size_bytes`、`archive_sha256`、version 固定 path を加え、
+配信用 `manifest.json` を生成する。過去 entry は append-only とし、CI は現在 R2 にある
+署名済み manifest と比較して、過去 entry の削除・変更、revision の巻き戻し、version の
 重複を拒否する。
 
 アプリは端末 locale が日本語なら `ja`、それ以外なら `en` を表示する。更新を複数世代
 飛ばした場合は、現行 version より新しく候補 version 以下の entry をすべて表示する。
 
-## Manifest
+## Pack 内 Manifest
 
 既存 manifest を拡張し、少なくとも次を保持する。
 
@@ -160,8 +169,8 @@ release CI は Pack の manifest から `download_size_bytes` と version 固定
 - `generated_at`
 - Asset ごとの logical ID、kind、relative path、`size_bytes`、`sha256`
 
-manifest 自身、signature sidecar、catalog は Asset 一覧へ含めない。Asset path は
-R2 prefix と端末 staging root のどちらにも安全に連結できる正規化済み relative path
+manifest 自身は Asset 一覧へ含めない。Asset path は
+ZIP 展開先と端末 staging root のどちらにも安全に連結できる正規化済み relative path
 とする。空 path、absolute path、`.`、`..`、空 segment、backslash、重複 path、
 重複 logical ID を拒否する。
 
