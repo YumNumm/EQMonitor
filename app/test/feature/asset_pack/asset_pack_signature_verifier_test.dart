@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cryptography/cryptography.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_signature.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/trusted_asset_pack_keys.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_signature_verifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -60,6 +62,24 @@ void main() {
   });
 
   group('AssetPackSignatureVerifier', () {
+    test('trusts the active production signing key', () async {
+      final content = utf8.encode(
+        'EQMonitor Asset Pack key rotation 2026-08-16\n',
+      );
+      final signature = Signature(
+        base64Decode(
+          'h6IKS0aHdR7xPkEqBXULTlsMz73iCbKjXXdbQA2fRXF'
+          'T1xPO90NWafPse85A6NEWNYi0fGZnGBvNiH0d55KhCg==',
+        ),
+        publicKey: SimplePublicKey(
+          trustedAssetPackPublicKeys[assetPackSigningKeyId20260816] ?? [],
+          type: KeyPairType.ed25519,
+        ),
+      );
+
+      expect(await Ed25519().verify(content, signature: signature), isTrue);
+    });
+
     test('matches the RFC 8032 Ed25519 empty-message vector', () async {
       final verifier = AssetPackSignatureVerifier(
         publicKeys: {'test-key': publicKey},
