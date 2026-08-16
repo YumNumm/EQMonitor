@@ -68,8 +68,7 @@ class AboutThisAppPage extends HookWidget {
                 Icons.description,
                 color: designSystem.colorTheme.onSurfaceVariant,
               ),
-              onTap: () async =>
-                  const TermOfServiceRoute($extra: null).push<void>(context),
+              onTap: () async => const TermOfServiceRoute().push<void>(context),
             ),
             ListTile(
               title: Text(
@@ -80,8 +79,7 @@ class AboutThisAppPage extends HookWidget {
                 Icons.info,
                 color: designSystem.colorTheme.onSurfaceVariant,
               ),
-              onTap: () async =>
-                  const PrivacyPolicyRoute($extra: null).push<void>(context),
+              onTap: () async => const PrivacyPolicyRoute().push<void>(context),
             ),
             ListTile(
               title: Text('ライセンス情報', style: designSystem.typography.bodyLarge),

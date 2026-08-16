@@ -906,82 +906,44 @@ mixin $KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
 
 mixin $TermOfServiceRoute on GoRouteData {
   static TermOfServiceRoute _fromState(GoRouterState state) =>
-      TermOfServiceRoute(
-        showAcceptButton:
-            _$convertMapValue(
-              'show-accept-button',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        $extra: state.extra as void Function({bool isAccepted})?,
-      );
-
-  TermOfServiceRoute get _self => this as TermOfServiceRoute;
+      const TermOfServiceRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/settings/term-of-service',
-    queryParams: {
-      if (_self.showAcceptButton != false)
-        'show-accept-button': _self.showAcceptButton.toString(),
-    },
-  );
+  String get location => GoRouteData.$location('/settings/term-of-service');
 
   @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+  void go(BuildContext context) => context.go(location);
 
   @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
+      context.pushReplacement(location);
 
   @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
+  void replace(BuildContext context) => context.replace(location);
 }
 
 mixin $PrivacyPolicyRoute on GoRouteData {
   static PrivacyPolicyRoute _fromState(GoRouterState state) =>
-      PrivacyPolicyRoute(
-        showAcceptButton:
-            _$convertMapValue(
-              'show-accept-button',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        $extra: state.extra as void Function({bool isAccepted})?,
-      );
-
-  PrivacyPolicyRoute get _self => this as PrivacyPolicyRoute;
+      const PrivacyPolicyRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/settings/privacy-policy',
-    queryParams: {
-      if (_self.showAcceptButton != false)
-        'show-accept-button': _self.showAcceptButton.toString(),
-    },
-  );
+  String get location => GoRouteData.$location('/settings/privacy-policy');
 
   @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+  void go(BuildContext context) => context.go(location);
 
   @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
+      context.pushReplacement(location);
 
   @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
+  void replace(BuildContext context) => context.replace(location);
 }
 
 mixin $LicenseRoute on GoRouteData {
@@ -1939,26 +1901,6 @@ mixin $HinetSeismicityRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
-}
-
-bool _$boolConverter(String value) {
-  switch (value) {
-    case 'true':
-      return true;
-    case 'false':
-      return false;
-    default:
-      throw UnsupportedError('Cannot convert "$value" into a bool.');
-  }
-}
-
 RouteBase get $feedRoute =>
     GoRouteData.$route(path: '/feed', factory: $FeedRoute._fromState);
 
@@ -2172,4 +2114,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'7cc48d7ff9ab9df8722f4156f0d2c1c42260e640';
+String _$goRouterHash() => r'e533e22c81d62388f0f2f2e11f404e2309499925';
