@@ -47,7 +47,7 @@ backend の release workflow は Wrangler を object uploader として使う。
 R2 Object Read & Write に限定した `CLOUDFLARE_API_TOKEN` と account ID を GitHub Actions
 secret / variable から渡し、bucket 作成や custom domain 管理は行わない。署名秘密鍵は
 PKCS#8 DER の base64 を `ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64`、対応する識別子を
-`ASSET_PACK_SIGNING_KEY_ID` として CI にだけ保持する。アプリには対応する SPKI 公開鍵だけを
+`ASSET_PACK_SIGNING_KEY_ID` として CI にだけ保持する。アプリには対応する raw 32-byte 公開鍵だけを
 埋め込む。
 
 R2 には次の object を配置する。
