@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/eew_warning_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
@@ -108,28 +109,13 @@ class SlotDetailPage extends HookConsumerWidget {
                     onChanged: (next) async {
                       switch (slot.slotType) {
                         case NotificationSlotType.currentLocation:
-                          await EewGlobalSettingsNotifier.updateSettingsMutation
-                              .run(ref, (tsx) async {
-                                await tsx
-                                    .get(eewGlobalSettingsProvider.notifier)
-                                    .updateSettings(warningEnabled: next);
-                              });
+                          await ref
+                              .read(eewWarningSettingsActionProvider)
+                              .updateCurrentLocation(ref, enabled: next);
                         case NotificationSlotType.nationwide:
-                          await EewWarningConfigNotifier.updateConfigMutation
-                              .run(ref, (tsx) async {
-                                await tsx
-                                    .get(eewWarningConfigProvider.notifier)
-                                    .updateConfig(
-                                      target: next
-                                          ? EewWarningTarget
-                                                .currentLocationAndNationwide
-                                          : EewWarningTarget
-                                                .currentLocationOnly,
-                                      nationwideInterruptionLevel: next
-                                          ? InterruptionLevel.active
-                                          : null,
-                                    );
-                              });
+                          await ref
+                              .read(eewWarningSettingsActionProvider)
+                              .updateNationwide(ref, enabled: next);
                         case NotificationSlotType.region:
                           return;
                       }

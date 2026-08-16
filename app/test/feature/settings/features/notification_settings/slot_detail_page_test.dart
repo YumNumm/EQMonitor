@@ -23,13 +23,16 @@ void main() {
       _slot(type: NotificationSlotType.currentLocation),
     );
     final eewNotifier = _RecordingEewGlobalSettingsNotifier();
+    final warningNotifier = _RecordingEewWarningConfigNotifier(
+      initialTarget: EewWarningTarget.currentLocationAndNationwide,
+    );
 
     await tester.pumpWidget(
       _TestApp(
         slot: slotsNotifier.slot,
         slotsNotifier: slotsNotifier,
         eewNotifier: eewNotifier,
-        warningNotifier: _RecordingEewWarningConfigNotifier(),
+        warningNotifier: warningNotifier,
       ),
     );
     await tester.pumpAndSettle();
@@ -43,6 +46,19 @@ void main() {
     await tester.tap(warningTile);
     await tester.pumpAndSettle();
     expect(eewNotifier.lastWarningEnabled, isFalse);
+    expect(
+      warningNotifier.state.requireValue.target,
+      EewWarningTarget.currentLocationOnly,
+    );
+
+    await tester.tap(find.widgetWithText(ListTile, '有効').at(1));
+    await tester.pumpAndSettle();
+    expect(eewNotifier.lastWarningEnabled, isTrue);
+    expect(eewNotifier.state.requireValue.warningEnabled, isTrue);
+    expect(
+      warningNotifier.state.requireValue.target,
+      EewWarningTarget.currentLocationOnly,
+    );
 
     final eewDropdown = find.byType(DropdownMenu<JmaIntensity>).first;
     final dropdown = tester.widget<DropdownMenu<JmaIntensity>>(eewDropdown);
@@ -54,12 +70,15 @@ void main() {
   testWidgets('nationwide warning can be enabled without Pro', (tester) async {
     final slot = _slot(type: NotificationSlotType.nationwide);
     final warningNotifier = _RecordingEewWarningConfigNotifier();
+    final eewNotifier = _RecordingEewGlobalSettingsNotifier(
+      initialWarningEnabled: false,
+    );
 
     await tester.pumpWidget(
       _TestApp(
         slot: slot,
         slotsNotifier: _RecordingSlotsNotifier(slot),
-        eewNotifier: _RecordingEewGlobalSettingsNotifier(),
+        eewNotifier: eewNotifier,
         warningNotifier: warningNotifier,
       ),
     );
@@ -81,6 +100,13 @@ void main() {
       warningNotifier.lastNationwideInterruptionLevel,
       InterruptionLevel.active,
     );
+    expect(eewNotifier.state.requireValue.warningEnabled, isTrue);
+
+    await tester.tap(find.widgetWithText(ListTile, '有効').at(1));
+    await tester.pumpAndSettle();
+    expect(warningNotifier.lastTarget, EewWarningTarget.currentLocationOnly);
+    expect(warningNotifier.lastNationwideInterruptionLevel, isNull);
+    expect(eewNotifier.state.requireValue.warningEnabled, isTrue);
   });
 
   testWidgets('region does not show warning settings', (tester) async {
@@ -142,16 +168,19 @@ class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
 }
 
 class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
+  _RecordingEewGlobalSettingsNotifier({this.initialWarningEnabled = true});
+
+  final bool initialWarningEnabled;
   bool? lastWarningEnabled;
 
   @override
-  Future<EewGlobalSettings> build() async => const EewGlobalSettings(
+  Future<EewGlobalSettings> build() async => EewGlobalSettings(
     enabled: true,
     defaultSound: 'default',
     defaultInterruptionLevel: InterruptionLevel.active,
     startLiveActivity: true,
     collapseNotification: true,
-    warningEnabled: true,
+    warningEnabled: initialWarningEnabled,
   );
 
   @override
@@ -173,12 +202,17 @@ class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
 }
 
 class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
+  _RecordingEewWarningConfigNotifier({
+    this.initialTarget = EewWarningTarget.currentLocationOnly,
+  });
+
+  final EewWarningTarget initialTarget;
   EewWarningTarget? lastTarget;
   InterruptionLevel? lastNationwideInterruptionLevel;
 
   @override
-  Future<EewWarningSettings> build() async => const EewWarningSettings(
-    target: EewWarningTarget.currentLocationOnly,
+  Future<EewWarningSettings> build() async => EewWarningSettings(
+    target: initialTarget,
     nationwideInterruptionLevel: null,
   );
 
