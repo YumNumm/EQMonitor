@@ -49,9 +49,9 @@ class _SliverListBody extends HookConsumerWidget {
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
     );
-    final listConfig = ref.watch(
+    final listConfigAsync = ref.watch(
       earthquakeHistoryConfigProvider.select(
-        (value) => value.requireValue.list,
+        (value) => value.whenData((config) => config.list),
       ),
     );
 
@@ -71,19 +71,30 @@ class _SliverListBody extends HookConsumerWidget {
           );
         }
       },
-      child: dataSourceAsync.when(
+      child: listConfigAsync.when(
         loading: () => const _EarthquakeHistorySkeleton(),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async =>
-              ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
+          onReload: () async {
+            ref.invalidate(earthquakeHistoryConfigProvider);
+            await ref.read(earthquakeHistoryConfigProvider.future);
+          },
         ),
-        data: (dataSource) => _PagingBody(
-          dataSource: dataSource,
-          listConfig: listConfig,
-          parameter: parameter,
-          onParameterChanged: (result) => parameter.value = result,
-          onRefresh: () => dataSource.refresh(),
+        data: (listConfig) => dataSourceAsync.when(
+          loading: () => const _EarthquakeHistorySkeleton(),
+          error: (error, _) => ErrorCard(
+            error: error,
+            onReload: () async => ref.refresh(
+              earthquakeHistoryDataSourceProvider(parameter.value),
+            ),
+          ),
+          data: (dataSource) => _PagingBody(
+            dataSource: dataSource,
+            listConfig: listConfig,
+            parameter: parameter,
+            onParameterChanged: (result) => parameter.value = result,
+            onRefresh: () => dataSource.refresh(),
+          ),
         ),
       ),
     );
