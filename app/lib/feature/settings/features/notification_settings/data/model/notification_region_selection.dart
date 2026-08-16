@@ -1,5 +1,5 @@
 final class NotificationRegionSelection {
-  const NotificationRegionSelection({
+  const new({
     required this.regionCode,
     required this.regionName,
     this.cityCode,

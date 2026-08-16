@@ -10,7 +10,7 @@ NotificationRegionCatalogBuilder notificationRegionCatalogBuilder(Ref ref) =>
     const NotificationRegionCatalogBuilder();
 
 final class NotificationRegionCatalogBuilder {
-  const NotificationRegionCatalogBuilder();
+  const new();
 
   NotificationRegionCatalog build({
     required JmaCodeTableParameter codeTable,

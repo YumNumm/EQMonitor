@@ -10,7 +10,7 @@ NotificationRegionAddAction notificationRegionAddAction(Ref ref) =>
     const NotificationRegionAddAction();
 
 final class NotificationRegionAddAction {
-  const NotificationRegionAddAction();
+  const new();
 
   Future<void> add({
     required WidgetRef ref,

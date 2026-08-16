@@ -8,7 +8,7 @@ NotificationRegionSearch notificationRegionSearch(Ref ref) =>
     const NotificationRegionSearch();
 
 final class NotificationRegionSearch {
-  const NotificationRegionSearch();
+  const new();
 
   List<T> filter<T>({
     required List<T> items,

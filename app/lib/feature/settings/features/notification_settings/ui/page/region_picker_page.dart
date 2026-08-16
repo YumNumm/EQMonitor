@@ -16,7 +16,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class RegionPickerPage extends HookConsumerWidget {
-  const RegionPickerPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -144,7 +144,7 @@ class RegionPickerPage extends HookConsumerWidget {
 }
 
 class _RegionListTile extends StatelessWidget {
-  const _RegionListTile({
+  const new({
     required this.region,
     required this.enabled,
     required this.onTap,
@@ -166,7 +166,7 @@ class _RegionListTile extends StatelessWidget {
 }
 
 class _RegionCatalogError extends StatelessWidget {
-  const _RegionCatalogError({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

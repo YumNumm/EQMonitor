@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:material_ui/material_ui.dart';
 
 class NotificationRegionMapSelectionCard extends StatelessWidget {
-  const NotificationRegionMapSelectionCard({
+  const new({
     required this.selection,
     required this.isResolving,
     required this.onDecideRegion,

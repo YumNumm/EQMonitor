@@ -19,7 +19,7 @@ import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NotificationRegionMapPickerPage extends HookConsumerWidget {
-  const NotificationRegionMapPickerPage({super.key});
+  const new({super.key});
 
   static Future<NotificationRegionSelection?> show(BuildContext context) =>
       Navigator.of(context).push<NotificationRegionSelection>(
@@ -304,7 +304,7 @@ class NotificationRegionMapPickerPage extends HookConsumerWidget {
 }
 
 class _NotificationRegionMapError extends StatelessWidget {
-  const _NotificationRegionMapError({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

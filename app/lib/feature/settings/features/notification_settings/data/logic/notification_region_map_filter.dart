@@ -7,7 +7,7 @@ NotificationRegionMapFilter notificationRegionMapFilter(Ref ref) =>
     const NotificationRegionMapFilter();
 
 final class NotificationRegionMapFilter {
-  const NotificationRegionMapFilter();
+  const new();
 
   List<Object> buildRegion(String? regionCode) => regionCode == null
       ? buildMatchNothing('code')

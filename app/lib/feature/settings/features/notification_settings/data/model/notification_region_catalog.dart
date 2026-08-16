@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 final class NotificationCityOption {
-  const NotificationCityOption({
+  const new({
     required this.code,
     required this.name,
     required this.kana,
@@ -13,7 +13,7 @@ final class NotificationCityOption {
 }
 
 final class NotificationRegionOption {
-  NotificationRegionOption({
+  new({
     required this.code,
     required this.name,
     required this.kana,
@@ -36,7 +36,7 @@ final class NotificationRegionOption {
 }
 
 final class NotificationRegionCatalog {
-  NotificationRegionCatalog({
+  new({
     required List<NotificationRegionOption> regions,
     required List<String> unmappedCityCodes,
   }) : regions = UnmodifiableListView(regions),

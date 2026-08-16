@@ -1,24 +1,24 @@
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_catalog.dart';
 
 sealed class NotificationRegionMapSelection {
-  const NotificationRegionMapSelection();
+  const new();
 }
 
 final class NotificationRegionMapNationwide
     extends NotificationRegionMapSelection {
-  const NotificationRegionMapNationwide();
+  const new();
 }
 
 final class NotificationRegionMapFocused
     extends NotificationRegionMapSelection {
-  const NotificationRegionMapFocused({required this.region});
+  const new({required this.region});
 
   final NotificationRegionOption region;
 }
 
 final class NotificationRegionMapCitySelected
     extends NotificationRegionMapSelection {
-  const NotificationRegionMapCitySelected({
+  const new({
     required this.region,
     required this.city,
   });

@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CityPickerPage extends HookConsumerWidget {
-  const CityPickerPage({required this.region, super.key});
+  const new({required this.region, super.key});
 
   final NotificationRegionOption region;
 
@@ -84,7 +84,7 @@ class CityPickerPage extends HookConsumerWidget {
 }
 
 class _WholeRegionTile extends StatelessWidget {
-  const _WholeRegionTile({required this.region});
+  const new({required this.region});
 
   final NotificationRegionOption region;
 
@@ -106,7 +106,7 @@ class _WholeRegionTile extends StatelessWidget {
 }
 
 class _CityListTile extends StatelessWidget {
-  const _CityListTile({required this.region, required this.city});
+  const new({required this.region, required this.city});
 
   final NotificationRegionOption region;
   final NotificationCityOption city;

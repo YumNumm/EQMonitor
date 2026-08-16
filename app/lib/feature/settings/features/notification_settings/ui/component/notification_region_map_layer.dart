@@ -19,7 +19,7 @@ const notificationRegionCityLayerId = 'notification-region-city-line';
 const notificationSelectedCityLayerId = 'notification-selected-city-line';
 
 class NotificationRegionMapLayer extends HookConsumerWidget {
-  const NotificationRegionMapLayer({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
