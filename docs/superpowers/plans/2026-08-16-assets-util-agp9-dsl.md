@@ -61,7 +61,7 @@ git --no-pager diff --check origin/develop...HEAD
 
 Expected: tests/analyze/diff check が成功し、AGP 9 project graph から対象4 diagnostic が消える。
 
-- [ ] **Step 4: 実装と知見を分けてコミットする**
+- [x] **Step 4: 実装と知見を分けてコミットする**
 
 ```shell
 git add packages/assets_util/android/build.gradle.kts
