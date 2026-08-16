@@ -10,10 +10,8 @@ import 'package:objective_c/objective_c.dart';
 /// Shared between iOS and macOS: both link the same `EQMAssetsUtil` Swift
 /// class (compiled twice by `hook/build.dart`, once per platform target),
 /// so the same Dart binding surface works on both.
-/// Every Asset Pack entry point here is completion-handler based because the
-/// native side runs its work off the caller's thread — since Flutter 3.29 the
-/// Dart isolate *is* the iOS main thread, and Background Assets must not be
-/// called there (see `EQMAssetsUtil.workQueue`).
+/// Asset Pack entry points are completion-handler based to share one binding
+/// surface across Apple platforms.
 abstract final class AssetsUtilApple {
   static Future<AssetPackDiagnostics> diagnosePack({
     required String packIdentifier,
@@ -30,27 +28,6 @@ abstract final class AssetsUtilApple {
       }
     });
     util.diagnoseAssetPackWithPackIdentifier(
-      packIdentifier.toNSString(),
-      completion: completion,
-    );
-    return completer.future;
-  }
-
-  static Future<AssetPackUpdateResult> checkForUpdates({
-    required String packIdentifier,
-  }) {
-    final completer = Completer<AssetPackUpdateResult>();
-    final util = EQMAssetsUtil.alloc();
-    final completion = ObjCBlock_ffiVoid_NSString.listener((json) {
-      try {
-        completer.complete(
-          AssetPackUpdateResult.fromJsonString(json.toDartString()),
-        );
-      } on FormatException catch (error, stackTrace) {
-        completer.completeError(error, stackTrace);
-      }
-    });
-    util.checkForAssetPackUpdatesWithPackIdentifier(
       packIdentifier.toNSString(),
       completion: completion,
     );
@@ -78,9 +55,8 @@ abstract final class AssetsUtilApple {
       if (path == null) {
         completer.completeError(
           AssetPackNotReadyException(
-            'Asset Pack ($packIdentifier) is not available locally yet '
-            '(iOS: Managed Background Assets download incomplete; '
-            'macOS: bundled platform/ directory missing).',
+            'The app-bundled Asset Pack directory is missing: '
+            '$packIdentifier',
           ),
           StackTrace.current,
         );
