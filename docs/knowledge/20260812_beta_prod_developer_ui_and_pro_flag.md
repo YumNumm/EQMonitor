@@ -19,8 +19,14 @@ BETA かつ prod flavor のビルド(= 通常の TestFlight / ストア配布 BE
 `isDeveloperUiEnabled == false` となり、以下を無効化する。
 
 - 設定のデバッグメニュー項目・HTTP キャッシュ表示/削除(`settings_page.dart`)
+- ホームシート下部の「デバッグページ」導線(`home_page.dart` の `_HomeActionsCard`)
 - `DebugLauncher` のシェイク / Shift+D 起動(`debug_launcher.dart`)
 - ルーターで `/debug` 配下を `HomeRoute` へリダイレクト(`router.dart`)
+
+設定のデバッグメニューとホームの導線は `isDeveloperUiEnabled && debugProvider` の
+二重ガードで、`debugProvider` はデバッグページ内でしか ON にできない。
+そのため通常の prod ストア版でも実質到達不能(ディープリンクは
+`NotificationDeepLink` の許可リストに `/debug` を含まない)。
 
 → 影響として TestFlight での App Check アプリ内確認ができなくなる。
   `docs/todo/550_*` と `docs/beta/ios-testflight-checklist.md` 4.1 を参照。
