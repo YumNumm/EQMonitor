@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/eew_history/data/notifier/eew_history_notice_notifier.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_history_notice_dialog.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,13 @@ Future<void> showEewHistoryNoticeFlow({
   if (acknowledged != true || !context.mounted) {
     return;
   }
-  await EewHistoryNoticeShown.markShownMutation.run(
-    ref,
-    (tsx) async => tsx.get(eewHistoryNoticeShownProvider.notifier).markShown(),
-  );
+  try {
+    await EewHistoryNoticeShown.markShownMutation.run(
+      ref,
+      (tsx) async =>
+          tsx.get(eewHistoryNoticeShownProvider.notifier).markShown(),
+    );
+  } catch (error, stackTrace) {
+    talker.handle(error, stackTrace, 'Failed to persist EEW history notice');
+  }
 }

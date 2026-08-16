@@ -53,7 +53,12 @@ class SharedPreferencesDataSource
   Future<void> setBool({
     required SharedPreferencesKey key,
     required bool value,
-  }) => _sharedPreferences.setBool(key.key, value);
+  }) async {
+    final didPersist = await _sharedPreferences.setBool(key.key, value);
+    if (!didPersist) {
+      throw StateError('Failed to persist SharedPreferences key: ${key.key}');
+    }
+  }
 
   @override
   Future<bool?> getBool({required SharedPreferencesKey key}) =>
