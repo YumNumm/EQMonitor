@@ -286,7 +286,7 @@ void main() {
       expect(result.newMaxIntensity, JmaIntensity.fiveLower);
     });
 
-    test('初報 (previous=null) で値がある場合は差分あり', () {
+    test('初報 (previous=null) で値がある場合は差分なし', () {
       final current = _quake(
         magnitude: '5.0',
         depth: 10,
@@ -297,10 +297,15 @@ void main() {
         current: current,
       );
 
-      expect(result, isNotNull);
-      expect(result!.hasMagnitudeChange(), isTrue);
-      expect(result.oldMagnitude, isNull);
-      expect(result.newMagnitude, '5.0');
+      expect(result, isNull);
+    });
+
+    test('旧マグニチュードが不明で現報のみ値がある場合は差分なし', () {
+      const diff = HypocenterDiff(
+        newMagnitude: '3.8',
+      );
+
+      expect(diff.hasMagnitudeChange(), isFalse);
     });
   });
 }
