@@ -2,7 +2,9 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
+import 'package:eqmonitor/feature/eew_history/data/notifier/eew_history_notice_notifier.dart';
 import 'package:eqmonitor/feature/eew_history/data/notifier/eew_list_data_source.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_history_list_tile.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_list_parameter_persistent_delegate.dart';
@@ -19,9 +21,26 @@ class EewHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EewListParameter());
+    final noticeShownAsync = ref.watch(eewHistoryNoticeShownProvider);
+    final noticeShown = switch (noticeShownAsync) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
     final dataSourceAsync = ref.watch(
       eewListDataSourceProvider(parameter.value),
     );
+
+    useEffect(() {
+      if (noticeShown == false) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!context.mounted) {
+            return;
+          }
+          await showEewHistoryNoticeFlow(ref: ref, context: context);
+        });
+      }
+      return null;
+    }, [noticeShown]);
 
     return Scaffold(
       body: dataSourceAsync.when(
@@ -131,8 +150,8 @@ class _Skeleton extends StatelessWidget {
         const ListTile(
           leading: CircleAvatar(radius: 20),
           title: Text('宮城県沖'),
-          subtitle: Text('2026/06/27 12:34発生 深さ 10km'),
-          trailing: Text('M6.0'),
+          subtitle: Text('2026/06/27 12:34発生 深さ 10km M6.0'),
+          trailing: Text('#29 (最終)'),
         ),
     ];
     return Skeletonizer(
