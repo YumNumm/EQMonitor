@@ -11,6 +11,7 @@ void main() {
         list: EarthquakeHistoryListConfig(),
       );
       expect(config.list.isFillBackground, isTrue);
+      expect(config.list.showDateSeparator, isTrue);
       expect(config.list.designatedRegionSearchType, isNull);
     });
   });
@@ -33,6 +34,7 @@ void main() {
       const original = EarthquakeHistoryConfig(
         list: EarthquakeHistoryListConfig(
           isFillBackground: false,
+          showDateSeparator: false,
           designatedRegionSearchType: RegionSearchType.city,
           designatedRegionCode: '13101',
           designatedRegionName: '千代田区',

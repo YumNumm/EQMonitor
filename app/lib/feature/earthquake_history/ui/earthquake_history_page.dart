@@ -3,14 +3,17 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/model/earthquake_history_list_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -46,6 +49,11 @@ class _SliverListBody extends HookConsumerWidget {
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
     );
+    final listConfigAsync = ref.watch(
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.whenData((config) => config.list),
+      ),
+    );
 
     // デフォルト(発生時刻↓)以外のソート中は、戻る操作でページを閉じずに
     // ソートをデフォルトへ戻す
@@ -63,18 +71,30 @@ class _SliverListBody extends HookConsumerWidget {
           );
         }
       },
-      child: dataSourceAsync.when(
+      child: listConfigAsync.when(
         loading: () => const _EarthquakeHistorySkeleton(),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async =>
-              ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
+          onReload: () async {
+            ref.invalidate(earthquakeHistoryConfigProvider);
+            await ref.read(earthquakeHistoryConfigProvider.future);
+          },
         ),
-        data: (dataSource) => _PagingBody(
-          dataSource: dataSource,
-          parameter: parameter,
-          onParameterChanged: (result) => parameter.value = result,
-          onRefresh: () => dataSource.refresh(),
+        data: (listConfig) => dataSourceAsync.when(
+          loading: () => const _EarthquakeHistorySkeleton(),
+          error: (error, _) => ErrorCard(
+            error: error,
+            onReload: () async => ref.refresh(
+              earthquakeHistoryDataSourceProvider(parameter.value),
+            ),
+          ),
+          data: (dataSource) => _PagingBody(
+            dataSource: dataSource,
+            listConfig: listConfig,
+            parameter: parameter,
+            onParameterChanged: (result) => parameter.value = result,
+            onRefresh: () => dataSource.refresh(),
+          ),
         ),
       ),
     );
@@ -84,18 +104,24 @@ class _SliverListBody extends HookConsumerWidget {
 class _PagingBody extends StatelessWidget {
   const _PagingBody({
     required this.dataSource,
+    required this.listConfig,
     required this.parameter,
     required this.onParameterChanged,
     required this.onRefresh,
   });
 
   final EarthquakeHistoryDataSource dataSource;
+  final EarthquakeHistoryListConfig listConfig;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
+    final display = EarthquakeHistoryListDisplay.resolve(
+      config: listConfig,
+      sortBy: parameter.value.sortBy,
+    );
     return RefreshIndicator(
       onRefresh: onRefresh,
       edgeOffset:
@@ -128,14 +154,17 @@ class _PagingBody extends StatelessWidget {
           ),
           SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,
-            stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(date: date),
+            stickyHeader: display.showDateSeparator,
+            headerBuilder: (_, date, _) => display.showDateSeparator
+                ? _DateHeader(date: date)
+                : const SizedBox.shrink(),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 EarthquakeHistoryListTile(
                   item: item,
                   searchParameter: parameter.value,
+                  showBackgroundColor: display.showBackgroundColor,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
                     eventId: item.earthquake.eventId,
                   ).push<void>(context),

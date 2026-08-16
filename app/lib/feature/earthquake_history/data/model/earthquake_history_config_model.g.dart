@@ -44,6 +44,10 @@ _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
         'is_fill_background',
         (v) => v as bool? ?? true,
       ),
+      showDateSeparator: $checkedConvert(
+        'show_date_separator',
+        (v) => v as bool? ?? true,
+      ),
       designatedRegionSearchType: $checkedConvert(
         'designated_region_search_type',
         (v) => $enumDecodeNullable(_$RegionSearchTypeEnumMap, v),
@@ -61,6 +65,7 @@ _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
   },
   fieldKeyMap: const {
     'isFillBackground': 'is_fill_background',
+    'showDateSeparator': 'show_date_separator',
     'designatedRegionSearchType': 'designated_region_search_type',
     'designatedRegionCode': 'designated_region_code',
     'designatedRegionName': 'designated_region_name',
@@ -71,6 +76,7 @@ Map<String, dynamic> _$EarthquakeHistoryListConfigToJson(
   _EarthquakeHistoryListConfig instance,
 ) => <String, dynamic>{
   'is_fill_background': instance.isFillBackground,
+  'show_date_separator': instance.showDateSeparator,
   'designated_region_search_type':
       _$RegionSearchTypeEnumMap[instance.designatedRegionSearchType],
   'designated_region_code': instance.designatedRegionCode,
