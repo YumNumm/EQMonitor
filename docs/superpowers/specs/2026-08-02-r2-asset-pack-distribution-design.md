@@ -263,14 +263,14 @@ OS の制約下で継続可能な background worker を使い、R2 から同じ 
 
 ## R2 と cache policy
 
-- `packs/{version}/**`: `Cache-Control: public, max-age=31536000, immutable`
-- `catalog.json` / `catalog.sig`: revalidation を要求し、ETag を付与する
-- Asset object: `Accept-Ranges: bytes` を利用できる構成にする
-- Content-Type: JSON、signature JSON、PMTiles を明示する
+- `packs/{version}/*.zip`: `Cache-Control: public, max-age=31536000, immutable`
+- `manifest.json` / `manifest.sig`: `Cache-Control: no-cache, max-age=0, must-revalidate` と ETag
+- ZIP object: `Accept-Ranges: bytes` を利用できる構成にする
+- Content-Type: manifest/signature は `application/json`、ZIP は `application/zip`
 - version prefix の既存 object が 1 件でも存在する場合、publish を失敗させる
 
-catalog と sidecar は 2 object なので、同時に atomic 更新できない。release 時は新しい
-`catalog.sig` を先に、`catalog.json` を最後に upload する。一時的な組合せ不一致や CDN
+manifest と sidecar は 2 object なので、同時に atomic 更新できない。release 時は新しい
+`manifest.sig` を先に、`manifest.json` を最後に upload する。一時的な組合せ不一致や CDN
 cache のずれは署名検証で fail closed し、クライアントは現行 Pack を維持して再試行する。
 
 ## Release pipeline
@@ -281,30 +281,30 @@ cache のずれは署名検証で fail closed し、クライアントは現行 
 release workflow は次を実行する。
 
 1. private Release の Pack と checksum を取得する。
-2. 必須 Asset、layout、manifest、size、SHA-256 を検証する。
-3. `tool/asset_pack/changelog.json` の手書き Change log entry を検証する。
-4. manifest を release 用 Ed25519 key で署名する。
-5. version 固定 object を R2 へ upload する。
-6. R2 から全 object を再取得し、署名、size、SHA-256 を再検証する。
-7. 現行の署名済み catalog を取得し、過去履歴が不変であることを確認する。
-8. 新 entry と増加した revision を持つ catalog を生成・署名する。
-9. `catalog.sig`、最後に `catalog.json` を upload する。
-10. 公開 catalog から対象 Pack を再取得して end-to-end 検証する。
+2. 必須 Asset、ZIP layout、Pack 内 manifest、size、SHA-256 を検証する。
+3. `tools/asset-pack/changelog.json` の手書き Change log entry を検証する。
+4. ZIP 全体の size と SHA-256 を計算する。
+5. version 固定 ZIP object を R2 へ upload する。
+6. R2 から ZIP を再取得し、size、SHA-256、Pack 内各 Asset を再検証する。
+7. 現行の署名済みトップレベル manifest を取得し、過去履歴が不変であることを確認する。
+8. 新 entry と増加した revision を持つトップレベル manifest を生成し、release 用 Ed25519 key で署名する。
+9. `manifest.sig`、最後に `manifest.json` を upload する。
+10. 公開 manifest から対象 ZIP を再取得して end-to-end 検証する。
 
-同一 version の再公開や、検証前の catalog 更新を禁止する。どの段階で失敗しても旧 catalog
+同一 version の再公開や、検証前の manifest 更新を禁止する。どの段階で失敗しても旧 manifest
 と旧 Pack は引き続き利用可能でなければならない。
 
 ## エラー処理
 
-- catalog 取得失敗: 現行 Pack を継続し、検証済み cache があれば履歴表示に使う。
-- catalog 署名不正・巻き戻し: 更新候補として扱わず security event を記録する。
+- manifest 取得失敗: 現行 Pack を継続し、検証済み cache があれば履歴表示に使う。
+- manifest 署名不正・巻き戻し: 更新候補として扱わず security event を記録する。
 - 未知の署名鍵: 更新を拒否し、アプリ更新が必要な可能性を診断へ表示する。
-- manifest 取得・署名失敗: Asset download を開始しない。
-- 通信中断: staging を保持し、同じ version の次回操作で再開する。
+- manifest 取得・署名失敗: ZIP download を開始しない。
+- 通信中断: partial ZIP を staging に保持し、同じ version の次回操作で再開する。
 - 空き容量不足: download 前に必要容量を表示し、現行 Pack を変更しない。
 - size・SHA-256・内容検証失敗: staging を有効化せず破棄し、現行 Pack を維持する。
-- pointer 更新失敗: 起動時の整合性検査で旧現行 Pack を選び、孤立した新 Pack は診断対象にする。
-- provider 再読込失敗: 直前 Pack へ戻し、失敗した Pack を再選択しない。
+- pointer 更新失敗: 起動時の整合性検査で同梱 Pack を選び、孤立した新 Pack は診断対象にする。
+- provider 再読込失敗: 同梱 Pack へ戻し、失敗した Pack を再選択しない。
 
 例外文字列を主要 UI にそのまま表示しない。ユーザーには再試行可能性と必要操作を示し、
 詳細は talker とデバッグ画面へ構造化して記録する。固定値、fake data、不完全な Pack へ
@@ -314,9 +314,9 @@ fallback しない。
 
 既存 Asset Pack デバッグ画面を R2 配信モデルへ更新し、次を表示する。
 
-- CDN base URL と catalog ETag
-- catalog schema、revision、生成日時、署名 `key_id`、検証結果
-- 同梱・現行・直前・staging の version と選択元
+- CDN base URL と manifest ETag
+- manifest schema、revision、生成日時、署名 `key_id`、検証結果
+- 同梱・現行 download・staging の version と選択元
 - candidate version、minimum app version、Change log 件数
 - background download identifier / worker state、進捗、再開可否
 - 各 Asset の relative path、期待・実 size、SHA-256 検証状態
@@ -331,19 +331,20 @@ fallback しない。
 
 - Ed25519 known-answer test、正常署名、不正署名、未知 `key_id`
 - 取得 byte 列と再 serialize JSON の違いを検出すること
-- catalog schema、revision rollback、SemVer 順、重複、locale 欠落
+- manifest schema、revision rollback、SemVer 順、重複、locale 欠落
 - path traversal、absolute path、重複 Asset ID / path、未知 kind
 - manifest の必須 Asset、size、SHA-256、version 一致
-- 同梱、download、直前 Pack から最新の互換 Pack を選ぶこと
-- catalog ETag cache と 304 response
+- 同梱と download Pack から最新の互換 Pack を選び、異常時は同梱へ戻ること
+- manifest ETag cache と 304 response
 
 ### Download・Storage
 
-- Range 再開、通信中断、process 終了後の staging 復元
-- 空き容量不足、途中 file、size mismatch、hash mismatch
+- ZIP の Range 再開、通信中断、process 終了後の staging 復元
+- 空き容量不足、途中 ZIP、archive size mismatch、archive hash mismatch
+- ZIP path traversal、absolute path、symlink、重複 path、展開サイズ上限
 - atomic rename と pointer 更新の各失敗点
 - 全検証完了前に新 Pack を参照しないこと
-- 有効化失敗時に現行 Pack、成功後に直前 1 世代を保持すること
+- 有効化失敗時に同梱 Pack へ戻り、成功後に旧 download Pack をすべて削除すること
 - 同じ version の多重 download・多重有効化を防ぐこと
 
 ### UI
@@ -351,7 +352,7 @@ fallback しない。
 - HomeSheet と設定の更新あり、複数 version の Change log
 - download 待機、進捗、再開、失敗、完了
 - minimum app version 不一致と未知署名鍵
-- offline、catalog 不正、検証済み cache 利用
+- offline、manifest 不正、検証済み cache 利用
 - text scale と長い日英 Change log で overflow しないこと
 
 ### Platform・Release
@@ -366,7 +367,7 @@ iOS 19〜25 は存在しないため、存在しない OS version を test matri
 
 ## 移行
 
-1. catalog / signature schema と client verifier を追加する。
+1. トップレベル manifest / signature schema と client verifier を追加する。
 2. 現行 Pack を初期 Pack として iOS bundle と Android 配布物へ stage する。
 3. R2 download、storage、更新 UI を導入し、旧 platform Pack と並行検証する。
 4. R2 release pipeline と production custom domain を有効化する。
@@ -380,9 +381,9 @@ iOS 19〜25 は存在しないため、存在しない OS version を test matri
 ## 完了条件
 
 - iOS 16〜18、iOS 26 以降、Android が同梱 Pack で offline 起動できる。
-- 全 platform が署名済み catalog で更新を検出し、R2 から同一 Pack を取得できる。
+- 全 platform が署名済みトップレベル manifest で更新を検出し、R2 から同一 ZIP を取得できる。
 - HomeSheet と設定に、現在より新しい全 Change log と手動更新操作が表示される。
 - manifest 署名、全 file の size・SHA-256・内容検証後だけ Pack が有効化される。
 - 通信断、改ざん、容量不足、process 終了でも現行 Pack が失われない。
-- catalog 履歴を JSON で追記し、安全に release できる。
+- manifest 履歴を JSON で追記し、安全に release できる。
 - Managed Background Assets への runtime・capability・CI 依存がなくなる。
