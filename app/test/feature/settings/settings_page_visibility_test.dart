@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
+import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_update_notifier.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,6 +31,7 @@ Future<void> _pumpSettings(
           app_prefs.SharedPreferencesAsync(prefs),
         ),
         adsOptOutProvider.overrideWithBuild((_, _) => false),
+        assetPackUpdateProvider.overrideWith(_IdleAssetPackUpdate.new),
         buildConfigProvider.overrideWithValue(buildConfig),
         packageInfoProvider.overrideWithValue(_packageInfo),
       ],
@@ -116,6 +118,14 @@ final _packageInfo = PackageInfo(
   version: '1.2.3',
   buildNumber: '456',
 );
+
+class _IdleAssetPackUpdate extends AssetPackUpdateNotifier {
+  @override
+  AssetPackUpdateState build() => const AssetPackUpdateIdle();
+
+  @override
+  Future<void> check() async {}
+}
 
 class _TestApp extends StatelessWidget {
   const _TestApp({required this.home});

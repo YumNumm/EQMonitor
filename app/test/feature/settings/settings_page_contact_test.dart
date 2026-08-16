@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
+import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_update_notifier.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:material_ui/material_ui.dart';
@@ -29,6 +30,7 @@ void main() {
             app_prefs.SharedPreferencesAsync(prefs),
           ),
           adsOptOutProvider.overrideWithBuild((_, _) => false),
+          assetPackUpdateProvider.overrideWith(_IdleAssetPackUpdate.new),
           buildConfigProvider.overrideWithValue(_buildConfig),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
@@ -61,6 +63,7 @@ void main() {
             app_prefs.SharedPreferencesAsync(prefs),
           ),
           adsOptOutProvider.overrideWithBuild((ref, notifier) => false),
+          assetPackUpdateProvider.overrideWith(_IdleAssetPackUpdate.new),
           buildConfigProvider.overrideWithValue(_buildConfig),
           openContactProvider.overrideWithValue(
             _FakeOpenContactAction(() => opened = true),
@@ -114,6 +117,14 @@ class _FakeOpenContactAction extends OpenContactAction {
   Future<void> call(WidgetRef ref, BuildContext context) async {
     _onCall();
   }
+}
+
+class _IdleAssetPackUpdate extends AssetPackUpdateNotifier {
+  @override
+  AssetPackUpdateState build() => const AssetPackUpdateIdle();
+
+  @override
+  Future<void> check() async {}
 }
 
 class _TestApp extends StatelessWidget {
