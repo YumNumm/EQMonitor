@@ -11,6 +11,7 @@ import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
+import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -54,6 +55,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 const _AppVersionInformation(),
+                const AssetPackUpdateCard(),
                 if (isProFeaturesEnabled) ...[
                   const SettingsSectionHeader(text: 'EQMonitor Pro'),
                   ListTile(

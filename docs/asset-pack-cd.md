@@ -1,256 +1,95 @@
-# Asset Pack CD (`upload-asset-pack.yaml`)
+# Asset Pack の R2 配布・アプリ同梱
 
-This document describes `.github/workflows/upload-asset-pack.yaml`: what it
-automates, what still needs one-time manual setup in Google Play Console /
-App Store Connect, and every assumption that must be confirmed on the
-workflow's first real run against a live `asset_pack_released` event.
+Asset Pack の正規配布先は Cloudflare R2 のカスタムドメイン
+`https://assets.eqmonitor.app/v1/assets`。iOS Managed Background Assets と
+Android Play Asset Delivery は使用しない。
 
-## What triggers it
+## 公開レイアウト
 
-`YumNumm/eqmonitor-backend`'s `release-asset-pack.yaml` publishes a GitHub
-Release `asset-pack-vX.Y.Z` (assets: `asset-pack-vX.Y.Z.zip` + `manifest.json`)
-and sends a `repository_dispatch` (`asset_pack_released`) to this repo with
-`client_payload: { pack_version, artifact_url, manifest_url, sha256 }`. This
-workflow can also be run manually via `workflow_dispatch` with the same
-`pack_version` / `artifact_url` / `sha256` (no `manifest_url` input — the
-manifest is read from inside the downloaded zip, not fetched separately).
+```text
+v1/assets/
+├── manifest.json
+├── manifest.sig
+└── packs/<version>/asset-pack-v<version>.zip
+```
 
-**Private Release download:** `eqmonitor-backend` is private, so the zip must
-be fetched with authentication. `download-and-verify` issues a GitHub App
-token (`vars.EQMONITOR_GITHUB_APP_ID` / `secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY`,
-`repositories: eqmonitor-backend`, `permission-contents: read` — same App as
-integration tests) and uses `gh release download`. Unauthenticated `curl` of
-`artifact_url` returns 404.
+- `manifest.json` は更新一覧のトップレベル manifest。
+- `manifest.sig` は manifest の Ed25519 署名 sidecar。
+- ZIP は version ごとの immutable object。上書きしない。
+- manifest と signature は再検証される短いキャッシュ、ZIP は immutable
+  cache とする。
 
-## What the workflow automates today
+backend の `release-asset-pack.yaml` は ZIP を生成した後、R2 へ
+`ZIP -> manifest.sig -> manifest.json` の順で公開し、公開物を再取得して
+署名まで検証してから `asset_pack_released` を dispatch する。
 
-| Stage | Automated? | Notes |
-|---|---|---|
-| Download + sha256 verify + structure assert + `pack_version` match | Yes | GitHub App token で private Release を取得し Artifact 化 |
-| iOS Managed Background Assets upload | Yes | `ba-package` → ASC API（パック未作成なら `POST /v1/backgroundAssets` で作成） |
-| iOS AppIntent/Widget `jma_code_table.json` | **Not in this workflow** | slim JSON はアプリリポジトリにコミット済み。`deploy-app.yaml` の `build-ios` は `stage_from_release.sh --target ios-native` で Release から再抽出して上書き可能。ランタイムの Flutter は Background Assets のフル JSON を読む |
-| Android Play Asset Delivery contents | **Not in this workflow** | `deploy-app.yaml` の `build-android` が `tool/asset_pack/stage_from_release.sh` で最新 Release をビルド直前に展開 |
-| macOS bundled assets | **Not in this workflow** | ローカル / 将来の macOS CI で同じ `stage_from_release.sh --target macos` を使う。git にはコミットしない |
+EQMonitor の `.github/workflows/upload-asset-pack.yaml` は dispatch を受け、
+公開カスタムドメインから 3 ファイルを再取得し、次を検証する。
 
-**pmtiles はリポジトリに置かない。** 正本は常に `eqmonitor-backend` の `asset-pack-v*` Release。Git LFS / sync-PR は使わない（100MB 制限を踏むだけなので廃止）。
+1. `manifest.sig` の Ed25519 署名と manifest SHA-256
+2. dispatch の version / SHA-256 と署名済み entry の一致
+3. ZIP 実体の size / SHA-256
+4. ZIP 内の必須ファイルと pack version
 
+## アプリへのデフォルト Pack 同梱
 
-## One-time manual setup required before this workflow can succeed end-to-end
+`tool/asset_pack/stage_from_r2.sh --target bundled` は署名済み最新 Pack を
+`app/assets/platform/` へ原子的に配置する。Android と iOS のリリース CI は
+ビルド前に必ずこれを実行する。
 
-### 1. Google Play Console: Play Asset Delivery module
+- Android: `app/android/app/build.gradle.kts` が `app/assets/platform` だけを
+  generated assets の `platform/` として base app に含める。初回解決時に
+  app-private storage へ展開する。
+- iOS / macOS: Xcode Runner の folder reference で `platform/` を Bundle
+  Resources に含める。
+- iOS native extension 用の縮小 JMA テーブルも必要な場合は
+  `tool/asset_pack/stage_from_r2.sh --target all` を使う。
 
-Play Asset Delivery install-time asset packs are Gradle dynamic-feature-style
-modules bundled *inside* the app's `.aab` — they are not independent
-artifacts uploaded on their own. This is why `google-play-cli` (this repo's
-existing Play upload tool, `github:YumNumm/google-play-cli`) only exposes
-`bundles publish` and `get-latest-build-number` (verified locally: `mise exec
--- google-play-cli --help` / `google-play-cli bundles --help` during Task 7's
-implementation — no `assetpacks` subcommand exists), and why the public
-Google Play Developer API has no standalone `edits.assetpacks.upload`
-endpoint — the only bundle-upload method is
-[`edits.bundles.upload`](https://developers.google.com/android-publisher/api-ref/rest/v3/edits.bundles/upload),
-which uploads the whole `.aab` (asset packs and all).
+同梱 Pack はアプリの更新でのみ置き換わり、R2 更新を適用・削除しても残る。
 
-**Manual setup:**
+## ランタイム更新
 
-1. Add the `com.android.dynamic-feature` module `app/android/assetpacks/eqmonitor_assets/` to the Android Gradle project (a separate task's responsibility — this repo's asset-pack CD assumes the module directory already exists at `app/android/assetpacks/eqmonitor_assets/src/main/assets/`).
-2. Declare it as an `install-time` delivery asset pack in the module's `build.gradle`/`AndroidManifest.xml` (per [Android's Play Asset Delivery guide](https://developer.android.com/guide/playcore/asset-delivery)) and reference it from the base app module.
-3. Nothing needs to be pre-created in the Play Console UI itself for an install-time pack — Play derives the asset pack from the uploaded `.aab`'s module structure the first time a bundle containing it is uploaded through `deploy-app.yaml`.
+アプリは起動後に `manifest.json` / `manifest.sig` を取得する。署名、manifest
+revision の巻き戻し、`minimum_app_version` を検証し、より新しい Pack がある
+場合だけ Home に案内を表示する。
 
-**What this means for automation:** Play ties install-time asset packs to a
-full AAB upload, so there is no independent "upload asset pack only" path.
-Instead, `deploy-app.yaml` stages the latest `asset-pack-v*` Release into
-`app/android/assetpacks/eqmonitor_assets/src/main/assets/` immediately before
-`flutter build appbundle` via `tool/asset_pack/stage_from_release.sh`. The new
-pack therefore ships with the next Android app release — not via a git PR of
-binaries. Staged files are gitignored.
+ユーザーがダイアログで同意した後に ZIP をダウンロードする。UI は進捗を
+表示し、ZIP と展開後全ファイルの size / SHA-256、未宣言ファイル、Zip Slip、
+symlink、展開サイズ上限を検証する。検証済み staging を app support directory
+へ切り替え、active version 以外のダウンロード版を削除する。
 
-If a faster path is ever needed, the two realistic options are (a) switch this
-asset pack to **on-demand** delivery, which supports `bundletool
-build-apks`/`install-apks` workflows closer to independent updates, or (b)
-accept the "ships with the next app release" cadence permanently and instead
-tighten `deploy-app.yaml`'s release cadence.
+active download が欠損・破損していれば preference と破損ディレクトリを外し、
+同梱 `platform/` を即時利用する。同梱 Pack 自体は削除しない。
+アプリ更新で同梱 Pack の方が新しくなった場合も、古い download を削除して
+同梱 Pack を選ぶ。
 
-### 2. App Store Connect: Managed Background Assets
+download task ID は Pack version から決定し、起動後に downloader の永続DBを
+復元する。OS がバックグラウンドで完了させた同一 ZIP は再取得せず、検証・展開へ
+引き継ぐ。
 
-The iOS job (`upload-ios`) packages the Release zip with `xcrun ba-package`
-and uploads via App Store Connect API. If the `backgroundAssets` record for
-`eqmonitor-assets` does not exist yet, the job creates it
-(`POST /v1/backgroundAssets`) before creating a version and uploading.
+## 鍵と GitHub 設定
 
-**One-time / ongoing alignment:**
+現在の key id は `asset-pack-2026-08-16`。公開鍵はアプリと
+`tool/asset_pack/trusted_keys/` に保持する。秘密鍵は backend のSOPS暗号化済み
+`.env.json`をsource of truthとし、同じ値をrepositoryの
+`ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64` secretへ同期する。
 
-1. Xcode Runner target Background Assets capability の asset pack ID は
-   **`eqmonitor-assets`**（ドット付き reverse-DNS は ASC が拒否 — ITMS-91133）。
-   `packages/assets_util` の `_iosAssetPackIdentifier` と一致させる。
-2. Info.plist: `BAHasManagedAssetPacks` / `BAUsesAppleHosting` / `BAAppGroupID`
-   （リポジトリ済み）。
-3. `AssetDownloader` ExtensionKit target（リポジトリ済み）。
+backend repository に必要な値:
 
-Manual Transporter upload remains a fallback if the API path fails
-(see below).
+- secret `ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64`
+- variable `ASSET_PACK_SIGNING_KEY_ID=asset-pack-2026-08-16`
+- secret `CLOUDFLARE_API_TOKEN`（対象 R2 bucket の object read/write）
+- variable `CLOUDFLARE_ACCOUNT_ID`
 
-## iOS: what is doc/WWDC-verified vs. best-effort
+鍵ローテーション時は旧 manifest が配信され得る期間、旧公開鍵もアプリに残す。
 
-Apple's Background Assets / App Store Connect API reference pages are
-JS-rendered SPAs; this task's tooling could not retrieve their full content
-verbatim (only page titles / summarized fragments came back from automated
-fetches). The following is what could actually be confirmed, and how:
+## 手動確認
 
-**Confirmed (cite-able):**
+```bash
+curl -fsS https://assets.eqmonitor.app/v1/assets/manifest.json | jq .
+curl -fsS https://assets.eqmonitor.app/v1/assets/manifest.sig | jq .
+tool/asset_pack/stage_from_r2.sh --target bundled
+```
 
-- `ba-package` ships with Xcode 26+ and requires macOS 26 (Tahoe) at
-  `/Applications/Xcode.app/Contents/Developer/usr/bin/ba-package` — confirmed
-  via the [Apple Developer Forums "ba-package tool not available"
-  thread](https://developer.apple.com/forums/thread/795796), including the
-  exact error messages seen on older Xcode/macOS.
-- The command syntax `xcrun ba-package template` (scaffold a manifest) and
-  `ba-package <manifest-path> <output-archive-path>` (build the archive, run
-  from the directory the manifest's file selectors are relative to), plus the
-  manifest JSON schema (`assetPackID`, `downloadPolicy` with
-  `essential`/`prefetch`/`onDemand`, `fileSelectors` with `file`/`directory`
-  entries, `platforms`) — confirmed via the [WWDC25 "Discover Apple-Hosted
-  Background Assets" session](https://developer.apple.com/videos/play/wwdc2025/325/)
-  transcript.
-- `xcrun altool --upload-asset-pack asset_pack --apple-id apple-id -u username
-  [-p password]`, Transporter (drag-and-drop), iTMSTransporter, and the App
-  Store Connect API as the four documented upload methods — confirmed via
-  [App Store Connect Help: Upload Apple-hosted asset packs](https://developer.apple.com/help/app-store-connect/manage-asset-packs/upload-apple-hosted-asset-packs).
-  Note `altool --upload-asset-pack` only documents `-u`/`-p` (Apple ID +
-  app-specific password) auth in this help page, not `--apiKey`/`--apiIssuer`
-  — this repo only holds App Store Connect **API key** secrets
-  (`APP_STORE_CONNECT_API_KEY_*`, no Apple ID credentials), which is why the
-  automated path uses the App Store Connect API directly instead of `altool`.
-- Resource *names* `backgroundAssets`, `backgroundAssetVersions`,
-  `backgroundAssetUploadFiles` exist in the App Store Connect API — confirmed
-  as literal resource/page names via
-  [`AppStoreConnectAPI/managing-apple-hosted-background-assets`](https://developer.apple.com/documentation/AppStoreConnectAPI/managing-apple-hosted-background-assets)
-  and corroborated by multiple independent search results describing the
-  same create-version → reserve-upload → commit sequence.
-
-**NOT verified (best-effort, structurally-informed guess):**
-
-- The exact JSON:API attribute names inside each request/response body
-  (`fileName`/`fileSize`/`assetType` on the reservation, `uploadOperations`
-  entries' shape, `sourceFileChecksums` (MD5 via the Checksums type; the
-  deprecated `sourceFileChecksum` attribute must not be used on ASC API 4.1+),
-  the terminal processing state
-  name). This ambiguity is why the `upload_archive` step's `asc
-  background-assets upload-files create` call omits `--checksum`: the former
-  hand-rolled client's live-verified 2026-07-27 run hit a `409
-  ENTITY_ERROR.ATTRIBUTE.INVALID` when sending a checksum, so uploads
-  deliberately go without one. Beyond that, this is no longer this repo's
-  concern: the `asc` CLI itself (driven
-  via `.asc/workflow.json`'s `asset_pack_ensure`/`asset_pack_upload`
-  workflows) issues the reservation/upload/commit requests, mirroring the
-  pattern used by every other ASC API asset-upload family — appScreenshots,
-  appPreviews, buildIcons — which has been stable for years.
-- The exact filename/extension `ba-package` writes its output archive as.
-  Confirmed locally (Xcode 27 / `ba-package` CLI): use the `package`
-  subcommand with `--output-path` / `-o`, and the path **must** end with
-  `.aar` — see `docs/knowledge/20260728_ba_package_cli.md`.
-- The attribute name App Store Connect uses to store a `backgroundAssets`
-  resource's asset pack identifier (needed by the pre-check to find "our"
-  pack among possibly several). `scripts/ci/asset_pack_ensure.sh` filters on
-  `.attributes.assetPackIdentifier`; if App Store Connect ever renames this
-  attribute, the `jq` filter there needs to be updated to match.
-
-**Every one of the unverified points above degrades to a loud, actionable
-failure** (the `asc` CLI / workflow step exits non-zero with the API error
-JSON on stderr/stdout, or an
-`::error::` annotation pointing at this document) rather than silently
-uploading something wrong. The manual fallback — Transporter drag-and-drop,
-or `xcrun altool --upload-asset-pack ... -u <apple-id> -p <app-specific
-password>` (requires adding new Apple ID credential secrets not currently in
-this repo) — always remains available if the automated path needs to be
-bypassed for a release.
-
-### Manual verification if polling fails or times out
-
-`scripts/ci/asset_pack_wait_version.sh` only exits successfully when the
-observed state matches its allow-list (`COMPLETE`, `READY_FOR_TESTING`,
-`PROCESSING_COMPLETE`). Any explicitly-known failure state
-(`FAILED_PROCESSING`, `REJECTED`, `INVALID`) **or** a 20-minute timeout on an
-unrecognized state both exit non-zero and fail the `upload-ios` job — on
-purpose, because the terminal state name is unverified (see above) and this
-job must never report green for an upload that's actually stuck or failed.
-
-If this happens, the file itself was already uploaded and committed
-successfully (polling only starts after the `upload_archive` step —
-`asc background-assets upload-files create` — succeeds) — only the
-*processing* status is in question. To check by hand:
-
-1. Open App Store Connect → the app (`ASC_APP_ID` `6447546703`) → **Background Assets** → the pack matching `IOS_BACKGROUND_ASSET_PACK_ID` (`eqmonitor-assets`).
-2. Find the version the failed job created — the version id appears in the `create_version` step's JSON output, and the `wait_processing` step (`scripts/ci/asset_pack_wait_version.sh`) logs `backgroundAssetVersion <id> state=...` lines to stderr right before polling starts; match it, or just look at the most recent version's timestamp.
-3. Read its status directly in the UI:
-   - If it shows a legitimate success state (e.g. ready for TestFlight/App Store submission) under a name this client doesn't recognize, add that literal state string to the `case` allow-list in `scripts/ci/asset_pack_wait_version.sh` so future runs don't need manual checking.
-   - If it shows a genuine failure/rejection, treat the Asset Pack version as failed: re-run `upload-ios` (it creates a fresh `backgroundAssetVersion` each time, so a failed one doesn't block retrying) after investigating the cause in the UI's error detail, if shown.
-   - If it's still legitimately processing beyond 20 minutes, either re-run the poll manually (`asc background-assets versions view --version-id <id> --output json`, or the ASC UI) or raise the timeout in `scripts/ci/asset_pack_wait_version.sh` if this turns out to be normal/expected latency.
-
-## Xcode version for `ba-package`
-
-`upload-ios` pins its own `IOS_ASSET_PACK_XCODE_VERSION` (currently `26.6`,
-matching `deploy-app.yaml`'s `XCODE_VERSION` today) — deliberately **not**
-shared with `deploy-app.yaml`'s env var, so bumping one never accidentally
-changes app-build reproducibility or vice versa. The workflow's mandatory
-"Pre-check: ba-package availability" step runs `xcrun ba-package --help`
-before anything else in the job; if it ever fails, bump
-`IOS_ASSET_PACK_XCODE_VERSION` in the workflow file (via
-`maxim-lobanov/setup-xcode`), not `deploy-app.yaml`'s pin.
-
-## `assetPackID` coordination (`IOS_BACKGROUND_ASSET_PACK_ID`)
-
-The workflow hardcodes `IOS_BACKGROUND_ASSET_PACK_ID: eqmonitor-assets`.
-This value must be **identical** to:
-
-- the `assetPackID` configured in Xcode's Background Assets capability for the Runner target, and
-- the identifier App Store Connect stores for the manually-created asset pack (step 1 of the App Store Connect setup above).
-
-As of 2026-07-28, the Xcode side registers this via the `AssetDownloader`
-ExtensionKit target and `Runner/Info.plist` BA keys — confirm the Apple
-Developer portal capability and App Store Connect pack use the same id before
-the first `upload-ios` run.
-
-## macOS folder-reference check: known simplification
-
-The "Check app/assets/platform is registered as an Xcode folder reference"
-step in `sync-macos` greps `app/macos/Runner.xcodeproj/project.pbxproj` for a
-`PBXFileReference` line containing both `lastKnownFileType = folder;` (the
-literal marker for a "blue folder" reference, as opposed to
-`folder.assetcatalog` used by yellow asset-catalog groups) and a `path`
-mentioning `platform`. This is a heuristic, not a full pbxproj parse: it does
-not resolve the referenced folder's full path through parent group nesting,
-so it could theoretically match a same-named folder reference that isn't
-actually `app/assets/platform`. Whoever registers the folder reference
-(pending task) should double check the sync-macos job goes green for the
-right reason, not just because *some* `platform`-named folder reference
-exists somewhere in the project.
-
-## Validation performed for this task (no live credentials available)
-
-- `tool/asset_pack/verify_zip.sh` exercised against a hand-built fixture zip
-  matching the mandated layout: success case, wrong-sha256 case,
-  missing-required-file case, and `pack_version`-mismatch case all produced
-  the correct exit code and error message.
-- (Superseded by the asc CLI migration — see below.) The repo's former
-  hand-rolled ES256 JWT builder (`tool/asset_pack/asc_client.py`, since
-  removed) was cross-verified two ways: (1) decoded and validated with
-  Python's `cryptography`/`PyJWT` against a generated P-256 test key, and (2)
-  round-tripped its raw r||s signature back into DER and verified with
-  `openssl dgst -verify` against the same key's public half. It was also
-  smoke-tested against the **real** `https://api.appstoreconnect.apple.com`
-  with intentionally-fake credentials, which correctly returned a
-  structured `401 NOT_AUTHORIZED` JSON:API error (proving the JWT/request
-  are well-formed enough to reach Apple's real auth layer) rather than a
-  malformed-request/routing error. Authentication is now delegated entirely
-  to the `asc` CLI (`ASC_KEY_ID` / `ASC_ISSUER_ID` / `ASC_PRIVATE_KEY_B64`),
-  so this repo no longer implements its own JWT signing.
-- `mise exec -- actionlint`, `mise exec -- zizmor`, `mise exec -- pinact run
-  --check`, and `mise exec -- shellcheck -S error` all pass with zero
-  findings for `upload-asset-pack.yaml` / `verify_zip.sh`, both individually
-  and across the whole `.github/workflows/` directory (no regressions).
-
-None of this substitutes for a real trigger against a live Background Assets
-pack in App Store Connect, a live Play Console module, and a live macOS
-`project.pbxproj` folder reference — see the "NOT verified" list above for
-exactly what the first real run must confirm.
+Terraform は `backend/home8s/terraform/cloudflare` で R2 bucket
+`eqmonitor-assets` と custom domain `assets.eqmonitor.app` を管理する。

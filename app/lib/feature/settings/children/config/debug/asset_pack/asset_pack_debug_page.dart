@@ -2,13 +2,11 @@ import 'package:assets_util/assets_util.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_repository.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 
 class AssetPackDebugPage extends ConsumerWidget {
   const AssetPackDebugPage({super.key});
@@ -16,8 +14,6 @@ class AssetPackDebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoAsync = ref.watch(assetPackDebugInfoProvider);
-    final updateState = ref.watch(AssetPackDebugAction.checkForUpdatesMutation);
-    final lastUpdate = ref.watch(assetPackLastUpdateResultProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,10 +35,6 @@ class AssetPackDebugPage extends ConsumerWidget {
             AsyncLoading() => const Center(child: CircularProgressIndicator()),
             AsyncError(:final error) => ListView(
               children: [
-                _UpdateSection(
-                  updateState: updateState,
-                  lastUpdate: lastUpdate,
-                ),
                 ListTile(
                   leading: const Icon(Icons.error_outline),
                   title: const Text('診断の取得に失敗'),
@@ -50,11 +42,7 @@ class AssetPackDebugPage extends ConsumerWidget {
                 ),
               ],
             ),
-            AsyncData(:final value) => _AssetPackDebugContent(
-              info: value,
-              updateState: updateState,
-              lastUpdate: lastUpdate,
-            ),
+            AsyncData(:final value) => _AssetPackDebugContent(info: value),
           },
         ),
       ),
@@ -63,15 +51,9 @@ class AssetPackDebugPage extends ConsumerWidget {
 }
 
 class _AssetPackDebugContent extends StatelessWidget {
-  const _AssetPackDebugContent({
-    required this.info,
-    required this.updateState,
-    required this.lastUpdate,
-  });
+  const _AssetPackDebugContent({required this.info});
 
   final AssetPackDebugInfo info;
-  final MutationState<AssetPackUpdateResult> updateState;
-  final AssetPackUpdateResult? lastUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +83,6 @@ class _AssetPackDebugContent extends StatelessWidget {
 
     return ListView(
       children: [
-        _UpdateSection(updateState: updateState, lastUpdate: lastUpdate),
         ListTile(
           leading: Icon(
             isReady ? Icons.check_circle_outline : Icons.error_outline,
@@ -149,66 +130,6 @@ class _AssetPackDebugContent extends StatelessWidget {
         if (info.assets.isEmpty)
           const ListTile(subtitle: Text('asset情報はまだ取得できていません')),
         for (final status in info.assets) _AssetTile(status: status),
-      ],
-    );
-  }
-}
-
-class _UpdateSection extends ConsumerWidget {
-  const _UpdateSection({required this.updateState, required this.lastUpdate});
-
-  final MutationState<AssetPackUpdateResult> updateState;
-  final AssetPackUpdateResult? lastUpdate;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isPending = updateState is MutationPending;
-    final nativeError = lastUpdate?.nativeError;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-          child: FilledButton.tonalIcon(
-            onPressed: isPending
-                ? null
-                : () async {
-                    await ref
-                        .read(assetPackDebugActionProvider)
-                        .checkForUpdates(ref, context);
-                  },
-            icon: isPending
-                ? const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.system_update_alt),
-            label: Text(isPending ? '更新を確認中' : '更新を確認'),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text('API応答はダウンロード完了を意味しません'),
-        ),
-        if (lastUpdate case final result?) ...[
-          _CopyableTile(title: 'checked_at', value: result.checkedAt),
-          _CopyableTile(
-            title: 'updating_ids',
-            value: result.updatingIdentifiers.join(', '),
-          ),
-          _CopyableTile(
-            title: 'removed_ids',
-            value: result.removedIdentifiers.join(', '),
-          ),
-          if (nativeError != null)
-            _CopyableTile(
-              title: 'update_error',
-              value:
-                  '${nativeError.domain} (${nativeError.code})\n'
-                  '${nativeError.description}',
-            ),
-        ],
-        const Divider(),
       ],
     );
   }

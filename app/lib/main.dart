@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:background_location_tracker/background_location_tracker.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
@@ -97,7 +98,7 @@ Future<void> main() async {
 
 /// アプリの起動シーケンス本体。`main()` から一度だけ呼ばれる。
 class AppBootstrap {
-  const AppBootstrap._();
+  const new _();
 
   static Future<void> run() async {
     final profiler = StartupProfiler();
@@ -257,6 +258,10 @@ class AppBootstrap {
     // 例外が発生しても起動フローを止めず talker に記録する。
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       GuardedUnawaitedUtil.run(
+        () => FileDownloader().start(autoCleanDatabase: true),
+        onError: (error, stack) => talker.error(error, stack),
+      );
+      GuardedUnawaitedUtil.run(
         () => MobileAds.instance.initialize(),
         onError: (error, stack) => talker.error(error, stack),
       );
@@ -319,7 +324,7 @@ class AppBootstrap {
 
 /// Android の通知チャンネル/チャンネルグループを初回起動時に登録する。
 class NotificationChannelRegistrar {
-  const NotificationChannelRegistrar._();
+  const new _();
 
   static Future<void> registerIfNeeded() async {
     final androidNotificationPlugin = FlutterLocalNotificationsPlugin()

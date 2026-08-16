@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final _sha256A = 'a' * 64;
@@ -256,6 +257,60 @@ void main() {
       expect(file.path, '${tempDir.path}/parameters/jma_code_table.json');
       expect(await file.readAsString(), content);
     });
+
+    test(
+      'falls back to bundled when an active downloaded asset is corrupt',
+      () async {
+        const bundledContent = '{"bundled":true}';
+        const downloadedContent = '{"downloaded":true}';
+        final bundledDir = await Directory.systemTemp.createTemp(
+          'asset_pack_bundled_test',
+        );
+        final downloadedDir = await Directory.systemTemp.createTemp(
+          'asset_pack_downloaded_test',
+        );
+        addTearDown(() => bundledDir.delete(recursive: true));
+        addTearDown(() => downloadedDir.delete(recursive: true));
+        Future<void> writePack(Directory directory, String content) async {
+          final manifest = _manifestMatchingJmaCodeTable(content);
+          await File(
+            '${directory.path}/manifest.json',
+          ).writeAsString(jsonEncode(manifest));
+          final asset = File(
+            '${directory.path}/parameters/jma_code_table.json',
+          );
+          await asset.parent.create(recursive: true);
+          await asset.writeAsString(content);
+        }
+
+        await writePack(bundledDir, bundledContent);
+        await writePack(downloadedDir, downloadedContent);
+        var useDownloaded = true;
+        final repository = AssetPackRepository(
+          resolvePackSource: () async => AssetPackSource(
+            kind: useDownloaded
+                ? AssetPackSourceKind.downloaded
+                : AssetPackSourceKind.bundled,
+            rootDirectory: useDownloaded ? downloadedDir : bundledDir,
+            version: useDownloaded ? '1.0.0' : null,
+          ),
+          deactivateDownloadedSource: (source) async {
+            useDownloaded = false;
+          },
+        );
+        await File(
+          '${downloadedDir.path}/parameters/jma_code_table.json',
+        ).writeAsString('corrupt');
+
+        final file = await repository.resolveAsset(
+          AssetPackAssetId.jmaCodeTable,
+        );
+
+        expect(file.path, '${bundledDir.path}/parameters/jma_code_table.json');
+        expect(await file.readAsString(), bundledContent);
+        expect(useDownloaded, isFalse);
+      },
+    );
 
     test('resolves manifest and asset independently', () async {
       const content = '{"ok":true}';
