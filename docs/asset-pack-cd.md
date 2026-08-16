@@ -70,8 +70,9 @@ download task ID は Pack version から決定し、起動後に downloader の�
 ## 鍵と GitHub 設定
 
 現在の key id は `asset-pack-2026-08-16`。公開鍵はアプリと
-`tool/asset_pack/trusted_keys/` に保持し、秘密鍵は backend repository の
-`ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64` secret だけに登録する。
+`tool/asset_pack/trusted_keys/` に保持する。秘密鍵は backend のSOPS暗号化済み
+`.env.json`をsource of truthとし、同じ値をrepositoryの
+`ASSET_PACK_SIGNING_PRIVATE_KEY_BASE64` secretへ同期する。
 
 backend repository に必要な値:
 

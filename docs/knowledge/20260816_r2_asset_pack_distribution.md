@@ -54,6 +54,7 @@ tool/asset_pack/stage_from_r2.sh --target all
 ## 鍵ローテーション
 
 現在の key id は `asset-pack-2026-08-16`。秘密鍵 DER の Base64 は backend の
-GitHub secret のみに保存する。公開鍵はアプリと CI verifier に同じ raw
-Ed25519 key を登録する。旧鍵で署名された manifest が cache / CDN に残る期間は
-旧公開鍵を削除しない。
+SOPS暗号化済み`.env.json`をsource of truthとし、GitHub Actions secretへ同期する。
+publisherは秘密値をCLI引数へ渡さず、600権限の一時ファイルとしてCLIへ渡す。
+公開鍵はアプリと CI verifier に同じ raw Ed25519 key を登録する。旧鍵で署名された
+manifest が cache / CDN に残る期間は旧公開鍵を削除しない。
