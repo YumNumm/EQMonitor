@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _WelcomeStepPage extends HookConsumerWidget {
-  const _WelcomeStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -142,7 +142,10 @@ class _WelcomeStepPage extends HookConsumerWidget {
           SizedBox(height: designSystem.spacing.xxxxl),
           Text(
             'EQMonitor へ\nようこそ',
-            style: designSystem.typography.displayMedium,
+            style: designSystem.typography.displayMedium.copyWith(
+              fontFamily: FontFamily.notoSansJP,
+              fontWeight: .bold,
+            ),
           ),
           SizedBox(height: designSystem.spacing.sm),
           Text(

@@ -1,17 +1,16 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:flutter/gestures.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum NotificationPresetSelectorStyle { onboarding, settings }
 
 class NotificationPresetSelector extends HookConsumerWidget {
-  const NotificationPresetSelector({
+  const new({
     required this.selectedPreset,
     required this.onChanged,
     required this.style,
@@ -115,7 +114,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
 }
 
 class _OnboardingPresetList extends StatelessWidget {
-  const _OnboardingPresetList({
+  const new({
     required this.presets,
     required this.selectedPreset,
     required this.isPresetEnabled,
@@ -155,7 +154,7 @@ class _OnboardingPresetList extends StatelessWidget {
 }
 
 class _OnboardingPresetCard extends StatelessWidget {
-  const _OnboardingPresetCard({
+  const new({
     required this.preset,
     required this.isSelected,
     required this.isEnabled,
@@ -241,75 +240,67 @@ class _OnboardingPresetCard extends StatelessWidget {
 }
 
 class _OnboardingPresetDescription extends StatelessWidget {
-  const _OnboardingPresetDescription({required this.preset});
+  const new({required this.preset});
 
   final NotificationPreset preset;
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
     return switch (preset) {
-      NotificationPreset.recommended => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      .recommended => Column(
+        crossAxisAlignment: .start,
         children: [
-          _PresetBulletItem(text: '現在地の緊急地震速報(警報)', designSystem: designSystem),
+          _PresetBulletItem(text: '現在地の緊急地震速報(警報)'),
           _PresetBulletItem(
             text: '現在地で予想震度4以上の緊急地震速報(予報)',
-            designSystem: designSystem,
           ),
           _PresetBulletItem(
             text: '現在地で震度1以上を観測した地震情報',
-            designSystem: designSystem,
           ),
         ],
       ),
-      NotificationPreset.all => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      .all => Column(
+        crossAxisAlignment: .start,
         children: [
           _PresetBulletItem(
-            text: '推奨設定に加え、全国のすべての緊急地震速報・地震情報も通知します',
-            designSystem: designSystem,
+            text: 'すべての緊急地震速報・地震情報を通知します',
           ),
           _PresetBulletItem(
             text: '南海トラフ地震関連情報も通知します',
-            designSystem: designSystem,
           ),
         ],
       ),
-      NotificationPreset.custom => Column(
+      .custom => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _PresetBulletItem(
             text: '通知する地域や震度を細かく設定できます',
-            designSystem: designSystem,
           ),
           _PresetBulletItem(
-            text: 'Proではさらに通知音や割り込みレベルを設定できます',
-            designSystem: designSystem,
+            text: 'EQMonitor Pro(有料プラン)ではさらに通知音や割り込みレベルを設定できます',
           ),
         ],
       ),
       NotificationPreset.none => _PresetBulletItem(
         text: '通知を受け取りません。後から設定で変更できます',
-        designSystem: designSystem,
       ),
     };
   }
 }
 
 class _PresetBulletItem extends StatelessWidget {
-  const _PresetBulletItem({required this.text, required this.designSystem});
+  const new({required this.text});
 
   final String text;
-  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
     return Padding(
       padding: EdgeInsets.only(bottom: designSystem.spacing.xs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '・',
@@ -332,7 +323,7 @@ class _PresetBulletItem extends StatelessWidget {
 }
 
 class _SettingsPresetGroup extends StatelessWidget {
-  const _SettingsPresetGroup({
+  const new({
     required this.presets,
     required this.selectedPreset,
     required this.isPresetEnabled,
@@ -393,7 +384,7 @@ class _SettingsPresetGroup extends StatelessWidget {
 }
 
 class _SettingsPresetTile extends StatelessWidget {
-  const _SettingsPresetTile({
+  const new({
     required this.preset,
     required this.isSelected,
     required this.isEnabled,
@@ -477,7 +468,7 @@ class _SettingsPresetTile extends StatelessWidget {
 }
 
 class _PresetSelectionMark extends StatelessWidget {
-  const _PresetSelectionMark({required this.isSelected});
+  const new({required this.isSelected});
 
   final bool isSelected;
 
@@ -501,7 +492,7 @@ class _PresetSelectionMark extends StatelessWidget {
 }
 
 class _CustomPresetTrailing extends StatelessWidget {
-  const _CustomPresetTrailing({required this.enabled, required this.onTap});
+  const new({required this.enabled, required this.onTap});
 
   final bool enabled;
   final VoidCallback onTap;
@@ -535,7 +526,7 @@ class _CustomPresetTrailing extends StatelessWidget {
 }
 
 class _CriticalAlertWarningLink extends HookWidget {
-  const _CriticalAlertWarningLink({required this.onTap});
+  const new({required this.onTap});
 
   final VoidCallback onTap;
 
@@ -564,7 +555,7 @@ class _CriticalAlertWarningLink extends HookWidget {
 
 /// [NotificationPreset] の表示ラベルを組み立てる。
 class _NotificationPresetLabel {
-  const _NotificationPresetLabel();
+  const new();
 
   String title(NotificationPreset preset) => switch (preset) {
     NotificationPreset.recommended => '推奨設定',

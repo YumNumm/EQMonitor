@@ -1,9 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _PermissionsStepPage extends HookConsumerWidget {
-  const _PermissionsStepPage({required this.navigation});
-
-  static const _temporaryQaUrl = 'https://example.com';
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -17,7 +15,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
     void openWebView({required String title}) {
       OnboardingWebViewRoute(
         title: title,
-        url: _PermissionsStepPage._temporaryQaUrl,
+        url: "https://eqmonitor.app/faq",
       ).push<void>(context);
     }
 
@@ -135,7 +133,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
 }
 
 class _PermissionSection extends StatelessWidget {
-  const _PermissionSection({
+  const new({
     required this.title,
     required this.children,
     this.description,
@@ -170,7 +168,7 @@ class _PermissionSection extends StatelessWidget {
 }
 
 class _PermissionActionCard extends StatelessWidget {
-  const _PermissionActionCard({
+  const new({
     required this.title,
     required this.description,
     required this.decision,
@@ -218,7 +216,7 @@ class _PermissionActionCard extends StatelessWidget {
         border: Border.all(color: designSystem.colorTheme.outlineVariant),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(title, style: designSystem.typography.titleMedium),
           SizedBox(height: designSystem.spacing.sm),
@@ -238,11 +236,15 @@ class _PermissionActionCard extends StatelessWidget {
             ),
           ],
           SizedBox(height: designSystem.spacing.md),
-          Wrap(
-            alignment: WrapAlignment.end,
-            spacing: designSystem.spacing.sm,
-            runSpacing: designSystem.spacing.sm,
-            children: actionButtons,
+          Align(
+            alignment: .centerRight,
+            child: Wrap(
+              alignment: .end,
+              crossAxisAlignment: .center,
+              spacing: designSystem.spacing.sm,
+              runSpacing: designSystem.spacing.sm,
+              children: actionButtons,
+            ),
           ),
         ],
       ),
@@ -251,7 +253,7 @@ class _PermissionActionCard extends StatelessWidget {
 }
 
 class _PermissionDescriptionText extends StatelessWidget {
-  const _PermissionDescriptionText({
+  const new({
     required this.description,
     required this.linkLabel,
     required this.onLinkTap,
@@ -296,7 +298,7 @@ class _PermissionDescriptionText extends StatelessWidget {
 }
 
 class _InlineTextLink extends StatelessWidget {
-  const _InlineTextLink({required this.label, required this.onTap});
+  const new({required this.label, required this.onTap});
 
   final String label;
   final VoidCallback onTap;
