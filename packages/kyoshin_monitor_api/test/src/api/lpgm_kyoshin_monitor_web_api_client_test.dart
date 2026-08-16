@@ -19,9 +19,9 @@ void main() {
 
   test('通常震度の地表は img_svr の jma_s を取得する', () async {
     await dataSource.getRealtimeImageData(
-      RealtimeDataType.shindo,
-      RealtimeLayer.surface,
-      DateTime(2026, 8, 16, 22, 58, 3),
+      type: RealtimeDataType.shindo,
+      layer: RealtimeLayer.surface,
+      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
     );
 
     expect(
@@ -33,9 +33,9 @@ void main() {
 
   test('通常震度の地下は img_svr の jma_b を取得する', () async {
     await dataSource.getRealtimeImageData(
-      RealtimeDataType.shindo,
-      RealtimeLayer.underground,
-      DateTime(2026, 8, 16, 22, 58, 3),
+      type: RealtimeDataType.shindo,
+      layer: RealtimeLayer.underground,
+      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
     );
 
     expect(
@@ -47,9 +47,9 @@ void main() {
 
   test('長周期データは地下設定でも monitor 配下の abrspmx_s を取得する', () async {
     await dataSource.getRealtimeImageData(
-      RealtimeDataType.abrspmx,
-      RealtimeLayer.underground,
-      DateTime(2026, 8, 16, 22, 58, 3),
+      type: RealtimeDataType.abrspmx,
+      layer: RealtimeLayer.underground,
+      dateTime: DateTime(2026, 8, 16, 22, 58, 3),
     );
 
     expect(
