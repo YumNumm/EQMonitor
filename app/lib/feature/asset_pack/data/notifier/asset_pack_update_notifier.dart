@@ -122,7 +122,7 @@ class AssetPackUpdateNotifier extends _$AssetPackUpdateNotifier {
     } on Object catch (error, stackTrace) {
       talker.error('[AssetPack] update install failed', error, stackTrace);
       state = const AssetPackUpdateError(
-        'Asset Pack を更新できませんでした。同梱データを引き続き使用します。',
+        'Asset Pack を更新できませんでした。現在のデータを引き続き使用します。',
       );
     }
   }
