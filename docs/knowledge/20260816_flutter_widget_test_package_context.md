@@ -23,3 +23,21 @@ cd app
 mise exec -- flutter clean
 mise exec -- flutter test test/feature/example_test.dart
 ```
+
+## Melos で Flutter / Dart テストを分離する
+
+`dependsOn: test` だけでは、`test` と `flutter_test` の両方を持つ
+Flutter パッケージも Dart VM のテスト対象になる。`dart:ui` の読み込みで
+失敗する場合は、Dart 専用パッケージを `--no-flutter` で絞り込む。
+
+```bash
+mise exec -- dart run melos exec -c 1 --private \
+  --dir-exists=test --depends-on=test --no-flutter -- dart test
+```
+
+Flutter パッケージは別に `flutter test` で実行する。
+
+```bash
+mise exec -- dart run melos exec -c 1 --private \
+  --dir-exists=test --depends-on=flutter_test -- flutter test
+```
