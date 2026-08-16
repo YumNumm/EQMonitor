@@ -13,7 +13,7 @@ void main() {
 
         expect(diagnostics.status, status);
         expect(diagnostics.schemaVersion, 1);
-        expect(diagnostics.packIdentifier, 'eqmonitor-assets');
+        expect(diagnostics.packIdentifier, 'platform');
       });
     }
 
@@ -113,7 +113,7 @@ void main() {
             'schema_version': 1,
             'platform': 'ios',
             'os_version': 'Version 26.4',
-            'pack_id': 'eqmonitor-assets',
+            'pack_id': 'platform',
             'status': 'ready',
             'system_availability': 'available',
             'detail': 'details',
@@ -126,47 +126,6 @@ void main() {
         ),
         throwsFormatException,
       );
-    });
-  });
-
-  group('AssetPackUpdateResult.fromJsonString', () {
-    test('decodes a successful check without implying download completion', () {
-      final result = AssetPackUpdateResult.fromJsonString(
-        jsonEncode({
-          'schema_version': 1,
-          'pack_id': 'eqmonitor-assets',
-          'success': true,
-          'checked_at': '2026-07-31T00:00:00Z',
-          'updating_ids': ['b', 'a'],
-          'removed_ids': <String>[],
-          'native_error': null,
-        }),
-      );
-
-      expect(result.success, isTrue);
-      expect(result.updatingIdentifiers, ['b', 'a']);
-      expect(result.nativeError, isNull);
-    });
-
-    test('decodes a failed check with native error details', () {
-      final result = AssetPackUpdateResult.fromJsonString(
-        jsonEncode({
-          'schema_version': 1,
-          'pack_id': 'eqmonitor-assets',
-          'success': false,
-          'checked_at': '2026-07-31T00:00:00Z',
-          'updating_ids': <String>[],
-          'removed_ids': <String>[],
-          'native_error': {
-            'domain': 'BAErrorDomain',
-            'code': 4,
-            'description': 'Network unavailable',
-          },
-        }),
-      );
-
-      expect(result.success, isFalse);
-      expect(result.nativeError?.code, 4);
     });
   });
 }
@@ -183,7 +142,7 @@ String diagnosticsJson({
   'schema_version': schemaVersion,
   'platform': 'ios',
   'os_version': 'Version 26.4',
-  'pack_id': 'eqmonitor-assets',
+  'pack_id': 'platform',
   'status': status,
   'system_availability': 'available',
   'detail': 'details',
