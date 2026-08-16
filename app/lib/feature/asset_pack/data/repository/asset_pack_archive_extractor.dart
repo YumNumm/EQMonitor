@@ -4,7 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
 
 class AssetPackArchiveException implements Exception {
-  const AssetPackArchiveException(this.message);
+  const new(this.message);
 
   final String message;
 
@@ -13,7 +13,7 @@ class AssetPackArchiveException implements Exception {
 }
 
 class AssetPackArchiveLimits {
-  const AssetPackArchiveLimits({
+  const new({
     this.maxFiles = 1024,
     this.maxUncompressedBytes = 1024 * 1024 * 1024,
     this.maxSingleFileBytes = 768 * 1024 * 1024,
@@ -25,7 +25,7 @@ class AssetPackArchiveLimits {
 }
 
 class AssetPackArchiveExtractor {
-  const AssetPackArchiveExtractor({
+  const new({
     this.limits = const AssetPackArchiveLimits(),
   });
 

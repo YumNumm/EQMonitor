@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// `HomeScopeUnavailableBody` 表示用の最小限の `MaterialApp` ラッパー。

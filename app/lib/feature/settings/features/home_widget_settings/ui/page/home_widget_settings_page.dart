@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/no
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -55,7 +55,7 @@ class _WidgetRegionSection extends ConsumerWidget {
 
     Future<void> pick() async {
       if (!isPro) {
-        await showProUpgradeDialog(context);
+        await const ProUpgradeDialogAction().show(context);
         return;
       }
       final result = await Navigator.of(context).push<WidgetRegionSelection>(
@@ -103,25 +103,23 @@ class _WidgetRegionPickerPage extends HookWidget {
     final selectedCode = useState<String?>(initial?.code);
     final selectedName = useState<String?>(initial?.name);
 
-    final canApply =
-        selectedCode.value != null && selectedCode.value!.isNotEmpty;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('任意地域を選択'),
         actions: [
-          TextButton(
-            onPressed: canApply
-                ? () => Navigator.of(context).pop(
-                    WidgetRegionSelection(
-                      searchType: searchType.value,
-                      code: selectedCode.value!,
-                      name: selectedName.value ?? '',
-                    ),
-                  )
-                : null,
-            child: const Text('決定'),
-          ),
+          switch (selectedCode.value) {
+            final code? when code.isNotEmpty => TextButton(
+              onPressed: () => Navigator.of(context).pop(
+                WidgetRegionSelection(
+                  searchType: searchType.value,
+                  code: code,
+                  name: selectedName.value ?? '',
+                ),
+              ),
+              child: const Text('決定'),
+            ),
+            _ => const TextButton(onPressed: null, child: Text('決定')),
+          },
         ],
       ),
       body: SafeArea(
@@ -173,13 +171,12 @@ class _WidgetRegionPickerPage extends HookWidget {
                   selectedName.value = selection?.name;
                 },
               ),
-            if (selectedName.value != null &&
-                selectedName.value!.isNotEmpty) ...[
+            if (selectedName.value case final name? when name.isNotEmpty) ...[
               const SizedBox(height: 12),
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.place_outlined),
-                  title: Text(selectedName.value!),
+                  title: Text(name),
                   subtitle: Text(
                     searchType.value == RegionSearchType.prefecture
                         ? '都道府県'

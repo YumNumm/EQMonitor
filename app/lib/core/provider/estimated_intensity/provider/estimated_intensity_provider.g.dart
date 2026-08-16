@@ -40,7 +40,7 @@ final class EstimatedIntensityProvider
 }
 
 String _$estimatedIntensityHash() =>
-    r'4ee4711d1fda87afcf37419f0659a942a9aacc9b';
+    r'f892e43161f79818b07b8a9205b4a3ca5c709c90';
 
 abstract class _$EstimatedIntensity
     extends $AsyncNotifier<List<EstimatedIntensityPoint>> {

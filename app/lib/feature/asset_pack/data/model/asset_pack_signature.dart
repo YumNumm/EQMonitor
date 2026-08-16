@@ -5,7 +5,7 @@ final _keyIdPattern = RegExp(r'^[a-z0-9][a-z0-9-]{0,63}$');
 final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 
 class AssetPackSignature {
-  const AssetPackSignature({
+  const new({
     required this.schemaVersion,
     required this.algorithm,
     required this.keyId,
@@ -13,7 +13,7 @@ class AssetPackSignature {
     required this.signatureBytes,
   });
 
-  factory AssetPackSignature.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final schemaVersion = json['schema_version'];
     final algorithm = json['algorithm'];
     final keyId = json['key_id'];

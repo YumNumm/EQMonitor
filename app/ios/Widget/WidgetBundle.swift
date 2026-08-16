@@ -18,6 +18,9 @@ struct EQMonitorWidgetBundle: WidgetBundle {
         }
         if #available(iOS 18.0, *) {
             OpenEarthquakeHistoryControl()
+        }
+        // Interactive Snippet を出すコントロールは iOS 26 以降
+        if #available(iOS 26.0, *) {
             LatestEarthquakeSnippetControl()
         }
     }

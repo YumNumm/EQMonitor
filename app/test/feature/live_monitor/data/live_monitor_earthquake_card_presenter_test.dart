@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final _reportedAt = DateTime.utc(2026, 7, 27, 12);
@@ -85,7 +85,7 @@ void main() {
 
   group('preferredIntensityMode', () {
     test('VXSE62はLPGMデータがあれば長周期地震動を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(maxLpgmIntensity: JmaLpgmIntensity.two),
         trigger: LiveMonitorEarthquakeTrigger.telegram(
           kind: LiveMonitorEarthquakeTriggerKind.vxse62,
@@ -97,7 +97,7 @@ void main() {
     });
 
     test('VXSE62でもLPGMデータがなければ気象庁震度を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(),
         trigger: LiveMonitorEarthquakeTrigger.telegram(
           kind: LiveMonitorEarthquakeTriggerKind.vxse62,
@@ -109,7 +109,7 @@ void main() {
     });
 
     test('推計震度triggerはタイルURLがあれば推計震度を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(
           estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
         ),
@@ -122,7 +122,7 @@ void main() {
     });
 
     test('推計震度triggerでもタイルURLがなければ気象庁震度を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(),
         trigger: const LiveMonitorEarthquakeTrigger.estimatedIntensity(
           generatedAt: null,
@@ -133,7 +133,7 @@ void main() {
     });
 
     test('分割表示はtriggerなしでもfull推計震度URLがあれば推計震度を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(
           maxLpgmIntensity: JmaLpgmIntensity.two,
           estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
@@ -151,7 +151,7 @@ void main() {
     });
 
     test('VXSE53は気象庁震度を選ぶ', () {
-      final mode = preferredIntensityMode(
+      final mode = LiveMonitorEarthquakeCardPresenter.preferredIntensityMode(
         earthquake: _earthquake(
           maxLpgmIntensity: JmaLpgmIntensity.two,
           estimatedIntensityTileUrl: 'https://example.com/estimated.pmtiles',
@@ -260,7 +260,9 @@ void main() {
     );
 
     expect(
-      latestSupportedTelegramTrigger(earthquake),
+      LiveMonitorEarthquakeCardPresenter.latestSupportedTelegramTrigger(
+        earthquake,
+      ),
       LiveMonitorEarthquakeTrigger.telegram(
         kind: LiveMonitorEarthquakeTriggerKind.vxse61,
         reportedAt: _reportedAt.add(const Duration(minutes: 3)),
@@ -276,11 +278,11 @@ void main() {
       _eew(eventId: 'new-high', reportTime: sameTime, serialNo: 2),
     ];
 
-    expect(orderedLiveMonitorEews(input).map((event) => event.eventId), [
-      'new-high',
-      'new-low',
-      'old',
-    ]);
+    expect(
+      LiveMonitorEarthquakeCardPresenter.orderedEews(input)
+          .map((event) => event.eventId),
+      ['new-high', 'new-low', 'old'],
+    );
     expect(input.map((event) => event.eventId), ['old', 'new-low', 'new-high']);
   });
 
@@ -292,11 +294,11 @@ void main() {
       _shake(eventId: 'new-high', updatedAt: sameTime, serialNo: 2),
     ];
 
-    expect(orderedLiveMonitorShakes(input).map((event) => event.eventId), [
-      'new-high',
-      'new-low',
-      'old',
-    ]);
+    expect(
+      LiveMonitorEarthquakeCardPresenter.orderedShakes(input)
+          .map((event) => event.eventId),
+      ['new-high', 'new-low', 'old'],
+    );
     expect(input.map((event) => event.eventId), ['old', 'new-low', 'new-high']);
   });
 }

@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 

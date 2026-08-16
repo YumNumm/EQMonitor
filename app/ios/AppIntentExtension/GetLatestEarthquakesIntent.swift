@@ -9,6 +9,8 @@ import AppIntents
 import EQMonitorAPI
 import SwiftUI
 
+/// `ShowsSnippetIntent` は iOS 26 以降。
+@available(iOS 26.0, *)
 struct GetLatestEarthquakesIntent: AppIntent {
     static let title: LocalizedStringResource = "最新の地震情報を確認"
     static let description = IntentDescription(
@@ -48,7 +50,8 @@ struct GetLatestEarthquakesIntent: AppIntent {
 // MARK: - Snippet Intent
 
 /// カード描画本体。ボタン操作のたびにシステムが perform を再実行するため、
-/// 常に最新のデータで再描画される。
+/// 常に最新のデータで再描画される。`SnippetIntent` は iOS 26 以降。
+@available(iOS 26.0, *)
 struct EarthquakeSnippetIntent: SnippetIntent {
     static let title: LocalizedStringResource = "地震情報カード"
 

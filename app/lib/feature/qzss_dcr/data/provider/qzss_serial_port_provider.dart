@@ -37,12 +37,13 @@ class QzssSerialPortConnection extends _$QzssSerialPortConnection {
       await disconnect();
 
       // 新しいサービスを作成
-      _service = QzssSerialPortService(
+      final service = QzssSerialPortService(
         portName: portName,
         baudRate: baudRate,
       );
+      _service = service;
 
-      await _service!.connect();
+      await service.connect();
 
       state = QzssSerialPortState(
         isConnected: true,
@@ -65,10 +66,7 @@ class QzssSerialPortConnection extends _$QzssSerialPortConnection {
     await _service?.disconnect();
     _service = null;
 
-    state = state.copyWith(
-      isConnected: false,
-      error: null,
-    );
+    state = state.copyWith(isConnected: false, error: null);
   }
 
   // ignore: avoid_public_notifier_properties

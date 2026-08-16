@@ -1,3 +1,5 @@
+import 'package:cupertino_ui/cupertino_ui.dart'
+    show GlobalCupertinoLocalizations;
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -9,12 +11,13 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_warning_overlay_host.dar
 import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_wake_lock_controller.dart';
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    show GlobalWidgetsLocalizations;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class App extends HookConsumerWidget {
-  const App({super.key});
+  const new({super.key});
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -38,8 +41,11 @@ class App extends HookConsumerWidget {
         backButtonDispatcher: routerConfig.backButtonDispatcher,
         child: DebugLauncher(child: child ?? const SizedBox.shrink()),
       ),
-      theme: buildTheme(colorSet: lightColorSet, brightness: Brightness.light),
-      darkTheme: buildTheme(
+      theme: AppThemeDataBuilder.build(
+        colorSet: lightColorSet,
+        brightness: Brightness.light,
+      ),
+      darkTheme: AppThemeDataBuilder.build(
         colorSet: darkColorSet,
         brightness: Brightness.dark,
       ),

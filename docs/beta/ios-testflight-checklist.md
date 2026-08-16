@@ -118,11 +118,23 @@ codesign -d --entitlements :- "$APP_PATH/PlugIns/AppIntentExtension.appex" | plu
 
 ### 4.1 アプリ内デバッグページで確認する
 
-TestFlightビルドは `IS_BETA_TESTING=true`(`.github/workflows/deploy-app.yaml`)でビルドされ、
-`buildConfig.isBetaTesting` が真になるため、`app/lib/feature/debug/launcher/debug_launcher.dart`
-のデバッグ起動条件を満たし、リリースビルドでもデバッグページを開ける。
+> [!IMPORTANT]
+> develop push の TestFlight ビルドは `.env.prod`(`FLAVOR=prod`) のみ（`IS_BETA_TESTING` なし）。  
+> `v*-beta.*` / 手動で `is_beta_testing=true` のときだけ `IS_BETA_TESTING=true`。
+> でビルドされる。この組み合わせでは `buildConfig.isDeveloperUiEnabled` が
+> **false** になり(`app/lib/core/model/environment.dart`)、デバッグメニュー・
+> HTTP キャッシュ表示・`DebugLauncher` のシェイク/ショートカット起動が
+> **すべて無効化される**。そのため、以下の「アプリ内デバッグページで確認する」手順は
+> 通常の TestFlight ビルドでは実施できない。
+>
+> App Check の確認は「4.2 Firebaseコンソールで確認する」を正とする。
+> どうしてもアプリ内デバッグページで確認したい場合は、`FLAVOR=dev` など
+> `isDeveloperUiEnabled` が true になるビルドを別途作成して検証する。
 
-1. TestFlightからインストールしたアプリを起動する。
+<details>
+<summary>(参考)デバッグ UI が有効なビルドでの確認手順</summary>
+
+1. デバッグ UI が有効なビルド(`isDeveloperUiEnabled == true`)をインストールして起動する。
 2. 端末をシェイクする(`DebugLauncher` のジェスチャ)、
    または対応するショートカットでデバッグページを開く。
 3. "Firebase App Check" セクションを確認する
@@ -132,6 +144,8 @@ TestFlightビルドは `IS_BETA_TESTING=true`(`.github/workflows/deploy-app.yaml
       (`kDebugMode` が false の場合 `main.dart` は `AppleAppAttestProvider` を使う)
 - [ ] `Token` に `null`/エラー以外の値(JWTらしき文字列)が表示される
 - [ ] 右上の再読み込みアイコンでトークンを再取得しても正常に取得できる
+
+</details>
 
 ### 4.2 Firebaseコンソールで確認する
 

@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_map_focus.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_host.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

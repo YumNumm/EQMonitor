@@ -72,7 +72,7 @@ class HypocenterPmTilesLayer extends HookWidget {
         }
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [
                 for (final value in ids) ...[

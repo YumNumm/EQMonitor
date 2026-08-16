@@ -16,11 +16,10 @@ part 'asset_pack_distribution_repository.g.dart';
 
 const assetPackDistributionBaseUrl = 'https://assets.eqmonitor.app/v1/assets';
 
-typedef VerifyAssetPackSignature =
-    Future<bool> Function({
-      required Uint8List content,
-      required AssetPackSignature sidecar,
-    });
+typedef VerifyAssetPackSignature = Future<bool> Function({
+  required Uint8List content,
+  required AssetPackSignature sidecar,
+});
 
 enum AssetPackDistributionErrorCode {
   transport,
@@ -30,7 +29,7 @@ enum AssetPackDistributionErrorCode {
 }
 
 class AssetPackDistributionException implements Exception {
-  const AssetPackDistributionException({
+  const new({
     required this.code,
     required this.message,
   });
@@ -43,17 +42,17 @@ class AssetPackDistributionException implements Exception {
 }
 
 sealed class AssetPackUpdateCheckResult {
-  const AssetPackUpdateCheckResult({required this.manifest});
+  const new({required this.manifest});
 
   final AssetPackDistributionManifest manifest;
 }
 
 final class AssetPackNoUpdate extends AssetPackUpdateCheckResult {
-  const AssetPackNoUpdate({required super.manifest});
+  const new({required super.manifest});
 }
 
 final class AssetPackUpdateAvailable extends AssetPackUpdateCheckResult {
-  const AssetPackUpdateAvailable({
+  const new({
     required super.manifest,
     required this.entry,
   });
@@ -62,7 +61,7 @@ final class AssetPackUpdateAvailable extends AssetPackUpdateCheckResult {
 }
 
 final class AssetPackAppUpdateRequired extends AssetPackUpdateCheckResult {
-  const AssetPackAppUpdateRequired({
+  const new({
     required super.manifest,
     required this.entry,
   });
@@ -71,7 +70,7 @@ final class AssetPackAppUpdateRequired extends AssetPackUpdateCheckResult {
 }
 
 class AssetPackDistributionRepository {
-  AssetPackDistributionRepository({
+  new({
     required this.dio,
     required this.preferences,
     required this.verifySignature,
@@ -153,7 +152,7 @@ Future<AssetPackDistributionRepository> assetPackDistributionRepository(
 }
 
 class AssetPackDistributionPayload {
-  const AssetPackDistributionPayload({
+  const new({
     required this.manifestBytes,
     required this.signatureBytes,
     this.etag,

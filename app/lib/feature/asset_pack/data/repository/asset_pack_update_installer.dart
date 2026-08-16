@@ -10,11 +10,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'asset_pack_update_installer.g.dart';
 
-typedef DownloadAssetPackArchive =
-    Future<File> Function({
-      required AssetPackDistributionEntry entry,
-      required void Function(double progress) onProgress,
-    });
+typedef DownloadAssetPackArchive = Future<File> Function({
+  required AssetPackDistributionEntry entry,
+  required void Function(double progress) onProgress,
+});
 
 enum AssetPackInstallPhase {
   downloading,
@@ -25,14 +24,14 @@ enum AssetPackInstallPhase {
 }
 
 class AssetPackInstallProgress {
-  const AssetPackInstallProgress({required this.phase, required this.progress});
+  const new({required this.phase, required this.progress});
 
   final AssetPackInstallPhase phase;
   final double progress;
 }
 
 class AssetPackInstallException implements Exception {
-  const AssetPackInstallException(this.message);
+  const new(this.message);
 
   final String message;
 
@@ -41,7 +40,7 @@ class AssetPackInstallException implements Exception {
 }
 
 class AssetPackUpdateInstaller {
-  AssetPackUpdateInstaller({
+  new({
     required this.storageRepository,
     required DownloadAssetPackArchive downloadArchive,
     AssetPackArchiveExtractor archiveExtractor =

@@ -59,7 +59,7 @@ class LiveMonitorInitialEarthquakeBoundary {
         realtimeEstimatedIdentifiers.any(
           (arrival) =>
               arrival.$1 == earthquake.eventId &&
-              liveMonitorEstimatedIntensityUrlMatchesIdentifier(
+              LiveMonitorEventDetector.estimatedIntensityUrlMatchesIdentifier(
                 fullUrl: estimatedIntensityTileUrl,
                 identifier: arrival.$2,
               ),

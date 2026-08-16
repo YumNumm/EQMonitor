@@ -12,7 +12,7 @@ part 'cache_only_dio_provider.g.dart';
 Future<Dio> cacheOnlyDio(Ref ref) async {
   final disabled = await ref.watch(httpCacheDisabledProvider.future);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
-  final dio = Dio(buildApiBaseOptions(baseUrl: telegramUrl.restApiUrl));
+  final dio = Dio(DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl));
   if (disabled) {
     dio.interceptors.add(CacheOnlyInterceptor.disabled());
     return dio;

@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -30,7 +31,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
   );
 
   static Map<String, dynamic> _convertEew(EewTelegramItem eew, double opacity) {
-    final hypo = eew.hypocenter!;
+    final hypo = eew.hypocenter.orFailBecause(
+      '呼び出し元でhypocenter/latitude/longitudeがnullでないことをフィルタ済み',
+    );
     return {
       'type': 'Feature',
       'geometry': {
@@ -210,7 +213,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() {
             isInitialized.value = false;
-            return removeMapStyleResources(
+            return MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [layerId.normal, layerId.lowPrecise],
               sourceIds: [sourceId.normal, sourceId.lowPrecise],

@@ -155,7 +155,7 @@ void main() {
 }
 
 // 400 BadRequest を表す非再試行エラー。
-// 400 は mapDioToProvisioningException で InvalidRequestException に変換される。
+// 400 は DioExceptionMapper.map で InvalidRequestException に変換される。
 // RetryController は isRetryable=false で即座に rethrow するため遅延なし。
 Result<void, Exception> _badRequest() {
   final options = RequestOptions(path: '/v2/device/me/migrate');

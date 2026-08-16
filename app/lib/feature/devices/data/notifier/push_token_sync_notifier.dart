@@ -56,7 +56,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
             case Failure(:final exception, :final stackTrace):
               final mapped = switch (exception) {
                 DeviceProvisioningException() => exception,
-                DioException() => mapDioToProvisioningException(
+                DioException() => DioExceptionMapper.map(
                   exception,
                   stackTrace ?? StackTrace.empty,
                 ),
@@ -97,7 +97,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
           state = AsyncData(
             snapshot.updateKind(
               kind: kind,
-              kindState: pushTokenKindStateFromWorker(workerState),
+              kindState: workerState.toKindState(),
             ),
           );
         }),

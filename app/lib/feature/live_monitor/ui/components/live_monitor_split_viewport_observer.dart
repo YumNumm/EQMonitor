@@ -54,6 +54,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
   LiveMonitorSplitViewportMeasurement? _pendingMeasurement;
   bool _measurementIsCurrent;
   bool _reportScheduled = false;
+  static const _splitRatioCalculator = LiveMonitorSplitRatioCalculator();
 
   set active(bool value) {
     if (_active == value) {
@@ -102,7 +103,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
       viewInsets: _environment.viewInsets,
       orientation: _environment.orientation,
     );
-    final shouldReport = shouldReportLiveMonitorSplitViewportMeasurement(
+    final shouldReport = _splitRatioCalculator.shouldReportMeasurement(
       previous: _reportedMeasurement,
       current: measurement,
     );

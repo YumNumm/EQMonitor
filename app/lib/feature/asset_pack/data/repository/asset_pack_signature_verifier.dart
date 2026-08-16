@@ -5,7 +5,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_signature.dart';
 
 class AssetPackSignatureVerifier {
-  AssetPackSignatureVerifier({required Map<String, List<int>> publicKeys})
+  new({required Map<String, List<int>> publicKeys})
     : publicKeys = Map.unmodifiable({
         for (final MapEntry(:key, :value) in publicKeys.entries)
           key: Uint8List.fromList(value),

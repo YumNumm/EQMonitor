@@ -4,16 +4,16 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_distribution_repository.dart';
 
-typedef RunAssetPackDownloadTask =
-    Future<TaskStatusUpdate> Function({
-      required DownloadTask task,
-      required void Function(double progress) onProgress,
-    });
-typedef ResolveAssetPackDownloadTaskFile =
-    Future<File> Function(DownloadTask task);
+typedef RunAssetPackDownloadTask = Future<TaskStatusUpdate> Function({
+  required DownloadTask task,
+  required void Function(double progress) onProgress,
+});
+typedef ResolveAssetPackDownloadTaskFile = Future<File> Function(
+  DownloadTask task,
+);
 
 class AssetPackArchiveDownloadException implements Exception {
-  const AssetPackArchiveDownloadException(this.message);
+  const new(this.message);
 
   final String message;
 
@@ -22,7 +22,7 @@ class AssetPackArchiveDownloadException implements Exception {
 }
 
 class R2AssetPackArchiveDownloader {
-  R2AssetPackArchiveDownloader({
+  new({
     RunAssetPackDownloadTask? runTask,
     ResolveAssetPackDownloadTaskFile? resolveTaskFile,
     this.baseUrl = assetPackDistributionBaseUrl,

@@ -79,9 +79,9 @@ EarthquakeParameter _buildParameter() {
 }
 
 void main() {
-  group('buildCityToRegionLookup', () {
+  group('CityToRegionLookupBuilder.build', () {
     test('cityCode を親 region コード・名にマップする', () {
-      final lookup = buildCityToRegionLookup(_buildParameter());
+      final lookup = CityToRegionLookupBuilder.build(_buildParameter());
 
       expect(lookup['0720100']?.code, 250);
       expect(lookup['0720100']?.name, '福島県中通り');
@@ -91,12 +91,12 @@ void main() {
     });
 
     test('region.code がパースできない場合は city も含めてスキップされる', () {
-      final lookup = buildCityToRegionLookup(_buildParameter());
+      final lookup = CityToRegionLookupBuilder.build(_buildParameter());
       expect(lookup.containsKey('9999999'), isFalse);
     });
 
     test('未登録 cityCode は null を返す', () {
-      final lookup = buildCityToRegionLookup(_buildParameter());
+      final lookup = CityToRegionLookupBuilder.build(_buildParameter());
       expect(lookup['0000000'], isNull);
     });
   });

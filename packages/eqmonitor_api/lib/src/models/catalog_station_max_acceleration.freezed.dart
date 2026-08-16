@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'catalog_station_max_acceleration.dart';
@@ -9,6 +9,7 @@ part of 'catalog_station_max_acceleration.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$CatalogStationMaxAccelerationCopyWithImpl<$Res>
 /// Create a copy of CatalogStationMaxAcceleration
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? synthesizedGal = freezed,Object? nsGal = freezed,Object? ewGal = freezed,Object? udGal = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CatalogStationMaxAcceleration(
 synthesizedGal: freezed == synthesizedGal ? _self.synthesizedGal : synthesizedGal // ignore: cast_nullable_to_non_nullable
 as num?,nsGal: freezed == nsGal ? _self.nsGal : nsGal // ignore: cast_nullable_to_non_nullable
 as num?,ewGal: freezed == ewGal ? _self.ewGal : ewGal // ignore: cast_nullable_to_non_nullable

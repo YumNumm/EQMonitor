@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'home_configuration_model.dart';
@@ -9,6 +9,7 @@ part of 'home_configuration_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$HomeShakeDetectionSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeShakeDetectionSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? animationMode = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeShakeDetectionSettings(
 show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
 as bool,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
 as HomeShakeDetectionAnimationMode,
@@ -332,7 +333,7 @@ class _$HomeEewSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeEewSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? animationRate = null,Object? autoZoom = null,Object? showPSWaveCircle = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeEewSettings(
 fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
 as HomeEewFillMode,animationRate: null == animationRate ? _self.animationRate : animationRate // ignore: cast_nullable_to_non_nullable
 as HomeEewAnimationRate,autoZoom: null == autoZoom ? _self.autoZoom : autoZoom // ignore: cast_nullable_to_non_nullable
@@ -604,7 +605,7 @@ class _$HomeKyoshinMonitorSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeKyoshinMonitorSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? markerSize = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeKyoshinMonitorSettings(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,markerSize: null == markerSize ? _self.markerSize : markerSize // ignore: cast_nullable_to_non_nullable
 as HomeKmoniMarkerSize,
@@ -870,7 +871,7 @@ class _$HomeMapGridSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeMapGridSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeMapGridSettings(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -1133,7 +1134,7 @@ class _$HomeMapSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeMapSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxZoom = freezed,Object? defaultBounds = null,Object? customBounds = freezed,Object? lockBearing = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeMapSettings(
 maxZoom: freezed == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as double?,defaultBounds: null == defaultBounds ? _self.defaultBounds : defaultBounds // ignore: cast_nullable_to_non_nullable
 as HomeMapDefaultBounds,customBounds: freezed == customBounds ? _self.customBounds : customBounds // ignore: cast_nullable_to_non_nullable
@@ -1405,7 +1406,7 @@ class _$HomeCommonSettingsCopyWithImpl<$Res>
 /// Create a copy of HomeCommonSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,Object? parameter = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(HomeCommonSettings(
 showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
 as bool,earthquakeHistoryScope: null == earthquakeHistoryScope ? _self.earthquakeHistoryScope : earthquakeHistoryScope // ignore: cast_nullable_to_non_nullable
 as HomeEarthquakeHistoryScope,parameter: freezed == parameter ? _self.parameter : parameter // ignore: cast_nullable_to_non_nullable
@@ -1698,7 +1699,7 @@ class _$HomeConfigurationModelCopyWithImpl<$Res>
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eew = null,Object? kyoshinMonitor = null,Object? map = null,Object? common = null,Object? shakeDetection = null,Object? mapGrid = null,}) {
-  return _then(_self.copyWith(
+  return _then(HomeConfigurationModel(
 eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
 as HomeEewSettings,kyoshinMonitor: null == kyoshinMonitor ? _self.kyoshinMonitor : kyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as HomeKyoshinMonitorSettings,map: null == map ? _self.map : map // ignore: cast_nullable_to_non_nullable

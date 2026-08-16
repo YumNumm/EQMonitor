@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_station.dart';
@@ -9,6 +9,7 @@ part of 'intensity_station.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$IntensityStationCopyWithImpl<$Res>
 /// Create a copy of IntensityStation
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? sva = freezed,Object? prePeriods = freezed,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityStation(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
@@ -214,7 +215,7 @@ return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntens
 @JsonSerializable()
 
 class _IntensityStation implements IntensityStation {
-  const _IntensityStation({required this.code, required this.name, required this.sva, required final  List<PrePeriod>? prePeriods, required this.maxIntensity, required this.maxLpgmIntensity}): _prePeriods = prePeriods;
+  const _IntensityStation({required this.code, required this.name, required this.sva, required  List<PrePeriod>? prePeriods, required this.maxIntensity, required this.maxLpgmIntensity}): _prePeriods = prePeriods;
   factory _IntensityStation.fromJson(Map<String, dynamic> json) => _$IntensityStationFromJson(json);
 
 @override final  String code;
@@ -352,7 +353,7 @@ class _$PrePeriodCopyWithImpl<$Res>
 /// Create a copy of PrePeriod
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? band = null,Object? lpgmIntensity = null,Object? sva = null,}) {
-  return _then(_self.copyWith(
+  return _then(PrePeriod(
 band: null == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
 as double,lpgmIntensity: null == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable

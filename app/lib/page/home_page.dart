@@ -1,15 +1,18 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/banner/app_banner.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/home_eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
@@ -17,18 +20,19 @@ import 'package:eqmonitor/feature/location/data/notifier/location_permission_ban
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
 import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomePage extends HookConsumerWidget {
-  const HomePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,16 +51,13 @@ class HomePage extends HookConsumerWidget {
 }
 
 class _SheetBody extends ConsumerWidget {
-  const _SheetBody();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
     final shakeEvents = ref.watch(shakeDetectionVisibleProvider);
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final typography = designSystem.typography;
+    final spacing = context.designSystem.spacing;
 
     final hasCurrentLocationRegion = ref.watch(
       notificationSlotsProvider.select(
@@ -83,105 +84,50 @@ class _SheetBody extends ConsumerWidget {
     final showNotificationBanner =
         !isNotificationGranted && !isNotificationBannerDismissed;
 
-    final eewCards = state.reversed
-        .mapIndexed(
-          (index, element) => Padding(
-            padding: EdgeInsets.only(bottom: spacing.md),
-            child: EewCard(
-              eew: element,
-              index: (state.length > 1) ? '${index + 1}' : null,
-            ),
-          ),
-        )
-        .toList();
-
-    final actionsCard = Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      color: colorTheme.surfaceContainerHigh,
-      clipBehavior: .antiAlias,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(designSystem.shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(visualDensity: .compact),
-        child: Column(
-          children: [
-            ListTile(
-              title: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '都道府県別 ',
-                      style: typography.bodySmall.copyWith(fontWeight: .bold),
-                    ),
-                    TextSpan(text: '最大震度', style: typography.titleSmall),
-                  ],
-                ),
-              ),
-              onTap: () async =>
-                  const IntensityHistoryRoute().push<void>(context),
-            ),
-            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
-            ListTile(
-              title: Text('緊急地震速報の履歴', style: typography.titleSmall),
-              onTap: () async => const EewHistoryRoute().push<void>(context),
-            ),
-            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
-            ListTile(
-              title: Text('設定', style: typography.titleSmall),
-              onTap: () async => const SettingsRoute().push<void>(context),
-            ),
-            Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
-            ListTile(
-              title: Text('デバッグページ', style: typography.titleSmall),
-              onTap: () async => const DebugRoute().push<void>(context),
-            ),
-          ],
-        ),
-      ),
-    );
-
     final isInMaintenance = ref.watch(
       startProvider.select((v) => v.value?.flags.maintenance.enabled ?? false),
     );
-    final padding = MediaQuery.paddingOf(context);
+
     return SingleChildScrollView(
+      physics: const BottomBouncingScrollPhysics(),
       child: SafeArea(
+        top: false,
+        minimum: EdgeInsets.fromLTRB(spacing.md, 0, spacing.md, spacing.md),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .stretch,
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.sm + padding.left,
-                0,
-                spacing.sm + padding.right,
-                padding.bottom,
+            // バナー・EEW カードは表示条件を満たさないとき何も描画しないため、
+            // 間隔は Column の spacing ではなく各 Widget 側の下余白で確保する
+            for (final (index, eew) in state.reversed.indexed)
+              Padding(
+                padding: EdgeInsets.only(bottom: spacing.md),
+                child: HomeEewCard(
+                  eew: eew,
+                  index: (state.length > 1) ? '${index + 1}' : null,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: .start,
-                spacing: spacing.sm,
-                children: [
-                  ...eewCards,
-                  if (isInMaintenance) MaintenanceBanner(),
-                  WhatsNewBanner(),
-                  const AssetPackUpdateCard(),
-                  if (showNotificationBanner) NotificationPermissionBanner(),
-                  const DeviceProvisioningBanner(),
-                  if (showPermissionBanner) _LocationPermissionBanner(),
-                  if (shakeEvents.isNotEmpty)
-                    ...shakeEvents
-                        .map((e) => ShakeDetectionCard(event: e))
-                        .toList(),
-                  // const LiveMonitorEntryCard(), // TODO(YumNumm): 後で戻す
-                  const HomeEarthquakeHistorySheet(),
-                  const HomeFeedSheet(),
-                  actionsCard,
-                ],
+            if (isInMaintenance) MaintenanceBanner(),
+            WhatsNewBanner(),
+            const AssetPackUpdateCard(),
+            if (showNotificationBanner) NotificationPermissionBanner(),
+            const DeviceProvisioningBanner(),
+            if (showPermissionBanner) _LocationPermissionBanner(),
+            for (final event in shakeEvents)
+              Padding(
+                padding: EdgeInsets.only(bottom: spacing.md),
+                child: ShakeDetectionCard(event: event),
               ),
+            // const LiveMonitorEntryCard(), // TODO(YumNumm): 後で戻す
+            Column(
+              crossAxisAlignment: .stretch,
+              spacing: spacing.md,
+              children: const [
+                HomeEarthquakeHistorySheet(),
+                HomeFeedSheet(),
+                _HomeActionsCard(),
+              ],
             ),
-            if (state.isEmpty) SizedBox(height: spacing.sm),
           ],
         ),
       ),
@@ -189,14 +135,97 @@ class _SheetBody extends ConsumerWidget {
   }
 }
 
-class _LocationPermissionBanner extends ConsumerWidget {
-  const _LocationPermissionBanner();
+/// ホームシート下部の各画面への導線カード。
+class _HomeActionsCard extends ConsumerWidget {
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
+    final typography = designSystem.typography;
+    final divider = Divider(
+      height: 1,
+      indent: spacing.lg,
+      endIndent: spacing.lg,
+    );
+    final isDebugMenuVisible =
+        ref.watch(buildConfigProvider).isDeveloperUiEnabled &&
+        (ref.watch(debugProvider).value ?? false);
+
+    return HomeSheetCard(
+      children: [
+        Theme(
+          data: Theme.of(context).copyWith(visualDensity: .compact),
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              Stack(
+                children: [
+                  ListTile(
+                    title: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '都道府県別 ',
+                            style: typography.bodySmall.copyWith(
+                              fontWeight: .bold,
+                            ),
+                          ),
+                          TextSpan(text: '最大震度', style: typography.titleSmall),
+                        ],
+                      ),
+                    ),
+                    onTap: null,
+                    // TODO(YumNumm): 後で戻す
+                    // onTap: () async =>
+                    //     const IntensityHistoryRoute().push<void>(context),
+                  ),
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: context.designSystem.colorTheme.surface.withValues(
+                        alpha: 0.8,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'このビルドではこの機能は利用できません',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              divider,
+              ListTile(
+                title: Text('緊急地震速報の履歴', style: typography.titleSmall),
+                onTap: () async => const EewHistoryRoute().push<void>(context),
+              ),
+              divider,
+              ListTile(
+                title: Text('設定', style: typography.titleSmall),
+                onTap: () async => const SettingsRoute().push<void>(context),
+              ),
+              if (isDebugMenuVisible) ...[
+                divider,
+                ListTile(
+                  title: Text('デバッグページ', style: typography.titleSmall),
+                  onTap: () async => const DebugRoute().push<void>(context),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LocationPermissionBanner extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorTheme = context.designSystem.colorTheme;
 
     final permission = ref.watch(backgroundLocationPermissionProvider).value;
 
@@ -212,70 +241,22 @@ class _LocationPermissionBanner extends ConsumerWidget {
       null => throw UnimplementedError('Not determined'),
     };
 
-    return Material(
-      color: colorTheme.primaryContainer,
-      borderRadius: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(designSystem.shape.card),
-      ).borderRadius,
-      clipBehavior: .antiAlias,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: spacing.md,
-          vertical: spacing.sm,
-        ),
-        child: Row(
-          spacing: spacing.md,
-          children: [
-            Icon(
-              Icons.info_rounded,
-              color: colorTheme.onPrimaryContainer,
-              size: 24,
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () async {
-                  final result = await Geolocator.requestPermission();
-                  if (result == .deniedForever ||
-                      result == .denied ||
-                      result == .whileInUse) {
-                    await Geolocator.openLocationSettings();
-                  }
-                },
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      message.$1,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: colorTheme.onPrimaryContainer,
-                      ),
-                    ),
-                    if (message.$2.isNotEmpty)
-                      Text(
-                        message.$2,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorTheme.onPrimaryContainer,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.close,
-                color: colorTheme.onPrimaryContainer,
-                size: 20,
-              ),
-              tooltip: '閉じる',
-              onPressed: () => unawaited(
-                ref
-                    .read(locationPermissionBannerDismissedProvider.notifier)
-                    .dismiss(),
-              ),
-            ),
-          ],
-        ),
+    return AppBanner(
+      icon: Icons.info_rounded,
+      title: message.$1,
+      description: message.$2,
+      backgroundColor: colorTheme.primaryContainer,
+      foregroundColor: colorTheme.onPrimaryContainer,
+      onTap: () async {
+        final result = await Geolocator.requestPermission();
+        if (result == .deniedForever ||
+            result == .denied ||
+            result == .whileInUse) {
+          await Geolocator.openLocationSettings();
+        }
+      },
+      onDismiss: () => unawaited(
+        ref.read(locationPermissionBannerDismissedProvider.notifier).dismiss(),
       ),
     );
   }

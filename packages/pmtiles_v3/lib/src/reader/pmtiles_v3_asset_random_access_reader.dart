@@ -9,9 +9,8 @@ final class PmTilesV3AssetRandomAccessReader
     implements PmTilesRandomAccessReader {
   PmTilesV3AssetRandomAccessReader({
     required Uint8List bytes,
-    PmTilesV3RangeValidator rangeValidator = const PmTilesV3RangeValidator(),
-  }) : _bytes = Uint8List.fromList(bytes),
-       _rangeValidator = rangeValidator;
+    this._rangeValidator = const PmTilesV3RangeValidator(),
+  }) : _bytes = Uint8List.fromList(bytes);
 
   static Future<PmTilesV3AssetRandomAccessReader> open({
     required String assetKey,

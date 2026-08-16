@@ -29,8 +29,9 @@ AssetPackRepository assetPackRepository(Ref ref) => AssetPackRepository(
 );
 
 typedef ResolveAssetPackSource = Future<AssetPackSource> Function();
-typedef DeactivateDownloadedAssetPackSource =
-    Future<void> Function(AssetPackSource source);
+typedef DeactivateDownloadedAssetPackSource = Future<void> Function(
+  AssetPackSource source,
+);
 
 /// Reads `manifest.json` and individual assets from the active local pack.
 ///
@@ -38,7 +39,7 @@ typedef DeactivateDownloadedAssetPackSource =
 /// [AssetPackStorageRepository] deactivates it and returns the immutable pack
 /// bundled with the installed app. There is no fake-data fallback.
 class AssetPackRepository {
-  AssetPackRepository({
+  new({
     ResolveAssetPackFile? resolvePackFile,
     Future<String> Function()? resolvePackRoot,
     ResolveAssetPackSource? resolvePackSource,
@@ -52,7 +53,7 @@ class AssetPackRepository {
        _resolvePackFile =
            resolvePackFile ??
            (resolvePackRoot == null
-               ? resolveAssetPackFile
+               ? AssetPackFileResolver.resolve
                : (relativePath) async =>
                      '${await resolvePackRoot()}/$relativePath');
 
@@ -243,5 +244,9 @@ Future<File> verifyResolvedAssetPackAsset({
   return file;
 }
 
-Future<String> resolveAssetPackFile(String relativePath) =>
-    AssetsUtil.resolvePackFile(relativePath: relativePath);
+class AssetPackFileResolver {
+  const new _();
+
+  static Future<String> resolve(String relativePath) =>
+      AssetsUtil.resolvePackFile(relativePath: relativePath);
+}

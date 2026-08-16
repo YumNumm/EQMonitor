@@ -17,7 +17,7 @@ typedef ResolveAssetPackStorageRoot = Future<Directory> Function();
 enum AssetPackSourceKind { bundled, downloaded }
 
 class AssetPackSource {
-  const AssetPackSource({
+  const new({
     required this.kind,
     required this.rootDirectory,
     required this.version,
@@ -29,7 +29,7 @@ class AssetPackSource {
 }
 
 class AssetPackStorageException implements Exception {
-  const AssetPackStorageException(this.message);
+  const new(this.message);
 
   final String message;
 
@@ -38,7 +38,7 @@ class AssetPackStorageException implements Exception {
 }
 
 class AssetPackStorageRepository {
-  AssetPackStorageRepository({
+  new({
     required SharedPreferencesDataSource preferences,
     required ResolveBundledAssetPackRoot resolveBundledRoot,
     required ResolveAssetPackStorageRoot resolveStorageRoot,

@@ -11,19 +11,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'asset_pack_update_notifier.g.dart';
 
 sealed class AssetPackUpdateState {
-  const AssetPackUpdateState();
+  const new();
 }
 
 final class AssetPackUpdateIdle extends AssetPackUpdateState {
-  const AssetPackUpdateIdle();
+  const new();
 }
 
 final class AssetPackUpdateChecking extends AssetPackUpdateState {
-  const AssetPackUpdateChecking();
+  const new();
 }
 
 final class AssetPackUpdateAvailableState extends AssetPackUpdateState {
-  const AssetPackUpdateAvailableState({
+  const new({
     required this.entry,
     required this.changelogEntries,
   });
@@ -33,13 +33,13 @@ final class AssetPackUpdateAvailableState extends AssetPackUpdateState {
 }
 
 final class AssetPackUpdateAppRequiredState extends AssetPackUpdateState {
-  const AssetPackUpdateAppRequiredState(this.entry);
+  const new(this.entry);
 
   final AssetPackDistributionEntry entry;
 }
 
 final class AssetPackUpdateInstalling extends AssetPackUpdateState {
-  const AssetPackUpdateInstalling({
+  const new({
     required this.entry,
     required this.progress,
   });
@@ -49,13 +49,13 @@ final class AssetPackUpdateInstalling extends AssetPackUpdateState {
 }
 
 final class AssetPackUpdateCompleted extends AssetPackUpdateState {
-  const AssetPackUpdateCompleted(this.version);
+  const new(this.version);
 
   final String version;
 }
 
 final class AssetPackUpdateError extends AssetPackUpdateState {
-  const AssetPackUpdateError(this.message);
+  const new(this.message);
 
   final String message;
 }

@@ -7,17 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 part 'app_links_interaction.g.dart';
 
-final AppLinksColdStartGate _appLinksColdStartGate = AppLinksColdStartGate();
-
-NotificationDeepLink? consumePendingAppLink() =>
-    _appLinksColdStartGate.consumePending();
-
-Future<void> awaitInitialAppLinkResolved() =>
-    _appLinksColdStartGate.whenResolved;
+@Riverpod(keepAlive: true)
+AppLinksColdStartGate appLinksColdStartGate(Ref ref) => AppLinksColdStartGate();
 
 @Riverpod(keepAlive: true)
 Stream<Uri> appLinksInteraction(Ref ref) async* {
   final appLinks = AppLinks();
+  final coldStartGate = ref.watch(appLinksColdStartGateProvider);
 
   // Cold-start: store initial link as pending so splash_page can consume it
   // after routing is ready, matching the firebase_messaging_interaction pattern.
@@ -29,14 +25,14 @@ Stream<Uri> appLinksInteraction(Ref ref) async* {
     initialUri = await appLinks.getInitialLink();
   } finally {
     // Splash awaits this; always complete even when getInitialLink throws.
-    _appLinksColdStartGate.resolveInitial(initialUri);
+    coldStartGate.resolveInitial(initialUri);
   }
   if (initialUri != null) {
     yield initialUri;
   }
 
   await for (final uri in appLinks.uriLinkStream) {
-    if (!_appLinksColdStartGate.shouldNavigateForStreamUri(uri)) {
+    if (!coldStartGate.shouldNavigateForStreamUri(uri)) {
       continue;
     }
     final link = NotificationDeepLink.fromUri(uri);

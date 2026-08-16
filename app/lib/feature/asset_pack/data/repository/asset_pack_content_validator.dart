@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart
 import 'package:path/path.dart' as p;
 
 class AssetPackContentException implements Exception {
-  const AssetPackContentException(this.message);
+  const new(this.message);
 
   final String message;
 
@@ -15,7 +15,7 @@ class AssetPackContentException implements Exception {
 }
 
 class AssetPackContentEntry {
-  const AssetPackContentEntry({
+  const new({
     required this.id,
     required this.path,
     required this.sha256,
@@ -29,7 +29,7 @@ class AssetPackContentEntry {
 }
 
 class AssetPackContentValidator {
-  const AssetPackContentValidator();
+  const new();
 
   Future<AssetPackManifest> validate({
     required Directory rootDirectory,

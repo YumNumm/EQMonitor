@@ -10,3 +10,5 @@ export 'src/reader/pmtiles_v3_asset_random_access_reader.dart'
     show PmTilesV3AssetRandomAccessReader;
 export 'src/reader/pmtiles_v3_file_random_access_reader.dart'
     show PmTilesV3FileRandomAccessReader;
+export 'src/reader/pmtiles_v3_range_validator.dart'
+    show PmTilesV3RangeValidator;

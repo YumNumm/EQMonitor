@@ -6,6 +6,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'feed_nankai_earthquake_info.dart';
 import 'info_type.dart';
+import 'nankai_telegram_code.dart';
+import 'nankai_telegram_type.dart';
 
 part 'feed_earthquake_nankai_data.freezed.dart';
 part 'feed_earthquake_nankai_data.g.dart';
@@ -16,9 +18,9 @@ abstract class FeedEarthquakeNankaiData with _$FeedEarthquakeNankaiData {
     /// const: "EARTHQUAKE_NANKAI"
     required String type,
     required InfoType infoType,
-
-    /// const: "NANKAI"
-    required String telegramType,
+    required NankaiTelegramType telegramType,
+    @JsonKey(includeIfNull: false)
+    NankaiTelegramCode? telegramCode,
     @JsonKey(includeIfNull: false)
     FeedNankaiEarthquakeInfo? earthquakeInfo,
     @JsonKey(includeIfNull: false)

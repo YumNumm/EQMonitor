@@ -5,7 +5,7 @@ final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 final _datePattern = RegExp(r'^\d{4}-\d{2}-\d{2}$');
 
 class AssetPackDistributionManifest {
-  const AssetPackDistributionManifest({
+  const new({
     required this.schemaVersion,
     required this.revision,
     required this.latestVersion,
@@ -13,7 +13,7 @@ class AssetPackDistributionManifest {
     required this.packs,
   });
 
-  factory AssetPackDistributionManifest.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final schemaVersion = requireInt(json, 'schema_version');
     final revision = requireInt(json, 'revision');
     final latestVersion = requireSemVer(json, 'latest_version');
@@ -71,7 +71,7 @@ class AssetPackDistributionManifest {
 }
 
 class AssetPackDistributionEntry {
-  const AssetPackDistributionEntry({
+  const new({
     required this.version,
     required this.publishedAt,
     required this.minimumAppVersion,
@@ -81,7 +81,7 @@ class AssetPackDistributionEntry {
     required this.localizations,
   });
 
-  factory AssetPackDistributionEntry.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final version = requireSemVer(json, 'version');
     final publishedAt = requireString(json, 'published_at');
     final minimumAppVersion = requireSemVer(json, 'minimum_app_version');
@@ -134,9 +134,9 @@ class AssetPackDistributionEntry {
 }
 
 class AssetPackChangelogLocalization {
-  const AssetPackChangelogLocalization({required this.sections});
+  const new({required this.sections});
 
-  factory AssetPackChangelogLocalization.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final rawSections = json['sections'];
     if (rawSections is! List || rawSections.isEmpty) {
       throw const FormatException('Changelog sections must not be empty');
@@ -159,9 +159,9 @@ class AssetPackChangelogLocalization {
 }
 
 class AssetPackChangelogSection {
-  const AssetPackChangelogSection({required this.title, required this.items});
+  const new({required this.title, required this.items});
 
-  factory AssetPackChangelogSection.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final title = requireString(json, 'title');
     final rawItems = json['items'];
     if (title.isEmpty || rawItems is! List || rawItems.isEmpty) {

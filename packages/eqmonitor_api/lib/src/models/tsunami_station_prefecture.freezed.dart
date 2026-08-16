@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_station_prefecture.dart';
@@ -9,6 +9,7 @@ part of 'tsunami_station_prefecture.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$TsunamiStationPrefectureCopyWithImpl<$Res>
 /// Create a copy of TsunamiStationPrefecture
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? areas = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiStationPrefecture(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,areas: null == areas ? _self.areas : areas // ignore: cast_nullable_to_non_nullable
@@ -220,7 +221,7 @@ return $default(_that.code,_that.name,_that.areas);case _:
 @JsonSerializable()
 
 class _TsunamiStationPrefecture implements TsunamiStationPrefecture {
-  const _TsunamiStationPrefecture({required this.code, required this.name, required final  List<TsunamiStationArea> areas}): _areas = areas;
+  const _TsunamiStationPrefecture({required this.code, required this.name, required  List<TsunamiStationArea> areas}): _areas = areas;
   factory _TsunamiStationPrefecture.fromJson(Map<String, dynamic> json) => _$TsunamiStationPrefectureFromJson(json);
 
 @override final  String code;

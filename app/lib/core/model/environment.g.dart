@@ -43,6 +43,18 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'revenue_cat_api_key_android',
         (v) => v as String,
       ),
+      isBetaTesting: $checkedConvert(
+        'is_beta_testing',
+        (v) => v as bool? ?? false,
+      ),
+      isProFeaturesEnabled: $checkedConvert(
+        'is_pro_features_enabled',
+        (v) => v as bool? ?? false,
+      ),
+      isShakeDetectionEnabled: $checkedConvert(
+        'is_shake_detection_enabled',
+        (v) => v as bool? ?? true,
+      ),
     );
     return val;
   },
@@ -58,6 +70,9 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
     'buildCommitMessage': 'build_commit_message',
     'revenueCatApiKeyIos': 'revenue_cat_api_key_ios',
     'revenueCatApiKeyAndroid': 'revenue_cat_api_key_android',
+    'isBetaTesting': 'is_beta_testing',
+    'isProFeaturesEnabled': 'is_pro_features_enabled',
+    'isShakeDetectionEnabled': 'is_shake_detection_enabled',
   },
 );
 
@@ -75,6 +90,9 @@ Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
       'build_commit_message': instance.buildCommitMessage,
       'revenue_cat_api_key_ios': instance.revenueCatApiKeyIos,
       'revenue_cat_api_key_android': instance.revenueCatApiKeyAndroid,
+      'is_beta_testing': instance.isBetaTesting,
+      'is_pro_features_enabled': instance.isProFeaturesEnabled,
+      'is_shake_detection_enabled': instance.isShakeDetectionEnabled,
     };
 
 const _$FlavorEnumMap = {Flavor.dev: 'dev', Flavor.prod: 'prod'};

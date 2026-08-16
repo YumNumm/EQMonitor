@@ -155,3 +155,13 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
   factory EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryParameterFromJson(json);
 }
+
+extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
+  /// フィルタや並び替えが変更されていない初期状態（全件・event ID 降順）か。
+  bool get isDefaultAll =>
+      this ==
+      const EarthquakeHistoryParameter.all(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      );
+}

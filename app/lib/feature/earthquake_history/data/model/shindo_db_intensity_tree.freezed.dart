@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shindo_db_intensity_tree.dart';
@@ -9,6 +9,7 @@ part of 'shindo_db_intensity_tree.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$ShindoDbIntensityTreeCopyWithImpl<$Res>
 /// Create a copy of ShindoDbIntensityTree
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? tree = null,Object? unresolvedStations = null,Object? totalStationCount = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShindoDbIntensityTree(
 tree: null == tree ? _self.tree : tree // ignore: cast_nullable_to_non_nullable
 as Map<ShindoDbIntensityClass, List<ShindoDbPrefectureNode>>,unresolvedStations: null == unresolvedStations ? _self.unresolvedStations : unresolvedStations // ignore: cast_nullable_to_non_nullable
 as Map<ShindoDbIntensityClass, List<ShindoDbStationNode>>,totalStationCount: null == totalStationCount ? _self.totalStationCount : totalStationCount // ignore: cast_nullable_to_non_nullable
@@ -208,7 +209,7 @@ return $default(_that.tree,_that.unresolvedStations,_that.totalStationCount);cas
 
 
 class _ShindoDbIntensityTree implements ShindoDbIntensityTree {
-  const _ShindoDbIntensityTree({required final  Map<ShindoDbIntensityClass, List<ShindoDbPrefectureNode>> tree, required final  Map<ShindoDbIntensityClass, List<ShindoDbStationNode>> unresolvedStations, required this.totalStationCount}): _tree = tree,_unresolvedStations = unresolvedStations;
+  const _ShindoDbIntensityTree({required  Map<ShindoDbIntensityClass, List<ShindoDbPrefectureNode>> tree, required  Map<ShindoDbIntensityClass, List<ShindoDbStationNode>> unresolvedStations, required this.totalStationCount}): _tree = tree,_unresolvedStations = unresolvedStations;
   
 
  final  Map<ShindoDbIntensityClass, List<ShindoDbPrefectureNode>> _tree;
@@ -338,7 +339,7 @@ class _$ShindoDbPrefectureNodeCopyWithImpl<$Res>
 /// Create a copy of ShindoDbPrefectureNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? prefecture = null,Object? cities = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShindoDbPrefectureNode(
 prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterPrefectureItem,cities: null == cities ? _self.cities : cities // ignore: cast_nullable_to_non_nullable
 as List<ShindoDbCityNode>,
@@ -491,7 +492,7 @@ return $default(_that.prefecture,_that.cities);case _:
 
 
 class _ShindoDbPrefectureNode implements ShindoDbPrefectureNode {
-  const _ShindoDbPrefectureNode({required this.prefecture, required final  List<ShindoDbCityNode> cities}): _cities = cities;
+  const _ShindoDbPrefectureNode({required this.prefecture, required  List<ShindoDbCityNode> cities}): _cities = cities;
   
 
 @override final  EarthquakeParameterPrefectureItem prefecture;
@@ -622,7 +623,7 @@ class _$ShindoDbCityNodeCopyWithImpl<$Res>
 /// Create a copy of ShindoDbCityNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? city = null,Object? region = null,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShindoDbCityNode(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterRegionItem,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
@@ -785,7 +786,7 @@ return $default(_that.city,_that.region,_that.stations);case _:
 
 
 class _ShindoDbCityNode implements ShindoDbCityNode {
-  const _ShindoDbCityNode({required this.city, required this.region, required final  List<ShindoDbStationNode> stations}): _stations = stations;
+  const _ShindoDbCityNode({required this.city, required this.region, required  List<ShindoDbStationNode> stations}): _stations = stations;
   
 
 @override final  EarthquakeParameterCityItem city;
@@ -927,7 +928,7 @@ class _$ShindoDbStationNodeCopyWithImpl<$Res>
 /// Create a copy of ShindoDbStationNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? record = null,Object? name = null,Object? location = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ShindoDbStationNode(
 record: null == record ? _self.record : record // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogStationRecord,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable

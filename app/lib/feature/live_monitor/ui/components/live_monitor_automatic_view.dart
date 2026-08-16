@@ -14,7 +14,7 @@ import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_ho
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_cards.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_layers.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,7 +31,7 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
         (configuration) => configuration.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final homeMapBounds = lngLatBoundsForHomeMapSettings(mapSettings);
+    final homeMapBounds = const HomeMapBoundsResolver().resolve(mapSettings);
     final homeBounds = LiveMonitorGeoBounds(
       minLat: homeMapBounds.latitudeSouth,
       maxLat: homeMapBounds.latitudeNorth,
@@ -42,13 +42,13 @@ class LiveMonitorAutomaticView extends HookConsumerWidget {
     final earthquakeTopCardHeight = useState(0.0);
     final earthquakeBottomCardHeight = useState(0.0);
     final systemInsets = MediaQuery.paddingOf(context);
-    final realtimeObscuredInsets = liveMonitorMapObscuredInsets(
+    final realtimeObscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: 0,
       bottomCardHeight: realtimeCardHeight.value,
     );
-    final earthquakeObscuredInsets = liveMonitorMapObscuredInsets(
+    final earthquakeObscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: earthquakeTopCardHeight.value,

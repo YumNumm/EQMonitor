@@ -69,6 +69,42 @@ void main() {
   });
 
   group('viewProjectionMatrixFor combined with tileMatrixFor', () {
+    test('uses the supplied MVT extent when composing the render matrix', () {
+      const camera = MapCamera(
+        centerLongitude: 0,
+        centerLatitude: 0,
+        zoom: 0,
+      );
+      final viewport = MapViewport(
+        logicalSize: const Size(512, 512),
+        devicePixelRatio: 1,
+      );
+      const tileId = UnwrappedTileId(
+        wrap: 0,
+        canonical: CanonicalTileId(z: 0, x: 0, y: 0),
+      );
+      final extent2048 = baseMapTileViewProjectionMatrixFor(
+        camera: camera,
+        viewport: viewport,
+        tileId: tileId,
+        zoom: camera.zoom,
+        extent: 2048,
+      );
+      final extent4096 = baseMapTileViewProjectionMatrixFor(
+        camera: camera,
+        viewport: viewport,
+        tileId: tileId,
+        zoom: camera.zoom,
+        extent: 4096,
+      );
+
+      final center2048 = extent2048.transform3(Vector3(1024, 1024, 0));
+      final center4096 = extent4096.transform3(Vector3(2048, 2048, 0));
+      expect(center2048.x, closeTo(center4096.x, 1e-12));
+      expect(center2048.y, closeTo(center4096.y, 1e-12));
+      expect(center2048.z, closeTo(center4096.z, 1e-12));
+    });
+
     // camera中心がworld中心と一致する、512x512の正方形viewportで、
     // whole-world tileの4隅がscreenの4隅へ写ることを確認する。
     Offset screenCornerFor({

@@ -1,11 +1,13 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_shindo_db_fill_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/shindo_db_fill_codes_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('computeShindoDbFillCodes', () {
+  const calculator = ShindoDbFillCodesCalculator();
+
+  group('ShindoDbFillCodesCalculator.compute', () {
     test('複数階級に登場する市区町村は最大階級にのみ含まれる', () {
       // 市区町村 01100 は階級 3・4 の両方に観測点を持つ
       final tree = _tree({
@@ -20,7 +22,7 @@ void main() {
         ],
       });
 
-      final codes = computeShindoDbFillCodes(tree);
+      final codes = calculator.compute(tree);
 
       expect(codes[ShindoDbIntensityClass.four]?.cityCodes, ['01100']);
       expect(codes[ShindoDbIntensityClass.three]?.cityCodes, ['01200']);
@@ -39,7 +41,7 @@ void main() {
         ],
       });
 
-      final codes = computeShindoDbFillCodes(tree);
+      final codes = calculator.compute(tree);
 
       expect(codes[ShindoDbIntensityClass.four]?.regionCodes, ['010100']);
       expect(codes[ShindoDbIntensityClass.three]?.regionCodes, ['010200']);
@@ -55,7 +57,7 @@ void main() {
         ],
       });
 
-      expect(computeShindoDbFillCodes(tree).keys.toList(), [
+      expect(calculator.compute(tree).keys.toList(), [
         ShindoDbIntensityClass.one,
         ShindoDbIntensityClass.four,
       ]);
@@ -71,7 +73,7 @@ void main() {
         ],
       });
 
-      expect(computeShindoDbFillCodes(tree).keys.toList(), [
+      expect(calculator.compute(tree).keys.toList(), [
         ShindoDbIntensityClass.two,
       ]);
     });

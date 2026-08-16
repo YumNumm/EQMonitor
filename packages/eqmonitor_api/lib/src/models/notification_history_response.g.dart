@@ -10,23 +10,18 @@ part of 'notification_history_response.dart';
 
 _NotificationHistoryResponse _$NotificationHistoryResponseFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_NotificationHistoryResponse',
-  json,
-  ($checkedConvert) {
-    final val = _NotificationHistoryResponse(
-      items: $checkedConvert(
-        'items',
-        (v) => (v as List<dynamic>)
-            .map((e) => NotificationLogItem.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      nextCursor: $checkedConvert('next_cursor', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'nextCursor': 'next_cursor'},
-);
+) => $checkedCreate('_NotificationHistoryResponse', json, ($checkedConvert) {
+  final val = _NotificationHistoryResponse(
+    items: $checkedConvert(
+      'items',
+      (v) => (v as List<dynamic>)
+          .map((e) => NotificationLogItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    nextCursor: $checkedConvert('next_cursor', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'nextCursor': 'next_cursor'});
 
 Map<String, dynamic> _$NotificationHistoryResponseToJson(
   _NotificationHistoryResponse instance,

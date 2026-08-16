@@ -3,9 +3,9 @@ import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_update_notifier.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_update_installer.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   setUp(() {

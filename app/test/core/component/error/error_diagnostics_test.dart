@@ -9,7 +9,7 @@ void main() {
     Object error = 'boom',
     StackTrace? stackTrace,
     bool includeStackTrace = false,
-  }) => buildErrorDiagnostics(
+  }) => ErrorDiagnosticsBuilder.build(
     error: error,
     stackTrace: stackTrace,
     deviceId: 'device-123',

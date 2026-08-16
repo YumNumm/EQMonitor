@@ -37,6 +37,7 @@ enum SharedPreferencesKey {
   isEstimatedIntensityOnEewReplayAllowed(
     'is_estimated_intensity_on_eew_replay_allowed',
   ),
+  isHomeEewEstimationDebugEnabled('is_home_eew_estimation_debug_enabled'),
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
   httpCacheScopeMigrationVersion('http_cache_scope_migration_version'),
@@ -45,6 +46,7 @@ enum SharedPreferencesKey {
     'notification_permission_banner_dismissed',
   ),
   notificationPreset('notification_preset'),
+  notificationCustomSnapshot('notification_custom_snapshot'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_intensity.dart';
@@ -9,6 +9,7 @@ part of 'eew_intensity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$EewIntensityCopyWithImpl<$Res>
 /// Create a copy of EewIntensity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? regions = null,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EewIntensity(
 regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<EewIntensityItem>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as EewIntensityValue?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
@@ -235,7 +236,7 @@ return $default(_that.regions,_that.maxIntensity,_that.maxLpgmIntensity);case _:
 @JsonSerializable()
 
 class _EewIntensity implements EewIntensity {
-  const _EewIntensity({required final  List<EewIntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _regions = regions;
+  const _EewIntensity({required  List<EewIntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _regions = regions;
   factory _EewIntensity.fromJson(Map<String, dynamic> json) => _$EewIntensityFromJson(json);
 
  final  List<EewIntensityItem> _regions;

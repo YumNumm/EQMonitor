@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -154,7 +154,7 @@ class _LiveMonitorMapContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MapLibreMap(
       key: ValueKey((slotId, styleString, mapSettings)),
-      options: homeMapOptionsFromSettings(
+      options: const HomeMapOptionsBuilder().build(
         context: context,
         styleString: styleString,
         map: mapSettings,

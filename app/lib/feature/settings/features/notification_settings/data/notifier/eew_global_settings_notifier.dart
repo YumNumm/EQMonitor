@@ -40,4 +40,13 @@ class EewGlobalSettingsNotifier extends _$EewGlobalSettingsNotifier {
     );
     state = AsyncData(result);
   }
+
+  void synchronizeWarningEnabled({required bool enabled}) {
+    final settings = state.value;
+    if (settings == null) {
+      ref.invalidateSelf();
+      return;
+    }
+    state = AsyncData(settings.copyWith(warningEnabled: enabled));
+  }
 }

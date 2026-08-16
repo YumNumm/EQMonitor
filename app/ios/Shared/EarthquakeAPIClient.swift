@@ -12,25 +12,38 @@ import OpenAPIRuntime
 // MARK: - API Error Types
 
 enum APIError: Error, LocalizedError {
-    case networkError(Error)
-    case invalidResponse
-    case decodingError(String)
+    case networkError(URLError)
     case serverError(Int)
-    case invalidURL
+    /// 通信・デコードのいずれとも判別できなかった失敗
+    case unexpected
 
+    /// ウィジェットに表示する文言。開発者向けの詳細は含めない。
     var errorDescription: String? {
         switch self {
         case .networkError(let error):
-            return "ネットワークエラー: \(error.localizedDescription)"
-        case .invalidResponse:
-            return "無効なレスポンス"
-        case .decodingError(let detail):
-            return "データ解析エラー: \(detail)"
+            return WidgetErrorMessage.network(error.code)
         case .serverError(let code):
-            return "サーバーエラー (\(code))"
-        case .invalidURL:
-            return "無効なURL"
+            return WidgetErrorMessage.server(statusCode: code)
+        case .unexpected:
+            return WidgetErrorMessage.unknown
         }
+    }
+
+    /// 任意の Error を APIError へ正規化する。
+    /// swift-openapi-runtime は transport の失敗を `ClientError` で包むため、
+    /// 中の `URLError` を取り出して圏外・タイムアウトを判別できるようにする。
+    static func from(_ error: Error) -> APIError {
+        if let apiError = error as? APIError {
+            return apiError
+        }
+        if let urlError = error as? URLError {
+            return .networkError(urlError)
+        }
+        if let clientError = error as? ClientError,
+           let urlError = clientError.underlyingError as? URLError {
+            return .networkError(urlError)
+        }
+        return .unexpected
     }
 }
 
@@ -164,7 +177,9 @@ class ConfigReader {
     /// 優先順位: App Groups UserDefaults → Info.plist (REST_API_URL) → ハードコードフォールバック
     static func getAPIBaseURL() -> URL {
         // Flutter アプリが App Groups UserDefaults に書き込んだ URL を優先する
-        if let appGroupDefaults = UserDefaults(suiteName: "group.net.yumnumm.eqmonitor"),
+        if let appGroupDefaults = UserDefaults(
+            suiteName: WidgetRegionResolver.appGroupSuiteName
+        ),
            let urlString = appGroupDefaults.string(forKey: "apiServerUrl"),
            let url = validBaseURL(from: urlString) {
             return url
@@ -195,6 +210,33 @@ class ConfigReader {
 // MARK: - Shared Instance
 
 extension EarthquakeAPIService {
-    /// 共有インスタンス
-    static let shared = EarthquakeAPIService(baseURL: ConfigReader.getAPIBaseURL())
+    /// ベース URL ごとに使い回す共有インスタンス。
+    ///
+    /// `static let` で 1 度だけ生成すると、拡張プロセスが生きている間は App Group の
+    /// `apiServerUrl` を読み直さない。アプリ側で API サーバを切り替えると
+    /// `WidgetCenter.reloadAllTimelines()` は走るのに古い URL を叩き続けるため、
+    /// URL が変わったときだけ Client を作り直す。
+    static var shared: EarthquakeAPIService {
+        cache.service(for: ConfigReader.getAPIBaseURL())
+    }
+
+    private static let cache = ServiceCache()
+
+    /// ベース URL をキーにした 1 件キャッシュ。TimelineProvider は並行して呼ばれうるため
+    /// ロックで保護する。
+    private final class ServiceCache: @unchecked Sendable {
+        private let lock = NSLock()
+        private var entry: (baseURL: URL, service: EarthquakeAPIService)?
+
+        func service(for baseURL: URL) -> EarthquakeAPIService {
+            lock.lock()
+            defer { lock.unlock() }
+            if let entry, entry.baseURL == baseURL {
+                return entry.service
+            }
+            let service = EarthquakeAPIService(baseURL: baseURL)
+            entry = (baseURL: baseURL, service: service)
+            return service
+        }
+    }
 }

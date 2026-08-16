@@ -38,14 +38,14 @@ android {
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
+    // AGP 9 では既定で無効。app_name を dart-define から差し替えるために必要
+    buildFeatures {
+        resValues = true
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     sourceSets {
@@ -54,7 +54,6 @@ android {
             assets.srcDir(bundledAssetPackRoot)
         }
     }
-
     defaultConfig {
         applicationId = "net.yumnumm.eqmonitor"
         dartDefines["appIdSuffix"]?.let {
@@ -98,6 +97,12 @@ android {
 
 tasks.named("preBuild").configure {
     dependsOn(stageBundledAssetPack)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
 
 flutter {
