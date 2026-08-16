@@ -139,9 +139,6 @@ class NotificationPresetApplier {
     NotificationPreset preset,
     NotificationCustomSnapshot? snapshot,
   ) async {
-    if (preset == NotificationPreset.none) {
-      return;
-    }
     final eewNotifier = _ref.read(eewGlobalSettingsProvider.notifier);
     final earthquakeNotifier = _ref.read(
       earthquakeGlobalSettingsProvider.notifier,
@@ -149,28 +146,28 @@ class NotificationPresetApplier {
     if (preset == NotificationPreset.custom) {
       final eew = snapshot?.eewGlobal;
       final earthquake = snapshot?.earthquakeGlobal;
-      if (eew != null) {
-        await eewNotifier.updateSettings(
-          enabled: eew.enabled,
-          defaultSound: eew.defaultSound,
-          defaultInterruptionLevel: eew.defaultInterruptionLevel,
-          startLiveActivity: eew.startLiveActivity,
-          collapseNotification: eew.collapseNotification,
-          warningEnabled: eew.warningEnabled,
-        );
-      }
-      if (earthquake != null) {
-        await earthquakeNotifier.updateSettings(
-          enabled: earthquake.enabled,
-          defaultSound: earthquake.defaultSound,
-          defaultInterruptionLevel: earthquake.defaultInterruptionLevel,
-          estimatedIntensityEnabled: earthquake.estimatedIntensityEnabled,
-          collapseNotification: earthquake.collapseNotification,
-        );
-      }
+      await eewNotifier.updateSettings(
+        enabled: true,
+        defaultSound: eew?.defaultSound,
+        defaultInterruptionLevel: eew?.defaultInterruptionLevel,
+        startLiveActivity: true,
+        collapseNotification: eew?.collapseNotification,
+        warningEnabled: eew?.warningEnabled,
+      );
+      await earthquakeNotifier.updateSettings(
+        enabled: true,
+        defaultSound: earthquake?.defaultSound,
+        defaultInterruptionLevel: earthquake?.defaultInterruptionLevel,
+        estimatedIntensityEnabled: earthquake?.estimatedIntensityEnabled,
+        collapseNotification: earthquake?.collapseNotification,
+      );
       return;
     }
-    await eewNotifier.updateSettings(enabled: true, warningEnabled: true);
+    await eewNotifier.updateSettings(
+      enabled: true,
+      startLiveActivity: preset != NotificationPreset.none,
+      warningEnabled: preset == NotificationPreset.none ? null : true,
+    );
     await earthquakeNotifier.updateSettings(enabled: true);
   }
 

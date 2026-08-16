@@ -2048,7 +2048,6 @@ extension ObjCBlock_ffiVoid_NSString$CallExtension on objc.ObjCBlock<ffi.Void Fu
 }
 
 late final _sel_diagnoseAssetPackWithPackIdentifier_completion_ = objc.registerName("diagnoseAssetPackWithPackIdentifier:completion:");
-late final _sel_checkForAssetPackUpdatesWithPackIdentifier_completion_ = objc.registerName("checkForAssetPackUpdatesWithPackIdentifier:completion:");
 late final _sel_init = objc.registerName("init");
 late final _sel_new = objc.registerName("new");
 late final _sel_allocWithZone_ = objc.registerName("allocWithZone:");
@@ -2098,13 +2097,6 @@ extension type EQMAssetsUtil._(objc.ObjCObject object$) implements objc.ObjCObje
 
 extension EQMAssetsUtil$Methods on EQMAssetsUtil {
 
-  /// checkForAssetPackUpdatesWithPackIdentifier:completion:
-  void checkForAssetPackUpdatesWithPackIdentifier(objc.NSString packIdentifier, {required objc.ObjCBlock<ffi.Void Function(objc.NSString)> completion}) {
-_objc_msgSend_o762yo(object$.ref.pointer, _sel_checkForAssetPackUpdatesWithPackIdentifier_completion_, packIdentifier.ref.pointer, completion.ref.pointer);
-
-  }
-
-
   /// Completion-handler based, and never runs its work on the caller’s
 /// thread: see <code>Self.workQueue</code>.
   void diagnoseAssetPackWithPackIdentifier(objc.NSString packIdentifier, {required objc.ObjCBlock<ffi.Void Function(objc.NSString)> completion}) {
@@ -2141,7 +2133,7 @@ _objc_msgSend_18qun1e(object$.ref.pointer, _sel_resolveAssetPackFileWithRelative
   /// Resolves the absolute path to the Asset Pack root directory.
 /// <ul>
 /// <li>
-/// iOS: the on-device directory of the Managed Background Assets pack
+/// Apple platforms: the app-bundled `platform` directory
 /// identified by <code>packIdentifier</code>, once fully downloaded.
 /// </li>
 /// <li>
@@ -2162,4 +2154,3 @@ _objc_msgSend_o762yo(object$.ref.pointer, _sel_resolvePackRootWithPackIdentifier
   }
 
 }
-

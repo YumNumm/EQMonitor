@@ -32,8 +32,7 @@ class AssetsUtilAndroid {
       final jPath = jni.AssetsUtil.resolvePackRoot(context, jPackName);
       if (jPath == null) {
         throw AssetPackNotReadyException(
-          'Asset Pack ($packName) is not available locally yet '
-          '(Play Asset Delivery install-time pack not delivered).',
+          'The app-bundled Asset Pack is missing: $packName',
         );
       }
       return jPath.toDartString(releaseOriginal: true);

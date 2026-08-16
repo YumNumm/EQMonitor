@@ -39,8 +39,8 @@ class BaseMapPmtilesRepository {
   /// Returns a MapLibre vector source URI for the base map PMTiles.
   ///
   /// iOS/Android/macOS: `pmtiles://file://...` resolved via
-  /// [AssetPackRepository] (Managed Background Assets / Play Asset
-  /// Delivery / bundled `Contents/Resources/platform`).
+  /// [AssetPackRepository] (verified R2 download, with the bundled
+  /// `platform` directory as fallback).
   ///
   /// Throws [UnsupportedError] on Web (地図機能は Web 未サポート) and on any
   /// other platform without an Asset Pack backend.

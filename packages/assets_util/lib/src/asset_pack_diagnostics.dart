@@ -184,57 +184,6 @@ AssetPackNativeError? nullableDiagnosticNativeError({
   throw const FormatException('native_error must be an object or null');
 }
 
-final class AssetPackUpdateResult {
-  const AssetPackUpdateResult({
-    required this.schemaVersion,
-    required this.packIdentifier,
-    required this.success,
-    required this.checkedAt,
-    required this.updatingIdentifiers,
-    required this.removedIdentifiers,
-    required this.nativeError,
-  });
-
-  factory AssetPackUpdateResult.fromJsonString(String source) {
-    final json = decodeDiagnosticObject(source);
-    final schemaVersion = requireDiagnosticInt(
-      json: json,
-      key: 'schema_version',
-    );
-    if (schemaVersion != 1) {
-      throw FormatException(
-        'Unsupported Asset Pack update schema_version: $schemaVersion',
-      );
-    }
-    return AssetPackUpdateResult(
-      schemaVersion: schemaVersion,
-      packIdentifier: requireDiagnosticString(json: json, key: 'pack_id'),
-      success: requireDiagnosticBool(json: json, key: 'success'),
-      checkedAt: requireDiagnosticString(json: json, key: 'checked_at'),
-      updatingIdentifiers: requireDiagnosticStringList(
-        json: json,
-        key: 'updating_ids',
-      ),
-      removedIdentifiers: requireDiagnosticStringList(
-        json: json,
-        key: 'removed_ids',
-      ),
-      nativeError: nullableDiagnosticNativeError(
-        json: json,
-        key: 'native_error',
-      ),
-    );
-  }
-
-  final int schemaVersion;
-  final String packIdentifier;
-  final bool success;
-  final String checkedAt;
-  final List<String> updatingIdentifiers;
-  final List<String> removedIdentifiers;
-  final AssetPackNativeError? nativeError;
-}
-
 Map<String, dynamic> decodeDiagnosticObject(String source) {
   final value = jsonDecode(source);
   if (value is Map<String, dynamic>) {

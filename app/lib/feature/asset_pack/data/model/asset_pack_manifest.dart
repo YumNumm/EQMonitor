@@ -68,7 +68,7 @@ final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 /// skipped rather than rejected — see [fromJson].
 @JsonSerializable(createFactory: false)
 class AssetPackManifest {
-  AssetPackManifest({
+  new({
     required this.packVersion,
     required this.schemaVersion,
     required this.generatedAt,
@@ -79,10 +79,9 @@ class AssetPackManifest {
   /// know** while still validating everything else strictly.
   ///
   /// Skipping unknown ids is required for forward compatibility, not a
-  /// convenience: Managed Background Assets (iOS) and Play Asset Delivery
-  /// (Android) hand the *latest* Pack to *every* installed app build, so the
-  /// backend adding an asset id must not make older builds reject the
-  /// manifest. Rejecting one entry means rejecting the whole file — and
+  /// convenience: signed R2 updates can contain ids introduced after this app
+  /// build, so the backend adding an asset id must not make older builds
+  /// reject the manifest. Rejecting one entry means rejecting the whole file — and
   /// `AssetPackRepository.readManifest` gates every asset lookup, so the base
   /// map and all parameters would become unreachable at once. That is exactly
   /// what happened when Pack v0.0.3 introduced `KYOSHIN_STATIONS` to app
@@ -91,7 +90,7 @@ class AssetPackManifest {
   /// Only the `id` is treated as an open set. `schema_version` is the
   /// compatibility gate for everything else, so any other mismatch (bad
   /// `sha256`, unknown `kind` for a known id, missing field) still throws.
-  factory AssetPackManifest.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final packVersion = AssetPackManifestJsonValidator.requireString(
       json,
       'pack_version',
@@ -188,7 +187,7 @@ class AssetPackManifest {
 /// directly.
 @JsonSerializable(createFactory: false)
 class AssetPackManifestItem {
-  AssetPackManifestItem({
+  new({
     required this.id,
     required this.kind,
     required this.path,
@@ -200,7 +199,7 @@ class AssetPackManifestItem {
     required this.sizeBytes,
   });
 
-  factory AssetPackManifestItem.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final idValue = json['id'];
     final id = _assetIdByJsonValue[idValue];
     if (id == null) {
@@ -291,7 +290,7 @@ class AssetPackManifestItem {
 
 /// asset_pack_manifest.json のパース時に、必須フィールドの型を検証しつつ取得する。
 class AssetPackManifestJsonValidator {
-  const AssetPackManifestJsonValidator._();
+  const new _();
 
   static String requireString(Map<String, dynamic> json, String key) {
     final value = json[key];

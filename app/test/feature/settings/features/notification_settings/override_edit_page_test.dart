@@ -98,7 +98,7 @@ void main() {
       fake.lastEarthquakeOverrides!.single.interruptionLevel,
       InterruptionLevel.critical,
     );
-    expect(find.text('震度0以上'), findsOneWidget);
+    expect(find.text('すべて'), findsOneWidget);
   });
 
   testWidgets('編集ダイアログは既存設定の値で初期化され、保存すると更新される', (tester) async {

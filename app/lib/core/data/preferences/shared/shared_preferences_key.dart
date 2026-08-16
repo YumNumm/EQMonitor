@@ -18,6 +18,12 @@ enum SharedPreferencesKey {
   changelogEtag('changelog_etag'),
   changelogBody('changelog_body'),
   whatsNewSeenVersion('whats_new_seen_version'),
+  assetPackDistributionEtag('asset_pack_distribution_etag'),
+  assetPackDistributionManifest('asset_pack_distribution_manifest'),
+  assetPackDistributionSignature('asset_pack_distribution_signature'),
+  assetPackAcceptedRevision('asset_pack_accepted_revision'),
+  assetPackAcceptedLatestVersion('asset_pack_accepted_latest_version'),
+  assetPackActiveDownloadedVersion('asset_pack_active_downloaded_version'),
 
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
