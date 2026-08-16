@@ -276,7 +276,7 @@ jobs:
       - name: Configure iOS
         working-directory: app
         env:
-          COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
           IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
           DEPLOY_IOS_EXTERNAL: ${{ needs.define-matrix.outputs.deploy-ios-external }}
         run: |
@@ -664,7 +664,8 @@ jobs:
         working-directory: app
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          # beta タグ配信時はタグ名(例: v3.1.0-beta.1)をそのまま表示。それ以外は ref_name-sha。
+          COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
           IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
           ANDROID_TRACK: ${{ needs.define-matrix.outputs.android-track }}
         run: |
