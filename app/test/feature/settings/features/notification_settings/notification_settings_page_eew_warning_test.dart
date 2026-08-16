@@ -1,15 +1,18 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/environment.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
@@ -18,14 +21,14 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  testWidgets('EEW warning detail toggles warningEnabled', (tester) async {
-    final recorder = _EewGlobalSettingsRecorder();
-
+  testWidgets('custom settings shows slot summaries and remaining settings', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -55,7 +58,10 @@ void main() {
             _FakeNotificationSlotsNotifier.new,
           ),
           eewGlobalSettingsProvider.overrideWith(
-            () => _FakeEewGlobalSettingsNotifier(recorder),
+            _FakeEewGlobalSettingsNotifier.new,
+          ),
+          earthquakeGlobalSettingsProvider.overrideWith(
+            _FakeEarthquakeGlobalSettingsNotifier.new,
           ),
           eewWarningConfigProvider.overrideWith(
             _FakeEewWarningConfigNotifier.new,
@@ -69,18 +75,33 @@ void main() {
     await tester.tap(find.byTooltip('カスタム設定'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('緊急地震速報(警報)'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('通知を受け取る'));
-    await tester.pumpAndSettle();
-
-    expect(recorder.lastWarningEnabled, isFalse);
+    expect(find.textContaining('EQMonitor Proにすると'), findsNothing);
+    expect(find.text('Live Activity'), findsNothing);
+    expect(find.text('推計震度分布図'), findsOneWidget);
+    expect(find.text('通知音・割り込みレベル'), findsOneWidget);
+    expect(find.text('震度別の音設定'), findsOneWidget);
+    expect(find.text('低精度の緊急地震速報'), findsOneWidget);
+    expect(find.byIcon(Icons.my_location), findsOneWidget);
+    expect(find.byIcon(Icons.public), findsOneWidget);
+    expect(find.byIcon(Icons.location_on), findsOneWidget);
+    expect(
+      find.text(
+        '緊急地震速報(予報): 震度4以上\n'
+        '緊急地震速報(警報): 有効\n'
+        '地震情報: 震度1以上',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        '緊急地震速報(予報): 震度5-以上\n'
+        '緊急地震速報(警報): 有効\n'
+        '地震情報: 震度3以上',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('緊急地震速報(予報): 無効\n地震情報: 無効'), findsOneWidget);
   });
-}
-
-final class _EewGlobalSettingsRecorder {
-  bool? lastWarningEnabled;
 }
 
 class _FakeStartNotifier extends StartNotifier {
@@ -128,14 +149,56 @@ class _FakeGeneralNotificationSettingsNotifier
 
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   @override
-  Future<List<NotificationSlot>> build() async => const [];
+  Future<List<NotificationSlot>> build() async => const [
+    NotificationSlot(
+      id: 'current',
+      slotType: NotificationSlotType.currentLocation,
+      regionId: null,
+      regionName: null,
+      cityCode: null,
+      cityName: null,
+      displayOrder: 0,
+      eewEnabled: true,
+      eewMinIntensity: JmaIntensity.four,
+      eewOverrides: null,
+      earthquakeEnabled: true,
+      earthquakeMinIntensity: JmaIntensity.one,
+      earthquakeOverrides: null,
+    ),
+    NotificationSlot(
+      id: 'nationwide',
+      slotType: NotificationSlotType.nationwide,
+      regionId: null,
+      regionName: null,
+      cityCode: null,
+      cityName: null,
+      displayOrder: 1,
+      eewEnabled: true,
+      eewMinIntensity: JmaIntensity.fiveLower,
+      eewOverrides: null,
+      earthquakeEnabled: true,
+      earthquakeMinIntensity: JmaIntensity.three,
+      earthquakeOverrides: null,
+    ),
+    NotificationSlot(
+      id: 'region',
+      slotType: NotificationSlotType.region,
+      regionId: 130000,
+      regionName: '東京都',
+      cityCode: null,
+      cityName: null,
+      displayOrder: 2,
+      eewEnabled: false,
+      eewMinIntensity: JmaIntensity.four,
+      eewOverrides: null,
+      earthquakeEnabled: false,
+      earthquakeMinIntensity: JmaIntensity.one,
+      earthquakeOverrides: null,
+    ),
+  ];
 }
 
 class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
-  _FakeEewGlobalSettingsNotifier(this._recorder);
-
-  final _EewGlobalSettingsRecorder _recorder;
-
   @override
   Future<EewGlobalSettings> build() async => const EewGlobalSettings(
     enabled: true,
@@ -155,7 +218,6 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
     bool? collapseNotification,
     bool? warningEnabled,
   }) async {
-    _recorder.lastWarningEnabled = warningEnabled;
     final current = state.requireValue;
     state = AsyncData(
       current.copyWith(
@@ -172,11 +234,24 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
   }
 }
 
+class _FakeEarthquakeGlobalSettingsNotifier
+    extends EarthquakeGlobalSettingsNotifier {
+  @override
+  Future<EarthquakeGlobalSettings> build() async =>
+      const EarthquakeGlobalSettings(
+        enabled: true,
+        defaultSound: 'default',
+        defaultInterruptionLevel: InterruptionLevel.active,
+        estimatedIntensityEnabled: true,
+        collapseNotification: true,
+      );
+}
+
 class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
   @override
   Future<EewWarningSettings> build() async => const EewWarningSettings(
-    target: EewWarningTarget.currentLocationOnly,
-    nationwideInterruptionLevel: null,
+    target: EewWarningTarget.currentLocationAndNationwide,
+    nationwideInterruptionLevel: InterruptionLevel.active,
   );
 }
 
@@ -198,7 +273,7 @@ const _buildConfig = BuildConfig(
 const _freeConstraints = api.PlanConstraints(
   isPro: false,
   maxRegions: 1,
-  eewWarningNationwide: false,
+  eewWarningNationwide: true,
   shakeDetection: false,
   overridesAllowed: false,
   earthquakeDefaultInterruptionLevel: 'active',
