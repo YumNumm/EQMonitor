@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EewHistoryNoticeDialog extends StatelessWidget {
-  const EewHistoryNoticeDialog({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

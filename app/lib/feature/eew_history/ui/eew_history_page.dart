@@ -16,7 +16,7 @@ import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewHistoryPage extends HookConsumerWidget {
-  const EewHistoryPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,7 +61,7 @@ class EewHistoryPage extends HookConsumerWidget {
 }
 
 class _PagingBody extends StatelessWidget {
-  const _PagingBody({
+  const new({
     required this.dataSource,
     required this.parameter,
     required this.onRefresh,
@@ -138,7 +138,7 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _Skeleton extends StatelessWidget {
-  const _Skeleton({this.itemCount = 5, this.scrollable = true});
+  const new({this.itemCount = 5, this.scrollable = true});
 
   final int itemCount;
   final bool scrollable;
@@ -163,7 +163,7 @@ class _Skeleton extends StatelessWidget {
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
+  const new({required this.date});
 
   final String date;
 

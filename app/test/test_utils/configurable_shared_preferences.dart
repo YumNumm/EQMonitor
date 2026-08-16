@@ -2,7 +2,7 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigurableSharedPreferences extends Mock implements SharedPreferences {
-  ConfigurableSharedPreferences({
+  new({
     this.boolValue,
     this.setBoolResult = true,
     this.setBoolError,

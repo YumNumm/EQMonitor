@@ -60,6 +60,6 @@ enum SharedPreferencesKey {
   eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled');
 
-  const SharedPreferencesKey(this.key);
+  new(this.key);
   final String key;
 }

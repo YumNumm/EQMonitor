@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EewHistoryListTile extends StatelessWidget {
-  const EewHistoryListTile({
+  const new({
     required this.item,
     this.onTap,
     this.visualDensity,
