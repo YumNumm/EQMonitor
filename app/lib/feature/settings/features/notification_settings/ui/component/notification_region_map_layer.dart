@@ -55,7 +55,7 @@ class NotificationRegionMapLayer extends HookConsumerWidget {
               id: BaseLayer.areaInformationCityQuakeLine.name,
               filter: filterBuilder.buildMatchNothing('regioncode'),
             );
-            await replaceMapStyleLayers(
+            await MapStyleLayerReplacer.replace(
               styleController: style,
               layerIds: const [
                 notificationRegionFocusLayerId,

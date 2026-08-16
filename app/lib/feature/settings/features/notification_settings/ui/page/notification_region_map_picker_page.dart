@@ -13,10 +13,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_region_catalog_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_region_map_layer.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_region_map_selection_card.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NotificationRegionMapPickerPage extends HookConsumerWidget {
   const NotificationRegionMapPickerPage({super.key});
@@ -76,7 +76,7 @@ class NotificationRegionMapPickerPage extends HookConsumerWidget {
       );
     }
 
-    final mapOptions = calculateJapanViewMapOptions(
+    final mapOptions = const MapZoomCalculator().japanViewMapOptions(
       context: context,
       styleString: styleString,
     );
@@ -189,14 +189,17 @@ class NotificationRegionMapPickerPage extends HookConsumerWidget {
                       }
                       notifier.focusRegion(region);
                       final size = MediaQuery.sizeOf(context);
-                      final zoom = zoomLevelForBounds(
-                        minLat: bounds.southWest.lat,
-                        maxLat: bounds.northEast.lat,
-                        minLng: bounds.southWest.lng,
-                        maxLng: bounds.northEast.lng,
-                        screenWidth: size.width,
-                        screenHeight: size.height * 0.65,
-                      ).clamp(6, 9).toDouble();
+                      final zoom = const MapZoomCalculator()
+                          .calculate(
+                            minLat: bounds.southWest.lat,
+                            maxLat: bounds.northEast.lat,
+                            minLng: bounds.southWest.lng,
+                            maxLng: bounds.northEast.lng,
+                            screenWidth: size.width,
+                            screenHeight: size.height * 0.65,
+                          )
+                          .clamp(6, 9)
+                          .toDouble();
                       await operationGuard.runLatest(
                         generation: generation,
                         operation: () => mapController.animateCamera(

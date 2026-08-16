@@ -1,9 +1,9 @@
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_region_search.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_catalog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_selection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CityPickerPage extends HookConsumerWidget {
   const CityPickerPage({required this.region, super.key});

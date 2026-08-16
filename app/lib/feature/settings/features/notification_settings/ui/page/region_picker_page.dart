@@ -32,7 +32,7 @@ class RegionPickerPage extends HookConsumerWidget {
       if (next is MutationError) {
         final error = next.error;
         if (error is DioException && error.response?.statusCode == 402) {
-          unawaited(showProUpgradeDialog(context));
+          unawaited(const ProUpgradeDialogAction().show(context));
           return;
         }
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,9 +57,9 @@ class RegionPickerPage extends HookConsumerWidget {
             name: (region) => region.name,
             kana: (region) => region.kana,
           );
-    final isAdding =
-        ref.watch(NotificationSlotsNotifier.addRegionMutation)
-            is MutationPending;
+    final isAdding = ref.watch(
+      NotificationSlotsNotifier.addRegionMutation,
+    ) is MutationPending;
 
     return Scaffold(
       appBar: AppBar(

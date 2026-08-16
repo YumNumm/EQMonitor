@@ -1,9 +1,9 @@
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_catalog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_region_catalog_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   final catalog = NotificationRegionCatalog(
