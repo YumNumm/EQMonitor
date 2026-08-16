@@ -37,7 +37,7 @@ class _Body extends StatelessWidget {
               title: const Text('テーマ設定'),
               subtitle: const Text('配色プリセットの選択・カスタム編集・JSON入出力'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => const ThemeSettingsRoute().go(context),
+              onTap: () async => const ThemeSettingsRoute().push<void>(context),
             ),
           ],
         ),
