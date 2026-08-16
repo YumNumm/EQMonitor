@@ -92,5 +92,24 @@ void main() {
         'ShindoDbIntensityClass.small.unknownFelt',
       );
     });
+
+    test('ラベルなしアイコンIDは数値階級だけ文字なし画像を返すこと', () {
+      expect(
+        ShindoDbIntensityClass.four.plainMapIconId,
+        'JmaIntensity.smallWithoutText.four',
+      );
+      expect(
+        ShindoDbIntensityClass.five.plainMapIconId,
+        'JmaIntensity.smallWithoutText.fiveUnknown',
+      );
+      expect(
+        ShindoDbIntensityClass.six.plainMapIconId,
+        'JmaIntensity.smallWithoutText.sixUnknown',
+      );
+      expect(
+        ShindoDbIntensityClass.local.plainMapIconId,
+        'ShindoDbIntensityClass.small.local',
+      );
+    });
   });
 }
