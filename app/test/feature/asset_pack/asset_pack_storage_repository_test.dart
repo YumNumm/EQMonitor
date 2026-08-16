@@ -113,6 +113,40 @@ void main() {
   });
 
   test(
+    'uses a newer bundled pack and removes the older active download',
+    () async {
+      final repository = createRepository(
+        bundledDirectory: bundledDirectory,
+        storageDirectory: storageDirectory,
+        preferences: preferences,
+      );
+      final staging = await repository.createStagingDirectory(version: '1.1.0');
+      await writePack(root: staging, version: '1.1.0');
+      await repository.activate(stagingDirectory: staging, version: '1.1.0');
+      await writePack(root: bundledDirectory, version: '1.2.0');
+
+      final restartedRepository = createRepository(
+        bundledDirectory: bundledDirectory,
+        storageDirectory: storageDirectory,
+        preferences: preferences,
+      );
+      final source = await restartedRepository.resolveActiveSource();
+
+      expect(source.kind, AssetPackSourceKind.bundled);
+      expect(
+        Directory('${storageDirectory.path}/packs/1.1.0').existsSync(),
+        isFalse,
+      );
+      expect(
+        await preferences.getString(
+          key: SharedPreferencesKey.assetPackActiveDownloadedVersion,
+        ),
+        isNull,
+      );
+    },
+  );
+
+  test(
     'keeps the current pack active when a new staging pack is invalid',
     () async {
       final repository = createRepository(

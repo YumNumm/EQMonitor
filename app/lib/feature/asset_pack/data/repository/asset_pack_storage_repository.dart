@@ -1,9 +1,15 @@
 import 'dart:io';
 
+import 'package:assets_util/assets_util.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_content_validator.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:version/version.dart';
+
+part 'asset_pack_storage_repository.g.dart';
 
 typedef ResolveBundledAssetPackRoot = Future<String> Function();
 typedef ResolveAssetPackStorageRoot = Future<Directory> Function();
@@ -50,6 +56,9 @@ class AssetPackStorageRepository {
   String? _verifiedDownloadedVersion;
 
   Future<AssetPackSource> resolveActiveSource() async {
+    final bundledSource = await resolveBundledAssetPackSource(
+      resolveBundledRoot: _resolveBundledRoot,
+    );
     final activeVersion = await _preferences.getString(
       key: SharedPreferencesKey.assetPackActiveDownloadedVersion,
     );
@@ -60,10 +69,23 @@ class AssetPackStorageRepository {
       );
       try {
         if (_verifiedDownloadedVersion != activeVersion) {
-          await _contentValidator.validate(
+          final downloadedManifest = await _contentValidator.validate(
             rootDirectory: activeDirectory,
             expectedVersion: activeVersion,
           );
+          final bundledManifestJson = await readAssetPackManifestJson(
+            rootDirectory: bundledSource.rootDirectory,
+          );
+          final bundledVersion = bundledManifestJson['pack_version'];
+          if (bundledVersion is! String ||
+              !isAssetPackVersion(bundledVersion)) {
+            throw const AssetPackStorageException('同梱 Asset Pack のバージョンが不正です。');
+          }
+          if (Version.parse(bundledVersion) >
+              Version.parse(downloadedManifest.packVersion)) {
+            await deactivateDownloadedVersion(version: activeVersion);
+            return bundledSource;
+          }
           _verifiedDownloadedVersion = activeVersion;
         }
         return AssetPackSource(
@@ -72,16 +94,11 @@ class AssetPackStorageRepository {
           version: activeVersion,
         );
       } on Object {
-        await deactivateCorruptAssetPack(
-          preferences: _preferences,
-          directory: activeDirectory,
-        );
+        await deactivateDownloadedVersion(version: activeVersion);
         _verifiedDownloadedVersion = null;
       }
     }
-    return resolveBundledAssetPackSource(
-      resolveBundledRoot: _resolveBundledRoot,
-    );
+    return bundledSource;
   }
 
   Future<Directory> createStagingDirectory({required String version}) async {
@@ -92,6 +109,24 @@ class AssetPackStorageRepository {
     final stagingRoot = Directory(p.join(storageRoot.path, 'staging'));
     await stagingRoot.create(recursive: true);
     return stagingRoot.createTemp('$version-');
+  }
+
+  Future<void> deactivateDownloadedVersion({required String version}) async {
+    if (!isAssetPackVersion(version)) {
+      return;
+    }
+    final activeVersion = await _preferences.getString(
+      key: SharedPreferencesKey.assetPackActiveDownloadedVersion,
+    );
+    if (activeVersion != version) {
+      return;
+    }
+    final storageRoot = await _resolveStorageRoot();
+    await deactivateCorruptAssetPack(
+      preferences: _preferences,
+      directory: Directory(p.join(storageRoot.path, 'packs', version)),
+    );
+    _verifiedDownloadedVersion = null;
   }
 
   Future<void> activate({
@@ -137,6 +172,21 @@ class AssetPackStorageRepository {
       throw AssetPackStorageException('Asset Pack を安全に切り替えられませんでした: $error');
     }
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<AssetPackStorageRepository> assetPackStorageRepository(Ref ref) async {
+  final preferences = await ref.watch(
+    sharedPreferencesDataSourceProvider.future,
+  );
+  return AssetPackStorageRepository(
+    preferences: preferences,
+    resolveBundledRoot: AssetsUtil.resolvePackRoot,
+    resolveStorageRoot: () async {
+      final supportDirectory = await getApplicationSupportDirectory();
+      return Directory(p.join(supportDirectory.path, 'eqmonitor_asset_packs'));
+    },
+  );
 }
 
 bool isAssetPackVersion(String value) =>

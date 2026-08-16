@@ -79,10 +79,9 @@ class AssetPackManifest {
   /// know** while still validating everything else strictly.
   ///
   /// Skipping unknown ids is required for forward compatibility, not a
-  /// convenience: Managed Background Assets (iOS) and Play Asset Delivery
-  /// (Android) hand the *latest* Pack to *every* installed app build, so the
-  /// backend adding an asset id must not make older builds reject the
-  /// manifest. Rejecting one entry means rejecting the whole file — and
+  /// convenience: signed R2 updates can contain ids introduced after this app
+  /// build, so the backend adding an asset id must not make older builds
+  /// reject the manifest. Rejecting one entry means rejecting the whole file — and
   /// `AssetPackRepository.readManifest` gates every asset lookup, so the base
   /// map and all parameters would become unreachable at once. That is exactly
   /// what happened when Pack v0.0.3 introduced `KYOSHIN_STATIONS` to app

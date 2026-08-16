@@ -128,7 +128,7 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
 「EQMonitor Map (Flutter Scene)」から`BaseMapView`を実際に開いて確認しました。
 使ったPMTilesはAsset Pack未準備時のデバッグ専用override経路
 (`eqmonitor_map_debug_source_provider.dart`)で読み込んだ、本番相当の
-`app/android/app/src/debug/assets/eqmonitor_assets/map/all.pmtiles`
+`app/assets/platform/map/all.pmtiles`
 (11,640,567 byte、zoom 0..8)です。
 
 ### 確認できたこと
