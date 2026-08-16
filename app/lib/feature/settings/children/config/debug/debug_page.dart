@@ -22,6 +22,9 @@ import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/startup/debug_startup_timing_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/start/data/flow/forced_update_dialog_presenter.dart';
+import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
+import 'package:eqmonitor/feature/start/data/model/store_url_model.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -857,6 +860,29 @@ class _StartApiDebugContent extends ConsumerWidget {
                       .join(', ')
                 : '(なし)',
           ),
+        ),
+        ListTile(
+          dense: true,
+          title: const Text('強制アップデートダイアログ'),
+          subtitle: const Text('閉じられるプレビューを表示'),
+          leading: const Icon(Icons.system_update_alt),
+          onTap: () async {
+            final storeUrl = data.app.storeUrl;
+            await ref
+                .read(forcedUpdateDialogPresenterProvider)
+                .showForcedUpdateDialog(
+                  context,
+                  req: const RequiredVersionModel(
+                    version: '99.0.0',
+                    message: '【デバッグ】最新バージョンへのアップデートが必要です。',
+                  ),
+                  storeUrl: StoreUrlModel(
+                    ios: storeUrl.ios,
+                    android: storeUrl.android,
+                  ),
+                  dismissible: false,
+                );
+          },
         ),
       ],
     );

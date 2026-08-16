@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/feature/start/data/logic/forced_update_requirement_matcher.dart';
 import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
 import 'package:eqmonitor/feature/start/data/model/store_url_model.dart';
-import 'package:eqmonitor/feature/start/data/logic/forced_update_requirement_matcher.dart';
 import 'package:eqmonitor/feature/start/data/provider/forced_update_info_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -66,19 +66,25 @@ class ForcedUpdateDialogPresenter {
     BuildContext context, {
     required RequiredVersionModel req,
     required StoreUrlModel storeUrl,
+    bool dismissible = false,
   }) {
     final url = resolveStoreUrl(storeUrl);
     return showDialog<void>(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: dismissible,
       builder: (ctx) => PopScope(
-        canPop: false,
+        canPop: dismissible,
         child: AlertDialog(
           title: const Text('アップデートが必要です'),
           content: Text(
             req.message ?? '最新バージョンへのアップデートが必要です。ストアよりアップデートを行ってください。',
           ),
           actions: [
+            if (dismissible)
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('閉じる'),
+              ),
             FilledButton(
               onPressed: url != null
                   ? () {
