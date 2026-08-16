@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.LibraryExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "net.yumnumm.assets_util"
 version = "1.0"
 
@@ -6,7 +9,7 @@ plugins {
     id("kotlin-android")
 }
 
-android {
+extensions.configure<LibraryExtension>("android") {
     namespace = "net.yumnumm.assets_util"
     compileSdk = 36
 
@@ -19,12 +22,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
