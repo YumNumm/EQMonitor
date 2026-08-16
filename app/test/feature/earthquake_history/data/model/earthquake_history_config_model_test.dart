@@ -8,6 +8,17 @@ void main() {
     });
 
     expect(config.details.stationDisplayMode, StationDisplayMode.auto);
+    expect(config.list.showDateSeparator, isTrue);
+  });
+
+  test('showDateSeparator を JSON ラウンドトリップできる', () {
+    const config = EarthquakeHistoryConfig(
+      list: EarthquakeHistoryListConfig(showDateSeparator: false),
+    );
+
+    final restored = EarthquakeHistoryConfig.fromJson(config.toJson());
+
+    expect(restored.list.showDateSeparator, isFalse);
   });
 
   test('stationDisplayMode を JSON ラウンドトリップできる', () {

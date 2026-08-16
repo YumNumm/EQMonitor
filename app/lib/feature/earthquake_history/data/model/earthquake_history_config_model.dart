@@ -23,6 +23,9 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
 
+    /// 発生時刻ソート時に日付区切りを表示するか
+    @Default(true) bool showDateSeparator,
+
     /// ホーム「指定地域」用。将来の地域選択UIから設定
     RegionSearchType? designatedRegionSearchType,
     String? designatedRegionCode,
@@ -47,12 +50,7 @@ abstract class EarthquakeHistoryDetailsConfig
 }
 
 /// 地震履歴詳細画面における塗りつぶし表示モード
-enum EarthquakeHistoryFillMode {
-  none,
-  auto,
-  region,
-  city,
-}
+enum EarthquakeHistoryFillMode { none, auto, region, city }
 
 /// 観測点の表示方法
 enum StationDisplayMode {
@@ -64,8 +62,4 @@ enum StationDisplayMode {
 }
 
 /// 震央マーカーの表示方法
-enum HypocenterDisplayMode {
-  zoomFade,
-  alwaysOpaque,
-  belowStations,
-}
+enum HypocenterDisplayMode { zoomFade, alwaysOpaque, belowStations }
