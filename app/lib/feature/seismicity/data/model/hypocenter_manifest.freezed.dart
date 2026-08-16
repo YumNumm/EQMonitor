@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'hypocenter_manifest.dart';
@@ -9,6 +9,7 @@ part of 'hypocenter_manifest.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$HypocenterManifestCopyWithImpl<$Res>
 /// Create a copy of HypocenterManifest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? archives = null,Object? datasetRevision = null,Object? dataUpdatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(HypocenterManifest(
 archives: null == archives ? _self.archives : archives // ignore: cast_nullable_to_non_nullable
 as List<HypocenterArchive>,datasetRevision: null == datasetRevision ? _self.datasetRevision : datasetRevision // ignore: cast_nullable_to_non_nullable
 as String,dataUpdatedAt: null == dataUpdatedAt ? _self.dataUpdatedAt : dataUpdatedAt // ignore: cast_nullable_to_non_nullable
@@ -208,7 +209,7 @@ return $default(_that.archives,_that.datasetRevision,_that.dataUpdatedAt);case _
 
 
 class _HypocenterManifest implements HypocenterManifest {
-  const _HypocenterManifest({required final  List<HypocenterArchive> archives, required this.datasetRevision, required this.dataUpdatedAt}): _archives = archives;
+  const _HypocenterManifest({required  List<HypocenterArchive> archives, required this.datasetRevision, required this.dataUpdatedAt}): _archives = archives;
   
 
  final  List<HypocenterArchive> _archives;

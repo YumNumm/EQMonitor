@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew.dart';
@@ -9,6 +9,7 @@ part of 'eew.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -85,7 +86,7 @@ class _$EewCopyWithImpl<$Res>
 /// Create a copy of Eew
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? result = freezed,Object? reportTime = freezed,Object? regionCode = freezed,Object? requestTime = freezed,Object? regionName = freezed,Object? longitude = freezed,Object? isCancel = freezed,Object? depth = freezed,Object? intensity = freezed,Object? isFinal = freezed,Object? isTraining = freezed,Object? latitude = freezed,Object? originTime = freezed,Object? security = freezed,Object? magnitude = freezed,Object? reportNum = freezed,Object? requestHypoType = freezed,Object? reportId = freezed,Object? alertFlag = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Eew(
 result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
 as Result?,reportTime: freezed == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable

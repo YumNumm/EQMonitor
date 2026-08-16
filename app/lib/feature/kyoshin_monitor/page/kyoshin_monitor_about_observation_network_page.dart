@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
@@ -35,7 +35,9 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                       ],
                       url: 'https://www.mowlas.bosai.go.jp/mowlas/',
                       titleColor: designSystem.colorTheme.onSecondaryContainer,
-                      descriptionColor: designSystem.colorTheme.onSecondaryContainer
+                      descriptionColor: designSystem
+                          .colorTheme
+                          .onSecondaryContainer
                           .withValues(alpha: 0.8),
                     ),
                   ),
@@ -64,8 +66,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                 ),
                 const Divider(),
                 const _ObservationNetworkSection(
-                  title:
-                      'Hi-net (High Sensitivity Seismograph Network Japan 高感度地震観測網)',
+                  title: 'Hi-net (High Sensitivity Seismograph Network Japan 高感度地震観測網)',
                   description: [
                     '約20km間隔で全国約800ヶ所に設置された高感度地震計による観測網です',
                     '人が感じることができないほどの微弱な揺れを正確に記録します',
@@ -75,8 +76,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                   url: 'https://www.hinet.bosai.go.jp/',
                 ),
                 const _ObservationNetworkSection(
-                  title:
-                      'F-net (Full Range Seismograph Network of Japan 広帯域地震観測網)',
+                  title: 'F-net (Full Range Seismograph Network of Japan 広帯域地震観測網)',
                   description: [
                     '約100km間隔で全国約70ヶ所に設置された広帯域地震計による観測網です',
                     '地震の規模(マグニチュード)や発生メカニズムの解明に活用されています',
@@ -85,8 +85,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                   url: 'https://www.fnet.bosai.go.jp/',
                 ),
                 const _ObservationNetworkSection(
-                  title:
-                      'V-net (The Fundamental Volcano Observation Network 基盤的火山観測網)',
+                  title: 'V-net (The Fundamental Volcano Observation Network 基盤的火山観測網)',
                   description: [
                     '16の活火山に設置された基盤的火山観測網です',
                     '広帯域地震計、傾斜計、GPS等の観測装置により火山活動を監視しています',
@@ -94,8 +93,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                   url: 'https://www.vnet.bosai.go.jp/',
                 ),
                 const _ObservationNetworkSection(
-                  title:
-                      'S-net (Seafloor observation network for earthquakes and tsunamis along the Japan Trench 日本海溝海底地震津波観測網)',
+                  title: 'S-net (Seafloor observation network for earthquakes and tsunamis along the Japan Trench 日本海溝海底地震津波観測網)',
                   description: [
                     '東日本大震災を受けて整備された海底地震津波観測網です',
                     '北海道沖から房総半島沖までの海底に150点の観測装置を設置しています',
@@ -104,8 +102,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                   url: 'https://www.seafloor.bosai.go.jp/',
                 ),
                 const _ObservationNetworkSection(
-                  title:
-                      'DONET (Dense Oceanfloor Network system for Earthquakes and Tsunamis 地震・津波観測監視システム)',
+                  title: 'DONET (Dense Oceanfloor Network system for Earthquakes and Tsunamis 地震・津波観測監視システム)',
                   description: [
                     '南海トラフの地震・津波を観測する海底観測網です',
                     '熊野灘と紀伊水道沖に計51ヶ所の観測点があります',
@@ -115,8 +112,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                   url: 'https://www.seafloor.bosai.go.jp/',
                 ),
                 const _ObservationNetworkSection(
-                  title:
-                      'N-net (Nankai Trough Observation Network system for Earthquakes and Tsunamis 南海トラフ海底地震津波観測網)',
+                  title: 'N-net (Nankai Trough Observation Network system for Earthquakes and Tsunamis 南海トラフ海底地震津波観測網)',
                   description: [
                     '高知県沖から日向灘にかけて整備中の海底観測網です',
                     '36点の観測装置を設置する計画で、18点は既に整備完了しています',
@@ -144,8 +140,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                         ),
                         _LinkItem(
                           title: 'シリーズ「新・強震観測の最新情報」',
-                          url:
-                              'https://www.zisin.jp/kyosindo/shin_kansoku/shin_kansoku.html',
+                          url: 'https://www.zisin.jp/kyosindo/shin_kansoku/shin_kansoku.html',
                         ),
                       ],
                     ),
@@ -181,12 +176,13 @@ class _ObservationNetworkSection extends StatelessWidget {
     final theme = Theme.of(context);
     final designSystem = context.designSystem;
     final textTheme = theme.textTheme;
+    final url = this.url;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: url != null ? () async => launchUrlString(url!) : null,
+          onTap: url != null ? () async => launchUrlString(url) : null,
           child: Row(
             children: [
               Expanded(
@@ -199,7 +195,11 @@ class _ObservationNetworkSection extends StatelessWidget {
                 ),
               ),
               if (url != null)
-                Icon(Icons.open_in_new, size: 16, color: designSystem.colorTheme.primary),
+                Icon(
+                  Icons.open_in_new,
+                  size: 16,
+                  color: designSystem.colorTheme.primary,
+                ),
             ],
           ),
         ),
@@ -233,9 +233,16 @@ class _LinkItem extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(title, style: TextStyle(color: designSystem.colorTheme.primary)),
+            child: Text(
+              title,
+              style: TextStyle(color: designSystem.colorTheme.primary),
+            ),
           ),
-          Icon(Icons.open_in_new, size: 16, color: designSystem.colorTheme.primary),
+          Icon(
+            Icons.open_in_new,
+            size: 16,
+            color: designSystem.colorTheme.primary,
+          ),
         ],
       ),
     );

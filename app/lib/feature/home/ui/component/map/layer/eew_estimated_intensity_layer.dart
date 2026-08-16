@@ -7,8 +7,9 @@ import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer_filter_updater.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -17,6 +18,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
   const EewEstimatedIntensityLayer({required this.eewRegions, super.key});
 
   final List<EewForecastRegionInfo> eewRegions;
+
+  static const _areaFilterBuilder = EewAreaFilterBuilder();
+  static const _filterUpdater = EewEstimatedIntensityLayerFilterUpdater();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +70,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                     id: layerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaForecastLocalE',
-                    filter: buildEewAreaCodeFilter(codes),
+                    filter: _areaFilterBuilder.build(codes),
                     paint: {
                       'fill-color': color.toHexString(),
                       'fill-opacity': 1,
@@ -78,7 +82,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
               .wait;
 
           isInitialized.value = true;
-          await _updateEewEstimatedIntensityFilters(
+          await _filterUpdater.update(
             styleController: styleController,
             regionMaxIntensities: latestRegionMaxIntensities.value,
           );
@@ -108,7 +112,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
       unawaited(
         enqueue(
-          () => _updateEewEstimatedIntensityFilters(
+          () => _filterUpdater.update(
             styleController: styleController,
             regionMaxIntensities: regionMaxIntensities,
           ),
@@ -120,27 +124,4 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
-}
-
-Future<void> _updateEewEstimatedIntensityFilters({
-  required StyleController styleController,
-  required List<EewForecastRegionInfo> regionMaxIntensities,
-}) async {
-  await JmaIntensity.values
-      .where((intensity) => intensity != JmaIntensity.unknown)
-      .map((intensity) {
-        final codes = regionMaxIntensities
-            .where((r) => r.intensity == intensity)
-            .map((r) => r.code)
-            .toList();
-        return styleController.updateFilter(
-          id: intensity.layerId,
-          filter: buildEewAreaCodeFilter(codes),
-        );
-      })
-      .wait;
-}
-
-extension on JmaIntensity {
-  String get layerId => 'eew-estimated-intensity-fill-$name';
 }

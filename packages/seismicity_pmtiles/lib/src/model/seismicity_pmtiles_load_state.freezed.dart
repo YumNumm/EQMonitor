@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'seismicity_pmtiles_load_state.dart';
@@ -9,6 +9,7 @@ part of 'seismicity_pmtiles_load_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -55,13 +56,14 @@ extension SeismicityPmTilesLoadStatePatterns on SeismicityPmTilesLoadState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesLoadIdle value)?  idle,TResult Function( SeismicityPmTilesLoadOpeningSource value)?  openingSource,TResult Function( SeismicityPmTilesLoadReadingDirectory value)?  readingDirectory,TResult Function( SeismicityPmTilesLoadCompleted value)?  completed,TResult Function( SeismicityPmTilesLoadFailed value)?  failed,TResult Function( SeismicityPmTilesLoadCancelled value)?  cancelled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeismicityPmTilesLoadIdle value)?  idle,TResult Function( SeismicityPmTilesLoadOpeningSource value)?  openingSource,TResult Function( SeismicityPmTilesLoadReadingDirectory value)?  readingDirectory,TResult Function( SeismicityPmTilesLoadDecoding value)?  decoding,TResult Function( SeismicityPmTilesLoadCompleted value)?  completed,TResult Function( SeismicityPmTilesLoadFailed value)?  failed,TResult Function( SeismicityPmTilesLoadCancelled value)?  cancelled,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle() when idle != null:
 return idle(_that);case SeismicityPmTilesLoadOpeningSource() when openingSource != null:
 return openingSource(_that);case SeismicityPmTilesLoadReadingDirectory() when readingDirectory != null:
-return readingDirectory(_that);case SeismicityPmTilesLoadCompleted() when completed != null:
+return readingDirectory(_that);case SeismicityPmTilesLoadDecoding() when decoding != null:
+return decoding(_that);case SeismicityPmTilesLoadCompleted() when completed != null:
 return completed(_that);case SeismicityPmTilesLoadFailed() when failed != null:
 return failed(_that);case SeismicityPmTilesLoadCancelled() when cancelled != null:
 return cancelled(_that);case _:
@@ -82,13 +84,14 @@ return cancelled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesLoadIdle value)  idle,required TResult Function( SeismicityPmTilesLoadOpeningSource value)  openingSource,required TResult Function( SeismicityPmTilesLoadReadingDirectory value)  readingDirectory,required TResult Function( SeismicityPmTilesLoadCompleted value)  completed,required TResult Function( SeismicityPmTilesLoadFailed value)  failed,required TResult Function( SeismicityPmTilesLoadCancelled value)  cancelled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeismicityPmTilesLoadIdle value)  idle,required TResult Function( SeismicityPmTilesLoadOpeningSource value)  openingSource,required TResult Function( SeismicityPmTilesLoadReadingDirectory value)  readingDirectory,required TResult Function( SeismicityPmTilesLoadDecoding value)  decoding,required TResult Function( SeismicityPmTilesLoadCompleted value)  completed,required TResult Function( SeismicityPmTilesLoadFailed value)  failed,required TResult Function( SeismicityPmTilesLoadCancelled value)  cancelled,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle():
 return idle(_that);case SeismicityPmTilesLoadOpeningSource():
 return openingSource(_that);case SeismicityPmTilesLoadReadingDirectory():
-return readingDirectory(_that);case SeismicityPmTilesLoadCompleted():
+return readingDirectory(_that);case SeismicityPmTilesLoadDecoding():
+return decoding(_that);case SeismicityPmTilesLoadCompleted():
 return completed(_that);case SeismicityPmTilesLoadFailed():
 return failed(_that);case SeismicityPmTilesLoadCancelled():
 return cancelled(_that);}
@@ -105,13 +108,14 @@ return cancelled(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesLoadIdle value)?  idle,TResult? Function( SeismicityPmTilesLoadOpeningSource value)?  openingSource,TResult? Function( SeismicityPmTilesLoadReadingDirectory value)?  readingDirectory,TResult? Function( SeismicityPmTilesLoadCompleted value)?  completed,TResult? Function( SeismicityPmTilesLoadFailed value)?  failed,TResult? Function( SeismicityPmTilesLoadCancelled value)?  cancelled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeismicityPmTilesLoadIdle value)?  idle,TResult? Function( SeismicityPmTilesLoadOpeningSource value)?  openingSource,TResult? Function( SeismicityPmTilesLoadReadingDirectory value)?  readingDirectory,TResult? Function( SeismicityPmTilesLoadDecoding value)?  decoding,TResult? Function( SeismicityPmTilesLoadCompleted value)?  completed,TResult? Function( SeismicityPmTilesLoadFailed value)?  failed,TResult? Function( SeismicityPmTilesLoadCancelled value)?  cancelled,}){
 final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle() when idle != null:
 return idle(_that);case SeismicityPmTilesLoadOpeningSource() when openingSource != null:
 return openingSource(_that);case SeismicityPmTilesLoadReadingDirectory() when readingDirectory != null:
-return readingDirectory(_that);case SeismicityPmTilesLoadCompleted() when completed != null:
+return readingDirectory(_that);case SeismicityPmTilesLoadDecoding() when decoding != null:
+return decoding(_that);case SeismicityPmTilesLoadCompleted() when completed != null:
 return completed(_that);case SeismicityPmTilesLoadFailed() when failed != null:
 return failed(_that);case SeismicityPmTilesLoadCancelled() when cancelled != null:
 return cancelled(_that);case _:
@@ -131,12 +135,13 @@ return cancelled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  idle,TResult Function()?  openingSource,TResult Function()?  readingDirectory,TResult Function()?  completed,TResult Function( SeismicityPmTilesException exception)?  failed,TResult Function()?  cancelled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  idle,TResult Function()?  openingSource,TResult Function()?  readingDirectory,TResult Function( SeismicityPmTilesDecodeProgress progress)?  decoding,TResult Function()?  completed,TResult Function( SeismicityPmTilesException exception)?  failed,TResult Function()?  cancelled,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle() when idle != null:
 return idle();case SeismicityPmTilesLoadOpeningSource() when openingSource != null:
 return openingSource();case SeismicityPmTilesLoadReadingDirectory() when readingDirectory != null:
-return readingDirectory();case SeismicityPmTilesLoadCompleted() when completed != null:
+return readingDirectory();case SeismicityPmTilesLoadDecoding() when decoding != null:
+return decoding(_that.progress);case SeismicityPmTilesLoadCompleted() when completed != null:
 return completed();case SeismicityPmTilesLoadFailed() when failed != null:
 return failed(_that.exception);case SeismicityPmTilesLoadCancelled() when cancelled != null:
 return cancelled();case _:
@@ -157,12 +162,13 @@ return cancelled();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  idle,required TResult Function()  openingSource,required TResult Function()  readingDirectory,required TResult Function()  completed,required TResult Function( SeismicityPmTilesException exception)  failed,required TResult Function()  cancelled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  idle,required TResult Function()  openingSource,required TResult Function()  readingDirectory,required TResult Function( SeismicityPmTilesDecodeProgress progress)  decoding,required TResult Function()  completed,required TResult Function( SeismicityPmTilesException exception)  failed,required TResult Function()  cancelled,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle():
 return idle();case SeismicityPmTilesLoadOpeningSource():
 return openingSource();case SeismicityPmTilesLoadReadingDirectory():
-return readingDirectory();case SeismicityPmTilesLoadCompleted():
+return readingDirectory();case SeismicityPmTilesLoadDecoding():
+return decoding(_that.progress);case SeismicityPmTilesLoadCompleted():
 return completed();case SeismicityPmTilesLoadFailed():
 return failed(_that.exception);case SeismicityPmTilesLoadCancelled():
 return cancelled();}
@@ -179,12 +185,13 @@ return cancelled();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  idle,TResult? Function()?  openingSource,TResult? Function()?  readingDirectory,TResult? Function()?  completed,TResult? Function( SeismicityPmTilesException exception)?  failed,TResult? Function()?  cancelled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  idle,TResult? Function()?  openingSource,TResult? Function()?  readingDirectory,TResult? Function( SeismicityPmTilesDecodeProgress progress)?  decoding,TResult? Function()?  completed,TResult? Function( SeismicityPmTilesException exception)?  failed,TResult? Function()?  cancelled,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesLoadIdle() when idle != null:
 return idle();case SeismicityPmTilesLoadOpeningSource() when openingSource != null:
 return openingSource();case SeismicityPmTilesLoadReadingDirectory() when readingDirectory != null:
-return readingDirectory();case SeismicityPmTilesLoadCompleted() when completed != null:
+return readingDirectory();case SeismicityPmTilesLoadDecoding() when decoding != null:
+return decoding(_that.progress);case SeismicityPmTilesLoadCompleted() when completed != null:
 return completed();case SeismicityPmTilesLoadFailed() when failed != null:
 return failed(_that.exception);case SeismicityPmTilesLoadCancelled() when cancelled != null:
 return cancelled();case _:
@@ -290,6 +297,81 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class SeismicityPmTilesLoadDecoding implements SeismicityPmTilesLoadState {
+  const SeismicityPmTilesLoadDecoding({required this.progress});
+  
+
+ final  SeismicityPmTilesDecodeProgress progress;
+
+/// Create a copy of SeismicityPmTilesLoadState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesLoadDecodingCopyWith<SeismicityPmTilesLoadDecoding> get copyWith => _$SeismicityPmTilesLoadDecodingCopyWithImpl<SeismicityPmTilesLoadDecoding>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesLoadDecoding&&(identical(other.progress, progress) || other.progress == progress));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,progress);
+
+@override
+String toString() {
+  return 'SeismicityPmTilesLoadState.decoding(progress: $progress)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeismicityPmTilesLoadDecodingCopyWith<$Res> implements $SeismicityPmTilesLoadStateCopyWith<$Res> {
+  factory $SeismicityPmTilesLoadDecodingCopyWith(SeismicityPmTilesLoadDecoding value, $Res Function(SeismicityPmTilesLoadDecoding) _then) = _$SeismicityPmTilesLoadDecodingCopyWithImpl;
+@useResult
+$Res call({
+ SeismicityPmTilesDecodeProgress progress
+});
+
+
+$SeismicityPmTilesDecodeProgressCopyWith<$Res> get progress;
+
+}
+/// @nodoc
+class _$SeismicityPmTilesLoadDecodingCopyWithImpl<$Res>
+    implements $SeismicityPmTilesLoadDecodingCopyWith<$Res> {
+  _$SeismicityPmTilesLoadDecodingCopyWithImpl(this._self, this._then);
+
+  final SeismicityPmTilesLoadDecoding _self;
+  final $Res Function(SeismicityPmTilesLoadDecoding) _then;
+
+/// Create a copy of SeismicityPmTilesLoadState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? progress = null,}) {
+  return _then(SeismicityPmTilesLoadDecoding(
+progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as SeismicityPmTilesDecodeProgress,
+  ));
+}
+
+/// Create a copy of SeismicityPmTilesLoadState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SeismicityPmTilesDecodeProgressCopyWith<$Res> get progress {
+  
+  return $SeismicityPmTilesDecodeProgressCopyWith<$Res>(_self.progress, (value) {
+    return _then(_self.copyWith(progress: value));
+  });
+}
+}
 
 /// @nodoc
 

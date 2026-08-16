@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -28,21 +29,33 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
 
   Future<void> putCurrentLocation({
     bool? eewEnabled,
-    JmaIntensity? eewMinIntensity,
     List<NotificationOverride>? eewOverrides,
     bool? earthquakeEnabled,
-    JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.putCurrentLocation(
       eewEnabled: eewEnabled,
-      eewMinIntensity: eewMinIntensity,
       eewOverrides: eewOverrides,
       earthquakeEnabled: earthquakeEnabled,
-      earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    await _startBackgroundLocationMonitoring();
+    ref.invalidateSelf();
+  }
+
+  static final replaceSlotsMutation = Mutation<void>();
+
+  Future<void> replaceSlots(List<NotificationSlotDraft> slots) async {
+    final repo = await ref.read(notificationSlotRepositoryProvider.future);
+    await repo.replaceSlots(slots);
+    if (slots.any((s) => s.slotType == NotificationSlotType.currentLocation)) {
+      await _startBackgroundLocationMonitoring();
+    }
+    ref.invalidateSelf();
+  }
+
+  Future<void> _startBackgroundLocationMonitoring() async {
     try {
       await BackgroundLocationTracker.startMonitoring();
     } on Object catch (e, st) {
@@ -52,7 +65,6 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
         st,
       );
     }
-    ref.invalidateSelf();
   }
 
   static final deleteCurrentLocationMutation = Mutation<void>();

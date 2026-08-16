@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'general_notification_settings.dart';
@@ -9,8 +9,10 @@ part of 'general_notification_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$GeneralNotificationSettings {
 
@@ -21,6 +23,8 @@ mixin _$GeneralNotificationSettings {
 @pragma('vm:prefer-inline')
 $GeneralNotificationSettingsCopyWith<GeneralNotificationSettings> get copyWith => _$GeneralNotificationSettingsCopyWithImpl<GeneralNotificationSettings>(this as GeneralNotificationSettings, _$identity);
 
+  /// Serializes this GeneralNotificationSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is GeneralNotificationSettings&&(identical(other.notificationEnabled, notificationEnabled) || other.notificationEnabled == notificationEnabled)&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.vyse60Enabled, vyse60Enabled) || other.vyse60Enabled == vyse60Enabled)&&(identical(other.earthquakeNoticeEnabled, earthquakeNoticeEnabled) || other.earthquakeNoticeEnabled == earthquakeNoticeEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,notificationEnabled,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,vyse60Enabled,earthquakeNoticeEnabled);
 
@@ -63,7 +67,7 @@ class _$GeneralNotificationSettingsCopyWithImpl<$Res>
 /// Create a copy of GeneralNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? notificationEnabled = null,Object? tsunamiEnabled = null,Object? trainingEnabled = null,Object? nankaiExtraordinaryEnabled = null,Object? nankaiRegularEnabled = null,Object? vyse60Enabled = null,Object? earthquakeNoticeEnabled = null,}) {
-  return _then(_self.copyWith(
+  return _then(GeneralNotificationSettings(
 notificationEnabled: null == notificationEnabled ? _self.notificationEnabled : notificationEnabled // ignore: cast_nullable_to_non_nullable
 as bool,tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
 as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
@@ -209,11 +213,11 @@ return $default(_that.notificationEnabled,_that.tsunamiEnabled,_that.trainingEna
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _GeneralNotificationSettings implements GeneralNotificationSettings {
   const _GeneralNotificationSettings({required this.notificationEnabled, required this.tsunamiEnabled, required this.trainingEnabled, required this.nankaiExtraordinaryEnabled, required this.nankaiRegularEnabled, required this.vyse60Enabled, required this.earthquakeNoticeEnabled});
-  
+  factory _GeneralNotificationSettings.fromJson(Map<String, dynamic> json) => _$GeneralNotificationSettingsFromJson(json);
 
 @override final  bool notificationEnabled;
 @override final  bool tsunamiEnabled;
@@ -229,14 +233,17 @@ class _GeneralNotificationSettings implements GeneralNotificationSettings {
 @pragma('vm:prefer-inline')
 _$GeneralNotificationSettingsCopyWith<_GeneralNotificationSettings> get copyWith => __$GeneralNotificationSettingsCopyWithImpl<_GeneralNotificationSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$GeneralNotificationSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneralNotificationSettings&&(identical(other.notificationEnabled, notificationEnabled) || other.notificationEnabled == notificationEnabled)&&(identical(other.tsunamiEnabled, tsunamiEnabled) || other.tsunamiEnabled == tsunamiEnabled)&&(identical(other.trainingEnabled, trainingEnabled) || other.trainingEnabled == trainingEnabled)&&(identical(other.nankaiExtraordinaryEnabled, nankaiExtraordinaryEnabled) || other.nankaiExtraordinaryEnabled == nankaiExtraordinaryEnabled)&&(identical(other.nankaiRegularEnabled, nankaiRegularEnabled) || other.nankaiRegularEnabled == nankaiRegularEnabled)&&(identical(other.vyse60Enabled, vyse60Enabled) || other.vyse60Enabled == vyse60Enabled)&&(identical(other.earthquakeNoticeEnabled, earthquakeNoticeEnabled) || other.earthquakeNoticeEnabled == earthquakeNoticeEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,notificationEnabled,tsunamiEnabled,trainingEnabled,nankaiExtraordinaryEnabled,nankaiRegularEnabled,vyse60Enabled,earthquakeNoticeEnabled);
 

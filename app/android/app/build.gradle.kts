@@ -33,20 +33,15 @@ android {
 
     assetPacks += setOf(":assetpacks:eqmonitor_assets")
 
+    // AGP 9 では既定で無効。app_name を dart-define から差し替えるために必要
+    buildFeatures {
+        resValues = true
+    }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    sourceSets {
-        getByName("main") {
-            java.srcDirs("src/main/kotlin")
-        }
     }
 
     defaultConfig {
@@ -87,6 +82,12 @@ android {
             versionNameSuffix = ".d"
             resValue("string", "app_name", "EQMonitor (Debug)")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

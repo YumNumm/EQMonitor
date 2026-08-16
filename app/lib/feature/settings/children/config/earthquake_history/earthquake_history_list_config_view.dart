@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryListConfigView extends StatelessWidget {
-  const EarthquakeHistoryListConfigView({
+  const new({
     required this.config,
     required this.onChanged,
     super.key,

@@ -1,11 +1,13 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level_parser.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_snapshot_reducer.dart';
@@ -22,6 +24,10 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
 
   @override
   ShakeDetectionSnapshot? build() {
+    if (!ref.watch(buildConfigProvider).isShakeDetectionEnabled) {
+      return null;
+    }
+
     ref.onDispose(invalidateSynchronization);
 
     ref.listen(eqMonitorWsStatusProvider, (_, next) {
@@ -70,7 +76,10 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
                       createdAt: event.createdAt,
                       updatedAt: event.updatedAt,
                       expiresAt: event.expiresAt,
-                      level: event.level.toJson().toShakeDetectionLevel(),
+                      level: event.level
+                          .toJson()
+                          .toShakeDetectionLevel()
+                          .toShakeDetectionLevelModel,
                       pointCount: event.pointCount,
                       minLat: event.region.bottomRight.latitude.toDouble(),
                       maxLat: event.region.topLeft.latitude.toDouble(),
@@ -162,6 +171,9 @@ class ShakeDetectionAcceptedSnapshot extends _$ShakeDetectionAcceptedSnapshot {
   }
 
   void applySnapshot(ShakeDetectionSnapshot incoming) {
+    if (!ref.read(buildConfigProvider).isShakeDetectionEnabled) {
+      return;
+    }
     final reducer = ref.read(shakeDetectionSnapshotReducerProvider);
     final current = state;
     final selected = reducer.selectNewer(current: current, incoming: incoming);

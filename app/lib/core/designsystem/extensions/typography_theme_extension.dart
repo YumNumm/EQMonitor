@@ -2,7 +2,7 @@
 
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'typography_theme_extension.tailor.dart';

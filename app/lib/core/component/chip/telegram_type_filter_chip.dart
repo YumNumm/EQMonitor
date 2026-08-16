@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class TelegramTypeFilterChip extends StatelessWidget {
@@ -11,7 +11,8 @@ class TelegramTypeFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = telegramTypes != null && telegramTypes!.isNotEmpty;
+    final telegramTypes = this.telegramTypes;
+    final isActive = telegramTypes != null && telegramTypes.isNotEmpty;
 
     return RawChip(
       onSelected: (_) async {

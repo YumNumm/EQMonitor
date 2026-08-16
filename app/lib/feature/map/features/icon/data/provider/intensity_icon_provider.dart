@@ -4,7 +4,11 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_data.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_jma_intensity.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon_jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/repository/intensity_icon_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,34 +26,28 @@ Future<IntensityIconData> intensityIcon(Ref ref) async {
       <IntensityIconType, Map<JmaLpgmIntensity, Uint8List>>{};
   for (final intensity in JmaIntensity.values) {
     for (final type in IntensityIconType.values) {
-      futures.add(
-        () async {
-          final bytes = await repository.renderJmaIntensityIcon(
-            intensity: intensity,
-            type: type,
-            colorSet: colorSet,
-            brightness: brightness,
-          );
-          jmaIntensityMap.putIfAbsent(type, () => {});
-          jmaIntensityMap[type]![intensity] = bytes;
-        }(),
-      );
+      futures.add(() async {
+        final bytes = await repository.renderJmaIntensityIcon(
+          intensity: intensity,
+          type: type,
+          colorSet: colorSet,
+          brightness: brightness,
+        );
+        jmaIntensityMap.putIfAbsent(type, () => {})[intensity] = bytes;
+      }());
     }
   }
   for (final intensity in JmaLpgmIntensity.values) {
     for (final type in IntensityIconType.values) {
-      futures.add(
-        () async {
-          final bytes = await repository.renderJmaLpgmIntensityIcon(
-            intensity: intensity,
-            type: type,
-            colorSet: colorSet,
-            brightness: brightness,
-          );
-          jmaLpgmIntensityMap.putIfAbsent(type, () => {});
-          jmaLpgmIntensityMap[type]![intensity] = bytes;
-        }(),
-      );
+      futures.add(() async {
+        final bytes = await repository.renderJmaLpgmIntensityIcon(
+          intensity: intensity,
+          type: type,
+          colorSet: colorSet,
+          brightness: brightness,
+        );
+        jmaLpgmIntensityMap.putIfAbsent(type, () => {})[intensity] = bytes;
+      }());
     }
   }
   await futures.wait;
@@ -73,17 +71,21 @@ Future<IntensityIconData> intensityIcon(Ref ref) async {
     jmaLpgmIntensityMap.entries.length == IntensityIconType.values.length,
     'jmaLpgmIntensityMap entries must be the same length as IntensityIconType values',
   );
+  const reason = '直前のループでIntensityIconType.valuesすべてに対して描画済み';
   return IntensityIconData(
     jmaIntensity: IntensityIconJmaIntensity(
-      filled: jmaIntensityMap[IntensityIconType.filled]!,
-      small: jmaIntensityMap[IntensityIconType.small]!,
-      smallWithoutText: jmaIntensityMap[IntensityIconType.smallWithoutText]!,
+      filled: jmaIntensityMap[IntensityIconType.filled].orFailBecause(reason),
+      small: jmaIntensityMap[IntensityIconType.small].orFailBecause(reason),
+      smallWithoutText: jmaIntensityMap[IntensityIconType.smallWithoutText]
+          .orFailBecause(reason),
     ),
     lpgmIntensity: IntensityIconJmaLpgmIntensity(
-      filled: jmaLpgmIntensityMap[IntensityIconType.filled]!,
-      small: jmaLpgmIntensityMap[IntensityIconType.small]!,
-      smallWithoutText:
-          jmaLpgmIntensityMap[IntensityIconType.smallWithoutText]!,
+      filled: jmaLpgmIntensityMap[IntensityIconType.filled].orFailBecause(
+        reason,
+      ),
+      small: jmaLpgmIntensityMap[IntensityIconType.small].orFailBecause(reason),
+      smallWithoutText: jmaLpgmIntensityMap[IntensityIconType.smallWithoutText]
+          .orFailBecause(reason),
     ),
   );
 }

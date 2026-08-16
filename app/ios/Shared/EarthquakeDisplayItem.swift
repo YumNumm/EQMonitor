@@ -222,7 +222,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     ) -> String {
         if let detailedName { return detailedName }
         if let name { return name }
-        if let maxIntensity { return "最大震度\(maxIntensity.displayString)を観測" }
+        if let maxIntensity { return "最大震度\(maxIntensity.titleText)を観測" }
         return ""
     }
 

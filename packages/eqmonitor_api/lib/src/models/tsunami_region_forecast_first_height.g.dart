@@ -10,28 +10,25 @@ part of 'tsunami_region_forecast_first_height.dart';
 
 _TsunamiRegionForecastFirstHeight _$TsunamiRegionForecastFirstHeightFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_TsunamiRegionForecastFirstHeight',
-  json,
-  ($checkedConvert) {
-    final val = _TsunamiRegionForecastFirstHeight(
-      arrivalTime: $checkedConvert(
-        'arrival_time',
-        (v) => v == null ? null : DateTime.parse(v as String),
-      ),
-      condition: $checkedConvert(
-        'condition',
-        (v) => $enumDecodeNullable(_$FirstHeightConditionEnumMap, v),
-      ),
-      revise: $checkedConvert(
-        'revise',
-        (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'arrivalTime': 'arrival_time'},
-);
+) => $checkedCreate('_TsunamiRegionForecastFirstHeight', json, (
+  $checkedConvert,
+) {
+  final val = _TsunamiRegionForecastFirstHeight(
+    arrivalTime: $checkedConvert(
+      'arrival_time',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    condition: $checkedConvert(
+      'condition',
+      (v) => $enumDecodeNullable(_$FirstHeightConditionEnumMap, v),
+    ),
+    revise: $checkedConvert(
+      'revise',
+      (v) => $enumDecodeNullable(_$ReviseEnumMap, v),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'arrivalTime': 'arrival_time'});
 
 Map<String, dynamic> _$TsunamiRegionForecastFirstHeightToJson(
   _TsunamiRegionForecastFirstHeight instance,

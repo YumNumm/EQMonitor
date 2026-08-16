@@ -246,10 +246,12 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 | 表示条件 | `estimatedIntensityTileUrl != null` |
 | ソース | VectorSource (PMTiles URL) |
 | ソースレイヤー | `seismic_intensity` |
-| レイヤータイプ | FillStyleLayer |
-| Fill opacity | 0.65 |
-| Fill color | GeoJSON properties の `fill` |
+| レイヤータイプ | FillStyleLayer + LineStyleLayer |
+| Fill opacity | 1.0 |
+| Fill color | properties の `name`（`intensity:4`〜`intensity:7`）をテーマの推計震度色に match 式でマッピング。未知の階級のみ properties の `fill` にフォールバック |
 | 配置 | `areaForecastLocalELine` より下 |
+
+注意: PMTiles は backend (`ixac41-pmtiles-generator`) で tippecanoe `-Z 5 -z 14` で生成されるため、zoom 5 未満ではタイルが存在せず描画されない（MapLibre は minzoom 側の underzoom を行わない）。
 
 ### 2-9. カメラ
 

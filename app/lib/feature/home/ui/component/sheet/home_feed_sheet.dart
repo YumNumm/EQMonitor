@@ -9,20 +9,17 @@ import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dar
 import 'package:eqmonitor/feature/feed/data/provider/unread_high_urgency_feed_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeFeedSheet extends ConsumerWidget {
-  const HomeFeedSheet({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
-    final typography = designSystem.typography;
+    final spacing = context.designSystem.spacing;
     final state = ref.watch(feedProvider);
 
     // 初回起動時: フィード読み込み完了時点の最新を既読基準として保存し、
@@ -44,68 +41,74 @@ class HomeFeedSheet extends ConsumerWidget {
     initializeFeedLastRead(state);
     final unreadItem = ref.watch(unreadHighUrgencyFeedProvider);
 
-    return Card.outlined(
-      margin: EdgeInsets.zero,
-      color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
-      elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
+    return HomeSheetCard(
+      children: [
+        if (unreadItem != null) _UnreadFeedBanner(item: unreadItem),
+        const HomeSheetCardHeader(title: 'お知らせ'),
+        switch (state) {
+          AsyncData<FeedNotifierState>(:final value) =>
+            value.items.isEmpty
+                ? const _HomeFeedEmpty()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final (index, item)
+                          in value.items.take(3).indexed) ...[
+                        if (index != 0)
+                          Divider(
+                            height: 1,
+                            indent: spacing.lg,
+                            endIndent: spacing.lg,
+                          ),
+                        _HomeFeedListTile(item: item),
+                      ],
+                    ],
+                  ),
+          AsyncError<FeedNotifierState>(:final error) => ErrorCard(
+            error: error,
+            onReload: () async => ref.invalidate(feedProvider, asReload: true),
+          ),
+          _ => const _HomeFeedSkeleton(),
+        },
+        Align(
+          alignment: .centerEnd,
+          child: TextButton(
+            onPressed: () async => const FeedRoute().push<void>(context),
+            child: Text('さらに表示'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeFeedEmpty extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final spacing = designSystem.spacing;
+    final colorTheme = designSystem.colorTheme;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.lg,
+        vertical: spacing.md,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (unreadItem != null) _UnreadFeedBanner(item: unreadItem),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              spacing.lg,
-              spacing.md,
-              spacing.lg,
-              spacing.xs,
-            ),
-            child: Text(
-              'お知らせ',
-              style: typography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          Icon(
+            Icons.notifications_none_rounded,
+            color: colorTheme.onSurfaceVariant,
           ),
-          switch (state) {
-            AsyncData<FeedNotifierState>(:final value) =>
-              value.items.isEmpty
-                  ? Padding(
-                      padding: EdgeInsets.all(spacing.lg),
-                      child: const Center(child: Text('お知らせはありません')),
-                    )
-                  : Column(
-                      children: value.items
-                          .take(3)
-                          .map((item) => _HomeFeedListTile(item: item))
-                          .toList(),
-                    ),
-            AsyncError<FeedNotifierState>(:final error) => ErrorCard(
-              error: error,
-              onReload: () async =>
-                  ref.invalidate(feedProvider, asReload: true),
+          SizedBox(height: spacing.xs),
+          Text(
+            'お知らせはありません',
+            style: designSystem.typography.bodyMedium.copyWith(
+              color: colorTheme.onSurfaceVariant,
             ),
-            _ => const _HomeFeedSkeleton(),
-          },
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              spacing.lg,
-              spacing.xs,
-              spacing.lg,
-              spacing.md,
-            ),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () async => const FeedRoute().push<void>(context),
-                child: const Text('さらに表示'),
-              ),
-            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -114,18 +117,15 @@ class HomeFeedSheet extends ConsumerWidget {
 }
 
 class _HomeFeedListTile extends StatelessWidget {
-  const _HomeFeedListTile({required this.item});
+  const new({required this.item});
 
   final FeedItem item;
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
+    final spacing = context.designSystem.spacing;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(shape.md),
       onTap: () async =>
           FeedItemDetailsRoute(id: item.id, $extra: item).push<void>(context),
       child: Padding(
@@ -140,7 +140,7 @@ class _HomeFeedListTile extends StatelessWidget {
 }
 
 class _HomeFeedSkeleton extends StatelessWidget {
-  const _HomeFeedSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -149,10 +149,10 @@ class _HomeFeedSkeleton extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
 
     return Padding(
-      padding: EdgeInsets.all(spacing.lg),
+      padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
       child: Skeletonizer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (var i = 0; i < 3; i++) ...[
               Container(
@@ -174,7 +174,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
 /// 未読の緊急度の高いお知らせを知らせるバナー。
 /// タップで詳細へ遷移して既読化、×ボタンで既読化のみ行う。
 class _UnreadFeedBanner extends ConsumerWidget {
-  const _UnreadFeedBanner({required this.item});
+  const new({required this.item});
 
   final FeedItem item;
 
@@ -183,7 +183,7 @@ class _UnreadFeedBanner extends ConsumerWidget {
     final designSystem = context.designSystem;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final color = feedUrgencyColor(item) ?? const Color(0xFFF57C00);
+    final color = item.urgencyColor ?? const Color(0xFFF57C00);
 
     return Material(
       color: color,
@@ -201,13 +201,13 @@ class _UnreadFeedBanner extends ConsumerWidget {
           padding: EdgeInsets.fromLTRB(
             spacing.lg,
             spacing.xs,
-            spacing.xs,
+            spacing.sm,
             spacing.xs,
           ),
           child: Row(
+            spacing: spacing.md,
             children: [
-              const Icon(Icons.campaign, color: Colors.white),
-              SizedBox(width: spacing.sm),
+              const Icon(Icons.campaign_rounded, color: Colors.white, size: 20),
               Expanded(
                 child: Text(
                   (item.title ?? item.summary ?? '').replaceAll('◆', ''),
@@ -223,7 +223,8 @@ class _UnreadFeedBanner extends ConsumerWidget {
                 onPressed: () async => ref
                     .read(feedLastReadProvider.notifier)
                     .markRead(item.publishedAt),
-                icon: const Icon(Icons.close, color: Colors.white),
+                icon: const Icon(Icons.close, color: Colors.white, size: 20),
+                visualDensity: VisualDensity.compact,
                 tooltip: '既読にする',
               ),
             ],

@@ -28,7 +28,7 @@ class AssetPackRepository {
   }) : _resolvePackFile =
            resolvePackFile ??
            (resolvePackRoot == null
-               ? resolveAssetPackFile
+               ? AssetPackFileResolver.resolve
                : (relativePath) async =>
                      '${await resolvePackRoot()}/$relativePath');
 
@@ -133,5 +133,9 @@ class AssetPackRepository {
   }
 }
 
-Future<String> resolveAssetPackFile(String relativePath) =>
-    AssetsUtil.resolvePackFile(relativePath: relativePath);
+class AssetPackFileResolver {
+  const AssetPackFileResolver._();
+
+  static Future<String> resolve(String relativePath) =>
+      AssetsUtil.resolvePackFile(relativePath: relativePath);
+}

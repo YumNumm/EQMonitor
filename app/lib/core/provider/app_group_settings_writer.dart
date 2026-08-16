@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/core/provider/widget_current_location_loader.dart';
+import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/model/widget_region_selection.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/notifier/widget_region_notifier.dart';
@@ -48,151 +48,193 @@ Future<void> appGroupSettingsWriter(Ref ref) async {
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
   final isPro = ref.watch(isProProvider);
   final widgetRegion = await ref.watch(widgetRegionProvider.future);
+  final locationResult = await ref
+      .read(widgetCurrentLocationLoaderProvider)
+      .load();
 
-  var changed = false;
-  changed |= await _setString(
-    prefs,
-    AppGroupKeys.apiServerUrl,
-    telegramUrl.restApiUrl,
+  final changed = await AppGroupSettingsWriter.write(
+    prefs: prefs,
+    telegramRestApiUrl: telegramUrl.restApiUrl,
+    isPro: isPro,
+    widgetRegion: widgetRegion,
+    locationResult: locationResult,
+    resolveEarthquakeRegion: (lat, lon) async {
+      final resolver = await ref.read(jmaRegionResolverProvider.future);
+      return resolver.resolveEarthquakeRegion(lat, lon);
+    },
   );
-  changed |= await _setBool(prefs, AppGroupKeys.debugMode, value: kDebugMode);
-  changed |= await _setBool(prefs, AppGroupKeys.isPro, value: isPro);
-
-  // 任意地域は Pro 専用。非 Pro のときは設定を保持したまま Widget からは隠す。
-  final effectiveRegion = isPro ? widgetRegion : null;
-  changed |= await _writeWidgetRegion(prefs, effectiveRegion);
-
-  changed |= await _writeCurrentLocation(ref, prefs);
 
   if (changed) {
-    await reloadWidgetTimelines();
+    await WidgetTimelineReloader.reload();
   }
 }
 
-Future<bool> _writeWidgetRegion(
-  SharedPreferencesAsync prefs,
-  WidgetRegionSelection? region,
-) async {
-  if (region == null) {
-    return _removeAll(prefs, const [
-      AppGroupKeys.widgetRegionSearchType,
-      AppGroupKeys.widgetRegionCode,
-      AppGroupKeys.widgetRegionName,
-    ]);
-  }
-  var changed = await _setString(
-    prefs,
-    AppGroupKeys.widgetRegionSearchType,
-    region.searchType.name,
-  );
-  changed |= await _setString(
-    prefs,
-    AppGroupKeys.widgetRegionCode,
-    region.code,
-  );
-  changed |= await _setString(
-    prefs,
-    AppGroupKeys.widgetRegionName,
-    region.name,
-  );
-  return changed;
-}
+/// App Group UserDefaults への書き込みロジック本体。
+class AppGroupSettingsWriter {
+  const AppGroupSettingsWriter._();
 
-Future<bool> _writeCurrentLocation(
-  Ref ref,
-  SharedPreferencesAsync prefs,
-) async {
-  final result = await ref.read(widgetCurrentLocationLoaderProvider).load();
-  switch (result.state) {
-    case WidgetLocationState.permissionDenied:
-      return writeCurrentLocationRegionToAppGroup(
-        prefs,
-        regionCode: null,
-        regionName: null,
-      );
-    case WidgetLocationState.temporarilyUnavailable:
-      return false;
-    case WidgetLocationState.available:
-      if (result.position case final position?) {
-        final resolver = await ref.read(jmaRegionResolverProvider.future);
-        final resolution = resolver.resolveEarthquakeRegion(
-          position.latitude,
-          position.longitude,
-        );
-        if (resolution != null) {
-          return writeCurrentLocationRegionToAppGroup(
-            prefs,
-            regionCode: resolution.regionCode,
-            regionName: resolution.regionName,
-          );
-        }
-      }
-      return false;
-  }
-}
+  static Future<bool> write({
+    required SharedPreferencesAsync prefs,
+    required String telegramRestApiUrl,
+    required bool isPro,
+    required WidgetRegionSelection? widgetRegion,
+    required WidgetLocationLoadResult locationResult,
+    required Future<EarthquakeRegionResolution?> Function(
+      double lat,
+      double lon,
+    )
+    resolveEarthquakeRegion,
+  }) async {
+    var changed = false;
+    changed |= await _setString(
+      prefs,
+      AppGroupKeys.apiServerUrl,
+      telegramRestApiUrl,
+    );
+    changed |= await _setBool(prefs, AppGroupKeys.debugMode, value: kDebugMode);
+    changed |= await _setBool(prefs, AppGroupKeys.isPro, value: isPro);
 
-/// 現在地の一次細分化地域コード/名を App Group に書き込む。
-/// null のときはキーを削除する。位置変化に追従する
-/// `backgroundLocationService` からも呼ばれる。
-///
-/// 書き込み内容が実際に変化したかを返す。呼び出し側はこれを見て
-/// [reloadWidgetTimelines] を呼ぶかどうか判断する。
-Future<bool> writeCurrentLocationRegionToAppGroup(
-  SharedPreferencesAsync prefs, {
-  required int? regionCode,
-  required String? regionName,
-}) async {
-  if (regionCode == null || regionName == null) {
-    return _removeAll(prefs, const [
+    // 任意地域は Pro 専用。非 Pro のときは設定を保持したまま Widget からは隠す。
+    final effectiveRegion = isPro ? widgetRegion : null;
+    changed |= await _writeWidgetRegion(prefs, effectiveRegion);
+
+    changed |= await _writeCurrentLocation(
+      prefs,
+      locationResult,
+      resolveEarthquakeRegion,
+    );
+
+    return changed;
+  }
+
+  /// 現在地の一次細分化地域コード/名を App Group に書き込む。
+  /// null のときはキーを削除する。位置変化に追従する
+  /// `backgroundLocationService` からも呼ばれる。
+  ///
+  /// 書き込み内容が実際に変化したかを返す。呼び出し側はこれを見て
+  /// [WidgetTimelineReloader.reload] を呼ぶかどうか判断する。
+  static Future<bool> writeCurrentLocationRegion(
+    SharedPreferencesAsync prefs, {
+    required int? regionCode,
+    required String? regionName,
+  }) async {
+    if (regionCode == null || regionName == null) {
+      return _removeAll(prefs, const [
+        AppGroupKeys.currentLocationRegionCode,
+        AppGroupKeys.currentLocationRegionName,
+      ]);
+    }
+    final codeChanged = await _setString(
+      prefs,
       AppGroupKeys.currentLocationRegionCode,
+      regionCode.toString(),
+    );
+    final nameChanged = await _setString(
+      prefs,
       AppGroupKeys.currentLocationRegionName,
-    ]);
+      regionName,
+    );
+    return codeChanged || nameChanged;
   }
-  final codeChanged = await _setString(
-    prefs,
-    AppGroupKeys.currentLocationRegionCode,
-    regionCode.toString(),
-  );
-  final nameChanged = await _setString(
-    prefs,
-    AppGroupKeys.currentLocationRegionName,
-    regionName,
-  );
-  return codeChanged || nameChanged;
-}
 
-Future<bool> _setString(
-  SharedPreferencesAsync prefs,
-  String key,
-  String value,
-) async {
-  if (await prefs.getString(key) == value) {
-    return false;
+  static Future<bool> _writeWidgetRegion(
+    SharedPreferencesAsync prefs,
+    WidgetRegionSelection? region,
+  ) async {
+    if (region == null) {
+      return _removeAll(prefs, const [
+        AppGroupKeys.widgetRegionSearchType,
+        AppGroupKeys.widgetRegionCode,
+        AppGroupKeys.widgetRegionName,
+      ]);
+    }
+    var changed = await _setString(
+      prefs,
+      AppGroupKeys.widgetRegionSearchType,
+      region.searchType.name,
+    );
+    changed |= await _setString(
+      prefs,
+      AppGroupKeys.widgetRegionCode,
+      region.code,
+    );
+    changed |= await _setString(
+      prefs,
+      AppGroupKeys.widgetRegionName,
+      region.name,
+    );
+    return changed;
   }
-  await prefs.setString(key, value);
-  return true;
-}
 
-Future<bool> _setBool(
-  SharedPreferencesAsync prefs,
-  String key, {
-  required bool value,
-}) async {
-  if (await prefs.getBool(key) == value) {
-    return false;
-  }
-  await prefs.setBool(key, value);
-  return true;
-}
-
-Future<bool> _removeAll(SharedPreferencesAsync prefs, List<String> keys) async {
-  var changed = false;
-  for (final key in keys) {
-    if (await prefs.getString(key) != null ||
-        await prefs.getBool(key) != null) {
-      await prefs.remove(key);
-      changed = true;
+  static Future<bool> _writeCurrentLocation(
+    SharedPreferencesAsync prefs,
+    WidgetLocationLoadResult result,
+    Future<EarthquakeRegionResolution?> Function(double lat, double lon)
+    resolveEarthquakeRegion,
+  ) async {
+    switch (result.state) {
+      case WidgetLocationState.permissionDenied:
+        return writeCurrentLocationRegion(
+          prefs,
+          regionCode: null,
+          regionName: null,
+        );
+      case WidgetLocationState.temporarilyUnavailable:
+        return false;
+      case WidgetLocationState.available:
+        if (result.position case final position?) {
+          final resolution = await resolveEarthquakeRegion(
+            position.latitude,
+            position.longitude,
+          );
+          if (resolution != null) {
+            return writeCurrentLocationRegion(
+              prefs,
+              regionCode: resolution.regionCode,
+              regionName: resolution.regionName,
+            );
+          }
+        }
+        return false;
     }
   }
-  return changed;
+
+  static Future<bool> _setString(
+    SharedPreferencesAsync prefs,
+    String key,
+    String value,
+  ) async {
+    if (await prefs.getString(key) == value) {
+      return false;
+    }
+    await prefs.setString(key, value);
+    return true;
+  }
+
+  static Future<bool> _setBool(
+    SharedPreferencesAsync prefs,
+    String key, {
+    required bool value,
+  }) async {
+    if (await prefs.getBool(key) == value) {
+      return false;
+    }
+    await prefs.setBool(key, value);
+    return true;
+  }
+
+  static Future<bool> _removeAll(
+    SharedPreferencesAsync prefs,
+    List<String> keys,
+  ) async {
+    var changed = false;
+    for (final key in keys) {
+      if (await prefs.getString(key) != null ||
+          await prefs.getBool(key) != null) {
+        await prefs.remove(key);
+        changed = true;
+      }
+    }
+    return changed;
+  }
 }

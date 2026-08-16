@@ -70,7 +70,10 @@ class IntensityFillLayerBuilder {
     };
     final focusedRegionCodes = focusedPrefectureCode == null
         ? const <String>[]
-        : regionCodesOfPrefecture(focusedPrefectureCode, prefectures);
+        : RegionCodeMapping.regionCodesOfPrefecture(
+            focusedPrefectureCode,
+            prefectures,
+          );
     final hasCityFill = focusedPrefectureCode != null && cityHighest.isNotEmpty;
 
     final entries = <MapStyleLayerEntry>[];
@@ -80,7 +83,10 @@ class IntensityFillLayerBuilder {
       prefectures: prefectures,
     );
     if (regionPairs.isNotEmpty) {
-      final fillColor = buildIntensityMatchExpression(regionPairs, colorModel);
+      final fillColor = IntensityMatchExpressionBuilder.build(
+        regionPairs,
+        colorModel,
+      );
       entries.add(
         belowRegionLine(
           FillStyleLayer(
@@ -127,7 +133,7 @@ class IntensityFillLayerBuilder {
     if (hasCityFill) {
       // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
       // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
-      final fillColor = buildIntensityMatchExpression(
+      final fillColor = IntensityMatchExpressionBuilder.build(
         cityHighest
             .map((entry) => (code: entry.code, intensity: entry.intensity))
             .toList(),
@@ -207,7 +213,10 @@ class IntensityFillLayerBuilder {
     required List<EarthquakeParameterPrefectureItem> prefectures,
   }) => [
     for (final entry in prefectureHighest)
-      for (final code in regionCodesOfPrefecture(entry.code, prefectures))
+      for (final code in RegionCodeMapping.regionCodesOfPrefecture(
+        entry.code,
+        prefectures,
+      ))
         (code: code, intensity: entry.intensity),
   ];
 
@@ -219,7 +228,7 @@ class IntensityFillLayerBuilder {
 
   /// 細分区域の境界線より下に挿入する。
   ///
-  /// [replaceMapStyleLayers] は与えられた順に「同じアンカーの直下」へ挿入する
+  /// [MapStyleLayerReplacer.replace] は与えられた順に「同じアンカーの直下」へ挿入する
   /// ため、先に渡したものが下、後に渡したものが上になる。
   MapStyleLayerEntry belowRegionLine(StyleLayer layer) => (
     layer: layer,

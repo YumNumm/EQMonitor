@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -16,22 +16,30 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eewSettings = ref.watch(eewGlobalSettingsProvider).value;
-    final earthquakeSettings =
-        ref.watch(earthquakeGlobalSettingsProvider).value;
+    final earthquakeSettings = ref
+        .watch(earthquakeGlobalSettingsProvider)
+        .value;
 
-    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
-    ref.listen(
-      EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
-      (_, next) async {
-        if (next is MutationError && context.mounted) {
-          await showErrorDialog(context, error: next.error);
-        }
-      },
-    );
+    ref.listen(EarthquakeGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
+      if (next is MutationError && context.mounted) {
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
+      }
+    });
 
     final eewSound = NotificationSound.fromApiValue(
       eewSettings?.defaultSound ?? NotificationSound.defaultSound.apiValue,
@@ -45,8 +53,10 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
           NotificationSound.defaultSound.apiValue,
     );
     final earthquakeLevel =
-        earthquakeSettings?.defaultInterruptionLevel ?? InterruptionLevel.active;
-    final earthquakeCollapse = earthquakeSettings?.collapseNotification ?? false;
+        earthquakeSettings?.defaultInterruptionLevel ??
+        InterruptionLevel.active;
+    final earthquakeCollapse =
+        earthquakeSettings?.collapseNotification ?? false;
 
     return Scaffold(
       appBar: AppBar(title: const Text('通知音・割り込みレベル')),
@@ -59,34 +69,31 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
             interruptionLevel: eewLevel,
             collapseNotification: eewCollapse,
             onSoundChanged: (sound) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(defaultSound: sound.apiValue);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(defaultSound: sound.apiValue);
+              });
             },
             onInterruptionLevelChanged: (level) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(defaultInterruptionLevel: level);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(defaultInterruptionLevel: level);
+              });
             },
             onCollapseChanged: ({required value}) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(collapseNotification: value);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(collapseNotification: value);
+              });
             },
           ),
           const SettingsSectionHeader(text: '地震情報'),

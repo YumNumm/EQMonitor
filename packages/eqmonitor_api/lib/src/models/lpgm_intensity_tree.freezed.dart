@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'lpgm_intensity_tree.dart';
@@ -9,6 +9,7 @@ part of 'lpgm_intensity_tree.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$LpgmIntensityTreeCopyWithImpl<$Res>
 /// Create a copy of LpgmIntensityTree
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? lpgmIntensity = null,Object? regions = null,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(LpgmIntensityTree(
 lpgmIntensity: null == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<LpgmIntensityTreeRegionId>,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
@@ -211,7 +212,7 @@ return $default(_that.lpgmIntensity,_that.regions,_that.stations);case _:
 @JsonSerializable()
 
 class _LpgmIntensityTree implements LpgmIntensityTree {
-  const _LpgmIntensityTree({@JsonKey(name: 'lpgm_intensity') required this.lpgmIntensity, required final  List<LpgmIntensityTreeRegionId> regions, required final  List<IntensityStationItem> stations}): _regions = regions,_stations = stations;
+  const _LpgmIntensityTree({@JsonKey(name: 'lpgm_intensity') required this.lpgmIntensity, required  List<LpgmIntensityTreeRegionId> regions, required  List<IntensityStationItem> stations}): _regions = regions,_stations = stations;
   factory _LpgmIntensityTree.fromJson(Map<String, dynamic> json) => _$LpgmIntensityTreeFromJson(json);
 
 @override@JsonKey(name: 'lpgm_intensity') final  JmaLpgmIntensity lpgmIntensity;

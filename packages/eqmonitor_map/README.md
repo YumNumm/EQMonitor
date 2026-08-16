@@ -4,18 +4,13 @@ EQMonitor専用のFlutter地図レンダラーです。
 
 Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラベルはasset内の1つの地理anchorから、実測文字サイズとDPRに応じたscreen placement候補を生成してFlutterの`TextPainter`で描画します。MapLibre Style JSON互換ではなく、型付きの宣言的`MapNode`ツリーを利用します。
 
-> [!WARNING]
-> `BaseMapView`でベースレイヤー(Fill/Line)のpan/pinch zoom付き描画を実装し、
-> iOS simulatorで実際に描画されることとpanでtileが差し替わることを確認済みです
-> (下記「実機/simulatorでの確認結果」参照)。ただし、海(land以外)の広い範囲が
-> `areaForecastLocalEwLine`(名目色オレンジ`0xFFFF7043`)の色で塗られたように
-> 見える既知の不具合があります(発生元layerを特定済み・原因/修正は未着手、
-> `docs/todo/800_eqmonitor_map_deferred_verification.md`参照)。当初の
-> `countriesLine`のLine meshに縮退三角形が混入しているという仮説は別agentの
-> 検証により反証されており、mesh生成コード自体は正常と確認されています。
-> pinch-zoomの実機/simulator確認、線幅・tile境界の目視確認、background色が
-> 実際に画面へ出ることの確認はできていません。iOS/Android実機(simulatorでは
-> ない物理端末)のprofile/release確認は実施していません。
+> [!IMPORTANT]
+> #1589では、`BaseMapView`の恒等Scene cameraとtile/layer nodeの
+> `localTransform`を正式なcamera経路とする。Line floodはcustom attributeの
+> slot/stride不整合が原因であり、`texCoords`とviewport由来のNDC半線幅へ移行済み。
+> ただし今回device/simulator/E2Eは実施していない。下記のiOS simulator観測は
+> Task 10当時のBaseMap Fill/panの履歴であり、今回のextent、fallback、camera境界を
+> 検証するものではない。
 
 ## appからの利用
 
@@ -46,9 +41,58 @@ Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラ�
 - camera controller、fitBounds、座標変換、hit test
 - 性能イベントとsnapshot
 
-remote PMTilesのidentity encoding/strong validator付きrange合成、appがsigned sidecarまで検証したAsset Pack descriptor、producerのglobal semantic検証とruntimeのbounded per-tile検証は、実装stackで追加する計画です。現行manifestがsemantic validationを提供済みという意味ではありません。source revisionを跨いだtile fallbackは行いません。
+remote PMTilesのidentity encoding/strong validator付きrange合成は#1591で実装済みです（下記「Tile pipeline contract」）。appがsigned sidecarまで検証したAsset Pack descriptor、producerのglobal semantic検証とruntimeのbounded per-tile検証は、実装stackで追加する計画です。現行manifestがsemantic validationを提供済みという意味ではありません。source revisionを跨いだtile fallbackは行いません。
 
 設計の正本は[`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../../docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md)です。
+
+## Foundation contract
+
+#1590のfoundationは、宣言scene、frame snapshot、source付きatomic revision、
+version付きpacked render batch、bounded performance観測だけを所有します。
+描画phaseはcallerが明示し、Flutter Scene/GPU、PMTiles I/O、地震payload、app統合は
+後続issueの境界に残します。contract、参照実装の採否、検証command、未実施の
+platform確認は
+[`docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`](../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md)
+を参照してください。
+
+## Tile pipeline contract
+
+#1591のtile pipelineは`VerifiedTileSource → BaseMapTileRepository →
+BaseMapTileDecoder → BaseMapTileCache`の経路を持ちます。callerが守る契約は次の
+とおりです。
+
+- sourceはappが検証済みの`VerifiedPmTilesSource`（local file）または
+  `VerifiedRemotePmTilesSource`（https URL、loopbackのみhttp可）だけを渡します。
+  packageはpath/URL/size/digestを再検証しません。
+- 欠損tileは`null`です。破損・上限超過・schema不整合は`PmTilesV3Exception` /
+  `MvtDecodeException` / `MapRemoteTileException`として送出し、空tileへ丸めません。
+- remoteは`Accept-Encoding: identity`・206・strong ETag・厳密な`Content-Range`を
+  必須にし、初回応答のETagを固定して以後`If-Match`を付けます。3xxはfail closedです。
+- MVT decodeとmesh構築は`BaseMapTileDecoder.decode`（`Isolate.run`）でUI isolateの
+  外へ出します。cancelは`BaseMapTileCache.cancelInFlight`で表現し、例外にはしません。
+  cancel後のtokenでの`put`は無視されます。
+- `MapTileFallbackPolicy.basemap`は同一cache identity内の親/子fallbackを許し、
+  `MapTileFallbackPolicy.hazard`はexact hit以外をmissにします。cache keyは
+  `VerifiedTileSourceCacheIdentity.cacheIdentity`（`sourceInstanceId` + 内容digest）
+  を含むため、revision跨ぎのlast-goodはどちらのpolicyでも起きません。
+- 上限は`MapTilePipelineBudget`と各`*Limits`でcallerが明示します。decoder/cache側に
+  隠れた既定値はありません。
+
+契約の実行可能な正本は
+[`test/tile/tile_pipeline_contract_test.dart`](test/tile/tile_pipeline_contract_test.dart)
+です。検証は**このpackageディレクトリから**実行します（repository rootから呼ぶと
+fixtureの解決rootがずれます）。
+
+```bash
+cd packages/eqmonitor_map
+mise exec -- flutter test test/tile
+mise exec -- dart analyze . --fatal-infos
+```
+
+未対応の残課題は`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md`（保持
+byteの集計上限）、`docs/todo/815_eqmonitor_map_remote_digest_binding.md`（remote応答
+の`sha256`束縛）、`docs/todo/830_eqmonitor_map_scheduler_wiring.md`（cover変更時の
+in-flight cancel）です。
 
 ## 設計原則
 
@@ -122,9 +166,28 @@ pass/fail artifactは生成しません。
 - `Dispose and remount`後にremount counterが増え、各counterを維持したまま操作を続行できる。
 - 各操作の前後でexception counterが増えず、端末logにFlutter/Scene例外や連続エラーがない。
 
-## `BaseMapView`の実機/simulatorでの確認結果
+## #1589の自動受け入れ結果とcamera境界
 
-Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグページ
+- source layerごとのMVT extentはdecodeから`BaseMapTileLayerGeometry.extent`、
+  Scene非依存のrender planを経てlayer nodeの行列まで伝播する。2048/8192 fixture、
+  祖先fallback後のtransform入力、行列testで確認している。
+- fallbackは要求cover/decodeを保ったまま`UnwrappedTileId`で重複排除する。同一の
+  祖先を重ねないことはunit testで確認している。
+- #1589の正式なcameraは、`BaseMapView`の恒等`scene.NodeCamera`と
+  `baseMapTileViewProjectionMatrixFor(...)`をnodeの`localTransform`へ一度だけ
+  設定する経路だけである。
+- `createSceneSpikeCameraSetup()`が返す`NodeCamera` +
+  `FlutterSceneOrthographicProjection`、`FlutterSceneSpikeView`、
+  `BaseMapMaterialPreflightView`は可視出力未確認のdiagnostic pathであり、#1589の
+  supported routeではない。削除・再配線・resize/lifecycle検証は#1593で扱う。
+
+Android/iOS GPU、実際のpinch、祖先fallbackの画面差し替え、非4096 archiveのGPU表示は
+残余platform riskである。device/simulator、golden、E2Eは今回実施していない。
+
+## Task 10当時の`BaseMapView` simulator観測
+
+これはTask 10での観測履歴であり、現在の#1589変更の受け入れ結果ではない。iPhone 17 Pro
+simulator (iOS 27.0)を使い、appのデバッグページ
 「EQMonitor Map (Flutter Scene)」から`BaseMapView`を実際に開いて確認しました。
 使ったPMTilesはAsset Pack未準備時のデバッグ専用override経路
 (`eqmonitor_map_debug_source_provider.dart`)で読み込んだ、本番相当の
@@ -139,15 +202,12 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
   HUDの`visibleTiles`/`decoding`もtile読み込みに応じて変化し、0へ収束する。
 - zoomはarchiveのheaderから実測した範囲(このarchiveでは`[0, 8]`)でclampされる。
 
-### 確認できなかったこと
+### この観測で確認できなかったこと
 
 - pinch-zoom(2本指)の実機/simulator確認。simulator操作に使ったmouseベースの
   自動操作は単一pointerしか扱えず、2本指のscale gestureを合成できませんでした。
-- `ColoredBox`のbackground色(layer仕様の`background`行の色)が実際に画面へ出る
-  ことの視覚的確認。下記の既知の不具合が画面のほぼ全域を覆ってしまうため、真の
-  背景色が出る場所をscreenshot上で見つけられませんでした。
-- 線幅(`half_width_world`)や色の見た目の確認、tile境界の隙間・重複の確認。
-  上記不具合の影響で判別できませんでした。
+- `ColoredBox`のbackground色(layer仕様の`background`行の色)、線幅や色の見た目、
+  tile境界の隙間・重複の視覚的確認。当時のLine floodの影響で判別できませんでした。
 - iOS/Android物理端末での確認(simulatorのみ実施)。
 - `BaseMapTileCache.lookupWithFallback`の祖先fallback(overscale)が実際に
   画面上で発動する様子。z4のtileには`countriesFill`/`countriesLine`が空の
@@ -158,11 +218,10 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
   確認してはいません(以前の版のこのREADMEには、これをoverscale確認済みと
   誤って記載していました。team-leadの指摘により訂正しています)。
 
-### 既知の不具合(flood発生元のlayerを特定・未修正)
+### 修正済み: Line floodの原因
 
-海(land以外の領域)が`areaForecastLocalEwLine`(source layer:
-`areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように
-見える不具合があります。
+海(land以外の領域)が`areaForecastLocalEewLine`(source layer:
+`areaForecastLocalEew`, 名目色`0xFFFF7043`のオレンジ)の色で塗られたように見えた。
 
 当初「`countriesLine`のLine meshに縮退した巨大三角形が2枚混入している」と
 報告しましたが、**この仮説は別agentの検証により反証されました。** 問題の
@@ -171,28 +230,19 @@ Task 10で、iPhone 17 Pro simulator (iOS 27.0)を使い、appのデバッグペ
 ring分離の再検証でも`crossRingViolations=0`・`bigTriCount=0`が確認されており、
 **`LineMeshBuilder`と`_polygonFeatureAsClosedLines`は正常と確定しています。**
 
-`BaseMapMaterialLibrary`をlayerごとに独立したmaterial instanceを持つ設計へ
-変更し(`spec.color`を実際に反映させ)、zoom=4のデバッグページをscreenshot
-確認したところ、画面の海に見える領域全体が`areaForecastLocalEwLine`の名目色
-そのもので塗りつぶされていました。原因(ring境界か、座標スケールか、tile
-座標の解釈かなど)は未特定で、これ以上の追跡は行っていません。詳細と最新
-状況は
-[`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md)
-を参照してください。
+真因はcustom attributeのslot/stride不整合で、shaderが意図したattributeではなく
+positionを読んでいたことだった。Lineは`texCoords`とviewport由来のNDC半線幅へ移行済みで
+ある。これは自動テストの受け入れ範囲だが、修正後のGPU可視出力は今回確認していない。
 
-### 未解決の疑問点: `countriesLine`以外のLine layerが画面上で見えない
+### Task 10で確認できなかったLine layer
 
 `areaForecastLocalELine`/`areaForecastLocalEewLine`/`areaInformationCityQuakeLine`
-が、screenshot上のどの位置でも視覚的に確認できませんでした。実際に画面へ
+が、Task 10のscreenshot上のどの位置でも視覚的に確認できませんでした。実際に画面へ
 表示されていたはずのtileを座標から逆算して直接decodeしたところ、これらの
 layerには非空・十分な量の頂点データが実在していました(例:
-`areaInformationCityQuakeLine`が1 tileあたり84780頂点)。データの欠如では
-なく、`countriesLine`は(bugはあるが)実際に画面へ出ている以上Line用
-material/shader自体は機能しているにもかかわらず、他のLine specだけが
-不可視という状態の原因は特定できていません。`lib/src/tile/base_map_tile_decoder.dart`・
-`lib/src/mesh/line_mesh_builder.dart`は別agentが並行して書き換え中のため、
-自分のcode(`base_map_view.dart`)由来か並行作業中の一時的な状態由来かを
-切り分けられていません。
+`areaInformationCityQuakeLine`が1 tileあたり84780頂点)。これは当時の可視出力の
+観測であり、現在のLine実装のGPU可視性を検証するものではない。今回の自動確認だけでは
+Line layerごとの見た目を結論づけず、GPU可視性は残余platform riskとして扱う。
 
 ### 修正済み: decode中は上位zoomのtileを表示し続ける(zoom窓の非対称化)
 

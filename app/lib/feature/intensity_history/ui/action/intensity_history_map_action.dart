@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:maplibre/maplibre.dart';
@@ -123,7 +123,10 @@ class IntensityHistoryMapAction {
     required String cityCode,
     required List<EarthquakeParameterPrefectureItem> prefectures,
   }) {
-    final prefectureCode = prefectureCodeOfCity(cityCode, prefectures);
+    final prefectureCode = RegionCodeMapping.prefectureCodeOfCity(
+      cityCode,
+      prefectures,
+    );
     if (prefectureCode == null) {
       return null;
     }
@@ -162,7 +165,7 @@ class IntensityHistoryMapAction {
     if (!context.mounted) {
       return;
     }
-    await showCityDetailModal(
+    await AreaDetailModalAction().showCity(
       context,
       cityCode: cityCode,
       cityName: cityName,
@@ -182,7 +185,10 @@ class IntensityHistoryMapAction {
     required List<EarthquakeParameterPrefectureItem> prefectures,
     required String regionCode,
   }) async {
-    final prefecture = prefectureOfRegionCode(regionCode, prefectures);
+    final prefecture = RegionCodeMapping.prefectureOfRegionCode(
+      regionCode,
+      prefectures,
+    );
     if (prefecture == null) {
       return;
     }
@@ -249,7 +255,7 @@ class IntensityHistoryMapAction {
     if (city == null || !context.mounted) {
       return;
     }
-    await showCityDetailModal(
+    await AreaDetailModalAction().showCity(
       context,
       cityCode: city.code,
       cityName: city.name.ja,

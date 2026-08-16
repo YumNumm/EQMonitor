@@ -29,7 +29,7 @@ part 'earthquake_api_client.g.dart';
 abstract class EarthquakeApiClient {
   factory EarthquakeApiClient(Dio dio, {String? baseUrl}) = _EarthquakeApiClient;
 
-  /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、NULL値の並び順はPostgreSQLの既定に従います（ASC: 末尾、DESC: 先頭）。カーソルベースのページネーション(cursor)はevent_idに基づくため、sortByがevent_id以外の場合はcursorと併用できません（1ページ目の取得のみ対応）。.
+  /// 地震情報一覧。sortByでmagnitude/max_intensity/max_lpgm_intensity/depth/origin_timeを指定した場合、値を持たない地震は昇順・降順いずれでも末尾に配置されます。cursorはソート条件を含むため、cursorを渡すときはsortBy/sortOrderを1ページ目と同じ値にしてください（異なる場合は400）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///

@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _OnboardingBottomBar extends StatelessWidget {
-  const _OnboardingBottomBar({
+  const new({
     required this.currentPage,
     required this.totalPages,
     required this.buttonLabel,
@@ -37,7 +37,7 @@ class _OnboardingBottomBar extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: .center,
             children: List.generate(
               totalPages,
               (index) => _PageDot(
@@ -49,7 +49,7 @@ class _OnboardingBottomBar extends StatelessWidget {
           ),
           SizedBox(height: designSystem.spacing.xl),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             spacing: designSystem.spacing.sm,
             children: [
               AnimatedSize(
@@ -81,10 +81,14 @@ class _OnboardingBottomBar extends StatelessWidget {
               ),
               Expanded(
                 child: FilledButton(
-                  onPressed: isNextEnabled ? onNext : null,
+                  onPressed: isNextEnabled || !isProcessing ? onNext : null,
                   style: FilledButton.styleFrom(
-                    backgroundColor: designSystem.colorTheme.primary,
-                    foregroundColor: designSystem.colorTheme.onInverseSurface,
+                    backgroundColor: isProcessing
+                        ? designSystem.colorTheme.surfaceContainer
+                        : designSystem.colorTheme.primary,
+                    foregroundColor: isProcessing
+                        ? designSystem.colorTheme.onSurface
+                        : designSystem.colorTheme.onInverseSurface,
                     shape: RoundedSuperellipseBorder(
                       borderRadius: BorderRadius.circular(
                         designSystem.shape.button,
@@ -96,7 +100,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                   ),
                   child: isProcessing
                       ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: .center,
                           spacing: designSystem.spacing.sm,
                           children: [
                             SizedBox.square(
@@ -185,7 +189,7 @@ class _OnboardingBottomBar extends StatelessWidget {
 }
 
 class _OnboardingBottomBarInlineLink extends StatelessWidget {
-  const _OnboardingBottomBarInlineLink({
+  const new({
     required this.label,
     required this.onTap,
   });
@@ -211,7 +215,7 @@ class _OnboardingBottomBarInlineLink extends StatelessWidget {
 }
 
 class _PageDot extends StatelessWidget {
-  const _PageDot({
+  const new({
     required this.isActive,
     required this.color,
     required this.inactiveColor,

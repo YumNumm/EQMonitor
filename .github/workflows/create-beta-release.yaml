@@ -51,16 +51,10 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "python"
-
-      - name: Configure git for tagging
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
 
       - name: Determine next beta version
         id: version
@@ -98,20 +92,16 @@ jobs:
 
           echo "version=v${BASE_VERSION}-beta.${NEXT}" >> "$GITHUB_OUTPUT"
 
-      - name: Create beta tag
-        if: ${{ !inputs.repair_existing_release }}
-        env:
-          BETA_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          git tag "$BETA_VERSION"
-          git push origin "$BETA_VERSION"
-
+      # タグは gh release create に作らせる。事前に push すると、後続が失敗したとき
+      # release の無いタグだけが残り、次回のベータ番号が無駄に進んでしまう。
       - name: Create GitHub pre-release
         if: ${{ !inputs.repair_existing_release }}
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           BETA_VERSION: ${{ steps.version.outputs.version }}
         run: |
+          set -euo pipefail
+
           gh api \
             --method POST \
             "repos/${{ github.repository }}/releases/generate-notes" \
@@ -119,7 +109,7 @@ jobs:
             -f target_commitish=develop \
             --jq .body \
             > release-notes.raw.md
-          mise exec -- python3 scripts/release/sanitize_release_notes.py \
+          mise exec python -- python3 scripts/release/sanitize_release_notes.py \
             < release-notes.raw.md \
             > release-notes.md
           gh release create "$BETA_VERSION" \
@@ -137,7 +127,7 @@ jobs:
             --json body \
             --jq .body \
             > release-notes.raw.md
-          mise exec -- python3 scripts/release/sanitize_release_notes.py \
+          mise exec python -- python3 scripts/release/sanitize_release_notes.py \
             < release-notes.raw.md \
             > release-notes.md
           gh release edit "$BETA_VERSION" --notes-file release-notes.md

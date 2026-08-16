@@ -7,12 +7,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EarthquakeHistoryPagingList extends StatelessWidget {
-  const EarthquakeHistoryPagingList({
+  const new({
     required this.dataSource,
     required this.parameter,
     required this.config,
@@ -72,7 +72,7 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
 }
 
 class _EarthquakeHistoryPagingItem extends StatelessWidget {
-  const _EarthquakeHistoryPagingItem({
+  const new({
     required this.item,
     required this.parameter,
     required this.showBackgroundColor,
@@ -107,7 +107,7 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
 }
 
 class EarthquakeHistorySkeleton extends StatelessWidget {
-  const EarthquakeHistorySkeleton({
+  const new({
     this.itemCount = 5,
     this.scrollable = true,
     super.key,
@@ -137,7 +137,7 @@ class EarthquakeHistorySkeleton extends StatelessWidget {
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
+  const new({required this.date});
 
   final String date;
 

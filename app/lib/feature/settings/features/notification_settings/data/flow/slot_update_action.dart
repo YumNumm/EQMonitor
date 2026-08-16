@@ -34,10 +34,8 @@ class SlotUpdateAction {
                 .get(notificationSlotsProvider.notifier)
                 .putCurrentLocation(
                   eewEnabled: resolvedEewEnabled,
-                  eewMinIntensity: resolvedEewMinIntensity,
                   eewOverrides: slot.eewOverrides,
                   earthquakeEnabled: resolvedEarthquakeEnabled,
-                  earthquakeMinIntensity: resolvedEarthquakeMinIntensity,
                   earthquakeOverrides: slot.earthquakeOverrides,
                 );
           },

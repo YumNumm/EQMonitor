@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_telegram_body_quake.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_telegram_body_quake.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$EarthquakeTelegramBodyQuakeCopyWithImpl<$Res>
 /// Create a copy of EarthquakeTelegramBodyQuake
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = freezed,Object? status = freezed,Object? magnitude = freezed,Object? magnitudeCondition = freezed,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,Object? depth = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? epicenterCode = freezed,Object? epicenterName = freezed,Object? epicenterDetailCode = freezed,Object? epicenterDetailName = freezed,Object? arrivalTime = freezed,Object? originTime = freezed,Object? originTimePrecision = freezed,Object? estimatedIntensityKey = freezed,Object? datasource = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeTelegramBodyQuake(
 eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus?,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable

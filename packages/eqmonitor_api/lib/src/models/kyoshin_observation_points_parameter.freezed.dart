@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'kyoshin_observation_points_parameter.dart';
@@ -9,6 +9,7 @@ part of 'kyoshin_observation_points_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$KyoshinObservationPointsParameterCopyWithImpl<$Res>
 /// Create a copy of KyoshinObservationPointsParameter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? metadata = null,Object? points = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinObservationPointsParameter(
 metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as KyoshinObservationPointsParameterMetadata,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
 as List<KyoshinObservationPoint>,
@@ -219,7 +220,7 @@ return $default(_that.metadata,_that.points);case _:
 @JsonSerializable()
 
 class _KyoshinObservationPointsParameter implements KyoshinObservationPointsParameter {
-  const _KyoshinObservationPointsParameter({required this.metadata, required final  List<KyoshinObservationPoint> points}): _points = points;
+  const _KyoshinObservationPointsParameter({required this.metadata, required  List<KyoshinObservationPoint> points}): _points = points;
   factory _KyoshinObservationPointsParameter.fromJson(Map<String, dynamic> json) => _$KyoshinObservationPointsParameterFromJson(json);
 
 @override final  KyoshinObservationPointsParameterMetadata metadata;

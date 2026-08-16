@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_depth.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_depth.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 EarthquakeDepth _$EarthquakeDepthFromJson(
@@ -221,7 +222,7 @@ return unknown();case _:
 @JsonSerializable()
 
 class EarthquakeDepthShallow implements EarthquakeDepth {
-  const EarthquakeDepthShallow({final  String? $type}): $type = $type ?? 'shallow';
+  const EarthquakeDepthShallow({ String? $type}): $type = $type ?? 'shallow';
   factory EarthquakeDepthShallow.fromJson(Map<String, dynamic> json) => _$EarthquakeDepthShallowFromJson(json);
 
 
@@ -260,7 +261,7 @@ String toString() {
 @JsonSerializable()
 
 class EarthquakeDepthValue implements EarthquakeDepth {
-  const EarthquakeDepthValue({required this.value, final  String? $type}): $type = $type ?? 'value';
+  const EarthquakeDepthValue({required this.value,  String? $type}): $type = $type ?? 'value';
   factory EarthquakeDepthValue.fromJson(Map<String, dynamic> json) => _$EarthquakeDepthValueFromJson(json);
 
  final  int value;
@@ -333,7 +334,7 @@ as int,
 @JsonSerializable()
 
 class EarthquakeDepthOver700km implements EarthquakeDepth {
-  const EarthquakeDepthOver700km({final  String? $type}): $type = $type ?? 'over700km';
+  const EarthquakeDepthOver700km({ String? $type}): $type = $type ?? 'over700km';
   factory EarthquakeDepthOver700km.fromJson(Map<String, dynamic> json) => _$EarthquakeDepthOver700kmFromJson(json);
 
 
@@ -372,7 +373,7 @@ String toString() {
 @JsonSerializable()
 
 class EarthquakeDepthUnknown implements EarthquakeDepth {
-  const EarthquakeDepthUnknown({final  String? $type}): $type = $type ?? 'unknown';
+  const EarthquakeDepthUnknown({ String? $type}): $type = $type ?? 'unknown';
   factory EarthquakeDepthUnknown.fromJson(Map<String, dynamic> json) => _$EarthquakeDepthUnknownFromJson(json);
 
 

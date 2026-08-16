@@ -30,19 +30,30 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     );
   }
 
-  FlutterSceneSpikeController.withDependencies({
+  factory FlutterSceneSpikeController.withDependencies({
     required SceneSpikeControllerAdapter adapter,
     required SceneSpikeMetrics metrics,
     required EqmonitorOrthographicProjection projection,
     required SpikeMeshFrame initialFrame,
     required Future<void> Function() initializeSceneStaticResources,
     scene.NodeCamera? camera,
-  }) : _adapter = adapter,
-       _metrics = metrics,
-       _projection = projection,
-       _camera = camera,
-       _frame = initialFrame,
-       _initializeSceneStaticResources = initializeSceneStaticResources;
+  }) => FlutterSceneSpikeController._(
+    adapter: adapter,
+    metrics: metrics,
+    projection: projection,
+    initialFrame: initialFrame,
+    initializeSceneStaticResources: initializeSceneStaticResources,
+    camera: camera,
+  );
+
+  FlutterSceneSpikeController._({
+    required this._adapter,
+    required this._metrics,
+    required this._projection,
+    required SpikeMeshFrame initialFrame,
+    required this._initializeSceneStaticResources,
+    this._camera,
+  }) : _frame = initialFrame;
 
   final SceneSpikeControllerAdapter _adapter;
   final SceneSpikeMetrics _metrics;

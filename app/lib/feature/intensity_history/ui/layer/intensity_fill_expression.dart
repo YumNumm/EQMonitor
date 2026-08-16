@@ -19,33 +19,37 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 ///
 /// `earthquake_history_region_intensity_layer.dart` の `_buildFillColorExpression`
 /// を純粋関数として切り出したもの。
-List<Object> buildIntensityMatchExpression(
-  List<({String code, JmaIntensity intensity})> pairs,
-  IntensityColors colorModel, {
-  String propertyKey = 'code',
-}) {
-  final intensityByCode = <String, JmaIntensity>{};
-  for (final pair in pairs) {
-    final current = intensityByCode[pair.code];
-    if (current == null || pair.intensity.orderIndex > current.orderIndex) {
-      intensityByCode[pair.code] = pair.intensity;
+class IntensityMatchExpressionBuilder {
+  const IntensityMatchExpressionBuilder._();
+
+  static List<Object> build(
+    List<({String code, JmaIntensity intensity})> pairs,
+    IntensityColors colorModel, {
+    String propertyKey = 'code',
+  }) {
+    final intensityByCode = <String, JmaIntensity>{};
+    for (final pair in pairs) {
+      final current = intensityByCode[pair.code];
+      if (current == null || pair.intensity.orderIndex > current.orderIndex) {
+        intensityByCode[pair.code] = pair.intensity;
+      }
     }
+
+    final args = <Object>[
+      'match',
+      <Object>['get', propertyKey],
+    ];
+
+    for (final entry in intensityByCode.entries) {
+      args
+        ..add(entry.key)
+        ..add(
+          colorModel.fromJmaIntensity(entry.value).background.toHexStringRGB(),
+        );
+    }
+
+    // 該当なし区域は透明
+    args.add('rgba(0,0,0,0)');
+    return args;
   }
-
-  final args = <Object>[
-    'match',
-    <Object>['get', propertyKey],
-  ];
-
-  for (final entry in intensityByCode.entries) {
-    args
-      ..add(entry.key)
-      ..add(
-        colorModel.fromJmaIntensity(entry.value).background.toHexStringRGB(),
-      );
-  }
-
-  // 該当なし区域は透明
-  args.add('rgba(0,0,0,0)');
-  return args;
 }

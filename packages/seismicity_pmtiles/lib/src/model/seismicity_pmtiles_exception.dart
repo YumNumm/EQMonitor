@@ -35,6 +35,62 @@ sealed class SeismicityPmTilesException
     required String reason,
   }) = SeismicityPmTilesSourceReadFailedException;
 
+  const factory SeismicityPmTilesException.networkRequestFailed({
+    required SeismicityPmTilesSource source,
+    required int? statusCode,
+  }) = SeismicityPmTilesNetworkRequestFailedException;
+
+  const factory SeismicityPmTilesException.invalidNetworkResponse({
+    required SeismicityPmTilesSource source,
+    required int statusCode,
+    required String reason,
+  }) = SeismicityPmTilesInvalidNetworkResponseException;
+
+  const factory SeismicityPmTilesException.archiveChanged({
+    required SeismicityPmTilesSource source,
+    required String? expectedEtag,
+    required String? receivedEtag,
+    required int statusCode,
+  }) = SeismicityPmTilesArchiveChangedException;
+
+  const factory SeismicityPmTilesException.cancelled({
+    required SeismicityPmTilesSource source,
+  }) = SeismicityPmTilesCancelledException;
+
+  const factory SeismicityPmTilesException.closed({
+    required SeismicityPmTilesSource source,
+  }) = SeismicityPmTilesClosedException;
+
+  const factory SeismicityPmTilesException.unsupportedSchema({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesUnsupportedSchemaException;
+
+  const factory SeismicityPmTilesException.invalidVectorTile({
+    required int tileId,
+    required String reason,
+  }) = SeismicityPmTilesInvalidVectorTileException;
+
+  const factory SeismicityPmTilesException.invalidHypocenterFeature({
+    required int tileId,
+    required int featureIndex,
+    required String field,
+    required String reason,
+  }) = SeismicityPmTilesInvalidHypocenterFeatureException;
+
+  const factory SeismicityPmTilesException.duplicateConflict({
+    required String hypocenterId,
+  }) = SeismicityPmTilesDuplicateConflictException;
+
+  const factory SeismicityPmTilesException.featureCountMismatch({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesFeatureCountMismatchException;
+
+  const factory SeismicityPmTilesException.decoderWorkerFailed({
+    required String reason,
+  }) = SeismicityPmTilesDecoderWorkerFailedException;
+
   const factory SeismicityPmTilesException.tileNotFound({
     required int tileId,
   }) = SeismicityPmTilesTileNotFoundException;

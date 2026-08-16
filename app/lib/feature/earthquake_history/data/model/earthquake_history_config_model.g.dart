@@ -101,22 +101,17 @@ const _$RegionSearchTypeEnumMap = {
 
 _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_EarthquakeHistoryDetailsConfig',
-  json,
-  ($checkedConvert) {
-    final val = _EarthquakeHistoryDetailsConfig(
-      stationDisplayMode: $checkedConvert(
-        'station_display_mode',
-        (v) =>
-            $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
-            StationDisplayMode.auto,
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'},
-);
+) => $checkedCreate('_EarthquakeHistoryDetailsConfig', json, ($checkedConvert) {
+  final val = _EarthquakeHistoryDetailsConfig(
+    stationDisplayMode: $checkedConvert(
+      'station_display_mode',
+      (v) =>
+          $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
+          StationDisplayMode.auto,
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'});
 
 Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   _EarthquakeHistoryDetailsConfig instance,

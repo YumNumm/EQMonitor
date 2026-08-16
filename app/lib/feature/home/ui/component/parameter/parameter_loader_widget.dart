@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ParameterLoaderWidget extends HookConsumerWidget {

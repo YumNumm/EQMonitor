@@ -4,13 +4,16 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -23,6 +26,8 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/r
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/custom_preset_reset_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -30,7 +35,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -61,8 +66,11 @@ class _Body extends HookConsumerWidget {
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
 
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
     final constraints = ref.watch(startProvider).value?.planConstraints.free;
-    final isPro = constraints?.isPro ?? false;
+    final isPro = isProFeaturesEnabled && (constraints?.isPro ?? false);
     final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
@@ -70,7 +78,9 @@ class _Body extends HookConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -79,7 +89,9 @@ class _Body extends HookConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -102,11 +114,24 @@ class _Body extends HookConsumerWidget {
           NotificationPresetSelector(
             selectedPreset: selectedPreset,
             onChanged: (preset) async {
-              await ref.read(notificationPresetApplierProvider).apply(preset);
-              if (preset == NotificationPreset.custom) {
-                await ref
-                    .read(notificationPresetProvider.notifier)
-                    .select(NotificationPreset.custom);
+              if (selectedPreset == NotificationPreset.custom &&
+                  preset != NotificationPreset.custom) {
+                final confirmed =
+                    await const CustomPresetResetConfirmDialogAction().show(
+                      context,
+                    );
+                if (!confirmed) {
+                  return;
+                }
+              }
+              try {
+                await ref.read(notificationPresetApplierProvider).apply(preset);
+              } on Object catch (error) {
+                if (context.mounted) {
+                  await ref
+                      .read(errorDialogActionProvider)
+                      .show(context, error: error);
+                }
               }
             },
             style: NotificationPresetSelectorStyle.settings,
@@ -238,7 +263,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
     ref.listen(EarthquakeGlobalSettingsNotifier.updateSettingsMutation, (
@@ -246,7 +273,9 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -397,7 +426,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const SoundInterruptionSettingsPage(),
                     ),
                   )
-                : () => const PaywallRoute().push<void>(context),
+                : () async => const ProUpgradeDialogAction().show(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(
@@ -410,7 +439,7 @@ class _CustomSettingsSection extends StatelessWidget {
                       builder: (_) => const PerIntensitySoundSettingsPage(),
                     ),
                   )
-                : () => const PaywallRoute().push<void>(context),
+                : () async => const ProUpgradeDialogAction().show(context),
           ),
           const Divider(height: 1),
           LockedSettingTile(
@@ -418,9 +447,8 @@ class _CustomSettingsSection extends StatelessWidget {
             subtitle: '100gal超えのレベル法, 1点検知の低精度の緊急地震速報(予報)',
             locked: !isPro,
             onTap: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('この機能は現在準備中です')));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('この機能は現在準備中です')));
             },
           ),
         ],
@@ -523,7 +551,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
     ref.listen(EewWarningConfigNotifier.updateConfigMutation, (_, next) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -532,7 +562,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -706,7 +738,9 @@ class _SlotListSection extends ConsumerWidget {
       next,
     ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
 
@@ -849,10 +883,11 @@ class _SlotListTile extends StatelessWidget {
     };
 
     final eewText = slot.eewEnabled
-        ? 'EEW: 震度${slot.eewMinIntensity?.label ?? '-'}以上'
+        ? 'EEW: ${slot.eewMinIntensity?.minIntensityThresholdLabel ?? '-'}'
         : 'EEW: 無効';
     final earthquakeText = slot.earthquakeEnabled
-        ? '地震情報: 震度${slot.earthquakeMinIntensity?.label ?? '-'}以上'
+        ? '地震情報: '
+              '${slot.earthquakeMinIntensity?.minIntensityThresholdLabel ?? '-'}'
         : '地震情報: 無効';
 
     final textColor = isActive ? null : Theme.of(context).disabledColor;
@@ -934,8 +969,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
-            subtitleText:
-                '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
+            subtitleText: '北海道の根室沖から東北地方の三陸沖の巨大地震の想定震源域やその周辺でMw7.0以上の地震が発生し、大規模地震の発生可能性が平常時より相対的に高まっている際に「北海道・三陸沖後発地震注意情報」を発表 ',
             value: settings.vyse60Enabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -949,8 +983,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「北海道・三陸沖後発地震注意情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nceq/info_guide.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nceq/info_guide.html',
               ),
               InfoLink(
                 title: '配信資料に関する仕様 No.40701 ～北海道・三陸沖後発地震注意情報～',
@@ -960,8 +993,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
           ),
           InfoNotificationTile(
             title: '南海トラフ地震関連解説情報(定例外)',
-            subtitleText:
-                '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
+            subtitleText: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表 ',
             value: settings.nankaiExtraordinaryEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation
@@ -975,13 +1007,11 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
               ),
               InfoLink(
                 title: '「南海トラフ地震臨時情報」が発表されたときの防災対応',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/bosai.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/bosai.html',
               ),
             ],
           ),
@@ -1001,20 +1031,17 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             bottomSheetLinks: const [
               InfoLink(
                 title: '「南海トラフ地震に関連する情報」について',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/info_criterion.html',
               ),
               InfoLink(
                 title: '南海トラフ沿いの地震に関する評価検討会とは',
-                url:
-                    'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/assessment.html',
+                url: 'https://www.jma.go.jp/jma/kishou/know/jishin/nteq/assessment.html',
               ),
             ],
           ),
           InfoNotificationTile(
             title: '地震・津波に関するお知らせ',
-            subtitleText:
-                '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
+            subtitleText: '気象庁が発表する「地震・津波に関するお知らせ」(VZSE40)を通知します。試験・訓練配信のお知らせや、市町村の震度データの入電停止などの情報が含まれます。',
             value: settings.earthquakeNoticeEnabled,
             onChanged: ({required value}) async {
               await GeneralNotificationSettingsNotifier.updateSettingsMutation

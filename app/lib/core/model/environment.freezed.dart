@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'environment.dart';
@@ -9,13 +9,14 @@ part of 'environment.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$BuildConfig implements DiagnosticableTreeMixin {
 
- String get restApiUrl; String get appIdSuffix; String get appName; String get commitInformation; Flavor get flavor; String get wsApiUrl; String get googleIosClientId; String get googleAndroidClientId; String get buildTimestamp; String get buildCommitMessage; String get revenueCatApiKeyIos; String get revenueCatApiKeyAndroid;
+ String get restApiUrl; String get appIdSuffix; String get appName; String get commitInformation; Flavor get flavor; String get wsApiUrl; String get googleIosClientId; String get googleAndroidClientId; String get buildTimestamp; String get buildCommitMessage; String get revenueCatApiKeyIos; String get revenueCatApiKeyAndroid; bool get isBetaTesting; bool get isProFeaturesEnabled; bool get isShakeDetectionEnabled;
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,21 +30,21 @@ $BuildConfigCopyWith<BuildConfig> get copyWith => _$BuildConfigCopyWithImpl<Buil
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'BuildConfig'))
-    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid));
+    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid))..add(DiagnosticsProperty('isBetaTesting', isBetaTesting))..add(DiagnosticsProperty('isProFeaturesEnabled', isProFeaturesEnabled))..add(DiagnosticsProperty('isShakeDetectionEnabled', isShakeDetectionEnabled));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid)&&(identical(other.isBetaTesting, isBetaTesting) || other.isBetaTesting == isBetaTesting)&&(identical(other.isProFeaturesEnabled, isProFeaturesEnabled) || other.isProFeaturesEnabled == isProFeaturesEnabled)&&(identical(other.isShakeDetectionEnabled, isShakeDetectionEnabled) || other.isShakeDetectionEnabled == isShakeDetectionEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid,isBetaTesting,isProFeaturesEnabled,isShakeDetectionEnabled);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid)';
+  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid, isBetaTesting: $isBetaTesting, isProFeaturesEnabled: $isProFeaturesEnabled, isShakeDetectionEnabled: $isShakeDetectionEnabled)';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $BuildConfigCopyWith<$Res>  {
   factory $BuildConfigCopyWith(BuildConfig value, $Res Function(BuildConfig) _then) = _$BuildConfigCopyWithImpl;
 @useResult
 $Res call({
- String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid, bool isBetaTesting, bool isProFeaturesEnabled, bool isShakeDetectionEnabled
 });
 
 
@@ -71,8 +72,8 @@ class _$BuildConfigCopyWithImpl<$Res>
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,Object? isBetaTesting = null,Object? isProFeaturesEnabled = null,Object? isShakeDetectionEnabled = null,}) {
+  return _then(BuildConfig(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
 as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
@@ -85,7 +86,10 @@ as String,buildTimestamp: null == buildTimestamp ? _self.buildTimestamp : buildT
 as String,buildCommitMessage: null == buildCommitMessage ? _self.buildCommitMessage : buildCommitMessage // ignore: cast_nullable_to_non_nullable
 as String,revenueCatApiKeyIos: null == revenueCatApiKeyIos ? _self.revenueCatApiKeyIos : revenueCatApiKeyIos // ignore: cast_nullable_to_non_nullable
 as String,revenueCatApiKeyAndroid: null == revenueCatApiKeyAndroid ? _self.revenueCatApiKeyAndroid : revenueCatApiKeyAndroid // ignore: cast_nullable_to_non_nullable
-as String,
+as String,isBetaTesting: null == isBetaTesting ? _self.isBetaTesting : isBetaTesting // ignore: cast_nullable_to_non_nullable
+as bool,isProFeaturesEnabled: null == isProFeaturesEnabled ? _self.isProFeaturesEnabled : isProFeaturesEnabled // ignore: cast_nullable_to_non_nullable
+as bool,isShakeDetectionEnabled: null == isShakeDetectionEnabled ? _self.isShakeDetectionEnabled : isShakeDetectionEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -170,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid,  bool isBetaTesting,  bool isProFeaturesEnabled,  bool isShakeDetectionEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BuildConfig() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid,_that.isBetaTesting,_that.isProFeaturesEnabled,_that.isShakeDetectionEnabled);case _:
   return orElse();
 
 }
@@ -191,10 +195,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid,  bool isBetaTesting,  bool isProFeaturesEnabled,  bool isShakeDetectionEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _BuildConfig():
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid,_that.isBetaTesting,_that.isProFeaturesEnabled,_that.isShakeDetectionEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +215,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid,  bool isBetaTesting,  bool isProFeaturesEnabled,  bool isShakeDetectionEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _BuildConfig() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid,_that.isBetaTesting,_that.isProFeaturesEnabled,_that.isShakeDetectionEnabled);case _:
   return null;
 
 }
@@ -226,7 +230,7 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 @JsonSerializable()
 
 class _BuildConfig extends BuildConfig with DiagnosticableTreeMixin {
-  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, required this.buildTimestamp, required this.buildCommitMessage, required this.revenueCatApiKeyIos, required this.revenueCatApiKeyAndroid}): super._();
+  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, required this.buildTimestamp, required this.buildCommitMessage, required this.revenueCatApiKeyIos, required this.revenueCatApiKeyAndroid, this.isBetaTesting = false, this.isProFeaturesEnabled = false, this.isShakeDetectionEnabled = true}): super._();
   factory _BuildConfig.fromJson(Map<String, dynamic> json) => _$BuildConfigFromJson(json);
 
 @override final  String restApiUrl;
@@ -241,6 +245,9 @@ class _BuildConfig extends BuildConfig with DiagnosticableTreeMixin {
 @override final  String buildCommitMessage;
 @override final  String revenueCatApiKeyIos;
 @override final  String revenueCatApiKeyAndroid;
+@override@JsonKey() final  bool isBetaTesting;
+@override@JsonKey() final  bool isProFeaturesEnabled;
+@override@JsonKey() final  bool isShakeDetectionEnabled;
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -256,21 +263,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'BuildConfig'))
-    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid));
+    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid))..add(DiagnosticsProperty('isBetaTesting', isBetaTesting))..add(DiagnosticsProperty('isProFeaturesEnabled', isProFeaturesEnabled))..add(DiagnosticsProperty('isShakeDetectionEnabled', isShakeDetectionEnabled));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid)&&(identical(other.isBetaTesting, isBetaTesting) || other.isBetaTesting == isBetaTesting)&&(identical(other.isProFeaturesEnabled, isProFeaturesEnabled) || other.isProFeaturesEnabled == isProFeaturesEnabled)&&(identical(other.isShakeDetectionEnabled, isShakeDetectionEnabled) || other.isShakeDetectionEnabled == isShakeDetectionEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid,isBetaTesting,isProFeaturesEnabled,isShakeDetectionEnabled);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid)';
+  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid, isBetaTesting: $isBetaTesting, isProFeaturesEnabled: $isProFeaturesEnabled, isShakeDetectionEnabled: $isShakeDetectionEnabled)';
 }
 
 
@@ -281,7 +288,7 @@ abstract mixin class _$BuildConfigCopyWith<$Res> implements $BuildConfigCopyWith
   factory _$BuildConfigCopyWith(_BuildConfig value, $Res Function(_BuildConfig) _then) = __$BuildConfigCopyWithImpl;
 @override @useResult
 $Res call({
- String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid, bool isBetaTesting, bool isProFeaturesEnabled, bool isShakeDetectionEnabled
 });
 
 
@@ -298,7 +305,7 @@ class __$BuildConfigCopyWithImpl<$Res>
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,Object? isBetaTesting = null,Object? isProFeaturesEnabled = null,Object? isShakeDetectionEnabled = null,}) {
   return _then(_BuildConfig(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
@@ -312,7 +319,10 @@ as String,buildTimestamp: null == buildTimestamp ? _self.buildTimestamp : buildT
 as String,buildCommitMessage: null == buildCommitMessage ? _self.buildCommitMessage : buildCommitMessage // ignore: cast_nullable_to_non_nullable
 as String,revenueCatApiKeyIos: null == revenueCatApiKeyIos ? _self.revenueCatApiKeyIos : revenueCatApiKeyIos // ignore: cast_nullable_to_non_nullable
 as String,revenueCatApiKeyAndroid: null == revenueCatApiKeyAndroid ? _self.revenueCatApiKeyAndroid : revenueCatApiKeyAndroid // ignore: cast_nullable_to_non_nullable
-as String,
+as String,isBetaTesting: null == isBetaTesting ? _self.isBetaTesting : isBetaTesting // ignore: cast_nullable_to_non_nullable
+as bool,isProFeaturesEnabled: null == isProFeaturesEnabled ? _self.isProFeaturesEnabled : isProFeaturesEnabled // ignore: cast_nullable_to_non_nullable
+as bool,isShakeDetectionEnabled: null == isShakeDetectionEnabled ? _self.isShakeDetectionEnabled : isShakeDetectionEnabled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

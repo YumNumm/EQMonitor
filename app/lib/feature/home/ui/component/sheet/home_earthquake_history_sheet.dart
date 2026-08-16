@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -6,33 +8,29 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
-import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthquake_list.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_selector.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeEarthquakeHistorySheet extends HookConsumerWidget {
-  const HomeEarthquakeHistorySheet({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
     final homeAsync = ref.watch(homeConfigurationProvider);
     final paramAsync = ref.watch(homeEarthquakeHistoryParameterProvider);
 
     return homeAsync.when(
       data: (home) {
         final scope = home.common.earthquakeHistoryScope;
-        // 地域コードから名称を解決する。解決できない場合はコードをそのまま表示。
         final selection = paramAsync.value?.regionSelection;
         final locationName = selection != null
             ? ref.watch(regionNameProvider(selection.$1, selection.$2)).value ??
@@ -50,7 +48,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           await HomeConfigurationNotifier.saveMutation.run(ref, (tsx) async {
             final notifier = tsx.get(homeConfigurationProvider.notifier);
             if (result is EarthquakeHistoryParameterAll) {
-              // クリアされた場合は parameter のみ消し、スコープは保持する
               await notifier.clearCustomEarthquakeHistoryParameter();
             } else {
               await notifier.setCustomEarthquakeHistoryParameter(result);
@@ -58,24 +55,15 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           });
         }
 
-        return Card.outlined(
-          margin: EdgeInsets.zero,
-          color: colorTheme.surfaceContainerHigh,
-          clipBehavior: Clip.antiAlias,
-          elevation: 0,
-          shape: RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: colorTheme.outlineVariant),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              HomeScopeSelector(
+        return HomeSheetCard(
+          children: [
+            HomeSheetCardHeader(
+              title: '最近の地震',
+              action: HomeScopeSelector(
                 scope: scope,
                 onScopeChanged: (newScope) async {
-                  if (newScope == HomeEarthquakeHistoryScope.custom &&
-                      home.common.parameter == null) {
+                  await HapticFeedback.lightImpact();
+                  if (newScope == .custom && home.common.parameter == null) {
                     await openRegionPicker();
                   } else {
                     await HomeConfigurationNotifier.saveMutation.run(
@@ -86,135 +74,108 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     );
                   }
                 },
+                onEditRegion: openRegionPicker,
                 locationName: locationName,
               ),
-              paramAsync.when(
-                data: (param) {
-                  if (param == null) {
-                    return HomeScopeUnavailableBody(
-                      scope: scope,
-                      onRetry: () => ref.invalidate(
+            ),
+            paramAsync.when(
+              data: (param) {
+                if (param == null) {
+                  return HomeScopeUnavailableBody(
+                    scope: scope,
+                    onRetry: () => ref.invalidate(
+                      homeEarthquakeHistoryParameterProvider,
+                      asReload: true,
+                    ),
+                    onConfigureRegion: scope == .custom
+                        ? openRegionPicker
+                        : null,
+                  );
+                }
+                final state = ref.watch(earthquakeHistoryProvider(param));
+                final listSection = switch (state) {
+                  AsyncData(:final value) =>
+                    value.items.isEmpty
+                        ? const EarthquakeHistoryNotFound()
+                        : HomeEarthquakeList(
+                            earthquakes: value.items,
+                            showCurrentLocationIntensity:
+                                scope == .currentLocation,
+                          ),
+                  AsyncError(:final error) => ErrorCard(
+                    error: error,
+                    onReload: () async {
+                      ref.invalidate(
                         homeEarthquakeHistoryParameterProvider,
                         asReload: true,
-                      ),
-                      onConfigureRegion:
-                          scope == HomeEarthquakeHistoryScope.custom
-                          ? openRegionPicker
-                          : null,
-                    );
-                  }
-                  final state = ref.watch(earthquakeHistoryProvider(param));
-                  final listSection = switch (state) {
-                    AsyncData(:final value) =>
-                      value.items.isEmpty
-                          ? const EarthquakeHistoryNotFound()
-                          : HomeEarthquakeList(
-                              earthquakes: value.items,
-                              showCurrentLocationIntensity:
-                                  scope == .currentLocation,
-                            ),
-                    AsyncError(:final error) => ErrorCard(
-                      error: error,
-                      onReload: () async {
-                        ref.invalidate(
-                          homeEarthquakeHistoryParameterProvider,
-                          asReload: true,
-                        );
-                        ref.invalidate(
-                          earthquakeHistoryProvider(param),
-                          asReload: true,
-                        );
-                      },
-                    ),
-                    _ => const _HomeEarthquakeHistorySheetSkeleton(),
-                  };
-                  return listSection;
-                },
-                loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
-                error: (error, _) => ErrorCard(
-                  error: error,
-                  onReload: () async => ref.invalidate(
-                    homeEarthquakeHistoryParameterProvider,
-                    asReload: true,
+                      );
+                      ref.invalidate(
+                        earthquakeHistoryProvider(param),
+                        asReload: true,
+                      );
+                    },
                   ),
+                  _ => const _HomeEarthquakeHistorySheetSkeleton(),
+                };
+                return listSection;
+              },
+              loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
+              error: (error, _) => ErrorCard(
+                error: error,
+                onReload: () async => ref.invalidate(
+                  homeEarthquakeHistoryParameterProvider,
+                  asReload: true,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  spacing.lg,
-                  spacing.xs,
-                  spacing.lg,
-                  spacing.md,
-                ),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    // スコープに対応する検索パラメータが解決できないときは
-                    // 「全国」が開いてしまい一覧の表示条件と一致しないため、
-                    // 一覧ボタン自体を無効化する（未設定/未解決の案内は
-                    // 上の HomeScopeUnavailableBody が担当する）。
-                    onPressed: paramAsync.value == null
-                        ? null
-                        : () async => EarthquakeHistoryRoute(
-                            $extra: paramAsync.value,
-                          ).push<void>(context),
-                    child: const Text('さらに表示'),
-                  ),
-                ),
+            ),
+            Align(
+              alignment: .centerEnd,
+              child: TextButton(
+                onPressed: paramAsync.value == null
+                    ? null
+                    : () async =>
+                          EarthquakeHistoryRoute($extra: paramAsync.value)
+                              .push<void>(context),
+                child: Text('さらに表示'),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
-      loading: () => Card.outlined(
-        margin: EdgeInsets.zero,
-        color: colorTheme.surfaceContainerHigh,
-        elevation: 0,
-        shape: RoundedSuperellipseBorder(
-          borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: colorTheme.outlineVariant),
-        ),
-        child: const _HomeEarthquakeHistorySheetSkeleton(),
+      loading: () => const HomeSheetCard(
+        children: [
+          HomeSheetCardHeader(title: '最近の地震'),
+          _HomeEarthquakeHistorySheetSkeleton(),
+        ],
       ),
-      error: (e, _) => const SizedBox.shrink(),
+      error: (error, _) => HomeSheetCard(
+        children: [
+          const HomeSheetCardHeader(title: '最近の地震'),
+          ErrorCard(
+            error: error,
+            onReload: () async =>
+                ref.invalidate(homeConfigurationProvider, asReload: true),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
-  const _HomeEarthquakeHistorySheetSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
-    final colorTheme = designSystem.colorTheme;
+    final spacing = context.designSystem.spacing;
 
     return Padding(
-      padding: EdgeInsets.all(spacing.lg),
+      padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
       child: Skeletonizer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: 18,
-              width: 120,
-              decoration: BoxDecoration(
-                color: colorTheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(shape.sm),
-              ),
-            ),
-            SizedBox(height: spacing.sm),
-            Container(
-              height: 44,
-              decoration: BoxDecoration(
-                color: colorTheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(shape.md),
-              ),
-            ),
-            SizedBox(height: spacing.lg),
-            for (final index in List.generate(3, (index) => index)) ...[
+            for (var index = 0; index < 3; index++) ...[
               const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(radius: 16),

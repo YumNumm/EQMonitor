@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'pmtiles_v3_limits.dart';
@@ -9,6 +9,7 @@ part of 'pmtiles_v3_limits.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -29,7 +30,7 @@ mixin _$PmTilesV3Limits {
 /// 全leaf directoryを読む契約はここでは負わない。
 ///
 /// `true`にすると、rootおよびすべてのleaf directoryを`open`時に走査し、
-/// `clustered`ヘッダが`true`の場合は[PmTilesV3ClusteredOrdering]で
+/// `clustered`ヘッダが`true`の場合は`PmTilesV3ClusteredOrdering`で
 /// content配置の整合まで検証する。producer契約がclustered orderingと
 /// tile件数の一致を保証しているarchive（例: `seismicity_pmtiles`が
 /// 生成するarchive）でのみ有効化すること。
@@ -82,7 +83,7 @@ class _$PmTilesV3LimitsCopyWithImpl<$Res>
 /// Create a copy of PmTilesV3Limits
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxDirectoryDepth = null,Object? rootDirectoryWindowLength = null,Object? validateEntireArchiveEagerly = null,}) {
-  return _then(_self.copyWith(
+  return _then(PmTilesV3Limits(
 maxDirectoryDepth: null == maxDirectoryDepth ? _self.maxDirectoryDepth : maxDirectoryDepth // ignore: cast_nullable_to_non_nullable
 as int,rootDirectoryWindowLength: null == rootDirectoryWindowLength ? _self.rootDirectoryWindowLength : rootDirectoryWindowLength // ignore: cast_nullable_to_non_nullable
 as int,validateEntireArchiveEagerly: null == validateEntireArchiveEagerly ? _self.validateEntireArchiveEagerly : validateEntireArchiveEagerly // ignore: cast_nullable_to_non_nullable
@@ -247,7 +248,7 @@ class _PmTilesV3Limits implements PmTilesV3Limits {
 /// 全leaf directoryを読む契約はここでは負わない。
 ///
 /// `true`にすると、rootおよびすべてのleaf directoryを`open`時に走査し、
-/// `clustered`ヘッダが`true`の場合は[PmTilesV3ClusteredOrdering]で
+/// `clustered`ヘッダが`true`の場合は`PmTilesV3ClusteredOrdering`で
 /// content配置の整合まで検証する。producer契約がclustered orderingと
 /// tile件数の一致を保証しているarchive（例: `seismicity_pmtiles`が
 /// 生成するarchive）でのみ有効化すること。

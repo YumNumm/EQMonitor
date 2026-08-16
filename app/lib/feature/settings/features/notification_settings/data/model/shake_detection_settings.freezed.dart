@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shake_detection_settings.dart';
@@ -9,12 +9,13 @@ part of 'shake_detection_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionEntry {
 
- String get id; String? get subRegionId; String? get subRegionName; api.ShakeDetectionLevel get minLevel; bool get isCurrentLocation; String? get prefectureCode; String? get cityCode;
+ String get id; String? get subRegionId; String? get subRegionName; ShakeDetectionLevel get minLevel; bool get isCurrentLocation; String? get prefectureCode; String? get cityCode;
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +46,7 @@ abstract mixin class $ShakeDetectionEntryCopyWith<$Res>  {
   factory $ShakeDetectionEntryCopyWith(ShakeDetectionEntry value, $Res Function(ShakeDetectionEntry) _then) = _$ShakeDetectionEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, String? subRegionId, String? subRegionName, api.ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
+ String id, String? subRegionId, String? subRegionName, ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
 });
 
 
@@ -63,12 +64,12 @@ class _$ShakeDetectionEntryCopyWithImpl<$Res>
 /// Create a copy of ShakeDetectionEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? subRegionName = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? prefectureCode = freezed,Object? cityCode = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ShakeDetectionEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
 as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
-as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
 as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -156,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry() when $default != null:
 return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
@@ -177,7 +178,7 @@ return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? subRegionId,  String? subRegionName,  ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry():
 return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
@@ -197,7 +198,7 @@ return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? subRegionId,  String? subRegionName,  api.ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? subRegionId,  String? subRegionName,  ShakeDetectionLevel minLevel,  bool isCurrentLocation,  String? prefectureCode,  String? cityCode)?  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionEntry() when $default != null:
 return $default(_that.id,_that.subRegionId,_that.subRegionName,_that.minLevel,_that.isCurrentLocation,_that.prefectureCode,_that.cityCode);case _:
@@ -218,7 +219,7 @@ class _ShakeDetectionEntry implements ShakeDetectionEntry {
 @override final  String id;
 @override final  String? subRegionId;
 @override final  String? subRegionName;
-@override final  api.ShakeDetectionLevel minLevel;
+@override final  ShakeDetectionLevel minLevel;
 @override final  bool isCurrentLocation;
 @override final  String? prefectureCode;
 @override final  String? cityCode;
@@ -253,7 +254,7 @@ abstract mixin class _$ShakeDetectionEntryCopyWith<$Res> implements $ShakeDetect
   factory _$ShakeDetectionEntryCopyWith(_ShakeDetectionEntry value, $Res Function(_ShakeDetectionEntry) _then) = __$ShakeDetectionEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? subRegionId, String? subRegionName, api.ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
+ String id, String? subRegionId, String? subRegionName, ShakeDetectionLevel minLevel, bool isCurrentLocation, String? prefectureCode, String? cityCode
 });
 
 
@@ -276,7 +277,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
 as String?,subRegionName: freezed == subRegionName ? _self.subRegionName : subRegionName // ignore: cast_nullable_to_non_nullable
 as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
-as api.ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
 as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -338,7 +339,7 @@ class _$ShakeDetectionSubRegionCopyWithImpl<$Res>
 /// Create a copy of ShakeDetectionSubRegion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? code = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShakeDetectionSubRegion(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable

@@ -13,7 +13,7 @@ const _keyExtra = 'cache.key';
 const kForceFreshExtra = 'cache.force_fresh';
 
 class HttpCacheInterceptor extends Interceptor {
-  HttpCacheInterceptor(this.store);
+  new(this.store);
 
   final HttpCacheStore store;
 

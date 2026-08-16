@@ -4,11 +4,11 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_list_config_view.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryConfigPage extends StatelessWidget {
-  const EarthquakeHistoryConfigPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
 }
 
 class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
-  const _HomeDesignatedRegionConfigTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,7 +80,7 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
 }
 
 class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
-  const _EarthquakeHistoryListConfigWidget();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
