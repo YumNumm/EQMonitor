@@ -4,7 +4,11 @@ import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_archive_extractor.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_repository.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/r2_asset_pack_archive_downloader.dart';
 import 'package:path/path.dart' as p;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'asset_pack_update_installer.g.dart';
 
 typedef DownloadAssetPackArchive =
     Future<File> Function({
@@ -119,6 +123,16 @@ class AssetPackUpdateInstaller {
       await deleteAssetPackTemporaryDirectory(directory: stagingWorkspace);
     }
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<AssetPackUpdateInstaller> assetPackUpdateInstaller(Ref ref) async {
+  final storage = await ref.watch(assetPackStorageRepositoryProvider.future);
+  final downloader = R2AssetPackArchiveDownloader();
+  return AssetPackUpdateInstaller(
+    storageRepository: storage,
+    downloadArchive: downloader.download,
+  );
 }
 
 Future<void> verifyAssetPackArchive({

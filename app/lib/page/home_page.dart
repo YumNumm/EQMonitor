@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -165,6 +166,7 @@ class _SheetBody extends ConsumerWidget {
                   ...eewCards,
                   if (isInMaintenance) MaintenanceBanner(),
                   WhatsNewBanner(),
+                  const AssetPackUpdateCard(),
                   if (showNotificationBanner) NotificationPermissionBanner(),
                   const DeviceProvisioningBanner(),
                   if (showPermissionBanner) _LocationPermissionBanner(),

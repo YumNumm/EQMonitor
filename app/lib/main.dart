@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:background_location_tracker/background_location_tracker.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
@@ -246,6 +247,10 @@ Future<void> _main() async {
   // 広告SDK・通知プラグインは override 値を生まないため runApp 後に遅延初期化する。
   // 例外が発生しても起動フローを止めず talker に記録する。
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    guardedUnawaited(
+      () => FileDownloader().start(autoCleanDatabase: true),
+      onError: (error, stack) => talker.error(error, stack),
+    );
     guardedUnawaited(
       () => MobileAds.instance.initialize(),
       onError: (error, stack) => talker.error(error, stack),

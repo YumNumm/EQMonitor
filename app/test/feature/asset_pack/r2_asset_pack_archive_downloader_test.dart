@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
-import 'package:eqmonitor/feature/asset_pack/data/repository/background_asset_pack_archive_downloader.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/r2_asset_pack_archive_downloader.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,7 +10,7 @@ void main() {
 
   setUp(() async {
     temporaryDirectory = await Directory.systemTemp.createTemp(
-      'background_asset_pack_archive_downloader_test_',
+      'r2_asset_pack_archive_downloader_test_',
     );
   });
 
@@ -22,7 +22,7 @@ void main() {
     DownloadTask? capturedTask;
     final output = File('${temporaryDirectory.path}/pack.zip');
     final progress = <double>[];
-    final downloader = BackgroundAssetPackArchiveDownloader(
+    final downloader = R2AssetPackArchiveDownloader(
       runTask: ({required task, required onProgress}) async {
         capturedTask = task;
         await output.writeAsString('zip');
@@ -38,6 +38,7 @@ void main() {
     );
 
     expect(file.path, output.path);
+    expect(capturedTask?.taskId, 'eqmonitor_asset_pack_1_2_3');
     expect(capturedTask?.url, contains(distributionEntry.archivePath));
     expect(capturedTask?.baseDirectory, BaseDirectory.temporary);
     expect(capturedTask?.updates, Updates.statusAndProgress);
@@ -45,8 +46,31 @@ void main() {
     expect(progress, [0.5]);
   });
 
+  test('reuses a completed file without starting a duplicate task', () async {
+    final output = File('${temporaryDirectory.path}/pack.zip');
+    await output.writeAsString('zip');
+    var runCount = 0;
+    final progress = <double>[];
+    final downloader = R2AssetPackArchiveDownloader(
+      runTask: ({required task, required onProgress}) async {
+        runCount++;
+        return TaskStatusUpdate(task, TaskStatus.complete);
+      },
+      resolveTaskFile: (task) async => output,
+    );
+
+    final file = await downloader.download(
+      entry: distributionEntry,
+      onProgress: progress.add,
+    );
+
+    expect(file.path, output.path);
+    expect(runCount, 0);
+    expect(progress, [1]);
+  });
+
   test('reports a safe exception when the background task fails', () async {
-    final downloader = BackgroundAssetPackArchiveDownloader(
+    final downloader = R2AssetPackArchiveDownloader(
       runTask: ({required task, required onProgress}) async =>
           TaskStatusUpdate(task, TaskStatus.failed),
       resolveTaskFile: (task) async => File('${temporaryDirectory.path}/none'),

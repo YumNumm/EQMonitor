@@ -4,9 +4,15 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_signature.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/trusted_asset_pack_keys.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_signature_verifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:version/version.dart';
+
+part 'asset_pack_distribution_repository.g.dart';
 
 const assetPackDistributionBaseUrl = 'https://assets.eqmonitor.app/v1/assets';
 
@@ -126,6 +132,24 @@ class AssetPackDistributionRepository {
     }
     return AssetPackUpdateAvailable(manifest: manifest, entry: latest);
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<AssetPackDistributionRepository> assetPackDistributionRepository(
+  Ref ref,
+) async {
+  final dio = await ref.watch(dioProvider.future);
+  final preferences = await ref.watch(
+    sharedPreferencesDataSourceProvider.future,
+  );
+  final verifier = AssetPackSignatureVerifier(
+    publicKeys: trustedAssetPackPublicKeys,
+  );
+  return AssetPackDistributionRepository(
+    dio: dio,
+    preferences: preferences,
+    verifySignature: verifier.verify,
+  );
 }
 
 class AssetPackDistributionPayload {

@@ -21,8 +21,8 @@ class AssetPackArchiveDownloadException implements Exception {
   String toString() => 'AssetPackArchiveDownloadException: $message';
 }
 
-class BackgroundAssetPackArchiveDownloader {
-  BackgroundAssetPackArchiveDownloader({
+class R2AssetPackArchiveDownloader {
+  R2AssetPackArchiveDownloader({
     RunAssetPackDownloadTask? runTask,
     ResolveAssetPackDownloadTaskFile? resolveTaskFile,
     this.baseUrl = assetPackDistributionBaseUrl,
@@ -39,6 +39,7 @@ class BackgroundAssetPackArchiveDownloader {
     required void Function(double progress) onProgress,
   }) async {
     final task = DownloadTask(
+      taskId: 'eqmonitor_asset_pack_${entry.version.replaceAll('.', '_')}',
       url: '$baseUrl/${entry.archivePath}',
       filename: 'asset-pack-v${entry.version}.zip',
       directory: 'eqmonitor_asset_packs/downloads',
@@ -51,7 +52,8 @@ class BackgroundAssetPackArchiveDownloader {
     );
     final outputFile = await _resolveTaskFile(task);
     if (outputFile.existsSync()) {
-      await outputFile.delete();
+      onProgress(1);
+      return outputFile;
     }
     final result = await _runTask(task: task, onProgress: onProgress);
     if (result.status != TaskStatus.complete || !outputFile.existsSync()) {
