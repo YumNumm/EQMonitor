@@ -15,8 +15,11 @@ typedef TelegramListByEventIdState = ({
 
 @riverpod
 class TelegramListByEventId extends _$TelegramListByEventId {
+  var _refreshGeneration = 0;
+
   @override
   Future<TelegramListByEventIdState> build(String eventId) async {
+    _refreshGeneration += 1;
     ref.listen(realtimeEventsProvider, (_, next) {
       if (next case AsyncData(
         value: RealtimeEarthquakeUpsertEvent(:final record),
@@ -54,7 +57,8 @@ class TelegramListByEventId extends _$TelegramListByEventId {
       return;
     }
 
-    state = await state.guardPlus(() async {
+    final refreshGeneration = _refreshGeneration;
+    final nextState = await state.guardPlus(() async {
       final client = await ref.read(apiClientProvider.future);
       final response = await client.telegram.getV2TelegramEventIdEventId(
         eventId: eventId,
@@ -68,6 +72,9 @@ class TelegramListByEventId extends _$TelegramListByEventId {
       ].sorted((a, b) => b.pressAt.compareTo(a.pressAt));
       return (items: mergedItems, nextToken: data.nextToken);
     });
+    if (refreshGeneration == _refreshGeneration) {
+      state = nextState;
+    }
   }
 }
 
