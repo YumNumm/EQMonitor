@@ -14,12 +14,12 @@ import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_p
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends ConsumerWidget {
-  const SettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,13 +81,14 @@ class SettingsPage extends ConsumerWidget {
                   onTap: () async =>
                       const EarthquakeHistoryConfigRoute().push(context),
                 ),
-                ListTile(
-                  title: const Text('地震活動'),
-                  subtitle: const Text('震央分布・M-T図・深さ断面'),
-                  leading: const Icon(Icons.bubble_chart_outlined),
-                  onTap: () async =>
-                      const SeismicityRoute().push<void>(context),
-                ),
+                // TODO(YumNumm): 地震活動機能は現在開発中のため非表示
+                // ListTile(
+                //   title: const Text('地震活動'),
+                //   subtitle: const Text('震央分布・M-T図・深さ断面'),
+                //   leading: const Icon(Icons.bubble_chart_outlined),
+                //   onTap: () async =>
+                //       const SeismicityRoute().push<void>(context),
+                // ),
                 ListTile(
                   title: const Text('ホーム画面ウィジェット'),
                   leading: const Icon(Icons.widgets_outlined),
@@ -197,7 +198,7 @@ class SettingsPage extends ConsumerWidget {
 }
 
 class _AppVersionInformation extends HookConsumerWidget {
-  const _AppVersionInformation();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
