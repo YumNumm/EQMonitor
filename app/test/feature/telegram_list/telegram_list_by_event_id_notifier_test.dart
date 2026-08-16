@@ -154,6 +154,11 @@ void main() {
     await container.pump();
 
     expect(adapter.requests, hasLength(2));
+
+    controller.add(const RealtimeEvent.ready(source: RealtimeSource.eqmonitor));
+    await container.pump();
+
+    expect(adapter.requests, hasLength(2));
   });
 
   test('only matching earthquake update refetches telegram details', () async {
@@ -196,6 +201,11 @@ void main() {
       ),
     );
     await container.pump();
+    expect(spy.freshFetchCount, 2);
+
+    controller.add(const RealtimeEvent.ready(source: RealtimeSource.eqmonitor));
+    await container.pump();
+
     expect(spy.freshFetchCount, 2);
   });
 }
