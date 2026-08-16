@@ -20,9 +20,7 @@ class TestNotificationKindButtons extends StatelessWidget {
     ) {
       final isPending = pendingKind == kind;
       return FilledButton.tonal(
-        onPressed: pendingKind != null && !isPending
-            ? null
-            : () async => onPressed(kind),
+        onPressed: pendingKind == null ? () async => onPressed(kind) : null,
         child: isPending
             ? const SizedBox(
                 width: 18,

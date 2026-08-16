@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RecordingNavigatorObserver extends NavigatorObserver {
-  Route<dynamic>? lastRoute;
+  Route<Object?>? lastRoute;
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+  void didPush(Route<Object?> route, Route<Object?>? previousRoute) {
     lastRoute = route;
   }
 }

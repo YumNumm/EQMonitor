@@ -27,4 +27,25 @@ void main() {
 
     expect(pressedKind, TestNotificationKind.critical);
   });
+
+  testWidgets('送信中のボタンを再度タップしてもcallbackを実行しない', (tester) async {
+    var pressedCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TestNotificationKindButtons(
+            pendingKind: TestNotificationKind.normal,
+            onPressed: (_) async => pressedCount++,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    await tester.tap(find.byType(FilledButton).first);
+
+    expect(pressedCount, 0);
+  });
 }
