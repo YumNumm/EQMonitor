@@ -16,7 +16,7 @@ void main() {
     app_log.talker = Talker();
   });
 
-  testWidgets('renders unsupported OS evidence and explicit update action', (
+  testWidgets('renders unsupported OS evidence for bundled assets', (
     tester,
   ) async {
     await tester.pumpWidget(testApp(info: debugInfo(status: .unsupportedOs)));
@@ -24,9 +24,7 @@ void main() {
 
     expect(find.text('未対応OS'), findsOneWidget);
     expect(find.text('Version 25.0'), findsOneWidget);
-    expect(find.text('eqmonitor-assets'), findsOneWidget);
-    expect(find.text('更新を確認'), findsOneWidget);
-    expect(find.textContaining('ダウンロード完了'), findsOneWidget);
+    expect(find.text('platform'), findsAtLeastNWidgets(1));
   });
 
   testWidgets('renders missing file and native error evidence', (tester) async {
@@ -64,15 +62,12 @@ void main() {
     );
   });
 
-  testWidgets('refresh only reloads diagnostics and update runs explicitly', (
-    tester,
-  ) async {
-    var updateChecks = 0;
+  testWidgets('refresh reloads bundled diagnostics', (tester) async {
+    var diagnoses = 0;
     final repository = AssetPackDebugRepository(
-      diagnosePack: () async => debugInfo(status: .ready).diagnostics,
-      checkForUpdates: () async {
-        updateChecks += 1;
-        return updateResult(success: true);
+      diagnosePack: () async {
+        diagnoses += 1;
+        return debugInfo(status: .ready).diagnostics;
       },
     );
     await tester.pumpWidget(testApp(repository: repository));
@@ -80,12 +75,7 @@ void main() {
 
     await tester.tap(find.byTooltip('診断を再読込'));
     await tester.pumpAndSettle();
-    expect(updateChecks, 0);
-
-    await tester.tap(find.text('更新を確認'));
-    await tester.pumpAndSettle();
-    expect(updateChecks, 1);
-    expect(find.text('2026-07-31T00:00:00Z'), findsOneWidget);
+    expect(diagnoses, 2);
   });
 
   testWidgets('does not overflow at text scale 2', (tester) async {
@@ -103,12 +93,11 @@ Widget testApp({
   AssetPackDebugRepository? repository,
   double textScale = 1,
 }) {
-  final resolvedInfo = info ?? debugInfo(status: .ready);
   final resolvedRepository =
       repository ??
       AssetPackDebugRepository(
-        diagnosePack: () async => resolvedInfo.diagnostics,
-        checkForUpdates: () async => updateResult(success: true),
+        diagnosePack: () async =>
+            (info ?? debugInfo(status: .ready)).diagnostics,
       );
   final theme = ThemeData.light().copyWith(
     extensions: [DesignSystemThemeExtension.light()],
@@ -116,7 +105,8 @@ Widget testApp({
   return ProviderScope(
     overrides: [
       assetPackDebugRepositoryProvider.overrideWithValue(resolvedRepository),
-      assetPackDebugInfoProvider.overrideWith((ref) async => resolvedInfo),
+      if (info != null)
+        assetPackDebugInfoProvider.overrideWith((ref) async => info),
     ],
     child: MaterialApp(
       theme: theme,
@@ -142,7 +132,7 @@ AssetPackDebugInfo debugInfo({
       'os_version': status == AssetPackDiagnosticStatus.unsupportedOs
           ? 'Version 25.0'
           : 'Version 26.4',
-      'pack_id': 'eqmonitor-assets',
+      'pack_id': 'platform',
       'status': status.name,
       'system_availability': 'unavailable',
       'detail': 'diagnostic details',
@@ -188,16 +178,3 @@ AssetPackDebugInfo debugInfo({
         .toList(),
   );
 }
-
-AssetPackUpdateResult updateResult({required bool success}) =>
-    AssetPackUpdateResult.fromJsonString(
-      jsonEncode({
-        'schema_version': 1,
-        'pack_id': 'eqmonitor-assets',
-        'success': success,
-        'checked_at': '2026-07-31T00:00:00Z',
-        'updating_ids': ['eqmonitor-assets'],
-        'removed_ids': <String>[],
-        'native_error': null,
-      }),
-    );

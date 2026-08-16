@@ -8,7 +8,6 @@ void main() {
   test('returns partial diagnostics when the pack is not ready', () async {
     final repository = AssetPackDebugRepository(
       diagnosePack: () async => diagnostics(status: .assetMissing),
-      checkForUpdates: updateResult,
     );
 
     final info = await repository.diagnose();
@@ -22,7 +21,6 @@ void main() {
     final repository = AssetPackDebugRepository(
       diagnosePack: () async =>
           diagnostics(status: .ready, manifest: validManifest),
-      checkForUpdates: updateResult,
     );
 
     final info = await repository.diagnose();
@@ -40,7 +38,7 @@ AssetPackDiagnostics diagnostics({
     'schema_version': 1,
     'platform': 'ios',
     'os_version': 'Version 26.4',
-    'pack_id': 'eqmonitor-assets',
+    'pack_id': 'platform',
     'status': status.name,
     'system_availability': 'unavailable',
     'detail': 'details',
@@ -63,19 +61,6 @@ AssetPackDiagnostics diagnostics({
     'native_error': null,
   }),
 );
-
-Future<AssetPackUpdateResult> updateResult() async =>
-    AssetPackUpdateResult.fromJsonString(
-      jsonEncode({
-        'schema_version': 1,
-        'pack_id': 'eqmonitor-assets',
-        'success': true,
-        'checked_at': '2026-07-31T00:00:00Z',
-        'updating_ids': <String>[],
-        'removed_ids': <String>[],
-        'native_error': null,
-      }),
-    );
 
 final validManifest = <String, dynamic>{
   'schema_version': 1,
