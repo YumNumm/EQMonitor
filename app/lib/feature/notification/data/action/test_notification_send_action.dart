@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
@@ -74,7 +75,7 @@ class TestNotificationSendAction {
           messenger.showSnackBar(
             SnackBar(
               content: Text('送信に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.designSystem.colorTheme.error,
             ),
           );
       }
@@ -83,7 +84,7 @@ class TestNotificationSendAction {
         messenger.showSnackBar(
           SnackBar(
             content: Text('送信に失敗しました: $exception'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: context.designSystem.colorTheme.error,
           ),
         );
       }
