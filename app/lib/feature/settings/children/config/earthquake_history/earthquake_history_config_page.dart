@@ -1,8 +1,8 @@
-import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_list_config_view.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -89,31 +89,14 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
         (value) => value.requireValue.list,
       ),
     );
-    return Column(
-      children: [
-        ListTile(
-          title: const Text('最大震度ごとの背景塗りつぶし'),
-          trailing: AppSwitch(
-            value: state.isFillBackground,
-            onChanged: (value) async {
-              final full = ref
-                  .read(earthquakeHistoryConfigProvider)
-                  .requireValue;
-              await ref
-                  .read(earthquakeHistoryConfigProvider.notifier)
-                  .save(full.copyWith.list(isFillBackground: value));
-            },
-          ),
-          onTap: () async {
-            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
-            await ref
-                .read(earthquakeHistoryConfigProvider.notifier)
-                .save(
-                  full.copyWith.list(isFillBackground: !state.isFillBackground),
-                );
-          },
-        ),
-      ],
+    return EarthquakeHistoryListConfigView(
+      config: state,
+      onChanged: (value) async {
+        final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+        await ref
+            .read(earthquakeHistoryConfigProvider.notifier)
+            .save(full.copyWith(list: value));
+      },
     );
   }
 }
