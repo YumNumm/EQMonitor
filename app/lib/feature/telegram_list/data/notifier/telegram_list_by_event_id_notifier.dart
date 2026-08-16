@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,6 +17,13 @@ typedef TelegramListByEventIdState = ({
 class TelegramListByEventId extends _$TelegramListByEventId {
   @override
   Future<TelegramListByEventIdState> build(String eventId) async {
+    ref.listen(realtimeEventsProvider, (_, next) {
+      if (next case AsyncData(
+        value: RealtimeEarthquakeUpsertEvent(:final record),
+      ) when record.eventId == eventId) {
+        ref.invalidateSelf();
+      }
+    });
     final client = await ref.read(apiClientProvider.future);
     final response = await client.telegram.getV2TelegramEventIdEventId(
       eventId: eventId,
