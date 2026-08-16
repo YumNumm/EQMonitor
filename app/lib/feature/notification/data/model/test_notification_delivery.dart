@@ -5,11 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'test_notification_delivery.freezed.dart';
 
-enum TestNotificationKind {
-  silent,
-  normal,
-  critical,
-}
+enum TestNotificationKind { silent, normal, critical }
 
 enum TestScenarioType {
   eewWarning,
@@ -46,10 +42,7 @@ abstract class TestNotificationDeliveryResult
   }) = _TestNotificationDeliveryResult;
 }
 
-enum TestNotificationFramework {
-  fcm,
-  apns,
-}
+enum TestNotificationFramework { fcm, apns }
 
 extension TestNotificationFrameworkDisplay on TestNotificationFramework {
   String get displayLabel => switch (this) {
