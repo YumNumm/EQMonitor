@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
@@ -86,6 +87,38 @@ void main() {
     expect(repository.receivedKinds, [TestNotificationKind.critical]);
     expect(handled, isTrue);
   });
+
+  testWidgets('RepositoryがFailureを返すと失敗SnackBarを表示する', (tester) async {
+    await tester.pumpWidget(
+      _TestApp(
+        repository: _FailurePushNotificationRepository(),
+        kind: TestNotificationKind.normal,
+        onHandled: (_) {},
+      ),
+    );
+
+    await tester.tap(find.text('通常'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('送信に失敗しました: Exception: result failure'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Repositoryが例外をthrowすると失敗SnackBarを表示する', (tester) async {
+    await tester.pumpWidget(
+      _TestApp(
+        repository: _ThrowingPushNotificationRepository(),
+        kind: TestNotificationKind.normal,
+        onHandled: (_) {},
+      ),
+    );
+
+    await tester.tap(find.text('通常'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('送信に失敗しました: Exception: thrown failure'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 class _TestApp extends StatelessWidget {
@@ -103,6 +136,10 @@ class _TestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeData.light().copyWith(
+      extensions: [DesignSystemThemeExtension.light()],
+    );
+
     return ProviderScope(
       overrides: [
         deviceIdProvider.overrideWith((ref) async => 'test-device-id'),
@@ -111,6 +148,7 @@ class _TestApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        theme: theme,
         home: Scaffold(
           body: Consumer(
             builder: (context, ref, child) => FilledButton(
@@ -131,6 +169,30 @@ class _TestApp extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+final class _FailurePushNotificationRepository extends Fake
+    implements PushNotificationRepository {
+  @override
+  Future<Result<TestNotificationDeliveryResult, Exception>>
+  sendTestNotification({
+    required String deviceId,
+    required TestNotificationKind kind,
+  }) async {
+    return Failure(Exception('result failure'));
+  }
+}
+
+final class _ThrowingPushNotificationRepository extends Fake
+    implements PushNotificationRepository {
+  @override
+  Future<Result<TestNotificationDeliveryResult, Exception>>
+  sendTestNotification({
+    required String deviceId,
+    required TestNotificationKind kind,
+  }) async {
+    throw Exception('thrown failure');
   }
 }
 
