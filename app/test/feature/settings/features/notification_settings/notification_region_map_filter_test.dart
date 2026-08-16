@@ -23,6 +23,14 @@ void main() {
     ]);
   });
 
+  test('市区町村がないregionはどの境界にも一致しない', () {
+    expect(filter.buildRegionCities(const []), [
+      '==',
+      ['get', 'regioncode'],
+      '__eqmonitor_no_match__',
+    ]);
+  });
+
   test('選択中の市区町村だけに一致する', () {
     expect(filter.buildSelectedCity('0110100'), [
       '==',
