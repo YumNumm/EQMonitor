@@ -32,16 +32,27 @@ class LpgmKyoshinMonitorWebApiDataSource {
       );
 
   /// RealtimeImg
-  Future<List<int>> getRealtimeImageData(
-    RealtimeDataType type,
-    RealtimeLayer layer,
-    DateTime dateTime,
-  ) => _client.getRealtimeImageData(
-    type: type.urlString,
-    layer: layer.urlString,
-    date: dateFormat.format(dateTime),
-    dateTime: dateTimeFormat.format(dateTime),
-  );
+  Future<List<int>> getRealtimeImageData({
+    required RealtimeDataType type,
+    required RealtimeLayer layer,
+    required DateTime dateTime,
+  }) {
+    final date = dateFormat.format(dateTime);
+    final formattedDateTime = dateTimeFormat.format(dateTime);
+    if (type.isLpgm) {
+      return _client.getLpgmRealtimeImageData(
+        type: type.urlString,
+        date: date,
+        dateTime: formattedDateTime,
+      );
+    }
+    return _client.getKyoshinRealtimeImageData(
+      type: type.urlString,
+      layer: layer.urlString,
+      date: date,
+      dateTime: formattedDateTime,
+    );
+  }
 
   static DateFormat get dateFormat => DateFormat('yyyyMMdd');
   static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');

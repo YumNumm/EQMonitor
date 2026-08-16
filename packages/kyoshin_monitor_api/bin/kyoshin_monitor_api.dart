@@ -67,9 +67,9 @@ class DownloadCommand extends Command<void> {
     try {
       final data = type.isLpgm
           ? await lpgmKyoshinMonitorWebApiDataSource.getRealtimeImageData(
-              type,
-              layer,
-              datetime,
+              type: type,
+              layer: layer,
+              dateTime: datetime,
             )
           : await kyoshinMonitorWebApiDataSource.getRealtimeImageData(
               type: type,
