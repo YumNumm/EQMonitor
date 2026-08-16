@@ -187,27 +187,28 @@ size、SHA-256 検証を通した同一 version の生成物を stage する。
 
 - read-only のアプリ同梱 Pack
 - writable な現行 download Pack
-- writable な直前 download Pack
 - download 中の staging directory
 
 現行 Pack の選択情報は専用 storage key enum を通して永続化し、key 文字列をコードへ
 直書きしない。起動時は候補を検証し、互換性のある最も新しい Pack を選ぶ。アプリ更新で
 同梱 Pack が現行 download Pack より新しくなった場合は、新しい同梱 Pack を選択する。
 
-有効化後も直前の download Pack 1 世代と同梱 Pack を保持する。staging は有効化対象と
-して参照しない。cleanup は現行 pointer の更新が完了した後にだけ行う。
+有効化後は現行 download Pack と同梱 Pack だけを保持し、それ以前の download Pack を
+すべて削除する。staging は有効化対象として参照しない。cleanup は現行 pointer の更新が
+完了した後にだけ行う。現行 download Pack に異常が見つかった場合は同梱 Pack へ
+fallback し、異常な download Pack を再選択しない。
 
 ## 更新確認と UI
 
-アプリは起動を catalog 通信で block せず、現在の検証済み Pack で画面を表示する。
-その後 `catalog.json` と `catalog.sig` を ETag / `If-None-Match` 付きで取得する。
+アプリは起動を manifest 通信で block せず、現在の検証済み Pack で画面を表示する。
+その後トップレベルの `manifest.json` と `manifest.sig` を ETag / `If-None-Match` 付きで取得する。
 
 次をすべて満たした場合だけ更新候補として扱う。
 
-- catalog 署名が正しい。
+- manifest 署名が正しい。
 - schema、revision、version 順、entry、path が妥当である。
 - latest version が同梱・現行 Pack より新しい。
-- revision と latest version が、端末で最後に受理した catalog より古くない。
+- revision と latest version が、端末で最後に受理した manifest より古くない。
 - 対象 Pack の `minimum_app_version` を現在のアプリが満たす。
 
 更新がある場合、HomeSheet と設定画面は同じ Riverpod state を監視して更新 card を
@@ -215,28 +216,30 @@ size、SHA-256 検証を通した同一 version の生成物を stage する。
 「更新する」button を含める。自動 download は開始しない。
 
 minimum app version を満たさない場合は Asset download button を表示せず、アプリ更新が
-必要であることを表示する。catalog 取得・検証に失敗した場合は未検証の Change log を
+必要であることを表示する。manifest 取得・検証に失敗した場合は未検証の Change log を
 表示しない。
 
-設定画面には、cache 済みの検証済み catalog から全 Change log 履歴を表示できる入口も
+設定画面には、cache 済みの検証済み manifest から全 Change log 履歴を表示できる入口も
 設ける。
 
 ## Download と有効化
 
 ユーザーが更新を開始すると、次の順で処理する。
 
-1. version 固定 path から manifest と signature を取得する。
-2. manifest の Ed25519 署名、schema、version、path、必須 Asset を検証する。
-3. manifest の合計 size と staging・直前世代保持分を考慮して空き容量を確認する。
-4. 各 Asset を staging directory へ download する。
-5. file ごとに size と SHA-256 を検証する。
-6. JSON parse、PMTiles header など、利用開始前に実行可能な内容検証を行う。
-7. 全検証に成功した staging directory を version directory へ atomic rename する。
-8. 現行 Pack pointer を新 version へ atomic に更新する。
-9. Asset を読む provider を invalidate し、新 Pack を開き直す。
-10. 直前の 1 世代を残して古い download Pack を cleanup する。
+1. 検証済みトップレベル manifest から対象 version の ZIP entry を選ぶ。
+2. ZIP の size と staging 分を考慮して空き容量を確認する。
+3. version 固定 path から ZIP を staging directory へ download し、受信 byte 数を進捗表示する。
+4. ZIP 全体の size と SHA-256 をトップレベル manifest と照合する。
+5. ZIP entry の path traversal、absolute path、symlink、重複 path、展開後合計 size を検査して展開する。
+6. Pack 内 manifest の schema、version、path、必須 Asset を検証する。
+7. file ごとに size と SHA-256 を検証する。
+8. JSON parse、PMTiles header など、利用開始前に実行可能な内容検証を行う。
+9. 全検証に成功した staging directory を version directory へ atomic rename する。
+10. 現行 Pack pointer を新 version へ atomic に更新する。
+11. Asset を読む provider を invalidate し、新 Pack を開き直す。
+12. 同梱 Pack と現行 download Pack 以外の download directory を cleanup する。
 
-catalog 内の absolute URL は受け入れない。固定した HTTPS base URL と、検証済みの
+manifest 内の absolute URL は受け入れない。固定した HTTPS base URL と、検証済みの
 relative path から URL を組み立てる。
 
 ### iOS
