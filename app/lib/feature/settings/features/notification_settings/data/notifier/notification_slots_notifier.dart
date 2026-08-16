@@ -29,15 +29,19 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
 
   Future<void> putCurrentLocation({
     bool? eewEnabled,
+    JmaIntensity? eewMinIntensity,
     List<NotificationOverride>? eewOverrides,
     bool? earthquakeEnabled,
+    JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.putCurrentLocation(
       eewEnabled: eewEnabled,
+      eewMinIntensity: eewMinIntensity,
       eewOverrides: eewOverrides,
       earthquakeEnabled: earthquakeEnabled,
+      earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
     await _startBackgroundLocationMonitoring();
@@ -76,8 +80,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     final slotsWithoutCurrentLocation = currentSlots
         .where((s) => s.slotType != NotificationSlotType.currentLocation)
         .toList();
-    final shakeDetectionState =
-        ref.read(shakeDetectionSettingsProvider).value;
+    final shakeDetectionState = ref.read(shakeDetectionSettingsProvider).value;
     const lifecycle = BackgroundLocationMonitoringLifecycle();
     await lifecycle.stopIfUnused(
       slots: slotsWithoutCurrentLocation,
@@ -202,5 +205,4 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     ref.invalidateSelf();
     return true;
   }
-
 }

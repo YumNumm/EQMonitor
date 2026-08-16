@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
@@ -6,7 +5,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// 現在地スロットは固定値のラベル、それ以外はドロップダウンで最小震度を表示する。
+/// スロットの最小震度をドロップダウンで表示する。
 class NotificationMinIntensityField extends StatelessWidget {
   const NotificationMinIntensityField({
     required this.slotType,
@@ -27,24 +26,19 @@ class NotificationMinIntensityField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final fixed = slotType.fixedMinIntensity(kind);
-
-    if (fixed != null) {
-      return Text(
-        fixed.minIntensityLabel,
-        style: designSystem.typography.bodyLarge.copyWith(
-          color: enabled
-              ? designSystem.colorTheme.onSurface
-              : designSystem.colorTheme.onSurfaceVariant,
-        ),
-      );
-    }
-
     final resolved =
         value != null && JmaIntensity.selectableValues.contains(value)
         ? value
-        : defaultNotificationSlotMinIntensity;
+        : switch ((slotType, kind)) {
+            (NotificationSlotType.currentLocation, NotificationKind.eew) =>
+              currentLocationEewMinIntensity,
+            (
+              NotificationSlotType.currentLocation,
+              NotificationKind.earthquake,
+            ) =>
+              currentLocationEarthquakeMinIntensity,
+            _ => defaultNotificationSlotMinIntensity,
+          };
 
     return DropdownMenu<JmaIntensity>(
       initialSelection: resolved,

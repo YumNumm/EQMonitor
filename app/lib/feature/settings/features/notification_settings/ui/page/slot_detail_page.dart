@@ -4,9 +4,12 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
@@ -29,6 +32,10 @@ class SlotDetailPage extends HookConsumerWidget {
         (v) => v.value?.where((s) => s.id == slotId).firstOrNull,
       ),
     );
+    final warningEnabled = ref.watch(
+      eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
+    );
+    final warningTarget = ref.watch(eewWarningConfigProvider).value?.target;
 
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
@@ -44,6 +51,8 @@ class SlotDetailPage extends HookConsumerWidget {
     listenMutationError(NotificationSlotsNotifier.putNationwideMutation);
     listenMutationError(NotificationSlotsNotifier.updateRegionMutation);
     listenMutationError(NotificationSlotsNotifier.removeRegionMutation);
+    listenMutationError(EewGlobalSettingsNotifier.updateSettingsMutation);
+    listenMutationError(EewWarningConfigNotifier.updateConfigMutation);
 
     final String title;
     if (slot == null) {
@@ -88,6 +97,45 @@ class SlotDetailPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+                if (slot.slotType != NotificationSlotType.region) ...[
+                  const SettingsSectionHeader(text: '緊急地震速報（警報）'),
+                  _WarningSettingsCard(
+                    enabled:
+                        slot.slotType == NotificationSlotType.currentLocation
+                        ? warningEnabled
+                        : warningTarget ==
+                              EewWarningTarget.currentLocationAndNationwide,
+                    onChanged: (next) async {
+                      switch (slot.slotType) {
+                        case NotificationSlotType.currentLocation:
+                          await EewGlobalSettingsNotifier.updateSettingsMutation
+                              .run(ref, (tsx) async {
+                                await tsx
+                                    .get(eewGlobalSettingsProvider.notifier)
+                                    .updateSettings(warningEnabled: next);
+                              });
+                        case NotificationSlotType.nationwide:
+                          await EewWarningConfigNotifier.updateConfigMutation
+                              .run(ref, (tsx) async {
+                                await tsx
+                                    .get(eewWarningConfigProvider.notifier)
+                                    .updateConfig(
+                                      target: next
+                                          ? EewWarningTarget
+                                                .currentLocationAndNationwide
+                                          : EewWarningTarget
+                                                .currentLocationOnly,
+                                      nationwideInterruptionLevel: next
+                                          ? InterruptionLevel.active
+                                          : null,
+                                    );
+                              });
+                        case NotificationSlotType.region:
+                          return;
+                      }
+                    },
+                  ),
+                ],
                 const SettingsSectionHeader(text: '地震情報'),
                 _NotificationConditionCard(
                   slotType: slot.slotType,
@@ -227,6 +275,58 @@ class _NotificationConditionCard extends StatelessWidget {
               locked: true,
               onTap: () async => const ProUpgradeDialogAction().show(context),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WarningSettingsCard extends StatelessWidget {
+  const _WarningSettingsCard({required this.enabled, required this.onChanged});
+
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
+
+    return Card.outlined(
+      margin: EdgeInsets.fromLTRB(
+        spacing.lg,
+        spacing.sm,
+        spacing.lg,
+        spacing.md,
+      ),
+      color: colorTheme.surfaceContainerHigh,
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: colorTheme.outlineVariant),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: const Text('有効'),
+            trailing: AppSwitch(value: enabled, onChanged: onChanged),
+            onTap: () => onChanged(!enabled),
+          ),
+          const Divider(height: 1),
+          Padding(
+            padding: EdgeInsets.all(spacing.md),
+            child: Text(
+              '緊急地震速報（警報）は、現在地や全国を対象に重大な通知として配信されます。',
+              style: designSystem.typography.bodySmall.copyWith(
+                color: colorTheme.onSurfaceVariant,
+              ),
+            ),
+          ),
         ],
       ),
     );
