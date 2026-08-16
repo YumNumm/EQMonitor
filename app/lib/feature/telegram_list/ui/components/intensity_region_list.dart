@@ -8,11 +8,15 @@ import 'package:flutter/material.dart';
 class IntensityRegionList extends StatelessWidget {
   const IntensityRegionList({
     required this.entries,
+    this.groupByPrefecture = false,
     this.prefectureMap,
     super.key,
   });
 
   final List<IntensityRegionDiffEntry> entries;
+
+  /// 市区町村コード先頭2桁で都道府県ごとにグループ化するか。
+  final bool groupByPrefecture;
 
   /// 市区町村コード先頭2桁 → 都道府県名 のマップ（VXSE53用）
   final Map<String, String>? prefectureMap;
@@ -41,6 +45,7 @@ class IntensityRegionList extends StatelessWidget {
             _IntensityRow(
               intensity: intensity,
               entries: entries,
+              groupByPrefecture: groupByPrefecture,
               prefectureMap: prefectureMap,
             ),
       ],
@@ -52,11 +57,13 @@ class _IntensityRow extends StatelessWidget {
   const _IntensityRow({
     required this.intensity,
     required this.entries,
+    required this.groupByPrefecture,
     this.prefectureMap,
   });
 
   final JmaIntensity intensity;
   final List<IntensityRegionDiffEntry> entries;
+  final bool groupByPrefecture;
   final Map<String, String>? prefectureMap;
 
   @override
@@ -69,19 +76,18 @@ class _IntensityRow extends StatelessWidget {
           JmaIntensityIcon(intensity: intensity, type: .filled, size: 28),
           const SizedBox(width: 8),
           Expanded(
-            child: switch (prefectureMap) {
-              final prefectureMap? => _PrefectureRegionList(
-                entries: entries,
-                prefectureMap: prefectureMap,
-              ),
-              null => Wrap(
-                spacing: 4,
-                runSpacing: 2,
-                children: [
-                  for (final entry in entries) _RegionChip(entry: entry),
-                ],
-              ),
-            },
+            child: groupByPrefecture
+                ? _PrefectureRegionList(
+                    entries: entries,
+                    prefectureMap: prefectureMap,
+                  )
+                : Wrap(
+                    spacing: 4,
+                    runSpacing: 2,
+                    children: [
+                      for (final entry in entries) _RegionChip(entry: entry),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -96,7 +102,7 @@ class _PrefectureRegionList extends StatelessWidget {
   });
 
   final List<IntensityRegionDiffEntry> entries;
-  final Map<String, String> prefectureMap;
+  final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +120,7 @@ class _PrefectureRegionList extends StatelessWidget {
         for (final prefCode in sortedPrefCodes)
           if (byPrefecture[prefCode] case final entries?)
             _PrefectureRegionRow(
-              prefectureName: prefectureMap[prefCode] ?? prefCode,
+              prefectureName: prefectureMap?[prefCode] ?? prefCode,
               entries: entries,
             ),
       ],

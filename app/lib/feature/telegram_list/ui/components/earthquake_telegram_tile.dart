@@ -195,7 +195,11 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
             HypocenterSummary(quake: quake, diff: hypocenterDiff),
           if (quake != null && regionDiff != null) const SizedBox(height: 8),
           if (regionDiff case final entries?)
-            IntensityRegionList(entries: entries, prefectureMap: prefectureMap),
+            IntensityRegionList(
+              entries: entries,
+              groupByPrefecture: true,
+              prefectureMap: prefectureMap,
+            ),
         ],
       ),
       .vxse61 =>
