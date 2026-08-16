@@ -40,7 +40,7 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_web_view_page.dart';
 import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/about_this_app_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_page.dart';
@@ -589,7 +589,7 @@ class AboutThisAppRoute extends GoRouteData with $AboutThisAppRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const AboutThisAppScreen();
+      const AboutThisAppPage();
 }
 
 class EewDetailsByEventIdRoute extends GoRouteData
