@@ -3,7 +3,6 @@ package net.yumnumm.assets_util
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.google.android.play.core.assetpacks.AssetPackManagerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -62,79 +61,34 @@ object AssetsUtil {
   }
 
   /**
-   * Resolves the absolute path to the Play Asset Delivery install-time
-   * pack [packName]'s root directory.
-   *
-   * Prefers [AssetPackManagerFactory]'s `AssetPackManager.getPackLocation`,
-   * which returns the on-device location of a delivered asset pack. Per
-   * Play Core's own documentation
-   * (https://developer.android.com/reference/com/google/android/play/core/assetpacks/AssetPackLocation),
-   * `AssetPackLocation.assetsPath()`/`path()` return `null` when the pack's
-   * storage method is `APK_ASSETS` — i.e. Play fused the install-time
-   * pack's contents into the base APK instead of shipping it as a separate
-   * split (documented to happen for some device/Play Store combinations
-   * even with install-time delivery). "To access assets from packs
-   * installed as APKs, use Asset Manager" (same reference page) — but
-   * `resolvePackRoot`'s contract (mirrored from the iOS/macOS
-   * implementations) must return a real filesystem *directory* path, and
-   * `AssetManager` has no such notion for APK-embedded assets. So in the
-   * fused case we extract the pack's files out of `context.assets` into
-   * `filesDir/<packName>/` once (atomic tmp-then-rename, same pattern as
-   * [resolveLocalPath]'s single-file copy, gated by the same
-   * `versionCode` marker so it isn't repeated every launch), and return
-   * that directory's absolute path.
-   *
-   * Returns `null` if the pack isn't available through either path yet;
-   * callers turn that into `AssetPackNotReadyException`.
+   * Extracts the immutable Asset Pack bundled under `assets/[packName]` to a
+   * filesystem directory. Map readers require regular file paths and cannot
+   * read directly from Android's AssetManager.
    */
   @JvmStatic
   fun resolvePackRoot(
     context: Context,
     packName: String,
   ): String? {
-    val assetPackManager = AssetPackManagerFactory.getInstance(context)
-    val location = assetPackManager.getPackLocation(packName)
-    val assetsPath = location?.assetsPath() ?: location?.path()
-    if (assetsPath != null) {
-      val dir = File(assetsPath)
-      if (dir.exists() && dir.isDirectory) {
-        return dir.absolutePath
-      }
+    if (!Regex("^[A-Za-z0-9_-]+$").matches(packName)) {
+      return null
     }
-
-    // Fallback: pack fused into the base APK (APK_ASSETS). `packName` is
-    // where AGP places a fused install-time pack's assets inside the base
-    // APK's own `assets/` tree (mirrors the module's
-    // `src/main/assets/` root, i.e. `assets/manifest.json` etc. under
-    // `assets/<packName>/` is *not* how AGP fuses — assets are merged
-    // directly at the base APK's assets root). Probe both layouts for the
-    // pack's mandated `manifest.json` before extracting.
-    val candidateAssetRoots = listOf(packName, "")
-    val assetRoot =
-      candidateAssetRoots.firstOrNull { root ->
-        val probePath = if (root.isEmpty()) "manifest.json" else "$root/manifest.json"
-        try {
-          context.assets.open(probePath).close()
-          true
-        } catch (_: java.io.FileNotFoundException) {
-          false
-        }
-      } ?: return null
-
-    return extractFusedAssetPackToFilesDir(context, packName, assetRoot)
+    val manifestPath = "$packName/manifest.json"
+    try {
+      context.assets.open(manifestPath).close()
+    } catch (_: java.io.FileNotFoundException) {
+      return null
+    }
+    return extractBundledAssetPackToFilesDir(context, packName)
   }
 
   /**
-   * Copies a fused (APK_ASSETS) install-time asset pack out of
-   * `context.assets` into `filesDir/<packName>/`, mirroring the relative
-   * directory structure, and returns the destination directory's absolute
-   * path. Uses the same `versionCode`-marker caching as [resolveLocalPath]
-   * so repeat launches don't re-copy tens of megabytes of pack contents.
+   * Copies the immutable app-bundled pack from AssetManager into
+   * `filesDir/<packName>/`. Map readers need regular filesystem paths.
    */
-  private fun extractFusedAssetPackToFilesDir(
+  private fun extractBundledAssetPackToFilesDir(
     context: Context,
     packName: String,
-    assetRoot: String,
   ): String? {
     val outDir = File(context.filesDir, packName)
     val versionCode = currentVersionCode(context)
@@ -151,7 +105,7 @@ object AssetsUtil {
       throw IllegalStateException("Failed to create directory: ${outDir.absolutePath}")
     }
 
-    copyAssetDirectoryRecursively(context, assetRoot, outDir)
+    copyAssetDirectoryRecursively(context, packName, outDir)
     markerFile.writeText(versionCode.toString())
     return outDir.absolutePath
   }

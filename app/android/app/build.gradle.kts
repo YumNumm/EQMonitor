@@ -1,6 +1,7 @@
 import java.util.Base64
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.tasks.Sync
 
 plugins {
     id("com.android.application")
@@ -25,13 +26,17 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val bundledAssetPackRoot = layout.buildDirectory.dir("generated/bundledAssetPack")
+val stageBundledAssetPack by tasks.registering(Sync::class) {
+    from("../../assets/platform")
+    into(bundledAssetPackRoot.map { it.dir("platform") })
+}
+
 android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
     compileSdk = 36
     ndkVersion = "29.0.14206865"
-
-    assetPacks += setOf(":assetpacks:eqmonitor_assets")
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -46,6 +51,7 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
+            assets.srcDir(bundledAssetPackRoot)
         }
     }
 
@@ -88,6 +94,10 @@ android {
             resValue("string", "app_name", "EQMonitor (Debug)")
         }
     }
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(stageBundledAssetPack)
 }
 
 flutter {

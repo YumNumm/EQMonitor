@@ -24,4 +24,4 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "14.0.+" apply false
 }
 
-include(":app", ":assetpacks:eqmonitor_assets")
+include(":app")
