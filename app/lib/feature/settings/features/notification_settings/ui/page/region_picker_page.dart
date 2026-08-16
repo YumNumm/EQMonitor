@@ -9,9 +9,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_region_catalog_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/city_picker_page.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_region_map_picker_page.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class RegionPickerPage extends HookConsumerWidget {
@@ -61,7 +62,27 @@ class RegionPickerPage extends HookConsumerWidget {
             is MutationPending;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('地域を選択')),
+      appBar: AppBar(
+        title: const Text('地域を選択'),
+        actions: [
+          IconButton(
+            tooltip: '地図から選択',
+            icon: const Icon(Icons.map_outlined),
+            onPressed: isAdding
+                ? null
+                : () async {
+                    final selection =
+                        await NotificationRegionMapPickerPage.show(context);
+                    if (selection == null || !context.mounted) {
+                      return;
+                    }
+                    await ref
+                        .read(notificationRegionAddActionProvider)
+                        .add(ref: ref, selection: selection);
+                  },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
