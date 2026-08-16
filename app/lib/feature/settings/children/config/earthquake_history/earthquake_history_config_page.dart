@@ -113,6 +113,30 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
                 );
           },
         ),
+        ListTile(
+          title: const Text('発生時刻ソート時の日付区切り'),
+          trailing: AppSwitch(
+            value: state.showDateSeparator,
+            onChanged: (value) async {
+              final full = ref
+                  .read(earthquakeHistoryConfigProvider)
+                  .requireValue;
+              await ref
+                  .read(earthquakeHistoryConfigProvider.notifier)
+                  .save(full.copyWith.list(showDateSeparator: value));
+            },
+          ),
+          onTap: () async {
+            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+            await ref
+                .read(earthquakeHistoryConfigProvider.notifier)
+                .save(
+                  full.copyWith.list(
+                    showDateSeparator: !state.showDateSeparator,
+                  ),
+                );
+          },
+        ),
       ],
     );
   }
