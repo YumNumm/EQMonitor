@@ -90,7 +90,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     state = await AsyncValue.guard(() async {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
       final realtimeDataType = settings.realtimeDataType;
-      final realtimeLayer = settings.realtimeLayer;
+      final realtimeLayer = settings.effectiveRealtimeLayer;
       final monitorSource = settings.monitorSource;
 
       final analyzer = await ref.read(
@@ -111,9 +111,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         image = await Timeline.timeSync(
           'lmoni.fetchImage',
           () async => lpgmDataSource.getRealtimeImageData(
-            realtimeDataType,
-            realtimeLayer,
-            targetTime,
+            type: realtimeDataType,
+            layer: realtimeLayer,
+            dateTime: targetTime,
           ),
         );
       } else {

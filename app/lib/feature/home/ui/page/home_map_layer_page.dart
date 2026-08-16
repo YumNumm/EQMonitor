@@ -829,7 +829,7 @@ class _KyoshinRealtimeLayerTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final setting = ref.watch(kyoshinMonitorSettingsProvider).requireValue;
-    if (!setting.useKmoni) {
+    if (!setting.canSelectRealtimeLayer) {
       return const SizedBox.shrink();
     }
     return _SettingDropdownField<RealtimeLayer>(
