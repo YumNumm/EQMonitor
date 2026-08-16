@@ -17,10 +17,12 @@ import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
+import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -66,10 +68,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                   _NotificationSettingsSection(
                     deviceId: deviceIdAsync.requireValue,
                   ),
-                if (deviceIdAsync.hasValue)
-                  _TestNotificationSection(
-                    deviceId: deviceIdAsync.requireValue,
-                  ),
+                if (deviceIdAsync.hasValue) const _TestNotificationSection(),
                 if (deviceIdAsync.hasValue)
                   _TestScenarioSection(deviceId: deviceIdAsync.requireValue),
                 if (deviceIdAsync.hasValue)
@@ -881,75 +880,26 @@ Future<GeneralNotificationSettings> _notificationSettings(
 // ── テスト通知 ───────────────────────────────────────────────────────────────
 
 class _TestNotificationSection extends HookConsumerWidget {
-  const _TestNotificationSection({required this.deviceId});
-
-  final String deviceId;
+  const _TestNotificationSection();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingKind = useState<TestNotificationKind?>(null);
 
-    Future<void> send(TestNotificationKind kind) async {
-      pendingKind.value = kind;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(
-        pushNotificationRepositoryProvider.future,
-      );
-      final result = await notificationRepository.sendTestNotification(
-        deviceId: deviceId,
-        kind: kind,
-      );
-      pendingKind.value = null;
-      if (!context.mounted) {
-        return;
-      }
-      switch (result) {
-        case Success(:final value):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
-                '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
-            ),
-          );
-        case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('送信に失敗: $exception'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-      }
-    }
-
     return _SectionCard(
       title: 'テスト通知',
-      subtitle: 'サイレント・通常・クリティカルをサーバー経由で送信します',
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children:
-            [
-              TestNotificationKind.silent,
-              TestNotificationKind.normal,
-              TestNotificationKind.critical,
-            ].map((kind) {
-              final isPending = pendingKind.value == kind;
-              return FilledButton.tonal(
-                onPressed: pendingKind.value != null && !isPending
-                    ? null
-                    : () async => send(kind),
-                child: isPending
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator.adaptive(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(kind.displayLabel),
-              );
-            }).toList(),
+      subtitle: '通常・重大な通知をサーバー経由で送信します',
+      child: TestNotificationKindButtons(
+        pendingKind: pendingKind.value,
+        onPressed: (kind) async {
+          pendingKind.value = kind;
+          await ref
+              .read(testNotificationSendActionProvider)
+              .handle(ref: ref, context: context, kind: kind);
+          if (context.mounted) {
+            pendingKind.value = null;
+          }
+        },
       ),
     );
   }

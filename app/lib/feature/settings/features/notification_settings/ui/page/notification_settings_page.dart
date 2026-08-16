@@ -2,12 +2,8 @@ import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
-import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
@@ -23,6 +19,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/r
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -31,7 +28,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -127,7 +123,7 @@ class _Body extends HookConsumerWidget {
         ],
         const SettingsSectionHeader(text: 'ツール'),
         const _NotificationHistoryTile(),
-        const _TestNotificationTile(),
+        const TestNotificationTile(),
         const _AndroidNotificationSettingsTile(),
       ],
     );
@@ -1062,104 +1058,6 @@ class _NotificationHistoryTile extends StatelessWidget {
       leading: const Icon(Icons.history),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async => const NotificationHistoryRoute().push<void>(context),
-    );
-  }
-}
-
-class _TestNotificationTile extends HookConsumerWidget {
-  const _TestNotificationTile();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final pendingKind = useState<TestNotificationKind?>(null);
-
-    Future<void> send(TestNotificationKind kind) async {
-      pendingKind.value = kind;
-      final messenger = ScaffoldMessenger.of(context);
-      final deviceId = await ref.read(deviceIdProvider.future);
-      final repo = await ref.read(pushNotificationRepositoryProvider.future);
-      final result = await repo.sendTestNotification(
-        deviceId: deviceId,
-        kind: kind,
-      );
-      if (!context.mounted) {
-        return;
-      }
-      pendingKind.value = null;
-      switch (result) {
-        case Success(:final value):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
-                '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
-            ),
-          );
-        case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('送信に失敗しました: $exception'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-      }
-    }
-
-    return ListTile(
-      title: const Text('テスト通知を送信'),
-      subtitle: const Text('通知が正しく届くか確認できます'),
-      leading: const Icon(Icons.send_outlined),
-      onTap: pendingKind.value != null
-          ? null
-          : () async {
-              await showModalBottomSheet<void>(
-                context: context,
-                builder: (context) => SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 24,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'テスト通知',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '送信する通知の種類を選んでください',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        const SizedBox(height: 16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: TestNotificationKind.values.map((kind) {
-                            return FilledButton.tonal(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                await send(kind);
-                              },
-                              child: Text(kind.displayLabel),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-      trailing: pendingKind.value != null
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-            )
-          : const Icon(Icons.chevron_right),
     );
   }
 }
