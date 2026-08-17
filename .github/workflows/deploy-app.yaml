@@ -177,6 +177,10 @@ jobs:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
           token_format: access_token
+          # androidpublisher API は cloud-platform スコープのトークンを拒否する
+          access_token_scopes: >-
+            https://www.googleapis.com/auth/cloud-platform,
+            https://www.googleapis.com/auth/androidpublisher
 
       - name: Generate Android release notes
         env:
@@ -848,6 +852,10 @@ jobs:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
           token_format: access_token
+          # androidpublisher API は cloud-platform スコープのトークンを拒否する
+          access_token_scopes: >-
+            https://www.googleapis.com/auth/cloud-platform,
+            https://www.googleapis.com/auth/androidpublisher
 
       - name: Ensure Google Play track exists
         if: ${{ needs.define-matrix.outputs.android-track == 'external' }}
