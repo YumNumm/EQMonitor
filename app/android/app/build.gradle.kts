@@ -49,7 +49,8 @@ val stageBundledAssetPack = tasks.register<StageBundledAssetPackTask>(
 android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
-    compileSdk = 36
+    // permission_handler_android 14.x が compileSdk 37 以上を要求する
+    compileSdk = 37
     ndkVersion = "29.0.14206865"
 
     // AGP 9 では既定で無効。app_name を dart-define から差し替えるために必要
