@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// [ThemeColorSet] から Material 3 の [ThemeData] を組み立てるファクトリ。
 class AppThemeDataBuilder {
-  const AppThemeDataBuilder._();
+  const new _();
 
   static ThemeData build({
     required ThemeColorSet colorSet,

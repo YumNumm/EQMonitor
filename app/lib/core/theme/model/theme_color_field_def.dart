@@ -12,7 +12,7 @@ enum ThemeColorFieldCategory {
 }
 
 class ThemeColorFieldDef {
-  const ThemeColorFieldDef({
+  const new({
     required this.label,
     required this.category,
     required this.description,
@@ -36,7 +36,7 @@ class ThemeColorFieldDef {
 /// `ThemeColorSet`の全編集可能カラーフィールドを網羅する。
 /// エディタUI(Task 5/6)は[all]を描画するだけで完結する。
 class ThemeColorFieldDefs {
-  const ThemeColorFieldDefs._();
+  const new _();
 
   static final List<ThemeColorFieldDef> all = [
     ThemeColorFieldDef(

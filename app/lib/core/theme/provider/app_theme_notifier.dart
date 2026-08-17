@@ -159,6 +159,6 @@ ThemeColorSet colorSetForBrightness(Ref ref, Brightness brightness) {
 }
 
 final class AppThemeImportException implements Exception {
-  const AppThemeImportException(this.message);
+  const new(this.message);
   final String message;
 }

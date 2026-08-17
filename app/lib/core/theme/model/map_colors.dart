@@ -7,7 +7,7 @@ part 'map_colors.g.dart';
 
 @freezed
 abstract class MapColors with _$MapColors {
-  const factory MapColors({
+  const factory({
     @ColorJsonConverter() required Color background,
     @ColorJsonConverter() required Color worldLand,
     @ColorJsonConverter() required Color worldLine,
@@ -15,6 +15,6 @@ abstract class MapColors with _$MapColors {
     @ColorJsonConverter() required Color japanLine,
   }) = _MapColors;
 
-  factory MapColors.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MapColorsFromJson(json);
 }

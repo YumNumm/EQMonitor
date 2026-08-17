@@ -9,7 +9,7 @@ typedef MapStyleLayerEntry = ({
 
 /// 固定 ID の MapLibre layer を、既存 layer の残留に強い形で置き換える。
 class MapStyleLayerReplacer {
-  const MapStyleLayerReplacer._();
+  const new _();
 
   static Future<void> replace({
     required StyleController styleController,
