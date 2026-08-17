@@ -21,7 +21,7 @@ final _freshFeed = FeedItem(
 );
 
 final class _RecordingFeedRepository implements FeedRepository {
-  _RecordingFeedRepository({this.nextCursor});
+  new({this.nextCursor});
 
   final String? nextCursor;
   final List<api.ApiClient?> clients = [];

@@ -67,7 +67,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
 
 class EarthquakeHistoryDataSource
     extends GroupedDataSource<String?, String, EarthquakePartial> {
-  EarthquakeHistoryDataSource({
+  new({
     required EarthquakeHistoryRepository repository,
     required EarthquakeHistoryParameter parameter,
     VoidCallback? onRefreshStarted,
@@ -417,14 +417,14 @@ class EarthquakeHistoryDataSource
 }
 
 sealed class _RealtimeListMutation {
-  const _RealtimeListMutation({required this.sequence});
+  const new({required this.sequence});
 
   final int sequence;
   String get eventId;
 }
 
 final class _RealtimeListUpsert extends _RealtimeListMutation {
-  const _RealtimeListUpsert({required super.sequence, required this.record});
+  const new({required super.sequence, required this.record});
 
   final api.Earthquake record;
   @override
@@ -432,7 +432,7 @@ final class _RealtimeListUpsert extends _RealtimeListMutation {
 }
 
 final class _RealtimeListDelete extends _RealtimeListMutation {
-  const _RealtimeListDelete({required super.sequence, required this.eventId});
+  const new({required super.sequence, required this.eventId});
 
   @override
   final String eventId;

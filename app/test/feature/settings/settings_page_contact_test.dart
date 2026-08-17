@@ -106,7 +106,7 @@ final _packageInfo = PackageInfo(
 );
 
 class _FakeOpenContactAction extends OpenContactAction {
-  const _FakeOpenContactAction(this._onCall);
+  const new(this._onCall);
 
   final void Function() _onCall;
 
@@ -117,7 +117,7 @@ class _FakeOpenContactAction extends OpenContactAction {
 }
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
 
   final Widget home;
 

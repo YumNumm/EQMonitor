@@ -21,7 +21,7 @@ class TravelTimeDataSource {
 /// 呼び出し対象は static method（インスタンス状態をキャプチャしないもの）
 /// である必要がある。talker (Firebase 依存の global) は isolate では使えない。
 class TravelTimeCsvParser {
-  const TravelTimeCsvParser._();
+  const new _();
 
   static TravelTimeTables parse(String raw) {
     final rows = raw

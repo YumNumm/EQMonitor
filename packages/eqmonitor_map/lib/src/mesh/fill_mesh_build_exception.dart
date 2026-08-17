@@ -14,21 +14,21 @@ sealed class FillMeshBuildException
     implements Exception {
   /// ringの頂点数が3未満、またはshoelace公式による符号付き面積が0の場合。
   /// MVT仕様上、面のないringは外形にも穴にもなり得ない。
-  const factory FillMeshBuildException.degenerateRing({
+  const factory degenerateRing({
     required String reason,
   }) = FillMeshDegenerateRingException;
 
   /// 穴(shoelace符号が負のring)が、それを内包する外形より前に現れた場合。
   /// MVT仕様は「最初のringは必ず外形」と定めており、これに反する並びは
   /// classifyRingsが復元不能なため受理しない。
-  const factory FillMeshBuildException.holeBeforeExterior({
+  const factory holeBeforeExterior({
     required String reason,
   }) = FillMeshHoleBeforeExteriorException;
 
   /// 呼び出し側が渡した`FillMeshBuilderLimits`を超過した場合
   /// (穴数超過、feature内頂点数超過、1つのfeatureがsegment容量に収まらない
   /// など)。
-  const factory FillMeshBuildException.limitExceeded({
+  const factory limitExceeded({
     required String reason,
   }) = FillMeshLimitExceededException;
 }

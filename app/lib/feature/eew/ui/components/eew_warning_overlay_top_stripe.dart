@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 const eewWarningOverlayStripeHeight = 10.0;
 
 class EewWarningOverlayTopStripe extends StatelessWidget {
-  const EewWarningOverlayTopStripe({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => WarningStripeDecoration(

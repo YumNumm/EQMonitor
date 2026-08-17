@@ -1,17 +1,17 @@
 sealed class KyoshinImageParseException implements Exception {
-  const KyoshinImageParseException(this.type);
+  const new(this.type);
 
   final KyoshinImageParseExceptionType type;
 }
 
 class KyoshinImageParseInvalidGifException extends KyoshinImageParseException {
-  const KyoshinImageParseInvalidGifException()
+  const new()
     : super(KyoshinImageParseExceptionType.invalidGif);
 }
 
 class KyoshinImageParseInvalidImageSizeException
     extends KyoshinImageParseException {
-  const KyoshinImageParseInvalidImageSizeException()
+  const new()
     : super(KyoshinImageParseExceptionType.invalidImageSize);
 }
 

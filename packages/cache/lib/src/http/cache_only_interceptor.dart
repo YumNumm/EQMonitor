@@ -4,8 +4,8 @@ import 'package:cache/src/http/restore_response.dart';
 import 'package:dio/dio.dart';
 
 class CacheOnlyInterceptor extends Interceptor {
-  CacheOnlyInterceptor(HttpCacheStore store) : _store = store;
-  CacheOnlyInterceptor.disabled() : _store = null;
+  new(HttpCacheStore store) : _store = store;
+  new disabled() : _store = null;
 
   final HttpCacheStore? _store;
 

@@ -17,7 +17,7 @@ void seismicityDecoderWorkerEntry(SendPort initialReplyTo) {
 }
 
 final class SeismicityDecoderWorkerSession {
-  SeismicityDecoderWorkerSession({required this.replyTo})
+  new({required this.replyTo})
     : decodedTileCount = 0,
       finished = false;
 

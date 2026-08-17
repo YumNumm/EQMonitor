@@ -9,7 +9,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Tsunami Decoder.
 class TsunamiDecoder {
-  const TsunamiDecoder._();
+  const new _();
 
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

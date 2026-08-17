@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/permission/data/model/permission_item_decision
 import 'package:geolocator/geolocator.dart';
 
 class PermissionState {
-  const PermissionState({
+  const new({
     required this.isCriticalAlertSupported,
     this.notification = PermissionItemDecision.notRequested,
     this.criticalAlert = PermissionItemDecision.notRequested,
@@ -11,7 +11,7 @@ class PermissionState {
     this.backgroundLocation = PermissionItemDecision.notRequested,
   });
 
-  factory PermissionState.fromOs({
+  factory fromOs({
     required OsNotificationPermission notification,
     required LocationPermission location,
   }) {

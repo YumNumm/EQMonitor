@@ -88,69 +88,69 @@ class AssetPackArchiveExtractor {
       }
     }
   }
-}
 
-void validateArchiveEntry({
-  required ArchiveFile entry,
-  required Set<String> names,
-  required AssetPackArchiveLimits limits,
-}) {
-  final name = entry.name;
-  final drivePathPattern = RegExp(r'^[A-Za-z]:');
-  if (name.isEmpty ||
-      name.startsWith('/') ||
-      drivePathPattern.hasMatch(name) ||
-      name.contains(r'\')) {
-    throw AssetPackArchiveException('ZIP に不正なパスが含まれています: $name');
-  }
+  void validateArchiveEntry({
+    required ArchiveFile entry,
+    required Set<String> names,
+    required AssetPackArchiveLimits limits,
+  }) {
+    final name = entry.name;
+    final drivePathPattern = RegExp(r'^[A-Za-z]:');
+    if (name.isEmpty ||
+        name.startsWith('/') ||
+        drivePathPattern.hasMatch(name) ||
+        name.contains(r'\')) {
+      throw AssetPackArchiveException('ZIP に不正なパスが含まれています: $name');
+    }
 
-  final pathWithoutDirectorySuffix = entry.isDirectory && name.endsWith('/')
-      ? name.substring(0, name.length - 1)
-      : name;
-  final segments = pathWithoutDirectorySuffix.split('/');
-  if (segments.isEmpty ||
-      segments.any(
-        (segment) => segment.isEmpty || segment == '.' || segment == '..',
-      )) {
-    throw AssetPackArchiveException('ZIP に不正なパスが含まれています: $name');
-  }
-  if (!names.add(name)) {
-    throw AssetPackArchiveException('ZIP に重複したパスが含まれています: $name');
-  }
-  if (entry.isSymbolicLink) {
-    throw AssetPackArchiveException('ZIP にシンボリックリンクが含まれています: $name');
-  }
-  if (entry.size < 0 || entry.size > limits.maxSingleFileBytes) {
-    throw AssetPackArchiveException('ZIP 内のファイルサイズが不正です: $name');
-  }
-}
-
-Future<void> extractArchiveEntry({
-  required ArchiveFile entry,
-  required Directory destinationDirectory,
-}) async {
-  final destinationRoot = p.normalize(p.absolute(destinationDirectory.path));
-  final destinationPath = p.normalize(p.join(destinationRoot, entry.name));
-  if (destinationPath != destinationRoot &&
-      !p.isWithin(destinationRoot, destinationPath)) {
-    throw AssetPackArchiveException('ZIP の展開先が許可範囲外です: ${entry.name}');
+    final pathWithoutDirectorySuffix = entry.isDirectory && name.endsWith('/')
+        ? name.substring(0, name.length - 1)
+        : name;
+    final segments = pathWithoutDirectorySuffix.split('/');
+    if (segments.isEmpty ||
+        segments.any(
+          (segment) => segment.isEmpty || segment == '.' || segment == '..',
+        )) {
+      throw AssetPackArchiveException('ZIP に不正なパスが含まれています: $name');
+    }
+    if (!names.add(name)) {
+      throw AssetPackArchiveException('ZIP に重複したパスが含まれています: $name');
+    }
+    if (entry.isSymbolicLink) {
+      throw AssetPackArchiveException('ZIP にシンボリックリンクが含まれています: $name');
+    }
+    if (entry.size < 0 || entry.size > limits.maxSingleFileBytes) {
+      throw AssetPackArchiveException('ZIP 内のファイルサイズが不正です: $name');
+    }
   }
 
-  if (entry.isDirectory) {
-    await Directory(destinationPath).create(recursive: true);
-    return;
-  }
+  Future<void> extractArchiveEntry({
+    required ArchiveFile entry,
+    required Directory destinationDirectory,
+  }) async {
+    final destinationRoot = p.normalize(p.absolute(destinationDirectory.path));
+    final destinationPath = p.normalize(p.join(destinationRoot, entry.name));
+    if (destinationPath != destinationRoot &&
+        !p.isWithin(destinationRoot, destinationPath)) {
+      throw AssetPackArchiveException('ZIP の展開先が許可範囲外です: ${entry.name}');
+    }
 
-  final outputFile = File(destinationPath);
-  await outputFile.parent.create(recursive: true);
-  final output = OutputFileStream(outputFile.path);
-  try {
-    entry.writeContent(output);
-  } finally {
-    await output.close();
-  }
-  final actualSize = await outputFile.length();
-  if (actualSize != entry.size) {
-    throw AssetPackArchiveException('ZIP 内のファイルサイズが一致しません: ${entry.name}');
+    if (entry.isDirectory) {
+      await Directory(destinationPath).create(recursive: true);
+      return;
+    }
+
+    final outputFile = File(destinationPath);
+    await outputFile.parent.create(recursive: true);
+    final output = OutputFileStream(outputFile.path);
+    try {
+      entry.writeContent(output);
+    } finally {
+      await output.close();
+    }
+    final actualSize = await outputFile.length();
+    if (actualSize != entry.size) {
+      throw AssetPackArchiveException('ZIP 内のファイルサイズが一致しません: ${entry.name}');
+    }
   }
 }

@@ -1,5 +1,5 @@
 final class EarthquakeDeletedException implements Exception {
-  const EarthquakeDeletedException({required this.eventId});
+  const new({required this.eventId});
 
   final String eventId;
 

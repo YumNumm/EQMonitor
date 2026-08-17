@@ -5,7 +5,7 @@ part 'replay_state.freezed.dart';
 
 @freezed
 abstract class ReplayState with _$ReplayState {
-  const factory ReplayState({
+  const factory({
     required ReplayFile file,
     required String fileName,
     required int currentIndex,
@@ -13,7 +13,7 @@ abstract class ReplayState with _$ReplayState {
     required double playbackSpeed,
   }) = _ReplayState;
 
-  const ReplayState._();
+  const new _();
 
   /// 総フレーム数
   int get totalFrames => file.data.length;

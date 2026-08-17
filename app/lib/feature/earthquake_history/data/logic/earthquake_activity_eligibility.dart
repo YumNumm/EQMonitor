@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magni
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 
 class EarthquakeActivityEligibility {
-  const EarthquakeActivityEligibility();
+  const new();
 
   bool isEligible(Earthquake earthquake) {
     final magnitudeEligible = switch (earthquake.hypocenter?.magnitude) {

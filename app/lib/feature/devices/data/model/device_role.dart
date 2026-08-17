@@ -6,7 +6,7 @@ enum DeviceRole {
   admin('admin'),
   user('user');
 
-  const DeviceRole(this.value);
+  new(this.value);
 
   final String value;
 

@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 /// 使わない。
 @immutable
 class MapViewport {
-  factory MapViewport({
+  factory({
     required Size logicalSize,
     required double devicePixelRatio,
   }) {
@@ -36,7 +36,7 @@ class MapViewport {
     );
   }
 
-  const MapViewport._({
+  const new _({
     required this.logicalSize,
     required this.devicePixelRatio,
   });

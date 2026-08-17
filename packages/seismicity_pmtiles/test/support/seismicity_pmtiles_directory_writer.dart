@@ -4,7 +4,7 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 
 /// Test-only checked encoder for PMTiles v3 root-directory bytes.
 final class SeismicityPmTilesDirectoryWriter {
-  const SeismicityPmTilesDirectoryWriter();
+  const new();
 
   static const maxUnsignedVarint = 0x7FFFFFFFFFFFFFFF;
   static const int maxTileIdExclusive = PmTilesV3TileId.maxValue + 1;

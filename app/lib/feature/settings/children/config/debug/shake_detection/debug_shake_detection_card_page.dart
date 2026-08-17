@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugShakeDetectionCardPage extends HookConsumerWidget {
-  const DebugShakeDetectionCardPage({super.key});
+  const new({super.key});
 
   static const _paramLabelStyle = TextStyle(fontSize: 11);
 
@@ -193,7 +193,7 @@ final List<ShakeDetectionEvent> _kSampleEvents = ShakeDetectionLevel.values.map(
 ).toList();
 
 class _ParamSection extends StatelessWidget {
-  const _ParamSection({required this.title, required this.child});
+  const new({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -222,7 +222,7 @@ class _ParamSection extends StatelessWidget {
 }
 
 class _SliderRow extends StatelessWidget {
-  const _SliderRow({
+  const new({
     required this.label,
     required this.value,
     required this.min,

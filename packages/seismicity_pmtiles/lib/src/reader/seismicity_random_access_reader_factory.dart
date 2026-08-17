@@ -8,7 +8,7 @@ import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_asset_loader.da
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_network_random_access_reader.dart';
 
 final class SeismicityRandomAccessReaderFactory {
-  const SeismicityRandomAccessReaderFactory({
+  const new({
     required this.assetLoader,
     required this.dio,
     required this.networkMaxCacheBytes,

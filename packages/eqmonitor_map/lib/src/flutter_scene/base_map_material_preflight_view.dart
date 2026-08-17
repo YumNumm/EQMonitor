@@ -13,7 +13,7 @@ import 'package:vector_math/vector_math.dart' as scene_math;
 /// 実際のベースレイヤー描画は`docs/superpowers/plans/2026-08-05-eqmonitor-map-base-layer-pmtiles.md`
 /// のTask 8とTask 10が持つ。ここでtile、camera操作、layer順を扱わない。
 class BaseMapMaterialPreflightView extends HookWidget {
-  const BaseMapMaterialPreflightView({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class BaseMapMaterialPreflightView extends HookWidget {
 }
 
 class _PreflightStatusCard extends StatelessWidget {
-  const _PreflightStatusCard({
+  const new({
     required this.failure,
     required this.isMaterialReady,
   });

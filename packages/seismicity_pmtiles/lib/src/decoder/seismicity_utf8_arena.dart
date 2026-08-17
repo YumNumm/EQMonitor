@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityUtf8Arena {
-  SeismicityUtf8Arena({
+  new({
     required int maxBytes,
     required int maxEntries,
     Uint8List Function(int length)? allocateBuildBytes,

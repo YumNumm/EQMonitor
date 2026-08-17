@@ -17,7 +17,7 @@ const _maxIndexableVerticesPerSegment = 65536;
 /// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
 /// 「Fill頂点生成」節: `classifyRings` → `limitHoles` → `earcut`)。
 final class FillMeshBuilder {
-  FillMeshBuilder({required this.limits}) {
+  new({required this.limits}) {
     if (limits.maxVerticesPerSegment <= 0 ||
         limits.maxVerticesPerSegment > _maxIndexableVerticesPerSegment) {
       throw ArgumentError.value(
@@ -122,7 +122,7 @@ final class FillMeshBuilder {
 /// x, y交互に詰めた[Int32List]のままここでも保持し、この段階では座標を
 /// 変換しない。
 final class _RawPolygon {
-  _RawPolygon({required this.exterior});
+  new({required this.exterior});
 
   final Int32List exterior;
   final List<Int32List> holes = [];

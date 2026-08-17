@@ -5,10 +5,10 @@ enum MapPerformanceObservationLevel { off, aggregate, detailed }
 
 enum MapPerformanceDropPolicy { dropOldest, dropNewest }
 
-extension type const MapFrameBudget._(Duration duration) {}
+extension type const MapFrameBudget._(Duration duration);
 
 final class MapPerformancePolicy {
-  const MapPerformancePolicy._({
+  const new _({
     required this.schemaVersion,
     required this.clockDomain,
     required this.observationLevel,

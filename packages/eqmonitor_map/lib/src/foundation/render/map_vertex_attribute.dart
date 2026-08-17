@@ -17,7 +17,7 @@ enum MapVertexAttributeFormat {
   uint32(byteLength: 4, scalarAlignment: 4),
   ;
 
-  const MapVertexAttributeFormat({
+  new({
     required this.byteLength,
     required this.scalarAlignment,
   });
@@ -27,7 +27,7 @@ enum MapVertexAttributeFormat {
 }
 
 final class MapVertexAttributeLayout {
-  MapVertexAttributeLayout({
+  new({
     required this.semantic,
     required this.format,
     required this.offset,

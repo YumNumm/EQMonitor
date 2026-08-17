@@ -18,7 +18,7 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// 震源座標の精度から誤差範囲を計算し、白い点線の矩形で表示する。
 class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
-  const EarthquakeHistoryHypocenterErrorLayer({
+  const new({
     required this.earthquake,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
     super.key,
@@ -144,7 +144,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
 }
 
 class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
-  const EarthquakeHistoryHypocenterErrorGeoJsonBuilder();
+  const new();
 
   String build({required Coordinate? coordinates, required int decimalPlaces}) {
     final polygon = switch (coordinates) {
@@ -173,7 +173,7 @@ class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
 }
 
 class EarthquakeHistoryHypocenterErrorLayerBuilder {
-  const EarthquakeHistoryHypocenterErrorLayerBuilder();
+  const new();
 
   static const sourceId = 'eq-history-hypocenter-error';
   static const layerId = 'eq-history-hypocenter-error-line';

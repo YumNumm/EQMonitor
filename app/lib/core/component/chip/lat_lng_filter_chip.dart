@@ -10,7 +10,7 @@ typedef LatLngRange = ({
 });
 
 class LatLngFilterChip extends StatelessWidget {
-  const LatLngFilterChip({
+  const new({
     this.latitudeGte,
     this.latitudeLte,
     this.longitudeGte,
@@ -120,7 +120,7 @@ class LatLngFilterChip extends StatelessWidget {
 }
 
 class _LatLngFilterModal extends HookWidget {
-  const _LatLngFilterModal({
+  const new({
     this.latitudeGte,
     this.latitudeLte,
     this.longitudeGte,
@@ -332,7 +332,7 @@ class _LatLngFilterModal extends HookWidget {
 }
 
 class _CoordField extends HookWidget {
-  const _CoordField({
+  const new({
     required this.label,
     required this.value,
     required this.onChanged,

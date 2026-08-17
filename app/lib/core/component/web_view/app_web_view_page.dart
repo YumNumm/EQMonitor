@@ -5,7 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppWebViewPage extends HookWidget {
-  const AppWebViewPage({required this.title, required this.url, super.key});
+  const new({required this.title, required this.url, super.key});
 
   final String title;
   final String url;

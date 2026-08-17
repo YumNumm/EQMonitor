@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class LpgmIntensityFilterChip extends StatelessWidget {
-  const LpgmIntensityFilterChip({
+  const new({
     this.min,
     this.max,
     this.onChanged,
@@ -62,7 +62,7 @@ class LpgmIntensityFilterChip extends StatelessWidget {
 }
 
 class _LpgmIntensityFilterModal extends HookWidget {
-  const _LpgmIntensityFilterModal({this.currentMin, this.currentMax});
+  const new({this.currentMin, this.currentMax});
 
   final JmaLpgmIntensity? currentMin;
   final JmaLpgmIntensity? currentMax;

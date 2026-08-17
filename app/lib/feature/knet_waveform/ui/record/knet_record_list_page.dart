@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 /// K-NET イベントの観測点一覧ページ
 class KnetRecordListPage extends ConsumerWidget {
-  const KnetRecordListPage({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   final DateTime eventTime;
 
@@ -67,7 +67,7 @@ class KnetRecordListPage extends ConsumerWidget {
 }
 
 class _DownloadProgressView extends ConsumerWidget {
-  const _DownloadProgressView({required this.eventTime});
+  const new({required this.eventTime});
 
   final DateTime eventTime;
 
@@ -138,7 +138,7 @@ class _DownloadProgressView extends ConsumerWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message});
+  const new({required this.message});
 
   final String message;
 

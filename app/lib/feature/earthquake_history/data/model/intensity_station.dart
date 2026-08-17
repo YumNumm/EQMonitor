@@ -8,7 +8,7 @@ part 'intensity_station.g.dart';
 
 @freezed
 abstract class IntensityStation with _$IntensityStation {
-  const factory IntensityStation({
+  const factory({
     required String code,
     required String name,
     required double? sva,
@@ -17,19 +17,19 @@ abstract class IntensityStation with _$IntensityStation {
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityStation;
 
-  factory IntensityStation.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityStationFromJson(json);
 }
 
 @freezed
 abstract class PrePeriod with _$PrePeriod {
-  const factory PrePeriod({
+  const factory({
     required double band,
     required JmaLpgmIntensity lpgmIntensity,
     required double sva,
   }) = _PrePeriod;
 
-  factory PrePeriod.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$PrePeriodFromJson(json);
 }
 

@@ -11,7 +11,7 @@ import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_http_range_requ
 
 final class SeismicityPmTilesNetworkRandomAccessReader
     implements PmTilesRandomAccessReader {
-  SeismicityPmTilesNetworkRandomAccessReader({
+  new({
     required this.source,
     required this.dio,
     required this.sizeBytes,
@@ -305,7 +305,7 @@ final class SeismicityPmTilesNetworkActiveReadTracker {
 }
 
 final class SeismicityPmTilesNetworkRangeLruCache {
-  SeismicityPmTilesNetworkRangeLruCache({required this.maxBytes});
+  new({required this.maxBytes});
 
   final int maxBytes;
   final _entries =

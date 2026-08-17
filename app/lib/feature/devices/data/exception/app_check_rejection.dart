@@ -4,6 +4,6 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 /// AppCheckInterceptor が `DioException.error` にセットし、
 /// Dio マッパーが `e.error is AppCheckRejection` で検出する。
 final class AppCheckRejection {
-  const AppCheckRejection(this.cause);
+  const new(this.cause);
   final FirebaseException cause;
 }

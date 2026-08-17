@@ -9,12 +9,12 @@ enum EewWarningTarget { currentLocationOnly, currentLocationAndNationwide }
 
 @freezed
 abstract class EewWarningSettings with _$EewWarningSettings {
-  const factory EewWarningSettings({
+  const factory({
     required EewWarningTarget target,
     required InterruptionLevel? nationwideInterruptionLevel,
   }) = _EewWarningSettings;
 
-  factory EewWarningSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EewWarningSettingsFromJson(json);
 }
 

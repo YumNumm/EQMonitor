@@ -236,7 +236,7 @@ void main() {
 }
 
 final class _Fixture {
-  const _Fixture({
+  const new({
     required this.controller,
     required this.container,
     required this.repository,
@@ -306,7 +306,7 @@ Future<void> _waitFor(bool Function() condition) async {
 }
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -315,7 +315,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _SpyRepository extends EarthquakeHistoryRepository {
-  _SpyRepository({required this.initial, required this.cacheClient})
+  new({required this.initial, required this.cacheClient})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

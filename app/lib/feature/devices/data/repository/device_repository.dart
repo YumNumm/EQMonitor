@@ -23,7 +23,7 @@ Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
 );
 
 class DeviceRepository {
-  DeviceRepository({
+  new({
     required api.ApiClient api,
     required DeviceAuthRepository authRepository,
     required api.ApnsEnvironment apnsEnvironment,

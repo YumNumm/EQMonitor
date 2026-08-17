@@ -17,7 +17,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryShindoDbFillLayer extends HookConsumerWidget {
-  const EarthquakeHistoryShindoDbFillLayer({
+  const new({
     required this.tree,
     required this.parameter,
     super.key,

@@ -39,7 +39,7 @@ const Set<TelegramType> _earthquakeTypes = {
 // ---------------------------------------------------------------------------
 
 class TelegramListByEventIdPage extends HookConsumerWidget {
-  const TelegramListByEventIdPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -121,7 +121,7 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 /// A flat widget list rendered inside a single [ListView] so that the
 /// scroll-based pagination still fires from [scrollController].
 class _SectionedList extends StatelessWidget {
-  const _SectionedList({
+  const new({
     required this.items,
     required this.hasNext,
     required this.isLoading,
@@ -276,7 +276,7 @@ class _SectionedList extends StatelessWidget {
 }
 
 class _SequenceInfo {
-  const _SequenceInfo({required this.sequenceNumber, this.previousId});
+  const new({required this.sequenceNumber, this.previousId});
   final int sequenceNumber;
   final String? previousId;
 }
@@ -286,7 +286,7 @@ class _SequenceInfo {
 // ---------------------------------------------------------------------------
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const new({required this.title});
 
   final String title;
 
@@ -311,7 +311,7 @@ class _SectionHeader extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _EewNavigationCard extends StatelessWidget {
-  const _EewNavigationCard({required this.count, required this.onTap});
+  const new({required this.count, required this.onTap});
 
   final int count;
   final VoidCallback onTap;
@@ -343,7 +343,7 @@ class _EewNavigationCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _TelegramListSkeleton extends StatelessWidget {
-  const _TelegramListSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {

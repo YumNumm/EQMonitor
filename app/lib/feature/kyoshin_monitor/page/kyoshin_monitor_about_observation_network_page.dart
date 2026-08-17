@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
-  const KyoshinMonitorAboutObservationNetworkPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +157,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
 }
 
 class _ObservationNetworkSection extends StatelessWidget {
-  const _ObservationNetworkSection({
+  const new({
     required this.title,
     required this.description,
     this.url,
@@ -219,7 +219,7 @@ class _ObservationNetworkSection extends StatelessWidget {
 }
 
 class _LinkItem extends StatelessWidget {
-  const _LinkItem({required this.title, required this.url});
+  const new({required this.title, required this.url});
 
   final String title;
   final String url;

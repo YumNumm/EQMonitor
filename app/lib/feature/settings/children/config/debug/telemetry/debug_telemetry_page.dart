@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:telemetry_store/telemetry_store.dart';
 
 class DebugTelemetryPage extends HookConsumerWidget {
-  const DebugTelemetryPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,7 +100,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
+  const new({
     required this.totalCount,
     required this.unsyncedCount,
   });
@@ -141,7 +141,7 @@ class _SummaryCard extends StatelessWidget {
 }
 
 class _EventTile extends StatelessWidget {
-  const _EventTile({required this.event});
+  const new({required this.event});
 
   final TelemetryEventRow event;
 
@@ -272,7 +272,7 @@ class _EventTile extends StatelessWidget {
 }
 
 class _DetailRow extends StatelessWidget {
-  const _DetailRow(this.label, this.value);
+  const new(this.label, this.value);
 
   final String label;
   final String value;

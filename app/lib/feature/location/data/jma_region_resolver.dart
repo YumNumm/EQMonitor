@@ -29,7 +29,7 @@ typedef EarthquakeRegionResolution = ({
 /// 市区町村（area_information_city）コードを解決するクラス。
 /// geobaseのpoint-in-polygonを使用。
 class JmaRegionResolver {
-  JmaRegionResolver({
+  new({
     required this.eewMapData,
     required this.cityMapData,
     required EarthquakeParameter earthquakeParameter,
@@ -129,7 +129,7 @@ class JmaRegionResolver {
 
 /// 市区町村コード → 親一次細分化地域コード/名のペア。
 class EarthquakeParentRegion {
-  const EarthquakeParentRegion({required this.code, required this.name});
+  const new({required this.code, required this.name});
 
   final int code;
   final String name;

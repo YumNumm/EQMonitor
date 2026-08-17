@@ -1,8 +1,8 @@
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TestNotificationKindButtons extends StatelessWidget {
-  const TestNotificationKindButtons({
+  const new({
     required this.pendingKind,
     required this.onPressed,
     super.key,

@@ -5,7 +5,7 @@ import 'dart:math' as math;
 
 /// シンプルなカラークラス
 class Color {
-  const Color(this.red, this.green, this.blue);
+  const new(this.red, this.green, this.blue);
 
   final int red;
   final int green;

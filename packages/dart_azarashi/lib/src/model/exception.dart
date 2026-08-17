@@ -1,7 +1,7 @@
 /// Exception thrown when decoding a QZSS DCR message fails.
 class QzssDcrDecoderException implements Exception {
   /// Creates a new [QzssDcrDecoderException].
-  const QzssDcrDecoderException(this.message, {this.sentence});
+  const new(this.message, {this.sentence});
 
   /// The error message.
   final String message;
@@ -21,7 +21,7 @@ class QzssDcrDecoderException implements Exception {
 /// Error thrown when a message type is not implemented.
 class QzssDcrDecoderNotImplementedError extends Error {
   /// Creates a new [QzssDcrDecoderNotImplementedError].
-  QzssDcrDecoderNotImplementedError(this.message, {this.sentence});
+  new(this.message, {this.sentence});
 
   /// The error message.
   final String message;

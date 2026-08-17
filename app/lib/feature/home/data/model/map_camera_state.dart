@@ -6,7 +6,7 @@ part 'map_camera_state.freezed.dart';
 
 @freezed
 abstract class MapCameraState with _$MapCameraState {
-  const factory MapCameraState({
+  const factory({
     required Geographic center,
     required double zoom,
     @Default(0.0) double bearing,
@@ -14,7 +14,7 @@ abstract class MapCameraState with _$MapCameraState {
     @Default(true) bool isAtHome,
   }) = _MapCameraState;
 
-  factory MapCameraState.home() => const MapCameraState(
+  factory home() => const MapCameraState(
     center: Geographic(lon: JapanBounds.centerLng, lat: JapanBounds.centerLat),
     zoom: 5.5,
   );

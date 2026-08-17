@@ -1,7 +1,7 @@
 import 'package:seismicity_pmtiles/src/decoder/seismicity_chunk_transfer.dart';
 
 final class SeismicityDatasetTransfer {
-  SeismicityDatasetTransfer({
+  new({
     required this.archiveRevision,
     required this.schemaVersion,
     required this.dataZoom,

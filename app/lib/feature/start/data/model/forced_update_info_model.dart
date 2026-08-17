@@ -8,7 +8,7 @@ part 'forced_update_info_model.freezed.dart';
 /// 強制アップデート判定に必要な情報のみを保持するドメインモデル。
 @freezed
 abstract class ForcedUpdateInfoModel with _$ForcedUpdateInfoModel {
-  const factory ForcedUpdateInfoModel({
+  const factory({
     required List<RequiredVersionModel> requiredVersions,
     required StoreUrlModel storeUrl,
   }) = _ForcedUpdateInfoModel;

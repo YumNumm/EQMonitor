@@ -17,7 +17,7 @@ Future<NotificationCustomSnapshotRepository> notificationCustomSnapshotRepositor
 }
 
 class NotificationCustomSnapshotRepository {
-  NotificationCustomSnapshotRepository(this._dataSource);
+  new(this._dataSource);
 
   final SharedPreferencesDataSource _dataSource;
 

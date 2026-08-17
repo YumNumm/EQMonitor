@@ -70,7 +70,7 @@ Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
 
 /// FCM 通知タップの計測記録を行う。
 class NotificationOpenedRecorder {
-  const NotificationOpenedRecorder._();
+  const new _();
 
   static Future<void> record({
     required TelemetryRecorder recorder,

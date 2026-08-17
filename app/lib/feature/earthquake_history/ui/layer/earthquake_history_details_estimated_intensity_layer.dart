@@ -15,7 +15,7 @@ import 'package:maplibre/maplibre.dart';
 /// 地震履歴詳細の推計震度（PMTiles ラスタ）レイヤー
 class EarthquakeHistoryDetailsEstimatedIntensityLayer
     extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsEstimatedIntensityLayer({
+  const new({
     required this.tileUrl,
     super.key,
   });
@@ -62,7 +62,7 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
 }
 
 class EarthquakeHistoryEstimatedIntensityStyle {
-  const EarthquakeHistoryEstimatedIntensityStyle();
+  const new();
 
   static const sourceId = 'earthquake-history-estimated-intensity';
   static const fillLayerId = 'earthquake-history-estimated-intensity-fill';

@@ -8,7 +8,7 @@ enum JmaFloodWarningLevel {
   floodOccurred(4, '氾濫発生情報'),
   other(15, 'その他の警戒レベル');
 
-  const JmaFloodWarningLevel(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

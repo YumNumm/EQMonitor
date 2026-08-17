@@ -13,7 +13,7 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre/maplibre.dart';
 
 class EewSimulationPsWaveLayer extends HookConsumerWidget {
-  const EewSimulationPsWaveLayer({super.key});
+  const new({super.key});
 
   static const _pWaveSourceId = 'eew-sim-p-wave';
   static const _sWaveSourceId = 'eew-sim-s-wave';

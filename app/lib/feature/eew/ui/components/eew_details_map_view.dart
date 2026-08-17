@@ -16,7 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewDetailsMapView extends HookConsumerWidget {
-  const EewDetailsMapView({
+  const new({
     required this.selectedEew,
     required this.displayMode,
     required this.initialCenter,
@@ -54,7 +54,7 @@ class EewDetailsMapView extends HookConsumerWidget {
 }
 
 class _MapContent extends ConsumerWidget {
-  const _MapContent({
+  const new({
     required this.styleString,
     required this.selectedEew,
     required this.displayMode,

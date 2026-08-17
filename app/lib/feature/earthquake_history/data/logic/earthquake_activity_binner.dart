@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activ
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 
 class EarthquakeActivityBinner {
-  const EarthquakeActivityBinner();
+  const new();
 
   List<EarthquakeActivityBin> build({
     required List<EarthquakePartialNormal> items,

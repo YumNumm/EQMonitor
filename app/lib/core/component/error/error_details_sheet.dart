@@ -20,7 +20,7 @@ ErrorDetailsSheetAction errorDetailsSheetAction(Ref ref) =>
     const ErrorDetailsSheetAction();
 
 class ErrorDetailsSheetAction {
-  const ErrorDetailsSheetAction();
+  const new();
 
   Future<void> show(
     BuildContext context, {
@@ -42,7 +42,7 @@ class ErrorDetailsSheetAction {
 }
 
 class _ErrorDetailsSheet extends ConsumerWidget {
-  const _ErrorDetailsSheet({
+  const new({
     required this.error,
     required this.stackTrace,
     required this.occurredAt,

@@ -12,7 +12,7 @@ enum JmaMarineWarningCode {
   typhoonWarning(23, '海上台風警報'),
   other(31, 'その他の警報等情報要素 海上警報');
 
-  const JmaMarineWarningCode(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

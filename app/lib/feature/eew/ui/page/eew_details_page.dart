@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsPage extends HookConsumerWidget {
-  const EewDetailsPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -27,7 +27,7 @@ class EewDetailsPage extends HookConsumerWidget {
 }
 
 class _EewList extends StatelessWidget {
-  const _EewList({required this.eews});
+  const new({required this.eews});
 
   final List<EewTelegramItem> eews;
 
@@ -51,7 +51,7 @@ class _EewList extends StatelessWidget {
 }
 
 class _EewDetailsPageSkeleton extends StatelessWidget {
-  const _EewDetailsPageSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _EewDetailsPageSkeleton extends StatelessWidget {
 }
 
 class _EewCard extends StatelessWidget {
-  const _EewCard({required this.eew});
+  const new({required this.eew});
 
   final EewTelegramItem eew;
 

@@ -1,12 +1,12 @@
 import 'package:eqmonitor/core/component/web_view/app_web_view_body.dart';
 
 class AppWebViewNavigationState {
-  const AppWebViewNavigationState.initial()
+  const new initial()
     : generation = 0,
       activeMainFrameUrl = null,
       status = AppWebViewLoadStatus.loading;
 
-  const AppWebViewNavigationState({
+  const new({
     required this.generation,
     required this.activeMainFrameUrl,
     required this.status,

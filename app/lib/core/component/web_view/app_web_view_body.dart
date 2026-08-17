@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 enum AppWebViewLoadStatus { loading, loaded, error }
 
 class AppWebViewBody extends StatelessWidget {
-  const AppWebViewBody({
+  const new({
     required this.webView,
     required this.status,
     required this.onRetry,

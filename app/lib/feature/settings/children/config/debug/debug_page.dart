@@ -35,7 +35,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugPage extends ConsumerWidget {
-  const DebugPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +47,7 @@ class DebugPage extends ConsumerWidget {
 }
 
 class _DebugWidget extends ConsumerWidget {
-  const _DebugWidget();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -446,7 +446,7 @@ class _DebugWidget extends ConsumerWidget {
 }
 
 class _AppCheckSection extends ConsumerWidget {
-  const _AppCheckSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -531,7 +531,7 @@ class _AppCheckSection extends ConsumerWidget {
 }
 
 class _ParameterDebugSection extends HookConsumerWidget {
-  const _ParameterDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -618,7 +618,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
 }
 
 class _HomeEewEstimationTile extends ConsumerWidget {
-  const _HomeEewEstimationTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -661,7 +661,7 @@ class _HomeEewEstimationTile extends ConsumerWidget {
 }
 
 class _BackgroundLocationDebugSection extends ConsumerWidget {
-  const _BackgroundLocationDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -709,7 +709,7 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
 }
 
 class _StartApiDebugSection extends ConsumerWidget {
-  const _StartApiDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -757,7 +757,7 @@ class _StartApiDebugSection extends ConsumerWidget {
 }
 
 class _StartApiDebugContent extends ConsumerWidget {
-  const _StartApiDebugContent({
+  const new({
     required this.data,
     required this.hasError,
     required this.error,

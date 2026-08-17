@@ -13,7 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// shouldShowAdsProvider が false の場合は何も表示しない。
 /// Web・デスクトップでは表示しない。
 class AdBanner extends HookConsumerWidget {
-  const AdBanner({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,7 @@ class AdBanner extends HookConsumerWidget {
 }
 
 class AdBannerPersistentDelegate extends SliverPersistentHeaderDelegate {
-  const AdBannerPersistentDelegate();
+  const new();
 
   @override
   Widget build(
@@ -54,7 +54,7 @@ class AdBannerPersistentDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _BannerAdWidget extends HookConsumerWidget {
-  const _BannerAdWidget();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

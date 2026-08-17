@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class _StubSubscriptionNotifier extends SubscriptionNotifier {
-  _StubSubscriptionNotifier(this._status);
+  new(this._status);
 
   final SubscriptionStatus _status;
 

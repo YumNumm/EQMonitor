@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 
 class EarthquakeActivityFilter {
-  const EarthquakeActivityFilter();
+  const new();
 
   static const _earthRadiusKm = 6371.0;
 

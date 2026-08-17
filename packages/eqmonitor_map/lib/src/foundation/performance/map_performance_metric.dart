@@ -1,4 +1,4 @@
-extension type MapPerformanceSchemaVersion._(int value) {}
+extension type MapPerformanceSchemaVersion._(int value);
 
 enum MapPerformanceMetricUnit { duration, count, bytes }
 

@@ -16,7 +16,7 @@ ParameterAssetDataSource parameterAssetDataSource(Ref ref) =>
 /// pack isn't ready, [AssetPackNotReadyException] propagates to the
 /// caller.
 final class ParameterAssetDataSource {
-  const ParameterAssetDataSource({
+  const new({
     required AssetPackRepository assetPackRepository,
   }) : _assetPackRepository = assetPackRepository;
 

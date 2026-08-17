@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 
 /// 観測点シンボルレイヤーの `icon-image` 式を表示モードから組み立てる
 class StationIconImageExpressionBuilder {
-  const StationIconImageExpressionBuilder();
+  const new();
 
   /// GeoJSON feature は以下のプロパティを持つ前提:
   /// - `iconIdFull`: 数字入りアイコンの画像 ID

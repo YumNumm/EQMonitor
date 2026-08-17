@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 /// へ JSON を書き込む。[directoryProvider] はテストで一時ディレクトリを
 /// 注入するためのフック(未指定時は [getApplicationSupportDirectory])。
 class SeismicityLocalCacheDataSource {
-  SeismicityLocalCacheDataSource({
+  new({
     Future<Directory> Function()? directoryProvider,
   }) : _directoryProvider = directoryProvider ?? getApplicationSupportDirectory;
 

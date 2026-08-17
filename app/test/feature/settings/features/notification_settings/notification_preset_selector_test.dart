@@ -216,7 +216,7 @@ void main() {
 }
 
 class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  _FakeFirebaseMessaging(this._settings);
+  new(this._settings);
 
   final NotificationSettings _settings;
 

@@ -20,7 +20,7 @@ final class SeismicityDecoderRunnerCleanupMemo {
 
 /// Non-export runner: archive traversal into an injected worker factory.
 final class SeismicityPmTilesDecoderRunner {
-  SeismicityPmTilesDecoderRunner({
+  new({
     required this.factory,
     this.schemaValidator = const SeismicitySchemaV1Validator(),
     this.publicationValidator = const SeismicityDatasetPublicationValidator(),

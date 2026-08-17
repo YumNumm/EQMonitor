@@ -185,7 +185,7 @@ EarthquakePartialNormal _makeEarthquake(String eventId) =>
 /// コンストラクタで渡した [items] を fetchEarthquakeList で返す。
 final class _FakeEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  _FakeEarthquakeHistoryRepository({required this.items})
+  new({required this.items})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

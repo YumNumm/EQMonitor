@@ -14,12 +14,12 @@ enum LiveMonitorEarthquakeTriggerKind {
 
 @freezed
 sealed class LiveMonitorEarthquakeTrigger with _$LiveMonitorEarthquakeTrigger {
-  const factory LiveMonitorEarthquakeTrigger.telegram({
+  const factory telegram({
     required LiveMonitorEarthquakeTriggerKind kind,
     required DateTime reportedAt,
   }) = LiveMonitorTelegramTrigger;
 
-  const factory LiveMonitorEarthquakeTrigger.estimatedIntensity({
+  const factory estimatedIntensity({
     required DateTime? generatedAt,
   }) = LiveMonitorEstimatedIntensityTrigger;
 }
@@ -34,35 +34,35 @@ extension LiveMonitorEarthquakeTriggerKindValue
 
 @freezed
 sealed class LiveMonitorDetectedEvent with _$LiveMonitorDetectedEvent {
-  const factory LiveMonitorDetectedEvent.eewStarted({
+  const factory eewStarted({
     required String eventId,
     required int serialNo,
   }) = LiveMonitorEewStartedEvent;
 
-  const factory LiveMonitorDetectedEvent.eewUpdated({
+  const factory eewUpdated({
     required String eventId,
     required int serialNo,
   }) = LiveMonitorEewUpdatedEvent;
 
-  const factory LiveMonitorDetectedEvent.shakeDetected({
+  const factory shakeDetected({
     required String eventId,
     required int serialNo,
   }) = LiveMonitorShakeDetectedEvent;
 
-  const factory LiveMonitorDetectedEvent.earthquakeUpsert({
+  const factory earthquakeUpsert({
     required String eventId,
     required LiveMonitorEarthquakeTrigger trigger,
     required Earthquake earthquake,
   }) = LiveMonitorEarthquakeUpsertEvent;
 
-  const factory LiveMonitorDetectedEvent.earthquakeDeleted({
+  const factory earthquakeDeleted({
     required String eventId,
   }) = LiveMonitorEarthquakeDeletedEvent;
 }
 
 @freezed
 abstract class LiveMonitorEventEnvelope with _$LiveMonitorEventEnvelope {
-  const factory LiveMonitorEventEnvelope({
+  const factory({
     required int sequence,
     required LiveMonitorDetectedEvent event,
   }) = _LiveMonitorEventEnvelope;

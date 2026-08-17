@@ -22,7 +22,7 @@ enum EarthquakeVxseOwnedField {
 }
 
 class EarthquakeVxseFieldOwnership {
-  const EarthquakeVxseFieldOwnership._(this.fields);
+  const new _(this.fields);
 
   final Set<EarthquakeVxseOwnedField> fields;
 

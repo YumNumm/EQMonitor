@@ -52,14 +52,14 @@ void main() {
 }
 
 final class _ChunkCorruptionCase {
-  const _ChunkCorruptionCase({required this.name, required this.chunk});
+  const new({required this.name, required this.chunk});
 
   final String name;
   final SeismicityPmTilesChunk chunk;
 }
 
 final class _IdentityCorruptionCase {
-  const _IdentityCorruptionCase({
+  const new({
     required this.name,
     required this.mutate,
   });

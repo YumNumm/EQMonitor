@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// 震度0〜7（降順）を横に並べて表示する。
 class IntensityHistoryLegend extends StatelessWidget {
-  const IntensityHistoryLegend({super.key});
+  const new({super.key});
 
   static const List<JmaIntensity> _levels = [
     JmaIntensity.seven,

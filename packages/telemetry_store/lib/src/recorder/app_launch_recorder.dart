@@ -14,7 +14,7 @@ const _kDebounceMs = 30000;
 /// within the debounce window. Returns `true` when the event was recorded,
 /// `false` when debounced.
 class AppLaunchRecorder {
-  AppLaunchRecorder(this._recorder, this._prefs);
+  new(this._recorder, this._prefs);
 
   final TelemetryRecorder _recorder;
   final SharedPreferences _prefs;

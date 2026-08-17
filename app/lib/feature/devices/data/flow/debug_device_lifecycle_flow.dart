@@ -14,7 +14,7 @@ DebugDeviceLifecycleFlow debugDeviceLifecycleFlow(Ref ref) =>
     DebugDeviceLifecycleFlow();
 
 class DebugDeviceLifecycleFlow {
-  DebugDeviceLifecycleFlow({
+  new({
     DebugDeviceLifecycleMessages? messages,
     DebugDeviceLifecycleConfirmDialog? confirmDialog,
   }) : messages = messages ?? DebugDeviceLifecycleMessages(),

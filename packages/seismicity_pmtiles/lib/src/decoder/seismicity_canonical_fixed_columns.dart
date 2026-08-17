@@ -21,7 +21,7 @@ typedef SeismicityCanonicalFixedColumnData = ({
 typedef SeismicityFixedColumnAllocator = T Function<T>(T Function() create);
 
 final class SeismicityCanonicalFixedColumns {
-  SeismicityCanonicalFixedColumns({
+  new({
     required int capacity,
     SeismicityFixedColumnAllocator? allocate,
   }) : _allocate = allocate ?? allocateSeismicityCanonicalFixedColumnData {

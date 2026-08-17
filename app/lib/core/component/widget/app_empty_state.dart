@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppEmptyState extends StatelessWidget {
-  const AppEmptyState({
+  const new({
     required this.message,
     super.key,
     this.icon = Icons.inbox_outlined,

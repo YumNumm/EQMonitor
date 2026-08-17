@@ -102,7 +102,7 @@ enum JmaTsunamiForecastRegion {
   okinawa(891, '沖縄県地方'),
   other(1000, 'その他の津波予報区');
 
-  const JmaTsunamiForecastRegion(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

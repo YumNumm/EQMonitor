@@ -2,7 +2,7 @@ import 'package:html/parser.dart' as html_parser;
 
 /// Apache style directory listing HTML から エントリ名一覧を抽出するパーサー
 class KnetDirectoryParser {
-  const KnetDirectoryParser._();
+  const new _();
 
   /// HTML から相対リンク（末尾 `/` 付きディレクトリ）の名前一覧を返す
   ///

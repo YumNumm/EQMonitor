@@ -73,9 +73,10 @@ class AssetPackStorageRepository {
             rootDirectory: activeDirectory,
             expectedVersion: activeVersion,
           );
-          final bundledManifestJson = await readAssetPackManifestJson(
-            rootDirectory: bundledSource.rootDirectory,
-          );
+          final bundledManifestJson = await _contentValidator
+              .readAssetPackManifestJson(
+                rootDirectory: bundledSource.rootDirectory,
+              );
           final bundledVersion = bundledManifestJson['pack_version'];
           if (bundledVersion is! String ||
               !isAssetPackVersion(bundledVersion)) {
@@ -172,6 +173,79 @@ class AssetPackStorageRepository {
       throw AssetPackStorageException('Asset Pack を安全に切り替えられませんでした: $error');
     }
   }
+
+  bool isAssetPackVersion(String value) =>
+      RegExp(r'^\d+\.\d+\.\d+$').hasMatch(value);
+
+  Future<AssetPackSource> resolveBundledAssetPackSource({
+    required ResolveBundledAssetPackRoot resolveBundledRoot,
+  }) async {
+    final directory = Directory(await resolveBundledRoot());
+    final manifest = File(p.join(directory.path, 'manifest.json'));
+    if (!directory.existsSync() || !manifest.existsSync()) {
+      throw const AssetPackStorageException('アプリに同梱された Asset Pack を読み込めません。');
+    }
+    return AssetPackSource(
+      kind: AssetPackSourceKind.bundled,
+      rootDirectory: directory,
+      version: null,
+    );
+  }
+
+  Future<void> installVerifiedStagingDirectory({
+    required Directory stagingDirectory,
+    required Directory destinationDirectory,
+    required String version,
+    required AssetPackContentValidator contentValidator,
+  }) async {
+    if (destinationDirectory.existsSync()) {
+      try {
+        await contentValidator.validate(
+          rootDirectory: destinationDirectory,
+          expectedVersion: version,
+        );
+        await stagingDirectory.delete(recursive: true);
+        return;
+      } on Object {
+        await destinationDirectory.delete(recursive: true);
+      }
+    }
+    await stagingDirectory.rename(destinationDirectory.path);
+  }
+
+  Future<void> cleanupInactiveAssetPackVersions({
+    required Directory packsRoot,
+    required String activeVersion,
+  }) async {
+    if (!packsRoot.existsSync()) {
+      return;
+    }
+    await for (final entity in packsRoot.list()) {
+      if (entity is Directory &&
+          p.basename(entity.path) != activeVersion &&
+          isAssetPackVersion(p.basename(entity.path))) {
+        await entity.delete(recursive: true);
+      }
+    }
+  }
+
+  Future<void> deactivateCorruptAssetPack({
+    required SharedPreferencesDataSource preferences,
+    required Directory directory,
+  }) async {
+    await preferences.remove(
+      key: SharedPreferencesKey.assetPackActiveDownloadedVersion,
+    );
+    try {
+      if (directory.existsSync()) {
+        await directory.delete(recursive: true);
+      }
+    } on FileSystemException {
+      // The preference is already cleared, so the bundled pack is used even if
+      // the OS temporarily prevents cleanup. A later successful activation
+      // retries removal as part of old-version cleanup.
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -187,77 +261,4 @@ Future<AssetPackStorageRepository> assetPackStorageRepository(Ref ref) async {
       return Directory(p.join(supportDirectory.path, 'eqmonitor_asset_packs'));
     },
   );
-}
-
-bool isAssetPackVersion(String value) =>
-    RegExp(r'^\d+\.\d+\.\d+$').hasMatch(value);
-
-Future<AssetPackSource> resolveBundledAssetPackSource({
-  required ResolveBundledAssetPackRoot resolveBundledRoot,
-}) async {
-  final directory = Directory(await resolveBundledRoot());
-  final manifest = File(p.join(directory.path, 'manifest.json'));
-  if (!directory.existsSync() || !manifest.existsSync()) {
-    throw const AssetPackStorageException('アプリに同梱された Asset Pack を読み込めません。');
-  }
-  return AssetPackSource(
-    kind: AssetPackSourceKind.bundled,
-    rootDirectory: directory,
-    version: null,
-  );
-}
-
-Future<void> installVerifiedStagingDirectory({
-  required Directory stagingDirectory,
-  required Directory destinationDirectory,
-  required String version,
-  required AssetPackContentValidator contentValidator,
-}) async {
-  if (destinationDirectory.existsSync()) {
-    try {
-      await contentValidator.validate(
-        rootDirectory: destinationDirectory,
-        expectedVersion: version,
-      );
-      await stagingDirectory.delete(recursive: true);
-      return;
-    } on Object {
-      await destinationDirectory.delete(recursive: true);
-    }
-  }
-  await stagingDirectory.rename(destinationDirectory.path);
-}
-
-Future<void> cleanupInactiveAssetPackVersions({
-  required Directory packsRoot,
-  required String activeVersion,
-}) async {
-  if (!packsRoot.existsSync()) {
-    return;
-  }
-  await for (final entity in packsRoot.list()) {
-    if (entity is Directory &&
-        p.basename(entity.path) != activeVersion &&
-        isAssetPackVersion(p.basename(entity.path))) {
-      await entity.delete(recursive: true);
-    }
-  }
-}
-
-Future<void> deactivateCorruptAssetPack({
-  required SharedPreferencesDataSource preferences,
-  required Directory directory,
-}) async {
-  await preferences.remove(
-    key: SharedPreferencesKey.assetPackActiveDownloadedVersion,
-  );
-  try {
-    if (directory.existsSync()) {
-      await directory.delete(recursive: true);
-    }
-  } on FileSystemException {
-    // The preference is already cleared, so the bundled pack is used even if
-    // the OS temporarily prevents cleanup. A later successful activation
-    // retries removal as part of old-version cleanup.
-  }
 }

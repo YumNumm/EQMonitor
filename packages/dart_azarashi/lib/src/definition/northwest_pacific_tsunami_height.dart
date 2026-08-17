@@ -11,7 +11,7 @@ enum JmaNorthwestPacificTsunamiHeight {
   high(510, 'High'),
   unknown(511, 'Unknown');
 
-  const JmaNorthwestPacificTsunamiHeight(this.code, this.descriptionEn);
+  new(this.code, this.descriptionEn);
 
   final int code;
   final String descriptionEn;

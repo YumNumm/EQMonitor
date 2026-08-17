@@ -6,7 +6,7 @@ part 'eew_estimated_region.freezed.dart';
 
 @Freezed(toJson: false)
 abstract class EewEstimatedRegion with _$EewEstimatedRegion {
-  const factory EewEstimatedRegion({
+  const factory({
     required String regionCode,
     required String regionName,
     required double intensity,

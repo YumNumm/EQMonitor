@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 final class CustomProviderObserver extends ProviderObserver {
-  CustomProviderObserver(this.talker);
+  new(this.talker);
 
   final Talker talker;
 

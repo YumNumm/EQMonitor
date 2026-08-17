@@ -124,7 +124,7 @@ void main() {
 }
 
 final class _MigrateAdapter implements HttpClientAdapter {
-  _MigrateAdapter({
+  new({
     this.migrateStatus = 200,
     this.getMeStatus = 200,
     this.firstGetMeStatus,
@@ -227,7 +227,7 @@ final class _MigrateAdapter implements HttpClientAdapter {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

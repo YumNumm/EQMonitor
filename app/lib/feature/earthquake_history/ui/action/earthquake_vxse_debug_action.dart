@@ -12,7 +12,7 @@ EarthquakeVxseDebugAction earthquakeVxseDebugAction(Ref ref) =>
     const EarthquakeVxseDebugAction();
 
 class EarthquakeVxseDebugAction {
-  const EarthquakeVxseDebugAction();
+  const new();
 
   void apply({
     required WidgetRef ref,

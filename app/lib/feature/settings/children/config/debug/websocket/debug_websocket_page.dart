@@ -10,7 +10,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugWebSocketPage extends HookConsumerWidget {
-  const DebugWebSocketPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +66,7 @@ class DebugWebSocketPage extends HookConsumerWidget {
 }
 
 class _WsStatusCard extends HookWidget {
-  const _WsStatusCard({required this.wsStatus});
+  const new({required this.wsStatus});
 
   final EqMonitorWsStatusState wsStatus;
 
@@ -139,7 +139,7 @@ class _WsStatusCard extends HookWidget {
 }
 
 class _WsEventCard extends StatelessWidget {
-  const _WsEventCard({required this.receivedAt, required this.event});
+  const new({required this.receivedAt, required this.event});
 
   final DateTime receivedAt;
   final RealtimeEvent event;

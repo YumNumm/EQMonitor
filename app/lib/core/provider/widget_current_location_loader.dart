@@ -21,7 +21,7 @@ WidgetCurrentLocationLoader widgetCurrentLocationLoader(Ref ref) =>
     );
 
 class WidgetCurrentLocationLoader {
-  const WidgetCurrentLocationLoader({
+  const new({
     required this.checkPermission,
     required this.getLastKnownPosition,
     required this.getCurrentPosition,

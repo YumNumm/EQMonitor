@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class KyoshinMonitorAboutPage extends HookConsumerWidget {
-  const KyoshinMonitorAboutPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +101,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.title, required this.style});
+  const new({required this.title, required this.style});
 
   final String title;
   final TextStyle? style;
@@ -116,7 +116,7 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({
+  const new({
     required this.items,
     this.onTapMore,
     this.isWarning = false,
@@ -180,14 +180,14 @@ class _InfoCard extends StatelessWidget {
 }
 
 class _InfoItem {
-  const _InfoItem({required this.title, required this.description});
+  const new({required this.title, required this.description});
 
   final String title;
   final String description;
 }
 
 class _InfoItemWidget extends StatelessWidget {
-  const _InfoItemWidget({required this.item, this.textColor});
+  const new({required this.item, this.textColor});
 
   final _InfoItem item;
   final Color? textColor;

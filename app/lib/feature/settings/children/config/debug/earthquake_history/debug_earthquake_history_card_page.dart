@@ -22,13 +22,13 @@ enum _DebugMode {
   preliminary('速報値'),
   confirmed('確定値');
 
-  const _DebugMode(this.label);
+  new(this.label);
 
   final String label;
 }
 
 class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
-  const DebugEarthquakeHistoryCardPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
 }
 
 class _DebugBody extends HookWidget {
-  const _DebugBody({required this.param});
+  const new({required this.param});
 
   final EarthquakeParameter param;
 
@@ -321,7 +321,7 @@ class _DebugBody extends HookWidget {
 }
 
 class _StationEntry {
-  _StationEntry({
+  new({
     required this.pref,
     required this.city,
     required this.station,
@@ -333,28 +333,28 @@ class _StationEntry {
 }
 
 class _SelectedStation {
-  _SelectedStation({required this.station, required this.intensity});
+  new({required this.station, required this.intensity});
 
   final EarthquakeParameterStationItem station;
   final JmaIntensity intensity;
 }
 
 class _PrefectureAccumulator {
-  _PrefectureAccumulator({required this.pref});
+  new({required this.pref});
 
   final EarthquakeParameterPrefectureItem pref;
   final cityMap = <String, _CityAccumulator>{};
 }
 
 class _CityAccumulator {
-  _CityAccumulator({required this.city});
+  new({required this.city});
 
   final EarthquakeParameterCityItem city;
   final stations = <_SelectedStation>[];
 }
 
 class _ParamCard extends StatelessWidget {
-  const _ParamCard({required this.title, required this.child});
+  const new({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -379,7 +379,7 @@ class _ParamCard extends StatelessWidget {
 }
 
 class _LabeledRow extends StatelessWidget {
-  const _LabeledRow({required this.label, required this.child});
+  const new({required this.label, required this.child});
 
   final String label;
   final Widget child;

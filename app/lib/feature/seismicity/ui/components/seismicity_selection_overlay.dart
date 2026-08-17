@@ -11,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 /// [onSelectionEnd] を呼ぶ。[enabled] が false の場合は
 /// [IgnorePointer] で下のマップ操作(パン/ズーム)を妨げない。
 class SeismicitySelectionOverlay extends HookWidget {
-  const SeismicitySelectionOverlay({
+  const new({
     required this.enabled,
     required this.mapController,
     required this.onSelectionEnd,
@@ -81,7 +81,7 @@ class SeismicitySelectionOverlay extends HookWidget {
 }
 
 class _SelectionPainter extends CustomPainter {
-  const _SelectionPainter({required this.start, required this.current});
+  const new({required this.start, required this.current});
 
   final Offset? start;
   final Offset? current;

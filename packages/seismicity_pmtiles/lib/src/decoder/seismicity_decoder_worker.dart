@@ -16,7 +16,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityWorkerNoOpTerminalProbe
     implements SeismicityWorkerTerminalProbe {
-  const SeismicityWorkerNoOpTerminalProbe();
+  const new();
 
   @override
   SeismicityWorkerTerminalCounters get counters => (
@@ -32,7 +32,7 @@ final class SeismicityWorkerNoOpTerminalProbe
 
 final class IsolateSeismicityDecoderWorkerFactory
     implements SeismicityDecoderWorkerFactory {
-  IsolateSeismicityDecoderWorkerFactory({
+  new({
     SeismicityDecoderIsolateLauncher? launcher,
     SeismicityWorkerTerminalProbe? probe,
     this.workerMain = seismicityDecoderWorkerEntry,
@@ -64,7 +64,7 @@ final class IsolateSeismicityDecoderWorkerFactory
 
 final class IsolateSeismicityDecoderWorkerHandle
     implements SeismicityDecoderWorkerHandle {
-  IsolateSeismicityDecoderWorkerHandle({
+  new({
     required this.endpoint,
     required this.acceptedDescriptor,
     required SeismicityWorkerTerminalProbe probe,

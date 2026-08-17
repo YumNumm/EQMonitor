@@ -7,7 +7,7 @@ part 'earthquake_telegram_comment.g.dart';
 /// 電文に付随するコメント（固定付加文・自由付加文）
 @freezed
 abstract class EarthquakeTelegramComment with _$EarthquakeTelegramComment {
-  const factory EarthquakeTelegramComment({
+  const factory({
     required EarthquakeTelegramType type,
     required DateTime reportedAt,
 
@@ -18,6 +18,6 @@ abstract class EarthquakeTelegramComment with _$EarthquakeTelegramComment {
     required String? free,
   }) = _EarthquakeTelegramComment;
 
-  factory EarthquakeTelegramComment.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeTelegramCommentFromJson(json);
 }

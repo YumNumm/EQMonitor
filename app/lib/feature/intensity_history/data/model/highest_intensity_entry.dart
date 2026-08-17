@@ -9,7 +9,7 @@ part 'highest_intensity_entry.g.dart';
 
 @freezed
 abstract class HighestIntensityEntry with _$HighestIntensityEntry {
-  const factory HighestIntensityEntry({
+  const factory({
     /// 気象庁防災情報XMLフォーマットの地域コード。
     required String code,
 
@@ -26,9 +26,9 @@ abstract class HighestIntensityEntry with _$HighestIntensityEntry {
     required EarthquakePartial earthquake,
   }) = _HighestIntensityEntry;
 
-  const HighestIntensityEntry._();
+  const new _();
 
-  factory HighestIntensityEntry.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HighestIntensityEntryFromJson(json);
 }
 

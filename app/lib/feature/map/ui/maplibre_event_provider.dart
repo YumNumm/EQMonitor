@@ -6,7 +6,7 @@ import 'package:maplibre/maplibre.dart';
 /// StatelessWidget + InheritedWidget パターン。
 /// StreamController は公開しない。emit のみを提供する。
 class MapLibreEventProvider extends StatelessWidget {
-  const MapLibreEventProvider({
+  const new({
     required this.child,
     super.key,
   });
@@ -33,13 +33,13 @@ class MapLibreEventProvider extends StatelessWidget {
 ///
 /// emit は現在 no-op。将来的にイベントをリスナーへ転送する実装に拡張可能。
 class MapLibreEventController {
-  const MapLibreEventController();
+  const new();
 
   void emit(MapEvent event) {}
 }
 
 class _InheritedMapLibreEventProvider extends InheritedWidget {
-  const _InheritedMapLibreEventProvider({
+  const new({
     required this.controller,
     required super.child,
   });

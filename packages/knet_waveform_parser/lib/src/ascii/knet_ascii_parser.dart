@@ -8,7 +8,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// 各ヘッダ行のラベルフィールドは固定幅（最大18文字）で、
 /// 19文字目以降（0-indexed では位置18以降）が値フィールドになる。
 class KnetAsciiParser {
-  const KnetAsciiParser();
+  const new();
 
   /// ASCII テキストを [KnetRecord] にパースする
   ///
@@ -236,7 +236,7 @@ class KnetAsciiParser {
 
 /// K-NET パースエラー
 class KnetParseException implements Exception {
-  const KnetParseException(this.message, [this.stackTrace]);
+  const new(this.message, [this.stackTrace]);
   final String message;
   final StackTrace? stackTrace;
 

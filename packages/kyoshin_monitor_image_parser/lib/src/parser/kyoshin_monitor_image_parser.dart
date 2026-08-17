@@ -106,18 +106,18 @@ class KyoshinMonitorImageParser {
   }
 }
 
-sealed class KyoshinMonitorImageParseObservationResult {}
+sealed class KyoshinMonitorImageParseObservationResult;
 
 class KyoshinMonitorImageParseObservationSuccess
     implements KyoshinMonitorImageParseObservationResult {
-  KyoshinMonitorImageParseObservationSuccess(this.point);
+  new(this.point);
 
   final KyoshinMonitorObservationAnalyzedPoint point;
 }
 
 class KyoshinMonitorImageParseObservationFailure
     implements KyoshinMonitorImageParseObservationResult {
-  KyoshinMonitorImageParseObservationFailure(this.point);
+  new(this.point);
 
   final KyoshinMonitorObservationPoint point;
 }

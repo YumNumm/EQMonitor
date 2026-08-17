@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:eqmonitor_websocket/src/ws_pong_message.dart';
 
 class WsHeartbeatResponder {
-  const WsHeartbeatResponder();
+  const new();
 
   String? buildResponse(String text) {
     try {

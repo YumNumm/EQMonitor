@@ -4,7 +4,7 @@ import 'package:nied_api_client/src/hinet/fnet/model/fnet_event.dart';
 
 /// F-net APIクライアント
 class FnetApiClient {
-  FnetApiClient({
+  new({
     required FnetCatalogApi api,
     required FnetCatalogParser parser,
   }) : _api = api,

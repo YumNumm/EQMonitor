@@ -14,7 +14,7 @@ Future<FeedDataSource> feedDataSource(Ref ref) async {
 }
 
 class FeedDataSource extends DataSource<String?, FeedItem> {
-  FeedDataSource({required FeedRepository repository})
+  new({required FeedRepository repository})
     : _repository = repository;
 
   final FeedRepository _repository;

@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SortFilterChip extends StatelessWidget {
-  const SortFilterChip({
+  const new({
     this.sortBy,
     this.sortOrder,
     this.onChanged,
@@ -55,7 +55,7 @@ class SortFilterChip extends StatelessWidget {
 }
 
 class _SortFilterModal extends HookWidget {
-  const _SortFilterModal({
+  const new({
     this.currentSortBy,
     this.currentSortOrder,
     this.sortByLocked = false,

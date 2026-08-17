@@ -11,7 +11,7 @@ part 'eew.g.dart';
 /// Web版APIでの緊急地震速報の情報
 @freezed
 abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
-  const factory Eew({
+  const factory({
     /// リザルト
     Result? result,
 
@@ -76,9 +76,9 @@ abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
     /// 警報 or 予報
     @JsonKey(name: 'alertflg') String? alertFlag,
   }) = _Eew;
-  const Eew._();
+  const new _();
 
-  factory Eew.fromJson(Map<String, dynamic> json) => _$EewFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$EewFromJson(json);
 
   /// 震源の座標
   Location? get location {
@@ -94,7 +94,7 @@ abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
 
 /// 位置情報
 class Location {
-  const Location(this.latitude, this.longitude);
+  const new(this.latitude, this.longitude);
 
   final double latitude;
   final double longitude;

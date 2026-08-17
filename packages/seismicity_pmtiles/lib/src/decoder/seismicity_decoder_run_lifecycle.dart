@@ -3,49 +3,49 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_result.dart';
 
 sealed class SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunSignal();
+  const new();
 }
 
 final class SeismicityDecoderRunSuccessSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunSuccessSignal({required this.dataset});
+  const new({required this.dataset});
 
   final SeismicityPmTilesDataset dataset;
 }
 
 final class SeismicityDecoderRunSourceFailureSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunSourceFailureSignal({required this.exception});
+  const new({required this.exception});
 
   final SeismicityPmTilesException exception;
 }
 
 final class SeismicityDecoderRunWorkerFailureSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunWorkerFailureSignal({required this.exception});
+  const new({required this.exception});
 
   final SeismicityPmTilesException exception;
 }
 
 final class SeismicityDecoderRunCancelSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunCancelSignal();
+  const new();
 }
 
 final class SeismicityDecoderRunCleanupSucceededSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunCleanupSucceededSignal();
+  const new();
 }
 
 final class SeismicityDecoderRunCleanupFailedSignal
     extends SeismicityDecoderRunSignal {
-  const SeismicityDecoderRunCleanupFailedSignal({required this.exception});
+  const new({required this.exception});
 
   final SeismicityPmTilesException exception;
 }
 
 final class SeismicityDecoderRunDecision {
-  const SeismicityDecoderRunDecision({
+  const new({
     required this.result,
     required this.closeArchive,
     required this.cancelWorker,

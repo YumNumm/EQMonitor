@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_t
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 class IntensityTreeConverter {
-  const IntensityTreeConverter({
+  const new({
     required this.parameter,
     this.shindoDbStations,
   });
@@ -339,7 +339,7 @@ class IntensityTreeConverter {
 // ---------------------------------------------------------------------------
 
 class _MutablePrefectureNode {
-  _MutablePrefectureNode({required this.prefecture});
+  new({required this.prefecture});
 
   final EarthquakeParameterPrefectureItem prefecture;
   final Map<String, _MutableCityNode> _cities = {};
@@ -376,7 +376,7 @@ class _MutablePrefectureNode {
 }
 
 class _MutableCityNode {
-  _MutableCityNode({required this.city});
+  new({required this.city});
 
   final EarthquakeParameterCityItem city;
   final List<StationIntensityNode> stations = [];
@@ -408,7 +408,7 @@ class _MutableCityNode {
 }
 
 class _LpgmPrefectureData {
-  _LpgmPrefectureData({required this.region});
+  new({required this.region});
 
   final EarthquakeParameterRegionItem region;
   final Map<EarthquakeParameterCityItem, List<api.IntensityStationItem>>

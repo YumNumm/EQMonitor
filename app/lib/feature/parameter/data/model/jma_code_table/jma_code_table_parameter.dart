@@ -7,18 +7,18 @@ part 'jma_code_table_parameter.g.dart';
 
 @freezed
 abstract class JmaCodeTableParameter with _$JmaCodeTableParameter {
-  const factory JmaCodeTableParameter({
+  const factory({
     required ParameterMetadata metadata,
     required JmaCodeTableCodeTables codeTables,
   }) = _JmaCodeTableParameter;
 
-  factory JmaCodeTableParameter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$JmaCodeTableParameterFromJson(json);
 }
 
 @freezed
 abstract class JmaCodeTableCodeTables with _$JmaCodeTableCodeTables {
-  const factory JmaCodeTableCodeTables({
+  const factory({
     required List<JmaCodeTableItem> areaForecastLocalEew,
     required List<JmaCodeTableItem> areaInformationPrefectureEarthquake,
     required List<JmaCodeTableCityItem> areaInformationCity,
@@ -27,13 +27,13 @@ abstract class JmaCodeTableCodeTables with _$JmaCodeTableCodeTables {
     required List<JmaCodeTableItem> areaEpicenterDetail,
   }) = _JmaCodeTableCodeTables;
 
-  factory JmaCodeTableCodeTables.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$JmaCodeTableCodeTablesFromJson(json);
 }
 
 @freezed
 abstract class JmaCodeTableCityItem with _$JmaCodeTableCityItem {
-  const factory JmaCodeTableCityItem({
+  const factory({
     required String code,
     required LocalizedName name,
     @JsonKey(name: 'parent_area_forecast_local_eew_code')
@@ -42,19 +42,19 @@ abstract class JmaCodeTableCityItem with _$JmaCodeTableCityItem {
     required String parentAreaInformationPrefectureEarthquakeCode,
   }) = _JmaCodeTableCityItem;
 
-  factory JmaCodeTableCityItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$JmaCodeTableCityItemFromJson(json);
 }
 
 @freezed
 abstract class JmaCodeTableItem with _$JmaCodeTableItem {
-  const factory JmaCodeTableItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required String? kana,
     required String? description,
   }) = _JmaCodeTableItem;
 
-  factory JmaCodeTableItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$JmaCodeTableItemFromJson(json);
 }

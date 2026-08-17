@@ -89,7 +89,7 @@ void main() {
 }
 
 final class _CountingArchive implements SeismicityPmTilesArchive {
-  _CountingArchive({required this.inner}) : closeCount = 0;
+  new({required this.inner}) : closeCount = 0;
 
   final SeismicityPmTilesArchive inner;
   Future<void>? _close;
@@ -121,7 +121,7 @@ final class _CountingArchive implements SeismicityPmTilesArchive {
 }
 
 final class _Task62BuiltArchive {
-  const _Task62BuiltArchive({
+  const new({
     required this.bytes,
     required this.descriptor,
     required this.validTileId,

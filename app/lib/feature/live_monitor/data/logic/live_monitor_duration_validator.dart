@@ -6,7 +6,7 @@ typedef LiveMonitorDurationValidation = ({
 });
 
 class LiveMonitorDurationValidator {
-  const LiveMonitorDurationValidator();
+  const new();
 
   LiveMonitorDurationValidation validate(String raw) {
     if (raw.isEmpty) {

@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
 class BasicModalSheet extends HookWidget {
-  const BasicModalSheet({
+  const new({
     required this.child,
     super.key,
     this.hasAppBar = true,

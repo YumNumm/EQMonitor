@@ -1,23 +1,23 @@
 /// テキスト中のプレーン部分 / URL 部分
 sealed class UrlTextSegment {
-  const UrlTextSegment();
+  const new();
 }
 
 final class PlainUrlTextSegment extends UrlTextSegment {
-  const PlainUrlTextSegment({required this.text});
+  const new({required this.text});
 
   final String text;
 }
 
 final class LinkUrlTextSegment extends UrlTextSegment {
-  const LinkUrlTextSegment({required this.url});
+  const new({required this.url});
 
   final String url;
 }
 
 /// 文字列から URL を検出してセグメントに分割する
 class UrlTextSegmentSplitter {
-  const UrlTextSegmentSplitter();
+  const new();
 
   static final _urlPattern = RegExp(
     r'https?://[^\s\u3000<>"{}|\\^`\[\]]+',

@@ -45,7 +45,7 @@ final openContactProvider = Provider<OpenContactAction>(
 /// 問い合わせページを開く。呼び出し側は `open(ref, context)` のように
 /// 関数として扱える([call]による callable object)。
 class OpenContactAction {
-  const OpenContactAction();
+  const new();
 
   Future<void> call(WidgetRef ref, BuildContext context) async {
     try {

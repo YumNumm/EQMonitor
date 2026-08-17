@@ -6,12 +6,12 @@ import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dar
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 
 final class LiveMonitorEarthquakePresentation {
-  const LiveMonitorEarthquakePresentation._({
+  const new _({
     required this.displayMode,
     required this.publicationAt,
   });
 
-  factory LiveMonitorEarthquakePresentation.forSplit({
+  factory forSplit({
     required Earthquake earthquake,
   }) {
     final latestPublication =
@@ -30,7 +30,7 @@ final class LiveMonitorEarthquakePresentation {
     );
   }
 
-  factory LiveMonitorEarthquakePresentation.forTrigger({
+  factory forTrigger({
     required Earthquake earthquake,
     required LiveMonitorEarthquakeTrigger trigger,
   }) {
@@ -56,7 +56,7 @@ final class LiveMonitorEarthquakePresentation {
 }
 
 class LiveMonitorEarthquakeCardPresenter {
-  const LiveMonitorEarthquakeCardPresenter._();
+  const new _();
 
   static IntensityDisplayMode preferredIntensityMode({
     required Earthquake earthquake,

@@ -7,11 +7,11 @@ part 'intensity_icon_data.g.dart';
 
 @freezed
 abstract class IntensityIconData with _$IntensityIconData {
-  const factory IntensityIconData({
+  const factory({
     required IntensityIconJmaIntensity jmaIntensity,
     required IntensityIconJmaLpgmIntensity lpgmIntensity,
   }) = _IntensityIconData;
 
-  factory IntensityIconData.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityIconDataFromJson(json);
 }

@@ -38,7 +38,7 @@ final class RecordingWorkerSeam
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
-  RecordingWorkerSeam() : receivePortClosed = false;
+  new() : receivePortClosed = false;
 
   final sent = <SeismicityDecoderWorkerRequest>[];
   final exitCompleter = Completer<void>();

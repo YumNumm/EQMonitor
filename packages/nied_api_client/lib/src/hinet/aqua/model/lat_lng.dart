@@ -5,10 +5,10 @@ part 'lat_lng.g.dart';
 
 @freezed
 abstract class LatLng with _$LatLng {
-  const factory LatLng({
+  const factory({
     required double latitude,
     required double longitude,
   }) = _LatLng;
 
-  factory LatLng.fromJson(Map<String, dynamic> json) => _$LatLngFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$LatLngFromJson(json);
 }

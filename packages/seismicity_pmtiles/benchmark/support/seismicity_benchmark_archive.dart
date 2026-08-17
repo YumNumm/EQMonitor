@@ -11,7 +11,7 @@ import 'seismicity_benchmark_feature_source.dart';
 ///
 /// Builds one raw MVT tile during [readTile] and retains no tile map.
 final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
-  factory SeismicityBenchmarkArchive({
+  factory({
     required int featureCount,
     required int featuresPerTile,
     SeismicityBenchmarkFeatureSource featureSource =
@@ -101,7 +101,7 @@ final class SeismicityBenchmarkArchive implements SeismicityPmTilesArchive {
     );
   }
 
-  SeismicityBenchmarkArchive._({
+  new _({
     required this.featureCount,
     required this.featuresPerTile,
     required this.featureSource,

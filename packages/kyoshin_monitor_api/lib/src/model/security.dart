@@ -5,9 +5,9 @@ part 'security.g.dart';
 
 @freezed
 abstract class Security with _$Security {
-  const factory Security({required String? realm, required String? hash}) =
+  const factory({required String? realm, required String? hash}) =
       _Security;
 
-  factory Security.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SecurityFromJson(json);
 }

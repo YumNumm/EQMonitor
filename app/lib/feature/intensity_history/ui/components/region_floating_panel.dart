@@ -17,7 +17,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// - Lv1(全都道府県表示): 「全国」を表示。
 /// - Lv2(特定都道府県フォーカス): 都道府県名・最高震度バッジ・観測件数を表示。
 class RegionFloatingPanel extends ConsumerWidget {
-  const RegionFloatingPanel({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class RegionFloatingPanel extends ConsumerWidget {
 }
 
 class _PrefecturePanel extends StatelessWidget {
-  const _PrefecturePanel({required this.theme});
+  const new({required this.theme});
 
   final ThemeData theme;
 
@@ -67,7 +67,7 @@ class _PrefecturePanel extends StatelessWidget {
 }
 
 class _CityPanel extends ConsumerWidget {
-  const _CityPanel({
+  const new({
     required this.prefectureCode,
     required this.prefectureName,
     required this.selectedCityCode,

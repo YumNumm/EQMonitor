@@ -3,7 +3,7 @@ import 'package:kyoshin_monitor_api/src/api/lpgm_kyoshin_monitor_web_api_client.
 import 'package:kyoshin_monitor_api/src/data_source/kyoshin_monitor_web_api_data_source.dart';
 
 class LpgmKyoshinMonitorWebApiDataSource {
-  LpgmKyoshinMonitorWebApiDataSource({
+  new({
     required LpgmKyoshinMonitorWebApiClient client,
   }) : _client = client;
 

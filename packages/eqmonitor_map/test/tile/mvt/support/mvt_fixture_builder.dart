@@ -5,7 +5,7 @@ import 'dart:typed_data';
 /// コード生成には頼らず、production側のwire readerと対称な素朴なvarint/
 /// tag encoderだけで組み立てる。
 final class MvtFixtureBuilder {
-  const MvtFixtureBuilder();
+  const new();
 
   static const geomTypePoint = 1;
   static const geomTypeLineString = 2;

@@ -17,7 +17,7 @@ import 'package:flutter_scene/scene.dart' as scene;
 /// いるのと同じ理由)ため、`test/flutter_scene/base_map_geometry_factory_test.dart`
 /// はこのpure関数だけを検証し、GPU呼び出しそのものはテストしない。
 class BaseMapGeometryFactory {
-  const BaseMapGeometryFactory();
+  const new();
 
   /// [mesh]から塗りつぶし用の`scene.Geometry`を作る。
   ///
@@ -66,7 +66,7 @@ class BaseMapGeometryFactory {
 /// 直接検証できる。
 @immutable
 class FillGeometryArgs {
-  const FillGeometryArgs({required this.positions, required this.indices});
+  const new({required this.positions, required this.indices});
 
   /// tile-local座標を3成分(x, y, 0)へ展開したfloat32頂点列
   /// ([_expandTo3D]のdoc comment参照)。
@@ -82,7 +82,7 @@ class FillGeometryArgs {
 /// いる。
 @immutable
 class LineGeometryArgs {
-  const LineGeometryArgs({
+  const new({
     required this.positions,
     required this.indices,
     required this.extrudes,

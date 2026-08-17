@@ -10,7 +10,7 @@ const mapAutomaticFocusTileSize = 512.0;
 typedef MapAutomaticFocusTarget = ({Geographic center, double zoom});
 
 class MapAutomaticFocusController {
-  const MapAutomaticFocusController();
+  const new();
 
   Future<bool> fit({
     required MapController controller,

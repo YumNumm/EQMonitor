@@ -13,7 +13,7 @@ const _warnings = [
 ];
 
 class BetaTestingWarningPage extends ConsumerWidget {
-  const BetaTestingWarningPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class BetaTestingWarningPage extends ConsumerWidget {
 }
 
 class _WarningHeader extends StatelessWidget {
-  const _WarningHeader({required this.designSystem});
+  const new({required this.designSystem});
 
   final DesignSystemThemeExtension designSystem;
 
@@ -93,7 +93,7 @@ class _WarningHeader extends StatelessWidget {
 }
 
 class _WarningList extends StatelessWidget {
-  const _WarningList({required this.designSystem});
+  const new({required this.designSystem});
 
   final DesignSystemThemeExtension designSystem;
 
@@ -123,7 +123,7 @@ class _WarningList extends StatelessWidget {
 }
 
 class _WarningCard extends StatelessWidget {
-  const _WarningCard({
+  const new({
     required this.warning,
     required this.index,
     required this.designSystem,
@@ -180,7 +180,7 @@ class _WarningCard extends StatelessWidget {
 }
 
 class _AgreementBottom extends ConsumerWidget {
-  const _AgreementBottom({required this.designSystem});
+  const new({required this.designSystem});
 
   final DesignSystemThemeExtension designSystem;
 

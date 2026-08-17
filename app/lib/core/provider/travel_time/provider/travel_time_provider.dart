@@ -102,7 +102,7 @@ extension TravelTimeTablesCalc on TravelTimeTables {
 }
 
 class TravelTimeResult {
-  TravelTimeResult(this.sDistance, this.pDistance);
+  new(this.sDistance, this.pDistance);
 
   /// S波到達予想(km)
   final double? sDistance;

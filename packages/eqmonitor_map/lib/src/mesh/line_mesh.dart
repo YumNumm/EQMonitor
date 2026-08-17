@@ -12,7 +12,7 @@ import 'dart:typed_data';
 /// 呼び出しがこの上限を超えるfeature群を渡された場合、`LineMeshBuilder`は
 /// 複数の[LineMesh](segment)へ分割して返す。
 final class LineMesh {
-  const LineMesh({
+  const new({
     required this.positions,
     required this.extrudes,
     required this.indices,

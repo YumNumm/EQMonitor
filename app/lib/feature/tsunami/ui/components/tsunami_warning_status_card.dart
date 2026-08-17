@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiWarningStatusCard extends StatelessWidget {
-  const TsunamiWarningStatusCard({required this.tsunami, super.key});
+  const new({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 

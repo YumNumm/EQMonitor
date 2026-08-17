@@ -27,7 +27,7 @@ import 'package:eqmonitor_map/src/geo/tile_id.dart';
 /// まだ持っていない tile の decode を遅らせる。よって in-flight / decode 済みの
 /// 判定は canonical で行い、返す値は描画位置を保つため unwrapped のままにする。
 final class MapTileScheduler {
-  const MapTileScheduler({required this.maxInFlightDecodes})
+  const new({required this.maxInFlightDecodes})
     : assert(maxInFlightDecodes > 0, 'maxInFlightDecodes must be > 0');
 
   /// 同時に走らせてよい decode 数の上限(呼び出し側が明示。

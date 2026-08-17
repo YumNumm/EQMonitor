@@ -8,7 +8,7 @@ import 'package:workflows/workflows.dart';
 /// [clearInstance] can clean them up without a key-range scan.
 final class SharedPreferencesWorkflowPersistence
     implements WorkflowPersistence {
-  SharedPreferencesWorkflowPersistence(this._prefs);
+  new(this._prefs);
 
   final SharedPreferencesAsync _prefs;
 

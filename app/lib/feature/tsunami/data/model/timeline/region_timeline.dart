@@ -10,7 +10,7 @@ part 'region_timeline.freezed.dart';
 /// 地域ごとのタイムライン。
 @freezed
 abstract class RegionTimeline with _$RegionTimeline {
-  const factory RegionTimeline({
+  const factory({
     required String code,
     required String name,
     required KindTimeline kind,

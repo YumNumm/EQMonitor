@@ -12,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeEditorPage extends ConsumerWidget {
-  const ThemeEditorPage({required this.mode, super.key});
+  const new({required this.mode, super.key});
 
   final ThemeBrightnessMode mode;
 
@@ -121,7 +121,7 @@ class ThemeEditorPage extends ConsumerWidget {
 }
 
 class _ColorFieldTile extends StatelessWidget {
-  const _ColorFieldTile({
+  const new({
     required this.def,
     required this.colorSet,
     required this.onChanged,
@@ -163,7 +163,7 @@ class _ColorFieldTile extends StatelessWidget {
 }
 
 class _IntensityFieldTile extends StatelessWidget {
-  const _IntensityFieldTile({
+  const new({
     required this.def,
     required this.colorSet,
     required this.onChanged,
@@ -259,7 +259,7 @@ class _IntensityFieldTile extends StatelessWidget {
 }
 
 class _ColorPickerDialog extends HookWidget {
-  const _ColorPickerDialog({required this.initial});
+  const new({required this.initial});
 
   final Color initial;
 

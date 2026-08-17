@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_color_mode.da
 import 'package:material_ui/material_ui.dart';
 
 class SeismicityColorModeSelector extends StatelessWidget {
-  const SeismicityColorModeSelector({
+  const new({
     required this.value,
     required this.onChanged,
     super.key,

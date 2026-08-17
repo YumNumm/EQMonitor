@@ -7,7 +7,7 @@ enum ApnsTokenKind {
   notification('NOTIFICATION'),
   liveActivityStart('LIVE_ACTIVITY_START');
 
-  const ApnsTokenKind(this.json);
+  new(this.json);
 
   final String json;
 }

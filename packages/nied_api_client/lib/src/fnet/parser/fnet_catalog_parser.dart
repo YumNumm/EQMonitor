@@ -2,7 +2,7 @@ import 'package:nied_api_client/src/hinet/fnet/model/fnet_event.dart';
 
 /// F-netカタログデータのパーサー
 class FnetCatalogParser {
-  const FnetCatalogParser();
+  const new();
 
   /// カタログファイルの内容をパースしてイベントのリストを返す
   List<FnetEvent> parse(String content) {

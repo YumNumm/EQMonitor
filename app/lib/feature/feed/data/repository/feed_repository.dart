@@ -12,7 +12,7 @@ Future<FeedRepository> feedRepository(Ref ref) async {
 }
 
 class FeedRepository {
-  FeedRepository({required api.ApiClient api}) : _api = api;
+  new({required api.ApiClient api}) : _api = api;
 
   final api.ApiClient _api;
 

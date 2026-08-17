@@ -5,7 +5,7 @@ part 'shared_preferences.g.dart';
 
 /// SharedPreferences のラッパー。参照プロジェクトとの API 互換のため。
 class SharedPreferencesAsync {
-  SharedPreferencesAsync(this._prefs);
+  new(this._prefs);
 
   final SharedPreferences _prefs;
 

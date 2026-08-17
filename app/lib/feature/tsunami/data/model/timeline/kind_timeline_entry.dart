@@ -7,7 +7,7 @@ typedef KindTimeline = List<KindTimelineEntry>;
 
 @freezed
 abstract class KindTimelineEntry with _$KindTimelineEntry {
-  const factory KindTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required TsunamiWarningKind kind,
     // 電文メタ

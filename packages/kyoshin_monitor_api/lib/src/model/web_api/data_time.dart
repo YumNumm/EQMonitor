@@ -8,7 +8,7 @@ part 'data_time.g.dart';
 abstract class DataTime
     with _$DataTime
     implements KyoshinMonitorWebApiResponse {
-  const factory DataTime({
+  const factory({
     required Security? security,
     required Result? result,
     @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
@@ -17,6 +17,6 @@ abstract class DataTime
     required DateTime requestTime,
   }) = _DataTime;
 
-  factory DataTime.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$DataTimeFromJson(json);
 }

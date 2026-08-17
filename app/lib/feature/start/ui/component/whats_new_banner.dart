@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// アプリのバージョンが更新され、まだ確認していない場合のみ表示する。
 /// タップで変更履歴(Changelog)画面に遷移する。
 class WhatsNewBanner extends ConsumerWidget {
-  const WhatsNewBanner({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

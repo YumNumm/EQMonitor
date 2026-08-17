@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// M-T図(時間 × マグニチュードの点プロット)。
 class SeismicityMtChart extends StatelessWidget {
-  const SeismicityMtChart({required this.events, super.key});
+  const new({required this.events, super.key});
 
   final List<SeismicityEvent> events;
 

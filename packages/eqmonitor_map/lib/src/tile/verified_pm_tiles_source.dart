@@ -18,7 +18,7 @@ final _loopbackIpv4 = RegExp(
 /// 網羅的に判別する。sealedのため subtype は本 library(このファイルと
 /// 生成 part)に閉じている。
 sealed class VerifiedTileSource {
-  const VerifiedTileSource();
+  const new();
 
   /// archiveの実体を区別する識別子。同一URL/pathでも中身が更新された別の
   /// downloadを別物として扱うために使う。
@@ -65,7 +65,7 @@ extension VerifiedTileSourceCacheIdentity on VerifiedTileSource {
 abstract class VerifiedPmTilesSource
     with _$VerifiedPmTilesSource
     implements VerifiedTileSource {
-  const factory VerifiedPmTilesSource({
+  const factory({
     required String sourceInstanceId,
     required String absolutePath,
     required int sizeBytes,
@@ -93,7 +93,7 @@ abstract class VerifiedPmTilesSource
 abstract class VerifiedRemotePmTilesSource
     with _$VerifiedRemotePmTilesSource
     implements VerifiedTileSource {
-  const factory VerifiedRemotePmTilesSource._({
+  const factory _({
     required String sourceInstanceId,
     required int sourceRevision,
     required Uri url,

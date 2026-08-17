@@ -8,7 +8,7 @@ enum SeismicityDepthProjectionAxis { latitude, longitude }
 ///
 /// 深さ未知のイベントは断面図に描画できないため除外する。
 class SeismicityDepthProjection {
-  const SeismicityDepthProjection();
+  const new();
 
   List<SeismicityDepthPoint> project({
     required List<SeismicityEvent> events,

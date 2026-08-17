@@ -8,7 +8,7 @@ part 'earthquake_telegram_body_quake_model.freezed.dart';
 @freezed
 abstract class EarthquakeTelegramBodyQuakeModel
     with _$EarthquakeTelegramBodyQuakeModel {
-  const factory EarthquakeTelegramBodyQuakeModel({
+  const factory({
     String? magnitude,
     num? depth,
     String? epicenterName,

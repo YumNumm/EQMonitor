@@ -8,7 +8,7 @@ part 'shindo_db_intensity_tree.freezed.dart';
 
 @Freezed(fromJson: false)
 abstract class ShindoDbIntensityTree with _$ShindoDbIntensityTree {
-  const factory ShindoDbIntensityTree({
+  const factory({
     required Map<ShindoDbIntensityClass, List<ShindoDbPrefectureNode>> tree,
     required Map<ShindoDbIntensityClass, List<ShindoDbStationNode>>
     unresolvedStations,
@@ -18,7 +18,7 @@ abstract class ShindoDbIntensityTree with _$ShindoDbIntensityTree {
 
 @Freezed(fromJson: false)
 abstract class ShindoDbPrefectureNode with _$ShindoDbPrefectureNode {
-  const factory ShindoDbPrefectureNode({
+  const factory({
     required EarthquakeParameterPrefectureItem prefecture,
     required List<ShindoDbCityNode> cities,
   }) = _ShindoDbPrefectureNode;
@@ -26,7 +26,7 @@ abstract class ShindoDbPrefectureNode with _$ShindoDbPrefectureNode {
 
 @Freezed(fromJson: false)
 abstract class ShindoDbCityNode with _$ShindoDbCityNode {
-  const factory ShindoDbCityNode({
+  const factory({
     required EarthquakeParameterCityItem city,
     required EarthquakeParameterRegionItem region,
     required List<ShindoDbStationNode> stations,
@@ -35,7 +35,7 @@ abstract class ShindoDbCityNode with _$ShindoDbCityNode {
 
 @Freezed(fromJson: false)
 abstract class ShindoDbStationNode with _$ShindoDbStationNode {
-  const factory ShindoDbStationNode({
+  const factory({
     required EarthquakeCatalogStationRecord record,
     required String name,
     required LatLng? location,

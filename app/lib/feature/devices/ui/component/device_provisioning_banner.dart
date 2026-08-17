@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class DeviceProvisioningBanner extends ConsumerWidget {
-  const DeviceProvisioningBanner({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,7 +75,7 @@ class DeviceProvisioningBanner extends ConsumerWidget {
 }
 
 class _DeviceProvisioningBannerContent extends StatelessWidget {
-  const _DeviceProvisioningBannerContent({
+  const new({
     required this.activeRetry,
     required this.isLoading,
     required this.isProvisioningRequired,
@@ -144,7 +144,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
 }
 
 class _WaitingBanner extends HookWidget {
-  const _WaitingBanner({required this.resumeAt, required this.error});
+  const new({required this.resumeAt, required this.error});
 
   final DateTime resumeAt;
   final DeviceProvisioningException error;
@@ -179,7 +179,7 @@ class _WaitingBanner extends HookWidget {
 }
 
 class _BannerTile extends StatelessWidget {
-  const _BannerTile({
+  const new({
     required this.icon,
     required this.backgroundColor,
     required this.foregroundColor,

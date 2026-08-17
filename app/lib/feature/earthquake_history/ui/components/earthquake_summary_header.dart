@@ -16,7 +16,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeSummaryHeader extends StatelessWidget {
-  const EarthquakeSummaryHeader({
+  const new({
     required this.item,
     this.showStatusWatermark = false,
     super.key,
@@ -88,7 +88,7 @@ class EarthquakeSummaryHeader extends StatelessWidget {
 const _leadingIconSize = 60.0;
 
 class _MaxIntensityWidget extends StatelessWidget {
-  const _MaxIntensityWidget({required this.intensity});
+  const new({required this.intensity});
 
   final JmaIntensity intensity;
 
@@ -110,7 +110,7 @@ class _MaxIntensityWidget extends StatelessWidget {
 }
 
 class _EarthquakeInformationBody extends StatelessWidget {
-  const _EarthquakeInformationBody({
+  const new({
     required this.item,
     required this.hypocenter,
     required this.earthquakeType,
@@ -191,7 +191,7 @@ class _EarthquakeInformationBody extends StatelessWidget {
 }
 
 class _HypocenterWidget extends StatelessWidget {
-  const _HypocenterWidget({
+  const new({
     required this.label,
     required this.epicenterName,
     required this.epicenterDetailName,
@@ -242,7 +242,7 @@ class _HypocenterWidget extends StatelessWidget {
 /// 火山噴火でマグニチュードが発表されない場合に、
 /// 「M不明」の代わりに事象そのものを示す表示。
 class _VolcanoEruptionWidget extends StatelessWidget {
-  const _VolcanoEruptionWidget();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +253,7 @@ class _VolcanoEruptionWidget extends StatelessWidget {
 }
 
 class _MagnitudeDepthUnknownWidget extends StatelessWidget {
-  const _MagnitudeDepthUnknownWidget({required this.hasIntensityDetails});
+  const new({required this.hasIntensityDetails});
 
   final bool hasIntensityDetails;
 
@@ -267,7 +267,7 @@ class _MagnitudeDepthUnknownWidget extends StatelessWidget {
 }
 
 class _EarthquakeNullWidget extends StatelessWidget {
-  const _EarthquakeNullWidget({required this.hasIntensityDetails});
+  const new({required this.hasIntensityDetails});
 
   final bool hasIntensityDetails;
 
@@ -281,7 +281,7 @@ class _EarthquakeNullWidget extends StatelessWidget {
 }
 
 class _UnknownInfoWidget extends StatelessWidget {
-  const _UnknownInfoWidget({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

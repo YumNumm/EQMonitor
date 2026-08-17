@@ -14,7 +14,7 @@ Future<SecurePreferencesDataSource> securePreferencesDataSource(Ref ref) async {
 
 class SecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
-  SecurePreferencesDataSource({required FlutterSecureStorage secureStorage})
+  new({required FlutterSecureStorage secureStorage})
     : _secureStorage = secureStorage;
 
   final FlutterSecureStorage _secureStorage;

@@ -15,7 +15,7 @@ enum HomeMapCameraUpdateAction { fitToRealtime, returnToHome, none }
 
 /// リアルタイム描画対象とホーム復帰要求からカメラ更新アクションを解決するクラス
 class HomeMapCameraUpdateActionResolver {
-  const HomeMapCameraUpdateActionResolver();
+  const new();
 
   HomeMapCameraUpdateAction resolve({
     required bool hasRealtimeTargets,

@@ -244,7 +244,7 @@ void main() {
 }
 
 final class _ReadFailureHttpCacheStore extends HttpCacheStore {
-  _ReadFailureHttpCacheStore({required CacheDatabase db})
+  new({required CacheDatabase db})
     : super(db: db, schemaVersion: 1, appBuild: 'test');
 
   @override
@@ -253,7 +253,7 @@ final class _ReadFailureHttpCacheStore extends HttpCacheStore {
 }
 
 final class _WriteFailureHttpCacheStore extends HttpCacheStore {
-  _WriteFailureHttpCacheStore({required CacheDatabase db})
+  new({required CacheDatabase db})
     : super(db: db, schemaVersion: 1, appBuild: 'test');
 
   @override

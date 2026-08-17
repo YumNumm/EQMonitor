@@ -4,15 +4,15 @@ part 'date.freezed.dart';
 
 @Freezed(toJson: false, fromJson: false)
 abstract class Date with _$Date {
-  const factory Date({
+  const factory({
     required int year,
     required int month,
     required int day,
   }) = _Date;
 
-  const Date._();
+  const new _();
 
-  factory Date.fromJson(dynamic json) {
+  factory fromJson(dynamic json) {
     if (json is String) {
       return Date.parse(json);
     }
@@ -24,7 +24,7 @@ abstract class Date with _$Date {
     );
   }
 
-  factory Date.parse(String dateString) {
+  factory parse(String dateString) {
     final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(dateString);
     if (match == null) {
       throw FormatException('Invalid date format: $dateString');
@@ -36,7 +36,7 @@ abstract class Date with _$Date {
     );
   }
 
-  factory Date.fromDateTime(DateTime dateTime) =>
+  factory fromDateTime(DateTime dateTime) =>
       Date(year: dateTime.year, month: dateTime.month, day: dateTime.day);
 
   String toJson() => toString();

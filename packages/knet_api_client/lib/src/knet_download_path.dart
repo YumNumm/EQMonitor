@@ -64,7 +64,7 @@ enum KnetFigType {
   /// 速度分布図
   velMap('all_velmap', '速度分布図');
 
-  const KnetFigType(this.suffix, this.label);
+  new(this.suffix, this.label);
 
   final String suffix;
   final String label;
@@ -91,7 +91,7 @@ enum KnetMovieType {
   sv4000Big('sv4000_b', 'SV 4.0s（大）'),
   sv4000Small('sv4000_s', 'SV 4.0s（小）');
 
-  const KnetMovieType(this.suffix, this.label);
+  new(this.suffix, this.label);
 
   final String suffix;
   final String label;

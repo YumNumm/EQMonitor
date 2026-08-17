@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 /// 文言と再試行導線をスコープごとに切り替える。
 /// 位置情報がらみのケースでは権限状態に応じてさらに細かく分岐する。
 class HomeScopeUnavailableBody extends StatelessWidget {
-  const HomeScopeUnavailableBody({
+  const new({
     required this.scope,
     required this.onRetry,
     this.onConfigureRegion,
@@ -38,7 +38,7 @@ class HomeScopeUnavailableBody extends StatelessWidget {
 }
 
 class _UnavailableContainer extends StatelessWidget {
-  const _UnavailableContainer({
+  const new({
     required this.icon,
     required this.message,
     this.actions = const [],
@@ -97,7 +97,7 @@ class _UnavailableContainer extends StatelessWidget {
 }
 
 class _CurrentLocationUnavailable extends HookWidget {
-  const _CurrentLocationUnavailable({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 
@@ -175,7 +175,7 @@ class _CurrentLocationUnavailable extends HookWidget {
 }
 
 class _CustomUnavailable extends StatelessWidget {
-  const _CustomUnavailable({this.onConfigureRegion});
+  const new({this.onConfigureRegion});
 
   final VoidCallback? onConfigureRegion;
 

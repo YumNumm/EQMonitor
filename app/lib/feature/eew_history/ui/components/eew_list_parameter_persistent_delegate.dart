@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 
 class EewListParameterPersistentDelegate
     extends SliverPersistentHeaderDelegate {
-  const EewListParameterPersistentDelegate({
+  const new({
     required this.parameter,
     required this.onChanged,
   });
@@ -44,7 +44,7 @@ class EewListParameterPersistentDelegate
 }
 
 class _FilterChipBar extends StatelessWidget {
-  const _FilterChipBar({required this.parameter, required this.onChanged});
+  const new({required this.parameter, required this.onChanged});
 
   final EewListParameter parameter;
   final void Function(EewListParameter) onChanged;

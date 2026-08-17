@@ -8,7 +8,7 @@ import 'dart:typed_data';
 /// 要求どおりの byte 範囲を切り出す。契約違反系のテストのために、返す status /
 /// Content-Encoding / redirect / ETag を切り替えられる。
 final class ControlledRemotePmTilesServer {
-  ControlledRemotePmTilesServer._(
+  new _(
     this._server,
     this.archiveBytes,
     this.etag,

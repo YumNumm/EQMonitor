@@ -25,13 +25,13 @@ enum MapTileLayerKind {
 /// digest が変わるので、別 revision の entry は exact lookup でも一致しない。
 @immutable
 final class MapTileFallbackPolicy {
-  const MapTileFallbackPolicy._({
+  const new _({
     required this.layerKind,
     required this.allowsSpatialFallback,
     required this.allowsCrossRevisionLastGood,
   });
 
-  factory MapTileFallbackPolicy.forLayer(MapTileLayerKind kind) =>
+  factory forLayer(MapTileLayerKind kind) =>
       switch (kind) {
         MapTileLayerKind.basemap => basemap,
         MapTileLayerKind.hazard => hazard,

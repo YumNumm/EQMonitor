@@ -10,7 +10,7 @@ abstract class ExtEncoder {
 }
 
 class Float {
-  Float(this.value);
+  new(this.value);
 
   final double value;
 
@@ -19,7 +19,7 @@ class Float {
 }
 
 class Serializer {
-  Serializer({DataWriter? dataWriter, ExtEncoder? extEncoder})
+  new({DataWriter? dataWriter, ExtEncoder? extEncoder})
     : _writer = dataWriter ?? DataWriter(),
       _extEncoder = extEncoder;
   static const _codec = Utf8Codec();

@@ -4,7 +4,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// P波/S波レイヤーの GeoJSON ソースを差分更新する。
 class EewPsWaveLayerGeoJsonUpdater {
-  const EewPsWaveLayerGeoJsonUpdater();
+  const new();
 
   Future<void> updateIfChanged({
     required StyleController styleController,

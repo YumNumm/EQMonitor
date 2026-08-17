@@ -147,7 +147,7 @@ void main() {
 }
 
 final class _TestModels {
-  const _TestModels();
+  const new();
 
   NotificationSlot currentLocationSlot() => const NotificationSlot(
     id: 'slot-cl',

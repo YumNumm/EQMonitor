@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 
 /// [EarthquakeVxseDebugEditorController] の編集中ドラフトを検証する。
 class EarthquakeVxseDebugDraftValidator {
-  const EarthquakeVxseDebugDraftValidator();
+  const new();
 
   EarthquakeTelegramType initialType({required Earthquake current}) {
     const supported = {

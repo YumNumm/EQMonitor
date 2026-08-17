@@ -10,7 +10,7 @@ enum EewWarningArrivalState { unarrived, unknown, arrived }
 @Freezed(toJson: false)
 abstract class EewWarningOverlayDisplayModel
     with _$EewWarningOverlayDisplayModel {
-  const factory EewWarningOverlayDisplayModel({
+  const factory({
     required EewWarningOverlaySource source,
     required List<String> eventIds,
     required String representativeEventId,

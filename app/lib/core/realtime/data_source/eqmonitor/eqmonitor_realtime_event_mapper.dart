@@ -11,7 +11,7 @@ EqMonitorRealtimeEventMapper eqMonitorRealtimeEventMapper(Ref ref) =>
     const EqMonitorRealtimeEventMapper();
 
 class EqMonitorRealtimeEventMapper {
-  const EqMonitorRealtimeEventMapper();
+  const new();
 
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
     WsRealtimeMessage(:final data) => switch (data) {

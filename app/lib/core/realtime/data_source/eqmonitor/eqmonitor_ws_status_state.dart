@@ -6,7 +6,7 @@ enum WsPhase { connecting, connected, disconnected }
 
 @freezed
 abstract class EqMonitorWsStatusState with _$EqMonitorWsStatusState {
-  const factory EqMonitorWsStatusState({
+  const factory({
     @Default(WsPhase.connecting) WsPhase phase,
     String? currentUrl,
     DateTime? lastPingAt,

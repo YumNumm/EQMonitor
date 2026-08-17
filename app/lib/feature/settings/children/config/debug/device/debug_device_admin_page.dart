@@ -17,7 +17,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugDeviceAdminPage extends ConsumerWidget {
-  const DebugDeviceAdminPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class DebugDeviceAdminPage extends ConsumerWidget {
 }
 
 class _DebugDeviceAdminBody extends HookConsumerWidget {
-  const _DebugDeviceAdminBody({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -116,7 +116,7 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
 }
 
 class _Body extends HookConsumerWidget {
-  const _Body({
+  const new({
     required this.deviceId,
     required this.device,
     required this.settings,
@@ -425,7 +425,7 @@ class _Body extends HookConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -459,7 +459,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.message});
+  const new({required this.message});
 
   final String message;
 

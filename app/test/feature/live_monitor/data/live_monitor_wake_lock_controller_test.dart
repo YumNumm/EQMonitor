@@ -60,7 +60,7 @@ final class FakeLiveMonitorWakeLockPlatform
 }
 
 final class MutableLiveMonitorSettings extends LiveMonitorSettingsNotifier {
-  MutableLiveMonitorSettings(this.initial);
+  new(this.initial);
 
   final LiveMonitorSettings initial;
 
@@ -71,7 +71,7 @@ final class MutableLiveMonitorSettings extends LiveMonitorSettingsNotifier {
 }
 
 final class MutableAppLifecycle extends AppLifecycle {
-  MutableAppLifecycle(this.initial);
+  new(this.initial);
 
   final AppLifecycleState initial;
 
@@ -82,7 +82,7 @@ final class MutableAppLifecycle extends AppLifecycle {
 }
 
 final class WakeLockFixture {
-  WakeLockFixture({
+  new({
     required this.container,
     required this.platform,
     required this.settings,

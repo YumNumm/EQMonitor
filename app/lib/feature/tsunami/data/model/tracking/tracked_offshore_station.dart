@@ -7,7 +7,7 @@ part 'tracked_offshore_station.freezed.dart';
 
 @freezed
 abstract class TrackedOffshoreStation with _$TrackedOffshoreStation {
-  const factory TrackedOffshoreStation({
+  const factory({
     required String code,
     required String name,
     required Tracked<TsunamiObservationFirstHeight> firstHeight,

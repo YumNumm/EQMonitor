@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _CompleteStepPage extends HookConsumerWidget {
-  const _CompleteStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 

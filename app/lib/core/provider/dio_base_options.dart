@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 /// API 用 [Dio] の [BaseOptions] を組み立てるユーティリティ。
 class DioBaseOptionsFactory {
-  const DioBaseOptionsFactory._();
+  const new _();
 
   static BaseOptions build({required String baseUrl}) => BaseOptions(
     baseUrl: baseUrl,

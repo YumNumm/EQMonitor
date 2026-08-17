@@ -8,42 +8,42 @@ part 'tsunami_parameter.g.dart';
 
 @freezed
 abstract class TsunamiParameter with _$TsunamiParameter {
-  const factory TsunamiParameter({
+  const factory({
     required ParameterMetadata metadata,
     required List<TsunamiParameterPrefectureItem> prefectures,
   }) = _TsunamiParameter;
 
-  factory TsunamiParameter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$TsunamiParameterFromJson(json);
 }
 
 @freezed
 abstract class TsunamiParameterPrefectureItem
     with _$TsunamiParameterPrefectureItem {
-  const factory TsunamiParameterPrefectureItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required List<TsunamiParameterAreaItem> areas,
   }) = _TsunamiParameterPrefectureItem;
 
-  factory TsunamiParameterPrefectureItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$TsunamiParameterPrefectureItemFromJson(json);
 }
 
 @freezed
 abstract class TsunamiParameterAreaItem with _$TsunamiParameterAreaItem {
-  const factory TsunamiParameterAreaItem({
+  const factory({
     required LocalizedName? name,
     required List<TsunamiParameterStationItem> stations,
   }) = _TsunamiParameterAreaItem;
 
-  factory TsunamiParameterAreaItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$TsunamiParameterAreaItemFromJson(json);
 }
 
 @freezed
 abstract class TsunamiParameterStationItem with _$TsunamiParameterStationItem {
-  const factory TsunamiParameterStationItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required String? kana,
@@ -51,6 +51,6 @@ abstract class TsunamiParameterStationItem with _$TsunamiParameterStationItem {
     required LatLng location,
   }) = _TsunamiParameterStationItem;
 
-  factory TsunamiParameterStationItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$TsunamiParameterStationItemFromJson(json);
 }

@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 強制アップデートが必要かどうかを監視し、必要なら非解除可能ダイアログを表示するWrapper。
 class ForcedUpdateWrapper extends HookConsumerWidget {
-  const ForcedUpdateWrapper({required this.child, super.key});
+  const new({required this.child, super.key});
 
   final Widget child;
 

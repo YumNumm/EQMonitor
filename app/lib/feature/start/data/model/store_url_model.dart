@@ -5,7 +5,7 @@ part 'store_url_model.freezed.dart';
 
 @freezed
 abstract class StoreUrlModel with _$StoreUrlModel {
-  const factory StoreUrlModel({required String ios, required String android}) =
+  const factory({required String ios, required String android}) =
       _StoreUrlModel;
 }
 

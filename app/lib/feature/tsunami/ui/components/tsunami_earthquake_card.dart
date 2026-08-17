@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiEarthquakeCard extends StatelessWidget {
-  const TsunamiEarthquakeCard({
+  const new({
     required this.earthquake,
     required this.eventIds,
     super.key,

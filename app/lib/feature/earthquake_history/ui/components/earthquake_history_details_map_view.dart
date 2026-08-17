@@ -45,7 +45,7 @@ import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsMapView({
+  const new({
     required this.earthquake,
     required this.displayMode,
     required this.showingDb,
@@ -80,7 +80,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
 
 /// 地震履歴地図画面でデバッグ操作を表示するか判定する。
 class EarthquakeHistoryDebuggerVisibility {
-  const EarthquakeHistoryDebuggerVisibility();
+  const new();
 
   bool shouldShow({
     required bool isDebugBuild,
@@ -89,7 +89,7 @@ class EarthquakeHistoryDebuggerVisibility {
 }
 
 class _MapContent extends HookConsumerWidget {
-  const _MapContent({
+  const new({
     required this.styleString,
     required this.earthquake,
     required this.displayMode,
@@ -577,7 +577,7 @@ class _MapContent extends HookConsumerWidget {
 }
 
 class _MapControllerCard extends StatelessWidget {
-  const _MapControllerCard({
+  const new({
     required this.onFitBoundsTap,
     required this.onDebugTap,
   });

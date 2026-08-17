@@ -37,7 +37,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 地震活動画面(震央分布 + 矩形選択によるM-T図・積算・深さ断面)。
 class SeismicityPage extends HookConsumerWidget {
-  const SeismicityPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -297,7 +297,7 @@ class SeismicityPage extends HookConsumerWidget {
 }
 
 class _MapBody extends HookConsumerWidget {
-  const _MapBody({
+  const new({
     required this.styleString,
     required this.mode,
     required this.datasetAsync,

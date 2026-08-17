@@ -26,7 +26,7 @@ FeedItem _item({
 );
 
 class _FakeFeedNotifier extends FeedNotifier {
-  _FakeFeedNotifier(this.items);
+  new(this.items);
 
   final List<FeedItem> items;
 
@@ -35,7 +35,7 @@ class _FakeFeedNotifier extends FeedNotifier {
 }
 
 class _FakeFeedLastRead extends FeedLastRead {
-  _FakeFeedLastRead(this.initial);
+  new(this.initial);
 
   final DateTime? initial;
   final markReadCalls = <DateTime>[];

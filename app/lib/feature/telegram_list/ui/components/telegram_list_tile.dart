@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TelegramListTile extends StatelessWidget {
-  const TelegramListTile({required this.telegram, this.onTap, super.key});
+  const new({required this.telegram, this.onTap, super.key});
 
   final TelegramItem telegram;
   final VoidCallback? onTap;
@@ -73,7 +73,7 @@ class TelegramListTile extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

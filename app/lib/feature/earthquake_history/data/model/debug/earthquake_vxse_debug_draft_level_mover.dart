@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_t
 /// 上書きしない。重複コードの拒否は [EarthquakeVxseDebugDraftValidator] の
 /// 責務であり、ここでは既存データを黙って破棄しない。
 class EarthquakeVxseDebugDraftLevelMover {
-  const EarthquakeVxseDebugDraftLevelMover();
+  const new();
 
   Map<JmaIntensity, List<IntensityRegion>> moveIntensityRegionLevel({
     required Map<JmaIntensity, List<IntensityRegion>> source,

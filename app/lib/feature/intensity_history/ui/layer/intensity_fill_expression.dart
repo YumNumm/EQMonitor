@@ -20,7 +20,7 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 /// `earthquake_history_region_intensity_layer.dart` の `_buildFillColorExpression`
 /// を純粋関数として切り出したもの。
 class IntensityMatchExpressionBuilder {
-  const IntensityMatchExpressionBuilder._();
+  const new _();
 
   static List<Object> build(
     List<({String code, JmaIntensity intensity})> pairs,

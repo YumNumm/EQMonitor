@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 /// VXSE51〜53, VXSE61, VXSE62 の電文タイプに応じて
 /// 震源サマリや震度地域リストの表示を切り替える。
 class EarthquakeTelegramTile extends ConsumerWidget {
-  const EarthquakeTelegramTile({
+  const new({
     required this.telegram,
     required this.body,
     required this.sequenceNumber,
@@ -161,7 +161,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
 }
 
 class _EarthquakeTelegramTileContent extends StatelessWidget {
-  const _EarthquakeTelegramTileContent({
+  const new({
     required this.telegramType,
     required this.body,
     required this.regionDiff,

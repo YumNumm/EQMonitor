@@ -9,7 +9,7 @@ part 'seismicity_event.g.dart';
 /// アプリ固有の中間表現。
 @freezed
 abstract class SeismicityEvent with _$SeismicityEvent {
-  const factory SeismicityEvent({
+  const factory({
     /// イベントID(Hi-net由来は合成ID)
     required String eventId,
 
@@ -32,6 +32,6 @@ abstract class SeismicityEvent with _$SeismicityEvent {
     required String? maxIntensity,
   }) = _SeismicityEvent;
 
-  factory SeismicityEvent.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SeismicityEventFromJson(json);
 }

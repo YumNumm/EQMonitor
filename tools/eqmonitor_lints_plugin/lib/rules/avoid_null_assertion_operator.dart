@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidNullAssertionOperator extends AnalysisRule {
-  AvoidNullAssertionOperator()
+  new()
     : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
@@ -38,7 +38,7 @@ class AvoidNullAssertionOperator extends AnalysisRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

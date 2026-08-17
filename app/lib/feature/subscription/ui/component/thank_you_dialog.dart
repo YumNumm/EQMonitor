@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ThankYouDialog extends StatelessWidget {
-  const ThankYouDialog({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

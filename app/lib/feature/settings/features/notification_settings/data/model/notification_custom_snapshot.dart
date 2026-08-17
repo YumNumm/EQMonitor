@@ -13,7 +13,7 @@ const int notificationCustomSnapshotSchemaVersion = 1;
 /// カスタムプリセットの設定をローカルへ退避・復元するためのスナップショット。
 @freezed
 abstract class NotificationCustomSnapshot with _$NotificationCustomSnapshot {
-  const factory NotificationCustomSnapshot({
+  const factory({
     required int schemaVersion,
     required List<NotificationSlotDraft> slots,
     required EewWarningSettings eewWarning,
@@ -22,6 +22,6 @@ abstract class NotificationCustomSnapshot with _$NotificationCustomSnapshot {
     required GeneralNotificationSettings general,
   }) = _NotificationCustomSnapshot;
 
-  factory NotificationCustomSnapshot.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$NotificationCustomSnapshotFromJson(json);
 }

@@ -74,4 +74,4 @@ void main() {
   });
 }
 
-final class _MapController {}
+final class _MapController;

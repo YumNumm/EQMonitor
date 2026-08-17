@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 ///
 /// `AdsOptOutPromoSheet.show(context)` で表示する。
 class AdsOptOutPromoSheet extends ConsumerWidget {
-  const AdsOptOutPromoSheet({super.key});
+  const new({super.key});
 
   static Future<void> show(BuildContext context) async {
     await showModalBottomSheet<void>(

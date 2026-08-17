@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class AdUnitId {
-  const AdUnitId._();
+  const new _();
 
   static String get banner {
     if (kDebugMode) {

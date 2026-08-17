@@ -23,13 +23,13 @@ abstract interface class SeismicityDecoderWorkerEndpoint {
 }
 
 final class SeismicityDecoderWorkerError {
-  const SeismicityDecoderWorkerError({required this.message});
+  const new({required this.message});
 
   final String message;
 }
 
 final class SeismicityDecoderWorkerExit {
-  const SeismicityDecoderWorkerExit();
+  const new();
 }
 
 final class DartSeismicityDecoderIsolateLauncher
@@ -99,7 +99,7 @@ final class DartSeismicityDecoderIsolateLauncher
 
 final class _DartSeismicityDecoderWorkerEndpoint
     implements SeismicityDecoderWorkerEndpoint {
-  _DartSeismicityDecoderWorkerEndpoint({
+  new({
     required this._isolate,
     required this._workerPort,
     required this._responsePort,

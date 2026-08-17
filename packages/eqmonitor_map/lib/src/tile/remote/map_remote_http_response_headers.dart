@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 /// fail closed」契約を迂回してしまうため。
 @immutable
 final class MapRemoteHttpResponseHeaders {
-  MapRemoteHttpResponseHeaders(Map<String, List<String>> raw)
+  new(Map<String, List<String>> raw)
     : _byLowerName = {
         for (final lowerName in {
           for (final key in raw.keys) key.toLowerCase(),

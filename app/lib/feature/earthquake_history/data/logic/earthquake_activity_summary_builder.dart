@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magni
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 
 class EarthquakeActivitySummaryBuilder {
-  const EarthquakeActivitySummaryBuilder();
+  const new();
 
   EarthquakeActivitySummary build({
     required List<EarthquakePartialNormal> items,

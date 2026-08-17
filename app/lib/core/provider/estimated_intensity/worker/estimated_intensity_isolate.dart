@@ -16,7 +16,7 @@ typedef EstimatedIntensityHypocenterInput = ({
 
 /// 推定震度計算を常駐 Worker Isolate で行うハンドル。
 final class EstimatedIntensityIsolate {
-  EstimatedIntensityIsolate._({
+  new _({
     required Isolate isolate,
     required ReceivePort mainReceive,
     required SendPort workerSendPort,
@@ -152,17 +152,17 @@ final class EstimatedIntensityIsolate {
 }
 
 final class _InitMessage {
-  const _InitMessage(this.points);
+  const new(this.points);
 
   final List<CalculationPoint> points;
 }
 
 final class _InitAck {
-  const _InitAck();
+  const new();
 }
 
 final class _ComputeSingleMessage {
-  const _ComputeSingleMessage({
+  const new({
     required this.id,
     required this.jmaMagnitude,
     required this.depth,
@@ -178,18 +178,18 @@ final class _ComputeSingleMessage {
 }
 
 final class _ComputeMaxMessage {
-  const _ComputeMaxMessage({required this.id, required this.eews});
+  const new({required this.id, required this.eews});
 
   final int id;
   final List<EstimatedIntensityHypocenterInput> eews;
 }
 
 final class _ShutdownMessage {
-  const _ShutdownMessage();
+  const new();
 }
 
 final class _ComputeResponseMessage {
-  const _ComputeResponseMessage({
+  const new({
     required this.id,
     this.intensities,
     this.errorMessage,
@@ -250,7 +250,7 @@ void _workerEntryPoint(SendPort mainSendPort) {
 /// [_workerEntryPoint] の spawn 先 Isolate 内で呼ばれるため、
 /// インスタンス状態をキャプチャしない static method として定義する。
 class EstimatedIntensityWorkerRunner {
-  const EstimatedIntensityWorkerRunner._();
+  const new _();
 
   static Future<void> runComputeSingle(
     SendPort mainSendPort,

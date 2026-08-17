@@ -1,7 +1,7 @@
 import 'package:lat_lng/src/lat_lng.dart';
 
 class LatLngBoundary {
-  factory LatLngBoundary.fromTwo(LatLng one, LatLng two) {
+  factory fromTwo(LatLng one, LatLng two) {
     final northEast = LatLng(
       one.lat > two.lat ? one.lat : two.lat,
       one.lon > two.lon ? one.lon : two.lon,
@@ -13,7 +13,7 @@ class LatLngBoundary {
     return LatLngBoundary._(northEast, southWest);
   }
 
-  factory LatLngBoundary.merge(List<LatLngBoundary> boundaries) {
+  factory merge(List<LatLngBoundary> boundaries) {
     final northEast = LatLng(
       boundaries
           .map((e) => e.northEast.lat)
@@ -33,7 +33,7 @@ class LatLngBoundary {
     return LatLngBoundary._(northEast, southWest);
   }
 
-  factory LatLngBoundary.fromList(List<LatLng> points) {
+  factory fromList(List<LatLng> points) {
     assert(points.isNotEmpty && points.length > 1, 'points must be not empty');
     var northEastLat = double.negativeInfinity;
     var northEastLon = double.negativeInfinity;
@@ -49,7 +49,7 @@ class LatLngBoundary {
     final southWest = LatLng(southWestLat, southWestLon);
     return LatLngBoundary._(northEast, southWest);
   }
-  LatLngBoundary._(this.northEast, this.southWest);
+  new _(this.northEast, this.southWest);
 
   final LatLng northEast;
   final LatLng southWest;

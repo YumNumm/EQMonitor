@@ -18,7 +18,7 @@ extension FeedItemUrgencyColor on FeedItem {
 }
 
 class FeedItemListTile extends StatelessWidget {
-  const FeedItemListTile({required this.item, this.onTap, super.key});
+  const new({required this.item, this.onTap, super.key});
 
   final FeedItem item;
   final void Function()? onTap;

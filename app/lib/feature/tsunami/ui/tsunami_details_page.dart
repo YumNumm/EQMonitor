@@ -16,7 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TsunamiDetailsPage extends HookConsumerWidget {
-  const TsunamiDetailsPage({required this.tsunamiId, super.key});
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 

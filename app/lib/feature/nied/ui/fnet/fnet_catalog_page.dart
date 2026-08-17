@@ -13,7 +13,7 @@ import 'package:nied_api_client/nied_api_client.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class FnetCatalogPage extends HookConsumerWidget {
-  const FnetCatalogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +37,7 @@ class FnetCatalogPage extends HookConsumerWidget {
 }
 
 class _FnetCatalogList extends HookConsumerWidget {
-  const _FnetCatalogList({required this.selectedMonth});
+  const new({required this.selectedMonth});
 
   final Month? selectedMonth;
 
@@ -137,7 +137,7 @@ class _FnetCatalogList extends HookConsumerWidget {
 }
 
 class _MonthSelector extends StatelessWidget {
-  const _MonthSelector({
+  const new({
     required this.selectedMonth,
     required this.onMonthChanged,
   });
@@ -194,7 +194,7 @@ class _MonthSelector extends StatelessWidget {
 }
 
 class _MonthPickerDialog extends HookWidget {
-  const _MonthPickerDialog({required this.initialMonth});
+  const new({required this.initialMonth});
 
   final Month? initialMonth;
 
@@ -281,7 +281,7 @@ class _MonthPickerDialog extends HookWidget {
 }
 
 class _EventCard extends HookWidget {
-  const _EventCard({required this.event});
+  const new({required this.event});
 
   final FnetEvent event;
 

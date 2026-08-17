@@ -6,7 +6,7 @@ part 'parameter_metadata.g.dart';
 
 @freezed
 abstract class ParameterMetadata with _$ParameterMetadata {
-  const factory ParameterMetadata({
+  const factory({
     required ParameterType type,
     required int schemaVersion,
     required String sourceVersion,
@@ -15,6 +15,6 @@ abstract class ParameterMetadata with _$ParameterMetadata {
     required String sha256,
   }) = _ParameterMetadata;
 
-  factory ParameterMetadata.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$ParameterMetadataFromJson(json);
 }

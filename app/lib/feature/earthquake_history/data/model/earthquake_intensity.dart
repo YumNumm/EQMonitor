@@ -12,7 +12,7 @@ part 'earthquake_intensity.g.dart';
 
 @freezed
 abstract class EarthquakeIntensity with _$EarthquakeIntensity {
-  const factory EarthquakeIntensity({
+  const factory({
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required Map<JmaIntensity, List<IntensityRegion>> regions,
@@ -21,7 +21,7 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
     lpgmIntensityTree,
   }) = _EarthquakeIntensity;
 
-  factory EarthquakeIntensity.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeIntensityFromJson(json);
 }
 

@@ -213,7 +213,7 @@ void main() {
 }
 
 final class _Task60Setup {
-  _Task60Setup({
+  new({
     required this.archive,
     required this.handle,
     required this.factory,

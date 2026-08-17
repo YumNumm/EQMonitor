@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 class HttpCacheEntry {
-  const HttpCacheEntry({
+  const new({
     required this.key,
     required this.statusCode,
     required this.eTag,

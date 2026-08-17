@@ -9,7 +9,7 @@ part 'hinet_seismicity_repository.g.dart';
 
 /// ログイン失敗時に送出する例外。
 class HinetLoginException implements Exception {
-  const HinetLoginException();
+  const new();
 
   @override
   String toString() => 'Hi-net へのログインに失敗しました';
@@ -17,7 +17,7 @@ class HinetLoginException implements Exception {
 
 /// [HinetSeismicityRepository.fetch] の結果。
 class HinetSeismicityFetchResult {
-  const HinetSeismicityFetchResult({
+  const new({
     required this.events,
     required this.skippedLineCount,
   });
@@ -31,7 +31,7 @@ class HinetSeismicityFetchResult {
 /// [HinetJmalistPartialFetchException] をアプリ層のモデル([SeismicityEvent])
 /// へ変換した上でラップし、UI 側で部分結果を破棄せず表示できるようにする。
 class HinetSeismicityPartialFetchException implements Exception {
-  const HinetSeismicityPartialFetchException({
+  const new({
     required this.partialResult,
     required this.failedFrom,
     required this.failedTo,
@@ -60,7 +60,7 @@ HinetSeismicityRepository hinetSeismicityRepository(Ref ref) =>
     HinetSeismicityRepository(client: ref.watch(niedApiClientProvider));
 
 class HinetSeismicityRepository {
-  const HinetSeismicityRepository({required NiedApiClient client})
+  const new({required NiedApiClient client})
     : _client = client;
 
   final NiedApiClient _client;

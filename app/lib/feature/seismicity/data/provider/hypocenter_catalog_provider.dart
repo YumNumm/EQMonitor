@@ -167,7 +167,7 @@ class HypocenterAnalysisProgressNotifier
 
 /// [HypocenterAnalysis.build] から呼び出す震源分析取得処理をまとめる。
 class HypocenterAnalysisRunner {
-  const HypocenterAnalysisRunner._();
+  const new _();
 
   static Future<Result<List<SeismicityEvent>, HypocenterApiException>>
   loadArchives({

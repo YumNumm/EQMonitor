@@ -211,7 +211,7 @@ void main() {
 }
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -220,7 +220,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _SpyTelegramDetails extends TelegramDetails {
-  _SpyTelegramDetails({required this.cacheClient});
+  new({required this.cacheClient});
 
   final api.ApiClient cacheClient;
   var freshFetchCount = 0;

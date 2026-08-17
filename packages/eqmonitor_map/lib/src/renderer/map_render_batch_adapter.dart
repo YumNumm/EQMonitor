@@ -3,7 +3,7 @@ import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 
 final class MapRenderSubmission {
-  const MapRenderSubmission._({
+  const new _({
     required this.frame,
     required this.batches,
   });

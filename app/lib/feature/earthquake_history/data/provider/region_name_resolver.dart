@@ -7,7 +7,7 @@ part 'region_name_resolver.g.dart';
 
 /// 地域コードから名称を解決する。
 class RegionNameResolver {
-  const RegionNameResolver();
+  const new();
 
   /// 見つからなければ null。
   ///

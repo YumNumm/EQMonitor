@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 /// GeoJSON は API ホストとは別の静的配信ホストに置かれるため、
 /// [Dio.get] へは絶対URLを渡す(Dioは絶対URLの場合baseUrlを無視する)。
 class SeismicityGeoJsonDataSource {
-  const SeismicityGeoJsonDataSource(
+  const new(
     this._dio, {
     this.parser = const SeismicityGeoJsonParser(),
   });

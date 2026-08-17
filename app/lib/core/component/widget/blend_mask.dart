@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 // https://stackoverflow.com/a/77039320
 class BlendMask extends SingleChildRenderObjectWidget {
-  const BlendMask({
+  const new({
     required this.blendMode,
     this.opacity = 1.0,
     super.key,
@@ -27,7 +27,7 @@ class BlendMask extends SingleChildRenderObjectWidget {
 }
 
 class RenderBlendMask extends RenderProxyBox {
-  RenderBlendMask(this.blendMode, this.opacity);
+  new(this.blendMode, this.opacity);
 
   BlendMode blendMode;
   double opacity;

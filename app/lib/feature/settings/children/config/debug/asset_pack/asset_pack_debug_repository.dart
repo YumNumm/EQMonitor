@@ -11,7 +11,7 @@ AssetPackDebugRepository assetPackDebugRepository(Ref ref) =>
     AssetPackDebugRepository();
 
 class AssetPackAssetFileStatus {
-  const AssetPackAssetFileStatus({
+  const new({
     required this.diagnostic,
     required this.item,
   });
@@ -21,7 +21,7 @@ class AssetPackAssetFileStatus {
 }
 
 class AssetPackDebugInfo {
-  const AssetPackDebugInfo({
+  const new({
     required this.diagnostics,
     required this.manifest,
     required this.manifestParseError,
@@ -35,7 +35,7 @@ class AssetPackDebugInfo {
 }
 
 class AssetPackDebugRepository {
-  AssetPackDebugRepository({DiagnoseAssetPack? diagnosePack})
+  new({DiagnoseAssetPack? diagnosePack})
     : diagnosePack = diagnosePack ?? AssetsUtil.diagnosePack;
 
   final DiagnoseAssetPack diagnosePack;

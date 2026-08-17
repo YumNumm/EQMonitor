@@ -21,7 +21,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SlotDetailPage extends HookConsumerWidget {
-  const SlotDetailPage({required this.slotId, required this.isPro, super.key});
+  const new({required this.slotId, required this.isPro, super.key});
 
   final String slotId;
   final bool isPro;
@@ -181,7 +181,7 @@ extension NotificationSlotTypeLabel on NotificationSlotType {
 }
 
 class _NotificationConditionCard extends StatelessWidget {
-  const _NotificationConditionCard({
+  const new({
     required this.slotType,
     required this.kind,
     required this.enabled,
@@ -268,7 +268,7 @@ class _NotificationConditionCard extends StatelessWidget {
 }
 
 class _WarningSettingsCard extends StatelessWidget {
-  const _WarningSettingsCard({required this.enabled, required this.onChanged});
+  const new({required this.enabled, required this.onChanged});
 
   final bool enabled;
   final ValueChanged<bool> onChanged;
@@ -320,7 +320,7 @@ class _WarningSettingsCard extends StatelessWidget {
 }
 
 class _DeleteRegionTile extends StatelessWidget {
-  const _DeleteRegionTile({required this.onTap});
+  const new({required this.onTap});
 
   final Future<void> Function() onTap;
 

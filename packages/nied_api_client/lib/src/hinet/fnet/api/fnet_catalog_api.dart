@@ -6,7 +6,7 @@ part 'fnet_catalog_api.g.dart';
 /// F-netカタログAPI
 @RestApi(baseUrl: 'https://www.fnet.bosai.go.jp/event/mcata/data/')
 abstract class FnetCatalogApi {
-  factory FnetCatalogApi(Dio dio, {String? baseUrl}) = _FnetCatalogApi;
+  factory(Dio dio, {String? baseUrl}) = _FnetCatalogApi;
 
   /// 指定された年月のカタログデータを取得
   /// @param year 年 (例: 2025)

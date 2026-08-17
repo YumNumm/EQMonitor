@@ -8,7 +8,7 @@ part 'site_list.g.dart';
 
 @freezed
 abstract class SiteList with _$SiteList {
-  const factory SiteList({
+  const factory({
     /// 観測点一覧
     List<Site>? items,
 
@@ -25,13 +25,13 @@ abstract class SiteList with _$SiteList {
     String? serialNo,
   }) = _SiteList;
 
-  factory SiteList.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SiteListFromJson(json);
 }
 
 @freezed
 abstract class Site with _$Site {
-  const factory Site({
+  const factory({
     /// 不明(内部ID?)
     int? muni,
 
@@ -50,9 +50,9 @@ abstract class Site with _$Site {
     /// 経度
     double? lng,
   }) = _Site;
-  const Site._();
+  const new _();
 
-  factory Site.fromJson(Map<String, dynamic> json) => _$SiteFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$SiteFromJson(json);
 
   /// 都道府県
   Prefecture? get prefecture => Prefecture.fromId(prefectureId);

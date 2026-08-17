@@ -31,7 +31,7 @@ extension EarthquakeTypeAppearance on EarthquakeType {
 /// ベースカラーの中にアイコンを白で表示する。
 /// [EarthquakeType.normal] は専用アイコンを持たないため何も表示しない。
 class EarthquakeTypeIcon extends StatelessWidget {
-  const EarthquakeTypeIcon({required this.type, required this.size, super.key});
+  const new({required this.type, required this.size, super.key});
 
   final EarthquakeType type;
   final double size;

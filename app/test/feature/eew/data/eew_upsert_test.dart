@@ -21,7 +21,7 @@ EewTelegramItem _eew({
 );
 
 class _StubEew extends Eew {
-  _StubEew([this._initial = const <EewTelegramItem>[]]);
+  new([this._initial = const <EewTelegramItem>[]]);
   final List<EewTelegramItem> _initial;
 
   @override

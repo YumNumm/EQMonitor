@@ -10,7 +10,7 @@ abstract class SeismicityPmTilesArchiveDescriptor
   // Freezed applies this constructor annotation to the generated class.
   // ignore: invalid_annotation_target
   @JsonSerializable(explicitToJson: true)
-  const factory SeismicityPmTilesArchiveDescriptor({
+  const factory({
     required SeismicityPmTilesSource source,
     required int schemaVersion,
     required int dataZoom,
@@ -21,7 +21,7 @@ abstract class SeismicityPmTilesArchiveDescriptor
     required DateTime periodTo,
   }) = _SeismicityPmTilesArchiveDescriptor;
 
-  factory SeismicityPmTilesArchiveDescriptor.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
   ) => _$SeismicityPmTilesArchiveDescriptorFromJson(json);
 }

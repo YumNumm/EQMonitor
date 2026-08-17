@@ -14,7 +14,7 @@ Future<PushNotificationRepository> pushNotificationRepository(Ref ref) async =>
     PushNotificationRepository(await ref.watch(apiClientProvider.future));
 
 class PushNotificationRepository {
-  PushNotificationRepository(this._api);
+  new(this._api);
 
   final api.ApiClient _api;
 

@@ -27,7 +27,7 @@ final _feed = FeedDetail(
 );
 
 class _FakeFeedRepository implements FeedRepository {
-  _FakeFeedRepository({this.response, this.error});
+  new({this.response, this.error});
 
   final FeedDetail? response;
   final Object? error;

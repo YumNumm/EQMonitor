@@ -6,14 +6,14 @@ part 'coordinate.g.dart';
 
 @freezed
 sealed class Coordinate with _$Coordinate {
-  const factory Coordinate.unknown() = CoordinateUnknown;
+  const factory unknown() = CoordinateUnknown;
 
-  const factory Coordinate.latLng({
+  const factory latLng({
     required double latitude,
     required double longitude,
   }) = CoordinateLatLng;
 
-  factory Coordinate.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$CoordinateFromJson(json);
 }
 

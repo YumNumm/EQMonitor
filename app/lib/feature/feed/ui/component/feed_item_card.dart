@@ -42,8 +42,6 @@ class FeedItemListTileContent extends StatelessWidget {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
 
-    final summary = item.summary ?? '';
-
     return Row(
       children: [
         Expanded(

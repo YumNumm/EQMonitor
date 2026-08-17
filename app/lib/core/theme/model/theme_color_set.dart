@@ -12,7 +12,7 @@ part 'theme_color_set.g.dart';
 
 @freezed
 abstract class ThemeColorSet with _$ThemeColorSet {
-  const factory ThemeColorSet({
+  const factory({
     @ColorJsonConverter() required Color primary,
     @ColorJsonConverter() required Color onPrimary,
     @ColorJsonConverter() required Color primaryContainer,
@@ -42,10 +42,10 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     @JsonKey(name: 'map') required MapColors mapColors,
   }) = _ThemeColorSet;
 
-  factory ThemeColorSet.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$ThemeColorSetFromJson(json);
 
-  const ThemeColorSet._();
+  const new _();
 
   ColorScheme toColorScheme(Brightness brightness) => ColorScheme(
     brightness: brightness,

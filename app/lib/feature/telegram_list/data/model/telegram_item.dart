@@ -8,7 +8,7 @@ part 'telegram_item.freezed.dart';
 
 @Freezed()
 abstract class TelegramItem with _$TelegramItem {
-  const factory TelegramItem({
+  const factory({
     required String id,
     required String eventId,
     required TelegramType type,

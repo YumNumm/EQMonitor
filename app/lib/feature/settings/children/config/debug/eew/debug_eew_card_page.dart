@@ -15,7 +15,7 @@ import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 /// デバッグ用。ホーム画面と同じ [EewCard] の見た目を、パラメータ操作で検証する。
 class DebugEewCardPage extends HookConsumerWidget {
-  const DebugEewCardPage({super.key});
+  const new({super.key});
 
   static const _paramLabelStyle = TextStyle(fontSize: 11);
   static const _paramValueStyle = TextStyle(fontSize: 11);
@@ -848,7 +848,7 @@ final _kSampleEews = <EewTelegramItem>[
 ];
 
 class _ParamSection extends StatelessWidget {
-  const _ParamSection({required this.title, required this.child});
+  const new({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -877,7 +877,7 @@ class _ParamSection extends StatelessWidget {
 }
 
 class _LabeledRow extends StatelessWidget {
-  const _LabeledRow({required this.label, required this.child});
+  const new({required this.label, required this.child});
 
   final String label;
   final Widget child;
@@ -898,7 +898,7 @@ class _LabeledRow extends StatelessWidget {
 }
 
 class _BoolRow extends StatelessWidget {
-  const _BoolRow({
+  const new({
     required this.label,
     required this.value,
     required this.onChanged,
@@ -921,7 +921,7 @@ class _BoolRow extends StatelessWidget {
 }
 
 class _SmallField extends StatelessWidget {
-  const _SmallField({
+  const new({
     required this.label,
     this.controller,
     this.child,

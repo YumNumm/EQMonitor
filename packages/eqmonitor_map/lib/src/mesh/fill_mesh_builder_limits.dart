@@ -10,7 +10,7 @@ part 'fill_mesh_builder_limits.freezed.dart';
 /// 食い潰さないための運用値であって、MVT仕様が要求する値ではない。
 @freezed
 abstract class FillMeshBuilderLimits with _$FillMeshBuilderLimits {
-  const factory FillMeshBuilderLimits({
+  const factory({
     /// 1つのpolygon(1つの外形とその穴の組)に含められる穴数の上限。
     /// MapLibre Nativeの`fill_generator.cpp`が`limitHoles(polygon, 500)`で
     /// 行っている制限と同じ位置付け。
