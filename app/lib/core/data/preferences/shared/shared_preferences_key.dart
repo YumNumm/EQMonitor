@@ -57,8 +57,9 @@ enum SharedPreferencesKey {
   bglDebugNotifyPrefecture('bgl_debug_prefecture'),
   bglDebugNotifyApiUpdate('bgl_debug_api_update'),
   feedLastReadPublishedAt('feed_last_read_published_at'),
+  eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled');
 
-  const SharedPreferencesKey(this.key);
+  new(this.key);
   final String key;
 }
