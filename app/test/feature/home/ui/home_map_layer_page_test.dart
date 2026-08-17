@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _TestApp extends StatelessWidget {
   const _TestApp();
@@ -10,7 +10,7 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [DesignSystemThemeExtension.light()],
+      extensions: <ThemeExtension<dynamic>>[DesignSystemThemeExtension.light()],
     );
     return MaterialApp(theme: theme, home: const HomeMapLayerPage());
   }
