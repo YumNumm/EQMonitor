@@ -10,12 +10,12 @@ part 'widget_region_selection.g.dart';
 /// [RegionSearchType.city] なら市区町村コード。
 @freezed
 abstract class WidgetRegionSelection with _$WidgetRegionSelection {
-  const factory WidgetRegionSelection({
+  const factory({
     required RegionSearchType searchType,
     required String code,
     required String name,
   }) = _WidgetRegionSelection;
 
-  factory WidgetRegionSelection.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$WidgetRegionSelectionFromJson(json);
 }

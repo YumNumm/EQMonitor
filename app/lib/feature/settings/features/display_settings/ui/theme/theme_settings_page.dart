@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeSettingsPage extends StatelessWidget {
-  const ThemeSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ThemeSettingsPage extends StatelessWidget {
 }
 
 class _ModeSection extends ConsumerWidget {
-  const _ModeSection({required this.mode});
+  const new({required this.mode});
 
   final ThemeBrightnessMode mode;
 
@@ -103,7 +103,7 @@ class _ModeSection extends ConsumerWidget {
 }
 
 class _ThemePreview extends StatelessWidget {
-  const _ThemePreview({required this.colorSet});
+  const new({required this.colorSet});
 
   final ThemeColorSet colorSet;
 
@@ -151,7 +151,7 @@ class _ThemePreview extends StatelessWidget {
 }
 
 class _Swatch extends StatelessWidget {
-  const _Swatch({required this.color, required this.label});
+  const new({required this.color, required this.label});
 
   final Color color;
   final String label;
