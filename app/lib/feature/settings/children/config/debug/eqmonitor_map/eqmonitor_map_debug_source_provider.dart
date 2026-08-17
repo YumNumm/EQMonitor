@@ -47,7 +47,7 @@ Future<EqmonitorMapDebugSource> eqmonitorMapDebugSource(Ref ref) async {
 
 /// [eqmonitorMapDebugSourceProvider]が使う解決ロジック本体。
 class EqmonitorMapDebugSourceResolver {
-  const EqmonitorMapDebugSourceResolver();
+  const new();
 
   Future<VerifiedPmTilesSource> resolveSource(
     AssetPackRepository repository,

@@ -11,19 +11,19 @@ part 'kyoshin_observation_points_parameter.g.dart';
 @freezed
 abstract class KyoshinObservationPointsParameter
     with _$KyoshinObservationPointsParameter {
-  const factory KyoshinObservationPointsParameter({
+  const factory({
     required ParameterMetadata metadata,
     required List<KyoshinObservationPoint> points,
   }) = _KyoshinObservationPointsParameter;
 
-  factory KyoshinObservationPointsParameter.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
   ) => _$KyoshinObservationPointsParameterFromJson(json);
 }
 
 @freezed
 abstract class KyoshinObservationPoint with _$KyoshinObservationPoint {
-  const factory KyoshinObservationPoint({
+  const factory({
     required KyoshinObservationPointType type,
     @JsonKey(name: 'source_type') required String sourceType,
     required String name,
@@ -36,7 +36,7 @@ abstract class KyoshinObservationPoint with _$KyoshinObservationPoint {
     @JsonKey(name: 'arv_400') required double? arv400,
   }) = _KyoshinObservationPoint;
 
-  factory KyoshinObservationPoint.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinObservationPointFromJson(json);
 }
 
@@ -53,12 +53,12 @@ enum KyoshinObservationPointType {
 @freezed
 abstract class KyoshinObservationPointMapPoint
     with _$KyoshinObservationPointMapPoint {
-  const factory KyoshinObservationPointMapPoint({
+  const factory({
     @ParameterPointConverter() required Point<double> center,
     @ParameterPointConverter() required Point<double> offset,
   }) = _KyoshinObservationPointMapPoint;
 
-  factory KyoshinObservationPointMapPoint.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
   ) => _$KyoshinObservationPointMapPointFromJson(json);
 }

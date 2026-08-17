@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
-  const ShakeDetectionCard({
+  const new({
     required this.event,
     this.outerPadding = const EdgeInsets.symmetric(horizontal: 4),
     super.key,
@@ -48,7 +48,7 @@ class ShakeDetectionCard extends ConsumerWidget {
 }
 
 class _ShakeDetectionCardHeader extends StatelessWidget {
-  const _ShakeDetectionCardHeader({required this.event});
+  const new({required this.event});
 
   final ShakeDetectionEvent event;
 
@@ -112,7 +112,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
 }
 
 class _ShakeDetectionCardBody extends StatelessWidget {
-  const _ShakeDetectionCardBody({
+  const new({
     required this.event,
     required this.regionsAsync,
   });

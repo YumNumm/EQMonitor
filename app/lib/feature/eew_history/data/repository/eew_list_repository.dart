@@ -14,7 +14,7 @@ Future<EewListRepository> eewListRepository(Ref ref) async {
 }
 
 class EewListRepository {
-  EewListRepository({required api.EewApiClient eew}) : _eew = eew;
+  new({required api.EewApiClient eew}) : _eew = eew;
 
   final api.EewApiClient _eew;
 

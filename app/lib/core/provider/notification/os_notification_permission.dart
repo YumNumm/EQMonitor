@@ -1,12 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class OsNotificationPermission {
-  const OsNotificationPermission._({
+  const new _({
     required this.authorizationStatus,
     required AppleNotificationSetting criticalAlert,
   }) : _criticalAlert = criticalAlert;
 
-  factory OsNotificationPermission.fromNotificationSettings(
+  factory fromNotificationSettings(
     NotificationSettings settings,
   ) {
     return OsNotificationPermission._(

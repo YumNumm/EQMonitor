@@ -18,7 +18,7 @@ part 'earthquake.g.dart';
 
 @freezed
 abstract class Earthquake with _$Earthquake {
-  const factory Earthquake({
+  const factory({
     required String eventId,
     required TelegramStatus status,
     required DateTime? originTime,
@@ -40,7 +40,7 @@ abstract class Earthquake with _$Earthquake {
     EarthquakeCatalog? catalog,
   }) = _Earthquake;
 
-  factory Earthquake.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeFromJson(json);
 }
 

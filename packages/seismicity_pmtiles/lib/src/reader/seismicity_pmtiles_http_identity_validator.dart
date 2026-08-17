@@ -4,7 +4,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_http_range_request.dart';
 
 final class SeismicityPmTilesHttpIdentityValidator {
-  const SeismicityPmTilesHttpIdentityValidator();
+  const new();
 
   String validate({
     required int statusCode,

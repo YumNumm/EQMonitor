@@ -36,7 +36,9 @@ class EewHistoryPage extends HookConsumerWidget {
           if (!context.mounted) {
             return;
           }
-          await showEewHistoryNoticeFlow(ref: ref, context: context);
+          await ref
+              .read(eewHistoryNoticeFlowProvider)
+              .show(ref: ref, context: context);
         });
       }
       return null;

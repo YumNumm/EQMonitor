@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// 通知項目の補足リンク一覧をボトムシートで表示する。
 class InfoNotificationBottomSheetAction {
-  const InfoNotificationBottomSheetAction();
+  const new();
 
   Future<void> show(
     BuildContext context, {
@@ -52,7 +52,7 @@ class InfoNotificationBottomSheetAction {
 }
 
 class InfoNotificationTile extends StatelessWidget {
-  const InfoNotificationTile({
+  const new({
     required this.title,
     required this.subtitleText,
     required this.value,
@@ -111,7 +111,7 @@ class InfoNotificationTile extends StatelessWidget {
 }
 
 class ComingSoonBadge extends StatelessWidget {
-  const ComingSoonBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

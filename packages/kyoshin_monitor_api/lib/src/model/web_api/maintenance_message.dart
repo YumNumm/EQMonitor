@@ -8,7 +8,7 @@ part 'maintenance_message.g.dart';
 abstract class MaintenanceMessage
     with _$MaintenanceMessage
     implements KyoshinMonitorWebApiResponse {
-  const factory MaintenanceMessage({
+  const factory({
     required String? message,
     required Security? security,
     required MaintenanceMessageType? type,
@@ -17,7 +17,7 @@ abstract class MaintenanceMessage
     required Result? result,
   }) = _MaintenanceMessage;
 
-  factory MaintenanceMessage.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MaintenanceMessageFromJson(json);
 }
 
@@ -27,6 +27,6 @@ enum MaintenanceMessageType {
   small('1'),
   highLight('2');
 
-  const MaintenanceMessageType(this.type);
+  new(this.type);
   final String type;
 }

@@ -57,7 +57,7 @@ final class _EmptyRealtimeEvents extends RealtimeEvents {
 
 final class _FakeEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  _FakeEarthquakeHistoryRepository()
+  new()
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _parameter,

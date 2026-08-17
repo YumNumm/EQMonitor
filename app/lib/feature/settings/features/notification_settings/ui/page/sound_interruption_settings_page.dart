@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SoundInterruptionSettingsPage extends HookConsumerWidget {
-  const SoundInterruptionSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -148,7 +148,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
 }
 
 class _SoundInterruptionCard extends StatelessWidget {
-  const _SoundInterruptionCard({
+  const new({
     required this.sound,
     required this.interruptionLevel,
     required this.collapseNotification,

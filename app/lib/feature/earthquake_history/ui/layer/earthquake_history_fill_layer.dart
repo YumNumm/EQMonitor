@@ -19,7 +19,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryFillLayer extends ConsumerWidget {
-  const EarthquakeHistoryFillLayer({
+  const new({
     required this.earthquake,
     required this.parameter,
     this.fillMode = EarthquakeHistoryFillMode.auto,
@@ -61,7 +61,7 @@ class EarthquakeHistoryFillLayer extends ConsumerWidget {
 }
 
 class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
-  const _EarthquakeHistoryFillLayerBody({
+  const new({
     required this.intensity,
     required this.parameter,
     required this.mode,
@@ -213,7 +213,7 @@ const _regionSourceLayerId = 'areaForecastLocalE';
 const _citySourceLayerId = 'areaInformationCityQuake';
 
 class EarthquakeHistoryFillLayerBuilder {
-  const EarthquakeHistoryFillLayerBuilder({required this.modeResolver});
+  const new({required this.modeResolver});
 
   final EarthquakeHistoryMapLayerModeResolver modeResolver;
 

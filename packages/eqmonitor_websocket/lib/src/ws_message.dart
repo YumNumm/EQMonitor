@@ -9,15 +9,15 @@ part 'ws_message.g.dart';
 @Freezed(unionKey: 'type', toJson: false)
 sealed class WsMessage with _$WsMessage {
   @FreezedUnionValue('realtime')
-  const factory WsMessage.realtime({required RealtimeEventEnvelope data}) =
+  const factory realtime({required RealtimeEventEnvelope data}) =
       WsRealtimeMessage;
 
   @FreezedUnionValue('ping')
-  const factory WsMessage.ping() = WsPingMessage;
+  const factory ping() = WsPingMessage;
 
   @FreezedUnionValue('ready')
-  const factory WsMessage.ready() = WsReadyMessage;
+  const factory ready() = WsReadyMessage;
 
-  factory WsMessage.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$WsMessageFromJson(json);
 }

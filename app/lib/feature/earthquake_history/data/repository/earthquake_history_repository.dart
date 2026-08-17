@@ -37,7 +37,7 @@ Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(Ref ref) async {
 }
 
 class EarthquakeHistoryRepository {
-  EarthquakeHistoryRepository({
+  new({
     required api.EarthquakeApiClient earthquake,
     required this.earthquakeParameter,
     required this.shindoDbStations,

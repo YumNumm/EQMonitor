@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:telemetry_store/telemetry_store.dart';
 
 class ApiEventSender extends EventSender {
-  ApiEventSender(this._dioFuture);
+  new(this._dioFuture);
 
   final Future<Dio> _dioFuture;
 

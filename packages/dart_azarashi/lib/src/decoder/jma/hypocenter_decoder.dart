@@ -4,7 +4,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Hypocenter Decoder.
 class HypocenterDecoder {
-  const HypocenterDecoder._();
+  const new _();
 
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

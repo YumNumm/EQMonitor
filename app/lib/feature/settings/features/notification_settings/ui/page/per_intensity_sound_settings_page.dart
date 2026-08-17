@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class PerIntensitySoundSettingsPage extends ConsumerWidget {
-  const PerIntensitySoundSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +43,7 @@ class PerIntensitySoundSettingsPage extends ConsumerWidget {
 }
 
 class _SlotOverrideCard extends StatelessWidget {
-  const _SlotOverrideCard({
+  const new({
     required this.slots,
     required this.overrideType,
   });
@@ -86,7 +86,7 @@ class _SlotOverrideCard extends StatelessWidget {
 }
 
 class _SlotOverrideTile extends StatelessWidget {
-  const _SlotOverrideTile({
+  const new({
     required this.slot,
     required this.overrideType,
   });

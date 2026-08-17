@@ -2,75 +2,75 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_worker_terminal_probe.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 sealed class SeismicityWorkerTerminalOutcome<T> {
-  const SeismicityWorkerTerminalOutcome();
+  const new();
 }
 
 final class SeismicityWorkerTerminalSuccessOutcome<T>
     extends SeismicityWorkerTerminalOutcome<T> {
-  const SeismicityWorkerTerminalSuccessOutcome({required this.value});
+  const new({required this.value});
 
   final T value;
 }
 
 final class SeismicityWorkerTerminalFailureOutcome<T>
     extends SeismicityWorkerTerminalOutcome<T> {
-  const SeismicityWorkerTerminalFailureOutcome({required this.error});
+  const new({required this.error});
 
   final SeismicityPmTilesException error;
 }
 
 final class SeismicityWorkerTerminalCancelledOutcome<T>
     extends SeismicityWorkerTerminalOutcome<T> {
-  const SeismicityWorkerTerminalCancelledOutcome();
+  const new();
 }
 
 sealed class SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalSignal();
+  const new();
 }
 
 final class SeismicityWorkerTerminalSuccessSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalSuccessSignal({required this.value});
+  const new({required this.value});
 
   final T value;
 }
 
 final class SeismicityWorkerTerminalFailureSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalFailureSignal({required this.error});
+  const new({required this.error});
 
   final SeismicityPmTilesException error;
 }
 
 final class SeismicityWorkerTerminalCrashSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalCrashSignal({required this.message});
+  const new({required this.message});
 
   final String message;
 }
 
 final class SeismicityWorkerTerminalUnexpectedPortCloseSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalUnexpectedPortCloseSignal();
+  const new();
 }
 
 final class SeismicityWorkerTerminalGracefulExitSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalGracefulExitSignal();
+  const new();
 }
 
 final class SeismicityWorkerTerminalCancelSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalCancelSignal();
+  const new();
 }
 
 final class SeismicityWorkerTerminalCloseSignal<T>
     extends SeismicityWorkerTerminalSignal<T> {
-  const SeismicityWorkerTerminalCloseSignal();
+  const new();
 }
 
 final class SeismicityWorkerTerminalDecision<T> {
-  const SeismicityWorkerTerminalDecision({
+  const new({
     required this.outcome,
     required this.completePending,
     required this.closePort,
@@ -90,7 +90,7 @@ final class SeismicityWorkerTerminalDecision<T> {
 }
 
 final class SeismicityWorkerTerminalCoordinator<T> {
-  SeismicityWorkerTerminalCoordinator({required this.probe});
+  new({required this.probe});
 
   final SeismicityWorkerTerminalProbe probe;
   SeismicityWorkerTerminalOutcome<T>? _outcome;

@@ -851,7 +851,7 @@ Future<PmTilesV3Archive> openFixture({
 }
 
 final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
-  TrackingRandomAccessReader({required this.bytes});
+  new({required this.bytes});
 
   final Uint8List bytes;
   final List<({int offset, int length})> reads = [];
@@ -888,7 +888,7 @@ final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
 }
 
 final class FailingOpenReader implements PmTilesRandomAccessReader {
-  FailingOpenReader({
+  new({
     required this.bytes,
     this.readFailure,
     this.readFailureStack,

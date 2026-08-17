@@ -5,7 +5,7 @@ part 'replay_file_header.g.dart';
 
 @freezed
 abstract class ReplayFileHeader with _$ReplayFileHeader {
-  const factory ReplayFileHeader({
+  const factory({
     required int version,
     required String softwareName,
     required DateTime startTime,
@@ -13,10 +13,10 @@ abstract class ReplayFileHeader with _$ReplayFileHeader {
     required ReplayFileCompressionMode compressionMode,
   }) = _ReplayFileHeader;
 
-  factory ReplayFileHeader.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$ReplayFileHeaderFromJson(json);
 
-  factory ReplayFileHeader.fromMsgPack(List<dynamic> data) {
+  factory fromMsgPack(List<dynamic> data) {
     final compressionModeValue = data[4] as int;
     return ReplayFileHeader(
       version: data[0] as int,
@@ -36,6 +36,6 @@ enum ReplayFileCompressionMode {
   gzip(2),
   brotli(3);
 
-  const ReplayFileCompressionMode(this.value);
+  new(this.value);
   final int value;
 }

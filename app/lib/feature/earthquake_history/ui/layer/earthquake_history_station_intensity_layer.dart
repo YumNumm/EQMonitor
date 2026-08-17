@@ -24,7 +24,7 @@ import 'package:maplibre/maplibre.dart';
 /// showingLpgmIntensity が true の場合は長周期地震動階級で色分けする。
 /// showStationLabel が true の場合は観測点名ラベルを表示する。
 class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
-  const EarthquakeHistoryStationIntensityLayer({
+  const new({
     required this.earthquake,
     required this.parameter,
     this.stationDisplayMode = StationDisplayMode.auto,
@@ -260,7 +260,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 }
 
 class EarthquakeHistoryStationGeoJsonBuilder {
-  const EarthquakeHistoryStationGeoJsonBuilder();
+  const new();
 
   static const iconSmallPrefix = 'JmaIntensity.small.';
   static const iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
@@ -370,7 +370,7 @@ class EarthquakeHistoryStationGeoJsonBuilder {
 }
 
 class EarthquakeHistoryStationIntensityLayerBuilder {
-  const EarthquakeHistoryStationIntensityLayerBuilder();
+  const new();
 
   static const sourceId = 'eq-history-station-intensity';
   static const circleLayerId = 'eq-history-station-intensity-circle';

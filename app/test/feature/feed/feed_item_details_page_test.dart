@@ -20,7 +20,7 @@ final _item = FeedItem(
 );
 
 class _FakeFeedNotifier extends FeedNotifier {
-  _FakeFeedNotifier(this.items);
+  new(this.items);
 
   final List<FeedItem> items;
 

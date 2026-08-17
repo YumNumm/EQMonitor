@@ -3,7 +3,7 @@
 part of msgpack_dart;
 
 class FormatError implements Exception {
-  FormatError(this.message);
+  new(this.message);
   final String message;
 
   @override

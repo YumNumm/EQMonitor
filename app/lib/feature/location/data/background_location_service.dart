@@ -43,7 +43,7 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 ///
 /// [Ref] はコンストラクタではなく各メソッドの引数として受け取る。
 class BackgroundLocationSyncCoordinator {
-  const BackgroundLocationSyncCoordinator();
+  const new();
 
   Future<void> ensureMonitoring(Ref ref) async {
     try {

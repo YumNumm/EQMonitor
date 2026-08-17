@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _OnboardingAppIconHero extends StatelessWidget {
-  const _OnboardingAppIconHero();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class _OnboardingAppIconHero extends StatelessWidget {
 }
 
 class _OnboardingCompleteHero extends StatelessWidget {
-  const _OnboardingCompleteHero({
+  const new({
     required this.color,
     required this.backgroundColor,
   });

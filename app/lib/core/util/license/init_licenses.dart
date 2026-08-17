@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 /// サードパーティ素材のライセンスをアプリのライセンス画面に登録する。
 class LicenseInitializer {
-  const LicenseInitializer._();
+  const new _();
 
   static void init() => LicenseRegistry.addLicense(() async* {
     yield const LicenseEntryWithLineBreaks(

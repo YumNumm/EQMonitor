@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 /// VXSE52, VXSE53, VXSE61, VXSE62 タイルで使用。
 /// 震源名・M・深さ・発生時刻を表示し、前報との差分があればチップで示す。
 class HypocenterSummary extends StatelessWidget {
-  const HypocenterSummary({required this.quake, this.diff, super.key});
+  const new({required this.quake, this.diff, super.key});
 
   final EarthquakeTelegramBodyQuakeModel quake;
   final HypocenterDiff? diff;
@@ -72,7 +72,7 @@ class HypocenterSummary extends StatelessWidget {
 }
 
 class _OriginTimeLine extends StatelessWidget {
-  const _OriginTimeLine({required this.originTime});
+  const new({required this.originTime});
 
   final String originTime;
 
@@ -98,7 +98,7 @@ class _OriginTimeLine extends StatelessWidget {
 }
 
 class _DiffChip extends StatelessWidget {
-  const _DiffChip({required this.text});
+  const new({required this.text});
 
   final String text;
 

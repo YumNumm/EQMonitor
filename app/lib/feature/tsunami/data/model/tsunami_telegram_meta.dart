@@ -6,7 +6,7 @@ part 'tsunami_telegram_meta.freezed.dart';
 
 @freezed
 abstract class TsunamiTelegramMeta with _$TsunamiTelegramMeta {
-  const factory TsunamiTelegramMeta({
+  const factory({
     required String telegramId,
     required TelegramType type,
     required int? serialNo,

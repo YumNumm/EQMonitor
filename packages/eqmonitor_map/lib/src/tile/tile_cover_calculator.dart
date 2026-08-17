@@ -13,7 +13,7 @@ import 'package:eqmonitor_map/src/geo/tile_id.dart';
 /// 距離でsortするscanline方式)相当の粒度で足りる。frustum cullingは
 /// ここでは実装しない。
 final class TileCoverCalculator {
-  const TileCoverCalculator._();
+  const new _();
 
   /// `camera`と`viewport`が画面に映す範囲を覆う[OverscaledTileId]の一覧を
   /// camera中心に近い順で返す。

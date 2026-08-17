@@ -29,7 +29,7 @@ import 'package:maplibre/maplibre.dart';
 /// - [initialPrefectureCode]: 指定時は起動直後に当該都道府県にフォーカスする(Lv2)。
 /// - [initialCityCode]: 指定時はさらに市区町村詳細モーダルを自動表示する。
 class IntensityHistoryPage extends ConsumerWidget {
-  const IntensityHistoryPage({
+  const new({
     this.initialPrefectureCode,
     this.initialCityCode,
     super.key,
@@ -58,7 +58,7 @@ class IntensityHistoryPage extends ConsumerWidget {
 }
 
 class _MapContent extends HookConsumerWidget {
-  const _MapContent({
+  const new({
     required this.styleString,
     required this.initialPrefectureCode,
     required this.initialCityCode,
@@ -229,7 +229,7 @@ class _MapContent extends HookConsumerWidget {
 }
 
 class _BackToJapanButton extends StatelessWidget {
-  const _BackToJapanButton({required this.onTap});
+  const new({required this.onTap});
 
   final Future<void> Function() onTap;
 

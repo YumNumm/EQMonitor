@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 /// エラー詳細シートの「まとめてコピー」で共有する診断テキストを組み立てる。
 class ErrorDiagnosticsBuilder {
-  const ErrorDiagnosticsBuilder._();
+  const new _();
 
   /// widget/platform に依存させないため、値はすべて呼び出し側が解決して渡す。
   static String build({

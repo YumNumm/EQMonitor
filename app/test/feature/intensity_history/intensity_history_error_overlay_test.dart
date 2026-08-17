@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class _FakePrefectureHighest extends PrefectureHighest {
-  _FakePrefectureHighest(this._build);
+  new(this._build);
 
   final Future<List<HighestIntensityEntry>> Function() _build;
 

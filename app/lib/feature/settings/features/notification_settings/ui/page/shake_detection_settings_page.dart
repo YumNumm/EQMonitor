@@ -8,7 +8,7 @@ import 'package:riverpod/experimental/mutation.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ShakeDetectionSettingsPage extends StatelessWidget {
-  const ShakeDetectionSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class ShakeDetectionSettingsPage extends StatelessWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -176,7 +176,7 @@ class _Body extends ConsumerWidget {
 }
 
 class _ShakeEntryCard extends StatelessWidget {
-  const _ShakeEntryCard({
+  const new({
     required this.entry,
     required this.isBusy,
     required this.onDelete,
@@ -241,7 +241,7 @@ class _ShakeEntryCard extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

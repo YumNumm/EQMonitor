@@ -1,6 +1,6 @@
 /// 加速度波形の積分・ベースライン補正ユーティリティ
 class KnetWaveformIntegration {
-  const KnetWaveformIntegration._();
+  const new _();
 
   /// トラペゾイド積分: 加速度(gal) → 速度(cm/s)、速度 → 変位(cm)
   static List<double> integrate(List<double> data, double dt) {

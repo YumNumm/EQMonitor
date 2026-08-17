@@ -8,7 +8,7 @@ part 'tsunami_region_estimation.freezed.dart';
 /// 津波予報区単位の観測に基づく推定値のドメインモデル
 @freezed
 abstract class TsunamiRegionEstimation with _$TsunamiRegionEstimation {
-  const factory TsunamiRegionEstimation({
+  const factory({
     required TsunamiEstimationFirstHeight firstHeight,
     required TsunamiEstimationMaxHeight maxHeight,
   }) = _TsunamiRegionEstimation;

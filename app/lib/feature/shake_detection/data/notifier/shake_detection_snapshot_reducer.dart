@@ -8,7 +8,7 @@ ShakeDetectionSnapshotReducer shakeDetectionSnapshotReducer(Ref ref) =>
     const ShakeDetectionSnapshotReducer();
 
 class ShakeDetectionSnapshotReducer {
-  const ShakeDetectionSnapshotReducer();
+  const new();
 
   ShakeDetectionSnapshot selectNewer({
     required ShakeDetectionSnapshot? current,

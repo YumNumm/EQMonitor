@@ -4,14 +4,14 @@ part 'travel_time_table.freezed.dart';
 
 @freezed
 abstract class TravelTimeTable with _$TravelTimeTable {
-  const factory TravelTimeTable({
+  const factory({
     required double p,
     required double s,
     required int depth,
     required int distance,
   }) = _TravelTimeTable;
 
-  factory TravelTimeTable.fromList(List<dynamic> list) {
+  factory fromList(List<dynamic> list) {
     return TravelTimeTable(
       p: double.parse(list[0].toString()),
       s: double.parse(list[1].toString()),
@@ -23,6 +23,6 @@ abstract class TravelTimeTable with _$TravelTimeTable {
 
 @freezed
 abstract class TravelTimeTables with _$TravelTimeTables {
-  const factory TravelTimeTables({required List<TravelTimeTable> table}) =
+  const factory({required List<TravelTimeTable> table}) =
       _TravelTimeTables;
 }

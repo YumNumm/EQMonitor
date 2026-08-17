@@ -6,7 +6,7 @@ part 'changelog_entry_model.freezed.dart';
 
 @freezed
 abstract class ChangelogEntryModel with _$ChangelogEntryModel {
-  const factory ChangelogEntryModel({
+  const factory({
     required String version,
     required DateTime date,
     required String url,

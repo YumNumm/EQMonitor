@@ -13,7 +13,7 @@ typedef ObservationMaxHeightTimeline = List<ObservationMaxHeightTimelineEntry>;
 @freezed
 abstract class ObservationFirstHeightTimelineEntry
     with _$ObservationFirstHeightTimelineEntry {
-  const factory ObservationFirstHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? arrivalTime,
     required WaveInitial? initial,
@@ -33,7 +33,7 @@ abstract class ObservationFirstHeightTimelineEntry
 @freezed
 abstract class ObservationMaxHeightTimelineEntry
     with _$ObservationMaxHeightTimelineEntry {
-  const factory ObservationMaxHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? dateTime,
     required double? value,

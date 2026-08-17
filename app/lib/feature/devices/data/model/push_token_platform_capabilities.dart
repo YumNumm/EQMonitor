@@ -1,13 +1,13 @@
 enum PushTokenPlatform { android, ios, unsupported }
 
 final class PushTokenPlatformCapabilities {
-  const PushTokenPlatformCapabilities({
+  const new({
     this.supportsFcm = false,
     this.supportsApns = false,
     this.supportsPushToStart = false,
   });
 
-  factory PushTokenPlatformCapabilities.forPlatform({
+  factory forPlatform({
     required PushTokenPlatform platform,
     int? iosMajorVersion,
   }) => switch (platform) {

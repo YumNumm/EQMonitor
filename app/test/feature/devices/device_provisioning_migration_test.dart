@@ -187,7 +187,7 @@ final class _NoopPushTokenSync extends PushTokenSyncNotifier {
 // private class なので import 不可のためここに再定義する。
 
 class FakeDeviceRepository extends DeviceRepository {
-  FakeDeviceRepository({
+  new({
     required Result<RegisteredDevice, Exception> Function() getResult,
     required Result<RegisteredDevice, Exception> Function() putResult,
     required Result<void, Exception> Function() migrateResult,
@@ -238,7 +238,7 @@ class FakeDeviceRepository extends DeviceRepository {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

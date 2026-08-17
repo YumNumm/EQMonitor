@@ -35,7 +35,7 @@ void main() {
 
 final class _NestedCollectionStateOwner
     implements MapRevisionStateOwner<Map<String, List<int>>> {
-  const _NestedCollectionStateOwner();
+  const new();
 
   @override
   MapRevisionCandidate<Map<String, List<int>>> own({

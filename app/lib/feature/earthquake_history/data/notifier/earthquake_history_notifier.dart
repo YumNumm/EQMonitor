@@ -368,14 +368,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 }
 
 sealed class _NotifierRealtimeMutation {
-  const _NotifierRealtimeMutation({required this.sequence});
+  const new({required this.sequence});
 
   final int sequence;
   String get eventId;
 }
 
 final class _NotifierRealtimeUpsert extends _NotifierRealtimeMutation {
-  const _NotifierRealtimeUpsert({
+  const new({
     required super.sequence,
     required this.record,
   });
@@ -386,7 +386,7 @@ final class _NotifierRealtimeUpsert extends _NotifierRealtimeMutation {
 }
 
 final class _NotifierRealtimeDelete extends _NotifierRealtimeMutation {
-  const _NotifierRealtimeDelete({
+  const new({
     required super.sequence,
     required this.eventId,
   });
@@ -395,7 +395,7 @@ final class _NotifierRealtimeDelete extends _NotifierRealtimeMutation {
   final String eventId;
 }
 
-class EarthquakeParameterHasNotInitializedException implements Exception {}
+class EarthquakeParameterHasNotInitializedException implements Exception;
 
 extension EarthquakeHistoryStateEx on PaginatedResponse<EarthquakePartial> {
   bool get hasNext => nextToken != null;

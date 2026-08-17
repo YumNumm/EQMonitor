@@ -7,7 +7,7 @@ part 'tsunami_forecast_max_height.freezed.dart';
 
 @freezed
 abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
-  const factory TsunamiForecastMaxHeight({
+  const factory({
     required double? value,
     required bool? isOver,
     required QualitativeHeight? qualitative,

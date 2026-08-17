@@ -4,7 +4,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_point_decoder.dart
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityDecodedHypocenter {
-  SeismicityDecodedHypocenter({
+  new({
     required this.tileId,
     required this.featureIndex,
     required this.hypocenterId,

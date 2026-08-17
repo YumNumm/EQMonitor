@@ -14,7 +14,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 電文発表時刻基準での静的PS波到達円レイヤー
 class EewStaticPsWaveLayer extends HookConsumerWidget {
-  const EewStaticPsWaveLayer({required this.eew, super.key});
+  const new({required this.eew, super.key});
 
   final EewTelegramItem? eew;
 

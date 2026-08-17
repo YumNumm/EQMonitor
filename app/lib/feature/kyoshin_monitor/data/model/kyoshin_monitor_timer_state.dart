@@ -5,11 +5,11 @@ part 'kyoshin_monitor_timer_state.g.dart';
 
 @freezed
 abstract class KyoshinMonitorTimerState with _$KyoshinMonitorTimerState {
-  const factory KyoshinMonitorTimerState({
+  const factory({
     required Duration delayFromDevice,
     required DateTime? lastSyncedAt,
   }) = _KyoshinMonitorTimerState;
 
-  factory KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorTimerStateFromJson(json);
 }

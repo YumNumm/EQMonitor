@@ -11,7 +11,7 @@ EarthquakeBodyDiffCalculator earthquakeBodyDiffCalculator(Ref ref) =>
     const EarthquakeBodyDiffCalculator();
 
 class EarthquakeBodyDiffCalculator {
-  const EarthquakeBodyDiffCalculator();
+  const new();
 
   /// [current] が現報、[previous] が前報の震度地域リスト。
   /// [previous] が null または空の場合は初報扱いで全て [IntensityDiffType.same]。

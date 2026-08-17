@@ -10,7 +10,7 @@ part 'spacing_theme_extension.tailor.dart';
 @tailorMixinComponent
 class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
     with _$SpacingThemeExtensionTailorMixin {
-  const SpacingThemeExtension({
+  const new({
     required this.xs,
     required this.sm,
     required this.md,
@@ -21,7 +21,7 @@ class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
     required this.xxxxl,
   });
 
-  factory SpacingThemeExtension.standard() => const SpacingThemeExtension(
+  factory standard() => const SpacingThemeExtension(
     xs: 4,
     sm: 8,
     md: 12,

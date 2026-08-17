@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 ///
 /// 各テストの tearDown で [resetAll] を呼び、モードを default に戻して独立性を保つ。
 class StubAdmin {
-  StubAdmin(this._dio);
+  new(this._dio);
 
   final Dio _dio;
 

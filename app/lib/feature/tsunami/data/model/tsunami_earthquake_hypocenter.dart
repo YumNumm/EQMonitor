@@ -8,7 +8,7 @@ part 'tsunami_earthquake_hypocenter.freezed.dart';
 /// 津波情報に付随する震源要素のドメインモデル
 @freezed
 abstract class TsunamiEarthquakeHypocenter with _$TsunamiEarthquakeHypocenter {
-  const factory TsunamiEarthquakeHypocenter({
+  const factory({
     required MagnitudeType magnitudeType,
     num? magnitudeValue,
     required DepthType depthType,

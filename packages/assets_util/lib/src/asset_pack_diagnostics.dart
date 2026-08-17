@@ -21,13 +21,13 @@ enum AssetPackFileDiagnosticStatus {
 }
 
 final class AssetPackNativeError {
-  const AssetPackNativeError({
+  const new({
     required this.domain,
     required this.code,
     required this.description,
   });
 
-  factory AssetPackNativeError.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       AssetPackNativeError(
         domain: requireDiagnosticString(json: json, key: 'domain'),
         code: requireDiagnosticInt(json: json, key: 'code'),
@@ -40,7 +40,7 @@ final class AssetPackNativeError {
 }
 
 final class AssetPackFileDiagnostic {
-  const AssetPackFileDiagnostic({
+  const new({
     required this.path,
     required this.status,
     required this.exists,
@@ -50,7 +50,7 @@ final class AssetPackFileDiagnostic {
     required this.nativeError,
   });
 
-  factory AssetPackFileDiagnostic.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       AssetPackFileDiagnostic(
         path: requireDiagnosticString(json: json, key: 'path'),
         status: decodeAssetPackFileStatus(
@@ -82,7 +82,7 @@ final class AssetPackFileDiagnostic {
 }
 
 final class AssetPackDiagnostics {
-  const AssetPackDiagnostics({
+  const new({
     required this.schemaVersion,
     required this.platform,
     required this.osVersion,
@@ -97,7 +97,7 @@ final class AssetPackDiagnostics {
     required this.nativeError,
   });
 
-  factory AssetPackDiagnostics.fromJsonString(String source) {
+  factory fromJsonString(String source) {
     final json = decodeDiagnosticObject(source);
     final schemaVersion = requireDiagnosticInt(
       json: json,

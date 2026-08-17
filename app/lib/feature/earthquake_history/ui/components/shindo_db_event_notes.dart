@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catal
 import 'package:material_ui/material_ui.dart';
 
 class ShindoDbEventNotes extends StatelessWidget {
-  const ShindoDbEventNotes({required this.catalog, super.key});
+  const new({required this.catalog, super.key});
 
   final EarthquakeCatalog catalog;
 

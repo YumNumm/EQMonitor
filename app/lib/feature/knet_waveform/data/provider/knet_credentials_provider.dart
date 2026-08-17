@@ -7,7 +7,7 @@ part 'knet_credentials_provider.g.dart';
 
 /// BOSAI 認証情報（ユーザーID + パスワード）
 class KnetCredentials {
-  const KnetCredentials({required this.userId, required this.password});
+  const new({required this.userId, required this.password});
 
   final String userId;
   final String password;

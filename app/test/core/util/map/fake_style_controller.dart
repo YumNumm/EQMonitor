@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:maplibre/maplibre.dart';
 
 class FakeStyleController implements StyleController {
-  FakeStyleController({
+  new({
     this.failingLayerIds = const {},
     this.failingSourceIds = const {},
     this.failingImageIds = const {},

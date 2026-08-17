@@ -48,7 +48,7 @@ void main() {
 }
 
 final class _FcmTokenAdapter implements HttpClientAdapter {
-  _FcmTokenAdapter({this.statusCode = 204});
+  new({this.statusCode = 204});
 
   final int statusCode;
   final requests = <RequestOptions>[];
@@ -68,4 +68,4 @@ final class _FcmTokenAdapter implements HttpClientAdapter {
 }
 
 final class _FakeDeviceAuthRepository extends Fake
-    implements DeviceAuthRepository {}
+    implements DeviceAuthRepository;

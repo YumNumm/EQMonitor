@@ -9,7 +9,7 @@ import 'package:knet_api_client/knet_api_client.dart';
 
 /// K-NET all/fig PNG 図を表示するビュー
 class KnetFigView extends HookConsumerWidget {
-  const KnetFigView({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   final DateTime eventTime;
 
@@ -35,7 +35,7 @@ class KnetFigView extends HookConsumerWidget {
 }
 
 class _FigContent extends HookWidget {
-  const _FigContent({required this.eventTime, required this.client});
+  const new({required this.eventTime, required this.client});
 
   final DateTime eventTime;
   final KnetDownloadClient client;
@@ -87,7 +87,7 @@ class _FigContent extends HookWidget {
 }
 
 class _FigTypeSelector extends StatelessWidget {
-  const _FigTypeSelector({required this.selected, required this.onChanged});
+  const new({required this.selected, required this.onChanged});
 
   final KnetFigType selected;
   final ValueChanged<KnetFigType> onChanged;
@@ -112,7 +112,7 @@ class _FigTypeSelector extends StatelessWidget {
 }
 
 class _ImageArea extends StatelessWidget {
-  const _ImageArea({
+  const new({
     required this.isLoading,
     required this.onRetry,
     this.errorMessage,
@@ -155,7 +155,7 @@ class _ImageArea extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const new({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

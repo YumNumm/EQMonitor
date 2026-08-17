@@ -10,7 +10,7 @@ part 'tsunami_region.freezed.dart';
 /// 津波予報区のドメインモデル
 @freezed
 abstract class TsunamiRegion with _$TsunamiRegion {
-  const factory TsunamiRegion({
+  const factory({
     required String code,
     required String name,
     required TsunamiWarningKind kind,

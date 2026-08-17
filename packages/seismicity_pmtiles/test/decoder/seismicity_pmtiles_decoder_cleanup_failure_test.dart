@@ -160,7 +160,7 @@ void main() {
 }
 
 final class _Task55Setup {
-  _Task55Setup({
+  new({
     required this.archive,
     required this.handle,
     required this.factory,

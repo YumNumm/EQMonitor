@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HomeMapLayerHeroIllustration extends HookWidget {
-  const HomeMapLayerHeroIllustration({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
 }
 
 class _LayerLabelChip extends StatelessWidget {
-  const _LayerLabelChip({required this.label, required this.backgroundColor});
+  const new({required this.label, required this.backgroundColor});
 
   final String label;
   final Color backgroundColor;
@@ -107,7 +107,7 @@ class _LayerLabelChip extends StatelessWidget {
 }
 
 class _HomeMapLayerHeroPainter extends CustomPainter {
-  const _HomeMapLayerHeroPainter({
+  const new({
     required this.progress,
     required this.baseColor,
     required this.layerColor,

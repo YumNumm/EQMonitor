@@ -5,7 +5,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityDecoderWorkerPendingDecode {
-  SeismicityDecoderWorkerPendingDecode({
+  new({
     required this.requestId,
     required this.completion,
   });

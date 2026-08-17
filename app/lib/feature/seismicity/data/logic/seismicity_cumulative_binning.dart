@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 /// 最初のイベント発生日から最後のイベント発生日まで、イベントが
 /// 存在しない日も 0 件として補完した連続系列を返す。
 class SeismicityCumulativeBinning {
-  const SeismicityCumulativeBinning();
+  const new();
 
   List<SeismicityDailyBin> bin(List<SeismicityEvent> events) {
     if (events.isEmpty) {

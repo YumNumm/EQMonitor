@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.da
 import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayFullscreen extends StatelessWidget {
-  const EewWarningOverlayFullscreen({
+  const new({
     required this.displayModel,
     required this.onMinimize,
     required this.onClose,
@@ -145,7 +145,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
 }
 
 class _EewWarningHeadline extends StatelessWidget {
-  const _EewWarningHeadline({required this.displayModel});
+  const new({required this.displayModel});
 
   final EewWarningOverlayDisplayModel displayModel;
 
@@ -171,7 +171,7 @@ class _EewWarningHeadline extends StatelessWidget {
 }
 
 class _EewWarningLocalIntensity extends StatelessWidget {
-  const _EewWarningLocalIntensity({
+  const new({
     required this.displayModel,
     required this.arrivalText,
     required this.intensityText,
@@ -229,7 +229,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
 }
 
 class _EewWarningDetails extends StatelessWidget {
-  const _EewWarningDetails({
+  const new({
     required this.displayModel,
     required this.magnitudeText,
     required this.depthText,
@@ -277,7 +277,7 @@ class _EewWarningDetails extends StatelessWidget {
 }
 
 class _EewWarningDetailRow extends StatelessWidget {
-  const _EewWarningDetailRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

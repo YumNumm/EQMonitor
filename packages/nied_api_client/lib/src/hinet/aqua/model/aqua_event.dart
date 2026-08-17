@@ -14,7 +14,7 @@ part 'aqua_event.g.dart';
 @freezed
 abstract class AquaEvent with _$AquaEvent {
   /// AQUA解析イベントを作成
-  const factory AquaEvent({
+  const factory({
     /// イベントID (yyyyMMddHHmmss形式)
     ///
     /// 地震発生日時を表す14桁の数字
@@ -82,6 +82,6 @@ abstract class AquaEvent with _$AquaEvent {
   }) = _AquaEvent;
 
   /// JSONからデシリアライズ
-  factory AquaEvent.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$AquaEventFromJson(json);
 }

@@ -7,11 +7,11 @@ part 'status_colors.g.dart';
 
 @freezed
 abstract class StatusColors with _$StatusColors {
-  const factory StatusColors({
+  const factory({
     @ColorJsonConverter() required Color success,
     @ColorJsonConverter() required Color warning,
   }) = _StatusColors;
 
-  factory StatusColors.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$StatusColorsFromJson(json);
 }

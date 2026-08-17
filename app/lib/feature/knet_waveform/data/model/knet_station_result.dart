@@ -4,7 +4,7 @@ import 'package:knet_waveform_parser/knet_waveform_parser.dart';
 
 /// 1観測点の CSV パース結果 + 計測震度
 class KnetStationResult {
-  const KnetStationResult({
+  const new({
     required this.filename,
     required this.record,
     required this.rawInt,

@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// カスタム設定から他プリセットへ切り替える前の確認ダイアログの表示を担う。
 class CustomPresetResetConfirmDialogAction {
-  const CustomPresetResetConfirmDialogAction();
+  const new();
 
   /// 承諾したら true を返す。ダイアログを閉じずに離脱した場合は
   /// 変更なし（キャンセル相当）として false を返す。

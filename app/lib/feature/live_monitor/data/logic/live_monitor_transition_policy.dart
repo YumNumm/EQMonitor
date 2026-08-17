@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_display_s
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 
 final class LiveMonitorTransitionDecision {
-  const LiveMonitorTransitionDecision({
+  const new({
     required this.next,
     required this.deadline,
     required this.closeControlPanel,
@@ -14,7 +14,7 @@ final class LiveMonitorTransitionDecision {
 }
 
 final class LiveMonitorTransitionPolicy {
-  const LiveMonitorTransitionPolicy();
+  const new();
 
   LiveMonitorTransitionDecision resolve({
     required LiveMonitorDisplayState current,

@@ -9,7 +9,7 @@ enum NotificationSlotType { currentLocation, nationwide, region }
 
 @freezed
 abstract class NotificationSlot with _$NotificationSlot {
-  const factory NotificationSlot({
+  const factory({
     required String id,
     required NotificationSlotType slotType,
     required int? regionId,

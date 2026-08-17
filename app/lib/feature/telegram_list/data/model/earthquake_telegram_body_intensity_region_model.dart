@@ -8,7 +8,7 @@ part 'earthquake_telegram_body_intensity_region_model.freezed.dart';
 @freezed
 abstract class EarthquakeTelegramBodyIntensityRegionModel
     with _$EarthquakeTelegramBodyIntensityRegionModel {
-  const factory EarthquakeTelegramBodyIntensityRegionModel({
+  const factory({
     required String code,
     required String name,
     JmaIntensity? intensity,

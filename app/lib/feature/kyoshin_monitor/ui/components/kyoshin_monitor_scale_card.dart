@@ -8,7 +8,7 @@ import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 /// 強震モニタの設定状況を考慮したスケールカード
 class KyoshinMonitorScaleCard extends ConsumerWidget {
-  const KyoshinMonitorScaleCard({this.onTap, super.key});
+  const new({this.onTap, super.key});
 
   final void Function()? onTap;
 

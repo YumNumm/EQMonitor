@@ -7,7 +7,7 @@ part 'tsunami_station_observation.freezed.dart';
 
 @freezed
 abstract class TsunamiStationObservation with _$TsunamiStationObservation {
-  const factory TsunamiStationObservation({
+  const factory({
     required String? sensor,
     required TsunamiObservationFirstHeight firstHeight,
     required TsunamiObservationMaxHeight? maxHeight,

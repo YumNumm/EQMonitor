@@ -10,7 +10,7 @@ typedef SeismicityMvtPoint = ({
 });
 
 final class SeismicityMvtPointDecoder {
-  const SeismicityMvtPointDecoder();
+  const new();
 
   SeismicityMvtPoint decode({
     required List<int> geometry,

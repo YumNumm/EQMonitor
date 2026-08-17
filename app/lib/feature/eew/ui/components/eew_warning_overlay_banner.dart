@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.da
 import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayBanner extends StatelessWidget {
-  const EewWarningOverlayBanner({
+  const new({
     required this.displayModel,
     required this.onExpand,
     required this.onClose,

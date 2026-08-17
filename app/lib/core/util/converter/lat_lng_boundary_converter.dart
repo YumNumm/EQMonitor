@@ -3,7 +3,7 @@ import 'package:lat_lng/lat_lng.dart';
 
 class LatLngBoundaryJsonConverter
     extends JsonConverter<LatLngBoundary, Map<String, dynamic>> {
-  const LatLngBoundaryJsonConverter();
+  const new();
 
   @override
   LatLngBoundary fromJson(Map<String, dynamic> json) => LatLngBoundary.fromTwo(
@@ -19,7 +19,7 @@ class LatLngBoundaryJsonConverter
 }
 
 class LatLngJsonConverter extends JsonConverter<LatLng, Map<String, dynamic>> {
-  const LatLngJsonConverter();
+  const new();
 
   @override
   LatLng fromJson(Map<String, dynamic> json) => LatLng.fromJson(json);

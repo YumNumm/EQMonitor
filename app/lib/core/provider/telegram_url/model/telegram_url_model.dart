@@ -5,11 +5,11 @@ part 'telegram_url_model.g.dart';
 
 @freezed
 abstract class TelegramUrlModel with _$TelegramUrlModel {
-  const factory TelegramUrlModel({
+  const factory({
     required String restApiUrl,
     required String wsApiUrl,
   }) = _TelegramUrlModel;
 
-  factory TelegramUrlModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$TelegramUrlModelFromJson(json);
 }

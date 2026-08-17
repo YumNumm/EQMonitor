@@ -19,7 +19,7 @@ typedef SeismicityDecodedHypocenterProperties = ({
 });
 
 final class SeismicityMvtPropertyDecoder {
-  const SeismicityMvtPropertyDecoder();
+  const new();
 
   SeismicityDecodedHypocenterProperties decode({
     required List<int> tags,

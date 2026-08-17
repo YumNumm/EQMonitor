@@ -5,14 +5,14 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 final class BaseMapRenderTile {
-  const BaseMapRenderTile({required this.tileId, required this.geometry});
+  const new({required this.tileId, required this.geometry});
 
   final UnwrappedTileId tileId;
   final BaseMapTileGeometry geometry;
 }
 
 final class BaseMapRenderTileResolver {
-  const BaseMapRenderTileResolver();
+  const new();
 
   List<BaseMapRenderTile> resolve({
     required List<OverscaledTileId> requestedCover,

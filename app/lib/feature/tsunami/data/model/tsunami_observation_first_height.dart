@@ -8,7 +8,7 @@ part 'tsunami_observation_first_height.freezed.dart';
 @freezed
 abstract class TsunamiObservationFirstHeight
     with _$TsunamiObservationFirstHeight {
-  const factory TsunamiObservationFirstHeight({
+  const factory({
     required DateTime? arrivalTime,
     required WaveInitial? initial,
     required bool? isUnidentifiable,

@@ -1,6 +1,6 @@
 /// デバッグ編集画面でリスト項目を追加する際に、重複しない識別子を採番する。
 class EarthquakeVxseDebugDraftIdentityGenerator {
-  const EarthquakeVxseDebugDraftIdentityGenerator();
+  const new();
 
   String nextCode({required String prefix, required Set<String> usedCodes}) {
     var suffix = 1;

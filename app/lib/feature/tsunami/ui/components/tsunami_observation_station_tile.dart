@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiObservationStationTile extends StatelessWidget {
-  const TsunamiObservationStationTile({required this.station, super.key});
+  const new({required this.station, super.key});
 
   final TsunamiRegionStation station;
 

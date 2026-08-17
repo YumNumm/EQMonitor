@@ -13,7 +13,7 @@ final eewForecastRegionIntensityFilterUpdaterProvider =
 
 /// EEW震度予報区域レイヤーの震度別 fill layer を管理する。
 class EewForecastRegionIntensityFilterUpdater {
-  const EewForecastRegionIntensityFilterUpdater();
+  const new();
 
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 

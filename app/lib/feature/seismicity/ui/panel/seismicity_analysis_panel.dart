@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// 矩形選択で得られたイベント一覧の分析パネル(3タブ)。
 class SeismicityAnalysisPanel extends StatelessWidget {
-  const SeismicityAnalysisPanel({required this.events, super.key});
+  const new({required this.events, super.key});
 
   final List<SeismicityEvent> events;
 

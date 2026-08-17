@@ -11,7 +11,7 @@ part 'error_dialog.g.dart';
 ErrorDialogAction errorDialogAction(Ref ref) => const ErrorDialogAction();
 
 class ErrorDialogAction {
-  const ErrorDialogAction();
+  const new();
 
   Future<void> show(
     BuildContext context, {
@@ -28,7 +28,7 @@ class ErrorDialogAction {
 }
 
 class _ErrorDialogBody extends ConsumerWidget {
-  const _ErrorDialogBody({
+  const new({
     required this.error,
     required this.title,
     required this.stackTrace,

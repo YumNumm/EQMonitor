@@ -6,7 +6,7 @@ part 'seismicity_pmtiles_chunk.freezed.dart';
 
 @Freezed(equal: false)
 abstract class SeismicityPmTilesChunk with _$SeismicityPmTilesChunk {
-  const factory SeismicityPmTilesChunk({
+  const factory({
     required Uint8List hypocenterIds,
     required Float64List latitudes,
     required Float64List longitudes,

@@ -22,7 +22,7 @@ final class _StubDetectedEvents extends LiveMonitorDetectedEventNotifier {
 }
 
 final class _MutableSettings extends LiveMonitorSettingsNotifier {
-  _MutableSettings(this.initial);
+  new(this.initial);
 
   final LiveMonitorSettings initial;
 
@@ -33,7 +33,7 @@ final class _MutableSettings extends LiveMonitorSettingsNotifier {
 }
 
 final class _MutableAppClock extends AppClock {
-  _MutableAppClock(this.current);
+  new(this.current);
 
   DateTime current;
 
@@ -45,7 +45,7 @@ final class _MutableAppClock extends AppClock {
 }
 
 final class _CoordinatorFixture {
-  _CoordinatorFixture({
+  new({
     required this.container,
     required this.detectedEvents,
     required this.settings,

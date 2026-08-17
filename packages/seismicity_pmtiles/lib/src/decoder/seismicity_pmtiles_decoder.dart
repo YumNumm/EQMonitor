@@ -5,7 +5,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_pmtiles_decoder_runner
 
 /// Public decoder facade. Always uses the real isolate worker factory.
 final class SeismicityPmTilesDecoder {
-  SeismicityPmTilesDecoder()
+  new()
     : _runner = SeismicityPmTilesDecoderRunner(
         factory: IsolateSeismicityDecoderWorkerFactory(),
       );

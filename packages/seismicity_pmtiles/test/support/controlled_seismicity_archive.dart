@@ -8,7 +8,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 /// Test-only [SeismicityPmTilesArchive] with deterministic pause/release/close.
 final class ControlledSeismicityArchive implements SeismicityPmTilesArchive {
-  ControlledSeismicityArchive({
+  new({
     required this.descriptor,
     required List<int> occupiedTileIds,
     required Map<int, Uint8List> tileBytes,

@@ -7,7 +7,7 @@ part 'earthquake_parameter.freezed.dart';
 
 @freezed
 abstract class EarthquakeParameter with _$EarthquakeParameter {
-  const factory EarthquakeParameter({
+  const factory({
     required ParameterMetadata metadata,
     required List<EarthquakeParameterPrefectureItem> prefectures,
   }) = _EarthquakeParameter;
@@ -16,7 +16,7 @@ abstract class EarthquakeParameter with _$EarthquakeParameter {
 @freezed
 abstract class EarthquakeParameterPrefectureItem
     with _$EarthquakeParameterPrefectureItem {
-  const factory EarthquakeParameterPrefectureItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required List<EarthquakeParameterRegionItem> regions,
@@ -26,7 +26,7 @@ abstract class EarthquakeParameterPrefectureItem
 @freezed
 abstract class EarthquakeParameterRegionItem
     with _$EarthquakeParameterRegionItem {
-  const factory EarthquakeParameterRegionItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required String? kana,
@@ -36,7 +36,7 @@ abstract class EarthquakeParameterRegionItem
 
 @freezed
 abstract class EarthquakeParameterCityItem with _$EarthquakeParameterCityItem {
-  const factory EarthquakeParameterCityItem({
+  const factory({
     required String code,
     required LocalizedName name,
     required String? kana,
@@ -47,7 +47,7 @@ abstract class EarthquakeParameterCityItem with _$EarthquakeParameterCityItem {
 @freezed
 abstract class EarthquakeParameterStationItem
     with _$EarthquakeParameterStationItem {
-  const factory EarthquakeParameterStationItem({
+  const factory({
     required String code,
     required String noCode,
     required LocalizedName name,

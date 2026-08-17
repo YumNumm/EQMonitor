@@ -12,7 +12,7 @@ enum DebugEewPreset {
   onePoint('1点検知（低精度）'),
   canceled('取消報');
 
-  const DebugEewPreset(this.label);
+  new(this.label);
 
   final String label;
 }
@@ -25,7 +25,7 @@ enum DebugShakePreset {
   strong('強い揺れ (Strong)'),
   stronger('非常に強い揺れ (Stronger)');
 
-  const DebugShakePreset(this.label);
+  new(this.label);
 
   final String label;
 }

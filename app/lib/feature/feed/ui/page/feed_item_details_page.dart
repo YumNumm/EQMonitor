@@ -13,7 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// （id 指定で1件取得するAPIは存在しないため、解決できない場合は
 /// 見つからない旨を表示して一覧へ誘導する）
 class FeedItemDetailsPage extends ConsumerWidget {
-  const FeedItemDetailsPage({required this.id, this.item, super.key});
+  const new({required this.id, this.item, super.key});
 
   final String id;
   final FeedItem? item;
@@ -43,7 +43,7 @@ class FeedItemDetailsPage extends ConsumerWidget {
 }
 
 class _FeedItemNotFound extends StatelessWidget {
-  const _FeedItemNotFound();
+  const new();
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'live_monitor_session_notifier.g.dart';
 
 final class LiveMonitorSessionLease {
-  LiveMonitorSessionLease._();
+  new _();
 }
 
 @Riverpod(keepAlive: true)

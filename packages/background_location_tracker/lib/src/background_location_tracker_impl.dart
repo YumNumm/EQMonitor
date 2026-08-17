@@ -6,7 +6,7 @@ import 'package:background_location_tracker/src/callback_dispatcher.dart';
 import 'package:flutter/services.dart';
 
 class BackgroundLocationTracker {
-  BackgroundLocationTracker._();
+  new _();
 
   static final _hostApi = BackgroundLocationHostApi();
   static const _persistenceChannel = MethodChannel(

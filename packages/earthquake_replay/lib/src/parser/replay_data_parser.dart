@@ -82,7 +82,7 @@ class ReplayDataParser {
 }
 
 class ReplayFile {
-  const ReplayFile({required this.header, required this.data});
+  const new({required this.header, required this.data});
 
   final ReplayFileHeader header;
   final List<ReplayData> data;

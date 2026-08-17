@@ -28,6 +28,6 @@ void main() {
   });
 }
 
-final class _FakeBuildContext extends Fake implements BuildContext {}
+final class _FakeBuildContext extends Fake implements BuildContext;
 
-final class _FakeGoRouterState extends Fake implements GoRouterState {}
+final class _FakeGoRouterState extends Fake implements GoRouterState;

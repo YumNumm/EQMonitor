@@ -18,7 +18,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'api_dio_factory.g.dart';
 
 final class ApiDioFactory {
-  const ApiDioFactory({
+  const new({
     required this.baseUrl,
     required this.headers,
     required this.baseInterceptors,

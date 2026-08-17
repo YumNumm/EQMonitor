@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 class MapJmaIntensityUint8ListJsonConverter
     implements
         JsonConverter<Map<JmaIntensity, Uint8List>, Map<String, dynamic>> {
-  const MapJmaIntensityUint8ListJsonConverter();
+  const new();
 
   @override
   Map<JmaIntensity, Uint8List> fromJson(Map<String, dynamic> json) =>
@@ -28,7 +28,7 @@ class MapJmaIntensityUint8ListJsonConverter
 class MapJmaLpgmIntensityUint8ListJsonConverter
     implements
         JsonConverter<Map<JmaLpgmIntensity, Uint8List>, Map<String, dynamic>> {
-  const MapJmaLpgmIntensityUint8ListJsonConverter();
+  const new();
 
   @override
   Map<JmaLpgmIntensity, Uint8List> fromJson(Map<String, dynamic> json) =>

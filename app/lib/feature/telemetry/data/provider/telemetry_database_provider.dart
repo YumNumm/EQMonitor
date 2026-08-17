@@ -32,7 +32,7 @@ String telemetryDbPath(Ref ref) {
 }
 
 class TelemetryDbPathResolver {
-  const TelemetryDbPathResolver._();
+  const new _();
 
   static Future<String> resolve() async {
     if (Platform.isIOS) {

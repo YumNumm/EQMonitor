@@ -138,7 +138,9 @@ class _TestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [DesignSystemThemeExtension.light()],
+      extensions: <ThemeExtension<dynamic>>[
+        DesignSystemThemeExtension.light(),
+      ],
     );
 
     return ProviderScope(

@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// URL 部分をタップ可能なリンクとして表示するテキスト
 class LinkifiedText extends StatelessWidget {
-  const LinkifiedText({
+  const new({
     required this.text,
     this.style,
     this.linkStyle,

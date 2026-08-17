@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_simulation_notifier.g.dart';
 
 class EewSimulationState {
-  const EewSimulationState({
+  const new({
     required this.reports,
     required this.currentIndex,
     required this.isPlaying,

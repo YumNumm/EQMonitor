@@ -24,7 +24,7 @@ NotificationPresetApplier notificationPresetApplier(Ref ref) =>
     NotificationPresetApplier(ref);
 
 class NotificationPresetApplier {
-  NotificationPresetApplier(this._ref);
+  new(this._ref);
 
   final Ref _ref;
 

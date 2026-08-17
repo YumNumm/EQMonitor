@@ -20,7 +20,7 @@ Future<SubscriptionRepository> subscriptionRepository(Ref ref) async {
 }
 
 class SubscriptionRepository {
-  const SubscriptionRepository({required String monthlyProductId})
+  const new({required String monthlyProductId})
     : _monthlyProductId = monthlyProductId;
 
   final String _monthlyProductId;

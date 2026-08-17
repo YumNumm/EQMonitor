@@ -5,7 +5,7 @@ enum JmaWeatherWarningState {
   issued(1, '発表'),
   cancelled(2, '解除');
 
-  const JmaWeatherWarningState(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

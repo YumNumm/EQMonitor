@@ -104,7 +104,7 @@ void main() {
 }
 
 final class _FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
-  _FakeVibrationGateway({
+  new({
     required this.hasVibratorResult,
     this.hasCustomVibrationsSupportResult = false,
     this.error,

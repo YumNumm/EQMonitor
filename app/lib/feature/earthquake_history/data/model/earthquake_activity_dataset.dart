@@ -5,7 +5,7 @@ part 'earthquake_activity_dataset.freezed.dart';
 
 @freezed
 abstract class EarthquakeActivityDataset with _$EarthquakeActivityDataset {
-  const factory EarthquakeActivityDataset({
+  const factory({
     required List<EarthquakePartialNormal> items,
     required DateTime fetchedAt,
   }) = _EarthquakeActivityDataset;

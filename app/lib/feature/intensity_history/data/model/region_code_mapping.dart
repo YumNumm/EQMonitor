@@ -15,7 +15,7 @@ import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_par
 
 /// 都道府県コード・市区町村コード・細分区域コードの相互変換ロジックを集約する。
 class RegionCodeMapping {
-  const RegionCodeMapping._();
+  const new _();
 
   /// 市区町村コードから所属都道府県コードを返す。
   ///

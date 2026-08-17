@@ -6,9 +6,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityChunkTransfer {
-  SeismicityChunkTransfer._(this._columns);
+  new _(this._columns);
 
-  factory SeismicityChunkTransfer.fromChunk({
+  factory fromChunk({
     required SeismicityPmTilesChunk chunk,
   }) => SeismicityChunkTransfer._([
     for (final column in <TypedData>[

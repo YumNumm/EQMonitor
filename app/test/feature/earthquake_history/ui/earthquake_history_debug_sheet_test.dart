@@ -499,7 +499,7 @@ final _baseEarthquake = Earthquake(
 );
 
 final class _ReadyDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _ReadyDetailsNotifier(this.base);
+  new(this.base);
 
   final Earthquake base;
 
@@ -519,7 +519,7 @@ final class _ErrorDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
 }
 
 final class _MutableDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _MutableDetailsNotifier(this.base);
+  new(this.base);
 
   final Earthquake base;
   Completer<Earthquake>? _refresh;
@@ -596,7 +596,7 @@ final class _FakeMapLibreMapState extends MapLibreMapState {
 }
 
 final class _ProductionFixture {
-  const _ProductionFixture({
+  const new({
     required this.container,
     required this.repository,
     required this.realtimeController,
@@ -651,7 +651,7 @@ _ProductionFixture _productionFixture() {
 }
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -660,7 +660,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _SpyRepository extends EarthquakeHistoryRepository {
-  _SpyRepository({required this.initial, required this.cacheClient})
+  new({required this.initial, required this.cacheClient})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

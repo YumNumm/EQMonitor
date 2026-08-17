@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// バナーが `SizedBox.shrink()` を返したときに、親側の `Column` の
 /// `spacing` だと余白だけが残ってしまうため。
 class AppBanner extends StatelessWidget {
-  const AppBanner({
+  const new({
     required this.icon,
     required this.title,
     required this.backgroundColor,

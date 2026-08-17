@@ -5,7 +5,7 @@ part 'registered_device.freezed.dart';
 
 @freezed
 abstract class RegisteredDevice with _$RegisteredDevice {
-  const factory RegisteredDevice({
+  const factory({
     required String id,
     required DevicePlatform platform,
     required String? userId,

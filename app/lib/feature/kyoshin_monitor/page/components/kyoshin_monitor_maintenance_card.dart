@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 class KyoshinMonitorMaintenanceCardnceCard extends ConsumerWidget {
-  const KyoshinMonitorMaintenanceCardnceCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

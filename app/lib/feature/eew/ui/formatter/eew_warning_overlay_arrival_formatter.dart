@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
 
 class EewWarningOverlayArrivalFormatter {
-  const EewWarningOverlayArrivalFormatter();
+  const new();
 
   String? format({
     required EewWarningArrivalState state,

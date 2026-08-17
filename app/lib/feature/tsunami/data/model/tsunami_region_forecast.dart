@@ -8,7 +8,7 @@ part 'tsunami_region_forecast.freezed.dart';
 /// 津波予報区単位の予報のドメインモデル
 @freezed
 abstract class TsunamiRegionForecast with _$TsunamiRegionForecast {
-  const factory TsunamiRegionForecast({
+  const factory({
     TsunamiForecastFirstHeight? firstHeight,
     TsunamiForecastMaxHeight? maxHeight,
   }) = _TsunamiRegionForecast;

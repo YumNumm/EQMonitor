@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `debugProvider` を固定するスタブ。
 class _StubDebug extends Debug {
-  _StubDebug({required this.isEnabled});
+  new({required this.isEnabled});
 
   final bool isEnabled;
 
@@ -18,7 +18,7 @@ class _StubDebug extends Debug {
 
 /// `homeEewEstimationDebugProvider` を固定するスタブ。
 class _StubHomeEewEstimationDebug extends HomeEewEstimationDebug {
-  _StubHomeEewEstimationDebug({required this.isEnabled});
+  new({required this.isEnabled});
 
   final bool isEnabled;
 

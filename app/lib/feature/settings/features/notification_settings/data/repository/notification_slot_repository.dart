@@ -25,7 +25,7 @@ Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
 /// [enabled] が false/未指定のときは [minIntensity] をそのまま返す
 /// (無効スロットの震度指定は意味を持たないため補完しない)。
 class NotificationSlotMinIntensityResolver {
-  const NotificationSlotMinIntensityResolver();
+  const new();
 
   JmaIntensity? resolve({
     required bool? enabled,
@@ -39,7 +39,7 @@ class NotificationSlotMinIntensityResolver {
 }
 
 class NotificationSlotRepository {
-  NotificationSlotRepository(this._api);
+  new(this._api);
 
   final api.ApiClient _api;
 

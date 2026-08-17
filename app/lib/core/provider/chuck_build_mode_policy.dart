@@ -1,5 +1,5 @@
 class ChuckBuildModePolicy {
-  const ChuckBuildModePolicy({required bool isDebugMode})
+  const new({required bool isDebugMode})
     : captureTraffic = true,
       showInspector = true,
       showNotification = isDebugMode;

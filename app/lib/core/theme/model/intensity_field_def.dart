@@ -9,13 +9,13 @@ enum IntensityFieldGroup {
     description: '緊急地震速報の予想震度の表示色。観測値が確定する前に、地図上の推計震度の塗りつぶしに使用されます。',
   );
 
-  const IntensityFieldGroup({required this.description});
+  new({required this.description});
 
   final String description;
 }
 
 class IntensityFieldDef {
-  const IntensityFieldDef({
+  const new({
     required this.label,
     required this.group,
     required this.entryGetter,
@@ -37,7 +37,7 @@ class IntensityFieldDef {
 /// `IntensityColors`(11件)/`EstimatedIntensityColors`(6件)の
 /// 全エントリを網羅する。エディタUI(Task 5/6)は[all]を描画するだけで完結する。
 class IntensityFieldDefs {
-  const IntensityFieldDefs._();
+  const new _();
 
   static final List<IntensityFieldDef> all = [
     IntensityFieldDef(

@@ -199,7 +199,7 @@ final class _EmptyRealtimeEvents extends RealtimeEvents {
 
 final class _SpyEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  _SpyEarthquakeHistoryRepository()
+  new()
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

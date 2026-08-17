@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ProBadge extends StatelessWidget {
-  const ProBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ProBadge extends StatelessWidget {
 }
 
 class LockedSettingTile extends StatelessWidget {
-  const LockedSettingTile({
+  const new({
     required this.title,
     required this.subtitle,
     required this.locked,

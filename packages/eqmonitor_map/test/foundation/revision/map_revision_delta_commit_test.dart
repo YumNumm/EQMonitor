@@ -327,7 +327,7 @@ MapRevisionCandidate<_NestedState> _candidate({
 );
 
 final class _NestedStateOwner implements MapRevisionStateOwner<_NestedState> {
-  _NestedStateOwner({this.onOwn, this.failWhen, this.rewriteDigest});
+  new({this.onOwn, this.failWhen, this.rewriteDigest});
 
   final void Function()? onOwn;
   final bool Function()? failWhen;

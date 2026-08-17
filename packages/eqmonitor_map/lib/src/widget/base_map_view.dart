@@ -29,7 +29,7 @@ part 'base_map_view.freezed.dart';
 /// (Global Constraints「上限値は呼び出し側が渡す`limits`引数で明示する」)。
 @freezed
 abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
-  const factory MapBaseLayerLimits({
+  const factory({
     /// pan/pinch zoom gestureが許すcamera zoomの下限、および
     /// [TileCoverCalculator.cover]へそのまま渡すtile zoomの下限。
     ///
@@ -92,7 +92,7 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
 /// 後から[BaseMapView]が再構築されても(同じ[source]/[limits]である限り)
 /// 現在のcamera状態を保つ。
 class BaseMapView extends HookWidget {
-  const BaseMapView({
+  const new({
     required this.source,
     required this.initialCamera,
     required this.limits,
@@ -188,7 +188,7 @@ class BaseMapView extends HookWidget {
 }
 
 class _BaseMapViewError extends StatelessWidget {
-  const _BaseMapViewError({required this.error});
+  const new({required this.error});
 
   // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
   // ではない。
@@ -214,7 +214,7 @@ class _BaseMapViewError extends StatelessWidget {
 }
 
 class _BaseMapDebugHud extends StatelessWidget {
-  const _BaseMapDebugHud({required this.controller});
+  const new({required this.controller});
 
   // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
   // ではない。
@@ -249,7 +249,7 @@ class _BaseMapDebugHud extends StatelessWidget {
 /// gesture・decode・Scene node管理を持つ内部controller。[BaseMapView]の外へは
 /// 公開しない(brief要求)。
 class _BaseMapController extends ChangeNotifier {
-  _BaseMapController({
+  new({
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
@@ -632,7 +632,7 @@ class _BaseMapController extends ChangeNotifier {
 /// 持たせるため、
 /// Scene側のcameraが二重に変換をかけないようにする。
 class _IdentityCameraProjection implements scene.CameraProjection {
-  const _IdentityCameraProjection();
+  const new();
 
   @override
   scene_math.Matrix4 getProjectionMatrix(double aspectRatio) =>
@@ -652,7 +652,7 @@ class _IdentityCameraProjection implements scene.CameraProjection {
 /// (`_rebuildSceneNodes`は毎frame呼ばれ得るが、同じtileが要求され続ける限り
 /// ここでhitし続け、GPU再アップロードは起きない)。
 class _TileSceneMeshCache {
-  _TileSceneMeshCache({required this.maxEntries})
+  new({required this.maxEntries})
     : assert(maxEntries > 0, 'maxEntries must be positive');
 
   final int maxEntries;

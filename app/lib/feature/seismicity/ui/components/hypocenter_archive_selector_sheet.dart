@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HypocenterArchiveSelectorSheet extends HookWidget {
-  const HypocenterArchiveSelectorSheet({
+  const new({
     required this.archives,
     required this.selected,
     required this.onApply,

@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
-  const KyoshinMonitorStatusCard({this.onTap, super.key});
+  const new({this.onTap, super.key});
 
   final void Function()? onTap;
 

@@ -17,7 +17,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 class HomeMapLayerPage extends HookConsumerWidget {
-  const HomeMapLayerPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -169,7 +169,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
 enum _MapLayerSection { eew, shakeDetection, location, kyoshinMonitor, map }
 
 class _SettingsSection extends StatelessWidget {
-  const _SettingsSection({
+  const new({
     required this.icon,
     required this.title,
     required this.description,
@@ -291,7 +291,7 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingSwitchTile extends StatelessWidget {
-  const _SettingSwitchTile({
+  const new({
     required this.title,
     required this.subtitle,
     required this.value,
@@ -336,7 +336,7 @@ class _SettingSwitchTile extends StatelessWidget {
 }
 
 class _SettingDropdownField<T> extends StatelessWidget {
-  const _SettingDropdownField({
+  const new({
     required this.title,
     required this.subtitle,
     required this.value,
@@ -411,7 +411,7 @@ class _SettingDropdownField<T> extends StatelessWidget {
 }
 
 class _SettingSegmentedField<T> extends StatelessWidget {
-  const _SettingSegmentedField({
+  const new({
     required this.title,
     required this.subtitle,
     required this.segments,
@@ -463,7 +463,7 @@ class _SettingSegmentedField<T> extends StatelessWidget {
 }
 
 class _SettingActionTile extends StatelessWidget {
-  const _SettingActionTile({
+  const new({
     required this.title,
     required this.subtitle,
     required this.actionLabel,
@@ -522,7 +522,7 @@ class _SettingActionTile extends StatelessWidget {
 }
 
 class _EewFillModeTile extends ConsumerWidget {
-  const _EewFillModeTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -554,7 +554,7 @@ class _EewFillModeTile extends ConsumerWidget {
 }
 
 class _EewPsWaveTile extends ConsumerWidget {
-  const _EewPsWaveTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -579,7 +579,7 @@ class _EewPsWaveTile extends ConsumerWidget {
 }
 
 class _EewAnimationTile extends ConsumerWidget {
-  const _EewAnimationTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -613,7 +613,7 @@ class _EewAnimationTile extends ConsumerWidget {
 }
 
 class _EewAutoZoomTile extends ConsumerWidget {
-  const _EewAutoZoomTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -638,7 +638,7 @@ class _EewAutoZoomTile extends ConsumerWidget {
 }
 
 class _LocationPermissionTile extends HookConsumerWidget {
-  const _LocationPermissionTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -671,7 +671,7 @@ class _LocationPermissionTile extends HookConsumerWidget {
 }
 
 class _ShowLocationTile extends ConsumerWidget {
-  const _ShowLocationTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -709,7 +709,7 @@ class _ShowLocationTile extends ConsumerWidget {
 }
 
 class _KyoshinMonitorEnabledTile extends ConsumerWidget {
-  const _KyoshinMonitorEnabledTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -732,7 +732,7 @@ class _KyoshinMonitorEnabledTile extends ConsumerWidget {
 }
 
 class _KyoshinMonitorSourceTile extends ConsumerWidget {
-  const _KyoshinMonitorSourceTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -771,7 +771,7 @@ class _KyoshinMonitorSourceTile extends ConsumerWidget {
 }
 
 class _KyoshinMonitorAboutTile extends StatelessWidget {
-  const _KyoshinMonitorAboutTile();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -787,7 +787,7 @@ class _KyoshinMonitorAboutTile extends StatelessWidget {
 }
 
 class _KyoshinRealtimeDataTypeTile extends ConsumerWidget {
-  const _KyoshinRealtimeDataTypeTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -827,7 +827,7 @@ class _KyoshinRealtimeDataTypeTile extends ConsumerWidget {
 }
 
 class _KyoshinRealtimeLayerTile extends ConsumerWidget {
-  const _KyoshinRealtimeLayerTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -853,7 +853,7 @@ class _KyoshinRealtimeLayerTile extends ConsumerWidget {
 }
 
 class _KyoshinMarkerTypeTile extends ConsumerWidget {
-  const _KyoshinMarkerTypeTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -887,7 +887,7 @@ class _KyoshinMarkerTypeTile extends ConsumerWidget {
 }
 
 class _KyoshinShowScaleTile extends ConsumerWidget {
-  const _KyoshinShowScaleTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -909,7 +909,7 @@ class _KyoshinShowScaleTile extends ConsumerWidget {
 }
 
 class _KyoshinMinShindoTile extends ConsumerWidget {
-  const _KyoshinMinShindoTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1004,7 +1004,7 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
 }
 
 class _KyoshinMarkerSizeTile extends ConsumerWidget {
-  const _KyoshinMarkerSizeTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1039,7 +1039,7 @@ class _KyoshinMarkerSizeTile extends ConsumerWidget {
 }
 
 class _MapLockBearingTile extends ConsumerWidget {
-  const _MapLockBearingTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1064,7 +1064,7 @@ class _MapLockBearingTile extends ConsumerWidget {
 }
 
 class _MapMaxZoomTile extends ConsumerWidget {
-  const _MapMaxZoomTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1152,7 +1152,7 @@ class _MapMaxZoomTile extends ConsumerWidget {
 }
 
 class _MapDefaultBoundsTile extends ConsumerWidget {
-  const _MapDefaultBoundsTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1187,7 +1187,7 @@ class _MapDefaultBoundsTile extends ConsumerWidget {
 }
 
 class _MapCustomBoundsButton extends ConsumerWidget {
-  const _MapCustomBoundsButton();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1208,7 +1208,7 @@ class _MapCustomBoundsButton extends ConsumerWidget {
 }
 
 class _ShakeDetectionShowTile extends ConsumerWidget {
-  const _ShakeDetectionShowTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1235,7 +1235,7 @@ class _ShakeDetectionShowTile extends ConsumerWidget {
 }
 
 class _ShakeDetectionAnimationModeTile extends ConsumerWidget {
-  const _ShakeDetectionAnimationModeTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

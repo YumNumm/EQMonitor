@@ -118,7 +118,7 @@ final class _SyncBuildTracker {
 }
 
 final class _TrackedPushTokenSyncNotifier extends PushTokenSyncNotifier {
-  _TrackedPushTokenSyncNotifier(this.tracker);
+  new(this.tracker);
 
   final _SyncBuildTracker tracker;
 

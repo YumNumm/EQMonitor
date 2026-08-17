@@ -8,7 +8,7 @@ part 'earthquake_telegram_body_model.freezed.dart';
 /// EARTHQUAKE 型電文（VXSE51〜53, VXSE61, VXSE62）本文のドメインモデル
 @freezed
 abstract class EarthquakeTelegramBodyModel with _$EarthquakeTelegramBodyModel {
-  const factory EarthquakeTelegramBodyModel({
+  const factory({
     EarthquakeTelegramBodyQuakeModel? quake,
     List<EarthquakeTelegramBodyIntensityRegionModel>? intensityRegions,
     List<EarthquakeTelegramBodyIntensityRegionModel>? intensityPrefectures,

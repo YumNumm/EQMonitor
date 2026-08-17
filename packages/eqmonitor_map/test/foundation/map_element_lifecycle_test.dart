@@ -30,7 +30,7 @@ void main() {
 }
 
 final class MapElementLifecycleFake implements MapElement {
-  MapElementLifecycleFake({required MapNode node}) : identity = node.identity;
+  new({required MapNode node}) : identity = node.identity;
 
   final List<String> calls = [];
 

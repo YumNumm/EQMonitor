@@ -7,7 +7,7 @@ part 'tsunami_forecast_first_height.freezed.dart';
 
 @freezed
 abstract class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
-  const factory TsunamiForecastFirstHeight({
+  const factory({
     required DateTime? arrivalTime,
     required FirstHeightCondition? condition,
     required Revise? revise,

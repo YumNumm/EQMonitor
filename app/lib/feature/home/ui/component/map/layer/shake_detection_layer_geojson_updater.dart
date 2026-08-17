@@ -4,7 +4,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 揺れ検知レイヤーの GeoJSON ソースを差分更新する。
 class ShakeDetectionLayerGeoJsonUpdater {
-  const ShakeDetectionLayerGeoJsonUpdater();
+  const new();
 
   Future<void> updateIfChanged({
     required StyleController styleController,

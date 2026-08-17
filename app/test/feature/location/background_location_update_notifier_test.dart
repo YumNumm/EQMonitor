@@ -27,7 +27,7 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
 /// `notificationSlotsProvider` を固定スロットで差し替えるための fake。
 /// `updateCurrentLocationRegion` は実装をそのまま検証する。
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  _FakeNotificationSlotsNotifier(this._slots);
+  new(this._slots);
 
   final List<NotificationSlot> _slots;
 
@@ -69,7 +69,7 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
 /// `ShakeDetectionSettingsNotifier` が読む `apiClientProvider` を差し替える
 /// HTTP アダプタ。揺れ検知設定の GET / PUT とサブ地域マスター GET を模倣する。
 final class _FakeShakeApiAdapter implements HttpClientAdapter {
-  _FakeShakeApiAdapter({
+  new({
     this.shakeEntries = const [],
     this.availableSubRegions = const [],
   });

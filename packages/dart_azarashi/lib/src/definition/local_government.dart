@@ -5,7 +5,7 @@
 /// Note: This is a partial list. The full list contains thousands of entries.
 /// Unknown codes will return a fallback description.
 class JmaLocalGovernment {
-  const JmaLocalGovernment._();
+  const new _();
 
   /// Extracts local government name from a 23-bit code.
   ///

@@ -32,7 +32,7 @@ import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
 class HomeMapView extends ConsumerWidget {
-  const HomeMapView({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,7 +73,7 @@ class HomeMapView extends ConsumerWidget {
 }
 
 class _MapContent extends ConsumerWidget {
-  const _MapContent({required this.styleString});
+  const new({required this.styleString});
 
   final String styleString;
 
@@ -159,7 +159,7 @@ class _MapContent extends ConsumerWidget {
 /// この Widget 自体が unmount→remount されるため、破棄時に
 /// [HomeMapCameraState] が保持する [MapController] を確実にクリアできる。
 class _MapLibreMapHost extends HookConsumerWidget {
-  const _MapLibreMapHost({
+  const new({
     required this.mapOptions,
     required this.showLocation,
     required this.children,
@@ -215,7 +215,7 @@ class _MapLibreMapHost extends HookConsumerWidget {
 }
 
 class _MapHeader extends ConsumerWidget {
-  const _MapHeader();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

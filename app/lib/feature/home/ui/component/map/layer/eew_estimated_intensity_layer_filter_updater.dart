@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.da
 import 'package:maplibre/maplibre.dart';
 
 class EewEstimatedIntensityLayerFilterUpdater {
-  const EewEstimatedIntensityLayerFilterUpdater();
+  const new();
 
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 

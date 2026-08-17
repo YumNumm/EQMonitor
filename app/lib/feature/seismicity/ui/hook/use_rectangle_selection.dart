@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// 画面座標(Offset)のみを扱う。地理座標への変換は呼び出し側
 /// ([SeismicitySelectionOverlay])が [MapController.toLngLat] を用いて行う。
 class RectangleSelectionState {
-  const RectangleSelectionState({
+  const new({
     required this.dragStart,
     required this.dragCurrent,
     required this.startDrag,
@@ -35,7 +35,7 @@ class RectangleSelectionState {
 /// 定義しても Hook の登録順序は変わらない
 /// (`docs/knowledge/20260814_flutter_hooks_top_level_function_alternative.md`)。
 class RectangleSelectionHook {
-  const RectangleSelectionHook._();
+  const new _();
 
   static RectangleSelectionState use() {
     final dragStart = useState<Offset?>(null);

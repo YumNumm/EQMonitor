@@ -27,7 +27,7 @@ const List<JmaIntensity> _overrideIntensities = [
 const _maxOverrides = 12;
 
 class OverrideEditPage extends HookConsumerWidget {
-  const OverrideEditPage({
+  const new({
     required this.slotId,
     required this.slotType,
     required this.overrideType,
@@ -276,7 +276,7 @@ class OverrideEditPage extends HookConsumerWidget {
 }
 
 class _OverrideTile extends StatelessWidget {
-  const _OverrideTile({
+  const new({
     required this.entry,
     required this.onTap,
     required this.onDismissed,
@@ -346,7 +346,7 @@ class _OverrideTile extends StatelessWidget {
 }
 
 class _IntensityBadge extends StatelessWidget {
-  const _IntensityBadge({required this.intensity});
+  const new({required this.intensity});
 
   final JmaIntensity intensity;
 
@@ -374,7 +374,7 @@ class _IntensityBadge extends StatelessWidget {
 }
 
 class _OverrideFormDialog extends HookWidget {
-  const _OverrideFormDialog({
+  const new({
     required this.availableIntensities,
     required this.initialIntensity,
     this.initialSound = NotificationSound.defaultSound,

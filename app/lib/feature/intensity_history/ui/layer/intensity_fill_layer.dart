@@ -27,7 +27,7 @@ import 'package:maplibre/maplibre.dart';
 /// `useEffect` を分けると、依存の異なる effect が別々に再実行された際に
 /// 追加順が入れ替わり、Lv1 の塗りが Lv2 の塗り・ディムを覆ってしまう。
 class IntensityFillLayer extends HookConsumerWidget {
-  const IntensityFillLayer({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

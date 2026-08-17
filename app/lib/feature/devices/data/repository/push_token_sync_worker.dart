@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/devices/data/retry/interruptible_backoff.dart'
 typedef PushTokenUpsert = Future<void> Function(String token);
 
 final class PushTokenSyncWorker {
-  PushTokenSyncWorker({
+  new({
     required PushTokenUpsert upsert,
     required InterruptibleBackoff backoff,
     PushTokenBackoff policy = const PushTokenBackoff(),

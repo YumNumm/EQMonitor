@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 class FatalErrorScreen extends StatelessWidget {
-  const FatalErrorScreen({required this.error, super.key});
+  const new({required this.error, super.key});
 
   final Object? error;
 
@@ -62,7 +62,7 @@ class FatalErrorScreen extends StatelessWidget {
 /// キャプチャしないもの）へのトップレベル参照のみ受け付けるため、
 /// static method として定義する。
 class FatalErrorWidgetBuilder {
-  const FatalErrorWidgetBuilder._();
+  const new _();
 
   /// MaterialApp 祖先が無い状況でも安全に描画する。
   static Widget build(FlutterErrorDetails details) {

@@ -49,7 +49,7 @@ final _now = DateTime.utc(2026, 7, 27, 12);
 final _reportedAt = DateTime.utc(2026, 7, 27, 11, 59);
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -58,7 +58,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _MutableEews extends EewAliveTelegram {
-  _MutableEews(this.initial);
+  new(this.initial);
 
   final List<EewTelegramItem>? initial;
 
@@ -69,7 +69,7 @@ final class _MutableEews extends EewAliveTelegram {
 }
 
 final class _MutableShakeSnapshot extends ShakeDetectionAcceptedSnapshot {
-  _MutableShakeSnapshot(this.initial);
+  new(this.initial);
 
   final ShakeDetectionSnapshot? initial;
 
@@ -95,7 +95,7 @@ final class _FixedAppClock extends AppClock {
 }
 
 final class _PageStore {
-  _PageStore(this.page);
+  new(this.page);
 
   PaginatedResponse<EarthquakePartial> page;
   Completer<PaginatedResponse<EarthquakePartial>>? firstLoad;
@@ -130,7 +130,7 @@ final class _StaticSettings extends LiveMonitorSettingsNotifier {
 }
 
 final class _StubHistoryNotifier extends EarthquakeHistoryNotifier {
-  _StubHistoryNotifier(this.store);
+  new(this.store);
 
   final _PageStore store;
 
@@ -164,7 +164,7 @@ final class _DetailStore {
 }
 
 final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _StubDetailsNotifier(this.store);
+  new(this.store);
 
   final _DetailStore store;
 
@@ -173,7 +173,7 @@ final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
 }
 
 final class _DetectedEventFixture {
-  _DetectedEventFixture({
+  new({
     required this.container,
     required this.realtime,
     required this.eews,
@@ -207,7 +207,7 @@ final class _DetectedEventFixture {
 }
 
 final class _IntegratedCanonicalFixture {
-  _IntegratedCanonicalFixture({
+  new({
     required this.container,
     required this.realtime,
     required this.events,

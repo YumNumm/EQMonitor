@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// NTP の補正時刻を固定値で返すスタブ。
 /// `fixedNow` が null の場合は未同期（補正なし）を表す。
 class _StubNtp extends Ntp {
-  _StubNtp(this._fixedNow);
+  new(this._fixedNow);
 
   final DateTime? _fixedNow;
 

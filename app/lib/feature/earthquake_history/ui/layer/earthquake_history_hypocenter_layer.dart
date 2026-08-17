@@ -19,7 +19,7 @@ import 'package:maplibre/maplibre.dart';
 /// [displayMode] に応じて不透明度を制御する。
 /// [HypocenterDisplayMode.belowStations] の z 順制御は呼び出し側で行う。
 class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
-  const EarthquakeHistoryHypocenterLayer({
+  const new({
     required this.earthquake,
     this.displayMode = HypocenterDisplayMode.zoomFade,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
@@ -149,7 +149,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
 }
 
 class EarthquakeHistoryHypocenterGeoJsonBuilder {
-  const EarthquakeHistoryHypocenterGeoJsonBuilder();
+  const new();
 
   String build({required Coordinate? coordinates}) => jsonEncode({
     'type': 'FeatureCollection',
@@ -168,7 +168,7 @@ class EarthquakeHistoryHypocenterGeoJsonBuilder {
 }
 
 class EarthquakeHistoryHypocenterLayerBuilder {
-  const EarthquakeHistoryHypocenterLayerBuilder();
+  const new();
 
   static const sourceId = 'earthquake-history-hypocenter';
   static const layerId = 'earthquake-history-hypocenter-symbol';

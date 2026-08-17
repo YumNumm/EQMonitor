@@ -11,7 +11,7 @@ import 'seismicity_mvt_fixture_builder.dart';
 import 'seismicity_pmtiles_archive_writer.dart';
 
 final class SeismicityArchiveFixture {
-  const SeismicityArchiveFixture({
+  const new({
     required this.bytes,
     required this.descriptor,
     required this.occupiedTileIds,
@@ -32,7 +32,7 @@ final class SeismicityArchiveFixture {
 
 /// Test-only gzip PMTiles fixture composition over Task 57 writer.
 final class SeismicityArchiveFixtureBuilder {
-  SeismicityArchiveFixtureBuilder({
+  new({
     this.archiveWriter = const SeismicityPmTilesArchiveWriter(),
     SeismicityMvtFixtureBuilder? mvtBuilder,
     this.tileId = const PmTilesV3TileId(),

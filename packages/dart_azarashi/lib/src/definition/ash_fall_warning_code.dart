@@ -8,7 +8,7 @@ enum JmaAshFallWarningCode {
   smallLapilliFall(4, '小さな噴石の落下'),
   other(7, 'その他の防災気象情報要素2');
 
-  const JmaAshFallWarningCode(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

@@ -4,7 +4,7 @@ part 'earthquake_activity_query.freezed.dart';
 
 @freezed
 abstract class EarthquakeActivityQuery with _$EarthquakeActivityQuery {
-  const factory EarthquakeActivityQuery({
+  const factory({
     required String baseEventId,
     required DateTime baseOriginTime,
     required double latitude,
@@ -16,7 +16,7 @@ abstract class EarthquakeActivityQuery with _$EarthquakeActivityQuery {
     required int? depthOffsetKm,
   }) = _EarthquakeActivityQuery;
 
-  const EarthquakeActivityQuery._();
+  const new _();
 
   DateTime get start => baseOriginTime.subtract(Duration(days: beforeDays));
 

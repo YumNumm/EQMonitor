@@ -8,7 +8,7 @@ enum MapFrameRevisionScope { source, layer }
 
 @Freezed(copyWith: false)
 sealed class MapFrameRevisionStamp with _$MapFrameRevisionStamp {
-  const factory MapFrameRevisionStamp._({
+  const factory _({
     required MapFrameRevisionScope scope,
     required MapSourceInstanceId sourceInstanceId,
     required int revision,

@@ -9,7 +9,7 @@ import 'dart:typed_data';
 /// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
 /// 「Fill頂点生成」節)。
 final class FillMesh {
-  const FillMesh({
+  const new({
     required this.positions,
     required this.indices,
     required this.vertexCount,

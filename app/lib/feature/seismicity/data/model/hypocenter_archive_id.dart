@@ -5,7 +5,7 @@ part 'hypocenter_archive_id.freezed.dart';
 
 @freezed
 abstract class HypocenterArchiveId with _$HypocenterArchiveId {
-  const factory HypocenterArchiveId({
+  const factory({
     required HypocenterArchivePartition partition,
     required String jstLabel,
   }) = _HypocenterArchiveId;

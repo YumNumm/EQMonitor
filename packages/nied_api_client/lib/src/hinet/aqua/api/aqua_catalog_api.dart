@@ -12,7 +12,7 @@ part 'aqua_catalog_api.g.dart';
 @RestApi(baseUrl: 'https://www.hinet.bosai.go.jp')
 abstract class AquaCatalogApi {
   /// ファクトリコンストラクタ
-  factory AquaCatalogApi(Dio dio, {String baseUrl}) = _AquaCatalogApi;
+  factory(Dio dio, {String baseUrl}) = _AquaCatalogApi;
 
   /// カタログHTMLを取得
   ///

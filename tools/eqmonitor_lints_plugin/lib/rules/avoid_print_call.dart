@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidPrintCall extends AnalysisRule {
-  AvoidPrintCall() : super(name: _code.name, description: _code.problemMessage);
+  new() : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_print',
@@ -36,7 +36,7 @@ class AvoidPrintCall extends AnalysisRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

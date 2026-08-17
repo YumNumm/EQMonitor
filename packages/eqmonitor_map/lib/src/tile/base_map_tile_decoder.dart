@@ -32,7 +32,7 @@ enum BaseMapLayerKind { background, fill, line }
 /// (地図としては同じpolygon地物を塗りと境界線の両方で描く)。
 @immutable
 class BaseMapLayerSpec {
-  const BaseMapLayerSpec({
+  const new({
     required this.styleLayerId,
     required this.kind,
     required this.color,
@@ -124,7 +124,7 @@ const baseMapLayerSpecs = <BaseMapLayerSpec>[
 /// `MvtTile`/`FillMesh`/`LineMesh`と同じ理由でFreezedにはしない。
 @immutable
 sealed class BaseMapTileLayerGeometry {
-  const BaseMapTileLayerGeometry({
+  const new({
     required this.styleLayerId,
     required this.extent,
   });
@@ -138,7 +138,7 @@ sealed class BaseMapTileLayerGeometry {
 }
 
 final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
-  const BaseMapTileFillLayerGeometry({
+  const new({
     required super.styleLayerId,
     required super.extent,
     required this.meshes,
@@ -148,7 +148,7 @@ final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
 }
 
 final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
-  const BaseMapTileLineLayerGeometry({
+  const new({
     required super.styleLayerId,
     required super.extent,
     required this.meshes,
@@ -159,7 +159,7 @@ final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
 
 @immutable
 class BaseMapTileGeometry {
-  const BaseMapTileGeometry({required this.layers});
+  const new({required this.layers});
 
   /// [baseMapLayerSpecs]から[BaseMapLayerKind.background]を除いた行と
   /// 同じ順序・同じ件数。
@@ -170,7 +170,7 @@ class BaseMapTileGeometry {
 /// decoder内部に固定fallbackは置かない(`MvtDecodeLimits`と同じ運用方針)。
 @freezed
 abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
-  const factory BaseMapTileDecodeLimits({
+  const factory({
     required MvtDecodeLimits mvtLimits,
     required FillMeshBuilderLimits fillLimits,
     required LineMeshBuilderLimits lineLimits,
@@ -204,7 +204,7 @@ abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
 /// コピー時間よりゾーンコピー自体の分岐・APIの複雑さの方が上回る。
 /// 根拠なく重い機構を入れない(Global Constraints)ため採用しない。
 final class BaseMapTileDecoder {
-  const BaseMapTileDecoder();
+  const new();
 
   Future<BaseMapTileGeometry> decode({
     required Uint8List tileBytes,

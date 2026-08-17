@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EewTable extends StatelessWidget {
-  const EewTable({
+  const new({
     required this.eews,
     this.selectedIndex,
     this.onSelect,
@@ -115,7 +115,7 @@ enum _EewTableColumn {
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
   accuracy(name: '精度', isNumeric: false);
 
-  const _EewTableColumn({
+  new({
     required this.name,
     required this.isNumeric,
     this.tooltip,
@@ -216,7 +216,7 @@ extension _EewTableColumnEx on _EewTableColumn {
 }
 
 class _EewTableColumnValue {
-  const _EewTableColumnValue({required this.value, required this.isNumeric});
+  const new({required this.value, required this.isNumeric});
 
   final String value;
   final bool isNumeric;

@@ -97,7 +97,7 @@ const earthquakeVxseDebugSampleLpgmRegion = LpgmIntensityRegion(
 );
 
 class EarthquakeVxseDebugDraftFactory {
-  const EarthquakeVxseDebugDraftFactory();
+  const new();
 
   EarthquakeVxseDebugDraft create({
     required Earthquake current,

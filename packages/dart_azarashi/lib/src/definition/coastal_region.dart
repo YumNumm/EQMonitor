@@ -69,7 +69,7 @@ enum JmaCoastalRegion {
   unknown(99, 'Unknown'),
   otherRegion(100, 'Other region');
 
-  const JmaCoastalRegion(this.code, this.nameEn);
+  new(this.code, this.nameEn);
 
   final int code;
   final String nameEn;

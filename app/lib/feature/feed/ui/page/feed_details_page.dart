@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedDetailsPage extends ConsumerWidget {
-  const FeedDetailsPage({required this.telegramHash, super.key});
+  const new({required this.telegramHash, super.key});
 
   final String telegramHash;
 
@@ -45,7 +45,7 @@ class FeedDetailsPage extends ConsumerWidget {
 }
 
 class FeedDetailsBody extends StatelessWidget {
-  const FeedDetailsBody({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final FeedDetail item;
 

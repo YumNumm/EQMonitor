@@ -7,7 +7,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidMixedDeclarationCategories extends AnalysisRule {
-  AvoidMixedDeclarationCategories()
+  new()
     : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
@@ -50,7 +50,7 @@ enum _Category {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

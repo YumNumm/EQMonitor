@@ -7,9 +7,9 @@ part 'telemetry_event.freezed.dart';
 
 @Freezed(toJson: false, fromJson: false)
 sealed class TelemetryEvent with _$TelemetryEvent {
-  const TelemetryEvent._();
+  const new _();
 
-  const factory TelemetryEvent.notificationReceived({
+  const factory notificationReceived({
     required NotificationFramework framework,
     required String channelId,
     String? title,
@@ -17,41 +17,41 @@ sealed class TelemetryEvent with _$TelemetryEvent {
     String? priority,
   }) = NotificationReceivedEvent;
 
-  const factory TelemetryEvent.notificationOpened({
+  const factory notificationOpened({
     required bool coldStart,
     String? eventId,
     int? elapsedMs,
   }) = NotificationOpenedEvent;
 
-  const factory TelemetryEvent.liveActivityStarted({
+  const factory liveActivityStarted({
     required LiveActivityType activityType,
     required String activityId,
   }) = LiveActivityStartedEvent;
 
-  const factory TelemetryEvent.liveActivityUpdated({
+  const factory liveActivityUpdated({
     required LiveActivityType activityType,
     required String activityId,
     String? eventId,
   }) = LiveActivityUpdatedEvent;
 
-  const factory TelemetryEvent.liveActivityEnded({
+  const factory liveActivityEnded({
     required LiveActivityType activityType,
     required String activityId,
     required LiveActivityEndReason endReason,
     int? durationMs,
   }) = LiveActivityEndedEvent;
 
-  const factory TelemetryEvent.error({
+  const factory error({
     required String errorType,
     required String message,
     String? stackTrace,
   }) = ErrorTelemetryEvent;
 
-  const factory TelemetryEvent.startupTiming({
+  const factory startupTiming({
     required Map<String, int> phasesMicros,
   }) = StartupTimingEvent;
 
-  const factory TelemetryEvent.appLaunch({
+  const factory appLaunch({
     required String launchType,
     required String appVersion,
     required int buildNumber,

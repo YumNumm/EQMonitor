@@ -52,7 +52,7 @@ void main() {
 }
 
 final class _Task63Case {
-  const _Task63Case({
+  const new({
     required this.name,
     required this.bytes,
     required this.descriptor,
@@ -66,7 +66,7 @@ final class _Task63Case {
 }
 
 final class _CountingReader implements PmTilesRandomAccessReader {
-  _CountingReader({required this.inner}) : closeCount = 0;
+  new({required this.inner}) : closeCount = 0;
 
   final PmTilesRandomAccessReader inner;
   Future<void>? _close;

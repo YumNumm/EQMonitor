@@ -41,7 +41,7 @@ enum KyoshinMonitorScaleGradientDirection {
 /// [textStyle] テキストのスタイル
 /// [gradientDirection] グラデーションの方向
 class KyoshinMonitorScale extends StatelessWidget {
-  const KyoshinMonitorScale({
+  const new({
     required this.type,
     required this.width,
     required this.height,
@@ -247,7 +247,7 @@ enum KyoshinMonitorScaleType {
 
 /// カラースケールの描画を行うCustomPainter
 class _KyoshinMonitorScalePainter extends CustomPainter {
-  const _KyoshinMonitorScalePainter({
+  const new({
     required this.type,
     required this.colorStops,
     required this.tickInterval,

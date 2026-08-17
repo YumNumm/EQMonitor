@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// F-netカタログページ
 class FnetCatalogPage extends HookConsumerWidget {
-  const FnetCatalogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,7 +94,7 @@ class FnetCatalogPage extends HookConsumerWidget {
 }
 
 class _FilterBar extends StatelessWidget {
-  const _FilterBar({
+  const new({
     required this.selectedYear,
     required this.selectedMonth,
     required this.onYearChanged,

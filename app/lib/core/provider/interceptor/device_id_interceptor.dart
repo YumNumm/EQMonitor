@@ -11,7 +11,7 @@ Future<DeviceIdInterceptor> deviceIdInterceptor(Ref ref) async {
 }
 
 class DeviceIdInterceptor extends Interceptor {
-  DeviceIdInterceptor({required this.deviceId});
+  new({required this.deviceId});
 
   final String deviceId;
 

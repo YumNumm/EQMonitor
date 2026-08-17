@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `shouldShowAdsProvider` の依存を上書きするためのスタブ群。
 class _StubEewAliveTelegram extends EewAliveTelegram {
-  _StubEewAliveTelegram(this._value);
+  new(this._value);
 
   final List<EewTelegramItem>? _value;
 
@@ -18,7 +18,7 @@ class _StubEewAliveTelegram extends EewAliveTelegram {
 }
 
 class _StubAdsOptOut extends AdsOptOutNotifier {
-  _StubAdsOptOut({required bool initial}) : _initial = initial;
+  new({required bool initial}) : _initial = initial;
 
   final bool _initial;
 

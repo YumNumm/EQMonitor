@@ -12,7 +12,7 @@ typedef EstimationMaxHeightTimeline = List<EstimationMaxHeightTimelineEntry>;
 @freezed
 abstract class EstimationFirstHeightTimelineEntry
     with _$EstimationFirstHeightTimelineEntry {
-  const factory EstimationFirstHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? arrivalTime,
     required bool? isAlreadyArrived,
@@ -30,7 +30,7 @@ abstract class EstimationFirstHeightTimelineEntry
 @freezed
 abstract class EstimationMaxHeightTimelineEntry
     with _$EstimationMaxHeightTimelineEntry {
-  const factory EstimationMaxHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? dateTime,
     required double? value,

@@ -6,13 +6,14 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/earthquake_telegram_tile.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> _pumpIntensityRegionList(
   WidgetTester tester, {
@@ -23,7 +24,9 @@ Future<void> _pumpIntensityRegionList(
   await tester.pumpWidget(
     MaterialApp(
       theme: ThemeData.light().copyWith(
-        extensions: [DesignSystemThemeExtension.light()],
+        extensions: <ThemeExtension<dynamic>>[
+          DesignSystemThemeExtension.light(),
+        ],
       ),
       home: Scaffold(
         body: IntensityRegionList(
@@ -114,7 +117,7 @@ void main() {
       hash: 'hash',
       createdAt: timestamp,
     );
-    const body = api.TelegramBodyUnionEarthquakeTelegramBody(
+    final body = const api.TelegramBodyUnionEarthquakeTelegramBody(
       type: 'EARTHQUAKE',
       intensityCities: [
         api.EarthquakeTelegramBodyIntensityRegion(
@@ -128,13 +131,15 @@ void main() {
           intensity: api.JmaIntensity.value4,
         ),
       ],
-    );
+    ).toEarthquakeTelegramBodyModel();
 
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
-            extensions: [DesignSystemThemeExtension.light()],
+            extensions: <ThemeExtension<dynamic>>[
+              DesignSystemThemeExtension.light(),
+            ],
           ),
           home: Scaffold(
             body: EarthquakeTelegramTile(

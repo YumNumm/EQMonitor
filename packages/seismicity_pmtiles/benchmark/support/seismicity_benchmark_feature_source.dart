@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 /// One transient deterministic benchmark hypocenter derived from a global
 /// index.
 final class SeismicityBenchmarkFeature {
-  const SeismicityBenchmarkFeature({
+  const new({
     required this.index,
     required this.hypocenterId,
     required this.hypocenterIdText,
@@ -44,7 +44,7 @@ final class SeismicityBenchmarkFeature {
 
 /// Stateless index → fixture feature derivation for decoder benchmarks.
 final class SeismicityBenchmarkFeatureSource {
-  const SeismicityBenchmarkFeatureSource();
+  const new();
 
   static const dataZoom = 6;
   static const extent = 4096;

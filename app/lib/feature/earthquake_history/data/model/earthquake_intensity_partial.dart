@@ -9,12 +9,12 @@ part 'earthquake_intensity_partial.g.dart';
 
 @freezed
 abstract class EarthquakeIntensityPartial with _$EarthquakeIntensityPartial {
-  const factory EarthquakeIntensityPartial({
+  const factory({
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) = _EarthquakeIntensityPartial;
 
-  factory EarthquakeIntensityPartial.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeIntensityPartialFromJson(json);
 }
 

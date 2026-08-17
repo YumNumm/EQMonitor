@@ -16,7 +16,7 @@ enum _StoreKind { shared, appGroup }
 typedef _Entry = ({String key, Object? value});
 
 class DebugSharedPreferencesPage extends HookConsumerWidget {
-  const DebugSharedPreferencesPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,7 +71,7 @@ class DebugSharedPreferencesPage extends HookConsumerWidget {
 }
 
 class _SharedView extends ConsumerWidget {
-  const _SharedView();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,7 +85,7 @@ class _SharedView extends ConsumerWidget {
 }
 
 class _AppGroupView extends ConsumerWidget {
-  const _AppGroupView();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -99,7 +99,7 @@ class _AppGroupView extends ConsumerWidget {
 }
 
 class _EntriesList extends ConsumerWidget {
-  const _EntriesList({
+  const new({
     required this.entries,
     required this.kind,
     required this.onRefresh,
@@ -165,7 +165,7 @@ class _EntriesList extends ConsumerWidget {
 /// SharedPreferences / AppGroup Preferences のエントリ値をデバッグ表示用の
 /// 文字列へ変換する。
 class _DebugPreferenceValueFormatter {
-  const _DebugPreferenceValueFormatter();
+  const new();
 
   String typeName(Object? value) => switch (value) {
     bool() => 'bool',
@@ -186,7 +186,7 @@ final _debugPreferencesEditorActionProvider = Provider(
 /// デバッグ画面から SharedPreferences / AppGroup Preferences の
 /// 読み書き・削除・編集ダイアログ表示を行う。
 class _DebugPreferencesEditorAction {
-  const _DebugPreferencesEditorAction();
+  const new();
 
   Future<void> remove(WidgetRef ref, _StoreKind kind, String key) async {
     switch (kind) {
@@ -308,7 +308,7 @@ class _DebugPreferencesEditorAction {
 }
 
 class _EditDialog extends HookConsumerWidget {
-  const _EditDialog({required this.kind, required this.entry});
+  const new({required this.kind, required this.entry});
 
   final _StoreKind kind;
   final _Entry entry;
@@ -334,7 +334,7 @@ class _EditDialog extends HookConsumerWidget {
 /// 選択された型のデフォルト値で渡ってくる。[keyName] は保存時に評価するため
 /// 関数で受け取る（新規追加ダイアログでキー入力が後から確定するため）。
 class _ValueEditor extends HookConsumerWidget {
-  const _ValueEditor({
+  const new({
     required this.kind,
     required this.keyName,
     required this.initialValue,
@@ -449,7 +449,7 @@ class _ValueEditor extends HookConsumerWidget {
 }
 
 class _SingleFieldEditor extends StatelessWidget {
-  const _SingleFieldEditor({
+  const new({
     required this.controller,
     required this.onSave,
     this.keyboardType,
@@ -480,7 +480,7 @@ class _SingleFieldEditor extends StatelessWidget {
 }
 
 class _StringListEditor extends HookWidget {
-  const _StringListEditor({required this.initial, required this.onSave});
+  const new({required this.initial, required this.onSave});
 
   final List<String> initial;
   final void Function(List<String>) onSave;
@@ -532,7 +532,7 @@ class _StringListEditor extends HookWidget {
 }
 
 class _SaveButton extends StatelessWidget {
-  const _SaveButton({required this.onPressed});
+  const new({required this.onPressed});
 
   final VoidCallback onPressed;
 
@@ -545,7 +545,7 @@ class _SaveButton extends StatelessWidget {
 enum _NewValueType { boolType, intType, doubleType, stringType, stringListType }
 
 class _AddDialog extends HookConsumerWidget {
-  const _AddDialog({required this.kind});
+  const new({required this.kind});
 
   final _StoreKind kind;
 

@@ -71,7 +71,7 @@ Future<void> appGroupSettingsWriter(Ref ref) async {
 
 /// App Group UserDefaults への書き込みロジック本体。
 class AppGroupSettingsWriter {
-  const AppGroupSettingsWriter._();
+  const new _();
 
   static Future<bool> write({
     required SharedPreferencesAsync prefs,

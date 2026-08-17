@@ -11,7 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsMapLayerModal({super.key});
+  const new({super.key});
 
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
     AppSheetRoute(
@@ -75,7 +75,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
 }
 
 class _LocationSettingCards extends ConsumerWidget {
-  const _LocationSettingCards();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -162,7 +162,7 @@ class _LocationSettingCards extends ConsumerWidget {
 }
 
 class _LocationCard extends StatelessWidget {
-  const _LocationCard({
+  const new({
     required this.title,
     required this.icon,
     required this.isSelected,

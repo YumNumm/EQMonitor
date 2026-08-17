@@ -7,7 +7,7 @@ enum QzssDcrPreamble {
   b(0x9A, 'B'), // 10011010
   c(0xC6, 'C'); // 11000110
 
-  const QzssDcrPreamble(this.code, this.symbol);
+  new(this.code, this.symbol);
 
   final int code;
   final String symbol;

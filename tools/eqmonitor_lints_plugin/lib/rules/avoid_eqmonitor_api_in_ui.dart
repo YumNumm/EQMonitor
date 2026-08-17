@@ -7,7 +7,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidEqmonitorApiInUi extends AnalysisRule {
-  AvoidEqmonitorApiInUi()
+  new()
     : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
@@ -43,7 +43,7 @@ class AvoidEqmonitorApiInUi extends AnalysisRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

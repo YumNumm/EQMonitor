@@ -7,7 +7,7 @@ enum JmaTyphoonScaleCategory {
   veryLarge(2, '超大型'),
   other(15, 'その他の大きさ階級分類');
 
-  const JmaTyphoonScaleCategory(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

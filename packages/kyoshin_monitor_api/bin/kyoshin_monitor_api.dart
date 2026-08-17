@@ -12,7 +12,7 @@ void main(List<String> args) async {
 }
 
 class DownloadCommand extends Command<void> {
-  DownloadCommand() {
+  new() {
     argParser
       ..addOption(
         'type',

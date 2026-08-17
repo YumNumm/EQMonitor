@@ -3,7 +3,7 @@ import 'package:eqmonitor_map/src/foundation/performance/map_performance_metric.
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_sample.dart';
 
 final class MapPerformanceEvent {
-  const MapPerformanceEvent._({
+  const new _({
     required this.frameSequence,
     required this.sample,
     required this.fixtureId,

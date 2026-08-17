@@ -24,7 +24,7 @@ abstract interface class SceneSpikeControllerAdapter
 }
 
 class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
-  factory FlutterSceneSpikeAdapter({
+  factory({
     required SpikeMeshFrame initialFrame,
   }) {
     final sceneGraph = scene.Scene();
@@ -48,7 +48,7 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
     );
   }
 
-  FlutterSceneSpikeAdapter._({
+  new _({
     required this.sceneGraph,
     required this._geometry,
     required this._unlitNode,
@@ -270,13 +270,13 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
 }
 
 class SceneSpikeMeshUpdateException implements Exception {
-  const SceneSpikeMeshUpdateException(this.detail);
+  const new(this.detail);
 
   final String detail;
 }
 
 class SceneSpikeMeshUpdateValidator {
-  const SceneSpikeMeshUpdateValidator._();
+  const new _();
 
   static void validate({
     required SpikeMeshFrame frame,

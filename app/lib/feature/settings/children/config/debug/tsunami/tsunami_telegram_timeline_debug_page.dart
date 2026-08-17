@@ -18,7 +18,7 @@ import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 /// [tsunamiId] に対応する [TsunamiTimeline] を取得し、
 /// 各地域・観測点・沖合観測局の追跡項目を 2 次元スクロールテーブルで表示する。
 class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
-  const TsunamiTelegramTimelineDebugPage({required this.tsunamiId, super.key});
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 
@@ -55,7 +55,7 @@ class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
 }
 
 class _TimelineBody extends StatelessWidget {
-  const _TimelineBody({required this.timeline});
+  const new({required this.timeline});
 
   final TsunamiTimeline timeline;
 
@@ -536,12 +536,12 @@ class _TimelineBody extends StatelessWidget {
 
 /// タイムラインの 1 行を表すスペック。
 sealed class _TimelineRowSpec {
-  const _TimelineRowSpec();
+  const new();
 }
 
 /// セクション見出し行（地域・観測点・沖合観測局）。
 class _SectionRowSpec extends _TimelineRowSpec {
-  const _SectionRowSpec(this.label, {this.indent = 0});
+  const new(this.label, {this.indent = 0});
 
   final String label;
   final double indent;
@@ -549,7 +549,7 @@ class _SectionRowSpec extends _TimelineRowSpec {
 
 /// 値を表示するデータ行。
 class _DataRowSpec extends _TimelineRowSpec {
-  const _DataRowSpec(this.label, this.cellBuilder, {this.indent = 0});
+  const new(this.label, this.cellBuilder, {this.indent = 0});
 
   final String label;
 

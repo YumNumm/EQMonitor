@@ -7,13 +7,13 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_entry.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
 
 sealed class PmTilesV3FixtureNode {
-  const PmTilesV3FixtureNode({required this.tileId});
+  const new({required this.tileId});
 
   final int tileId;
 }
 
 final class PmTilesV3FixtureTile extends PmTilesV3FixtureNode {
-  const PmTilesV3FixtureTile({
+  const new({
     required super.tileId,
     required this.bytes,
     this.runLength = 1,
@@ -26,7 +26,7 @@ final class PmTilesV3FixtureTile extends PmTilesV3FixtureNode {
 }
 
 final class PmTilesV3FixtureLeaf extends PmTilesV3FixtureNode {
-  const PmTilesV3FixtureLeaf({
+  const new({
     required super.tileId,
     required this.entries,
   });
@@ -35,13 +35,13 @@ final class PmTilesV3FixtureLeaf extends PmTilesV3FixtureNode {
 }
 
 final class PmTilesV3Fixture {
-  const PmTilesV3Fixture({required this.bytes});
+  const new({required this.bytes});
 
   final Uint8List bytes;
 }
 
 final class PmTilesV3FixtureBuilder {
-  const PmTilesV3FixtureBuilder();
+  const new();
 
   PmTilesV3Fixture build({
     required List<PmTilesV3FixtureNode> rootEntries,
@@ -86,7 +86,7 @@ final class PmTilesV3FixtureBuilder {
 }
 
 final class PmTilesV3FixtureAssembly {
-  PmTilesV3FixtureAssembly({
+  new({
     required this.internalCompression,
     required this.tileCompression,
     required this.clustered,

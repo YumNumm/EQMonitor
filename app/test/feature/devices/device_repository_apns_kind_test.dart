@@ -80,4 +80,4 @@ final class _ApnsKindAdapter implements HttpClientAdapter {
 }
 
 final class _FakeDeviceAuthRepository extends Fake
-    implements DeviceAuthRepository {}
+    implements DeviceAuthRepository;

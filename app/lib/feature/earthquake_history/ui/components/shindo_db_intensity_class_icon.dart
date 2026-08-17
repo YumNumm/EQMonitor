@@ -40,7 +40,7 @@ extension ShindoDbIntensityClassMapIconId on ShindoDbIntensityClass {
 /// 現行の JMA 震度と一致する階級は [JmaIntensityIcon] をそのまま利用し、
 /// 旧階級 (5/6) と歴史的階級はラベルテキスト入りの円を描画する。
 class ShindoDbIntensityClassMapIcon extends StatelessWidget {
-  const ShindoDbIntensityClassMapIcon({
+  const new({
     required this.intensityClass,
     this.size = 50,
     super.key,
@@ -101,7 +101,7 @@ class ShindoDbIntensityClassMapIcon extends StatelessWidget {
 }
 
 class ShindoDbIntensityClassIcon extends StatelessWidget {
-  const ShindoDbIntensityClassIcon({
+  const new({
     required this.intensityClass,
     this.size = 40,
     super.key,

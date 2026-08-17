@@ -252,7 +252,7 @@ void main() {
 }
 
 final class SequenceUtcWallSource implements MapUtcWallSource {
-  SequenceUtcWallSource({required List<DateTime> values, required this.calls})
+  new({required List<DateTime> values, required this.calls})
     : _values = List<DateTime>.of(values);
 
   final List<DateTime> _values;
@@ -270,7 +270,7 @@ final class SequenceUtcWallSource implements MapUtcWallSource {
 }
 
 final class SequenceMonotonicSource implements MapMonotonicSource {
-  SequenceMonotonicSource({
+  new({
     required this.domain,
     required this.sourceIdentity,
     required List<Duration> elapsedValues,
@@ -302,7 +302,7 @@ final class SequenceMonotonicSource implements MapMonotonicSource {
 }
 
 final class RecordingMapClockCaptureCreator {
-  RecordingMapClockCaptureCreator({required this.calls});
+  new({required this.calls});
 
   final List<String> calls;
   var _captureCount = 0;

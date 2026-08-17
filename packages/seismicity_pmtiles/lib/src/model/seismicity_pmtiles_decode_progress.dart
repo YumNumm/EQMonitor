@@ -5,7 +5,7 @@ part 'seismicity_pmtiles_decode_progress.freezed.dart';
 @freezed
 abstract class SeismicityPmTilesDecodeProgress
     with _$SeismicityPmTilesDecodeProgress {
-  const factory SeismicityPmTilesDecodeProgress({
+  const factory({
     required int decodedTileCount,
     required int rawFeatureCount,
     required int uniqueFeatureCount,

@@ -5,7 +5,7 @@ import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 
 class KyoshinMonitorWebApiDataSource {
-  KyoshinMonitorWebApiDataSource({required KyoshinMonitorWebApiClient client})
+  new({required KyoshinMonitorWebApiClient client})
     : _client = client;
 
   final KyoshinMonitorWebApiClient _client;
@@ -133,7 +133,7 @@ enum RealtimeDataType {
   /// Lpgm系列でのみ利用可
   abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true);
 
-  const RealtimeDataType(
+  new(
     this.displayName,
     this.urlString, {
     required this.isLpgm,
@@ -156,7 +156,7 @@ enum RealtimeLayer {
   /// 地下
   underground('地下', 'b');
 
-  const RealtimeLayer(this.displayName, this.urlString);
+  new(this.displayName, this.urlString);
 
   /// 表示名
   final String displayName;
@@ -169,7 +169,7 @@ enum BaseMapTheme {
   white('白', 'w'),
   gray('グレー', 'b');
 
-  const BaseMapTheme(this.displayName, this.urlString);
+  new(this.displayName, this.urlString);
 
   final String displayName;
   final String urlString;
