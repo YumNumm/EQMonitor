@@ -180,12 +180,18 @@ void main() {
       );
 
       expect(
-        adapter.lastRequestBody!['current_location_interruption_level'],
-        api.CurrentLocationInterruptionLevel.active,
+        adapter.lastRequestBody,
+        containsPair(
+          'current_location_interruption_level',
+          api.CurrentLocationInterruptionLevel.active,
+        ),
       );
       expect(
-        adapter.lastRequestBody!['nationwide_interruption_level'],
-        api.NationwideInterruptionLevel.timeSensitive,
+        adapter.lastRequestBody,
+        containsPair(
+          'nationwide_interruption_level',
+          api.NationwideInterruptionLevel.timeSensitive,
+        ),
       );
       expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
       expect(
