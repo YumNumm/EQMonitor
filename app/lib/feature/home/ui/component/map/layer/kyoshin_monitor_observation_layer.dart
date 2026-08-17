@@ -194,34 +194,28 @@ class KyoshinMonitorObservationLayerBuilder {
       id: KyoshinMonitorObservationLayer._layerId,
       sourceId: KyoshinMonitorObservationLayer._sourceId,
       paint: {
+        // MapLibre iOS はズーム依存の式 (interpolate + zoom) が式ツリーの
+        // 最上位にないと NSException を投げるため、係数は stop の出力値へ畳み込む
         'circle-radius': [
-          '*',
-          radiusScaleFactor,
-          [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3,
-            1,
-            10,
-            10,
-          ],
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          1 * radiusScaleFactor,
+          10,
+          10 * radiusScaleFactor,
         ],
         'circle-color': ['get', 'color'],
         'circle-stroke-color': '#808080',
         'circle-stroke-width': showMarkerBorder
             ? [
-                '*',
-                radiusScaleFactor,
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  0.2,
-                  10,
-                  1,
-                ],
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                3,
+                0.2 * radiusScaleFactor,
+                10,
+                1 * radiusScaleFactor,
               ]
             : 0,
       },
