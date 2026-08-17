@@ -14,29 +14,56 @@ class AndroidNotificationChannelInitializer {
   const AndroidNotificationChannelInitializer({required this.platform});
 
   factory AndroidNotificationChannelInitializer.forCurrentPlatform() {
-    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+    if (kIsWeb) {
       return const AndroidNotificationChannelInitializer(
         platform: NoopAndroidNotificationChannelPlatform(),
       );
     }
 
-    final plugin = FlutterLocalNotificationsPlugin()
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final targetPlatform = defaultTargetPlatform;
+    final androidPlugin = targetPlatform == TargetPlatform.android
+        ? FlutterLocalNotificationsPlugin()
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >()
+        : null;
+    return AndroidNotificationChannelInitializer.forPlatform(
+      targetPlatform: targetPlatform,
+      androidPlugin: androidPlugin,
+    );
+  }
+
+  factory AndroidNotificationChannelInitializer.forPlatform({
+    required TargetPlatform targetPlatform,
+    required AndroidFlutterLocalNotificationsPlugin? androidPlugin,
+  }) {
+    if (targetPlatform != TargetPlatform.android) {
+      return const AndroidNotificationChannelInitializer(
+        platform: NoopAndroidNotificationChannelPlatform(),
+      );
+    }
+    if (androidPlugin == null) {
+      throw StateError(
+        'AndroidFlutterLocalNotificationsPlugin is unavailable on Android',
+      );
+    }
     return AndroidNotificationChannelInitializer(
-      platform: switch (plugin) {
-        final AndroidFlutterLocalNotificationsPlugin plugin =>
-          AndroidFlutterLocalNotificationsChannelPlatform(plugin: plugin),
-        null => const NoopAndroidNotificationChannelPlatform(),
-      },
+      platform: AndroidFlutterLocalNotificationsChannelPlatform(
+        plugin: androidPlugin,
+      ),
     );
   }
 
   final AndroidNotificationChannelPlatform platform;
 
   Future<void> initialize() async {
+    final activeChannelIds = notificationChannels
+        .map((channel) => channel.id)
+        .toSet();
     for (final id in legacyNotificationChannelIds) {
+      if (activeChannelIds.contains(id)) {
+        continue;
+      }
       await platform.deleteChannel(id);
     }
     for (final group in notificationChannelGroups) {
