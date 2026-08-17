@@ -64,7 +64,7 @@ class EstimatedIntensityDataSource {
 
 /// 汎用の数学ユーティリティ。
 class MathUtil {
-  const MathUtil._();
+  const new _();
 
   static double log10(num x) => math.log(x) / math.ln10;
 }
