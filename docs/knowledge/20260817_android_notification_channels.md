@@ -2,9 +2,12 @@
 
 ## Channel が通知表示を決める
 
-Android 8.0（API 26）以降では、Channel作成後にアプリを更新しても、同じChannel IDの
-`importance` や `sound` を上書きできない。EQMonitorのAndroid `minSdk` は29のため、
-すべての対応端末でこの制約を前提にする。
+Android 8.0（API 26）以降では、作成済みの同じChannel IDへ再登録しても、`sound` などの
+通知behaviorや `importance` の引き上げは適用できず、ユーザーが変更した設定が優先される。
+一方、ユーザーがChannel設定を変更していない場合は、既存値より低い `importance` への
+引き下げが適用されることがある。registryの変更を安全なno-opとみなさず、通知の到達性や
+緊急性など生命安全への影響を評価する。EQMonitorのAndroid `minSdk` は29のため、すべての
+対応端末でこの制約を前提にする。
 
 - FCMの `android.priority` は端末までの配送priorityであり、Channelのimportanceとは別物。
 - Android 8.0以降では、per-messageのsoundやnotification priorityより、端末に作成済みの
