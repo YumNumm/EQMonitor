@@ -5,6 +5,7 @@
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/widget/base_map_view.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -96,6 +97,118 @@ void main() {
       );
 
       expect(result.zoom, 1);
+    });
+
+    // ピンチの基準点。zoom は焦点(2本指の中間点)の下にある地点を固定した
+    // まま変わらなければならない。焦点を渡さないと camera は中心と zoom
+    // でしか定義されないため、必然的に画面中央基準の zoom になる。
+    group('focal point anchoring', () {
+      const viewport = Size(400, 800);
+      const center = Offset(200, 400);
+
+      /// [focalPoint] の下にある world 上の地点を正規化座標で返す。
+      /// zoom に依存しないので、gesture の前後で比較できる。
+      ({double x, double y}) anchorUnder(MapCamera c, Offset focalPoint) {
+        const projection = MapMercatorProjection();
+        final worldSize = projection.worldSizeForZoom(c.zoom);
+        final worldCenter = c.worldCenter();
+        final fromCenter = focalPoint - center;
+        return (
+          x: (worldCenter.x + fromCenter.dx) / worldSize,
+          y: (worldCenter.y + fromCenter.dy) / worldSize,
+        );
+      }
+
+      test('an off-center pinch keeps the point under the fingers fixed', () {
+        const focalPoint = Offset(320, 200); // 中央から右上へ大きく外れた位置
+        final before = anchorUnder(camera, focalPoint);
+
+        final result = cameraAfterGestureUpdate(
+          camera: camera,
+          gestureStartZoom: camera.zoom,
+          cumulativeScale: 2, // 1段ズームイン
+          focalPointDelta: Offset.zero,
+          focalPoint: focalPoint,
+          viewportLogicalSize: viewport,
+          minZoom: 0,
+          maxZoom: 10,
+        );
+
+        final after = anchorUnder(result, focalPoint);
+        expect(result.zoom, closeTo(camera.zoom + 1, 1e-9));
+        expect(after.x, closeTo(before.x, 1e-9));
+        expect(after.y, closeTo(before.y, 1e-9));
+      });
+
+      test('a pinch centred on screen still zooms about the center', () {
+        final result = cameraAfterGestureUpdate(
+          camera: camera,
+          gestureStartZoom: camera.zoom,
+          cumulativeScale: 2,
+          focalPointDelta: Offset.zero,
+          focalPoint: center,
+          viewportLogicalSize: viewport,
+          minZoom: 0,
+          maxZoom: 10,
+        );
+
+        expect(result.centerLongitude, closeTo(camera.centerLongitude, 1e-9));
+        expect(result.centerLatitude, closeTo(camera.centerLatitude, 1e-9));
+      });
+
+      test('the anchor holds when the zoom clamps at maxZoom', () {
+        const focalPoint = Offset(320, 200);
+        final result = cameraAfterGestureUpdate(
+          camera: camera,
+          gestureStartZoom: camera.zoom,
+          cumulativeScale: 100,
+          focalPointDelta: Offset.zero,
+          focalPoint: focalPoint,
+          viewportLogicalSize: viewport,
+          minZoom: 0,
+          maxZoom: 7,
+        );
+
+        // clamp 後の zoom でも焦点が固定される。clamp 前の zoom で
+        // アンカーを計算すると、上限に張り付いた指の下が滑る。
+        expect(result.zoom, 7);
+        expect(
+          anchorUnder(result, focalPoint).x,
+          closeTo(anchorUnder(camera, focalPoint).x, 1e-9),
+        );
+      });
+
+      test('pan and focal-anchored zoom compose in one update', () {
+        const focalPoint = Offset(320, 200);
+        const delta = Offset(10, -20);
+
+        final panned = cameraAfterGestureUpdate(
+          camera: camera,
+          gestureStartZoom: camera.zoom,
+          cumulativeScale: 1,
+          focalPointDelta: delta,
+          focalPoint: focalPoint,
+          viewportLogicalSize: viewport,
+          minZoom: 0,
+          maxZoom: 10,
+        );
+        // pan だけを適用した状態の焦点下の地点が、zoom 後も保たれる。
+        final expected = anchorUnder(panned, focalPoint);
+
+        final result = cameraAfterGestureUpdate(
+          camera: camera,
+          gestureStartZoom: camera.zoom,
+          cumulativeScale: 2,
+          focalPointDelta: delta,
+          focalPoint: focalPoint,
+          viewportLogicalSize: viewport,
+          minZoom: 0,
+          maxZoom: 10,
+        );
+
+        expect(anchorUnder(result, focalPoint).x, closeTo(expected.x, 1e-9));
+        expect(anchorUnder(result, focalPoint).y, closeTo(expected.y, 1e-9));
+      });
     });
   });
 

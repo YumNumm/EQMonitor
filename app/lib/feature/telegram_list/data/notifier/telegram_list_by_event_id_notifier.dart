@@ -39,8 +39,10 @@ class TelegramListByEventId extends _$TelegramListByEventId {
         if (comparedByReportAt != 0) {
           return comparedByReportAt;
         }
-        if (a.serialNo != null && b.serialNo != null) {
-          return b.serialNo!.compareTo(a.serialNo!);
+        final aSerialNo = a.serialNo;
+        final bSerialNo = b.serialNo;
+        if (aSerialNo != null && bSerialNo != null) {
+          return bSerialNo.compareTo(aSerialNo);
         }
         return 0;
       }),

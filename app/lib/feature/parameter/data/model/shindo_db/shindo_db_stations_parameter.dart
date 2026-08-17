@@ -29,11 +29,11 @@ abstract class ShindoDbStationItem with _$ShindoDbStationItem {
 
   factory ShindoDbStationItem.fromJson(Map<String, dynamic> json) =>
       ShindoDbStationItem(
-        code: json['code']! as String,
-        name: json['name']! as String,
+        code: json['code'] as String,
+        name: json['name'] as String,
         location: LatLng(
-          (json['latitude']! as num).toDouble(),
-          (json['longitude']! as num).toDouble(),
+          (json['latitude'] as num).toDouble(),
+          (json['longitude'] as num).toDouble(),
         ),
         cityCode: json['city_code'] as String?,
       );

@@ -1,14 +1,45 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
+
+import '../support/network_range_test_support.dart';
+
+SeismicityPmTilesArchiveDescriptor descriptorFor({
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return SeismicityPmTilesArchiveDescriptor(
+    source: source,
+    schemaVersion: 1,
+    dataZoom: 8,
+    expectedSizeBytes: sizeBytes,
+    expectedFeatureCount: 1,
+    archiveRevision: 'fixture-v1',
+    periodFrom: DateTime.utc(2025),
+    periodTo: DateTime.utc(2026),
+  );
+}
+
+Future<SeismicityPmTilesResult<PmTilesRandomAccessReader>> createFor({
+  required SeismicityRandomAccessReaderFactory factory,
+  required SeismicityPmTilesSource source,
+  required int sizeBytes,
+}) {
+  return factory.create(
+    descriptor: descriptorFor(source: source, sizeBytes: sizeBytes),
+    cancelToken: CancelToken(),
+  );
+}
 
 void main() {
   late Directory tempDirectory;
   late File archiveFile;
   late int assetLoadCount;
+  late NetworkRangeTestAdapter adapter;
   late SeismicityRandomAccessReaderFactory factory;
 
   setUp(() async {
@@ -18,19 +49,24 @@ void main() {
     archiveFile = File('${tempDirectory.path}/archive.pmtiles');
     await archiveFile.writeAsBytes([1, 2, 3, 4]);
     assetLoadCount = 0;
+    adapter = NetworkRangeTestAdapter();
     factory = SeismicityRandomAccessReaderFactory(
       assetLoader: ({required assetKey}) async {
         assetLoadCount++;
         return Uint8List.fromList([5, 6, 7, 8]);
       },
+      dio: Dio()..httpClientAdapter = adapter,
+      networkMaxCacheBytes: 8,
     );
   });
 
   tearDown(() => tempDirectory.delete(recursive: true));
 
   test('routes file sources to the file reader', () async {
-    final result = await factory.create(
+    final result = await createFor(
+      factory: factory,
       source: SeismicityPmTilesSource.file(path: archiveFile.path),
+      sizeBytes: 4,
     );
 
     switch (result) {
@@ -42,11 +78,14 @@ void main() {
         fail('Expected file reader, got $exception');
     }
     expect(assetLoadCount, 0);
+    expect(adapter.requests, isEmpty);
   });
 
   test('routes asset sources through the injected loader once', () async {
-    final result = await factory.create(
+    final result = await createFor(
+      factory: factory,
       source: const SeismicityPmTilesSource.asset(assetKey: 'archive.pmtiles'),
+      sizeBytes: 4,
     );
 
     switch (result) {
@@ -59,38 +98,110 @@ void main() {
         fail('Expected asset reader, got $exception');
     }
     expect(assetLoadCount, 1);
+    expect(adapter.requests, isEmpty);
   });
 
-  test('returns unsupportedSource for network without fallback', () async {
+  test('routes valid Network source to the random access reader', () async {
+    adapter.enqueueResponse(
+      statusCode: 206,
+      body: const [1, 2],
+      etag: '"v1"',
+      contentRange: 'bytes 0-1/16',
+    );
     final source = SeismicityPmTilesSource.network(
       archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
     );
 
-    final result = await factory.create(source: source);
-
-    expect(
-      result,
-      SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
-        exception: SeismicityPmTilesException.unsupportedSource(source: source),
-      ),
+    final result = await createFor(
+      factory: factory,
+      source: source,
+      sizeBytes: 16,
     );
+
+    switch (result) {
+      case SeismicityPmTilesSuccess(:final value):
+        addTearDown(value.close);
+        expect(value.sizeBytes, 16);
+        expect(
+          await value.readAt(offset: 0, length: 2),
+          orderedEquals(<int>[1, 2]),
+        );
+      case SeismicityPmTilesFailure(:final exception):
+        fail('Expected Network reader, got $exception');
+    }
     expect(assetLoadCount, 0);
+    expect(adapter.requests, hasLength(1));
+    final request = adapter.requests.single;
+    expect(request.method, 'GET');
+    expect(request.headers['Range'], 'bytes=0-1');
+    expect(request.headers.containsKey('If-Match'), isFalse);
   });
+
+  for (final fixture in <({int sizeBytes, int cacheBytes, String reason})>[
+    (
+      sizeBytes: 0,
+      cacheBytes: 8,
+      reason: 'Network expectedSizeBytes must be positive.',
+    ),
+    (
+      sizeBytes: 16,
+      cacheBytes: 0,
+      reason: 'networkMaxCacheBytes must be positive.',
+    ),
+  ]) {
+    test('rejects invalid Network input ${fixture.reason}', () async {
+      final invalidFactory = SeismicityRandomAccessReaderFactory(
+        assetLoader: ({required assetKey}) async => Uint8List(0),
+        dio: Dio()..httpClientAdapter = adapter,
+        networkMaxCacheBytes: fixture.cacheBytes,
+      );
+
+      final result = await createFor(
+        factory: invalidFactory,
+        source: SeismicityPmTilesSource.network(
+          archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+        ),
+        sizeBytes: fixture.sizeBytes,
+      );
+
+      expect(
+        result,
+        SeismicityPmTilesResult<PmTilesRandomAccessReader>.failure(
+          exception: SeismicityPmTilesException.invalidDescriptor(
+            reason: fixture.reason,
+          ),
+        ),
+      );
+      expect(adapter.requests, isEmpty);
+    });
+  }
 
   test('returns typed failure when a selected file cannot be opened', () async {
     final source = SeismicityPmTilesSource.file(
       path: '${tempDirectory.path}/missing.pmtiles',
     );
 
-    final result = await factory.create(source: source);
+    final result = await createFor(
+      factory: factory,
+      source: source,
+      sizeBytes: 4,
+    );
 
     switch (result) {
       case SeismicityPmTilesSuccess():
         fail('Expected source read failure');
       case SeismicityPmTilesFailure(:final exception):
-        expect(exception, isA<SeismicityPmTilesSourceReadFailedException>());
+        expect(
+          exception,
+          isA<SeismicityPmTilesSourceReadFailedException>().having(
+            (failure) => failure.source,
+            'source',
+            source,
+          ),
+        );
     }
     expect(assetLoadCount, 0);
+    expect(adapter.requests, isEmpty);
   });
 
   test('returns typed failure when the asset loader throws an Error', () async {
@@ -100,9 +211,15 @@ void main() {
     final errorFactory = SeismicityRandomAccessReaderFactory(
       assetLoader: ({required assetKey}) =>
           Future<Uint8List>.error(StateError('asset unavailable')),
+      dio: Dio()..httpClientAdapter = adapter,
+      networkMaxCacheBytes: 8,
     );
 
-    final result = await errorFactory.create(source: source);
+    final result = await createFor(
+      factory: errorFactory,
+      source: source,
+      sizeBytes: 4,
+    );
 
     switch (result) {
       case SeismicityPmTilesSuccess():
@@ -119,5 +236,53 @@ void main() {
               ),
         );
     }
+    expect(adapter.requests, isEmpty);
+  });
+
+  test('unsafe Network 200 never falls back to Asset', () async {
+    var networkAssetLoadCount = 0;
+    final networkAdapter = NetworkRangeTestAdapter()
+      ..enqueueResponse(
+        statusCode: 200,
+        body: const [0, 1],
+        etag: '"v1"',
+      );
+    final networkFactory = SeismicityRandomAccessReaderFactory(
+      assetLoader: ({required assetKey}) async {
+        networkAssetLoadCount++;
+        return Uint8List(0);
+      },
+      dio: Dio()..httpClientAdapter = networkAdapter,
+      networkMaxCacheBytes: 8,
+    );
+    final result = await networkFactory.create(
+      descriptor: descriptorFor(
+        source: SeismicityPmTilesSource.network(
+          archiveUri: Uri.parse('https://example.com/archive.pmtiles'),
+        ),
+        sizeBytes: 16,
+      ),
+      cancelToken: CancelToken(),
+    );
+    final reader = switch (result) {
+      SeismicityPmTilesSuccess(:final value) => value,
+      SeismicityPmTilesFailure(:final exception) => throw exception,
+    };
+    addTearDown(reader.close);
+
+    await expectLater(
+      reader.readAt(offset: 0, length: 2),
+      throwsA(
+        isA<SeismicityPmTilesInvalidNetworkResponseException>()
+            .having((failure) => failure.statusCode, 'statusCode', 200)
+            .having(
+              (failure) => failure.reason,
+              'reason',
+              'Expected HTTP 206 Partial Content.',
+            ),
+      ),
+    );
+    expect(networkAssetLoadCount, 0);
+    expect(networkAdapter.requests, hasLength(1));
   });
 }

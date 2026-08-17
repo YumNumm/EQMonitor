@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -189,7 +189,7 @@ final class _TestModels {
               id: 'current',
               subRegionId: null,
               subRegionName: null,
-              minLevel: api.ShakeDetectionLevel.medium,
+              minLevel: ShakeDetectionLevel.medium,
               isCurrentLocation: true,
             ),
         ],

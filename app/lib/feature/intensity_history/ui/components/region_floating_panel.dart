@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_hist
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 地域別最大震度マップの上部フローティングパネル。
@@ -128,7 +128,7 @@ class _CityPanel extends ConsumerWidget {
           child: InkWell(
             onTap: () async {
               if (selectedCity != null) {
-                await showCityDetailModal(
+                await AreaDetailModalAction().showCity(
                   context,
                   cityCode: selectedCity.code,
                   cityName: selectedCity.name,
@@ -137,7 +137,7 @@ class _CityPanel extends ConsumerWidget {
                 );
                 return;
               }
-              await showPrefectureDetailModal(
+              await AreaDetailModalAction().showPrefecture(
                 context,
                 prefectureCode: prefectureCode,
                 prefectureName: prefectureName,
@@ -157,35 +157,43 @@ class _CityPanel extends ConsumerWidget {
                     ),
                     const SizedBox(width: 10),
                   ],
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (selectedCity != null)
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (selectedCity != null)
+                          Text(
+                            prefectureName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: context
+                                  .designSystem
+                                  .colorTheme
+                                  .onSurfaceVariant,
+                            ),
+                          ),
                         Text(
-                          prefectureName,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: context
-                                .designSystem
-                                .colorTheme
-                                .onSurfaceVariant,
+                          displayName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      Text(
-                        displayName,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (entry != null)
-                        Text(
-                          '${entry.count}件',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: context.designSystem.colorTheme.onSurface
-                                .withValues(alpha: 0.7),
+                        if (entry != null)
+                          Text(
+                            '${entry.count}件',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: context.designSystem.colorTheme.onSurface
+                                  .withValues(alpha: 0.7),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

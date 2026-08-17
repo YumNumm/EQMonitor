@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 震度地域リスト（震度階級ごとにグループ化、差分注釈付き）
 class IntensityRegionList extends StatelessWidget {

@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/theme/model/status_colors.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_theme.freezed.dart';

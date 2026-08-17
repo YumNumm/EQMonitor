@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

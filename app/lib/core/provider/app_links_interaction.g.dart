@@ -11,6 +11,54 @@ part of 'app_links_interaction.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(appLinksColdStartGate)
+final appLinksColdStartGateProvider = AppLinksColdStartGateProvider._();
+
+final class AppLinksColdStartGateProvider
+    extends
+        $FunctionalProvider<
+          AppLinksColdStartGate,
+          AppLinksColdStartGate,
+          AppLinksColdStartGate
+        >
+    with $Provider<AppLinksColdStartGate> {
+  AppLinksColdStartGateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appLinksColdStartGateProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appLinksColdStartGateHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppLinksColdStartGate> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AppLinksColdStartGate create(Ref ref) {
+    return appLinksColdStartGate(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppLinksColdStartGate value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppLinksColdStartGate>(value),
+    );
+  }
+}
+
+String _$appLinksColdStartGateHash() =>
+    r'a73656b476b762a15f2722282658a84de364c69d';
+
 @ProviderFor(appLinksInteraction)
 final appLinksInteractionProvider = AppLinksInteractionProvider._();
 
@@ -43,4 +91,4 @@ final class AppLinksInteractionProvider
 }
 
 String _$appLinksInteractionHash() =>
-    r'ef2c6c39d5343100ba12ace24e03947fc48a5c03';
+    r'b0856ecc69912b20f3adb93a364ef09f8769b95b';

@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AquaPage extends StatelessWidget {
   const AquaPage({super.key});

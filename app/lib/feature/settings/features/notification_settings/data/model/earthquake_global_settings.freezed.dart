@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_global_settings.dart';
@@ -9,8 +9,10 @@ part of 'earthquake_global_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$EarthquakeGlobalSettings {
 
@@ -21,6 +23,8 @@ mixin _$EarthquakeGlobalSettings {
 @pragma('vm:prefer-inline')
 $EarthquakeGlobalSettingsCopyWith<EarthquakeGlobalSettings> get copyWith => _$EarthquakeGlobalSettingsCopyWithImpl<EarthquakeGlobalSettings>(this as EarthquakeGlobalSettings, _$identity);
 
+  /// Serializes this EarthquakeGlobalSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeGlobalSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.defaultSound, defaultSound) || other.defaultSound == defaultSound)&&(identical(other.defaultInterruptionLevel, defaultInterruptionLevel) || other.defaultInterruptionLevel == defaultInterruptionLevel)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,enabled,defaultSound,defaultInterruptionLevel,estimatedIntensityEnabled,collapseNotification);
 
@@ -63,7 +67,7 @@ class _$EarthquakeGlobalSettingsCopyWithImpl<$Res>
 /// Create a copy of EarthquakeGlobalSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? defaultSound = null,Object? defaultInterruptionLevel = null,Object? estimatedIntensityEnabled = null,Object? collapseNotification = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeGlobalSettings(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,defaultSound: null == defaultSound ? _self.defaultSound : defaultSound // ignore: cast_nullable_to_non_nullable
 as String,defaultInterruptionLevel: null == defaultInterruptionLevel ? _self.defaultInterruptionLevel : defaultInterruptionLevel // ignore: cast_nullable_to_non_nullable
@@ -207,11 +211,11 @@ return $default(_that.enabled,_that.defaultSound,_that.defaultInterruptionLevel,
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _EarthquakeGlobalSettings implements EarthquakeGlobalSettings {
   const _EarthquakeGlobalSettings({required this.enabled, required this.defaultSound, required this.defaultInterruptionLevel, required this.estimatedIntensityEnabled, required this.collapseNotification});
-  
+  factory _EarthquakeGlobalSettings.fromJson(Map<String, dynamic> json) => _$EarthquakeGlobalSettingsFromJson(json);
 
 @override final  bool enabled;
 @override final  String defaultSound;
@@ -225,14 +229,17 @@ class _EarthquakeGlobalSettings implements EarthquakeGlobalSettings {
 @pragma('vm:prefer-inline')
 _$EarthquakeGlobalSettingsCopyWith<_EarthquakeGlobalSettings> get copyWith => __$EarthquakeGlobalSettingsCopyWithImpl<_EarthquakeGlobalSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EarthquakeGlobalSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeGlobalSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.defaultSound, defaultSound) || other.defaultSound == defaultSound)&&(identical(other.defaultInterruptionLevel, defaultInterruptionLevel) || other.defaultInterruptionLevel == defaultInterruptionLevel)&&(identical(other.estimatedIntensityEnabled, estimatedIntensityEnabled) || other.estimatedIntensityEnabled == estimatedIntensityEnabled)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,enabled,defaultSound,defaultInterruptionLevel,estimatedIntensityEnabled,collapseNotification);
 

@@ -9,7 +9,7 @@ void main() {
 
   test('parseTravelTimeCsv parses p/s/depth/distance rows', () {
     const raw = '0.416,0.703,0,2\n1.243,2.099,0,6';
-    final tables = parseTravelTimeCsv(raw);
+    final tables = TravelTimeCsvParser.parse(raw);
     expect(tables.table, hasLength(2));
     final first = tables.table.first;
     expect(first.p, closeTo(0.416, 1e-9));
@@ -26,12 +26,12 @@ void main() {
   test('parseTravelTimeCsv skips first row on parse failure', () {
     // ヘッダー行がある場合でも先頭のパース失敗はスキップ
     const raw = 'p,s,depth,distance\n0.416,0.703,0,2';
-    final tables = parseTravelTimeCsv(raw);
+    final tables = TravelTimeCsvParser.parse(raw);
     expect(tables.table, hasLength(1));
     expect(tables.table.first.distance, 2);
   });
 
   test('parseTravelTimeCsv throws on empty result', () {
-    expect(() => parseTravelTimeCsv(''), throwsException);
+    expect(() => TravelTimeCsvParser.parse(''), throwsException);
   });
 }

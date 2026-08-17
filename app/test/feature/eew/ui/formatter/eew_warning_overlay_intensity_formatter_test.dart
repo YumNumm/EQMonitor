@@ -5,30 +5,33 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_for
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const intensityFormatter = EewWarningOverlayIntensityFormatter();
+  const labelFormatter = EewWarningOverlayLabelFormatter();
+
   test('formats split JMA intensities with Japanese suffixes', () {
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.fiveLower,
         isOver: false,
       ),
       '5弱',
     );
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.fiveUpper,
         isOver: false,
       ),
       '5強',
     );
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.sixLower,
         isOver: false,
       ),
       '6弱',
     );
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.sixUpper,
         isOver: false,
       ),
@@ -38,31 +41,25 @@ void main() {
 
   test('formats unknown and over values without duplicated qualifiers', () {
     expect(
-      formatEewWarningOverlayIntensity(
-        intensity: JmaIntensity.unknown,
-        isOver: true,
-      ),
+      intensityFormatter.format(intensity: JmaIntensity.unknown, isOver: true),
       '不明',
     );
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.fiveUnknown,
         isOver: true,
       ),
       '5弱以上',
     );
     expect(
-      formatEewWarningOverlayIntensity(
-        intensity: JmaIntensity.sixLower,
-        isOver: true,
-      ),
+      intensityFormatter.format(intensity: JmaIntensity.sixLower, isOver: true),
       '6弱以上',
     );
   });
 
   test('fixed simulation intensity copy is 6弱', () {
     expect(
-      formatEewWarningOverlayIntensity(
+      intensityFormatter.format(
         intensity: JmaIntensity.sixLower,
         isOver: false,
       ),
@@ -72,14 +69,14 @@ void main() {
 
   test('banner label keeps simulation identity', () {
     expect(
-      formatEewWarningOverlayBannerLabel(
+      labelFormatter.bannerLabel(
         source: EewWarningOverlaySource.simulation,
         reportLabel: '訓練／シミュレーション',
       ),
       '訓練／シミュレーション',
     );
     expect(
-      formatEewWarningOverlayBannerLabel(
+      labelFormatter.bannerLabel(
         source: EewWarningOverlaySource.real,
         reportLabel: '緊急地震速報（警報） 第3報',
       ),

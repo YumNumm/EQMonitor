@@ -18,7 +18,6 @@ struct LocationInfo: Codable, Hashable {
     }
 
     var arrivalDate: Date? {
-        guard let arrivalTime = arrivalTime else { return nil }
-        return ISO8601DateFormatter().date(from: arrivalTime)
+        LiveActivityDate.parse(arrivalTime)
     }
 }

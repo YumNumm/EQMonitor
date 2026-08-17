@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_vxse_debug_draft.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_vxse_debug_draft.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 EarthquakeVxseDebugDraft _$EarthquakeVxseDebugDraftFromJson(
@@ -265,7 +266,7 @@ return vxse62(_that.eventId,_that.reportedAt,_that.status,_that.arrivalTime,_tha
 @JsonSerializable()
 
 class EarthquakeVxse51DebugDraft implements EarthquakeVxseDebugDraft {
-  const EarthquakeVxse51DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.maxIntensity, required final  Map<JmaIntensity, List<IntensityRegion>> regions, required final  Map<JmaIntensity, List<IntensityPrefecture>> prefectures, required final  List<EarthquakeTelegramComment> comments, final  String? $type}): _regions = regions,_prefectures = prefectures,_comments = comments,$type = $type ?? 'VXSE51';
+  const EarthquakeVxse51DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.maxIntensity, required  Map<JmaIntensity, List<IntensityRegion>> regions, required  Map<JmaIntensity, List<IntensityPrefecture>> prefectures, required  List<EarthquakeTelegramComment> comments,  String? $type}): _regions = regions,_prefectures = prefectures,_comments = comments,$type = $type ?? 'VXSE51';
   factory EarthquakeVxse51DebugDraft.fromJson(Map<String, dynamic> json) => _$EarthquakeVxse51DebugDraftFromJson(json);
 
 @override final  String eventId;
@@ -368,7 +369,7 @@ as List<EarthquakeTelegramComment>,
 @JsonSerializable()
 
 class EarthquakeVxse52DebugDraft implements EarthquakeVxseDebugDraft {
-  const EarthquakeVxse52DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required final  List<EarthquakeTelegramComment> comments, final  String? $type}): _comments = comments,$type = $type ?? 'VXSE52';
+  const EarthquakeVxse52DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required  List<EarthquakeTelegramComment> comments,  String? $type}): _comments = comments,$type = $type ?? 'VXSE52';
   factory EarthquakeVxse52DebugDraft.fromJson(Map<String, dynamic> json) => _$EarthquakeVxse52DebugDraftFromJson(json);
 
 @override final  String eventId;
@@ -468,7 +469,7 @@ $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
 @JsonSerializable()
 
 class EarthquakeVxse53DebugDraft implements EarthquakeVxseDebugDraft {
-  const EarthquakeVxse53DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required this.earthquakeType, required this.maxIntensity, required final  Map<JmaIntensity, List<IntensityRegion>> regions, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  List<EarthquakeTelegramComment> comments, final  String? $type}): _regions = regions,_intensityTree = intensityTree,_comments = comments,$type = $type ?? 'VXSE53';
+  const EarthquakeVxse53DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required this.earthquakeType, required this.maxIntensity, required  Map<JmaIntensity, List<IntensityRegion>> regions, required  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required  List<EarthquakeTelegramComment> comments,  String? $type}): _regions = regions,_intensityTree = intensityTree,_comments = comments,$type = $type ?? 'VXSE53';
   factory EarthquakeVxse53DebugDraft.fromJson(Map<String, dynamic> json) => _$EarthquakeVxse53DebugDraftFromJson(json);
 
 @override final  String eventId;
@@ -588,7 +589,7 @@ $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
 @JsonSerializable()
 
 class EarthquakeVxse61DebugDraft implements EarthquakeVxseDebugDraft {
-  const EarthquakeVxse61DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required final  List<EarthquakeTelegramComment> comments, final  String? $type}): _comments = comments,$type = $type ?? 'VXSE61';
+  const EarthquakeVxse61DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required  List<EarthquakeTelegramComment> comments,  String? $type}): _comments = comments,$type = $type ?? 'VXSE61';
   factory EarthquakeVxse61DebugDraft.fromJson(Map<String, dynamic> json) => _$EarthquakeVxse61DebugDraftFromJson(json);
 
 @override final  String eventId;
@@ -688,7 +689,7 @@ $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
 @JsonSerializable()
 
 class EarthquakeVxse62DebugDraft implements EarthquakeVxseDebugDraft {
-  const EarthquakeVxse62DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<IntensityRegion>> regions, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegions, required final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree, required final  List<EarthquakeTelegramComment> comments, final  String? $type}): _regions = regions,_intensityTree = intensityTree,_lpgmRegions = lpgmRegions,_lpgmIntensityTree = lpgmIntensityTree,_comments = comments,$type = $type ?? 'VXSE62';
+  const EarthquakeVxse62DebugDraft({required this.eventId, required this.reportedAt, required this.status, required this.arrivalTime, required this.originTime, required this.hypocenter, required this.maxIntensity, required this.maxLpgmIntensity, required  Map<JmaIntensity, List<IntensityRegion>> regions, required  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required  Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegions, required  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree, required  List<EarthquakeTelegramComment> comments,  String? $type}): _regions = regions,_intensityTree = intensityTree,_lpgmRegions = lpgmRegions,_lpgmIntensityTree = lpgmIntensityTree,_comments = comments,$type = $type ?? 'VXSE62';
   factory EarthquakeVxse62DebugDraft.fromJson(Map<String, dynamic> json) => _$EarthquakeVxse62DebugDraftFromJson(json);
 
 @override final  String eventId;

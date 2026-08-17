@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'map_style_config.freezed.dart';
@@ -56,7 +57,7 @@ abstract class MapStyleColorScheme with _$MapStyleColorScheme {
         colorScheme.surfaceContainerLowest,
         Colors.blue.shade900,
         0.1,
-      )!,
+      ).orFailBecause('両引数が非nullのためColor.lerpは必ず非nullを返す'),
       landColor: colorScheme.surfaceContainerHighest,
       lineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerHighest,

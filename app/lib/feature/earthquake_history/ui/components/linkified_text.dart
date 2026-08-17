@@ -1,5 +1,5 @@
 import 'package:eqmonitor/feature/earthquake_history/ui/components/url_text_segment_splitter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// URL 部分をタップ可能なリンクとして表示するテキスト

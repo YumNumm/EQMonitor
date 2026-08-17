@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/data/service/home_map_camera_coordinator.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

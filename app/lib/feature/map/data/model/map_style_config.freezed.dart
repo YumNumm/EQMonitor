@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'map_style_config.dart';
@@ -9,6 +9,7 @@ part of 'map_style_config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$MapStyleConfigCopyWithImpl<$Res>
 /// Create a copy of MapStyleConfig
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? theme = null,Object? colorScheme = freezed,Object? styleString = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MapStyleConfig(
 theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as MapStyleTheme,colorScheme: freezed == colorScheme ? _self.colorScheme : colorScheme // ignore: cast_nullable_to_non_nullable
 as MapStyleColorScheme?,styleString: freezed == styleString ? _self.styleString : styleString // ignore: cast_nullable_to_non_nullable
@@ -359,7 +360,7 @@ class _$MapStyleColorSchemeCopyWithImpl<$Res>
 /// Create a copy of MapStyleColorScheme
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? backgroundColor = null,Object? landColor = null,Object? lineColor = null,Object? japanLandColor = null,Object? japanLineColor = null,}) {
-  return _then(_self.copyWith(
+  return _then(MapStyleColorScheme(
 backgroundColor: null == backgroundColor ? _self.backgroundColor : backgroundColor // ignore: cast_nullable_to_non_nullable
 as Color,landColor: null == landColor ? _self.landColor : landColor // ignore: cast_nullable_to_non_nullable
 as Color,lineColor: null == lineColor ? _self.lineColor : lineColor // ignore: cast_nullable_to_non_nullable

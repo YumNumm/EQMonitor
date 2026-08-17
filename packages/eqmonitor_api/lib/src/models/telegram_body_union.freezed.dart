@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'telegram_body_union.dart';
@@ -9,6 +9,7 @@ part of 'telegram_body_union.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 TelegramBodyUnion _$TelegramBodyUnionFromJson(
@@ -283,7 +284,7 @@ return fallbackTelegramBody(_that.type);case _:
 
 @JsonSerializable()
 class TelegramBodyUnionEarthquakeTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEarthquakeTelegramBody({required this.type, @JsonKey(includeIfNull: false) this.earthquake, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false) final  List<EarthquakeTelegramBodyIntensityStation>? intensityStations, final  String? $type}): _intensityRegions = intensityRegions,_intensityPrefectures = intensityPrefectures,_intensityCities = intensityCities,_intensityStations = intensityStations,$type = $type ?? 'earthquakeTelegramBody';
+  const TelegramBodyUnionEarthquakeTelegramBody({required this.type, @JsonKey(includeIfNull: false) this.earthquake, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityRegions, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityPrefectures, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityRegion>? intensityCities, @JsonKey(includeIfNull: false)  List<EarthquakeTelegramBodyIntensityStation>? intensityStations,  String? $type}): _intensityRegions = intensityRegions,_intensityPrefectures = intensityPrefectures,_intensityCities = intensityCities,_intensityStations = intensityStations,$type = $type ?? 'earthquakeTelegramBody';
   factory TelegramBodyUnionEarthquakeTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeTelegramBodyFromJson(json);
 
 /// const: "EARTHQUAKE"
@@ -411,7 +412,7 @@ $EarthquakeTelegramBodyQuakeCopyWith<$Res>? get earthquake {
 
 @JsonSerializable()
 class TelegramBodyUnionEewTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEewTelegramBody({required this.type, required this.eew, required final  List<Object?> eewIntensityRegions, required final  List<Object?> eewWarningZones, required final  List<Object?> eewWarningPrefectures, required final  List<Object?> eewWarningRegions, final  String? $type}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions,$type = $type ?? 'eewTelegramBody';
+  const TelegramBodyUnionEewTelegramBody({required this.type, required this.eew, required  List<Object?> eewIntensityRegions, required  List<Object?> eewWarningZones, required  List<Object?> eewWarningPrefectures, required  List<Object?> eewWarningRegions,  String? $type}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions,$type = $type ?? 'eewTelegramBody';
   factory TelegramBodyUnionEewTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEewTelegramBodyFromJson(json);
 
 /// const: "EEW"
@@ -518,7 +519,7 @@ as List<Object?>,
 
 @JsonSerializable()
 class TelegramBodyUnionEarthquakeNoticeTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEarthquakeNoticeTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeNoticeTelegramBody';
+  const TelegramBodyUnionEarthquakeNoticeTelegramBody({required this.type,  String? $type}): $type = $type ?? 'earthquakeNoticeTelegramBody';
   factory TelegramBodyUnionEarthquakeNoticeTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeNoticeTelegramBodyFromJson(json);
 
 /// const: "EARTHQUAKE_NOTICE"
@@ -592,7 +593,7 @@ as String,
 
 @JsonSerializable()
 class TelegramBodyUnionEarthquakeExplanationTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEarthquakeExplanationTelegramBody({required this.type, required this.text, final  String? $type}): $type = $type ?? 'earthquakeExplanationTelegramBody';
+  const TelegramBodyUnionEarthquakeExplanationTelegramBody({required this.type, required this.text,  String? $type}): $type = $type ?? 'earthquakeExplanationTelegramBody';
   factory TelegramBodyUnionEarthquakeExplanationTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeExplanationTelegramBodyFromJson(json);
 
 /// const: "EARTHQUAKE_EXPLANATION"
@@ -668,7 +669,7 @@ as String,
 
 @JsonSerializable()
 class TelegramBodyUnionEarthquakeCountsTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEarthquakeCountsTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeCountsTelegramBody';
+  const TelegramBodyUnionEarthquakeCountsTelegramBody({required this.type,  String? $type}): $type = $type ?? 'earthquakeCountsTelegramBody';
   factory TelegramBodyUnionEarthquakeCountsTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeCountsTelegramBodyFromJson(json);
 
 /// const: "EARTHQUAKE_COUNTS"
@@ -742,7 +743,7 @@ as String,
 
 @JsonSerializable()
 class TelegramBodyUnionEarthquakeNankaiTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionEarthquakeNankaiTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'earthquakeNankaiTelegramBody';
+  const TelegramBodyUnionEarthquakeNankaiTelegramBody({required this.type,  String? $type}): $type = $type ?? 'earthquakeNankaiTelegramBody';
   factory TelegramBodyUnionEarthquakeNankaiTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionEarthquakeNankaiTelegramBodyFromJson(json);
 
 /// const: "EARTHQUAKE_NANKAI"
@@ -816,7 +817,7 @@ as String,
 
 @JsonSerializable()
 class TelegramBodyUnionFallbackTelegramBody implements TelegramBodyUnion {
-  const TelegramBodyUnionFallbackTelegramBody({required this.type, final  String? $type}): $type = $type ?? 'fallbackTelegramBody';
+  const TelegramBodyUnionFallbackTelegramBody({required this.type,  String? $type}): $type = $type ?? 'fallbackTelegramBody';
   factory TelegramBodyUnionFallbackTelegramBody.fromJson(Map<String, dynamic> json) => _$TelegramBodyUnionFallbackTelegramBodyFromJson(json);
 
 @override final  String type;

@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayFullscreen extends StatelessWidget {
   const EewWarningOverlayFullscreen({
@@ -23,11 +23,11 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final arrivalText = formatEewWarningOverlayArrival(
+    final arrivalText = const EewWarningOverlayArrivalFormatter().format(
       state: displayModel.arrivalState,
       secondsUntilArrival: displayModel.secondsUntilArrival,
     );
-    final intensityText = formatEewWarningOverlayIntensity(
+    final intensityText = const EewWarningOverlayIntensityFormatter().format(
       intensity: displayModel.localIntensity,
       isOver: displayModel.localIntensityIsOver,
     );
@@ -43,7 +43,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
 
     return BlockSemantics(
       child: Semantics(
-        label: formatEewWarningOverlaySemanticsLabel(
+        label: const EewWarningOverlayLabelFormatter().semanticsLabel(
           source: displayModel.source,
         ),
         scopesRoute: true,

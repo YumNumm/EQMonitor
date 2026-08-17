@@ -30,6 +30,7 @@ Live Activityは以下の2つのトリガーで開始されます。
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `eventId` | `string` | イベントID（Primary Key） |
+| `type` | `string?` | イベント種別（`"shake_detection"`）。クライアントは未使用で、欠落しても表示は継続する |
 | `level` | `ShakeDetectionLevel` | 観測した揺れの強さ |
 | `detectedAt` | `ISO8601 string?` | 検知した日時（JSTで表示） |
 | `location` | `LocationInfo?` | 現在地情報（現在地で検知された場合） |
@@ -64,6 +65,7 @@ type ShakeDetectionLevel =
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `eventId` | `string` | イベントID（Primary Key） |
+| `type` | `string?` | イベント種別（`"eew"`）。クライアントは未使用で、欠落しても表示は継続する |
 | `serialNo` | `number?` | 報番号 |
 | `headline` | `string?` | 見出し（後述のルールで生成） |
 | `hypocenterName` | `string?` | 震源地名（キャンセル時はnull） |
@@ -108,6 +110,20 @@ type ShakeDetectionLevel =
 3. キャンセル報の場合 → `time = null`, `isOriginTime = false`
 
 > **Note:** PLUM法やレベル法では発生時刻が特定できない場合があります。その場合は検知時刻を使用し、`isOriginTime = false`となります。クライアント側ではこのフラグを参照して「発生」「検知」の表示を切り替えてください。
+
+#### 日時文字列の表現
+
+`time` / `arrivalTime` / `detectedAt` はいずれも文字列として `content-state` に載り、クライアント側で `Date` に変換します。パースに失敗すると発生時刻や主要動到達カウントダウンが丸ごと欠落するため、クライアントは次の表現をすべて受理します（`app/ios/Shared/LiveActivityDate.swift`）。
+
+- 小数秒あり / なし（`...T16:10:00.123+09:00` / `...T16:10:00+09:00`）
+- UTC 表記（`...T07:10:00Z`）
+- PostgreSQL `timestamptz` のテキスト表現（`2024-01-01 16:10:00+09`）
+
+表示は端末のタイムゾーンではなく **JST 固定** です（JMA の発表時刻が JST を正とするため）。
+
+#### キャンセル報の扱い
+
+キャンセル報では `hypocenterName` / `magnitude` / `depth` / `time` / `maxIntensity` / `location` を `null` で送ります。クライアントは `isCanceled === true` のとき、これらの値が残っていても**予想震度・M・深さ・発生時刻・主要動到達カウントダウンを表示しません**。取消済みの速報で秒読みが動き続けると誤情報になるためです。
 
 #### headline生成ルール
 
@@ -753,9 +769,12 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct EewContentState: Codable, Hashable {
     let eventId: String
+    /// UI 未使用。必須にすると backend が欠落させた瞬間に
+    /// content-state 全体のデコードが失敗するため optional
+    let type: String?
     let hypocenterName: String?
     let magnitude: Double?
-    let depth: Int?
+    let depth: Double?
     let time: String?
     let isOriginTime: Bool?
     let maxIntensity: String?
@@ -800,6 +819,8 @@ struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct ShakeDetectionContentState: Codable, Hashable {
     let eventId: String
+    /// UI 未使用。欠落してもデコードが落ちないよう optional
+    let type: String?
     let level: String?
     let detectedAt: String?
     let location: LocationInfo?
@@ -811,8 +832,7 @@ struct ShakeDetectionContentState: Codable, Hashable {
     }
 
     var detectedDate: Date? {
-        guard let detectedAt = detectedAt else { return nil }
-        return ISO8601DateFormatter().date(from: detectedAt)
+        LiveActivityDate.parse(detectedAt)
     }
 }
 
@@ -854,8 +874,7 @@ struct LocationInfo: Codable, Hashable {
     }
 
     var arrivalDate: Date? {
-        guard let arrivalTime = arrivalTime else { return nil }
-        return ISO8601DateFormatter().date(from: arrivalTime)
+        LiveActivityDate.parse(arrivalTime)
     }
 }
 ```

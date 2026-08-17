@@ -75,28 +75,16 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
             return Timeline(entries: [entry], policy: .after(nextUpdate))
 
-        } catch let error as APIError {
-            let entry = EarthquakeEntry(
-                date: currentDate,
-                configuration: configuration,
-                earthquakes: [],
-                error: error.errorDescription,
-                resolved: resolved
-            )
-
-            // エラー時は5分後に再試行
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
-            return Timeline(entries: [entry], policy: .after(nextUpdate))
-
         } catch {
             let entry = EarthquakeEntry(
                 date: currentDate,
                 configuration: configuration,
                 earthquakes: [],
-                error: "不明なエラー: \(error.localizedDescription)",
+                error: APIError.from(error).errorDescription ?? WidgetErrorMessage.unknown,
                 resolved: resolved
             )
 
+            // エラー時は5分後に再試行
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
             return Timeline(entries: [entry], policy: .after(nextUpdate))
         }

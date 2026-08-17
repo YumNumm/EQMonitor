@@ -53,7 +53,7 @@ final class PushTokenSyncSnapshot {
         return RetryRunning(attempt: attempt);
       }
     }
-    return const RetryIdle();
+    return RetryIdle();
   }
 
   Iterable<MapEntry<PushTokenKind, PushTokenKindState>> get kindEntries => [
@@ -122,16 +122,16 @@ final class FailedTokenState extends PushTokenKindState {
   final DeviceProvisioningException error;
 }
 
-PushTokenKindState pushTokenKindStateFromWorker(
-  PushTokenSyncWorkerState workerState,
-) => switch (workerState) {
-  PushTokenSyncWorkerAbsent() ||
-  PushTokenSyncWorkerDisposed() => const AbsentTokenState(),
-  PushTokenSyncWorkerSyncing(:final attempt) => SyncingTokenState(
-    attempt: attempt,
-  ),
-  PushTokenSyncWorkerWaiting(:final attempt, :final error, :final resumeAt) =>
-    WaitingTokenState(attempt: attempt, error: error, resumeAt: resumeAt),
-  PushTokenSyncWorkerSynced() => const SyncedTokenState(),
-  PushTokenSyncWorkerFailed(:final error) => FailedTokenState(error: error),
-};
+extension PushTokenKindStateConverter on PushTokenSyncWorkerState {
+  PushTokenKindState toKindState() => switch (this) {
+    PushTokenSyncWorkerAbsent() ||
+    PushTokenSyncWorkerDisposed() => const AbsentTokenState(),
+    PushTokenSyncWorkerSyncing(:final attempt) => SyncingTokenState(
+      attempt: attempt,
+    ),
+    PushTokenSyncWorkerWaiting(:final attempt, :final error, :final resumeAt) =>
+      WaitingTokenState(attempt: attempt, error: error, resumeAt: resumeAt),
+    PushTokenSyncWorkerSynced() => const SyncedTokenState(),
+    PushTokenSyncWorkerFailed(:final error) => FailedTokenState(error: error),
+  };
+}

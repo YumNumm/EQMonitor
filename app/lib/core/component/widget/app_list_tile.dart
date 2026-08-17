@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppListTile extends StatelessWidget {
   factory AppListTile.switchListTile({

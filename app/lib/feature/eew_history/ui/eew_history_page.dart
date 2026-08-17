@@ -2,26 +2,45 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
+import 'package:eqmonitor/feature/eew_history/data/notifier/eew_history_notice_notifier.dart';
 import 'package:eqmonitor/feature/eew_history/data/notifier/eew_list_data_source.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_history_list_tile.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_list_parameter_persistent_delegate.dart';
 import 'package:eqmonitor/feature/eew_history/ui/components/pinned_active_eew_section.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewHistoryPage extends HookConsumerWidget {
-  const EewHistoryPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EewListParameter());
+    final noticeShownAsync = ref.watch(eewHistoryNoticeShownProvider);
+    final noticeShown = switch (noticeShownAsync) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
     final dataSourceAsync = ref.watch(
       eewListDataSourceProvider(parameter.value),
     );
+
+    useEffect(() {
+      if (noticeShown == false) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!context.mounted) {
+            return;
+          }
+          await showEewHistoryNoticeFlow(ref: ref, context: context);
+        });
+      }
+      return null;
+    }, [noticeShown]);
 
     return Scaffold(
       body: dataSourceAsync.when(
@@ -42,7 +61,7 @@ class EewHistoryPage extends HookConsumerWidget {
 }
 
 class _PagingBody extends StatelessWidget {
-  const _PagingBody({
+  const new({
     required this.dataSource,
     required this.parameter,
     required this.onRefresh,
@@ -119,7 +138,7 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _Skeleton extends StatelessWidget {
-  const _Skeleton({this.itemCount = 5, this.scrollable = true});
+  const new({this.itemCount = 5, this.scrollable = true});
 
   final int itemCount;
   final bool scrollable;
@@ -131,8 +150,8 @@ class _Skeleton extends StatelessWidget {
         const ListTile(
           leading: CircleAvatar(radius: 20),
           title: Text('宮城県沖'),
-          subtitle: Text('2026/06/27 12:34発生 深さ 10km'),
-          trailing: Text('M6.0'),
+          subtitle: Text('2026/06/27 12:34発生 深さ 10km M6.0'),
+          trailing: Text('#29 (最終)'),
         ),
     ];
     return Skeletonizer(
@@ -144,7 +163,7 @@ class _Skeleton extends StatelessWidget {
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
+  const new({required this.date});
 
   final String date;
 

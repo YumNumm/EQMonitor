@@ -11,7 +11,7 @@
 | 項目 | 値 |
 | ------ | ----- |
 | ライブラリ | MapLibre GL (flutter-maplibre 0.3.x) |
-| タイルソース | iOS/Android: Asset Pack（iOS Background Assets / Android Play Asset Delivery）で配布された `all.pmtiles` を、`pmtiles://file://...`（`assets_util` で解決した絶対パス）で参照。macOS: 同内容をネイティブ同梱（アプリバンドル内）し、同じく `pmtiles://file://...` で参照。Web: 地図機能は廃止（未サポート）。旧 `https://v2.map.eqmonitor.app/all.pmtiles` によるベース地図配信は停止済み |
+| タイルソース | iOS/Android/macOS: 署名検証済み R2 Asset Pack を `pmtiles://file://...` で参照。未更新時またはダウンロード版の異常時は、アプリに同梱した同内容の `platform/` Pack を使用する。Web: 地図機能は廃止（未サポート）。旧 `https://v2.map.eqmonitor.app/all.pmtiles` によるベース地図配信は停止済み |
 | スタイル | ローカルファイルに書き出して参照 (ダーク/ライト別) |
 | グリフ | `https://glyphs.geolonia.com/{fontstack}/{range}.pbf` |
 
@@ -246,10 +246,12 @@ region / city と同構成。レイヤー ID プレフィックスは `eq-histor
 | 表示条件 | `estimatedIntensityTileUrl != null` |
 | ソース | VectorSource (PMTiles URL) |
 | ソースレイヤー | `seismic_intensity` |
-| レイヤータイプ | FillStyleLayer |
-| Fill opacity | 0.65 |
-| Fill color | GeoJSON properties の `fill` |
+| レイヤータイプ | FillStyleLayer + LineStyleLayer |
+| Fill opacity | 1.0 |
+| Fill color | properties の `name`（`intensity:4`〜`intensity:7`）をテーマの推計震度色に match 式でマッピング。未知の階級のみ properties の `fill` にフォールバック |
 | 配置 | `areaForecastLocalELine` より下 |
+
+注意: PMTiles は backend (`ixac41-pmtiles-generator`) で tippecanoe `-Z 5 -z 14` で生成されるため、zoom 5 未満ではタイルが存在せず描画されない（MapLibre は minzoom 側の underzoom を行わない）。
 
 ### 2-9. カメラ
 

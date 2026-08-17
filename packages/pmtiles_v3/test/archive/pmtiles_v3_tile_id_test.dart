@@ -47,6 +47,42 @@ void main() {
     }
   });
 
+  test('inverts every tile ID produced through zoom 8', () {
+    expect(tileId.zxyForTileId(tileId: 0), (z: 0, x: 0, y: 0));
+    for (var z = 0; z <= 8; z++) {
+      final side = 1 << z;
+      for (var y = 0; y < side; y++) {
+        for (var x = 0; x < side; x++) {
+          final id = tileId.tileIdForZxy(z: z, x: x, y: y);
+          expect(tileId.zxyForTileId(tileId: id), (z: z, x: x, y: y));
+        }
+      }
+    }
+  });
+
+  test('inverts the first and last tile IDs at zoom 31', () {
+    final range = tileId.rangeForZoom(zoom: PmTilesV3TileId.maxZoom);
+    expect(
+      tileId.zxyForTileId(tileId: range.start),
+      (z: PmTilesV3TileId.maxZoom, x: 0, y: 0),
+    );
+    expect(
+      tileId.zxyForTileId(tileId: range.endExclusive - 1),
+      (
+        z: PmTilesV3TileId.maxZoom,
+        x: (1 << PmTilesV3TileId.maxZoom) - 1,
+        y: 0,
+      ),
+    );
+  });
+
+  test('rejects an out-of-range tile ID before inverse conversion', () {
+    expect(
+      () => tileId.zxyForTileId(tileId: -1),
+      throwsA(isA<PmTilesV3InvalidTileIdException>()),
+    );
+  });
+
   test('rejects zoom and coordinates outside the archive grid', () {
     expect(
       () => tileId.tileIdForZxy(z: -1, x: 0, y: 0),

@@ -11,7 +11,7 @@ abstract class EarthquakeHistoryMapLayerParameter
     // 市区町村ポリゴンがタイルに存在する最小ズーム
     // (BaseMapTileSpec.cityMinZoom) に合わせる。
     @Default(6) double regionToCity,
-    @Default(8) double stationMinZoom,
+    @Default(6) double stationMinZoom,
     @Default(9) double stationLabelMinZoom,
     @Default(9) double stationTextZoom,
     @Default(8) double hypocenterFadeZoom,
@@ -23,13 +23,13 @@ abstract class EarthquakeHistoryMapLayerParameter
     @Default(0.6) double cityFillOpacity,
 
     // 観測点サイズ (circle-radius interpolation)
-    @Default(2) double stationCircleRadiusMin,
-    @Default(8) double stationCircleRadiusMax,
+    @Default(0.8) double stationCircleRadiusMin,
+    @Default(6.7) double stationCircleRadiusMax,
 
     // 観測点アイコンサイズ (icon-size interpolation)
-    @Default(0.025) double stationIconSizeMin,
-    @Default(0.18) double stationIconSizeMid,
-    @Default(0.6) double stationIconSizeMax,
+    @Default(0.03) double stationIconSizeMin,
+    @Default(0.13) double stationIconSizeMid,
+    @Default(0.5) double stationIconSizeMax,
 
     // 震央マーカー
     @Default(0.15) double hypocenterIconSizeMin,

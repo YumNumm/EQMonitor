@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RealtimeDataTypeInfoDialog extends StatelessWidget {
@@ -89,7 +89,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
                   Icon(Icons.open_in_new, size: 12, color: hyperLinkColor),
                   Text(
                     '強震モニタについて - 防災科研',
-                    style: textTheme.bodyMedium!.copyWith(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: hyperLinkColor,
                     ),
                   ),
@@ -123,12 +123,12 @@ class _DataTypeInfo extends StatelessWidget {
         children: [
           Text(
             title,
-            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
             description,
-            style: textTheme.bodyMedium!.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),

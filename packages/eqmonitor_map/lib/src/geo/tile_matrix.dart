@@ -76,3 +76,17 @@ Matrix4 viewProjectionMatrixFor({
     ..scaleByDouble(1, -1, 1, 1)
     ..translateByDouble(-center.x, -center.y, 0, 1);
 }
+
+/// ベースマップtile-local座標をclip座標へ変換する合成行列を作る。
+///
+/// MVT layerごとに宣言される[extent]を必須入力にして、tile-local頂点を
+/// そのsource layerの座標系でworldへ配置する。
+Matrix4 baseMapTileViewProjectionMatrixFor({
+  required MapCamera camera,
+  required MapViewport viewport,
+  required UnwrappedTileId tileId,
+  required double zoom,
+  required int extent,
+}) => viewProjectionMatrixFor(camera: camera, viewport: viewport).multiplied(
+  tileMatrixFor(tileId: tileId, zoom: zoom, extent: extent),
+);

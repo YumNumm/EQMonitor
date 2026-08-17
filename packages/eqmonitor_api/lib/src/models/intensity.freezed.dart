@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity.dart';
@@ -9,6 +9,7 @@ part of 'intensity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$IntensityCopyWithImpl<$Res>
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? intensityTree = null,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Intensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
 as List<IntensityTree>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
@@ -212,7 +213,7 @@ return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_t
 @JsonSerializable()
 
 class _Intensity implements Intensity {
-  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(name: 'intensity_tree') required final  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') final  List<LpgmIntensityTree>? lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
+  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(name: 'intensity_tree') required  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
   factory _Intensity.fromJson(Map<String, dynamic> json) => _$IntensityFromJson(json);
 
 @override@JsonKey(name: 'max_intensity') final  JmaIntensity maxIntensity;

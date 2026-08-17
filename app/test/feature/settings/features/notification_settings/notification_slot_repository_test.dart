@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -36,16 +37,27 @@ void main() {
   });
 
   group('putCurrentLocation', () {
-    test('sends request and returns slot', () async {
+    test('sends selected minimum intensities when enabling', () async {
       final slot = await repository.putCurrentLocation(
         eewEnabled: true,
-        eewMinIntensity: JmaIntensity.four,
+        eewMinIntensity: JmaIntensity.three,
+        earthquakeEnabled: true,
+        earthquakeMinIntensity: JmaIntensity.two,
       );
 
       expect(slot.slotType, NotificationSlotType.currentLocation);
       expect(slot.eewEnabled, isTrue);
       expect(adapter.lastRequestBody, isNotNull);
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['eew_min_intensity'],
+        api.JmaIntensity.value3,
+      );
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['earthquake_min_intensity'],
+        api.JmaIntensity.value2,
+      );
     });
 
     test('sends eew_enabled/earthquake_enabled=false when called without '
@@ -90,6 +102,43 @@ void main() {
         adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
         isFalse,
       );
+    });
+  });
+
+  group('replaceSlots', () {
+    test('sends the slot list and returns the parsed slots', () async {
+      final slots = await repository.replaceSlots(const [
+        NotificationSlotDraft(
+          slotType: NotificationSlotType.currentLocation,
+          eewEnabled: true,
+          eewMinIntensity: JmaIntensity.four,
+          earthquakeEnabled: true,
+          earthquakeMinIntensity: JmaIntensity.one,
+        ),
+        NotificationSlotDraft(
+          slotType: NotificationSlotType.nationwide,
+          eewEnabled: true,
+          eewMinIntensity: JmaIntensity.zero,
+          earthquakeEnabled: true,
+          earthquakeMinIntensity: JmaIntensity.zero,
+        ),
+      ]);
+
+      expect(slots, hasLength(2));
+      expect(adapter.lastRequestList, isNotNull);
+      expect(adapter.lastRequestList, hasLength(2));
+      final nationwide = adapter.lastRequestList!
+          .cast<Map<String, dynamic>>()
+          .firstWhere(
+            (e) => e['slot_type'] == api.SlotType.nationwide,
+          );
+      expect(nationwide['eew_min_intensity'], api.JmaIntensity.value0);
+      expect(nationwide['earthquake_min_intensity'], api.JmaIntensity.value0);
+    });
+
+    test('sends an empty array to delete every slot', () async {
+      await repository.replaceSlots(const []);
+      expect(adapter.lastRequestList, isEmpty);
     });
   });
 
@@ -174,10 +223,7 @@ void main() {
         nationwideInterruptionLevel: InterruptionLevel.active,
       );
 
-      expect(
-        settings.target,
-        EewWarningTarget.currentLocationAndNationwide,
-      );
+      expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
       expect(settings.nationwideInterruptionLevel, InterruptionLevel.active);
     });
   });
@@ -196,6 +242,7 @@ void main() {
 
 final class _SlotApiAdapter implements HttpClientAdapter {
   Map<String, dynamic>? lastRequestBody;
+  List<dynamic>? lastRequestList;
   String? lastDeletedSlotId;
 
   @override
@@ -219,6 +266,13 @@ final class _SlotApiAdapter implements HttpClientAdapter {
       lastRequestBody = Map<String, dynamic>.from(
         options.data as Map<String, dynamic>,
       );
+    }
+    if (options.data is List) {
+      lastRequestList = List<dynamic>.from(options.data as List);
+    }
+
+    if (path.endsWith('/slots') && method == 'PUT') {
+      return _jsonResponse(jsonEncode(_slotsListResponse));
     }
 
     if (path.endsWith('/slots') && method == 'GET') {
@@ -255,9 +309,7 @@ final class _SlotApiAdapter implements HttpClientAdapter {
     }
 
     if (path.endsWith('/eew-warning') && method == 'PATCH') {
-      return _jsonResponse(
-        jsonEncode(_eewWarningResponseNationwide),
-      );
+      return _jsonResponse(jsonEncode(_eewWarningResponseNationwide));
     }
 
     if (path.endsWith('/eew') && method == 'GET') {

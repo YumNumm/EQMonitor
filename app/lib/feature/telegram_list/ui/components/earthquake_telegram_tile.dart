@@ -1,14 +1,14 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_model.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/telegram_comments_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/data/repository/earthquake_body_diff_calculator.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/hypocenter_summary.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -30,16 +30,16 @@ class EarthquakeTelegramTile extends ConsumerWidget {
   final TelegramItem telegram;
 
   /// 電文コメント
-  final api.TelegramComments? comments;
+  final TelegramCommentsModel? comments;
 
   /// 地震情報本文（EARTHQUAKE 型）
-  final api.TelegramBodyUnionEarthquakeTelegramBody body;
+  final EarthquakeTelegramBodyModel body;
 
   /// 報番号（1-based、1 = 初報）
   final int sequenceNumber;
 
   /// 前報の本文（差分表示用、初報の場合は null）
-  final api.TelegramBodyUnionEarthquakeTelegramBody? previousBody;
+  final EarthquakeTelegramBodyModel? previousBody;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,8 +78,8 @@ class EarthquakeTelegramTile extends ConsumerWidget {
           );
 
     final hypocenterDiff = diffCalculator.computeHypocenterDiff(
-      current: body.earthquake,
-      previous: previousBody?.earthquake,
+      current: body.quake,
+      previous: previousBody?.quake,
     );
 
     return Card(
@@ -170,14 +170,14 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
   });
 
   final TelegramType telegramType;
-  final api.TelegramBodyUnionEarthquakeTelegramBody body;
+  final EarthquakeTelegramBodyModel body;
   final List<IntensityRegionDiffEntry>? regionDiff;
   final HypocenterDiff? hypocenterDiff;
   final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
-    final quake = body.earthquake;
+    final quake = body.quake;
 
     return switch (telegramType) {
       .vxse51 => switch (regionDiff) {

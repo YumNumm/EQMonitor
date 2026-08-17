@@ -9,19 +9,16 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
   final eews = ref.watch(eewAliveTelegramProvider) ?? [];
 
   return eews
-      .where((e) {
-        if (e.isCanceled) {
-          return false;
-        }
-        return e.hypocenter?.latitude != null &&
-            e.hypocenter?.longitude != null;
-      })
+      .where((e) => !e.isCanceled)
       .map((eew) {
-        final hypocenter = eew.hypocenter!;
+        final hypocenter = eew.hypocenter;
+        final latitude = hypocenter?.latitude;
+        final longitude = hypocenter?.longitude;
+        if (hypocenter == null || latitude == null || longitude == null) {
+          return null;
+        }
         return Feature(
-          geometry: Point(
-            Geographic(lon: hypocenter.longitude!, lat: hypocenter.latitude!),
-          ),
+          geometry: Point(Geographic(lon: longitude, lat: latitude)),
           properties: {
             'magnitude': hypocenter.magnitude,
             'depth': hypocenter.depth,
@@ -29,5 +26,6 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
           },
         );
       })
+      .whereType<Feature<Point>>()
       .toList();
 }

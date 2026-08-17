@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_global_settings.dart';
@@ -9,8 +9,10 @@ part of 'eew_global_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$EewGlobalSettings {
 
@@ -21,6 +23,8 @@ mixin _$EewGlobalSettings {
 @pragma('vm:prefer-inline')
 $EewGlobalSettingsCopyWith<EewGlobalSettings> get copyWith => _$EewGlobalSettingsCopyWithImpl<EewGlobalSettings>(this as EewGlobalSettings, _$identity);
 
+  /// Serializes this EewGlobalSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EewGlobalSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.defaultSound, defaultSound) || other.defaultSound == defaultSound)&&(identical(other.defaultInterruptionLevel, defaultInterruptionLevel) || other.defaultInterruptionLevel == defaultInterruptionLevel)&&(identical(other.startLiveActivity, startLiveActivity) || other.startLiveActivity == startLiveActivity)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification)&&(identical(other.warningEnabled, warningEnabled) || other.warningEnabled == warningEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,enabled,defaultSound,defaultInterruptionLevel,startLiveActivity,collapseNotification,warningEnabled);
 
@@ -63,7 +67,7 @@ class _$EewGlobalSettingsCopyWithImpl<$Res>
 /// Create a copy of EewGlobalSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? defaultSound = null,Object? defaultInterruptionLevel = null,Object? startLiveActivity = null,Object? collapseNotification = null,Object? warningEnabled = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewGlobalSettings(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,defaultSound: null == defaultSound ? _self.defaultSound : defaultSound // ignore: cast_nullable_to_non_nullable
 as String,defaultInterruptionLevel: null == defaultInterruptionLevel ? _self.defaultInterruptionLevel : defaultInterruptionLevel // ignore: cast_nullable_to_non_nullable
@@ -208,11 +212,11 @@ return $default(_that.enabled,_that.defaultSound,_that.defaultInterruptionLevel,
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _EewGlobalSettings implements EewGlobalSettings {
   const _EewGlobalSettings({required this.enabled, required this.defaultSound, required this.defaultInterruptionLevel, required this.startLiveActivity, required this.collapseNotification, required this.warningEnabled});
-  
+  factory _EewGlobalSettings.fromJson(Map<String, dynamic> json) => _$EewGlobalSettingsFromJson(json);
 
 @override final  bool enabled;
 @override final  String defaultSound;
@@ -227,14 +231,17 @@ class _EewGlobalSettings implements EewGlobalSettings {
 @pragma('vm:prefer-inline')
 _$EewGlobalSettingsCopyWith<_EewGlobalSettings> get copyWith => __$EewGlobalSettingsCopyWithImpl<_EewGlobalSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EewGlobalSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewGlobalSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.defaultSound, defaultSound) || other.defaultSound == defaultSound)&&(identical(other.defaultInterruptionLevel, defaultInterruptionLevel) || other.defaultInterruptionLevel == defaultInterruptionLevel)&&(identical(other.startLiveActivity, startLiveActivity) || other.startLiveActivity == startLiveActivity)&&(identical(other.collapseNotification, collapseNotification) || other.collapseNotification == collapseNotification)&&(identical(other.warningEnabled, warningEnabled) || other.warningEnabled == warningEnabled));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,enabled,defaultSound,defaultInterruptionLevel,startLiveActivity,collapseNotification,warningEnabled);
 

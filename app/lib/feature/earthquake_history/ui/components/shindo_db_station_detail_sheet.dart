@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -235,10 +235,10 @@ class _MaxAccelTable extends StatelessWidget {
             ),
           ],
         ),
-        if (maxAccelTime != null) ...[
+        if (maxAccelTime case final accelTime?) ...[
           const SizedBox(height: 4),
           Text(
-            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(maxAccelTime!.toLocal())}',
+            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(accelTime.toLocal())}',
             style: theme.textTheme.labelSmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,

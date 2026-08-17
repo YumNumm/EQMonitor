@@ -34,8 +34,7 @@ abstract class EewTelegramItem with _$EewTelegramItem {
       isPlum || accuracy == null || accuracy?.epicenter == 1;
 
   /// レベル法: 震央精度が1点相当かつ発震時刻なし（Live Activity `isLevel` と同義）
-  bool get isLevelMethod =>
-      accuracy?.epicenter == 1 && originTime == null;
+  bool get isLevelMethod => accuracy?.epicenter == 1 && originTime == null;
 
   /// IPF法1点検知: 震央精度1点相当・発震時刻あり・PLUMでない（Live Activity `isOnePoint` と同義）
   bool get isOnePointDetection =>
@@ -260,11 +259,8 @@ extension on api.EewWarning {
 }
 
 extension on api.EewWarningZoneItem {
-  EewWarningZoneInfo _toEewWarningZoneInfo() => EewWarningZoneInfo(
-    code: code,
-    name: name,
-    hadWarning: hadWarning,
-  );
+  EewWarningZoneInfo _toEewWarningZoneInfo() =>
+      EewWarningZoneInfo(code: code, name: name, hadWarning: hadWarning);
 }
 
 extension on api.EewAccuracy {

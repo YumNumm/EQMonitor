@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -88,7 +88,7 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabledWidget = BorderedContainer(
-      accentColor: accentColor ?? Colors.blue[800]!,
+      accentColor: accentColor ?? Colors.blue.shade800,
       onPressed: onPressed,
       child: Padding(padding: padding, child: child),
     );

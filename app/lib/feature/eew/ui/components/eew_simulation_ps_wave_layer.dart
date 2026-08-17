@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
@@ -96,11 +96,14 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         final currentReport = sim.currentReport;
         final originTime = currentReport.originTime;
         final hypocenter = currentReport.hypocenter;
+        final latitude = hypocenter?.latitude;
+        final longitude = hypocenter?.longitude;
+        final depth = hypocenter?.depth;
         if (originTime == null ||
             hypocenter == null ||
-            hypocenter.latitude == null ||
-            hypocenter.longitude == null ||
-            hypocenter.depth == null ||
+            latitude == null ||
+            longitude == null ||
+            depth == null ||
             currentReport.isPlum) {
           unawaited(
             _updateGeoJson(
@@ -140,13 +143,10 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           );
           return;
         }
-        final travelTime = travelTimeMap.getTravelTime(
-          hypocenter.depth!,
-          elapsed,
-        );
+        final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
-        final lat = hypocenter.latitude!;
-        final lng = hypocenter.longitude!;
+        final lat = latitude;
+        final lng = longitude;
         final isWarning = currentReport.isWarning ?? false;
         final lineColor = isWarning ? '#FF0000' : '#FFA500';
         final fillColor = isWarning ? '#FF0000' : '#FFA500';
@@ -154,27 +154,25 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         final pWaveFeatures = <Map<String, dynamic>>[];
         final sWaveFeatures = <Map<String, dynamic>>[];
 
-        if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
+        final pDistance = travelTime.pDistance;
+        if (pDistance != null && pDistance > 0) {
           pWaveFeatures.add({
             'type': 'Feature',
             'geometry': {
               'type': 'Polygon',
-              'coordinates': [
-                _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
-              ],
+              'coordinates': [_generateCircleCoordinates(lat, lng, pDistance)],
             },
             'properties': <String, dynamic>{},
           });
         }
 
-        if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
+        final sDistance = travelTime.sDistance;
+        if (sDistance != null && sDistance > 0) {
           sWaveFeatures.add({
             'type': 'Feature',
             'geometry': {
               'type': 'Polygon',
-              'coordinates': [
-                _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
-              ],
+              'coordinates': [_generateCircleCoordinates(lat, lng, sDistance)],
             },
             'properties': {'lineColor': lineColor, 'fillColor': fillColor},
           });

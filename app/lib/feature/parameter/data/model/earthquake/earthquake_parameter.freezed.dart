@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_parameter.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$EarthquakeParameterCopyWithImpl<$Res>
 /// Create a copy of EarthquakeParameter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? metadata = null,Object? prefectures = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeParameter(
 metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as ParameterMetadata,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeParameterPrefectureItem>,
@@ -216,7 +217,7 @@ return $default(_that.metadata,_that.prefectures);case _:
 
 
 class _EarthquakeParameter implements EarthquakeParameter {
-  const _EarthquakeParameter({required this.metadata, required final  List<EarthquakeParameterPrefectureItem> prefectures}): _prefectures = prefectures;
+  const _EarthquakeParameter({required this.metadata, required  List<EarthquakeParameterPrefectureItem> prefectures}): _prefectures = prefectures;
   
 
 @override final  ParameterMetadata metadata;
@@ -347,7 +348,7 @@ class _$EarthquakeParameterPrefectureItemCopyWithImpl<$Res>
 /// Create a copy of EarthquakeParameterPrefectureItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? regions = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeParameterPrefectureItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
@@ -501,7 +502,7 @@ return $default(_that.code,_that.name,_that.regions);case _:
 
 
 class _EarthquakeParameterPrefectureItem implements EarthquakeParameterPrefectureItem {
-  const _EarthquakeParameterPrefectureItem({required this.code, required this.name, required final  List<EarthquakeParameterRegionItem> regions}): _regions = regions;
+  const _EarthquakeParameterPrefectureItem({required this.code, required this.name, required  List<EarthquakeParameterRegionItem> regions}): _regions = regions;
   
 
 @override final  String code;
@@ -634,7 +635,7 @@ class _$EarthquakeParameterRegionItemCopyWithImpl<$Res>
 /// Create a copy of EarthquakeParameterRegionItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = freezed,Object? cities = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeParameterRegionItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,kana: freezed == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
@@ -789,7 +790,7 @@ return $default(_that.code,_that.name,_that.kana,_that.cities);case _:
 
 
 class _EarthquakeParameterRegionItem implements EarthquakeParameterRegionItem {
-  const _EarthquakeParameterRegionItem({required this.code, required this.name, required this.kana, required final  List<EarthquakeParameterCityItem> cities}): _cities = cities;
+  const _EarthquakeParameterRegionItem({required this.code, required this.name, required this.kana, required  List<EarthquakeParameterCityItem> cities}): _cities = cities;
   
 
 @override final  String code;
@@ -924,7 +925,7 @@ class _$EarthquakeParameterCityItemCopyWithImpl<$Res>
 /// Create a copy of EarthquakeParameterCityItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = freezed,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeParameterCityItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,kana: freezed == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
@@ -1079,7 +1080,7 @@ return $default(_that.code,_that.name,_that.kana,_that.stations);case _:
 
 
 class _EarthquakeParameterCityItem implements EarthquakeParameterCityItem {
-  const _EarthquakeParameterCityItem({required this.code, required this.name, required this.kana, required final  List<EarthquakeParameterStationItem> stations}): _stations = stations;
+  const _EarthquakeParameterCityItem({required this.code, required this.name, required this.kana, required  List<EarthquakeParameterStationItem> stations}): _stations = stations;
   
 
 @override final  String code;
@@ -1214,7 +1215,7 @@ class _$EarthquakeParameterStationItemCopyWithImpl<$Res>
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? noCode = null,Object? name = null,Object? kana = freezed,Object? status = null,Object? sourceStatus = null,Object? owner = null,Object? location = null,Object? arv400 = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeParameterStationItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,noCode: null == noCode ? _self.noCode : noCode // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable

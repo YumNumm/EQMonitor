@@ -52,16 +52,6 @@
 - ラベル描画、動的レイヤー、remote source、Asset Pack以外のsource、
   attestation検証、hit test、性能HUD、widget/golden testは
   `BaseMapView`のスコープ外。
-- `BaseMapTileGeometry`はdecodeに使ったMVT `extent`を保持しないため、
-  `BaseMapView`はtile行列へ`mvtDefaultExtent`(4096)を固定値として渡している。
-  実archive(z0/0/0、z4/14/6、z6/57/25で実測)は全layerが`extent=4096`
-  だったため現状は破綻しないが、これは計画の漏れであり、4096以外の`extent`を
-  宣言するsource layerを持つarchiveでは壊れる潜在的な脆さが残っている。
-  layerごとの実際の`extent`を`BaseMapTileGeometry`まで伝播する必要がある。
-- tile coverの複数tileが同じ祖先へfallbackした場合の重複描画排除
-  (`_BaseMapController._rebuildSceneNodes`)。現状は同じtileが複数回
-  描画されても`baseMapLayerSpecs`の色が全て不透明なため見た目には現れないが、
-  半透明色を導入する場合は排除が必要になる。
 
 ## Task 10で観測したfloodの真因(特定済み、修正は別コミット)
 
@@ -79,9 +69,10 @@ ring境界処理の不具合と推測していたが、**いずれも反証さ�
   ringを正しく分離している。当初「巨大三角形2枚」と見えたものは、tile buffer
   のclip辺(`y = extent 4096 + buffer 80`)という正当な地物であり、報告値
   16384と4096の差はhalfWidth 4と1の違いで完全に説明できた。
-- **MVT extentのハードコード**: `base_map_view.dart`がtile行列へ
-  `mvtDefaultExtent`(4096)を固定で渡しているが、実archiveの全layerが
-  `extent=4096`であり縮尺の破綻はない(後述の潜在的脆さは別項)。
+- **MVT extentのハードコード(Task 10当時)**: 観測時の`base_map_view.dart`は
+  tile行列へ`mvtDefaultExtent`(4096)を固定で渡していたが、実archiveの全layerも
+  `extent=4096`だったため、floodの原因ではなかった。#1589ではdecode済みのlayer
+  extentをrender planからtile行列へ渡す経路へ変更済みであり、この固定値経路は残っていない。
 - **miter limit clampの漏れ**: 可視6タイル全layerの全頂点で押し出し長は
   `[1.0, 4.0000002]`に収まり、上限超過は0件。
 - **world空間での過大三角形**: `tileMatrixFor`適用後のworld座標で測っても
@@ -112,10 +103,11 @@ GPUレベルの実験で確認した。`base_map_line.fmat`のfragment shaderを
 `.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/extrude-gpu-probe-report.md`
 にある(このディレクトリはgit管理外)。
 
-## spike用camera配線が描画されない(未修正)
+## spike/preflight camera配線は#1593で検証する
 
 上記の実験中に別の不具合が判明した。**`scene_spike_camera.dart`と同型の
-camera配線(`scene.NodeCamera` + `EqmonitorOrthographicProjection`)は、この
+camera配線（`NodeCamera` + `FlutterSceneOrthographicProjection`（内部で
+`EqmonitorOrthographicProjection`を使用））は、この
 環境で可視レンダリングを一切生成しない。** production実績のある
 `base_map_fill.fmat`を使っても何も描画されず、`BaseMapMaterialPreflightView`
 をそのままマウントしても同様だった。段階的なsanity checkで、組み込み
@@ -126,18 +118,8 @@ geometry/material + `PerspectiveCamera`は正常に描画され、custom `.fmat`
 つまり **Task 1の`BaseMapMaterialPreflightView`は、実際に画面へ何かが出ることを
 一度も目視確認されていない。** Task 1では`.fmat`がimpellercでコンパイルされ
 shaderbundleに`in vec2 extrude;`が入ることまでは確認したが、描画そのものは
-確認していなかった。`BaseMapView`は別のcamera配線
-(`_IdentityCameraProjection` + `viewProjectionMatrixFor`をnodeへ焼き込む方式)を
-使っており、そちらでは描画される。
+確認していなかった。#1589では`BaseMapView`の恒等cameraとnode transform経路だけを
+正式化する。spike/preflightのcamera配線は#1589のsupported routeではない。
 
-`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`が実際に描画されるかは
-別途確認が必要である。
-
-## `BaseMapTileGeometry`がMVT extentを運んでいない(潜在的な脆さ)
-
-`base_map_view.dart`はtile行列へ`mvtDefaultExtent`(4096)を固定で渡している。
-`BaseMapTileGeometry`がどの`extent`でdecodeしたかを保持していないためである。
-実archiveの全layerが`extent=4096`なので現時点で実害はないが、異なる`extent`を
-持つarchiveでは縮尺が壊れる。設計正本は「MVT extentは固定値ではなくtileごとに
-layer宣言値を読む」と定めており、この固定化はそれに反する。計画側でextentの
-伝搬を指定しなかった漏れである。
+`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`の可視出力、GPU lifecycle、
+context recovery、resizeは#1593で一緒に確認する。

@@ -4,13 +4,11 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidStatefulWidget extends AnalysisRule {
   AvoidStatefulWidget()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_stateful_widget',
@@ -29,7 +27,13 @@ class AvoidStatefulWidget extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) => registry.addClassDeclaration(this, _Visitor(this));
+  ) {
+    final path = context.definingUnit.unit.declaredFragment?.source.fullName;
+    if (path != null && LintTargetScope.isExcluded(path: path)) {
+      return;
+    }
+    registry.addClassDeclaration(this, _Visitor(this));
+  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {

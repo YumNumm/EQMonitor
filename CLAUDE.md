@@ -8,7 +8,10 @@ EQMonitor is a Flutter-based earthquake monitoring and early warning app for Jap
 
 ## GitHub / Pull Requests（厳守）
 
-- PR は **常に YumNumm（このリポジトリの `origin`）** のみ。`gh pr create` では `--repo YumNumm/EQMonitor` を明示する。
+- **PR と Issue を作成してよいのは YumNumm org のリポジトリのみ。upstream へは絶対に作成しない。**
+- `gh pr create` / `gh issue create` では `--repo YumNumm/<repo>` を**必ず明示する**。省略禁止。
+- 特に `third_party/flutter_scene` のような fork 配下では、`gh` は既定の送信先を **upstream（`bdero/flutter_scene`）** にする。明示しないと upstream へ PR が飛ぶ。
+- このルールは `.claude/settings.json` の PreToolUse フックでも機械的に強制している（`--repo YumNumm/` を含まない `gh pr create` / `gh issue create` は deny）。フックを迂回しない。
 - メインブランチは `develop`。PR のベースブランチは `develop` を指定する。
 
 ## Setup
@@ -16,10 +19,13 @@ EQMonitor is a Flutter-based earthquake monitoring and early warning app for Jap
 ```bash
 mise install                                      # Install Flutter, Java, Node, etc.
 flutter config --enable-swift-package-manager     # Enable SPM for iOS
+git submodule update --init third_party/flutter_scene  # Required by pub (path dep)
 dart pub global activate melos                    # Install Melos
 melos bootstrap                                   # Resolve workspace dependencies
 mv environment/.env.example environment/.env.dev  # Configure environment
 ```
+
+`third_party/flutter_scene` は `YumNumm/flutter_scene`（`bdero/flutter_scene` の fork）の submodule で、`eqmonitor_map` が `path:` 依存で参照します。初期化しないと `pub get` が失敗します。fork の pin は submodule commit が正本です。
 
 ## Build Commands (Flutter / Dart)
 

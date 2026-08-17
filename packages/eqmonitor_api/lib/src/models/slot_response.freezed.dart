@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'slot_response.dart';
@@ -9,6 +9,7 @@ part of 'slot_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$SlotResponseCopyWithImpl<$Res>
 /// Create a copy of SlotResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? slotType = null,Object? regionId = freezed,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,Object? displayOrder = null,Object? eewEnabled = null,Object? eewMinIntensity = freezed,Object? eewOverrides = freezed,Object? earthquakeEnabled = null,Object? earthquakeMinIntensity = freezed,Object? earthquakeOverrides = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(SlotResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,slotType: null == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
 as SlotType,regionId: freezed == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
@@ -223,7 +224,7 @@ return $default(_that.id,_that.slotType,_that.regionId,_that.regionName,_that.ci
 @JsonSerializable()
 
 class _SlotResponse implements SlotResponse {
-  const _SlotResponse({required this.id, @JsonKey(name: 'slot_type') required this.slotType, @JsonKey(includeIfNull: true, name: 'region_id') required this.regionId, @JsonKey(includeIfNull: true, name: 'region_name') required this.regionName, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode, @JsonKey(includeIfNull: true, name: 'city_name') required this.cityName, @JsonKey(name: 'display_order') required this.displayOrder, @JsonKey(name: 'eew_enabled') required this.eewEnabled, @JsonKey(includeIfNull: true, name: 'eew_min_intensity') required this.eewMinIntensity, @JsonKey(includeIfNull: true, name: 'eew_overrides') required final  List<SlotOverride>? eewOverrides, @JsonKey(name: 'earthquake_enabled') required this.earthquakeEnabled, @JsonKey(includeIfNull: true, name: 'earthquake_min_intensity') required this.earthquakeMinIntensity, @JsonKey(includeIfNull: true, name: 'earthquake_overrides') required final  List<SlotOverride>? earthquakeOverrides, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
+  const _SlotResponse({required this.id, @JsonKey(name: 'slot_type') required this.slotType, @JsonKey(includeIfNull: true, name: 'region_id') required this.regionId, @JsonKey(includeIfNull: true, name: 'region_name') required this.regionName, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode, @JsonKey(includeIfNull: true, name: 'city_name') required this.cityName, @JsonKey(name: 'display_order') required this.displayOrder, @JsonKey(name: 'eew_enabled') required this.eewEnabled, @JsonKey(includeIfNull: true, name: 'eew_min_intensity') required this.eewMinIntensity, @JsonKey(includeIfNull: true, name: 'eew_overrides') required  List<SlotOverride>? eewOverrides, @JsonKey(name: 'earthquake_enabled') required this.earthquakeEnabled, @JsonKey(includeIfNull: true, name: 'earthquake_min_intensity') required this.earthquakeMinIntensity, @JsonKey(includeIfNull: true, name: 'earthquake_overrides') required  List<SlotOverride>? earthquakeOverrides, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
   factory _SlotResponse.fromJson(Map<String, dynamic> json) => _$SlotResponseFromJson(json);
 
 @override final  String id;

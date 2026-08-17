@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_bounds_filter.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
@@ -10,7 +11,7 @@ import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/data/provider/hinet_credentials_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/data/repository/hinet_seismicity_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -263,11 +264,11 @@ class _FetchBody extends HookConsumerWidget {
           ),
         Expanded(
           child: switch (mapConfiguration) {
-            AsyncData(:final value) when value.styleString != null => Stack(
+            AsyncData(value: MapConfiguration(:final styleString?)) => Stack(
               children: [
                 MapLibreMap(
                   options: MapOptions(
-                    initStyle: value.styleString!,
+                    initStyle: styleString,
                     initCenter: const Geographic(lon: 137.0, lat: 36.5),
                     initZoom: 4.5,
                   ),

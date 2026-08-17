@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [EarthquakeHistoryListTile] の各種デザインをプレビューするデバッグページ。
 ///
@@ -217,7 +217,7 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(
         title,
-        style: theme.textTheme.titleSmall!.copyWith(
+        style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.bold,
           color: context.designSystem.colorTheme.primary,
         ),

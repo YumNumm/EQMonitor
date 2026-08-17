@@ -48,19 +48,36 @@ abstract class LpgmKyoshinMonitorWebApiClient {
     @Path('dateTime') required String dateTime,
   });
 
-  /// RealtimeImg
+  /// 強震モニタ RealtimeImg
   ///
   /// [type] データ種別
   /// [layer] 地上(s), 地下(b)
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
   @GET(
-    '/monitor/data/data/map_img/RealTimeImg/{type}_{layer}/{date}/{dateTime}.{type}_{layer}.gif',
+    '/img_svr/data/map_img/RealTimeImg/'
+    '{type}_{layer}/{date}/{dateTime}.{type}_{layer}.gif',
   )
   @DioResponseType(ResponseType.bytes)
-  Future<List<int>> getRealtimeImageData({
+  Future<List<int>> getKyoshinRealtimeImageData({
     @Path('type') required String type,
     @Path('layer') required String layer,
+    @Path('date') required String date,
+    @Path('dateTime') required String dateTime,
+  });
+
+  /// 長周期地震動モニタ RealtimeImg
+  ///
+  /// [type] データ種別
+  /// [date] 日付(yyyyMMdd)
+  /// [dateTime] 日付(yyyyMMddHHmmss)
+  @GET(
+    '/monitor/data/data/map_img/RealTimeImg/'
+    '{type}_s/{date}/{dateTime}.{type}_s.gif',
+  )
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getLpgmRealtimeImageData({
+    @Path('type') required String type,
     @Path('date') required String date,
     @Path('dateTime') required String dateTime,
   });

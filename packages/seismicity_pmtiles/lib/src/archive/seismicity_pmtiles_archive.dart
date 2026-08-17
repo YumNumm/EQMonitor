@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descriptor.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
-import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 
 /// この package が [PmTilesV3Archive] を開くときに使う上限値。PMTiles v3
 /// 仕様そのものではなく運用値であり、汎用package抽出前から変わっていない
@@ -28,6 +27,8 @@ abstract interface class SeismicityPmTilesArchive {
   }
 
   PmTilesV3Header get header;
+
+  SeismicityPmTilesArchiveDescriptor get descriptor;
 
   Stream<int> occupiedTileIdsAtZoom({required int zoom});
 
@@ -75,7 +76,7 @@ final class SeismicityPmTilesArchiveOpener {
 
     return _SeismicityPmTilesArchiveImpl(
       inner: innerArchive,
-      descriptorSource: descriptor.source,
+      descriptor: descriptor,
     );
   }
 
@@ -118,8 +119,8 @@ final class SeismicityPmTilesArchiveOpener {
   }) async {
     try {
       await reader.close();
-      // Reader implementations may throw any error while closing; cleanup must
-      // preserve the original open failure regardless of its type.
+      // Reader implementations may throw unexpected errors while closing;
+      // cleanup must preserve the original open failure regardless of type.
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       // The original open failure and stack are the authoritative failure.
@@ -130,11 +131,13 @@ final class SeismicityPmTilesArchiveOpener {
 final class _SeismicityPmTilesArchiveImpl implements SeismicityPmTilesArchive {
   _SeismicityPmTilesArchiveImpl({
     required this.inner,
-    required this.descriptorSource,
+    required this.descriptor,
   });
 
   final PmTilesV3Archive inner;
-  final SeismicityPmTilesSource descriptorSource;
+
+  @override
+  final SeismicityPmTilesArchiveDescriptor descriptor;
 
   @override
   PmTilesV3Header get header => inner.header;
@@ -144,7 +147,7 @@ final class _SeismicityPmTilesArchiveImpl implements SeismicityPmTilesArchive {
     try {
       return inner.occupiedTileIdsAtZoom(zoom: zoom);
     } on PmTilesV3Exception catch (exception) {
-      throw exception.toSeismicityException(source: descriptorSource);
+      throw exception.toSeismicityException(source: descriptor.source);
     }
   }
 
@@ -157,7 +160,7 @@ final class _SeismicityPmTilesArchiveImpl implements SeismicityPmTilesArchive {
       }
       return bytes;
     } on PmTilesV3Exception catch (exception) {
-      throw exception.toSeismicityException(source: descriptorSource);
+      throw exception.toSeismicityException(source: descriptor.source);
     }
   }
 

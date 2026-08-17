@@ -1,37 +1,39 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
-String feedItemDataText(FeedItemData data) => switch (data) {
-  FeedItemDataEarthquakeNotice(:final text) => text,
-  FeedItemDataEarthquakeExplanation(:final text) => text,
-  FeedItemDataEarthquakeCounts(:final text) => text ?? '',
-  FeedItemDataEarthquakeNankai(:final text) => text ?? '',
-  FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
-  FeedItemDataIncident() => '障害情報',
-  FeedItemDataDeveloperMessage() => '開発者メッセージ',
-};
+extension FeedItemDataDisplay on FeedItemData {
+  String get text => switch (this) {
+    FeedItemDataEarthquakeNotice(:final text) => text,
+    FeedItemDataEarthquakeExplanation(:final text) => text,
+    FeedItemDataEarthquakeCounts(:final text) => text ?? '',
+    FeedItemDataEarthquakeNankai(:final text) => text ?? '',
+    FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
+    FeedItemDataIncident() => '障害情報',
+    FeedItemDataDeveloperMessage() => '開発者メッセージ',
+  };
 
-String? feedItemUrl(FeedItemData data) => switch (data) {
-  FeedItemDataAppUpdate(:final url) => url,
-  FeedItemDataIncident(:final url) => url,
-  FeedItemDataDeveloperMessage(:final url) => url,
-  _ => null,
-};
+  String? get url => switch (this) {
+    FeedItemDataAppUpdate(:final url) => url,
+    FeedItemDataIncident(:final url) => url,
+    FeedItemDataDeveloperMessage(:final url) => url,
+    _ => null,
+  };
 
-String _feedTypeLabel(FeedItemData data) => switch (data) {
-  FeedItemDataEarthquakeNotice() => '地震情報',
-  FeedItemDataEarthquakeExplanation() => '地震解説',
-  FeedItemDataEarthquakeCounts() => '地震回数',
-  FeedItemDataEarthquakeNankai() => '南海トラフ',
-  FeedItemDataAppUpdate() => 'アップデート',
-  FeedItemDataIncident() => '障害情報',
-  FeedItemDataDeveloperMessage() => 'お知らせ',
-};
+  String get typeLabel => switch (this) {
+    FeedItemDataEarthquakeNotice() => '地震情報',
+    FeedItemDataEarthquakeExplanation() => '地震解説',
+    FeedItemDataEarthquakeCounts() => '地震回数',
+    FeedItemDataEarthquakeNankai() => '南海トラフ',
+    FeedItemDataAppUpdate() => 'アップデート',
+    FeedItemDataIncident() => '障害情報',
+    FeedItemDataDeveloperMessage() => 'お知らせ',
+  };
+}
 
 class FeedItemListTileContent extends StatelessWidget {
-  const FeedItemListTileContent({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final FeedItem item;
 
@@ -40,14 +42,16 @@ class FeedItemListTileContent extends StatelessWidget {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
 
+    final summary = item.summary ?? '';
+
     return Row(
       children: [
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
-                (item.summary ?? '').replaceAll("◆", ""),
+                (item.title ?? "").replaceAll("◆", "").replaceAll("\n", ""),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -75,17 +79,16 @@ class FeedItemListTileContent extends StatelessWidget {
 }
 
 class FeedTypeBadge extends StatelessWidget {
-  const FeedTypeBadge({required this.data, super.key});
+  const new({required this.data, super.key});
 
   final FeedItemData data;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      _feedTypeLabel(data),
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-        color: context.designSystem.colorTheme.onSurfaceVariant,
-      ),
+      data.typeLabel,
+      style: Theme.of(context).textTheme.labelSmall
+          ?.copyWith(color: context.designSystem.colorTheme.onSurfaceVariant),
     );
   }
 }
