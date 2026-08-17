@@ -22,58 +22,239 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   testWidgets('EEW warning detail toggles warningEnabled', (tester) async {
-    final recorder = _EewGlobalSettingsRecorder();
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          firebaseMessagingProvider.overrideWithValue(
-            _FakeFirebaseMessaging(
-              _notificationSettings(
-                authorizationStatus: AuthorizationStatus.authorized,
-              ),
-            ),
-          ),
-          osNotificationPermissionProvider.overrideWith(
-            (ref) async => OsNotificationPermission.fromNotificationSettings(
-              _notificationSettings(
-                authorizationStatus: AuthorizationStatus.authorized,
-              ),
-            ),
-          ),
-          startProvider.overrideWith(_FakeStartNotifier.new),
-          notificationPresetProvider.overrideWith(
-            _FakeNotificationPresetNotifier.new,
-          ),
-          generalNotificationSettingsProvider.overrideWith(
-            _FakeGeneralNotificationSettingsNotifier.new,
-          ),
-          notificationSlotsProvider.overrideWith(
-            _FakeNotificationSlotsNotifier.new,
-          ),
-          eewGlobalSettingsProvider.overrideWith(
-            () => _FakeEewGlobalSettingsNotifier(recorder),
-          ),
-          eewWarningConfigProvider.overrideWith(
-            _FakeEewWarningConfigNotifier.new,
-          ),
-        ],
-        child: const _TestApp(home: NotificationSettingsPage()),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('カスタム設定'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('緊急地震速報(警報)'));
-    await tester.pumpAndSettle();
+    final recorders = await pumpWarningPage(tester);
 
     await tester.tap(find.text('通知を受け取る'));
     await tester.pumpAndSettle();
 
-    expect(recorder.lastWarningEnabled, isFalse);
+    expect(recorders.global.lastWarningEnabled, isFalse);
   });
+
+  testWidgets('iOS shows four current-location interruption levels', (
+    tester,
+  ) async {
+    await pumpWarningPage(tester, platform: TargetPlatform.iOS);
+
+    expect(find.text('現在地の割り込みレベル'), findsOneWidget);
+    expect(find.text('パッシブ'), findsOneWidget);
+    expect(find.text('アクティブ'), findsOneWidget);
+    expect(find.text('タイムセンシティブ'), findsOneWidget);
+    expect(find.text('重大な通知'), findsOneWidget);
+  });
+
+  testWidgets('nationwide selector has no critical option', (tester) async {
+    await pumpWarningPage(
+      tester,
+      platform: TargetPlatform.iOS,
+      target: EewWarningTarget.currentLocationAndNationwide,
+    );
+
+    expect(find.text('全国の割り込みレベル'), findsOneWidget);
+    expect(find.text('タイムセンシティブ'), findsNWidgets(2));
+    expect(find.text('重大な通知'), findsOneWidget);
+  });
+
+  testWidgets('interruption selectors update current and nationwide levels', (
+    tester,
+  ) async {
+    final recorders = await pumpWarningPage(
+      tester,
+      platform: TargetPlatform.iOS,
+      target: EewWarningTarget.currentLocationAndNationwide,
+    );
+
+    await tester.ensureVisible(find.text('タイムセンシティブ').first);
+    await tester.tap(find.text('タイムセンシティブ').first);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('パッシブ').last);
+    await tester.tap(find.text('パッシブ').last);
+    await tester.pumpAndSettle();
+
+    expect(
+      recorders.warning.currentLocationInterruptionLevel,
+      InterruptionLevel.timeSensitive,
+    );
+    expect(
+      recorders.warning.nationwideInterruptionLevel,
+      InterruptionLevel.passive,
+    );
+  });
+
+  testWidgets('shows critical permission card only for enabled critical iOS', (
+    tester,
+  ) async {
+    await pumpWarningPage(
+      tester,
+      platform: TargetPlatform.iOS,
+      currentLevel: InterruptionLevel.critical,
+      criticalAlert: AppleNotificationSetting.disabled,
+    );
+
+    expect(find.text('重大な通知を許可'), findsOneWidget);
+    expect(
+      find.text(
+        '現在地が緊急地震速報（警報）の対象になった場合に、'
+        '消音モード中でも通知するには重大な通知の許可が必要です。',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('hides critical permission card unless every condition is met', (
+    tester,
+  ) async {
+    const cases = [
+      (
+        name: 'warning disabled',
+        warningEnabled: false,
+        currentLevel: InterruptionLevel.critical,
+        criticalAlert: AppleNotificationSetting.disabled,
+      ),
+      (
+        name: 'current level is not critical',
+        warningEnabled: true,
+        currentLevel: InterruptionLevel.active,
+        criticalAlert: AppleNotificationSetting.disabled,
+      ),
+      (
+        name: 'critical permission granted',
+        warningEnabled: true,
+        currentLevel: InterruptionLevel.critical,
+        criticalAlert: AppleNotificationSetting.enabled,
+      ),
+      (
+        name: 'critical permission unsupported',
+        warningEnabled: true,
+        currentLevel: InterruptionLevel.critical,
+        criticalAlert: AppleNotificationSetting.notSupported,
+      ),
+    ];
+
+    for (final testCase in cases) {
+      await pumpWarningPage(
+        tester,
+        platform: TargetPlatform.iOS,
+        warningEnabled: testCase.warningEnabled,
+        currentLevel: testCase.currentLevel,
+        criticalAlert: testCase.criticalAlert,
+      );
+      expect(find.text('重大な通知を許可'), findsNothing, reason: testCase.name);
+    }
+  });
+
+  testWidgets('critical permission card opens the existing dialog', (
+    tester,
+  ) async {
+    await pumpWarningPage(
+      tester,
+      platform: TargetPlatform.iOS,
+      currentLevel: InterruptionLevel.critical,
+      criticalAlert: AppleNotificationSetting.disabled,
+    );
+
+    await tester.ensureVisible(find.text('重大な通知を許可'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('重大な通知を許可'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('重大な通知が許可されていません'), findsOneWidget);
+  });
+
+  testWidgets('Android hides interruption selectors and shows OS settings', (
+    tester,
+  ) async {
+    await pumpWarningPage(tester, platform: TargetPlatform.android);
+
+    expect(find.text('現在地の割り込みレベル'), findsNothing);
+    expect(find.text('全国の割り込みレベル'), findsNothing);
+    expect(find.text('Androidの通知設定'), findsOneWidget);
+  });
+}
+
+Future<_WarningPageRecorders> pumpWarningPage(
+  WidgetTester tester, {
+  bool warningEnabled = true,
+  InterruptionLevel currentLevel = InterruptionLevel.active,
+  EewWarningTarget target = EewWarningTarget.currentLocationOnly,
+  InterruptionLevel? nationwideLevel,
+  AppleNotificationSetting criticalAlert =
+      AppleNotificationSetting.notSupported,
+  TargetPlatform platform = TargetPlatform.android,
+}) async {
+  final globalRecorder = _EewGlobalSettingsRecorder();
+  final warningRecorder = _EewWarningConfigRecorder();
+  final notificationSettings = _notificationSettings(
+    authorizationStatus: AuthorizationStatus.authorized,
+    criticalAlert: criticalAlert,
+  );
+  final warningSettings = EewWarningSettings(
+    target: target,
+    currentLocationInterruptionLevel: currentLevel,
+    nationwideInterruptionLevel:
+        target == EewWarningTarget.currentLocationAndNationwide
+        ? nationwideLevel ?? InterruptionLevel.active
+        : null,
+  );
+
+  await tester.pumpWidget(
+    ProviderScope(
+      key: UniqueKey(),
+      overrides: [
+        firebaseMessagingProvider.overrideWithValue(
+          _FakeFirebaseMessaging(notificationSettings),
+        ),
+        osNotificationPermissionProvider.overrideWith(
+          (ref) async => OsNotificationPermission.fromNotificationSettings(
+            notificationSettings,
+          ),
+        ),
+        startProvider.overrideWith(_FakeStartNotifier.new),
+        notificationPresetProvider.overrideWith(
+          _FakeNotificationPresetNotifier.new,
+        ),
+        generalNotificationSettingsProvider.overrideWith(
+          _FakeGeneralNotificationSettingsNotifier.new,
+        ),
+        notificationSlotsProvider.overrideWith(
+          _FakeNotificationSlotsNotifier.new,
+        ),
+        eewGlobalSettingsProvider.overrideWith(
+          () => _FakeEewGlobalSettingsNotifier(
+            recorder: globalRecorder,
+            warningEnabled: warningEnabled,
+          ),
+        ),
+        eewWarningConfigProvider.overrideWith(
+          () => _FakeEewWarningConfigNotifier(
+            initialSettings: warningSettings,
+            recorder: warningRecorder,
+          ),
+        ),
+      ],
+      child: _TestApp(
+        home: const NotificationSettingsPage(),
+        platform: platform,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.byTooltip('カスタム設定'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('緊急地震速報(警報)'));
+  await tester.pumpAndSettle();
+
+  return _WarningPageRecorders(
+    global: globalRecorder,
+    warning: warningRecorder,
+  );
+}
+
+final class _WarningPageRecorders {
+  const _WarningPageRecorders({required this.global, required this.warning});
+
+  final _EewGlobalSettingsRecorder global;
+  final _EewWarningConfigRecorder warning;
 }
 
 final class _EewGlobalSettingsRecorder {
@@ -129,18 +310,22 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
 }
 
 class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
-  _FakeEewGlobalSettingsNotifier(this._recorder);
+  _FakeEewGlobalSettingsNotifier({
+    required _EewGlobalSettingsRecorder recorder,
+    required this.warningEnabled,
+  }) : _recorder = recorder;
 
   final _EewGlobalSettingsRecorder _recorder;
+  final bool warningEnabled;
 
   @override
-  Future<EewGlobalSettings> build() async => const EewGlobalSettings(
+  Future<EewGlobalSettings> build() async => EewGlobalSettings(
     enabled: true,
     defaultSound: 'default',
     defaultInterruptionLevel: InterruptionLevel.active,
     startLiveActivity: true,
     collapseNotification: true,
-    warningEnabled: true,
+    warningEnabled: warningEnabled,
   );
 
   @override
@@ -169,12 +354,48 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
   }
 }
 
+final class _EewWarningConfigRecorder {
+  InterruptionLevel? currentLocationInterruptionLevel;
+  InterruptionLevel? nationwideInterruptionLevel;
+}
+
 class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
+  _FakeEewWarningConfigNotifier({
+    required this.initialSettings,
+    required this.recorder,
+  });
+
+  final EewWarningSettings initialSettings;
+  final _EewWarningConfigRecorder recorder;
+
   @override
-  Future<EewWarningSettings> build() async => const EewWarningSettings(
-    target: EewWarningTarget.currentLocationOnly,
-    nationwideInterruptionLevel: null,
-  );
+  Future<EewWarningSettings> build() async => initialSettings;
+
+  @override
+  Future<void> updateConfig({
+    EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
+    InterruptionLevel? nationwideInterruptionLevel,
+  }) async {
+    if (currentLocationInterruptionLevel != null) {
+      recorder.currentLocationInterruptionLevel =
+          currentLocationInterruptionLevel;
+    }
+    if (nationwideInterruptionLevel != null) {
+      recorder.nationwideInterruptionLevel = nationwideInterruptionLevel;
+    }
+    final current = state.requireValue;
+    state = AsyncData(
+      current.copyWith(
+        target: target ?? current.target,
+        currentLocationInterruptionLevel:
+            currentLocationInterruptionLevel ??
+            current.currentLocationInterruptionLevel,
+        nationwideInterruptionLevel:
+            nationwideInterruptionLevel ?? current.nationwideInterruptionLevel,
+      ),
+    );
+  }
 }
 
 const _freeConstraints = api.PlanConstraints(
@@ -198,13 +419,15 @@ const _subscriptionConstraints = api.PlanConstraints(
 );
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const _TestApp({required this.home, required this.platform});
 
   final Widget home;
+  final TargetPlatform platform;
 
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
+      platform: platform,
       extensions: [DesignSystemThemeExtension.light()],
     );
     return MaterialApp(theme: theme, home: home);

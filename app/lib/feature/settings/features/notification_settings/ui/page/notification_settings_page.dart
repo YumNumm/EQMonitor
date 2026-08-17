@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
@@ -20,9 +21,12 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/a
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/critical_alert_permission_card.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/interruption_level_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -538,7 +542,16 @@ class _EewWarningSettingsPage extends ConsumerWidget {
 
     final config = ref.watch(eewWarningConfigProvider).value;
     final target = config?.target;
+    final currentLocationLevel = config?.currentLocationInterruptionLevel;
     final nationwideLevel = config?.nationwideInterruptionLevel;
+    final permission = ref.watch(osNotificationPermissionProvider).value;
+    final platform = Theme.of(context).platform;
+    final showCriticalAlertPermissionCard =
+        platform == TargetPlatform.iOS &&
+        warningEnabled &&
+        currentLocationLevel == InterruptionLevel.critical &&
+        permission?.isCriticalAlertSupported == true &&
+        permission?.isCriticalAlertGranted == false;
 
     Future<void> select(EewWarningTarget value) async {
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
@@ -595,34 +608,45 @@ class _EewWarningSettingsPage extends ConsumerWidget {
             onTap: () async =>
                 select(EewWarningTarget.currentLocationAndNationwide),
           ),
-          if (target == EewWarningTarget.currentLocationAndNationwide) ...[
-            const SettingsSectionHeader(text: '全国の割り込みレベル'),
-            RadioGroup<InterruptionLevel>(
-              groupValue: nationwideLevel,
-              onChanged: (v) async {
-                if (!warningEnabled) {
-                  return;
-                }
-                if (v != null) {
-                  await updateNationwideLevel(v);
-                }
-              },
-              child: Column(
-                children: [
-                  RadioListTile<InterruptionLevel>(
-                    title: const Text('通常'),
-                    value: InterruptionLevel.active,
-                    enabled: warningEnabled,
-                  ),
-                  RadioListTile<InterruptionLevel>(
-                    title: const Text('サイレント'),
-                    value: InterruptionLevel.passive,
-                    enabled: warningEnabled,
-                  ),
-                ],
+          if (platform == TargetPlatform.iOS) ...[
+            if (currentLocationLevel != null)
+              InterruptionLevelSelector(
+                title: '現在地の割り込みレベル',
+                value: currentLocationLevel,
+                levels: currentLocationLevels,
+                enabled: warningEnabled,
+                onChanged: (value) async {
+                  await EewWarningConfigNotifier.updateConfigMutation.run(ref, (
+                    tsx,
+                  ) async {
+                    await tsx
+                        .get(eewWarningConfigProvider.notifier)
+                        .updateConfig(currentLocationInterruptionLevel: value);
+                  });
+                },
+              ),
+            if (target == EewWarningTarget.currentLocationAndNationwide &&
+                nationwideLevel != null)
+              InterruptionLevelSelector(
+                title: '全国の割り込みレベル',
+                value: nationwideLevel,
+                levels: nationwideLevels,
+                enabled: warningEnabled,
+                onChanged: updateNationwideLevel,
+              ),
+            if (showCriticalAlertPermissionCard)
+              CriticalAlertPermissionCard(
+                onPressed: () =>
+                    showCriticalAlertPermissionDialog(context, ref),
+              ),
+          ] else if (platform == TargetPlatform.android)
+            ListTile(
+              title: const Text('Androidの通知設定'),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () async => AppSettings.openAppSettings(
+                type: AppSettingsType.notification,
               ),
             ),
-          ],
         ],
       ),
     );
