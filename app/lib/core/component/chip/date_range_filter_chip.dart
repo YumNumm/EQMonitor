@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class DateRangeFilterChip extends StatelessWidget {
-  const DateRangeFilterChip({this.min, this.max, this.onChanged, super.key});
+  const new({this.min, this.max, this.onChanged, super.key});
 
   /// 震度の範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される

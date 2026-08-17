@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeTypeFilterChip extends StatelessWidget {
-  const EarthquakeTypeFilterChip({
+  const new({
     this.earthquakeType,
     this.onChanged,
     super.key,
@@ -43,7 +43,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 }
 
 class _EarthquakeTypeFilterModal extends StatelessWidget {
-  const _EarthquakeTypeFilterModal({this.currentType});
+  const new({this.currentType});
 
   final EarthquakeType? currentType;
 

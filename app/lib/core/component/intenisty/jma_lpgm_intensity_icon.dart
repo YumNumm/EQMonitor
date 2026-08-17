@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.da
 import 'package:material_ui/material_ui.dart';
 
 class JmaLpgmIntensityIcon extends StatelessWidget {
-  const JmaLpgmIntensityIcon({
+  const new({
     required this.intensity,
     required this.type,
     this.customText,

@@ -16,7 +16,7 @@ typedef RegionIntensityResult = ({
 });
 
 class RegionIntensityFilterChip extends StatelessWidget {
-  const RegionIntensityFilterChip({
+  const new({
     this.regionSearchType,
     this.regionCode,
     this.regionName,
@@ -90,7 +90,7 @@ class RegionIntensityFilterChip extends StatelessWidget {
 }
 
 class _RegionIntensityPickerPage extends HookConsumerWidget {
-  const _RegionIntensityPickerPage({
+  const new({
     this.initialSearchType,
     this.initialCode,
     this.initialName,
@@ -258,7 +258,7 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
 }
 
 class _IntensityRangeSelector extends HookWidget {
-  const _IntensityRangeSelector({
+  const new({
     required this.min,
     required this.max,
     required this.sliderValues,

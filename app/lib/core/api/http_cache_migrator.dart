@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.da
 const kHttpCacheScopeMigrationVersion = 1;
 
 final class HttpCacheMigrator {
-  const HttpCacheMigrator({required this.clearCache, required this.dataSource});
+  const new({required this.clearCache, required this.dataSource});
 
   final Future<void> Function() clearCache;
   final SharedPreferencesDataSource dataSource;

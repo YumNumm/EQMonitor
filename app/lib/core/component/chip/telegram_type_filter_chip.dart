@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class TelegramTypeFilterChip extends StatelessWidget {
-  const TelegramTypeFilterChip({this.telegramTypes, this.onChanged, super.key});
+  const new({this.telegramTypes, this.onChanged, super.key});
 
   final List<EarthquakeTelegramType>? telegramTypes;
   final ValueChanged<List<EarthquakeTelegramType>?>? onChanged;
@@ -56,7 +56,7 @@ class TelegramTypeFilterChip extends StatelessWidget {
 }
 
 class _TelegramTypeFilterModal extends HookWidget {
-  const _TelegramTypeFilterModal({this.current});
+  const new({this.current});
 
   final List<EarthquakeTelegramType>? current;
 
