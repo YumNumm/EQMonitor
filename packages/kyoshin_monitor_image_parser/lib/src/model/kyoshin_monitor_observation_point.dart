@@ -8,20 +8,20 @@ part 'kyoshin_monitor_observation_point.g.dart';
 @freezed
 abstract class KyoshinMonitorObservationPoint
     with _$KyoshinMonitorObservationPoint {
-  const factory KyoshinMonitorObservationPoint({
+  const factory({
     required String code,
     required int x,
     required int y,
   }) = _KyoshinMonitorObservationPoint;
 
-  factory KyoshinMonitorObservationPoint.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorObservationPointFromJson(json);
 }
 
 @freezed
 abstract class KyoshinMonitorObservationAnalyzedPoint
     with _$KyoshinMonitorObservationAnalyzedPoint {
-  const factory KyoshinMonitorObservationAnalyzedPoint({
+  const factory({
     required KyoshinMonitorObservationPoint point,
     required double scale,
     required int r,
@@ -29,9 +29,9 @@ abstract class KyoshinMonitorObservationAnalyzedPoint
     required int b,
   }) = _KyoshinMonitorObservationAnalyzedPoint;
 
-  const KyoshinMonitorObservationAnalyzedPoint._();
+  const new _();
 
-  factory KyoshinMonitorObservationAnalyzedPoint.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
   ) => _$KyoshinMonitorObservationAnalyzedPointFromJson(json);
 
@@ -45,7 +45,7 @@ abstract class KyoshinMonitorObservationAnalyzedPoint
 /// インデックスで対応する。
 @freezed
 abstract class NamedObservationPoint with _$NamedObservationPoint {
-  const factory NamedObservationPoint({
+  const factory({
     required String code,
     required String name,
     required double latitude,
@@ -54,6 +54,6 @@ abstract class NamedObservationPoint with _$NamedObservationPoint {
     required int y,
   }) = _NamedObservationPoint;
 
-  factory NamedObservationPoint.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$NamedObservationPointFromJson(json);
 }
