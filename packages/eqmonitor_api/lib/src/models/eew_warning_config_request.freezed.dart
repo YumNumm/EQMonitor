@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewWarningConfigRequest {
 
-@JsonKey(includeIfNull: false) Target? get target;@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? get nationwideInterruptionLevel;
+@JsonKey(includeIfNull: false) Target? get target;@JsonKey(includeIfNull: false, name: 'current_location_interruption_level') CurrentLocationInterruptionLevel? get currentLocationInterruptionLevel;@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? get nationwideInterruptionLevel;
 /// Create a copy of EewWarningConfigRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EewWarningConfigRequestCopyWith<EewWarningConfigRequest> get copyWith => _$EewW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningConfigRequest&&(identical(other.target, target) || other.target == target)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningConfigRequest&&(identical(other.target, target) || other.target == target)&&(identical(other.currentLocationInterruptionLevel, currentLocationInterruptionLevel) || other.currentLocationInterruptionLevel == currentLocationInterruptionLevel)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,target,nationwideInterruptionLevel);
+int get hashCode => Object.hash(runtimeType,target,currentLocationInterruptionLevel,nationwideInterruptionLevel);
 
 @override
 String toString() {
-  return 'EewWarningConfigRequest(target: $target, nationwideInterruptionLevel: $nationwideInterruptionLevel)';
+  return 'EewWarningConfigRequest(target: $target, currentLocationInterruptionLevel: $currentLocationInterruptionLevel, nationwideInterruptionLevel: $nationwideInterruptionLevel)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EewWarningConfigRequestCopyWith<$Res>  {
   factory $EewWarningConfigRequestCopyWith(EewWarningConfigRequest value, $Res Function(EewWarningConfigRequest) _then) = _$EewWarningConfigRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false) Target? target,@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? nationwideInterruptionLevel
+@JsonKey(includeIfNull: false) Target? target,@JsonKey(includeIfNull: false, name: 'current_location_interruption_level') CurrentLocationInterruptionLevel? currentLocationInterruptionLevel,@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? nationwideInterruptionLevel
 });
 
 
@@ -65,10 +65,11 @@ class _$EewWarningConfigRequestCopyWithImpl<$Res>
 
 /// Create a copy of EewWarningConfigRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? target = freezed,Object? nationwideInterruptionLevel = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? target = freezed,Object? currentLocationInterruptionLevel = freezed,Object? nationwideInterruptionLevel = freezed,}) {
   return _then(_self.copyWith(
 target: freezed == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
-as Target?,nationwideInterruptionLevel: freezed == nationwideInterruptionLevel ? _self.nationwideInterruptionLevel : nationwideInterruptionLevel // ignore: cast_nullable_to_non_nullable
+as Target?,currentLocationInterruptionLevel: freezed == currentLocationInterruptionLevel ? _self.currentLocationInterruptionLevel : currentLocationInterruptionLevel // ignore: cast_nullable_to_non_nullable
+as CurrentLocationInterruptionLevel?,nationwideInterruptionLevel: freezed == nationwideInterruptionLevel ? _self.nationwideInterruptionLevel : nationwideInterruptionLevel // ignore: cast_nullable_to_non_nullable
 as NationwideInterruptionLevel?,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'current_location_interruption_level')  CurrentLocationInterruptionLevel? currentLocationInterruptionLevel, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewWarningConfigRequest() when $default != null:
-return $default(_that.target,_that.nationwideInterruptionLevel);case _:
+return $default(_that.target,_that.currentLocationInterruptionLevel,_that.nationwideInterruptionLevel);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.target,_that.nationwideInterruptionLevel);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'current_location_interruption_level')  CurrentLocationInterruptionLevel? currentLocationInterruptionLevel, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)  $default,) {final _that = this;
 switch (_that) {
 case _EewWarningConfigRequest():
-return $default(_that.target,_that.nationwideInterruptionLevel);case _:
+return $default(_that.target,_that.currentLocationInterruptionLevel,_that.nationwideInterruptionLevel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.target,_that.nationwideInterruptionLevel);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  Target? target, @JsonKey(includeIfNull: false, name: 'current_location_interruption_level')  CurrentLocationInterruptionLevel? currentLocationInterruptionLevel, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level')  NationwideInterruptionLevel? nationwideInterruptionLevel)?  $default,) {final _that = this;
 switch (_that) {
 case _EewWarningConfigRequest() when $default != null:
-return $default(_that.target,_that.nationwideInterruptionLevel);case _:
+return $default(_that.target,_that.currentLocationInterruptionLevel,_that.nationwideInterruptionLevel);case _:
   return null;
 
 }
@@ -210,10 +211,11 @@ return $default(_that.target,_that.nationwideInterruptionLevel);case _:
 @JsonSerializable()
 
 class _EewWarningConfigRequest implements EewWarningConfigRequest {
-  const _EewWarningConfigRequest({@JsonKey(includeIfNull: false) this.target, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') this.nationwideInterruptionLevel});
+  const _EewWarningConfigRequest({@JsonKey(includeIfNull: false) this.target, @JsonKey(includeIfNull: false, name: 'current_location_interruption_level') this.currentLocationInterruptionLevel, @JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') this.nationwideInterruptionLevel});
   factory _EewWarningConfigRequest.fromJson(Map<String, dynamic> json) => _$EewWarningConfigRequestFromJson(json);
 
 @override@JsonKey(includeIfNull: false) final  Target? target;
+@override@JsonKey(includeIfNull: false, name: 'current_location_interruption_level') final  CurrentLocationInterruptionLevel? currentLocationInterruptionLevel;
 @override@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') final  NationwideInterruptionLevel? nationwideInterruptionLevel;
 
 /// Create a copy of EewWarningConfigRequest
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningConfigRequest&&(identical(other.target, target) || other.target == target)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningConfigRequest&&(identical(other.target, target) || other.target == target)&&(identical(other.currentLocationInterruptionLevel, currentLocationInterruptionLevel) || other.currentLocationInterruptionLevel == currentLocationInterruptionLevel)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,target,nationwideInterruptionLevel);
+int get hashCode => Object.hash(runtimeType,target,currentLocationInterruptionLevel,nationwideInterruptionLevel);
 
 @override
 String toString() {
-  return 'EewWarningConfigRequest(target: $target, nationwideInterruptionLevel: $nationwideInterruptionLevel)';
+  return 'EewWarningConfigRequest(target: $target, currentLocationInterruptionLevel: $currentLocationInterruptionLevel, nationwideInterruptionLevel: $nationwideInterruptionLevel)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$EewWarningConfigRequestCopyWith<$Res> implements $EewWarn
   factory _$EewWarningConfigRequestCopyWith(_EewWarningConfigRequest value, $Res Function(_EewWarningConfigRequest) _then) = __$EewWarningConfigRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false) Target? target,@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? nationwideInterruptionLevel
+@JsonKey(includeIfNull: false) Target? target,@JsonKey(includeIfNull: false, name: 'current_location_interruption_level') CurrentLocationInterruptionLevel? currentLocationInterruptionLevel,@JsonKey(includeIfNull: false, name: 'nationwide_interruption_level') NationwideInterruptionLevel? nationwideInterruptionLevel
 });
 
 
@@ -266,10 +268,11 @@ class __$EewWarningConfigRequestCopyWithImpl<$Res>
 
 /// Create a copy of EewWarningConfigRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? target = freezed,Object? nationwideInterruptionLevel = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? target = freezed,Object? currentLocationInterruptionLevel = freezed,Object? nationwideInterruptionLevel = freezed,}) {
   return _then(_EewWarningConfigRequest(
 target: freezed == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
-as Target?,nationwideInterruptionLevel: freezed == nationwideInterruptionLevel ? _self.nationwideInterruptionLevel : nationwideInterruptionLevel // ignore: cast_nullable_to_non_nullable
+as Target?,currentLocationInterruptionLevel: freezed == currentLocationInterruptionLevel ? _self.currentLocationInterruptionLevel : currentLocationInterruptionLevel // ignore: cast_nullable_to_non_nullable
+as CurrentLocationInterruptionLevel?,nationwideInterruptionLevel: freezed == nationwideInterruptionLevel ? _self.nationwideInterruptionLevel : nationwideInterruptionLevel // ignore: cast_nullable_to_non_nullable
 as NationwideInterruptionLevel?,
   ));
 }

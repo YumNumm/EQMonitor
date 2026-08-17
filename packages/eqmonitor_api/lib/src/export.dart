@@ -381,6 +381,7 @@ export 'models/slot_type.dart';
 export 'models/eew_min_intensity.dart';
 export 'models/earthquake_min_intensity.dart';
 export 'models/target.dart';
+export 'models/current_location_interruption_level.dart';
 export 'models/nationwide_interruption_level.dart';
 export 'models/framework.dart';
 export 'models/result.dart';

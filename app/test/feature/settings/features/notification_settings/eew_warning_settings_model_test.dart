@@ -8,27 +8,40 @@ void main() {
     test('converts current_location_only target', () {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationOnly,
+        currentLocationInterruptionLevel:
+            api.CurrentLocationInterruptionLevel.active,
         nationwideInterruptionLevel: null,
       );
 
       final settings = response.toEewWarningSettings();
 
       expect(settings.target, EewWarningTarget.currentLocationOnly);
+      expect(
+        settings.currentLocationInterruptionLevel,
+        InterruptionLevel.active,
+      );
       expect(settings.nationwideInterruptionLevel, isNull);
     });
 
-    test('converts current_location_and_nationwide target', () {
+    test('maps current critical and nationwide time-sensitive', () {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationAndNationwide,
-        nationwideInterruptionLevel: api.NationwideInterruptionLevel.active,
+        currentLocationInterruptionLevel:
+            api.CurrentLocationInterruptionLevel.critical,
+        nationwideInterruptionLevel:
+            api.NationwideInterruptionLevel.timeSensitive,
       );
 
       final settings = response.toEewWarningSettings();
 
       expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
       expect(
+        settings.currentLocationInterruptionLevel,
+        InterruptionLevel.critical,
+      );
+      expect(
         settings.nationwideInterruptionLevel,
-        InterruptionLevel.active,
+        InterruptionLevel.timeSensitive,
       );
     });
   });

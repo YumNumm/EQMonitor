@@ -89,7 +89,7 @@ void main() {
       );
     });
 
-    test('toApiNationwideInterruptionLevel returns null for unsupported', () {
+    test('toApiNationwideInterruptionLevel rejects only critical', () {
       expect(
         InterruptionLevel.passive.toApiNationwideInterruptionLevel,
         api.NationwideInterruptionLevel.passive,
@@ -100,11 +100,11 @@ void main() {
       );
       expect(
         InterruptionLevel.timeSensitive.toApiNationwideInterruptionLevel,
-        isNull,
+        api.NationwideInterruptionLevel.timeSensitive,
       );
       expect(
-        InterruptionLevel.critical.toApiNationwideInterruptionLevel,
-        isNull,
+        () => InterruptionLevel.critical.toApiNationwideInterruptionLevel,
+        throwsStateError,
       );
     });
   });
@@ -127,5 +127,4 @@ void main() {
       );
     });
   });
-
 }

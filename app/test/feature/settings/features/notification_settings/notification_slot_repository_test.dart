@@ -163,22 +163,39 @@ void main() {
       final settings = await repository.getEewWarningConfig();
 
       expect(settings.target, EewWarningTarget.currentLocationOnly);
+      expect(
+        settings.currentLocationInterruptionLevel,
+        InterruptionLevel.critical,
+      );
       expect(settings.nationwideInterruptionLevel, isNull);
     });
   });
 
   group('patchEewWarningConfig', () {
-    test('sends patch and returns updated settings', () async {
+    test('sends current and nationwide interruption levels', () async {
       final settings = await repository.patchEewWarningConfig(
         target: EewWarningTarget.currentLocationAndNationwide,
-        nationwideInterruptionLevel: InterruptionLevel.active,
+        currentLocationInterruptionLevel: InterruptionLevel.active,
+        nationwideInterruptionLevel: InterruptionLevel.timeSensitive,
       );
 
       expect(
-        settings.target,
-        EewWarningTarget.currentLocationAndNationwide,
+        adapter.lastRequestBody!['current_location_interruption_level'],
+        api.CurrentLocationInterruptionLevel.active,
       );
-      expect(settings.nationwideInterruptionLevel, InterruptionLevel.active);
+      expect(
+        adapter.lastRequestBody!['nationwide_interruption_level'],
+        api.NationwideInterruptionLevel.timeSensitive,
+      );
+      expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
+      expect(
+        settings.currentLocationInterruptionLevel,
+        InterruptionLevel.active,
+      );
+      expect(
+        settings.nationwideInterruptionLevel,
+        InterruptionLevel.timeSensitive,
+      );
     });
   });
 
@@ -255,9 +272,7 @@ final class _SlotApiAdapter implements HttpClientAdapter {
     }
 
     if (path.endsWith('/eew-warning') && method == 'PATCH') {
-      return _jsonResponse(
-        jsonEncode(_eewWarningResponseNationwide),
-      );
+      return _jsonResponse(jsonEncode(_eewWarningResponseNationwide));
     }
 
     if (path.endsWith('/eew') && method == 'GET') {
@@ -342,12 +357,14 @@ final List<Map<String, Object?>> _slotsListResponse = [
 
 const Map<String, String?> _eewWarningResponse = {
   'target': 'current_location_only',
+  'current_location_interruption_level': 'critical',
   'nationwide_interruption_level': null,
 };
 
 const _eewWarningResponseNationwide = {
   'target': 'current_location_and_nationwide',
-  'nationwide_interruption_level': 'active',
+  'current_location_interruption_level': 'active',
+  'nationwide_interruption_level': 'time_sensitive',
 };
 
 const Map<String, Object?> _eewGlobalResponseEnabled = {

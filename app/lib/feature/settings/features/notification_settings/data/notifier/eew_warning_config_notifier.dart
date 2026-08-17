@@ -23,11 +23,13 @@ class EewWarningConfigNotifier extends _$EewWarningConfigNotifier {
 
   Future<void> updateConfig({
     EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     final result = await repo.patchEewWarningConfig(
       target: target,
+      currentLocationInterruptionLevel: currentLocationInterruptionLevel,
       nationwideInterruptionLevel: nationwideInterruptionLevel,
     );
     state = AsyncData(result);

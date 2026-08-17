@@ -53,11 +53,22 @@ extension ApiDefaultInterruptionLevelConverter on api.DefaultInterruptionLevel {
   };
 }
 
+extension ApiCurrentLocationInterruptionLevelConverter
+    on api.CurrentLocationInterruptionLevel {
+  InterruptionLevel get toAppInterruptionLevel => switch (this) {
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
+  };
+}
+
 extension ApiNationwideInterruptionLevelConverter
     on api.NationwideInterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
     .passive => .passive,
     .active => .active,
+    .timeSensitive => .timeSensitive,
   };
 }
 
@@ -77,11 +88,22 @@ extension InterruptionLevelToApi on InterruptionLevel {
         .critical => api.DefaultInterruptionLevel.critical,
       };
 
-  api.NationwideInterruptionLevel? get toApiNationwideInterruptionLevel =>
+  api.CurrentLocationInterruptionLevel
+  get toApiCurrentLocationInterruptionLevel => switch (this) {
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
+  };
+
+  api.NationwideInterruptionLevel get toApiNationwideInterruptionLevel =>
       switch (this) {
         .passive => .passive,
         .active => .active,
-        _ => null,
+        .timeSensitive => .timeSensitive,
+        .critical => throw StateError(
+          'critical cannot be used for nationwide EEW warnings',
+        ),
       };
 }
 

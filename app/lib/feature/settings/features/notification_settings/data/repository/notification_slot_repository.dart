@@ -205,11 +205,14 @@ class NotificationSlotRepository {
 
   Future<EewWarningSettings> patchEewWarningConfig({
     EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
     final response = await _api.device.patchV2DeviceMeSettingsEewWarning(
       body: api.EewWarningConfigRequest(
         target: target?.toApiTarget,
+        currentLocationInterruptionLevel: currentLocationInterruptionLevel
+            ?.toApiCurrentLocationInterruptionLevel,
         nationwideInterruptionLevel:
             nationwideInterruptionLevel?.toApiNationwideInterruptionLevel,
       ),

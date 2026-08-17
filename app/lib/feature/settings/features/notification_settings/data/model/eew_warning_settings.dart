@@ -10,6 +10,7 @@ enum EewWarningTarget { currentLocationOnly, currentLocationAndNationwide }
 abstract class EewWarningSettings with _$EewWarningSettings {
   const factory EewWarningSettings({
     required EewWarningTarget target,
+    required InterruptionLevel currentLocationInterruptionLevel,
     required InterruptionLevel? nationwideInterruptionLevel,
   }) = _EewWarningSettings;
 }
@@ -17,6 +18,8 @@ abstract class EewWarningSettings with _$EewWarningSettings {
 extension ApiEewWarningConfigResponseConverter on api.EewWarningConfigResponse {
   EewWarningSettings toEewWarningSettings() => EewWarningSettings(
     target: target.toAppTarget,
+    currentLocationInterruptionLevel:
+        currentLocationInterruptionLevel.toAppInterruptionLevel,
     nationwideInterruptionLevel:
         nationwideInterruptionLevel?.toAppInterruptionLevel,
   );
