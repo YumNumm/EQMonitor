@@ -4,9 +4,11 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_forecast_threshold_policy.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/formatter/notification_slot_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -24,17 +26,26 @@ class EewForecastSettingsPage extends HookConsumerWidget {
     final slots = [...?slotsAsync.value]
       ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
-    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
         await showErrorDialog(context, error: next.error);
       }
     });
-    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (_, next) async {
+    ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
         await showErrorDialog(context, error: next.error);
       }
     });
-    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (_, next) async {
+    ref.listen(NotificationSlotsNotifier.putNationwideMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
         await showErrorDialog(context, error: next.error);
       }
@@ -65,12 +76,9 @@ class EewForecastSettingsPage extends HookConsumerWidget {
                 );
               },
             ),
-            const SettingsSectionHeader(text: '地域ごとの最小震度'),
+            const SettingsSectionHeader(text: '通知する予想震度のしきい値'),
             for (final slot in slots)
-              _SlotEewTile(
-                slot: slot,
-                enabled: globalEnabled,
-              ),
+              _SlotEewTile(slot: slot, enabled: globalEnabled),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
@@ -88,10 +96,7 @@ class EewForecastSettingsPage extends HookConsumerWidget {
 }
 
 class _MasterEewControl extends StatelessWidget {
-  const _MasterEewControl({
-    required this.value,
-    required this.onChanged,
-  });
+  const _MasterEewControl({required this.value, required this.onChanged});
 
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -117,7 +122,9 @@ class _MasterEewControl extends StatelessWidget {
               vertical: spacing.md,
             ),
             decoration: BoxDecoration(
-              color: value ? colorTheme.surfaceContainerHighest : colorTheme.surfaceContainerHigh,
+              color: value
+                  ? colorTheme.surfaceContainerHighest
+                  : colorTheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(shape.pill),
               border: Border.all(color: colorTheme.outlineVariant),
             ),
@@ -143,42 +150,34 @@ class _MasterEewControl extends StatelessWidget {
 }
 
 class _SlotEewTile extends ConsumerWidget {
-  const _SlotEewTile({
-    required this.slot,
-    required this.enabled,
-  });
+  const _SlotEewTile({required this.slot, required this.enabled});
 
   final NotificationSlot slot;
   final bool enabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (icon, name) = switch (slot.slotType) {
-      NotificationSlotType.currentLocation => ('📍', '現在地'),
-      NotificationSlotType.nationwide => ('🌐', '全国'),
-      NotificationSlotType.region => (
-        '📍',
-        slot.cityName != null
-            ? '${slot.regionName ?? "地域"} ${slot.cityName}'
-            : slot.regionName ?? '地域',
-      ),
+    final icon = switch (slot.slotType) {
+      NotificationSlotType.currentLocation ||
+      NotificationSlotType.region => '📍',
+      NotificationSlotType.nationwide => '🌐',
     };
 
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 20)),
-      title: Text(name),
+      title: Text(NotificationSlotFormatter.displayName(slot)),
+      subtitle: Text(NotificationSlotFormatter.thresholdSubtitle(slot)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _IntensityDropdown(
+            slotType: slot.slotType,
             value: slot.eewMinIntensity,
             enabled: enabled,
             onChanged: (intensity) async {
-              await ref.read(slotUpdateActionProvider).execute(
-                ref,
-                slot,
-                eewMinIntensity: intensity,
-              );
+              await ref
+                  .read(slotUpdateActionProvider)
+                  .execute(ref, slot, eewMinIntensity: intensity);
             },
           ),
           const SizedBox(width: 8),
@@ -186,11 +185,9 @@ class _SlotEewTile extends ConsumerWidget {
             value: slot.eewEnabled,
             onChanged: enabled
                 ? (value) async {
-                    await ref.read(slotUpdateActionProvider).execute(
-                      ref,
-                      slot,
-                      eewEnabled: value,
-                    );
+                    await ref
+                        .read(slotUpdateActionProvider)
+                        .execute(ref, slot, eewEnabled: value);
                   }
                 : null,
           ),
@@ -202,21 +199,24 @@ class _SlotEewTile extends ConsumerWidget {
 
 class _IntensityDropdown extends StatelessWidget {
   const _IntensityDropdown({
+    required this.slotType,
     required this.value,
     required this.enabled,
     required this.onChanged,
   });
 
+  final NotificationSlotType slotType;
   final JmaIntensity? value;
   final bool enabled;
   final ValueChanged<JmaIntensity> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final resolved =
-        value != null && JmaIntensity.selectableValues.contains(value)
-            ? value
-            : JmaIntensity.three;
+    final values = EewForecastThresholdPolicy.valuesFor(slotType);
+    final resolved = EewForecastThresholdPolicy.selectedValueFor(
+      slotType: slotType,
+      value: value,
+    );
 
     return DropdownMenu<JmaIntensity>(
       initialSelection: resolved,
@@ -229,10 +229,10 @@ class _IntensityDropdown extends StatelessWidget {
         }
       },
       dropdownMenuEntries: [
-        for (final intensity in JmaIntensity.selectableValues)
+        for (final intensity in values)
           DropdownMenuEntry(
             value: intensity,
-            label: '震度${intensity.label}',
+            label: NotificationSlotFormatter.intensityLabel(intensity),
           ),
       ],
     );

@@ -5,21 +5,19 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_forecast_threshold_policy.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/formatter/notification_slot_formatter.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SlotDetailPage extends HookConsumerWidget {
-  const SlotDetailPage({
-    required this.slotId,
-    required this.isPro,
-    super.key,
-  });
+  const SlotDetailPage({required this.slotId, required this.isPro, super.key});
 
   final String slotId;
   final bool isPro;
@@ -67,6 +65,10 @@ class SlotDetailPage extends HookConsumerWidget {
                 _NotificationConditionCard(
                   enabled: slot.eewEnabled,
                   minIntensity: slot.eewMinIntensity,
+                  thresholdTitle: '通知する予想震度のしきい値',
+                  thresholdSubtitle:
+                      NotificationSlotFormatter.thresholdSubtitle(slot),
+                  eewSlotType: slot.slotType,
                   isPro: isPro,
                   overrides: slot.eewOverrides ?? [],
                   onEnabledChanged: (next) => ref
@@ -90,6 +92,9 @@ class SlotDetailPage extends HookConsumerWidget {
                 _NotificationConditionCard(
                   enabled: slot.earthquakeEnabled,
                   minIntensity: slot.earthquakeMinIntensity,
+                  thresholdTitle: '最小震度',
+                  thresholdSubtitle: null,
+                  eewSlotType: null,
                   isPro: isPro,
                   overrides: slot.earthquakeOverrides ?? [],
                   onEnabledChanged: (next) => ref
@@ -132,7 +137,6 @@ class SlotDetailPage extends HookConsumerWidget {
             ),
     );
   }
-
 }
 
 extension NotificationSlotTypeLabel on NotificationSlotType {
@@ -147,6 +151,9 @@ class _NotificationConditionCard extends StatelessWidget {
   const _NotificationConditionCard({
     required this.enabled,
     required this.minIntensity,
+    required this.thresholdTitle,
+    required this.thresholdSubtitle,
+    required this.eewSlotType,
     required this.isPro,
     required this.overrides,
     required this.onEnabledChanged,
@@ -156,6 +163,9 @@ class _NotificationConditionCard extends StatelessWidget {
 
   final bool enabled;
   final JmaIntensity? minIntensity;
+  final String thresholdTitle;
+  final String? thresholdSubtitle;
+  final NotificationSlotType? eewSlotType;
   final bool isPro;
   final List<NotificationOverride> overrides;
   final ValueChanged<bool> onEnabledChanged;
@@ -194,10 +204,15 @@ class _NotificationConditionCard extends StatelessWidget {
           const Divider(height: 1),
           ListTile(
             enabled: enabled,
-            title: const Text('最小震度'),
+            title: Text(thresholdTitle),
+            subtitle: switch (thresholdSubtitle) {
+              final String subtitle => Text(subtitle),
+              null => null,
+            },
             trailing: _IntensityDropdown(
               value: minIntensity,
               enabled: enabled,
+              eewSlotType: eewSlotType,
               onChanged: onMinIntensityChanged,
             ),
           ),
@@ -228,19 +243,29 @@ class _IntensityDropdown extends StatelessWidget {
   const _IntensityDropdown({
     required this.value,
     required this.enabled,
+    required this.eewSlotType,
     required this.onChanged,
   });
 
   final JmaIntensity? value;
   final bool enabled;
+  final NotificationSlotType? eewSlotType;
   final ValueChanged<JmaIntensity> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final resolved =
-        value != null && JmaIntensity.selectableValues.contains(value)
-        ? value
-        : JmaIntensity.three;
+    final slotType = eewSlotType;
+    final values = slotType == null
+        ? JmaIntensity.selectableValues
+        : EewForecastThresholdPolicy.valuesFor(slotType);
+    final resolved = slotType == null
+        ? value != null && values.contains(value)
+              ? value
+              : JmaIntensity.three
+        : EewForecastThresholdPolicy.selectedValueFor(
+            slotType: slotType,
+            value: value,
+          );
 
     return DropdownMenu<JmaIntensity>(
       initialSelection: resolved,
@@ -253,10 +278,12 @@ class _IntensityDropdown extends StatelessWidget {
         }
       },
       dropdownMenuEntries: [
-        for (final intensity in JmaIntensity.selectableValues)
+        for (final intensity in values)
           DropdownMenuEntry(
             value: intensity,
-            label: '震度${intensity.label}',
+            label: slotType == null
+                ? '震度${intensity.label}'
+                : NotificationSlotFormatter.intensityLabel(intensity),
           ),
       ],
     );
@@ -274,10 +301,7 @@ class _DeleteRegionTile extends StatelessWidget {
 
     return ListTile(
       leading: Icon(Icons.delete_outline, color: colorTheme.error),
-      title: Text(
-        'この地域を削除',
-        style: TextStyle(color: colorTheme.error),
-      ),
+      title: Text('この地域を削除', style: TextStyle(color: colorTheme.error)),
       onTap: onTap,
     );
   }
