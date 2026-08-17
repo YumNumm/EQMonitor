@@ -17,18 +17,17 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// AGP 9 の lint ワーカー (AndroidLintWorkAction) が CI の JDK では初期化できず、
-// pub 依存の Android module の lintVital / extract*Annotations が
-// release build ごと落ちるため無効化する。
-// 対象は third-party の生成物で、lint 結果や AAR annotations を我々が扱うことはない。
+// pub 依存 module の lintVital は third-party の生成物で結果を扱うことがないため
+// 無効化する (release build 時間の節約)。
+// かつて CI で AndroidLintWorkAction が初期化できなかった根本原因は
+// JDK 17.0.2 の cgroup v2 検出 NPE で、mise.toml の Temurin 更新で解消済み。
+// extract*Annotations は下流 (syncReleaseLibJars) が typedefs.txt を要求するため
+// 無効化してはならない。
 // NOTE: AGP 9 では lint DSL (checkReleaseBuilds) の設定が評価順の都合で
 // "It is too late to set checkReleaseBuilds" になるため、タスク自体を無効化する。
 subprojects {
     tasks.configureEach {
-        if (
-            name.startsWith("lintVital") ||
-            (name.startsWith("extract") && name.endsWith("Annotations"))
-        ) {
+        if (name.startsWith("lintVital")) {
             enabled = false
         }
     }
