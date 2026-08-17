@@ -6,7 +6,7 @@ part 'shake_detection_settings.freezed.dart';
 
 @freezed
 abstract class ShakeDetectionEntry with _$ShakeDetectionEntry {
-  const factory ShakeDetectionEntry({
+  const factory({
     required String id,
     required String? subRegionId,
     required String? subRegionName,
@@ -46,7 +46,7 @@ extension ShakeDetectionEntryRequestConverter on ShakeDetectionEntry {
 
 @freezed
 abstract class ShakeDetectionSubRegion with _$ShakeDetectionSubRegion {
-  const factory ShakeDetectionSubRegion({
+  const factory({
     required String id,
     required String code,
     required String name,

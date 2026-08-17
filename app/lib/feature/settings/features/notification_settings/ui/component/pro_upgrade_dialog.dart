@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// Pro プランへのアップグレード案内ダイアログの表示を担う。
 class ProUpgradeDialogAction {
-  const ProUpgradeDialogAction();
+  const new();
 
   Future<void> show(BuildContext context) async {
     await showDialog<void>(
@@ -16,7 +16,7 @@ class ProUpgradeDialogAction {
 }
 
 class _ProUpgradeDialog extends ConsumerWidget {
-  const _ProUpgradeDialog();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

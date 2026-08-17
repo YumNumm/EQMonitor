@@ -12,7 +12,7 @@ EewWarningSettingsAction eewWarningSettingsAction(Ref ref) =>
     const EewWarningSettingsAction();
 
 class EewWarningSettingsAction {
-  const EewWarningSettingsAction();
+  const new();
 
   Future<void> updateCurrentLocation(
     WidgetRef ref, {

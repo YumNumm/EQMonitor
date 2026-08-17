@@ -4,7 +4,7 @@ enum NotificationSound {
   eewForecast('eew_forecast', 'EEW予報音'),
   earthquake('earthquake', '地震情報音');
 
-  const NotificationSound(this.apiValue, this.displayName);
+  new(this.apiValue, this.displayName);
   final String apiValue;
   final String displayName;
 

@@ -7,13 +7,13 @@ part 'notification_override.g.dart';
 
 @freezed
 abstract class NotificationOverride with _$NotificationOverride {
-  const factory NotificationOverride({
+  const factory({
     required JmaIntensity minJmaIntensity,
     required String sound,
     required InterruptionLevel interruptionLevel,
   }) = _NotificationOverride;
 
-  factory NotificationOverride.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$NotificationOverrideFromJson(json);
 }
 

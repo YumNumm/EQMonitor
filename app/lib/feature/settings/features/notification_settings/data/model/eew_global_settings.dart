@@ -7,7 +7,7 @@ part 'eew_global_settings.g.dart';
 
 @freezed
 abstract class EewGlobalSettings with _$EewGlobalSettings {
-  const factory EewGlobalSettings({
+  const factory({
     required bool enabled,
     required String defaultSound,
     required InterruptionLevel defaultInterruptionLevel,
@@ -16,7 +16,7 @@ abstract class EewGlobalSettings with _$EewGlobalSettings {
     required bool warningEnabled,
   }) = _EewGlobalSettings;
 
-  factory EewGlobalSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EewGlobalSettingsFromJson(json);
 }
 

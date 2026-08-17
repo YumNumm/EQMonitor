@@ -7,7 +7,7 @@ part 'earthquake_global_settings.g.dart';
 
 @freezed
 abstract class EarthquakeGlobalSettings with _$EarthquakeGlobalSettings {
-  const factory EarthquakeGlobalSettings({
+  const factory({
     required bool enabled,
     required String defaultSound,
     required InterruptionLevel defaultInterruptionLevel,
@@ -15,7 +15,7 @@ abstract class EarthquakeGlobalSettings with _$EarthquakeGlobalSettings {
     required bool collapseNotification,
   }) = _EarthquakeGlobalSettings;
 
-  factory EarthquakeGlobalSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeGlobalSettingsFromJson(json);
 }
 

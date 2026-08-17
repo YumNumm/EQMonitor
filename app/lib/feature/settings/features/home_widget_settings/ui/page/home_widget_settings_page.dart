@@ -12,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeWidgetSettingsPage extends ConsumerWidget {
-  const HomeWidgetSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class HomeWidgetSettingsPage extends ConsumerWidget {
 }
 
 class _WidgetRegionSection extends ConsumerWidget {
-  const _WidgetRegionSection({required this.isPro, required this.regionAsync});
+  const new({required this.isPro, required this.regionAsync});
 
   final bool isPro;
   final AsyncValue<WidgetRegionSelection?> regionAsync;
@@ -91,7 +91,7 @@ class _WidgetRegionSection extends ConsumerWidget {
 }
 
 class _WidgetRegionPickerPage extends HookWidget {
-  const _WidgetRegionPickerPage({this.initial});
+  const new({this.initial});
 
   final WidgetRegionSelection? initial;
 
