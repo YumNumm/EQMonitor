@@ -197,4 +197,3 @@ per-message sound から Android の importance を推測しない。
 - Webhook API の Channel enum 化
 - 旧アプリ向け Channel version gate と段階移行
 - FCM/APNs を唯一の生命安全通知経路として保証すること
-
