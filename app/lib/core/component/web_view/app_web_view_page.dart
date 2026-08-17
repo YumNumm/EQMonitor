@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/web_view/app_web_view_body.dart';
+import 'package:eqmonitor/core/component/web_view/app_web_view_navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -11,38 +12,52 @@ class AppWebViewPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useRef<InAppWebViewController?>(null);
-    final status = useState(AppWebViewLoadStatus.loading);
+    final navigation = useState(const AppWebViewNavigationState.initial());
+    final generation = navigation.value.generation;
+    final webView = useMemoized(
+      () => InAppWebView(
+        key: ValueKey<int>(generation),
+        initialUrlRequest: URLRequest(url: WebUri(url)),
+        onLoadStart: (_, value) {
+          navigation.value = navigation.value.loadStarted(
+            generation: generation,
+            url: value,
+          );
+        },
+        onLoadStop: (_, value) {
+          navigation.value = navigation.value.loadStopped(
+            generation: generation,
+            url: value,
+          );
+        },
+        onReceivedError: (_, request, error) {
+          navigation.value = navigation.value.networkError(
+            generation: generation,
+            url: request.url,
+            isForMainFrame: request.isForMainFrame,
+            isCancellation: error.type == WebResourceErrorType.CANCELLED,
+          );
+        },
+        onReceivedHttpError: (_, request, response) {
+          navigation.value = navigation.value.httpError(
+            generation: generation,
+            url: request.url,
+            isForMainFrame: request.isForMainFrame,
+            statusCode: response.statusCode,
+          );
+        },
+      ),
+      [generation, url],
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: AppWebViewBody(
-        status: status.value,
+        status: navigation.value.status,
         onRetry: () async {
-          status.value = AppWebViewLoadStatus.loading;
-          await controller.value?.reload();
+          navigation.value = navigation.value.retry();
         },
-        webView: InAppWebView(
-          initialUrlRequest: URLRequest(url: WebUri(url)),
-          onWebViewCreated: (value) => controller.value = value,
-          onLoadStart: (_, _) => status.value = AppWebViewLoadStatus.loading,
-          onLoadStop: (_, _) {
-            if (status.value != AppWebViewLoadStatus.error) {
-              status.value = AppWebViewLoadStatus.loaded;
-            }
-          },
-          onReceivedError: (_, request, _) {
-            if (request.isForMainFrame ?? true) {
-              status.value = AppWebViewLoadStatus.error;
-            }
-          },
-          onReceivedHttpError: (_, request, response) {
-            final isFailure = (response.statusCode ?? 0) >= 400;
-            if ((request.isForMainFrame ?? true) && isFailure) {
-              status.value = AppWebViewLoadStatus.error;
-            }
-          },
-        ),
+        webView: webView,
       ),
     );
   }
