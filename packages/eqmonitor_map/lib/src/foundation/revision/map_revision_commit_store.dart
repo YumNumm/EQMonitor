@@ -2,7 +2,7 @@ import 'package:eqmonitor_map/src/foundation/revision/map_revision.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_revision_state_owner.dart';
 
 final class MapRevisionCommitStore<TState> {
-  MapRevisionCommitStore(this._owner);
+  new(this._owner);
 
   final MapRevisionStateOwner<TState> _owner;
   MapCommittedRevision<TState>? _current;

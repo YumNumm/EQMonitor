@@ -5,7 +5,7 @@ part 'map_revision.freezed.dart';
 
 @Freezed(copyWith: false)
 sealed class MapFullRevision with _$MapFullRevision {
-  const factory MapFullRevision._({
+  const factory _({
     required MapSourceInstanceId source,
     required int revision,
     required MapContentDigest digest,
@@ -14,7 +14,7 @@ sealed class MapFullRevision with _$MapFullRevision {
 
 @Freezed(copyWith: false)
 sealed class MapDeltaRevision with _$MapDeltaRevision {
-  const factory MapDeltaRevision._({
+  const factory _({
     required MapSourceInstanceId source,
     required int baseRevision,
     required int targetRevision,
@@ -76,7 +76,7 @@ MapDeltaRevision createMapDeltaRevision({
 
 @Freezed(copyWith: false)
 sealed class MapCommittedRevision<TState> with _$MapCommittedRevision<TState> {
-  const factory MapCommittedRevision._({
+  const factory _({
     required MapSourceInstanceId source,
     required int revision,
     required MapContentDigest digest,
@@ -86,7 +86,7 @@ sealed class MapCommittedRevision<TState> with _$MapCommittedRevision<TState> {
 
 @Freezed(copyWith: false)
 sealed class MapFullResyncRequest with _$MapFullResyncRequest {
-  const factory MapFullResyncRequest._({
+  const factory _({
     required MapSourceInstanceId source,
     required int? afterRevision,
   }) = _MapFullResyncRequest;
@@ -111,11 +111,11 @@ enum MapRevisionApplyResultKind { committed, idempotentNoOp, rejected }
 )
 sealed class MapRevisionApplyResult<TState>
     with _$MapRevisionApplyResult<TState> {
-  factory MapRevisionApplyResult.committed({
+  factory committed({
     required MapCommittedRevision<TState> current,
   }) => MapRevisionApplyResult._committed(current: current);
 
-  factory MapRevisionApplyResult.idempotentNoOp({
+  factory idempotentNoOp({
     required MapCommittedRevision<TState> current,
     MapFullResyncRequest? fullResyncRequest,
   }) {
@@ -135,7 +135,7 @@ sealed class MapRevisionApplyResult<TState>
     );
   }
 
-  factory MapRevisionApplyResult.rejected({
+  factory rejected({
     required MapCommittedRevision<TState>? current,
     required MapRevisionRejectReason reason,
     MapFullResyncRequest? fullResyncRequest,
@@ -161,19 +161,19 @@ sealed class MapRevisionApplyResult<TState>
     );
   }
 
-  const factory MapRevisionApplyResult._committed({
+  const factory _committed({
     required MapCommittedRevision<TState> current,
     MapRevisionRejectReason? reason,
     MapFullResyncRequest? fullResyncRequest,
   }) = _MapRevisionApplyResultCommitted<TState>;
 
-  const factory MapRevisionApplyResult._idempotentNoOp({
+  const factory _idempotentNoOp({
     required MapCommittedRevision<TState> current,
     MapRevisionRejectReason? reason,
     MapFullResyncRequest? fullResyncRequest,
   }) = _MapRevisionApplyResultIdempotentNoOp<TState>;
 
-  const factory MapRevisionApplyResult._rejected({
+  const factory _rejected({
     required MapCommittedRevision<TState>? current,
     required MapRevisionRejectReason reason,
     MapFullResyncRequest? fullResyncRequest,

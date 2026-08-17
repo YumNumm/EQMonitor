@@ -1,5 +1,5 @@
 final class MapRenderSortKey {
-  MapRenderSortKey({
+  new({
     required this.phasePolicyVersion,
     required this.phase,
     required this.declarationOrderWithinPhase,

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 /// コードは持たせず、手書きの`==`/`hashCode`を持つ素のimmutable classにする。
 @immutable
 class CanonicalTileId {
-  const CanonicalTileId({required this.z, required this.x, required this.y})
+  const new({required this.z, required this.x, required this.y})
     : assert(z >= 0, 'z must be non-negative'),
       assert(x >= 0, 'x must be non-negative'),
       assert(y >= 0, 'y must be non-negative');
@@ -64,7 +64,7 @@ class OverscaledTileId {
   // フィールドを読むため、const constructorのconstant evaluationでは
   // 扱えない(単純な自パラメータ同士の比較を超える)。CanonicalTileIdとは
   // 違いconstにはしない。
-  OverscaledTileId({
+  new({
     required this.overscaledZ,
     required this.wrap,
     required this.canonical,
@@ -106,7 +106,7 @@ class OverscaledTileId {
 /// 入力はこのIDになる。
 @immutable
 class UnwrappedTileId {
-  const UnwrappedTileId({required this.wrap, required this.canonical});
+  const new({required this.wrap, required this.canonical});
 
   final int wrap;
   final CanonicalTileId canonical;

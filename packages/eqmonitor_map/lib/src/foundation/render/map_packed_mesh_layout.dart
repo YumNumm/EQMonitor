@@ -15,13 +15,13 @@ enum MapIndexFormat {
   uint32(byteLength: 4),
   ;
 
-  const MapIndexFormat({required this.byteLength});
+  new({required this.byteLength});
 
   final int byteLength;
 }
 
 final class MapPackedMeshLayout {
-  const MapPackedMeshLayout._({
+  const new _({
     required this.version,
     required this.topology,
     required this.byteOrder,

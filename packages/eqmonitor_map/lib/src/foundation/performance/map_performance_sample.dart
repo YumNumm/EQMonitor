@@ -10,7 +10,7 @@ part 'map_performance_sample.freezed.dart';
   when: FreezedWhenOptions.none,
 )
 abstract class MapPerformanceSample with _$MapPerformanceSample {
-  const factory MapPerformanceSample._({
+  const factory _({
     required MapPerformanceSchemaVersion schemaVersion,
     required MapClockDomainId clockDomain,
     required MapPerformanceMetricKind kind,
@@ -18,7 +18,7 @@ abstract class MapPerformanceSample with _$MapPerformanceSample {
     required int value,
   }) = _MapPerformanceSample;
 
-  factory MapPerformanceSample.duration({
+  factory duration({
     required MapPerformanceSchemaVersion schemaVersion,
     required MapClockDomainId clockDomain,
     required MapPerformanceMetricKind kind,
@@ -40,7 +40,7 @@ abstract class MapPerformanceSample with _$MapPerformanceSample {
     );
   }
 
-  factory MapPerformanceSample.count({
+  factory count({
     required MapPerformanceSchemaVersion schemaVersion,
     required MapClockDomainId clockDomain,
     required MapPerformanceMetricKind kind,
@@ -62,7 +62,7 @@ abstract class MapPerformanceSample with _$MapPerformanceSample {
     );
   }
 
-  factory MapPerformanceSample.bytes({
+  factory bytes({
     required MapPerformanceSchemaVersion schemaVersion,
     required MapClockDomainId clockDomain,
     required MapPerformanceMetricKind kind,

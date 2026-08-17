@@ -3,7 +3,7 @@ extension type const MapRenderPhaseId._(String value) {
 }
 
 final class MapRenderPhasePolicy {
-  const MapRenderPhasePolicy._({
+  const new _({
     required this.version,
     required this.orderedPhases,
     required this._rankByPhase,
