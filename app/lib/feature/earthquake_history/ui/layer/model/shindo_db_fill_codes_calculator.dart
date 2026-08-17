@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intens
 
 /// 震度DB塗り潰しレイヤーの階級ごとの対象コードを算出する。
 class ShindoDbFillCodesCalculator {
-  const ShindoDbFillCodesCalculator();
+  const new();
 
   /// 階級ごとの塗り潰し対象コード (orderIndex 昇順 = 低階級→高階級)。
   /// 低階級から順にレイヤー追加することで高階級レイヤーが上に来る。

@@ -5,7 +5,7 @@ part 'eew_warning_overlay_candidate.freezed.dart';
 
 @Freezed(toJson: false)
 abstract class EewWarningOverlayCandidate with _$EewWarningOverlayCandidate {
-  const factory EewWarningOverlayCandidate({
+  const factory({
     required EewTelegramItem event,
     required String warningAreaCode,
     required String warningAreaName,
