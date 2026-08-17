@@ -26,7 +26,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 const _semanticKey = EarthquakeVxseDebugEditorSemanticKey();
 
 class EarthquakeVxseDebugEditor extends HookConsumerWidget {
-  const EarthquakeVxseDebugEditor({required this.current, super.key});
+  const new({required this.current, super.key});
 
   final Earthquake current;
 
@@ -101,7 +101,7 @@ class EarthquakeVxseDebugEditor extends HookConsumerWidget {
 }
 
 class _SharedReportFields extends StatelessWidget {
-  const _SharedReportFields({required this.state, required this.notifier});
+  const new({required this.state, required this.notifier});
 
   final EarthquakeVxseDebugEditorState state;
   final EarthquakeVxseDebugEditorController notifier;
@@ -197,7 +197,7 @@ class _SharedReportFields extends StatelessWidget {
 }
 
 class _HypocenterFields extends StatelessWidget {
-  const _HypocenterFields({required this.draft, required this.notifier});
+  const new({required this.draft, required this.notifier});
 
   final EarthquakeVxseDebugDraft draft;
   final EarthquakeVxseDebugEditorController notifier;
@@ -559,7 +559,7 @@ enum _MagnitudeEditorType { value, unknown, overM8 }
 enum _DepthEditorType { shallow, value, over700km, unknown }
 
 class _SeismicIntensityFields extends StatelessWidget {
-  const _SeismicIntensityFields({required this.draft, required this.notifier});
+  const new({required this.draft, required this.notifier});
 
   final EarthquakeVxseDebugDraft draft;
   final EarthquakeVxseDebugEditorController notifier;
@@ -721,7 +721,7 @@ class _SeismicIntensityFields extends StatelessWidget {
 }
 
 class _Vxse51PrefectureFields extends StatelessWidget {
-  const _Vxse51PrefectureFields({
+  const new({
     required this.prefectures,
     required this.maxIntensity,
     required this.notifier,
@@ -825,7 +825,7 @@ class _Vxse51PrefectureFields extends StatelessWidget {
 }
 
 class _OrdinaryTreeFields extends StatelessWidget {
-  const _OrdinaryTreeFields({
+  const new({
     required this.tree,
     required this.maxIntensity,
     required this.ownsCities,
@@ -1206,7 +1206,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
 }
 
 class _LpgmFields extends StatelessWidget {
-  const _LpgmFields({required this.draft, required this.notifier});
+  const new({required this.draft, required this.notifier});
 
   final EarthquakeVxse62DebugDraft draft;
   final EarthquakeVxseDebugEditorController notifier;
@@ -1596,7 +1596,7 @@ class _LpgmFields extends StatelessWidget {
 }
 
 class _CommentsFields extends StatelessWidget {
-  const _CommentsFields({
+  const new({
     required this.selectedType,
     required this.draft,
     required this.notifier,
@@ -1669,7 +1669,7 @@ class _CommentsFields extends StatelessWidget {
 }
 
 class _JsonEditor extends HookWidget {
-  const _JsonEditor({required this.state, required this.notifier});
+  const new({required this.state, required this.notifier});
 
   final EarthquakeVxseDebugEditorState state;
   final EarthquakeVxseDebugEditorController notifier;
@@ -1714,7 +1714,7 @@ class _JsonEditor extends HookWidget {
 }
 
 class _OrdinaryRegionRow extends StatelessWidget {
-  const _OrdinaryRegionRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.level,
@@ -1828,7 +1828,7 @@ class _OrdinaryRegionRow extends StatelessWidget {
 }
 
 class _OrdinaryPrefectureRow extends StatelessWidget {
-  const _OrdinaryPrefectureRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.level,
@@ -1940,7 +1940,7 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
 }
 
 class _OrdinaryCityRow extends StatelessWidget {
-  const _OrdinaryCityRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.city,
@@ -2039,7 +2039,7 @@ class _OrdinaryCityRow extends StatelessWidget {
 }
 
 class _StationParentCityLocator extends StatelessWidget {
-  const _StationParentCityLocator({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.currentCode,
@@ -2109,7 +2109,7 @@ class _StationParentCityLocator extends StatelessWidget {
 }
 
 class _OrdinaryStationRow extends StatelessWidget {
-  const _OrdinaryStationRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.ownsStationDetails,
@@ -2230,7 +2230,7 @@ class _OrdinaryStationRow extends StatelessWidget {
 }
 
 class _LpgmRegionRow extends StatelessWidget {
-  const _LpgmRegionRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.level,
@@ -2342,7 +2342,7 @@ class _LpgmRegionRow extends StatelessWidget {
 }
 
 class _LpgmPrefectureRow extends StatelessWidget {
-  const _LpgmPrefectureRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.level,
@@ -2456,7 +2456,7 @@ class _LpgmPrefectureRow extends StatelessWidget {
 }
 
 class _LpgmStationRow extends StatelessWidget {
-  const _LpgmStationRow({
+  const new({
     required this.notifier,
     required this.fieldPrefix,
     required this.station,
@@ -2574,7 +2574,7 @@ class _LpgmStationRow extends StatelessWidget {
 }
 
 class _StationDetailsFields extends StatelessWidget {
-  const _StationDetailsFields({
+  const new({
     required this.fieldPrefix,
     required this.intensity,
     required this.notifier,
@@ -2795,7 +2795,7 @@ class _StationDetailsFields extends StatelessWidget {
 }
 
 class _CommentRow extends StatelessWidget {
-  const _CommentRow({
+  const new({
     required this.fieldPrefix,
     required this.comment,
     required this.notifier,
@@ -2877,7 +2877,7 @@ class _CommentRow extends StatelessWidget {
 }
 
 class _ControlledTextFormField extends HookWidget {
-  const _ControlledTextFormField({
+  const new({
     required this.fieldId,
     required this.value,
     required this.label,
@@ -2936,7 +2936,7 @@ class _ControlledTextFormField extends HookWidget {
 }
 
 class _ControlledDropdown<T> extends StatelessWidget {
-  const _ControlledDropdown({
+  const new({
     required this.value,
     required this.label,
     required this.items,
