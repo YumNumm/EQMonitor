@@ -5,10 +5,10 @@ part 'seismicity_pmtiles_result.freezed.dart';
 
 @freezed
 sealed class SeismicityPmTilesResult<T> with _$SeismicityPmTilesResult<T> {
-  const factory SeismicityPmTilesResult.success({required T value}) =
+  const factory success({required T value}) =
       SeismicityPmTilesSuccess<T>;
 
-  const factory SeismicityPmTilesResult.failure({
+  const factory failure({
     required SeismicityPmTilesException exception,
   }) = SeismicityPmTilesFailure<T>;
 }

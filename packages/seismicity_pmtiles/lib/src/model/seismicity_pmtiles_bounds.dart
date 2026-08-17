@@ -5,13 +5,13 @@ part 'seismicity_pmtiles_bounds.g.dart';
 
 @freezed
 abstract class SeismicityPmTilesBounds with _$SeismicityPmTilesBounds {
-  const factory SeismicityPmTilesBounds({
+  const factory({
     required double minLongitude,
     required double minLatitude,
     required double maxLongitude,
     required double maxLatitude,
   }) = _SeismicityPmTilesBounds;
 
-  factory SeismicityPmTilesBounds.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SeismicityPmTilesBoundsFromJson(json);
 }
