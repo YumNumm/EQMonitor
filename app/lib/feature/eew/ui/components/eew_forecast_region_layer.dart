@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_forecast_region_intensity_filter_updater.dart';
+import 'package:eqmonitor/feature/eew/data/logic/eew_warning_area_selector.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
@@ -16,8 +17,8 @@ import 'package:maplibre/maplibre.dart';
 
 /// EEW震度予報区域レイヤー
 ///
-/// `displayMode` に応じて、府県地震予報区（areaForecastLocalEew）を
-/// 予想震度別 or 警報発表区域として塗りつぶす。
+/// `displayMode` に応じて、予報区を予想震度別、または府県予報区を
+/// 警報発表区域として塗りつぶす。
 class EewForecastRegionLayer extends HookConsumerWidget {
   const EewForecastRegionLayer({
     required this.eew,
@@ -31,7 +32,8 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   final List<EewForecastRegionInfo>? additionalRegions;
 
   static const _sourceId = 'eqmonitor_map';
-  static const _sourceLayerId = 'areaForecastLocalE';
+  static const _intensitySourceLayerId = 'areaForecastLocalE';
+  static const _warningSourceLayerId = 'areaForecastLocalEew';
   static const _warningLayerId = 'eew-details-warning-fill';
   static const _warningLineLayerId = 'eew-details-warning-line';
   static const _areaFilterBuilder = EewAreaFilterBuilder();
@@ -40,6 +42,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
+    final warningAreaSelector = ref.watch(eewWarningAreaSelectorProvider);
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
     final intensityFilterUpdater = ref.watch(
       eewForecastRegionIntensityFilterUpdaterProvider,
@@ -62,10 +65,15 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           .toList();
     }, [eew, additionalRegions]);
 
-    final warningCodes = useMemoized(() {
-      final zones = eew?.warning?.regions ?? const [];
-      return zones.where((z) => z.hadWarning).map((z) => z.code).toList();
-    }, [eew]);
+    final warningCodes = useMemoized(
+      () => warningAreaSelector.selectPrefectureCodes(
+        events: switch (eew) {
+          final event? => [event],
+          null => const <EewTelegramItem>[],
+        },
+      ),
+      [warningAreaSelector, eew],
+    );
 
     final enqueue = useMapOperationQueue();
 
@@ -89,7 +97,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               FillStyleLayer(
                 id: intensityFilterUpdater.detailLayerId(intensity),
                 sourceId: _sourceId,
-                sourceLayerId: _sourceLayerId,
+                sourceLayerId: _intensitySourceLayerId,
                 filter: _areaFilterBuilder.build(codes),
                 paint: {'fill-color': color.toHexString(), 'fill-opacity': 0.7},
               ),
@@ -159,17 +167,17 @@ class EewForecastRegionLayer extends HookConsumerWidget {
             FillStyleLayer(
               id: _warningLayerId,
               sourceId: _sourceId,
-              sourceLayerId: _sourceLayerId,
+              sourceLayerId: _warningSourceLayerId,
               filter: filter,
               paint: const {'fill-color': '#DD0000', 'fill-opacity': 1},
             ),
-            belowLayerId: BaseLayer.areaForecastLocalELine.name,
+            belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           );
           await styleController.addLayer(
             LineStyleLayer(
               id: _warningLineLayerId,
               sourceId: _sourceId,
-              sourceLayerId: _sourceLayerId,
+              sourceLayerId: _warningSourceLayerId,
               filter: filter,
               paint: {
                 'line-color': isDarkMode ? '#FFFFFF' : '#222222',
