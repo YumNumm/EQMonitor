@@ -9,7 +9,7 @@ import 'package:workflows/src/workflow_persistence.dart';
 /// JSON-encodable value. The callback is executed at most once per instance:
 /// subsequent calls with the same name return the cached result.
 final class WorkflowStep {
-  WorkflowStep({
+  new({
     required String instanceId,
     required WorkflowPersistence persistence,
   }) : _instanceId = instanceId,

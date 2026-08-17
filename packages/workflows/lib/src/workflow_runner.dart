@@ -9,7 +9,7 @@ import 'package:workflows/src/workflow_step.dart';
 /// logical workflow execution. If the app dies mid-run, calling [run] again
 /// with the same `instanceId` resumes from the last completed step.
 final class WorkflowRunner {
-  WorkflowRunner({required WorkflowPersistence persistence})
+  new({required WorkflowPersistence persistence})
     : _persistence = persistence;
 
   final WorkflowPersistence _persistence;

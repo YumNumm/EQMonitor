@@ -8,7 +8,7 @@ import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 import 'package:eqmonitor_lints_plugin/src/top_level_function_exemption.dart';
 
 class AvoidTopLevelFunctions extends AnalysisRule {
-  AvoidTopLevelFunctions()
+  new()
     : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
@@ -39,7 +39,7 @@ class AvoidTopLevelFunctions extends AnalysisRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 
