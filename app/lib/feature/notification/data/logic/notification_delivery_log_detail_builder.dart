@@ -10,7 +10,7 @@ NotificationDeliveryLogDetailBuilder notificationDeliveryLogDetailBuilder(
 ) => NotificationDeliveryLogDetailBuilder();
 
 final class NotificationDeliveryLogDetail {
-  const NotificationDeliveryLogDetail({required this.rows});
+  const new({required this.rows});
 
   final List<NotificationDeliveryLogDetailRow> rows;
 
@@ -19,7 +19,7 @@ final class NotificationDeliveryLogDetail {
 }
 
 final class NotificationDeliveryLogDetailRow {
-  const NotificationDeliveryLogDetailRow({
+  const new({
     required this.label,
     required this.value,
   });
