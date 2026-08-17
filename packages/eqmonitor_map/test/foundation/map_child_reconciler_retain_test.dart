@@ -58,7 +58,7 @@ void main() {
 }
 
 final class RetainTrackingElement implements MapElement {
-  RetainTrackingElement({required MapNode node}) : identity = node.identity;
+  new({required MapNode node}) : identity = node.identity;
 
   @override
   final MapNodeIdentity identity;

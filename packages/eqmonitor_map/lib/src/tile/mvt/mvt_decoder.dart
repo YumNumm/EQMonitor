@@ -27,7 +27,7 @@ MvtTile decodeMvtTile(Uint8List bytes, {required MvtDecodeLimits limits}) {
 }
 
 final class MvtDecoder {
-  const MvtDecoder();
+  const new();
 
   static const _layerFieldNumber = 3;
 
@@ -58,7 +58,7 @@ final class MvtDecoder {
 }
 
 final class _MvtLayerDecoder {
-  const _MvtLayerDecoder();
+  const new();
 
   static const _nameFieldNumber = 1;
   static const _featuresFieldNumber = 2;
@@ -145,7 +145,7 @@ final class _MvtLayerDecoder {
 }
 
 final class _MvtFeatureDecoder {
-  const _MvtFeatureDecoder();
+  const new();
 
   static const _typeFieldNumber = 3;
   static const _geometryFieldNumber = 4;
@@ -211,7 +211,7 @@ final class _MvtFeatureDecoder {
 /// 早期チェック。ring/頂点ごとの上限はbufferへ積んだ後に効くのに対し、これは
 /// 単一のcommand headerが巨大なcountを宣言した時点でbailoutする。
 final class _CommandBudget {
-  _CommandBudget({required this.limit});
+  new({required this.limit});
 
   final int limit;
   var _total = 0;
@@ -227,7 +227,7 @@ final class _CommandBudget {
 }
 
 final class _MvtGeometryDecoder {
-  const _MvtGeometryDecoder();
+  const new();
 
   List<Int32List> decode({
     required List<int> rawCommands,
@@ -499,7 +499,7 @@ final class _MvtGeometryDecoder {
 /// length-delimited、未知field番号のskipをここへ集約し、すべての読み出しで
 /// 境界検証を行う。
 final class _ProtoReader {
-  _ProtoReader(this._bytes) : _length = _bytes.length;
+  new(this._bytes) : _length = _bytes.length;
 
   final Uint8List _bytes;
   final int _length;

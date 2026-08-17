@@ -165,7 +165,7 @@ void main() {
 }
 
 final class CountingMapClock implements MapClock {
-  CountingMapClock({required this.domain});
+  new({required this.domain});
 
   final MapClockDomainId domain;
   final MapMonotonicSourceIdentity _sourceIdentity =
