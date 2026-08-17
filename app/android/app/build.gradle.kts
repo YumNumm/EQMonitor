@@ -1,11 +1,22 @@
 import java.util.Base64
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.Sync
 
 plugins {
     id("com.android.application")
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+abstract class StageBundledAssetPackTask : Sync() {
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    init {
+        into(outputDirectory)
+    }
 }
 
 val dartDefines = mutableMapOf<String, String>()
@@ -26,10 +37,13 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
-val bundledAssetPackRoot = layout.buildDirectory.dir("generated/bundledAssetPack")
-val stageBundledAssetPack by tasks.registering(Sync::class) {
-    from("../../assets/platform")
-    into(bundledAssetPackRoot.map { it.dir("platform") })
+val stageBundledAssetPack = tasks.register<StageBundledAssetPackTask>(
+    "stageBundledAssetPack",
+) {
+    from("../../assets/platform") {
+        into("platform")
+    }
+    outputDirectory.set(layout.buildDirectory.dir("generated/bundledAssetPack"))
 }
 
 android {
@@ -51,7 +65,6 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
-            assets.srcDir(bundledAssetPackRoot)
         }
     }
     defaultConfig {
@@ -95,8 +108,13 @@ android {
     }
 }
 
-tasks.named("preBuild").configure {
-    dependsOn(stageBundledAssetPack)
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            stageBundledAssetPack,
+            StageBundledAssetPackTask::outputDirectory,
+        )
+    }
 }
 
 kotlin {
