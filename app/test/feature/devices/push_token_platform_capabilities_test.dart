@@ -107,7 +107,7 @@ void main() {
 
 final class _FakeApnsTokenCallbackDataSource
     implements ApnsTokenCallbackDataSource {
-  const _FakeApnsTokenCallbackDataSource();
+  const new();
 
   @override
   Stream<String> get tokenUpdates => const Stream.empty();

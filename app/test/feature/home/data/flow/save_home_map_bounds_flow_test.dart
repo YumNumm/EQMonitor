@@ -12,7 +12,7 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _MapController extends Mock implements MapController {
-  _MapController({required this.visibleRegion});
+  new({required this.visibleRegion});
 
   final LngLatBounds visibleRegion;
 
@@ -45,11 +45,13 @@ void main() {
             '/selector': (_) => Consumer(
               builder: (context, ref, _) => Scaffold(
                 body: FilledButton(
-                  onPressed: () => saveHomeMapBoundsFlow(
-                    context: context,
-                    ref: ref,
-                    controller: controller,
-                  ),
+                  onPressed: () => ref
+                      .read(saveHomeMapBoundsFlowProvider)
+                      .save(
+                        context: context,
+                        ref: ref,
+                        controller: controller,
+                      ),
                   child: const Text('保存'),
                 ),
               ),
