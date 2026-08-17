@@ -23,15 +23,13 @@ class EstimatedIntensityDataSource {
     final momentMagnitude = jmaMagnitude - 0.171;
     // 断層長計算(半径)
     final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
-    const distanceCalcular = lat_long_2.Distance();
+    const distanceCalculator = lat_long_2.Distance();
     for (final point in points) {
-      final epicenterDistance =
-          distanceCalcular.as(
-            .Kilometer,
-            lat_long_2.LatLng(point.lat, point.lon),
-            lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
-          ) -
-          faultLength;
+      final epicenterDistance = distanceCalculator.as(
+        .Kilometer,
+        lat_long_2.LatLng(point.lat, point.lon),
+        lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
+      );
       // 断層長を引いた震源距離を求める
       final distance =
           math.pow(math.pow(depth, 2) + math.pow(epicenterDistance, 2), 0.5) -
@@ -66,7 +64,7 @@ class EstimatedIntensityDataSource {
 
 /// 汎用の数学ユーティリティ。
 class MathUtil {
-  const MathUtil._();
+  const new _();
 
   static double log10(num x) => math.log(x) / math.ln10;
 }
