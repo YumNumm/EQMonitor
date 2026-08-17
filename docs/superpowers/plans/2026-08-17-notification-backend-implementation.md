@@ -126,10 +126,10 @@ git -C backend commit -m "Feat: EEW警報の現在地配信レベルを追加"
 
 **Files:**
 - Modify: `backend/packages/database/src/schema/schema.ts`
-- Modify: `backend/packages/database/drizzle/<Task 1 generated>/migration.sql`
+- Create: `backend/packages/database/drizzle/<generated>/migration.sql`
 - Modify: `backend/api/api/src/features/device/model/slot-requests.ts`
 - Modify: `backend/api/api/src/features/device/routes/settings/slots.ts`
-- Test: `backend/api/api/test/device/notification-slots.test.ts`
+- Test: `backend/api/api/test/device/slots-routes.test.ts`
 
 **Interfaces:**
 - Produces: `isAllowedEewMinIntensity(slotType, intensity): boolean`。
@@ -149,7 +149,7 @@ it.each(['1', '2', '3'])('accepts %s for nationwide', async intensity => {
 
 - [ ] **Step 2: 現行の共通JmaIntensity validatorで失敗することを確認する**
 
-Run: `cd backend && pnpm --filter @eqmonitor-backend/api test -- test/device/notification-slots.test.ts`
+Run: `cd backend && pnpm --filter @eqmonitor-backend/api test -- test/device/slots-routes.test.ts`
 
 Expected: 現在地・地域でも震度1〜3を受理してFAIL。
 
@@ -173,11 +173,13 @@ WHERE slot_type IN ('current_location', 'region')
   AND eew_min_intensity IN ('1', '2', '3');
 ```
 
-DB CHECKにも同じ許可集合を記述し、APIを迂回した不正値を拒否する。
+DB CHECKにも同じ許可集合を記述し、APIを迂回した不正値を拒否する。schema変更後に
+`pnpm --filter @eqmonitor-backend/database drizzle-kit:generate` を実行し、Task 1とは別の
+migrationとsnapshotを生成する。
 
 - [ ] **Step 4: API・DBテストを通す**
 
-Run: `cd backend && pnpm --filter @eqmonitor-backend/api test -- test/device/notification-slots.test.ts`
+Run: `cd backend && pnpm --filter @eqmonitor-backend/api test -- test/device/slots-routes.test.ts`
 
 Run: `cd backend && pnpm --filter @eqmonitor-backend/database test`
 
@@ -186,7 +188,7 @@ Expected: すべて成功。
 - [ ] **Step 5: コミットする**
 
 ```bash
-git -C backend add packages/database api/api/src/features/device/model/slot-requests.ts api/api/src/features/device/routes/settings/slots.ts api/api/test/device/notification-slots.test.ts
+git -C backend add packages/database api/api/src/features/device/model/slot-requests.ts api/api/src/features/device/routes/settings/slots.ts api/api/test/device/slots-routes.test.ts
 git -C backend commit -m "Fix: EEW予報しきい値を地域種別ごとに制約"
 ```
 
