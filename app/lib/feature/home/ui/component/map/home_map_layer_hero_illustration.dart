@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HomeMapLayerHeroIllustration extends HookWidget {
@@ -18,7 +19,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
       colorTheme.surfaceContainerHighest,
       primary,
       0.35,
-    )!;
+    ).orFailBecause('両引数が非nullのためColor.lerpは必ず非nullを返す');
     final controller = useAnimationController(
       duration: const Duration(seconds: 12),
     );

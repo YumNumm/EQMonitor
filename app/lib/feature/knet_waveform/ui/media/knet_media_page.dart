@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_fig_view.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_movie_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// K-NET all/fig PNG・all/movie MP4 を表示するページ

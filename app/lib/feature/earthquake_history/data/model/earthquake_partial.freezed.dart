@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_partial.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_partial.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 EarthquakePartial _$EarthquakePartialFromJson(
@@ -231,7 +232,7 @@ return station(_that.stationIntensity,_that.earthquake);case _:
 @JsonSerializable()
 
 class EarthquakePartialNormal extends EarthquakePartial {
-  const EarthquakePartialNormal({required this.eventId, required this.status, required this.originTime, required this.originTimePrecision, required this.arrivalTime, required final  List<EarthquakeDataSource> dataSources, required this.hypocenter, required this.intensity, required this.earthquakeType, required final  List<EarthquakeTelegramType> telegramTypes, required this.estimatedIntensityTileUrl, final  String? $type}): _dataSources = dataSources,_telegramTypes = telegramTypes,$type = $type ?? 'normal',super._();
+  const EarthquakePartialNormal({required this.eventId, required this.status, required this.originTime, required this.originTimePrecision, required this.arrivalTime, required  List<EarthquakeDataSource> dataSources, required this.hypocenter, required this.intensity, required this.earthquakeType, required  List<EarthquakeTelegramType> telegramTypes, required this.estimatedIntensityTileUrl,  String? $type}): _dataSources = dataSources,_telegramTypes = telegramTypes,$type = $type ?? 'normal',super._();
   factory EarthquakePartialNormal.fromJson(Map<String, dynamic> json) => _$EarthquakePartialNormalFromJson(json);
 
  final  String eventId;
@@ -360,7 +361,7 @@ $EarthquakeIntensityPartialCopyWith<$Res>? get intensity {
 @JsonSerializable()
 
 class EarthquakePartialPrefecture extends EarthquakePartial {
-  const EarthquakePartialPrefecture({required this.prefectureIntensity, required this.earthquake, final  String? $type}): $type = $type ?? 'prefecture',super._();
+  const EarthquakePartialPrefecture({required this.prefectureIntensity, required this.earthquake,  String? $type}): $type = $type ?? 'prefecture',super._();
   factory EarthquakePartialPrefecture.fromJson(Map<String, dynamic> json) => _$EarthquakePartialPrefectureFromJson(json);
 
  final  JmaIntensity prefectureIntensity;
@@ -435,7 +436,7 @@ as EarthquakePartialNormal,
 @JsonSerializable()
 
 class EarthquakePartialRegion extends EarthquakePartial {
-  const EarthquakePartialRegion({required this.regionIntensity, required this.earthquake, final  String? $type}): $type = $type ?? 'region',super._();
+  const EarthquakePartialRegion({required this.regionIntensity, required this.earthquake,  String? $type}): $type = $type ?? 'region',super._();
   factory EarthquakePartialRegion.fromJson(Map<String, dynamic> json) => _$EarthquakePartialRegionFromJson(json);
 
  final  JmaIntensity regionIntensity;
@@ -510,7 +511,7 @@ as EarthquakePartialNormal,
 @JsonSerializable()
 
 class EarthquakePartialCity extends EarthquakePartial {
-  const EarthquakePartialCity({required this.cityIntensity, required this.earthquake, final  String? $type}): $type = $type ?? 'city',super._();
+  const EarthquakePartialCity({required this.cityIntensity, required this.earthquake,  String? $type}): $type = $type ?? 'city',super._();
   factory EarthquakePartialCity.fromJson(Map<String, dynamic> json) => _$EarthquakePartialCityFromJson(json);
 
  final  JmaIntensity cityIntensity;
@@ -585,7 +586,7 @@ as EarthquakePartialNormal,
 @JsonSerializable()
 
 class EarthquakePartialStation extends EarthquakePartial {
-  const EarthquakePartialStation({required this.stationIntensity, required this.earthquake, final  String? $type}): $type = $type ?? 'station',super._();
+  const EarthquakePartialStation({required this.stationIntensity, required this.earthquake,  String? $type}): $type = $type ?? 'station',super._();
   factory EarthquakePartialStation.fromJson(Map<String, dynamic> json) => _$EarthquakePartialStationFromJson(json);
 
  final  JmaIntensity stationIntensity;
@@ -711,7 +712,7 @@ class _$IntensityAreaInfoCopyWithImpl<$Res>
 /// Create a copy of IntensityAreaInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? intensity = null,Object? lpgmIntensity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityAreaInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
@@ -1001,7 +1002,7 @@ class _$StationSearchInfoCopyWithImpl<$Res>
 /// Create a copy of StationSearchInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? intensity = freezed,Object? lpgmIntensity = freezed,Object? sva = freezed,Object? prePeriods = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StationSearchInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
@@ -1158,7 +1159,7 @@ return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.
 @JsonSerializable()
 
 class _StationSearchInfo implements StationSearchInfo {
-  const _StationSearchInfo({required this.code, required this.name, required this.intensity, required this.lpgmIntensity, required this.sva, required final  List<PrePeriod>? prePeriods}): _prePeriods = prePeriods;
+  const _StationSearchInfo({required this.code, required this.name, required this.intensity, required this.lpgmIntensity, required this.sva, required  List<PrePeriod>? prePeriods}): _prePeriods = prePeriods;
   factory _StationSearchInfo.fromJson(Map<String, dynamic> json) => _$StationSearchInfoFromJson(json);
 
 @override final  String code;

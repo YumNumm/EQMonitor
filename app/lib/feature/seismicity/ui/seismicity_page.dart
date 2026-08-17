@@ -29,7 +29,7 @@ import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_span_selec
 import 'package:eqmonitor/feature/seismicity/ui/layer/hypocenter_pmtiles_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';

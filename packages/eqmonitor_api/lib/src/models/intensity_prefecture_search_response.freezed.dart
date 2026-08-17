@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_prefecture_search_response.dart';
@@ -9,6 +9,7 @@ part of 'intensity_prefecture_search_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -68,7 +69,7 @@ class _$IntensityPrefectureSearchResponseCopyWithImpl<$Res>
 /// Create a copy of IntensityPrefectureSearchResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityPrefectureSearchResponse(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<IntensityPrefectureSearchItem>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
@@ -213,7 +214,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 @JsonSerializable()
 
 class _IntensityPrefectureSearchResponse implements IntensityPrefectureSearchResponse {
-  const _IntensityPrefectureSearchResponse({required final  List<IntensityPrefectureSearchItem> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
+  const _IntensityPrefectureSearchResponse({required  List<IntensityPrefectureSearchItem> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
   factory _IntensityPrefectureSearchResponse.fromJson(Map<String, dynamic> json) => _$IntensityPrefectureSearchResponseFromJson(json);
 
  final  List<IntensityPrefectureSearchItem> _items;

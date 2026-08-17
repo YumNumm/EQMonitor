@@ -2,6 +2,8 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 
+/// コントロールセンターのウィジェット。`ControlWidget` は iOS 18 以降。
+@available(iOS 18.0, *)
 struct OpenEarthquakeHistoryControl: ControlWidget {
     static let kind = "net.yumnumm.eqmonitor.control.open-earthquake-history"
 
@@ -16,6 +18,8 @@ struct OpenEarthquakeHistoryControl: ControlWidget {
     }
 }
 
+/// `OpenURLIntent` は iOS 18 以降。
+@available(iOS 18.0, *)
 struct OpenEarthquakeHistoryIntent: AppIntent {
     static let title: LocalizedStringResource = "地震履歴を開く"
     static let openAppWhenRun = true

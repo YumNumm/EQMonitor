@@ -6,8 +6,8 @@ import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/logic/notification_delivery_log_detail_builder.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

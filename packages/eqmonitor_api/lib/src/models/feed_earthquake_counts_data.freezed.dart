@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'feed_earthquake_counts_data.dart';
@@ -9,6 +9,7 @@ part of 'feed_earthquake_counts_data.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -67,7 +68,7 @@ class _$FeedEarthquakeCountsDataCopyWithImpl<$Res>
 /// Create a copy of FeedEarthquakeCountsData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? infoType = null,Object? earthquakeCounts = freezed,Object? nextAdvisory = freezed,Object? text = freezed,Object? comments = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedEarthquakeCountsData(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as InfoType,earthquakeCounts: freezed == earthquakeCounts ? _self.earthquakeCounts : earthquakeCounts // ignore: cast_nullable_to_non_nullable
@@ -227,7 +228,7 @@ return $default(_that.type,_that.infoType,_that.earthquakeCounts,_that.nextAdvis
 @JsonSerializable()
 
 class _FeedEarthquakeCountsData implements FeedEarthquakeCountsData {
-  const _FeedEarthquakeCountsData({required this.type, required this.infoType, @JsonKey(includeIfNull: false) final  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments}): _earthquakeCounts = earthquakeCounts;
+  const _FeedEarthquakeCountsData({required this.type, required this.infoType, @JsonKey(includeIfNull: false)  List<FeedEarthquakeCount>? earthquakeCounts, @JsonKey(includeIfNull: false) this.nextAdvisory, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments}): _earthquakeCounts = earthquakeCounts;
   factory _FeedEarthquakeCountsData.fromJson(Map<String, dynamic> json) => _$FeedEarthquakeCountsDataFromJson(json);
 
 /// const: "EARTHQUAKE_COUNTS"

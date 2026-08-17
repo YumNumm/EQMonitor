@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shindo_db_stations_parameter.dart';
@@ -9,6 +9,7 @@ part of 'shindo_db_stations_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$ShindoDbStationsParameterCopyWithImpl<$Res>
 /// Create a copy of ShindoDbStationsParameter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? metadata = null,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShindoDbStationsParameter(
 metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as ShindoDbStationsParameterMetadata,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
 as List<ShindoDbStation>,
@@ -219,7 +220,7 @@ return $default(_that.metadata,_that.stations);case _:
 @JsonSerializable()
 
 class _ShindoDbStationsParameter implements ShindoDbStationsParameter {
-  const _ShindoDbStationsParameter({required this.metadata, required final  List<ShindoDbStation> stations}): _stations = stations;
+  const _ShindoDbStationsParameter({required this.metadata, required  List<ShindoDbStation> stations}): _stations = stations;
   factory _ShindoDbStationsParameter.fromJson(Map<String, dynamic> json) => _$ShindoDbStationsParameterFromJson(json);
 
 @override final  ShindoDbStationsParameterMetadata metadata;

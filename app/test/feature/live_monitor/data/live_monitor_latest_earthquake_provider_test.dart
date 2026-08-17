@@ -3,13 +3,15 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
-import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest_earthquake_provider.dart';
+import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_latest_earthquake_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const selector = LiveMonitorLatestEarthquakeSelector();
+
   test('全国一覧のeventId降順先頭を選ぶこと', () {
     expect(
-      selectLiveMonitorLatestEventId([
+      selector.selectEventId([
         _partial(eventId: '202607270002'),
         _partial(eventId: '202607270001'),
       ]),
@@ -19,7 +21,7 @@ void main() {
 
   test('古いeventIdの内容更新は最新eventIdを押しのけないこと', () {
     expect(
-      selectLiveMonitorLatestEventId([
+      selector.selectEventId([
         _partial(eventId: '202607270002'),
         _partial(
           eventId: '202607270001',
@@ -32,7 +34,7 @@ void main() {
   });
 
   test('全国一覧が空なら最新eventIdを返さないこと', () {
-    expect(selectLiveMonitorLatestEventId([]), isNull);
+    expect(selector.selectEventId([]), isNull);
   });
 }
 

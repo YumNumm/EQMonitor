@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 「警報のみ」を絞り込むトグルチップ。
 class EewWarningFilterChip extends StatelessWidget {

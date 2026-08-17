@@ -12,7 +12,7 @@ part 'seismicity_repository_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Dio> seismicityGeoJsonDio(Ref ref) async {
-  final dio = Dio(buildApiBaseOptions(baseUrl: ''));
+  final dio = Dio(DioBaseOptionsFactory.build(baseUrl: ''));
   dio.options.connectTimeout = const Duration(milliseconds: 10000);
   dio.options.sendTimeout = const Duration(milliseconds: 10000);
   final disabled = await ref.watch(httpCacheDisabledProvider.future);

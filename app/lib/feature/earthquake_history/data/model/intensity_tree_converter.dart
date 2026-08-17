@@ -27,8 +27,9 @@ class IntensityTreeConverter {
         for (final city in region.cities)
           for (final station in city.stations) station.code: station,
     };
-    if (shindoDbStations != null) {
-      for (final station in shindoDbStations!.stations) {
+    final shindoDb = shindoDbStations;
+    if (shindoDb != null) {
+      for (final station in shindoDb.stations) {
         map.putIfAbsent(station.code, station.toEarthquakeParameterStationItem);
       }
     }
@@ -41,8 +42,9 @@ class IntensityTreeConverter {
         for (final city in region.cities)
           for (final station in city.stations) station.code: city.code,
     };
-    if (shindoDbStations != null) {
-      for (final station in shindoDbStations!.stations) {
+    final shindoDb = shindoDbStations;
+    if (shindoDb != null) {
+      for (final station in shindoDb.stations) {
         final cityCode = station.cityCode;
         if (cityCode != null) {
           map.putIfAbsent(station.code, () => cityCode);
@@ -65,17 +67,21 @@ class IntensityTreeConverter {
     final stationCityCode = _stationCityCodeMap();
     final cityPrefecture = _cityPrefectureMap();
 
-    final stationIntensityMap = <String, IntensityStation>{};
+    final stationIntensityMap =
+        <String, ({JmaIntensity level, IntensityStation station})>{};
     for (final entry in intensity.intensityTree) {
       final ji = entry.intensity.toJmaIntensity;
       for (final stationCode in entry.stations ?? <String>[]) {
-        stationIntensityMap[stationCode] = IntensityStation(
-          code: stationCode,
-          name: stationCode,
-          sva: null,
-          prePeriods: null,
-          maxIntensity: ji,
-          maxLpgmIntensity: null,
+        stationIntensityMap[stationCode] = (
+          level: ji,
+          station: IntensityStation(
+            code: stationCode,
+            name: stationCode,
+            sva: null,
+            prePeriods: null,
+            maxIntensity: ji,
+            maxLpgmIntensity: null,
+          ),
         );
       }
     }
@@ -89,7 +95,8 @@ class IntensityTreeConverter {
 
     final resultMap = <JmaIntensity, Map<String, _MutablePrefectureNode>>{};
 
-    for (final stationCode in stationIntensityMap.keys) {
+    for (final mapEntry in stationIntensityMap.entries) {
+      final stationCode = mapEntry.key;
       final stationItem = stationParam[stationCode];
       if (stationItem == null) {
         continue;
@@ -99,8 +106,8 @@ class IntensityTreeConverter {
         continue;
       }
 
-      final intensityEntry = stationIntensityMap[stationCode]!;
-      final ji = intensityEntry.maxIntensity!;
+      final intensityEntry = mapEntry.value.station;
+      final ji = mapEntry.value.level;
 
       final foundCity = cityCodeToCity[cityCode];
       final foundPrefecture = cityPrefecture[cityCode];
@@ -241,15 +248,17 @@ class IntensityTreeConverter {
           }
         }
       }
-      if (foundRegion == null || foundCity == null) {
+      final resolvedRegion = foundRegion;
+      final resolvedCity = foundCity;
+      if (resolvedRegion == null || resolvedCity == null) {
         continue;
       }
 
       final prefData = result.putIfAbsent(
-        foundRegion.code,
-        () => _LpgmPrefectureData(region: foundRegion!),
+        resolvedRegion.code,
+        () => _LpgmPrefectureData(region: resolvedRegion),
       );
-      prefData.addStation(foundCity, stationItem);
+      prefData.addStation(resolvedCity, stationItem);
     }
 
     return result;

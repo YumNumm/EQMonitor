@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_configuration_notifier.g.dart';

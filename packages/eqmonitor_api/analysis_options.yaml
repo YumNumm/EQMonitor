@@ -11,3 +11,9 @@ analyzer:
     - "**/build/**"
     - "build/**"
     - "lib/src/**"
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

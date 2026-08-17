@@ -1,13 +1,11 @@
-include: package:eqmonitor_lints/analysis_options.yaml
+include: ../analysis_options.yaml
 analyzer:
   errors:
-    avoid_implementing_value_types: ignore
     avoid_print: ignore
     document_ignores: ignore
     invalid_annotation_target: ignore
     lines_longer_than_80_chars: ignore
     unnecessary_async: ignore
-    unnecessary_cast: ignore
   exclude:
     - "**/DerivedData/**"
     - "**/build/**"
@@ -18,18 +16,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-
-plugins:
-  eqmonitor_lints_plugin:
-    path: ../tools/eqmonitor_lints_plugin
-    diagnostics:
-      avoid_stateful_widget: true
-      avoid_null_assertion_operator: true
-      avoid_top_level_functions: true
-      avoid_print: true
-      avoid_eqmonitor_api_in_ui: true
-      avoid_mixed_declaration_categories: true
-  eqmonitor_custom_lints:
-    path: ../tools/eqmonitor_custom_lints
-    diagnostics:
-      avoid_direct_color_scheme: true

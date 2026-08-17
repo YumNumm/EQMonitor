@@ -8,32 +8,29 @@ part of 'site_list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_SiteList _$SiteListFromJson(Map<String, dynamic> json) => $checkedCreate(
-  '_SiteList',
-  json,
-  ($checkedConvert) {
-    final val = _SiteList(
-      items: $checkedConvert(
-        'items',
-        (v) => (v as List<dynamic>?)
-            ?.map((e) => Site.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      security: $checkedConvert(
-        'security',
-        (v) => v == null ? null : Security.fromJson(v as Map<String, dynamic>),
-      ),
-      dataTime: $checkedConvert('data_time', (v) => v as String?),
-      result: $checkedConvert(
-        'result',
-        (v) => v == null ? null : Result.fromJson(v as Map<String, dynamic>),
-      ),
-      serialNo: $checkedConvert('serial_no', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'dataTime': 'data_time', 'serialNo': 'serial_no'},
-);
+_SiteList _$SiteListFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_SiteList', json, ($checkedConvert) {
+      final val = _SiteList(
+        items: $checkedConvert(
+          'items',
+          (v) => (v as List<dynamic>?)
+              ?.map((e) => Site.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        security: $checkedConvert(
+          'security',
+          (v) =>
+              v == null ? null : Security.fromJson(v as Map<String, dynamic>),
+        ),
+        dataTime: $checkedConvert('data_time', (v) => v as String?),
+        result: $checkedConvert(
+          'result',
+          (v) => v == null ? null : Result.fromJson(v as Map<String, dynamic>),
+        ),
+        serialNo: $checkedConvert('serial_no', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {'dataTime': 'data_time', 'serialNo': 'serial_no'});
 
 Map<String, dynamic> _$SiteListToJson(_SiteList instance) => <String, dynamic>{
   'items': instance.items,

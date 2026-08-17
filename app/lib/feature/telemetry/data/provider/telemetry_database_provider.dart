@@ -19,9 +19,7 @@ const _appGroupChannel = MethodChannel('net.yumnumm.eqmonitor/app_group');
 @Riverpod(keepAlive: true)
 TelemetryDatabase telemetryDatabase(Ref ref) {
   final dbPath = ref.watch(telemetryDbPathProvider);
-  final db = TelemetryDatabase(
-    NativeDatabase.createInBackground(File(dbPath)),
-  );
+  final db = TelemetryDatabase(NativeDatabase.createInBackground(File(dbPath)));
   ref.onDispose(db.close);
   return db;
 }
@@ -33,34 +31,40 @@ String telemetryDbPath(Ref ref) {
   );
 }
 
-Future<String> resolveTelemetryDbPath() async {
-  if (Platform.isIOS) {
-    final containerPath = await _getAppGroupContainerPath();
-    final dir = Directory(
-      p.join(containerPath, 'Library', 'Application Support'),
-    );
-    if (!dir.existsSync()) {
-      dir.createSync(recursive: true);
-    }
-    return p.join(dir.path, 'telemetry.db');
-  }
-  final appDir = await getApplicationDocumentsDirectory();
-  return p.join(appDir.path, 'telemetry.db');
-}
+class TelemetryDbPathResolver {
+  const TelemetryDbPathResolver._();
 
-/// Returns the App Group container path obtained from the native side via
-/// `FileManager.default.containerURL(forSecurityApplicationGroupIdentifier:)`.
-///
-/// This is the **only** correct way to get the App Group container path.
-/// String-manipulation heuristics on paths returned by `path_provider` are
-/// fragile and can break across iOS versions and simulator vs device.
-Future<String> _getAppGroupContainerPath() async {
-  final path = await _appGroupChannel.invokeMethod<String>('getContainerPath');
-  if (path == null || path.isEmpty) {
-    throw StateError(
-      'Native getContainerPath returned null. '
-      'Ensure the App Group entitlement is configured correctly.',
-    );
+  static Future<String> resolve() async {
+    if (Platform.isIOS) {
+      final containerPath = await _getAppGroupContainerPath();
+      final dir = Directory(
+        p.join(containerPath, 'Library', 'Application Support'),
+      );
+      if (!dir.existsSync()) {
+        dir.createSync(recursive: true);
+      }
+      return p.join(dir.path, 'telemetry.db');
+    }
+    final appDir = await getApplicationDocumentsDirectory();
+    return p.join(appDir.path, 'telemetry.db');
   }
-  return path;
+
+  /// Returns the App Group container path obtained from the native side via
+  /// `FileManager.default.containerURL(forSecurityApplicationGroupIdentifier:)`.
+  ///
+  /// This is the **only** correct way to get the App Group container path.
+  /// String-manipulation heuristics on paths returned by `path_provider` are
+  /// fragile and can break across iOS versions and simulator vs device.
+  static Future<String> _getAppGroupContainerPath() async {
+    final path = await _appGroupChannel.invokeMethod<String>(
+      'getContainerPath',
+    );
+    if (path == null || path.isEmpty) {
+      throw StateError(
+        'Native getContainerPath returned null. '
+        'Ensure the App Group entitlement is configured correctly.',
+      );
+    }
+    return path;
+  }
 }

@@ -10,27 +10,22 @@ part of 'seismicity_manifest_layer.dart';
 
 _SeismicityManifestLayer _$SeismicityManifestLayerFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_SeismicityManifestLayer',
-  json,
-  ($checkedConvert) {
-    final val = _SeismicityManifestLayer(
-      type: $checkedConvert('type', (v) => v as String),
-      span: $checkedConvert(
-        'span',
-        (v) => $enumDecode(_$SeismicitySpanEnumMap, v),
-      ),
-      url: $checkedConvert('url', (v) => v as String),
-      generatedAt: $checkedConvert(
-        'generated_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      count: $checkedConvert('count', (v) => (v as num).toInt()),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'generatedAt': 'generated_at'},
-);
+) => $checkedCreate('_SeismicityManifestLayer', json, ($checkedConvert) {
+  final val = _SeismicityManifestLayer(
+    type: $checkedConvert('type', (v) => v as String),
+    span: $checkedConvert(
+      'span',
+      (v) => $enumDecode(_$SeismicitySpanEnumMap, v),
+    ),
+    url: $checkedConvert('url', (v) => v as String),
+    generatedAt: $checkedConvert(
+      'generated_at',
+      (v) => DateTime.parse(v as String),
+    ),
+    count: $checkedConvert('count', (v) => (v as num).toInt()),
+  );
+  return val;
+}, fieldKeyMap: const {'generatedAt': 'generated_at'});
 
 Map<String, dynamic> _$SeismicityManifestLayerToJson(
   _SeismicityManifestLayer instance,

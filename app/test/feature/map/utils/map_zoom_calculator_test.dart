@@ -2,6 +2,7 @@ import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const calculator = MapZoomCalculator();
   group('calculateZoomLevel', () {
     test('日本全国の範囲で適切なズームレベルが計算されること', () {
       // Arrange - 日本全国の緯度経度範囲
@@ -13,7 +14,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -37,7 +38,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -60,7 +61,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -83,7 +84,7 @@ void main() {
       const screenHeight = 768.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -107,7 +108,7 @@ void main() {
       const screenHeight = 812.0; // iPhone X系
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -131,7 +132,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -155,7 +156,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -180,7 +181,7 @@ void main() {
 
       // Act & Assert - エラーにならずに計算できること
       expect(
-        () => calculateZoomLevel(
+        () => calculator.calculate(
           minLat: minLat,
           maxLat: maxLat,
           minLng: minLng,
@@ -202,7 +203,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act
-      final zoom = calculateZoomLevel(
+      final zoom = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -222,7 +223,7 @@ void main() {
       const screenHeight = 667.0;
 
       // Act - 小さい範囲
-      final zoomSmall = calculateZoomLevel(
+      final zoomSmall = calculator.calculate(
         minLat: 35,
         maxLat: 36,
         minLng: 139,
@@ -232,7 +233,7 @@ void main() {
       );
 
       // Act - 大きい範囲
-      final zoomLarge = calculateZoomLevel(
+      final zoomLarge = calculator.calculate(
         minLat: 30,
         maxLat: 45,
         minLng: 130,
@@ -253,7 +254,7 @@ void main() {
       const maxLng = JapanBounds.maxLng;
 
       // Act - 小さい画面
-      final zoomSmall = calculateZoomLevel(
+      final zoomSmall = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,
@@ -263,7 +264,7 @@ void main() {
       );
 
       // Act - 大きい画面
-      final zoomLarge = calculateZoomLevel(
+      final zoomLarge = calculator.calculate(
         minLat: minLat,
         maxLat: maxLat,
         minLng: minLng,

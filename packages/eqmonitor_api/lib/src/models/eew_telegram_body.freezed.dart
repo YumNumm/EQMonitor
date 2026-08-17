@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_telegram_body.dart';
@@ -9,6 +9,7 @@ part of 'eew_telegram_body.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -67,7 +68,7 @@ class _$EewTelegramBodyCopyWithImpl<$Res>
 /// Create a copy of EewTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? eew = freezed,Object? eewIntensityRegions = null,Object? eewWarningZones = null,Object? eewWarningPrefectures = null,Object? eewWarningRegions = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewTelegramBody(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,eew: freezed == eew ? _self.eew : eew ,eewIntensityRegions: null == eewIntensityRegions ? _self.eewIntensityRegions : eewIntensityRegions // ignore: cast_nullable_to_non_nullable
 as List<Object?>,eewWarningZones: null == eewWarningZones ? _self.eewWarningZones : eewWarningZones // ignore: cast_nullable_to_non_nullable
@@ -214,7 +215,7 @@ return $default(_that.type,_that.eew,_that.eewIntensityRegions,_that.eewWarningZ
 @JsonSerializable()
 
 class _EewTelegramBody implements EewTelegramBody {
-  const _EewTelegramBody({required this.type, required this.eew, required final  List<Object?> eewIntensityRegions, required final  List<Object?> eewWarningZones, required final  List<Object?> eewWarningPrefectures, required final  List<Object?> eewWarningRegions}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions;
+  const _EewTelegramBody({required this.type, required this.eew, required  List<Object?> eewIntensityRegions, required  List<Object?> eewWarningZones, required  List<Object?> eewWarningPrefectures, required  List<Object?> eewWarningRegions}): _eewIntensityRegions = eewIntensityRegions,_eewWarningZones = eewWarningZones,_eewWarningPrefectures = eewWarningPrefectures,_eewWarningRegions = eewWarningRegions;
   factory _EewTelegramBody.fromJson(Map<String, dynamic> json) => _$EewTelegramBodyFromJson(json);
 
 /// const: "EEW"

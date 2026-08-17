@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'asset_pack_debug_repository.g.dart';
 
 typedef DiagnoseAssetPack = Future<AssetPackDiagnostics> Function();
-typedef CheckAssetPackUpdates = Future<AssetPackUpdateResult> Function();
 
 @riverpod
 AssetPackDebugRepository assetPackDebugRepository(Ref ref) =>
@@ -36,14 +35,10 @@ class AssetPackDebugInfo {
 }
 
 class AssetPackDebugRepository {
-  AssetPackDebugRepository({
-    DiagnoseAssetPack? diagnosePack,
-    CheckAssetPackUpdates? checkForUpdates,
-  }) : diagnosePack = diagnosePack ?? AssetsUtil.diagnosePack,
-       checkAssetPackUpdates = checkForUpdates ?? AssetsUtil.checkForUpdates;
+  AssetPackDebugRepository({DiagnoseAssetPack? diagnosePack})
+    : diagnosePack = diagnosePack ?? AssetsUtil.diagnosePack;
 
   final DiagnoseAssetPack diagnosePack;
-  final CheckAssetPackUpdates checkAssetPackUpdates;
 
   Future<AssetPackDebugInfo> diagnose() async {
     final diagnostics = await diagnosePack();
@@ -80,6 +75,4 @@ class AssetPackDebugRepository {
       assets: assets,
     );
   }
-
-  Future<AssetPackUpdateResult> checkForUpdates() => checkAssetPackUpdates();
 }

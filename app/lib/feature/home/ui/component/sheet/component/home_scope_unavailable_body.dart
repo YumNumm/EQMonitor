@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -116,7 +116,8 @@ class _CurrentLocationUnavailable extends HookWidget {
     }, const []);
 
     // 権限取得中はスケルトンを避けて軽量プレースホルダ
-    if (permission.value == null) {
+    final currentPermission = permission.value;
+    if (currentPermission == null) {
       return const _UnavailableContainer(
         icon: Icons.location_searching_outlined,
         message: '現在地を取得しています…',
@@ -125,7 +126,7 @@ class _CurrentLocationUnavailable extends HookWidget {
 
     // 権限がない / 永続拒否 / それでも取れない、それぞれに合わせて文言と
     // アクションを切り替える。
-    return switch (permission.value!) {
+    return switch (currentPermission) {
       LocationPermission.denied => _UnavailableContainer(
         icon: Icons.location_off_outlined,
         message: '位置情報の利用が許可されていません。許可すると現在地周辺の地震を表示できます。',

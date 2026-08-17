@@ -4,13 +4,11 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidEqmonitorApiInUi extends AnalysisRule {
   AvoidEqmonitorApiInUi()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_eqmonitor_api_in_ui',
@@ -30,7 +28,9 @@ class AvoidEqmonitorApiInUi extends AnalysisRule {
     RuleContext context,
   ) {
     final path = context.definingUnit.unit.declaredFragment?.source.fullName;
-    if (path == null || !_isInUiLayer(path)) {
+    if (path == null ||
+        LintTargetScope.isExcluded(path: path) ||
+        !_isInUiLayer(path)) {
       return;
     }
     registry.addImportDirective(this, _Visitor(this));

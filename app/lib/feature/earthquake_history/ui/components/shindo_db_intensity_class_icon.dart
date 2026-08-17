@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension ShindoDbIntensityClassMapIconId on ShindoDbIntensityClass {
   /// 地図スタイルに登録された観測点アイコン画像の ID
@@ -18,6 +18,21 @@ extension ShindoDbIntensityClassMapIconId on ShindoDbIntensityClass {
         ? 'JmaIntensity.${IntensityIconType.small.name}.${exact.name}'
         : 'ShindoDbIntensityClass.${IntensityIconType.small.name}.$name';
   }
+
+  /// 地図スタイルに登録されたラベルなし観測点アイコン画像の ID
+  ///
+  /// 色だけでは分類できない歴史的階級は [mapIconId] のラベルを維持する。
+  String get plainMapIconId => switch (this) {
+    .five =>
+      'JmaIntensity.${IntensityIconType.smallWithoutText.name}.fiveUnknown',
+    .six =>
+      'JmaIntensity.${IntensityIconType.smallWithoutText.name}.sixUnknown',
+    _ => switch (exactJmaIntensity) {
+      final intensity? =>
+        'JmaIntensity.${IntensityIconType.smallWithoutText.name}.${intensity.name}',
+      null => mapIconId,
+    },
+  };
 }
 
 /// 震度データベースの震度階級の地図用円形アイコン

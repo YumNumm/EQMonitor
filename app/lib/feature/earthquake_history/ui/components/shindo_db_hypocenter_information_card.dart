@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class ShindoDbHypocenterInformationCard extends StatelessWidget {
@@ -37,9 +37,8 @@ class ShindoDbHypocenterInformationCard extends StatelessWidget {
     final cardColor = cardBackgroundColor.withValues(alpha: 0.3);
 
     return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8,
-      ).add(const EdgeInsets.only(bottom: 4)),
+      margin: const EdgeInsets.symmetric(horizontal: 8)
+          .add(const EdgeInsets.only(bottom: 4)),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(16),
@@ -79,15 +78,16 @@ class _MaxIntensityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final maxIntensity = hypocenter.maxIntensity;
+    if (maxIntensity == null) {
+      return const SizedBox.shrink();
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        ShindoDbIntensityClassIcon(
-          intensityClass: hypocenter.maxIntensity!,
-          size: 60,
-        ),
+        ShindoDbIntensityClassIcon(intensityClass: maxIntensity, size: 60),
       ],
     );
   }
@@ -145,8 +145,8 @@ class _MagnitudeRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.alphabetic,
         children: [
-          Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
-          Text('不明', style: textTheme.valueStyle(textTheme.headlineMedium!)),
+          Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
+          Text('不明', style: textTheme.valueStyle(textTheme.headlineMedium)),
         ],
       );
     }
@@ -160,10 +160,10 @@ class _MagnitudeRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
+            Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
             Text(
               first.value.toStringAsFixed(1),
-              style: textTheme.valueStyle(textTheme.headlineLarge!),
+              style: textTheme.valueStyle(textTheme.headlineLarge),
             ),
           ],
         ),
@@ -187,8 +187,12 @@ class _DepthRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final depthKm = hypocenter.depthKm;
+    if (depthKm == null) {
+      return const SizedBox.shrink();
+    }
     final stderr = hypocenter.depthStderrKm;
-    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall!);
+    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall);
     final hasSecondaryInfo = stderr != null || hypocenter.depthIsFree;
 
     return Column(
@@ -199,8 +203,8 @@ class _DepthRow extends StatelessWidget {
             children: [
               TextSpan(text: '深さ', style: subTextStyle),
               TextSpan(
-                text: hypocenter.depthKm!.toStringAsFixed(0),
-                style: textTheme.valueStyle(textTheme.headlineLarge!),
+                text: depthKm.toStringAsFixed(0),
+                style: textTheme.valueStyle(textTheme.headlineLarge),
               ),
               TextSpan(text: 'km', style: subTextStyle),
             ],
@@ -244,13 +248,13 @@ class _OriginTimeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS頃');
+    final stderr = stderrSeconds;
 
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(text: '発生時刻: ${dateFormat.format(originTime.toLocal())}'),
-          if (stderrSeconds != null)
-            TextSpan(text: '±${stderrSeconds!.toStringAsFixed(1)}秒'),
+          if (stderr != null) TextSpan(text: '±${stderr.toStringAsFixed(1)}秒'),
         ],
         style: theme.textTheme.bodySmall?.copyWith(
           color: context.designSystem.colorTheme.onSurfaceVariant,
@@ -276,12 +280,12 @@ class _EpicenterWidget extends StatelessWidget {
       mainAxisSize: .min,
       crossAxisAlignment: .baseline,
       children: [
-        Text('震源地', style: textTheme.labelStyle(textTheme.bodySmall!)),
+        Text('震源地', style: textTheme.labelStyle(textTheme.bodySmall)),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
             epicenterName,
-            style: textTheme.valueStyle(textTheme.headlineSmall!),
+            style: textTheme.valueStyle(textTheme.headlineSmall),
           ),
         ),
       ],
@@ -313,10 +317,10 @@ class _DetailsTile extends StatelessWidget {
       childrenPadding: const EdgeInsets.only(bottom: 8),
       children: [
         _InfoRow(label: 'レコード種別', value: primary.recordTypeLabel),
-        if (primary.determinationFlagLabel != null)
-          _InfoRow(label: '決定フラグ', value: primary.determinationFlagLabel!),
-        if (primary.evaluationLabel != null)
-          _InfoRow(label: '震源評価', value: primary.evaluationLabel!),
+        if (primary.determinationFlagLabel case final label?)
+          _InfoRow(label: '決定フラグ', value: label),
+        if (primary.evaluationLabel case final label?)
+          _InfoRow(label: '震源評価', value: label),
         _InfoRow(label: '観測点数', value: '${primary.stationCount}'),
         ...primary.magnitudes.map(
           (m) => _InfoRow(
@@ -326,11 +330,10 @@ class _DetailsTile extends StatelessWidget {
         ),
         for (final (i, h) in others.indexed)
           _HypocenterSection(index: i + 2, hypocenter: h),
-        if (catalog.linkMatchConfidence != null)
+        if (catalog.linkMatchConfidence case final confidence?)
           _InfoRow(
             label: '照合信頼度',
-            value:
-                '${(catalog.linkMatchConfidence! * 100).toStringAsFixed(0)}%',
+            value: '${(confidence * 100).toStringAsFixed(0)}%',
           ),
       ],
     );
@@ -361,10 +364,10 @@ class _HypocenterSection extends StatelessWidget {
           ),
         ),
         _InfoRow(label: 'レコード種別', value: hypocenter.recordTypeLabel),
-        if (hypocenter.determinationFlagLabel != null)
-          _InfoRow(label: '決定フラグ', value: hypocenter.determinationFlagLabel!),
-        if (hypocenter.evaluationLabel != null)
-          _InfoRow(label: '震源評価', value: hypocenter.evaluationLabel!),
+        if (hypocenter.determinationFlagLabel case final label?)
+          _InfoRow(label: '決定フラグ', value: label),
+        if (hypocenter.evaluationLabel case final label?)
+          _InfoRow(label: '震源評価', value: label),
         _InfoRow(label: '観測点数', value: '${hypocenter.stationCount}'),
         ...hypocenter.magnitudes.map(
           (m) => _InfoRow(

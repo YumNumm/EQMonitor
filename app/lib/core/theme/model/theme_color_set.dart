@@ -2,8 +2,9 @@ import 'package:eqmonitor/core/theme/model/estimated_intensity_colors.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/theme/model/status_colors.dart';
+import 'package:eqmonitor/core/theme/util/contrast_color_util.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'theme_color_set.freezed.dart';
@@ -56,15 +57,15 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     // onSecondary/onTertiary/onErrorはColorSchemeの必須引数だが、削除対象
     // フィールドのため、各背景色（secondary/tertiary/error）自身の輝度から
     // 導出する。
-    onSecondary: onColorForBackground(secondary),
+    onSecondary: ContrastColorUtil.onColorForBackground(secondary),
     secondaryContainer: secondaryContainer,
     onSecondaryContainer: onSecondaryContainer,
     tertiary: tertiary,
-    onTertiary: onColorForBackground(tertiary),
+    onTertiary: ContrastColorUtil.onColorForBackground(tertiary),
     tertiaryContainer: tertiaryContainer,
     onTertiaryContainer: onTertiaryContainer,
     error: error,
-    onError: onColorForBackground(error),
+    onError: ContrastColorUtil.onColorForBackground(error),
     errorContainer: errorContainer,
     onErrorContainer: onErrorContainer,
     surface: surface,
@@ -79,19 +80,6 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     // inverseSurfaceは保持していないため、ColorSchemeの既定値により
     // onSurfaceにフォールバックする。そのため、保持しているフィールドの値
     // ではなく、実際に反転背景として使われるonSurfaceから前景色を導出する。
-    onInverseSurface: onColorForBackground(onSurface),
+    onInverseSurface: ContrastColorUtil.onColorForBackground(onSurface),
   );
-}
-
-/// [background]に対してWCAGコントラスト比がより高い前景色（黒/白）を導出する。
-///
-/// 白/黒それぞれと[background]とのコントラスト比を計算し、
-/// より読みやすい（コントラスト比が高い）方を返す。
-/// - 白とのコントラスト比: `1.05 / (Lbg + 0.05)`
-/// - 黒とのコントラスト比: `(Lbg + 0.05) / 0.05`
-Color onColorForBackground(Color background) {
-  final luminance = background.computeLuminance();
-  final contrastWithWhite = 1.05 / (luminance + 0.05);
-  final contrastWithBlack = (luminance + 0.05) / 0.05;
-  return contrastWithBlack >= contrastWithWhite ? Colors.black : Colors.white;
 }

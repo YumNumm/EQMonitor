@@ -4,17 +4,19 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class KyoshinMonitorObservationLayer extends ConsumerWidget {
-  const KyoshinMonitorObservationLayer({super.key});
+  const new({super.key});
 
   static const _sourceId = 'kyoshin-monitor-observations';
   static const _layerId = 'kyoshin-monitor-circles';
@@ -32,7 +34,7 @@ class KyoshinMonitorObservationLayer extends ConsumerWidget {
 }
 
 class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
-  const _KyoshinMonitorObservationLayerBody();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,6 +50,15 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
       HomeKmoniMarkerSize.medium => 1.0,
       HomeKmoniMarkerSize.large => 1.35,
     };
+    final markerType = ref.watch(
+      kyoshinMonitorSettingsProvider.select(
+        (value) =>
+            value.value?.kmoniMarkerType ?? KyoshinMonitorMarkerType.onlyEew,
+      ),
+    );
+    final hasActiveEew = ref.watch(
+      eewAliveTelegramProvider.select((eews) => eews?.isNotEmpty ?? false),
+    );
 
     final isLayerInitialized = useRef(false);
     final lifecycleToken = useRef<Object?>(null);
@@ -82,7 +93,7 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
         }
         unawaited(
           enqueue(() {
-            return removeMapStyleResources(
+            return MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [KyoshinMonitorObservationLayer._layerId],
               sourceIds: const [KyoshinMonitorObservationLayer._sourceId],
@@ -115,13 +126,15 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
           await styleController.addLayer(
             const KyoshinMonitorObservationLayerBuilder().build(
               radiusScaleFactor: radiusScaleFactor,
+              markerType: markerType,
+              hasActiveEew: hasActiveEew,
             ),
           );
           isLayerInitialized.value = true;
         }),
       );
       return null;
-    }, [styleController, radiusScaleFactor]);
+    }, [styleController, radiusScaleFactor, markerType, hasActiveEew]);
 
     useEffect(() {
       final token = lifecycleToken.value;
@@ -165,14 +178,26 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
 }
 
 class KyoshinMonitorObservationLayerBuilder {
-  const KyoshinMonitorObservationLayerBuilder();
+  const new();
 
-  CircleStyleLayer build({required double radiusScaleFactor}) =>
-      CircleStyleLayer(
-        id: KyoshinMonitorObservationLayer._layerId,
-        sourceId: KyoshinMonitorObservationLayer._sourceId,
-        paint: {
-          'circle-radius': [
+  CircleStyleLayer build({
+    required double radiusScaleFactor,
+    required KyoshinMonitorMarkerType markerType,
+    required bool hasActiveEew,
+  }) {
+    final showMarkerBorder = switch (markerType) {
+      KyoshinMonitorMarkerType.always => true,
+      KyoshinMonitorMarkerType.onlyEew => hasActiveEew,
+      KyoshinMonitorMarkerType.never => false,
+    };
+    return CircleStyleLayer(
+      id: KyoshinMonitorObservationLayer._layerId,
+      sourceId: KyoshinMonitorObservationLayer._sourceId,
+      paint: {
+        'circle-radius': [
+          '*',
+          radiusScaleFactor,
+          [
             'interpolate',
             ['linear'],
             ['zoom'],
@@ -181,17 +206,25 @@ class KyoshinMonitorObservationLayerBuilder {
             10,
             10,
           ],
-          'circle-color': ['get', 'color'],
-          'circle-stroke-color': '#808080',
-          'circle-stroke-width': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3,
-            0.2 * radiusScaleFactor,
-            10,
-            radiusScaleFactor,
-          ],
-        },
-      );
+        ],
+        'circle-color': ['get', 'color'],
+        'circle-stroke-color': '#808080',
+        'circle-stroke-width': showMarkerBorder
+            ? [
+                '*',
+                radiusScaleFactor,
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.2,
+                  10,
+                  1,
+                ],
+              ]
+            : 0,
+      },
+    );
+  }
 }

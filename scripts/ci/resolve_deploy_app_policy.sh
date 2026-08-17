@@ -8,6 +8,7 @@ set -euo pipefail
 : "${INPUT_IOS:?INPUT_IOS is required}"
 : "${INPUT_ANDROID:?INPUT_ANDROID is required}"
 : "${INPUT_EXTERNAL:?INPUT_EXTERNAL is required}"
+: "${INPUT_IS_BETA_TESTING:?INPUT_IS_BETA_TESTING is required}"
 
 platforms=()
 ios_external=false
@@ -40,3 +41,11 @@ for platform in "${platforms[@]}"; do
 done
 echo "deploy-ios-external=$ios_external"
 echo "android-track=$android_track"
+
+is_beta_testing=false
+if [[ "$EVENT_NAME" == "push" && "$REF_TYPE" == "tag" && "$REF_NAME" == v*-beta.* ]]; then
+  is_beta_testing=true
+elif [[ "$EVENT_NAME" == "workflow_dispatch" && "$INPUT_IS_BETA_TESTING" == "true" ]]; then
+  is_beta_testing=true
+fi
+echo "is-beta-testing=$is_beta_testing"

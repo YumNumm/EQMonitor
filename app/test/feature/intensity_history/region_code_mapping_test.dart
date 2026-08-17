@@ -16,15 +16,13 @@ EarthquakeParameterCityItem _city(String code) => EarthquakeParameterCityItem(
   stations: const [],
 );
 
-EarthquakeParameterRegionItem _region(
-  String code,
-  List<String> cityCodes,
-) => EarthquakeParameterRegionItem(
-  code: code,
-  name: _name('region-$code'),
-  kana: null,
-  cities: cityCodes.map(_city).toList(),
-);
+EarthquakeParameterRegionItem _region(String code, List<String> cityCodes) =>
+    EarthquakeParameterRegionItem(
+      code: code,
+      name: _name('region-$code'),
+      kana: null,
+      cities: cityCodes.map(_city).toList(),
+    );
 
 EarthquakeParameterPrefectureItem _pref(
   String code,
@@ -57,67 +55,100 @@ final List<EarthquakeParameterPrefectureItem> _testPrefectures = [
 void main() {
   group('prefectureCodeOfCity', () {
     test('市区町村 code の前 2 桁が都道府県 code の前 2 桁と一致する場合に都道府県 code を返す', () {
-      final result = prefectureCodeOfCity('0110101', _testPrefectures);
+      final result = RegionCodeMapping.prefectureCodeOfCity(
+        '0110101',
+        _testPrefectures,
+      );
       expect(result, '0100');
     });
 
     test('別の都道府県の市区町村コードも正しく解決できる', () {
-      final result = prefectureCodeOfCity('0210101', _testPrefectures);
+      final result = RegionCodeMapping.prefectureCodeOfCity(
+        '0210101',
+        _testPrefectures,
+      );
       expect(result, '0200');
     });
 
     test('一致する都道府県が存在しない場合は null を返す', () {
-      final result = prefectureCodeOfCity('9999999', _testPrefectures);
+      final result = RegionCodeMapping.prefectureCodeOfCity(
+        '9999999',
+        _testPrefectures,
+      );
       expect(result, isNull);
     });
   });
 
   group('regionCodesOfPrefecture', () {
     test('都道府県配下の全細分区域 code を返す', () {
-      final result = regionCodesOfPrefecture('0100', _testPrefectures);
+      final result = RegionCodeMapping.regionCodesOfPrefecture(
+        '0100',
+        _testPrefectures,
+      );
       expect(result, containsAll(['0110100', '0110200']));
       expect(result.length, 2);
     });
 
     test('存在しない都道府県 code の場合は空リストを返す', () {
-      final result = regionCodesOfPrefecture('9999', _testPrefectures);
+      final result = RegionCodeMapping.regionCodesOfPrefecture(
+        '9999',
+        _testPrefectures,
+      );
       expect(result, isEmpty);
     });
   });
 
   group('prefectureOfRegionCode', () {
     test('細分区域コードから正しく都道府県コードと名前を返す', () {
-      final result = prefectureOfRegionCode('0110100', _testPrefectures);
+      final result = RegionCodeMapping.prefectureOfRegionCode(
+        '0110100',
+        _testPrefectures,
+      );
       expect(result?.code, '0100');
       expect(result?.name, 'pref-0100');
     });
 
     test('別の都道府県の細分区域コードも正しく解決できる', () {
-      final result = prefectureOfRegionCode('0210100', _testPrefectures);
+      final result = RegionCodeMapping.prefectureOfRegionCode(
+        '0210100',
+        _testPrefectures,
+      );
       expect(result?.code, '0200');
       expect(result?.name, 'pref-0200');
     });
 
     test('存在しない細分区域 code の場合は null を返す', () {
-      final result = prefectureOfRegionCode('9999999', _testPrefectures);
+      final result = RegionCodeMapping.prefectureOfRegionCode(
+        '9999999',
+        _testPrefectures,
+      );
       expect(result, isNull);
     });
   });
 
   group('cityCodesOfPrefecture', () {
     test('都道府県配下の全市区町村 code を返す', () {
-      final result = cityCodesOfPrefecture('0100', _testPrefectures);
+      final result = RegionCodeMapping.cityCodesOfPrefecture(
+        '0100',
+        _testPrefectures,
+      );
       expect(result, containsAll(['0110101', '0110102', '0110201']));
       expect(result.length, 3);
     });
 
     test('別の都道府県でも正しく返す', () {
-      final result = cityCodesOfPrefecture('0200', _testPrefectures);
+      final result = RegionCodeMapping.cityCodesOfPrefecture(
+        '0200',
+        _testPrefectures,
+      );
       expect(result, ['0210101']);
     });
 
     test('存在しない都道府県 code の場合は空リストを返す', () {
-      final result = cityCodesOfPrefecture('9999', _testPrefectures);
+      final result = RegionCodeMapping.cityCodesOfPrefecture(
+        '9999',
+        _testPrefectures,
+      );
       expect(result, isEmpty);
     });
   });

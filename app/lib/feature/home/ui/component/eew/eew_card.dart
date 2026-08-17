@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
@@ -21,14 +21,17 @@ class EewCard extends ConsumerWidget {
     required this.eew,
     required this.index,
     this.nowOverride,
-    this.userRegionEstimate,
+    this.estimatedRegions,
     super.key,
   });
 
   final EewTelegramItem eew;
   final String? index;
   final DateTime? nowOverride;
-  final EewEstimatedRegion? userRegionEstimate;
+
+  /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
+  /// フォールバックとして利用する。
+  final List<EewEstimatedRegion>? estimatedRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +75,9 @@ class EewCard extends ConsumerWidget {
     final localRegion = localForecastRegion(eew, regionCode);
 
     // JMAのlocalRegionがない場合、推定値をフォールバック
-    final estimate = userRegionEstimate;
+    final estimate = regionCode != null
+        ? estimatedRegions?.firstWhereOrNull((e) => e.regionCode == regionCode)
+        : null;
     final effectiveLocalIntensity =
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
@@ -109,7 +114,7 @@ class EewCard extends ConsumerWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (index != null) _BackgroundIndexText(index: index!),
+        if (index case final index?) _BackgroundIndexText(index: index),
         _EewMainCard(
           eew: eew,
           isWarning: isWarning,
@@ -183,12 +188,13 @@ class _EewMainCard extends StatelessWidget {
         ? _warningHeaderColor
         : _forecastHeaderColor;
 
+    final regionDisplayName = this.regionDisplayName;
     final showLocalForecast =
         (localForecastIntensity != null ||
             secondsUntilArrival != null ||
             showArrived) &&
         regionDisplayName != null &&
-        regionDisplayName!.isNotEmpty &&
+        regionDisplayName.isNotEmpty &&
         localForecastIntensity != null;
 
     return Card(
@@ -244,7 +250,7 @@ class _EewMainCard extends StatelessWidget {
                       if (showLocalForecast)
                         _EewLocalForecastSection(
                           intensity: localForecastIntensity,
-                          regionDisplayName: regionDisplayName!,
+                          regionDisplayName: regionDisplayName,
                         ),
                     ],
                   ),
@@ -548,9 +554,9 @@ class _EewLocalForecastSection extends StatelessWidget {
             ),
           ],
         ),
-        if (intensity != null) ...[
+        if (intensity case final intensity?) ...[
           const SizedBox(height: 2),
-          JmaIntensityIcon(intensity: intensity!, type: .filled),
+          JmaIntensityIcon(intensity: intensity, type: .filled),
         ],
       ],
     );

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:flutter/material.dart' as material;
-import 'package:flutter/material.dart' hide LicensePage;
+import 'package:material_ui/material_ui.dart' as material;
+import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

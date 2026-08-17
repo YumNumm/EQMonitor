@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.LibraryExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "net.yumnumm.assets_util"
 version = "1.0"
 
@@ -6,7 +9,7 @@ plugins {
     id("kotlin-android")
 }
 
-android {
+extensions.configure<LibraryExtension>("android") {
     namespace = "net.yumnumm.assets_util"
     compileSdk = 36
 
@@ -19,20 +22,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
-    }
 }
 
-dependencies {
-    // Play Asset Delivery: AssetPackManager / AssetPackLocation for
-    // resolving the eqmonitor_assets install-time pack's on-device
-    // location (resolvePackRoot). Version 2.3.0 confirmed as the latest
-    // available via https://dl.google.com/android/maven2/com/google/android/play/group-index.xml.
-    implementation("com.google.android.play:asset-delivery-ktx:2.3.0")
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }

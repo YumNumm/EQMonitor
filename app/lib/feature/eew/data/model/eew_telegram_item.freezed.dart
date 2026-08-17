@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_telegram_item.dart';
@@ -9,6 +9,7 @@ part of 'eew_telegram_item.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$EewTelegramItemCopyWithImpl<$Res>
 /// Create a copy of EewTelegramItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? isCanceled = null,Object? isLastInfo = null,Object? reportTime = null,Object? isPlum = null,Object? headline = freezed,Object? isWarning = freezed,Object? originTime = freezed,Object? arrivalTime = freezed,Object? editorialOffice = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? warning = freezed,Object? accuracy = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EewTelegramItem(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
@@ -464,7 +465,7 @@ class _$EewHypocenterInfoCopyWithImpl<$Res>
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EewHypocenterInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
@@ -745,7 +746,7 @@ class _$EewForecastIntensityInfoCopyWithImpl<$Res>
 /// Create a copy of EewForecastIntensityInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? regions = null,Object? maxIntensity = freezed,Object? maxIntensityIsOver = null,Object? maxLpgmIntensity = freezed,Object? maxLpgmIntensityIsOver = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewForecastIntensityInfo(
 regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<EewForecastRegionInfo>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,maxIntensityIsOver: null == maxIntensityIsOver ? _self.maxIntensityIsOver : maxIntensityIsOver // ignore: cast_nullable_to_non_nullable
@@ -892,7 +893,7 @@ return $default(_that.regions,_that.maxIntensity,_that.maxIntensityIsOver,_that.
 
 
 class _EewForecastIntensityInfo implements EewForecastIntensityInfo {
-  const _EewForecastIntensityInfo({required final  List<EewForecastRegionInfo> regions, this.maxIntensity, this.maxIntensityIsOver = false, this.maxLpgmIntensity, this.maxLpgmIntensityIsOver = false}): _regions = regions;
+  const _EewForecastIntensityInfo({required  List<EewForecastRegionInfo> regions, this.maxIntensity, this.maxIntensityIsOver = false, this.maxLpgmIntensity, this.maxLpgmIntensityIsOver = false}): _regions = regions;
   
 
  final  List<EewForecastRegionInfo> _regions;
@@ -1020,7 +1021,7 @@ class _$EewForecastRegionInfoCopyWithImpl<$Res>
 /// Create a copy of EewForecastRegionInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? intensityIsOver = null,Object? arrivalTime = freezed,Object? isArrived = null,Object? lpgmIntensity = freezed,Object? lpgmIntensityIsOver = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewForecastRegionInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
@@ -1304,7 +1305,7 @@ class _$EewWarningInfoCopyWithImpl<$Res>
 /// Create a copy of EewWarningInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? zones = null,Object? prefectures = null,Object? regions = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewWarningInfo(
 zones: null == zones ? _self.zones : zones // ignore: cast_nullable_to_non_nullable
 as List<EewWarningZoneInfo>,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<EewWarningZoneInfo>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
@@ -1449,7 +1450,7 @@ return $default(_that.zones,_that.prefectures,_that.regions);case _:
 
 
 class _EewWarningInfo implements EewWarningInfo {
-  const _EewWarningInfo({required final  List<EewWarningZoneInfo> zones, required final  List<EewWarningZoneInfo> prefectures, required final  List<EewWarningZoneInfo> regions}): _zones = zones,_prefectures = prefectures,_regions = regions;
+  const _EewWarningInfo({required  List<EewWarningZoneInfo> zones, required  List<EewWarningZoneInfo> prefectures, required  List<EewWarningZoneInfo> regions}): _zones = zones,_prefectures = prefectures,_regions = regions;
   
 
  final  List<EewWarningZoneInfo> _zones;
@@ -1585,7 +1586,7 @@ class _$EewWarningZoneInfoCopyWithImpl<$Res>
 /// Create a copy of EewWarningZoneInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? hadWarning = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewWarningZoneInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,hadWarning: null == hadWarning ? _self.hadWarning : hadWarning // ignore: cast_nullable_to_non_nullable
@@ -1900,7 +1901,7 @@ class _$EewAccuracyInfoCopyWithImpl<$Res>
 /// Create a copy of EewAccuracyInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? epicenter = null,Object? hypocenter = null,Object? depth = null,Object? magnitudeCalculation = null,Object? numberOfMagnitudeCalculation = null,}) {
-  return _then(_self.copyWith(
+  return _then(EewAccuracyInfo(
 epicenter: null == epicenter ? _self.epicenter : epicenter // ignore: cast_nullable_to_non_nullable
 as int,hypocenter: null == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as int,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable

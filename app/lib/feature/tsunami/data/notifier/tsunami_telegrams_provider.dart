@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_with_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tsunami_telegrams_provider.g.dart';
@@ -14,7 +13,6 @@ Future<List<TsunamiTelegramWithState>> tsunamiTelegrams(
   final response = await client.tsunami.getV2TsunamiTsunamiIdTelegrams(
     tsunamiId: tsunamiId,
   );
-  return [...response.data.telegrams]..sort(
-      (a, b) => a.telegram.pressedAt.compareTo(b.telegram.pressedAt),
-    );
+  return [...response.data.telegrams.map((e) => e.toDomain())]
+    ..sort((a, b) => a.telegram.publishedAt.compareTo(b.telegram.publishedAt));
 }

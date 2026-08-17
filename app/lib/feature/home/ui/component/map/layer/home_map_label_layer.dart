@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_label_parameter.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_map_label_parameter_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';

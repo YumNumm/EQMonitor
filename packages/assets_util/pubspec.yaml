@@ -1,14 +1,12 @@
 name: assets_util
 version: 1.0.0
-description: >
-  Platform-managed local assets resolver via FFI (iOS) and JNI (Android).
-  Not FlutterGen Assets. Intended for Background Assets / Play Asset Delivery later.
+description: App-bundled local assets resolver via FFI (Apple) and JNI (Android).
 
 publish_to: "none"
 
 environment:
-  sdk: ^3.11.0
-  flutter: ^3.44.0
+  sdk: ^3.14.0-29.0.dev
+  flutter: ^3.47.0-1.0.pre-97
 
 resolution: workspace
 

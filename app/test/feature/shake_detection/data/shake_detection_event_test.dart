@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 final _createdAt = DateTime.utc(2026, 7, 19, 12);
@@ -38,12 +39,12 @@ void main() {
 
   group('ShakeDetectionLevel enum (eqmonitor_api)', () {
     test('全レベルが json プロパティを持つこと', () {
-      const cases = <ShakeDetectionLevel, String>{
-        ShakeDetectionLevel.weaker: 'Weaker',
-        ShakeDetectionLevel.weak: 'Weak',
-        ShakeDetectionLevel.medium: 'Medium',
-        ShakeDetectionLevel.strong: 'Strong',
-        ShakeDetectionLevel.stronger: 'Stronger',
+      const cases = <api.ShakeDetectionLevel, String>{
+        api.ShakeDetectionLevel.weaker: 'Weaker',
+        api.ShakeDetectionLevel.weak: 'Weak',
+        api.ShakeDetectionLevel.medium: 'Medium',
+        api.ShakeDetectionLevel.strong: 'Strong',
+        api.ShakeDetectionLevel.stronger: 'Stronger',
       };
       for (final entry in cases.entries) {
         expect(entry.key.json, entry.value);

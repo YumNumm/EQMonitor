@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -38,6 +38,13 @@ import background_location_tracker
       AppGroupMethodChannel.register(with: registrar)
     }
 
+    // Register the debug-only Live Activity local start/update/end channel.
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "LiveActivityDebugMethodChannel"
+    ) {
+      LiveActivityDebugMethodChannel.register(with: registrar)
+    }
+
     // Register the widget reload method channel.
     // Flutter が App Group UserDefaults を更新したあとに `reloadTimelines` を
     // 呼び出すと、ホーム画面ウィジェットのタイムラインを再読み込みする。

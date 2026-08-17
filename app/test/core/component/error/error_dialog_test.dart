@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,9 +12,11 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showErrorDialog(context, error: error),
+            body: Consumer(
+              builder: (context, ref, _) => ElevatedButton(
+                onPressed: () => ref
+                    .read(errorDialogActionProvider)
+                    .show(context, error: error),
                 child: const Text('open'),
               ),
             ),

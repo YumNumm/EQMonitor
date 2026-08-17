@@ -17,13 +17,16 @@ struct ShakeDetectionHeaderContainer: View {
 
     private let stripeHeight: CGFloat = 8
 
+    private static let unknownLevelStripeColors: [Color] = [
+        Color(red: 0.5, green: 0.5, blue: 0.5),
+        Color(red: 0.3, green: 0.3, blue: 0.3),
+    ]
+
     var body: some View {
         VStack(spacing: 0) {
-            // ストライプパターン
-            if let level = level {
-                StripePattern(colors: level.stripeColors)
-                    .frame(height: stripeHeight)
-            }
+            // ストライプパターン。level 不明でもヘッダーの高さを変えないため常に描く
+            StripePattern(colors: level?.stripeColors ?? Self.unknownLevelStripeColors)
+                .frame(height: stripeHeight)
 
             HStack(alignment: .center, spacing: 8) {
                 // 左側: 「揺れ検知」ラベル + 揺れレベル説明
@@ -53,7 +56,7 @@ struct ShakeDetectionHeaderContainer: View {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("検知時刻")
                             .liveActivityLabelStyle(.header)
-                        Text(formatTime(detectedDate))
+                        Text(JSTDateFormat.timeWithSeconds(detectedDate))
                             .font(
                                 .system(
                                     size: 14,
@@ -74,14 +77,6 @@ struct ShakeDetectionHeaderContainer: View {
 
     private var backgroundColor: Color {
         level?.headerBackgroundColor ?? Color(red: 0.5, green: 0.5, blue: 0.5)
-    }
-
-    private func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        formatter.locale = Locale(identifier: "ja_JP")
-        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        return formatter.string(from: date)
     }
 }
 
@@ -110,11 +105,13 @@ struct ShakeDetectionLocationSummaryView: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
+            // ロック画面の Live Activity はライト/ダーク両方で描画されるため、
+            // 白固定にすると明るい背景で不可視になる。
             Image(systemName: "location.fill")
                 .font(.system(size: 14, weight: .bold))
-                .foregroundColor(.white.opacity(0.86))
+                .foregroundColor(.primary.opacity(0.86))
                 .frame(width: 28, height: 28)
-                .background(Color.white.opacity(0.12))
+                .background(Color.primary.opacity(0.08))
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 2) {

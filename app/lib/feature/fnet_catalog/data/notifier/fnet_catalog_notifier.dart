@@ -7,10 +7,7 @@ part 'fnet_catalog_notifier.g.dart';
 @riverpod
 class FnetCatalogNotifier extends _$FnetCatalogNotifier {
   @override
-  Future<List<FnetEvent>> build({
-    required int year,
-    int? month,
-  }) async {
+  Future<List<FnetEvent>> build({required int year, int? month}) async {
     if (month != null) {
       return ref
           .read(fnetCatalogRepositoryProvider)
@@ -25,10 +22,11 @@ class FnetCatalogNotifier extends _$FnetCatalogNotifier {
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
+      final month = this.month;
       if (month != null) {
         return ref
             .read(fnetCatalogRepositoryProvider)
-            .fetchCatalog(year: year, month: month!);
+            .fetchCatalog(year: year, month: month);
       } else {
         return ref
             .read(fnetCatalogRepositoryProvider)

@@ -6,11 +6,11 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DisplaySettingsPage extends StatelessWidget {
-  const DisplaySettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DisplaySettingsPage extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _Body extends StatelessWidget {
               title: const Text('テーマ設定'),
               subtitle: const Text('配色プリセットの選択・カスタム編集・JSON入出力'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => const ThemeSettingsRoute().go(context),
+              onTap: () async => const ThemeSettingsRoute().push<void>(context),
             ),
           ],
         ),
@@ -47,7 +47,7 @@ class _Body extends StatelessWidget {
 }
 
 class _ThemeSelector extends ConsumerWidget {
-  const _ThemeSelector();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

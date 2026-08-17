@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'catalog_link.dart';
@@ -9,6 +9,7 @@ part of 'catalog_link.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$CatalogLinkCopyWithImpl<$Res>
 /// Create a copy of CatalogLink
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? matchConfidence = null,Object? matchMethod = null,Object? timeDiffSeconds = null,Object? distanceKm = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CatalogLink(
 matchConfidence: null == matchConfidence ? _self.matchConfidence : matchConfidence // ignore: cast_nullable_to_non_nullable
 as num,matchMethod: null == matchMethod ? _self.matchMethod : matchMethod // ignore: cast_nullable_to_non_nullable
 as CatalogLinkMatchMethod,timeDiffSeconds: null == timeDiffSeconds ? _self.timeDiffSeconds : timeDiffSeconds // ignore: cast_nullable_to_non_nullable

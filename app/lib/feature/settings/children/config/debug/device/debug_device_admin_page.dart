@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -94,19 +94,19 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
           ),
         ),
         Expanded(
-          child: switch (snapshot.connectionState) {
-            ConnectionState.waiting => const Center(
+          child: switch ((snapshot.connectionState, snapshot.data)) {
+            (ConnectionState.waiting, _) => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
-            ConnectionState.done =>
-              snapshot.hasError
-                  ? _ErrorBody(message: snapshot.error.toString())
-                  : _Body(
-                      deviceId: deviceId,
-                      device: snapshot.data!.device,
-                      settings: snapshot.data!.settings,
-                      onReload: reload,
-                    ),
+            (ConnectionState.done, _) when snapshot.hasError => _ErrorBody(
+              message: snapshot.error.toString(),
+            ),
+            (ConnectionState.done, final data?) => _Body(
+              deviceId: deviceId,
+              device: data.device,
+              settings: data.settings,
+              onReload: reload,
+            ),
             _ => const SizedBox.shrink(),
           },
         ),
@@ -253,9 +253,8 @@ class _Body extends HookConsumerWidget {
 
     Future<void> saveNotificationSettings() async {
       if (device == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('先にデバイスを登録してください')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('先にデバイスを登録してください')));
         return;
       }
       await runWithBusy(() async {
@@ -314,18 +313,25 @@ class _Body extends HookConsumerWidget {
         const SizedBox(height: 24),
         Text('サーバー上の状態', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
-        if (device == null)
-          Text(
+        switch (device) {
+          null => Text(
             '未登録（またはこの端末 ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
-          )
-        else ...[
-          _InfoRow(label: 'デバイス ID', value: device!.id),
-          _InfoRow(label: 'プラットフォーム', value: device!.platform.displayLabel),
-          _InfoRow(label: 'ロケール', value: device!.locale.name),
-        ],
+          ),
+          final registeredDevice => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _InfoRow(label: 'デバイス ID', value: registeredDevice.id),
+              _InfoRow(
+                label: 'プラットフォーム',
+                value: registeredDevice.platform.displayLabel,
+              ),
+              _InfoRow(label: 'ロケール', value: registeredDevice.locale.name),
+            ],
+          ),
+        },
         const SizedBox(height: 16),
         Text('デバイスの登録・編集・削除', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 4),

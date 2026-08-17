@@ -7,6 +7,8 @@ void main() {
   test('manifest archiveをJSTの日付IDへ変換する', () {
     final response = api.HypocenterManifestResponse(
       data: api.Data2(
+        schemaVersion: api.SchemaVersion.value2,
+        generatedAt: DateTime.utc(2026, 8, 2),
         archives: [
           api.Archives(
             partition: api.Partition.day,
@@ -15,6 +17,7 @@ void main() {
               to: DateTime.utc(2026, 8, 2, 15),
             ),
             queryRevision: '1234567890abcdef12345678',
+            archiveRevision: 'fedcba9876543210fedcba98',
             url: 'https://tiles.example/day.pmtiles',
             featureCount: 10,
             sizeBytes: 100,

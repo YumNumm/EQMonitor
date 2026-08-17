@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -26,7 +27,7 @@ class DeviceProvisioningBanner extends ConsumerWidget {
 
     final notifier = ref.watch(deviceProvisioningProvider.notifier);
     final provisionRetry = notifier.retryState;
-    final syncRetry = syncSnapshot?.value?.retryState ?? const RetryIdle();
+    final syncRetry = syncSnapshot?.value?.retryState ?? RetryIdle();
 
     // アクティブなリトライ状態（provisioning 優先）
     final activeRetry = provisionRetry is! RetryIdle
@@ -193,37 +194,11 @@ class _BannerTile extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
-    final shape = designSystem.shape;
-    final colorTheme = designSystem.colorTheme;
-
-    return Material(
-      color: backgroundColor,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
-        side: BorderSide(color: colorTheme.outlineVariant),
-      ),
-      clipBehavior: .antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Icon(icon, color: foregroundColor, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: foregroundColor),
-              ),
-            ),
-            if (trailing != null) ...[const SizedBox(width: 8), trailing!],
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppBanner(
+    icon: icon,
+    title: message,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    trailing: trailing,
+  );
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_telegram_body_intensity_station.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_telegram_body_intensity_station.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$EarthquakeTelegramBodyIntensityStationCopyWithImpl<$Res>
 /// Create a copy of EarthquakeTelegramBodyIntensityStation
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? eventId = freezed,Object? intensity = freezed,Object? lpgmIntensity = freezed,Object? sva = freezed,Object? prePeriods = freezed,Object? datasource = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeTelegramBodyIntensityStation(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -216,7 +217,7 @@ return $default(_that.code,_that.name,_that.eventId,_that.intensity,_that.lpgmIn
 @JsonSerializable()
 
 class _EarthquakeTelegramBodyIntensityStation implements EarthquakeTelegramBodyIntensityStation {
-  const _EarthquakeTelegramBodyIntensityStation({required this.code, required this.name, @JsonKey(includeIfNull: false) this.eventId, @JsonKey(includeIfNull: false) this.intensity, @JsonKey(includeIfNull: false) this.lpgmIntensity, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false) final  List<TelegramBodyPrePeriod>? prePeriods, @JsonKey(includeIfNull: false) this.datasource}): _prePeriods = prePeriods;
+  const _EarthquakeTelegramBodyIntensityStation({required this.code, required this.name, @JsonKey(includeIfNull: false) this.eventId, @JsonKey(includeIfNull: false) this.intensity, @JsonKey(includeIfNull: false) this.lpgmIntensity, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false)  List<TelegramBodyPrePeriod>? prePeriods, @JsonKey(includeIfNull: false) this.datasource}): _prePeriods = prePeriods;
   factory _EarthquakeTelegramBodyIntensityStation.fromJson(Map<String, dynamic> json) => _$EarthquakeTelegramBodyIntensityStationFromJson(json);
 
 @override final  String code;

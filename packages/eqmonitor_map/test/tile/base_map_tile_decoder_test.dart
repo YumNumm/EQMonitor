@@ -107,6 +107,37 @@ void main() {
   });
 
   group('decodeBaseMapTileSync', () {
+    test('preserves each source layer extent on every derived style layer', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.buildLayer(
+            name: 'countries',
+            extent: 2048,
+            features: [_buildFeatureTriangle()],
+          ),
+          _builder.buildLayer(
+            name: 'areaForecastLocalE',
+            extent: 8192,
+            features: [_buildFeatureTriangle()],
+          ),
+        ],
+      );
+
+      final geometry = decodeBaseMapTileSync(tile, _limits);
+      final extents = {
+        for (final layer in geometry.layers) layer.styleLayerId: layer.extent,
+      };
+
+      expect(extents, {
+        'countriesFill': 2048,
+        'countriesLine': 2048,
+        'areaForecastLocalEFill': 8192,
+        'areaForecastLocalEewLine': null,
+        'areaForecastLocalELine': 8192,
+        'areaInformationCityQuakeLine': null,
+      });
+    });
+
     test('produces one entry per non-background spec, in spec order', () {
       final tile = _builder.buildTile(
         layers: [
@@ -147,11 +178,9 @@ void main() {
       );
 
       final geometry = decodeBaseMapTileSync(tile, _limits);
-      final fill =
-          geometry.layers.singleWhere(
-                (l) => l.styleLayerId == 'countriesFill',
-              )
-              as BaseMapTileFillLayerGeometry;
+      final fill = geometry.layers.singleWhere(
+        (l) => l.styleLayerId == 'countriesFill',
+      ) as BaseMapTileFillLayerGeometry;
 
       expect(fill.meshes, hasLength(1));
       final mesh = fill.meshes.single;
@@ -176,11 +205,9 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         expect(line.meshes, hasLength(1));
         final mesh = line.meshes.single;
@@ -207,11 +234,9 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'areaForecastLocalEewLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'areaForecastLocalEewLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         expect(line.meshes, hasLength(1));
         final mesh = line.meshes.single;
@@ -254,16 +279,12 @@ void main() {
         );
 
         final geometry = decodeBaseMapTileSync(tile, _limits);
-        final fill =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesFill',
-                )
-                as BaseMapTileFillLayerGeometry;
-        final line =
-            geometry.layers.singleWhere(
-                  (l) => l.styleLayerId == 'countriesLine',
-                )
-                as BaseMapTileLineLayerGeometry;
+        final fill = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesFill',
+        ) as BaseMapTileFillLayerGeometry;
+        final line = geometry.layers.singleWhere(
+          (l) => l.styleLayerId == 'countriesLine',
+        ) as BaseMapTileLineLayerGeometry;
 
         // FillはPolygon featureだけを見るので、三角形1枚ぶんの頂点(3)のまま。
         expect(fill.meshes.single.vertexCount, 3);
@@ -287,11 +308,9 @@ void main() {
 
       const decoder = BaseMapTileDecoder();
       final geometry = await decoder.decode(tileBytes: tile, limits: _limits);
-      final fill =
-          geometry.layers.singleWhere(
-                (l) => l.styleLayerId == 'countriesFill',
-              )
-              as BaseMapTileFillLayerGeometry;
+      final fill = geometry.layers.singleWhere(
+        (l) => l.styleLayerId == 'countriesFill',
+      ) as BaseMapTileFillLayerGeometry;
 
       expect(fill.meshes.single.vertexCount, 3);
     });

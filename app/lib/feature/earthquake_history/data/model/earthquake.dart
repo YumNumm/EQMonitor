@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
@@ -70,7 +71,9 @@ extension EarthquakeApiExtension on api.Earthquake {
         })
         .whereType<EarthquakeTelegramMetadata>()
         .toList(),
-    telegramComments: extractTelegramComments(telegrams),
+    telegramComments: const EarthquakeTelegramCommentSelector().extract(
+      telegrams,
+    ),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
     catalog: catalog?.toEarthquakeCatalog,

@@ -11,19 +11,23 @@ import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
+import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends ConsumerWidget {
-  const SettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value;
+    final buildConfig = ref.watch(buildConfigProvider);
+    final isDeveloperUiEnabled = buildConfig.isDeveloperUiEnabled;
+    final isProFeaturesEnabled = buildConfig.isProFeaturesEnabled;
     final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -51,13 +55,16 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 const _AppVersionInformation(),
-                const SettingsSectionHeader(text: 'EQMonitor Pro'),
-                ListTile(
-                  title: const Text('EQMonitor Pro'),
-                  leading: const Icon(Icons.workspace_premium_outlined),
-                  onTap: () async =>
-                      const SubscriptionSettingsRoute().push<void>(context),
-                ),
+                const AssetPackUpdateCard(),
+                if (isProFeaturesEnabled) ...[
+                  const SettingsSectionHeader(text: 'EQMonitor Pro'),
+                  ListTile(
+                    title: const Text('EQMonitor Pro'),
+                    leading: const Icon(Icons.workspace_premium_outlined),
+                    onTap: () async =>
+                        const SubscriptionSettingsRoute().push<void>(context),
+                  ),
+                ],
                 const SettingsSectionHeader(text: '各種設定'),
                 ListTile(
                   title: const Text('通知設定'),
@@ -76,13 +83,14 @@ class SettingsPage extends ConsumerWidget {
                   onTap: () async =>
                       const EarthquakeHistoryConfigRoute().push(context),
                 ),
-                ListTile(
-                  title: const Text('地震活動'),
-                  subtitle: const Text('震央分布・M-T図・深さ断面'),
-                  leading: const Icon(Icons.bubble_chart_outlined),
-                  onTap: () async =>
-                      const SeismicityRoute().push<void>(context),
-                ),
+                // TODO(YumNumm): 地震活動機能は現在開発中のため非表示
+                // ListTile(
+                //   title: const Text('地震活動'),
+                //   subtitle: const Text('震央分布・M-T図・深さ断面'),
+                //   leading: const Icon(Icons.bubble_chart_outlined),
+                //   onTap: () async =>
+                //       const SeismicityRoute().push<void>(context),
+                // ),
                 ListTile(
                   title: const Text('ホーム画面ウィジェット'),
                   leading: const Icon(Icons.widgets_outlined),
@@ -125,46 +133,50 @@ class SettingsPage extends ConsumerWidget {
                     (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
                   ),
                 ),
-                const SettingsSectionHeader(text: 'キャッシュ'),
-                ListTile(
-                  title: const Text('HTTPキャッシュ'),
-                  leading: const Icon(Icons.storage_outlined),
-                  subtitle: Text(
-                    cacheSize.when(
-                      data: const ByteSizeFormatter().format,
-                      loading: () => '計算中…',
-                      error: (_, _) => '取得に失敗しました',
+                if (isDeveloperUiEnabled) ...[
+                  const SettingsSectionHeader(text: 'キャッシュ'),
+                  ListTile(
+                    title: const Text('HTTPキャッシュ'),
+                    leading: const Icon(Icons.storage_outlined),
+                    subtitle: Text(
+                      cacheSize.when(
+                        data: const ByteSizeFormatter().format,
+                        loading: () => '計算中…',
+                        error: (_, _) => '取得に失敗しました',
+                      ),
                     ),
                   ),
-                ),
-                ListTile(
-                  title: const Text('HTTPキャッシュを削除'),
-                  leading: const Icon(Icons.delete_outline),
-                  onTap: () async {
-                    final messenger = ScaffoldMessenger.of(context);
-                    final store = await ref.read(httpCacheStoreProvider.future);
-                    await store.clearAll();
-                    await store.vacuum();
-                    ref.invalidate(httpCacheSizeProvider);
-                    messenger.showSnackBar(
-                      const SnackBar(content: Text('HTTPキャッシュを削除しました')),
-                    );
-                  },
-                ),
+                  ListTile(
+                    title: const Text('HTTPキャッシュを削除'),
+                    leading: const Icon(Icons.delete_outline),
+                    onTap: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+                      final store = await ref.read(
+                        httpCacheStoreProvider.future,
+                      );
+                      await store.clearAll();
+                      await store.vacuum();
+                      ref.invalidate(httpCacheSizeProvider);
+                      messenger.showSnackBar(
+                        const SnackBar(content: Text('HTTPキャッシュを削除しました')),
+                      );
+                    },
+                  ),
+                ],
                 Center(
                   child: Text(
                     'Powered by Flutter',
-                    style: textTheme.bodySmall!.copyWith(
+                    style: textTheme.bodySmall?.copyWith(
                       color: context.designSystem.colorTheme.onSurface
                           .withValues(alpha: 0.8),
                     ),
                   ),
                 ),
-                if (isDebugEnabled ?? false) ...[
+                if (isDeveloperUiEnabled && (isDebugEnabled ?? false)) ...[
                   Center(
                     child: Text(
                       'Debug Mode',
-                      style: textTheme.bodySmall!.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
                         color: context.designSystem.colorTheme.onSurface
                             .withValues(alpha: 0.8),
                       ),
@@ -188,7 +200,7 @@ class SettingsPage extends ConsumerWidget {
 }
 
 class _AppVersionInformation extends HookConsumerWidget {
-  const _AppVersionInformation();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
