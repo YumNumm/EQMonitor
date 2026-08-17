@@ -17,14 +17,18 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// AGP 9 の lintVital が pub 依存の Android module (android_file_picker) で
-// AndroidLintWorkAction を初期化できず release build ごと落ちるため無効化する。
-// 対象は third-party の生成物で、lint 結果を我々が扱うことはない。
+// AGP 9 の lint ワーカー (AndroidLintWorkAction) が CI の JDK では初期化できず、
+// pub 依存の Android module の lintVital / extract*Annotations が
+// release build ごと落ちるため無効化する。
+// 対象は third-party の生成物で、lint 結果や AAR annotations を我々が扱うことはない。
 // NOTE: AGP 9 では lint DSL (checkReleaseBuilds) の設定が評価順の都合で
 // "It is too late to set checkReleaseBuilds" になるため、タスク自体を無効化する。
 subprojects {
     tasks.configureEach {
-        if (name.startsWith("lintVital")) {
+        if (
+            name.startsWith("lintVital") ||
+            (name.startsWith("extract") && name.endsWith("Annotations"))
+        ) {
             enabled = false
         }
     }
