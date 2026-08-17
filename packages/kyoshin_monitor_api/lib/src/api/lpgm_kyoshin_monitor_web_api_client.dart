@@ -6,7 +6,7 @@ part 'lpgm_kyoshin_monitor_web_api_client.g.dart';
 
 @RestApi(baseUrl: 'https://www.lmoni.bosai.go.jp')
 abstract class LpgmKyoshinMonitorWebApiClient {
-  factory LpgmKyoshinMonitorWebApiClient(Dio dio, {String baseUrl}) =
+  factory(Dio dio, {String baseUrl}) =
       _LpgmKyoshinMonitorWebApiClient;
 
   /// ベース画像

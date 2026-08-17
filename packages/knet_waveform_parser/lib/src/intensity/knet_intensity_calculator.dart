@@ -11,7 +11,7 @@ import 'package:meta/meta.dart';
 ///
 /// 参考実装: https://github.com/ingen084/seismometer
 class KnetIntensityCalculator {
-  KnetIntensityCalculator({double samplingFrequencyHz = 100.0})
+  new({double samplingFrequencyHz = 100.0})
     : _fs = samplingFrequencyHz {
     _initCoefficients();
   }

@@ -15,7 +15,7 @@ class KnetDownloadClient {
   /// [userId] BOSAI ユーザーID
   /// [password] BOSAI パスワード
   /// [baseUrl] ベース URL（デフォルト: 防災科研の公式サーバー）
-  KnetDownloadClient({
+  new({
     required String userId,
     required String password,
     String? baseUrl,

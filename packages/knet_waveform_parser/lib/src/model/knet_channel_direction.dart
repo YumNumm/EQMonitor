@@ -18,7 +18,7 @@ enum KnetChannelDirection {
   /// KiK-net 地下 上下方向
   ud2('U-D2');
 
-  const KnetChannelDirection(this.label);
+  new(this.label);
   final String label;
 
   static KnetChannelDirection fromString(String value) {
