@@ -2,9 +2,10 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'test_notification_send_action.g.dart';
@@ -14,7 +15,7 @@ TestNotificationSendAction testNotificationSendAction(Ref ref) =>
     const TestNotificationSendAction();
 
 class TestNotificationSendAction {
-  const TestNotificationSendAction();
+  const new();
 
   Future<bool> handle({
     required WidgetRef ref,

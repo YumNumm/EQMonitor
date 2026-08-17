@@ -3,10 +3,11 @@ import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('通常通知は確認なしで送信し、成功を表示する', (tester) async {
@@ -122,7 +123,7 @@ void main() {
 }
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({
+  const new({
     required this.repository,
     required this.kind,
     required this.onHandled,
