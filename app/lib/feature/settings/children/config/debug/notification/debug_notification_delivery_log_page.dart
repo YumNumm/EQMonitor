@@ -12,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
-  const DebugNotificationDeliveryLogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -193,7 +193,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
 }
 
 class _NotificationLogTile extends StatelessWidget {
-  const _NotificationLogTile({required this.item, required this.onTap});
+  const new({required this.item, required this.onTap});
 
   final PushNotificationLogEntry item;
   final VoidCallback onTap;
@@ -220,7 +220,7 @@ class _NotificationLogTile extends StatelessWidget {
 }
 
 class _LogDetailSheet extends StatelessWidget {
-  const _LogDetailSheet({required this.detail});
+  const new({required this.detail});
 
   final NotificationDeliveryLogDetail detail;
 
@@ -279,7 +279,7 @@ class _LogDetailSheet extends StatelessWidget {
 }
 
 class _LogDetailRow extends StatelessWidget {
-  const _LogDetailRow({required this.row});
+  const new({required this.row});
 
   final NotificationDeliveryLogDetailRow row;
 
