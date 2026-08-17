@@ -37,7 +37,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'debug_device_settings_page.g.dart';
 
 class DebugDeviceSettingsPage extends HookConsumerWidget {
-  const DebugDeviceSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,7 +91,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 // ── プロビジョニング起動状態セクション ──────────────────────────────────────
 
 class _ProvisioningStartupSection extends HookConsumerWidget {
-  const _ProvisioningStartupSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -248,7 +248,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
 }
 
 class _StatusChip extends StatelessWidget {
-  const _StatusChip({
+  const new({
     required this.label,
     required this.color,
     required this.textColor,
@@ -292,7 +292,7 @@ class _StatusChip extends StatelessWidget {
 // ── デバイス操作セクション ───────────────────────────────────────────────────
 
 class _DeviceLifecycleSection extends HookConsumerWidget {
-  const _DeviceLifecycleSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -392,7 +392,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
 // ── OS通知許可セクション ──────────────────────────────────────────────────────
 
 class _NotificationPermissionSection extends ConsumerWidget {
-  const _NotificationPermissionSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -469,7 +469,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
 // ── デバイス情報（サーバー取得）────────────────────────────────────────────
 
 class _DeviceInfoSection extends ConsumerWidget {
-  const _DeviceInfoSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -521,7 +521,7 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
 // ── プッシュトークン同期 ────────────────────────────────────────────────────
 
 class _TokenSection extends HookConsumerWidget {
-  const _TokenSection({required this.syncSnapshot});
+  const new({required this.syncSnapshot});
 
   final AsyncValue<PushTokenSyncSnapshot> syncSnapshot;
 
@@ -610,7 +610,7 @@ class _TokenSection extends HookConsumerWidget {
 }
 
 class _TokenStatusRow extends StatelessWidget {
-  const _TokenStatusRow({
+  const new({
     required this.label,
     required this.kindState,
     required this.isResendEnabled,
@@ -681,7 +681,7 @@ class _TokenStatusRow extends StatelessWidget {
 // ── 設定プロバイダー状態 ──────────────────────────────────────────────────────
 
 class _SettingsProviderStatusSection extends ConsumerWidget {
-  const _SettingsProviderStatusSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -703,7 +703,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
 }
 
 class _ProviderStatusRow extends StatelessWidget {
-  const _ProviderStatusRow({required this.label, required this.state});
+  const new({required this.label, required this.state});
 
   final String label;
   final AsyncValue<Object?> state;
@@ -742,7 +742,7 @@ class _ProviderStatusRow extends StatelessWidget {
 // ── 全般通知設定 ────────────────────────────────────────────────────────────
 
 class _NotificationSettingsSection extends HookConsumerWidget {
-  const _NotificationSettingsSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -878,7 +878,7 @@ Future<GeneralNotificationSettings> _notificationSettings(
 // ── テスト通知 ───────────────────────────────────────────────────────────────
 
 class _TestNotificationSection extends HookConsumerWidget {
-  const _TestNotificationSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -906,7 +906,7 @@ class _TestNotificationSection extends HookConsumerWidget {
 // ── テストシナリオ実行 ───────────────────────────────────────────────────────
 
 class _TestScenarioSection extends HookConsumerWidget {
-  const _TestScenarioSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1006,7 +1006,7 @@ class _TestScenarioSection extends HookConsumerWidget {
 }
 
 class _TestScenarioTypeSection extends HookConsumerWidget {
-  const _TestScenarioTypeSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1112,7 +1112,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
 // ── 通知履歴 ─────────────────────────────────────────────────────────────────
 
 class _HistorySection extends ConsumerWidget {
-  const _HistorySection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1180,7 +1180,7 @@ Future<List<PushNotificationLogEntry>> _notificationHistory(
 }
 
 class _NotificationHistoryTile extends StatelessWidget {
-  const _NotificationHistoryTile({required this.item});
+  const new({required this.item});
 
   final PushNotificationLogEntry item;
 
@@ -1252,7 +1252,7 @@ Future<NotificationSettings> _osNotificationPermission(Ref ref) async {
 // ── 共通ウィジェット ───────────────────────────────────────────────────────
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
+  const new({
     required this.title,
     required this.child,
     this.subtitle,
@@ -1313,7 +1313,7 @@ class _SectionCard extends StatelessWidget {
 }
 
 class _KeyValueRow extends StatelessWidget {
-  const _KeyValueRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

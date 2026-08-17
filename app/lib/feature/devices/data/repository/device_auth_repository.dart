@@ -12,7 +12,7 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async =>
     );
 
 class DeviceAuthRepository {
-  const DeviceAuthRepository(this._preferences);
+  const new(this._preferences);
 
   final PreferencesDataSource<SecureStorageKey> _preferences;
 
