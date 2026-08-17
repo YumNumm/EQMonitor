@@ -1,218 +1,129 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
-import 'package:eqmonitor/feature/parameter/data/model/jma_code_table/jma_code_table_parameter.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/notification_region_search.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_catalog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_selection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CityPickerPage extends HookConsumerWidget {
-  const CityPickerPage({
-    required this.regionCode,
-    required this.regionName,
-    super.key,
-  });
+  const new({required this.region, super.key});
 
-  final String regionCode;
-  final String regionName;
+  final NotificationRegionOption region;
+
+  static Future<NotificationRegionSelection?> show(
+    BuildContext context, {
+    required NotificationRegionOption region,
+  }) => Navigator.of(context).push<NotificationRegionSelection>(
+    MaterialPageRoute(builder: (_) => CityPickerPage(region: region)),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchController = useTextEditingController();
     final searchText = useState('');
-
     useEffect(() {
       void listener() => searchText.value = searchController.text;
       searchController.addListener(listener);
       return () => searchController.removeListener(listener);
     }, [searchController]);
 
-    final jmaCodeTableAsync = ref.watch(jmaCodeTableProvider);
-    final cities = jmaCodeTableAsync.value?.codeTables.areaInformationCity;
-
-    final filteredCities = _filterCities(cities, regionCode, searchText.value);
-
-    ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) {
-      if (next is MutationError) {
-        final error = next.error;
-        if (error is DioException && error.response?.statusCode == 402) {
-          unawaited(const ProUpgradeDialogAction().show(context));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('地域の追加に失敗しました: $error'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-        }
-      }
-      if (next is MutationSuccess) {
-        Navigator.of(context)
-          ..pop()
-          ..pop();
-      }
-    });
-
-    final isAdding = ref.watch(
-      NotificationSlotsNotifier.addRegionMutation,
-    ) is MutationPending;
+    final search = ref.watch(notificationRegionSearchProvider);
+    final filteredCities = search.filter(
+      items: region.cities,
+      query: searchText.value,
+      name: (city) => city.name,
+      kana: (city) => city.kana,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: Text('$regionName - 市区町村を選択')),
+      appBar: AppBar(title: Text('${region.name} - 市区町村を選択')),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: SearchBar(
               controller: searchController,
-              hintText: '市区町村名で検索',
-              leading: const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(Icons.search),
-              ),
+              hintText: '市区町村名・ふりがなで検索',
+              leading: const Icon(Icons.search),
               trailing: [
                 if (searchText.value.isNotEmpty)
                   IconButton(
                     icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      searchController.clear();
-                      searchText.value = '';
-                    },
+                    onPressed: searchController.clear,
                   ),
               ],
             ),
           ),
-          if (isAdding) const LinearProgressIndicator(),
           Expanded(
-            child: switch (jmaCodeTableAsync) {
-              AsyncLoading() => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-              AsyncError(:final error) => Center(
-                child: Text('読み込みに失敗しました: $error'),
-              ),
-              _ when filteredCities != null => ListView.builder(
-                itemCount: filteredCities.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return _WholeRegionTile(
-                      regionCode: regionCode,
-                      regionName: regionName,
-                      enabled: !isAdding,
-                    );
-                  }
-                  final city = filteredCities[index - 1];
-                  return _CityListTile(
-                    city: city,
-                    regionCode: regionCode,
-                    enabled: !isAdding,
+            child: ListView.builder(
+              itemCount: filteredCities.isEmpty ? 2 : filteredCities.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return _WholeRegionTile(region: region);
+                }
+                if (filteredCities.isEmpty) {
+                  final message = searchText.value.isEmpty
+                      ? '選択できる市区町村がありません'
+                      : '該当する市区町村がありません';
+                  return Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(child: Text(message)),
                   );
-                },
-              ),
-              _ => const SizedBox.shrink(),
-            },
+                }
+                return _CityListTile(
+                  region: region,
+                  city: filteredCities[index - 1],
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
-
-  static List<JmaCodeTableCityItem>? _filterCities(
-    List<JmaCodeTableCityItem>? cities,
-    String regionCode,
-    String query,
-  ) {
-    if (cities == null) {
-      return null;
-    }
-    final regionCities = cities
-        .where((c) => c.parentAreaForecastLocalEewCode == regionCode)
-        .toList();
-    if (query.isEmpty) {
-      return regionCities;
-    }
-    final lowerQuery = query.toLowerCase();
-    return regionCities.where((item) {
-      return item.name.ja.toLowerCase().contains(lowerQuery);
-    }).toList();
-  }
 }
 
-class _WholeRegionTile extends ConsumerWidget {
-  const _WholeRegionTile({
-    required this.regionCode,
-    required this.regionName,
-    required this.enabled,
-  });
+class _WholeRegionTile extends StatelessWidget {
+  const new({required this.region});
 
-  final String regionCode;
-  final String regionName;
-  final bool enabled;
+  final NotificationRegionOption region;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      enabled: enabled,
-      leading: const Icon(Icons.select_all),
-      title: Text('$regionName 全域'),
-      subtitle: const Text('この地域全体の通知を受け取ります'),
-      trailing: const Icon(Icons.add),
-      onTap: enabled
-          ? () async {
-              await NotificationSlotsNotifier.addRegionMutation.run(ref, (
-                tsx,
-              ) async {
-                await tsx
-                    .get(notificationSlotsProvider.notifier)
-                    .addRegion(
-                      regionId: int.parse(regionCode),
-                      regionName: regionName,
-                    );
-              });
-            }
-          : null,
-    );
-  }
+  Widget build(BuildContext context) => ListTile(
+    minTileHeight: 48,
+    visualDensity: VisualDensity.compact,
+    leading: const Icon(Icons.select_all),
+    title: Text('${region.name} 全域'),
+    subtitle: const Text('この地域全体の通知を受け取ります'),
+    trailing: const Icon(Icons.add),
+    onTap: () => Navigator.of(context).pop(
+      NotificationRegionSelection(
+        regionCode: region.code,
+        regionName: region.name,
+      ),
+    ),
+  );
 }
 
-class _CityListTile extends ConsumerWidget {
-  const _CityListTile({
-    required this.city,
-    required this.regionCode,
-    required this.enabled,
-  });
+class _CityListTile extends StatelessWidget {
+  const new({required this.region, required this.city});
 
-  final JmaCodeTableCityItem city;
-  final String regionCode;
-  final bool enabled;
+  final NotificationRegionOption region;
+  final NotificationCityOption city;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      enabled: enabled,
-      title: Text(city.name.ja),
-      subtitle: Text(city.code),
-      trailing: const Icon(Icons.add),
-      onTap: enabled
-          ? () async {
-              await NotificationSlotsNotifier.addRegionMutation.run(ref, (
-                tsx,
-              ) async {
-                await tsx
-                    .get(notificationSlotsProvider.notifier)
-                    .addRegion(
-                      regionId: int.parse(regionCode),
-                      cityCode: city.code,
-                      cityName: city.name.ja,
-                    );
-              });
-            }
-          : null,
-    );
-  }
+  Widget build(BuildContext context) => ListTile(
+    minTileHeight: 48,
+    visualDensity: VisualDensity.compact,
+    title: Text(city.name),
+    trailing: const Icon(Icons.add),
+    onTap: () => Navigator.of(context).pop(
+      NotificationRegionSelection(
+        regionCode: region.code,
+        regionName: region.name,
+        cityCode: city.code,
+        cityName: city.name,
+      ),
+    ),
+  );
 }
