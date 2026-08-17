@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
+
 allprojects {
     repositories {
         google()
@@ -15,6 +18,26 @@ subprojects {
 
 subprojects {
     project.evaluationDependsOn(":app")
+}
+
+// AGP 9 の lintVital が pub 依存の Android module (android_file_picker) で
+// AndroidLintWorkAction を初期化できず release build ごと落ちるため無効化する。
+// 対象は third-party の生成物で、lint 結果を我々が扱うことはない。
+subprojects {
+    plugins.withId("com.android.application") {
+        extensions.configure<ApplicationExtension>("android") {
+            lint {
+                checkReleaseBuilds = false
+            }
+        }
+    }
+    plugins.withId("com.android.library") {
+        extensions.configure<LibraryExtension>("android") {
+            lint {
+                checkReleaseBuilds = false
+            }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
