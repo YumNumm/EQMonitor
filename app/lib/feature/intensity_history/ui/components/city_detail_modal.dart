@@ -21,7 +21,7 @@ enum _AreaDetailType {
   prefecture(label: '都道府県'),
   city(label: '市区町村');
 
-  const _AreaDetailType({required this.label});
+  new({required this.label});
   final String label;
 }
 
@@ -73,7 +73,7 @@ class AreaDetailModalAction {
 }
 
 class _AreaDetailModal extends ConsumerWidget {
-  const _AreaDetailModal({
+  const new({
     required this.areaType,
     required this.areaName,
     required this.parentAreaName,
@@ -162,7 +162,7 @@ class _AreaDetailModal extends ConsumerWidget {
 }
 
 class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
-  const _AreaEarthquakeListSliverGroup({
+  const new({
     required this.parameter,
     required this.page,
   });
@@ -235,7 +235,7 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
 }
 
 class _InitialLoadingSliver extends StatelessWidget {
-  const _InitialLoadingSliver();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +275,7 @@ class _DragHandle extends StatelessWidget {
 }
 
 class _SummarySection extends StatelessWidget {
-  const _SummarySection({
+  const new({
     required this.areaType,
     required this.parentAreaName,
     required this.areaName,

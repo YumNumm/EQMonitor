@@ -10,7 +10,7 @@ final intensityHistoryErrorOverlayActionProvider =
     );
 
 class IntensityHistoryErrorOverlayAction {
-  const IntensityHistoryErrorOverlayAction();
+  const new();
 
   Future<void> showDetails({
     required WidgetRef ref,
@@ -25,7 +25,7 @@ class IntensityHistoryErrorOverlayAction {
 }
 
 class IntensityHistoryErrorOverlay extends ConsumerWidget {
-  const IntensityHistoryErrorOverlay({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

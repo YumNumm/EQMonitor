@@ -8,12 +8,12 @@ part 'highest_intensity_response.g.dart';
 
 @freezed
 abstract class HighestIntensityResponse with _$HighestIntensityResponse {
-  const factory HighestIntensityResponse({
+  const factory({
     required DateTime aggregatedAt,
     required List<HighestIntensityEntry> items,
   }) = _HighestIntensityResponse;
 
-  factory HighestIntensityResponse.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HighestIntensityResponseFromJson(json);
 }
 

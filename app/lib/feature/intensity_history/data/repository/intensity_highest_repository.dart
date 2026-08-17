@@ -18,7 +18,7 @@ Future<IntensityHighestRepository> intensityHighestRepository(Ref ref) async {
 }
 
 class IntensityHighestRepository {
-  const IntensityHighestRepository({
+  const new({
     required EarthquakeApiClient earthquake,
     required EarthquakeParameter parameter,
   }) : _earthquake = earthquake,

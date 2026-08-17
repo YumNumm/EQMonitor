@@ -26,7 +26,7 @@ IntensityHistoryMapAction intensityHistoryMapAction(Ref ref) =>
 
 /// 地域別最大震度マップのタップ操作・カメラ操作をまとめて担う。
 class IntensityHistoryMapAction {
-  const IntensityHistoryMapAction();
+  const new();
 
   /// 日本全国の表示範囲。
   static const japanBounds = LngLatBounds(
