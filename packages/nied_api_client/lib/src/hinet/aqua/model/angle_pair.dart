@@ -5,11 +5,11 @@ part 'angle_pair.g.dart';
 
 @freezed
 abstract class AnglePair with _$AnglePair {
-  const factory AnglePair({
+  const factory({
     required double first,
     required double second,
   }) = _AnglePair;
 
-  factory AnglePair.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$AnglePairFromJson(json);
 }

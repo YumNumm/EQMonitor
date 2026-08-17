@@ -4,7 +4,7 @@ import 'package:nied_api_client/src/hinet/jmalist/model/hinet_jmalist_event.dart
 ///
 /// [skippedLineCount] は FAR FIELD 行・欠測により復元不能な行の合計件数。
 class HinetJmalistParseResult {
-  const HinetJmalistParseResult({
+  const new({
     required this.events,
     required this.skippedLineCount,
   });
@@ -21,7 +21,7 @@ class HinetJmalistParseResult {
 /// 日付・時刻は JST で出力されるため、[HinetJmalistEvent.originTime] へ
 /// 格納する前に UTC(-9h)へ変換する。
 class HinetJmalistParser {
-  const HinetJmalistParser();
+  const new();
 
   static const _jstOffset = Duration(hours: 9);
 

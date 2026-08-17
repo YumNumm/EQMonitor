@@ -15,7 +15,7 @@ class Deserializer {
 
   int get offset => _offset;
 
-  Deserializer(
+  new(
     Uint8List list, {
     ExtDecoder? extDecoder,
     this.copyBinaryData = false,

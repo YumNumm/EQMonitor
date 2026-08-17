@@ -9,7 +9,7 @@ class NiedApiClient {
   /// NIED APIクライアントを作成
   ///
   /// [dio] HTTPクライアント
-  NiedApiClient({required Dio dio}) : _dio = dio;
+  new({required Dio dio}) : _dio = dio;
 
   final Dio _dio;
   HinetApiClient get hinet => HinetApiClient(_dio);

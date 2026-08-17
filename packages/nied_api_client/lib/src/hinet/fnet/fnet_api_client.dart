@@ -7,7 +7,7 @@ import 'package:nied_api_client/src/hinet/fnet/parser/fnet_catalog_parser.dart';
 ///
 /// F-netの地震カタログデータを取得・パースするためのクライアント
 class FnetApiClient {
-  FnetApiClient({
+  new({
     required FnetCatalogApi api,
     required FnetCatalogParser parser,
   }) : _api = api,
