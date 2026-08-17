@@ -26,7 +26,7 @@ const _buildConfig = BuildConfig(
 );
 
 class FakeSubscriptionRepository extends SubscriptionRepository {
-  FakeSubscriptionRepository({
+  new({
     required this.initialStatus,
     required this.purchaseOutcome,
     required this.restoreOutcome,

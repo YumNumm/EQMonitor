@@ -125,7 +125,7 @@ HypocenterArchive _archive(int index) => HypocenterArchive(
 );
 
 final class _RecordingRepository implements HypocenterArchiveEventRepository {
-  _RecordingRepository({this.failingLabel});
+  new({this.failingLabel});
 
   final String? failingLabel;
   var _active = 0;

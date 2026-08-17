@@ -54,7 +54,7 @@ const _general = GeneralNotificationSettings(
 );
 
 class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
-  _RecordingSlotsNotifier(this._initial);
+  new(this._initial);
 
   final List<NotificationSlot> _initial;
   final replaceCalls = <List<NotificationSlotDraft>>[];
@@ -150,7 +150,7 @@ class _RecordingEewWarningNotifier extends EewWarningConfigNotifier {
 }
 
 class _RecordingPresetNotifier extends NotificationPresetNotifier {
-  _RecordingPresetNotifier(this._initial);
+  new(this._initial);
 
   final NotificationPreset _initial;
   final selected = <NotificationPreset>[];

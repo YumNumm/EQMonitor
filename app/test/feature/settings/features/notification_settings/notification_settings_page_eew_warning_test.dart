@@ -291,7 +291,7 @@ const _subscriptionConstraints = api.PlanConstraints(
 );
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
 
   final Widget home;
 
@@ -305,7 +305,7 @@ class _TestApp extends StatelessWidget {
 }
 
 class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  _FakeFirebaseMessaging(this._settings);
+  new(this._settings);
 
   final NotificationSettings _settings;
 

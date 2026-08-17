@@ -191,7 +191,7 @@ Future<ProviderContainer> _pumpPage(
 }
 
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  _FakeNotificationSlotsNotifier(this._initial);
+  new(this._initial);
 
   final NotificationSlot _initial;
   List<NotificationOverride>? lastEarthquakeOverrides;
@@ -227,7 +227,7 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
 }
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
 
   final Widget home;
 

@@ -75,7 +75,7 @@ TsunamiState _tsunami({required List<TsunamiRegion> regions}) => TsunamiState(
 );
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
 
   final Widget home;
 
