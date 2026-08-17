@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorRealtimeCards extends ConsumerWidget {
-  const LiveMonitorRealtimeCards({
+  const new({
     this.maximumHeight,
     this.onHeightChanged,
     super.key,

@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_measur
 import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorEarthquakeOverlay extends StatelessWidget {
-  const LiveMonitorEarthquakeOverlay({
+  const new({
     required this.earthquake,
     required this.presentation,
     required this.initialNow,

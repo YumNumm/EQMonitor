@@ -11,7 +11,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorEarthquakeLayers extends ConsumerWidget {
-  const LiveMonitorEarthquakeLayers({
+  const new({
     required this.earthquake,
     required this.displayMode,
     super.key,

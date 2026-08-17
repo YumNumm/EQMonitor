@@ -8,7 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorControlPanel extends HookConsumerWidget {
-  const LiveMonitorControlPanel({
+  const new({
     required this.onDurationChanged,
     required this.onDurationCommit,
     required this.onExit,

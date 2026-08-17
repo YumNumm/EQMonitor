@@ -6,7 +6,7 @@ part 'jma_map_isolate_message.freezed.dart';
 
 @freezed
 abstract class JmaMapCalculateMessage with _$JmaMapCalculateMessage {
-  const factory JmaMapCalculateMessage({
+  const factory({
     required int id,
     required JmaMapType type,
     required double lat,
@@ -16,12 +16,12 @@ abstract class JmaMapCalculateMessage with _$JmaMapCalculateMessage {
 
 @freezed
 abstract class JmaMapShutdownMessage with _$JmaMapShutdownMessage {
-  const factory JmaMapShutdownMessage() = _JmaMapShutdownMessage;
+  const factory() = _JmaMapShutdownMessage;
 }
 
 @freezed
 abstract class JmaMapResponseMessage with _$JmaMapResponseMessage {
-  const factory JmaMapResponseMessage({
+  const factory({
     required int id,
     MapDataItem? result,
     String? errorMessage,

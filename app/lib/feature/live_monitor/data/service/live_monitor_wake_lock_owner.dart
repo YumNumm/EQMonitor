@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'live_monitor_wake_lock_owner.g.dart';
 
 final class LiveMonitorWakeLockOwner {
-  LiveMonitorWakeLockOwner({required this.platform});
+  new({required this.platform});
 
   final LiveMonitorWakeLockPlatform platform;
   bool? appliedEnabled;
