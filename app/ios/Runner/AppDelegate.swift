@@ -31,6 +31,12 @@ import background_location_tracker
     }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "ApnsTokenEventChannel"
+    ) {
+      ApnsTokenEventChannel.register(with: registrar)
+    }
+
     // Register App Group container path method channel.
     if let registrar = engineBridge.pluginRegistry.registrar(
       forPlugin: "AppGroupMethodChannel"
@@ -67,5 +73,16 @@ import background_location_tracker
         }
       }
     }
+  }
+
+  override func application(
+    _ application: UIApplication,
+    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+  ) {
+    super.application(
+      application,
+      didRegisterForRemoteNotificationsWithDeviceToken: deviceToken
+    )
+    ApnsTokenEventChannel.shared.publish(deviceToken)
   }
 }

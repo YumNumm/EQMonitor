@@ -44,6 +44,7 @@
 		859DF75E2BBEA0F000B827B1 /* Synced - EQMonitor.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */; };
 		85A1B0012F59A00000000001 /* AppGroupMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */; };
 		85A1B0212F59C00000000021 /* LiveActivityDebugMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */; };
+		A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */; };
 		85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1B0112F59B00000000011 /* TelemetryWriter.swift */; };
 		85A2A5E4E14A505A334823DE /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */; };
 		85B4051A2C08E73300EB3835 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 85B405192C08E73300EB3835 /* Gzip */; };
@@ -181,6 +182,7 @@
 		859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Synced - EQMonitor.storekit"; sourceTree = "<group>"; };
 		85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppGroupMethodChannel.swift; sourceTree = "<group>"; };
 		85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveActivityDebugMethodChannel.swift; sourceTree = "<group>"; };
+		A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApnsTokenEventChannel.swift; sourceTree = "<group>"; };
 		85A1B0112F59B00000000011 /* TelemetryWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryWriter.swift; sourceTree = "<group>"; };
 		85C54CF92E96C7E700BFBBAB /* WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C54CFA2E96C7E700BFBBAB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -426,6 +428,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				85A1B0002F59A00000000001 /* AppGroupMethodChannel.swift */,
 				85A1B0202F59C00000000020 /* LiveActivityDebugMethodChannel.swift */,
+				A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */,
 			);
@@ -820,6 +823,7 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				85A1B0012F59A00000000001 /* AppGroupMethodChannel.swift in Sources */,
 				85A1B0212F59C00000000021 /* LiveActivityDebugMethodChannel.swift in Sources */,
+				A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
