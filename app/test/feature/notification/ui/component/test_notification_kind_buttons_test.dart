@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('通常と重大な通知だけを表示し重大な通知の種別を渡す', (tester) async {
