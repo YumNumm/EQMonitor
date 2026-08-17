@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShindoDbStationDetailSheet extends StatelessWidget {
-  const ShindoDbStationDetailSheet({required this.station, super.key});
+  const new({required this.station, super.key});
 
   final ShindoDbStationNode station;
 
@@ -62,7 +62,7 @@ class ShindoDbStationDetailSheet extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.station});
+  const new({required this.station});
 
   final ShindoDbStationNode station;
 
@@ -117,7 +117,7 @@ class _Header extends StatelessWidget {
 }
 
 class _InfoRows extends StatelessWidget {
-  const _InfoRows({required this.record});
+  const new({required this.record});
 
   final EarthquakeCatalogStationRecord record;
 
@@ -147,7 +147,7 @@ class _InfoRows extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -185,7 +185,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _MaxAccelTable extends StatelessWidget {
-  const _MaxAccelTable({required this.maxAccel, required this.maxAccelTime});
+  const new({required this.maxAccel, required this.maxAccelTime});
 
   final EarthquakeCatalogMaxAcceleration maxAccel;
   final DateTime? maxAccelTime;
@@ -285,7 +285,7 @@ class _MaxAccelTable extends StatelessWidget {
 }
 
 class _PeriodsTable extends StatelessWidget {
-  const _PeriodsTable({required this.periods});
+  const new({required this.periods});
 
   final EarthquakeCatalogPeriods periods;
 
@@ -383,7 +383,7 @@ class _PeriodsTable extends StatelessWidget {
 }
 
 class _RelatedLinksCard extends StatelessWidget {
-  const _RelatedLinksCard();
+  const new();
 
   static const List<({String title, String url})> _links = [
     (

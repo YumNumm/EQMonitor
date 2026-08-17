@@ -18,7 +18,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
-  const EarthquakeHistoryShindoDbStationLayer({
+  const new({
     required this.tree,
     required this.parameter,
     this.stationDisplayMode = StationDisplayMode.auto,
@@ -149,7 +149,7 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
 }
 
 class EarthquakeHistoryShindoDbStationLayerBuilder {
-  const EarthquakeHistoryShindoDbStationLayerBuilder._();
+  const new _();
 
   static SymbolStyleLayer build({
     required EarthquakeHistoryMapLayerParameter parameter,
@@ -182,7 +182,7 @@ class EarthquakeHistoryShindoDbStationLayerBuilder {
 }
 
 class EarthquakeHistoryShindoDbStationGeoJsonBuilder {
-  const EarthquakeHistoryShindoDbStationGeoJsonBuilder();
+  const new();
 
   String build({required ShindoDbIntensityTree tree}) {
     final features = <Map<String, dynamic>>[];

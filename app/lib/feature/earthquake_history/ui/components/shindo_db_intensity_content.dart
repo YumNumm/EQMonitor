@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ShindoDbIntensityContent extends HookWidget {
-  const ShindoDbIntensityContent({required this.tree, super.key});
+  const new({required this.tree, super.key});
 
   final ShindoDbIntensityTree tree;
 
@@ -57,7 +57,7 @@ class ShindoDbIntensityContent extends HookWidget {
 }
 
 class _ShindoDbIntensityLevelSection extends HookWidget {
-  const _ShindoDbIntensityLevelSection({
+  const new({
     required this.intensityClass,
     required this.prefectures,
     required this.unresolvedStations,
@@ -152,7 +152,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
 }
 
 class _ShindoDbPrefectureTile extends HookWidget {
-  const _ShindoDbPrefectureTile({required this.prefecture});
+  const new({required this.prefecture});
 
   final ShindoDbPrefectureNode prefecture;
 
@@ -195,7 +195,7 @@ class _ShindoDbPrefectureTile extends HookWidget {
 }
 
 class _ShindoDbCityTile extends HookWidget {
-  const _ShindoDbCityTile({required this.city});
+  const new({required this.city});
 
   final ShindoDbCityNode city;
 
@@ -230,7 +230,7 @@ class _ShindoDbCityTile extends HookWidget {
 }
 
 class _ShindoDbUnresolvedTile extends HookWidget {
-  const _ShindoDbUnresolvedTile({required this.stations});
+  const new({required this.stations});
 
   final List<ShindoDbStationNode> stations;
 
@@ -266,7 +266,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
 }
 
 class _ShindoDbStationChips extends StatelessWidget {
-  const _ShindoDbStationChips({required this.stations});
+  const new({required this.stations});
 
   final List<ShindoDbStationNode> stations;
 

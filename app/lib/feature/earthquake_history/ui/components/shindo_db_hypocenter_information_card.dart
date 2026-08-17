@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class ShindoDbHypocenterInformationCard extends StatelessWidget {
-  const ShindoDbHypocenterInformationCard({
+  const new({
     required this.catalog,
     required this.originTime,
     super.key,
@@ -72,7 +72,7 @@ class ShindoDbHypocenterInformationCard extends StatelessWidget {
 }
 
 class _MaxIntensityWidget extends StatelessWidget {
-  const _MaxIntensityWidget({required this.hypocenter});
+  const new({required this.hypocenter});
 
   final EarthquakeCatalogHypocenter hypocenter;
 
@@ -94,7 +94,7 @@ class _MaxIntensityWidget extends StatelessWidget {
 }
 
 class _PrimaryHypocenterBody extends StatelessWidget {
-  const _PrimaryHypocenterBody({
+  const new({
     required this.hypocenter,
     required this.originTime,
   });
@@ -131,7 +131,7 @@ class _PrimaryHypocenterBody extends StatelessWidget {
 }
 
 class _MagnitudeRow extends StatelessWidget {
-  const _MagnitudeRow({required this.magnitudes});
+  const new({required this.magnitudes});
 
   final List<EarthquakeCatalogMagnitude> magnitudes;
 
@@ -180,7 +180,7 @@ class _MagnitudeRow extends StatelessWidget {
 }
 
 class _DepthRow extends StatelessWidget {
-  const _DepthRow({required this.hypocenter});
+  const new({required this.hypocenter});
 
   final EarthquakeCatalogHypocenter hypocenter;
 
@@ -239,7 +239,7 @@ class _DepthRow extends StatelessWidget {
 }
 
 class _OriginTimeRow extends StatelessWidget {
-  const _OriginTimeRow({required this.originTime, required this.stderrSeconds});
+  const new({required this.originTime, required this.stderrSeconds});
 
   final DateTime originTime;
   final double? stderrSeconds;
@@ -267,7 +267,7 @@ class _OriginTimeRow extends StatelessWidget {
 }
 
 class _EpicenterWidget extends StatelessWidget {
-  const _EpicenterWidget({required this.epicenterName});
+  const new({required this.epicenterName});
 
   final String epicenterName;
 
@@ -294,7 +294,7 @@ class _EpicenterWidget extends StatelessWidget {
 }
 
 class _DetailsTile extends StatelessWidget {
-  const _DetailsTile({required this.catalog, required this.primary});
+  const new({required this.catalog, required this.primary});
 
   final EarthquakeCatalog catalog;
   final EarthquakeCatalogHypocenter primary;
@@ -341,7 +341,7 @@ class _DetailsTile extends StatelessWidget {
 }
 
 class _HypocenterSection extends StatelessWidget {
-  const _HypocenterSection({required this.index, required this.hypocenter});
+  const new({required this.index, required this.hypocenter});
 
   final int index;
   final EarthquakeCatalogHypocenter hypocenter;
@@ -381,7 +381,7 @@ class _HypocenterSection extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
