@@ -9,7 +9,7 @@ final sWaveTravelTimeLookupProvider = Provider<SWaveTravelTimeLookup>(
 class SWaveTravelTimeLookup {
   const SWaveTravelTimeLookup();
 
-  /// 走時テーブルからS波到達時間(秒)を距離(km)から逆引きする。
+  /// 走時テーブルからS波到達時間(秒)を震央距離(km)から逆引きする。
   double? lookup({
     required TravelTimeTables tables,
     required int depth,
