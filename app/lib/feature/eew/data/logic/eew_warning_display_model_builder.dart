@@ -18,7 +18,7 @@ EewWarningDisplayModelBuilder eewWarningDisplayModelBuilder(Ref ref) =>
     );
 
 class EewWarningDisplayModelBuilder {
-  EewWarningDisplayModelBuilder({
+  new({
     EewWarningArrivalClassifier? arrivalClassifier,
     EewWarningRepresentativeSelector? representativeSelector,
   }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier(),

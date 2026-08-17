@@ -8,7 +8,7 @@ EewWarningAreaSelector eewWarningAreaSelector(Ref ref) =>
     const EewWarningAreaSelector();
 
 class EewWarningAreaSelector {
-  const EewWarningAreaSelector();
+  const new();
 
   List<String> selectPrefectureCodes({
     required Iterable<EewTelegramItem> events,

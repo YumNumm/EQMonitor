@@ -11,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 警報発表区域の塗りつぶし（府県予報区 `eqmonitor_map`）
 class EewWarningRegionsLayer extends HookConsumerWidget {
-  const EewWarningRegionsLayer({required this.eews, super.key});
+  const new({required this.eews, super.key});
 
   final List<EewTelegramItem> eews;
 

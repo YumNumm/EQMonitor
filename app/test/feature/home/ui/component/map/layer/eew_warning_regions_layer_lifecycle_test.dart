@@ -89,8 +89,7 @@ void main() {
 }
 
 class WarningRegionStyleController extends FakeStyleController {
-  WarningRegionStyleController({required this.firstAddGate})
-    : super(throwOnDuplicateLayerIds: true);
+  new({required this.firstAddGate}) : super(throwOnDuplicateLayerIds: true);
 
   final Completer<void> firstAddGate;
   final operations = <String>[];
@@ -139,7 +138,7 @@ class WarningRegionStyleController extends FakeStyleController {
 }
 
 class WarningRegionMapController implements MapController {
-  WarningRegionMapController({required this.styleController});
+  new({required this.styleController});
 
   final StyleController styleController;
 

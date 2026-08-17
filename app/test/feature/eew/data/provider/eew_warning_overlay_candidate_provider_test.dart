@@ -18,7 +18,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class _StubEewAliveTelegram extends EewAliveTelegram {
-  _StubEewAliveTelegram(this.value);
+  new(this.value);
 
   final List<EewTelegramItem>? value;
 
@@ -27,7 +27,7 @@ class _StubEewAliveTelegram extends EewAliveTelegram {
 }
 
 class _StubEewWarningOverlayEnabled extends EewWarningOverlayEnabled {
-  _StubEewWarningOverlayEnabled(this.value);
+  new(this.value);
 
   final Future<bool> value;
 
