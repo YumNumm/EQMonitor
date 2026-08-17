@@ -17,7 +17,7 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre/maplibre.dart';
 
 class EewPsWaveLayer extends ConsumerWidget {
-  const EewPsWaveLayer({required this.eews, super.key});
+  const new({required this.eews, super.key});
 
   final List<EewTelegramItem> eews;
 
@@ -47,7 +47,7 @@ class EewPsWaveLayer extends ConsumerWidget {
 }
 
 class _EewPsWaveLayerBody extends HookConsumerWidget {
-  const _EewPsWaveLayerBody({required this.eews});
+  const new({required this.eews});
 
   final List<EewTelegramItem> eews;
 

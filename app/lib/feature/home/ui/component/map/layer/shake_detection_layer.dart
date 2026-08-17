@@ -16,7 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class ShakeDetectionLayer extends ConsumerWidget {
-  const ShakeDetectionLayer({required this.events, super.key});
+  const new({required this.events, super.key});
 
   final List<ShakeDetectionEvent> events;
 
@@ -38,7 +38,7 @@ class ShakeDetectionLayer extends ConsumerWidget {
 }
 
 class _ShakeDetectionLayerBody extends HookConsumerWidget {
-  const _ShakeDetectionLayerBody({
+  const new({
     required this.events,
     required this.settings,
   });

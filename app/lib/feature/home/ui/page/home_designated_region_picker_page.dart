@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// 都道府県/市区町村のいずれかを、リストもしくは地図から選択して
 /// [EarthquakeHistoryParameter] を返す。
 class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
-  const HomeDesignatedRegionPickerPage({super.key, this.initialParameter});
+  const new({super.key, this.initialParameter});
 
   final EarthquakeHistoryParameter? initialParameter;
 

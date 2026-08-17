@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewHypocenterLayer extends HookConsumerWidget {
-  const EewHypocenterLayer({
+  const new({
     required this.eews,
     this.enableBlink = false,
     super.key,

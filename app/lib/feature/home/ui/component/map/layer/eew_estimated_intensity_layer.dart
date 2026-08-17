@@ -15,7 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewEstimatedIntensityLayer extends HookConsumerWidget {
-  const EewEstimatedIntensityLayer({required this.eewRegions, super.key});
+  const new({required this.eewRegions, super.key});
 
   final List<EewForecastRegionInfo> eewRegions;
 
