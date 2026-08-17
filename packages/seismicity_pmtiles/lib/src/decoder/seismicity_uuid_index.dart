@@ -11,7 +11,7 @@ typedef SeismicityUuidEquals = bool Function({
 });
 
 final class SeismicityUuidIndex {
-  SeismicityUuidIndex({
+  new({
     required int expectedUniqueCount,
     Uint32List Function(int length)? allocateSlots,
   }) : _expectedUniqueCount = expectedUniqueCount {

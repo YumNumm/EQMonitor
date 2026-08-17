@@ -18,7 +18,7 @@ abstract interface class SeismicityPmTilesDecodeOperation {
 /// Non-export controller that owns result/state completion for runners.
 final class SeismicityPmTilesDecodeOperationController
     implements SeismicityPmTilesDecodeOperation {
-  SeismicityPmTilesDecodeOperationController({
+  new({
     this._onCancel,
   });
 

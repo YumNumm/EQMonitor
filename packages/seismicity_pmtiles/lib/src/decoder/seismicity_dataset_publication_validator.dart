@@ -6,7 +6,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 /// Fail-closed publication gate for every real or injected worker factory.
 final class SeismicityDatasetPublicationValidator {
-  const SeismicityDatasetPublicationValidator({
+  const new({
     this.chunkValidator = const SeismicityPmTilesChunkValidator(),
     this.chunkSumGate = const SeismicityDatasetChunkSumGate(),
   });
