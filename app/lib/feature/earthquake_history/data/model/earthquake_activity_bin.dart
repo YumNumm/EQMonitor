@@ -5,13 +5,13 @@ part 'earthquake_activity_bin.freezed.dart';
 
 @freezed
 abstract class EarthquakeActivityBin with _$EarthquakeActivityBin {
-  const factory EarthquakeActivityBin({
+  const factory({
     required DateTime start,
     required DateTime end,
     required Map<EarthquakeActivityIntensityCategory, int> counts,
   }) = _EarthquakeActivityBin;
 
-  const EarthquakeActivityBin._();
+  const new _();
 
   int get totalCount => counts.values.fold(0, (sum, count) => sum + count);
 }

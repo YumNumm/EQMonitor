@@ -11,12 +11,12 @@ part 'current_location_intensity_display.freezed.dart';
 sealed class CurrentLocationIntensityDisplay
     with _$CurrentLocationIntensityDisplay {
   /// 市区町村別の通常結果がなく、細分区域などの速報値として表示する。
-  const factory CurrentLocationIntensityDisplay.quick({
+  const factory quick({
     required JmaIntensity intensity,
   }) = CurrentLocationIntensityDisplayQuick;
 
   /// 市区町村別の通常結果として表示する。
-  const factory CurrentLocationIntensityDisplay.result({
+  const factory result({
     required JmaIntensity intensity,
     required JmaLpgmIntensity? lpgmIntensity,
 
@@ -28,6 +28,6 @@ sealed class CurrentLocationIntensityDisplay
   }) = CurrentLocationIntensityDisplayResult;
 
   /// 現在地に対応する震度がない。
-  const factory CurrentLocationIntensityDisplay.none() =
+  const factory none() =
       CurrentLocationIntensityDisplayNone;
 }

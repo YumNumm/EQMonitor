@@ -7,20 +7,20 @@ part 'earthquake_depth.g.dart';
 @freezed
 sealed class EarthquakeDepth with _$EarthquakeDepth {
   /// ごく浅い
-  const factory EarthquakeDepth.shallow() = EarthquakeDepthShallow;
+  const factory shallow() = EarthquakeDepthShallow;
 
   /// 10~700km
-  const factory EarthquakeDepth.value({
+  const factory value({
     required int value,
   }) = EarthquakeDepthValue;
 
   /// 700km以上
-  const factory EarthquakeDepth.over700km() = EarthquakeDepthOver700km;
+  const factory over700km() = EarthquakeDepthOver700km;
 
   /// 不明
-  const factory EarthquakeDepth.unknown() = EarthquakeDepthUnknown;
+  const factory unknown() = EarthquakeDepthUnknown;
 
-  factory EarthquakeDepth.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeDepthFromJson(json);
 }
 

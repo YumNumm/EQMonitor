@@ -15,7 +15,7 @@ enum EarthquakeActivityIntensityCategory {
   seven,
   noInformation;
 
-  factory EarthquakeActivityIntensityCategory.fromIntensity(
+  factory fromIntensity(
     JmaIntensity? intensity,
   ) => switch (intensity) {
     JmaIntensity.zero => .zero,

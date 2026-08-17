@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 
 class EarthquakeVxseDebugReducer {
-  const EarthquakeVxseDebugReducer();
+  const new();
 
   Earthquake apply({
     required Earthquake current,
@@ -966,12 +966,12 @@ class EarthquakeVxseDebugReducer {
 }
 
 sealed class EarthquakeVxseDebugDraftValidationIssue {
-  const EarthquakeVxseDebugDraftValidationIssue();
+  const new();
 }
 
 final class EarthquakeVxseDebugCommentTypeValidationIssue
     extends EarthquakeVxseDebugDraftValidationIssue {
-  const EarthquakeVxseDebugCommentTypeValidationIssue({
+  const new({
     required this.commentIndex,
     required this.actualType,
     required this.expectedType,
@@ -984,7 +984,7 @@ final class EarthquakeVxseDebugCommentTypeValidationIssue
 
 final class EarthquakeVxseDebugStationParentValidationIssue
     extends EarthquakeVxseDebugDraftValidationIssue {
-  const EarthquakeVxseDebugStationParentValidationIssue({
+  const new({
     required this.stationCode,
     required this.cityCodes,
   });
@@ -995,7 +995,7 @@ final class EarthquakeVxseDebugStationParentValidationIssue
 
 final class EarthquakeVxseDebugDuplicateIdentityValidationIssue
     extends EarthquakeVxseDebugDraftValidationIssue {
-  const EarthquakeVxseDebugDuplicateIdentityValidationIssue({
+  const new({
     required this.collection,
     required this.identity,
   });
@@ -1005,7 +1005,7 @@ final class EarthquakeVxseDebugDuplicateIdentityValidationIssue
 }
 
 class EarthquakeVxseDebugDraftValidationException implements Exception {
-  const EarthquakeVxseDebugDraftValidationException(this.issues);
+  const new(this.issues);
 
   final List<EarthquakeVxseDebugDraftValidationIssue> issues;
 }
