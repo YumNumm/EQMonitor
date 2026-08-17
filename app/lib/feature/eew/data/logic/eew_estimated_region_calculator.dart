@@ -40,23 +40,26 @@ class EewEstimatedRegionCalculator {
       return [];
     }
 
-    const distanceCalculator = latlong2.Distance();
+    final sWaveTravelTimes = switch (originTime) {
+      null => List<double?>.filled(stations.length, null, growable: false),
+      _ => sWaveTravelTimeLookup.lookupAll(
+        tables: tables,
+        depth: depth,
+        distancesKm: [
+          for (final station in stations)
+            const latlong2.Distance().as(
+              .Kilometer,
+              latlong2.LatLng(station.point.lat, station.point.lon),
+              latlong2.LatLng(latitude, longitude),
+            ),
+        ],
+      ),
+    };
     final regionMap = <String, _RegionCalculation>{};
     for (var i = 0; i < stations.length; i++) {
       final station = stations[i];
       final intensity = intensities[i];
-      final sWaveTravelTime = switch (originTime) {
-        null => null,
-        _ => sWaveTravelTimeLookup.lookup(
-          tables: tables,
-          depth: depth,
-          distanceKm: distanceCalculator.as(
-            .Kilometer,
-            latlong2.LatLng(station.point.lat, station.point.lon),
-            latlong2.LatLng(latitude, longitude),
-          ),
-        ),
-      };
+      final sWaveTravelTime = sWaveTravelTimes[i];
       final current = regionMap[station.regionCode];
       regionMap[station.regionCode] = (
         name: station.regionName,

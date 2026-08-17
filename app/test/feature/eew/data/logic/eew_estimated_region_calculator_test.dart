@@ -137,7 +137,51 @@ void main() {
         originTime.add(const Duration(seconds: 10)),
       );
     });
+
+    test('多数地点の走時を1回のバッチ参照で取得する', () {
+      final lookup = RecordingSWaveTravelTimeLookup();
+      final batchCalculator = EewEstimatedRegionCalculator(
+        sWaveTravelTimeLookup: lookup,
+      );
+      final stations = List.generate(
+        1000,
+        (index) => station(
+          regionCode: '100',
+          longitude: 135 + (index % 100) * 0.001,
+        ),
+      );
+
+      final result = batchCalculator.calculate(
+        stations: stations,
+        intensities: List.filled(stations.length, 4),
+        tables: travelTimeTables,
+        depth: 100,
+        latitude: 35,
+        longitude: 135,
+        originTime: originTime,
+      );
+
+      expect(result, hasLength(1));
+      expect(lookup.callCount, 1);
+      expect(lookup.distanceCount, stations.length);
+    });
   });
+}
+
+class RecordingSWaveTravelTimeLookup extends SWaveTravelTimeLookup {
+  int callCount = 0;
+  int distanceCount = 0;
+
+  @override
+  List<double?> lookupAll({
+    required TravelTimeTables tables,
+    required int depth,
+    required List<double> distancesKm,
+  }) {
+    callCount++;
+    distanceCount = distancesKm.length;
+    return List.filled(distancesKm.length, 10);
+  }
 }
 
 EstimatedIntensityRegionStation station({
