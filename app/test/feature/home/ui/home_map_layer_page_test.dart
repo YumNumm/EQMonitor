@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class _TestApp extends StatelessWidget {
-  const _TestApp();
+  const new();
 
   @override
   Widget build(BuildContext context) {

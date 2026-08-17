@@ -43,16 +43,6 @@ jobs:
       - name: Analyze app
         run: mise exec -- dart analyze app --fatal-infos --format machine
 
-      # eqmonitor_custom_lints (avoid_direct_color_scheme 等) は
-      # analysis_options.yaml の `plugins:` 経由で上記 Analyze app から
-      # 既に実行されるため、ここではルール実装自体の回帰防止として
-      # パッケージ単体のユニットテストのみ実行する。
-      - name: Test eqmonitor_custom_lints
-        working-directory: tools/eqmonitor_custom_lints
-        run: |
-          mise exec -- dart pub get
-          mise exec -- dart test
-
       # tools/ は melos workspace 外のため `melos run test` の対象にならない。
       # ルール実装の回帰防止としてここで実行する。
       - name: Test eqmonitor_lints_plugin

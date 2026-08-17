@@ -73,11 +73,13 @@ class _Body extends HookConsumerWidget {
           if (controller == null) {
             return;
           }
-          await saveHomeMapBoundsFlow(
-            context: context,
-            ref: ref,
-            controller: controller,
-          );
+          await ref
+              .read(saveHomeMapBoundsFlowProvider)
+              .save(
+                context: context,
+                ref: ref,
+                controller: controller,
+              );
         },
         icon: const Icon(Icons.save),
         label: const Text('この範囲を保存'),
