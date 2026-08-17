@@ -1,0 +1,46 @@
+---
+description: eqmonitor_map の地図レンダラ参照実装ルール
+globs: packages/eqmonitor_map/**/*.dart,packages/eqmonitor_map/**/*.fmat,docs/superpowers/specs/*eqmonitor-map*
+alwaysApply: false
+---
+
+# Map Renderer Reference Rules
+
+`packages/eqmonitor_map` のマップレンダラを実装・デバッグするときは、独自判断で方式を作る前に、必ず以下3つの参照実装と既存の `docs/knowledge/` を確認する。
+
+## 参照先の使い分け
+
+| 問題領域 | 参照先 |
+| --- | --- |
+| Web Mercator / tile cover / overzoom / world wrap / MVT edge handling | MapLibre Native |
+| fill / line vertex generation / joins / caps / line extrusion shader | MapLibre Native |
+| frame snapshot / ordered layers / observation points / intensity display | KEVi |
+| label placement / zoom-vs-stroke-width / integer-zoom geometry cache | KEVi |
+| Flutter Scene mechanics / `.fmat` / material parameters | dashmap |
+| worker isolate mesh building / GPU upload frame budgeting / floating origin | dashmap |
+
+## 固定参照
+
+- MapLibre Native: https://github.com/maplibre/maplibre-native/tree/f1905c521577f009c70179fac53e3f4f67a3fa53
+  - Repository: `maplibre/maplibre-native`
+  - License: BSD-2-Clause
+  - Commit: `f1905c521577f009c70179fac53e3f4f67a3fa53`
+  - 知見: `docs/knowledge/20260805_maplibre_native_renderer_reference.md`
+- KEVi: https://github.com/ingen084/KyoshinEewViewerIngen/tree/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f
+  - Repository: `ingen084/KyoshinEewViewerIngen`
+  - License: MIT
+  - Commit: `5a2bf513b6b9c93ee06473f70b6d27ee96070b3f`
+  - Geometry cache section: `cc5ce50b19e0a68b18bcc3a7caa0df413bd8ed05`
+  - 知見: `docs/knowledge/20260802_kevi_map_renderer_reference.md`
+- dashmap: https://github.com/bdero/dashmap/tree/a6ff92edd999e922f81d26d209d8f589faee3fd0
+  - Repository: `bdero/dashmap`
+  - License: MIT
+  - Commit: `a6ff92edd999e922f81d26d209d8f589faee3fd0`
+  - 知見: `docs/knowledge/20260807_dashmap_flutter_scene_reference.md`
+
+## 運用ルール
+
+- 新しい参照知見を追加するときは、必ず対象repository・license・commit SHAを固定して記録する。
+- 参照repositoryは `/tmp/refs` 配下へcloneし、EQMonitor workspace内へ置かない。
+- 新しい発見・運用上の注意点は `knowledge-management.mdc` に従い、`docs/knowledge/` に簡潔に残す。
+- dashmapはPMTiles / MVT / vector line stroking / label実装を持たないため、これらの正本として引用しない。

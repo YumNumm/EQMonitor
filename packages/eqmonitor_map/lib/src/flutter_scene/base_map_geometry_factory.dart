@@ -37,9 +37,11 @@ class BaseMapGeometryFactory {
 
   /// [mesh]から線描画用の`scene.Geometry`を作る。
   ///
-  /// [LineMesh.extrudes]は`MeshGeometry.fromArrays`の組み込み`texCoords`
-  /// 引数(`vec2`)へ渡す。以前は`setCustomAttribute('extrude', ...)`で
-  /// custom vertex attributeとして渡していたが、この環境ではGPUへ値が
+  /// [LineMesh.extrudes]はtile-local Y-down座標系の法線なので、
+  /// [buildLineGeometryArgs]でY成分を反転してclip/NDC Y-up座標系の
+  /// 押し出し方向へ変換してから、`MeshGeometry.fromArrays`の組み込み
+  /// `texCoords`引数(`vec2`)へ渡す。以前は`setCustomAttribute('extrude', ...)`
+  /// でcustom vertex attributeとして渡していたが、この環境ではGPUへ値が
   /// 届かず、代わりに同じ頂点の`position`(origin rebasing後の座標)が
   /// shaderで読まれてしまうバグがあることをGPUレベルの実験で確認した
   /// (`.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/
@@ -92,12 +94,14 @@ class LineGeometryArgs {
   /// [LineMesh.indices]をそのまま渡す。
   final Uint16List indices;
 
-  /// [LineMesh.extrudes]をそのまま渡す(2成分、z拡張は不要。押し出し方向は
-  /// 座標ではなく`vec2`の方向ベクトルであり、`MeshGeometry.fromArrays`の
-  /// `positions`のような3成分要求を持たない)。`lineGeometry`が
-  /// `MeshGeometry.fromArrays`の`texCoords:`引数へそのまま渡す
-  /// (`lineGeometry`のdoc comment参照。custom attributeの不具合を避ける
-  /// ため、組み込みのtexCoordsへ押し出し法線を積んでいる)。
+  /// [LineMesh.extrudes]のY成分を反転したclip/NDC Y-up座標系の押し出し方向
+  /// (2成分、z拡張は不要)。`LineMeshBuilder`の出力はtile-local Y-down座標系の
+  /// 法線だが、`base_map_line.fmat`は`vertex.world_position`が既に実質NDCの
+  /// 空間にある時点でこの値を加算するため、このFlutter Scene adapter境界で
+  /// 座標系を合わせる。`lineGeometry`が`MeshGeometry.fromArrays`の
+  /// `texCoords:`引数へ渡す(`lineGeometry`のdoc comment参照。custom
+  /// attributeの不具合を避けるため、組み込みのtexCoordsへ押し出し法線を
+  /// 積んでいる)。
   final Float32List extrudes;
 }
 
@@ -111,10 +115,14 @@ FillGeometryArgs buildFillGeometryArgs(FillMesh mesh) {
 
 /// [mesh]から[BaseMapGeometryFactory.lineGeometry]の引数を組み立てる。
 LineGeometryArgs buildLineGeometryArgs(LineMesh mesh) {
+  final extrudes = Float32List.fromList(mesh.extrudes);
+  for (var i = 1; i < extrudes.length; i += 2) {
+    extrudes[i] = -extrudes[i];
+  }
   return LineGeometryArgs(
     positions: _expandTo3D(mesh.positions),
     indices: mesh.indices,
-    extrudes: mesh.extrudes,
+    extrudes: extrudes,
   );
 }
 
