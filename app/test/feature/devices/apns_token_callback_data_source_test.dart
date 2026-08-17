@@ -12,12 +12,17 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   const codec = StandardMethodCodec();
+  late Completer<void> listenReceived;
 
   setUp(() {
-    messenger.setMockMessageHandler(
-      _channelName,
-      (_) async => codec.encodeSuccessEnvelope(null),
-    );
+    listenReceived = Completer<void>();
+    messenger.setMockMessageHandler(_channelName, (message) async {
+      final call = codec.decodeMethodCall(message);
+      if (call.method == 'listen' && !listenReceived.isCompleted) {
+        listenReceived.complete();
+      }
+      return codec.encodeSuccessEnvelope(null);
+    });
   });
 
   tearDown(() {
@@ -29,7 +34,7 @@ void main() {
       const EventChannel(_channelName),
     );
     final token = dataSource.tokenUpdates.first;
-    await pumpEventQueue();
+    await listenReceived.future;
 
     await _sendEvent(codec.encodeSuccessEnvelope('callback-token'));
 
@@ -44,9 +49,24 @@ void main() {
       dataSource.tokenUpdates,
       emitsError(isA<FormatException>()),
     );
-    await pumpEventQueue();
+    await listenReceived.future;
 
     await _sendEvent(codec.encodeSuccessEnvelope(42));
+
+    await expectation;
+  });
+
+  test('empty String callback produces FormatException', () async {
+    final dataSource = EventChannelApnsTokenCallbackDataSource(
+      const EventChannel(_channelName),
+    );
+    final expectation = expectLater(
+      dataSource.tokenUpdates,
+      emitsError(isA<FormatException>()),
+    );
+    await listenReceived.future;
+
+    await _sendEvent(codec.encodeSuccessEnvelope(''));
 
     await expectation;
   });
