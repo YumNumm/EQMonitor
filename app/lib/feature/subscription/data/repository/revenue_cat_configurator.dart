@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 
 class RevenueCatConfigurator {
-  const RevenueCatConfigurator();
+  const new();
 
   Future<void> ensureConfigured() async {
     if (kIsWeb || (!Platform.isIOS && !Platform.isAndroid)) {

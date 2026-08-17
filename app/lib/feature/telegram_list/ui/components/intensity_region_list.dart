@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// 震度地域リスト（震度階級ごとにグループ化、差分注釈付き）
 class IntensityRegionList extends StatelessWidget {
-  const IntensityRegionList({
+  const new({
     required this.entries,
     this.groupByPrefecture = false,
     this.prefectureMap,
@@ -54,7 +54,7 @@ class IntensityRegionList extends StatelessWidget {
 }
 
 class _IntensityRow extends StatelessWidget {
-  const _IntensityRow({
+  const new({
     required this.intensity,
     required this.entries,
     required this.groupByPrefecture,
@@ -158,7 +158,7 @@ class _PrefectureRegionRow extends StatelessWidget {
 }
 
 class _RegionChip extends StatelessWidget {
-  const _RegionChip({required this.entry});
+  const new({required this.entry});
 
   final IntensityRegionDiffEntry entry;
 
