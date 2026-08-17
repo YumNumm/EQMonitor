@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 
 class LiveMonitorSettingsNormalizer {
-  const LiveMonitorSettingsNormalizer();
+  const new();
 
   LiveMonitorSettings normalize(LiveMonitorSettings settings) {
     final earthquakeDisplaySeconds =

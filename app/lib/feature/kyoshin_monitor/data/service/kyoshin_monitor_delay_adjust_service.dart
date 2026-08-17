@@ -12,4 +12,4 @@ enum KyoshinMonitorDelayAdjustType {
   imageFetch404Ntp,
 }
 
-abstract class KyoshinMonitorDelayAdjustService {}
+abstract class KyoshinMonitorDelayAdjustService;

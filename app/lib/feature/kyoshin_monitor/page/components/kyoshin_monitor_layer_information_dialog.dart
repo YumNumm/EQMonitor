@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RealtimeDataTypeInfoDialog extends StatelessWidget {
-  const RealtimeDataTypeInfoDialog({super.key});
+  const new({super.key});
 
   static Future<void> show(BuildContext context) async =>
       showAdaptiveDialog<void>(
@@ -62,7 +62,7 @@ class RealtimeDataTypeInfoDialog extends StatelessWidget {
 }
 
 class _KyoshinMonitorSource extends StatelessWidget {
-  const _KyoshinMonitorSource();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
 }
 
 class _DataTypeInfo extends StatelessWidget {
-  const _DataTypeInfo({required this.title, required this.description});
+  const new({required this.title, required this.description});
 
   final String title;
   final String description;

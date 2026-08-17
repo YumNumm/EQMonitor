@@ -17,7 +17,7 @@ typedef LiveMonitorSplitViewportMeasurement = ({
 });
 
 class LiveMonitorSplitRatioCalculator {
-  const LiveMonitorSplitRatioCalculator();
+  const new();
 
   double updateRatio({
     required double current,

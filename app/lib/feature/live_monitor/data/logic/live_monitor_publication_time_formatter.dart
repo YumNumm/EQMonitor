@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class LiveMonitorPublicationTimeFormatter {
-  const LiveMonitorPublicationTimeFormatter();
+  const new();
 
   String format({required DateTime reportedAt, required DateTime now}) {
     final rawElapsed = now.toUtc().difference(reportedAt.toUtc());

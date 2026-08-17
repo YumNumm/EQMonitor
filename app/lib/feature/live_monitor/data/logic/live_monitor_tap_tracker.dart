@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 class LiveMonitorTapTracker {
-  LiveMonitorTapTracker({required this.touchSlop});
+  new({required this.touchSlop});
 
   final double touchSlop;
 

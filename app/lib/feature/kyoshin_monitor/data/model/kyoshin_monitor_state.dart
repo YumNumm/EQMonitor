@@ -6,7 +6,7 @@ part 'kyoshin_monitor_state.g.dart';
 
 @freezed
 abstract class KyoshinMonitorState with _$KyoshinMonitorState {
-  const factory KyoshinMonitorState({
+  const factory({
     RealtimeDataType? currentRealtimeDataType,
     RealtimeLayer? currentRealtimeLayer,
     @Default(KyoshinMonitorStatus.initializing) KyoshinMonitorStatus status,
@@ -22,7 +22,7 @@ abstract class KyoshinMonitorState with _$KyoshinMonitorState {
     List<int>? currentImageRaw,
   }) = _KyoshinMonitorState;
 
-  factory KyoshinMonitorState.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorStateFromJson(json);
 }
 
