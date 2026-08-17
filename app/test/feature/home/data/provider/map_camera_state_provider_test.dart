@@ -30,7 +30,7 @@ class _TestShakes extends Notifier<List<ShakeDetectionEvent>> {
 }
 
 class _MutableEewAliveTelegram extends EewAliveTelegram {
-  _MutableEewAliveTelegram(this.initial);
+  new(this.initial);
 
   final List<EewTelegramItem> initial;
 

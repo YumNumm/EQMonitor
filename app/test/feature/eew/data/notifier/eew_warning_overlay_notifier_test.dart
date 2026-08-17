@@ -21,7 +21,7 @@ final mutableRealDisplayProvider =
 
 final class MutableRealDisplay
     extends Notifier<EewWarningOverlayDisplayModel?> {
-  MutableRealDisplay([this.initial]);
+  new([this.initial]);
 
   final EewWarningOverlayDisplayModel? initial;
 
@@ -32,7 +32,7 @@ final class MutableRealDisplay
 }
 
 final class MutableAppLifecycle extends AppLifecycle {
-  MutableAppLifecycle({this.initial = AppLifecycleState.resumed});
+  new({this.initial = AppLifecycleState.resumed});
 
   final AppLifecycleState initial;
 
@@ -43,7 +43,7 @@ final class MutableAppLifecycle extends AppLifecycle {
 }
 
 final class FakeScheduledTask implements EewWarningOverlayScheduledTask {
-  FakeScheduledTask({required this.delay, required this.callback});
+  new({required this.delay, required this.callback});
 
   final Duration delay;
   final Future<void> Function() callback;
@@ -82,7 +82,7 @@ final class FakeScheduler implements EewWarningOverlayScheduler {
 }
 
 final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
-  FakeVibrationGateway({
+  new({
     this.startBarriers = const [],
     this.cancelBarriers = const [],
     this.hasVibratorResult = true,
@@ -132,7 +132,7 @@ final class FakeVibrationGateway implements EewWarningOverlayVibrationGateway {
 }
 
 final class TestContext {
-  TestContext({
+  new({
     required this.container,
     required this.real,
     required this.lifecycle,
