@@ -55,7 +55,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
               sliver: SliverList.list(
                 children: [
                   _SettingsSection(
-                    icon: Icons.emergency_rounded,
                     title: '緊急地震速報',
                     description: 'EEW の塗りつぶし、アニメーション、自動追従を調整します。',
                     isExpanded: expandedSection.value == _MapLayerSection.eew,
@@ -74,7 +73,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   _SettingsSection(
-                    icon: Icons.vibration_rounded,
                     title: '揺れ検知',
                     description: '揺れ検知イベントの表示とアニメーションを調整します。',
                     isExpanded:
@@ -94,7 +92,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   _SettingsSection(
-                    icon: Icons.my_location_rounded,
                     title: '現在地',
                     description: '位置情報の利用許可と、地図上での表示設定です。',
                     isExpanded:
@@ -112,7 +109,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   _SettingsSection(
-                    icon: Icons.sensors_rounded,
                     title: '強震モニタ',
                     description: 'リアルタイム観測点の表示条件と見た目を変更します。',
                     isExpanded:
@@ -139,7 +135,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   _SettingsSection(
-                    icon: Icons.map_rounded,
                     title: 'マップ',
                     description: '地図の回転、ズーム、初期表示範囲を設定します。',
                     isExpanded: expandedSection.value == _MapLayerSection.map,
@@ -170,7 +165,6 @@ enum _MapLayerSection { eew, shakeDetection, location, kyoshinMonitor, map }
 
 class _SettingsSection extends StatelessWidget {
   const new({
-    required this.icon,
     required this.title,
     required this.description,
     required this.isExpanded,
@@ -178,7 +172,6 @@ class _SettingsSection extends StatelessWidget {
     required this.children,
   });
 
-  final IconData icon;
   final String title;
   final String description;
   final bool isExpanded;
@@ -231,19 +224,6 @@ class _SettingsSection extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: colorTheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(shape.md),
-                    ),
-                    child: Icon(
-                      icon,
-                      color: context.designSystem.colorTheme.primary,
-                    ),
-                  ),
-                  SizedBox(width: spacing.md),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
