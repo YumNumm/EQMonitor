@@ -46,6 +46,7 @@ void main() {
     await pumpWarningPage(
       tester,
       platform: TargetPlatform.iOS,
+      isPro: true,
       target: EewWarningTarget.currentLocationAndNationwide,
     );
 
@@ -99,6 +100,31 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'critical permission card follows master control before target header',
+    (tester) async {
+      await pumpWarningPage(
+        tester,
+        platform: TargetPlatform.iOS,
+        currentLevel: InterruptionLevel.critical,
+        criticalAlert: AppleNotificationSetting.disabled,
+      );
+
+      final texts = find
+          .descendant(of: find.byType(ListView), matching: find.byType(Text))
+          .evaluate()
+          .map((element) => (element.widget as Text).data)
+          .toList();
+      final masterIndex = texts.indexOf('通知を受け取る');
+      final cardIndex = texts.indexOf('重大な通知を許可');
+      final targetHeaderIndex = texts.indexOf('通知対象');
+
+      expect(masterIndex, isNonNegative);
+      expect(cardIndex, greaterThan(masterIndex));
+      expect(cardIndex, lessThan(targetHeaderIndex));
+    },
+  );
 
   testWidgets('hides critical permission card unless every condition is met', (
     tester,
@@ -169,6 +195,27 @@ void main() {
     expect(find.text('全国の割り込みレベル'), findsNothing);
     expect(find.text('Androidの通知設定'), findsOneWidget);
   });
+
+  testWidgets(
+    'reselecting nationwide target preserves its interruption level',
+    (tester) async {
+      final recorders = await pumpWarningPage(
+        tester,
+        platform: TargetPlatform.iOS,
+        isPro: true,
+        target: EewWarningTarget.currentLocationAndNationwide,
+        nationwideLevel: InterruptionLevel.timeSensitive,
+      );
+
+      await tester.ensureVisible(find.text('現在地 + 全国'));
+      await tester.tap(find.text('現在地 + 全国'));
+      await tester.pumpAndSettle();
+
+      expect(recorders.warning.updateConfigCallCount, 0);
+      expect(recorders.warning.target, isNull);
+      expect(recorders.warning.nationwideInterruptionLevel, isNull);
+    },
+  );
 }
 
 Future<_WarningPageRecorders> pumpWarningPage(
@@ -180,6 +227,7 @@ Future<_WarningPageRecorders> pumpWarningPage(
   AppleNotificationSetting criticalAlert =
       AppleNotificationSetting.notSupported,
   TargetPlatform platform = TargetPlatform.android,
+  bool isPro = false,
 }) async {
   final globalRecorder = _EewGlobalSettingsRecorder();
   final warningRecorder = _EewWarningConfigRecorder();
@@ -208,7 +256,7 @@ Future<_WarningPageRecorders> pumpWarningPage(
             notificationSettings,
           ),
         ),
-        startProvider.overrideWith(_FakeStartNotifier.new),
+        startProvider.overrideWith(() => _FakeStartNotifier(isPro: isPro)),
         notificationPresetProvider.overrideWith(
           _FakeNotificationPresetNotifier.new,
         ),
@@ -262,13 +310,17 @@ final class _EewGlobalSettingsRecorder {
 }
 
 class _FakeStartNotifier extends StartNotifier {
+  _FakeStartNotifier({required this.isPro});
+
+  final bool isPro;
+
   @override
-  Future<api.StartResponse> build() async => const api.StartResponse(
-    flags: api.StartFlags(
+  Future<api.StartResponse> build() async => api.StartResponse(
+    flags: const api.StartFlags(
       adsEnabled: false,
       maintenance: api.MaintenanceInfo(enabled: false),
     ),
-    app: api.StartApp(
+    app: const api.StartApp(
       version: api.StartAppVersion(
         requiredVersions: [api.RequiredVersion(version: '0.0.0')],
       ),
@@ -278,7 +330,7 @@ class _FakeStartNotifier extends StartNotifier {
       ),
     ),
     planConstraints: api.PlanConstraintVariants(
-      free: _freeConstraints,
+      free: isPro ? _subscriptionConstraints : _freeConstraints,
       subscription: _subscriptionConstraints,
     ),
   );
@@ -355,6 +407,8 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
 }
 
 final class _EewWarningConfigRecorder {
+  int updateConfigCallCount = 0;
+  EewWarningTarget? target;
   InterruptionLevel? currentLocationInterruptionLevel;
   InterruptionLevel? nationwideInterruptionLevel;
 }
@@ -377,6 +431,8 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
     InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
+    recorder.updateConfigCallCount = recorder.updateConfigCallCount + 1;
+    recorder.target = target;
     if (currentLocationInterruptionLevel != null) {
       recorder.currentLocationInterruptionLevel =
           currentLocationInterruptionLevel;

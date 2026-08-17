@@ -41,6 +41,48 @@ void main() {
     expect(find.text('震度別の音設定'), findsOneWidget);
   });
 
+  testWidgets('custom list uses threshold labels and joined region names', (
+    tester,
+  ) async {
+    await pumpCustomSettings(
+      tester,
+      platform: TargetPlatform.iOS,
+      isPro: true,
+      slots: [
+        _slot,
+        _slot.copyWith(
+          id: 'region',
+          slotType: NotificationSlotType.region,
+          regionId: 13,
+          regionName: '東京都',
+          cityCode: '13104',
+          cityName: '新宿区',
+          displayOrder: 1,
+          eewMinIntensity: JmaIntensity.fiveLower,
+        ),
+      ],
+    );
+
+    expect(find.text('東京都新宿区'), findsOneWidget);
+    expect(find.textContaining('EEW: すべて'), findsOneWidget);
+    expect(find.textContaining('EEW: 震度5弱以上'), findsOneWidget);
+    expect(find.textContaining('5-'), findsNothing);
+    expect(find.textContaining('東京都 新宿区'), findsNothing);
+  });
+
+  testWidgets('custom list rejects an enabled EEW without a threshold', (
+    tester,
+  ) async {
+    await pumpCustomSettings(
+      tester,
+      platform: TargetPlatform.iOS,
+      isPro: true,
+      slots: [_slot.copyWith(eewMinIntensity: null)],
+    );
+
+    expect(tester.takeException(), isA<StateError>());
+  });
+
   testWidgets('does not show downgrade retention copy', (tester) async {
     await pumpCustomSettings(
       tester,
@@ -80,8 +122,14 @@ Future<void> pumpCustomSettings(
   WidgetTester tester, {
   required TargetPlatform platform,
   required bool isPro,
+  List<NotificationSlot> slots = const [_slot],
 }) async {
-  await pumpNotificationSettings(tester, platform: platform, isPro: isPro);
+  await pumpNotificationSettings(
+    tester,
+    platform: platform,
+    isPro: isPro,
+    slots: slots,
+  );
   await tester.tap(find.byTooltip('カスタム設定'));
   await tester.pumpAndSettle();
 }
@@ -90,6 +138,7 @@ Future<void> pumpNotificationSettings(
   WidgetTester tester, {
   required TargetPlatform platform,
   required bool isPro,
+  List<NotificationSlot> slots = const [_slot],
 }) async {
   await tester.binding.setSurfaceSize(const Size(800, 6000));
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -112,7 +161,7 @@ Future<void> pumpNotificationSettings(
           _FakeGeneralNotificationSettingsNotifier.new,
         ),
         notificationSlotsProvider.overrideWith(
-          _FakeNotificationSlotsNotifier.new,
+          () => _FakeNotificationSlotsNotifier(slots: slots),
         ),
         eewGlobalSettingsProvider.overrideWith(
           _FakeEewGlobalSettingsNotifier.new,
@@ -206,8 +255,12 @@ class _FakeGeneralNotificationSettingsNotifier
 }
 
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
+  _FakeNotificationSlotsNotifier({this.slots = const [_slot]});
+
+  final List<NotificationSlot> slots;
+
   @override
-  Future<List<NotificationSlot>> build() async => const [_slot];
+  Future<List<NotificationSlot>> build() async => slots;
 }
 
 class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
@@ -275,7 +328,7 @@ const _slot = NotificationSlot(
   cityName: null,
   displayOrder: 0,
   eewEnabled: true,
-  eewMinIntensity: JmaIntensity.four,
+  eewMinIntensity: JmaIntensity.zero,
   eewOverrides: null,
   earthquakeEnabled: true,
   earthquakeMinIntensity: JmaIntensity.three,

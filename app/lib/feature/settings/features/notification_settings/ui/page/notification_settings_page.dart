@@ -27,6 +27,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/formatter/notification_slot_formatter.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_info_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_forecast_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
@@ -559,6 +560,9 @@ class _EewWarningSettingsPage extends ConsumerWidget {
         permission?.isCriticalAlertGranted == false;
 
     Future<void> select(EewWarningTarget value) async {
+      if (target == value) {
+        return;
+      }
       await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
         await tsx
             .get(eewWarningConfigProvider.notifier)
@@ -597,6 +601,10 @@ class _EewWarningSettingsPage extends ConsumerWidget {
               });
             },
           ),
+          if (showCriticalAlertPermissionCard)
+            CriticalAlertPermissionCard(
+              onPressed: () => showCriticalAlertPermissionDialog(context, ref),
+            ),
           const SettingsSectionHeader(text: '通知対象'),
           _TargetOptionTile(
             title: '現在地のみ',
@@ -638,11 +646,6 @@ class _EewWarningSettingsPage extends ConsumerWidget {
                 levels: nationwideLevels,
                 enabled: warningEnabled,
                 onChanged: updateNationwideLevel,
-              ),
-            if (showCriticalAlertPermissionCard)
-              CriticalAlertPermissionCard(
-                onPressed: () =>
-                    showCriticalAlertPermissionDialog(context, ref),
               ),
           ] else if (platform == TargetPlatform.android)
             ListTile(
@@ -857,20 +860,24 @@ class _SlotListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, title) = switch (slot.slotType) {
-      NotificationSlotType.currentLocation => ('📍', '現在地'),
-      NotificationSlotType.nationwide => ('🌐', '全国'),
-      NotificationSlotType.region => (
-        '📍',
-        slot.cityName != null
-            ? '${slot.regionName ?? '地域'} ${slot.cityName}'
-            : slot.regionName ?? '地域',
+    final icon = switch (slot.slotType) {
+      NotificationSlotType.currentLocation ||
+      NotificationSlotType.region => '📍',
+      NotificationSlotType.nationwide => '🌐',
+    };
+    final title = NotificationSlotFormatter.displayName(slot);
+
+    final eewText = switch ((slot.eewEnabled, slot.eewMinIntensity)) {
+      (false, _) => 'EEW: 無効',
+      (true, final intensity?) =>
+        switch (NotificationSlotFormatter.intensityLabel(intensity)) {
+          'すべて' => 'EEW: すべて',
+          final label => 'EEW: $label以上',
+        },
+      (true, null) => throw StateError(
+        'EEW threshold is required when notifications are enabled',
       ),
     };
-
-    final eewText = slot.eewEnabled
-        ? 'EEW: 震度${slot.eewMinIntensity?.label ?? '-'}以上'
-        : 'EEW: 無効';
     final earthquakeText = slot.earthquakeEnabled
         ? '地震情報: 震度${slot.earthquakeMinIntensity?.label ?? '-'}以上'
         : '地震情報: 無効';
