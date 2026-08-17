@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 /// origin_time(ISO8601, required), magnitude(number|null),
 /// depth(number|null km), max_intensity(string|null)。
 class SeismicityGeoJsonParser {
-  const SeismicityGeoJsonParser();
+  const new();
 
   List<SeismicityEvent> parse(Map<String, dynamic> geoJson) {
     final features = geoJson['features'] as List<dynamic>? ?? const [];

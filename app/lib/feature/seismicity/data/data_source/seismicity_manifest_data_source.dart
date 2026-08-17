@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_manifest.dart
 /// backend の openapi.json 反映後に `eqmonitor_api` パッケージへ移行する想定の
 /// 暫定実装(素のDioで直接叩く)。
 class SeismicityManifestDataSource {
-  const SeismicityManifestDataSource(this._dio);
+  const new(this._dio);
 
   final Dio _dio;
 

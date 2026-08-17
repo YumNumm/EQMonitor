@@ -6,7 +6,7 @@ enum HypocenterApiErrorKind {
 }
 
 class HypocenterApiException implements Exception {
-  const HypocenterApiException({
+  const new({
     required this.message,
     this.statusCode,
     this.kind = HypocenterApiErrorKind.network,

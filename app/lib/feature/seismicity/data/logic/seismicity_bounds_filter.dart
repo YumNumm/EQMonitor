@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 
 /// 地図上で選択された緯度経度矩形でイベントをフィルタする。
 class SeismicityBoundsFilter {
-  const SeismicityBoundsFilter();
+  const new();
 
   List<SeismicityEvent> filter({
     required List<SeismicityEvent> events,

@@ -18,7 +18,7 @@ PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
 );
 
 class PermissionRepository {
-  const PermissionRepository({
+  const new({
     required FirebaseMessaging Function() readMessaging,
     required Future<LocationPermission> Function() requestLocationPermission,
     required Future<void> Function() onLocationPermissionGranted,

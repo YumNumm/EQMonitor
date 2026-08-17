@@ -18,7 +18,7 @@ Future<ParameterRepository> parameterRepository(Ref ref) async {
 /// if the pack isn't ready, `AssetPackNotReadyException` propagates from
 /// [assetDataSource] unchanged.
 final class ParameterRepository {
-  const ParameterRepository({
+  const new({
     required ParameterAssetDataSource assetDataSource,
     required ParameterJsonParser parser,
   }) : _assetDataSource = assetDataSource,

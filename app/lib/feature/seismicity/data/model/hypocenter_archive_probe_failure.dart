@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_api_exception
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 
 class HypocenterArchiveProbeFailure {
-  const HypocenterArchiveProbeFailure({
+  const new({
     required this.archive,
     required this.exception,
   });

@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 
 /// ローカルキャッシュへ保存する単位(span 1つ分のイベント一覧と鮮度情報)。
 class SeismicityCachedDataset {
-  const SeismicityCachedDataset({
+  const new({
     required this.events,
     required this.generatedAt,
   });
