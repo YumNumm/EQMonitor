@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_wake_l
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'
-    show GlobalWidgetsLocalizations;
+    as flutter_localizations;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -51,7 +51,8 @@ class App extends HookConsumerWidget {
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
+        flutter_localizations.GlobalMaterialLocalizations.delegate,
+        flutter_localizations.GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ja', 'JP')],

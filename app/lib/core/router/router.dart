@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
+import 'package:eqmonitor/core/component/web_view/app_web_view_page.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/material_page_mixin.dart';
@@ -39,12 +40,9 @@ import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
-import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_web_view_page.dart';
 import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/about_this_app_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_page.dart';
@@ -127,8 +125,8 @@ GoRouter goRouter(Ref ref) => GoRouter(
       final allowedDuringOnboarding =
           [
             const OnboardingRoute().location,
-            const TermOfServiceRoute($extra: null).location,
-            const PrivacyPolicyRoute($extra: null).location,
+            const TermOfServiceRoute().location,
+            const PrivacyPolicyRoute().location,
             const LicenseRoute().location,
           ].contains(state.matchedLocation) ||
           state.matchedLocation == '/onboarding/web-view' ||
@@ -191,7 +189,7 @@ class OnboardingWebViewRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      OnboardingWebViewPage(title: title, url: url);
+      AppWebViewPage(title: title, url: url);
 }
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
@@ -553,32 +551,26 @@ class EarthquakeHistoryConfigRoute extends GoRouteData
 
 class TermOfServiceRoute extends GoRouteData
     with $TermOfServiceRoute, MaterialPageMixin {
-  const TermOfServiceRoute({
-    required this.$extra,
-    this.showAcceptButton = false,
-  });
-
-  final void Function({bool isAccepted})? $extra;
-  final bool showAcceptButton;
+  const TermOfServiceRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
+      const AppWebViewPage(
+        title: '利用規約',
+        url: 'https://eqmonitor.app/term_of_service',
+      );
 }
 
 class PrivacyPolicyRoute extends GoRouteData
     with $PrivacyPolicyRoute, MaterialPageMixin {
-  const PrivacyPolicyRoute({
-    required this.$extra,
-    this.showAcceptButton = false,
-  });
-
-  final void Function({bool isAccepted})? $extra;
-  final bool showAcceptButton;
+  const PrivacyPolicyRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      PrivacyPolicyPage(onResult: $extra, showAcceptButton: showAcceptButton);
+      const AppWebViewPage(
+        title: 'プライバシーポリシー',
+        url: 'https://eqmonitor.app/privacy_policy',
+      );
 }
 
 class LicenseRoute extends GoRouteData with $LicenseRoute, MaterialPageMixin {
@@ -595,7 +587,7 @@ class AboutThisAppRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const AboutThisAppScreen();
+      const AboutThisAppPage();
 }
 
 class EewDetailsByEventIdRoute extends GoRouteData
