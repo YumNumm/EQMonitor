@@ -12,7 +12,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
-import 'package:eqmonitor/core/fcm/channels.dart';
+import 'package:eqmonitor/core/fcm/android_notification_channel_initializer.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
@@ -253,7 +253,8 @@ Future<void> _main() async {
   }
   if (!kIsWeb) {
     guardedUnawaited(() async {
-      await _registerNotificationChannelIfNeeded();
+      await AndroidNotificationChannelInitializer.forCurrentPlatform()
+          .initialize();
       await FlutterLocalNotificationsPlugin().initialize(
         settings: const InitializationSettings(
           iOS: DarwinInitializationSettings(
@@ -303,21 +304,5 @@ Future<void> _main() async {
 
   if (!kIsWeb && Platform.isIOS) {
     container.listen(appGroupSettingsWriterProvider, (_, _) {});
-  }
-}
-
-Future<void> _registerNotificationChannelIfNeeded() async {
-  final androidNotificationPlugin = FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >();
-  if (androidNotificationPlugin == null) {
-    return;
-  }
-  for (final group in notificationChannelGroups) {
-    await androidNotificationPlugin.createNotificationChannelGroup(group);
-  }
-  for (final channel in notificationChannels) {
-    await androidNotificationPlugin.createNotificationChannel(channel);
   }
 }

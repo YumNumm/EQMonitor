@@ -1,176 +1,169 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final notificationChannels = <AndroidNotificationChannel>[
-  const AndroidNotificationChannel(
-    'fromdev',
-    '開発者からのお知らせ',
-    description: '開発者からの連絡に使用されます。',
-    groupId: 'fromdev',
+const notificationChannelGroups = <AndroidNotificationChannelGroup>[
+  AndroidNotificationChannelGroup('eew', '緊急地震速報'),
+  AndroidNotificationChannelGroup('earthquake', '地震情報'),
+  AndroidNotificationChannelGroup('tsunami', '津波情報'),
+  AndroidNotificationChannelGroup('safety_information', '防災・関連情報'),
+  AndroidNotificationChannelGroup('service', 'サービス通知'),
+];
+
+const notificationChannels = <AndroidNotificationChannel>[
+  AndroidNotificationChannel(
+    'eew_warning_current_location',
+    '現在地が対象の緊急地震速報（警報）',
+    groupId: 'eew',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'bgl_debug',
-    'バックグラウンド位置デバッグ',
-    description: 'バックグラウンド位置情報の変化デバッグ通知（開発者向け）',
-    importance: Importance.low,
-  ),
-
-  //! EEW
-  const AndroidNotificationChannel(
-    'eew_warning',
-    '緊急地震速報(警報)',
+  AndroidNotificationChannel(
+    'eew_warning_nationwide',
+    '全国設定だけで受ける緊急地震速報（警報）',
     groupId: 'eew',
-    description: '緊急地震速報(警報)通知',
-    ledColor: Color.fromARGB(255, 190, 0, 0),
-    importance: Importance.max,
   ),
-  const AndroidNotificationChannel(
+  AndroidNotificationChannel(
     'eew_forecast',
-    '緊急地震速報(予報)',
+    '緊急地震速報（予報）',
     groupId: 'eew',
-    description: '緊急地震速報(予報)通知',
-    ledColor: Color.fromARGB(255, 190, 0, 0),
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'eew_low_accuracy',
-    '緊急地震速報(予報・低精度)',
+  AndroidNotificationChannel(
+    'eew_low_accuracy_v2',
+    '1点検知・レベル法の低精度EEW',
     groupId: 'eew',
-    description: '1点検知による精度の低い緊急地震速報(予報)通知',
-    ledColor: Color.fromARGB(255, 190, 0, 0),
-    importance: Importance.high,
   ),
-
-  //! 地震通知
-  const AndroidNotificationChannel(
-    'VXSE51',
-    groupId: 'earthquake',
+  AndroidNotificationChannel(
+    'earthquake_vxse51',
     '震度速報',
-    description: '震度3以上の地域を90秒程度で第1報を通知',
+    groupId: 'earthquake',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VXSE52',
+  AndroidNotificationChannel(
+    'earthquake_vxse52',
+    '震源情報',
     groupId: 'earthquake',
-    '震源に関する情報',
-    description: '震源速報、津波の有無を通知',
+  ),
+  AndroidNotificationChannel(
+    'earthquake_vxse53',
+    '震源・震度情報',
+    groupId: 'earthquake',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VXSE53',
+  AndroidNotificationChannel(
+    'earthquake_vxse61',
+    '震源要素更新',
     groupId: 'earthquake',
-    '震源・震度に関する情報',
-    description: '震源要素・各地の震度、海外で発生した大きな地震の震源要素等、津波の有無を通知',
+  ),
+  AndroidNotificationChannel(
+    'earthquake_vxse62',
+    '長周期地震動情報',
+    groupId: 'earthquake',
     importance: Importance.high,
   ),
-  /*
-  const AndroidNotificationChannel(
-    'VXSE56',
+  AndroidNotificationChannel(
+    'earthquake_estimated_intensity',
+    '推計震度情報',
     groupId: 'earthquake',
-    '地震の活動状況等に関する情報',
-    description: '地震の活動状況等に関する情報や、伊豆東部の地震活動に関する情報などの解説情報を発表',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE60',
-    groupId: 'earthquake',
-    '地震回数に関する情報',
-    description: '顕著な地震に対して、有感地震の回数経過状況を発表',
-    importance: Importance.high,
-  ),
-  */
-  const AndroidNotificationChannel(
-    'VXSE61',
-    groupId: 'earthquake',
-    '顕著な地震の震源要素更新のお知らせ',
-    description: '顕著な地震に対して、震源要素をより正確にした情報を発表',
-  ),
-  const AndroidNotificationChannel(
-    'VXSE62',
-    groupId: 'earthquake',
-    '長周期地震動に関する観測情報',
-    description: '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VZSE40',
-    groupId: 'earthquake',
-    '地震・津波に関するお知らせ',
-    description: '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ、その他を発表',
     importance: Importance.low,
+    playSound: false,
   ),
-  /*
-  const AndroidNotificationChannel(
-    'VTSE41',
+  AndroidNotificationChannel(
+    'tsunami_major_warning',
+    '大津波警報',
     groupId: 'tsunami',
-    '津波警報・注意報・予報',
-    description:
-        '影響をもたらす津波が到達すると予測された地域、または影響がなくなった地域に対して、津波警報・注意報・予報の発表・切替及び解除について、予報区ごとに予想の高さや津波到達時間、震源要素等を発表',
-    importance: Importance.max,
+    importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VTSE51',
+  AndroidNotificationChannel(
+    'tsunami_warning',
+    '津波警報・第1波到達',
     groupId: 'tsunami',
-    '津波情報',
-    description: '各地の満潮時刻、津波到達予想時刻に関する情報及び地上観測点における津波観測に関する情報を発表',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VTSE52',
+  AndroidNotificationChannel(
+    'tsunami_advisory',
+    '津波注意報',
     groupId: 'tsunami',
-    '沖合の津波情報',
-    description: '沖合の観測点における津波観測に関する情報を発表',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'WEPA60',
+  AndroidNotificationChannel(
+    'tsunami_update',
+    '更新・切替・解除・取消',
     groupId: 'tsunami',
-    '国際津波関連情報(国内向け)',
-    description:
-        '北西太平洋域でM6.5以上の地震が発生した場合、北西太平洋域の各国が津波警報等の発表に資するための支援情報として発表するものを複製した国内向け配信',
+  ),
+  AndroidNotificationChannel(
+    'tsunami_passive',
+    '津波予報・沖合観測',
+    groupId: 'tsunami',
+    importance: Importance.low,
+    playSound: false,
+  ),
+  AndroidNotificationChannel(
+    'earthquake_notice',
+    'VZSE40',
+    groupId: 'safety_information',
+    importance: Importance.low,
+    playSound: false,
+  ),
+  AndroidNotificationChannel(
+    'nankai_information',
+    '南海トラフ臨時・解説情報',
+    groupId: 'safety_information',
     importance: Importance.high,
   ),
-  */
-  const AndroidNotificationChannel(
-    'VYSE50',
-    groupId: 'earthquake',
-    '南海トラフ地震臨時情報',
-    description: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震発生が警戒される場合に発表',
+  AndroidNotificationChannel(
+    'aftershock_advisory',
+    '北海道・三陸沖後発地震注意情報',
+    groupId: 'safety_information',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VYSE51',
-    groupId: 'earthquake',
-    '南海トラフ地震関連解説情報(定例外)',
-    description:
-        '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震と関連するかどうか調査を開始・解説・終了した場合等に発表',
+  AndroidNotificationChannel(
+    'shake_detection',
+    '揺れ検知',
+    groupId: 'safety_information',
     importance: Importance.high,
   ),
-  const AndroidNotificationChannel(
-    'VYSE52',
-    groupId: 'earthquake',
-    '南海トラフ地震関連解説情報(定例)',
-    description: '南海トラフ沿いの地震に関する評価検討会の定例会合における調査結果の発表',
+  AndroidNotificationChannel(
+    'training_information',
+    '訓練・試験情報',
+    groupId: 'safety_information',
+    importance: Importance.low,
+    playSound: false,
+  ),
+  AndroidNotificationChannel('service_test', '通常テスト通知', groupId: 'service'),
+  AndroidNotificationChannel(
+    'service_test_critical',
+    '重大テスト通知',
+    groupId: 'service',
     importance: Importance.high,
+  ),
+  AndroidNotificationChannel(
+    'service_fallback',
+    'Channel 未指定通知の fallback',
+    groupId: 'service',
+  ),
+  AndroidNotificationChannel(
+    'bgl_debug',
+    'アプリ内バックグラウンド位置デバッグ',
+    groupId: 'service',
+    importance: Importance.low,
+    playSound: false,
   ),
 ];
 
-final notificationChannelGroups = <AndroidNotificationChannelGroup>[
-  const AndroidNotificationChannelGroup('eew', '緊急地震速報'),
-  const AndroidNotificationChannelGroup(
-    'earthquake',
-    '地震通知',
-    description: '緊急地震速報を除く地震に関する情報をお伝えします',
-  ),
-  const AndroidNotificationChannelGroup(
-    'tsunami',
-    '津波通知',
-    description: '津波に関する情報をお伝えします',
-  ),
-  const AndroidNotificationChannelGroup(
-    'fromdev',
-    '開発者からのお知らせ',
-    description: '開発者からの連絡に使用されます。',
-  ),
+const legacyNotificationChannelIds = <String>[
+  'fromdev',
+  'bgl_debug',
+  'eew_warning',
+  'eew_forecast',
+  'eew_low_accuracy',
+  'VXSE51',
+  'VXSE52',
+  'VXSE53',
+  'VXSE61',
+  'VXSE62',
+  'VZSE40',
+  'VYSE50',
+  'VYSE51',
+  'VYSE52',
+  'test',
+  'test_critical',
 ];
