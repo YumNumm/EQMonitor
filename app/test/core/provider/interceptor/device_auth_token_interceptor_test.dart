@@ -123,7 +123,7 @@ final class _CapturingRequestHandler extends RequestInterceptorHandler {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository({required String token})
+  new({required String token})
     : _token = token,
       super(_MemorySecurePreferencesDataSource());
 

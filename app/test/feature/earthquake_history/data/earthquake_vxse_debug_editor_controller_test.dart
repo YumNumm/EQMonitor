@@ -560,7 +560,7 @@ _Fixture _fixture() {
 }
 
 class _Fixture {
-  const _Fixture({required this.container, required this.current});
+  const new({required this.container, required this.current});
 
   final ProviderContainer container;
   final Earthquake current;

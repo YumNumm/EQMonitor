@@ -95,7 +95,7 @@ void main() {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

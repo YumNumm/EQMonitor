@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class _PlainRoute extends GoRouteData {
-  const _PlainRoute();
+  const new();
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
@@ -15,7 +15,7 @@ class _PlainRoute extends GoRouteData {
 }
 
 class _MaterialPageRoute extends GoRouteData with MaterialPageMixin {
-  const _MaterialPageRoute();
+  const new();
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>

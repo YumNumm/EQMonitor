@@ -453,7 +453,7 @@ _WiringHarness _createHarness({
 }
 
 final class _WiringHarness {
-  _WiringHarness({
+  new({
     required this.container,
     required this.tokens,
     required this.acks,
@@ -491,7 +491,7 @@ final class _WiringHarness {
 }
 
 final class _RecordingDeviceRepository extends DeviceRepository {
-  _RecordingDeviceRepository({this.failFcmRetryably = false})
+  new({this.failFcmRetryably = false})
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -520,7 +520,7 @@ final class _RecordingDeviceRepository extends DeviceRepository {
 }
 
 final class _PendingFailureDeviceRepository extends DeviceRepository {
-  _PendingFailureDeviceRepository()
+  new()
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -553,7 +553,7 @@ final class _PendingFailureDeviceRepository extends DeviceRepository {
 }
 
 final class _StartupDeviceRepository extends DeviceRepository {
-  _StartupDeviceRepository()
+  new()
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -593,7 +593,7 @@ final class _StartupDeviceRepository extends DeviceRepository {
 
 final class _RecordingProvisioningRepository
     extends DeviceProvisioningRepository {
-  _RecordingProvisioningRepository({required SharedPreferences prefs})
+  new({required SharedPreferences prefs})
     : super(
         dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
         persistence: SharedPreferencesWorkflowPersistence(
@@ -629,7 +629,7 @@ final class _FailingThenRecoverableProvisioningNotifier
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   @override
   Future<void> saveToken({required String token}) async {}
