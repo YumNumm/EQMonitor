@@ -44,8 +44,12 @@ mise exec -- dart fix --apply --code=empty_container_bodies app
 
 ```bash
 mise exec -- flutter analyze --no-pub --fatal-infos app
-mise exec -- dart run melos run analyze
+DASH__SUPPRESS_ANALYTICS=true mise exec -- dart run melos run analyze
 ```
+
+`DART_SUPPRESS_ANALYTICS` では analysis server の telemetry は停止しない。
+ネットワーク制限のある CI では `DASH__SUPPRESS_ANALYTICS=true` を指定し、
+`unified_analytics` による送信失敗で解析自体が終了するのを防ぐ。
 
 ## Flutter test と native assets
 

@@ -65,9 +65,12 @@ analyzer telemetry の外部通信失敗は製品コードの問題ではない�
 実装後は次を fresh run する。
 
 ```bash
-mise exec -- flutter test app/test/feature/asset_pack
-mise exec -- dart run melos run analyze
-mise exec -- flutter test app
+cd app
+mise exec -- flutter test test/feature/asset_pack
+cd ..
+DASH__SUPPRESS_ANALYTICS=true mise exec -- dart run melos run analyze
+cd app
+mise exec -- flutter test
 ```
 
 最終 analyze は info、warning、error のすべてが0件であることを確認する。

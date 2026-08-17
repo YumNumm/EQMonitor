@@ -124,7 +124,7 @@ Expected: PASS with no issues.
 
 - [ ] **Step 1: Run the existing Asset Pack tests before refactoring**
 
-Run: `mise exec -- flutter test app/test/feature/asset_pack`
+Run from `app/`: `mise exec -- flutter test test/feature/asset_pack`
 
 Expected: all existing behavior tests pass while Melos analyze remains RED with 33 `avoid_top_level_functions` warnings.
 
@@ -173,7 +173,7 @@ Expected: PASS with `No issues found!`.
 
 - [ ] **Step 2: Run the workspace analyzer gate**
 
-Run: `DART_SUPPRESS_ANALYTICS=true mise exec -- dart run melos run analyze`
+Run: `DASH__SUPPRESS_ANALYTICS=true mise exec -- dart run melos run analyze`
 
 Expected: PASS for every workspace package with fatal infos enabled and no analyzer telemetry network crash.
 
