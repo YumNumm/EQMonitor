@@ -5,7 +5,7 @@ part 'nearby_earthquake_parameter.freezed.dart';
 /// 震源近傍の地震探索パラメータ
 @freezed
 abstract class NearbyEarthquakeParameter with _$NearbyEarthquakeParameter {
-  const factory NearbyEarthquakeParameter({
+  const factory({
     /// 緯度オフセット (度): ±この値の範囲を検索
     @Default(0.5) double latitudeOffset,
 

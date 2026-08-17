@@ -13,28 +13,28 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 sealed class EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListDecision();
+  const new();
 }
 
 final class EarthquakeRealtimeListUpsert
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListUpsert(this.item);
+  const new(this.item);
 
   final EarthquakePartial item;
 }
 
 final class EarthquakeRealtimeListRemove
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListRemove();
+  const new();
 }
 
 final class EarthquakeRealtimeListPreserve
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListPreserve();
+  const new();
 }
 
 final class EarthquakeRealtimeListReconciler {
-  const EarthquakeRealtimeListReconciler({
+  const new({
     required this.parameter,
     required this.repository,
   });
