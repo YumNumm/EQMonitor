@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 final class BaseMapTileTransformInput {
-  const BaseMapTileTransformInput({
+  const new({
     required this.tileId,
     required this.zoom,
     required this.extent,
@@ -19,7 +19,7 @@ final class BaseMapTileTransformInput {
 
 @immutable
 final class BaseMapLayerRenderPlan {
-  const BaseMapLayerRenderPlan({
+  const new({
     required this.tileGeometry,
     required this.layerGeometry,
     required this.transformInput,
@@ -50,7 +50,7 @@ List<BaseMapLayerRenderPlan> buildBaseMapRenderPlans({
 }
 
 final class _BaseMapRenderPlanBuilder {
-  const _BaseMapRenderPlanBuilder();
+  const new();
 
   List<BaseMapLayerRenderPlan> build({
     required List<BaseMapRenderTile> renderTiles,

@@ -22,7 +22,7 @@ part 'map_tile_pipeline_budget.freezed.dart';
 /// 必ず[createMapTilePipelineBudget]から作り直す。
 @Freezed(copyWith: false)
 abstract class MapTilePipelineBudget with _$MapTilePipelineBudget {
-  const factory MapTilePipelineBudget._({
+  const factory _({
     required int schemaVersion,
     required int maxInFlightDecodes,
     required int maxCacheEntries,

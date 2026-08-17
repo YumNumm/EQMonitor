@@ -6,7 +6,7 @@ import 'package:vector_math/vector_math_64.dart';
 /// 共有する。responsibilityが同じ(worldHalfHeightとdepthHalfExtentから
 /// 正射影行列を作る)ため、地図用に別の投影実装を新設していない。
 class EqmonitorOrthographicProjection {
-  factory EqmonitorOrthographicProjection({
+  factory({
     required double worldHalfHeight,
     required double depthHalfExtent,
   }) {
@@ -30,7 +30,7 @@ class EqmonitorOrthographicProjection {
     );
   }
 
-  const EqmonitorOrthographicProjection._({
+  const new _({
     required this.worldHalfHeight,
     required this.depthHalfExtent,
   });

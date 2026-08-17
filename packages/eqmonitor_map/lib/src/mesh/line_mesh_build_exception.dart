@@ -19,7 +19,7 @@ sealed class LineMeshBuildException
     implements Exception {
   /// 呼び出し側が渡した`LineMeshBuilderLimits`を超過した場合(1つのfeatureが
   /// 単独でsegment容量に収まらない場合)。
-  const factory LineMeshBuildException.limitExceeded({
+  const factory limitExceeded({
     required String reason,
   }) = LineMeshLimitExceededException;
 }

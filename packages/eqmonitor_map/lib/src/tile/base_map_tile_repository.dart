@@ -16,7 +16,7 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 /// 「欠損tileと不正tileを区別する」節)。[readTile]はこの伝播だけが責務であり、
 /// `try/catch`で握り潰したり空tileへ丸めたりしない。
 final class BaseMapTileRepository {
-  BaseMapTileRepository._(this.source, this._archive);
+  new _(this.source, this._archive);
 
   /// このrepositoryが読む対象を確定した契約([VerifiedTileSource]の
   /// doc comment参照)。

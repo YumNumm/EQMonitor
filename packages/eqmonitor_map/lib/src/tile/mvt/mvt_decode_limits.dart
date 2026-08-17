@@ -8,7 +8,7 @@ part 'mvt_decode_limits.freezed.dart';
 /// 運用値であって、MVT仕様が要求する値ではない。
 @freezed
 abstract class MvtDecodeLimits with _$MvtDecodeLimits {
-  const factory MvtDecodeLimits({
+  const factory({
     /// 1つのtileに含められるlayer数の上限。
     required int maxLayers,
 
