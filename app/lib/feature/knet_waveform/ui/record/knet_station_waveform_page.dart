@@ -15,7 +15,7 @@ import 'package:knet_waveform_parser/knet_waveform_parser.dart';
 
 /// 観測点波形・スペクトル解析ページ
 class KnetStationWaveformPage extends HookConsumerWidget {
-  const KnetStationWaveformPage({required this.result, super.key});
+  const new({required this.result, super.key});
 
   final KnetStationResult result;
 
@@ -138,7 +138,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
 // ── ヘッダ（震度・PGA/PGV/PGD/SI） ──────────────────────────────────────
 
 class _MetricsHeader extends StatelessWidget {
-  const _MetricsHeader({
+  const new({
     required this.result,
     required this.intensity,
     required this.analysis,
@@ -224,7 +224,7 @@ class _MetricsHeader extends StatelessWidget {
 }
 
 class _MetricChip extends StatelessWidget {
-  const _MetricChip({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -249,7 +249,7 @@ class _MetricChip extends StatelessWidget {
 // ── 加速度波形チャート（バイアス除去済み） ────────────────────────────────
 
 class _WaveformChart extends StatelessWidget {
-  const _WaveformChart({required this.record, required this.channelIndex});
+  const new({required this.record, required this.channelIndex});
 
   final KnetCsvRecord record;
   final int channelIndex;
@@ -298,7 +298,7 @@ class _WaveformChart extends StatelessWidget {
 // ── 汎用 時系列チャート ───────────────────────────────────────────────────
 
 class _TimeSeriesChart extends StatelessWidget {
-  const _TimeSeriesChart({
+  const new({
     required this.data,
     required this.unit,
     required this.dt,
@@ -427,7 +427,7 @@ class _TimeSeriesChart extends StatelessWidget {
 // ── 応答スペクトルビュー ─────────────────────────────────────────────────
 
 class _SpectrumView extends StatelessWidget {
-  const _SpectrumView({required this.analysis});
+  const new({required this.analysis});
 
   final AsyncValue<KnetStationAnalysis> analysis;
 
@@ -442,7 +442,7 @@ class _SpectrumView extends StatelessWidget {
 }
 
 class _SpectrumChart extends HookWidget {
-  const _SpectrumChart({required this.spectrum});
+  const new({required this.spectrum});
 
   final ResponseSpectrumResult spectrum;
 
@@ -569,7 +569,7 @@ class _SpectrumChart extends HookWidget {
 // ── フーリエスペクトルビュー ──────────────────────────────────────────────
 
 class _FourierView extends StatelessWidget {
-  const _FourierView({required this.analysis});
+  const new({required this.analysis});
 
   final AsyncValue<KnetStationAnalysis> analysis;
 
@@ -584,7 +584,7 @@ class _FourierView extends StatelessWidget {
 }
 
 class _FourierChart extends StatelessWidget {
-  const _FourierChart({required this.spectrum});
+  const new({required this.spectrum});
 
   final FourierSpectrumResult spectrum;
 

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 /// K-NET all/fig PNG・all/movie MP4 を表示するページ
 class KnetMediaPage extends StatelessWidget {
-  const KnetMediaPage({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   /// 地震発生時刻（JST）
   final DateTime eventTime;

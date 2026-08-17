@@ -17,7 +17,7 @@ import 'package:maplibre/maplibre.dart';
 /// 追加順が入れ替わり Lv1(細分区域)の塗りが Lv2(市区町村)の塗りを覆ってしまう
 /// ため、順序はこのクラスに集約する。
 class IntensityFillLayerBuilder {
-  const IntensityFillLayerBuilder();
+  const new();
 
   static const sourceId = 'eqmonitor_map';
   static const regionSourceLayerId = 'areaForecastLocalE';
