@@ -18,8 +18,8 @@ class EewWarningCandidateSelector {
   }) {
     final candidates = <EewWarningOverlayCandidate>[];
     for (final event in aliveEews) {
-      final hasCurrentWarning = event.warning?.regions.any(
-        (region) => region.code == warningAreaCode && region.hadWarning,
+      final hasCurrentWarning = event.warning?.prefectures.any(
+        (prefecture) => prefecture.code == warningAreaCode,
       );
       if (event.isWarning != true ||
           event.isCanceled ||

@@ -182,6 +182,17 @@ void main() {
     );
   });
 
+  test('初回警報のhadWarningがfalseのzoneも見出しに使う', () {
+    final initialWarning = candidate(warningZonesHadWarning: false);
+
+    expect(
+      EewWarningDisplayModelBuilder()
+          .build(candidates: [initialWarning], now: now)
+          ?.strongMotionHeadline,
+      '北海道で強い揺れ',
+    );
+  });
+
   test('候補が空なら表示しない', () {
     expect(
       EewWarningDisplayModelBuilder().build(candidates: const [], now: now),
@@ -195,7 +206,7 @@ void main() {
       now: now,
     );
 
-    expect(model?.currentRegionName, '石狩地方北部');
+    expect(model?.currentRegionName, '北海道道央');
     expect(model?.localIntensity, JmaIntensity.unknown);
     expect(model?.localIntensityIsOver, isFalse);
     expect(model?.arrivalState, EewWarningArrivalState.unknown);
@@ -211,6 +222,7 @@ EewWarningOverlayCandidate candidate({
   bool isLevelMethod = false,
   String? detailedHypocenterName,
   List<(String, String)> warningZones = const [('9910', '北海道')],
+  bool warningZonesHadWarning = true,
   JmaIntensity intensity = JmaIntensity.fiveLower,
   DateTime? arrivalTime,
   bool isArrived = false,
@@ -263,11 +275,13 @@ EewWarningOverlayCandidate candidate({
             (zone) => EewWarningZoneInfo(
               code: zone.$1,
               name: zone.$2,
-              hadWarning: true,
+              hadWarning: warningZonesHadWarning,
             ),
           )
           .toList(),
-      prefectures: const [],
+      prefectures: const [
+        EewWarningZoneInfo(code: '9011', name: '北海道道央', hadWarning: false),
+      ],
       regions: const [
         EewWarningZoneInfo(code: '100', name: '石狩地方北部', hadWarning: true),
       ],
@@ -277,8 +291,8 @@ EewWarningOverlayCandidate candidate({
   return EewWarningCandidateSelector()
       .select(
         aliveEews: [event],
-        warningAreaCode: '100',
-        warningAreaName: '石狩地方北部',
+        warningAreaCode: '9011',
+        warningAreaName: '北海道道央',
         forecastAreaCode: hasLocalForecast ? '100' : null,
         forecastAreaName: hasLocalForecast ? '現在地予報区' : null,
       )
