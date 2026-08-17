@@ -24,7 +24,7 @@ final class PmTilesV3ReaderMutex {
 
 final class PmTilesV3FileRandomAccessReader
     implements PmTilesRandomAccessReader {
-  PmTilesV3FileRandomAccessReader({
+  new({
     required this._file,
     required this.sizeBytes,
     this._rangeValidator = const PmTilesV3RangeValidator(),

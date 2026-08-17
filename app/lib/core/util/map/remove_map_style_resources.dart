@@ -3,7 +3,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// MapLibre のリソースを layer → source → image の順で独立して破棄する。
 class MapStyleResourceRemover {
-  const MapStyleResourceRemover._();
+  const new _();
 
   static Future<void> remove({
     required StyleController styleController,

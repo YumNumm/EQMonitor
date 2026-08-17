@@ -24,7 +24,7 @@ PrefectureBoundsResolver prefectureBoundsResolver(Ref ref) =>
 /// `seedRegionCode` を含むクラスタ（未指定時は市区町村数が最多のクラスタ）
 /// だけを採用する。
 class PrefectureBoundsResolver {
-  const PrefectureBoundsResolver();
+  const new();
 
   /// 同一クラスタとみなす外接矩形間の最大ギャップ（度）。
   ///

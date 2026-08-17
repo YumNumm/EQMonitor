@@ -23,7 +23,7 @@ import 'package:nied_api_client/nied_api_client.dart';
 /// NIED は震源情報の二次配布を禁止しているため、本画面の内容を
 /// 一般公開画面へ転用しないこと。
 class HinetSeismicityPage extends HookConsumerWidget {
-  const HinetSeismicityPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class HinetSeismicityPage extends HookConsumerWidget {
 }
 
 class _CredentialsForm extends HookConsumerWidget {
-  const _CredentialsForm();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,7 +103,7 @@ class _CredentialsForm extends HookConsumerWidget {
 }
 
 class _FetchBody extends HookConsumerWidget {
-  const _FetchBody({required this.credentials});
+  const new({required this.credentials});
 
   final HinetCredentials credentials;
 
@@ -312,7 +312,7 @@ class _FetchBody extends HookConsumerWidget {
 }
 
 class _DatePickerButton extends StatelessWidget {
-  const _DatePickerButton({
+  const new({
     required this.label,
     required this.value,
     required this.onChanged,

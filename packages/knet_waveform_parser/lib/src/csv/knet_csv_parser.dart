@@ -9,7 +9,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// `#` プレフィックスのコメント行でヘッダを記述し、
 /// `#` なしのデータ行に時刻・相対時刻・各チャンネルの加速度が格納される。
 class KnetCsvParser {
-  const KnetCsvParser();
+  const new();
 
   /// CSV テキストを [KnetCsvRecord] にパースする
   KnetCsvRecord parse(String source) {
@@ -236,7 +236,7 @@ class KnetCsvParser {
 
 /// K-NET CSV 1データポイント
 class KnetCsvDataPoint {
-  const KnetCsvDataPoint({
+  const new({
     required this.time,
     required this.relativeTimeSec,
     required this.accelerationsGal,
@@ -254,7 +254,7 @@ class KnetCsvDataPoint {
 
 /// K-NET CSV パース結果
 class KnetCsvRecord {
-  const KnetCsvRecord({
+  const new({
     required this.earthquakeInfo,
     required this.stationInfo,
     required this.offsets,

@@ -3,7 +3,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
 class ForcedUpdateRequirementMatcher {
-  const ForcedUpdateRequirementMatcher({required this.packageInfo});
+  const new({required this.packageInfo});
 
   final PackageInfo packageInfo;
 

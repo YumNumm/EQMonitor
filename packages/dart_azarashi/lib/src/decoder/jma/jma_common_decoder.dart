@@ -9,7 +9,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Common decoder utilities for JMA messages.
 class JmaCommonDecoder {
-  const JmaCommonDecoder._();
+  const new _();
 
   /// Extracts day, hour, minute field and returns DateTime.
   static DateTime extractDayHourMin(JmaCommonParams params, int slider) {

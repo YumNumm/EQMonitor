@@ -7,7 +7,7 @@ import 'package:nied_api_client/src/hinet/aqua/util/focal_mechanism_url_generato
 /// AQUAシステム（Accurate and QUick Analysis System for Source Parameters）のAPIにアクセスします
 class AquaApiClient {
   /// AQUA APIクライアントを作成
-  AquaApiClient(this._dio);
+  new(this._dio);
 
   final Dio _dio;
 

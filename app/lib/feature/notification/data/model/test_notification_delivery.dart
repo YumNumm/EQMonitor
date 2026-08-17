@@ -108,7 +108,7 @@ extension TestScenarioTypeApiExtension on TestScenarioType {
 
 /// テストシナリオ実行結果
 class TestScenarioDeliveryResult {
-  const TestScenarioDeliveryResult({
+  const new({
     required this.eventId,
     required this.stepsPlanned,
     required this.telegramTypes,
@@ -120,7 +120,7 @@ class TestScenarioDeliveryResult {
 }
 
 class TestScenarioTypeDeliveryResult {
-  const TestScenarioTypeDeliveryResult({
+  const new({
     required this.message,
     required this.scenario,
     required this.eventId,

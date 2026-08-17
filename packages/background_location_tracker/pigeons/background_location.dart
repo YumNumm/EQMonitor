@@ -13,7 +13,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 class LocationUpdateMessage {
-  LocationUpdateMessage({
+  new({
     required this.latitude,
     required this.longitude,
     required this.accuracy,

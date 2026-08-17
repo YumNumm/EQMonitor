@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'shake_detection_repository.g.dart';
 
 final class ShakeDetectionApiException implements Exception {
-  const ShakeDetectionApiException({required this.message, this.statusCode});
+  const new({required this.message, this.statusCode});
 
   final String message;
   final int? statusCode;
@@ -30,7 +30,7 @@ abstract interface class ShakeDetectionRepository {
 }
 
 final class ApiShakeDetectionRepository implements ShakeDetectionRepository {
-  const ApiShakeDetectionRepository({
+  const new({
     required api.ShakeDetectionApiClient client,
   }) : _client = client;
 

@@ -1,5 +1,5 @@
 class ByteSizeFormatter {
-  const ByteSizeFormatter();
+  const new();
 
   String format(int bytes) {
     if (bytes < 1024) {

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh_layout.dart';
 
 final class MapPackedMesh {
-  const MapPackedMesh._({
+  const new _({
     required this.payloadVersion,
     required this.layout,
     required this.vertexBytes,

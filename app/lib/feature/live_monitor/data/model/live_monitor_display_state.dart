@@ -6,10 +6,10 @@ part 'live_monitor_display_state.freezed.dart';
 
 @freezed
 sealed class LiveMonitorDisplayState with _$LiveMonitorDisplayState {
-  const factory LiveMonitorDisplayState.realtime() =
+  const factory realtime() =
       LiveMonitorRealtimeDisplayState;
 
-  const factory LiveMonitorDisplayState.earthquake({
+  const factory earthquake({
     required String eventId,
     required LiveMonitorEarthquakeTrigger trigger,
     required Earthquake earthquake,

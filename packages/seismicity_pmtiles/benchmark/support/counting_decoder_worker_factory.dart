@@ -7,7 +7,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 /// including attempts that later fail.
 final class CountingDecoderWorkerFactory
     implements SeismicityDecoderWorkerFactory {
-  CountingDecoderWorkerFactory({required this.delegate});
+  new({required this.delegate});
 
   final SeismicityDecoderWorkerFactory delegate;
 

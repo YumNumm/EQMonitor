@@ -16,7 +16,7 @@ const _kMarkComplete = 'markLocalComplete';
 
 /// v2.6 → v3 device migration workflow のランナー。
 class DeviceMigrationWorkflow {
-  const DeviceMigrationWorkflow();
+  const new();
 
   /// Runs the v2.6 → v3 device migration as a durable workflow.
   ///

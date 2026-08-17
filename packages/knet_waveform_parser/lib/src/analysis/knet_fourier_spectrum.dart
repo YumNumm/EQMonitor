@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 /// フーリエ振幅スペクトル計算結果
 class FourierSpectrumResult {
-  const FourierSpectrumResult({
+  const new({
     required this.frequencies,
     required this.amplitudes,
   });
@@ -17,7 +17,7 @@ class FourierSpectrumResult {
 
 /// 加速度波形のフーリエ振幅スペクトルを計算する (Cooley-Tukey FFT)
 class KnetFourierSpectrum {
-  const KnetFourierSpectrum._();
+  const new _();
 
   /// フーリエ振幅スペクトルを計算する
   ///

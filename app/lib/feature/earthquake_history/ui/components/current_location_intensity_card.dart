@@ -18,7 +18,7 @@ import 'package:lat_lng/lat_lng.dart';
 
 /// 現在地に対応する震度を表示する。
 class CurrentLocationIntensityCard extends HookConsumerWidget {
-  const CurrentLocationIntensityCard({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 
@@ -125,7 +125,7 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
 }
 
 class _CurrentLocationIntensityContent extends StatelessWidget {
-  const _CurrentLocationIntensityContent({
+  const new({
     required this.intensity,
     required this.lpgmIntensity,
     required this.title,

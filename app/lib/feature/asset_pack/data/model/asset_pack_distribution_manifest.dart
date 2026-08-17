@@ -14,10 +14,24 @@ class AssetPackDistributionManifest {
   });
 
   factory fromJson(Map<String, dynamic> json) {
-    final schemaVersion = requireInt(json, 'schema_version');
-    final revision = requireInt(json, 'revision');
-    final latestVersion = requireSemVer(json, 'latest_version');
-    final generatedAt = requireString(json, 'generated_at');
+    final schemaVersion = AssetPackDistributionManifestJsonValidator.requireInt(
+      json,
+      'schema_version',
+    );
+    final revision = AssetPackDistributionManifestJsonValidator.requireInt(
+      json,
+      'revision',
+    );
+    final latestVersion =
+        AssetPackDistributionManifestJsonValidator.requireSemVer(
+          json,
+          'latest_version',
+        );
+    final generatedAt =
+        AssetPackDistributionManifestJsonValidator.requireString(
+          json,
+          'generated_at',
+        );
     final rawPacks = json['packs'];
     if (schemaVersion != 1 || revision < 1) {
       throw const FormatException('Unsupported distribution manifest header');
@@ -82,12 +96,35 @@ class AssetPackDistributionEntry {
   });
 
   factory fromJson(Map<String, dynamic> json) {
-    final version = requireSemVer(json, 'version');
-    final publishedAt = requireString(json, 'published_at');
-    final minimumAppVersion = requireSemVer(json, 'minimum_app_version');
-    final archivePath = requireString(json, 'archive_path');
-    final archiveSizeBytes = requireInt(json, 'archive_size_bytes');
-    final archiveSha256 = requireString(json, 'archive_sha256');
+    final version = AssetPackDistributionManifestJsonValidator.requireSemVer(
+      json,
+      'version',
+    );
+    final publishedAt =
+        AssetPackDistributionManifestJsonValidator.requireString(
+          json,
+          'published_at',
+        );
+    final minimumAppVersion =
+        AssetPackDistributionManifestJsonValidator.requireSemVer(
+          json,
+          'minimum_app_version',
+        );
+    final archivePath =
+        AssetPackDistributionManifestJsonValidator.requireString(
+          json,
+          'archive_path',
+        );
+    final archiveSizeBytes =
+        AssetPackDistributionManifestJsonValidator.requireInt(
+          json,
+          'archive_size_bytes',
+        );
+    final archiveSha256 =
+        AssetPackDistributionManifestJsonValidator.requireString(
+          json,
+          'archive_sha256',
+        );
     if (!_datePattern.hasMatch(publishedAt) ||
         archivePath != 'packs/$version/asset-pack-v$version.zip' ||
         archiveSizeBytes < 1 ||
@@ -162,7 +199,10 @@ class AssetPackChangelogSection {
   const new({required this.title, required this.items});
 
   factory fromJson(Map<String, dynamic> json) {
-    final title = requireString(json, 'title');
+    final title = AssetPackDistributionManifestJsonValidator.requireString(
+      json,
+      'title',
+    );
     final rawItems = json['items'];
     if (title.isEmpty || rawItems is! List || rawItems.isEmpty) {
       throw const FormatException(
@@ -184,26 +224,30 @@ class AssetPackChangelogSection {
   final List<String> items;
 }
 
-String requireSemVer(Map<String, dynamic> json, String key) {
-  final value = requireString(json, key);
-  if (!_semVerPattern.hasMatch(value)) {
-    throw FormatException('$key must be MAJOR.MINOR.PATCH');
-  }
-  return value;
-}
+class AssetPackDistributionManifestJsonValidator {
+  const new _();
 
-String requireString(Map<String, dynamic> json, String key) {
-  final value = json[key];
-  if (value is! String || value.isEmpty) {
-    throw FormatException('$key must be a non-empty string');
+  static String requireSemVer(Map<String, dynamic> json, String key) {
+    final value = requireString(json, key);
+    if (!_semVerPattern.hasMatch(value)) {
+      throw FormatException('$key must be MAJOR.MINOR.PATCH');
+    }
+    return value;
   }
-  return value;
-}
 
-int requireInt(Map<String, dynamic> json, String key) {
-  final value = json[key];
-  if (value is! int) {
-    throw FormatException('$key must be an integer');
+  static String requireString(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is! String || value.isEmpty) {
+      throw FormatException('$key must be a non-empty string');
+    }
+    return value;
   }
-  return value;
+
+  static int requireInt(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is! int) {
+      throw FormatException('$key must be an integer');
+    }
+    return value;
+  }
 }

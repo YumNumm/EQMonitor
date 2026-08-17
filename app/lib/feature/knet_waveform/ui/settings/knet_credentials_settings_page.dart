@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
 
 class KnetCredentialsSettingsPage extends HookConsumerWidget {
-  const KnetCredentialsSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,7 +180,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
 }
 
 class _VerifyResultBanner extends StatelessWidget {
-  const _VerifyResultBanner({required this.success});
+  const new({required this.success});
 
   final bool success;
 

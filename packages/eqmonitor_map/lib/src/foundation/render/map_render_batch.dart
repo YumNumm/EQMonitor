@@ -6,7 +6,7 @@ import 'package:eqmonitor_map/src/foundation/render/map_render_phase.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 
 final class MapRenderBatchCompatibility {
-  const MapRenderBatchCompatibility._({
+  const new _({
     required this.contractVersion,
     required this.payloadVersion,
     required this.batchKey,
@@ -41,7 +41,7 @@ MapRenderBatchCompatibility mapRenderBatchCompatibilityOf({
 );
 
 final class MapRenderBatch {
-  const MapRenderBatch._({
+  const new _({
     required this.version,
     required this.compatibility,
     required this.packets,

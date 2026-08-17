@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiWarningHistoryButton extends HookWidget {
-  const TsunamiWarningHistoryButton({required this.tsunami, super.key});
+  const new({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 
@@ -44,7 +44,7 @@ class TsunamiWarningHistoryButton extends HookWidget {
 }
 
 class _HistoryOverlay extends StatelessWidget {
-  const _HistoryOverlay({
+  const new({
     required this.link,
     required this.tsunami,
     required this.onDismiss,
@@ -153,7 +153,7 @@ class _HistoryOverlay extends StatelessWidget {
 }
 
 class _WarningTimelineEntry {
-  const _WarningTimelineEntry({
+  const new({
     required this.time,
     required this.description,
     required this.isLast,
@@ -165,7 +165,7 @@ class _WarningTimelineEntry {
 }
 
 class _TimelineEntry extends StatelessWidget {
-  const _TimelineEntry({required this.entry});
+  const new({required this.entry});
 
   final _WarningTimelineEntry entry;
 

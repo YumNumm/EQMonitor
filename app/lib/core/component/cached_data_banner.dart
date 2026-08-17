@@ -9,7 +9,7 @@ import 'package:riverpod/riverpod.dart';
 /// - いずれかがキャッシュ由来の値を表示中 (`isFromCache`) → 更新中表示
 /// - それ以外 (fresh / 初回ロード) → 高さゼロ
 class CachedDataBanner extends StatelessWidget {
-  const CachedDataBanner({required this.values, super.key});
+  const new({required this.values, super.key});
 
   /// 画面が表示している SWR 対象 provider の状態。値の中身は参照しない。
   final List<AsyncValue<Object?>> values;
@@ -64,7 +64,7 @@ class CachedDataBanner extends StatelessWidget {
 /// true の間だけ `CachedDataBanner` の更新中表示と同等のバナーを出す。
 /// 一覧ページのリスト上部に `SliverToBoxAdapter` で挿入する用途を想定。
 class RevalidatingBanner extends StatelessWidget {
-  const RevalidatingBanner({required this.isRevalidating, super.key});
+  const new({required this.isRevalidating, super.key});
 
   final ValueListenable<bool> isRevalidating;
 
@@ -100,7 +100,7 @@ class RevalidatingBanner extends StatelessWidget {
 }
 
 class _BannerContent extends StatelessWidget {
-  const _BannerContent({
+  const new({
     required this.leading,
     required this.message,
     required this.backgroundColor,

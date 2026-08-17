@@ -2,13 +2,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'map_node_identity.freezed.dart';
 
-extension type MapNodeKey._(String value) {}
+extension type MapNodeKey._(String value);
 
-extension type MapNodeTypeId._(String value) {}
+extension type MapNodeTypeId._(String value);
 
 @freezed
 abstract class MapNodeIdentity with _$MapNodeIdentity {
-  const factory MapNodeIdentity._({
+  const factory _({
     required MapNodeKey key,
     required MapNodeTypeId type,
   }) = _MapNodeIdentity;

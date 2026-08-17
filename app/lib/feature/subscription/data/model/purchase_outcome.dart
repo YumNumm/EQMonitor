@@ -6,7 +6,7 @@ part 'purchase_outcome.freezed.dart';
 
 @Freezed()
 abstract class PurchaseOutcome with _$PurchaseOutcome {
-  const factory PurchaseOutcome({
+  const factory({
     required PurchaseResult result,
     SubscriptionStatus? status,
   }) = _PurchaseOutcome;

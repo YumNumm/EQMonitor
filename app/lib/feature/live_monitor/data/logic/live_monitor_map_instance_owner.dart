@@ -1,11 +1,11 @@
 final class LiveMonitorMapInstanceIdentity {
-  const LiveMonitorMapInstanceIdentity._(this.generation);
+  const new _(this.generation);
 
   final int generation;
 }
 
 final class LiveMonitorMapCameraOperation<T> {
-  const LiveMonitorMapCameraOperation._({
+  const new _({
     required this.identity,
     required this.controller,
     required this.generation,

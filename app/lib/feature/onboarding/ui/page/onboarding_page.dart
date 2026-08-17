@@ -40,7 +40,7 @@ typedef _OnboardingNavigationRegistrar = void Function(
 );
 
 class _OnboardingStepNavigation {
-  const _OnboardingStepNavigation({
+  const new({
     required this.isActive,
     required this.nextPage,
     required this.previousPage,
@@ -54,7 +54,7 @@ class _OnboardingStepNavigation {
 }
 
 class OnboardingPage extends HookConsumerWidget {
-  const OnboardingPage({super.key});
+  const new({super.key});
 
   static const List<_OnboardingStep> _steps = _OnboardingStep.values;
 
@@ -156,7 +156,7 @@ class OnboardingPage extends HookConsumerWidget {
 }
 
 class _StepNavigationState {
-  const _StepNavigationState({
+  const new({
     required this.buttonLabel,
     required this.processingLabel,
     required this.isNextEnabled,
@@ -164,7 +164,7 @@ class _StepNavigationState {
     required this.onNext,
   });
 
-  factory _StepNavigationState.initial(_OnboardingStep step) =>
+  factory initial(_OnboardingStep step) =>
       _StepNavigationState(
         buttonLabel: switch (step) {
           _OnboardingStep.complete => 'はじめる',

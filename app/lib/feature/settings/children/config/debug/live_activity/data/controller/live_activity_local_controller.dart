@@ -45,7 +45,7 @@ abstract interface class LiveActivityLocalController {
 /// iOS 以外のプラットフォーム向けの no-op 実装。
 class UnsupportedLiveActivityLocalController
     implements LiveActivityLocalController {
-  const UnsupportedLiveActivityLocalController();
+  const new();
 
   @override
   Future<bool> isSupported() async => false;
@@ -75,7 +75,7 @@ class UnsupportedLiveActivityLocalController
 /// `net.yumnumm.eqmonitor/live_activity_debug` MethodChannel 経由の iOS 実装。
 class MethodChannelLiveActivityLocalController
     implements LiveActivityLocalController {
-  const MethodChannelLiveActivityLocalController();
+  const new();
 
   static const MethodChannel _channel = MethodChannel(
     'net.yumnumm.eqmonitor/live_activity_debug',
@@ -146,7 +146,7 @@ class MethodChannelLiveActivityLocalController
 
 /// Live Activity のローカル操作で発生した例外。
 class LiveActivityLocalException implements Exception {
-  const LiveActivityLocalException(this.message, {this.code});
+  const new(this.message, {this.code});
 
   final String message;
   final String? code;

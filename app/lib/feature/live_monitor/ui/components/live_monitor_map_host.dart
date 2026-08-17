@@ -13,7 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class LiveMonitorMapHost extends StatelessWidget {
-  const LiveMonitorMapHost({
+  const new({
     required this.slotId,
     required this.focus,
     required this.layers,
@@ -38,7 +38,7 @@ class LiveMonitorMapHost extends StatelessWidget {
 }
 
 class _LiveMonitorMapViewport extends HookConsumerWidget {
-  const _LiveMonitorMapViewport({
+  const new({
     required this.slotId,
     required this.focus,
     required this.layers,
@@ -136,7 +136,7 @@ class _LiveMonitorMapViewport extends HookConsumerWidget {
 }
 
 class _LiveMonitorMapContent extends StatelessWidget {
-  const _LiveMonitorMapContent({
+  const new({
     required this.slotId,
     required this.styleString,
     required this.mapSettings,
@@ -180,7 +180,7 @@ extension LiveMonitorMapPaddingFlutterX on LiveMonitorMapPadding {
 }
 
 class _LiveMonitorMapLoadingCard extends StatelessWidget {
-  const _LiveMonitorMapLoadingCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +203,7 @@ class _LiveMonitorMapLoadingCard extends StatelessWidget {
 }
 
 class _LiveMonitorMapErrorCard extends StatelessWidget {
-  const _LiveMonitorMapErrorCard({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

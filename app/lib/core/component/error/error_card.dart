@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ErrorCard extends ConsumerWidget {
-  const ErrorCard({
+  const new({
     required this.error,
     super.key,
     this.title,

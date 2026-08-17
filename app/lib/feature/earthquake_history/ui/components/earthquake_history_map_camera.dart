@@ -13,7 +13,7 @@ const double kEarthquakeHistoryMapFocusZoom = 8;
 
 /// 地震履歴詳細マップのカメラ位置（中心・ズーム・フォーカス座標）を算出する。
 class EarthquakeHistoryMapCamera {
-  const EarthquakeHistoryMapCamera();
+  const new();
 
   /// 震源があればその位置、なければ日本付近の既定位置
   Geographic initialCenter(Earthquake earthquake) {

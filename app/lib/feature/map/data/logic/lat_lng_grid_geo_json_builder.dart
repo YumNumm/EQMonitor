@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/map/data/logic/lat_lng_grid_interval_selector.
 import 'package:maplibre/maplibre.dart';
 
 final class LatLngGridGeoJsonBuilder {
-  const LatLngGridGeoJsonBuilder({
+  const new({
     this.intervalSelector = const LatLngGridIntervalSelector(),
   });
 

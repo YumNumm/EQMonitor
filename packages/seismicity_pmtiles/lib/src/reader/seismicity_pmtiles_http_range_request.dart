@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 final class SeismicityPmTilesHttpRangeRequestBuilder {
-  const SeismicityPmTilesHttpRangeRequestBuilder();
+  const new();
 
   Options build({
     required int offset,
@@ -32,7 +32,7 @@ final class SeismicityPmTilesHttpRangeRequestBuilder {
 }
 
 final class SeismicityPmTilesStrongEtagValidator {
-  const SeismicityPmTilesStrongEtagValidator();
+  const new();
 
   bool isValid({required String value}) {
     final codeUnits = value.codeUnits;

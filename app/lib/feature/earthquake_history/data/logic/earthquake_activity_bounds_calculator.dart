@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 class EarthquakeActivityBounds {
-  const EarthquakeActivityBounds({
+  const new({
     required this.latitudeGte,
     required this.latitudeLte,
     required this.longitudeGte,
@@ -15,7 +15,7 @@ class EarthquakeActivityBounds {
 }
 
 class EarthquakeActivityBoundsCalculator {
-  const EarthquakeActivityBoundsCalculator();
+  const new();
 
   static const _earthRadiusKm = 6371.0;
 

@@ -1,5 +1,5 @@
 class HttpCacheKeyDisplay {
-  const HttpCacheKeyDisplay();
+  const new();
 
   String urlLabel({required String key}) {
     final first = key.indexOf(':');

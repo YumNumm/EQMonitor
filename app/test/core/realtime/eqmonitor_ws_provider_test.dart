@@ -14,7 +14,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web_socket/web_socket.dart';
 
 final class FakeWebSocket implements WebSocket {
-  FakeWebSocket();
+  new();
 
   final _controller = StreamController<WebSocketEvent>();
   // ignore: omit_obvious_property_types

@@ -6,7 +6,7 @@ part 'earthquake_history_map_layer_parameter.g.dart';
 @freezed
 abstract class EarthquakeHistoryMapLayerParameter
     with _$EarthquakeHistoryMapLayerParameter {
-  const factory EarthquakeHistoryMapLayerParameter({
+  const factory({
     // ズーム閾値
     // 市区町村ポリゴンがタイルに存在する最小ズーム
     // (BaseMapTileSpec.cityMinZoom) に合わせる。
@@ -37,7 +37,7 @@ abstract class EarthquakeHistoryMapLayerParameter
     @Default(0.6) double hypocenterFadeOpacity,
   }) = _EarthquakeHistoryMapLayerParameter;
 
-  factory EarthquakeHistoryMapLayerParameter.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
   ) => _$EarthquakeHistoryMapLayerParameterFromJson(json);
 }

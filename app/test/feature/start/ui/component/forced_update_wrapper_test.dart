@@ -64,7 +64,7 @@ PackageInfo _packageInfo({required String version}) => PackageInfo(
 );
 
 class _FakeStartNotifier extends StartNotifier {
-  _FakeStartNotifier({required this.requiredVersion});
+  new({required this.requiredVersion});
 
   final String requiredVersion;
 

@@ -8,7 +8,7 @@ part 'tsunami_region_station.freezed.dart';
 /// 津波予報区に属する観測点のドメインモデル
 @freezed
 abstract class TsunamiRegionStation with _$TsunamiRegionStation {
-  const factory TsunamiRegionStation({
+  const factory({
     required String code,
     required String name,
     TsunamiStationForecast? forecast,

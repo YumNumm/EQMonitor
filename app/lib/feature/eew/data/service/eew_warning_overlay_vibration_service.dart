@@ -41,7 +41,7 @@ abstract interface class EewWarningOverlayVibrationGateway {
 }
 
 class VibrationPackageGateway implements EewWarningOverlayVibrationGateway {
-  const VibrationPackageGateway();
+  const new();
 
   @override
   Future<bool> hasVibrator() => Vibration.hasVibrator();
@@ -63,7 +63,7 @@ class VibrationPackageGateway implements EewWarningOverlayVibrationGateway {
 }
 
 class EewWarningOverlayVibrationService {
-  const EewWarningOverlayVibrationService({
+  const new({
     required EewWarningOverlayVibrationGateway gateway,
     required Talker talker,
   }) : _gateway = gateway,

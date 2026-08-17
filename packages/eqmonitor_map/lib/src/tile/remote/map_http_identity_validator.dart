@@ -10,7 +10,7 @@ import 'package:eqmonitor_map/src/tile/remote/map_remote_tile_exception.dart';
 /// (gzip / br / deflate / zstd など、あるいは transform を含む複数値)は
 /// [MapRemoteTileNonIdentityEncodingException]で fail closed する。
 final class MapHttpIdentityValidator {
-  const MapHttpIdentityValidator();
+  const new();
 
   void validate({required MapRemoteHttpResponseHeaders headers}) {
     final encodings = headers.valuesOf('content-encoding');

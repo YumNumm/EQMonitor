@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// 転記しない理由は`eqmonitor_map_debug_source_provider.dart`の
 /// `_readHeader`のdoc comment参照。
 class EqmonitorMapDebugPage extends ConsumerWidget {
-  const EqmonitorMapDebugPage({super.key});
+  const new({super.key});
 
   static const _initialCamera = MapCamera(
     centerLongitude: 137.5,
@@ -73,7 +73,7 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
 /// `AssetPackNotReadyException`)の場合の表示。地図を空で描かず、原因を
 /// そのまま出す(brief要求)。
 class _EqmonitorMapDebugSourceError extends StatelessWidget {
-  const _EqmonitorMapDebugSourceError({required this.error});
+  const new({required this.error});
 
   final Object error;
 

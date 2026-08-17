@@ -3,7 +3,7 @@ import 'dart:async';
 const _maximumBackoff = Duration(seconds: 60);
 
 final class PushTokenBackoff {
-  const PushTokenBackoff();
+  const new();
 
   Duration durationFor({required int attempt, Duration? retryAfter}) {
     if (retryAfter != null) {
@@ -17,7 +17,7 @@ final class PushTokenBackoff {
 }
 
 final class InterruptibleBackoff {
-  InterruptibleBackoff({Future<void> Function(Duration)? delayOverride})
+  new({Future<void> Function(Duration)? delayOverride})
     : _delay = delayOverride ?? Future<void>.delayed;
 
   final Future<void> Function(Duration) _delay;

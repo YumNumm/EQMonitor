@@ -5,15 +5,15 @@ part 'seismicity_pmtiles_source.g.dart';
 
 @freezed
 sealed class SeismicityPmTilesSource with _$SeismicityPmTilesSource {
-  const factory SeismicityPmTilesSource.network({required Uri archiveUri}) =
+  const factory network({required Uri archiveUri}) =
       SeismicityPmTilesNetworkSource;
 
-  const factory SeismicityPmTilesSource.file({required String path}) =
+  const factory file({required String path}) =
       SeismicityPmTilesFileSource;
 
-  const factory SeismicityPmTilesSource.asset({required String assetKey}) =
+  const factory asset({required String assetKey}) =
       SeismicityPmTilesAssetSource;
 
-  factory SeismicityPmTilesSource.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SeismicityPmTilesSourceFromJson(json);
 }

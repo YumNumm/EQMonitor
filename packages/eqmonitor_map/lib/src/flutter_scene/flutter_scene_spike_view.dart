@@ -8,7 +8,7 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math_64.dart';
 
 class SceneSpikeBindingObserver with WidgetsBindingObserver {
-  const SceneSpikeBindingObserver({
+  const new({
     required this.onMetricsChanged,
     required this.onBackground,
     required this.onForeground,
@@ -35,7 +35,7 @@ class SceneSpikeBindingObserver with WidgetsBindingObserver {
 }
 
 class FlutterSceneSpikeView extends HookWidget {
-  const FlutterSceneSpikeView({required this.remountOwner, super.key});
+  const new({required this.remountOwner, super.key});
 
   // The owner exposes its current controller to the internal spike harness.
   // ignore: diagnostic_describe_all_properties
@@ -156,7 +156,7 @@ class FlutterSceneSpikeView extends HookWidget {
 }
 
 class _SceneSpikeHarnessPanel extends StatelessWidget {
-  const _SceneSpikeHarnessPanel({required this.remountOwner});
+  const new({required this.remountOwner});
 
   // The owner exposes its current controller to the internal spike harness.
   // ignore: diagnostic_describe_all_properties

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// Android / iOS 共通で同じ挙動にする。
 class BottomBouncingScrollPhysics extends BouncingScrollPhysics {
-  const BottomBouncingScrollPhysics({
+  const new({
     super.parent,
     super.decelerationRate,
   });

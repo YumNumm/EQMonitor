@@ -8,7 +8,7 @@ part 'tsunami_station_forecast.freezed.dart';
 
 @freezed
 abstract class TsunamiStationForecast with _$TsunamiStationForecast {
-  const factory TsunamiStationForecast({
+  const factory({
     required DateTime highTideAt,
     required TsunamiForecastFirstHeight? firstHeight,
   }) = _TsunamiStationForecast;

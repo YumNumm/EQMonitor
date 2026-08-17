@@ -18,7 +18,7 @@ IntensityIconRepository intensityIconRepository(Ref ref) =>
     const IntensityIconRepository();
 
 final class IntensityIconRepository {
-  const IntensityIconRepository();
+  const new();
 
   Future<Uint8List> renderJmaIntensityIcon({
     required JmaIntensity intensity,

@@ -13,7 +13,7 @@ typedef SeismicityChunkFactory = SeismicityChunkBuilder Function({
 });
 
 final class SeismicityDatasetAccumulator {
-  SeismicityDatasetAccumulator({
+  new({
     required int expectedUniqueCount,
     required int chunkCapacity,
     this._createChunk = SeismicityChunkBuilder.new,
@@ -125,7 +125,7 @@ final class SeismicityDatasetAccumulator {
 }
 
 final class SeismicityChunkLengthSummer {
-  const SeismicityChunkLengthSummer();
+  const new();
 
   int sumChecked({required List<SeismicityPmTilesChunk> chunks}) {
     var sum = 0;
@@ -143,7 +143,7 @@ final class SeismicityChunkLengthSummer {
 }
 
 final class SeismicityDatasetChunkSumGate {
-  const SeismicityDatasetChunkSumGate();
+  const new();
 
   void ensureMatches({
     required List<SeismicityPmTilesChunk> chunks,

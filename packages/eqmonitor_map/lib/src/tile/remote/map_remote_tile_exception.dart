@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 /// 送出する(空 tile / 部分的な結果へフォールバックしない)。
 @immutable
 sealed class MapRemoteTileException implements Exception {
-  const MapRemoteTileException();
+  const new();
 
   String get message;
 }
@@ -19,7 +19,7 @@ sealed class MapRemoteTileException implements Exception {
 /// 切り出せないため、identity 以外は fail closed とする。
 final class MapRemoteTileNonIdentityEncodingException
     extends MapRemoteTileException {
-  const MapRemoteTileNonIdentityEncodingException({
+  const new({
     required this.contentEncoding,
   });
 
@@ -39,7 +39,7 @@ final class MapRemoteTileNonIdentityEncodingException
 /// 扱わない。
 final class MapRemoteTileUnexpectedStatusException
     extends MapRemoteTileException {
-  const MapRemoteTileUnexpectedStatusException({required this.statusCode});
+  const new({required this.statusCode});
 
   final int statusCode;
 
@@ -55,7 +55,7 @@ final class MapRemoteTileUnexpectedStatusException
 /// strong ETag が期待値と一致しない)。受信済み byte はすべて破棄する。
 final class MapRemoteTileSnapshotMismatchException
     extends MapRemoteTileException {
-  const MapRemoteTileSnapshotMismatchException({
+  const new({
     required this.expectedEtag,
     required this.receivedEtag,
     required this.statusCode,
@@ -78,7 +78,7 @@ final class MapRemoteTileSnapshotMismatchException
 /// strong validator(強い ETag)が欠損・複数・weak(`W/` prefix)だった場合。
 /// Range の再取得整合性を保証できないため fail closed する。
 final class MapRemoteTileWeakValidatorException extends MapRemoteTileException {
-  const MapRemoteTileWeakValidatorException({required this.receivedEtag});
+  const new({required this.receivedEtag});
 
   /// 受信した ETag(欠損時は`null`、複数時は結合表現)。
   final String? receivedEtag;
@@ -95,7 +95,7 @@ final class MapRemoteTileWeakValidatorException extends MapRemoteTileException {
 /// (total が期待 archive size と異なる場合を含む)。
 final class MapRemoteTileContentRangeMismatchException
     extends MapRemoteTileException {
-  const MapRemoteTileContentRangeMismatchException({
+  const new({
     required this.expected,
     required this.received,
   });
@@ -115,7 +115,7 @@ final class MapRemoteTileContentRangeMismatchException
 /// 破棄する。
 final class MapRemoteTileBodyLengthMismatchException
     extends MapRemoteTileException {
-  const MapRemoteTileBodyLengthMismatchException({
+  const new({
     required this.expectedLength,
     required this.actualLength,
   });
@@ -137,7 +137,7 @@ final class MapRemoteTileBodyLengthMismatchException
 /// reader は redirect を追わず fail closed する。
 final class MapRemoteTileRedirectRejectedException
     extends MapRemoteTileException {
-  const MapRemoteTileRedirectRejectedException({
+  const new({
     required this.statusCode,
     required this.location,
   });
@@ -156,7 +156,7 @@ final class MapRemoteTileRedirectRejectedException
 
 /// ネットワーク層の失敗(接続不可・切断など)。
 final class MapRemoteTileNetworkException extends MapRemoteTileException {
-  const MapRemoteTileNetworkException({required this.reason});
+  const new({required this.reason});
 
   final String reason;
 
@@ -169,7 +169,7 @@ final class MapRemoteTileNetworkException extends MapRemoteTileException {
 
 /// close 済みの reader へ read が来た場合。
 final class MapRemoteTileClosedException extends MapRemoteTileException {
-  const MapRemoteTileClosedException();
+  const new();
 
   @override
   String get message => 'The remote PMTiles reader is closed.';

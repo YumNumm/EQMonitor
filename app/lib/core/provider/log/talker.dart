@@ -8,7 +8,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 late final Talker talker;
 
 class RealtimeSseLog extends TalkerLog {
-  RealtimeSseLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'RealtimeSse';
@@ -18,7 +18,7 @@ class RealtimeSseLog extends TalkerLog {
 }
 
 class DioLog extends TalkerLog {
-  DioLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'Dio';
@@ -28,7 +28,7 @@ class DioLog extends TalkerLog {
 }
 
 class KyoshinMonitorLog extends TalkerLog {
-  KyoshinMonitorLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'KyoshinMonitor';
@@ -38,7 +38,7 @@ class KyoshinMonitorLog extends TalkerLog {
 }
 
 class AppLifeCycleLog extends TalkerLog {
-  AppLifeCycleLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'AppLifeCycle';
@@ -48,7 +48,7 @@ class AppLifeCycleLog extends TalkerLog {
 }
 
 class NtpLog extends TalkerLog {
-  NtpLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'NTP';
@@ -58,7 +58,7 @@ class NtpLog extends TalkerLog {
 }
 
 class GoRouterLog extends TalkerLog {
-  GoRouterLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'GoRouter';
@@ -68,7 +68,7 @@ class GoRouterLog extends TalkerLog {
 }
 
 class HttpCacheLog extends TalkerLog {
-  HttpCacheLog(super.message);
+  new(super.message);
 
   @override
   String get title => 'HttpCache';
@@ -78,7 +78,7 @@ class HttpCacheLog extends TalkerLog {
 }
 
 class CrashlyticsTalkerObserver implements TalkerObserver {
-  CrashlyticsTalkerObserver();
+  new();
 
   @override
   void onError(TalkerError err) => unawaited(

@@ -7,7 +7,7 @@ part 'tracked_tsunami_timeline.freezed.dart';
 
 @freezed
 abstract class TrackedTsunamiTimeline with _$TrackedTsunamiTimeline {
-  const factory TrackedTsunamiTimeline({
+  const factory({
     required List<TsunamiTelegramMeta> telegrams,
     required List<TrackedRegion> regions,
     required List<TrackedOffshoreStation> offshoreStations,

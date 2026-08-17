@@ -22,7 +22,7 @@ const _initialSettings = GeneralNotificationSettings(
 );
 
 class _FakePushNotificationRepository extends PushNotificationRepository {
-  _FakePushNotificationRepository() : super(api.ApiClient(Dio()));
+  new() : super(api.ApiClient(Dio()));
 
   final patchedNotificationEnabled = <bool>[];
   final patchedEarthquakeNoticeEnabled = <bool>[];

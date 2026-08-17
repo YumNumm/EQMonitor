@@ -97,12 +97,12 @@ extension EarthquakeStationStatusApiConverter on api.EarthquakeStationStatus {
 }
 
 final class EarthquakeStationArv400Index {
-  const EarthquakeStationArv400Index._(this._values);
+  const new _(this._values);
 
-  factory EarthquakeStationArv400Index.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       EarthquakeStationArv400Index.fromSubtree(json);
 
-  factory EarthquakeStationArv400Index.fromSubtree(Map<String, dynamic> json) {
+  factory fromSubtree(Map<String, dynamic> json) {
     final values = <String, double>{};
     _Arv400Collector.collect(json: json, values: values);
     return EarthquakeStationArv400Index._(values);
@@ -114,7 +114,7 @@ final class EarthquakeStationArv400Index {
 }
 
 final class _Arv400Collector {
-  const _Arv400Collector._();
+  const new _();
 
   static void collect({
     required Map<String, dynamic> json,

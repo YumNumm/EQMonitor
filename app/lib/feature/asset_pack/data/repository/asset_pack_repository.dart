@@ -129,119 +129,119 @@ class AssetPackRepository {
       verifiedSha256Keys: _verifiedSha256Keys,
     );
   }
-}
 
-Future<AssetPackManifest> readAssetPackManifestFile(File file) async {
-  if (!file.existsSync()) {
-    throw AssetPackNotReadyException(
-      'Asset Pack manifest.json not found at ${file.path}',
-    );
-  }
-  final String raw;
-  try {
-    raw = await file.readAsString();
-  } on Object catch (error) {
-    throw AssetPackNotReadyException(
-      'Failed to read Asset Pack manifest.json (${file.path}): $error',
-    );
-  }
-  try {
-    final decoded = jsonDecode(raw);
-    if (decoded is! Map<String, dynamic>) {
-      throw const FormatException(
-        'Asset Pack manifest.json root must be an object',
-      );
-    }
-    return AssetPackManifest.fromJson(decoded);
-  } on Object catch (error) {
-    throw AssetPackNotReadyException(
-      'Invalid Asset Pack manifest.json (${file.path}): $error',
-    );
-  }
-}
-
-Future<File> resolveAssetPackAssetFromRoot({
-  required AssetPackAssetId id,
-  required Directory rootDirectory,
-  required Set<String> verifiedSha256Keys,
-}) async {
-  final manifest = await readAssetPackManifestFile(
-    File(p.join(rootDirectory.path, 'manifest.json')),
-  );
-  final item = manifest.findAsset(id);
-  if (item == null) {
-    throw AssetPackNotReadyException(
-      'Asset Pack manifest does not contain required asset: $id',
-    );
-  }
-  return verifyResolvedAssetPackAsset(
-    file: File(p.join(rootDirectory.path, item.path)),
-    item: item,
-    manifest: manifest,
-    verifiedSha256Keys: verifiedSha256Keys,
-  );
-}
-
-Future<T> withDownloadedAssetPackFallback<T>({
-  required ResolveAssetPackSource resolveSource,
-  required DeactivateDownloadedAssetPackSource? deactivateDownloadedSource,
-  required Set<String> verifiedSha256Keys,
-  required Future<T> Function(AssetPackSource source) operation,
-}) async {
-  final source = await resolveSource();
-  try {
-    return await operation(source);
-  } on AssetPackNotReadyException {
-    if (source.kind != AssetPackSourceKind.downloaded ||
-        deactivateDownloadedSource == null) {
-      rethrow;
-    }
-    await deactivateDownloadedSource(source);
-    final version = source.version;
-    if (version != null) {
-      verifiedSha256Keys.removeWhere((key) => key.startsWith('$version:'));
-    }
-    final fallback = await resolveSource();
-    if (fallback.kind == AssetPackSourceKind.downloaded) {
-      rethrow;
-    }
-    return operation(fallback);
-  }
-}
-
-Future<File> verifyResolvedAssetPackAsset({
-  required File file,
-  required AssetPackManifestItem item,
-  required AssetPackManifest manifest,
-  required Set<String> verifiedSha256Keys,
-}) async {
-  final id = item.id;
-  if (!file.existsSync()) {
-    throw AssetPackNotReadyException('Asset file not found: ${file.path}');
-  }
-  final size = await file.length();
-  if (size == 0) {
-    throw AssetPackNotReadyException('Asset file is empty: ${file.path}');
-  }
-  if (size != item.sizeBytes) {
-    throw AssetPackNotReadyException(
-      'Asset size mismatch for $id (${file.path}): '
-      'expected ${item.sizeBytes} bytes, got $size bytes',
-    );
-  }
-  final sha256Key = '${manifest.packVersion}:${id.name}';
-  if (!verifiedSha256Keys.contains(sha256Key)) {
-    final digest = await sha256.bind(file.openRead()).first;
-    final actual = digest.toString();
-    if (actual != item.sha256) {
+  Future<AssetPackManifest> readAssetPackManifestFile(File file) async {
+    if (!file.existsSync()) {
       throw AssetPackNotReadyException(
-        'Asset sha256 mismatch for $id (${file.path}): '
-        'expected ${item.sha256}, got $actual',
+        'Asset Pack manifest.json not found at ${file.path}',
       );
     }
-    verifiedSha256Keys.add(sha256Key);
+    final String raw;
+    try {
+      raw = await file.readAsString();
+    } on Object catch (error) {
+      throw AssetPackNotReadyException(
+        'Failed to read Asset Pack manifest.json (${file.path}): $error',
+      );
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException(
+          'Asset Pack manifest.json root must be an object',
+        );
+      }
+      return AssetPackManifest.fromJson(decoded);
+    } on Object catch (error) {
+      throw AssetPackNotReadyException(
+        'Invalid Asset Pack manifest.json (${file.path}): $error',
+      );
+    }
   }
-  return file;
+
+  Future<File> resolveAssetPackAssetFromRoot({
+    required AssetPackAssetId id,
+    required Directory rootDirectory,
+    required Set<String> verifiedSha256Keys,
+  }) async {
+    final manifest = await readAssetPackManifestFile(
+      File(p.join(rootDirectory.path, 'manifest.json')),
+    );
+    final item = manifest.findAsset(id);
+    if (item == null) {
+      throw AssetPackNotReadyException(
+        'Asset Pack manifest does not contain required asset: $id',
+      );
+    }
+    return verifyResolvedAssetPackAsset(
+      file: File(p.join(rootDirectory.path, item.path)),
+      item: item,
+      manifest: manifest,
+      verifiedSha256Keys: verifiedSha256Keys,
+    );
+  }
+
+  Future<T> withDownloadedAssetPackFallback<T>({
+    required ResolveAssetPackSource resolveSource,
+    required DeactivateDownloadedAssetPackSource? deactivateDownloadedSource,
+    required Set<String> verifiedSha256Keys,
+    required Future<T> Function(AssetPackSource source) operation,
+  }) async {
+    final source = await resolveSource();
+    try {
+      return await operation(source);
+    } on AssetPackNotReadyException {
+      if (source.kind != AssetPackSourceKind.downloaded ||
+          deactivateDownloadedSource == null) {
+        rethrow;
+      }
+      await deactivateDownloadedSource(source);
+      final version = source.version;
+      if (version != null) {
+        verifiedSha256Keys.removeWhere((key) => key.startsWith('$version:'));
+      }
+      final fallback = await resolveSource();
+      if (fallback.kind == AssetPackSourceKind.downloaded) {
+        rethrow;
+      }
+      return operation(fallback);
+    }
+  }
+
+  Future<File> verifyResolvedAssetPackAsset({
+    required File file,
+    required AssetPackManifestItem item,
+    required AssetPackManifest manifest,
+    required Set<String> verifiedSha256Keys,
+  }) async {
+    final id = item.id;
+    if (!file.existsSync()) {
+      throw AssetPackNotReadyException('Asset file not found: ${file.path}');
+    }
+    final size = await file.length();
+    if (size == 0) {
+      throw AssetPackNotReadyException('Asset file is empty: ${file.path}');
+    }
+    if (size != item.sizeBytes) {
+      throw AssetPackNotReadyException(
+        'Asset size mismatch for $id (${file.path}): '
+        'expected ${item.sizeBytes} bytes, got $size bytes',
+      );
+    }
+    final sha256Key = '${manifest.packVersion}:${id.name}';
+    if (!verifiedSha256Keys.contains(sha256Key)) {
+      final digest = await sha256.bind(file.openRead()).first;
+      final actual = digest.toString();
+      if (actual != item.sha256) {
+        throw AssetPackNotReadyException(
+          'Asset sha256 mismatch for $id (${file.path}): '
+          'expected ${item.sha256}, got $actual',
+        );
+      }
+      verifiedSha256Keys.add(sha256Key);
+    }
+    return file;
+  }
 }
 
 class AssetPackFileResolver {

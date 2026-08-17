@@ -10,7 +10,7 @@ part 'telegram_detail_model.freezed.dart';
 /// [earthquakeBody] は電文タイプが EARTHQUAKE の場合のみ値を持つ。
 @freezed
 abstract class TelegramDetailModel with _$TelegramDetailModel {
-  const factory TelegramDetailModel({
+  const factory({
     EarthquakeTelegramBodyModel? earthquakeBody,
     TelegramCommentsModel? comments,
   }) = _TelegramDetailModel;

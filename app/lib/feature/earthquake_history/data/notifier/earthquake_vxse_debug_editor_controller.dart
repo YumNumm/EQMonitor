@@ -20,7 +20,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_vxse_debug_editor_controller.g.dart';
 
 class EarthquakeVxseDebugEditorState {
-  const EarthquakeVxseDebugEditorState({
+  const new({
     required this.selectedType,
     required this.applyMode,
     required this.draft,
@@ -41,7 +41,7 @@ class EarthquakeVxseDebugEditorState {
   final Map<String, String> typedInputErrors;
 
   /// バリデーション済みのドラフトから、エラーの無い状態を作る。
-  factory EarthquakeVxseDebugEditorState.valid({
+  factory valid({
     required EarthquakeTelegramType selectedType,
     required EarthquakeVxseApplyMode applyMode,
     required EarthquakeVxseDebugDraft draft,
@@ -84,7 +84,7 @@ class EarthquakeVxseDebugEditorState {
 
 /// Provider identity is the event ID; [current] only bootstraps the session.
 class EarthquakeVxseDebugEditorSession {
-  const EarthquakeVxseDebugEditorSession({required this.current});
+  const new({required this.current});
 
   final Earthquake current;
 

@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 
 final class BackgroundLocationUpdateRetry {
-  const BackgroundLocationUpdateRetry({
+  const new({
     this.baseDelay = const Duration(milliseconds: 250),
   });
 
@@ -26,7 +26,7 @@ final class BackgroundLocationUpdateRetry {
 }
 
 final class BackgroundLocationMonitoringPolicy {
-  const BackgroundLocationMonitoringPolicy();
+  const new();
 
   bool shouldMonitor({
     required List<NotificationSlot> slots,
@@ -50,7 +50,7 @@ final class BackgroundLocationMonitoringPolicy {
 }
 
 final class BackgroundLocationMonitoringLifecycle {
-  const BackgroundLocationMonitoringLifecycle({
+  const new({
     this.policy = const BackgroundLocationMonitoringPolicy(),
   });
 

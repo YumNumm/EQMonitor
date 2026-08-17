@@ -15,7 +15,7 @@ final earthquakeHistoryMapPopupActionProvider = Provider(
 
 /// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
 class EarthquakeHistoryMapPopupAction {
-  const EarthquakeHistoryMapPopupAction();
+  const new();
 
   /// 観測点タップ時のポップアップ
   ///
@@ -62,7 +62,7 @@ class EarthquakeHistoryMapPopupAction {
 }
 
 class _StationPopupBody extends StatelessWidget {
-  const _StationPopupBody({
+  const new({
     required this.stationName,
     required this.intensity,
     required this.lpgmIntensity,
@@ -139,7 +139,7 @@ class _StationPopupBody extends StatelessWidget {
 }
 
 class _AreaPopupBody extends StatelessWidget {
-  const _AreaPopupBody({
+  const new({
     required this.areaName,
     required this.maxIntensity,
     this.intensityHistoryRoute,

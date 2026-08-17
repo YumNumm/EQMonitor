@@ -18,7 +18,7 @@ import 'package:material_ui/material_ui.dart';
 /// デバッグ用。アプリ内から ActivityKit を用いて EEW / 揺れ検知の
 /// Live Activity をローカル開始・更新・終了し、表示を検証する。
 class DebugLiveActivityPage extends HookConsumerWidget {
-  const DebugLiveActivityPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -192,7 +192,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
 }
 
 class _PresetChips extends StatelessWidget {
-  const _PresetChips({
+  const new({
     required this.kind,
     required this.onEewPreset,
     required this.onShakePreset,
@@ -228,7 +228,7 @@ class _PresetChips extends StatelessWidget {
 }
 
 class _RealDataSection extends ConsumerWidget {
-  const _RealDataSection({
+  const new({
     required this.kind,
     required this.onEewSelected,
     required this.onShakeSelected,
@@ -287,7 +287,7 @@ class _RealDataSection extends ConsumerWidget {
 }
 
 class _SessionCard extends StatelessWidget {
-  const _SessionCard({required this.session});
+  const new({required this.session});
 
   final DebugLiveActivitySession session;
 
@@ -313,7 +313,7 @@ class _SessionCard extends StatelessWidget {
 }
 
 class _SupportabilityTile extends ConsumerWidget {
-  const _SupportabilityTile();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

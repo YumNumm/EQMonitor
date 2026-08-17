@@ -4,7 +4,7 @@ part 'live_monitor_map_focus.freezed.dart';
 
 @freezed
 abstract class LiveMonitorGeoBounds with _$LiveMonitorGeoBounds {
-  const factory LiveMonitorGeoBounds({
+  const factory({
     required double minLat,
     required double maxLat,
     required double minLng,
@@ -22,7 +22,7 @@ extension LiveMonitorGeoBoundsX on LiveMonitorGeoBounds {
 
 @freezed
 abstract class LiveMonitorMapPadding with _$LiveMonitorMapPadding {
-  const factory LiveMonitorMapPadding({
+  const factory({
     @Default(8) double top,
     @Default(8) double right,
     @Default(8) double bottom,
@@ -32,7 +32,7 @@ abstract class LiveMonitorMapPadding with _$LiveMonitorMapPadding {
 
 @freezed
 abstract class LiveMonitorMapFocus with _$LiveMonitorMapFocus {
-  const factory LiveMonitorMapFocus({
+  const factory({
     required LiveMonitorGeoBounds bounds,
     required LiveMonitorMapPadding padding,
   }) = _LiveMonitorMapFocus;

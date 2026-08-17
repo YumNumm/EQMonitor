@@ -5,7 +5,7 @@ part 'hypocenter_manifest.freezed.dart';
 
 @freezed
 abstract class HypocenterManifest with _$HypocenterManifest {
-  const factory HypocenterManifest({
+  const factory({
     required List<HypocenterArchive> archives,
     required String datasetRevision,
     required DateTime dataUpdatedAt,

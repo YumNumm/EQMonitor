@@ -9,7 +9,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_uuid_index.dart'
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityUtf8Dictionary {
-  SeismicityUtf8Dictionary({
+  new({
     required int maxBytes,
     required int maxEntries,
     Uint32List Function(int length)? allocateSlots,

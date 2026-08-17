@@ -1,6 +1,6 @@
 /// Immutable parsed CLI arguments for the seismicity decode benchmark harness.
 final class SeismicityBenchmarkArguments {
-  const SeismicityBenchmarkArguments({
+  const new({
     required this.featureCount,
     required this.featuresPerTile,
     required this.chunkCapacity,
@@ -22,7 +22,7 @@ final class SeismicityBenchmarkArguments {
 /// Strict typed parser for benchmark CLI flags.
 /// Parsing only — no benchmark run.
 final class SeismicityBenchmarkArgumentsParser {
-  const SeismicityBenchmarkArgumentsParser();
+  const new();
 
   static const usage =
       'Usage: seismicity_pmtiles_decode_benchmark.dart '
@@ -83,7 +83,7 @@ final class SeismicityBenchmarkArgumentsParser {
 }
 
 final class SeismicityBenchmarkPositiveIntParser {
-  const SeismicityBenchmarkPositiveIntParser();
+  const new();
 
   static final _pattern = RegExp(r'^[1-9][0-9]*$');
   static const _maxInt64 = 9223372036854775807;
@@ -109,7 +109,7 @@ final class SeismicityBenchmarkPositiveIntParser {
 }
 
 final class SeismicityBenchmarkArgumentsException implements Exception {
-  const SeismicityBenchmarkArgumentsException({required this.message});
+  const new({required this.message});
 
   final String message;
 

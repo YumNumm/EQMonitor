@@ -7,7 +7,7 @@ part 'real_time_data.g.dart';
 
 @freezed
 abstract class RealTimeData with _$RealTimeData {
-  const factory RealTimeData({
+  const factory({
     required DateTime? dateTime,
     required String? packetType,
     required String? kyoshinType,
@@ -18,6 +18,6 @@ abstract class RealTimeData with _$RealTimeData {
     required Security? security,
   }) = _RealTimeData;
 
-  factory RealTimeData.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$RealTimeDataFromJson(json);
 }

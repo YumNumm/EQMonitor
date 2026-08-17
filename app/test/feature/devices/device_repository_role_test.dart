@@ -73,7 +73,7 @@ DeviceRepository _repository({String? role, int statusCode = 200}) {
 }
 
 final class _DeviceMeAdapter implements HttpClientAdapter {
-  _DeviceMeAdapter({required this.role, required this.statusCode});
+  new({required this.role, required this.statusCode});
 
   final String? role;
   final int statusCode;

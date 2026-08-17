@@ -69,6 +69,18 @@ final class AssetPackAppUpdateRequired extends AssetPackUpdateCheckResult {
   final AssetPackDistributionEntry entry;
 }
 
+class AssetPackDistributionPayload {
+  const new({
+    required this.manifestBytes,
+    required this.signatureBytes,
+    this.etag,
+  });
+
+  final Uint8List manifestBytes;
+  final Uint8List signatureBytes;
+  final String? etag;
+}
+
 class AssetPackDistributionRepository {
   new({
     required this.dio,
@@ -131,6 +143,151 @@ class AssetPackDistributionRepository {
     }
     return AssetPackUpdateAvailable(manifest: manifest, entry: latest);
   }
+
+  Future<Response<Uint8List>> fetchDistributionFile({
+    required Dio dio,
+    required String url,
+    String? etag,
+  }) async {
+    try {
+      return await dio.get<Uint8List>(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {if (etag != null) 'If-None-Match': etag},
+          validateStatus: (status) => status == 200 || status == 304,
+        ),
+      );
+    } on DioException {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.transport,
+        message: 'Asset Pack 更新情報を取得できませんでした。',
+      );
+    }
+  }
+
+  Future<AssetPackDistributionPayload> fetchDistributionPayload({
+    required Dio dio,
+    required String baseUrl,
+    required Response<Uint8List> manifestResponse,
+  }) async {
+    final manifestBytes = manifestResponse.data;
+    if (manifestBytes == null) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.invalidResponse,
+        message: 'Asset Pack 更新情報が空です。',
+      );
+    }
+    final signatureResponse = await fetchDistributionFile(
+      dio: dio,
+      url: '$baseUrl/manifest.sig',
+    );
+    final signatureBytes = signatureResponse.data;
+    if (signatureBytes == null || signatureResponse.statusCode != 200) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.invalidResponse,
+        message: 'Asset Pack 署名情報が空です。',
+      );
+    }
+    return AssetPackDistributionPayload(
+      manifestBytes: manifestBytes,
+      signatureBytes: signatureBytes,
+      etag: manifestResponse.headers.value('etag'),
+    );
+  }
+
+  Future<void> storeVerifiedDistribution({
+    required SharedPreferencesDataSource preferences,
+    required AssetPackDistributionPayload payload,
+  }) async {
+    await preferences.setString(
+      key: SharedPreferencesKey.assetPackDistributionManifest,
+      value: base64Encode(payload.manifestBytes),
+    );
+    await preferences.setString(
+      key: SharedPreferencesKey.assetPackDistributionSignature,
+      value: base64Encode(payload.signatureBytes),
+    );
+    final etag = payload.etag;
+    if (etag != null) {
+      await preferences.setString(
+        key: SharedPreferencesKey.assetPackDistributionEtag,
+        value: etag,
+      );
+    }
+  }
+
+  Future<AssetPackDistributionPayload> readCachedDistribution({
+    required SharedPreferencesDataSource preferences,
+  }) async {
+    final manifest = await preferences.getString(
+      key: SharedPreferencesKey.assetPackDistributionManifest,
+    );
+    final signature = await preferences.getString(
+      key: SharedPreferencesKey.assetPackDistributionSignature,
+    );
+    if (manifest == null || signature == null) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.invalidResponse,
+        message: 'Asset Pack 更新キャッシュが見つかりません。',
+      );
+    }
+    return AssetPackDistributionPayload(
+      manifestBytes: base64Decode(manifest),
+      signatureBytes: base64Decode(signature),
+    );
+  }
+
+  AssetPackSignature decodeAssetPackSignature(Uint8List bytes) {
+    final value = jsonDecode(utf8.decode(bytes));
+    if (value is! Map<String, dynamic>) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.invalidResponse,
+        message: 'Asset Pack 署名情報の形式が不正です。',
+      );
+    }
+    return AssetPackSignature.fromJson(value);
+  }
+
+  AssetPackDistributionManifest decodeDistributionManifest(Uint8List bytes) {
+    final value = jsonDecode(utf8.decode(bytes));
+    if (value is! Map<String, dynamic>) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.invalidResponse,
+        message: 'Asset Pack 更新情報の形式が不正です。',
+      );
+    }
+    return AssetPackDistributionManifest.fromJson(value);
+  }
+
+  Future<void> enforceAndStoreAcceptedManifest({
+    required SharedPreferencesDataSource preferences,
+    required AssetPackDistributionManifest manifest,
+  }) async {
+    final acceptedRevision = await preferences.getInt(
+      key: SharedPreferencesKey.assetPackAcceptedRevision,
+    );
+    final acceptedVersion = await preferences.getString(
+      key: SharedPreferencesKey.assetPackAcceptedLatestVersion,
+    );
+    if ((acceptedRevision != null && manifest.revision < acceptedRevision) ||
+        (acceptedVersion != null &&
+            Version.parse(manifest.latestVersion) <
+                Version.parse(acceptedVersion))) {
+      throw const AssetPackDistributionException(
+        code: AssetPackDistributionErrorCode.rollback,
+        message: '古い Asset Pack 更新情報を拒否しました。',
+      );
+    }
+    await preferences.setInt(
+      key: SharedPreferencesKey.assetPackAcceptedRevision,
+      value: manifest.revision,
+    );
+    await preferences.setString(
+      key: SharedPreferencesKey.assetPackAcceptedLatestVersion,
+      value: manifest.latestVersion,
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -148,162 +305,5 @@ Future<AssetPackDistributionRepository> assetPackDistributionRepository(
     dio: dio,
     preferences: preferences,
     verifySignature: verifier.verify,
-  );
-}
-
-class AssetPackDistributionPayload {
-  const new({
-    required this.manifestBytes,
-    required this.signatureBytes,
-    this.etag,
-  });
-
-  final Uint8List manifestBytes;
-  final Uint8List signatureBytes;
-  final String? etag;
-}
-
-Future<Response<Uint8List>> fetchDistributionFile({
-  required Dio dio,
-  required String url,
-  String? etag,
-}) async {
-  try {
-    return await dio.get<Uint8List>(
-      url,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: {if (etag != null) 'If-None-Match': etag},
-        validateStatus: (status) => status == 200 || status == 304,
-      ),
-    );
-  } on DioException {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.transport,
-      message: 'Asset Pack 更新情報を取得できませんでした。',
-    );
-  }
-}
-
-Future<AssetPackDistributionPayload> fetchDistributionPayload({
-  required Dio dio,
-  required String baseUrl,
-  required Response<Uint8List> manifestResponse,
-}) async {
-  final manifestBytes = manifestResponse.data;
-  if (manifestBytes == null) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.invalidResponse,
-      message: 'Asset Pack 更新情報が空です。',
-    );
-  }
-  final signatureResponse = await fetchDistributionFile(
-    dio: dio,
-    url: '$baseUrl/manifest.sig',
-  );
-  final signatureBytes = signatureResponse.data;
-  if (signatureBytes == null || signatureResponse.statusCode != 200) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.invalidResponse,
-      message: 'Asset Pack 署名情報が空です。',
-    );
-  }
-  return AssetPackDistributionPayload(
-    manifestBytes: manifestBytes,
-    signatureBytes: signatureBytes,
-    etag: manifestResponse.headers.value('etag'),
-  );
-}
-
-Future<void> storeVerifiedDistribution({
-  required SharedPreferencesDataSource preferences,
-  required AssetPackDistributionPayload payload,
-}) async {
-  await preferences.setString(
-    key: SharedPreferencesKey.assetPackDistributionManifest,
-    value: base64Encode(payload.manifestBytes),
-  );
-  await preferences.setString(
-    key: SharedPreferencesKey.assetPackDistributionSignature,
-    value: base64Encode(payload.signatureBytes),
-  );
-  final etag = payload.etag;
-  if (etag != null) {
-    await preferences.setString(
-      key: SharedPreferencesKey.assetPackDistributionEtag,
-      value: etag,
-    );
-  }
-}
-
-Future<AssetPackDistributionPayload> readCachedDistribution({
-  required SharedPreferencesDataSource preferences,
-}) async {
-  final manifest = await preferences.getString(
-    key: SharedPreferencesKey.assetPackDistributionManifest,
-  );
-  final signature = await preferences.getString(
-    key: SharedPreferencesKey.assetPackDistributionSignature,
-  );
-  if (manifest == null || signature == null) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.invalidResponse,
-      message: 'Asset Pack 更新キャッシュが見つかりません。',
-    );
-  }
-  return AssetPackDistributionPayload(
-    manifestBytes: base64Decode(manifest),
-    signatureBytes: base64Decode(signature),
-  );
-}
-
-AssetPackSignature decodeAssetPackSignature(Uint8List bytes) {
-  final value = jsonDecode(utf8.decode(bytes));
-  if (value is! Map<String, dynamic>) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.invalidResponse,
-      message: 'Asset Pack 署名情報の形式が不正です。',
-    );
-  }
-  return AssetPackSignature.fromJson(value);
-}
-
-AssetPackDistributionManifest decodeDistributionManifest(Uint8List bytes) {
-  final value = jsonDecode(utf8.decode(bytes));
-  if (value is! Map<String, dynamic>) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.invalidResponse,
-      message: 'Asset Pack 更新情報の形式が不正です。',
-    );
-  }
-  return AssetPackDistributionManifest.fromJson(value);
-}
-
-Future<void> enforceAndStoreAcceptedManifest({
-  required SharedPreferencesDataSource preferences,
-  required AssetPackDistributionManifest manifest,
-}) async {
-  final acceptedRevision = await preferences.getInt(
-    key: SharedPreferencesKey.assetPackAcceptedRevision,
-  );
-  final acceptedVersion = await preferences.getString(
-    key: SharedPreferencesKey.assetPackAcceptedLatestVersion,
-  );
-  if ((acceptedRevision != null && manifest.revision < acceptedRevision) ||
-      (acceptedVersion != null &&
-          Version.parse(manifest.latestVersion) <
-              Version.parse(acceptedVersion))) {
-    throw const AssetPackDistributionException(
-      code: AssetPackDistributionErrorCode.rollback,
-      message: '古い Asset Pack 更新情報を拒否しました。',
-    );
-  }
-  await preferences.setInt(
-    key: SharedPreferencesKey.assetPackAcceptedRevision,
-    value: manifest.revision,
-  );
-  await preferences.setString(
-    key: SharedPreferencesKey.assetPackAcceptedLatestVersion,
-    value: manifest.latestVersion,
   );
 }

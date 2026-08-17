@@ -5,7 +5,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 /// Decoder for hexadecimal string format messages (63 characters).
 class HexDecoder {
   /// Creates a new [HexDecoder].
-  const HexDecoder();
+  const new();
 
   /// Decodes a hexadecimal string message.
   ///

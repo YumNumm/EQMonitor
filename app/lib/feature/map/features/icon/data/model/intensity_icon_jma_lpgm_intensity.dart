@@ -10,7 +10,7 @@ part 'intensity_icon_jma_lpgm_intensity.g.dart';
 @freezed
 abstract class IntensityIconJmaLpgmIntensity
     with _$IntensityIconJmaLpgmIntensity {
-  const factory IntensityIconJmaLpgmIntensity({
+  const factory({
     @MapJmaLpgmIntensityUint8ListJsonConverter()
     required Map<JmaLpgmIntensity, Uint8List> filled,
     @MapJmaLpgmIntensityUint8ListJsonConverter()
@@ -19,6 +19,6 @@ abstract class IntensityIconJmaLpgmIntensity
     required Map<JmaLpgmIntensity, Uint8List> smallWithoutText,
   }) = _IntensityIconJmaLpgmIntensity;
 
-  factory IntensityIconJmaLpgmIntensity.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityIconJmaLpgmIntensityFromJson(json);
 }

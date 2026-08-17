@@ -33,7 +33,7 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 /// `docs/todo/815_eqmonitor_map_remote_digest_binding.md`
 final class MapRemotePmTilesRandomAccessReader
     implements PmTilesRandomAccessReader {
-  MapRemotePmTilesRandomAccessReader({
+  new({
     required this.source,
     required int maxCacheBytes,
     HttpClient? httpClient,
@@ -278,7 +278,7 @@ final class MapRemotePmTilesRandomAccessReader
 /// `(strongEtag, offset, length)` で引く byte 範囲の LRU。合計 byte が
 /// [maxBytes] を超えないよう最古から捨てる。
 final class _RangeLruCache {
-  _RangeLruCache({required this.maxBytes});
+  new({required this.maxBytes});
 
   final int maxBytes;
   final _entries = <(String, int, int), Uint8List>{};

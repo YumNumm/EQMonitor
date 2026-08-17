@@ -7,7 +7,7 @@ const seismicMapFocusMargin = 0.1;
 typedef SeismicMapGeoCoordinate = ({double latitude, double longitude});
 
 class SeismicMapFocusBuilder {
-  const SeismicMapFocusBuilder();
+  const new();
 
   LngLatBounds forRealtime({
     required LngLatBounds fallbackBounds,

@@ -10,7 +10,7 @@ part 'notification_slot_draft.g.dart';
 /// サーバ払い出しの id を持たない通知スロット。全件置換とローカル退避に使う。
 @freezed
 abstract class NotificationSlotDraft with _$NotificationSlotDraft {
-  const factory NotificationSlotDraft({
+  const factory({
     required NotificationSlotType slotType,
     required bool eewEnabled,
     required bool earthquakeEnabled,
@@ -25,7 +25,7 @@ abstract class NotificationSlotDraft with _$NotificationSlotDraft {
     List<NotificationOverride>? earthquakeOverrides,
   }) = _NotificationSlotDraft;
 
-  factory NotificationSlotDraft.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$NotificationSlotDraftFromJson(json);
 }
 

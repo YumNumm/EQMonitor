@@ -13,7 +13,7 @@ final mutableRealDisplayProvider =
 
 final class MutableRealDisplay
     extends Notifier<EewWarningOverlayDisplayModel?> {
-  MutableRealDisplay([this.initial]);
+  new([this.initial]);
 
   final EewWarningOverlayDisplayModel? initial;
 

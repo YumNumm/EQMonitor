@@ -6,7 +6,7 @@ part 'offshore_station_timeline.freezed.dart';
 /// 沖合観測局ごとのタイムライン。
 @freezed
 abstract class OffshoreStationTimeline with _$OffshoreStationTimeline {
-  const factory OffshoreStationTimeline({
+  const factory({
     required String code,
     required String name,
     required ObservationFirstHeightTimeline firstHeight,

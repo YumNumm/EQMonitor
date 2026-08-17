@@ -6,7 +6,7 @@
 /// このクラスは `tools/eqmonitor_custom_lints` にも同一内容で複製されている。
 /// 判定ロジックを変更する場合は両方を同時に更新すること。
 class LintTargetScope {
-  const LintTargetScope._();
+  const new _();
 
   static const _excludedDirectories = {
     'test',

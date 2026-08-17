@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_model_convert
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 class HypocenterManifestRepository {
-  const HypocenterManifestRepository({required api.HypocentersApiClient client})
+  const new({required api.HypocentersApiClient client})
     : _client = client;
 
   final api.HypocentersApiClient _client;

@@ -3,7 +3,7 @@ import 'package:eqmonitor_map/src/foundation/performance/map_metric_aggregate.da
 import 'package:eqmonitor_map/src/foundation/performance/map_performance_metric.dart';
 
 final class MapPerformanceSnapshot {
-  const MapPerformanceSnapshot._({
+  const new _({
     required this.schemaVersion,
     required this.clockDomain,
     required this.windowStartedAt,

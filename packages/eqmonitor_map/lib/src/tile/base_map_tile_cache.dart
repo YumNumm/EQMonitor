@@ -91,7 +91,7 @@ import 'package:flutter/foundation.dart';
 /// 見つかった祖先で打ち切る。遡る段数の上限`maxParentSteps`は呼び出し側が
 /// 渡す(Global Constraints)。
 final class BaseMapTileCache {
-  BaseMapTileCache({
+  new({
     required this.maxEntries,
     required this.maxParentFallbackSteps,
     this.fallbackPolicy = MapTileFallbackPolicy.basemap,
@@ -306,19 +306,19 @@ final class BaseMapTileCache {
 /// [BaseMapTileCache.lookupWithFallback]の結果。
 @immutable
 sealed class BaseMapTileFallbackResult {
-  const BaseMapTileFallbackResult();
+  const new();
 }
 
 /// 要求どおりのtileがcache済みだった場合。
 final class BaseMapTileFallbackExact extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackExact(this.geometry);
+  const new(this.geometry);
 
   final BaseMapTileGeometry geometry;
 }
 
 /// 要求tileは未cacheだが、`z+1`の子4枚が全てcache済みだった場合。
 final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackChildren(this.children)
+  const new(this.children)
     : assert(children.length == 4, 'children must always contain 4 tiles');
 
   /// `CanonicalTileId.children()`と同じ並び順(4件、全て非null)。
@@ -328,7 +328,7 @@ final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
 /// 要求tileも子4枚も未cacheで、`stepsUp`段上の祖先[tileId]がcache済み
 /// だった場合。
 final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackParent(
+  const new(
     this.geometry, {
     required this.tileId,
     required this.stepsUp,
@@ -342,5 +342,5 @@ final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
 /// 要求tile・子4枚・`maxParentSteps`段以内の祖先のいずれもcacheされていない
 /// 場合。
 final class BaseMapTileFallbackMiss extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackMiss();
+  const new();
 }

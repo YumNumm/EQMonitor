@@ -29,12 +29,11 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class NotificationSettingsPage extends StatelessWidget {
-  const NotificationSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +44,8 @@ class NotificationSettingsPage extends StatelessWidget {
   }
 }
 
-class _Body extends HookConsumerWidget {
-  const _Body();
+class _Body extends ConsumerWidget {
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,7 +152,7 @@ class _Body extends HookConsumerWidget {
 }
 
 class _MasterNotificationControl extends StatelessWidget {
-  const _MasterNotificationControl({
+  const new({
     required this.value,
     required this.onChanged,
   });
@@ -210,7 +209,7 @@ class _MasterNotificationControl extends StatelessWidget {
 }
 
 class _CustomNotificationSettingsPage extends ConsumerWidget {
-  const _CustomNotificationSettingsPage({
+  const new({
     required this.isPro,
     required this.maxRegions,
   });
@@ -267,7 +266,7 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
 }
 
 class _CustomSettingsSection extends StatelessWidget {
-  const _CustomSettingsSection({
+  const new({
     required this.isPro,
     required this.estimatedIntensityEnabled,
     required this.onEstimatedIntensityChanged,
@@ -351,7 +350,7 @@ class _CustomSettingsSection extends StatelessWidget {
 }
 
 class _InlineSwitchTile extends StatelessWidget {
-  const _InlineSwitchTile({
+  const new({
     required this.title,
     required this.subtitle,
     required this.value,
@@ -378,7 +377,7 @@ class _InlineSwitchTile extends StatelessWidget {
 }
 
 class _SlotListSection extends ConsumerWidget {
-  const _SlotListSection({required this.isPro, required this.maxRegions});
+  const new({required this.isPro, required this.maxRegions});
 
   final bool isPro;
   final int maxRegions;
@@ -522,7 +521,7 @@ class _SlotListSection extends ConsumerWidget {
 }
 
 class _SlotListTile extends StatelessWidget {
-  const _SlotListTile({
+  const new({
     required this.slot,
     required this.isActive,
     required this.warningEnabled,
@@ -582,7 +581,7 @@ class _SlotListTile extends StatelessWidget {
 }
 
 class _GeneralNotificationSettingsSection extends ConsumerWidget {
-  const _GeneralNotificationSettingsSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -726,7 +725,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
 }
 
 class _NotificationHistoryTile extends StatelessWidget {
-  const _NotificationHistoryTile();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -741,7 +740,7 @@ class _NotificationHistoryTile extends StatelessWidget {
 }
 
 class _AndroidNotificationSettingsTile extends StatelessWidget {
-  const _AndroidNotificationSettingsTile();
+  const new();
 
   @override
   Widget build(BuildContext context) {

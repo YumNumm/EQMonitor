@@ -9,7 +9,7 @@ part 'map_render_packet.freezed.dart';
 
 @Freezed(copyWith: false)
 sealed class MapRenderPipelineKey with _$MapRenderPipelineKey {
-  const factory MapRenderPipelineKey._({
+  const factory _({
     required int version,
     required String key,
   }) = _MapRenderPipelineKey;
@@ -17,7 +17,7 @@ sealed class MapRenderPipelineKey with _$MapRenderPipelineKey {
 
 @Freezed(copyWith: false)
 sealed class MapRenderBatchKey with _$MapRenderBatchKey {
-  const factory MapRenderBatchKey._({
+  const factory _({
     required int version,
     required MapNodeKey nodeKey,
     required String scopeKey,
@@ -28,7 +28,7 @@ sealed class MapRenderBatchKey with _$MapRenderBatchKey {
 }
 
 final class MapMaterialParameterBlock {
-  const MapMaterialParameterBlock._({
+  const new _({
     required this.version,
     required this.bytes,
   });
@@ -38,7 +38,7 @@ final class MapMaterialParameterBlock {
 }
 
 final class MapRenderPacket {
-  const MapRenderPacket._({
+  const new _({
     required this.contractVersion,
     required this.sortKey,
     required this.batchKey,

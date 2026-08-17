@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class MagnitudeFilterChip extends StatelessWidget {
-  const MagnitudeFilterChip({this.min, this.max, this.onChanged, super.key});
+  const new({this.min, this.max, this.onChanged, super.key});
 
   /// マグニチュードの範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
@@ -48,7 +48,7 @@ class MagnitudeFilterChip extends StatelessWidget {
 }
 
 class _MagnitudeFilterModal extends HookWidget {
-  const _MagnitudeFilterModal({
+  const new({
     this.currentMin = MagnitudeFilterChip.initialMin,
     this.currentMax = MagnitudeFilterChip.initialMax,
   });

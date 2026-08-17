@@ -25,7 +25,7 @@ enum FeedTelegramType {
 
 @freezed
 abstract class FeedListResponse with _$FeedListResponse {
-  const factory FeedListResponse({
+  const factory({
     required List<FeedItem> feeds,
     required String? nextCursor,
   }) = _FeedListResponse;
@@ -33,7 +33,7 @@ abstract class FeedListResponse with _$FeedListResponse {
 
 @freezed
 abstract class FeedItem with _$FeedItem {
-  const factory FeedItem({
+  const factory({
     required String id,
     required FeedType feedType,
     required FeedPriority priority,
@@ -48,7 +48,7 @@ abstract class FeedItem with _$FeedItem {
 
 @freezed
 abstract class FeedDetail with _$FeedDetail {
-  const factory FeedDetail({
+  const factory({
     required String id,
     required FeedType feedType,
     required FeedPriority priority,
@@ -64,17 +64,17 @@ abstract class FeedDetail with _$FeedDetail {
 
 @freezed
 sealed class FeedItemData with _$FeedItemData {
-  const factory FeedItemData.earthquakeNotice({required String text}) =
+  const factory earthquakeNotice({required String text}) =
       FeedItemDataEarthquakeNotice;
 
-  const factory FeedItemData.earthquakeExplanation({
+  const factory earthquakeExplanation({
     required FeedInfoType infoType,
     required String text,
     FeedNaming? naming,
     FeedComments? comments,
   }) = FeedItemDataEarthquakeExplanation;
 
-  const factory FeedItemData.earthquakeCounts({
+  const factory earthquakeCounts({
     required FeedInfoType infoType,
     List<FeedEarthquakeCount>? earthquakeCounts,
     String? nextAdvisory,
@@ -82,35 +82,35 @@ sealed class FeedItemData with _$FeedItemData {
     FeedComments? comments,
   }) = FeedItemDataEarthquakeCounts;
 
-  const factory FeedItemData.earthquakeNankai({
+  const factory earthquakeNankai({
     required FeedInfoType infoType,
     FeedNankaiEarthquakeInfo? earthquakeInfo,
     String? nextAdvisory,
     String? text,
   }) = FeedItemDataEarthquakeNankai;
 
-  const factory FeedItemData.appUpdate({String? version, String? url}) =
+  const factory appUpdate({String? version, String? url}) =
       FeedItemDataAppUpdate;
 
-  const factory FeedItemData.incident({String? url}) = FeedItemDataIncident;
+  const factory incident({String? url}) = FeedItemDataIncident;
 
-  const factory FeedItemData.developerMessage({String? url}) =
+  const factory developerMessage({String? url}) =
       FeedItemDataDeveloperMessage;
 }
 
 @freezed
 abstract class FeedComments with _$FeedComments {
-  const factory FeedComments({required String free}) = _FeedComments;
+  const factory({required String free}) = _FeedComments;
 }
 
 @freezed
 abstract class FeedNaming with _$FeedNaming {
-  const factory FeedNaming({required String text, String? en}) = _FeedNaming;
+  const factory({required String text, String? en}) = _FeedNaming;
 }
 
 @freezed
 abstract class FeedEarthquakeCount with _$FeedEarthquakeCount {
-  const factory FeedEarthquakeCount({
+  const factory({
     required FeedTelegramType type,
     required FeedEarthquakeCountTargetTime targetTime,
     required FeedEarthquakeCountValues values,
@@ -120,7 +120,7 @@ abstract class FeedEarthquakeCount with _$FeedEarthquakeCount {
 @freezed
 abstract class FeedEarthquakeCountTargetTime
     with _$FeedEarthquakeCountTargetTime {
-  const factory FeedEarthquakeCountTargetTime({
+  const factory({
     required String start,
     required String end,
   }) = _FeedEarthquakeCountTargetTime;
@@ -128,7 +128,7 @@ abstract class FeedEarthquakeCountTargetTime
 
 @freezed
 abstract class FeedEarthquakeCountValues with _$FeedEarthquakeCountValues {
-  const factory FeedEarthquakeCountValues({
+  const factory({
     required String? all,
     required String? felt,
   }) = _FeedEarthquakeCountValues;
@@ -136,7 +136,7 @@ abstract class FeedEarthquakeCountValues with _$FeedEarthquakeCountValues {
 
 @freezed
 abstract class FeedNankaiEarthquakeInfo with _$FeedNankaiEarthquakeInfo {
-  const factory FeedNankaiEarthquakeInfo({
+  const factory({
     required String text,
     FeedNankaiEarthquakeInfoKind? kind,
     String? appendix,
@@ -146,7 +146,7 @@ abstract class FeedNankaiEarthquakeInfo with _$FeedNankaiEarthquakeInfo {
 @freezed
 abstract class FeedNankaiEarthquakeInfoKind
     with _$FeedNankaiEarthquakeInfoKind {
-  const factory FeedNankaiEarthquakeInfoKind({
+  const factory({
     required String code,
     required String name,
   }) = _FeedNankaiEarthquakeInfoKind;

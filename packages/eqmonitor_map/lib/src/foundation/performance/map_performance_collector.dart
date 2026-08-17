@@ -14,19 +14,19 @@ enum MapPerformanceRecordResultKind {
 }
 
 final class MapPerformanceRecordResult {
-  const MapPerformanceRecordResult.accepted()
+  const new accepted()
     : this._(kind: MapPerformanceRecordResultKind.accepted);
 
-  const MapPerformanceRecordResult.aggregated()
+  const new aggregated()
     : this._(kind: MapPerformanceRecordResultKind.aggregated);
 
-  const MapPerformanceRecordResult.ignored()
+  const new ignored()
     : this._(kind: MapPerformanceRecordResultKind.ignored);
 
-  const MapPerformanceRecordResult.rejected()
+  const new rejected()
     : this._(kind: MapPerformanceRecordResultKind.rejected);
 
-  const MapPerformanceRecordResult._({
+  const new _({
     required this.kind,
     this.completedSnapshots = const [],
   });
@@ -36,7 +36,7 @@ final class MapPerformanceRecordResult {
 }
 
 final class MapPerformanceCollector {
-  MapPerformanceCollector({
+  new({
     required this.policy,
     required Duration windowStartedAt,
   }) : _windowStartedAt = windowStartedAt {

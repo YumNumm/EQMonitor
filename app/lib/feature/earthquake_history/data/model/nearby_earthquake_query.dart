@@ -7,7 +7,7 @@ part 'nearby_earthquake_query.freezed.dart';
 
 @freezed
 abstract class NearbyEarthquakeQuery with _$NearbyEarthquakeQuery {
-  const factory NearbyEarthquakeQuery({
+  const factory({
     required String excludeEventId,
     required double latitude,
     required double longitude,
@@ -17,7 +17,7 @@ abstract class NearbyEarthquakeQuery with _$NearbyEarthquakeQuery {
     required SortOrder sortOrder,
   }) = _NearbyEarthquakeQuery;
 
-  const NearbyEarthquakeQuery._();
+  const new _();
 
   double get latitudeGte =>
       (latitude - parameter.latitudeOffset).clamp(-90, 90).toDouble();

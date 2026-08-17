@@ -6,7 +6,7 @@ part 'kyoshin_monitor_settings_model.g.dart';
 
 @freezed
 abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
-  const factory KyoshinMonitorSettingsModel({
+  const factory({
     /// 強震モニタの表示最低リアルタイム震度
     @Default(null) double? minRealtimeShindo,
 
@@ -36,7 +36,7 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     KyoshinMonitorSettingsApiModel api,
   }) = _KyoshinMonitorSettingsModel;
 
-  factory KyoshinMonitorSettingsModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorSettingsModelFromJson(json);
 }
 
@@ -50,7 +50,7 @@ extension KyoshinMonitorSettingsModelX on KyoshinMonitorSettingsModel {
 @freezed
 abstract class KyoshinMonitorSettingsApiModel
     with _$KyoshinMonitorSettingsApiModel {
-  const factory KyoshinMonitorSettingsApiModel({
+  const factory({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
     @JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)
@@ -68,7 +68,7 @@ abstract class KyoshinMonitorSettingsApiModel
     @Default(Duration(minutes: 10)) Duration delayAdjustInterval,
   }) = _KyoshinMonitorSettingsApiModel;
 
-  factory KyoshinMonitorSettingsApiModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorSettingsApiModelFromJson(json);
 }
 
@@ -77,7 +77,7 @@ enum KyoshinMonitorEndpoint {
   kmoni('http://www.kmoni.bosai.go.jp'),
   lmoniexp('https://smi.lmoniexp.bosai.go.jp');
 
-  const KyoshinMonitorEndpoint(this.url);
+  new(this.url);
 
   final String url;
 }

@@ -91,7 +91,7 @@ enum JmaNotificationOnDisasterPrevention {
   epicenterCorrection(256, '震源要素を訂正します。'),
   otherDisasterPrevention(500, 'その他の防災上の留意事項');
 
-  const JmaNotificationOnDisasterPrevention(this.code, this.message);
+  new(this.code, this.message);
 
   final int code;
   final String message;

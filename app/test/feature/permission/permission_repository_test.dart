@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 
 class _FakeMessaging extends Fake implements FirebaseMessaging {
-  _FakeMessaging(this._requestSettings);
+  new(this._requestSettings);
 
   final NotificationSettings _requestSettings;
 

@@ -146,7 +146,7 @@ NotificationSlot _slot({required NotificationSlotType type}) =>
     );
 
 class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
-  _RecordingSlotsNotifier(this.slot);
+  new(this.slot);
 
   final NotificationSlot slot;
   JmaIntensity? lastEewMinIntensity;
@@ -168,7 +168,7 @@ class _RecordingSlotsNotifier extends NotificationSlotsNotifier {
 }
 
 class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
-  _RecordingEewGlobalSettingsNotifier({this.initialWarningEnabled = true});
+  new({this.initialWarningEnabled = true});
 
   final bool initialWarningEnabled;
   bool? lastWarningEnabled;
@@ -202,7 +202,7 @@ class _RecordingEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
 }
 
 class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
-  _RecordingEewWarningConfigNotifier({
+  new({
     this.initialTarget = EewWarningTarget.currentLocationOnly,
   });
 
@@ -233,7 +233,7 @@ class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
 }
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({
+  const new({
     required this.slot,
     required this.slotsNotifier,
     required this.eewNotifier,

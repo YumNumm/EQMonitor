@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// 震源近傍の地震探索パラメータを調整する BottomSheet
 class NearbyEarthquakeParameterSheet extends HookWidget {
-  const NearbyEarthquakeParameterSheet({
+  const new({
     required this.initial,
     required this.hasDepth,
     super.key,
@@ -99,7 +99,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
 }
 
 class _SliderRow extends StatelessWidget {
-  const _SliderRow({
+  const new({
     required this.label,
     required this.value,
     required this.min,

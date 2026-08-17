@@ -5,7 +5,7 @@ part 'estimated_intensity_point.freezed.dart';
 
 @Freezed(toJson: false)
 abstract class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
-  const factory EstimatedIntensityPoint({
+  const factory({
     required String regionCode,
     required String cityCode,
     required EarthquakeParameterStationItem station,

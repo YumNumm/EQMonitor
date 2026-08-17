@@ -11,7 +11,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_validity_bitmap.dart';
 
 final class SeismicityChunkIntensityDictionary {
-  SeismicityChunkIntensityDictionary({required int capacity})
+  new({required int capacity})
     : _dictionary = SeismicityUtf8Dictionary(
         maxBytes: 0xffffffff,
         maxEntries: capacity,

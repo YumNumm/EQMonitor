@@ -7,7 +7,7 @@ part 'line_mesh_builder_limits.freezed.dart';
 /// `lib/src/mesh/fill_mesh_builder_limits.dart`参照)。
 @freezed
 abstract class LineMeshBuilderLimits with _$LineMeshBuilderLimits {
-  const factory LineMeshBuilderLimits({
+  const factory({
     /// 1つの`LineMesh` segmentに積める頂点数の上限。index bufferが
     /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない
     /// 場合`LineMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を

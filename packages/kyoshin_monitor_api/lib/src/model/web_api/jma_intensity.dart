@@ -33,7 +33,7 @@ enum JmaIntensity {
   /// 震度7
   seven(displayName: '7', description: '震度7', level: 9);
 
-  const JmaIntensity({
+  new({
     required this.displayName,
     required this.description,
     required this.level,

@@ -4,7 +4,7 @@ part 'pmtiles_v3_header.freezed.dart';
 
 @freezed
 abstract class PmTilesV3Header with _$PmTilesV3Header {
-  const factory PmTilesV3Header({
+  const factory({
     required int rootDirectoryOffset,
     required int rootDirectoryLength,
     required int metadataOffset,

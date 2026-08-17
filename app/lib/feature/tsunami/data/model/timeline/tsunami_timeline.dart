@@ -8,7 +8,7 @@ part 'tsunami_timeline.freezed.dart';
 /// 津波タイムライン公開ルート型（UI が参照）。
 @freezed
 abstract class TsunamiTimeline with _$TsunamiTimeline {
-  const factory TsunamiTimeline({
+  const factory({
     required List<TsunamiTelegramMeta> telegrams,
     required List<RegionTimeline> regions,
     required List<OffshoreStationTimeline> offshoreStations,

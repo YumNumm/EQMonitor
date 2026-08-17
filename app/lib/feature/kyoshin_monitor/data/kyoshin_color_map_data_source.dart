@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_color_map_m
 import 'package:flutter/services.dart';
 
 class KyoshinColorMapDataSource {
-  const KyoshinColorMapDataSource();
+  const new();
 
   Future<List<KyoshinColorMapModel>> load() async {
     final str = await rootBundle.loadString(Assets.kyoshinShindoColorMap);

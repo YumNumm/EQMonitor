@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({
+  const new({
     required this.onPressed,
     required this.isEnabled,
     required this.child,
@@ -11,7 +11,7 @@ class ActionButton extends StatelessWidget {
     super.key,
   });
 
-  factory ActionButton.enabled({
+  factory enabled({
     required void Function() onPressed,
     required Widget child,
     EdgeInsets padding = const EdgeInsets.all(16),
@@ -24,14 +24,14 @@ class ActionButton extends StatelessWidget {
     );
   }
 
-  factory ActionButton.disabled({
+  factory disabled({
     required void Function() onPressed,
     required Widget child,
   }) {
     return ActionButton(onPressed: onPressed, isEnabled: false, child: child);
   }
 
-  factory ActionButton.text({
+  factory text({
     required void Function() onPressed,
     required String text,
     required BuildContext context,
@@ -56,7 +56,7 @@ class ActionButton extends StatelessWidget {
     ),
   );
 
-  factory ActionButton.textOutline({
+  factory textOutline({
     required void Function() onPressed,
     required String text,
     required BuildContext context,

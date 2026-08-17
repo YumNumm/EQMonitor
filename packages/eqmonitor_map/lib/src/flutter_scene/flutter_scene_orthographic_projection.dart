@@ -3,7 +3,7 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
 
 class FlutterSceneOrthographicProjection implements scene.CameraProjection {
-  const FlutterSceneOrthographicProjection({required this.projection});
+  const new({required this.projection});
 
   final EqmonitorOrthographicProjection projection;
 

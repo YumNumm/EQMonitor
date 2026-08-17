@@ -7,7 +7,7 @@ const _widgetChannel = MethodChannel('net.yumnumm.eqmonitor/widget');
 
 /// iOS ホーム画面ウィジェットのタイムラインを再読み込みさせる。
 class WidgetTimelineReloader {
-  const WidgetTimelineReloader._();
+  const new _();
 
   /// App Group UserDefaults の内容を更新したあとに呼ぶと、ネイティブ側
   /// (`WidgetCenter.shared.reloadAllTimelines()`) が新しい設定でウィジェットを

@@ -6,7 +6,7 @@ enum JmaInformationType {
   correction(1, '訂正', 'Correction'),
   cancellation(2, '取消', 'Cancellation');
 
-  const JmaInformationType(this.code, this.nameJa, this.nameEn);
+  new(this.code, this.nameJa, this.nameEn);
 
   final int code;
   final String nameJa;

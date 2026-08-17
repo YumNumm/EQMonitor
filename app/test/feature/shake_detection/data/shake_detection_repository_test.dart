@@ -10,7 +10,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 final class _ShakeDetectionAdapter implements HttpClientAdapter {
-  _ShakeDetectionAdapter({required this.statusCode, this.responseBody});
+  new({required this.statusCode, this.responseBody});
 
   final int statusCode;
   final String? responseBody;

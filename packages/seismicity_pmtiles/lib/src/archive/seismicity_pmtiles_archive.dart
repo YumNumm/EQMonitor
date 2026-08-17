@@ -38,7 +38,7 @@ abstract interface class SeismicityPmTilesArchive {
 }
 
 final class SeismicityPmTilesArchiveOpener {
-  const SeismicityPmTilesArchiveOpener();
+  const new();
 
   Future<SeismicityPmTilesArchive> open({
     required PmTilesRandomAccessReader reader,
@@ -129,7 +129,7 @@ final class SeismicityPmTilesArchiveOpener {
 }
 
 final class _SeismicityPmTilesArchiveImpl implements SeismicityPmTilesArchive {
-  _SeismicityPmTilesArchiveImpl({
+  new({
     required this.inner,
     required this.descriptor,
   });

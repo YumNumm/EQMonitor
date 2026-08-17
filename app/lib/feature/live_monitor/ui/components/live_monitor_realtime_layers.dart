@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorRealtimeLayers extends ConsumerWidget {
-  const LiveMonitorRealtimeLayers({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

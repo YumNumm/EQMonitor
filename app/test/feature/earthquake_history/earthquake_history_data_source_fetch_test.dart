@@ -246,7 +246,7 @@ EarthquakePartialNormal _makeEarthquake(String eventId) =>
 
 final class _SpyEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  _SpyEarthquakeHistoryRepository({this.throwOnFetch = false})
+  new({this.throwOnFetch = false})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

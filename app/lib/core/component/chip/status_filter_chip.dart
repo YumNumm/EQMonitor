@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class StatusFilterChip extends StatelessWidget {
-  const StatusFilterChip({required this.statuses, this.onChanged, super.key});
+  const new({required this.statuses, this.onChanged, super.key});
 
   final void Function(List<TelegramStatus>?)? onChanged;
   final List<TelegramStatus>? statuses;
@@ -47,7 +47,7 @@ class StatusFilterChip extends StatelessWidget {
 }
 
 class _StatusFilterModal extends HookWidget {
-  const _StatusFilterModal({this.currentStatuses});
+  const new({this.currentStatuses});
 
   final List<TelegramStatus>? currentStatuses;
 

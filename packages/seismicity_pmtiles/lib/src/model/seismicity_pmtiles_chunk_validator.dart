@@ -5,7 +5,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_validity_bitmap.dart';
 
 final class SeismicityPmTilesChunkValidator {
-  const SeismicityPmTilesChunkValidator();
+  const new();
 
   void validate({required SeismicityPmTilesChunk chunk}) {
     final length = chunk.latitudes.length;

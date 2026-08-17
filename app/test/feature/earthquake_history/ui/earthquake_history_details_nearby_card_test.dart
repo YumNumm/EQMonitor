@@ -63,7 +63,7 @@ void main() {
 }
 
 final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _StubDetailsNotifier(this.earthquake);
+  new(this.earthquake);
 
   final Earthquake earthquake;
 

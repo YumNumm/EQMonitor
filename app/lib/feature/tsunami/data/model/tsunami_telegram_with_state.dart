@@ -8,7 +8,7 @@ part 'tsunami_telegram_with_state.freezed.dart';
 /// 電文とその電文受信時点の津波状態のドメインモデル
 @freezed
 abstract class TsunamiTelegramWithState with _$TsunamiTelegramWithState {
-  const factory TsunamiTelegramWithState({
+  const factory({
     required TsunamiTelegramMeta telegram,
     required TsunamiState state,
   }) = _TsunamiTelegramWithState;

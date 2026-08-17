@@ -13,7 +13,7 @@ final notificationPermissionDialogActionProvider = Provider(
 
 /// OS 通知権限・重大な通知権限が無効なときの案内ダイアログ表示を担う。
 class NotificationPermissionDialogAction {
-  const NotificationPermissionDialogAction();
+  const new();
 
   Future<void> showOsPermission(BuildContext context, WidgetRef ref) async {
     final permission = await ref.read(osNotificationPermissionProvider.future);
@@ -110,7 +110,7 @@ class _NotificationPermissionRequester {
 }
 
 class _NotificationPermissionDialog extends StatelessWidget {
-  const _NotificationPermissionDialog({
+  const new({
     required this.title,
     required this.body,
     required this.primaryActionLabel,

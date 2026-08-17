@@ -6,22 +6,22 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 sealed class SeismicityDecoderWorkerRequest {
-  const SeismicityDecoderWorkerRequest({required this.requestId});
+  const new({required this.requestId});
 
-  const factory SeismicityDecoderWorkerRequest.initialize({
+  const factory initialize({
     required int requestId,
     required SendPort responsePort,
     required SeismicityPmTilesArchiveDescriptor acceptedDescriptor,
     required int chunkCapacity,
   }) = SeismicityDecoderWorkerInitializeRequest;
 
-  const factory SeismicityDecoderWorkerRequest.decode({
+  const factory decode({
     required int requestId,
     required int tileId,
     required TransferableTypedData tileBytes,
   }) = SeismicityDecoderWorkerDecodeRequest;
 
-  const factory SeismicityDecoderWorkerRequest.finish({
+  const factory finish({
     required int requestId,
   }) = SeismicityDecoderWorkerFinishRequest;
 
@@ -30,7 +30,7 @@ sealed class SeismicityDecoderWorkerRequest {
 
 final class SeismicityDecoderWorkerInitializeRequest
     extends SeismicityDecoderWorkerRequest {
-  const SeismicityDecoderWorkerInitializeRequest({
+  const new({
     required super.requestId,
     required this.responsePort,
     required this.acceptedDescriptor,
@@ -44,7 +44,7 @@ final class SeismicityDecoderWorkerInitializeRequest
 
 final class SeismicityDecoderWorkerDecodeRequest
     extends SeismicityDecoderWorkerRequest {
-  const SeismicityDecoderWorkerDecodeRequest({
+  const new({
     required super.requestId,
     required this.tileId,
     required this.tileBytes,
@@ -56,27 +56,27 @@ final class SeismicityDecoderWorkerDecodeRequest
 
 final class SeismicityDecoderWorkerFinishRequest
     extends SeismicityDecoderWorkerRequest {
-  const SeismicityDecoderWorkerFinishRequest({required super.requestId});
+  const new({required super.requestId});
 }
 
 sealed class SeismicityDecoderWorkerResponse {
-  const SeismicityDecoderWorkerResponse({required this.requestId});
+  const new({required this.requestId});
 
-  const factory SeismicityDecoderWorkerResponse.ready({
+  const factory ready({
     required int requestId,
   }) = SeismicityDecoderWorkerReadyResponse;
 
-  const factory SeismicityDecoderWorkerResponse.progress({
+  const factory progress({
     required int requestId,
     required SeismicityPmTilesDecodeProgress progress,
   }) = SeismicityDecoderWorkerProgressResponse;
 
-  const factory SeismicityDecoderWorkerResponse.finished({
+  const factory finished({
     required int requestId,
     required SeismicityDatasetTransfer datasetTransfer,
   }) = SeismicityDecoderWorkerFinishedResponse;
 
-  const factory SeismicityDecoderWorkerResponse.failure({
+  const factory failure({
     required int requestId,
     required SeismicityPmTilesException error,
   }) = SeismicityDecoderWorkerFailureResponse;
@@ -86,12 +86,12 @@ sealed class SeismicityDecoderWorkerResponse {
 
 final class SeismicityDecoderWorkerReadyResponse
     extends SeismicityDecoderWorkerResponse {
-  const SeismicityDecoderWorkerReadyResponse({required super.requestId});
+  const new({required super.requestId});
 }
 
 final class SeismicityDecoderWorkerProgressResponse
     extends SeismicityDecoderWorkerResponse {
-  const SeismicityDecoderWorkerProgressResponse({
+  const new({
     required super.requestId,
     required this.progress,
   });
@@ -101,7 +101,7 @@ final class SeismicityDecoderWorkerProgressResponse
 
 final class SeismicityDecoderWorkerFinishedResponse
     extends SeismicityDecoderWorkerResponse {
-  const SeismicityDecoderWorkerFinishedResponse({
+  const new({
     required super.requestId,
     required this.datasetTransfer,
   });
@@ -111,7 +111,7 @@ final class SeismicityDecoderWorkerFinishedResponse
 
 final class SeismicityDecoderWorkerFailureResponse
     extends SeismicityDecoderWorkerResponse {
-  const SeismicityDecoderWorkerFailureResponse({
+  const new({
     required super.requestId,
     required this.error,
   });

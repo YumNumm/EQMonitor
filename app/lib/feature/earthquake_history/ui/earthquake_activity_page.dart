@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeActivityPage extends HookConsumerWidget {
-  const EarthquakeActivityPage({required this.initialQuery, super.key});
+  const new({required this.initialQuery, super.key});
 
   final EarthquakeActivityQuery initialQuery;
 
@@ -133,7 +133,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
 }
 
 class _ActivityControls extends StatelessWidget {
-  const _ActivityControls({
+  const new({
     required this.query,
     required this.interval,
     required this.onQueryChanged,
@@ -217,7 +217,7 @@ class _ActivityControls extends StatelessWidget {
 }
 
 class _ActivitySummary extends StatelessWidget {
-  const _ActivitySummary({required this.query, required this.items});
+  const new({required this.query, required this.items});
   final EarthquakeActivityQuery query;
   final List<EarthquakePartialNormal> items;
   @override
@@ -238,7 +238,7 @@ class _ActivitySummary extends StatelessWidget {
 }
 
 class _ActivityChart extends StatelessWidget {
-  const _ActivityChart({required this.bins});
+  const new({required this.bins});
   final List<EarthquakeActivityBin> bins;
   @override
   Widget build(BuildContext context) {

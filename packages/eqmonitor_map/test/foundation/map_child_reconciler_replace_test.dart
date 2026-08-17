@@ -146,7 +146,7 @@ void main() {
 }
 
 final class ReplaceTrackingElement implements MapElement {
-  ReplaceTrackingElement({required MapNode node, required this.calls})
+  new({required MapNode node, required this.calls})
     : identity = node.identity;
 
   final List<String> calls;
@@ -171,7 +171,7 @@ final class ReplaceTrackingElement implements MapElement {
 }
 
 final class ReplaceTrackingElementFactory implements MapElementFactory {
-  ReplaceTrackingElementFactory({required this.calls});
+  new({required this.calls});
 
   final List<String> calls;
   final List<MapNode> createdNodes = [];

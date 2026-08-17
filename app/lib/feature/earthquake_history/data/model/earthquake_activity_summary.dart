@@ -6,7 +6,7 @@ part 'earthquake_activity_summary.freezed.dart';
 
 @freezed
 abstract class EarthquakeActivitySummary with _$EarthquakeActivitySummary {
-  const factory EarthquakeActivitySummary({
+  const factory({
     required int beforeCount,
     required int afterCount,
     required JmaIntensity? maxIntensity,

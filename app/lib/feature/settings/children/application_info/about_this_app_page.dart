@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutThisAppPage extends HookWidget {
-  const AboutThisAppPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

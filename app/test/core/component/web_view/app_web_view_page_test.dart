@@ -235,7 +235,7 @@ final class RecordingInAppWebViewPlatform extends InAppWebViewPlatform {
 
 final class RecordingPlatformInAppWebViewWidget
     extends PlatformInAppWebViewWidget {
-  RecordingPlatformInAppWebViewWidget(super.params) : super.implementation();
+  new(super.params) : super.implementation();
 
   @override
   T controllerFromPlatform<T>(PlatformInAppWebViewController controller) =>
@@ -250,7 +250,7 @@ final class RecordingPlatformInAppWebViewWidget
 
 final class RecordingPlatformInAppWebViewController
     extends PlatformInAppWebViewController {
-  RecordingPlatformInAppWebViewController()
+  new()
     : super.implementation(
         const PlatformInAppWebViewControllerCreationParams(id: 'test'),
       );

@@ -6,7 +6,7 @@ part 'seismicity_dataset.freezed.dart';
 /// 指定 span 1つ分の震源イベント一覧と鮮度情報。
 @freezed
 abstract class SeismicityDataset with _$SeismicityDataset {
-  const factory SeismicityDataset({
+  const factory({
     required List<SeismicityEvent> events,
     required DateTime generatedAt,
 

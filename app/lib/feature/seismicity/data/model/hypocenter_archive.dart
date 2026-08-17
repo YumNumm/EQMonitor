@@ -5,7 +5,7 @@ part 'hypocenter_archive.freezed.dart';
 
 @freezed
 abstract class HypocenterArchive with _$HypocenterArchive {
-  const factory HypocenterArchive({
+  const factory({
     required HypocenterArchiveId id,
     required DateTime periodFrom,
     required DateTime periodTo,

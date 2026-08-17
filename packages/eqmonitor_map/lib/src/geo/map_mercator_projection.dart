@@ -5,7 +5,7 @@ import 'dart:math' as math;
 /// と同じ定数・式を使う。zoomのpixel基準を512に固定しているのは、既存の
 /// vector tileと同じ見た目を保つため（tileSize_D相当）。
 class MapMercatorProjection {
-  const MapMercatorProjection();
+  const new();
 
   /// Web Mercatorが表現できる緯度の上限(絶対値)。北緯・南緯共通。
   /// `atan(sinh(pi))`をdegreeへ変換した値で、投影がy軸方向に発散しない範囲。

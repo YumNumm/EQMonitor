@@ -19,7 +19,7 @@ class JapanMainIslandBounds {
 
 /// [HomeMapSettings] からホームマップの表示範囲を解決するクラス
 class HomeMapBoundsResolver {
-  const HomeMapBoundsResolver();
+  const new();
 
   /// [HomeMapSettings.defaultBounds] に対応する [LngLatBounds]。
   LngLatBounds resolve(HomeMapSettings settings) {

@@ -13,7 +13,7 @@ import 'package:kyoshin_monitor_image_parser/src/parser/kyoshin_monitor_image_pa
 
 /// GIF 解析と GeoJSON 文字列生成を Worker Isolate で行う結果。
 final class AnalyzeResult {
-  const AnalyzeResult({
+  const new({
     required this.geoJson,
     required this.featureCount,
     this.parseMicros,
@@ -28,7 +28,7 @@ final class AnalyzeResult {
 
 /// 常駐 Worker Isolate へのハンドル。
 final class KyoshinMonitorAnalyzerIsolate {
-  KyoshinMonitorAnalyzerIsolate._({
+  new _({
     required Isolate isolate,
     required ReceivePort mainReceive,
     required SendPort workerSendPort,
@@ -138,28 +138,28 @@ final class KyoshinMonitorAnalyzerIsolate {
 }
 
 final class _InitMessage {
-  const _InitMessage(this.points);
+  const new(this.points);
 
   final List<NamedObservationPoint> points;
 }
 
 final class _InitAck {
-  const _InitAck();
+  const new();
 }
 
 final class _AnalyzeMessage {
-  const _AnalyzeMessage(this.id, this.gifBytes);
+  const new(this.id, this.gifBytes);
 
   final int id;
   final Uint8List gifBytes;
 }
 
 final class _ShutdownMessage {
-  const _ShutdownMessage();
+  const new();
 }
 
 final class _AnalyzeResponseMessage {
-  const _AnalyzeResponseMessage({
+  const new({
     required this.id,
     this.result,
     this.errorMessage,

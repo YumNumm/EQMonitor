@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class DebugJmaMapPage extends HookConsumerWidget {
-  const DebugJmaMapPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -316,7 +316,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
 }
 
 class _ResultInfo extends StatelessWidget {
-  const _ResultInfo({required this.item});
+  const new({required this.item});
 
   final MapDataItem item;
 
@@ -358,7 +358,7 @@ class _ResultInfo extends StatelessWidget {
 }
 
 class _ObservationPointInfo extends StatelessWidget {
-  const _ObservationPointInfo({required this.item});
+  const new({required this.item});
 
   final EarthquakeParameterStationItem item;
 
@@ -377,7 +377,7 @@ class _ObservationPointInfo extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

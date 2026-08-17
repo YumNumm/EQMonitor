@@ -10,7 +10,7 @@ import 'support/seismicity_benchmark_archive.dart';
 
 /// Correctness-first decode benchmark over Task 65/66 with a real worker.
 final class SeismicityDecodeBenchmarkResult {
-  const SeismicityDecodeBenchmarkResult({
+  const new({
     required this.featureCount,
     required this.tileCount,
     required this.chunkCapacity,
@@ -174,7 +174,7 @@ Future<SeismicityDecodeBenchmarkResult> runSeismicityDecodeBenchmark({
 }
 
 final class _BenchmarkUuidBytes {
-  const _BenchmarkUuidBytes();
+  const new();
 
   bool equal({required Uint8List left, required Uint8List right}) {
     if (left.lengthInBytes != right.lengthInBytes) {

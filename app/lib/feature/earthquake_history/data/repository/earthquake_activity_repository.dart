@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 
 class EarthquakeActivityRepository {
-  const EarthquakeActivityRepository({
+  const new({
     required EarthquakeHistoryRepository earthquakeHistoryRepository,
     EarthquakeActivityBoundsCalculator boundsCalculator =
         const EarthquakeActivityBoundsCalculator(),

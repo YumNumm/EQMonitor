@@ -17,7 +17,7 @@ enum JmaDisasterCategory {
   // 13: Unused
   marine(14, '海上', 'Marine');
 
-  const JmaDisasterCategory(this.code, this.nameJa, this.nameEn);
+  new(this.code, this.nameJa, this.nameEn);
 
   final int code;
   final String nameJa;

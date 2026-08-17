@@ -11,43 +11,43 @@ part 'intensity_tree.g.dart';
 /// 都道府県単位の震度ノード
 @freezed
 abstract class PrefectureIntensityNode with _$PrefectureIntensityNode {
-  const factory PrefectureIntensityNode({
+  const factory({
     required IntensityPrefecture prefecture,
     required List<CityIntensityNode> cities,
   }) = _PrefectureIntensityNode;
 
-  factory PrefectureIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$PrefectureIntensityNodeFromJson(json);
 }
 
 @freezed
 abstract class IntensityPrefecture with _$IntensityPrefecture {
-  const factory IntensityPrefecture({
+  const factory({
     @EarthquakeParameterPrefectureItemJsonConverter()
     required EarthquakeParameterPrefectureItem prefecture,
     required JmaIntensity? maxIntensity,
   }) = _IntensityPrefecture;
 
-  factory IntensityPrefecture.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityPrefectureFromJson(json);
 }
 
 @freezed
 abstract class IntensityRegion with _$IntensityRegion {
-  const factory IntensityRegion({
+  const factory({
     @EarthquakeParameterRegionItemJsonConverter()
     required EarthquakeParameterRegionItem region,
     required JmaIntensity? maxIntensity,
   }) = _IntensityRegion;
 
-  factory IntensityRegion.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityRegionFromJson(json);
 }
 
 /// 市区町村単位の震度ノード
 @freezed
 abstract class CityIntensityNode with _$CityIntensityNode {
-  const factory CityIntensityNode({
+  const factory({
     @EarthquakeParameterCityItemJsonConverter()
     required EarthquakeParameterCityItem city,
     required JmaIntensity? maxIntensity,
@@ -55,19 +55,19 @@ abstract class CityIntensityNode with _$CityIntensityNode {
     JmaLpgmIntensity? maxLpgmIntensity,
   }) = _CityIntensityNode;
 
-  factory CityIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$CityIntensityNodeFromJson(json);
 }
 
 /// 観測点単位の震度ノード
 @freezed
 abstract class StationIntensityNode with _$StationIntensityNode {
-  const factory StationIntensityNode({
+  const factory({
     @EarthquakeParameterStationItemJsonConverter()
     required EarthquakeParameterStationItem station,
     required IntensityStation? intensity,
   }) = _StationIntensityNode;
 
-  factory StationIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$StationIntensityNodeFromJson(json);
 }

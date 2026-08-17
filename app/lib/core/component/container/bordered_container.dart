@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
 class BorderedContainer extends StatelessWidget {
-  const BorderedContainer({
+  const new({
     required this.child,
     this.accentColor,
     this.padding = const EdgeInsets.all(12),

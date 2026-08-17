@@ -8,7 +8,7 @@ import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 enum MapAppLifecycle { active, inactive, background, detached }
 
 final class MapFrameSnapshot {
-  const MapFrameSnapshot._({
+  const new _({
     required this.clockCapture,
     required this.frameNumber,
     required this.camera,

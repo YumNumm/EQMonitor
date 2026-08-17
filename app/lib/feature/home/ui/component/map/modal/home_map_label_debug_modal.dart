@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeMapLabelDebugModal extends ConsumerWidget {
-  const HomeMapLabelDebugModal._();
+  const new _();
 
   static Future<void> show({required BuildContext context}) =>
       showModalBottomSheet(

@@ -9,7 +9,7 @@ part 'focal_mechanism.g.dart';
 @freezed
 abstract class FocalMechanism with _$FocalMechanism {
   /// 発震機構解を作成
-  const factory FocalMechanism({
+  const factory({
     /// 傾斜角(δ)
     ///
     /// 水平面から下向きに測る
@@ -27,6 +27,6 @@ abstract class FocalMechanism with _$FocalMechanism {
   }) = _FocalMechanism;
 
   /// JSONからデシリアライズ
-  factory FocalMechanism.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$FocalMechanismFromJson(json);
 }

@@ -10,7 +10,7 @@ LiveMonitorExitAction liveMonitorExitAction(Ref ref) =>
     const LiveMonitorExitAction();
 
 class LiveMonitorExitAction {
-  const LiveMonitorExitAction();
+  const new();
 
   Future<void> confirm({
     required WidgetRef ref,

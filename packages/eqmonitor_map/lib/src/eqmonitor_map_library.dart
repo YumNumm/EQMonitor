@@ -4,7 +4,7 @@ const eqmonitorMapLibrary = EqmonitorMapLibrary(
 );
 
 class EqmonitorMapLibrary {
-  const EqmonitorMapLibrary({
+  const new({
     required this.packageName,
     required this.supportedPlatforms,
   });

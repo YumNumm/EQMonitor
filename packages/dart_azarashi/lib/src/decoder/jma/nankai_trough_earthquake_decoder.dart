@@ -10,7 +10,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 ///
 /// Decodes JMA Nankai Trough Earthquake information messages.
 class NankaiTroughEarthquakeDecoder {
-  const NankaiTroughEarthquakeDecoder._();
+  const new _();
 
   /// Decodes a Nankai Trough Earthquake message.
   static QzssDcReport decode(JmaCommonParams params) {

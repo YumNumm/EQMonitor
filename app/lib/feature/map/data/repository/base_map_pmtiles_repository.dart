@@ -14,7 +14,7 @@ BaseMapPmtilesRepository baseMapPmtilesRepository(Ref ref) =>
     );
 
 class BaseMapPmtilesRepository {
-  BaseMapPmtilesRepository({
+  new({
     required AssetPackRepository assetPackRepository,
     bool Function()? isWeb,
     bool Function()? isSupportedPlatform,

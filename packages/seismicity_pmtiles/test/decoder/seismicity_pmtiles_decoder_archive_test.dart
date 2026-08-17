@@ -79,7 +79,7 @@ void main() {
 }
 
 final class _Task61BuiltArchive {
-  const _Task61BuiltArchive({
+  const new({
     required this.bytes,
     required this.descriptor,
     required this.occupiedTileIds,

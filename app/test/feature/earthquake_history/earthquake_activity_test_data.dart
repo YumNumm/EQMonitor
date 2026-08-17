@@ -55,7 +55,7 @@ EarthquakePartialNormal testActivityEarthquake({
 
 abstract class TestEarthquakeHistoryRepository
     extends EarthquakeHistoryRepository {
-  TestEarthquakeHistoryRepository()
+  new()
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: testEarthquakeParameter,

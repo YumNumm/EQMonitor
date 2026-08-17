@@ -1,17 +1,17 @@
-extension type MapClockDomainId._(String value) {}
+extension type MapClockDomainId._(String value);
 
 final class MapMonotonicSourceIdentity {
-  MapMonotonicSourceIdentity._();
+  new _();
 }
 
 final class MapWallInstant {
-  const MapWallInstant._({required this.value});
+  const new _({required this.value});
 
   final DateTime value;
 }
 
 final class MapMonotonicInstant {
-  const MapMonotonicInstant._({
+  const new _({
     required this.domain,
     required this.sourceIdentity,
     required this.elapsed,
@@ -23,7 +23,7 @@ final class MapMonotonicInstant {
 }
 
 final class MapClockCapture {
-  const MapClockCapture._({
+  const new _({
     required this.domain,
     required this.wallInstant,
     required this.monotonicInstant,
@@ -59,20 +59,20 @@ typedef MapClockCaptureCreator = MapClockCapture Function({
 });
 
 final class SystemUtcWallSource implements MapUtcWallSource {
-  const SystemUtcWallSource();
+  const new();
 
   @override
   DateTime captureUtc() => DateTime.now().toUtc();
 }
 
 final class SystemMonotonicSource implements MapMonotonicSource {
-  SystemMonotonicSource._({
+  new _({
     required this.domain,
     required this.sourceIdentity,
     required this._stopwatch,
   });
 
-  factory SystemMonotonicSource.start({required MapClockDomainId domain}) =>
+  factory start({required MapClockDomainId domain}) =>
       SystemMonotonicSource._(
         domain: domain,
         sourceIdentity: createMapMonotonicSourceIdentity(),
@@ -96,14 +96,14 @@ final class SystemMonotonicSource implements MapMonotonicSource {
 }
 
 final class SystemMapClock implements MapClock {
-  SystemMapClock._({
+  new _({
     required this._domain,
     required this._utcWallSource,
     required this._monotonicSource,
     required this._captureCreator,
   });
 
-  factory SystemMapClock.start({required MapClockDomainId domain}) {
+  factory start({required MapClockDomainId domain}) {
     final monotonicSource = SystemMonotonicSource.start(domain: domain);
     return SystemMapClock.withSources(
       domain: domain,
@@ -113,7 +113,7 @@ final class SystemMapClock implements MapClock {
     );
   }
 
-  factory SystemMapClock.withSources({
+  factory withSources({
     required MapClockDomainId domain,
     required MapUtcWallSource utcWallSource,
     required MapMonotonicSource monotonicSource,

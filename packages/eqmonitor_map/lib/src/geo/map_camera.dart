@@ -8,13 +8,13 @@ part 'map_camera.freezed.dart';
 /// (brief指定)。bearing/pitchには未対応で、フィールドも追加しない。
 @freezed
 abstract class MapCamera with _$MapCamera {
-  const factory MapCamera({
+  const factory({
     required double centerLongitude,
     required double centerLatitude,
     required double zoom,
   }) = _MapCamera;
 
-  const MapCamera._();
+  const new _();
 
   /// camera中心をnormalized MercatorのworldSize単位(現在のzoom基準)へ
   /// 投影した座標。tile_matrixのorigin rebasingがcamera中心をworld原点

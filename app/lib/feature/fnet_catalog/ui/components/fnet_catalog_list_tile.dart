@@ -5,7 +5,7 @@ import 'package:nied_api_client/nied_api_client.dart';
 
 /// F-netカタログのリストタイル
 class FnetCatalogListTile extends StatelessWidget {
-  const FnetCatalogListTile({required this.event, super.key});
+  const new({required this.event, super.key});
 
   final FnetEvent event;
 
@@ -101,7 +101,7 @@ class FnetCatalogListTile extends StatelessWidget {
 }
 
 class _MagnitudeChip extends StatelessWidget {
-  const _MagnitudeChip({required this.label, required this.magnitude});
+  const new({required this.label, required this.magnitude});
 
   final String label;
   final double magnitude;
@@ -145,7 +145,7 @@ class _MagnitudeChip extends StatelessWidget {
 }
 
 class _InfoItem extends StatelessWidget {
-  const _InfoItem({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -174,7 +174,7 @@ class _InfoItem extends StatelessWidget {
 }
 
 class _DetailSheet extends StatelessWidget {
-  const _DetailSheet({required this.event, required this.scrollController});
+  const new({required this.event, required this.scrollController});
 
   final FnetEvent event;
   final ScrollController scrollController;
@@ -327,7 +327,7 @@ class _DetailSheet extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.children});
+  const new({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
@@ -352,7 +352,7 @@ class _Section extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

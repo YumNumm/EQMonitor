@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 @immutable
 class DesignSystemThemeExtension
     extends ThemeExtension<DesignSystemThemeExtension> {
-  const DesignSystemThemeExtension({
+  const new({
     required this.colorTheme,
     required this.spacing,
     required this.shape,
@@ -19,7 +19,7 @@ class DesignSystemThemeExtension
   /// テスト用: EQMonitor Default テーマのライトカラーで構築する。
   ///
   /// eqmonitorDefault() は light を必ず設定するファクトリであるという前提。
-  factory DesignSystemThemeExtension.light() =>
+  factory light() =>
       DesignSystemThemeExtension._fromColorTheme(
         AppTheme.eqmonitorDefault().light.orFailBecause(
           'AppTheme.eqmonitorDefault() は light を必ず設定する前提のため',
@@ -29,14 +29,14 @@ class DesignSystemThemeExtension
   /// テスト用: EQMonitor Default テーマのダークカラーで構築する。
   ///
   /// eqmonitorDefault() は dark を必ず設定するファクトリであるという前提。
-  factory DesignSystemThemeExtension.dark() =>
+  factory dark() =>
       DesignSystemThemeExtension._fromColorTheme(
         AppTheme.eqmonitorDefault().dark.orFailBecause(
           'AppTheme.eqmonitorDefault() は dark を必ず設定する前提のため',
         ),
       );
 
-  factory DesignSystemThemeExtension._fromColorTheme(
+  factory _fromColorTheme(
     ThemeColorSet colorTheme,
   ) => DesignSystemThemeExtension(
     colorTheme: colorTheme,

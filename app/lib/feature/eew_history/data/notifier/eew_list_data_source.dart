@@ -66,7 +66,7 @@ Future<EewListDataSource> eewListDataSource(
 
 class EewListDataSource
     extends GroupedDataSource<String?, String, EewTelegramItem> {
-  EewListDataSource({
+  new({
     required EewListRepository repository,
     required EewListParameter parameter,
   }) : _repository = repository,

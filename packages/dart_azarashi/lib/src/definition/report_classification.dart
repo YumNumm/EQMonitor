@@ -8,7 +8,7 @@ enum JmaReportClassification {
   // 3-6: Unused
   trainingTest(7, '訓練/試験', 'Training/Test');
 
-  const JmaReportClassification(this.code, this.nameJa, this.nameEn);
+  new(this.code, this.nameJa, this.nameEn);
 
   final int code;
   final String nameJa;

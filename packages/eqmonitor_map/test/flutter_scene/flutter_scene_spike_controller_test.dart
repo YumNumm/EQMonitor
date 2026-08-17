@@ -530,7 +530,7 @@ FlutterSceneSpikeController createController({
 );
 
 class FakeSceneSpikeControllerAdapter implements SceneSpikeControllerAdapter {
-  FakeSceneSpikeControllerAdapter({
+  new({
     Future<void>? rebuildCompletion,
     Future<bool>? initializeCompletion,
     this.updateMeshError,

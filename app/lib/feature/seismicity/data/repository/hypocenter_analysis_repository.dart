@@ -18,7 +18,7 @@ abstract interface class HypocenterArchiveEventRepository {
 }
 
 class HypocenterAnalysisRepository implements HypocenterArchiveEventRepository {
-  const HypocenterAnalysisRepository({
+  const new({
     required api.HypocentersApiClient client,
     Talker? logger,
   }) : _client = client,
@@ -93,7 +93,7 @@ class HypocenterAnalysisRepository implements HypocenterArchiveEventRepository {
 }
 
 class HypocenterBoundsPolygon {
-  const HypocenterBoundsPolygon();
+  const new();
 
   String encode({required SeismicityBounds bounds}) => [
     '${bounds.minLongitude},${bounds.minLatitude}',

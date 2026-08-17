@@ -8,7 +8,7 @@ final eewWarningOverlayRenderPolicyProvider =
     );
 
 class EewWarningOverlayRenderPolicy {
-  const EewWarningOverlayRenderPolicy();
+  const new();
 
   bool shouldRender({
     required AppLifecycleState lifecycle,

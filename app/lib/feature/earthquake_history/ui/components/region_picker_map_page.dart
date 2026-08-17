@@ -14,7 +14,7 @@ typedef RegionPickerResult = ({String code, String name});
 
 /// 地図をタップして都道府県・市区町村を選択するページ。
 class RegionPickerMapPage extends HookConsumerWidget {
-  const RegionPickerMapPage({required this.selectedType, super.key});
+  const new({required this.selectedType, super.key});
 
   final String selectedType;
 

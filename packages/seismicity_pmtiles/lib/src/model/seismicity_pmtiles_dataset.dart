@@ -5,7 +5,7 @@ part 'seismicity_pmtiles_dataset.freezed.dart';
 
 @Freezed(equal: false)
 abstract class SeismicityPmTilesDataset with _$SeismicityPmTilesDataset {
-  const factory SeismicityPmTilesDataset({
+  const factory({
     required String archiveRevision,
     required int schemaVersion,
     required int dataZoom,

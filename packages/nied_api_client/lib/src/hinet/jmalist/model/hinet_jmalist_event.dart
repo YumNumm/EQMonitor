@@ -8,7 +8,7 @@ part 'hinet_jmalist_event.freezed.dart';
 /// アプリの一般公開機能から到達不可能なデバッグ画面専用として扱うこと。
 @freezed
 abstract class HinetJmalistEvent with _$HinetJmalistEvent {
-  const factory HinetJmalistEvent({
+  const factory({
     /// 発生時刻(UTC)
     ///
     /// jmalist.php の出力は JST のため、パーサ側で UTC(-9h)へ変換して

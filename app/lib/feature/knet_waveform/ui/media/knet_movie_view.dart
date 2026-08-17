@@ -10,7 +10,7 @@ import 'package:video_player/video_player.dart';
 
 /// K-NET all/movie MP4 をストリーミング再生するビュー
 class KnetMovieView extends HookConsumerWidget {
-  const KnetMovieView({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   final DateTime eventTime;
 
@@ -36,7 +36,7 @@ class KnetMovieView extends HookConsumerWidget {
 }
 
 class _MovieContent extends HookWidget {
-  const _MovieContent({required this.eventTime, required this.client});
+  const new({required this.eventTime, required this.client});
 
   final DateTime eventTime;
   final KnetDownloadClient client;
@@ -106,7 +106,7 @@ class _MovieContent extends HookWidget {
 }
 
 class _MovieTypeSelector extends StatelessWidget {
-  const _MovieTypeSelector({required this.selected, required this.onChanged});
+  const new({required this.selected, required this.onChanged});
 
   final KnetMovieType selected;
   final ValueChanged<KnetMovieType> onChanged;
@@ -131,7 +131,7 @@ class _MovieTypeSelector extends StatelessWidget {
 }
 
 class _VideoArea extends HookWidget {
-  const _VideoArea({
+  const new({
     required this.controller,
     required this.isInitialized,
     required this.onRetry,
@@ -190,7 +190,7 @@ class _VideoArea extends HookWidget {
 }
 
 class _VideoControls extends StatelessWidget {
-  const _VideoControls({
+  const new({
     required this.controller,
     required this.isPlaying,
     required this.duration,
@@ -274,7 +274,7 @@ class _VideoControls extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const new({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

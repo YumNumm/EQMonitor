@@ -9,7 +9,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk_validator.
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 final class SeismicityChunkBuilder {
-  SeismicityChunkBuilder({
+  new({
     required int capacity,
     this._beforeCanonicalAdd,
     this._beforeIntensityAdd,

@@ -9,11 +9,11 @@ part 'intensity_history_state.freezed.dart';
 @freezed
 sealed class IntensityHistoryState with _$IntensityHistoryState {
   /// Lv1: 全都道府県表示状態。
-  const factory IntensityHistoryState.prefecture() =
+  const factory prefecture() =
       IntensityHistoryStatePrefecture;
 
   /// Lv2: 特定都道府県にフォーカス中の状態。
-  const factory IntensityHistoryState.city({
+  const factory city({
     required String prefectureCode,
     required String prefectureName,
     String? selectedCityCode,

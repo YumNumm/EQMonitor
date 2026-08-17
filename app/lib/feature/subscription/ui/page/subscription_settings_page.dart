@@ -9,7 +9,7 @@ import 'package:riverpod/experimental/mutation.dart';
 
 /// サブスクリプションの状態確認 / 管理画面。
 class SubscriptionSettingsPage extends ConsumerWidget {
-  const SubscriptionSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class SubscriptionSettingsPage extends ConsumerWidget {
 }
 
 class _ActiveSection extends ConsumerWidget {
-  const _ActiveSection({required this.status});
+  const new({required this.status});
 
   final SubscriptionStatusActive status;
 
@@ -118,7 +118,7 @@ class _ActiveSection extends ConsumerWidget {
 }
 
 class _InactiveSection extends ConsumerWidget {
-  const _InactiveSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

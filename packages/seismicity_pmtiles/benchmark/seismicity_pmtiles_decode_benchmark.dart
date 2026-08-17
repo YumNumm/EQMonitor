@@ -44,7 +44,7 @@ Future<int> runSeismicityDecodeBenchmarkCli({
 
 /// Fixed-key JSON writer without retaining a string-key result map.
 final class SeismicityBenchmarkJsonWriter {
-  const SeismicityBenchmarkJsonWriter();
+  const new();
 
   String write({required SeismicityDecodeBenchmarkResult result}) {
     final threshold = result.informationalTimeThreshold;

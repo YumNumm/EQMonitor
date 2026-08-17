@@ -15,7 +15,7 @@ enum ThemeBrightnessMode { light, dark }
 
 @freezed
 abstract class AppTheme with _$AppTheme {
-  const factory AppTheme({
+  const factory({
     required String name,
     required int version,
     required String author,
@@ -24,11 +24,11 @@ abstract class AppTheme with _$AppTheme {
     ThemeColorSet? dark,
   }) = _AppTheme;
 
-  factory AppTheme.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$AppThemeFromJson(json);
 
   // 設計ドキュメントに記載のEQMonitor Defaultプリセット（全色値のコード）
-  factory AppTheme.eqmonitorDefault() => const AppTheme(
+  factory eqmonitorDefault() => const AppTheme(
     name: 'EQMonitor Default',
     version: 1,
     author: 'EQMonitor',
@@ -251,7 +251,7 @@ abstract class AppTheme with _$AppTheme {
     ),
   );
 
-  const AppTheme._();
+  const new _();
 
   ThemeColorSet colorSetFor(Brightness brightness) {
     final colorSet = switch (brightness) {

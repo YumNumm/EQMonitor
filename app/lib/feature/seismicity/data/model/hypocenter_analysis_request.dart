@@ -6,7 +6,7 @@ part 'hypocenter_analysis_request.freezed.dart';
 
 @freezed
 abstract class HypocenterAnalysisRequest with _$HypocenterAnalysisRequest {
-  const factory HypocenterAnalysisRequest({
+  const factory({
     required List<HypocenterArchiveId> archiveIds,
     required SeismicityBounds bounds,
   }) = _HypocenterAnalysisRequest;

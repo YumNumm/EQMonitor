@@ -9,7 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
 class HypocenterPmTilesLayer extends HookWidget {
-  const HypocenterPmTilesLayer({
+  const new({
     required this.archives,
     required this.colorMode,
     super.key,
@@ -92,7 +92,7 @@ class HypocenterPmTilesLayer extends HookWidget {
 }
 
 class HypocenterPmTilesStyleBuilder {
-  const HypocenterPmTilesStyleBuilder();
+  const new();
 
   HypocenterPmTilesStyleIds idsFor(HypocenterArchive archive) {
     final suffix = '${archive.id.partition.name}-${archive.id.jstLabel}'
@@ -225,7 +225,7 @@ class HypocenterPmTilesStyleBuilder {
 }
 
 class HypocenterPmTilesStyleIds {
-  const HypocenterPmTilesStyleIds({
+  const new({
     required this.sourceId,
     required this.clusterLayerId,
     required this.hypocenterLayerId,
@@ -237,7 +237,7 @@ class HypocenterPmTilesStyleIds {
 }
 
 class HypocenterPmTilesLayers {
-  const HypocenterPmTilesLayers({
+  const new({
     required this.cluster,
     required this.hypocenter,
   });

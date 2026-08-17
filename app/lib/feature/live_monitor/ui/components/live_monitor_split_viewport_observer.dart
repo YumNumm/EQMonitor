@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class LiveMonitorSplitViewportObserver extends SingleChildRenderObjectWidget {
-  const LiveMonitorSplitViewportObserver({
+  const new({
     required this.active,
     required this.environment,
     required this.onMeasurementChanged,
@@ -37,7 +37,7 @@ class LiveMonitorSplitViewportObserver extends SingleChildRenderObjectWidget {
 }
 
 class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
-  LiveMonitorSplitViewportRenderObject({
+  new({
     required bool active,
     required LiveMonitorSplitViewportEnvironment environment,
     required ValueChanged<LiveMonitorSplitViewportMeasurement>

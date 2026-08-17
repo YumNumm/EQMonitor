@@ -7,7 +7,7 @@ import 'package:eqmonitor/core/model/environment.dart';
 /// `buildConfigProvider` を読む provider / Widget のテストでは必ず
 /// `buildConfigProvider.overrideWithValue(...)` で差し替えること。
 class BuildConfigFixture {
-  const BuildConfigFixture();
+  const new();
 
   BuildConfig build({
     Flavor flavor = Flavor.dev,

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class _FakeMessaging extends Fake implements FirebaseMessaging {
-  _FakeMessaging(this._settings);
+  new(this._settings);
   final NotificationSettings _settings;
   @override
   Future<NotificationSettings> getNotificationSettings() async => _settings;

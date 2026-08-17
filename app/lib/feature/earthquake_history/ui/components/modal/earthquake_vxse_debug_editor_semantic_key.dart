@@ -5,7 +5,7 @@ import 'dart:convert';
 /// リスト項目の並び替え・削除後もWidgetの識別子（フォーカス・raw入力状態）を
 /// 安定させるため、値をbase64url化したコンポーネントからprefixを構築する。
 class EarthquakeVxseDebugEditorSemanticKey {
-  const EarthquakeVxseDebugEditorSemanticKey();
+  const new();
 
   String component(String value) =>
       base64Url.encode(utf8.encode(value)).replaceAll('=', '');

@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class QzssDcrReportWidget extends HookConsumerWidget {
-  const QzssDcrReportWidget({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -151,7 +151,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
+  const new({
     required this.label,
     required this.value,
     this.icon,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class SpikeLabelPaintLayout {
-  const SpikeLabelPaintLayout({
+  const new({
     required this.anchor,
     required this.paintOffset,
   });
@@ -13,7 +13,7 @@ class SpikeLabelPaintLayout {
 }
 
 class SpikeLabelLayout {
-  const SpikeLabelLayout({
+  const new({
     required this.projectionMatrix,
     required this.geographicAnchor,
     required this.logicalSize,
@@ -65,7 +65,7 @@ class SpikeLabelLayout {
 }
 
 class SpikeLabelPainter extends CustomPainter {
-  const SpikeLabelPainter({
+  const new({
     required this.projectionMatrix,
     required this.geographicAnchor,
     required this.logicalSize,

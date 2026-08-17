@@ -6,7 +6,7 @@ enum JmaTyphoonReferenceTimeType {
   estimation(2, '推定'),
   forecast(3, '予報');
 
-  const JmaTyphoonReferenceTimeType(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

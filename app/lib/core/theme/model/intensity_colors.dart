@@ -8,7 +8,7 @@ part 'intensity_colors.g.dart';
 
 @freezed
 abstract class IntensityColors with _$IntensityColors {
-  const factory IntensityColors({
+  const factory({
     required IntensityColorEntry unknown,
     required IntensityColorEntry zero,
     required IntensityColorEntry one,
@@ -22,7 +22,7 @@ abstract class IntensityColors with _$IntensityColors {
     required IntensityColorEntry seven,
   }) = _IntensityColors;
 
-  factory IntensityColors.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityColorsFromJson(json);
 }
 

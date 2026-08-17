@@ -9,7 +9,7 @@ ShakeDetectionGridCellBuilder shakeDetectionGridCellBuilder(Ref ref) =>
     ShakeDetectionGridCellBuilder();
 
 class ShakeDetectionGridCell {
-  const ShakeDetectionGridCell({
+  const new({
     required this.minLat,
     required this.minLng,
     required this.level,

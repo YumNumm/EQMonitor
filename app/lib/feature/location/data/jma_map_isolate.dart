@@ -53,7 +53,7 @@ void jmaMapWorkerEntryPoint(JmaMapWorkerArgument argument) {
 }
 
 final class JmaMapWorkerArgument {
-  const JmaMapWorkerArgument({
+  const new({
     required this.mainSendPort,
     required this.mapDataBytesByType,
   });
@@ -63,7 +63,7 @@ final class JmaMapWorkerArgument {
 }
 
 final class JmaMapWorkerStartupError {
-  const JmaMapWorkerStartupError({
+  const new({
     required this.errorMessage,
     required this.errorStack,
   });
@@ -139,7 +139,7 @@ class JmaMapWorkerCalculator {
 
 /// 常駐 Worker Isolate への JMA マップ検索ハンドル。
 final class JmaMapIsolate {
-  JmaMapIsolate._({
+  new _({
     required Isolate isolate,
     required ReceivePort mainReceive,
     required SendPort workerSendPort,

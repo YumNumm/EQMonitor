@@ -1,6 +1,6 @@
-extension type MapSourceInstanceId._(String value) {}
+extension type MapSourceInstanceId._(String value);
 
-extension type MapContentDigest._(String value) {}
+extension type MapContentDigest._(String value);
 
 MapSourceInstanceId createMapSourceInstanceId({required String value}) {
   final normalizedValue = value.trim();

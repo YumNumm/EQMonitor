@@ -8,7 +8,7 @@ typedef MaxHeightTimeline = List<MaxHeightTimelineEntry>;
 
 @freezed
 abstract class MaxHeightTimelineEntry with _$MaxHeightTimelineEntry {
-  const factory MaxHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required double? value,
     required bool? isOver,

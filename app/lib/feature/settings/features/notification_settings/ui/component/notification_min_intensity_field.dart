@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// スロットの最小震度をドロップダウンで表示する。
 class NotificationMinIntensityField extends StatelessWidget {
-  const NotificationMinIntensityField({
+  const new({
     required this.slotType,
     required this.kind,
     required this.value,

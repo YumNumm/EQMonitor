@@ -12,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiRegionList extends StatelessWidget {
-  const TsunamiRegionList({required this.tsunami, super.key});
+  const new({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 
@@ -59,7 +59,7 @@ class TsunamiRegionList extends StatelessWidget {
 }
 
 class _WarningGroupHeader extends StatelessWidget {
-  const _WarningGroupHeader({required this.kind});
+  const new({required this.kind});
 
   final TsunamiWarningKind kind;
 
@@ -89,7 +89,7 @@ class _WarningGroupHeader extends StatelessWidget {
 }
 
 class _ForecastRegionCard extends StatelessWidget {
-  const _ForecastRegionCard({required this.region});
+  const new({required this.region});
 
   final TsunamiRegion region;
 
@@ -140,7 +140,7 @@ class _ForecastRegionCard extends StatelessWidget {
 }
 
 class _ForecastDetails extends StatelessWidget {
-  const _ForecastDetails({required this.region});
+  const new({required this.region});
 
   final TsunamiRegion region;
 
@@ -207,7 +207,7 @@ class _ForecastDetails extends StatelessWidget {
 }
 
 class _ObservationExpansion extends HookWidget {
-  const _ObservationExpansion({required this.stations});
+  const new({required this.stations});
 
   final List<TsunamiRegionStation> stations;
 

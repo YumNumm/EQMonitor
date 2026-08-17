@@ -7,7 +7,7 @@ import 'package:vector_math/vector_math_64.dart';
 /// serialization.
 @immutable
 class SpikeDirtyRange {
-  factory SpikeDirtyRange({required int start, required int count}) {
+  factory({required int start, required int count}) {
     RangeError.checkNotNegative(start, 'start');
     if (count <= 0) {
       throw RangeError.value(count, 'count', 'must be positive');
@@ -15,7 +15,7 @@ class SpikeDirtyRange {
     return SpikeDirtyRange._(start: start, count: count);
   }
 
-  const SpikeDirtyRange._({required this.start, required this.count});
+  const new _({required this.start, required this.count});
 
   final int start;
   final int count;
@@ -34,14 +34,14 @@ class SpikeDirtyRange {
 /// serialization.
 @immutable
 class SpikeMeshFrame {
-  const SpikeMeshFrame._({
+  const new _({
     required this.positions,
     required this.colors,
     required this.positionDirtyRange,
     required this.colorDirtyRange,
   });
 
-  factory SpikeMeshFrame.initial() {
+  factory initial() {
     final positions = Float32List.fromList([
       -0.5,
       -0.5,

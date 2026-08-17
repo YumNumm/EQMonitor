@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiTimelineOverlay extends ConsumerWidget {
-  const TsunamiTimelineOverlay({required this.tsunamiId, super.key});
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 
@@ -101,7 +101,7 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
 }
 
 class _ExpandedOverlay extends StatelessWidget {
-  const _ExpandedOverlay({
+  const new({
     required this.tsunamiId,
     required this.telegrams,
     required this.selection,
@@ -246,7 +246,7 @@ class _ExpandedOverlay extends StatelessWidget {
 }
 
 class _CollapsedOverlay extends StatelessWidget {
-  const _CollapsedOverlay({
+  const new({
     required this.telegrams,
     required this.selection,
     required this.ref,
@@ -309,7 +309,7 @@ class _CollapsedOverlay extends StatelessWidget {
 }
 
 class _TimeProportionalSlider extends StatelessWidget {
-  const _TimeProportionalSlider({
+  const new({
     required this.telegrams,
     required this.effectiveIndex,
     required this.isLatest,
@@ -386,7 +386,7 @@ class _TimeProportionalSlider extends StatelessWidget {
 }
 
 class _TimeMarkers extends StatelessWidget {
-  const _TimeMarkers({required this.telegrams});
+  const new({required this.telegrams});
 
   final List<TsunamiTelegramWithState> telegrams;
 

@@ -74,7 +74,7 @@ enum JmaEewForecastRegion {
   okinawaRegion(70, '沖縄'),
   other(80, 'その他の府県予報区および地方予報区');
 
-  const JmaEewForecastRegion(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

@@ -17,7 +17,7 @@ part 'earthquake_partial.g.dart';
 
 @freezed
 sealed class EarthquakePartial with _$EarthquakePartial {
-  const factory EarthquakePartial.normal({
+  const factory normal({
     required String eventId,
     required TelegramStatus status,
     required DateTime? originTime,
@@ -31,30 +31,30 @@ sealed class EarthquakePartial with _$EarthquakePartial {
     required String? estimatedIntensityTileUrl,
   }) = EarthquakePartialNormal;
 
-  const factory EarthquakePartial.prefecture({
+  const factory prefecture({
     required JmaIntensity prefectureIntensity,
     required EarthquakePartialNormal earthquake,
   }) = EarthquakePartialPrefecture;
 
-  const factory EarthquakePartial.region({
+  const factory region({
     required JmaIntensity regionIntensity,
     required EarthquakePartialNormal earthquake,
   }) = EarthquakePartialRegion;
 
-  const factory EarthquakePartial.city({
+  const factory city({
     required JmaIntensity cityIntensity,
     required EarthquakePartialNormal earthquake,
   }) = EarthquakePartialCity;
 
-  const factory EarthquakePartial.station({
+  const factory station({
     required JmaIntensity stationIntensity,
     required EarthquakePartialNormal earthquake,
   }) = EarthquakePartialStation;
 
-  factory EarthquakePartial.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakePartialFromJson(json);
 
-  const EarthquakePartial._();
+  const new _();
 
   EarthquakePartialNormal get earthquake => switch (this) {
     final EarthquakePartialNormal value => value,
@@ -71,20 +71,20 @@ sealed class EarthquakePartial with _$EarthquakePartial {
 
 @freezed
 abstract class IntensityAreaInfo with _$IntensityAreaInfo {
-  const factory IntensityAreaInfo({
+  const factory({
     required String code,
     required LocalizedName name,
     required JmaIntensity intensity,
     required JmaLpgmIntensity? lpgmIntensity,
   }) = _IntensityAreaInfo;
 
-  factory IntensityAreaInfo.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityAreaInfoFromJson(json);
 }
 
 @freezed
 abstract class StationSearchInfo with _$StationSearchInfo {
-  const factory StationSearchInfo({
+  const factory({
     required String code,
     required LocalizedName name,
     required JmaIntensity? intensity,
@@ -93,7 +93,7 @@ abstract class StationSearchInfo with _$StationSearchInfo {
     required List<PrePeriod>? prePeriods,
   }) = _StationSearchInfo;
 
-  factory StationSearchInfo.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$StationSearchInfoFromJson(json);
 }
 

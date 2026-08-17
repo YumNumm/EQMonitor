@@ -3,7 +3,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 /// トップレベル関数のうち、言語仕様・フレームワーク上その形でしか
 /// 書けないものを [AvoidTopLevelFunctions] の対象外と判定する。
 class TopLevelFunctionExemption {
-  const TopLevelFunctionExemption._();
+  const new _();
 
   static const _entryPointFunctionName = 'main';
   static const _riverpodAnnotationNames = {'riverpod', 'Riverpod'};

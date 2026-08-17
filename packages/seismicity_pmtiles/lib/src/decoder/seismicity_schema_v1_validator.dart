@@ -15,7 +15,7 @@ const schemaV1Properties = <String>{
 };
 
 final class SeismicitySchemaV1Validator {
-  const SeismicitySchemaV1Validator();
+  const new();
 
   void validateDescriptor({
     required SeismicityPmTilesArchiveDescriptor descriptor,

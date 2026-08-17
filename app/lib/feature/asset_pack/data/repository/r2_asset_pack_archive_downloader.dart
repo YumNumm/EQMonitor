@@ -63,13 +63,13 @@ class R2AssetPackArchiveDownloader {
     }
     return outputFile;
   }
+
+  static Future<TaskStatusUpdate> runBackgroundAssetPackDownloadTask({
+    required DownloadTask task,
+    required void Function(double progress) onProgress,
+  }) => FileDownloader().download(task, onProgress: onProgress);
+
+  static Future<File> resolveBackgroundAssetPackDownloadTaskFile(
+    DownloadTask task,
+  ) async => File(await task.filePath());
 }
-
-Future<TaskStatusUpdate> runBackgroundAssetPackDownloadTask({
-  required DownloadTask task,
-  required void Function(double progress) onProgress,
-}) => FileDownloader().download(task, onProgress: onProgress);
-
-Future<File> resolveBackgroundAssetPackDownloadTaskFile(
-  DownloadTask task,
-) async => File(await task.filePath());

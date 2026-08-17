@@ -6,7 +6,7 @@ part 'general_notification_settings.g.dart';
 
 @freezed
 abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
-  const factory GeneralNotificationSettings({
+  const factory({
     required bool notificationEnabled,
     required bool tsunamiEnabled,
     required bool trainingEnabled,
@@ -16,7 +16,7 @@ abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
     required bool earthquakeNoticeEnabled,
   }) = _GeneralNotificationSettings;
 
-  factory GeneralNotificationSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$GeneralNotificationSettingsFromJson(json);
 }
 

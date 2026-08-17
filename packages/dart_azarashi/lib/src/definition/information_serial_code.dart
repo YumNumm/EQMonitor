@@ -28,7 +28,7 @@ enum JmaInformationSerialCode {
   investigationEnded(6, '調査終了', '調査終了'),
   otherInformation(15, 'その他の情報', 'その他の情報');
 
-  const JmaInformationSerialCode(this.code, this.name, this.description);
+  new(this.code, this.name, this.description);
 
   final int code;
   final String name;

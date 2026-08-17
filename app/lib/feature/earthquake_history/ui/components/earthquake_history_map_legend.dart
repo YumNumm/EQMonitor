@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 /// [showingLpgmIntensity] が true の場合は長周期地震動階級を表示する。
 /// [shindoDbTree] が指定された場合は震度DBモードの凡例を表示する。
 class EarthquakeHistoryMapLegend extends StatelessWidget {
-  const EarthquakeHistoryMapLegend({
+  const new({
     required this.intensity,
     this.showingLpgmIntensity = false,
     this.shindoDbTree,
@@ -57,7 +57,7 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
 }
 
 class _JmaLegend extends StatelessWidget {
-  const _JmaLegend({required this.intensity});
+  const new({required this.intensity});
   final EarthquakeIntensity intensity;
 
   @override
@@ -80,7 +80,7 @@ class _JmaLegend extends StatelessWidget {
 }
 
 class _LpgmLegend extends StatelessWidget {
-  const _LpgmLegend({required this.intensity});
+  const new({required this.intensity});
   final EarthquakeIntensity intensity;
 
   @override
@@ -106,7 +106,7 @@ class _LpgmLegend extends StatelessWidget {
 }
 
 class _ShindoDbLegend extends StatelessWidget {
-  const _ShindoDbLegend({required this.tree});
+  const new({required this.tree});
   final ShindoDbIntensityTree tree;
 
   @override
