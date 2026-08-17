@@ -155,9 +155,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                             baseline: TextBaseline.alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: '利用規約',
-                              onTap: () => const TermOfServiceRoute(
-                                $extra: null,
-                              ).push<void>(context),
+                              onTap: () => const TermOfServiceRoute()
+                                  .push<void>(context),
                             ),
                           ),
                           const TextSpan(text: ' と '),
@@ -166,9 +165,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                             baseline: TextBaseline.alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: 'プライバシーポリシー',
-                              onTap: () => const PrivacyPolicyRoute(
-                                $extra: null,
-                              ).push<void>(context),
+                              onTap: () => const PrivacyPolicyRoute()
+                                  .push<void>(context),
                             ),
                           ),
                           const TextSpan(text: ' に同意したとみなされます'),
