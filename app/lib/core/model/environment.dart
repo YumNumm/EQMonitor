@@ -13,7 +13,7 @@ enum Flavor { dev, prod }
 
 @freezed
 abstract class BuildConfig with _$BuildConfig {
-  const factory BuildConfig({
+  const factory({
     required String restApiUrl,
     required String appIdSuffix,
     required String appName,
@@ -31,10 +31,10 @@ abstract class BuildConfig with _$BuildConfig {
     @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
 
-  factory BuildConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$BuildConfigFromJson(json);
 
-  factory BuildConfig.fromEnvironment() => BuildConfig(
+  factory fromEnvironment() => BuildConfig(
     restApiUrl: const String.fromEnvironment('REST_API_URL'),
     appIdSuffix: const String.fromEnvironment('APP_ID_SUFFIX'),
     appName: const String.fromEnvironment('APP_NAME'),
@@ -61,7 +61,7 @@ abstract class BuildConfig with _$BuildConfig {
     ),
   );
 
-  const BuildConfig._();
+  const new _();
 
   /// デバッグ向け UI（デバッグメニュー・HTTP キャッシュ操作）を表示してよいか。
   ///

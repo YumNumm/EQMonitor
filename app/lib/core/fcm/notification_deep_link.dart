@@ -1,5 +1,5 @@
 sealed class NotificationDeepLink {
-  const NotificationDeepLink();
+  const new();
 
   static const _internalScheme = 'eqmonitor';
   // 通知(link)とOSディープリンク(app_links)は意図的に同一の許可リストを共用する。
@@ -52,13 +52,13 @@ sealed class NotificationDeepLink {
 }
 
 class NotificationRouteLink extends NotificationDeepLink {
-  const NotificationRouteLink({required this.location});
+  const new({required this.location});
 
   final String location;
 }
 
 class NotificationUrlLink extends NotificationDeepLink {
-  const NotificationUrlLink({required this.uri});
+  const new({required this.uri});
 
   final Uri uri;
 }

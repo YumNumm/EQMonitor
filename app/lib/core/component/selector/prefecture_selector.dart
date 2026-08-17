@@ -8,7 +8,7 @@ typedef PrefectureSelection = ({String code, String name});
 
 /// 都道府県選択ドロップダウン
 class PrefectureSelector extends ConsumerWidget {
-  const PrefectureSelector({
+  const new({
     required this.selectedCode,
     required this.onChanged,
     this.hintText = '都道府県を選択',

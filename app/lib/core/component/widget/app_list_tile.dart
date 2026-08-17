@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppListTile extends StatelessWidget {
-  factory AppListTile.switchListTile({
+  factory switchListTile({
     required String title,
     required String subtitle,
     required bool value,
@@ -19,7 +19,7 @@ class AppListTile extends StatelessWidget {
     type: _AppListTileType.switchListTile,
   );
 
-  factory AppListTile.listTile({
+  factory listTile({
     required String title,
     required String subtitle,
     Widget? trailing,
@@ -32,7 +32,7 @@ class AppListTile extends StatelessWidget {
     type: _AppListTileType.listTile,
   );
 
-  const AppListTile._({
+  const new _({
     required this.title,
     required this.subtitle,
     required this.type,

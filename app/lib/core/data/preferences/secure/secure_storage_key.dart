@@ -6,6 +6,6 @@ enum SecureStorageKey {
   knetBosaiUserId('knet_bosai_user_id'),
   knetBosaiPassword('knet_bosai_password');
 
-  const SecureStorageKey(this.key);
+  new(this.key);
   final String key;
 }

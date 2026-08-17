@@ -14,7 +14,7 @@ import 'package:riverpod/src/internals.dart' show DataKind;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final class CachedOperationToken {
-  const CachedOperationToken._(this._authority);
+  const new _(this._authority);
 
   final int _authority;
 }

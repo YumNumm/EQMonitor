@@ -10,7 +10,7 @@ part 'shape_theme_extension.tailor.dart';
 @tailorMixinComponent
 class ShapeThemeExtension extends ThemeExtension<ShapeThemeExtension>
     with _$ShapeThemeExtensionTailorMixin {
-  const ShapeThemeExtension({
+  const new({
     required this.xs,
     required this.sm,
     required this.md,
@@ -22,7 +22,7 @@ class ShapeThemeExtension extends ThemeExtension<ShapeThemeExtension>
     required this.pill,
   });
 
-  factory ShapeThemeExtension.standard() => const ShapeThemeExtension(
+  factory standard() => const ShapeThemeExtension(
     xs: 8,
     sm: 12,
     md: 16,
