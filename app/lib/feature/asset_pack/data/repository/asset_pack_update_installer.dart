@@ -122,6 +122,42 @@ class AssetPackUpdateInstaller {
       await deleteAssetPackTemporaryDirectory(directory: stagingWorkspace);
     }
   }
+
+  Future<void> verifyAssetPackArchive({
+    required File archiveFile,
+    required AssetPackDistributionEntry entry,
+  }) async {
+    if (!archiveFile.existsSync() ||
+        await archiveFile.length() != entry.archiveSizeBytes) {
+      throw const AssetPackInstallException('ダウンロードした ZIP のサイズが配信情報と一致しません。');
+    }
+    final digest = await sha256.bind(archiveFile.openRead()).first;
+    if (digest.toString() != entry.archiveSha256) {
+      throw const AssetPackInstallException('ダウンロードした ZIP のハッシュが配信情報と一致しません。');
+    }
+  }
+
+  Future<void> deleteAssetPackTemporaryFile({required File? file}) async {
+    try {
+      if (file != null && file.existsSync()) {
+        await file.delete();
+      }
+    } on FileSystemException {
+      // Temporary storage is never activated. The OS can reclaim it later.
+    }
+  }
+
+  Future<void> deleteAssetPackTemporaryDirectory({
+    required Directory? directory,
+  }) async {
+    try {
+      if (directory != null && directory.existsSync()) {
+        await directory.delete(recursive: true);
+      }
+    } on FileSystemException {
+      // Temporary storage is never activated. The OS can reclaim it later.
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -132,40 +168,4 @@ Future<AssetPackUpdateInstaller> assetPackUpdateInstaller(Ref ref) async {
     storageRepository: storage,
     downloadArchive: downloader.download,
   );
-}
-
-Future<void> verifyAssetPackArchive({
-  required File archiveFile,
-  required AssetPackDistributionEntry entry,
-}) async {
-  if (!archiveFile.existsSync() ||
-      await archiveFile.length() != entry.archiveSizeBytes) {
-    throw const AssetPackInstallException('ダウンロードした ZIP のサイズが配信情報と一致しません。');
-  }
-  final digest = await sha256.bind(archiveFile.openRead()).first;
-  if (digest.toString() != entry.archiveSha256) {
-    throw const AssetPackInstallException('ダウンロードした ZIP のハッシュが配信情報と一致しません。');
-  }
-}
-
-Future<void> deleteAssetPackTemporaryFile({required File? file}) async {
-  try {
-    if (file != null && file.existsSync()) {
-      await file.delete();
-    }
-  } on FileSystemException {
-    // Temporary storage is never activated. The OS can reclaim it later.
-  }
-}
-
-Future<void> deleteAssetPackTemporaryDirectory({
-  required Directory? directory,
-}) async {
-  try {
-    if (directory != null && directory.existsSync()) {
-      await directory.delete(recursive: true);
-    }
-  } on FileSystemException {
-    // Temporary storage is never activated. The OS can reclaim it later.
-  }
 }
