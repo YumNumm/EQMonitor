@@ -22,6 +22,9 @@ final class ApnsTokenEventChannel: NSObject, FlutterStreamHandler {
   }
 
   func publish(_ deviceToken: Data) {
+    guard !deviceToken.isEmpty else {
+      return
+    }
     let token = deviceToken.map { byte in
       String(format: "%02x", byte)
     }.joined()
