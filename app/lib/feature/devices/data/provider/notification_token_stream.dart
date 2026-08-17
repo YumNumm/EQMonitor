@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/feature/devices/data/data_source/apns_token_callback_data_source.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
@@ -20,7 +21,7 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
       ? ref.watch(_firebaseMessagingTokenStreamProvider).value
       : null;
   final apnsToken = capabilities.supportsApns
-      ? ref.watch(_apnsTokenStreamProvider).value
+      ? ref.watch(apnsNotificationTokenStreamProvider).value
       : null;
   final apnsPushToStartToken = capabilities.supportsPushToStart
       ? ref.watch(apnsPushToStartTokenStreamProvider).value
@@ -39,7 +40,7 @@ Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
 
   // iOSの場合は、APNs Tokenを取得してからFCM Tokenを取得する
   if (ref.watch(pushTokenPlatformCapabilitiesProvider).supportsApns) {
-    await ref.read(_apnsTokenStreamProvider.future);
+    await ref.read(apnsNotificationTokenStreamProvider.future);
   }
 
   final initialToken = await messaging.getToken();
@@ -51,7 +52,7 @@ Stream<String> _firebaseMessagingTokenStream(Ref ref) async* {
 }
 
 @Riverpod(keepAlive: true)
-Stream<String> _apnsTokenStream(Ref ref) async* {
+Stream<String> apnsNotificationTokenStream(Ref ref) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
   assert(
     ref.watch(pushTokenPlatformCapabilitiesProvider).supportsApns,
@@ -59,12 +60,18 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
   );
 
   final initialToken = await messaging.getAPNSToken();
+  var lastToken = initialToken;
   if (initialToken != null) {
     yield initialToken;
   }
 
-  await for (final _ in messaging.onTokenRefresh) {
-    ref.invalidateSelf();
+  final callbackDataSource = ref.watch(apnsTokenCallbackDataSourceProvider);
+  await for (final token in callbackDataSource.tokenUpdates) {
+    if (token == lastToken) {
+      continue;
+    }
+    lastToken = token;
+    yield token;
   }
 }
 
