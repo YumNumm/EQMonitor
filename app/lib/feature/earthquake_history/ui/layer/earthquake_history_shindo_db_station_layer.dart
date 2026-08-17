@@ -4,13 +4,15 @@ import 'dart:convert';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/util/map/map_geo_json_source_updater.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_icon_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -19,11 +21,13 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
   const EarthquakeHistoryShindoDbStationLayer({
     required this.tree,
     required this.parameter,
+    this.stationDisplayMode = StationDisplayMode.auto,
     super.key,
   });
 
   final ShindoDbIntensityTree tree;
   final EarthquakeHistoryMapLayerParameter parameter;
+  final StationDisplayMode stationDisplayMode;
 
   static const sourceId = 'eq-history-shindo-db-station';
   static const iconLayerId = 'eq-history-shindo-db-station-icon';
@@ -70,7 +74,7 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [iconLayerId],
               sourceIds: const [sourceId],
@@ -112,13 +116,14 @@ class EarthquakeHistoryShindoDbStationLayer extends HookConsumerWidget {
           await styleController.addLayer(
             EarthquakeHistoryShindoDbStationLayerBuilder.build(
               parameter: parameter,
+              stationDisplayMode: stationDisplayMode,
             ),
           );
           isLayerInitialized.value = true;
         }),
       );
       return null;
-    }, [styleController, parameter, iconData, dbIconData]);
+    }, [styleController, parameter, stationDisplayMode, iconData, dbIconData]);
 
     useEffect(() {
       final token = lifecycleToken.value;
@@ -148,12 +153,16 @@ class EarthquakeHistoryShindoDbStationLayerBuilder {
 
   static SymbolStyleLayer build({
     required EarthquakeHistoryMapLayerParameter parameter,
+    required StationDisplayMode stationDisplayMode,
   }) => SymbolStyleLayer(
     id: EarthquakeHistoryShindoDbStationLayer.iconLayerId,
     sourceId: EarthquakeHistoryShindoDbStationLayer.sourceId,
     minZoom: parameter.stationMinZoom,
     layout: {
-      'icon-image': ['get', 'iconId'],
+      'icon-image': const StationIconImageExpressionBuilder().build(
+        stationDisplayMode: stationDisplayMode,
+        stationTextZoom: parameter.stationTextZoom,
+      ),
       'icon-allow-overlap': true,
       'icon-ignore-placement': true,
       'symbol-sort-key': ['get', 'sortKey'],
@@ -177,6 +186,11 @@ class EarthquakeHistoryShindoDbStationGeoJsonBuilder {
 
   String build({required ShindoDbIntensityTree tree}) {
     final features = <Map<String, dynamic>>[];
+    final sortedClasses = {
+      ...tree.tree.keys,
+      ...tree.unresolvedStations.keys,
+    }.toList()..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final maxClass = sortedClasses.firstOrNull;
 
     void addStation(ShindoDbStationNode station, ShindoDbIntensityClass cls) {
       final loc = station.location;
@@ -191,7 +205,9 @@ class EarthquakeHistoryShindoDbStationGeoJsonBuilder {
         },
         'properties': {
           'name': station.name,
-          'iconId': cls.mapIconId,
+          'iconIdFull': cls.mapIconId,
+          'iconIdPlain': cls.plainMapIconId,
+          'isMax': cls == maxClass,
           // 高震度が上に描画されるようソートキーに使用
           'sortKey': cls.orderIndex,
         },

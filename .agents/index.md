@@ -5,6 +5,16 @@ Cursor を使う場合は `.cursor/rules/*.mdc` が直接読み込まれます�
 
 ---
 
+## GitHub / Pull Request・Issue（厳守）
+
+- **PR と Issue を作成してよいのは YumNumm org のリポジトリのみ。upstream へは絶対に作成しない。**
+- `gh pr create` / `gh issue create` では `--repo YumNumm/<repo>` を**必ず明示する**。省略禁止。
+- 特に `third_party/flutter_scene` は `bdero/flutter_scene` の fork の submodule であり、この配下では `gh` が既定の送信先を **upstream** にする。`--repo` を省略すると upstream へ PR が飛ぶ。
+- EQMonitor 本体のメインブランチは `develop`。PR のベースブランチは `develop` を指定する。
+- Claude Code では `.claude/settings.json` の PreToolUse フックが `--repo YumNumm/` を含まない `gh pr create` / `gh issue create` を deny する。**このフックは Claude Code でしか動かない**ため、他のエージェント（Codex 等）では本ルールを自分で守ること。
+
+---
+
 ## 生命に関わる情報・開発上の共通前提
 
 このプロジェクトでは、緊急地震速報など生命に関わる情報を扱います。以下を守ってください。
@@ -17,6 +27,13 @@ Cursor を使う場合は `.cursor/rules/*.mdc` が直接読み込まれます�
 
 - 数万人規模の利用を想定する。コードの品質・可読性はもちろん、単体テスト・Widget テストなどを充実させ、バグの低減につなげること。
 - データの読み込み中・エラー時の表示は雑になりがちです。例外をそのまま表示して overflow したりしないよう、その場に合わせた正しい表示を開発者と検討し実装すること。
+
+## テスト方針
+
+- TDD は有効な選択肢だが、一律の必須手順にはしない。ユーザーの指示と変更リスクに応じて、テスト先行・テスト追加・既存テストによる回帰確認を選択する。
+- 文言や情報配置など表示専用の軽微な変更では、Widget Test の追加を必須としない。
+- 緊急情報の判定、データ変換、状態遷移、通知条件、永続化、障害修正など、誤動作の影響や回帰リスクが高いロジックには自動テストを用意する。
+- 新しいテストを追加しない場合も、関連する既存テストと静的解析を実行し、追加しない理由を作業結果に記載する。
 
 ---
 

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -95,9 +95,10 @@ class _EewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final originTime = eew.originTime != null
-        ? dateFormat.format(eew.originTime!)
-        : '不明';
+    final originTime = switch (eew.originTime) {
+      final originTime? => dateFormat.format(originTime),
+      null => '不明',
+    };
     final reportTime = dateFormat.format(eew.reportTime);
     final hypocenter = eew.hypocenter;
 

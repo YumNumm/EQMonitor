@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'travel_time_table.dart';
@@ -9,6 +9,7 @@ part of 'travel_time_table.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$TravelTimeTableCopyWithImpl<$Res>
 /// Create a copy of TravelTimeTable
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? p = null,Object? s = null,Object? depth = null,Object? distance = null,}) {
-  return _then(_self.copyWith(
+  return _then(TravelTimeTable(
 p: null == p ? _self.p : p // ignore: cast_nullable_to_non_nullable
 as double,s: null == s ? _self.s : s // ignore: cast_nullable_to_non_nullable
 as double,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
@@ -329,7 +330,7 @@ class _$TravelTimeTablesCopyWithImpl<$Res>
 /// Create a copy of TravelTimeTables
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? table = null,}) {
-  return _then(_self.copyWith(
+  return _then(TravelTimeTables(
 table: null == table ? _self.table : table // ignore: cast_nullable_to_non_nullable
 as List<TravelTimeTable>,
   ));
@@ -472,7 +473,7 @@ return $default(_that.table);case _:
 
 
 class _TravelTimeTables implements TravelTimeTables {
-  const _TravelTimeTables({required final  List<TravelTimeTable> table}): _table = table;
+  const _TravelTimeTables({required  List<TravelTimeTable> table}): _table = table;
   
 
  final  List<TravelTimeTable> _table;

@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
   const SettingsSectionHeader({required this.text, super.key});

@@ -3,11 +3,22 @@ export 'package:pmtiles_v3/pmtiles_v3.dart'
 
 export 'src/archive/seismicity_pmtiles_archive.dart'
     show SeismicityPmTilesArchive;
+export 'src/decoder/seismicity_pmtiles_decode_operation.dart'
+    show SeismicityPmTilesDecodeOperation;
+export 'src/decoder/seismicity_pmtiles_decoder.dart'
+    show SeismicityPmTilesDecoder;
 export 'src/model/seismicity_pmtiles_archive_descriptor.dart';
 export 'src/model/seismicity_pmtiles_bounds.dart';
+export 'src/model/seismicity_pmtiles_chunk.dart';
+export 'src/model/seismicity_pmtiles_chunk_validator.dart'
+    show SeismicityPmTilesChunkValidator;
+export 'src/model/seismicity_pmtiles_dataset.dart';
+export 'src/model/seismicity_pmtiles_decode_progress.dart';
 export 'src/model/seismicity_pmtiles_exception.dart';
 export 'src/model/seismicity_pmtiles_load_state.dart';
 export 'src/model/seismicity_pmtiles_result.dart';
 export 'src/model/seismicity_pmtiles_source.dart';
+export 'src/model/seismicity_validity_bitmap.dart'
+    show SeismicityValidityBitmap;
 export 'src/reader/seismicity_pmtiles_asset_loader.dart';
 export 'src/reader/seismicity_random_access_reader_factory.dart';

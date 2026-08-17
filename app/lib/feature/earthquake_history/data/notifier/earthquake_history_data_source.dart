@@ -7,27 +7,16 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_realtime_list_reconciler.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_data_source.g.dart';
-
-/// デフォルトの「全て」パラメータかどうかを判定する。
-/// フィルタや並び替えが変更されていない初期状態と一致する場合のみ true。
-bool isDefaultAllParameter(EarthquakeHistoryParameter p) =>
-    p ==
-    const EarthquakeHistoryParameter.all(
-      sortBy: EarthquakeSortBy.eventId,
-      sortOrder: SortOrder.desc,
-    );
 
 @riverpod
 Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
@@ -117,7 +106,7 @@ class EarthquakeHistoryDataSource
   Future<LoadResult<String?, EarthquakePartial>> load(
     LoadAction<String?> action,
   ) async => switch (action) {
-    Refresh() when isDefaultAllParameter(_parameter) => await _load(
+    Refresh() when _parameter.isDefaultAll => await _load(
       limit: 10,
       cursor: null,
     ),
@@ -361,7 +350,7 @@ class EarthquakeHistoryDataSource
             continue;
           }
           final previous = index == -1 ? null : result[index];
-          _applyDecisionToList(
+          _applyDecisionToListItems(
             result,
             reconciler.decide(record: record, previous: previous),
             eventId: eventId,
@@ -401,27 +390,29 @@ class EarthquakeHistoryDataSource
       removeItem(index);
     }
   }
-}
 
-void _applyDecisionToList(
-  List<EarthquakePartial> items,
-  EarthquakeRealtimeListDecision decision, {
-  required String eventId,
-}) {
-  final index = items.indexWhere((item) => item.earthquake.eventId == eventId);
-  switch (decision) {
-    case EarthquakeRealtimeListUpsert(:final item):
-      if (index == -1) {
-        items.add(item);
-      } else {
-        items[index] = item;
-      }
-    case EarthquakeRealtimeListRemove():
-      if (index != -1) {
-        items.removeAt(index);
-      }
-    case EarthquakeRealtimeListPreserve():
-      return;
+  void _applyDecisionToListItems(
+    List<EarthquakePartial> items,
+    EarthquakeRealtimeListDecision decision, {
+    required String eventId,
+  }) {
+    final index = items.indexWhere(
+      (item) => item.earthquake.eventId == eventId,
+    );
+    switch (decision) {
+      case EarthquakeRealtimeListUpsert(:final item):
+        if (index == -1) {
+          items.add(item);
+        } else {
+          items[index] = item;
+        }
+      case EarthquakeRealtimeListRemove():
+        if (index != -1) {
+          items.removeAt(index);
+        }
+      case EarthquakeRealtimeListPreserve():
+        return;
+    }
   }
 }
 

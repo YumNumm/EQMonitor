@@ -1,6 +1,6 @@
 # assets_util
 
-Platform-managed local assets（FlutterGen の `Assets` とは別物）の絶対パスを解決する。
+アプリに同梱されたローカル Asset Pack（FlutterGen の `Assets` とは別物）の絶対パスを解決する。
 
 - iOS / macOS: Native Assets + Swift + ffigen（`EQMAssetsUtil` を共有。`live_activity_util` と同型）
 - Android: Flutter plugin + Kotlin + jnigen
@@ -12,18 +12,14 @@ Platform-managed local assets（FlutterGen の `Assets` とは別物）の絶対
 final path = AssetsUtil.resolveLocalPath(fileName: 'example.bin');
 
 // Asset Pack (manifest.json / map/all.pmtiles / parameters/*.json) のルート。
-// - iOS: Managed Background Assets（`eqmonitor-assets`）
-// - Android: Play Asset Delivery install-time pack（`eqmonitor_assets`）
-// - macOS: Bundle.main 内の `platform/` フォルダ（常に利用可能）
-// 未取得・存在しない場合は AssetPackNotReadyException を投げる（フォールバックなし）。
+// - iOS / macOS: Bundle.main 内の `platform/` フォルダ
+// - Android: APK assets/platform を app-private storage へ一度展開
+// 存在しない場合は AssetPackNotReadyException を投げる。
 final packRoot = await AssetsUtil.resolvePackRoot();
 ```
 
-iOS の Managed Background Assets 側の実 API 調査結果・既知の制約
-（`AssetPackManager` に「パックのルートディレクトリを取得する」API が無いこと、
-Background Download App Extension が別途必要なこと等）は
-`docs/knowledge/20260727_background_assets_api_surface.md` と
-`docs/ios-background-assets.md` を参照。
+R2 更新の署名検証・ダウンロード・展開・切り替えは EQMonitor アプリ層が担う。
+この package は更新済み Pack を管理せず、異常時に必ず残る同梱 Pack だけを解決する。
 
 ## Codegen
 

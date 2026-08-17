@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'parameter_data_response_union.dart';
@@ -9,6 +9,7 @@ part of 'parameter_data_response_union.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 ParameterDataResponseUnion _$ParameterDataResponseUnionFromJson(
@@ -231,7 +232,7 @@ return shindoDbStationsParameter(_that.metadata,_that.stations);case _:
 
 @JsonSerializable()
 class ParameterDataResponseUnionJmaCodeTableParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionJmaCodeTableParameter({required this.metadata, @JsonKey(name: 'code_tables') required this.codeTables, final  String? $type}): $type = $type ?? 'jmaCodeTableParameter';
+  const ParameterDataResponseUnionJmaCodeTableParameter({required this.metadata, @JsonKey(name: 'code_tables') required this.codeTables,  String? $type}): $type = $type ?? 'jmaCodeTableParameter';
   factory ParameterDataResponseUnionJmaCodeTableParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionJmaCodeTableParameterFromJson(json);
 
 @override final  JmaCodeTableParameterMetadata metadata;
@@ -324,7 +325,7 @@ $JmaCodeTableParameterCodeTablesCopyWith<$Res> get codeTables {
 
 @JsonSerializable()
 class ParameterDataResponseUnionKyoshinObservationPointsParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionKyoshinObservationPointsParameter({required this.metadata, required final  List<KyoshinObservationPoint> points, final  String? $type}): _points = points,$type = $type ?? 'kyoshinObservationPointsParameter';
+  const ParameterDataResponseUnionKyoshinObservationPointsParameter({required this.metadata, required  List<KyoshinObservationPoint> points,  String? $type}): _points = points,$type = $type ?? 'kyoshinObservationPointsParameter';
   factory ParameterDataResponseUnionKyoshinObservationPointsParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionKyoshinObservationPointsParameterFromJson(json);
 
 @override final  KyoshinObservationPointsParameterMetadata metadata;
@@ -414,7 +415,7 @@ $KyoshinObservationPointsParameterMetadataCopyWith<$Res> get metadata {
 
 @JsonSerializable()
 class ParameterDataResponseUnionEarthquakeStationsParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionEarthquakeStationsParameter({required this.metadata, required final  List<EarthquakeStationPrefecture> prefectures, final  String? $type}): _prefectures = prefectures,$type = $type ?? 'earthquakeStationsParameter';
+  const ParameterDataResponseUnionEarthquakeStationsParameter({required this.metadata, required  List<EarthquakeStationPrefecture> prefectures,  String? $type}): _prefectures = prefectures,$type = $type ?? 'earthquakeStationsParameter';
   factory ParameterDataResponseUnionEarthquakeStationsParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionEarthquakeStationsParameterFromJson(json);
 
 @override final  ParameterMetadata metadata;
@@ -504,7 +505,7 @@ $ParameterMetadataCopyWith<$Res> get metadata {
 
 @JsonSerializable()
 class ParameterDataResponseUnionTsunamiStationsParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionTsunamiStationsParameter({required this.metadata, required final  List<TsunamiStationPrefecture> prefectures, final  String? $type}): _prefectures = prefectures,$type = $type ?? 'tsunamiStationsParameter';
+  const ParameterDataResponseUnionTsunamiStationsParameter({required this.metadata, required  List<TsunamiStationPrefecture> prefectures,  String? $type}): _prefectures = prefectures,$type = $type ?? 'tsunamiStationsParameter';
   factory ParameterDataResponseUnionTsunamiStationsParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionTsunamiStationsParameterFromJson(json);
 
 @override final  TsunamiStationsParameterMetadata metadata;
@@ -594,7 +595,7 @@ $TsunamiStationsParameterMetadataCopyWith<$Res> get metadata {
 
 @JsonSerializable()
 class ParameterDataResponseUnionShindoDbStationsParameter implements ParameterDataResponseUnion {
-  const ParameterDataResponseUnionShindoDbStationsParameter({required this.metadata, required final  List<ShindoDbStation> stations, final  String? $type}): _stations = stations,$type = $type ?? 'shindoDbStationsParameter';
+  const ParameterDataResponseUnionShindoDbStationsParameter({required this.metadata, required  List<ShindoDbStation> stations,  String? $type}): _stations = stations,$type = $type ?? 'shindoDbStationsParameter';
   factory ParameterDataResponseUnionShindoDbStationsParameter.fromJson(Map<String, dynamic> json) => _$ParameterDataResponseUnionShindoDbStationsParameterFromJson(json);
 
 @override final  ShindoDbStationsParameterMetadata metadata;

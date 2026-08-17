@@ -12,7 +12,7 @@
 ## スコープ
 
 - アプリが foreground にある時だけ表示するアプリ内 UI
-- 現在地に対応する細分区域が警報対象かを判定
+- 現在地に対応する EEW 府県予報区が警報対象かを判定
 - 全画面表示、最小化バナー、再展開、明示的な閉じる操作
 - 複数の有効な警報を1画面に集約し、代表イベントを選択
 - 最大10秒のパルス状バイブレーション
@@ -54,8 +54,11 @@
 3. `eewProvider` に存在する
 4. 生存判定上有効で、取消・期限切れではない
 5. `isWarning` が true
-6. 現在地から JMA の緊急地震速報用細分区域 `areaForecastLocalEew` を解決できる
-7. 解決した区域 code が `event.warning.regions.where((e) => e.hadWarning)` に含まれる
+6. 現在地から JMA の緊急地震速報用府県予報区 `areaForecastLocalEew` を解決できる
+7. 解決した区域 code が現在報の `event.warning.prefectures` に含まれる
+
+`hadWarning` は前回報ですでに警報だったかを示す履歴情報なので、現在警報の対象判定には
+使用しない。初回警報や後続報で追加された区域も、現在報の配列に存在すれば即時に対象とする。
 
 現在地・権限・区域解決が loading/error/不明の場合は表示しない。解決後に対象であれば、
 未処理の eventId として通常どおり表示する。対象地域から外れた場合は即座に消し、
@@ -130,7 +133,7 @@ EQMonitor の Material 3 テーマに合わせる。
 見出しは backend の Live Activity と同じ構造を採用し、完成済み文字列の分割ではなく、
 短縮震源名と警報地域の構造化データから組み立てる。アプリ側では短縮震源名を
 `hypocenter?.detailedName ?? hypocenter?.name`、見出し地域を
-`warning.zones.where((e) => e.hadWarning)` から得る。backend の `isLevel` 相当はアプリモデルに
+現在報の `warning.zones` 全件から得る。backend の `isLevel` 相当はアプリモデルに
 直接存在しないため、`accuracy?.epicenter == 1 && originTime == null` から明示的に導出する。
 PLUM 法・レベル法または震源不明時は不正確な震源を強調せず、地域側の
 「○○で強い揺れ」を主見出しにする。地域も得られない場合だけ、overlay 独自の安全な
@@ -172,8 +175,9 @@ iOS の haptics 制約を各プラットフォームで確認する。
 
 ## 検証方針
 
-ユーザー要望により Widget test は追加しない。ロジックを Widget から分離し、次を unit /
-provider / notifier test で検証する。
+ロジックを Widget から分離し、次を unit / provider / notifier test で検証する。
+地図レイヤーについては、非同期 initialize / update / dispose の順序を保証する Widget test
+も追加する。
 
 - 対象区域、警報状態、realtime 状態による候補抽出
 - 到達区分、予想震度、時刻、eventId による代表選択
@@ -185,6 +189,7 @@ provider / notifier test で検証する。
 - location 離脱・再進入、lifecycle、無効化の状態遷移
 - 設定の既定値・永続化・無効化
 - シミュレーションが provider を汚染せず、実警報に優先されること
+- 地図レイヤー初期化中の更新、dispose 後の再 mount、連続更新で最終 filter が残ること
 
 実機またはシミュレーション UI で、SafeArea、長い地域名、text scale、Light/Dark、
 Android back、実際の振動開始・停止を手動確認する。

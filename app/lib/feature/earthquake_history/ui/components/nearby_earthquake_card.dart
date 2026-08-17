@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

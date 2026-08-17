@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_entries_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

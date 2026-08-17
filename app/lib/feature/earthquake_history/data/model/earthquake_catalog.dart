@@ -89,15 +89,17 @@ abstract class EarthquakeCatalogPeriodComponent
   }) = _EarthquakeCatalogPeriodComponent;
 }
 
-String formatCatalogPeriodValue(api.CatalogPeriodValue value) {
-  final rawValue = value.value;
-  if (rawValue == null) {
-    return '欠測';
+extension on api.CatalogPeriodValue {
+  String get _formatted {
+    final rawValue = value;
+    if (rawValue == null) {
+      return '欠測';
+    }
+    return switch (kind) {
+      api.CatalogPeriodKind.frequency => '${rawValue}Hz',
+      api.CatalogPeriodKind.period => '${rawValue}秒',
+    };
   }
-  return switch (value.kind) {
-    api.CatalogPeriodKind.frequency => '${rawValue}Hz',
-    api.CatalogPeriodKind.period => '${rawValue}秒',
-  };
 }
 
 extension EarthquakeCatalogApiExtension on api.Catalog {
@@ -143,23 +145,25 @@ extension on api.CatalogHypocenter {
 }
 
 extension on api.CatalogStationRecord {
-  EarthquakeCatalogStationRecord get _toEarthquakeCatalogStationRecord =>
-      EarthquakeCatalogStationRecord(
-        stationCode: stationCode,
-        intensityClass: intensity.classValue.toShindoDbIntensityClass,
-        instrumentalIntensity: intensity.instrumental?.toDouble(),
-        observedAt: observedAt,
-        maxAcceleration: maxAcceleration?._toDomain,
-        maxAccelTime: maxAccelTime,
-        periods: periods == null
-            ? null
-            : EarthquakeCatalogPeriods(
-                ns: periods!.ns?._toDomain,
-                ew: periods!.ew?._toDomain,
-                ud: periods!.ud?._toDomain,
-              ),
-        observationCount: observationCount,
-      );
+  EarthquakeCatalogStationRecord get _toEarthquakeCatalogStationRecord {
+    final periodsValue = periods;
+    return EarthquakeCatalogStationRecord(
+      stationCode: stationCode,
+      intensityClass: intensity.classValue.toShindoDbIntensityClass,
+      instrumentalIntensity: intensity.instrumental?.toDouble(),
+      observedAt: observedAt,
+      maxAcceleration: maxAcceleration?._toDomain,
+      maxAccelTime: maxAccelTime,
+      periods: periodsValue == null
+          ? null
+          : EarthquakeCatalogPeriods(
+              ns: periodsValue.ns?._toDomain,
+              ew: periodsValue.ew?._toDomain,
+              ud: periodsValue.ud?._toDomain,
+            ),
+      observationCount: observationCount,
+    );
+  }
 }
 
 extension on api.CatalogStationMaxAcceleration {
@@ -173,15 +177,14 @@ extension on api.CatalogStationMaxAcceleration {
 }
 
 extension on api.CatalogStationPeriodComponent {
-  EarthquakeCatalogPeriodComponent get _toDomain =>
-      EarthquakeCatalogPeriodComponent(
-        maxAccelPeriodText: maxAccelPeriod != null
-            ? formatCatalogPeriodValue(maxAccelPeriod!)
-            : null,
-        predominantPeriodText: predominantPeriod != null
-            ? formatCatalogPeriodValue(predominantPeriod!)
-            : null,
-      );
+  EarthquakeCatalogPeriodComponent get _toDomain {
+    final maxAccelPeriodValue = maxAccelPeriod;
+    final predominantPeriodValue = predominantPeriod;
+    return EarthquakeCatalogPeriodComponent(
+      maxAccelPeriodText: maxAccelPeriodValue?._formatted,
+      predominantPeriodText: predominantPeriodValue?._formatted,
+    );
+  }
 }
 
 extension on api.CatalogHypocenterRecordType {

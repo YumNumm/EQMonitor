@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_config_model.freezed.dart';
@@ -23,6 +24,10 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
 
+    /// 日付見出しの表示方法
+    @Default(DateHeaderDisplayMode.onlyWhenDateSort)
+    DateHeaderDisplayMode dateHeaderDisplayMode,
+
     /// ホーム「指定地域」用。将来の地域選択UIから設定
     RegionSearchType? designatedRegionSearchType,
     String? designatedRegionCode,
@@ -31,6 +36,19 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
 
   factory EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryListConfigFromJson(json);
+}
+
+/// 地震履歴一覧の日付見出しの表示方法
+enum DateHeaderDisplayMode {
+  always,
+  onlyWhenDateSort,
+  never;
+
+  bool isVisible({required EarthquakeSortBy sortBy}) => switch (this) {
+    .always => true,
+    .onlyWhenDateSort => sortBy == EarthquakeSortBy.eventId,
+    .never => false,
+  };
 }
 
 /// 地震履歴詳細画面の設定
@@ -47,12 +65,7 @@ abstract class EarthquakeHistoryDetailsConfig
 }
 
 /// 地震履歴詳細画面における塗りつぶし表示モード
-enum EarthquakeHistoryFillMode {
-  none,
-  auto,
-  region,
-  city,
-}
+enum EarthquakeHistoryFillMode { none, auto, region, city }
 
 /// 観測点の表示方法
 enum StationDisplayMode {
@@ -64,8 +77,4 @@ enum StationDisplayMode {
 }
 
 /// 震央マーカーの表示方法
-enum HypocenterDisplayMode {
-  zoomFade,
-  alwaysOpaque,
-  belowStations,
-}
+enum HypocenterDisplayMode { zoomFade, alwaysOpaque, belowStations }

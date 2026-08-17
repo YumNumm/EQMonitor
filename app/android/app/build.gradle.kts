@@ -1,6 +1,7 @@
 import java.util.Base64
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.tasks.Sync
 
 plugins {
     id("com.android.application")
@@ -25,30 +26,34 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val bundledAssetPackRoot = layout.buildDirectory.dir("generated/bundledAssetPack")
+val stageBundledAssetPack by tasks.registering(Sync::class) {
+    from("../../assets/platform")
+    into(bundledAssetPackRoot.map { it.dir("platform") })
+}
+
 android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
-    assetPacks += setOf(":assetpacks:eqmonitor_assets")
-
+    // AGP 9 では既定で無効。app_name を dart-define から差し替えるために必要
+    buildFeatures {
+        resValues = true
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/kotlin")
+            assets.srcDir(bundledAssetPackRoot)
         }
     }
-
     defaultConfig {
         applicationId = "net.yumnumm.eqmonitor"
         dartDefines["appIdSuffix"]?.let {
@@ -87,6 +92,16 @@ android {
             versionNameSuffix = ".d"
             resValue("string", "app_name", "EQMonitor (Debug)")
         }
+    }
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(stageBundledAssetPack)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

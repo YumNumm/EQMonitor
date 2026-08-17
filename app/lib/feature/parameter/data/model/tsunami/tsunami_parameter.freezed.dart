@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_parameter.dart';
@@ -9,6 +9,7 @@ part of 'tsunami_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$TsunamiParameterCopyWithImpl<$Res>
 /// Create a copy of TsunamiParameter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? metadata = null,Object? prefectures = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiParameter(
 metadata: null == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
 as ParameterMetadata,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<TsunamiParameterPrefectureItem>,
@@ -219,7 +220,7 @@ return $default(_that.metadata,_that.prefectures);case _:
 @JsonSerializable()
 
 class _TsunamiParameter implements TsunamiParameter {
-  const _TsunamiParameter({required this.metadata, required final  List<TsunamiParameterPrefectureItem> prefectures}): _prefectures = prefectures;
+  const _TsunamiParameter({required this.metadata, required  List<TsunamiParameterPrefectureItem> prefectures}): _prefectures = prefectures;
   factory _TsunamiParameter.fromJson(Map<String, dynamic> json) => _$TsunamiParameterFromJson(json);
 
 @override final  ParameterMetadata metadata;
@@ -356,7 +357,7 @@ class _$TsunamiParameterPrefectureItemCopyWithImpl<$Res>
 /// Create a copy of TsunamiParameterPrefectureItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? areas = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiParameterPrefectureItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,areas: null == areas ? _self.areas : areas // ignore: cast_nullable_to_non_nullable
@@ -510,7 +511,7 @@ return $default(_that.code,_that.name,_that.areas);case _:
 @JsonSerializable()
 
 class _TsunamiParameterPrefectureItem implements TsunamiParameterPrefectureItem {
-  const _TsunamiParameterPrefectureItem({required this.code, required this.name, required final  List<TsunamiParameterAreaItem> areas}): _areas = areas;
+  const _TsunamiParameterPrefectureItem({required this.code, required this.name, required  List<TsunamiParameterAreaItem> areas}): _areas = areas;
   factory _TsunamiParameterPrefectureItem.fromJson(Map<String, dynamic> json) => _$TsunamiParameterPrefectureItemFromJson(json);
 
 @override final  String code;
@@ -649,7 +650,7 @@ class _$TsunamiParameterAreaItemCopyWithImpl<$Res>
 /// Create a copy of TsunamiParameterAreaItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? stations = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiParameterAreaItem(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName?,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
 as List<TsunamiParameterStationItem>,
@@ -805,7 +806,7 @@ return $default(_that.name,_that.stations);case _:
 @JsonSerializable()
 
 class _TsunamiParameterAreaItem implements TsunamiParameterAreaItem {
-  const _TsunamiParameterAreaItem({required this.name, required final  List<TsunamiParameterStationItem> stations}): _stations = stations;
+  const _TsunamiParameterAreaItem({required this.name, required  List<TsunamiParameterStationItem> stations}): _stations = stations;
   factory _TsunamiParameterAreaItem.fromJson(Map<String, dynamic> json) => _$TsunamiParameterAreaItemFromJson(json);
 
 @override final  LocalizedName? name;
@@ -945,7 +946,7 @@ class _$TsunamiParameterStationItemCopyWithImpl<$Res>
 /// Create a copy of TsunamiParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = freezed,Object? owner = null,Object? location = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiParameterStationItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as LocalizedName,kana: freezed == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable

@@ -8,29 +8,28 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   final selector = EewWarningCandidateSelector();
 
-  test('現在のwarning regionにhadWarningがある警報だけを返す', () {
+  test('現在報のwarning prefectureに含まれる警報だけを返す', () {
     final result = selector.select(
       aliveEews: [
-        warningEew(eventId: 'eligible', warningRegionCode: '100'),
-        warningEew(eventId: 'other', warningRegionCode: '200'),
         warningEew(
-          eventId: 'previous-only',
-          warningRegionCode: '100',
+          eventId: 'eligible',
+          warningPrefectureCode: '9011',
           hadWarning: false,
         ),
+        warningEew(eventId: 'other', warningPrefectureCode: '9020'),
         warningEew(
           eventId: 'forecast',
-          warningRegionCode: '100',
+          warningPrefectureCode: '9011',
           isWarning: false,
         ),
         warningEew(
           eventId: 'canceled',
-          warningRegionCode: '100',
+          warningPrefectureCode: '9011',
           isCanceled: true,
         ),
       ],
-      warningAreaCode: '100',
-      warningAreaName: '石狩地方北部',
+      warningAreaCode: '9011',
+      warningAreaName: '北海道道央',
       forecastAreaCode: '100',
       forecastAreaName: '石狩地方北部',
     );
@@ -51,8 +50,8 @@ void main() {
               arrivalTime: arrival,
             ),
           ],
-          warningAreaCode: '100',
-          warningAreaName: '石狩地方北部',
+          warningAreaCode: '9011',
+          warningAreaName: '北海道道央',
           forecastAreaCode: '100',
           forecastAreaName: '石狩地方北部',
         )
@@ -66,8 +65,8 @@ void main() {
     final result = selector
         .select(
           aliveEews: [warningEew(eventId: 'event', warningRegionCode: '100')],
-          warningAreaCode: '100',
-          warningAreaName: '石狩地方北部',
+          warningAreaCode: '9011',
+          warningAreaName: '北海道道央',
           forecastAreaCode: null,
           forecastAreaName: null,
         )
@@ -81,6 +80,7 @@ EewTelegramItem warningEew({
   required String eventId,
   bool? isWarning = true,
   bool isCanceled = false,
+  String warningPrefectureCode = '9011',
   String warningRegionCode = '100',
   bool hadWarning = true,
   String forecastRegionCode = '999',
@@ -123,6 +123,12 @@ EewTelegramItem warningEew({
     zones: [
       EewWarningZoneInfo(code: '9910', name: '北海道', hadWarning: hadWarning),
     ],
-    prefectures: const [],
+    prefectures: [
+      EewWarningZoneInfo(
+        code: warningPrefectureCode,
+        name: '府県予報区',
+        hadWarning: hadWarning,
+      ),
+    ],
   ),
 );

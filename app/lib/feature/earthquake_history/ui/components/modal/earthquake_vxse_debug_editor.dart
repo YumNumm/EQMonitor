@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
@@ -7,6 +5,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_identity_generator.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_level_mover.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
@@ -18,31 +18,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_statio
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor_semantic_key.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-String _semanticComponent(String value) =>
-    base64Url.encode(utf8.encode(value)).replaceAll('=', '');
-
-String _semanticPrefix(String surface, List<String> components) =>
-    [surface, ...components.map(_semanticComponent)].join('.');
-
-String _prePeriodPrefix({
-  required String stationPrefix,
-  required String band,
-  required String occurrence,
-}) => '$stationPrefix.${_semanticPrefix('prePeriod', [band, occurrence])}';
-
-String _withSemanticComponent({
-  required String prefix,
-  required int segmentIndex,
-  required String value,
-}) {
-  final components = prefix.split('.');
-  components[segmentIndex] = _semanticComponent(value);
-  return components.join('.');
-}
+const _semanticKey = EarthquakeVxseDebugEditorSemanticKey();
 
 class EarthquakeVxseDebugEditor extends HookConsumerWidget {
   const EarthquakeVxseDebugEditor({required this.current, super.key});
@@ -639,7 +620,7 @@ class _SeismicIntensityFields extends StatelessWidget {
               for (final (index, region) in entry.value.indexed)
                 _OrdinaryRegionRow(
                   notifier: notifier,
-                  fieldPrefix: _semanticPrefix('ordinaryRegion', [
+                  fieldPrefix: _semanticKey.prefix('ordinaryRegion', [
                     entry.key.name,
                     region.region.code,
                     entry.value
@@ -653,27 +634,30 @@ class _SeismicIntensityFields extends StatelessWidget {
                   ]),
                   level: entry.key,
                   region: region,
-                  onChanged: (updated) => notifier.setRegions(
-                    updated.maxIntensity != null &&
-                            updated.maxIntensity != entry.key
-                        ? moveIntensityRegionLevel(
-                            source: regions,
-                            from: entry.key,
-                            index: index,
-                            to: updated.maxIntensity!,
-                          )
-                        : {
-                            for (final currentEntry in regions.entries)
-                              currentEntry.key: [
-                                for (final (currentIndex, current)
-                                    in currentEntry.value.indexed)
-                                  currentEntry.key == entry.key &&
-                                          currentIndex == index
-                                      ? updated
-                                      : current,
-                              ],
-                          },
-                  ),
+                  onChanged: (updated) {
+                    final maxIntensity = updated.maxIntensity;
+                    return notifier.setRegions(
+                      maxIntensity != null && maxIntensity != entry.key
+                          ? const EarthquakeVxseDebugDraftLevelMover()
+                                .moveIntensityRegionLevel(
+                                  source: regions,
+                                  from: entry.key,
+                                  index: index,
+                                  to: maxIntensity,
+                                )
+                          : {
+                              for (final currentEntry in regions.entries)
+                                currentEntry.key: [
+                                  for (final (currentIndex, current)
+                                      in currentEntry.value.indexed)
+                                    currentEntry.key == entry.key &&
+                                            currentIndex == index
+                                        ? updated
+                                        : current,
+                                ],
+                            },
+                    );
+                  },
                   onRemove: () => notifier.setRegions({
                     for (final currentEntry in regions.entries)
                       if (currentEntry.key != entry.key ||
@@ -692,13 +676,14 @@ class _SeismicIntensityFields extends StatelessWidget {
               child: TextButton.icon(
                 key: const Key('ordinary-region-add'),
                 onPressed: () {
-                  final code = nextEarthquakeVxseDebugCode(
-                    prefix: 'debug-region',
-                    usedCodes: regions.values
-                        .expand((nodes) => nodes)
-                        .map((node) => node.region.code)
-                        .toSet(),
-                  );
+                  final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                      .nextCode(
+                        prefix: 'debug-region',
+                        usedCodes: regions.values
+                            .expand((nodes) => nodes)
+                            .map((node) => node.region.code)
+                            .toSet(),
+                      );
                   notifier.setRegions({
                     ...regions,
                     maxIntensity: [
@@ -755,7 +740,7 @@ class _Vxse51PrefectureFields extends StatelessWidget {
         for (final (index, prefecture) in entry.value.indexed)
           _OrdinaryPrefectureRow(
             notifier: notifier,
-            fieldPrefix: _semanticPrefix('vxse51Prefecture', [
+            fieldPrefix: _semanticKey.prefix('vxse51Prefecture', [
               entry.key.name,
               prefecture.prefecture.code,
               entry.value
@@ -769,26 +754,30 @@ class _Vxse51PrefectureFields extends StatelessWidget {
             ]),
             level: entry.key,
             prefecture: prefecture,
-            onChanged: (updated) => notifier.setPrefectures(
-              updated.maxIntensity != null && updated.maxIntensity != entry.key
-                  ? moveIntensityPrefectureLevel(
-                      source: prefectures,
-                      from: entry.key,
-                      index: index,
-                      to: updated.maxIntensity!,
-                    )
-                  : {
-                      for (final currentEntry in prefectures.entries)
-                        currentEntry.key: [
-                          for (final (currentIndex, current)
-                              in currentEntry.value.indexed)
-                            currentEntry.key == entry.key &&
-                                    currentIndex == index
-                                ? updated
-                                : current,
-                        ],
-                    },
-            ),
+            onChanged: (updated) {
+              final maxIntensity = updated.maxIntensity;
+              return notifier.setPrefectures(
+                maxIntensity != null && maxIntensity != entry.key
+                    ? const EarthquakeVxseDebugDraftLevelMover()
+                          .moveIntensityPrefectureLevel(
+                            source: prefectures,
+                            from: entry.key,
+                            index: index,
+                            to: maxIntensity,
+                          )
+                    : {
+                        for (final currentEntry in prefectures.entries)
+                          currentEntry.key: [
+                            for (final (currentIndex, current)
+                                in currentEntry.value.indexed)
+                              currentEntry.key == entry.key &&
+                                      currentIndex == index
+                                  ? updated
+                                  : current,
+                          ],
+                      },
+              );
+            },
             onRemove: () => notifier.setPrefectures({
               for (final currentEntry in prefectures.entries)
                 if (currentEntry.key != entry.key ||
@@ -807,13 +796,14 @@ class _Vxse51PrefectureFields extends StatelessWidget {
         child: TextButton.icon(
           key: const Key('ordinary-prefecture-add'),
           onPressed: () {
-            final code = nextEarthquakeVxseDebugCode(
-              prefix: 'debug-prefecture',
-              usedCodes: prefectures.values
-                  .expand((nodes) => nodes)
-                  .map((node) => node.prefecture.code)
-                  .toSet(),
-            );
+            final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                .nextCode(
+                  prefix: 'debug-prefecture',
+                  usedCodes: prefectures.values
+                      .expand((nodes) => nodes)
+                      .map((node) => node.prefecture.code)
+                      .toSet(),
+                );
             notifier.setPrefectures({
               ...prefectures,
               maxIntensity: [
@@ -858,7 +848,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
         for (final (prefectureIndex, prefecture) in entry.value.indexed) ...[
           _OrdinaryPrefectureRow(
             notifier: notifier,
-            fieldPrefix: _semanticPrefix('ordinaryPrefecture', [
+            fieldPrefix: _semanticKey.prefix('ordinaryPrefecture', [
               entry.key.name,
               prefecture.prefecture.prefecture.code,
               entry.value
@@ -873,26 +863,30 @@ class _OrdinaryTreeFields extends StatelessWidget {
             ]),
             level: entry.key,
             prefecture: prefecture.prefecture,
-            onChanged: (updated) => notifier.setIntensityTree(
-              updated.maxIntensity != null && updated.maxIntensity != entry.key
-                  ? moveIntensityTreePrefectureLevel(
-                      source: tree,
-                      from: entry.key,
-                      index: prefectureIndex,
-                      to: updated.maxIntensity!,
-                    )
-                  : {
-                      for (final currentEntry in tree.entries)
-                        currentEntry.key: [
-                          for (final (currentIndex, current)
-                              in currentEntry.value.indexed)
-                            currentEntry.key == entry.key &&
-                                    currentIndex == prefectureIndex
-                                ? current.copyWith(prefecture: updated)
-                                : current,
-                        ],
-                    },
-            ),
+            onChanged: (updated) {
+              final maxIntensity = updated.maxIntensity;
+              return notifier.setIntensityTree(
+                maxIntensity != null && maxIntensity != entry.key
+                    ? const EarthquakeVxseDebugDraftLevelMover()
+                          .moveIntensityTreePrefectureLevel(
+                            source: tree,
+                            from: entry.key,
+                            index: prefectureIndex,
+                            to: maxIntensity,
+                          )
+                    : {
+                        for (final currentEntry in tree.entries)
+                          currentEntry.key: [
+                            for (final (currentIndex, current)
+                                in currentEntry.value.indexed)
+                              currentEntry.key == entry.key &&
+                                      currentIndex == prefectureIndex
+                                  ? current.copyWith(prefecture: updated)
+                                  : current,
+                          ],
+                      },
+              );
+            },
             onRemove: () => notifier.setIntensityTree({
               for (final currentEntry in tree.entries)
                 if (currentEntry.key != entry.key ||
@@ -910,7 +904,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (ownsCities)
               _OrdinaryCityRow(
                 notifier: notifier,
-                fieldPrefix: _semanticPrefix('ordinaryCity', [
+                fieldPrefix: _semanticKey.prefix('ordinaryCity', [
                   entry.key.name,
                   prefecture.prefecture.prefecture.code,
                   city.city.code,
@@ -964,7 +958,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
             for (final (stationIndex, station) in city.stations.indexed)
               _OrdinaryStationRow(
                 notifier: notifier,
-                fieldPrefix: _semanticPrefix('ordinaryStation', [
+                fieldPrefix: _semanticKey.prefix('ordinaryStation', [
                   entry.key.name,
                   prefecture.prefecture.prefecture.code,
                   city.city.code,
@@ -1049,7 +1043,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
             if (!ownsCities)
               _StationParentCityLocator(
                 notifier: notifier,
-                fieldPrefix: _semanticPrefix('ordinaryParentCity', [
+                fieldPrefix: _semanticKey.prefix('ordinaryParentCity', [
                   entry.key.name,
                   prefecture.prefecture.prefecture.code,
                   city.city.code,
@@ -1082,13 +1076,14 @@ class _OrdinaryTreeFields extends StatelessWidget {
           TextButton.icon(
             key: const Key('ordinary-prefecture-add'),
             onPressed: () {
-              final code = nextEarthquakeVxseDebugCode(
-                prefix: 'debug-prefecture',
-                usedCodes: tree.values
-                    .expand((nodes) => nodes)
-                    .map((node) => node.prefecture.prefecture.code)
-                    .toSet(),
-              );
+              final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                  .nextCode(
+                    prefix: 'debug-prefecture',
+                    usedCodes: tree.values
+                        .expand((nodes) => nodes)
+                        .map((node) => node.prefecture.prefecture.code)
+                        .toSet(),
+                  );
               notifier.setIntensityTree({
                 ...tree,
                 maxIntensity: [
@@ -1114,14 +1109,15 @@ class _OrdinaryTreeFields extends StatelessWidget {
               key: const Key('ordinary-city-add'),
               onPressed: () {
                 final values = tree[maxIntensity] ?? const [];
-                final code = nextEarthquakeVxseDebugCode(
-                  prefix: 'debug-city',
-                  usedCodes: tree.values
-                      .expand((nodes) => nodes)
-                      .expand((node) => node.cities)
-                      .map((node) => node.city.code)
-                      .toSet(),
-                );
+                final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                    .nextCode(
+                      prefix: 'debug-city',
+                      usedCodes: tree.values
+                          .expand((nodes) => nodes)
+                          .expand((node) => node.cities)
+                          .map((node) => node.city.code)
+                          .toSet(),
+                    );
                 final addedCity = CityIntensityNode(
                   city: earthquakeVxseDebugSampleCity.copyWith(code: code),
                   maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
@@ -1152,15 +1148,16 @@ class _OrdinaryTreeFields extends StatelessWidget {
             key: const Key('ordinary-station-add'),
             onPressed: () {
               final values = tree[maxIntensity] ?? const [];
-              final stationCode = nextEarthquakeVxseDebugCode(
-                prefix: 'debug-station',
-                usedCodes: tree.values
-                    .expand((nodes) => nodes)
-                    .expand((node) => node.cities)
-                    .expand((node) => node.stations)
-                    .map((node) => node.station.code)
-                    .toSet(),
-              );
+              final stationCode =
+                  const EarthquakeVxseDebugDraftIdentityGenerator().nextCode(
+                    prefix: 'debug-station',
+                    usedCodes: tree.values
+                        .expand((nodes) => nodes)
+                        .expand((node) => node.cities)
+                        .expand((node) => node.stations)
+                        .map((node) => node.station.code)
+                        .toSet(),
+                  );
               final base = values.isEmpty
                   ? const PrefectureIntensityNode(
                       prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
@@ -1244,7 +1241,7 @@ class _LpgmFields extends StatelessWidget {
             for (final (index, region) in entry.value.indexed)
               _LpgmRegionRow(
                 notifier: notifier,
-                fieldPrefix: _semanticPrefix('lpgmRegion', [
+                fieldPrefix: _semanticKey.prefix('lpgmRegion', [
                   entry.key.name,
                   region.region.code,
                   entry.value
@@ -1258,27 +1255,31 @@ class _LpgmFields extends StatelessWidget {
                 ]),
                 level: entry.key,
                 region: region,
-                onChanged: (updated) => notifier.setLpgmRegions(
-                  updated.maxLpgmIntensity != null &&
-                          updated.maxLpgmIntensity != entry.key
-                      ? moveLpgmRegionLevel(
-                          source: draft.lpgmRegions,
-                          from: entry.key,
-                          index: index,
-                          to: updated.maxLpgmIntensity!,
-                        )
-                      : {
-                          for (final currentEntry in draft.lpgmRegions.entries)
-                            currentEntry.key: [
-                              for (final (currentIndex, current)
-                                  in currentEntry.value.indexed)
-                                currentEntry.key == entry.key &&
-                                        currentIndex == index
-                                    ? updated
-                                    : current,
-                            ],
-                        },
-                ),
+                onChanged: (updated) {
+                  final maxLpgmIntensity = updated.maxLpgmIntensity;
+                  return notifier.setLpgmRegions(
+                    maxLpgmIntensity != null && maxLpgmIntensity != entry.key
+                        ? const EarthquakeVxseDebugDraftLevelMover()
+                              .moveLpgmRegionLevel(
+                                source: draft.lpgmRegions,
+                                from: entry.key,
+                                index: index,
+                                to: maxLpgmIntensity,
+                              )
+                        : {
+                            for (final currentEntry
+                                in draft.lpgmRegions.entries)
+                              currentEntry.key: [
+                                for (final (currentIndex, current)
+                                    in currentEntry.value.indexed)
+                                  currentEntry.key == entry.key &&
+                                          currentIndex == index
+                                      ? updated
+                                      : current,
+                              ],
+                          },
+                  );
+                },
                 onRemove: () => notifier.setLpgmRegions({
                   for (final currentEntry in draft.lpgmRegions.entries)
                     if (currentEntry.key != entry.key ||
@@ -1295,13 +1296,14 @@ class _LpgmFields extends StatelessWidget {
           TextButton.icon(
             key: const Key('lpgm-region-add'),
             onPressed: () {
-              final code = nextEarthquakeVxseDebugCode(
-                prefix: 'debug-lpgm-region',
-                usedCodes: draft.lpgmRegions.values
-                    .expand((nodes) => nodes)
-                    .map((node) => node.region.code)
-                    .toSet(),
-              );
+              final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                  .nextCode(
+                    prefix: 'debug-lpgm-region',
+                    usedCodes: draft.lpgmRegions.values
+                        .expand((nodes) => nodes)
+                        .map((node) => node.region.code)
+                        .toSet(),
+                  );
               notifier.setLpgmRegions({
                 ...draft.lpgmRegions,
                 draft.maxLpgmIntensity: [
@@ -1323,7 +1325,7 @@ class _LpgmFields extends StatelessWidget {
                 in entry.value.indexed) ...[
               _LpgmPrefectureRow(
                 notifier: notifier,
-                fieldPrefix: _semanticPrefix('lpgmPrefecture', [
+                fieldPrefix: _semanticKey.prefix('lpgmPrefecture', [
                   entry.key.name,
                   prefecture.region.code,
                   entry.value
@@ -1337,28 +1339,31 @@ class _LpgmFields extends StatelessWidget {
                 ]),
                 level: entry.key,
                 prefecture: prefecture,
-                onChanged: (updated) => notifier.setLpgmIntensityTree(
-                  updated.maxLpgmIntensity != null &&
-                          updated.maxLpgmIntensity != entry.key
-                      ? moveLpgmPrefectureLevel(
-                          source: draft.lpgmIntensityTree,
-                          from: entry.key,
-                          index: prefectureIndex,
-                          to: updated.maxLpgmIntensity!,
-                        )
-                      : {
-                          for (final currentEntry
-                              in draft.lpgmIntensityTree.entries)
-                            currentEntry.key: [
-                              for (final (currentIndex, current)
-                                  in currentEntry.value.indexed)
-                                currentEntry.key == entry.key &&
-                                        currentIndex == prefectureIndex
-                                    ? updated
-                                    : current,
-                            ],
-                        },
-                ),
+                onChanged: (updated) {
+                  final maxLpgmIntensity = updated.maxLpgmIntensity;
+                  return notifier.setLpgmIntensityTree(
+                    maxLpgmIntensity != null && maxLpgmIntensity != entry.key
+                        ? const EarthquakeVxseDebugDraftLevelMover()
+                              .moveLpgmPrefectureLevel(
+                                source: draft.lpgmIntensityTree,
+                                from: entry.key,
+                                index: prefectureIndex,
+                                to: maxLpgmIntensity,
+                              )
+                        : {
+                            for (final currentEntry
+                                in draft.lpgmIntensityTree.entries)
+                              currentEntry.key: [
+                                for (final (currentIndex, current)
+                                    in currentEntry.value.indexed)
+                                  currentEntry.key == entry.key &&
+                                          currentIndex == prefectureIndex
+                                      ? updated
+                                      : current,
+                              ],
+                          },
+                  );
+                },
                 onRemove: () => notifier.setLpgmIntensityTree({
                   for (final currentEntry in draft.lpgmIntensityTree.entries)
                     if (currentEntry.key != entry.key ||
@@ -1375,7 +1380,7 @@ class _LpgmFields extends StatelessWidget {
               for (final (cityIndex, city) in prefecture.cities.indexed) ...[
                 _StationParentCityLocator(
                   notifier: notifier,
-                  fieldPrefix: _semanticPrefix('lpgmParentCity', [
+                  fieldPrefix: _semanticKey.prefix('lpgmParentCity', [
                     entry.key.name,
                     prefecture.region.code,
                     city.city.code,
@@ -1403,7 +1408,7 @@ class _LpgmFields extends StatelessWidget {
                 for (final (stationIndex, station) in city.stations.indexed)
                   _LpgmStationRow(
                     notifier: notifier,
-                    fieldPrefix: _semanticPrefix('lpgmStation', [
+                    fieldPrefix: _semanticKey.prefix('lpgmStation', [
                       entry.key.name,
                       prefecture.region.code,
                       city.city.code,
@@ -1494,13 +1499,14 @@ class _LpgmFields extends StatelessWidget {
               TextButton.icon(
                 key: const Key('lpgm-prefecture-add'),
                 onPressed: () {
-                  final code = nextEarthquakeVxseDebugCode(
-                    prefix: 'debug-lpgm-prefecture',
-                    usedCodes: draft.lpgmIntensityTree.values
-                        .expand((nodes) => nodes)
-                        .map((node) => node.region.code)
-                        .toSet(),
-                  );
+                  final code = const EarthquakeVxseDebugDraftIdentityGenerator()
+                      .nextCode(
+                        prefix: 'debug-lpgm-prefecture',
+                        usedCodes: draft.lpgmIntensityTree.values
+                            .expand((nodes) => nodes)
+                            .map((node) => node.region.code)
+                            .toSet(),
+                      );
                   notifier.setLpgmIntensityTree({
                     ...draft.lpgmIntensityTree,
                     draft.maxLpgmIntensity: [
@@ -1526,15 +1532,17 @@ class _LpgmFields extends StatelessWidget {
                   final values =
                       draft.lpgmIntensityTree[draft.maxLpgmIntensity] ??
                       const [];
-                  final stationCode = nextEarthquakeVxseDebugCode(
-                    prefix: 'debug-lpgm-station',
-                    usedCodes: draft.lpgmIntensityTree.values
-                        .expand((nodes) => nodes)
-                        .expand((node) => node.cities)
-                        .expand((node) => node.stations)
-                        .map((node) => node.station.code)
-                        .toSet(),
-                  );
+                  final stationCode =
+                      const EarthquakeVxseDebugDraftIdentityGenerator()
+                          .nextCode(
+                            prefix: 'debug-lpgm-station',
+                            usedCodes: draft.lpgmIntensityTree.values
+                                .expand((nodes) => nodes)
+                                .expand((node) => node.cities)
+                                .expand((node) => node.stations)
+                                .map((node) => node.station.code)
+                                .toSet(),
+                          );
                   final base = values.isEmpty
                       ? const PrefectureLpgmIntensityNode(
                           region: earthquakeVxseDebugSampleRegion,
@@ -1609,7 +1617,7 @@ class _CommentsFields extends StatelessWidget {
           Text('コメント', style: Theme.of(context).textTheme.titleMedium),
           for (final (index, comment) in draft.comments.indexed)
             _CommentRow(
-              fieldPrefix: _semanticPrefix('comment', [
+              fieldPrefix: _semanticKey.prefix('comment', [
                 selectedType.name,
                 comment.reportedAt.toIso8601String(),
                 draft.comments
@@ -1639,13 +1647,14 @@ class _CommentsFields extends StatelessWidget {
               ...draft.comments,
               EarthquakeTelegramComment(
                 type: selectedType,
-                reportedAt: nextEarthquakeVxseDebugCommentTime(
-                  base: draft.reportedAt,
-                  usedTimes: draft.comments
-                      .where((comment) => comment.type == selectedType)
-                      .map((comment) => comment.reportedAt)
-                      .toSet(),
-                ),
+                reportedAt: const EarthquakeVxseDebugDraftIdentityGenerator()
+                    .nextCommentTime(
+                      base: draft.reportedAt,
+                      usedTimes: draft.comments
+                          .where((comment) => comment.type == selectedType)
+                          .map((comment) => comment.reportedAt)
+                          .toSet(),
+                    ),
                 additional: '',
                 free: '',
               ),
@@ -1692,9 +1701,8 @@ class _JsonEditor extends HookWidget {
               minLines: 6,
               maxLines: null,
               autocorrect: false,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(fontFamily: 'monospace'),
               decoration: InputDecoration(errorText: state.validationError),
               onChanged: notifier.validateJson,
             ),
@@ -1745,7 +1753,7 @@ class _OrdinaryRegionRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 2,
                       value: value,
@@ -1792,7 +1800,7 @@ class _OrdinaryRegionRow extends StatelessWidget {
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticComponent(
+                      to: _semanticKey.withComponent(
                         prefix: fieldPrefix,
                         segmentIndex: 1,
                         value: value.name,
@@ -1859,7 +1867,7 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 2,
                       value: value,
@@ -1905,7 +1913,7 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 if (value != level) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 1,
                       value: value?.name ?? level.name,
@@ -1971,7 +1979,7 @@ class _OrdinaryCityRow extends StatelessWidget {
                   onValidChanged: (value) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticComponent(
+                      to: _semanticKey.withComponent(
                         prefix: fieldPrefix,
                         segmentIndex: 3,
                         value: value,
@@ -2071,7 +2079,7 @@ class _StationParentCityLocator extends StatelessWidget {
                   onValidChanged: (value) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticComponent(
+                      to: _semanticKey.withComponent(
                         prefix: fieldPrefix,
                         segmentIndex: 3,
                         value: value,
@@ -2145,7 +2153,7 @@ class _OrdinaryStationRow extends StatelessWidget {
                     onValidChanged: (value) {
                       notifier.migrateTypedInputPrefix(
                         from: fieldPrefix,
-                        to: _withSemanticComponent(
+                        to: _semanticKey.withComponent(
                           prefix: fieldPrefix,
                           segmentIndex: 4,
                           value: value,
@@ -2261,7 +2269,7 @@ class _LpgmRegionRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 2,
                       value: value,
@@ -2307,7 +2315,7 @@ class _LpgmRegionRow extends StatelessWidget {
                 if (value != level) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 1,
                       value: value?.name ?? level.name,
@@ -2373,7 +2381,7 @@ class _LpgmPrefectureRow extends StatelessWidget {
                 onValidChanged: (value) {
                   notifier.migrateTypedInputPrefix(
                     from: fieldPrefix,
-                    to: _withSemanticComponent(
+                    to: _semanticKey.withComponent(
                       prefix: fieldPrefix,
                       segmentIndex: 2,
                       value: value,
@@ -2403,7 +2411,7 @@ class _LpgmPrefectureRow extends StatelessWidget {
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
-                      to: _withSemanticComponent(
+                      to: _semanticKey.withComponent(
                         prefix: fieldPrefix,
                         segmentIndex: 1,
                         value: value.name,
@@ -2490,7 +2498,7 @@ class _LpgmStationRow extends StatelessWidget {
                     onValidChanged: (value) {
                       notifier.migrateTypedInputPrefix(
                         from: fieldPrefix,
-                        to: _withSemanticComponent(
+                        to: _semanticKey.withComponent(
                           prefix: fieldPrefix,
                           segmentIndex: 4,
                           value: value,
@@ -2604,7 +2612,7 @@ class _StationDetailsFields extends StatelessWidget {
             in (intensity.prePeriods ?? const []).indexed)
           Card.outlined(
             key: ValueKey(
-              _prePeriodPrefix(
+              _semanticKey.prePeriodPrefix(
                 stationPrefix: fieldPrefix,
                 band: prePeriod.band.toString(),
                 occurrence: (intensity.prePeriods ?? const [])
@@ -2627,7 +2635,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-band'),
                       fieldId:
-                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.band',
+                          '${_semanticKey.prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.band',
                       value: prePeriod.band.toString(),
                       label: '周期帯',
                       notifier: notifier,
@@ -2635,7 +2643,7 @@ class _StationDetailsFields extends StatelessWidget {
                       validation: (value) =>
                           double.tryParse(value) == null ? '数値を入力してください' : null,
                       onValidChanged: (value) {
-                        final prefix = _prePeriodPrefix(
+                        final prefix = _semanticKey.prePeriodPrefix(
                           stationPrefix: fieldPrefix,
                           band: prePeriod.band.toString(),
                           occurrence: (intensity.prePeriods ?? const [])
@@ -2648,7 +2656,7 @@ class _StationDetailsFields extends StatelessWidget {
                         );
                         notifier.migrateTypedInputPrefix(
                           from: prefix,
-                          to: _withSemanticComponent(
+                          to: _semanticKey.withComponent(
                             prefix: prefix,
                             segmentIndex: 7,
                             value: double.parse(value).toString(),
@@ -2706,7 +2714,7 @@ class _StationDetailsFields extends StatelessWidget {
                     child: _ControlledTextFormField(
                       fieldKey: const Key('pre-period-sva'),
                       fieldId:
-                          '${_prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.sva',
+                          '${_semanticKey.prePeriodPrefix(stationPrefix: fieldPrefix, band: prePeriod.band.toString(), occurrence: (intensity.prePeriods ?? const []).take(index).where((candidate) => candidate.band == prePeriod.band).length.toString())}.sva',
                       value: prePeriod.sva.toString(),
                       label: 'SVA',
                       notifier: notifier,
@@ -2731,7 +2739,7 @@ class _StationDetailsFields extends StatelessWidget {
                     tooltip: '周期帯を削除',
                     onPressed: () {
                       notifier.pruneTypedInputPrefix(
-                        _prePeriodPrefix(
+                        _semanticKey.prePeriodPrefix(
                           stationPrefix: fieldPrefix,
                           band: prePeriod.band.toString(),
                           occurrence: (intensity.prePeriods ?? const [])
@@ -2766,11 +2774,12 @@ class _StationDetailsFields extends StatelessWidget {
               prePeriods: [
                 ...intensity.prePeriods ?? const [],
                 PrePeriod(
-                  band: nextEarthquakeVxseDebugPrePeriodBand(
-                    usedBands: (intensity.prePeriods ?? const [])
-                        .map((prePeriod) => prePeriod.band)
-                        .toSet(),
-                  ),
+                  band: const EarthquakeVxseDebugDraftIdentityGenerator()
+                      .nextPrePeriodBand(
+                        usedBands: (intensity.prePeriods ?? const [])
+                            .map((prePeriod) => prePeriod.band)
+                            .toSet(),
+                      ),
                   lpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
                   sva: 12.3,
                 ),
@@ -2820,7 +2829,7 @@ class _CommentRow extends StatelessWidget {
               onValidChanged: (value) {
                 notifier.migrateTypedInputPrefix(
                   from: fieldPrefix,
-                  to: _withSemanticComponent(
+                  to: _semanticKey.withComponent(
                     prefix: fieldPrefix,
                     segmentIndex: 2,
                     value: DateTime.parse(value).toIso8601String(),

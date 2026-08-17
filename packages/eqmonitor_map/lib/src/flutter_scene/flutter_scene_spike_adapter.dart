@@ -50,12 +50,10 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
 
   FlutterSceneSpikeAdapter._({
     required this.sceneGraph,
-    required scene.MeshGeometry geometry,
-    required scene.Node unlitNode,
+    required this._geometry,
+    required this._unlitNode,
     required SpikeMeshFrame initialFrame,
-  }) : _geometry = geometry,
-       _unlitNode = unlitNode,
-       _currentFrame = initialFrame,
+  }) : _currentFrame = initialFrame,
        _vertexCount = initialFrame.positions.length ~/ 3;
 
   @override

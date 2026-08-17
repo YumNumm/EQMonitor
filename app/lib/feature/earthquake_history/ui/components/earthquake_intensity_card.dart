@@ -9,11 +9,11 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/estimated_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_content.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeIntensityCard extends StatelessWidget {
-  const EarthquakeIntensityCard({
+  const new({
     required this.item,
     required this.displayMode,
     required this.onDisplayModeChanged,
@@ -137,7 +137,7 @@ class EarthquakeIntensityCard extends StatelessWidget {
             .jma => JmaIntensityContent(item: item),
             .lpgm => LpgmIntensityContent(item: item),
             .estimated => const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: EstimatedIntensityNoticeContent(),
             ),
           },

@@ -228,8 +228,8 @@
   },
   {
     "key": "GET /v2/hypocenters/manifest",
-    "file": "get__v2_hypocenters_manifest__empty.json",
-    "fixture": "empty"
+    "file": "get__v2_hypocenters_manifest__legacy.json",
+    "fixture": "legacy"
   },
   {
     "key": "GET /v2/hypocenters/manifest",

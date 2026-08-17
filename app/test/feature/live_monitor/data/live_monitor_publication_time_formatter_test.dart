@@ -2,12 +2,14 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_publicati
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const formatter = LiveMonitorPublicationTimeFormatter();
+
   test('24時間を超えても累積時間と2桁分で表示する', () {
     final reportedAt = DateTime(2026, 7, 26, 12, 3);
     final now = DateTime(2026, 7, 27, 17, 10);
 
     expect(
-      formatLiveMonitorPublicationTime(reportedAt: reportedAt, now: now),
+      formatter.format(reportedAt: reportedAt, now: now),
       '2026/07/26 12:03 発表 (29時間07分前)',
     );
   });
@@ -17,7 +19,7 @@ void main() {
     final now = DateTime(2026, 7, 27, 17, 10);
 
     expect(
-      formatLiveMonitorPublicationTime(reportedAt: reportedAt, now: now),
+      formatter.format(reportedAt: reportedAt, now: now),
       '2026/07/27 17:11 発表 (0時間00分前)',
     );
   });

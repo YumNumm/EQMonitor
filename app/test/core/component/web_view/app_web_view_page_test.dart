@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/component/web_view/app_web_view_page.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _initialUrl = 'https://eqmonitor.app/term_of_service';
 const _redirectedUrl = 'https://eqmonitor.app/term_of_service/latest';
@@ -192,7 +192,10 @@ Widget _app({Key? key}) {
   }
 
   return MaterialApp(
-    theme: buildTheme(colorSet: colorSet, brightness: Brightness.light),
+    theme: AppThemeDataBuilder.build(
+      colorSet: colorSet,
+      brightness: Brightness.light,
+    ),
     home: AppWebViewPage(key: key, title: '利用規約', url: _initialUrl),
   );
 }

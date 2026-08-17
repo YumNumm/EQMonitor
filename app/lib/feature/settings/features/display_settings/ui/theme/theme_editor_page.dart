@@ -6,8 +6,9 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeEditorPage extends ConsumerWidget {
@@ -257,26 +258,21 @@ class _IntensityFieldTile extends StatelessWidget {
   }
 }
 
-class _ColorPickerDialog extends StatefulWidget {
+class _ColorPickerDialog extends HookWidget {
   const _ColorPickerDialog({required this.initial});
 
   final Color initial;
 
   @override
-  State<_ColorPickerDialog> createState() => _ColorPickerDialogState();
-}
-
-class _ColorPickerDialogState extends State<_ColorPickerDialog> {
-  late Color _current = widget.initial;
-
-  @override
   Widget build(BuildContext context) {
+    final current = useState(initial);
+
     return AlertDialog.adaptive(
       title: const Text('色を選択'),
       content: SingleChildScrollView(
         child: ColorPicker(
-          pickerColor: _current,
-          onColorChanged: (color) => setState(() => _current = color),
+          pickerColor: current.value,
+          onColorChanged: (color) => current.value = color,
         ),
       ),
       actions: [
@@ -285,7 +281,7 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
           child: const Text('キャンセル'),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop(_current),
+          onPressed: () => Navigator.of(context).pop(current.value),
           child: const Text('適用'),
         ),
       ],

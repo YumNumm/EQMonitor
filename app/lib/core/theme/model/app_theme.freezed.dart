@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_theme.dart';
@@ -9,6 +9,7 @@ part of 'app_theme.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$AppThemeCopyWithImpl<$Res>
 /// Create a copy of AppTheme
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? version = null,Object? author = null,Object? modes = null,Object? light = freezed,Object? dark = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AppTheme(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as int,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
@@ -238,7 +239,7 @@ return $default(_that.name,_that.version,_that.author,_that.modes,_that.light,_t
 @JsonSerializable()
 
 class _AppTheme extends AppTheme {
-  const _AppTheme({required this.name, required this.version, required this.author, required final  List<ThemeBrightnessMode> modes, this.light, this.dark}): _modes = modes,super._();
+  const _AppTheme({required this.name, required this.version, required this.author, required  List<ThemeBrightnessMode> modes, this.light, this.dark}): _modes = modes,super._();
   factory _AppTheme.fromJson(Map<String, dynamic> json) => _$AppThemeFromJson(json);
 
 @override final  String name;

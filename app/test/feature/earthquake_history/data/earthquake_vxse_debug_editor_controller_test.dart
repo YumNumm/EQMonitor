@@ -6,6 +6,8 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_identity_generator.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_level_mover.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
@@ -206,12 +208,13 @@ void main() {
       ],
     };
 
-    final moved = moveIntensityRegionLevel(
-      source: source,
-      from: JmaIntensity.four,
-      index: 0,
-      to: JmaIntensity.fiveLower,
-    );
+    final moved = const EarthquakeVxseDebugDraftLevelMover()
+        .moveIntensityRegionLevel(
+          source: source,
+          from: JmaIntensity.four,
+          index: 0,
+          to: JmaIntensity.fiveLower,
+        );
 
     expect(moved.containsKey(JmaIntensity.four), isFalse);
     expect(moved[JmaIntensity.fiveLower], hasLength(2));
@@ -235,12 +238,13 @@ void main() {
       ],
     };
 
-    final moved = moveLpgmRegionLevel(
-      source: source,
-      from: JmaLpgmIntensity.two,
-      index: 0,
-      to: JmaLpgmIntensity.three,
-    );
+    final moved = const EarthquakeVxseDebugDraftLevelMover()
+        .moveLpgmRegionLevel(
+          source: source,
+          from: JmaLpgmIntensity.two,
+          index: 0,
+          to: JmaLpgmIntensity.three,
+        );
 
     expect(moved.containsKey(JmaLpgmIntensity.two), isFalse);
     expect(moved[JmaLpgmIntensity.three], hasLength(2));
@@ -251,32 +255,45 @@ void main() {
   });
 
   test('prefecture grouped level変更もordinary/LPGMの外Map keyを移す', () {
-    final ordinary = moveIntensityPrefectureLevel(
-      source: {
-        JmaIntensity.four: [earthquakeVxseDebugSampleIntensityPrefecture],
-      },
-      from: JmaIntensity.four,
-      index: 0,
-      to: JmaIntensity.fiveLower,
-    );
-    final lpgm = moveLpgmPrefectureLevel(
-      source: {
-        JmaLpgmIntensity.two: [lpgmTreeOrSample(tree: null).values.first.first],
-      },
-      from: JmaLpgmIntensity.two,
-      index: 0,
-      to: JmaLpgmIntensity.three,
-    );
-    final ordinaryTree = moveIntensityTreePrefectureLevel(
-      source: {
-        JmaIntensity.four: [
-          intensityTreeOrSample(tree: null).values.first.first,
-        ],
-      },
-      from: JmaIntensity.four,
-      index: 0,
-      to: JmaIntensity.fiveLower,
-    );
+    final ordinary = const EarthquakeVxseDebugDraftLevelMover()
+        .moveIntensityPrefectureLevel(
+          source: {
+            JmaIntensity.four: [earthquakeVxseDebugSampleIntensityPrefecture],
+          },
+          from: JmaIntensity.four,
+          index: 0,
+          to: JmaIntensity.fiveLower,
+        );
+    final lpgm = const EarthquakeVxseDebugDraftLevelMover()
+        .moveLpgmPrefectureLevel(
+          source: {
+            JmaLpgmIntensity.two: [
+              const EarthquakeVxseDebugDraftFactory()
+                  .lpgmTreeOrSample(tree: null)
+                  .values
+                  .first
+                  .first,
+            ],
+          },
+          from: JmaLpgmIntensity.two,
+          index: 0,
+          to: JmaLpgmIntensity.three,
+        );
+    final ordinaryTree = const EarthquakeVxseDebugDraftLevelMover()
+        .moveIntensityTreePrefectureLevel(
+          source: {
+            JmaIntensity.four: [
+              const EarthquakeVxseDebugDraftFactory()
+                  .intensityTreeOrSample(tree: null)
+                  .values
+                  .first
+                  .first,
+            ],
+          },
+          from: JmaIntensity.four,
+          index: 0,
+          to: JmaIntensity.fiveLower,
+        );
 
     expect(ordinary.containsKey(JmaIntensity.four), isFalse);
     expect(
@@ -301,15 +318,16 @@ void main() {
     final duplicate = earthquakeVxseDebugSampleIntensityRegion.copyWith(
       maxIntensity: JmaIntensity.fiveLower,
     );
-    final moved = moveIntensityRegionLevel(
-      source: {
-        JmaIntensity.four: [earthquakeVxseDebugSampleIntensityRegion],
-        JmaIntensity.fiveLower: [duplicate],
-      },
-      from: JmaIntensity.four,
-      index: 0,
-      to: JmaIntensity.fiveLower,
-    );
+    final moved = const EarthquakeVxseDebugDraftLevelMover()
+        .moveIntensityRegionLevel(
+          source: {
+            JmaIntensity.four: [earthquakeVxseDebugSampleIntensityRegion],
+            JmaIntensity.fiveLower: [duplicate],
+          },
+          from: JmaIntensity.four,
+          index: 0,
+          to: JmaIntensity.fiveLower,
+        );
 
     fixture.notifier.updateDraft(draft.copyWith(regions: moved));
 
@@ -422,26 +440,30 @@ void main() {
   });
 
   test('debug identity generatorは既存値を飛ばして決定的な次値を返す', () {
-    final firstCode = nextEarthquakeVxseDebugCode(
-      prefix: 'debug-station',
-      usedCodes: const {'debug-station-1'},
-    );
-    final secondCode = nextEarthquakeVxseDebugCode(
-      prefix: 'debug-station',
-      usedCodes: {'debug-station-1', firstCode},
-    );
-    final firstTime = nextEarthquakeVxseDebugCommentTime(
-      base: DateTime.utc(2026, 7, 24),
-      usedTimes: {DateTime.utc(2026, 7, 24)},
-    );
-    final secondTime = nextEarthquakeVxseDebugCommentTime(
-      base: DateTime.utc(2026, 7, 24),
-      usedTimes: {DateTime.utc(2026, 7, 24), firstTime},
-    );
-    final firstBand = nextEarthquakeVxseDebugPrePeriodBand(usedBands: {1.6});
-    final secondBand = nextEarthquakeVxseDebugPrePeriodBand(
-      usedBands: {1.6, firstBand},
-    );
+    final firstCode = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextCode(
+          prefix: 'debug-station',
+          usedCodes: const {'debug-station-1'},
+        );
+    final secondCode = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextCode(
+          prefix: 'debug-station',
+          usedCodes: {'debug-station-1', firstCode},
+        );
+    final firstTime = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextCommentTime(
+          base: DateTime.utc(2026, 7, 24),
+          usedTimes: {DateTime.utc(2026, 7, 24)},
+        );
+    final secondTime = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextCommentTime(
+          base: DateTime.utc(2026, 7, 24),
+          usedTimes: {DateTime.utc(2026, 7, 24), firstTime},
+        );
+    final firstBand = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextPrePeriodBand(usedBands: {1.6});
+    final secondBand = const EarthquakeVxseDebugDraftIdentityGenerator()
+        .nextPrePeriodBand(usedBands: {1.6, firstBand});
 
     expect((firstCode, secondCode), ('debug-station-2', 'debug-station-3'));
     expect(firstTime, DateTime.utc(2026, 7, 24, 0, 0, 1));

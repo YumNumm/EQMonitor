@@ -155,7 +155,7 @@ class _LpgmKyoshinMonitorWebApiClient
   }
 
   @override
-  Future<List<int>> getRealtimeImageData({
+  Future<List<int>> getKyoshinRealtimeImageData({
     required String type,
     required String layer,
     required String date,
@@ -174,7 +174,43 @@ class _LpgmKyoshinMonitorWebApiClient
           )
           .compose(
             _dio.options,
-            '/monitor/data/data/map_img/RealTimeImg/${type}_${layer}/${date}/${dateTime}.${type}_${layer}.gif',
+            '/img_svr/data/map_img/RealTimeImg/${type}_${layer}/${date}/${dateTime}.${type}_${layer}.gif',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
+    try {
+      _value = _result.data!.cast<int>();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<int>> getLpgmRealtimeImageData({
+    required String type,
+    required String date,
+    required String dateTime,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<int>>(
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+            responseType: ResponseType.bytes,
+          )
+          .compose(
+            _dio.options,
+            '/monitor/data/data/map_img/RealTimeImg/${type}_s/${date}/${dateTime}.${type}_s.gif',
             queryParameters: queryParameters,
             data: _data,
           )

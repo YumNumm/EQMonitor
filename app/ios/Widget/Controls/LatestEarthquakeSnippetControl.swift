@@ -10,6 +10,8 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 
+/// Interactive Snippet（`SnippetIntent`）を表示するため iOS 26 以降。
+@available(iOS 26.0, *)
 struct LatestEarthquakeSnippetControl: ControlWidget {
     static let kind = "net.yumnumm.eqmonitor.control.latest-earthquake"
 

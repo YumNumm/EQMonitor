@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_telegram_meta.dart';
@@ -9,12 +9,13 @@ part of 'tsunami_telegram_meta.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiTelegramMeta {
 
- String get telegramId; int? get serialNo; String get title; String? get headline; DateTime get publishedAt; DateTime get reportedAt; DateTime? get targetedAt; DateTime? get revokedAt; String get infoKind;
+ String get telegramId; TelegramType get type; int? get serialNo; String get title; String? get headline; DateTime get publishedAt; DateTime get reportedAt; DateTime? get targetedAt; DateTime? get revokedAt; String get infoKind;
 /// Create a copy of TsunamiTelegramMeta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $TsunamiTelegramMetaCopyWith<TsunamiTelegramMeta> get copyWith => _$TsunamiTeleg
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramMeta&&(identical(other.telegramId, telegramId) || other.telegramId == telegramId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.reportedAt, reportedAt) || other.reportedAt == reportedAt)&&(identical(other.targetedAt, targetedAt) || other.targetedAt == targetedAt)&&(identical(other.revokedAt, revokedAt) || other.revokedAt == revokedAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramMeta&&(identical(other.telegramId, telegramId) || other.telegramId == telegramId)&&(identical(other.type, type) || other.type == type)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.reportedAt, reportedAt) || other.reportedAt == reportedAt)&&(identical(other.targetedAt, targetedAt) || other.targetedAt == targetedAt)&&(identical(other.revokedAt, revokedAt) || other.revokedAt == revokedAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,telegramId,serialNo,title,headline,publishedAt,reportedAt,targetedAt,revokedAt,infoKind);
+int get hashCode => Object.hash(runtimeType,telegramId,type,serialNo,title,headline,publishedAt,reportedAt,targetedAt,revokedAt,infoKind);
 
 @override
 String toString() {
-  return 'TsunamiTelegramMeta(telegramId: $telegramId, serialNo: $serialNo, title: $title, headline: $headline, publishedAt: $publishedAt, reportedAt: $reportedAt, targetedAt: $targetedAt, revokedAt: $revokedAt, infoKind: $infoKind)';
+  return 'TsunamiTelegramMeta(telegramId: $telegramId, type: $type, serialNo: $serialNo, title: $title, headline: $headline, publishedAt: $publishedAt, reportedAt: $reportedAt, targetedAt: $targetedAt, revokedAt: $revokedAt, infoKind: $infoKind)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $TsunamiTelegramMetaCopyWith<$Res>  {
   factory $TsunamiTelegramMetaCopyWith(TsunamiTelegramMeta value, $Res Function(TsunamiTelegramMeta) _then) = _$TsunamiTelegramMetaCopyWithImpl;
 @useResult
 $Res call({
- String telegramId, int? serialNo, String title, String? headline, DateTime publishedAt, DateTime reportedAt, DateTime? targetedAt, DateTime? revokedAt, String infoKind
+ String telegramId, TelegramType type, int? serialNo, String title, String? headline, DateTime publishedAt, DateTime reportedAt, DateTime? targetedAt, DateTime? revokedAt, String infoKind
 });
 
 
@@ -62,10 +63,11 @@ class _$TsunamiTelegramMetaCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramMeta
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? telegramId = null,Object? serialNo = freezed,Object? title = null,Object? headline = freezed,Object? publishedAt = null,Object? reportedAt = null,Object? targetedAt = freezed,Object? revokedAt = freezed,Object? infoKind = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? telegramId = null,Object? type = null,Object? serialNo = freezed,Object? title = null,Object? headline = freezed,Object? publishedAt = null,Object? reportedAt = null,Object? targetedAt = freezed,Object? revokedAt = freezed,Object? infoKind = null,}) {
+  return _then(TsunamiTelegramMeta(
 telegramId: null == telegramId ? _self.telegramId : telegramId // ignore: cast_nullable_to_non_nullable
-as String,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as TelegramType,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable
@@ -158,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String telegramId,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String telegramId,  TelegramType type,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramMeta() when $default != null:
-return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
+return $default(_that.telegramId,_that.type,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
   return orElse();
 
 }
@@ -179,10 +181,10 @@ return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String telegramId,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String telegramId,  TelegramType type,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramMeta():
-return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
+return $default(_that.telegramId,_that.type,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +201,10 @@ return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String telegramId,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String telegramId,  TelegramType type,  int? serialNo,  String title,  String? headline,  DateTime publishedAt,  DateTime reportedAt,  DateTime? targetedAt,  DateTime? revokedAt,  String infoKind)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramMeta() when $default != null:
-return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
+return $default(_that.telegramId,_that.type,_that.serialNo,_that.title,_that.headline,_that.publishedAt,_that.reportedAt,_that.targetedAt,_that.revokedAt,_that.infoKind);case _:
   return null;
 
 }
@@ -214,10 +216,11 @@ return $default(_that.telegramId,_that.serialNo,_that.title,_that.headline,_that
 
 
 class _TsunamiTelegramMeta implements TsunamiTelegramMeta {
-  const _TsunamiTelegramMeta({required this.telegramId, required this.serialNo, required this.title, required this.headline, required this.publishedAt, required this.reportedAt, required this.targetedAt, required this.revokedAt, required this.infoKind});
+  const _TsunamiTelegramMeta({required this.telegramId, required this.type, required this.serialNo, required this.title, required this.headline, required this.publishedAt, required this.reportedAt, required this.targetedAt, required this.revokedAt, required this.infoKind});
   
 
 @override final  String telegramId;
+@override final  TelegramType type;
 @override final  int? serialNo;
 @override final  String title;
 @override final  String? headline;
@@ -237,16 +240,16 @@ _$TsunamiTelegramMetaCopyWith<_TsunamiTelegramMeta> get copyWith => __$TsunamiTe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramMeta&&(identical(other.telegramId, telegramId) || other.telegramId == telegramId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.reportedAt, reportedAt) || other.reportedAt == reportedAt)&&(identical(other.targetedAt, targetedAt) || other.targetedAt == targetedAt)&&(identical(other.revokedAt, revokedAt) || other.revokedAt == revokedAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramMeta&&(identical(other.telegramId, telegramId) || other.telegramId == telegramId)&&(identical(other.type, type) || other.type == type)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.reportedAt, reportedAt) || other.reportedAt == reportedAt)&&(identical(other.targetedAt, targetedAt) || other.targetedAt == targetedAt)&&(identical(other.revokedAt, revokedAt) || other.revokedAt == revokedAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,telegramId,serialNo,title,headline,publishedAt,reportedAt,targetedAt,revokedAt,infoKind);
+int get hashCode => Object.hash(runtimeType,telegramId,type,serialNo,title,headline,publishedAt,reportedAt,targetedAt,revokedAt,infoKind);
 
 @override
 String toString() {
-  return 'TsunamiTelegramMeta(telegramId: $telegramId, serialNo: $serialNo, title: $title, headline: $headline, publishedAt: $publishedAt, reportedAt: $reportedAt, targetedAt: $targetedAt, revokedAt: $revokedAt, infoKind: $infoKind)';
+  return 'TsunamiTelegramMeta(telegramId: $telegramId, type: $type, serialNo: $serialNo, title: $title, headline: $headline, publishedAt: $publishedAt, reportedAt: $reportedAt, targetedAt: $targetedAt, revokedAt: $revokedAt, infoKind: $infoKind)';
 }
 
 
@@ -257,7 +260,7 @@ abstract mixin class _$TsunamiTelegramMetaCopyWith<$Res> implements $TsunamiTele
   factory _$TsunamiTelegramMetaCopyWith(_TsunamiTelegramMeta value, $Res Function(_TsunamiTelegramMeta) _then) = __$TsunamiTelegramMetaCopyWithImpl;
 @override @useResult
 $Res call({
- String telegramId, int? serialNo, String title, String? headline, DateTime publishedAt, DateTime reportedAt, DateTime? targetedAt, DateTime? revokedAt, String infoKind
+ String telegramId, TelegramType type, int? serialNo, String title, String? headline, DateTime publishedAt, DateTime reportedAt, DateTime? targetedAt, DateTime? revokedAt, String infoKind
 });
 
 
@@ -274,10 +277,11 @@ class __$TsunamiTelegramMetaCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramMeta
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? telegramId = null,Object? serialNo = freezed,Object? title = null,Object? headline = freezed,Object? publishedAt = null,Object? reportedAt = null,Object? targetedAt = freezed,Object? revokedAt = freezed,Object? infoKind = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? telegramId = null,Object? type = null,Object? serialNo = freezed,Object? title = null,Object? headline = freezed,Object? publishedAt = null,Object? reportedAt = null,Object? targetedAt = freezed,Object? revokedAt = freezed,Object? infoKind = null,}) {
   return _then(_TsunamiTelegramMeta(
 telegramId: null == telegramId ? _self.telegramId : telegramId // ignore: cast_nullable_to_non_nullable
-as String,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as TelegramType,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,publishedAt: null == publishedAt ? _self.publishedAt : publishedAt // ignore: cast_nullable_to_non_nullable

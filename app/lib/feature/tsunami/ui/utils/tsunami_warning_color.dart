@@ -1,9 +1,9 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 // ignore_for_file: avoid_classes_with_only_static_members
 
 import 'dart:ui';
 
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 
 abstract final class TsunamiWarningColor {
   static List<Color> stripeColors(TsunamiWarningKind kind) => switch (kind) {
@@ -11,14 +11,8 @@ abstract final class TsunamiWarningColor {
       Color(0xFF800080),
       Color(0xFF000000),
     ],
-    TsunamiWarningKind.warning => const [
-      Color(0xFFFF0000),
-      Color(0xFF000000),
-    ],
-    TsunamiWarningKind.advisory => const [
-      Color(0xFFFFCC00),
-      Color(0xFF996600),
-    ],
+    TsunamiWarningKind.warning => const [Color(0xFFFF0000), Color(0xFF000000)],
+    TsunamiWarningKind.advisory => const [Color(0xFFFFCC00), Color(0xFF996600)],
     TsunamiWarningKind.warningCancel ||
     TsunamiWarningKind.advisoryCancel ||
     TsunamiWarningKind.forecast ||
@@ -75,9 +69,7 @@ abstract final class TsunamiWarningColor {
 
   /// Returns the highest [TsunamiWarningKind] across all regions,
   /// falling back to [TsunamiWarningKind.none] for an empty list.
-  static TsunamiWarningKind resolveMaxKind(
-    List<TsunamiRegion> regions,
-  ) {
+  static TsunamiWarningKind resolveMaxKind(List<TsunamiRegion> regions) {
     if (regions.isEmpty) {
       return TsunamiWarningKind.none;
     }

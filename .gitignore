@@ -164,6 +164,7 @@ macos/GoogleService-Info.plist
 ios/*.p8
 
 *.pem
+!tool/asset_pack/trusted_keys/*.pem
 
 # Secret Folder
 secret/

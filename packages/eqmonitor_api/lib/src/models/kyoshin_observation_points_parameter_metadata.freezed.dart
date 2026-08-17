@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'kyoshin_observation_points_parameter_metadata.dart';
@@ -9,6 +9,7 @@ part of 'kyoshin_observation_points_parameter_metadata.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -68,7 +69,7 @@ class _$KyoshinObservationPointsParameterMetadataCopyWithImpl<$Res>
 /// Create a copy of KyoshinObservationPointsParameterMetadata
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? schemaVersion = null,Object? sourceVersion = null,Object? sourceUpdatedAt = freezed,Object? sourceUrls = null,Object? sha256 = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinObservationPointsParameterMetadata(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
 as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
@@ -216,7 +217,7 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 @JsonSerializable()
 
 class _KyoshinObservationPointsParameterMetadata implements KyoshinObservationPointsParameterMetadata {
-  const _KyoshinObservationPointsParameterMetadata({required this.type, @JsonKey(name: 'schema_version') required this.schemaVersion, @JsonKey(name: 'source_version') required this.sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at') required this.sourceUpdatedAt, @JsonKey(name: 'source_urls') required final  List<String> sourceUrls, required this.sha256}): _sourceUrls = sourceUrls;
+  const _KyoshinObservationPointsParameterMetadata({required this.type, @JsonKey(name: 'schema_version') required this.schemaVersion, @JsonKey(name: 'source_version') required this.sourceVersion, @JsonKey(includeIfNull: true, name: 'source_updated_at') required this.sourceUpdatedAt, @JsonKey(name: 'source_urls') required  List<String> sourceUrls, required this.sha256}): _sourceUrls = sourceUrls;
   factory _KyoshinObservationPointsParameterMetadata.fromJson(Map<String, dynamic> json) => _$KyoshinObservationPointsParameterMetadataFromJson(json);
 
 /// const: "KYOSHIN_OBSERVATION_POINTS"

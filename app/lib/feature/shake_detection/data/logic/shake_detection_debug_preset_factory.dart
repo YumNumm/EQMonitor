@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 enum ShakeDetectionDebugPresetId { tokyoMultiLevelGrid }
 
@@ -50,12 +51,12 @@ class ShakeDetectionDebugPresetFactory {
 
     final points = [
       for (final (i, spec) in pointSpecs.indexed)
-        Points(
+        api.Points(
           code: 'DEBUG-TKY-$i',
           name: 'Debug Tokyo $i',
           region: '東京都',
           type: 'K',
-          location: Location(latitude: spec.lat, longitude: spec.lng),
+          location: api.Location(latitude: spec.lat, longitude: spec.lng),
           intensity: spec.intensity,
           prefectureCode: '13',
           regionCode: '350',

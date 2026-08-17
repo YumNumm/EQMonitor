@@ -8,26 +8,37 @@ import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-Future<void> showErrorDetailsSheet(
-  BuildContext context, {
-  required Object error,
-  StackTrace? stackTrace,
-}) {
-  final occurredAt = DateTime.now();
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
-    builder: (context) => _ErrorDetailsSheet(
-      error: error,
-      stackTrace: stackTrace,
-      occurredAt: occurredAt,
-    ),
-  );
+part 'error_details_sheet.g.dart';
+
+@riverpod
+ErrorDetailsSheetAction errorDetailsSheetAction(Ref ref) =>
+    const ErrorDetailsSheetAction();
+
+class ErrorDetailsSheetAction {
+  const ErrorDetailsSheetAction();
+
+  Future<void> show(
+    BuildContext context, {
+    required Object error,
+    StackTrace? stackTrace,
+  }) {
+    final occurredAt = DateTime.now();
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => _ErrorDetailsSheet(
+        error: error,
+        stackTrace: stackTrace,
+        occurredAt: occurredAt,
+      ),
+    );
+  }
 }
 
 class _ErrorDetailsSheet extends ConsumerWidget {
@@ -51,9 +62,14 @@ class _ErrorDetailsSheet extends ConsumerWidget {
       _ => '(取得中)',
     };
     final packageInfo = ref.watch(packageInfoProvider);
-    final os = _osString(ref);
+    final os = switch ((Platform.isIOS, Platform.isAndroid)) {
+      (true, _) => 'iOS ${ref.watch(iosDeviceInfoProvider).systemVersion}',
+      (_, true) =>
+        'Android ${ref.watch(androidDeviceInfoProvider).version.release}',
+      _ => Platform.operatingSystem,
+    };
 
-    final diagnostics = buildErrorDiagnostics(
+    final diagnostics = ErrorDiagnosticsBuilder.build(
       error: error,
       stackTrace: stackTrace,
       deviceId: deviceId,
@@ -119,15 +135,5 @@ class _ErrorDetailsSheet extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _osString(WidgetRef ref) {
-    if (Platform.isIOS) {
-      return 'iOS ${ref.watch(iosDeviceInfoProvider).systemVersion}';
-    }
-    if (Platform.isAndroid) {
-      return 'Android ${ref.watch(androidDeviceInfoProvider).version.release}';
-    }
-    return Platform.operatingSystem;
   }
 }

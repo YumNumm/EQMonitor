@@ -1,10 +1,11 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_split_ratio.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_pane.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_realtime_pane.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_split_viewport_observer.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,12 +14,12 @@ class LiveMonitorSplitView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const splitRatioCalculator = LiveMonitorSplitRatioCalculator();
     final mediaQuery = MediaQuery.of(context);
     final orientation = mediaQuery.orientation;
     final isPortrait = orientation == Orientation.portrait;
-    final avoidBounds = DisplayFeatureSubScreen.avoidBounds(
-      mediaQuery,
-    ).toList(growable: false);
+    final avoidBounds = DisplayFeatureSubScreen.avoidBounds(mediaQuery)
+        .toList(growable: false);
     final settings =
         ref.watch(liveMonitorSettingsProvider).value ??
         const LiveMonitorSettings();
@@ -74,7 +75,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
             final measurement = viewportMeasurement.value;
             final measurementIsCurrent =
                 measurement != null &&
-                isLiveMonitorSplitViewportMeasurementCurrent(
+                splitRatioCalculator.isMeasurementCurrent(
                   measuredViewportSize: measurement.viewportSize,
                   currentViewportSize: constraints.biggest,
                 ) &&
@@ -90,11 +91,12 @@ class LiveMonitorSplitView extends HookConsumerWidget {
             Rect? splitDisplayFeatureBounds;
             for (final screenBounds in avoidBounds) {
               final bounds = switch (splitViewGlobalOrigin) {
-                final Offset origin => liveMonitorDisplayFeatureLocalBounds(
-                  screenBounds: screenBounds,
-                  splitViewGlobalOrigin: origin,
-                  splitViewSize: constraints.biggest,
-                ),
+                final Offset origin =>
+                  splitRatioCalculator.displayFeatureLocalBounds(
+                    screenBounds: screenBounds,
+                    splitViewGlobalOrigin: origin,
+                    splitViewSize: constraints.biggest,
+                  ),
                 null => null,
               };
               if (bounds == null) {
@@ -144,7 +146,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
                 ? adaptiveDividerExtent
                 : standardDividerExtent;
             final secondaryExtent = totalExtent - primaryExtent - dividerExtent;
-            final colorScheme = Theme.of(context).colorScheme;
+            final colorScheme = context.designSystem.colorTheme;
             final divider = Semantics(
               label: hasSplitDisplayFeature ? '画面の折りたたみ領域' : 'リアルタイム表示の分割割合',
               value: hasSplitDisplayFeature
@@ -164,7 +166,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
                           final primaryDelta = isPortrait
                               ? details.delta.dy
                               : details.delta.dx;
-                          localRatio.value = updateLiveMonitorSplitRatio(
+                          localRatio.value = splitRatioCalculator.updateRatio(
                             current: localRatio.value,
                             primaryDelta: primaryDelta,
                             availableExtent: availableExtent,

@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/station_icon_image_expression.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -134,7 +134,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
@@ -192,7 +192,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 latestLayerConfiguration.value == configuration) {
               return;
             }
-            await removeMapStyleResources(
+            await MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
@@ -408,8 +408,7 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
             10,
             parameter.stationCircleRadiusMax,
           ],
-          StationDisplayMode.auto ||
-          StationDisplayMode.maxFocused => [
+          StationDisplayMode.auto || StationDisplayMode.maxFocused => [
             'interpolate',
             ['linear'],
             ['zoom'],
@@ -453,7 +452,7 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
       sourceId: sourceId,
       minZoom: parameter.stationMinZoom,
       layout: {
-        'icon-image': stationIconImageExpression(
+        'icon-image': const StationIconImageExpressionBuilder().build(
           stationDisplayMode: stationDisplayMode,
           stationTextZoom: parameter.stationTextZoom,
         ),

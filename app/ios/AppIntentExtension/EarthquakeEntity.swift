@@ -42,7 +42,7 @@ struct EarthquakeEntity: AppEntity, Identifiable {
         self.hypocenterName = item.hypocenterName
         self.magnitude = item.magnitude
         self.depth = item.depth.isEmpty ? "不明" : item.depth
-        self.maxIntensity = item.maxIntensity?.displayString ?? "不明"
+        self.maxIntensity = item.maxIntensity?.titleText ?? "不明"
         self.occurredAt = item.formattedTime
     }
 }

@@ -50,7 +50,10 @@ void main() {
   group('migrateFromLegacyIntensityColors', () {
     test('旧キーが無い場合はnullを返す', () async {
       final dataSource = await _dataSource({});
-      expect(await migrateFromLegacyIntensityColors(dataSource), isNull);
+      expect(
+        await ThemeMigration.migrateFromLegacyIntensityColors(dataSource),
+        isNull,
+      );
     });
 
     test('旧intensity_colorキーがある場合はマイグレーションされる', () async {
@@ -58,7 +61,9 @@ void main() {
         SharedPreferencesKey.intensityColor.key: _legacyIntensityColorJson,
       });
 
-      final result = await migrateFromLegacyIntensityColors(dataSource);
+      final result = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
 
       expect(result, isNotNull);
       expect(result!.light!.intensity.seven.background.toARGB32(), 0xFFC800FF);
@@ -77,7 +82,9 @@ void main() {
             _legacyEstimatedIntensityColorJson,
       });
 
-      final result = await migrateFromLegacyIntensityColors(dataSource);
+      final result = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
 
       expect(result, isNotNull);
       expect(
@@ -104,7 +111,9 @@ void main() {
             _legacyEstimatedIntensityColorJson,
       });
 
-      final result = await migrateFromLegacyIntensityColors(dataSource);
+      final result = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
 
       expect(result, isNotNull);
       expect(result!.light!.intensity.seven.background.toARGB32(), 0xFFC800FF);
@@ -132,7 +141,9 @@ void main() {
             _legacyEstimatedIntensityColorJson,
       });
 
-      final result = await migrateFromLegacyIntensityColors(dataSource);
+      final result = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
 
       expect(result, isNotNull);
       // intensity は default のまま (壊れたJSONは無視される)
@@ -157,7 +168,9 @@ void main() {
         SharedPreferencesKey.estimatedIntensityColor.key: '[]',
       });
 
-      final result = await migrateFromLegacyIntensityColors(dataSource);
+      final result = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
       final defaultTheme = AppTheme.eqmonitorDefault();
 
       expect(result, isNotNull);

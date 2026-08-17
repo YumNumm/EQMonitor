@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_tree.dart';
@@ -9,6 +9,7 @@ part of 'intensity_tree.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$IntensityTreeCopyWithImpl<$Res>
 /// Create a copy of IntensityTree
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? intensity = null,Object? regions = null,Object? stations = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityTree(
 intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<IntensityTreeRegionId>,stations: freezed == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
@@ -211,7 +212,7 @@ return $default(_that.intensity,_that.regions,_that.stations);case _:
 @JsonSerializable()
 
 class _IntensityTree implements IntensityTree {
-  const _IntensityTree({required this.intensity, required final  List<IntensityTreeRegionId> regions, @JsonKey(includeIfNull: false) final  List<IntensityTreeStationId>? stations}): _regions = regions,_stations = stations;
+  const _IntensityTree({required this.intensity, required  List<IntensityTreeRegionId> regions, @JsonKey(includeIfNull: false)  List<IntensityTreeStationId>? stations}): _regions = regions,_stations = stations;
   factory _IntensityTree.fromJson(Map<String, dynamic> json) => _$IntensityTreeFromJson(json);
 
 @override final  JmaIntensity intensity;

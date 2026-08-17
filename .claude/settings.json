@@ -2,6 +2,22 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "claude-security@claude-plugins-official": true,
-    "asc@rorkai": true
+    "asc@rorkai": true,
+    "ponytail@ponytail": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(gh *)",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/gh-repo-guard.sh\"",
+            "statusMessage": "PR/Issue の作成先を検証中"
+          }
+        ]
+      }
+    ]
   }
 }

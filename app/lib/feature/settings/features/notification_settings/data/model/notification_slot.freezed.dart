@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'notification_slot.dart';
@@ -9,6 +9,7 @@ part of 'notification_slot.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$NotificationSlotCopyWithImpl<$Res>
 /// Create a copy of NotificationSlot
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? slotType = null,Object? regionId = freezed,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,Object? displayOrder = null,Object? eewEnabled = null,Object? eewMinIntensity = freezed,Object? eewOverrides = freezed,Object? earthquakeEnabled = null,Object? earthquakeMinIntensity = freezed,Object? earthquakeOverrides = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NotificationSlot(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,slotType: null == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
 as NotificationSlotType,regionId: freezed == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
@@ -218,7 +219,7 @@ return $default(_that.id,_that.slotType,_that.regionId,_that.regionName,_that.ci
 
 
 class _NotificationSlot implements NotificationSlot {
-  const _NotificationSlot({required this.id, required this.slotType, required this.regionId, required this.regionName, required this.cityCode, required this.cityName, required this.displayOrder, required this.eewEnabled, required this.eewMinIntensity, required final  List<NotificationOverride>? eewOverrides, required this.earthquakeEnabled, required this.earthquakeMinIntensity, required final  List<NotificationOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
+  const _NotificationSlot({required this.id, required this.slotType, required this.regionId, required this.regionName, required this.cityCode, required this.cityName, required this.displayOrder, required this.eewEnabled, required this.eewMinIntensity, required  List<NotificationOverride>? eewOverrides, required this.earthquakeEnabled, required this.earthquakeMinIntensity, required  List<NotificationOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
   
 
 @override final  String id;

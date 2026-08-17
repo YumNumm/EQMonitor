@@ -1,33 +1,31 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_intensity_region_model.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/repository/earthquake_body_diff_calculator.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
-/// テスト用ヘルパー: 最低限のフィールドで [api.EarthquakeTelegramBodyIntensityRegion] を生成
-api.EarthquakeTelegramBodyIntensityRegion _region(
+/// テスト用ヘルパー: 最低限のフィールドで [EarthquakeTelegramBodyIntensityRegionModel] を生成
+EarthquakeTelegramBodyIntensityRegionModel _region(
   String code,
   String name,
-  api.JmaIntensity? intensity,
+  JmaIntensity? intensity,
 ) {
-  return api.EarthquakeTelegramBodyIntensityRegion(
-    eventId: 'test-event',
+  return EarthquakeTelegramBodyIntensityRegionModel(
     code: code,
     name: name,
     intensity: intensity,
-    datasource: .jmaDisasterInformationXml,
   );
 }
 
-/// テスト用ヘルパー: [api.EarthquakeTelegramBodyQuake] を生成
-api.EarthquakeTelegramBodyQuake _quake({
+/// テスト用ヘルパー: [EarthquakeTelegramBodyQuakeModel] を生成
+EarthquakeTelegramBodyQuakeModel _quake({
   String? magnitude,
   num? depth,
   String? epicenterName,
-  api.JmaIntensity? maxIntensity,
+  JmaIntensity? maxIntensity,
 }) {
-  return api.EarthquakeTelegramBodyQuake(
-    eventId: 'test-event',
+  return EarthquakeTelegramBodyQuakeModel(
     magnitude: magnitude,
     depth: depth,
     epicenterName: epicenterName,
@@ -41,13 +39,11 @@ void main() {
   group('computeIntensityRegionDiff', () {
     test('初報 (previous=null) の場合、全て same になる', () {
       final current = [
-        _region('100', '東京都', api.JmaIntensity.value3),
-        _region('200', '神奈川県', api.JmaIntensity.value2),
+        _region('100', '東京都', JmaIntensity.three),
+        _region('200', '神奈川県', JmaIntensity.two),
       ];
 
-      final result = calculator.computeIntensityRegionDiff(
-        current: current,
-      );
+      final result = calculator.computeIntensityRegionDiff(current: current);
 
       expect(result, hasLength(2));
       expect(result[0].diffType, IntensityDiffType.same);
@@ -57,9 +53,7 @@ void main() {
     });
 
     test('初報 (previous=empty) の場合、全て same になる', () {
-      final current = [
-        _region('100', '東京都', api.JmaIntensity.value3),
-      ];
+      final current = [_region('100', '東京都', JmaIntensity.three)];
 
       final result = calculator.computeIntensityRegionDiff(
         current: current,
@@ -71,12 +65,10 @@ void main() {
     });
 
     test('新たに追加された地域を検出する', () {
-      final previous = [
-        _region('100', '東京都', api.JmaIntensity.value3),
-      ];
+      final previous = [_region('100', '東京都', JmaIntensity.three)];
       final current = [
-        _region('100', '東京都', api.JmaIntensity.value3),
-        _region('200', '神奈川県', api.JmaIntensity.value2),
+        _region('100', '東京都', JmaIntensity.three),
+        _region('200', '神奈川県', JmaIntensity.two),
       ];
 
       final result = calculator.computeIntensityRegionDiff(
@@ -95,12 +87,8 @@ void main() {
     });
 
     test('震度上方修正 (value4 -> value5minus) を検出する', () {
-      final previous = [
-        _region('100', '東京都', api.JmaIntensity.value4),
-      ];
-      final current = [
-        _region('100', '東京都', api.JmaIntensity.value5minus),
-      ];
+      final previous = [_region('100', '東京都', JmaIntensity.four)];
+      final current = [_region('100', '東京都', JmaIntensity.fiveLower)];
 
       final result = calculator.computeIntensityRegionDiff(
         current: current,
@@ -114,12 +102,8 @@ void main() {
     });
 
     test('震度下方修正 (value5plus -> value4) を検出する', () {
-      final previous = [
-        _region('100', '東京都', api.JmaIntensity.value5plus),
-      ];
-      final current = [
-        _region('100', '東京都', api.JmaIntensity.value4),
-      ];
+      final previous = [_region('100', '東京都', JmaIntensity.fiveUpper)];
+      final current = [_region('100', '東京都', JmaIntensity.four)];
 
       final result = calculator.computeIntensityRegionDiff(
         current: current,
@@ -134,13 +118,11 @@ void main() {
 
     test('intensity が null のエントリはスキップされる', () {
       final current = [
-        _region('100', '東京都', api.JmaIntensity.value3),
+        _region('100', '東京都', JmaIntensity.three),
         _region('200', '神奈川県', null),
       ];
 
-      final result = calculator.computeIntensityRegionDiff(
-        current: current,
-      );
+      final result = calculator.computeIntensityRegionDiff(current: current);
 
       expect(result, hasLength(1));
       expect(result[0].code, '100');
@@ -148,13 +130,13 @@ void main() {
 
     test('複数の差分種別が混在するケース', () {
       final previous = [
-        _region('100', '東京都', api.JmaIntensity.value3),
-        _region('200', '神奈川県', api.JmaIntensity.value5plus),
+        _region('100', '東京都', JmaIntensity.three),
+        _region('200', '神奈川県', JmaIntensity.fiveUpper),
       ];
       final current = [
-        _region('100', '東京都', api.JmaIntensity.value4), // upgraded
-        _region('200', '神奈川県', api.JmaIntensity.value4), // downgraded
-        _region('300', '千葉県', api.JmaIntensity.value2), // added
+        _region('100', '東京都', JmaIntensity.four), // upgraded
+        _region('200', '神奈川県', JmaIntensity.four), // downgraded
+        _region('300', '千葉県', JmaIntensity.two), // added
       ];
 
       final result = calculator.computeIntensityRegionDiff(
@@ -175,7 +157,7 @@ void main() {
         magnitude: '5.0',
         depth: 10,
         epicenterName: '東京湾',
-        maxIntensity: api.JmaIntensity.value4,
+        maxIntensity: JmaIntensity.four,
       );
 
       final result = calculator.computeHypocenterDiff(
@@ -196,9 +178,7 @@ void main() {
     });
 
     test('both null の場合 null を返す', () {
-      final result = calculator.computeHypocenterDiff(
-        current: null,
-      );
+      final result = calculator.computeHypocenterDiff(current: null);
 
       expect(result, isNull);
     });
@@ -209,11 +189,7 @@ void main() {
         depth: 10,
         epicenterName: '東京湾',
       );
-      final current = _quake(
-        magnitude: '5.5',
-        depth: 10,
-        epicenterName: '東京湾',
-      );
+      final current = _quake(magnitude: '5.5', depth: 10, epicenterName: '東京湾');
 
       final result = calculator.computeHypocenterDiff(
         current: current,
@@ -234,11 +210,7 @@ void main() {
         depth: 10,
         epicenterName: '東京湾',
       );
-      final current = _quake(
-        magnitude: '5.0',
-        depth: 30,
-        epicenterName: '東京湾',
-      );
+      final current = _quake(magnitude: '5.0', depth: 30, epicenterName: '東京湾');
 
       final result = calculator.computeHypocenterDiff(
         current: current,
@@ -268,12 +240,8 @@ void main() {
     });
 
     test('最大震度の変化を検出する', () {
-      final previous = _quake(
-        maxIntensity: api.JmaIntensity.value4,
-      );
-      final current = _quake(
-        maxIntensity: api.JmaIntensity.value5minus,
-      );
+      final previous = _quake(maxIntensity: JmaIntensity.four);
+      final current = _quake(maxIntensity: JmaIntensity.fiveLower);
 
       final result = calculator.computeHypocenterDiff(
         current: current,
@@ -286,21 +254,18 @@ void main() {
       expect(result.newMaxIntensity, JmaIntensity.fiveLower);
     });
 
-    test('初報 (previous=null) で値がある場合は差分あり', () {
-      final current = _quake(
-        magnitude: '5.0',
-        depth: 10,
-        epicenterName: '東京湾',
-      );
+    test('初報 (previous=null) で値がある場合は差分なし', () {
+      final current = _quake(magnitude: '5.0', depth: 10, epicenterName: '東京湾');
 
-      final result = calculator.computeHypocenterDiff(
-        current: current,
-      );
+      final result = calculator.computeHypocenterDiff(current: current);
 
-      expect(result, isNotNull);
-      expect(result!.hasMagnitudeChange(), isTrue);
-      expect(result.oldMagnitude, isNull);
-      expect(result.newMagnitude, '5.0');
+      expect(result, isNull);
+    });
+
+    test('旧マグニチュードが不明で現報のみ値がある場合は差分なし', () {
+      const diff = HypocenterDiff(newMagnitude: '3.8');
+
+      expect(diff.hasMagnitudeChange(), isFalse);
     });
   });
 }

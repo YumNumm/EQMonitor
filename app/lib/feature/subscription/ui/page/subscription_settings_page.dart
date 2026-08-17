@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// M-T図(時間 × マグニチュードの点プロット)。
 class SeismicityMtChart extends StatelessWidget {
@@ -21,10 +21,11 @@ class SeismicityMtChart extends StatelessWidget {
     final firstTime = withMagnitude.first.originTime;
     final spots = [
       for (final event in withMagnitude)
-        ScatterSpot(
-          event.originTime.difference(firstTime).inHours.toDouble(),
-          event.magnitude!,
-        ),
+        if (event.magnitude case final magnitude?)
+          ScatterSpot(
+            event.originTime.difference(firstTime).inHours.toDouble(),
+            magnitude,
+          ),
     ];
     final colorScheme = context.designSystem.colorTheme;
 

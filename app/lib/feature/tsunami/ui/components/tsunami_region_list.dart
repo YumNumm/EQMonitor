@@ -1,9 +1,14 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region_station.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/first_height_condition.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/qualitative_height.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiRegionList extends StatelessWidget {
@@ -94,9 +99,10 @@ class _ForecastRegionCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final observedStations = region.stations
         .where(
-          (s) =>
-              s.observation != null &&
-              !(s.observation!.firstHeight.isMissing ?? false),
+          (s) => switch (s.observation) {
+            final observation? => observation.firstHeight.isMissing != true,
+            null => false,
+          },
         )
         .toList();
 
@@ -147,9 +153,10 @@ class _ForecastDetails extends StatelessWidget {
     if (forecast != null) {
       final mh = forecast.maxHeight;
       if (mh != null) {
-        if (mh.qualitative != null) {
+        final qualitative = mh.qualitative;
+        if (qualitative != null) {
           parts.add(
-            '予想最大波高: ${switch (mh.qualitative!) {
+            '予想最大波高: ${switch (qualitative) {
               QualitativeHeight.enormous => '巨大',
               QualitativeHeight.high => '高い',
             }}',
@@ -164,17 +171,19 @@ class _ForecastDetails extends StatelessWidget {
 
       final fh = forecast.firstHeight;
       if (fh != null) {
-        if (fh.condition != null) {
+        final condition = fh.condition;
+        final arrivalTime = fh.arrivalTime;
+        if (condition != null) {
           parts.add(
-            '到達予想: ${switch (fh.condition!) {
+            '到達予想: ${switch (condition) {
               FirstHeightCondition.arriving => '第一波到達中',
               FirstHeightCondition.firstWaveConfirmed => '第一波確認',
               FirstHeightCondition.imminent => 'まもなく到達',
             }}',
           );
-        } else if (fh.arrivalTime != null) {
+        } else if (arrivalTime != null) {
           parts.add(
-            '到達予想: ${DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())}頃',
+            '到達予想: ${DateFormat('HH:mm').format(arrivalTime.toLocal())}頃',
           );
         }
       }
@@ -197,23 +206,17 @@ class _ForecastDetails extends StatelessWidget {
   }
 }
 
-class _ObservationExpansion extends StatefulWidget {
+class _ObservationExpansion extends HookWidget {
   const _ObservationExpansion({required this.stations});
 
   final List<TsunamiRegionStation> stations;
 
   @override
-  State<_ObservationExpansion> createState() => _ObservationExpansionState();
-}
-
-class _ObservationExpansionState extends State<_ObservationExpansion> {
-  var _expanded = false;
-
-  @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
+    final expanded = useState(false);
 
-    if (widget.stations.isEmpty) {
+    if (stations.isEmpty) {
       return const SizedBox(height: 8);
     }
 
@@ -221,19 +224,19 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         InkWell(
-          onTap: () => setState(() => _expanded = !_expanded),
+          onTap: () => expanded.value = !expanded.value,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
                 Icon(
-                  _expanded ? Icons.expand_less : Icons.expand_more,
+                  expanded.value ? Icons.expand_less : Icons.expand_more,
                   size: 18,
                   color: designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '観測点を表示 (${widget.stations.length})',
+                  '観測点を表示 (${stations.length})',
                   style: TextStyle(
                     fontSize: 13,
                     color: designSystem.colorTheme.onSurfaceVariant,
@@ -243,13 +246,13 @@ class _ObservationExpansionState extends State<_ObservationExpansion> {
             ),
           ),
         ),
-        if (_expanded)
+        if (expanded.value)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final station in widget.stations)
+                for (final station in stations)
                   TsunamiObservationStationTile(station: station),
               ],
             ),

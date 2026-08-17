@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'dispatch_summary_item.dart';
@@ -9,6 +9,7 @@ part of 'dispatch_summary_item.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$DispatchSummaryItemCopyWithImpl<$Res>
 /// Create a copy of DispatchSummaryItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? correlationKey = null,Object? eventType = null,Object? eventId = null,Object? serialNo = null,Object? jmaReportTime = null,Object? targetDevices = null,Object? enqueuedFcm = null,Object? enqueuedApns = null,Object? enqueuedBroadcast = null,Object? successFcm = null,Object? failedFcm = null,Object? successApns = null,Object? failedApns = null,Object? headline = freezed,Object? resolverDelayMs = freezed,Object? proxyReceivedAt = freezed,Object? resolverDoneAt = freezed,Object? sendStartedAt = freezed,Object? sendCompletedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(DispatchSummaryItem(
 correlationKey: null == correlationKey ? _self.correlationKey : correlationKey // ignore: cast_nullable_to_non_nullable
 as String,eventType: null == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable

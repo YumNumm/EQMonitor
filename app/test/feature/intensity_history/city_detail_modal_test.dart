@@ -19,7 +19,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_prec
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -65,7 +65,8 @@ class _PagedEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   }
 }
 
-class _CountingPagedEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+class _CountingPagedEarthquakeHistoryNotifier
+    extends EarthquakeHistoryNotifier {
   static var fetchNextDataCallCount = 0;
   static Completer<void>? fetchNextDataCompleter;
 
@@ -177,7 +178,7 @@ void main() {
           ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
@@ -213,7 +214,7 @@ void main() {
           ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showPrefectureDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showPrefecture(
             context,
             prefectureCode: '1700',
             prefectureName: '石川県',
@@ -246,7 +247,7 @@ void main() {
           ).overrideWith(_EmptyEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
@@ -278,7 +279,7 @@ void main() {
           ).overrideWith(_ErrorEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
@@ -310,7 +311,7 @@ void main() {
           ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
@@ -343,7 +344,7 @@ void main() {
           ).overrideWith(_PagedEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
@@ -362,7 +363,8 @@ void main() {
   testWidgets('追加読み込み中の二重押下は1回に抑制される', (tester) async {
     _CountingPagedEarthquakeHistoryNotifier.reset();
     addTearDown(() {
-      _CountingPagedEarthquakeHistoryNotifier.fetchNextDataCompleter?.complete();
+      _CountingPagedEarthquakeHistoryNotifier.fetchNextDataCompleter
+          ?.complete();
     });
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -379,7 +381,7 @@ void main() {
           ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => showCityDetailModal(
+          onPressed: (context) => AreaDetailModalAction().showCity(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
