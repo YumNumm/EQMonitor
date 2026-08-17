@@ -5,7 +5,7 @@ part 'changelog_section_model.freezed.dart';
 
 @freezed
 abstract class ChangelogSectionModel with _$ChangelogSectionModel {
-  const factory ChangelogSectionModel({
+  const factory({
     required String title,
     required List<String> items,
   }) = _ChangelogSectionModel;

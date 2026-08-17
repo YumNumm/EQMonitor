@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 
 /// 3種類のプッシュトークンそれぞれの同期状態スナップショット。
 final class PushTokenSyncSnapshot {
-  const PushTokenSyncSnapshot({
+  const new({
     required this.fcm,
     required this.apnsNotification,
     required this.apnsPushToStart,
@@ -83,25 +83,25 @@ final class PushTokenSyncSnapshot {
 }
 
 sealed class PushTokenKindState {
-  const PushTokenKindState();
+  const new();
 }
 
 final class NotApplicableTokenState extends PushTokenKindState {
-  const NotApplicableTokenState();
+  const new();
 }
 
 final class AbsentTokenState extends PushTokenKindState {
-  const AbsentTokenState();
+  const new();
 }
 
 final class SyncingTokenState extends PushTokenKindState {
-  const SyncingTokenState({required this.attempt});
+  const new({required this.attempt});
 
   final int attempt;
 }
 
 final class WaitingTokenState extends PushTokenKindState {
-  const WaitingTokenState({
+  const new({
     required this.attempt,
     required this.error,
     required this.resumeAt,
@@ -113,11 +113,11 @@ final class WaitingTokenState extends PushTokenKindState {
 }
 
 final class SyncedTokenState extends PushTokenKindState {
-  const SyncedTokenState();
+  const new();
 }
 
 final class FailedTokenState extends PushTokenKindState {
-  const FailedTokenState({required this.error});
+  const new({required this.error});
 
   final DeviceProvisioningException error;
 }

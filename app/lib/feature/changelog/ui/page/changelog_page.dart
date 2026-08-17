@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class ChangelogPage extends ConsumerWidget {
-  const ChangelogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class ChangelogPage extends ConsumerWidget {
 }
 
 class _ChangelogList extends StatelessWidget {
-  const _ChangelogList({required this.entries});
+  const new({required this.entries});
 
   final List<ChangelogEntryModel> entries;
 
@@ -67,7 +67,7 @@ class _ChangelogList extends StatelessWidget {
 }
 
 class ChangelogEntryCard extends StatelessWidget {
-  const ChangelogEntryCard({required this.entry, super.key});
+  const new({required this.entry, super.key});
 
   final ChangelogEntryModel entry;
 
@@ -108,7 +108,7 @@ class ChangelogEntryCard extends StatelessWidget {
 }
 
 class _SectionWidget extends StatelessWidget {
-  const _SectionWidget({required this.section});
+  const new({required this.section});
 
   final ChangelogSectionModel section;
 
@@ -128,7 +128,7 @@ class _SectionWidget extends StatelessWidget {
 /// material_ui へ移行したアプリのテーマを直接渡せない。
 /// テキストスタイルのみを明示的に受け渡して配色崩れを防ぐ。
 class _ThemedMarkdownBody extends StatelessWidget {
-  const _ThemedMarkdownBody({required this.data});
+  const new({required this.data});
 
   final String data;
 

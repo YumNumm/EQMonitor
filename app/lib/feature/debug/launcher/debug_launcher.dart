@@ -34,7 +34,7 @@ class GoRouterCurrentLocationResolver {
 ///
 /// kDebugMode / Beta ビルドでのみ有効化することを想定。
 class DebugLauncher extends HookConsumerWidget {
-  const DebugLauncher({required this.child, super.key});
+  const new({required this.child, super.key});
 
   final Widget child;
 
