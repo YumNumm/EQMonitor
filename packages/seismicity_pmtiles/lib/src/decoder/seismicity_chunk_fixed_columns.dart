@@ -23,7 +23,7 @@ typedef SeismicityChunkFixedColumnAllocator = T Function<T>(
 );
 
 final class SeismicityChunkFixedColumns {
-  SeismicityChunkFixedColumns({
+  new({
     required int capacity,
     SeismicityChunkFixedColumnAllocator? allocate,
   }) : _allocate = allocate ?? allocateSeismicityChunkFixedColumnData {

@@ -9,7 +9,7 @@ typedef SeismicityCanonicalPropertyChunkData = ({
 });
 
 final class SeismicityCanonicalPropertyChunk {
-  SeismicityCanonicalPropertyChunk({required int capacity})
+  new({required int capacity})
     : _fixed = SeismicityCanonicalFixedColumns(capacity: capacity),
       _strings = SeismicityCanonicalStringColumns(capacity: capacity);
 

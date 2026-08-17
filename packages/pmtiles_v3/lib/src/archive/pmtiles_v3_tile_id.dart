@@ -1,7 +1,7 @@
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3TileId {
-  const PmTilesV3TileId();
+  const new();
 
   static const maxZoom = 31;
   static const int maxValue = ((1 << 62) - 1) ~/ 3 + (1 << 62) - 1;

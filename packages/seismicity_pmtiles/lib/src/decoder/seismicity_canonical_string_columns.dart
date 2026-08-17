@@ -22,7 +22,7 @@ typedef SeismicityCanonicalStringColumnData = ({
 typedef SeismicityStringColumnAllocator = T Function<T>(T Function() create);
 
 final class SeismicityCanonicalStringColumns {
-  SeismicityCanonicalStringColumns({
+  new({
     required int capacity,
     SeismicityStringColumnAllocator? allocate,
   }) : _allocate = allocate ?? allocateSeismicityStringColumn,

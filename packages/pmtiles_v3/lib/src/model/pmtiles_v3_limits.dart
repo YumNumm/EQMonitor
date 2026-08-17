@@ -8,7 +8,7 @@ part 'pmtiles_v3_limits.freezed.dart';
 /// `seismicity_pmtiles` が使っていた固定値をそのまま引数化したもの。
 @freezed
 abstract class PmTilesV3Limits with _$PmTilesV3Limits {
-  const factory PmTilesV3Limits({
+  const factory({
     /// directory treeを辿る最大深さ。3を超えるarchiveは corrupt として拒否する。
     required int maxDirectoryDepth,
 

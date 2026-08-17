@@ -6,7 +6,7 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3DirectoryDecoder {
-  const PmTilesV3DirectoryDecoder({
+  const new({
     this.compressionDecoder = const PmTilesV3CompressionDecoder(),
     this.tileId = const PmTilesV3TileId(),
   });
