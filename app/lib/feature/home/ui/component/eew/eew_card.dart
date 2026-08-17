@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 class EewCard extends ConsumerWidget {
-  const EewCard({
+  const new({
     required this.eew,
     required this.index,
     this.nowOverride,
@@ -149,7 +149,7 @@ class EewCard extends ConsumerWidget {
 }
 
 class _EewMainCard extends StatelessWidget {
-  const _EewMainCard({
+  const new({
     required this.eew,
     required this.isWarning,
     required this.happenedTime,
@@ -274,7 +274,7 @@ class _EewMainCard extends StatelessWidget {
 }
 
 class _EewCardHeader extends StatelessWidget {
-  const _EewCardHeader({
+  const new({
     required this.eew,
     required this.isWarning,
     required this.headerBackgroundColor,
@@ -409,7 +409,7 @@ class _EewCardHeader extends StatelessWidget {
 }
 
 class _EewMaxIntensitySection extends StatelessWidget {
-  const _EewMaxIntensitySection({
+  const new({
     required this.maxIntensity,
     required this.depth,
   });
@@ -441,7 +441,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
 }
 
 class _EewHypocenterSection extends StatelessWidget {
-  const _EewHypocenterSection({required this.eew, required this.happenedTime});
+  const new({required this.eew, required this.happenedTime});
 
   final EewTelegramItem eew;
   final DateTime happenedTime;
@@ -518,7 +518,7 @@ class _EewHypocenterSection extends StatelessWidget {
 }
 
 class _EewLocalForecastSection extends StatelessWidget {
-  const _EewLocalForecastSection({
+  const new({
     required this.intensity,
     required this.regionDisplayName,
   });
@@ -564,7 +564,7 @@ class _EewLocalForecastSection extends StatelessWidget {
 }
 
 class _EewLpgmSection extends StatelessWidget {
-  const _EewLpgmSection({required this.intensity});
+  const new({required this.intensity});
 
   final JmaLpgmIntensity intensity;
 
@@ -591,7 +591,7 @@ class _EewLpgmSection extends StatelessWidget {
 }
 
 class _BackgroundIndexText extends StatelessWidget {
-  const _BackgroundIndexText({required this.index});
+  const new({required this.index});
 
   final String index;
 
@@ -616,7 +616,7 @@ class _BackgroundIndexText extends StatelessWidget {
 }
 
 class _SecondaryLabel extends StatelessWidget {
-  const _SecondaryLabel({required this.text});
+  const new({required this.text});
 
   final String text;
 
@@ -634,7 +634,7 @@ class _SecondaryLabel extends StatelessWidget {
 }
 
 class _MagnitudeRow extends StatelessWidget {
-  const _MagnitudeRow({required this.magnitude});
+  const new({required this.magnitude});
 
   final double magnitude;
 
@@ -668,7 +668,7 @@ class _MagnitudeRow extends StatelessWidget {
 }
 
 class _DepthRow extends StatelessWidget {
-  const _DepthRow({required this.depth});
+  const new({required this.depth});
 
   final int depth;
 

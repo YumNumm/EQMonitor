@@ -5,7 +5,7 @@ part 'home_map_label_parameter.g.dart';
 
 @freezed
 abstract class HomeMapLabelParameter with _$HomeMapLabelParameter {
-  const factory HomeMapLabelParameter({
+  const factory({
     @JsonKey(defaultValue: true) @Default(false) bool showRegionLabel,
     @JsonKey(defaultValue: true) @Default(false) bool showCityLabel,
     @Default(5.0) double regionLabelMinZoom,
@@ -15,6 +15,6 @@ abstract class HomeMapLabelParameter with _$HomeMapLabelParameter {
     @Default(1.0) double textHaloWidth,
   }) = _HomeMapLabelParameter;
 
-  factory HomeMapLabelParameter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapLabelParameterFromJson(json);
 }

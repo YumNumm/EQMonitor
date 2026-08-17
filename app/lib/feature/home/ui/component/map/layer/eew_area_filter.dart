@@ -1,5 +1,5 @@
 class EewAreaFilterBuilder {
-  const EewAreaFilterBuilder();
+  const new();
 
   static const _emptyFilter = <Object>['==', '1', '2'];
 

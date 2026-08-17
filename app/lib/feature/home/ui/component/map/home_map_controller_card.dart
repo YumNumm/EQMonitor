@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 class HomeMapControllerCard extends StatelessWidget {
-  const HomeMapControllerCard({
+  const new({
     super.key,
     this.onLayerButtonTap,
     this.onLocationButtonTap,

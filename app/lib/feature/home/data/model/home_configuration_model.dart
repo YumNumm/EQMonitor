@@ -96,56 +96,56 @@ enum HomeMapDefaultBounds {
 @freezed
 abstract class HomeShakeDetectionSettings with _$HomeShakeDetectionSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeShakeDetectionSettings({
+  const factory({
     @Default(true) bool show,
     @Default(HomeShakeDetectionAnimationMode.blink)
     HomeShakeDetectionAnimationMode animationMode,
   }) = _HomeShakeDetectionSettings;
 
-  factory HomeShakeDetectionSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeShakeDetectionSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeEewSettings with _$HomeEewSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeEewSettings({
+  const factory({
     @Default(HomeEewFillMode.intensity) HomeEewFillMode fillMode,
     @Default(HomeEewAnimationRate.unlimited) HomeEewAnimationRate animationRate,
     @Default(true) bool autoZoom,
     @Default(true) bool showPSWaveCircle,
   }) = _HomeEewSettings;
 
-  factory HomeEewSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeEewSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeKyoshinMonitorSettings({
+  const factory({
     @Default(null) double? minRealtimeShindo,
     @Default(HomeKmoniMarkerSize.medium) HomeKmoniMarkerSize markerSize,
   }) = _HomeKyoshinMonitorSettings;
 
-  factory HomeKyoshinMonitorSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeKyoshinMonitorSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeMapGridSettings with _$HomeMapGridSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeMapGridSettings({@Default(false) bool enabled}) =
+  const factory({@Default(false) bool enabled}) =
       _HomeMapGridSettings;
 
-  factory HomeMapGridSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapGridSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeMapSettings with _$HomeMapSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeMapSettings({
+  const factory({
     @Default(null) double? maxZoom,
     @Default(HomeMapDefaultBounds.mainIsland)
     HomeMapDefaultBounds defaultBounds,
@@ -153,28 +153,28 @@ abstract class HomeMapSettings with _$HomeMapSettings {
     @Default(false) bool lockBearing,
   }) = _HomeMapSettings;
 
-  factory HomeMapSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeCommonSettings with _$HomeCommonSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeCommonSettings({
+  const factory({
     @Default(false) bool showLocation,
     @Default(HomeEarthquakeHistoryScope.nationwide)
     HomeEarthquakeHistoryScope earthquakeHistoryScope,
     EarthquakeHistoryParameter? parameter,
   }) = _HomeCommonSettings;
 
-  factory HomeCommonSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeCommonSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeConfigurationModel with _$HomeConfigurationModel {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeConfigurationModel({
+  const factory({
     @Default(HomeEewSettings()) HomeEewSettings eew,
     @Default(HomeKyoshinMonitorSettings())
     HomeKyoshinMonitorSettings kyoshinMonitor,
@@ -185,6 +185,6 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(HomeMapGridSettings()) HomeMapGridSettings mapGrid,
   }) = _HomeConfigurationModel;
 
-  factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeConfigurationModelFromJson(json);
 }
