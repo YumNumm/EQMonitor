@@ -8,7 +8,7 @@ part 'tsunami_offshore_station.freezed.dart';
 /// 沖合津波観測点のドメインモデル
 @freezed
 abstract class TsunamiOffshoreStation with _$TsunamiOffshoreStation {
-  const factory TsunamiOffshoreStation({
+  const factory({
     required String code,
     required String name,
     required TsunamiObservationFirstHeight firstHeight,

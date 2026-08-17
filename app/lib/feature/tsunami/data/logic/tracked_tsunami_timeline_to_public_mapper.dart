@@ -28,7 +28,7 @@ extension TrackedTsunamiTimelineMapping on TrackedTsunamiTimeline {
 }
 
 class _TsunamiTimelineMapper {
-  _TsunamiTimelineMapper(this._tracked)
+  new(this._tracked)
     : _metaById = {for (final m in _tracked.telegrams) m.telegramId: m};
 
   final TrackedTsunamiTimeline _tracked;

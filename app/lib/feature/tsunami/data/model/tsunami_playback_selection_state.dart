@@ -5,7 +5,7 @@ part 'tsunami_playback_selection_state.freezed.dart';
 @freezed
 abstract class TsunamiPlaybackSelectionState
     with _$TsunamiPlaybackSelectionState {
-  const factory TsunamiPlaybackSelectionState({
+  const factory({
     @Default(null) int? selectedIndex,
     @Default(true) bool isExpanded,
   }) = _TsunamiPlaybackSelectionState;

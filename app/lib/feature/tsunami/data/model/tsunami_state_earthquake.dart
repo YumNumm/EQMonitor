@@ -7,7 +7,7 @@ part 'tsunami_state_earthquake.freezed.dart';
 /// 津波情報の起因となった地震のドメインモデル
 @freezed
 abstract class TsunamiStateEarthquake with _$TsunamiStateEarthquake {
-  const factory TsunamiStateEarthquake({
+  const factory({
     required DateTime originTime,
     required TsunamiEarthquakeHypocenter hypocenter,
     DateTime? arrivalTime,

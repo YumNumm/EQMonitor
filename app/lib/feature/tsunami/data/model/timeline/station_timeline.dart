@@ -6,7 +6,7 @@ part 'station_timeline.freezed.dart';
 /// 観測点ごとのタイムライン。
 @freezed
 abstract class StationTimeline with _$StationTimeline {
-  const factory StationTimeline({
+  const factory({
     required String code,
     required String name,
     required StationForecastTimeline forecast,

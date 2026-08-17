@@ -10,7 +10,7 @@ part 'tsunami_state.freezed.dart';
 /// 津波情報全体のドメインモデル
 @freezed
 abstract class TsunamiState with _$TsunamiState {
-  const factory TsunamiState({
+  const factory({
     required String id,
     required List<String> eventIds,
     required bool isActive,

@@ -8,7 +8,7 @@ typedef FirstHeightTimeline = List<FirstHeightTimelineEntry>;
 
 @freezed
 abstract class FirstHeightTimelineEntry with _$FirstHeightTimelineEntry {
-  const factory FirstHeightTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? arrivalTime,
     required FirstHeightCondition? condition,
