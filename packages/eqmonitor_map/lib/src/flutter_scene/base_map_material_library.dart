@@ -28,7 +28,7 @@ import 'package:vector_math/vector_math.dart' show Vector2;
 /// `baseMapLayerSpecs`の非background行ごとに1回ずつ呼び、
 /// `styleLayerId`をkeyにして結果を保持する。
 class BaseMapMaterialLibrary {
-  const BaseMapMaterialLibrary._();
+  const new _();
 
   /// `assets/base_map_fill.fmat`を新しく1つ読み込み、[color]を設定する。
   static Future<scene.PreprocessedMaterial> loadFillMaterial({
