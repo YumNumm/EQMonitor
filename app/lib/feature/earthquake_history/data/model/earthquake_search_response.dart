@@ -11,12 +11,12 @@ part 'earthquake_search_response.g.dart';
 @Freezed(genericArgumentFactories: true)
 abstract class PaginatedResponse<T extends EarthquakePartial>
     with _$PaginatedResponse<T> {
-  const factory PaginatedResponse({
+  const factory({
     required List<T> items,
     required String? nextToken,
   }) = _PaginatedSearchResponse<T>;
 
-  factory PaginatedResponse.fromJson(
+  factory fromJson(
     Map<String, dynamic> json,
     T Function(Object?) fromJsonT,
   ) => _$PaginatedSearchResponseFromJson(json, fromJsonT);
@@ -25,26 +25,26 @@ abstract class PaginatedResponse<T extends EarthquakePartial>
 /// 地域震度検索アイテム（都道府県・地域・市区町村共通）
 @freezed
 abstract class IntensityAreaSearchItem with _$IntensityAreaSearchItem {
-  const factory IntensityAreaSearchItem({
+  const factory({
     required String eventId,
     required IntensityAreaInfo area,
     required EarthquakePartial earthquake,
   }) = _IntensityAreaSearchItem;
 
-  factory IntensityAreaSearchItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityAreaSearchItemFromJson(json);
 }
 
 /// 観測点震度検索アイテム
 @freezed
 abstract class StationSearchItem with _$StationSearchItem {
-  const factory StationSearchItem({
+  const factory({
     required String eventId,
     required StationSearchInfo station,
     required EarthquakePartial earthquake,
   }) = _StationSearchItem;
 
-  factory StationSearchItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$StationSearchItemFromJson(json);
 }
 

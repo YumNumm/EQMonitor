@@ -6,11 +6,11 @@ part 'earthquake_telegram_metadata.g.dart';
 
 @freezed
 abstract class EarthquakeTelegramMetadata with _$EarthquakeTelegramMetadata {
-  const factory EarthquakeTelegramMetadata({
+  const factory({
     required EarthquakeTelegramType type,
     required DateTime reportedAt,
   }) = _EarthquakeTelegramMetadata;
 
-  factory EarthquakeTelegramMetadata.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeTelegramMetadataFromJson(json);
 }

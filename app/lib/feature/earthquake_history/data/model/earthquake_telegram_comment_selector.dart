@@ -5,7 +5,7 @@ import 'package:extensions/extensions.dart';
 
 /// 電文コメントの抽出・選択を行う。
 class EarthquakeTelegramCommentSelector {
-  const EarthquakeTelegramCommentSelector();
+  const new();
 
   /// APIの電文リストからコメント（固定付加文・自由付加文）を持つ電文を抽出する
   List<EarthquakeTelegramComment> extract(

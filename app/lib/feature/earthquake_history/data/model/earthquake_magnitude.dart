@@ -6,15 +6,15 @@ part 'earthquake_magnitude.g.dart';
 
 @freezed
 sealed class EarthquakeMagnitude with _$EarthquakeMagnitude {
-  const factory EarthquakeMagnitude.value({
+  const factory value({
     required double value,
   }) = EarthquakeMagnitudeValue;
 
-  const factory EarthquakeMagnitude.unknown() = EarthquakeMagnitudeUnknown;
+  const factory unknown() = EarthquakeMagnitudeUnknown;
 
-  const factory EarthquakeMagnitude.overM8() = EarthquakeMagnitudeOverM8;
+  const factory overM8() = EarthquakeMagnitudeOverM8;
 
-  factory EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeMagnitudeFromJson(json);
 }
 

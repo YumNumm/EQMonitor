@@ -9,7 +9,7 @@ part 'earthquake_hypocenter.g.dart';
 
 @freezed
 abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
-  const factory EarthquakeHypocenter({
+  const factory({
     required String? code,
     required String? name,
     required Coordinate? coordinates,
@@ -19,7 +19,7 @@ abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
     required String? detailedName,
   }) = _EarthquakeHypocenter;
 
-  factory EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHypocenterFromJson(json);
 }
 

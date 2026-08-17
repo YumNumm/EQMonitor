@@ -8,19 +8,19 @@ part 'earthquake_history_config_model.g.dart';
 @freezed
 abstract class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory EarthquakeHistoryConfig({
+  const factory({
     required EarthquakeHistoryListConfig list,
     @Default(EarthquakeHistoryDetailsConfig())
     EarthquakeHistoryDetailsConfig details,
   }) = _EarthquakeHistoryConfig;
 
-  factory EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryConfigFromJson(json);
 }
 
 @freezed
 abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
-  const factory EarthquakeHistoryListConfig({
+  const factory({
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
 
@@ -34,7 +34,7 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
     String? designatedRegionName,
   }) = _EarthquakeHistoryListConfig;
 
-  factory EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryListConfigFromJson(json);
 }
 
@@ -55,12 +55,12 @@ enum DateHeaderDisplayMode {
 @freezed
 abstract class EarthquakeHistoryDetailsConfig
     with _$EarthquakeHistoryDetailsConfig {
-  const factory EarthquakeHistoryDetailsConfig({
+  const factory({
     /// 観測点アイコンの表示モード
     @Default(StationDisplayMode.auto) StationDisplayMode stationDisplayMode,
   }) = _EarthquakeHistoryDetailsConfig;
 
-  factory EarthquakeHistoryDetailsConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryDetailsConfigFromJson(json);
 }
 
