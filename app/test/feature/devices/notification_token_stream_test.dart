@@ -147,10 +147,7 @@ void main() {
   StreamController<String> fcmRefreshes,
   Future<String> firstApnsToken,
 })
-createHarness({
-  String? initialApnsToken,
-  Stream<String>? callbackTokens,
-}) {
+createHarness({String? initialApnsToken, Stream<String>? callbackTokens}) {
   final fcmRefreshes = StreamController<String>.broadcast();
   final messaging = _FakeFirebaseMessaging(
     initialApnsToken: initialApnsToken,
@@ -178,9 +175,7 @@ createHarness({
     container: container,
     messaging: messaging,
     fcmRefreshes: fcmRefreshes,
-    firstApnsToken: container.read(
-      apnsNotificationTokenStreamProvider.future,
-    ),
+    firstApnsToken: container.read(apnsNotificationTokenStreamProvider.future),
   );
 }
 
