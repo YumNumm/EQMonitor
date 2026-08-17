@@ -1,5 +1,5 @@
 final class MapPercentileValue {
-  const MapPercentileValue._({
+  const new _({
     required this.percentile,
     required this.value,
   });
@@ -9,7 +9,7 @@ final class MapPercentileValue {
 }
 
 final class MapMetricAggregate {
-  const MapMetricAggregate._({
+  const new _({
     required this.count,
     required this.sum,
     required this.min,
@@ -29,7 +29,7 @@ final class MapMetricAggregate {
 }
 
 final class MapMetricAccumulator {
-  MapMetricAccumulator(this._maxSamples) {
+  new(this._maxSamples) {
     if (_maxSamples <= 0) {
       throw ArgumentError.value(_maxSamples, 'maxSamples', 'must be positive');
     }

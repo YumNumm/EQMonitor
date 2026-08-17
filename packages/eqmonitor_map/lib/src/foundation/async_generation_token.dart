@@ -53,7 +53,7 @@ final class AsyncGenerationOwner {
 
 /// [AsyncGenerationOwner.begin]が発行する不変 token。
 final class AsyncGenerationToken {
-  const AsyncGenerationToken._({
+  const new _({
     required this._owner,
     required this._generation,
   });
