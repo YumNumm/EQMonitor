@@ -53,9 +53,16 @@ abstract class HypocenterDiff with _$HypocenterDiff {
   factory HypocenterDiff.fromJson(Map<String, dynamic> json) =>
       _$HypocenterDiffFromJson(json);
 
-  bool hasMagnitudeChange() => oldMagnitude != newMagnitude;
-  bool hasDepthChange() => oldDepth != newDepth;
-  bool hasEpicenterNameChange() => oldEpicenterName != newEpicenterName;
+  bool hasMagnitudeChange() =>
+      oldMagnitude != null &&
+      newMagnitude != null &&
+      oldMagnitude != newMagnitude;
+  bool hasDepthChange() =>
+      oldDepth != null && newDepth != null && oldDepth != newDepth;
+  bool hasEpicenterNameChange() =>
+      oldEpicenterName != null &&
+      newEpicenterName != null &&
+      oldEpicenterName != newEpicenterName;
   bool hasMaxIntensityChange() => oldMaxIntensity != newMaxIntensity;
 
   bool hasAnyChange() =>
