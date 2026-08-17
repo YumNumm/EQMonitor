@@ -23,6 +23,11 @@ on:
         required: false
         default: false
         type: boolean
+      is_beta_testing:
+        description: "Set IS_BETA_TESTING dart-define"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -44,6 +49,7 @@ jobs:
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
       deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
       android-track: ${{ steps.define-environment-matrix.outputs.android-track }}
+      is-beta-testing: ${{ steps.define-environment-matrix.outputs.is-beta-testing }}
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -61,7 +67,132 @@ jobs:
           INPUT_IOS: ${{ inputs.ios || false }}
           INPUT_ANDROID: ${{ inputs.android || false }}
           INPUT_EXTERNAL: ${{ inputs.external || false }}
+          INPUT_IS_BETA_TESTING: ${{ inputs.is_beta_testing || false }}
         run: scripts/ci/resolve_deploy_app_policy.sh >> "$GITHUB_OUTPUT"
+
+  generate-release-note-ios:
+    name: Generate Release Note (iOS)
+    needs: define-matrix
+    if: ${{ needs.define-matrix.outputs.deploy-ios }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    environment:
+      name: EQMonitor-iOS
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          cache: false
+          install_args: '"github:rorkai/App-Store-Connect-CLI"'
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Generate iOS release notes
+        env:
+          ASC_APP_ID: "6447546703"
+          ASC_BYPASS_KEYCHAIN: "1"
+          PLATFORM: ios
+          OUTPUT_PATH: release-notes-ios.txt
+        run: |
+          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
+          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
+          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          scripts/ci/generate_release_note.sh
+
+      - name: Upload iOS release notes
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: release-notes-ios.txt
+          if-no-files-found: error
+
+  generate-release-note-android:
+    name: Generate Release Note (Android)
+    needs: define-matrix
+    if: ${{ needs.define-matrix.outputs.deploy-android }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: EQMonitor-Android
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        with:
+          cache: false
+          install_args: "yq"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      - name: Authenticate to Google Cloud Platform
+        id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
+          token_format: access_token
+
+      - name: Generate Android release notes
+        env:
+          GOOGLE_PLAY_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          PACKAGE_NAME: net.yumnumm.eqmonitor
+          TRACK_NAME: ${{ needs.define-matrix.outputs.android-track }}
+          PLATFORM: android
+          OUTPUT_PATH: release-notes-android.txt
+        run: scripts/ci/generate_release_note.sh
+
+      - name: Upload Android release notes
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: release-notes-android.txt
+          if-no-files-found: error
 
   build-ios:
     name: Build iOS
@@ -79,6 +210,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+      - name: Init flutter_scene submodule
+        uses: ./.github/actions/init-flutter-scene-submodule
+
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -89,7 +224,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "flutter xcbeautify"
@@ -118,23 +253,10 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
-      # AppIntent/Widget Bundle Resources need a slim jma_code_table.json.
-      # Full parameters stay on Managed Background Assets at runtime.
-      - name: Generate GitHub App token (eqmonitor-backend contents:read)
-        id: asset-pack-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
-          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-          owner: YumNumm
-          repositories: |
-            eqmonitor-backend
-          permission-contents: read
-
-      - name: Stage iOS native jma_code_table from backend Release
-        env:
-          GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
-        run: tool/asset_pack/stage_from_release.sh --target ios-native
+      # Bundle the signed R2 pack as the immutable default and refresh the
+      # slim table used by AppIntent/Widget native targets.
+      - name: Stage signed Asset Pack from R2 for iOS
+        run: tool/asset_pack/stage_from_r2.sh --target all
 
       - name: Extract environment variables
         run: |
@@ -143,10 +265,20 @@ jobs:
       - name: Configure iOS
         working-directory: app
         env:
-          COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+          IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
+          DEPLOY_IOS_EXTERNAL: ${{ needs.define-matrix.outputs.deploy-ios-external }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          BETA_ARGS=()
+          if [ "$IS_BETA_TESTING" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
+          # 公開テスト(TestFlight external)配布のビルドでは揺れ検知を無効にする
+          if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
+          fi
           flutter build ios --config-only \
             --no-codesign \
             --no-pub \
@@ -155,7 +287,7 @@ jobs:
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            --dart-define IS_BETA_TESTING="true"
+            "${BETA_ARGS[@]}"
 
       - name: Extract App Store Connect API Key
         run: |
@@ -163,16 +295,9 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
-      # Cloud-managed certificates: アーカイブ時は署名しない。
-      # 証明書・プロビジョニングプロファイルはエクスポート時に API Key 経由で自動管理される。
-      # 参考: https://zenn.dev/welchi/articles/flutter-ios-ci-cd-xcode-cloud
       - name: Create XCArchive
         working-directory: app
         run: |
-          # Without pipefail, xcodebuild failures are swallowed by xcbeautify
-          # and the job only fails later when Runner.app is missing.
-          # The pipeline must stay inside `if`, otherwise `bash -e` aborts the
-          # step before the raw log can be dumped.
           set -o pipefail
           if ! xcodebuild archive \
             -workspace ios/Runner.xcworkspace \
@@ -186,14 +311,10 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             VERBOSE_SCRIPT_LOGGING=YES \
             2>&1 | tee /tmp/xcodebuild-archive.log | xcbeautify --renderer github-actions; then
-            # xcbeautify drops actool/ibtoold and Run Script diagnostics,
-            # so surface them explicitly.
             echo "::group::xcodebuild raw errors"
             grep -n -A 5 -E '^(error:|.*\*\* ARCHIVE FAILED)' /tmp/xcodebuild-archive.log || true
             echo "::endgroup::"
             echo "::group::Run Script phase output"
-            # A failing PhaseScriptExecution prints its stdout/stderr right after
-            # the command header; `tail` alone is swallowed by trailing Copy logs.
             awk '/^PhaseScriptExecution/{start = NR} {line[NR] = $0}
                  END {if (start) for (i = start; i <= NR && i < start + 500; i++) print line[i]}' \
               /tmp/xcodebuild-archive.log
@@ -206,7 +327,6 @@ jobs:
             exit 1
           fi
 
-      # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
       - name: Embed entitlements and ad-hoc sign
         working-directory: app
         run: |
@@ -214,7 +334,6 @@ jobs:
             --app build/ios/Runner.xcarchive/Products/Applications/Runner.app \
             --ios-dir ios
 
-      # エクスポート時に App Store Connect API Key で Cloud-managed 署名（証明書はクラウドで管理）
       - name: Create IPA
         working-directory: app
         run: |
@@ -229,11 +348,7 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$KEY_PATH" \
           | xcbeautify --renderer github-actions
-          echo "--------------------------------"
-          ls -lah .
 
-      # Firebase App Distribution 用に ad-hoc(release-testing) 署名の IPA も同じアーカイブから生成。
-      # -allowProvisioningUpdates により Apple Developer 登録済み端末を含む ad-hoc プロファイルが自動生成される。
       - name: Create Ad-Hoc IPA
         working-directory: app
         run: |
@@ -248,8 +363,6 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$KEY_PATH" \
           | xcbeautify --renderer github-actions
-          echo "--------------------------------"
-          ls -lah adhoc
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
@@ -272,6 +385,7 @@ jobs:
     needs:
       - build-ios
       - define-matrix
+      - generate-release-note-ios
     runs-on: macos-26
     permissions:
       contents: read
@@ -293,6 +407,12 @@ jobs:
           name: EQMonitor-ios.ipa
           path: build
 
+      - name: Download iOS release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: notes
+
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -303,7 +423,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -328,8 +448,8 @@ jobs:
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
+          TEST_NOTES="$(cat notes/release-notes-ios.txt)"
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
-            TEST_NOTES="$(scripts/ci/testflight_test_notes.sh)"
             asc publish testflight \
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
@@ -341,11 +461,23 @@ jobs:
               --timeout 30m \
               --output json
           else
-            # asc 3.4.1 の publish testflight は --group 必須のため、アップロードのみの経路では builds upload を使う
             asc builds upload \
               --app "$ASC_APP_ID" \
               --ipa build/EQMonitor.ipa \
               --output json
+            if ! asc builds test-notes create \
+              --app "$ASC_APP_ID" \
+              --latest \
+              --platform IOS \
+              --locale ja \
+              --whats-new "$TEST_NOTES"; then
+              asc builds test-notes update \
+                --app "$ASC_APP_ID" \
+                --latest \
+                --platform IOS \
+                --locale ja \
+                --whats-new "$TEST_NOTES"
+            fi
           fi
 
   deploy-ios-firebase-app-distribution:
@@ -353,7 +485,7 @@ jobs:
     needs:
       - build-ios
       - define-matrix
-    # firebase-tools は linux-arm64 バイナリを配布しておらず arm ランナー不可のため x64 を使う
+      - generate-release-note-ios
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -378,7 +510,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "firebase yq"
@@ -397,30 +529,20 @@ jobs:
           name: EQMonitor-ios-adhoc.ipa
           path: build
 
-      - name: List files & rename
+      - name: Download iOS release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-ios
+          path: notes
+
+      - name: Rename
         run: |
-          ls -lah build/
           mv build/*.ipa build/app.ipa
-          echo "--------------------------------"
-          ls -lah build/
 
-      - name: Output release version
+      - name: Prepare release notes
         run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
-          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "[$VERSION - $REF_NAME]" > changelog.tmp
-
-      - name: Output git log
-        run: |
-          # LAST TAG
-           LAST_TAG=$(git describe --tags --abbrev=0)
-           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-           # 最大2000文字
-           head -c 2000 changelog.tmp > changelog.txt
-           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
-             echo '...' >> changelog.txt
-           fi
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+            < notes/release-notes-ios.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -456,6 +578,10 @@ jobs:
         with:
           persist-credentials: false
 
+      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+      - name: Init flutter_scene submodule
+        uses: ./.github/actions/init-flutter-scene-submodule
+
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
@@ -466,7 +592,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
@@ -489,24 +615,10 @@ jobs:
         working-directory: app
         run: flutter pub get --enforce-lockfile
 
-      # Play Asset Delivery install-time pack contents are not committed.
-      # Stage the latest asset-pack-v* Release from eqmonitor-backend into the
-      # Gradle module before building the AAB (see docs/asset-pack-cd.md).
-      - name: Generate GitHub App token (eqmonitor-backend contents:read)
-        id: asset-pack-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
-          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-          owner: YumNumm
-          repositories: |
-            eqmonitor-backend
-          permission-contents: read
-
-      - name: Stage Android Asset Pack from backend Release
-        env:
-          GH_TOKEN: ${{ steps.asset-pack-token.outputs.token }}
-        run: tool/asset_pack/stage_from_release.sh --target android
+      # The same signed R2 pack is embedded in the base AAB as the immutable
+      # fallback used before, or if, a downloaded update cannot be validated.
+      - name: Stage signed Asset Pack from R2 for Android
+        run: tool/asset_pack/stage_from_r2.sh --target bundled
 
       - name: Extract keystore
         run: |
@@ -530,10 +642,21 @@ jobs:
         working-directory: app
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
+          # beta タグ配信時はタグ名(例: v3.1.0-beta.1)をそのまま表示。それ以外は ref_name-sha。
+          COMMIT_INFORMATION: ${{ github.ref_type == 'tag' && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+          IS_BETA_TESTING: ${{ needs.define-matrix.outputs.is-beta-testing }}
+          ANDROID_TRACK: ${{ needs.define-matrix.outputs.android-track }}
         run: |
           BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          BETA_ARGS=()
+          if [ "$IS_BETA_TESTING" = "true" ]; then
+            BETA_ARGS+=(--dart-define IS_BETA_TESTING="true")
+          fi
+          # 公開テスト(Google Play external)配布のビルドでは揺れ検知を無効にする
+          if [ "$ANDROID_TRACK" = "external" ]; then
+            BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
+          fi
           flutter build appbundle \
             --release \
             --no-pub \
@@ -542,7 +665,7 @@ jobs:
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
             --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
             --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE" \
-            --dart-define IS_BETA_TESTING="true"
+            "${BETA_ARGS[@]}"
 
       - name: Copy AAB to expected location
         run: |
@@ -559,9 +682,9 @@ jobs:
 
   deploy-android-firebase-app-distribution:
     name: Deploy Android (Firebase App Distribution)
-    needs: build-android
-    # firebase-tools は linux-arm64 バイナリを配布しておらず、aqua registry の
-    # supported_envs も amd64 のみ。arm ランナーでは mise --locked が失敗するため x64 を使う
+    needs:
+      - build-android
+      - generate-release-note-android
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -586,7 +709,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "firebase yq"
@@ -605,30 +728,20 @@ jobs:
           name: EQMonitor-android.aab
           path: build
 
-      - name: List files & rename
+      - name: Download Android release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: notes
+
+      - name: Rename
         run: |
-          ls -lah build/
           mv build/*.aab build/app.aab
-          echo "--------------------------------"
-          ls -lah build/
 
-      - name: Output release version
+      - name: Prepare release notes
         run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
-          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "[$VERSION - $REF_NAME]" > changelog.tmp
-
-      - name: Output git log
-        run: |
-          # LAST TAG
-           LAST_TAG=$(git describe --tags --abbrev=0)
-           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-           # 最大2000文字
-           head -c 2000 changelog.tmp > changelog.txt
-           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
-             echo '...' >> changelog.txt
-           fi
+          python3 scripts/ci/truncate_release_note.py --max-chars 2000 \
+            < notes/release-notes-android.txt > changelog.txt
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -654,6 +767,7 @@ jobs:
     needs:
       - build-android
       - define-matrix
+      - generate-release-note-android
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
@@ -676,6 +790,12 @@ jobs:
           name: EQMonitor-android.aab
           path: download
 
+      - name: Download Android release notes
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: EQMonitor-release-notes-android
+          path: notes
+
       - name: Move AAB to root
         run: mv download/*.aab app.aab
 
@@ -694,7 +814,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
           install_args: "github:YumNumm/google-play-cli yq"
@@ -712,27 +832,11 @@ jobs:
         run: |
           VERSION=$(yq .version app/pubspec.yaml -r)
           echo "release_version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "[$VERSION]" > changelog.tmp
 
-      - name: Output git log
+      - name: Prepare release notes
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
-          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-          # Google Play API は言語ごとに最大500文字（Unicode）。バイト単位の head では超過し得るため文字数で切る
-          python3 << 'PY'
-          from pathlib import Path
-
-          text = Path("changelog.tmp").read_text(encoding="utf-8")
-          max_len = 500
-          if len(text) > max_len:
-              text = text[: max_len - 3] + "..."
-          Path("changelog.txt").write_text(text, encoding="utf-8")
-          print(f"release notes length (chars): {len(text)}")
-          PY
-
-      - name: Generate release notes JSON
-        run: |
+          python3 scripts/ci/truncate_release_note.py --max-chars 500 \
+            < notes/release-notes-android.txt > changelog.txt
           jq -Rs '[{language: "ja-JP", text: .}]' changelog.txt > release-notes.json
           jq . release-notes.json
 

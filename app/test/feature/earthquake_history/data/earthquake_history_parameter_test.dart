@@ -44,6 +44,18 @@ void main() {
     });
   });
 
+  group('EarthquakeSortBy.showsDateHeader', () {
+    test('発生時刻ソートの場合のみ日付ヘッダーを表示する', () {
+      for (final sortBy in EarthquakeSortBy.values) {
+        expect(
+          sortBy.showsDateHeader,
+          sortBy == EarthquakeSortBy.eventId,
+          reason: sortBy.name,
+        );
+      }
+    });
+  });
+
   group('EarthquakeHistoryParameter — JSON 文字列経由の往復', () {
     EarthquakeHistoryParameter roundTrip(EarthquakeHistoryParameter value) {
       return EarthquakeHistoryParameter.fromJson(

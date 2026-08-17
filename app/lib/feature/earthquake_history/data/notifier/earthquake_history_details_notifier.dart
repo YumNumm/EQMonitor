@@ -39,10 +39,7 @@ class EarthquakeHistoryDetailsNotifier
             _pendingRealtimeRecord = record;
             final repository = _repository;
             if (repository != null) {
-              final base = earthquakeFromRealtimeRecord(
-                record: record,
-                repository: repository,
-              );
+              final base = repository.toEarthquakeFromRealtimeRecord(record);
               _baseEarthquake = base;
               if (ref.read(earthquakeDebugOverrideProvider(eventId)) == null) {
                 state = AsyncData(base);
@@ -78,10 +75,7 @@ class EarthquakeHistoryDetailsNotifier
     _repository = repository;
     final pendingRecord = _pendingRealtimeRecord;
     if (pendingRecord != null) {
-      final base = earthquakeFromRealtimeRecord(
-        record: pendingRecord,
-        repository: repository,
-      );
+      final base = repository.toEarthquakeFromRealtimeRecord(pendingRecord);
       _baseEarthquake = base;
       final override = ref.read(earthquakeDebugOverrideProvider(eventId));
       state = AsyncData(override ?? base);
@@ -105,10 +99,7 @@ class EarthquakeHistoryDetailsNotifier
     late final Earthquake base;
     if (source == CachedResultSource.cache) {
       if (record != null && repository != null) {
-        base = earthquakeFromRealtimeRecord(
-          record: record,
-          repository: repository,
-        );
+        base = repository.toEarthquakeFromRealtimeRecord(record);
       } else if (override != null && currentBase != null) {
         base = currentBase;
       } else {
@@ -120,10 +111,7 @@ class EarthquakeHistoryDetailsNotifier
     } else if (record == null || repository == null) {
       base = value;
     } else {
-      base = earthquakeFromRealtimeRecord(
-        record: record,
-        repository: repository,
-      );
+      base = repository.toEarthquakeFromRealtimeRecord(record);
     }
     _baseEarthquake = base;
     return override ?? base;
@@ -142,11 +130,3 @@ class EarthquakeHistoryDetailsNotifier
     return repository.fetchEarthquakeDetail(eventId: eventId, client: client);
   }
 }
-
-Earthquake earthquakeFromRealtimeRecord({
-  required api.Earthquake record,
-  required EarthquakeHistoryRepository repository,
-}) => record.toEarthquake(
-  parameter: repository.earthquakeParameter,
-  shindoDbStations: repository.shindoDbStations,
-);

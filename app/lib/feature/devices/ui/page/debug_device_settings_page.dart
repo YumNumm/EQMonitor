@@ -21,13 +21,14 @@ import 'package:eqmonitor/feature/notification/data/action/test_notification_sen
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -194,9 +195,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             children: [
               Text(
                 'リトライ状態: ',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorTheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorTheme.onSurfaceVariant),
               ),
               const SizedBox(width: 4),
               retryChip,
@@ -206,9 +206,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             const SizedBox(height: 4),
             Text(
               (retryState.value as RetryWaiting).lastError.userMessage,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorTheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: colorTheme.onSurfaceVariant),
             ),
           ],
           if (isLoading) ...[
@@ -279,9 +278,8 @@ class _StatusChip extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: textColor),
+              style: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: textColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -1290,10 +1288,10 @@ class _SectionCard extends StatelessWidget {
                           title,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        if (subtitle != null) ...[
+                        if (subtitle case final subtitle?) ...[
                           const SizedBox(height: 4),
                           Text(
-                            subtitle!,
+                            subtitle,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: colorTheme.onSurfaceVariant),
                           ),

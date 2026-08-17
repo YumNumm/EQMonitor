@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
@@ -52,10 +52,7 @@ class BasicModalSheet extends HookWidget {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
-                    top: spacing.sm,
-                    bottom: spacing.xs,
-                  ),
+                  margin: EdgeInsets.symmetric(vertical: spacing.sm),
                   width: 36,
                   height: 4,
                   alignment: Alignment.center,

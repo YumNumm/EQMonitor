@@ -1,10 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class PerIntensitySoundSettingsPage extends ConsumerWidget {
@@ -28,11 +29,11 @@ class PerIntensitySoundSettingsPage extends ConsumerWidget {
             )
           else ...[
             const SettingsSectionHeader(text: '緊急地震速報(予報)'),
-            _SlotOverrideCard(slots: slots, overrideType: OverrideType.eew),
+            _SlotOverrideCard(slots: slots, overrideType: NotificationKind.eew),
             const SettingsSectionHeader(text: '地震情報'),
             _SlotOverrideCard(
               slots: slots,
-              overrideType: OverrideType.earthquake,
+              overrideType: NotificationKind.earthquake,
             ),
           ],
         ],
@@ -48,7 +49,7 @@ class _SlotOverrideCard extends StatelessWidget {
   });
 
   final List<NotificationSlot> slots;
-  final OverrideType overrideType;
+  final NotificationKind overrideType;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,7 @@ class _SlotOverrideTile extends StatelessWidget {
   });
 
   final NotificationSlot slot;
-  final OverrideType overrideType;
+  final NotificationKind overrideType;
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +108,8 @@ class _SlotOverrideTile extends StatelessWidget {
     };
 
     final overrides = switch (overrideType) {
-      OverrideType.eew => slot.eewOverrides ?? [],
-      OverrideType.earthquake => slot.earthquakeOverrides ?? [],
+      NotificationKind.eew => slot.eewOverrides ?? [],
+      NotificationKind.earthquake => slot.earthquakeOverrides ?? [],
     };
 
     final subtitle =

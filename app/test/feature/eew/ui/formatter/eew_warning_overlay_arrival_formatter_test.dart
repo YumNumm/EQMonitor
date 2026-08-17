@@ -3,23 +3,25 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const formatter = EewWarningOverlayArrivalFormatter();
+
   test('arrival text distinguishes future, arrived, and unknown', () {
     expect(
-      formatEewWarningOverlayArrival(
+      formatter.format(
         state: EewWarningArrivalState.unarrived,
         secondsUntilArrival: 10,
       ),
       'あと約10秒',
     );
     expect(
-      formatEewWarningOverlayArrival(
+      formatter.format(
         state: EewWarningArrivalState.arrived,
         secondsUntilArrival: null,
       ),
       '到達と推定',
     );
     expect(
-      formatEewWarningOverlayArrival(
+      formatter.format(
         state: EewWarningArrivalState.unknown,
         secondsUntilArrival: null,
       ),
@@ -29,7 +31,7 @@ void main() {
 
   test('unarrived without remaining seconds stays unknown', () {
     expect(
-      formatEewWarningOverlayArrival(
+      formatter.format(
         state: EewWarningArrivalState.unarrived,
         secondsUntilArrival: null,
       ),

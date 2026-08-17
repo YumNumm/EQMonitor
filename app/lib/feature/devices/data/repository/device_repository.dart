@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
+import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
@@ -38,6 +39,24 @@ class DeviceRepository {
       Result.capture(() async {
         final response = await _api.device.getV2DeviceMe();
         return response.data.toRegisteredDevice;
+      });
+
+  /// デバイスに紐づくユーザーのロールを取得する。
+  ///
+  /// `role` は OpenAPI の `DeviceMeResponse` に未定義のため、生成モデルではなく
+  /// レスポンスの生 JSON から読む。backend がフィールドを追加し次第、生成モデル
+  /// 経由へ置き換える(`docs/todo/300_device_role_api_field.md`)。
+  ///
+  /// ロールを判定できない場合(フィールド未提供・未知の値)は null を返す。
+  Future<Result<DeviceRole?, Exception>> getDeviceRole() =>
+      Result.capture(() async {
+        final response = await _api.device.getV2DeviceMe();
+        final body = response.response.data;
+        if (body is! Map<String, dynamic>) {
+          return null;
+        }
+        final role = body['role'];
+        return DeviceRole.fromApiValue(role is String ? role : null);
       });
 
   Future<Result<RegisteredDevice, Exception>> registerDevice({

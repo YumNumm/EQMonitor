@@ -1,10 +1,13 @@
 import 'package:clock/clock.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../fixtures/build_config.dart';
 
 final _now = DateTime.utc(2026, 7, 19, 12);
 
@@ -31,7 +34,10 @@ ShakeDetectionEvent event(
 
 ProviderContainer containerWith(List<ShakeDetectionEvent> events) {
   final container = ProviderContainer(
-    overrides: [shakeDetectionProvider.overrideWithValue(events)],
+    overrides: [
+      buildConfigProvider.overrideWithValue(const BuildConfigFixture().build()),
+      shakeDetectionProvider.overrideWithValue(events),
+    ],
   );
   addTearDown(container.dispose);
   return container;

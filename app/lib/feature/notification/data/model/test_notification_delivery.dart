@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'test_notification_delivery.freezed.dart';
 
 enum TestNotificationKind { silent, normal, critical }
 
@@ -31,24 +28,6 @@ enum TestScenarioType {
   tsunamiFirstWave,
   tsunamiMaxHeightUpdate,
   tsunamiOffshore,
-}
-
-@freezed
-abstract class TestNotificationDeliveryResult
-    with _$TestNotificationDeliveryResult {
-  const factory TestNotificationDeliveryResult({
-    required String message,
-    required TestNotificationFramework framework,
-  }) = _TestNotificationDeliveryResult;
-}
-
-enum TestNotificationFramework { fcm, apns }
-
-extension TestNotificationFrameworkDisplay on TestNotificationFramework {
-  String get displayLabel => switch (this) {
-    .fcm => 'FCM',
-    .apns => 'APNs',
-  };
 }
 
 extension TestNotificationKindDisplay on TestNotificationKind {
@@ -85,18 +64,6 @@ extension TestScenarioTypeDisplay on TestScenarioType {
     .tsunamiMaxHeightUpdate => 'TSUNAMI_MAX_HEIGHT_UPDATE',
     .tsunamiOffshore => 'TSUNAMI_OFFSHORE',
   };
-}
-
-extension TestNotificationDeliveryResultApiExtension
-    on api.TestNotificationResponse {
-  TestNotificationDeliveryResult get toTestNotificationDeliveryResult =>
-      TestNotificationDeliveryResult(
-        message: message,
-        framework: switch (framework) {
-          .fcm => .fcm,
-          .apns => .apns,
-        },
-      );
 }
 
 extension TestNotificationKindApiExtension on TestNotificationKind {

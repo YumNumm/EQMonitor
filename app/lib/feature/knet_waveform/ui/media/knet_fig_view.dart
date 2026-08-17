@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_client_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
@@ -26,9 +26,7 @@ class KnetFigView extends HookConsumerWidget {
       ),
       data: (client) {
         if (client == null) {
-          return const Center(
-            child: Text('認証情報が設定されていません'),
-          );
+          return const Center(child: Text('認証情報が設定されていません'));
         }
         return _FigContent(eventTime: eventTime, client: client);
       },
@@ -64,13 +62,10 @@ class _FigContent extends HookWidget {
       }
     }
 
-    useEffect(
-      () {
-        unawaited(loadImage());
-        return null;
-      },
-      [selectedType.value, eventTime],
-    );
+    useEffect(() {
+      unawaited(loadImage());
+      return null;
+    }, [selectedType.value, eventTime]);
 
     return Column(
       children: [
@@ -92,10 +87,7 @@ class _FigContent extends HookWidget {
 }
 
 class _FigTypeSelector extends StatelessWidget {
-  const _FigTypeSelector({
-    required this.selected,
-    required this.onChanged,
-  });
+  const _FigTypeSelector({required this.selected, required this.onChanged});
 
   final KnetFigType selected;
   final ValueChanged<KnetFigType> onChanged;
@@ -138,10 +130,11 @@ class _ImageArea extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (errorMessage != null) {
-      return _ErrorView(message: errorMessage!, onRetry: onRetry);
+    if (errorMessage case final errorMessage?) {
+      return _ErrorView(message: errorMessage, onRetry: onRetry);
     }
 
+    final imageBytes = this.imageBytes;
     if (imageBytes == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -151,7 +144,7 @@ class _ImageArea extends StatelessWidget {
       maxScale: 5,
       child: Center(
         child: Image.memory(
-          imageBytes!,
+          imageBytes,
           fit: BoxFit.contain,
           errorBuilder: (context, error, _) =>
               _ErrorView(message: error.toString(), onRetry: onRetry),

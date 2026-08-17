@@ -83,22 +83,17 @@ Map<String, dynamic> _$RealtimeEarthquakeUpsertEventToJson(
 
 RealtimeEarthquakeDeleteEvent _$RealtimeEarthquakeDeleteEventFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'RealtimeEarthquakeDeleteEvent',
-  json,
-  ($checkedConvert) {
-    final val = RealtimeEarthquakeDeleteEvent(
-      eventId: $checkedConvert('event_id', (v) => v as String),
-      source: $checkedConvert(
-        'source',
-        (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
-      ),
-      $type: $checkedConvert('runtimeType', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'eventId': 'event_id', r'$type': 'runtimeType'},
-);
+) => $checkedCreate('RealtimeEarthquakeDeleteEvent', json, ($checkedConvert) {
+  final val = RealtimeEarthquakeDeleteEvent(
+    eventId: $checkedConvert('event_id', (v) => v as String),
+    source: $checkedConvert(
+      'source',
+      (v) => $enumDecode(_$RealtimeSourceEnumMap, v),
+    ),
+    $type: $checkedConvert('runtimeType', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'eventId': 'event_id', r'$type': 'runtimeType'});
 
 Map<String, dynamic> _$RealtimeEarthquakeDeleteEventToJson(
   RealtimeEarthquakeDeleteEvent instance,

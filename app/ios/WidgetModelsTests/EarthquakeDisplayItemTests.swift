@@ -75,6 +75,14 @@ struct EarthquakeDisplayItemFormatTests {
             name: nil, detailedName: nil, maxIntensity: nil) == "")
     }
 
+    /// 震度速報は震源未確定 + 未入電になりやすい組み合わせ。
+    /// 「最大震度5弱以上未入電を観測」のような電文事情まで含む文にしない。
+    @Test func hypocenterFallbackOmitsNoInputWording() {
+        #expect(EarthquakeDisplayItem.resolveTitle(
+            name: nil, detailedName: nil, maxIntensity: .fiveLowerNoInput)
+                == "最大震度5弱以上を観測")
+    }
+
     private func makeDate(
         _ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: Int
     ) -> Date? {

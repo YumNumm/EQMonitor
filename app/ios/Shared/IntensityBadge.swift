@@ -28,7 +28,12 @@ struct IntensityBadge: View {
         .minimumScaleFactor(0.5)
         .lineLimit(1)
         .foregroundStyle(textColor)
-        .frame(width: size, height: size)
+        .padding(.horizontal, size * 0.08)
+        // 未入電（「5弱以上」等）はサブ文字が長く正方形に収まらない。
+        // 高さだけ固定し、幅は最小 size として横方向に伸ばす
+        // （固定幅にすると背景の外へ文字がはみ出す）。
+        .frame(height: size)
+        .frame(minWidth: size)
         .background(
             RoundedRectangle(cornerRadius: size * cornerRatio, style: .continuous)
                 .fill(backgroundColor)

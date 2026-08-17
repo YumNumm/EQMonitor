@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'telegram.dart';
@@ -9,6 +9,7 @@ part of 'telegram.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$TelegramCopyWithImpl<$Res>
 /// Create a copy of Telegram
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressedAt = null,Object? reportedAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? serialNo = freezed,Object? targetedAt = freezed,Object? revokedAt = freezed,Object? headline = freezed,Object? body = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Telegram(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -226,7 +227,7 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 @JsonSerializable()
 
 class _Telegram implements Telegram {
-  const _Telegram({required this.id, @JsonKey(name: 'event_id') required this.eventId, required this.type, required this.title, required this.status, @JsonKey(name: 'info_type') required this.infoType, @JsonKey(name: 'editorial_office') required this.editorialOffice, @JsonKey(name: 'publishing_office') required final  List<String> publishingOffice, @JsonKey(name: 'pressed_at') required this.pressedAt, @JsonKey(name: 'reported_at') required this.reportedAt, @JsonKey(name: 'info_kind') required this.infoKind, @JsonKey(name: 'info_kind_version') required this.infoKindVersion, required this.hash, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(includeIfNull: false, name: 'serial_no') this.serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at') this.targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at') this.revokedAt, @JsonKey(includeIfNull: false) this.headline, @JsonKey(includeIfNull: false) this.body}): _publishingOffice = publishingOffice;
+  const _Telegram({required this.id, @JsonKey(name: 'event_id') required this.eventId, required this.type, required this.title, required this.status, @JsonKey(name: 'info_type') required this.infoType, @JsonKey(name: 'editorial_office') required this.editorialOffice, @JsonKey(name: 'publishing_office') required  List<String> publishingOffice, @JsonKey(name: 'pressed_at') required this.pressedAt, @JsonKey(name: 'reported_at') required this.reportedAt, @JsonKey(name: 'info_kind') required this.infoKind, @JsonKey(name: 'info_kind_version') required this.infoKindVersion, required this.hash, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(includeIfNull: false, name: 'serial_no') this.serialNo, @JsonKey(includeIfNull: false, name: 'targeted_at') this.targetedAt, @JsonKey(includeIfNull: false, name: 'revoked_at') this.revokedAt, @JsonKey(includeIfNull: false) this.headline, @JsonKey(includeIfNull: false) this.body}): _publishingOffice = publishingOffice;
   factory _Telegram.fromJson(Map<String, dynamic> json) => _$TelegramFromJson(json);
 
 @override final  String id;

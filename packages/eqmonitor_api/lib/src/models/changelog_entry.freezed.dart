@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'changelog_entry.dart';
@@ -9,6 +9,7 @@ part of 'changelog_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$ChangelogEntryCopyWithImpl<$Res>
 /// Create a copy of ChangelogEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? date = null,Object? url = null,Object? sections = null,Object? content = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ChangelogEntry(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
@@ -213,7 +214,7 @@ return $default(_that.version,_that.date,_that.url,_that.sections,_that.content)
 @JsonSerializable()
 
 class _ChangelogEntry implements ChangelogEntry {
-  const _ChangelogEntry({required this.version, required this.date, required this.url, required final  List<ChangelogSection> sections, @JsonKey(includeIfNull: false) this.content}): _sections = sections;
+  const _ChangelogEntry({required this.version, required this.date, required this.url, required  List<ChangelogSection> sections, @JsonKey(includeIfNull: false) this.content}): _sections = sections;
   factory _ChangelogEntry.fromJson(Map<String, dynamic> json) => _$ChangelogEntryFromJson(json);
 
 @override final  String version;

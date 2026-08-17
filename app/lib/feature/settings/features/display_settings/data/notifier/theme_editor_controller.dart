@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/theme/model/intensity_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme_editor_controller.g.dart';

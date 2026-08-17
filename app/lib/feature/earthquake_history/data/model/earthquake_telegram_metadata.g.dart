@@ -10,24 +10,19 @@ part of 'earthquake_telegram_metadata.dart';
 
 _EarthquakeTelegramMetadata _$EarthquakeTelegramMetadataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_EarthquakeTelegramMetadata',
-  json,
-  ($checkedConvert) {
-    final val = _EarthquakeTelegramMetadata(
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, v),
-      ),
-      reportedAt: $checkedConvert(
-        'reported_at',
-        (v) => DateTime.parse(v as String),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'reportedAt': 'reported_at'},
-);
+) => $checkedCreate('_EarthquakeTelegramMetadata', json, ($checkedConvert) {
+  final val = _EarthquakeTelegramMetadata(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, v),
+    ),
+    reportedAt: $checkedConvert(
+      'reported_at',
+      (v) => DateTime.parse(v as String),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'reportedAt': 'reported_at'});
 
 Map<String, dynamic> _$EarthquakeTelegramMetadataToJson(
   _EarthquakeTelegramMetadata instance,

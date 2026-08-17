@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'knet_record.dart';
@@ -9,6 +9,7 @@ part of 'knet_record.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -18,12 +19,12 @@ mixin _$KnetRecord {
 /// 地震情報（即時公開データでは null）
  KnetEarthquakeInfo? get earthquakeInfo;/// 観測点情報
  KnetStationInfo get stationInfo;/// 記録開始時刻（JST）
- DateTime get recordTime;/// サンプリング周波数 [Hz]
- double get samplingFrequencyHz;/// 計測時間 [s]
+ DateTime get recordTime;/// サンプリング周波数 (Hz)
+ double get samplingFrequencyHz;/// 計測時間 (秒)
  double get durationTimeSec;/// チャンネル方向
  KnetChannelDirection get direction;/// スケール係数の分子
  double get scaleFactorNumerator;/// スケール係数の分母
- double get scaleFactorDenominator;/// 最大加速度 [gal]
+ double get scaleFactorDenominator;/// 最大加速度 (gal)
  double get maxAccelerationGal;/// 最終補正時刻
  DateTime? get lastCorrection;/// メモ
  String get memo;/// 波形データ（生デジタル値）
@@ -79,7 +80,7 @@ class _$KnetRecordCopyWithImpl<$Res>
 /// Create a copy of KnetRecord
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? earthquakeInfo = freezed,Object? stationInfo = null,Object? recordTime = null,Object? samplingFrequencyHz = null,Object? durationTimeSec = null,Object? direction = null,Object? scaleFactorNumerator = null,Object? scaleFactorDenominator = null,Object? maxAccelerationGal = null,Object? lastCorrection = freezed,Object? memo = null,Object? rawData = null,Object? networkType = null,}) {
-  return _then(_self.copyWith(
+  return _then(KnetRecord(
 earthquakeInfo: freezed == earthquakeInfo ? _self.earthquakeInfo : earthquakeInfo // ignore: cast_nullable_to_non_nullable
 as KnetEarthquakeInfo?,stationInfo: null == stationInfo ? _self.stationInfo : stationInfo // ignore: cast_nullable_to_non_nullable
 as KnetStationInfo,recordTime: null == recordTime ? _self.recordTime : recordTime // ignore: cast_nullable_to_non_nullable
@@ -255,7 +256,7 @@ return $default(_that.earthquakeInfo,_that.stationInfo,_that.recordTime,_that.sa
 @JsonSerializable()
 
 class _KnetRecord extends KnetRecord {
-  const _KnetRecord({required this.earthquakeInfo, required this.stationInfo, required this.recordTime, required this.samplingFrequencyHz, required this.durationTimeSec, required this.direction, required this.scaleFactorNumerator, required this.scaleFactorDenominator, required this.maxAccelerationGal, required this.lastCorrection, required this.memo, required final  List<int> rawData, required this.networkType}): _rawData = rawData,super._();
+  const _KnetRecord({required this.earthquakeInfo, required this.stationInfo, required this.recordTime, required this.samplingFrequencyHz, required this.durationTimeSec, required this.direction, required this.scaleFactorNumerator, required this.scaleFactorDenominator, required this.maxAccelerationGal, required this.lastCorrection, required this.memo, required  List<int> rawData, required this.networkType}): _rawData = rawData,super._();
   factory _KnetRecord.fromJson(Map<String, dynamic> json) => _$KnetRecordFromJson(json);
 
 /// 地震情報（即時公開データでは null）
@@ -264,9 +265,9 @@ class _KnetRecord extends KnetRecord {
 @override final  KnetStationInfo stationInfo;
 /// 記録開始時刻（JST）
 @override final  DateTime recordTime;
-/// サンプリング周波数 [Hz]
+/// サンプリング周波数 (Hz)
 @override final  double samplingFrequencyHz;
-/// 計測時間 [s]
+/// 計測時間 (秒)
 @override final  double durationTimeSec;
 /// チャンネル方向
 @override final  KnetChannelDirection direction;
@@ -274,7 +275,7 @@ class _KnetRecord extends KnetRecord {
 @override final  double scaleFactorNumerator;
 /// スケール係数の分母
 @override final  double scaleFactorDenominator;
-/// 最大加速度 [gal]
+/// 最大加速度 (gal)
 @override final  double maxAccelerationGal;
 /// 最終補正時刻
 @override final  DateTime? lastCorrection;
@@ -390,9 +391,9 @@ $KnetStationInfoCopyWith<$Res> get stationInfo {
 mixin _$KnetEarthquakeInfo {
 
 /// 地震発生時刻
- DateTime get originTime;/// 震源緯度 [度]
- double get latitude;/// 震源経度 [度]
- double get longitude;/// 震源深さ [km]
+ DateTime get originTime;/// 震源緯度 (度)
+ double get latitude;/// 震源経度 (度)
+ double get longitude;/// 震源深さ (km)
  double get depthKm;/// マグニチュード
  double get magnitude;
 /// Create a copy of KnetEarthquakeInfo
@@ -445,7 +446,7 @@ class _$KnetEarthquakeInfoCopyWithImpl<$Res>
 /// Create a copy of KnetEarthquakeInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? originTime = null,Object? latitude = null,Object? longitude = null,Object? depthKm = null,Object? magnitude = null,}) {
-  return _then(_self.copyWith(
+  return _then(KnetEarthquakeInfo(
 originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
@@ -597,11 +598,11 @@ class _KnetEarthquakeInfo implements KnetEarthquakeInfo {
 
 /// 地震発生時刻
 @override final  DateTime originTime;
-/// 震源緯度 [度]
+/// 震源緯度 (度)
 @override final  double latitude;
-/// 震源経度 [度]
+/// 震源経度 (度)
 @override final  double longitude;
-/// 震源深さ [km]
+/// 震源深さ (km)
 @override final  double depthKm;
 /// マグニチュード
 @override final  double magnitude;
@@ -675,9 +676,9 @@ as double,
 mixin _$KnetStationInfo {
 
 /// 観測点コード
- String get stationCode;/// 観測点緯度 [度]
- double get latitude;/// 観測点経度 [度]
- double get longitude;/// 観測点標高 [m]
+ String get stationCode;/// 観測点緯度 (度)
+ double get latitude;/// 観測点経度 (度)
+ double get longitude;/// 観測点標高 (m)
  double get heightM;
 /// Create a copy of KnetStationInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -729,7 +730,7 @@ class _$KnetStationInfoCopyWithImpl<$Res>
 /// Create a copy of KnetStationInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? stationCode = null,Object? latitude = null,Object? longitude = null,Object? heightM = null,}) {
-  return _then(_self.copyWith(
+  return _then(KnetStationInfo(
 stationCode: null == stationCode ? _self.stationCode : stationCode // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
@@ -880,11 +881,11 @@ class _KnetStationInfo implements KnetStationInfo {
 
 /// 観測点コード
 @override final  String stationCode;
-/// 観測点緯度 [度]
+/// 観測点緯度 (度)
 @override final  double latitude;
-/// 観測点経度 [度]
+/// 観測点経度 (度)
 @override final  double longitude;
-/// 観測点標高 [m]
+/// 観測点標高 (m)
 @override final  double heightM;
 
 /// Create a copy of KnetStationInfo

@@ -1,4 +1,4 @@
-name: Upload Asset Pack
+name: Verify Asset Pack on R2
 
 on:
   repository_dispatch:
@@ -6,306 +6,99 @@ on:
   workflow_dispatch:
     inputs:
       pack_version:
-        description: "Asset Pack version (e.g. 1.2.3)"
-        required: true
-        type: string
-      artifact_url:
-        description: "asset-pack-vX.Y.Z.zip download URL"
+        description: "R2 Asset Pack version (for example 1.2.3)"
         required: true
         type: string
       sha256:
-        description: "sha256 of the zip"
+        description: "Expected archive SHA-256 from the backend release"
         required: true
         type: string
 
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.event.client_payload.pack_version || inputs.pack_version }}
   cancel-in-progress: false
 
 env:
-  ASC_APP_ID: "6447546703" # deploy-app.yaml
-  # Managed Background Assets pack identifier. Dots are rejected by App Store
-  # Connect with ITMS-91133, so this is NOT reverse-DNS
-  # (docs/knowledge/20260728_asset_pack_id_charset.md). It must match
-  # `_iosAssetPackIdentifier` in packages/assets_util/lib/assets_util.dart —
-  # the "Verify asset pack id" step below enforces that. Nothing in the Xcode
-  # project declares this id; it only appears in the ba-package manifest CI
-  # generates, in the runtime AssetPackManager lookup, and in App Store
-  # Connect (see docs/ios-background-assets.md).
-  IOS_BACKGROUND_ASSET_PACK_ID: "eqmonitor-assets"
-  # Xcode version for the iOS Managed Background Assets job ONLY. Deliberately
-  # independent of deploy-app.yaml's `XCODE_VERSION` (app builds keep their own
-  # pin). `ba-package` requires Xcode 26+ / macOS 26 (Tahoe) per
-  # https://developer.apple.com/forums/thread/795796 — currently aligned with
-  # deploy-app at 26.6 (available on macos-26 runners). The probe step below
-  # verifies ba-package rather than assuming it.
-  IOS_ASSET_PACK_XCODE_VERSION: "26.6"
+  ASSET_PACK_BASE_URL: https://assets.eqmonitor.app/v1/assets
+  ASSET_PACK_SIGNING_KEY_ID: asset-pack-2026-08-16
 
 jobs:
-  # ---------------------------------------------------------------------
-  # Step 1: download + verify (feeds the iOS upload job)
-  # ---------------------------------------------------------------------
-  download-and-verify:
-    name: Download & verify Asset Pack
-    runs-on: ubuntu-slim
+  verify-r2-publication:
+    name: Verify signed public R2 artifacts
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
-    outputs:
-      pack_version: ${{ steps.resolve-inputs.outputs.pack_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      # private な YumNumm/eqmonitor-backend Release から zip を取るため。
-      # 無認証 curl は 404 になる（browser_download_url でも private は要認証）。
-      # https://github.com/actions/create-github-app-token
-      - name: Generate GitHub App token (eqmonitor-backend contents:read)
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
-          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-          owner: YumNumm
-          repositories: |
-            eqmonitor-backend
-          permission-contents: read
 
       - name: Resolve trigger inputs
-        id: resolve-inputs
+        id: inputs
         env:
           EVENT_NAME: ${{ github.event_name }}
-          DISPATCH_PACK_VERSION: ${{ github.event.client_payload.pack_version }}
-          DISPATCH_ARTIFACT_URL: ${{ github.event.client_payload.artifact_url }}
+          DISPATCH_VERSION: ${{ github.event.client_payload.pack_version }}
           DISPATCH_SHA256: ${{ github.event.client_payload.sha256 }}
-          INPUT_PACK_VERSION: ${{ inputs.pack_version }}
-          INPUT_ARTIFACT_URL: ${{ inputs.artifact_url }}
-          INPUT_SHA256: ${{ inputs.sha256 }}
+          MANUAL_VERSION: ${{ inputs.pack_version }}
+          MANUAL_SHA256: ${{ inputs.sha256 }}
         run: |
           set -euo pipefail
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            pack_version="$INPUT_PACK_VERSION"
-            artifact_url="$INPUT_ARTIFACT_URL"
-            sha256="$INPUT_SHA256"
+          if [[ "$EVENT_NAME" == 'workflow_dispatch' ]]; then
+            version="$MANUAL_VERSION"
+            sha256="$MANUAL_SHA256"
           else
-            pack_version="$DISPATCH_PACK_VERSION"
-            artifact_url="$DISPATCH_ARTIFACT_URL"
+            version="$DISPATCH_VERSION"
             sha256="$DISPATCH_SHA256"
           fi
-          if [ -z "$pack_version" ] || [ -z "$artifact_url" ] || [ -z "$sha256" ]; then
-            echo "::error::missing pack_version/artifact_url/sha256 (event=$EVENT_NAME)"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo '::error::pack_version must be MAJOR.MINOR.PATCH'
+            exit 1
+          fi
+          if [[ ! "$sha256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo '::error::sha256 must be 64 lowercase hex characters'
             exit 1
           fi
           {
-            echo "pack_version=${pack_version}"
-            echo "artifact_url=${artifact_url}"
-            echo "sha256=${sha256}"
+            echo "version=$version"
+            echo "sha256=$sha256"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Download Asset Pack zip
+      - name: Download public manifest, signature, and immutable archive
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PACK_VERSION: ${{ steps.resolve-inputs.outputs.pack_version }}
-          ARTIFACT_URL: ${{ steps.resolve-inputs.outputs.artifact_url }}
+          VERSION: ${{ steps.inputs.outputs.version }}
         run: |
           set -euo pipefail
-          # Release tag / 資産名は backend の release-asset-pack.yaml と揃える。
-          # artifact_url は検証・フォールバック用に残す（タグ取得が失敗した場合）。
-          if gh release download "asset-pack-v${PACK_VERSION}" \
-            --repo YumNumm/eqmonitor-backend \
-            --pattern "asset-pack-v${PACK_VERSION}.zip" \
-            --output asset-pack.zip; then
-            echo "downloaded via gh release download (asset-pack-v${PACK_VERSION})"
-          else
-            echo "::warning::gh release download failed; falling back to authenticated curl on artifact_url"
-            curl -fL --retry 3 \
-              -H "Authorization: Bearer ${GH_TOKEN}" \
-              -H "Accept: application/octet-stream" \
-              -o asset-pack.zip \
-              "$ARTIFACT_URL"
-          fi
+          curl --fail --location --retry 5 --retry-all-errors \
+            --output manifest.json "$ASSET_PACK_BASE_URL/manifest.json"
+          curl --fail --location --retry 5 --retry-all-errors \
+            --output manifest.sig "$ASSET_PACK_BASE_URL/manifest.sig"
+          curl --fail --location --retry 5 --retry-all-errors \
+            --output asset-pack.zip \
+            "$ASSET_PACK_BASE_URL/packs/$VERSION/asset-pack-v$VERSION.zip"
+          test -s manifest.json
+          test -s manifest.sig
           test -s asset-pack.zip
 
-      - name: Verify checksum, unpack, and assert layout
+      - name: Verify signature and signed archive metadata
         env:
-          SHA256: ${{ steps.resolve-inputs.outputs.sha256 }}
-          PACK_VERSION: ${{ steps.resolve-inputs.outputs.pack_version }}
+          VERSION: ${{ steps.inputs.outputs.version }}
+          SHA256: ${{ steps.inputs.outputs.sha256 }}
         run: |
-          tool/asset_pack/verify_zip.sh asset-pack.zip "$SHA256" "$PACK_VERSION" extracted
+          node tool/asset_pack/verify_r2_distribution.mjs \
+            --manifest manifest.json \
+            --signature manifest.sig \
+            --archive asset-pack.zip \
+            --version "$VERSION" \
+            --sha256 "$SHA256" \
+            --public-key \
+            "$ASSET_PACK_SIGNING_KEY_ID=tool/asset_pack/trusted_keys/$ASSET_PACK_SIGNING_KEY_ID.pem"
 
-      - name: Upload extracted Asset Pack as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: asset-pack-extracted
-          path: extracted
-          if-no-files-found: error
-          retention-days: 3
-
-  # ---------------------------------------------------------------------
-  # Step 2: iOS Managed Background Assets upload
-  # Android / macOS do NOT sync into git. Those platforms stage the pack at
-  # build time from the backend Release via tool/asset_pack/stage_from_release.sh
-  # (see deploy-app.yaml build-android and docs/asset-pack-cd.md).
-  # ---------------------------------------------------------------------
-  # ---------------------------------------------------------------------
-  upload-ios:
-    name: Upload iOS Managed Background Assets
-    needs: download-and-verify
-    runs-on: macos-26
-    timeout-minutes: 30
-    permissions:
-      contents: read
-    environment:
-      name: EQMonitor-iOS
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      # A pack uploaded under an id the shipped app never asks for downloads
-      # fine and then fails to resolve on device, so catch drift before
-      # spending the job on packaging and uploading.
-      - name: Verify asset pack id
-        run: |
-          python3 -m tool.asset_pack.check_asset_pack_id \
-            --asset-pack-id "$IOS_BACKGROUND_ASSET_PACK_ID"
-
-      # ASC credentials live in SOPS-encrypted `.env.json` (same path as
-      # deploy-app.yaml), not as GitHub Actions secrets named
-      # APP_STORE_CONNECT_*. Decrypt via mise after writing the age key.
-      - name: Extract SOPS Age Key File
-        run: |
-          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
-
-      - name: Copy mise.local.toml
-        run: |
-          cp mise.local.toml.example mise.local.toml
-
-      # https://github.com/jdx/mise-action
-      - name: Install Mise
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+      - name: Verify ZIP contents
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          cache: false
-          # `mise env` での .env.json 復号に加え、ASC 通信用の asc CLI を入れる。
-          # flutter 等のフルツールチェーンは不要。
-          install_args: '"github:rorkai/App-Store-Connect-CLI"'
-
-      - name: Set environment variables
-        run: |
-          for line in $(mise env --redacted --dotenv); do
-            echo "$line" >> "$GITHUB_ENV"
-            mask_value="${line#*=}"
-            echo "::add-mask::${mask_value}"
-          done
-
-      # https://github.com/maxim-lobanov/setup-xcode
-      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
-        with:
-          xcode-version: ${{ env.IOS_ASSET_PACK_XCODE_VERSION }}
-
-      - name: Download extracted Asset Pack
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: asset-pack-extracted
-          path: extracted
-
-      - name: Verify App Store Connect credentials
-        run: |
-          set -euo pipefail
-          if [ -z "${APP_STORE_CONNECT_API_KEY_BASE64:-}" ] || [ -z "${APP_STORE_CONNECT_API_KEY_ID:-}" ]; then
-            echo "::error::APP_STORE_CONNECT_API_KEY_BASE64 / APP_STORE_CONNECT_API_KEY_ID missing after mise env decrypt. Check .env.json + secrets.AGE_KEY."
-            exit 1
-          fi
-
-      # Mandatory pre-check #1 (per task brief): confirm this runner's Xcode
-      # actually ships `ba-package` before relying on it. Known to require
-      # Xcode 26+ / macOS 26 Tahoe (https://developer.apple.com/forums/thread/795796);
-      # if this ever fails, bump IOS_ASSET_PACK_XCODE_VERSION above (NOT
-      # deploy-app.yaml's XCODE_VERSION, which must stay independent).
-      - name: "Pre-check: ba-package availability"
-        run: |
-          set -euo pipefail
-          if ! xcrun ba-package --help > /tmp/ba-package-help.txt 2>&1; then
-            echo "::error::xcrun ba-package is not available on this runner's Xcode (${IOS_ASSET_PACK_XCODE_VERSION}). ba-package requires Xcode 26+ on macOS 26 (Tahoe). Bump IOS_ASSET_PACK_XCODE_VERSION in this workflow (or the runner image) -- do NOT change deploy-app.yaml's XCODE_VERSION for this. See docs/asset-pack-cd.md."
-            cat /tmp/ba-package-help.txt >&2
-            exit 1
-          fi
-          cat /tmp/ba-package-help.txt
-
-      # Ensure the Managed Background Assets pack exists in App Store Connect
-      # (creates via POST /v1/backgroundAssets when missing — Apple's
-      # documented first step before version upload).
-      - name: "Ensure App Store Connect asset pack exists"
-        env:
-          ASC_BYPASS_KEYCHAIN: "1"
-        run: |
-          set -euo pipefail
-          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
-          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
-          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
-          asc workflow validate
-          asc workflow run asset_pack_ensure \
-            APP_ID:"$ASC_APP_ID" \
-            ASSET_PACK_ID:"$IOS_BACKGROUND_ASSET_PACK_ID"
-
-      - name: Build ba-package manifest
-        run: |
-          set -euo pipefail
-          # fileSelectors are resolved against the packaging CWD (`extracted/`).
-          # Do NOT use `{ "directory": "." }` — ba-package stages into a Contents
-          # tree and fails with "couldn't be copied … already exists" when the
-          # selector is the packaging directory itself.
-          cat > ba-package-manifest.json <<EOF
-          {
-            "assetPackID": "${IOS_BACKGROUND_ASSET_PACK_ID}",
-            "downloadPolicy": {
-              "essential": {
-                "installationEventTypes": ["firstInstallation", "subsequentUpdate"]
-              }
-            },
-            "fileSelectors": [
-              { "file": "manifest.json" },
-              { "directory": "map" },
-              { "directory": "parameters" }
-            ],
-            "platforms": ["iOS"]
-          }
-          EOF
-          cat ba-package-manifest.json
-
-      - name: Package archive with ba-package
-        run: |
-          set -euo pipefail
-          archive_path="ios-background-asset.aar"
-          (
-            cd extracted
-            # Manifest stays outside `extracted/` so it is not packaged.
-            # Selectors above resolve relative to this CWD.
-            xcrun ba-package package ../ba-package-manifest.json -o "../${archive_path}"
-          )
-          if [ ! -f "$archive_path" ]; then
-            echo "::error::ba-package did not produce ${archive_path}. Inspect 'xcrun ba-package help package' output from the pre-check step above. Manual fallback: package with Xcode locally and upload via Transporter (docs/asset-pack-cd.md)."
-            exit 1
-          fi
-          ls -lah "$archive_path"
-          echo "archive_path=$archive_path" >> "$GITHUB_ENV"
-
-      - name: Upload to App Store Connect (Managed Background Assets)
-        env:
-          ASC_BYPASS_KEYCHAIN: "1"
-        run: |
-          set -euo pipefail
-          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
-          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
-          export ASC_PRIVATE_KEY_B64="$APP_STORE_CONNECT_API_KEY_BASE64"
-          asc workflow run asset_pack_upload \
-            APP_ID:"$ASC_APP_ID" \
-            ASSET_PACK_ID:"$IOS_BACKGROUND_ASSET_PACK_ID" \
-            ARCHIVE_PATH:"$archive_path"
+          VERSION: ${{ steps.inputs.outputs.version }}
+          SHA256: ${{ steps.inputs.outputs.sha256 }}
+        run: tool/asset_pack/verify_zip.sh asset-pack.zip "$SHA256" "$VERSION" extracted

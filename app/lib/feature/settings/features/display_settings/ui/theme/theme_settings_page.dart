@@ -10,7 +10,7 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/provider/theme_presets_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_json_dialogs.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeSettingsPage extends StatelessWidget {
@@ -69,13 +69,10 @@ class _ModeSection extends ConsumerWidget {
           const SizedBox(height: 8),
           RadioGroup<AppTheme>(
             groupValue: currentTheme,
-            onChanged: (themeName) async {
-              if (themeName == null) {
+            onChanged: (preset) async {
+              if (preset == null) {
                 return;
               }
-              final preset = presets.firstWhere(
-                (preset) => preset.name == themeName,
-              );
               await ref
                   .read(appThemeProvider.notifier)
                   .setThemeForMode(mode, preset);

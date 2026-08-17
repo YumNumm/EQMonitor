@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SortFilterChip extends StatelessWidget {
@@ -148,9 +148,9 @@ class _SortFilterModal extends HookWidget {
                   child: const Text('キャンセル'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).pop((sortBy.value, sortOrder.value)),
+                  onPressed: () =>
+                      Navigator.of(context)
+                          .pop((sortBy.value, sortOrder.value)),
                   child: const Text('完了'),
                 ),
               ],

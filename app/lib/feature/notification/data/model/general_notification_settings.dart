@@ -2,6 +2,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'general_notification_settings.freezed.dart';
+part 'general_notification_settings.g.dart';
 
 @freezed
 abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
@@ -14,6 +15,9 @@ abstract class GeneralNotificationSettings with _$GeneralNotificationSettings {
     required bool vyse60Enabled,
     required bool earthquakeNoticeEnabled,
   }) = _GeneralNotificationSettings;
+
+  factory GeneralNotificationSettings.fromJson(Map<String, dynamic> json) =>
+      _$GeneralNotificationSettingsFromJson(json);
 }
 
 extension GeneralNotificationSettingsApiExtension

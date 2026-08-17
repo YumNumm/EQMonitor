@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
@@ -117,11 +118,15 @@ class EarthquakeHistoryRepository {
   }) async {
     final response = await (client?.earthquake ?? _earthquake)
         .getV2EarthquakeEventId(eventId: eventId);
-    return response.data.earthquake.toEarthquake(
-      parameter: earthquakeParameter,
-      shindoDbStations: shindoDbStations,
-    );
+    return toEarthquakeFromRealtimeRecord(response.data.earthquake);
   }
+
+  /// リアルタイム配信の電文レコードをアプリ内モデルへ変換する。
+  Earthquake toEarthquakeFromRealtimeRecord(api.Earthquake record) =>
+      record.toEarthquake(
+        parameter: earthquakeParameter,
+        shindoDbStations: shindoDbStations,
+      );
 
   Future<PaginatedResponse<EarthquakePartialRegion>> searchByRegion({
     required String code,
@@ -424,20 +429,25 @@ class EarthquakeHistoryRepository {
       }
     }
 
-    final sortedTreeClasses = treeAccum.keys.toList()
-      ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final sortedTreeEntries = treeAccum.entries.toList()
+      ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex));
     final tree = <ShindoDbIntensityClass, List<ShindoDbPrefectureNode>>{};
-    for (final cls in sortedTreeClasses) {
-      final prefMap = treeAccum[cls]!;
-      final sortedPrefCodes = prefMap.keys.toList()..sort();
+    for (final treeEntry in sortedTreeEntries) {
+      final sortedPrefEntries = treeEntry.value.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
       final prefNodes = <ShindoDbPrefectureNode>[];
-      for (final prefCode in sortedPrefCodes) {
-        final cityMap = prefMap[prefCode]!;
-        final sortedCityCodes = cityMap.keys.toList()..sort();
+      for (final prefEntry in sortedPrefEntries) {
+        final sortedCityEntries = prefEntry.value.entries.toList()
+          ..sort((a, b) => a.key.compareTo(b.key));
         final cityNodes = <ShindoDbCityNode>[];
-        for (final code in sortedCityCodes) {
-          final data = cityDataByCode[code]!;
-          final stations = cityMap[code]!
+        for (final cityEntry in sortedCityEntries) {
+          // 同じループで treeAccum と cityDataByCode の両方に書き込んでいるため、
+          // treeAccum に存在するコードは cityDataByCode にも必ず存在する。
+          final data = cityDataByCode[cityEntry.key].orFailBecause(
+            'buildShindoDbIntensityTree: treeAccum と cityDataByCode は同一'
+            'ループで同時に populate しているため必ず対応するエントリが存在する',
+          );
+          final stations = cityEntry.value
             ..sort(
               (a, b) => a.record.stationCode.compareTo(b.record.stationCode),
             );
@@ -449,24 +459,28 @@ class EarthquakeHistoryRepository {
             ),
           );
         }
+        // prefByCode も treeAccum と同一ループで同時に populate している。
+        final prefecture = prefByCode[prefEntry.key].orFailBecause(
+          'buildShindoDbIntensityTree: treeAccum と prefByCode は同一'
+          'ループで同時に populate しているため必ず対応するエントリが存在する',
+        );
         prefNodes.add(
-          ShindoDbPrefectureNode(
-            prefecture: prefByCode[prefCode]!,
-            cities: cityNodes,
-          ),
+          ShindoDbPrefectureNode(prefecture: prefecture, cities: cityNodes),
         );
       }
-      tree[cls] = prefNodes;
+      tree[treeEntry.key] = prefNodes;
     }
 
-    final sortedUnresolvedClasses = unresolvedAccum.keys.toList()
-      ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
+    final sortedUnresolvedEntries = unresolvedAccum.entries.toList()
+      ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex));
     final unresolvedStations =
-        <ShindoDbIntensityClass, List<ShindoDbStationNode>>{};
-    for (final cls in sortedUnresolvedClasses) {
-      unresolvedStations[cls] = unresolvedAccum[cls]!
-        ..sort((a, b) => a.record.stationCode.compareTo(b.record.stationCode));
-    }
+        <ShindoDbIntensityClass, List<ShindoDbStationNode>>{
+          for (final entry in sortedUnresolvedEntries)
+            entry.key: entry.value
+              ..sort(
+                (a, b) => a.record.stationCode.compareTo(b.record.stationCode),
+              ),
+        };
 
     return ShindoDbIntensityTree(
       tree: tree,

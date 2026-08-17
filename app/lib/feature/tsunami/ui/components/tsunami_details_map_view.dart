@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 import 'dart:convert';
 
@@ -14,12 +13,18 @@ import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_offshore_station.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region_station.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/observation_max_height_condition.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geobase/geobase.dart' as geo;
@@ -37,13 +42,10 @@ class TsunamiDetailsMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null =>
+      AsyncData(value: MapConfiguration(:final styleString?)) =>
         MapOperationQueueScope(
           child: MapLibreEventProvider(
-            child: _MapContent(
-              styleString: value.styleString!,
-              tsunami: tsunami,
-            ),
+            child: _MapContent(styleString: styleString, tsunami: tsunami),
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
@@ -81,7 +83,9 @@ class _MapContent extends HookConsumerWidget {
     );
 
     final center = _initialCenter();
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: _kDefaultZoom,
@@ -129,12 +133,11 @@ class _MapContent extends HookConsumerWidget {
   }
 
   Geographic _initialCenter() {
-    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
-    if (coords != null) {
-      return Geographic(
-        lon: coords.longitude.toDouble(),
-        lat: coords.latitude.toDouble(),
-      );
+    final hypocenter = tsunami.earthquakes.firstOrNull?.hypocenter;
+    final latitude = hypocenter?.latitude;
+    final longitude = hypocenter?.longitude;
+    if (latitude != null && longitude != null) {
+      return Geographic(lon: longitude, lat: latitude);
     }
     return _kDefaultCenter;
   }
@@ -143,14 +146,11 @@ class _MapContent extends HookConsumerWidget {
     final points = <Geographic>[];
 
     // 震源
-    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
-    if (coords != null) {
-      points.add(
-        Geographic(
-          lon: coords.longitude.toDouble(),
-          lat: coords.latitude.toDouble(),
-        ),
-      );
+    final hypocenter = tsunami.earthquakes.firstOrNull?.hypocenter;
+    final latitude = hypocenter?.latitude;
+    final longitude = hypocenter?.longitude;
+    if (latitude != null && longitude != null) {
+      points.add(Geographic(lon: longitude, lat: latitude));
     }
 
     if (points.isEmpty) {
@@ -231,7 +231,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: layerIds.reversed.toList(),
               sourceIds: const [_MapContent._tsunamiLineSourceId],
@@ -280,10 +280,10 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
     final lifecycleToken = useRef<Object?>(null);
     final initialization = useRef<Future<void>?>(null);
     final geoJsonUpdater = useMemoized(MapGeoJsonSourceUpdater.new);
-    final coords = tsunami.earthquakes.firstOrNull?.hypocenter.coordinates;
+    final hypocenter = tsunami.earthquakes.firstOrNull?.hypocenter;
     final geoJson = const TsunamiMapGeoJsonBuilder().buildHypocenter(
-      latitude: coords?.latitude.toDouble(),
-      longitude: coords?.longitude.toDouble(),
+      latitude: hypocenter?.latitude,
+      longitude: hypocenter?.longitude,
     );
 
     useEffect(() {
@@ -325,7 +325,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [_MapContent._hypocenterLayerId],
               sourceIds: const [_MapContent._hypocenterSourceId],
@@ -422,7 +422,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 _MapContent._stationLabelLayerId,

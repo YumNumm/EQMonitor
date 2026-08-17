@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_url_builder.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,30 +34,34 @@ final contactUrlProvider = FutureProvider<Uri>((ref) async {
 });
 
 final contactUrlLauncherProvider = Provider<Future<bool> Function(Uri)>(
-  (_) => (url) => launchUrl(url, mode: LaunchMode.externalApplication),
+  (_) =>
+      (url) => launchUrl(url, mode: LaunchMode.externalApplication),
 );
 
-final openContactProvider =
-    Provider<Future<void> Function(WidgetRef, BuildContext)>(
-  (_) => openContactPage,
+final openContactProvider = Provider<OpenContactAction>(
+  (_) => const OpenContactAction(),
 );
 
-Future<void> openContactPage(WidgetRef ref, BuildContext context) async {
-  try {
-    final url = await ref.read(contactUrlProvider.future);
-    final launched = await ref.read(contactUrlLauncherProvider)(url);
-    if (!context.mounted || launched) {
-      return;
+/// 問い合わせページを開く。呼び出し側は `open(ref, context)` のように
+/// 関数として扱える([call]による callable object)。
+class OpenContactAction {
+  const OpenContactAction();
+
+  Future<void> call(WidgetRef ref, BuildContext context) async {
+    try {
+      final url = await ref.read(contactUrlProvider.future);
+      final launched = await ref.read(contactUrlLauncherProvider)(url);
+      if (!context.mounted || launched) {
+        return;
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('問い合わせページを開けませんでした')));
+    } on Exception {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('問い合わせページを開けませんでした')));
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('問い合わせページを開けませんでした')),
-    );
-  } on Exception {
-    if (!context.mounted) {
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('問い合わせページを開けませんでした')),
-    );
   }
 }

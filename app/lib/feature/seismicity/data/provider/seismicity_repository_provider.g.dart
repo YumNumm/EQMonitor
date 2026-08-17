@@ -43,7 +43,7 @@ final class SeismicityGeoJsonDioProvider
 }
 
 String _$seismicityGeoJsonDioHash() =>
-    r'b03cbbd42346af193efbddfa69224eb7045ec387';
+    r'231c9e7721e667fcfab83e2b84dff837e89a81d9';
 
 @ProviderFor(seismicityRepository)
 final seismicityRepositoryProvider = SeismicityRepositoryProvider._();

@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('liveMonitorMapObscuredInsets', () {
     test('system insetとCard高さが0なら追加遮蔽量も0になる', () {
-      final insets = liveMonitorMapObscuredInsets(
+      final insets = LiveMonitorMapFocusBuilder.obscuredInsets(
         systemTopInset: 0,
         systemBottomInset: 0,
         topCardHeight: 0,
@@ -15,7 +15,7 @@ void main() {
     });
 
     test('system insetがsafe spacing未満ならCard高さだけを返す', () {
-      final insets = liveMonitorMapObscuredInsets(
+      final insets = LiveMonitorMapFocusBuilder.obscuredInsets(
         systemTopInset: 4,
         systemBottomInset: 7,
         topCardHeight: 20,
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('system insetがsafe spacingを超えた分を上下のCard高さへ加える', () {
-      final insets = liveMonitorMapObscuredInsets(
+      final insets = LiveMonitorMapFocusBuilder.obscuredInsets(
         systemTopInset: 24,
         systemBottomInset: 34,
         topCardHeight: 10,
@@ -37,7 +37,7 @@ void main() {
     });
 
     test('負のCard高さは0として扱いsystem insetの追加分だけを返す', () {
-      final insets = liveMonitorMapObscuredInsets(
+      final insets = LiveMonitorMapFocusBuilder.obscuredInsets(
         systemTopInset: 18,
         systemBottomInset: 28,
         topCardHeight: -10,

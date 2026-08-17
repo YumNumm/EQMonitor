@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_lay
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorRealtimeLayers extends ConsumerWidget {

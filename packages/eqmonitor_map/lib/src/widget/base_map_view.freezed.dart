@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'base_map_view.dart';
@@ -9,6 +9,7 @@ part of 'base_map_view.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -45,7 +46,13 @@ mixin _$MapBaseLayerLimits {
 /// 意味がない(遡れる段数より深く保持しても使われず、遡れる段数より
 /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
 /// 渡す。
- int get maxParentFallbackSteps;
+ int get maxParentFallbackSteps;/// 同時に走らせる tile decode の上限([MapTileScheduler]へ渡す)。
+///
+/// 1 frame の cover に含まれる欠損 tile 全部へ無制限に `Isolate.run` decode を
+/// 張ると、cover が大きく変わった瞬間に多数の isolate を同時 spawn して
+/// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
+/// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
+ int get maxInFlightDecodes;
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -56,16 +63,16 @@ $MapBaseLayerLimitsCopyWith<MapBaseLayerLimits> get copyWith => _$MapBaseLayerLi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps);
+int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes);
 
 @override
 String toString() {
-  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps)';
+  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes)';
 }
 
 
@@ -76,7 +83,7 @@ abstract mixin class $MapBaseLayerLimitsCopyWith<$Res>  {
   factory $MapBaseLayerLimitsCopyWith(MapBaseLayerLimits value, $Res Function(MapBaseLayerLimits) _then) = _$MapBaseLayerLimitsCopyWithImpl;
 @useResult
 $Res call({
- int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps
+ int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes
 });
 
 
@@ -93,14 +100,15 @@ class _$MapBaseLayerLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,}) {
+  return _then(MapBaseLayerLimits(
 minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as int,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as int,pmTilesLimits: null == pmTilesLimits ? _self.pmTilesLimits : pmTilesLimits // ignore: cast_nullable_to_non_nullable
 as PmTilesV3Limits,decodeLimits: null == decodeLimits ? _self.decodeLimits : decodeLimits // ignore: cast_nullable_to_non_nullable
 as BaseMapTileDecodeLimits,maxCachedTileGeometries: null == maxCachedTileGeometries ? _self.maxCachedTileGeometries : maxCachedTileGeometries // ignore: cast_nullable_to_non_nullable
 as int,maxParentFallbackSteps: null == maxParentFallbackSteps ? _self.maxParentFallbackSteps : maxParentFallbackSteps // ignore: cast_nullable_to_non_nullable
+as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -204,10 +212,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits() when $default != null:
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
   return orElse();
 
 }
@@ -225,10 +233,10 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)  $default,) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits():
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -245,10 +253,10 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)?  $default,) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits() when $default != null:
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
   return null;
 
 }
@@ -260,7 +268,7 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 
 
 class _MapBaseLayerLimits implements MapBaseLayerLimits {
-  const _MapBaseLayerLimits({required this.minZoom, required this.maxZoom, required this.pmTilesLimits, required this.decodeLimits, required this.maxCachedTileGeometries, required this.maxParentFallbackSteps});
+  const _MapBaseLayerLimits({required this.minZoom, required this.maxZoom, required this.pmTilesLimits, required this.decodeLimits, required this.maxCachedTileGeometries, required this.maxParentFallbackSteps, required this.maxInFlightDecodes});
   
 
 /// pan/pinch zoom gestureが許すcamera zoomの下限、および
@@ -300,6 +308,13 @@ class _MapBaseLayerLimits implements MapBaseLayerLimits {
 /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
 /// 渡す。
 @override final  int maxParentFallbackSteps;
+/// 同時に走らせる tile decode の上限([MapTileScheduler]へ渡す)。
+///
+/// 1 frame の cover に含まれる欠損 tile 全部へ無制限に `Isolate.run` decode を
+/// 張ると、cover が大きく変わった瞬間に多数の isolate を同時 spawn して
+/// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
+/// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
+@override final  int maxInFlightDecodes;
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
@@ -311,16 +326,16 @@ _$MapBaseLayerLimitsCopyWith<_MapBaseLayerLimits> get copyWith => __$MapBaseLaye
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps);
+int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes);
 
 @override
 String toString() {
-  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps)';
+  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes)';
 }
 
 
@@ -331,7 +346,7 @@ abstract mixin class _$MapBaseLayerLimitsCopyWith<$Res> implements $MapBaseLayer
   factory _$MapBaseLayerLimitsCopyWith(_MapBaseLayerLimits value, $Res Function(_MapBaseLayerLimits) _then) = __$MapBaseLayerLimitsCopyWithImpl;
 @override @useResult
 $Res call({
- int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps
+ int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes
 });
 
 
@@ -348,7 +363,7 @@ class __$MapBaseLayerLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,}) {
   return _then(_MapBaseLayerLimits(
 minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as int,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
@@ -356,6 +371,7 @@ as int,pmTilesLimits: null == pmTilesLimits ? _self.pmTilesLimits : pmTilesLimit
 as PmTilesV3Limits,decodeLimits: null == decodeLimits ? _self.decodeLimits : decodeLimits // ignore: cast_nullable_to_non_nullable
 as BaseMapTileDecodeLimits,maxCachedTileGeometries: null == maxCachedTileGeometries ? _self.maxCachedTileGeometries : maxCachedTileGeometries // ignore: cast_nullable_to_non_nullable
 as int,maxParentFallbackSteps: null == maxParentFallbackSteps ? _self.maxParentFallbackSteps : maxParentFallbackSteps // ignore: cast_nullable_to_non_nullable
+as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

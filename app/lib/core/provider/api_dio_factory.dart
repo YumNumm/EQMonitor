@@ -29,7 +29,7 @@ final class ApiDioFactory {
   final List<Interceptor> baseInterceptors;
 
   Dio build({HttpCacheStore? httpCacheStore}) {
-    final dio = Dio(buildApiBaseOptions(baseUrl: baseUrl));
+    final dio = Dio(DioBaseOptionsFactory.build(baseUrl: baseUrl));
     dio.options
       ..headers.addAll(headers)
       ..connectTimeout = const Duration(seconds: 10)

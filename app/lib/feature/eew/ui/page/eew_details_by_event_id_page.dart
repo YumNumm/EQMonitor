@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
@@ -12,19 +11,16 @@ import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
-import 'package:eqmonitor/feature/eew/ui/hook/use_eew_estimated_regions.dart';
+import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_hook.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
-import 'package:eqmonitor/feature/location/data/location.dart';
-import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -95,11 +91,17 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               eews
                   .map((eew) => eew.hypocenter)
                   .nonNulls
-                  .where((h) => h.latitude != null && h.longitude != null)
-                  .firstOrNull
-                  ?.let(
-                    (h) => Geographic(lat: h.latitude!, lon: h.longitude!),
-                  ) ??
+                  .map(
+                    (h) => switch ((h.latitude, h.longitude)) {
+                      (final lat?, final lon?) => Geographic(
+                        lat: lat,
+                        lon: lon,
+                      ),
+                      _ => null,
+                    },
+                  )
+                  .nonNulls
+                  .firstOrNull ??
               const Geographic(lat: 35.6895, lon: 139.6917);
 
           if (simulation != null) {
@@ -143,7 +145,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 }
 
 class _SimulationView extends HookConsumerWidget {
-  const _SimulationView({
+  const new({
     required this.selectedEew,
     required this.displayMode,
     required this.initialCenter,
@@ -171,7 +173,7 @@ class _SimulationView extends HookConsumerWidget {
       virtualNow = firstReportTime.add(elapsed);
     }
 
-    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+    final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: currentEew,
       isEnabled: isEstimatedAllowed,
@@ -183,29 +185,6 @@ class _SimulationView extends HookConsumerWidget {
       }
       return estimatedRegions.additionalForecastRegionsFor(eew: currentEew);
     }, [estimatedRegions, currentEew]);
-
-    // ユーザー現在地regionの推定値
-    final positionAsync = ref.watch(locationStreamProvider);
-    final position = positionAsync.value;
-    final regionItem = position != null
-        ? ref
-              .watch(
-                jmaMapAreaForecastLocalEInsideProvider(
-                  lat_lng.LatLng(position.latitude, position.longitude),
-                ),
-              )
-              .value
-        : null;
-    final userRegionCode = regionItem?.property?.code;
-
-    final userEstimate = useMemoized(() {
-      if (estimatedRegions == null || userRegionCode == null) {
-        return null;
-      }
-      return estimatedRegions.firstWhereOrNull(
-        (e) => e.regionCode == userRegionCode,
-      );
-    }, [estimatedRegions, userRegionCode]);
 
     return Stack(
       children: [
@@ -228,7 +207,7 @@ class _SimulationView extends HookConsumerWidget {
               eew: currentEew,
               index: null,
               nowOverride: virtualNow,
-              userRegionEstimate: isEstimatedAllowed ? userEstimate : null,
+              estimatedRegions: isEstimatedAllowed ? estimatedRegions : null,
             ),
           ),
       ],
@@ -237,7 +216,7 @@ class _SimulationView extends HookConsumerWidget {
 }
 
 class _EewDetailsByEventIdSkeleton extends StatelessWidget {
-  const _EewDetailsByEventIdSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -258,10 +237,7 @@ class _EewDetailsByEventIdSkeleton extends StatelessWidget {
 }
 
 class _DisplayModeSelector extends StatelessWidget {
-  const _DisplayModeSelector({
-    required this.displayMode,
-    required this.onChanged,
-  });
+  const new({required this.displayMode, required this.onChanged});
 
   final EewDisplayMode displayMode;
   final void Function(EewDisplayMode) onChanged;
@@ -289,7 +265,7 @@ class _DisplayModeSelector extends StatelessWidget {
 }
 
 class _ResponsiveLayout extends HookConsumerWidget {
-  const _ResponsiveLayout({
+  const new({
     required this.eews,
     required this.selectedIndex,
     required this.onSelect,
@@ -312,17 +288,18 @@ class _ResponsiveLayout extends HookConsumerWidget {
     final isEstimatedAllowed =
         ref.watch(estimatedIntensityOnEewReplayAllowedProvider).value ?? false;
 
-    final estimatedRegions = useEewEstimatedRegionsWithStaleCache(
+    final estimatedRegions = EewEstimatedRegionsStaleCacheHook.use(
       ref: ref,
       eew: selectedEew,
       isEnabled: isEstimatedAllowed,
     );
 
     final additionalRegions = useMemoized(() {
-      if (estimatedRegions == null || selectedEew == null) {
+      final eew = selectedEew;
+      if (estimatedRegions == null || eew == null) {
         return null;
       }
-      return estimatedRegions.additionalForecastRegionsFor(eew: selectedEew!);
+      return estimatedRegions.additionalForecastRegionsFor(eew: eew);
     }, [estimatedRegions, selectedEew]);
 
     return LayoutBuilder(
@@ -364,13 +341,14 @@ class _ResponsiveLayout extends HookConsumerWidget {
 }
 
 class _SimulationStartBanner extends StatelessWidget {
-  const _SimulationStartBanner({required this.onStart});
+  const new({required this.onStart});
 
   final VoidCallback onStart;
 
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
+
     return Material(
       color: designSystem.colorTheme.primaryContainer,
       child: InkWell(
@@ -386,7 +364,7 @@ class _SimulationStartBanner extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'シミュレーション再生: 各報を実際の時間間隔で再生します',
+                  'シミュレーション再生',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: designSystem.colorTheme.onPrimaryContainer,
                   ),

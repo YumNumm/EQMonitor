@@ -42,4 +42,4 @@ final class CacheOnlyDioProvider
   }
 }
 
-String _$cacheOnlyDioHash() => r'd71a1fa8c0696ab49bf985b201658ccfaa8aea90';
+String _$cacheOnlyDioHash() => r'b54cb5c97b5b8b878caa37615537361c0d7fcadd';

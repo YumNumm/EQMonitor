@@ -2,17 +2,19 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
-Color? feedUrgencyColor(FeedItem item) {
-  if (item.priority == .critical) {
-    return Color(0xFFD32F2F);
+extension FeedItemUrgencyColor on FeedItem {
+  Color? get urgencyColor {
+    if (priority == .critical) {
+      return Color(0xFFD32F2F);
+    }
+    if (isHighUrgency) {
+      return Color(0xFFF57C00);
+    }
+    return null;
   }
-  if (item.isHighUrgency) {
-    return Color(0xFFF57C00);
-  }
-  return null;
 }
 
 class FeedItemListTile extends StatelessWidget {
@@ -25,10 +27,9 @@ class FeedItemListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorTheme = context.designSystem.colorTheme;
-    final urgencyColor = feedUrgencyColor(item);
-    final dateStr = DateFormat(
-      'yyyy/MM/dd HH:mm頃発表',
-    ).format(item.publishedAt.toLocal());
+    final urgencyColor = item.urgencyColor;
+    final dateStr = DateFormat('yyyy/MM/dd HH:mm頃発表')
+        .format(item.publishedAt.toLocal());
 
     final isEarthquakeNotice = item.feedType == .earthquakeNotice;
     final preferredTitle = isEarthquakeNotice ? item.summary : item.title;
@@ -42,7 +43,7 @@ class FeedItemListTile extends StatelessWidget {
       tileColor: urgencyColor?.withValues(alpha: 0.4),
       title: Text(
         title,
-        style: theme.textTheme.titleSmall!.copyWith(
+        style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.bold,
         ),
         maxLines: 1,

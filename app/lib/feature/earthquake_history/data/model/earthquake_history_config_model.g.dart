@@ -44,6 +44,12 @@ _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
         'is_fill_background',
         (v) => v as bool? ?? true,
       ),
+      dateHeaderDisplayMode: $checkedConvert(
+        'date_header_display_mode',
+        (v) =>
+            $enumDecodeNullable(_$DateHeaderDisplayModeEnumMap, v) ??
+            DateHeaderDisplayMode.onlyWhenDateSort,
+      ),
       designatedRegionSearchType: $checkedConvert(
         'designated_region_search_type',
         (v) => $enumDecodeNullable(_$RegionSearchTypeEnumMap, v),
@@ -61,6 +67,7 @@ _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
   },
   fieldKeyMap: const {
     'isFillBackground': 'is_fill_background',
+    'dateHeaderDisplayMode': 'date_header_display_mode',
     'designatedRegionSearchType': 'designated_region_search_type',
     'designatedRegionCode': 'designated_region_code',
     'designatedRegionName': 'designated_region_name',
@@ -71,10 +78,18 @@ Map<String, dynamic> _$EarthquakeHistoryListConfigToJson(
   _EarthquakeHistoryListConfig instance,
 ) => <String, dynamic>{
   'is_fill_background': instance.isFillBackground,
+  'date_header_display_mode':
+      _$DateHeaderDisplayModeEnumMap[instance.dateHeaderDisplayMode]!,
   'designated_region_search_type':
       _$RegionSearchTypeEnumMap[instance.designatedRegionSearchType],
   'designated_region_code': instance.designatedRegionCode,
   'designated_region_name': instance.designatedRegionName,
+};
+
+const _$DateHeaderDisplayModeEnumMap = {
+  DateHeaderDisplayMode.always: 'always',
+  DateHeaderDisplayMode.onlyWhenDateSort: 'onlyWhenDateSort',
+  DateHeaderDisplayMode.never: 'never',
 };
 
 const _$RegionSearchTypeEnumMap = {
@@ -86,22 +101,17 @@ const _$RegionSearchTypeEnumMap = {
 
 _EarthquakeHistoryDetailsConfig _$EarthquakeHistoryDetailsConfigFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_EarthquakeHistoryDetailsConfig',
-  json,
-  ($checkedConvert) {
-    final val = _EarthquakeHistoryDetailsConfig(
-      stationDisplayMode: $checkedConvert(
-        'station_display_mode',
-        (v) =>
-            $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
-            StationDisplayMode.auto,
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'},
-);
+) => $checkedCreate('_EarthquakeHistoryDetailsConfig', json, ($checkedConvert) {
+  final val = _EarthquakeHistoryDetailsConfig(
+    stationDisplayMode: $checkedConvert(
+      'station_display_mode',
+      (v) =>
+          $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
+          StationDisplayMode.auto,
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'stationDisplayMode': 'station_display_mode'});
 
 Map<String, dynamic> _$EarthquakeHistoryDetailsConfigToJson(
   _EarthquakeHistoryDetailsConfig instance,

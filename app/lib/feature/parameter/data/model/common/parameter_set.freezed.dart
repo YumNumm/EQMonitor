@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'parameter_set.dart';
@@ -9,6 +9,7 @@ part of 'parameter_set.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -65,7 +66,7 @@ class _$ParameterSetCopyWithImpl<$Res>
 /// Create a copy of ParameterSet
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? manifest = null,Object? jmaCodeTable = null,Object? kyoshinObservationPoints = null,Object? earthquake = null,Object? tsunami = null,Object? shindoDbStations = null,}) {
-  return _then(_self.copyWith(
+  return _then(ParameterSet(
 manifest: null == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
 as AssetPackManifest,jmaCodeTable: null == jmaCodeTable ? _self.jmaCodeTable : jmaCodeTable // ignore: cast_nullable_to_non_nullable
 as JmaCodeTableParameter,kyoshinObservationPoints: null == kyoshinObservationPoints ? _self.kyoshinObservationPoints : kyoshinObservationPoints // ignore: cast_nullable_to_non_nullable

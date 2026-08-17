@@ -42,6 +42,38 @@ extension View {
     }
 }
 
+// MARK: - 主要動到達カウントダウン
+
+/// 主要動到達までの残り時間。桁が変わっても幅が揺れないよう等幅フォントで描く。
+/// Lock Screen のヘッダーと Dynamic Island で同じ見た目にするため共通化している。
+@available(iOS 16.1, *)
+struct ArrivalCountdownText: View {
+    let remaining: ClosedRange<Date>
+    let size: CGFloat
+    /// ヘッダーのように背景を自前で塗る場所では白を渡す
+    var color: Color = .primary
+
+    var body: some View {
+        // Workaround: timerInterval は横いっぱいに広がろうとするため、
+        // 同じフォントの placeholder で幅を確保して overlay で重ねる
+        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
+        Text("00:00")
+            .font(font)
+            .hidden()
+            .overlay(alignment: .trailing) {
+                Text(timerInterval: remaining, countsDown: true)
+                    .font(font)
+                    .monospacedDigit()
+                    .foregroundColor(color)
+                    .contentTransition(.numericText(countsDown: true))
+            }
+    }
+
+    private var font: Font {
+        AppFonts.code(size: size, weight: .bold)
+    }
+}
+
 // MARK: - Stripe Pattern
 
 @available(iOS 16.1, *)

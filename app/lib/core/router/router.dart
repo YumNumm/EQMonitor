@@ -4,6 +4,7 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/component/error/fatal_error_screen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/router/material_page_mixin.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
@@ -77,9 +78,6 @@ import 'package:eqmonitor/feature/settings/features/home_widget_settings/ui/page
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
-import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
@@ -89,7 +87,7 @@ import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide LicensePage;
+import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
@@ -105,6 +103,22 @@ GoRouter goRouter(Ref ref) => GoRouter(
   redirect: (context, state) {
     if (state.matchedLocation == '/splash') {
       return null;
+    }
+
+    final buildConfig = ref.read(buildConfigProvider);
+    if (!buildConfig.isDeveloperUiEnabled &&
+        state.matchedLocation.startsWith(const DebugRoute().location)) {
+      return const HomeRoute().location;
+    }
+    if (!buildConfig.isProFeaturesEnabled &&
+        state.matchedLocation.startsWith('/subscription')) {
+      return const HomeRoute().location;
+    }
+    if (!buildConfig.isShakeDetectionEnabled &&
+        state.matchedLocation.startsWith(
+          const ShakeDetectionSettingsRoute().location,
+        )) {
+      return const HomeRoute().location;
     }
 
     final isOnboardingCompleted =
@@ -150,7 +164,7 @@ class GoRouterRedirectException implements Exception {
 }
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
-class SplashRoute extends GoRouteData with $SplashRoute {
+class SplashRoute extends GoRouteData with $SplashRoute, MaterialPageMixin {
   const SplashRoute();
 
   @override
@@ -158,7 +172,8 @@ class SplashRoute extends GoRouteData with $SplashRoute {
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
-class OnboardingRoute extends GoRouteData with $OnboardingRoute {
+class OnboardingRoute extends GoRouteData
+    with $OnboardingRoute, MaterialPageMixin {
   const OnboardingRoute();
 
   @override
@@ -167,7 +182,8 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 }
 
 @TypedGoRoute<OnboardingWebViewRoute>(path: '/onboarding/web-view')
-class OnboardingWebViewRoute extends GoRouteData with $OnboardingWebViewRoute {
+class OnboardingWebViewRoute extends GoRouteData
+    with $OnboardingWebViewRoute, MaterialPageMixin {
   const OnboardingWebViewRoute({required this.title, required this.url});
 
   final String title;
@@ -180,7 +196,7 @@ class OnboardingWebViewRoute extends GoRouteData with $OnboardingWebViewRoute {
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
 class BetaTestingWarningRoute extends GoRouteData
-    with $BetaTestingWarningRoute {
+    with $BetaTestingWarningRoute, MaterialPageMixin {
   const BetaTestingWarningRoute();
 
   @override
@@ -189,7 +205,8 @@ class BetaTestingWarningRoute extends GoRouteData
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
-class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
+class EarthquakeHistoryRoute extends GoRouteData
+    with $EarthquakeHistoryRoute, MaterialPageMixin {
   const EarthquakeHistoryRoute({this.$extra});
 
   final EarthquakeHistoryParameter? $extra;
@@ -200,7 +217,8 @@ class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
 }
 
 @TypedGoRoute<EewHistoryRoute>(path: '/eew-history')
-class EewHistoryRoute extends GoRouteData with $EewHistoryRoute {
+class EewHistoryRoute extends GoRouteData
+    with $EewHistoryRoute, MaterialPageMixin {
   const EewHistoryRoute();
 
   @override
@@ -209,7 +227,8 @@ class EewHistoryRoute extends GoRouteData with $EewHistoryRoute {
 }
 
 @TypedGoRoute<SeismicityRoute>(path: '/seismicity')
-class SeismicityRoute extends GoRouteData with $SeismicityRoute {
+class SeismicityRoute extends GoRouteData
+    with $SeismicityRoute, MaterialPageMixin {
   const SeismicityRoute();
 
   @override
@@ -218,7 +237,8 @@ class SeismicityRoute extends GoRouteData with $SeismicityRoute {
 }
 
 @TypedGoRoute<IntensityHistoryRoute>(path: '/intensity-history')
-class IntensityHistoryRoute extends GoRouteData with $IntensityHistoryRoute {
+class IntensityHistoryRoute extends GoRouteData
+    with $IntensityHistoryRoute, MaterialPageMixin {
   const IntensityHistoryRoute({this.prefectureCode, this.cityCode});
 
   final String? prefectureCode;
@@ -236,7 +256,7 @@ class IntensityHistoryRoute extends GoRouteData with $IntensityHistoryRoute {
   path: '/earthquake-history-details/:eventId',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData
-    with $EarthquakeHistoryDetailsRoute {
+    with $EarthquakeHistoryDetailsRoute, MaterialPageMixin {
   const EarthquakeHistoryDetailsRoute({required this.eventId});
 
   final String eventId;
@@ -249,7 +269,7 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
 
 @TypedGoRoute<EarthquakeActivityRoute>(path: '/earthquake-activity')
 class EarthquakeActivityRoute extends GoRouteData
-    with $EarthquakeActivityRoute {
+    with $EarthquakeActivityRoute, MaterialPageMixin {
   const EarthquakeActivityRoute({required this.$extra});
 
   final EarthquakeActivityQuery $extra;
@@ -259,36 +279,9 @@ class EarthquakeActivityRoute extends GoRouteData
       EarthquakeActivityPage(initialQuery: $extra);
 }
 
-@TypedGoRoute<ShakeDetectionHistoryRoute>(path: '/shake-detection-history')
-class ShakeDetectionHistoryRoute extends GoRouteData
-    with $ShakeDetectionHistoryRoute {
-  const ShakeDetectionHistoryRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ShakeDetectionHistoryPage();
-}
-
-@TypedGoRoute<ShakeDetectionHistoryDetailsRoute>(
-  path: '/shake-detection-history-details/:eventId',
-)
-class ShakeDetectionHistoryDetailsRoute extends GoRouteData
-    with $ShakeDetectionHistoryDetailsRoute {
-  const ShakeDetectionHistoryDetailsRoute({
-    required this.eventId,
-    required this.$extra,
-  });
-
-  final String eventId;
-  final ShakeDetectionEvent $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      ShakeDetectionHistoryDetailsPage(event: $extra);
-}
-
 @TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')
-class LiveMonitorRoute extends GoRouteData with $LiveMonitorRoute {
+class LiveMonitorRoute extends GoRouteData
+    with $LiveMonitorRoute, MaterialPageMixin {
   const LiveMonitorRoute();
 
   @override
@@ -298,7 +291,7 @@ class LiveMonitorRoute extends GoRouteData with $LiveMonitorRoute {
 
 @TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')
 class TelegramListByEventIdRoute extends GoRouteData
-    with $TelegramListByEventIdRoute {
+    with $TelegramListByEventIdRoute, MaterialPageMixin {
   const TelegramListByEventIdRoute({required this.eventId});
 
   final String eventId;
@@ -321,12 +314,20 @@ class TelegramListByEventIdRoute extends GoRouteData
 class HomeRoute extends GoRouteData with $HomeRoute {
   const HomeRoute();
 
+  /// `sheet` パッケージのシートと secondary transition を連携させるため、
+  /// [MaterialPageMixin] ではなく [MaterialExtendedPage] を使う。
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const MaterialExtendedPage<void>(child: HomePage());
+      MaterialExtendedPage<void>(
+        key: state.pageKey,
+        name: state.name ?? state.path,
+        restorationId: state.pageKey.value,
+        child: const HomePage(),
+      );
 }
 
-class HomeMapLayerRoute extends GoRouteData with $HomeMapLayerRoute {
+class HomeMapLayerRoute extends GoRouteData
+    with $HomeMapLayerRoute, MaterialPageMixin {
   const HomeMapLayerRoute();
 
   @override
@@ -335,7 +336,7 @@ class HomeMapLayerRoute extends GoRouteData with $HomeMapLayerRoute {
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
-class TalkerRoute extends GoRouteData with $TalkerRoute {
+class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
   const TalkerRoute();
 
   @override
@@ -448,7 +449,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
     ),
   ],
 )
-class SettingsRoute extends GoRouteData with $SettingsRoute {
+class SettingsRoute extends GoRouteData with $SettingsRoute, MaterialPageMixin {
   const SettingsRoute();
 
   @override
@@ -456,7 +457,7 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
       const SettingsPage();
 }
 
-class DisplayRoute extends GoRouteData with $DisplayRoute {
+class DisplayRoute extends GoRouteData with $DisplayRoute, MaterialPageMixin {
   const DisplayRoute();
 
   @override
@@ -464,7 +465,8 @@ class DisplayRoute extends GoRouteData with $DisplayRoute {
       const DisplaySettingsPage();
 }
 
-class ThemeSettingsRoute extends GoRouteData with $ThemeSettingsRoute {
+class ThemeSettingsRoute extends GoRouteData
+    with $ThemeSettingsRoute, MaterialPageMixin {
   const ThemeSettingsRoute();
 
   @override
@@ -472,7 +474,8 @@ class ThemeSettingsRoute extends GoRouteData with $ThemeSettingsRoute {
       const ThemeSettingsPage();
 }
 
-class ThemeEditorRoute extends GoRouteData with $ThemeEditorRoute {
+class ThemeEditorRoute extends GoRouteData
+    with $ThemeEditorRoute, MaterialPageMixin {
   const ThemeEditorRoute({required this.mode});
 
   final String mode;
@@ -488,7 +491,7 @@ class ThemeEditorRoute extends GoRouteData with $ThemeEditorRoute {
 }
 
 class NotificationSettingsRoute extends GoRouteData
-    with $NotificationSettingsRoute {
+    with $NotificationSettingsRoute, MaterialPageMixin {
   const NotificationSettingsRoute();
 
   @override
@@ -497,7 +500,7 @@ class NotificationSettingsRoute extends GoRouteData
 }
 
 class HomeWidgetSettingsRoute extends GoRouteData
-    with $HomeWidgetSettingsRoute {
+    with $HomeWidgetSettingsRoute, MaterialPageMixin {
   const HomeWidgetSettingsRoute();
 
   @override
@@ -506,7 +509,7 @@ class HomeWidgetSettingsRoute extends GoRouteData
 }
 
 class ShakeDetectionSettingsRoute extends GoRouteData
-    with $ShakeDetectionSettingsRoute {
+    with $ShakeDetectionSettingsRoute, MaterialPageMixin {
   const ShakeDetectionSettingsRoute();
 
   @override
@@ -515,7 +518,7 @@ class ShakeDetectionSettingsRoute extends GoRouteData
 }
 
 class NotificationHistoryRoute extends GoRouteData
-    with $NotificationHistoryRoute {
+    with $NotificationHistoryRoute, MaterialPageMixin {
   const NotificationHistoryRoute();
 
   @override
@@ -523,7 +526,7 @@ class NotificationHistoryRoute extends GoRouteData
       const DebugNotificationDeliveryLogPage();
 }
 
-class DebugRoute extends GoRouteData with $DebugRoute {
+class DebugRoute extends GoRouteData with $DebugRoute, MaterialPageMixin {
   const DebugRoute();
 
   @override
@@ -531,7 +534,7 @@ class DebugRoute extends GoRouteData with $DebugRoute {
 }
 
 class HttpApiEndpointSelectorRoute extends GoRouteData
-    with $HttpApiEndpointSelectorRoute {
+    with $HttpApiEndpointSelectorRoute, MaterialPageMixin {
   const HttpApiEndpointSelectorRoute();
 
   @override
@@ -540,7 +543,7 @@ class HttpApiEndpointSelectorRoute extends GoRouteData
 }
 
 class EarthquakeHistoryConfigRoute extends GoRouteData
-    with $EarthquakeHistoryConfigRoute {
+    with $EarthquakeHistoryConfigRoute, MaterialPageMixin {
   const EarthquakeHistoryConfigRoute();
 
   @override
@@ -548,7 +551,8 @@ class EarthquakeHistoryConfigRoute extends GoRouteData
       const EarthquakeHistoryConfigPage();
 }
 
-class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
+class TermOfServiceRoute extends GoRouteData
+    with $TermOfServiceRoute, MaterialPageMixin {
   const TermOfServiceRoute({
     required this.$extra,
     this.showAcceptButton = false,
@@ -562,7 +566,8 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
       TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
+class PrivacyPolicyRoute extends GoRouteData
+    with $PrivacyPolicyRoute, MaterialPageMixin {
   const PrivacyPolicyRoute({
     required this.$extra,
     this.showAcceptButton = false,
@@ -576,7 +581,7 @@ class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
       PrivacyPolicyPage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class LicenseRoute extends GoRouteData with $LicenseRoute {
+class LicenseRoute extends GoRouteData with $LicenseRoute, MaterialPageMixin {
   const LicenseRoute();
 
   @override
@@ -584,7 +589,8 @@ class LicenseRoute extends GoRouteData with $LicenseRoute {
       const LicensePage();
 }
 
-class AboutThisAppRoute extends GoRouteData with $AboutThisAppRoute {
+class AboutThisAppRoute extends GoRouteData
+    with $AboutThisAppRoute, MaterialPageMixin {
   const AboutThisAppRoute();
 
   @override
@@ -593,7 +599,7 @@ class AboutThisAppRoute extends GoRouteData with $AboutThisAppRoute {
 }
 
 class EewDetailsByEventIdRoute extends GoRouteData
-    with $EewDetailsByEventIdRoute {
+    with $EewDetailsByEventIdRoute, MaterialPageMixin {
   const EewDetailsByEventIdRoute({required this.eventId});
 
   final String eventId;
@@ -605,7 +611,7 @@ class EewDetailsByEventIdRoute extends GoRouteData
 }
 
 class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
-    with $KyoshinMonitorAboutObservationNetworkRoute {
+    with $KyoshinMonitorAboutObservationNetworkRoute, MaterialPageMixin {
   const KyoshinMonitorAboutObservationNetworkRoute();
 
   @override
@@ -614,7 +620,8 @@ class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
   }
 }
 
-class DebugEewCardRoute extends GoRouteData with $DebugEewCardRoute {
+class DebugEewCardRoute extends GoRouteData
+    with $DebugEewCardRoute, MaterialPageMixin {
   const DebugEewCardRoute();
 
   @override
@@ -624,7 +631,7 @@ class DebugEewCardRoute extends GoRouteData with $DebugEewCardRoute {
 }
 
 class DebugEarthquakeHistoryCardRoute extends GoRouteData
-    with $DebugEarthquakeHistoryCardRoute {
+    with $DebugEarthquakeHistoryCardRoute, MaterialPageMixin {
   const DebugEarthquakeHistoryCardRoute();
 
   @override
@@ -634,7 +641,7 @@ class DebugEarthquakeHistoryCardRoute extends GoRouteData
 }
 
 class DebugEarthquakeHistoryListTileRoute extends GoRouteData
-    with $DebugEarthquakeHistoryListTileRoute {
+    with $DebugEarthquakeHistoryListTileRoute, MaterialPageMixin {
   const DebugEarthquakeHistoryListTileRoute();
 
   @override
@@ -644,7 +651,7 @@ class DebugEarthquakeHistoryListTileRoute extends GoRouteData
 }
 
 class DebugShakeDetectionCardRoute extends GoRouteData
-    with $DebugShakeDetectionCardRoute {
+    with $DebugShakeDetectionCardRoute, MaterialPageMixin {
   const DebugShakeDetectionCardRoute();
 
   @override
@@ -654,7 +661,7 @@ class DebugShakeDetectionCardRoute extends GoRouteData
 }
 
 class DebugShakeDetectionInsertRoute extends GoRouteData
-    with $DebugShakeDetectionInsertRoute {
+    with $DebugShakeDetectionInsertRoute, MaterialPageMixin {
   const DebugShakeDetectionInsertRoute();
 
   @override
@@ -663,7 +670,8 @@ class DebugShakeDetectionInsertRoute extends GoRouteData
   }
 }
 
-class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
+class DebugJmaMapRoute extends GoRouteData
+    with $DebugJmaMapRoute, MaterialPageMixin {
   const DebugJmaMapRoute();
 
   @override
@@ -672,7 +680,8 @@ class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
   }
 }
 
-class EqmonitorMapDebugRoute extends GoRouteData with $EqmonitorMapDebugRoute {
+class EqmonitorMapDebugRoute extends GoRouteData
+    with $EqmonitorMapDebugRoute, MaterialPageMixin {
   const EqmonitorMapDebugRoute();
 
   @override
@@ -682,7 +691,7 @@ class EqmonitorMapDebugRoute extends GoRouteData with $EqmonitorMapDebugRoute {
 }
 
 class DebugKyoshinMonitorRoute extends GoRouteData
-    with $DebugKyoshinMonitorRoute {
+    with $DebugKyoshinMonitorRoute, MaterialPageMixin {
   const DebugKyoshinMonitorRoute();
 
   @override
@@ -691,7 +700,8 @@ class DebugKyoshinMonitorRoute extends GoRouteData
   }
 }
 
-class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
+class PlaygroundRoute extends GoRouteData
+    with $PlaygroundRoute, MaterialPageMixin {
   const PlaygroundRoute();
 
   @override
@@ -700,7 +710,8 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   }
 }
 
-class DebugWebSocketRoute extends GoRouteData with $DebugWebSocketRoute {
+class DebugWebSocketRoute extends GoRouteData
+    with $DebugWebSocketRoute, MaterialPageMixin {
   const DebugWebSocketRoute();
 
   @override
@@ -710,7 +721,7 @@ class DebugWebSocketRoute extends GoRouteData with $DebugWebSocketRoute {
 }
 
 class DebugNotificationDeliveryLogRoute extends GoRouteData
-    with $DebugNotificationDeliveryLogRoute {
+    with $DebugNotificationDeliveryLogRoute, MaterialPageMixin {
   const DebugNotificationDeliveryLogRoute();
 
   @override
@@ -719,7 +730,8 @@ class DebugNotificationDeliveryLogRoute extends GoRouteData
   }
 }
 
-class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
+class DebugDeviceAdminRoute extends GoRouteData
+    with $DebugDeviceAdminRoute, MaterialPageMixin {
   const DebugDeviceAdminRoute();
 
   @override
@@ -729,7 +741,7 @@ class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
 }
 
 class DebugDeviceSettingsRoute extends GoRouteData
-    with $DebugDeviceSettingsRoute {
+    with $DebugDeviceSettingsRoute, MaterialPageMixin {
   const DebugDeviceSettingsRoute();
 
   @override
@@ -738,7 +750,8 @@ class DebugDeviceSettingsRoute extends GoRouteData
   }
 }
 
-class DebugNavigationRoute extends GoRouteData with $DebugNavigationRoute {
+class DebugNavigationRoute extends GoRouteData
+    with $DebugNavigationRoute, MaterialPageMixin {
   const DebugNavigationRoute();
 
   @override
@@ -747,7 +760,8 @@ class DebugNavigationRoute extends GoRouteData with $DebugNavigationRoute {
   }
 }
 
-class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
+class DebugAppGroupRoute extends GoRouteData
+    with $DebugAppGroupRoute, MaterialPageMixin {
   const DebugAppGroupRoute();
 
   @override
@@ -756,7 +770,8 @@ class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
   }
 }
 
-class AssetPackDebugRoute extends GoRouteData with $AssetPackDebugRoute {
+class AssetPackDebugRoute extends GoRouteData
+    with $AssetPackDebugRoute, MaterialPageMixin {
   const AssetPackDebugRoute();
 
   @override
@@ -766,7 +781,7 @@ class AssetPackDebugRoute extends GoRouteData with $AssetPackDebugRoute {
 }
 
 class DebugSharedPreferencesRoute extends GoRouteData
-    with $DebugSharedPreferencesRoute {
+    with $DebugSharedPreferencesRoute, MaterialPageMixin {
   const DebugSharedPreferencesRoute();
 
   @override
@@ -776,7 +791,7 @@ class DebugSharedPreferencesRoute extends GoRouteData
 }
 
 class DebugSecureStorageRoute extends GoRouteData
-    with $DebugSecureStorageRoute {
+    with $DebugSecureStorageRoute, MaterialPageMixin {
   const DebugSecureStorageRoute();
 
   @override
@@ -785,7 +800,8 @@ class DebugSecureStorageRoute extends GoRouteData
   }
 }
 
-class DebugHttpCacheRoute extends GoRouteData with $DebugHttpCacheRoute {
+class DebugHttpCacheRoute extends GoRouteData
+    with $DebugHttpCacheRoute, MaterialPageMixin {
   const DebugHttpCacheRoute();
 
   @override
@@ -795,7 +811,7 @@ class DebugHttpCacheRoute extends GoRouteData with $DebugHttpCacheRoute {
 }
 
 class DebugIntensityIconRoute extends GoRouteData
-    with $DebugIntensityIconRoute {
+    with $DebugIntensityIconRoute, MaterialPageMixin {
   const DebugIntensityIconRoute();
 
   @override
@@ -804,7 +820,8 @@ class DebugIntensityIconRoute extends GoRouteData
   }
 }
 
-class DebugTelemetryRoute extends GoRouteData with $DebugTelemetryRoute {
+class DebugTelemetryRoute extends GoRouteData
+    with $DebugTelemetryRoute, MaterialPageMixin {
   const DebugTelemetryRoute();
 
   @override
@@ -814,7 +831,7 @@ class DebugTelemetryRoute extends GoRouteData with $DebugTelemetryRoute {
 }
 
 class DebugTsunamiDetailsRoute extends GoRouteData
-    with $DebugTsunamiDetailsRoute {
+    with $DebugTsunamiDetailsRoute, MaterialPageMixin {
   const DebugTsunamiDetailsRoute();
 
   @override
@@ -824,7 +841,7 @@ class DebugTsunamiDetailsRoute extends GoRouteData
 }
 
 class DebugTsunamiTimelineRoute extends GoRouteData
-    with $DebugTsunamiTimelineRoute {
+    with $DebugTsunamiTimelineRoute, MaterialPageMixin {
   const DebugTsunamiTimelineRoute({required this.tsunamiId});
 
   final String tsunamiId;
@@ -835,7 +852,7 @@ class DebugTsunamiTimelineRoute extends GoRouteData
   }
 }
 
-class NiedRoute extends GoRouteData with $NiedRoute {
+class NiedRoute extends GoRouteData with $NiedRoute, MaterialPageMixin {
   const NiedRoute();
 
   @override
@@ -844,7 +861,7 @@ class NiedRoute extends GoRouteData with $NiedRoute {
   }
 }
 
-class AquaRoute extends GoRouteData with $AquaRoute {
+class AquaRoute extends GoRouteData with $AquaRoute, MaterialPageMixin {
   const AquaRoute();
 
   @override
@@ -853,7 +870,8 @@ class AquaRoute extends GoRouteData with $AquaRoute {
   }
 }
 
-class AquaCatalogRoute extends GoRouteData with $AquaCatalogRoute {
+class AquaCatalogRoute extends GoRouteData
+    with $AquaCatalogRoute, MaterialPageMixin {
   const AquaCatalogRoute();
 
   @override
@@ -862,7 +880,7 @@ class AquaCatalogRoute extends GoRouteData with $AquaCatalogRoute {
   }
 }
 
-class FnetRoute extends GoRouteData with $FnetRoute {
+class FnetRoute extends GoRouteData with $FnetRoute, MaterialPageMixin {
   const FnetRoute();
 
   @override
@@ -871,7 +889,8 @@ class FnetRoute extends GoRouteData with $FnetRoute {
   }
 }
 
-class FnetCatalogRoute extends GoRouteData with $FnetCatalogRoute {
+class FnetCatalogRoute extends GoRouteData
+    with $FnetCatalogRoute, MaterialPageMixin {
   const FnetCatalogRoute();
 
   @override
@@ -880,7 +899,8 @@ class FnetCatalogRoute extends GoRouteData with $FnetCatalogRoute {
   }
 }
 
-class KnetWaveformRoute extends GoRouteData with $KnetWaveformRoute {
+class KnetWaveformRoute extends GoRouteData
+    with $KnetWaveformRoute, MaterialPageMixin {
   const KnetWaveformRoute();
 
   @override
@@ -889,7 +909,7 @@ class KnetWaveformRoute extends GoRouteData with $KnetWaveformRoute {
 }
 
 class KnetCredentialsSettingsRoute extends GoRouteData
-    with $KnetCredentialsSettingsRoute {
+    with $KnetCredentialsSettingsRoute, MaterialPageMixin {
   const KnetCredentialsSettingsRoute();
 
   @override
@@ -897,7 +917,8 @@ class KnetCredentialsSettingsRoute extends GoRouteData
       const KnetCredentialsSettingsPage();
 }
 
-class KnetMediaRoute extends GoRouteData with $KnetMediaRoute {
+class KnetMediaRoute extends GoRouteData
+    with $KnetMediaRoute, MaterialPageMixin {
   const KnetMediaRoute({required this.$extra});
 
   /// 地震発生時刻（JST）
@@ -908,7 +929,8 @@ class KnetMediaRoute extends GoRouteData with $KnetMediaRoute {
       KnetMediaPage(eventTime: $extra);
 }
 
-class KnetRecordListRoute extends GoRouteData with $KnetRecordListRoute {
+class KnetRecordListRoute extends GoRouteData
+    with $KnetRecordListRoute, MaterialPageMixin {
   const KnetRecordListRoute({required this.$extra});
 
   /// 地震発生時刻（JST）
@@ -920,7 +942,7 @@ class KnetRecordListRoute extends GoRouteData with $KnetRecordListRoute {
 }
 
 class KnetStationWaveformRoute extends GoRouteData
-    with $KnetStationWaveformRoute {
+    with $KnetStationWaveformRoute, MaterialPageMixin {
   const KnetStationWaveformRoute({required this.$extra});
 
   final KnetStationResult $extra;
@@ -930,7 +952,8 @@ class KnetStationWaveformRoute extends GoRouteData
       KnetStationWaveformPage(result: $extra);
 }
 
-class HinetSeismicityRoute extends GoRouteData with $HinetSeismicityRoute {
+class HinetSeismicityRoute extends GoRouteData
+    with $HinetSeismicityRoute, MaterialPageMixin {
   const HinetSeismicityRoute();
 
   @override
@@ -940,7 +963,7 @@ class HinetSeismicityRoute extends GoRouteData with $HinetSeismicityRoute {
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData
-    with $KyoshinMonitorAboutRoute {
+    with $KyoshinMonitorAboutRoute, MaterialPageMixin {
   const KyoshinMonitorAboutRoute();
 
   @override
@@ -949,7 +972,8 @@ class KyoshinMonitorAboutRoute extends GoRouteData
   }
 }
 
-class ChangelogRoute extends GoRouteData with $ChangelogRoute {
+class ChangelogRoute extends GoRouteData
+    with $ChangelogRoute, MaterialPageMixin {
   const ChangelogRoute();
 
   @override
@@ -958,7 +982,7 @@ class ChangelogRoute extends GoRouteData with $ChangelogRoute {
 }
 
 @TypedGoRoute<FeedRoute>(path: '/feed')
-class FeedRoute extends GoRouteData with $FeedRoute {
+class FeedRoute extends GoRouteData with $FeedRoute, MaterialPageMixin {
   const FeedRoute();
 
   @override
@@ -966,7 +990,8 @@ class FeedRoute extends GoRouteData with $FeedRoute {
 }
 
 @TypedGoRoute<FeedDetailsRoute>(path: '/feed/source/:telegramHash')
-class FeedDetailsRoute extends GoRouteData with $FeedDetailsRoute {
+class FeedDetailsRoute extends GoRouteData
+    with $FeedDetailsRoute, MaterialPageMixin {
   const FeedDetailsRoute({required this.telegramHash});
 
   final String telegramHash;
@@ -977,7 +1002,8 @@ class FeedDetailsRoute extends GoRouteData with $FeedDetailsRoute {
 }
 
 @TypedGoRoute<FeedItemDetailsRoute>(path: '/feed/detail/:id')
-class FeedItemDetailsRoute extends GoRouteData with $FeedItemDetailsRoute {
+class FeedItemDetailsRoute extends GoRouteData
+    with $FeedItemDetailsRoute, MaterialPageMixin {
   const FeedItemDetailsRoute({required this.id, this.$extra});
 
   final String id;
@@ -989,7 +1015,8 @@ class FeedItemDetailsRoute extends GoRouteData with $FeedItemDetailsRoute {
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
-class TsunamiDetailsRoute extends GoRouteData with $TsunamiDetailsRoute {
+class TsunamiDetailsRoute extends GoRouteData
+    with $TsunamiDetailsRoute, MaterialPageMixin {
   const TsunamiDetailsRoute({required this.tsunamiId});
 
   final String tsunamiId;
@@ -1001,7 +1028,7 @@ class TsunamiDetailsRoute extends GoRouteData with $TsunamiDetailsRoute {
 }
 
 @TypedGoRoute<PaywallRoute>(path: '/subscription/paywall')
-class PaywallRoute extends GoRouteData with $PaywallRoute {
+class PaywallRoute extends GoRouteData with $PaywallRoute, MaterialPageMixin {
   const PaywallRoute();
 
   @override
@@ -1011,7 +1038,7 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
 
 @TypedGoRoute<SubscriptionSettingsRoute>(path: '/subscription/settings')
 class SubscriptionSettingsRoute extends GoRouteData
-    with $SubscriptionSettingsRoute {
+    with $SubscriptionSettingsRoute, MaterialPageMixin {
   const SubscriptionSettingsRoute();
 
   @override

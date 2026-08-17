@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_progress_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_event_stations_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -21,9 +21,7 @@ class KnetRecordListPage extends ConsumerWidget {
     final stationsAsync = ref.watch(knetEventStationsProvider(eventTime));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('観測点一覧 — ${_dtFmt.format(eventTime)}'),
-      ),
+      appBar: AppBar(title: Text('観測点一覧 — ${_dtFmt.format(eventTime)}')),
       body: stationsAsync.when(
         loading: () => _DownloadProgressView(eventTime: eventTime),
         error: (e, st) => _ErrorView(message: e.toString()),
@@ -38,6 +36,7 @@ class KnetRecordListPage extends ConsumerWidget {
               final intensity = JmaIntensityFromRawKnetInt.fromRawKnetInt(
                 s.rawInt,
               );
+              final stationInfo = s.stationInfo;
               return ListTile(
                 leading: JmaIntensityIcon(
                   intensity: intensity,
@@ -45,10 +44,10 @@ class KnetRecordListPage extends ConsumerWidget {
                   size: 40,
                 ),
                 title: Text(s.stationCode),
-                subtitle: s.stationInfo != null
+                subtitle: stationInfo != null
                     ? Text(
-                        '緯度: ${s.stationInfo!.latitude.toStringAsFixed(4)}  '
-                        '経度: ${s.stationInfo!.longitude.toStringAsFixed(4)}',
+                        '緯度: ${stationInfo.latitude.toStringAsFixed(4)}  '
+                        '経度: ${stationInfo.longitude.toStringAsFixed(4)}',
                         style: Theme.of(context).textTheme.bodySmall,
                       )
                     : null,

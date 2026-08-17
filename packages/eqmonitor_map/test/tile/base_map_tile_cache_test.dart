@@ -4,6 +4,7 @@ import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
+import 'package:eqmonitor_map/src/tile/map_tile_fallback_policy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// `marker`だけが違う[BaseMapTileGeometry]のsentinel。cacheが正しい
@@ -14,6 +15,7 @@ BaseMapTileGeometry _geometry(int marker) {
     layers: [
       BaseMapTileFillLayerGeometry(
         styleLayerId: 'countriesFill',
+        extent: 4096,
         meshes: [
           FillMesh(
             positions: Float32List.fromList([marker.toDouble(), 0]),
@@ -44,8 +46,12 @@ void main() {
       );
 
       final result = cache.get(sourceInstanceId: 'a', tileId: tileId);
-      expect(result, isNotNull);
-      expect(_markerOf(result!), 1);
+      if (result == null) {
+        fail('expected the cached geometry');
+      }
+      final layer = result.layers.single as BaseMapTileFillLayerGeometry;
+      expect(layer.extent, 4096);
+      expect(_markerOf(result), 1);
     });
 
     test('a different sourceInstanceId is a different entry', () {
@@ -478,6 +484,35 @@ void main() {
       );
     });
 
+    test('concurrent decodes in one incarnation all write to the cache', () {
+      final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
+      const first = CanonicalTileId(z: 5, x: 0, y: 0);
+      const second = CanonicalTileId(z: 5, x: 1, y: 0);
+
+      // scheduler が maxInFlightDecodes > 1 で並行に開始した2件を模す。
+      final firstToken = cache.beginDecode();
+      final secondToken = cache.beginDecode();
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: second,
+        geometry: _geometry(2),
+        token: secondToken,
+      );
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: first,
+        geometry: _geometry(1),
+        token: firstToken,
+      );
+
+      expect(
+        cache.get(sourceInstanceId: 'a', tileId: first),
+        isNotNull,
+        reason: 'starting a second decode must not retire the first one',
+      );
+      expect(cache.get(sourceInstanceId: 'a', tileId: second), isNotNull);
+    });
+
     test('a token issued after cancellation still writes normally', () {
       final cache = BaseMapTileCache(maxEntries: 10, maxParentFallbackSteps: 1);
       const tileId = CanonicalTileId(z: 5, x: 0, y: 0);
@@ -671,6 +706,67 @@ void main() {
       );
 
       expect(result, isA<BaseMapTileFallbackMiss>());
+    });
+  });
+
+  group('hazard fallback policy', () {
+    test('an exact hit is still returned under the hazard policy', () {
+      final cache = BaseMapTileCache(
+        maxEntries: 10,
+        maxParentFallbackSteps: 1,
+        fallbackPolicy: MapTileFallbackPolicy.hazard,
+      );
+      const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: tileId,
+        geometry: _geometry(7),
+        token: cache.beginDecode(),
+      );
+
+      final result = cache.lookupWithFallback(
+        sourceInstanceId: 'a',
+        tileId: tileId,
+        maxParentSteps: 3,
+      );
+
+      expect(result, isA<BaseMapTileFallbackExact>());
+      expect(_markerOf((result as BaseMapTileFallbackExact).geometry), 7);
+    });
+
+    test('fails closed instead of falling back to children or a parent', () {
+      final cache = BaseMapTileCache(
+        maxEntries: 10,
+        maxParentFallbackSteps: 3,
+        fallbackPolicy: MapTileFallbackPolicy.hazard,
+      );
+      const tileId = CanonicalTileId(z: 5, x: 2, y: 2);
+      for (var i = 0; i < tileId.children().length; i++) {
+        cache.put(
+          sourceInstanceId: 'a',
+          tileId: tileId.children()[i],
+          geometry: _geometry(100 + i),
+          token: cache.beginDecode(),
+        );
+      }
+      cache.put(
+        sourceInstanceId: 'a',
+        tileId: tileId.scaledTo(4),
+        geometry: _geometry(999),
+        token: cache.beginDecode(),
+      );
+
+      final result = cache.lookupWithFallback(
+        sourceInstanceId: 'a',
+        tileId: tileId,
+        maxParentSteps: 3,
+      );
+
+      expect(
+        result,
+        isA<BaseMapTileFallbackMiss>(),
+        reason: 'hazard must not surface a stale or lower-detail tile',
+      );
     });
   });
 }

@@ -40,6 +40,13 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
       _$KyoshinMonitorSettingsModelFromJson(json);
 }
 
+extension KyoshinMonitorSettingsModelX on KyoshinMonitorSettingsModel {
+  RealtimeLayer get effectiveRealtimeLayer =>
+      realtimeDataType.isLpgm ? RealtimeLayer.surface : realtimeLayer;
+
+  bool get canSelectRealtimeLayer => useKmoni && !realtimeDataType.isLpgm;
+}
+
 @freezed
 abstract class KyoshinMonitorSettingsApiModel
     with _$KyoshinMonitorSettingsApiModel {

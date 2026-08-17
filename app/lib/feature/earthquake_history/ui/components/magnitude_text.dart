@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [MagnitudeText] の表示バリアント。
 enum MagnitudeTextVariant {
@@ -64,7 +64,7 @@ class MagnitudeText extends StatelessWidget {
           EarthquakeMagnitudeOverM8() => [const TextSpan(text: 'M8超')],
           null => [],
         },
-        style: theme.textTheme.labelLarge!.copyWith(
+        style: theme.textTheme.labelLarge?.copyWith(
           color: color,
           fontFamily: FontFamily.googleSansCode,
         ),
@@ -90,13 +90,12 @@ class MagnitudeText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        if (showM)
-          Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
+        if (showM) Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
         Flexible(
           child: Text(
             text,
             style: textTheme.valueStyle(
-              showM ? textTheme.headlineLarge! : textTheme.headlineMedium!,
+              showM ? textTheme.headlineLarge : textTheme.headlineMedium,
             ),
           ),
         ),

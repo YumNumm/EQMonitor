@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,12 +29,11 @@ Future<void> _pumpAndOpenSheet(WidgetTester tester) async {
           ],
         ),
         home: Scaffold(
-          body: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () => showErrorDetailsSheet(
-                context,
-                error: Exception('boom'),
-              ),
+          body: Consumer(
+            builder: (context, ref, _) => ElevatedButton(
+              onPressed: () => ref
+                  .read(errorDetailsSheetActionProvider)
+                  .show(context, error: Exception('boom')),
               child: const Text('open'),
             ),
           ),

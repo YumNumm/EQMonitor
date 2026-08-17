@@ -15,10 +15,15 @@ class FlutterSceneSpikeRemountOwner extends ChangeNotifier {
         ),
       );
 
-  FlutterSceneSpikeRemountOwner.withDependencies({
+  factory FlutterSceneSpikeRemountOwner.withDependencies({
     required FlutterSceneSpikeControllerFactory controllerFactory,
-  }) : _controllerFactory = controllerFactory,
-       _metrics = SceneSpikeMetrics() {
+  }) => FlutterSceneSpikeRemountOwner._(
+    controllerFactory: controllerFactory,
+  );
+
+  FlutterSceneSpikeRemountOwner._({
+    required this._controllerFactory,
+  }) : _metrics = SceneSpikeMetrics() {
     _controller = _controllerFactory(_metrics);
   }
 

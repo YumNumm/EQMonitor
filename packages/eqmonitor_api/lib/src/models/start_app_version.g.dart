@@ -9,28 +9,23 @@ part of 'start_app_version.dart';
 // **************************************************************************
 
 _StartAppVersion _$StartAppVersionFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_StartAppVersion',
-      json,
-      ($checkedConvert) {
-        final val = _StartAppVersion(
-          requiredVersions: $checkedConvert(
-            'required_versions',
-            (v) => (v as List<dynamic>)
-                .map((e) => RequiredVersion.fromJson(e as Map<String, dynamic>))
-                .toList(),
-          ),
-          latest: $checkedConvert(
-            'latest',
-            (v) => v == null
-                ? null
-                : LatestVersion.fromJson(v as Map<String, dynamic>),
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'requiredVersions': 'required_versions'},
-    );
+    $checkedCreate('_StartAppVersion', json, ($checkedConvert) {
+      final val = _StartAppVersion(
+        requiredVersions: $checkedConvert(
+          'required_versions',
+          (v) => (v as List<dynamic>)
+              .map((e) => RequiredVersion.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        latest: $checkedConvert(
+          'latest',
+          (v) => v == null
+              ? null
+              : LatestVersion.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'requiredVersions': 'required_versions'});
 
 Map<String, dynamic> _$StartAppVersionToJson(_StartAppVersion instance) =>
     <String, dynamic>{

@@ -1,8 +1,9 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,6 +24,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const durationValidator = LiveMonitorDurationValidator();
     final durationController = useTextEditingController(
       text: settings.earthquakeDisplaySeconds.toString(),
     );
@@ -32,7 +34,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
 
     final Future<bool> Function({required String raw, required int? revision})
     saveDuration = ({required raw, required revision}) async {
-      final validation = validateLiveMonitorDuration(raw);
+      final validation = durationValidator.validate(raw);
       final seconds = validation.seconds;
       if (seconds == null) {
         durationError.value = '3〜300の整数を入力してください';
@@ -44,7 +46,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
         return false;
       }
       if (!didCommit &&
-          isCurrentLiveMonitorDurationGeneration(
+          durationValidator.isCurrentGeneration(
             currentRaw: durationController.text,
             currentRevision: durationRevision.value,
             committedRaw: raw,
@@ -67,7 +69,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
           if (!context.mounted) {
             return;
           }
-          if (!shouldApplyCommittedLiveMonitorDuration(
+          if (!durationValidator.shouldApplyCommitted(
             didCommit: didCommit,
             hasFocus: durationFocusNode.hasFocus,
             currentRaw: durationController.text,
@@ -109,7 +111,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
     }, [settings.earthquakeDisplaySeconds]);
 
     final panelHeight = MediaQuery.sizeOf(context).height * 0.9;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.designSystem.colorTheme;
     return SafeArea(
       minimum: const EdgeInsets.all(8),
       child: ConstrainedBox(
@@ -141,7 +143,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                       );
                       if (!context.mounted ||
                           !didCommit ||
-                          !isCurrentLiveMonitorDurationGeneration(
+                          !durationValidator.isCurrentGeneration(
                             currentRaw: durationController.text,
                             currentRevision: durationRevision.value,
                             committedRaw: committedRaw,
@@ -203,7 +205,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 onChanged: (raw) {
                   durationRevision.value = onDurationChanged(raw);
                   durationError.value =
-                      validateLiveMonitorDuration(raw).error == null
+                      durationValidator.validate(raw).error == null
                       ? null
                       : '3〜300の整数を入力してください';
                 },
@@ -249,7 +251,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                       );
                       if (!context.mounted ||
                           !didCommit ||
-                          !isCurrentLiveMonitorDurationGeneration(
+                          !durationValidator.isCurrentGeneration(
                             currentRaw: durationController.text,
                             currentRevision: durationRevision.value,
                             committedRaw: committedRaw,

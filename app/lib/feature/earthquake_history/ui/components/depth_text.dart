@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 深さを表示する Widget。
 ///
@@ -21,26 +21,19 @@ class DepthText extends StatelessWidget {
       EarthquakeDepthUnknown() || null => ('調査中', null, true),
     };
 
-    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall!);
+    final subTextStyle = textTheme.labelStyle(textTheme.titleSmall);
 
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(
-            text: '深さ',
-            style: subTextStyle,
-          ),
+          TextSpan(text: '深さ', style: subTextStyle),
           TextSpan(
             text: text,
             style: textTheme.valueStyle(
-              isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
+              isSpecial ? textTheme.headlineMedium : textTheme.headlineLarge,
             ),
           ),
-          if (trailing != null)
-            TextSpan(
-              text: trailing,
-              style: subTextStyle,
-            ),
+          if (trailing != null) TextSpan(text: trailing, style: subTextStyle),
         ],
       ),
     );

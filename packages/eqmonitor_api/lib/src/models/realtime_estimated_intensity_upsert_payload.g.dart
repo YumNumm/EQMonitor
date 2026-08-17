@@ -10,35 +10,32 @@ part of 'realtime_estimated_intensity_upsert_payload.dart';
 
 _RealtimeEstimatedIntensityUpsertPayload
 _$RealtimeEstimatedIntensityUpsertPayloadFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_RealtimeEstimatedIntensityUpsertPayload',
-      json,
-      ($checkedConvert) {
-        final val = _RealtimeEstimatedIntensityUpsertPayload(
-          type: $checkedConvert(
-            'type',
-            (v) => $enumDecode(
-              _$RealtimeEstimatedIntensityUpsertPayloadTypeEnumMap,
-              v,
-            ),
+    $checkedCreate('_RealtimeEstimatedIntensityUpsertPayload', json, (
+      $checkedConvert,
+    ) {
+      final val = _RealtimeEstimatedIntensityUpsertPayload(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(
+            _$RealtimeEstimatedIntensityUpsertPayloadTypeEnumMap,
+            v,
           ),
-          operation: $checkedConvert(
-            'operation',
-            (v) => $enumDecode(
-              _$RealtimeEstimatedIntensityUpsertPayloadOperationEnumMap,
-              v,
-            ),
+        ),
+        operation: $checkedConvert(
+          'operation',
+          (v) => $enumDecode(
+            _$RealtimeEstimatedIntensityUpsertPayloadOperationEnumMap,
+            v,
           ),
-          eventId: $checkedConvert('event_id', (v) => v as String),
-          record: $checkedConvert(
-            'record',
-            (v) => EstimatedIntensityEvent.fromJson(v as Map<String, dynamic>),
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'eventId': 'event_id'},
-    );
+        ),
+        eventId: $checkedConvert('event_id', (v) => v as String),
+        record: $checkedConvert(
+          'record',
+          (v) => EstimatedIntensityEvent.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'eventId': 'event_id'});
 
 Map<String, dynamic> _$RealtimeEstimatedIntensityUpsertPayloadToJson(
   _RealtimeEstimatedIntensityUpsertPayload instance,

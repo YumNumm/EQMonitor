@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
@@ -247,8 +247,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                   onChanged: (v) => isPlum.value = v,
                 ),
                 _LabeledRow(
-                  label:
-                      'accuracy.epicenter（1+origin無し=レベル法 / 1+origin有り=1点）',
+                  label: 'accuracy.epicenter（1+origin無し=レベル法 / 1+origin有り=1点）',
                   child: SegmentedButton<int?>(
                     showSelectedIcon: false,
                     segments: const [
@@ -257,7 +256,8 @@ class DebugEewCardPage extends HookConsumerWidget {
                       ButtonSegment(value: 4, label: Text('4')),
                     ],
                     selected: {accuracyEpicenter.value},
-                    onSelectionChanged: (s) => accuracyEpicenter.value = s.first,
+                    onSelectionChanged: (s) =>
+                        accuracyEpicenter.value = s.first,
                   ),
                 ),
                 _LabeledRow(
@@ -570,10 +570,9 @@ class DebugEewCardPage extends HookConsumerWidget {
               ),
             ),
           ),
-          ..._kSampleEews.asMap().entries.map(
-            (e) {
-              final eew = e.value;
-              return Padding(
+          ..._kSampleEews.asMap().entries.map((e) {
+            final eew = e.value;
+            return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -607,20 +606,15 @@ class DebugEewCardPage extends HookConsumerWidget {
                         _ => '予報・通常',
                       },
                       style: _paramLabelStyle.copyWith(
-                        color:
-                            context.designSystem.colorTheme.onSurfaceVariant,
+                        color: context.designSystem.colorTheme.onSurfaceVariant,
                       ),
                     ),
                   ),
-                  EewCard(
-                    eew: eew,
-                    index: '${e.key + 1}',
-                  ),
+                  EewCard(eew: eew, index: '${e.key + 1}'),
                 ],
               ),
             );
-            },
-          ),
+          }),
         ],
       ),
     );
@@ -779,10 +773,7 @@ final _kSampleEews = <EewTelegramItem>[
     isPlum: false,
     isWarning: false,
     originTime: DateTime.utc(2024, 1, 1, 12, 3, 50),
-    hypocenter: const EewHypocenterInfo(
-      code: 's-null',
-      name: '三重県南東沖',
-    ),
+    hypocenter: const EewHypocenterInfo(code: 's-null', name: '三重県南東沖'),
     forecastIntensity: const EewForecastIntensityInfo(
       regions: [],
       maxIntensity: JmaIntensity.two,
@@ -873,10 +864,8 @@ class _ParamSection extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             child,
@@ -925,10 +914,7 @@ class _BoolRow extends StatelessWidget {
       dense: true,
       contentPadding: EdgeInsets.zero,
       title: Text(label, style: DebugEewCardPage._paramLabelStyle),
-      trailing: AppSwitch(
-        value: value,
-        onChanged: onChanged,
-      ),
+      trailing: AppSwitch(value: value, onChanged: onChanged),
       onTap: () => onChanged(!value),
     );
   }
@@ -941,10 +927,7 @@ class _SmallField extends StatelessWidget {
     this.child,
     this.hint,
     this.maxLines = 1,
-  }) : assert(
-         controller != null || child != null,
-         'controller or child',
-       );
+  }) : assert(controller != null || child != null, 'controller or child');
 
   final String label;
   final TextEditingController? controller;
@@ -960,8 +943,8 @@ class _SmallField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: DebugEewCardPage._paramLabelStyle),
-          if (child != null)
-            child!
+          if (child case final child?)
+            child
           else
             TextField(
               controller: controller,

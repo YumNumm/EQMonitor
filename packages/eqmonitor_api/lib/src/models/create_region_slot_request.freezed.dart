@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'create_region_slot_request.dart';
@@ -9,6 +9,7 @@ part of 'create_region_slot_request.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$CreateRegionSlotRequestCopyWithImpl<$Res>
 /// Create a copy of CreateRegionSlotRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,Object? eewEnabled = freezed,Object? eewMinIntensity = freezed,Object? eewOverrides = freezed,Object? earthquakeEnabled = freezed,Object? earthquakeMinIntensity = freezed,Object? earthquakeOverrides = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CreateRegionSlotRequest(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as num,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
@@ -218,7 +219,7 @@ return $default(_that.regionId,_that.regionName,_that.cityCode,_that.cityName,_t
 @JsonSerializable()
 
 class _CreateRegionSlotRequest implements CreateRegionSlotRequest {
-  const _CreateRegionSlotRequest({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(includeIfNull: false, name: 'region_name') this.regionName, @JsonKey(includeIfNull: false, name: 'city_code') this.cityCode, @JsonKey(includeIfNull: false, name: 'city_name') this.cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled') this.eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity') this.eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides') final  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled') this.earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') this.earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides') final  List<SlotOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
+  const _CreateRegionSlotRequest({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(includeIfNull: false, name: 'region_name') this.regionName, @JsonKey(includeIfNull: false, name: 'city_code') this.cityCode, @JsonKey(includeIfNull: false, name: 'city_name') this.cityName, @JsonKey(includeIfNull: false, name: 'eew_enabled') this.eewEnabled, @JsonKey(includeIfNull: false, name: 'eew_min_intensity') this.eewMinIntensity, @JsonKey(includeIfNull: false, name: 'eew_overrides')  List<SlotOverride>? eewOverrides, @JsonKey(includeIfNull: false, name: 'earthquake_enabled') this.earthquakeEnabled, @JsonKey(includeIfNull: false, name: 'earthquake_min_intensity') this.earthquakeMinIntensity, @JsonKey(includeIfNull: false, name: 'earthquake_overrides')  List<SlotOverride>? earthquakeOverrides}): _eewOverrides = eewOverrides,_earthquakeOverrides = earthquakeOverrides;
   factory _CreateRegionSlotRequest.fromJson(Map<String, dynamic> json) => _$CreateRegionSlotRequestFromJson(json);
 
 @override@JsonKey(name: 'region_id') final  num regionId;

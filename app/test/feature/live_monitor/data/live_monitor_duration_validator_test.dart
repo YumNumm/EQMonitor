@@ -2,26 +2,28 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const validator = LiveMonitorDurationValidator();
+
   test('整数3〜300だけを受理する', () {
-    expect(validateLiveMonitorDuration('3').seconds, 3);
-    expect(validateLiveMonitorDuration('300').seconds, 300);
+    expect(validator.validate('3').seconds, 3);
+    expect(validator.validate('300').seconds, 300);
     expect(
-      validateLiveMonitorDuration('').error,
+      validator.validate('').error,
       LiveMonitorDurationValidationError.empty,
     );
     expect(
-      validateLiveMonitorDuration('3.5').error,
+      validator.validate('3.5').error,
       LiveMonitorDurationValidationError.notInteger,
     );
     expect(
-      validateLiveMonitorDuration('301').error,
+      validator.validate('301').error,
       LiveMonitorDurationValidationError.outOfRange,
     );
   });
 
   test('保存中に再編集した入力は保存済み値で上書きしない', () {
     expect(
-      shouldApplyCommittedLiveMonitorDuration(
+      validator.shouldApplyCommitted(
         didCommit: true,
         hasFocus: false,
         currentRaw: '60',
@@ -32,7 +34,7 @@ void main() {
       isTrue,
     );
     expect(
-      shouldApplyCommittedLiveMonitorDuration(
+      validator.shouldApplyCommitted(
         didCommit: true,
         hasFocus: true,
         currentRaw: '60',
@@ -43,7 +45,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldApplyCommittedLiveMonitorDuration(
+      validator.shouldApplyCommitted(
         didCommit: true,
         hasFocus: false,
         currentRaw: '90',
@@ -57,7 +59,7 @@ void main() {
 
   test('保存失敗時は同じ入力でも保存済み値を反映しない', () {
     expect(
-      shouldApplyCommittedLiveMonitorDuration(
+      validator.shouldApplyCommitted(
         didCommit: false,
         hasFocus: false,
         currentRaw: '60',
@@ -71,7 +73,7 @@ void main() {
 
   test('保存に成功した世代と一致するdraftだけを破棄する', () {
     expect(
-      shouldClearLiveMonitorDurationDraft(
+      validator.shouldClearDraft(
         didCommit: true,
         currentRaw: '60',
         currentRevision: 1,
@@ -81,7 +83,7 @@ void main() {
       isTrue,
     );
     expect(
-      shouldClearLiveMonitorDurationDraft(
+      validator.shouldClearDraft(
         didCommit: false,
         currentRaw: '60',
         currentRevision: 1,
@@ -91,7 +93,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldClearLiveMonitorDurationDraft(
+      validator.shouldClearDraft(
         didCommit: true,
         currentRaw: '90',
         currentRevision: 2,
@@ -104,7 +106,7 @@ void main() {
 
   test('同じrawに戻っても古い世代の保存でdraftを破棄しない', () {
     expect(
-      shouldApplyCommittedLiveMonitorDuration(
+      validator.shouldApplyCommitted(
         didCommit: true,
         hasFocus: false,
         currentRaw: '60',
@@ -115,7 +117,7 @@ void main() {
       isFalse,
     );
     expect(
-      shouldClearLiveMonitorDurationDraft(
+      validator.shouldClearDraft(
         didCommit: true,
         currentRaw: '60',
         currentRevision: 3,

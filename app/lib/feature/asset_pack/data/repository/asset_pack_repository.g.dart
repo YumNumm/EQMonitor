@@ -57,4 +57,4 @@ final class AssetPackRepositoryProvider
 }
 
 String _$assetPackRepositoryHash() =>
-    r'9fc9acc0f42fe0b4b50f925e743658d349ec4e3f';
+    r'a4bf1e9c400b1dfe41e116f32fb7f6e629d6b1b7';

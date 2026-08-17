@@ -32,4 +32,13 @@ class EewWarningConfigNotifier extends _$EewWarningConfigNotifier {
     );
     state = AsyncData(result);
   }
+
+  void synchronizeWithGlobalToggle() {
+    state = const AsyncData(
+      EewWarningSettings(
+        target: EewWarningTarget.currentLocationOnly,
+        nationwideInterruptionLevel: null,
+      ),
+    );
+  }
 }

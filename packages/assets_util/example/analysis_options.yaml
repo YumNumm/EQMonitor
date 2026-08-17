@@ -6,6 +6,15 @@
 # invoked from the command line by running `flutter analyze`.
 
 # The following line activates the shared EQMonitor lint configuration.
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: package:eqmonitor_lints/recommended.yaml
 
 linter:

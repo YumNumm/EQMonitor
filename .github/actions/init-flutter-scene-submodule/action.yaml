@@ -1,0 +1,17 @@
+name: Init flutter_scene submodule
+description: >-
+  pub 解決に必要な public submodule third_party/flutter_scene のみを初期化する。
+
+# actions/checkout の `submodules: true` は .gitmodules に列挙された全 submodule を
+# 対象にするため、private な YumNumm/eqmonitor-backend も clone しようとして
+# GITHUB_TOKEN では `repository not found` で checkout ごと失敗する。
+# backend は pub workspace 外で Dart の依存解決には不要なので、
+# 認証不要な public fork の flutter_scene だけを個別に取得する。
+# backend を必要とするジョブ (wc-check-integration.yaml) は
+# GitHub App トークン付きの `submodules: true` を使う。
+runs:
+  using: composite
+  steps:
+    - name: Init third_party/flutter_scene
+      shell: bash
+      run: git submodule update --init --depth 1 third_party/flutter_scene

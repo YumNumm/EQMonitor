@@ -15,8 +15,10 @@ struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct ShakeDetectionContentState: Codable, Hashable {
     let eventId: String
-    /// イベント種別（backendは常に "shake_detection" を送る）
-    let type: String
+    /// イベント種別（backend は "shake_detection" を送る）。
+    /// UI では使わないため optional。必須にすると backend が欠落させた瞬間に
+    /// content-state 全体のデコードが失敗し Live Activity が表示されなくなる。
+    let type: String?
     let level: String?
     let detectedAt: String?
     let location: LocationInfo?
@@ -27,12 +29,7 @@ struct ShakeDetectionContentState: Codable, Hashable {
     }
 
     var detectedDate: Date? {
-        guard let detectedAt = detectedAt else { return nil }
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = formatter.date(from: detectedAt) { return date }
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter.date(from: detectedAt)
+        LiveActivityDate.parse(detectedAt)
     }
 }
 

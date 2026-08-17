@@ -5,8 +5,9 @@ import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// MapLibre の source/layer 操作を直列化して実行するスケジューラ。
-typedef MapOperationScheduler =
-    Future<void> Function(Future<void> Function() operation);
+typedef MapOperationScheduler = Future<void> Function(
+  Future<void> Function() operation,
+);
 
 /// MapLibre の source/layer の追加・削除を直列化して実行するためのフック。
 ///
@@ -51,6 +52,9 @@ typedef MapOperationScheduler =
 ///   };
 /// }, [style, ...keys]);
 /// ```
+// flutter_hooks の Hook はトップレベル関数として定義する規約であり、
+// クラスのメソッドにすると Hook の登録順序が壊れて動作しない。
+// ignore: eqmonitor_lints_plugin/avoid_top_level_functions
 MapOperationScheduler useMapOperationQueue() {
   final context = useContext();
   final sharedQueueRef = useRef<MapOperationQueue?>(null);

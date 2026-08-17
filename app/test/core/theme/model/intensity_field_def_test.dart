@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/intensity_field_def.dart';
 import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

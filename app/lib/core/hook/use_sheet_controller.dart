@@ -2,6 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
+// flutter_hooks の Hook はトップレベル関数として定義する規約であり、
+// クラスのメソッドにすると Hook の登録順序が壊れて動作しない。
+// ignore: eqmonitor_lints_plugin/avoid_top_level_functions
 SheetController useSheetController({
   String debugLabel = 'useSheetController',
 }) => use(_UseSheetControllerHook(debugLabel: debugLabel));
