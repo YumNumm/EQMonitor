@@ -5,7 +5,7 @@ part 'telemetry_database.g.dart';
 
 @DriftDatabase(tables: [TelemetryEvents])
 class TelemetryDatabase extends _$TelemetryDatabase {
-  TelemetryDatabase(super.e);
+  new(super.e);
 
   @override
   int get schemaVersion => 1;

@@ -5,7 +5,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 
 final class SeismicityPmTilesContentRangeValidator {
-  const SeismicityPmTilesContentRangeValidator();
+  const new();
 
   Uint8List validate({
     required Headers headers,

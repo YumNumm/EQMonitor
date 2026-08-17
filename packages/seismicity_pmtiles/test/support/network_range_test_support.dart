@@ -71,7 +71,7 @@ final class NetworkRangeTestAdapter implements HttpClientAdapter {
 }
 
 final class PoisonFirstResponseCoordinator {
-  PoisonFirstResponseCoordinator({
+  new({
     required this.peerRange,
     required this.poisonRange,
   });
@@ -106,7 +106,7 @@ final class PoisonFirstResponseCoordinator {
 }
 
 final class StaticNetworkRangeReply implements NetworkRangeReply {
-  const StaticNetworkRangeReply({
+  const new({
     required this.statusCode,
     required this.body,
     required this.etagValues,
@@ -135,7 +135,7 @@ final class StaticNetworkRangeReply implements NetworkRangeReply {
 }
 
 final class FailingNetworkRangeReply implements NetworkRangeReply {
-  const FailingNetworkRangeReply({required this.statusCode});
+  const new({required this.statusCode});
 
   final int? statusCode;
 
@@ -160,7 +160,7 @@ final class FailingNetworkRangeReply implements NetworkRangeReply {
 }
 
 final class PendingRangeResponse implements NetworkRangeReply {
-  PendingRangeResponse({
+  new({
     required this.offset,
     required this.total,
     required this.etag,

@@ -1,21 +1,21 @@
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
 extension type SeismicityFixtureScalar._(VectorTile_Value raw) {
-  SeismicityFixtureScalar.string(String value)
+  new string(String value)
     : this._(createVectorTileValue(stringValue: value));
-  SeismicityFixtureScalar.float(double value)
+  new float(double value)
     : this._(createVectorTileValue(floatValue: value));
-  SeismicityFixtureScalar.double(double value)
+  new double(double value)
     : this._(createVectorTileValue(doubleValue: value));
-  SeismicityFixtureScalar.signed(String value)
+  new signed(String value)
     : this._(VectorTile_Value.fromJson('{"4":"$value"}'));
-  SeismicityFixtureScalar.unsigned(String value)
+  new unsigned(String value)
     : this._(VectorTile_Value.fromJson('{"5":"$value"}'));
-  SeismicityFixtureScalar.zigZagSigned(String value)
+  new zigZagSigned(String value)
     : this._(VectorTile_Value.fromJson('{"6":"$value"}'));
-  SeismicityFixtureScalar.boolean({required bool value})
+  new boolean({required bool value})
     : this._(createVectorTileValue(boolValue: value));
-  SeismicityFixtureScalar.multiple({
+  new multiple({
     required SeismicityFixtureScalar first,
     required SeismicityFixtureScalar second,
   }) : this._(first.raw.deepCopy()..mergeFromMessage(second.raw));

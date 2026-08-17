@@ -5,7 +5,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_decoder_worker_factory
 
 final class ControlledSeismicityDecoderWorkerFactory
     implements SeismicityDecoderWorkerFactory {
-  ControlledSeismicityDecoderWorkerFactory({required this.handle});
+  new({required this.handle});
 
   final SeismicityDecoderWorkerHandle handle;
   final _spawn = Completer<SeismicityDecoderWorkerHandle>();

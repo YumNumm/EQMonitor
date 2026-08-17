@@ -13,7 +13,7 @@ final class ControlledSeismicityIsolateLauncher
         SeismicityDecoderIsolateLauncher,
         SeismicityDecoderWorkerEndpoint,
         SeismicityWorkerTerminalProbe {
-  ControlledSeismicityIsolateLauncher() : deferExitedUntilReleased = false;
+  new() : deferExitedUntilReleased = false;
 
   final _responses =
       StreamController<SeismicityDecoderWorkerResponse>.broadcast();

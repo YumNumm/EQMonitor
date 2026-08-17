@@ -348,7 +348,7 @@ List<int> _varint(int value) {
 }
 
 final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
-  TrackingRandomAccessReader({required this.bytes});
+  new({required this.bytes});
 
   final Uint8List bytes;
   var _closeCalls = 0;
@@ -383,7 +383,7 @@ final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
 }
 
 final class FailingOpenReader implements PmTilesRandomAccessReader {
-  FailingOpenReader({
+  new({
     required this.bytes,
     this.readFailure,
     this.readFailureStack,
