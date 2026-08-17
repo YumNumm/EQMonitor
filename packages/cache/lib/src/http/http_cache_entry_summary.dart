@@ -1,5 +1,5 @@
 class HttpCacheEntrySummary {
-  const HttpCacheEntrySummary({
+  const new({
     required this.key,
     required this.statusCode,
     required this.eTag,

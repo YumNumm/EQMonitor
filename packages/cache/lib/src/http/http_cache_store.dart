@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 
 class HttpCacheStore {
-  HttpCacheStore({
+  new({
     required this.db,
     required this.schemaVersion,
     required this.appBuild,

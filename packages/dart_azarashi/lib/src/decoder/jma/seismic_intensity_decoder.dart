@@ -8,7 +8,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Seismic Intensity Decoder.
 class SeismicIntensityDecoder {
-  const SeismicIntensityDecoder._();
+  const new _();
 
   static QzssDcReport decode(JmaCommonParams params) {
     final message = params.message;

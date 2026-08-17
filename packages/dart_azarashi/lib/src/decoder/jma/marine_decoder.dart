@@ -9,7 +9,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 ///
 /// Decodes JMA Marine information messages.
 class MarineDecoder {
-  const MarineDecoder._();
+  const new _();
 
   /// Decodes a Marine message.
   static QzssDcReport decode(JmaCommonParams params) {
