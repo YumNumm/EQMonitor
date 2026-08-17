@@ -4,7 +4,7 @@ enum RevenueCatUnavailableReason {
 }
 
 final class RevenueCatUnavailableException implements Exception {
-  const RevenueCatUnavailableException({required this.reason});
+  const new({required this.reason});
 
   final RevenueCatUnavailableReason reason;
 

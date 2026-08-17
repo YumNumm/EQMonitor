@@ -8,7 +8,7 @@ part 'shake_detection_event.freezed.dart';
 
 @Freezed()
 abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
-  const factory ShakeDetectionEvent({
+  const factory({
     required String eventId,
     required int serialNo,
     required DateTime createdAt,

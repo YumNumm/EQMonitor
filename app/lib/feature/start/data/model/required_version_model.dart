@@ -5,7 +5,7 @@ part 'required_version_model.freezed.dart';
 
 @freezed
 abstract class RequiredVersionModel with _$RequiredVersionModel {
-  const factory RequiredVersionModel({
+  const factory({
     String? version,
     int? buildNumber,
     String? message,
