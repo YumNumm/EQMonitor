@@ -34,7 +34,7 @@ extension TestNotificationKindDisplay on TestNotificationKind {
   String get displayLabel => switch (this) {
     .silent => 'サイレント',
     .normal => '通常',
-    .critical => 'クリティカル',
+    .critical => '重大な通知',
   };
 }
 
