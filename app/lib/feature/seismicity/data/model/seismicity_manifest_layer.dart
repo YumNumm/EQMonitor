@@ -6,7 +6,7 @@ part 'seismicity_manifest_layer.g.dart';
 
 @freezed
 abstract class SeismicityManifestLayer with _$SeismicityManifestLayer {
-  const factory SeismicityManifestLayer({
+  const factory({
     required String type,
     required SeismicitySpan span,
     required String url,
@@ -14,6 +14,6 @@ abstract class SeismicityManifestLayer with _$SeismicityManifestLayer {
     required int count,
   }) = _SeismicityManifestLayer;
 
-  factory SeismicityManifestLayer.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$SeismicityManifestLayerFromJson(json);
 }

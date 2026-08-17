@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AssetPackDebugPage extends ConsumerWidget {
-  const AssetPackDebugPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +51,7 @@ class AssetPackDebugPage extends ConsumerWidget {
 }
 
 class _AssetPackDebugContent extends StatelessWidget {
-  const _AssetPackDebugContent({required this.info});
+  const new({required this.info});
 
   final AssetPackDebugInfo info;
 
@@ -136,7 +136,7 @@ class _AssetPackDebugContent extends StatelessWidget {
 }
 
 class _AssetTile extends StatelessWidget {
-  const _AssetTile({required this.status});
+  const new({required this.status});
 
   final AssetPackAssetFileStatus status;
 
@@ -195,7 +195,7 @@ class _AssetTile extends StatelessWidget {
 }
 
 class _CopyableTile extends StatelessWidget {
-  const _CopyableTile({required this.title, required this.value});
+  const new({required this.title, required this.value});
 
   final String title;
   final String value;

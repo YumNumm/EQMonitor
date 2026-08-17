@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// 回数積算図(上段、LineChart)と日別ヒストグラム(下段、BarChart)の併記。
 class SeismicityCumulativeHistogramChart extends StatelessWidget {
-  const SeismicityCumulativeHistogramChart({required this.events, super.key});
+  const new({required this.events, super.key});
 
   final List<SeismicityEvent> events;
 

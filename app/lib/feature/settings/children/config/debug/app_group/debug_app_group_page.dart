@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugAppGroupPage extends HookConsumerWidget {
-  const DebugAppGroupPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class DebugAppGroupPage extends HookConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.values, required this.action});
+  const new({required this.values, required this.action});
 
   final AppGroupValues values;
   final DebugAppGroupAction action;
@@ -85,7 +85,7 @@ class _Body extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.title);
+  const new(this.title);
 
   final String title;
 
