@@ -2,15 +2,13 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EewHistoryListTile extends StatelessWidget {
-  const EewHistoryListTile({
+  const new({
     required this.item,
     this.onTap,
     this.visualDensity,
@@ -32,19 +30,18 @@ class EewHistoryListTile extends StatelessWidget {
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final time = item.originTime ?? item.reportTime;
     final depth = hypocenter?.depth;
-    final subTitle =
-        '${dateFormatter.format(time.toLocal())}発生 '
-        '${depth != null ? '深さ ${depth}km' : ''}';
+    final magnitude = hypocenter?.magnitude;
+    final subtitleParts = [
+      '${dateFormatter.format(time.toLocal())}発生',
+      if (depth != null) '深さ ${depth}km',
+      if (magnitude != null) 'M${magnitude.toStringAsFixed(1)}',
+    ];
+    final reportLabel = '#${item.serialNo}${item.isLastInfo ? ' (最終)' : ''}';
 
     final intensityColors = context.designSystem.colorTheme.intensity;
     final maxIntensityColor = maxIntensity != null
         ? intensityColors.fromJmaIntensity(maxIntensity).background
         : null;
-
-    final magnitude = switch (hypocenter?.magnitude) {
-      final magnitudeValue? => EarthquakeMagnitude.value(value: magnitudeValue),
-      null => null,
-    };
 
     return ListTile(
       visualDensity: visualDensity,
@@ -83,14 +80,20 @@ class EewHistoryListTile extends StatelessWidget {
         ],
       ),
       subtitle: Text(
-        subTitle,
+        subtitleParts.join(' '),
         style: const TextStyle(
           fontFamily: FontFamily.googleSansCode,
           fontFamilyFallback: [FontFamily.notoSansJP],
           letterSpacing: -0.2,
         ),
       ),
-      trailing: MagnitudeText(magnitude: magnitude),
+      trailing: Text(
+        reportLabel,
+        style: theme.textTheme.labelLarge?.copyWith(
+          fontFamily: FontFamily.googleSansCode,
+          fontFamilyFallback: const [FontFamily.notoSansJP],
+        ),
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ final class TelegramDetailsProvider
   }
 }
 
-String _$telegramDetailsHash() => r'86a12b55d0171a7edd486188464be69259933833';
+String _$telegramDetailsHash() => r'06dc56f071844f39caf8e2297237a84e7864799a';
 
 final class TelegramDetailsFamily extends $Family
     with
