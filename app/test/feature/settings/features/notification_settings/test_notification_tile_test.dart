@@ -5,12 +5,13 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_sheet.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('タップするとAppSheetRouteでテスト通知Sheetを表示する', (tester) async {
@@ -102,14 +103,16 @@ void main() {
 }
 
 class _TestNotificationApp extends StatelessWidget {
-  const _TestNotificationApp({required this.repository});
+  const new({required this.repository});
 
   final PushNotificationRepository repository;
 
   @override
   Widget build(BuildContext context) {
     final theme = ThemeData.light().copyWith(
-      extensions: [DesignSystemThemeExtension.light()],
+      extensions: <ThemeExtension<dynamic>>[
+        DesignSystemThemeExtension.light(),
+      ],
     );
 
     return ProviderScope(

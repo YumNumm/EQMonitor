@@ -1,10 +1,10 @@
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TestNotificationSheet extends HookWidget {
-  const TestNotificationSheet({required this.onPressed, super.key});
+  const new({required this.onPressed, super.key});
 
   final Future<void> Function(
     TestNotificationKind kind,
