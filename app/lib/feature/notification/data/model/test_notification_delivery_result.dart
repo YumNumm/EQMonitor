@@ -6,7 +6,7 @@ part 'test_notification_delivery_result.freezed.dart';
 @freezed
 abstract class TestNotificationDeliveryResult
     with _$TestNotificationDeliveryResult {
-  const factory TestNotificationDeliveryResult({
+  const factory({
     required String message,
     required TestNotificationFramework framework,
   }) = _TestNotificationDeliveryResult;

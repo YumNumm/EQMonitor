@@ -10,7 +10,7 @@ part 'parameter_set.freezed.dart';
 
 @freezed
 abstract class ParameterSet with _$ParameterSet {
-  const factory ParameterSet({
+  const factory({
     /// Asset Pack の `manifest.json`（地図アセットも含む）。パラメータ固有のメタ
     /// データが必要な場合は `manifest.findAsset(...)` を利用する。
     required AssetPackManifest manifest,

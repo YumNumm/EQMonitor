@@ -7,7 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 class EarthquakeParameterPrefectureItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterPrefectureItem, Map<String, dynamic>> {
-  const EarthquakeParameterPrefectureItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterPrefectureItem fromJson(Map<String, dynamic> json) =>
@@ -31,7 +31,7 @@ class EarthquakeParameterPrefectureItemJsonConverter
 class EarthquakeParameterRegionItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterRegionItem, Map<String, dynamic>> {
-  const EarthquakeParameterRegionItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterRegionItem fromJson(Map<String, dynamic> json) =>
@@ -56,7 +56,7 @@ class EarthquakeParameterRegionItemJsonConverter
 class EarthquakeParameterCityItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterCityItem, Map<String, dynamic>> {
-  const EarthquakeParameterCityItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterCityItem fromJson(Map<String, dynamic> json) =>
@@ -80,7 +80,7 @@ class EarthquakeParameterCityItemJsonConverter
 class EarthquakeParameterStationItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterStationItem, Map<String, dynamic>> {
-  const EarthquakeParameterStationItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterStationItem fromJson(Map<String, dynamic> json) =>
@@ -112,7 +112,7 @@ class EarthquakeParameterStationItemJsonConverter
 
 /// EarthquakeParameter 系モデルの JSON 変換で共通利用する小さな変換ロジックを集約する。
 class EarthquakeParameterJsonFieldConverter {
-  const EarthquakeParameterJsonFieldConverter._();
+  const new _();
 
   static Map<String, dynamic> localizedNameToJson(LocalizedName name) => {
     'ja': name.ja,

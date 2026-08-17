@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _OnboardingStepPage extends StatelessWidget {
-  const _OnboardingStepPage({required this.step, required this.navigation});
+  const new({required this.step, required this.navigation});
 
   final _OnboardingStep step;
   final _OnboardingStepNavigation navigation;
