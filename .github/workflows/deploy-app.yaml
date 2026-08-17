@@ -384,6 +384,15 @@ jobs:
           path: app/adhoc/EQMonitor.ipa
           if-no-files-found: error
 
+      # クラッシュログのシンボリケート用に dSYM を保存する
+      # https://github.com/actions/upload-artifact
+      - name: Upload dSYMs as artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-ios-dSYMs
+          path: app/build/ios/Runner.xcarchive/dSYMs
+          if-no-files-found: error
+
   deploy-ios:
     name: Deploy iOS (App Store Connect)
     needs:
@@ -682,6 +691,18 @@ jobs:
         with:
           name: EQMonitor-android.aab
           path: app/build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+      # クラッシュログのシンボリケート用に R8 mapping を保存する。
+      # native debug symbols (.sym) と proguard.map は debugSymbolLevel の設定により
+      # AAB の BUNDLE-METADATA へ埋め込まれるため、AAB artifact 自体に同梱される。
+      # (gradle の build dir は root の app/build へリダイレクトされている)
+      # https://github.com/actions/upload-artifact
+      - name: Upload debug symbols as artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: EQMonitor-android-debug-symbols
+          path: app/build/app/outputs/mapping/release/mapping.txt
           if-no-files-found: error
 
   deploy-android-firebase-app-distribution:

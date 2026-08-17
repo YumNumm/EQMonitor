@@ -101,6 +101,10 @@ android {
             )
             multiDexEnabled = true
             resValue("string", "app_name", "EQMonitor")
+            // クラッシュログのシンボリケート用に native-debug-symbols.zip を生成する
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
         getByName("debug") {
             versionNameSuffix = ".d"
