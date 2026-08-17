@@ -8,7 +8,7 @@ part 'kmoni_observation_point.freezed.dart';
 @freezed
 abstract class AnalyzedKmoniObservationPoint
     with _$AnalyzedKmoniObservationPoint {
-  const factory AnalyzedKmoniObservationPoint({
+  const factory({
     required KyoshinObservationPoint point,
     double? intensityValue,
     @ColorJsonConverter() Color? intensityColor,

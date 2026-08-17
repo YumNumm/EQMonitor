@@ -17,7 +17,7 @@ AppCheckInterceptor appCheckInterceptor(Ref ref) {
 }
 
 class AppCheckInterceptor extends Interceptor {
-  AppCheckInterceptor({
+  new({
     required AppCheckTokenGetter getToken,
     required AppCheckTokenGetter getLimitedUseToken,
   }) : _getToken = getToken,
