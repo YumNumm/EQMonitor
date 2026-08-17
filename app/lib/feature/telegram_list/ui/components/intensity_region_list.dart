@@ -96,7 +96,7 @@ class _IntensityRow extends StatelessWidget {
 }
 
 class _PrefectureRegionList extends StatelessWidget {
-  const _PrefectureRegionList({
+  const new({
     required this.entries,
     required this.prefectureMap,
   });
@@ -129,7 +129,7 @@ class _PrefectureRegionList extends StatelessWidget {
 }
 
 class _PrefectureRegionRow extends StatelessWidget {
-  const _PrefectureRegionRow({
+  const new({
     required this.prefectureName,
     required this.entries,
   });
