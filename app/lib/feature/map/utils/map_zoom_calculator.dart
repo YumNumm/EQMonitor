@@ -28,7 +28,7 @@ class JapanBounds {
 }
 
 class MapZoomCalculator {
-  const MapZoomCalculator();
+  const new();
 
   /// 日本全国が映るMapOptionsを計算する
   MapOptions japanViewMapOptions({

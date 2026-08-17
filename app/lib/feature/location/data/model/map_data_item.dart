@@ -4,7 +4,7 @@ part 'map_data_item.freezed.dart';
 
 @freezed
 abstract class MapDataLatLng with _$MapDataLatLng {
-  const factory MapDataLatLng({
+  const factory({
     required double lat,
     required double lng,
   }) = _MapDataLatLng;
@@ -12,7 +12,7 @@ abstract class MapDataLatLng with _$MapDataLatLng {
 
 @freezed
 abstract class MapDataBounds with _$MapDataBounds {
-  const factory MapDataBounds({
+  const factory({
     required MapDataLatLng southWest,
     required MapDataLatLng northEast,
   }) = _MapDataBounds;
@@ -20,7 +20,7 @@ abstract class MapDataBounds with _$MapDataBounds {
 
 @freezed
 abstract class MapDataProperty with _$MapDataProperty {
-  const factory MapDataProperty({
+  const factory({
     required String code,
     required String name,
     required String nameKana,
@@ -32,7 +32,7 @@ abstract class MapDataProperty with _$MapDataProperty {
 /// 津波予報区の場合のみ [distanceToCoastlineKm] が設定される。
 @freezed
 abstract class MapDataItem with _$MapDataItem {
-  const factory MapDataItem({
+  const factory({
     MapDataBounds? bounds,
     MapDataProperty? property,
     MapDataLatLng? polylabel,

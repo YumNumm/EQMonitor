@@ -5,12 +5,12 @@ part 'map_configuration.g.dart';
 
 @freezed
 abstract class MapConfiguration with _$MapConfiguration {
-  const factory MapConfiguration({
+  const factory({
     required MapTheme theme,
     String? styleString,
   }) = _MapConfiguration;
 
-  factory MapConfiguration.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MapConfigurationFromJson(json);
 }
 

@@ -9,7 +9,7 @@ part 'camera_position.g.dart';
 /// マップのカメラ位置を表すモデル
 @freezed
 abstract class MapCameraPosition with _$MapCameraPosition {
-  const factory MapCameraPosition({
+  const factory({
     /// カメラの中心座標
     required LatLng target,
 
@@ -24,9 +24,9 @@ abstract class MapCameraPosition with _$MapCameraPosition {
   }) = _MapCameraPosition;
 
   /// MapLibreのCameraPositionに変換
-  const MapCameraPosition._();
+  const new _();
 
-  factory MapCameraPosition.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MapCameraPositionFromJson(json);
 
   /// 指定された緯度経度矩形が画面に収まるカメラ位置を計算する
@@ -36,7 +36,7 @@ abstract class MapCameraPosition with _$MapCameraPosition {
   /// [padding] 画面の端から境界までのパディング（ピクセル）
   /// [tileSize] タイルサイズ（通常は256または512）
   /// [return] 適切なカメラ位置
-  factory MapCameraPosition.fitBounds({
+  factory fitBounds({
     required double screenWidth,
     required double screenHeight,
     required ({double minLat, double minLng, double maxLat, double maxLng})

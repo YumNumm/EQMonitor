@@ -17,7 +17,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class AquaCatalogPage extends HookConsumerWidget {
-  const AquaCatalogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class AquaCatalogPage extends HookConsumerWidget {
 }
 
 class _AquaCatalogList extends HookConsumerWidget {
-  const _AquaCatalogList({required this.selectedMonth});
+  const new({required this.selectedMonth});
 
   final Month? selectedMonth;
 
@@ -144,7 +144,7 @@ class _AquaCatalogList extends HookConsumerWidget {
 }
 
 class _AquaCatalogSkeleton extends StatelessWidget {
-  const _AquaCatalogSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ class _AquaCatalogSkeleton extends StatelessWidget {
 }
 
 class _MonthSelector extends StatelessWidget {
-  const _MonthSelector({
+  const new({
     required this.selectedMonth,
     required this.onMonthChanged,
   });
@@ -223,7 +223,7 @@ class _MonthSelector extends StatelessWidget {
 }
 
 class _MonthPickerDialog extends HookWidget {
-  const _MonthPickerDialog({required this.initialMonth});
+  const new({required this.initialMonth});
 
   final Month? initialMonth;
 
@@ -312,7 +312,7 @@ class _MonthPickerDialog extends HookWidget {
 }
 
 class _EventCard extends HookWidget {
-  const _EventCard({required this.event});
+  const new({required this.event});
 
   final AquaEvent event;
 
