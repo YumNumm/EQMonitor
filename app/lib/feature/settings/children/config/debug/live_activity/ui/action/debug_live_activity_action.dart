@@ -14,7 +14,7 @@ final debugLiveActivityActionProvider = Provider<DebugLiveActivityAction>(
 ///
 /// JSON の検証 → ネイティブ操作 → SnackBar 表示までを担う。
 class DebugLiveActivityAction {
-  const DebugLiveActivityAction();
+  const new();
 
   /// Live Activity を開始する。成功時のみ [DebugLiveActivitySession] を返す。
   Future<DebugLiveActivitySession?> start({

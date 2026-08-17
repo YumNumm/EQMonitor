@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationDebugPage extends StatelessWidget {
-  const NavigationDebugPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class NavigationDebugPage extends StatelessWidget {
 }
 
 class _RouteDropdownMenu extends HookWidget {
-  const _RouteDropdownMenu();
+  const new();
 
   @override
   Widget build(BuildContext context) {

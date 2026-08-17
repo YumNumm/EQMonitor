@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/d
 /// `activityId` は iOS の `Activity.id`（開始時にネイティブが払い出す）。
 /// 更新・終了時に同じ ID を指定する。
 class DebugLiveActivitySession {
-  const DebugLiveActivitySession({
+  const new({
     required this.activityId,
     required this.kind,
     required this.eventId,

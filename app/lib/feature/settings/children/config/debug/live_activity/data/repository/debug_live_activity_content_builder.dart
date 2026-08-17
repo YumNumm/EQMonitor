@@ -17,7 +17,7 @@ final debugLiveActivityContentBuilderProvider =
 /// (`EewContentState` / `ShakeDetectionContentState` / `LocationInfo`) の
 /// プロパティ名と一致させる（デフォルトの CodingKeys = プロパティ名）。
 class DebugLiveActivityContentBuilder {
-  const DebugLiveActivityContentBuilder();
+  const new();
 
   // --- EEW: プリセット ---
 

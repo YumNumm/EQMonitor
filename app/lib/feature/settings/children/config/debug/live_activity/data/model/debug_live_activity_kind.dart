@@ -6,7 +6,7 @@ enum DebugLiveActivityKind {
   eew('eew', 'EEW（緊急地震速報）'),
   shakeDetection('shake_detection', '揺れ検知');
 
-  const DebugLiveActivityKind(this.wireName, this.label);
+  new(this.wireName, this.label);
 
   /// MethodChannel / ContentState `type` フィールドで使用する識別子。
   final String wireName;
