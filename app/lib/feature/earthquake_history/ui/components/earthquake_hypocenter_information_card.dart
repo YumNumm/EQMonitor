@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_su
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHypocenterInformationCard extends StatelessWidget {
-  const EarthquakeHypocenterInformationCard({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 

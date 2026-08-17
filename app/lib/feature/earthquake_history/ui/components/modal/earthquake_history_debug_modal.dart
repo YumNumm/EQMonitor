@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDebugModal extends ConsumerWidget {
-  const EarthquakeHistoryDebugModal({super.key});
+  const new({super.key});
 
   static Future<void> show({required BuildContext context}) =>
       showModalBottomSheet(

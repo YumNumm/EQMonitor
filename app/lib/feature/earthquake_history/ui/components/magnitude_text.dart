@@ -18,7 +18,7 @@ enum MagnitudeTextVariant {
 ///
 /// [variant] により表示の粒度を切り替える。
 class MagnitudeText extends StatelessWidget {
-  const MagnitudeText({
+  const new({
     required this.magnitude,
     this.variant = MagnitudeTextVariant.compact,
     this.color,

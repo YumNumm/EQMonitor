@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeLpgmIntensityCard extends StatelessWidget {
-  const EarthquakeLpgmIntensityCard({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 

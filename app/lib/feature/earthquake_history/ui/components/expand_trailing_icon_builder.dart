@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// 展開可能なタイルの末尾に表示する開閉アイコンを組み立てる。
 class ExpandTrailingIconBuilder {
-  const ExpandTrailingIconBuilder();
+  const new();
 
   Widget? build({required bool hasChildren, required bool isExpanded}) {
     if (!hasChildren) {

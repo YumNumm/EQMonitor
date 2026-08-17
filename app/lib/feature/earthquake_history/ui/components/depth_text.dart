@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// `深さ`ラベルと値を分けて大きく見せる表示。詳細カードなどの強調用途。
 class DepthText extends StatelessWidget {
-  const DepthText({required this.depth, super.key});
+  const new({required this.depth, super.key});
 
   final EarthquakeDepth? depth;
 
