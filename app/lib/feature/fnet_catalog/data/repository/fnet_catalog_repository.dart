@@ -9,7 +9,7 @@ FnetCatalogRepository fnetCatalogRepository(Ref ref) =>
     FnetCatalogRepository(client: ref.watch(niedApiClientProvider));
 
 class FnetCatalogRepository {
-  FnetCatalogRepository({required NiedApiClient client}) : _client = client;
+  new({required NiedApiClient client}) : _client = client;
 
   final NiedApiClient _client;
 

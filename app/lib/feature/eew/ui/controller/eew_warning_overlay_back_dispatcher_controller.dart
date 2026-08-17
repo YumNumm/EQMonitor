@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class EewWarningOverlayBackDispatcherController {
-  EewWarningOverlayBackDispatcherController({
+  new({
     required BackButtonDispatcher parent,
     required Future<void> Function() onFullscreenBack,
   }) : _parent = parent,

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_display_model.dart';
 
 class EewWarningOverlayLabelFormatter {
-  const EewWarningOverlayLabelFormatter();
+  const new();
 
   String bannerLabel({
     required EewWarningOverlaySource source,

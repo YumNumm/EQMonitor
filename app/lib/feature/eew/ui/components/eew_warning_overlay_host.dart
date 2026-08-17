@@ -11,7 +11,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EewWarningOverlayHost extends HookConsumerWidget {
-  const EewWarningOverlayHost({
+  const new({
     required this.child,
     required this.backButtonDispatcher,
     super.key,
