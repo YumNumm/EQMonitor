@@ -258,9 +258,9 @@ void main() {
       final recoveredCall = repository.callEvents.stream.firstWhere(
         (call) => call.token == 'recovered-token',
       );
-      final provisioningNotifier =
-          container.read(deviceProvisioningProvider.notifier)
-              as _FailingThenRecoverableProvisioningNotifier;
+      final provisioningNotifier = container.read(
+        deviceProvisioningProvider.notifier,
+      ) as _FailingThenRecoverableProvisioningNotifier;
       provisioningNotifier.recover();
       await wiringRecomputed.future.timeout(const Duration(seconds: 5));
       tokens.add(const NotificationToken(fcmToken: 'recovered-token'));

@@ -15,7 +15,7 @@ abstract interface class ApnsTokenCallbackDataSource {
 
 final class EventChannelApnsTokenCallbackDataSource
     implements ApnsTokenCallbackDataSource {
-  const EventChannelApnsTokenCallbackDataSource(this._channel);
+  const new(this._channel);
 
   final EventChannel _channel;
 

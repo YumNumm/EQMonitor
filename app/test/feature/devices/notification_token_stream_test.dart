@@ -265,7 +265,7 @@ createHarness({
 }
 
 class _FakeApnsTokenCallbackDataSource implements ApnsTokenCallbackDataSource {
-  _FakeApnsTokenCallbackDataSource(this._tokens);
+  new(this._tokens);
 
   final Stream<String> _tokens;
   var readCount = 0;
@@ -284,7 +284,7 @@ class _FakeApnsTokenCallbackDataSource implements ApnsTokenCallbackDataSource {
 
 final class _ReplayingApnsTokenCallbackDataSource
     extends _FakeApnsTokenCallbackDataSource {
-  _ReplayingApnsTokenCallbackDataSource() : super(const Stream.empty());
+  new() : super(const Stream.empty());
 
   final _updates = StreamController<String>.broadcast();
   String? _latestToken;
@@ -311,7 +311,7 @@ final class _ReplayingApnsTokenCallbackDataSource
 }
 
 final class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  _FakeFirebaseMessaging({
+  new({
     required this.initialApnsToken,
     this.initialApnsTokenFuture,
     required this.fcmRefreshes,
