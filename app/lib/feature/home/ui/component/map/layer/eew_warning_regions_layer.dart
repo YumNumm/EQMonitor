@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
+import 'package:eqmonitor/feature/eew/data/logic/eew_warning_area_selector.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 警報発表区域の塗りつぶし（府県予報区 `eqmonitor_map`）
 class EewWarningRegionsLayer extends HookConsumerWidget {
-  const EewWarningRegionsLayer({required this.eews, super.key});
+  const new({required this.eews, super.key});
 
   final List<EewTelegramItem> eews;
 
@@ -20,22 +21,12 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
+    final warningAreaSelector = ref.watch(eewWarningAreaSelectorProvider);
 
-    final codes = useMemoized(() {
-      final out = <String>{};
-      for (final e in eews) {
-        final zones = e.warning?.regions;
-        if (zones == null) {
-          continue;
-        }
-        for (final z in zones) {
-          if (z.hadWarning) {
-            out.add(z.code);
-          }
-        }
-      }
-      return out.toList();
-    }, [eews]);
+    final codes = useMemoized(
+      () => warningAreaSelector.selectPrefectureCodes(events: eews),
+      [warningAreaSelector, eews],
+    );
 
     final isInitialized = useRef(false);
     final latestCodes = useRef<List<String>>(codes);

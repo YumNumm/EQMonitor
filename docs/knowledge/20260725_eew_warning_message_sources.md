@@ -49,13 +49,28 @@ resolver の代表的な期待値は
 - 完成した通知文字列を空白や語尾で分割しない
 - backend の短縮震源名 `hypocenterReduceName` と警報地域 `warningZones` から UI 用モデルを作る
 - アプリでは短縮震源名を `hypocenter?.detailedName ?? hypocenter?.name`、警報地域を
-  `warning.zones.where((e) => e.hadWarning)` から得る
+  現在報の `warning.zones` 全件から得る
 - 警報地域は半角スペース区切りでまとめ、「で強い揺れ」は末尾に1回だけ付ける
 - アプリモデルにない backend の `isLevel` 相当は
   `accuracy?.epicenter == 1 && originTime == null` から導出する
 - `isPlum` / `isLevel` 相当または震源不明時は、推定できない震源名を主見出しにしない
 - `isWarning`、現在地の予想最大震度、到達情報は構造化フィールドから判定する
 - overlay では情報不足時に内容を捏造せず、独自の最終 fallback を `強い揺れに警戒` とする
+
+## 2026-08-17 追記: 現在警報と区域コード
+
+- `hadWarning` は現在報の警報状態ではなく、DMData の
+  `kind.lastKind.code == '31'`、つまり前回報ですでに警報だったかを示す。
+- 初回警報と後続報で新たに追加された区域は `hadWarning == false` になり得るため、
+  現在警報の抽出条件に使わない。
+- `areaForecastLocalEew` は `warning.prefectures`（90xx）と対応する。
+- `areaForecastLocalE` は `warning.regions`（3桁）および
+  `forecastIntensity.regions` と対応する。
+- 現在警報は `isWarning == true && !isCanceled` と現在報の警報配列で判定する。
+
+詳細は
+[`2026-08-17-eew-warning-area-mapping-design.md`](../superpowers/specs/2026-08-17-eew-warning-area-mapping-design.md)
+を参照する。
 
 ## backend 経路
 

@@ -18,7 +18,7 @@ EewWarningDisplayModelBuilder eewWarningDisplayModelBuilder(Ref ref) =>
     );
 
 class EewWarningDisplayModelBuilder {
-  EewWarningDisplayModelBuilder({
+  new({
     EewWarningArrivalClassifier? arrivalClassifier,
     EewWarningRepresentativeSelector? representativeSelector,
   }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier(),
@@ -50,9 +50,7 @@ class EewWarningDisplayModelBuilder {
     for (final candidate in sortedCandidates) {
       for (final zone
           in candidate.event.warning?.zones ?? const <EewWarningZoneInfo>[]) {
-        if (zone.hadWarning) {
-          zoneNamesByCode.putIfAbsent(zone.code, () => zone.name);
-        }
+        zoneNamesByCode.putIfAbsent(zone.code, () => zone.name);
       }
     }
     final zoneCodes = zoneNamesByCode.keys.toList()..sort();

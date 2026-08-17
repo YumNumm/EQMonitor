@@ -18,7 +18,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class _StubEewAliveTelegram extends EewAliveTelegram {
-  _StubEewAliveTelegram(this.value);
+  new(this.value);
 
   final List<EewTelegramItem>? value;
 
@@ -27,7 +27,7 @@ class _StubEewAliveTelegram extends EewAliveTelegram {
 }
 
 class _StubEewWarningOverlayEnabled extends EewWarningOverlayEnabled {
-  _StubEewWarningOverlayEnabled(this.value);
+  new(this.value);
 
   final Future<bool> value;
 
@@ -62,6 +62,7 @@ EewTelegramItem _warningEew({
   bool? isWarning = true,
   bool isCanceled = false,
   bool hadWarning = true,
+  String warningPrefectureCode = '9011',
   String warningRegionCode = '100',
   String forecastRegionCode = '200',
   JmaIntensity intensity = JmaIntensity.sixUpper,
@@ -89,7 +90,13 @@ EewTelegramItem _warningEew({
   ),
   warning: EewWarningInfo(
     zones: const [],
-    prefectures: const [],
+    prefectures: [
+      EewWarningZoneInfo(
+        code: warningPrefectureCode,
+        name: '府県予報区',
+        hadWarning: hadWarning,
+      ),
+    ],
     regions: [
       EewWarningZoneInfo(
         code: warningRegionCode,
@@ -121,7 +128,7 @@ ProviderContainer _container({
       ),
       jmaMapAreaForecastLocalEewInsideProvider.overrideWith(
         (ref, latLng) =>
-            warningArea ?? Future.value(_mapItem(code: '100', name: '警報判定区域')),
+            warningArea ?? Future.value(_mapItem(code: '9011', name: '警報判定区域')),
       ),
       jmaMapAreaForecastLocalEInsideProvider.overrideWith(
         (ref, latLng) =>
@@ -221,7 +228,7 @@ void main() {
       await _candidatesFor(
         alive: [_warningEew()],
         warningArea: Future.value(
-          _mapItem(code: '100', name: '警報判定区域', hasProperty: false),
+          _mapItem(code: '9011', name: '警報判定区域', hasProperty: false),
         ),
       ),
       isEmpty,
@@ -234,9 +241,12 @@ void main() {
       await _candidatesFor(alive: [_warningEew(isWarning: false)]),
       isEmpty,
     );
+  });
+
+  test('初回警報でhadWarningがfalseでも候補に残す', () async {
     expect(
       await _candidatesFor(alive: [_warningEew(hadWarning: false)]),
-      isEmpty,
+      hasLength(1),
     );
   });
 
@@ -282,7 +292,7 @@ void main() {
 
   test('警報区域が解決済みからloadingまたはerrorになると候補を消す', () async {
     var warningArea = Future<MapDataItem?>.value(
-      _mapItem(code: '100', name: '警報判定区域'),
+      _mapItem(code: '9011', name: '警報判定区域'),
     );
     final position = _position();
     final latLng = LatLng(position.latitude, position.longitude);
@@ -346,10 +356,7 @@ void main() {
     );
     addTearDown(subscription.close);
     final initial = await _waitForCandidates(container);
-    expect(
-      initial.single.localForecastRegion,
-      isNotNull,
-    );
+    expect(initial.single.localForecastRegion, isNotNull);
 
     forecastArea = Completer<MapDataItem?>().future;
     container.invalidate(jmaMapAreaForecastLocalEInsideProvider(latLng));
