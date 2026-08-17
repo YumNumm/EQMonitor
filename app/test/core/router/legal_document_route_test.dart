@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/web_view/app_web_view_page.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {

@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/component/web_view/app_web_view_body.dart';
 import 'package:eqmonitor/core/component/web_view/app_web_view_navigation_state.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppWebViewPage extends HookWidget {
   const AppWebViewPage({required this.title, required this.url, super.key});
