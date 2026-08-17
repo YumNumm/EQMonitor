@@ -347,6 +347,7 @@ class _CustomSettingsSection extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -390,32 +391,36 @@ class _CustomSettingsSection extends StatelessWidget {
             value: estimatedIntensityEnabled,
             onChanged: onEstimatedIntensityChanged,
           ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '通知音・割り込みレベル',
-            subtitle: isPro ? '種類ごとに変更できます' : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const SoundInterruptionSettingsPage(),
-                    ),
-                  )
-                : () => const PaywallRoute().push<void>(context),
-          ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '震度別の音設定',
-            subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const PerIntensitySoundSettingsPage(),
-                    ),
-                  )
-                : () => const PaywallRoute().push<void>(context),
-          ),
+          if (isIos) ...[
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '通知音・割り込みレベル',
+              subtitle: isPro
+                  ? '種類ごとに変更できます'
+                  : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SoundInterruptionSettingsPage(),
+                      ),
+                    )
+                  : () => const PaywallRoute().push<void>(context),
+            ),
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '震度別の音設定',
+              subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PerIntensitySoundSettingsPage(),
+                      ),
+                    )
+                  : () => const PaywallRoute().push<void>(context),
+            ),
+          ],
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
@@ -831,15 +836,6 @@ class _SlotListSection extends ConsumerWidget {
             icon: const Icon(Icons.add),
             label: Text(
               isPro ? '地域を追加' : '地域を追加（$regionSlotCount/$maxRegions）',
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-          child: Text(
-            'ダウングレード時も設定は保持され、Freeの上限を超える項目は配信時に無効扱いになります。',
-            style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ),

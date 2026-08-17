@@ -178,6 +178,7 @@ class _NotificationConditionCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -216,23 +217,25 @@ class _NotificationConditionCard extends StatelessWidget {
               onChanged: onMinIntensityChanged,
             ),
           ),
-          const Divider(height: 1),
-          if (isPro)
-            ListTile(
-              title: const Text('震度別設定'),
-              subtitle: overrides.isEmpty
-                  ? const Text('震度ごとに通知をオーバーライドできます')
-                  : Text('${overrides.length}件の設定'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: onOverrideTap,
-            )
-          else
-            LockedSettingTile(
-              title: '震度別設定',
-              subtitle: 'Proで利用できます',
-              locked: true,
-              onTap: () => const PaywallRoute().push<void>(context),
-            ),
+          if (isIos) ...[
+            const Divider(height: 1),
+            if (isPro)
+              ListTile(
+                title: const Text('震度別設定'),
+                subtitle: overrides.isEmpty
+                    ? const Text('震度ごとに通知をオーバーライドできます')
+                    : Text('${overrides.length}件の設定'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: onOverrideTap,
+              )
+            else
+              LockedSettingTile(
+                title: '震度別設定',
+                subtitle: 'Proで利用できます',
+                locked: true,
+                onTap: () => const PaywallRoute().push<void>(context),
+              ),
+          ],
         ],
       ),
     );
