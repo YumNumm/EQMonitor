@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 
 class TsunamiWarningLegend extends StatelessWidget {
-  const TsunamiWarningLegend({super.key});
+  const new({super.key});
 
   static const List<TsunamiWarningKind> _kinds = [
     TsunamiWarningKind.majorWarning,

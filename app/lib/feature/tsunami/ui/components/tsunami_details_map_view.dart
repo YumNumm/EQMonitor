@@ -33,7 +33,7 @@ import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 
 class TsunamiDetailsMapView extends HookConsumerWidget {
-  const TsunamiDetailsMapView({required this.tsunami, super.key});
+  const new({required this.tsunami, super.key});
 
   final TsunamiState tsunami;
 
@@ -59,7 +59,7 @@ const _kDefaultCenter = Geographic(lon: 138, lat: 36.5);
 const _kDefaultZoom = 4.5;
 
 class _MapContent extends HookConsumerWidget {
-  const _MapContent({required this.styleString, required this.tsunami});
+  const new({required this.styleString, required this.tsunami});
 
   final String styleString;
   final TsunamiState tsunami;
@@ -173,7 +173,7 @@ class _MapContent extends HookConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _TsunamiRegionLineLayer extends HookConsumerWidget {
-  const _TsunamiRegionLineLayer({required this.tsunami});
+  const new({required this.tsunami});
 
   final TsunamiState tsunami;
 
@@ -269,7 +269,7 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _TsunamiHypocenterLayer extends HookConsumerWidget {
-  const _TsunamiHypocenterLayer({required this.tsunami});
+  const new({required this.tsunami});
 
   final TsunamiState tsunami;
 
@@ -364,7 +364,7 @@ class _TsunamiHypocenterLayer extends HookConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _TsunamiObservationStationLayer extends HookConsumerWidget {
-  const _TsunamiObservationStationLayer({required this.tsunami});
+  const new({required this.tsunami});
 
   final TsunamiState tsunami;
 
@@ -459,7 +459,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
 }
 
 class TsunamiMapGeoJsonBuilder {
-  const TsunamiMapGeoJsonBuilder();
+  const new();
 
   static const emptyFeatureCollection =
       '{"type":"FeatureCollection","features":[]}';
@@ -637,7 +637,7 @@ class TsunamiMapGeoJsonBuilder {
 }
 
 class TsunamiMapLayerBuilder {
-  const TsunamiMapLayerBuilder._();
+  const new _();
 
   static const warningKinds = [
     TsunamiWarningKind.forecast,
@@ -744,7 +744,7 @@ class TsunamiMapLayerBuilder {
 // ---------------------------------------------------------------------------
 
 class _MapControllerCard extends StatelessWidget {
-  const _MapControllerCard({required this.onFitBoundsTap});
+  const new({required this.onFitBoundsTap});
 
   final Future<void> Function() onFitBoundsTap;
 
