@@ -9,7 +9,7 @@ enum JmaTsunamiWarningCode {
   majorTsunamiWarningIssued(5, '大津波警報：発表'),
   other(15, 'その他の警報');
 
-  const JmaTsunamiWarningCode(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

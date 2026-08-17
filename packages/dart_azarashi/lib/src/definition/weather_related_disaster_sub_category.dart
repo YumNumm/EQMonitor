@@ -14,7 +14,7 @@ enum JmaWeatherRelatedDisasterSubCategory {
   sedimentDisasterWarningInfo(23, '土砂災害警戒情報'),
   other(31, 'その他の警報等情報要素');
 
-  const JmaWeatherRelatedDisasterSubCategory(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

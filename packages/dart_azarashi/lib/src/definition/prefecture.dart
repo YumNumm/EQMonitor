@@ -50,7 +50,7 @@ enum JmaPrefecture {
   kagoshima(46, '鹿児島県'),
   okinawa(47, '沖縄県');
 
-  const JmaPrefecture(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

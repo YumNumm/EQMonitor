@@ -348,7 +348,7 @@ enum JmaEpicenterAndHypocenter {
   distantPlace(999, '遠地'),
   other(1000, 'その他の震央地名');
 
-  const JmaEpicenterAndHypocenter(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

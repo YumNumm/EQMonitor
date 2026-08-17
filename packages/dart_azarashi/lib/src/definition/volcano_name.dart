@@ -2,7 +2,7 @@
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-32.
 class JmaVolcanoName {
-  const JmaVolcanoName._();
+  const new _();
 
   /// Map of volcano codes to names.
   static const volcanoes = <int, String>{

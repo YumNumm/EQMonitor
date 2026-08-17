@@ -18,7 +18,7 @@ enum JmaVolcanicWarningCode {
   possibleEruption(62, '噴火したもよう'),
   other(127, 'その他の防災気象情報要素');
 
-  const JmaVolcanicWarningCode(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;
