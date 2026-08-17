@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/notification/data/logic/notification_delivery_log_detail_builder.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -95,7 +97,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
         AsyncLoading() => const Center(
           child: CircularProgressIndicator.adaptive(),
         ),
-        AsyncData<String>(:final value) => Builder(
+        AsyncData<String>() => Builder(
           builder: (context) {
             if (loading.value && items.value.isEmpty && error.value == null) {
               return const Center(child: CircularProgressIndicator.adaptive());
@@ -137,11 +139,6 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    ListTile(
-                      dense: true,
-                      title: const Text('対象端末 ID'),
-                      subtitle: SelectableText(value),
-                    ),
                   ],
                 ),
               );
@@ -174,11 +171,14 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                   return _NotificationLogTile(
                     item: item,
                     onTap: () async {
+                      final detail = ref
+                          .read(notificationDeliveryLogDetailBuilderProvider)
+                          .build(entry: item);
                       await showModalBottomSheet<void>(
                         context: context,
                         showDragHandle: true,
                         isScrollControlled: true,
-                        builder: (context) => _LogDetailSheet(item: item),
+                        builder: (context) => _LogDetailSheet(detail: detail),
                       );
                     },
                   );
@@ -220,9 +220,9 @@ class _NotificationLogTile extends StatelessWidget {
 }
 
 class _LogDetailSheet extends StatelessWidget {
-  const _LogDetailSheet({required this.item});
+  const _LogDetailSheet({required this.detail});
 
-  final PushNotificationLogEntry item;
+  final NotificationDeliveryLogDetail detail;
 
   @override
   Widget build(BuildContext context) {
@@ -247,15 +247,62 @@ class _LogDetailSheet extends StatelessWidget {
                   ),
                   IconButton(
                     tooltip: 'テキストをコピー',
-                    onPressed: () async {},
+                    onPressed: () async {
+                      await Clipboard.setData(
+                        ClipboardData(text: detail.copyText),
+                      );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('コピーしました')),
+                        );
+                      }
+                    },
                     icon: const Icon(Icons.copy),
                   ),
                 ],
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                itemCount: detail.rows.length,
+                itemBuilder: (context, index) =>
+                    _LogDetailRow(row: detail.rows[index]),
+              ),
+            ),
           ],
         );
       },
+    );
+  }
+}
+
+class _LogDetailRow extends StatelessWidget {
+  const _LogDetailRow({required this.row});
+
+  final NotificationDeliveryLogDetailRow row;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            row.label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: context.designSystem.colorTheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 4),
+          SelectableText(
+            row.value,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      ),
     );
   }
 }
