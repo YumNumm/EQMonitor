@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 
-const mapAutomaticFocusMaxZoom = 8.0;
+const mapAutomaticFocusMaxZoom = 7.0;
 const mapAutomaticFocusMercatorMaxLatitude = 85.05112878;
 const mapAutomaticFocusTileSize = 512.0;
 
