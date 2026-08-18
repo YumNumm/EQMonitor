@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "release-type": "dart",
+      "component": "eqmonitor-beta",
+      "changelog-path": "CHANGELOG.beta.md",
+      "include-component-in-tag": false,
+      "include-v-in-tag": true,
+      "versioning": "prerelease",
+      "prerelease": true,
+      "prerelease-type": "beta",
+      "pull-request-title-pattern": "chore: beta release ${version}",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "app/pubspec.yaml"
+        }
+      ]
+    }
+  }
+}

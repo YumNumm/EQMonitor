@@ -24,14 +24,25 @@ assert_contains() {
   fi
 }
 
+assert_null() {
+  local actual=$1
+  local description=$2
+  if [[ "$actual" != "null" ]]; then
+    echo "$description: expected null, got '$actual'" >&2
+    exit 1
+  fi
+}
+
+issue_comment=$(mise exec -- yq -r '.on.issue_comment' "$WORKFLOW")
+assert_null "$issue_comment" "issue_comment trigger removed"
+
+version_required=$(mise exec -- yq -r \
+  '.on.workflow_dispatch.inputs.version.required' "$WORKFLOW")
+assert_equal true "$version_required" "version input required"
+
 repair_type=$(mise exec -- yq -r \
   '.on.workflow_dispatch.inputs.repair_existing_release.type' "$WORKFLOW")
 assert_equal boolean "$repair_type" "repair input type"
-
-create_tag_condition=$(mise exec -- yq -r \
-  '.jobs.create-beta.steps[] | select(.name == "Create beta tag") | .if' "$WORKFLOW")
-assert_contains "$create_tag_condition" '!inputs.repair_existing_release' \
-  "create tag repair guard"
 
 create_release_condition=$(mise exec -- yq -r \
   '.jobs.create-beta.steps[] | select(.name == "Create GitHub pre-release") | .if' "$WORKFLOW")
