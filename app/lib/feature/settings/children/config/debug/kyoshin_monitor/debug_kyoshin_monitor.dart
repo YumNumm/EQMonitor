@@ -3,8 +3,12 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_offset_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
@@ -62,11 +66,43 @@ class _Body extends ConsumerWidget {
                 AsyncData(:final value) =>
                   const JsonEncoder.withIndent('  ').convert({
                     ...value.toJson(),
-                    'delay_from_device': value.delayFromDevice.toString(),
+                    'shift': value.shift.toString(),
+                    'round_trip_time': value.roundTripTime.toString(),
+                    'publish_delay_with_ntp': value
+                        .publishDelay(ref.read(ntpProvider.notifier).offset)
+                        .toString(),
                   }),
                 AsyncError(:final error) => error.toString(),
                 _ => 'Loading...',
               }, style: bodyTextStyle),
+            ],
+          ),
+        ),
+        BorderedContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('時刻同期 / オフセット', style: titleTextStyle),
+              Text(
+                const JsonEncoder.withIndent('  ').convert({
+                  'ntp_offset': ref
+                      .read(ntpProvider.notifier)
+                      .offset
+                      ?.toString(),
+                  'ntp_last_synced_at': ref
+                      .watch(ntpProvider)
+                      .value
+                      ?.updatedAt
+                      ?.toIso8601String(),
+                  'effective_offset': ref
+                      .watch(kyoshinMonitorEffectiveOffsetProvider)
+                      ?.toString(),
+                  'offset_adjustments': ref
+                      .watch(kyoshinMonitorOffsetAdjustmentProvider)
+                      .map((key, value) => MapEntry(key.name, '$value')),
+                }),
+                style: bodyTextStyle,
+              ),
             ],
           ),
         ),

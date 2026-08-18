@@ -114,6 +114,17 @@ abstract class HomeEewSettings with _$HomeEewSettings {
     @Default(HomeEewAnimationRate.unlimited) HomeEewAnimationRate animationRate,
     @Default(true) bool autoZoom,
     @Default(true) bool showPSWaveCircle,
+
+    /// P/S波到達予想円の時刻基準を、強震モニタ画像の取得対象時刻に合わせるか。
+    ///
+    /// `false` (既定) は NTP 補正済みの正確な現在時刻を使う。円は本来
+    /// 「いま波がどこまで来ているか」を示すものなので、既定では画像との
+    /// 見た目の一致より実時間の正確さを優先する。
+    ///
+    /// `true` にすると観測点の色と円の位置が完全に同期して見える代わりに、
+    /// 円がサーバの公開遅延ぶん (実測: 強震モニタ約1.2秒 / 長周期地震動
+    /// モニタ約0.6秒) 過去にずれる。
+    @Default(false) bool alignPSWaveCircleToKyoshinMonitor,
   }) = _HomeEewSettings;
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -135,8 +146,7 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
 @freezed
 abstract class HomeMapGridSettings with _$HomeMapGridSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory({@Default(false) bool enabled}) =
-      _HomeMapGridSettings;
+  const factory({@Default(false) bool enabled}) = _HomeMapGridSettings;
 
   factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapGridSettingsFromJson(json);

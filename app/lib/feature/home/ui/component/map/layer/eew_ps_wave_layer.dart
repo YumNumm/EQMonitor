@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer_geojson_updater.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_offset_provider.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -60,6 +61,14 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
     final animationRate = ref.watch(
       homeConfigurationProvider.select(
         (a) => a.value?.eew.animationRate ?? HomeEewAnimationRate.unlimited,
+      ),
+    );
+
+    // 強震モニタの公開遅延に合わせるかどうか。
+    // 既定は false = NTP 補正済みの正確な現在時刻を使う。
+    final alignToKyoshinMonitor = ref.watch(
+      homeConfigurationProvider.select(
+        (a) => a.value?.eew.alignPSWaveCircleToKyoshinMonitor ?? false,
       ),
     );
 
@@ -212,61 +221,77 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
       return null;
     }, [styleController, showEews, animationRate, animationController]);
 
-    useEffect(() {
-      if (styleController == null) {
-        return null;
-      }
-
-      // このリスナー自体の有効期間は `showEews`/`animationController` の
-      // 変化にも連動する（[styleController] のみに連動する [disposed] とは別軸）。
-      var listenerDisposed = false;
-
-      void listener() {
-        if (listenerDisposed || disposed.value) {
-          return;
+    useEffect(
+      () {
+        if (styleController == null) {
+          return null;
         }
-        final travelTimeMap = ref.read(travelTimeDepthMapProvider);
-        // 走時表未ロード時は波を描かない
-        if (travelTimeMap == null) {
-          return;
+
+        // このリスナー自体の有効期間は `showEews`/`animationController` の
+        // 変化にも連動する（[styleController] のみに連動する [disposed] とは別軸）。
+        var listenerDisposed = false;
+
+        void listener() {
+          if (listenerDisposed || disposed.value) {
+            return;
+          }
+          final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+          // 走時表未ロード時は波を描かない
+          if (travelTimeMap == null) {
+            return;
+          }
+          final now = ref.read(appClockProvider.notifier).now();
+          // 設定が有効なら、強震モニタ画像の取得対象時刻に合わせる。
+          final kyoshinMonitorOffset = alignToKyoshinMonitor
+              ? ref.read(kyoshinMonitorEffectiveOffsetProvider)
+              : null;
+          final baseTime = kyoshinMonitorOffset == null
+              ? now
+              : now.subtract(kyoshinMonitorOffset);
+
+          final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
+            showEews,
+            baseTime,
+            travelTimeMap,
+          );
+
+          unawaited(
+            _geoJsonUpdater.updateIfChanged(
+              styleController: styleController,
+              pWaveSourceId: EewPsWaveLayer.sourceId.pWave,
+              sWaveSourceId: EewPsWaveLayer.sourceId.sWave,
+              pWaveGeojson: pWaveGeojson,
+              sWaveGeojson: sWaveGeojson,
+              latestPWaveGeoJson: latestPWaveGeoJson,
+              latestSWaveGeoJson: latestSWaveGeoJson,
+              initFuture: initFuture,
+              disposed: disposed,
+            ),
+          );
         }
-        final now = ref.read(appClockProvider.notifier).now();
 
-        final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
-          showEews,
-          now,
-          travelTimeMap,
-        );
+        Timer? timer;
+        if (animationRate == HomeEewAnimationRate.oneHz) {
+          listener();
+          timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
+        } else {
+          animationController.addListener(listener);
+        }
 
-        unawaited(
-          _geoJsonUpdater.updateIfChanged(
-            styleController: styleController,
-            pWaveSourceId: EewPsWaveLayer.sourceId.pWave,
-            sWaveSourceId: EewPsWaveLayer.sourceId.sWave,
-            pWaveGeojson: pWaveGeojson,
-            sWaveGeojson: sWaveGeojson,
-            latestPWaveGeoJson: latestPWaveGeoJson,
-            latestSWaveGeoJson: latestSWaveGeoJson,
-            initFuture: initFuture,
-            disposed: disposed,
-          ),
-        );
-      }
-
-      Timer? timer;
-      if (animationRate == HomeEewAnimationRate.oneHz) {
-        listener();
-        timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
-      } else {
-        animationController.addListener(listener);
-      }
-
-      return () {
-        listenerDisposed = true;
-        timer?.cancel();
-        animationController.removeListener(listener);
-      };
-    }, [styleController, showEews, animationRate, animationController]);
+        return () {
+          listenerDisposed = true;
+          timer?.cancel();
+          animationController.removeListener(listener);
+        };
+      },
+      [
+        styleController,
+        showEews,
+        animationRate,
+        animationController,
+        alignToKyoshinMonitor,
+      ],
+    );
 
     return const SizedBox.shrink();
   }

@@ -148,7 +148,44 @@ _KyoshinMonitorSettingsApiModel _$KyoshinMonitorSettingsApiModelFromJson(
       delayAdjustInterval: $checkedConvert(
         'delay_adjust_interval',
         (v) => v == null
-            ? const Duration(minutes: 10)
+            ? const Duration(seconds: 60)
+            : Duration(microseconds: (v as num).toInt()),
+      ),
+      delayAdjustType: $checkedConvert(
+        'delay_adjust_type',
+        (v) =>
+            $enumDecodeNullable(
+              _$KyoshinMonitorDelayAdjustTypeEnumMap,
+              v,
+              unknownValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp,
+            ) ??
+            KyoshinMonitorDelayAdjustType.imageFetch404Ntp,
+      ),
+      autoOffsetIncrement: $checkedConvert(
+        'auto_offset_increment',
+        (v) => v as bool? ?? true,
+      ),
+      offsetAdjustments: $checkedConvert(
+        'offset_adjustments',
+        (v) =>
+            (v as Map<String, dynamic>?)?.map(
+              (k, e) => MapEntry(
+                $enumDecode(_$KyoshinMonitorSourceEnumMap, k),
+                Duration(microseconds: (e as num).toInt()),
+              ),
+            ) ??
+            const <KyoshinMonitorSource, Duration>{},
+      ),
+      minOffset: $checkedConvert(
+        'min_offset',
+        (v) => v == null
+            ? const Duration(milliseconds: 600)
+            : Duration(microseconds: (v as num).toInt()),
+      ),
+      maxOffset: $checkedConvert(
+        'max_offset',
+        (v) => v == null
+            ? const Duration(milliseconds: 5000)
             : Duration(microseconds: (v as num).toInt()),
       ),
     );
@@ -157,6 +194,11 @@ _KyoshinMonitorSettingsApiModel _$KyoshinMonitorSettingsApiModelFromJson(
   fieldKeyMap: const {
     'imageFetchInterval': 'image_fetch_interval',
     'delayAdjustInterval': 'delay_adjust_interval',
+    'delayAdjustType': 'delay_adjust_type',
+    'autoOffsetIncrement': 'auto_offset_increment',
+    'offsetAdjustments': 'offset_adjustments',
+    'minOffset': 'min_offset',
+    'maxOffset': 'max_offset',
   },
 );
 
@@ -166,9 +208,25 @@ Map<String, dynamic> _$KyoshinMonitorSettingsApiModelToJson(
   'endpoint': _$KyoshinMonitorEndpointEnumMap[instance.endpoint]!,
   'image_fetch_interval': instance.imageFetchInterval.inMicroseconds,
   'delay_adjust_interval': instance.delayAdjustInterval.inMicroseconds,
+  'delay_adjust_type':
+      _$KyoshinMonitorDelayAdjustTypeEnumMap[instance.delayAdjustType]!,
+  'auto_offset_increment': instance.autoOffsetIncrement,
+  'offset_adjustments': instance.offsetAdjustments.map(
+    (k, e) => MapEntry(_$KyoshinMonitorSourceEnumMap[k]!, e.inMicroseconds),
+  ),
+  'min_offset': instance.minOffset.inMicroseconds,
+  'max_offset': instance.maxOffset.inMicroseconds,
 };
 
 const _$KyoshinMonitorEndpointEnumMap = {
   KyoshinMonitorEndpoint.kmoni: 'http://www.kmoni.bosai.go.jp',
   KyoshinMonitorEndpoint.lmoniexp: 'https://smi.lmoniexp.bosai.go.jp',
+};
+
+const _$KyoshinMonitorDelayAdjustTypeEnumMap = {
+  KyoshinMonitorDelayAdjustType.latestJson: 'latestJson',
+  KyoshinMonitorDelayAdjustType.latestJsonMultiple: 'latestJsonMultiple',
+  KyoshinMonitorDelayAdjustType.imageFetch404DeviceTime:
+      'imageFetch404DeviceTime',
+  KyoshinMonitorDelayAdjustType.imageFetch404Ntp: 'imageFetch404Ntp',
 };

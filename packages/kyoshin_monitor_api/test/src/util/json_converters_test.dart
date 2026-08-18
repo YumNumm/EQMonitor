@@ -21,6 +21,35 @@ void main() {
     test('不正な日時文字列の場合はnullを返す', () {
       expect(dateTimeOrNullFromString('invalid'), isNull);
     });
+
+    // 回帰テスト:
+    // Web API は `2026/08/19 00:17:30` のようにタイムゾーン指定のない JST を
+    // 返す。素の DateTime.parse はこれを端末ローカル時刻として解釈するため、
+    // 非JST端末では絶対時刻がずれていた。
+    test('タイムゾーン指定のない文字列はJSTとして絶対時刻化する', () {
+      expect(
+        dateTimeFromString('2026/08/19 00:17:30'),
+        DateTime.utc(2026, 8, 18, 15, 17, 30),
+      );
+    });
+
+    test('タイムゾーン指定がある文字列はそのまま解釈する', () {
+      expect(
+        dateTimeFromString('2024-03-20T12:34:56Z'),
+        DateTime.utc(2024, 3, 20, 12, 34, 56),
+      );
+      expect(
+        dateTimeFromString('2026-08-19T00:17:30+09:00'),
+        DateTime.utc(2026, 8, 18, 15, 17, 30),
+      );
+    });
+  });
+
+  group('dateTimeToString', () {
+    test('JSTの壁時計文字列になり、パースと往復する', () {
+      const raw = '2026/08/19 00:17:30';
+      expect(dateTimeToString(dateTimeFromString(raw)), raw);
+    });
   });
 
   group('doubleOrNullFromString', () {

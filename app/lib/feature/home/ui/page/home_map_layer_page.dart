@@ -67,6 +67,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     children: const [
                       _EewFillModeTile(),
                       _EewPsWaveTile(),
+                      _EewPsWaveTimeBaseTile(),
                       _EewAnimationTile(),
                       _EewAutoZoomTile(),
                     ],
@@ -552,6 +553,35 @@ class _EewPsWaveTile extends ConsumerWidget {
           (tsx) async => tsx
               .get(homeConfigurationProvider.notifier)
               .updateEew(cfg.eew.copyWith(showPSWaveCircle: next)),
+        );
+      },
+    );
+  }
+}
+
+class _EewPsWaveTimeBaseTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null || !cfg.eew.showPSWaveCircle) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: 'P/S波の予報円を強震モニタに合わせる',
+      subtitle: cfg.eew.alignPSWaveCircleToKyoshinMonitor
+          ? '観測点の色と予報円が同期しますが、予報円はサーバの公開遅延ぶん過去になります。'
+          : 'NTPで補正した正確な現在時刻で予報円を描画します。',
+      value: cfg.eew.alignPSWaveCircleToKyoshinMonitor,
+      onChanged: (next) async {
+        await HomeConfigurationNotifier.saveMutation.run(
+          ref,
+          (tsx) async => tsx
+              .get(homeConfigurationProvider.notifier)
+              .updateEew(
+                cfg.eew.copyWith(alignPSWaveCircleToKyoshinMonitor: next),
+              ),
         );
       },
     );

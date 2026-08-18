@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/trimmed_mean_samples.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/widgets.dart';
@@ -13,145 +16,168 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_timer_notifier.g.dart';
 
+/// 初回成功までの再試行間隔
+const _firstSyncRetryInterval = Duration(seconds: 5);
+
+/// トリム平均を成立させるため、起動直後は短い間隔で連続して測る。
+///
+/// 長周期地震動モニタの公式フロントエンドと同じ「最初の5回は1秒間隔」。
+const _initialBurstCount = 5;
+const _initialBurstInterval = Duration(seconds: 1);
+
+/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+///
+/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
+/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
 @riverpod
 class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   @override
   Stream<KyoshinMonitorTimerState> build() async* {
-    final streamController = StreamController<KyoshinMonitorTimerState>();
-    // 5秒ごとにRetry
-    while (true) {
-      final result = await _syncDelaySimple();
-      talker.logCustom(KyoshinMonitorLog('result: $result'));
-      if (result case Success(:final value)) {
-        talker.logCustom(KyoshinMonitorLog('delayFromDevice: $value'));
-        yield KyoshinMonitorTimerState(
-          delayFromDevice: value,
-          lastSyncedAt: DateTime.now(),
-        );
-        break;
-      } else {
-        final failure = result as Failure<Duration, Exception>;
-        talker.logCustom(KyoshinMonitorLog('failure: ${failure.exception}'));
-        await Future<void>.delayed(const Duration(seconds: 5));
+    // 画像の取得先が変わると公開遅延も変わるため、サンプルを作り直す。
+    final source = ref.watch(
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.requireValue.monitorSource,
+      ),
+    );
+    final resyncInterval = ref.watch(
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.requireValue.api.delayAdjustInterval,
+      ),
+    );
+
+    final roundTripTimes = TrimmedMeanSamples();
+    final shifts = TrimmedMeanSamples();
+
+    final controller = StreamController<KyoshinMonitorTimerState>();
+    ref.onDispose(controller.close);
+
+    var disposed = false;
+    ref.onDispose(() => disposed = true);
+
+    /// 1 回測ってサンプルに加え、更新後の状態を返す。失敗時は null。
+    Future<KyoshinMonitorTimerState?> syncOnce() async {
+      final result = await _sample(source);
+      switch (result) {
+        case Success(:final value):
+          roundTripTimes.add(value.roundTripTime);
+          shifts.add(value.shift);
+          final shift = shifts.value;
+          final roundTripTime = roundTripTimes.value;
+          if (shift == null || roundTripTime == null) {
+            return null;
+          }
+          final state = KyoshinMonitorTimerState(
+            shift: shift,
+            roundTripTime: roundTripTime,
+            source: source,
+            sampleCount: shifts.length,
+            lastSyncedAt: clock.now(),
+          );
+          talker.logCustom(
+            KyoshinMonitorLog(
+              'time sync: source=${source.name} '
+              'shift=${state.shift.inMilliseconds}ms '
+              'rtt=${state.roundTripTime.inMilliseconds}ms '
+              'samples=${state.sampleCount}',
+            ),
+          );
+          return state;
+        case Failure(:final exception):
+          talker.logCustom(
+            KyoshinMonitorLog(
+              'time sync failed: source=${source.name} '
+              '$exception',
+            ),
+          );
+          return null;
       }
     }
 
-    // Resync timer
-    var isResyncing = false;
-    final interval = ref.watch(
-      kyoshinMonitorSettingsProvider.select(
-        (v) => v.requireValue.api.imageFetchInterval,
-      ),
-    );
-    ref.listen(
-      periodicTimerProvider(
-        interval,
-      ),
-      (
-        _,
-        next,
-      ) async {
-        final lifecycle = ref.read(appLifecycleProvider);
-        if ([
-          AppLifecycleState.paused,
-          AppLifecycleState.detached,
-          AppLifecycleState.inactive,
-        ].contains(lifecycle)) {
-          return;
-        }
-        if (isResyncing) {
-          return;
-        }
-        var retryCount = 0;
-        while (retryCount < 3) {
-          isResyncing = true;
-          final result = await _syncDelaySimple();
-          if (result case Success(:final value)) {
-            streamController.add(
-              KyoshinMonitorTimerState(
-                delayFromDevice: value,
-                lastSyncedAt: DateTime.now(),
-              ),
-            );
-            break;
-          } else {
-            retryCount++;
-            await Future<void>.delayed(const Duration(seconds: 5));
+    // 初回は成功するまで繰り返す。ここが通らないと画像取得を始められない。
+    while (!disposed) {
+      final state = await syncOnce();
+      if (state != null) {
+        yield state;
+        break;
+      }
+      await Future<void>.delayed(_firstSyncRetryInterval);
+    }
+
+    // トリム平均を成立させるための追い込み。
+    unawaited(
+      Future<void>(() async {
+        for (var i = 1; i < _initialBurstCount; i++) {
+          await Future<void>.delayed(_initialBurstInterval);
+          if (disposed || controller.isClosed) {
+            return;
+          }
+          final state = await syncOnce();
+          if (state != null && !controller.isClosed) {
+            controller.add(state);
           }
         }
-        isResyncing = false;
-      },
+      }),
     );
 
-    ref.onDispose(streamController.close);
-    yield* streamController.stream;
+    // 以降は設定された間隔で再同期する。
+    var isResyncing = false;
+    Timer? resyncTimer;
+    resyncTimer = Timer.periodic(resyncInterval, (_) async {
+      if (disposed || controller.isClosed || isResyncing) {
+        return;
+      }
+      if (_isBackground) {
+        return;
+      }
+      isResyncing = true;
+      try {
+        final state = await syncOnce();
+        if (state != null && !controller.isClosed) {
+          controller.add(state);
+        }
+      } finally {
+        isResyncing = false;
+      }
+    });
+    ref.onDispose(() => resyncTimer?.cancel());
+
+    yield* controller.stream;
   }
 
-  @visibleForTesting
-  Future<Result<Duration, Exception>> syncDelaySimple() async =>
-      _syncDelaySimple();
+  bool get _isBackground => const [
+    AppLifecycleState.paused,
+    AppLifecycleState.detached,
+    AppLifecycleState.inactive,
+  ].contains(ref.read(appLifecycleProvider));
 
-  /// サーバの現在時刻を1回取得して、デバイスの現在時刻との差分を返す
-  Future<Result<Duration, Exception>> _syncDelaySimple() async =>
-      Result.capture(() async {
-        final latestJson = await ref
+  /// `latest.json` を 1 回取得する。
+  ///
+  /// 画像と同じホストの `latest.json` を叩くことで、往復時間の推定が
+  /// 実際の画像取得の経路に近くなる。
+  @visibleForTesting
+  Future<Result<KyoshinMonitorTimeSample, Exception>> sample(
+    KyoshinMonitorSource source,
+  ) => _sample(source);
+
+  Future<Result<KyoshinMonitorTimeSample, Exception>> _sample(
+    KyoshinMonitorSource source,
+  ) => Result.capture(() async {
+    final sentAt = clock.now();
+    final dataTime = switch (source) {
+      KyoshinMonitorSource.kmoni =>
+        await ref
             .read(kyoshinMonitorWebApiDataSourceProvider)
-            .getLatestDataTime();
-        final deviceTime = DateTime.now();
-        return deviceTime.difference(latestJson.latestTime);
-      });
-
-  @visibleForTesting
-  Future<Result<Duration, Exception>> syncDelay([
-    Duration interval = const Duration(milliseconds: 200),
-  ]) async => _syncDelay(interval);
-
-  /// サーバの現在取得が変わるまでくりかえし取得し、変わったらその差分を返す
-  Future<Result<Duration, Exception>> _syncDelay([
-    Duration interval = const Duration(milliseconds: 200),
-  ]) async => Result.capture(() async {
-    final firstTime =
-        (await ref
-                .read(kyoshinMonitorWebApiDataSourceProvider)
-                .getLatestDataTime())
-            .latestTime;
-    var latestTime = firstTime;
-    while (true) {
-      await Future<void>.delayed(interval);
-      latestTime =
-          (await ref
-                  .read(kyoshinMonitorWebApiDataSourceProvider)
-                  .getLatestDataTime())
-              .latestTime;
-      if (latestTime != firstTime) {
-        break;
-      }
-    }
-    final deviceTime = DateTime.now();
-    return deviceTime.difference(latestTime);
+            .getLatestDataTime(),
+      KyoshinMonitorSource.lmoni =>
+        await ref
+            .read(lpgmKyoshinMonitorWebApiDataSourceProvider)
+            .getLatestDataTime(),
+    };
+    final receivedAt = clock.now();
+    return KyoshinMonitorTimeSample(
+      sentAt: sentAt,
+      receivedAt: receivedAt,
+      latestTime: dataTime.latestTime,
+    );
   });
-}
-
-@riverpod
-Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
-  final streamController = StreamController<void>();
-  final delayAdjustInterval = ref.watch(
-    kyoshinMonitorSettingsProvider.select(
-      (v) => v.requireValue.api.delayAdjustInterval,
-    ),
-  );
-  ref.listen(periodicTimerProvider(delayAdjustInterval), (previous, next) {
-    final lifecycle = ref.read(appLifecycleProvider);
-    if ([
-      AppLifecycleState.paused,
-      AppLifecycleState.detached,
-      AppLifecycleState.inactive,
-    ].contains(lifecycle)) {
-      return;
-    }
-    streamController.add(null);
-  });
-
-  ref.onDispose(streamController.close);
-  return streamController.stream;
 }
