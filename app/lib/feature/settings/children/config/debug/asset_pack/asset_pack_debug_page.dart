@@ -1,10 +1,12 @@
-import 'package:assets_util/assets_util.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_diagnostics.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_repository.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AssetPackDebugPage extends ConsumerWidget {
   const new({super.key});
@@ -57,32 +59,48 @@ class _AssetPackDebugContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusLabel = switch (diagnostics.status) {
-      AssetPackDiagnosticStatus.ready => '利用可能',
-      AssetPackDiagnosticStatus.manifestMissing => 'manifestなし',
-    };
-    final isReady = diagnostics.status == AssetPackDiagnosticStatus.ready;
-    final statusColor = isReady
-        ? context.designSystem.colorTheme.onSurface
-        : context.designSystem.colorTheme.error;
+    final isBundled = diagnostics.sourceKind == AssetPackSourceKind.bundled;
+    final manifest = diagnostics.manifest;
 
     return ListView(
       children: [
         ListTile(
           leading: Icon(
-            isReady ? Icons.check_circle_outline : Icons.error_outline,
-            color: statusColor,
+            isBundled ? Icons.inventory_2_outlined : Icons.cloud_done_outlined,
+            color: context.designSystem.colorTheme.onSurface,
           ),
-          title: Text(statusLabel),
-          subtitle: Text(diagnostics.detail),
+          title: Text(isBundled ? 'アプリ同梱Pack' : 'ダウンロード済みPack'),
+          subtitle: Text('${manifest.assets.length}個のアセットを読み込み可能'),
         ),
-        _CopyableTile(title: 'status', value: diagnostics.status.name),
-        _CopyableTile(title: 'platform', value: diagnostics.platform),
-        _CopyableTile(title: 'os_version', value: diagnostics.osVersion),
-        _CopyableTile(title: 'pack_id', value: diagnostics.packIdentifier),
-        if (diagnostics.packRoot case final value?)
-          _CopyableTile(title: 'pack_root', value: value),
+        _CopyableTile(title: 'pack_version', value: manifest.packVersion),
+        _CopyableTile(title: 'generated_at', value: manifest.generatedAt),
+        _CopyableTile(title: 'root', value: diagnostics.rootPath),
+        _CopyableTile(
+          title: 'bundled_root',
+          value: diagnostics.bundledRootPath,
+        ),
+        const Divider(),
+        for (final asset in manifest.assets) _AssetTile(asset: asset),
       ],
+    );
+  }
+}
+
+class _AssetTile extends StatelessWidget {
+  const new({required this.asset});
+
+  final AssetPackManifestItem asset;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(asset.id.name),
+      subtitle: Text(
+        '${asset.path}\n'
+        '${asset.sizeBytes} bytes / source ${asset.sourceVersion}',
+        style: const TextStyle(fontFamily: FontFamily.googleSansCode),
+      ),
+      isThreeLine: true,
     );
   }
 }

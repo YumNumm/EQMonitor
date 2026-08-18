@@ -10,12 +10,12 @@ part of 'asset_pack_debug_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Reads native diagnostics for the app-bundled Asset Pack.
+/// 本番と同じ解決経路で、いま有効な Asset Pack の状態を読み出す。
 
 @ProviderFor(assetPackDiagnostics)
 final assetPackDiagnosticsProvider = AssetPackDiagnosticsProvider._();
 
-/// Reads native diagnostics for the app-bundled Asset Pack.
+/// 本番と同じ解決経路で、いま有効な Asset Pack の状態を読み出す。
 
 final class AssetPackDiagnosticsProvider
     extends
@@ -27,7 +27,7 @@ final class AssetPackDiagnosticsProvider
     with
         $FutureModifier<AssetPackDiagnostics>,
         $FutureProvider<AssetPackDiagnostics> {
-  /// Reads native diagnostics for the app-bundled Asset Pack.
+  /// 本番と同じ解決経路で、いま有効な Asset Pack の状態を読み出す。
   AssetPackDiagnosticsProvider._()
     : super(
         from: null,
@@ -55,4 +55,4 @@ final class AssetPackDiagnosticsProvider
 }
 
 String _$assetPackDiagnosticsHash() =>
-    r'40c7c32b335640919509c430d2098c0034a67166';
+    r'8b3675f8c360372e68222d5b779403b061cdb9b2';

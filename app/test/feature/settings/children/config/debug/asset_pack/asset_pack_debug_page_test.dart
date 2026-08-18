@@ -1,13 +1,13 @@
-import 'dart:convert';
-
-import 'package:assets_util/assets_util.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart' as app_log;
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_diagnostics.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_repository.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/asset_pack/asset_pack_debug_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 void main() {
@@ -15,33 +15,29 @@ void main() {
     app_log.talker = Talker();
   });
 
-  testWidgets('renders evidence for a bundled pack that is ready', (
-    tester,
-  ) async {
+  testWidgets('renders evidence for the bundled pack', (tester) async {
     await tester.pumpWidget(
-      testApp(diagnostics: diagnosticsFor(status: .ready)),
+      testApp(diagnostics: diagnosticsFor(sourceKind: .bundled)),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('利用可能'), findsOneWidget);
-    expect(find.text('Version 26.4'), findsOneWidget);
-    expect(find.text('platform'), findsAtLeastNWidgets(1));
-    expect(find.text('/pack'), findsOneWidget);
+    expect(find.text('アプリ同梱Pack'), findsOneWidget);
+    expect(find.text('1.2.3'), findsOneWidget);
+    expect(find.text('/packs/1.2.3'), findsOneWidget);
+    expect(find.text('/bundled/1.2.3'), findsOneWidget);
+    expect(find.text('baseMapPmtiles'), findsOneWidget);
   });
 
-  testWidgets('renders evidence for a missing bundled manifest', (
-    tester,
-  ) async {
+  testWidgets('renders evidence for a downloaded pack', (tester) async {
     await tester.pumpWidget(
-      testApp(diagnostics: diagnosticsFor(status: .manifestMissing)),
+      testApp(diagnostics: diagnosticsFor(sourceKind: .downloaded)),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('manifestなし'), findsOneWidget);
-    expect(find.text('diagnostic details'), findsOneWidget);
+    expect(find.text('ダウンロード済みPack'), findsOneWidget);
   });
 
-  testWidgets('renders the failure when native diagnostics throw', (
+  testWidgets('renders the failure when the pack cannot be resolved', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -52,13 +48,13 @@ void main() {
     expect(find.text('診断の取得に失敗'), findsOneWidget);
   });
 
-  testWidgets('refresh reloads bundled diagnostics', (tester) async {
+  testWidgets('refresh reloads diagnostics', (tester) async {
     var diagnoses = 0;
     await tester.pumpWidget(
       testApp(
         loadDiagnostics: () async {
           diagnoses += 1;
-          return diagnosticsFor(status: .ready);
+          return diagnosticsFor(sourceKind: .bundled);
         },
       ),
     );
@@ -72,7 +68,7 @@ void main() {
   testWidgets('does not overflow at text scale 2', (tester) async {
     await tester.pumpWidget(
       testApp(
-        diagnostics: diagnosticsFor(status: .manifestMissing),
+        diagnostics: diagnosticsFor(sourceKind: .downloaded),
         textScale: 2,
       ),
     );
@@ -89,14 +85,12 @@ Widget testApp({
 }) {
   final load =
       loadDiagnostics ??
-      () async => diagnostics ?? diagnosticsFor(status: .ready);
+      () async => diagnostics ?? diagnosticsFor(sourceKind: .bundled);
   final theme = ThemeData.light().copyWith(
     extensions: [DesignSystemThemeExtension.light()],
   );
   return ProviderScope(
-    overrides: [
-      assetPackDiagnosticsProvider.overrideWith((ref) => load()),
-    ],
+    overrides: [assetPackDiagnosticsProvider.overrideWith((ref) => load())],
     child: MaterialApp(
       theme: theme,
       builder: (context, child) => MediaQuery(
@@ -111,15 +105,27 @@ Widget testApp({
 }
 
 AssetPackDiagnostics diagnosticsFor({
-  required AssetPackDiagnosticStatus status,
-}) => AssetPackDiagnostics.fromJsonString(
-  jsonEncode({
-    'schema_version': 3,
-    'platform': 'ios',
-    'os_version': 'Version 26.4',
-    'pack_id': 'platform',
-    'status': status.name,
-    'detail': 'diagnostic details',
-    'pack_root': status == AssetPackDiagnosticStatus.ready ? '/pack' : null,
+  required AssetPackSourceKind sourceKind,
+}) => AssetPackDiagnostics(
+  sourceKind: sourceKind,
+  rootPath: '/packs/1.2.3',
+  bundledRootPath: '/bundled/1.2.3',
+  manifest: AssetPackManifest.fromJson({
+    'pack_version': '1.2.3',
+    'schema_version': 1,
+    'generated_at': '2026-08-19T00:00:00Z',
+    'assets': [
+      {
+        'id': 'BASE_MAP_PMTILES',
+        'kind': 'pmtiles',
+        'path': 'map/all.pmtiles',
+        'schema_version': 1,
+        'source_version': '2026-08-01',
+        'source_updated_at': '2026-08-01T00:00:00Z',
+        'source_urls': <String>[],
+        'sha256': 'a' * 64,
+        'size_bytes': 1024,
+      },
+    ],
   }),
 );
