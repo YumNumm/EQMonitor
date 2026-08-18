@@ -1,30 +1,40 @@
 # デバイスの Admin ロール判定と、デバッグ機能のゲート方法
 
 **作成日**: 2026-08-14
+**更新日**: 2026-08-18（backend が `role` を返すようになったため改訂）
 
 ## 結論
 
-アプリから「このデバイスは Admin か」を判定する経路は、現状 **存在しない**。
-Admin 限定のデバッグ機能を追加する場合は、判定が取れないケースを
-「権限なし」として扱い、UI に理由を表示する前提で設計する。
+`GET /v2/device/me` が `role`（`ADMIN` / `USER`）を返す。
+Admin 限定のデバッグ機能は、判定が取れないケースを「権限なし」として扱い、
+UI に理由を表示する前提で設計する。
 
-## backend の認証・権限の構造
+## backend の権限の構造
 
-| 認証方式 | 使う場所 | role を取れるか |
+ロールは 2 系統あり、**別物**として扱う。
+
+| 系統 | 取得経路 | 判定に使う場所 |
 | --- | --- | --- |
-| デバイス JWT（`POST /v2/device` 発行、HS256） | `/v2/device/me/*`、`/v2/subscription/*` | 取れない（クレームに role なし） |
-| better-auth セッション / JWT | `/v2/user/me*`、`/v2/admin/*`、`/v2/feeds/admin` | 取れる（`user.role === 'admin'`） |
+| デバイスのロール | `GET /v2/device/me` の `role`（デバイス JWT で取得） | アプリ内の Admin 限定 UI のゲート |
+| ユーザーのロール | better-auth の `user.role`（Cookie セッション / better-auth JWT） | backend 側の管理者認可（`/v2/admin/*`、`/v2/feeds/admin` 等） |
 
-- ロールは better-auth の `admin()` プラグインが持つ `user.role`。
-- `GET /v2/device/me`（`DeviceMeResponse`）は `role` を返さない。
-- アプリにはアカウントログインが無く、better-auth セッションを保持していない。
-  そのため `/v2/user/me` は 401 になる。
+- デバイスのロールは backend の環境変数 `ADMIN_DEVICE_IDS`（デバイス ID の
+  カンマ区切り）による許可リストで決まる。列挙されたデバイスのみ `ADMIN`、
+  それ以外は `USER`。未設定なら全デバイスが `USER`。
+- **`role: ADMIN` は認可の根拠にならない。** デバイス JWT は `POST /v2/device` で
+  匿名の誰でも取得できるため、backend 側の管理者認可は従来どおり
+  better-auth セッションの `user.role === 'admin'` で行う。
+  デバイスの `role` は「クライアントに開発者向け UI を出してよいか」を
+  伝えるためだけに使う。
+- アプリにはアカウントログインが無く better-auth セッションを保持していないため、
+  `/v2/user/me` からユーザーのロールを取ることはできない。
 
 ## 実装上の指針
 
-- ロール取得は `DeviceRepository.getDeviceRole()`（`GET /v2/device/me`）に集約する。
-  backend が `role` を返し始めたら、生 JSON 読み取りから生成モデル経由へ移す。
-- 未提供・未知の値・通信失敗はすべて `null`（= 非 Admin）として扱う。
+- ロール取得は `DeviceRepository.getDeviceRole()`（`GET /v2/device/me`）に集約し、
+  生成モデル `DeviceMeResponse.role` から読む。
+- デバイス未登録・通信失敗・未知の値（生成 enum のデコード失敗）はすべて
+  `null`（= 非 Admin）として扱う。
   生命に関わる情報を扱うアプリなので、権限を推測するフォールバックは書かない。
 - ゲートは「設定値」と「操作できるか」を別 provider に分ける。
   - `isHomeEewEstimationDebugAvailableProvider`: Admin かつデバッグモード有効
@@ -33,6 +43,9 @@ Admin 限定のデバッグ機能を追加する場合は、判定が取れな�
 - デバッグ画面のトグルは `onChanged: null` で非活性にし、
   サブタイトルに「デバッグモード無効」「ロール取得中」「Admin 以外」などの理由を出す。
 
-## 残課題
+## 運用
 
-`docs/todo/300_device_role_api_field.md` に backend 側の対応内容を記載した。
+Admin 扱いにするデバイスは、backend の Helm values
+（`deploy/k8s/values/tokyo/{develop,production}.yaml` の
+`eqmonitorApi.adminDeviceIds`）へ UUID をカンマ区切りで追加する。
+デバイス ID はデバッグ画面のデバイス情報から確認できる。

@@ -55,7 +55,7 @@ abstract class DeviceApiClient {
     @Body() required DeviceRegisterBody body,
   });
 
-  /// デバイス情報を取得
+  /// デバイス情報を取得。role は ADMIN_DEVICE_IDS に列挙されたデバイスのみ ADMIN、それ以外は USER。
   @GET(DeviceApiClientUrls.getV2DeviceMe)
   Future<HttpResponse<DeviceMeResponse>> getV2DeviceMe();
 

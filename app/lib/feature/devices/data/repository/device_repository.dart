@@ -41,22 +41,15 @@ class DeviceRepository {
         return response.data.toRegisteredDevice;
       });
 
-  /// デバイスに紐づくユーザーのロールを取得する。
+  /// このデバイスのロールを取得する。
   ///
-  /// `role` は OpenAPI の `DeviceMeResponse` に未定義のため、生成モデルではなく
-  /// レスポンスの生 JSON から読む。backend がフィールドを追加し次第、生成モデル
-  /// 経由へ置き換える(`docs/todo/300_device_role_api_field.md`)。
-  ///
-  /// ロールを判定できない場合(フィールド未提供・未知の値)は null を返す。
-  Future<Result<DeviceRole?, Exception>> getDeviceRole() =>
+  /// backend は `ADMIN_DEVICE_IDS` に列挙されたデバイスにのみ `ADMIN` を返す。
+  /// 未知の値が来た場合は生成モデルのデコードが失敗し、Failure になる。
+  /// 権限を推測して Admin 扱いにするフォールバックは意図的に入れていない。
+  Future<Result<DeviceRole, Exception>> getDeviceRole() =>
       Result.capture(() async {
         final response = await _api.device.getV2DeviceMe();
-        final body = response.response.data;
-        if (body is! Map<String, dynamic>) {
-          return null;
-        }
-        final role = body['role'];
-        return DeviceRole.fromApiValue(role is String ? role : null);
+        return response.data.role.toDeviceRole;
       });
 
   Future<Result<RegisteredDevice, Exception>> registerDevice({

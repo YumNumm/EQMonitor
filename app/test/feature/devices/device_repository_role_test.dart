@@ -13,43 +13,40 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DeviceRepository.getDeviceRole', () {
-    test('admin ロールを返す', () async {
-      final repository = _repository(role: 'admin');
+    test('ADMIN ロールを返す', () async {
+      final repository = _repository(role: 'ADMIN');
 
       final result = await repository.getDeviceRole();
 
-      expect(result, isA<Success<DeviceRole?, Exception>>());
+      expect(result, isA<Success<DeviceRole, Exception>>());
       expect(
-        (result as Success<DeviceRole?, Exception>).value,
+        (result as Success<DeviceRole, Exception>).value,
         DeviceRole.admin,
       );
     });
 
-    test('user ロールを返す', () async {
-      final repository = _repository(role: 'user');
+    test('USER ロールを返す', () async {
+      final repository = _repository(role: 'USER');
 
       final result = await repository.getDeviceRole();
 
-      expect(
-        (result as Success<DeviceRole?, Exception>).value,
-        DeviceRole.user,
-      );
+      expect((result as Success<DeviceRole, Exception>).value, DeviceRole.user);
     });
 
-    test('role が未提供の場合は null を返す', () async {
+    test('role が未提供の場合は Failure を返す', () async {
       final repository = _repository();
 
       final result = await repository.getDeviceRole();
 
-      expect((result as Success<DeviceRole?, Exception>).value, isNull);
+      expect(result, isA<Failure<DeviceRole, Exception>>());
     });
 
-    test('未知の role は権限を推測せず null を返す', () async {
-      final repository = _repository(role: 'moderator');
+    test('未知の role は権限を推測せず Failure を返す', () async {
+      final repository = _repository(role: 'MODERATOR');
 
       final result = await repository.getDeviceRole();
 
-      expect((result as Success<DeviceRole?, Exception>).value, isNull);
+      expect(result, isA<Failure<DeviceRole, Exception>>());
     });
 
     test('API が失敗した場合は Failure を返す', () async {
@@ -57,7 +54,7 @@ void main() {
 
       final result = await repository.getDeviceRole();
 
-      expect(result, isA<Failure<DeviceRole?, Exception>>());
+      expect(result, isA<Failure<DeviceRole, Exception>>());
     });
   });
 }
