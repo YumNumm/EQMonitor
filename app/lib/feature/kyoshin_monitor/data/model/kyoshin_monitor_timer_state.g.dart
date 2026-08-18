@@ -15,10 +15,19 @@ _KyoshinMonitorTimerState _$KyoshinMonitorTimerStateFromJson(
   json,
   ($checkedConvert) {
     final val = _KyoshinMonitorTimerState(
-      delayFromDevice: $checkedConvert(
-        'delay_from_device',
+      shift: $checkedConvert(
+        'shift',
         (v) => Duration(microseconds: (v as num).toInt()),
       ),
+      roundTripTime: $checkedConvert(
+        'round_trip_time',
+        (v) => Duration(microseconds: (v as num).toInt()),
+      ),
+      source: $checkedConvert(
+        'source',
+        (v) => $enumDecode(_$KyoshinMonitorSourceEnumMap, v),
+      ),
+      sampleCount: $checkedConvert('sample_count', (v) => (v as num).toInt()),
       lastSyncedAt: $checkedConvert(
         'last_synced_at',
         (v) => v == null ? null : DateTime.parse(v as String),
@@ -27,7 +36,8 @@ _KyoshinMonitorTimerState _$KyoshinMonitorTimerStateFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'delayFromDevice': 'delay_from_device',
+    'roundTripTime': 'round_trip_time',
+    'sampleCount': 'sample_count',
     'lastSyncedAt': 'last_synced_at',
   },
 );
@@ -35,6 +45,14 @@ _KyoshinMonitorTimerState _$KyoshinMonitorTimerStateFromJson(
 Map<String, dynamic> _$KyoshinMonitorTimerStateToJson(
   _KyoshinMonitorTimerState instance,
 ) => <String, dynamic>{
-  'delay_from_device': instance.delayFromDevice.inMicroseconds,
+  'shift': instance.shift.inMicroseconds,
+  'round_trip_time': instance.roundTripTime.inMicroseconds,
+  'source': _$KyoshinMonitorSourceEnumMap[instance.source]!,
+  'sample_count': instance.sampleCount,
   'last_synced_at': instance.lastSyncedAt?.toIso8601String(),
+};
+
+const _$KyoshinMonitorSourceEnumMap = {
+  KyoshinMonitorSource.kmoni: 'kmoni',
+  KyoshinMonitorSource.lmoni: 'lmoni',
 };

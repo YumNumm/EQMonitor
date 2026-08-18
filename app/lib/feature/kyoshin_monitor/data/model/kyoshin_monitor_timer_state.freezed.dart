@@ -16,7 +16,14 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$KyoshinMonitorTimerState {
 
- Duration get delayFromDevice; DateTime? get lastSyncedAt;
+/// 端末時計から見た `latest_time` のずれ (トリム平均)
+///
+/// 通常は負の値。端末時計の誤差を含むため、そのまま現在時刻から引いては
+/// いけない。[publishDelay] を使うこと。
+ Duration get shift;/// `latest.json` 取得の往復時間 (トリム平均)
+ Duration get roundTripTime;/// どのデータソースに対して測った値か
+ KyoshinMonitorSource get source;/// 測定に使ったサンプル数
+ int get sampleCount; DateTime? get lastSyncedAt;
 /// Create a copy of KyoshinMonitorTimerState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +36,16 @@ $KyoshinMonitorTimerStateCopyWith<KyoshinMonitorTimerState> get copyWith => _$Ky
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorTimerState&&(identical(other.delayFromDevice, delayFromDevice) || other.delayFromDevice == delayFromDevice)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorTimerState&&(identical(other.shift, shift) || other.shift == shift)&&(identical(other.roundTripTime, roundTripTime) || other.roundTripTime == roundTripTime)&&(identical(other.source, source) || other.source == source)&&(identical(other.sampleCount, sampleCount) || other.sampleCount == sampleCount)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,delayFromDevice,lastSyncedAt);
+int get hashCode => Object.hash(runtimeType,shift,roundTripTime,source,sampleCount,lastSyncedAt);
 
 @override
 String toString() {
-  return 'KyoshinMonitorTimerState(delayFromDevice: $delayFromDevice, lastSyncedAt: $lastSyncedAt)';
+  return 'KyoshinMonitorTimerState(shift: $shift, roundTripTime: $roundTripTime, source: $source, sampleCount: $sampleCount, lastSyncedAt: $lastSyncedAt)';
 }
 
 
@@ -49,7 +56,7 @@ abstract mixin class $KyoshinMonitorTimerStateCopyWith<$Res>  {
   factory $KyoshinMonitorTimerStateCopyWith(KyoshinMonitorTimerState value, $Res Function(KyoshinMonitorTimerState) _then) = _$KyoshinMonitorTimerStateCopyWithImpl;
 @useResult
 $Res call({
- Duration delayFromDevice, DateTime? lastSyncedAt
+ Duration shift, Duration roundTripTime, KyoshinMonitorSource source, int sampleCount, DateTime? lastSyncedAt
 });
 
 
@@ -66,10 +73,13 @@ class _$KyoshinMonitorTimerStateCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorTimerState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? delayFromDevice = null,Object? lastSyncedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? shift = null,Object? roundTripTime = null,Object? source = null,Object? sampleCount = null,Object? lastSyncedAt = freezed,}) {
   return _then(KyoshinMonitorTimerState(
-delayFromDevice: null == delayFromDevice ? _self.delayFromDevice : delayFromDevice // ignore: cast_nullable_to_non_nullable
-as Duration,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+shift: null == shift ? _self.shift : shift // ignore: cast_nullable_to_non_nullable
+as Duration,roundTripTime: null == roundTripTime ? _self.roundTripTime : roundTripTime // ignore: cast_nullable_to_non_nullable
+as Duration,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorSource,sampleCount: null == sampleCount ? _self.sampleCount : sampleCount // ignore: cast_nullable_to_non_nullable
+as int,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -155,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration delayFromDevice,  DateTime? lastSyncedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration shift,  Duration roundTripTime,  KyoshinMonitorSource source,  int sampleCount,  DateTime? lastSyncedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorTimerState() when $default != null:
-return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
+return $default(_that.shift,_that.roundTripTime,_that.source,_that.sampleCount,_that.lastSyncedAt);case _:
   return orElse();
 
 }
@@ -176,10 +186,10 @@ return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration delayFromDevice,  DateTime? lastSyncedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration shift,  Duration roundTripTime,  KyoshinMonitorSource source,  int sampleCount,  DateTime? lastSyncedAt)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorTimerState():
-return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
+return $default(_that.shift,_that.roundTripTime,_that.source,_that.sampleCount,_that.lastSyncedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +206,10 @@ return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration delayFromDevice,  DateTime? lastSyncedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration shift,  Duration roundTripTime,  KyoshinMonitorSource source,  int sampleCount,  DateTime? lastSyncedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorTimerState() when $default != null:
-return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
+return $default(_that.shift,_that.roundTripTime,_that.source,_that.sampleCount,_that.lastSyncedAt);case _:
   return null;
 
 }
@@ -211,10 +221,20 @@ return $default(_that.delayFromDevice,_that.lastSyncedAt);case _:
 @JsonSerializable()
 
 class _KyoshinMonitorTimerState implements KyoshinMonitorTimerState {
-  const _KyoshinMonitorTimerState({required this.delayFromDevice, required this.lastSyncedAt});
+  const _KyoshinMonitorTimerState({required this.shift, required this.roundTripTime, required this.source, required this.sampleCount, required this.lastSyncedAt});
   factory _KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorTimerStateFromJson(json);
 
-@override final  Duration delayFromDevice;
+/// 端末時計から見た `latest_time` のずれ (トリム平均)
+///
+/// 通常は負の値。端末時計の誤差を含むため、そのまま現在時刻から引いては
+/// いけない。[publishDelay] を使うこと。
+@override final  Duration shift;
+/// `latest.json` 取得の往復時間 (トリム平均)
+@override final  Duration roundTripTime;
+/// どのデータソースに対して測った値か
+@override final  KyoshinMonitorSource source;
+/// 測定に使ったサンプル数
+@override final  int sampleCount;
 @override final  DateTime? lastSyncedAt;
 
 /// Create a copy of KyoshinMonitorTimerState
@@ -230,16 +250,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorTimerState&&(identical(other.delayFromDevice, delayFromDevice) || other.delayFromDevice == delayFromDevice)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorTimerState&&(identical(other.shift, shift) || other.shift == shift)&&(identical(other.roundTripTime, roundTripTime) || other.roundTripTime == roundTripTime)&&(identical(other.source, source) || other.source == source)&&(identical(other.sampleCount, sampleCount) || other.sampleCount == sampleCount)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,delayFromDevice,lastSyncedAt);
+int get hashCode => Object.hash(runtimeType,shift,roundTripTime,source,sampleCount,lastSyncedAt);
 
 @override
 String toString() {
-  return 'KyoshinMonitorTimerState(delayFromDevice: $delayFromDevice, lastSyncedAt: $lastSyncedAt)';
+  return 'KyoshinMonitorTimerState(shift: $shift, roundTripTime: $roundTripTime, source: $source, sampleCount: $sampleCount, lastSyncedAt: $lastSyncedAt)';
 }
 
 
@@ -250,7 +270,7 @@ abstract mixin class _$KyoshinMonitorTimerStateCopyWith<$Res> implements $Kyoshi
   factory _$KyoshinMonitorTimerStateCopyWith(_KyoshinMonitorTimerState value, $Res Function(_KyoshinMonitorTimerState) _then) = __$KyoshinMonitorTimerStateCopyWithImpl;
 @override @useResult
 $Res call({
- Duration delayFromDevice, DateTime? lastSyncedAt
+ Duration shift, Duration roundTripTime, KyoshinMonitorSource source, int sampleCount, DateTime? lastSyncedAt
 });
 
 
@@ -267,10 +287,13 @@ class __$KyoshinMonitorTimerStateCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorTimerState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? delayFromDevice = null,Object? lastSyncedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? shift = null,Object? roundTripTime = null,Object? source = null,Object? sampleCount = null,Object? lastSyncedAt = freezed,}) {
   return _then(_KyoshinMonitorTimerState(
-delayFromDevice: null == delayFromDevice ? _self.delayFromDevice : delayFromDevice // ignore: cast_nullable_to_non_nullable
-as Duration,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+shift: null == shift ? _self.shift : shift // ignore: cast_nullable_to_non_nullable
+as Duration,roundTripTime: null == roundTripTime ? _self.roundTripTime : roundTripTime // ignore: cast_nullable_to_non_nullable
+as Duration,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorSource,sampleCount: null == sampleCount ? _self.sampleCount : sampleCount // ignore: cast_nullable_to_non_nullable
+as int,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

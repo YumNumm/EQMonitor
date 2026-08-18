@@ -282,7 +282,16 @@ as HomeShakeDetectionAnimationMode,
 /// @nodoc
 mixin _$HomeEewSettings {
 
- HomeEewFillMode get fillMode; HomeEewAnimationRate get animationRate; bool get autoZoom; bool get showPSWaveCircle;
+ HomeEewFillMode get fillMode; HomeEewAnimationRate get animationRate; bool get autoZoom; bool get showPSWaveCircle;/// P/S波到達予想円の時刻基準を、強震モニタ画像の取得対象時刻に合わせるか。
+///
+/// `false` (既定) は NTP 補正済みの正確な現在時刻を使う。円は本来
+/// 「いま波がどこまで来ているか」を示すものなので、既定では画像との
+/// 見た目の一致より実時間の正確さを優先する。
+///
+/// `true` にすると観測点の色と円の位置が完全に同期して見える代わりに、
+/// 円がサーバの公開遅延ぶん (実測: 強震モニタ約1.2秒 / 長周期地震動
+/// モニタ約0.6秒) 過去にずれる。
+ bool get alignPSWaveCircleToKyoshinMonitor;
 /// Create a copy of HomeEewSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -295,16 +304,16 @@ $HomeEewSettingsCopyWith<HomeEewSettings> get copyWith => _$HomeEewSettingsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeEewSettings&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.animationRate, animationRate) || other.animationRate == animationRate)&&(identical(other.autoZoom, autoZoom) || other.autoZoom == autoZoom)&&(identical(other.showPSWaveCircle, showPSWaveCircle) || other.showPSWaveCircle == showPSWaveCircle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeEewSettings&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.animationRate, animationRate) || other.animationRate == animationRate)&&(identical(other.autoZoom, autoZoom) || other.autoZoom == autoZoom)&&(identical(other.showPSWaveCircle, showPSWaveCircle) || other.showPSWaveCircle == showPSWaveCircle)&&(identical(other.alignPSWaveCircleToKyoshinMonitor, alignPSWaveCircleToKyoshinMonitor) || other.alignPSWaveCircleToKyoshinMonitor == alignPSWaveCircleToKyoshinMonitor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fillMode,animationRate,autoZoom,showPSWaveCircle);
+int get hashCode => Object.hash(runtimeType,fillMode,animationRate,autoZoom,showPSWaveCircle,alignPSWaveCircleToKyoshinMonitor);
 
 @override
 String toString() {
-  return 'HomeEewSettings(fillMode: $fillMode, animationRate: $animationRate, autoZoom: $autoZoom, showPSWaveCircle: $showPSWaveCircle)';
+  return 'HomeEewSettings(fillMode: $fillMode, animationRate: $animationRate, autoZoom: $autoZoom, showPSWaveCircle: $showPSWaveCircle, alignPSWaveCircleToKyoshinMonitor: $alignPSWaveCircleToKyoshinMonitor)';
 }
 
 
@@ -315,7 +324,7 @@ abstract mixin class $HomeEewSettingsCopyWith<$Res>  {
   factory $HomeEewSettingsCopyWith(HomeEewSettings value, $Res Function(HomeEewSettings) _then) = _$HomeEewSettingsCopyWithImpl;
 @useResult
 $Res call({
- HomeEewFillMode fillMode, HomeEewAnimationRate animationRate, bool autoZoom, bool showPSWaveCircle
+ HomeEewFillMode fillMode, HomeEewAnimationRate animationRate, bool autoZoom, bool showPSWaveCircle, bool alignPSWaveCircleToKyoshinMonitor
 });
 
 
@@ -332,12 +341,13 @@ class _$HomeEewSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeEewSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? animationRate = null,Object? autoZoom = null,Object? showPSWaveCircle = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fillMode = null,Object? animationRate = null,Object? autoZoom = null,Object? showPSWaveCircle = null,Object? alignPSWaveCircleToKyoshinMonitor = null,}) {
   return _then(HomeEewSettings(
 fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
 as HomeEewFillMode,animationRate: null == animationRate ? _self.animationRate : animationRate // ignore: cast_nullable_to_non_nullable
 as HomeEewAnimationRate,autoZoom: null == autoZoom ? _self.autoZoom : autoZoom // ignore: cast_nullable_to_non_nullable
 as bool,showPSWaveCircle: null == showPSWaveCircle ? _self.showPSWaveCircle : showPSWaveCircle // ignore: cast_nullable_to_non_nullable
+as bool,alignPSWaveCircleToKyoshinMonitor: null == alignPSWaveCircleToKyoshinMonitor ? _self.alignPSWaveCircleToKyoshinMonitor : alignPSWaveCircleToKyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -423,10 +433,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle,  bool alignPSWaveCircleToKyoshinMonitor)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeEewSettings() when $default != null:
-return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle);case _:
+return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle,_that.alignPSWaveCircleToKyoshinMonitor);case _:
   return orElse();
 
 }
@@ -444,10 +454,10 @@ return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle,  bool alignPSWaveCircleToKyoshinMonitor)  $default,) {final _that = this;
 switch (_that) {
 case _HomeEewSettings():
-return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle);case _:
+return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle,_that.alignPSWaveCircleToKyoshinMonitor);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -464,10 +474,10 @@ return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewFillMode fillMode,  HomeEewAnimationRate animationRate,  bool autoZoom,  bool showPSWaveCircle,  bool alignPSWaveCircleToKyoshinMonitor)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeEewSettings() when $default != null:
-return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle);case _:
+return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWaveCircle,_that.alignPSWaveCircleToKyoshinMonitor);case _:
   return null;
 
 }
@@ -479,13 +489,23 @@ return $default(_that.fillMode,_that.animationRate,_that.autoZoom,_that.showPSWa
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeEewSettings implements HomeEewSettings {
-  const _HomeEewSettings({this.fillMode = HomeEewFillMode.intensity, this.animationRate = HomeEewAnimationRate.unlimited, this.autoZoom = true, this.showPSWaveCircle = true});
+  const _HomeEewSettings({this.fillMode = HomeEewFillMode.intensity, this.animationRate = HomeEewAnimationRate.unlimited, this.autoZoom = true, this.showPSWaveCircle = true, this.alignPSWaveCircleToKyoshinMonitor = false});
   factory _HomeEewSettings.fromJson(Map<String, dynamic> json) => _$HomeEewSettingsFromJson(json);
 
 @override@JsonKey() final  HomeEewFillMode fillMode;
 @override@JsonKey() final  HomeEewAnimationRate animationRate;
 @override@JsonKey() final  bool autoZoom;
 @override@JsonKey() final  bool showPSWaveCircle;
+/// P/S波到達予想円の時刻基準を、強震モニタ画像の取得対象時刻に合わせるか。
+///
+/// `false` (既定) は NTP 補正済みの正確な現在時刻を使う。円は本来
+/// 「いま波がどこまで来ているか」を示すものなので、既定では画像との
+/// 見た目の一致より実時間の正確さを優先する。
+///
+/// `true` にすると観測点の色と円の位置が完全に同期して見える代わりに、
+/// 円がサーバの公開遅延ぶん (実測: 強震モニタ約1.2秒 / 長周期地震動
+/// モニタ約0.6秒) 過去にずれる。
+@override@JsonKey() final  bool alignPSWaveCircleToKyoshinMonitor;
 
 /// Create a copy of HomeEewSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -500,16 +520,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeEewSettings&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.animationRate, animationRate) || other.animationRate == animationRate)&&(identical(other.autoZoom, autoZoom) || other.autoZoom == autoZoom)&&(identical(other.showPSWaveCircle, showPSWaveCircle) || other.showPSWaveCircle == showPSWaveCircle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeEewSettings&&(identical(other.fillMode, fillMode) || other.fillMode == fillMode)&&(identical(other.animationRate, animationRate) || other.animationRate == animationRate)&&(identical(other.autoZoom, autoZoom) || other.autoZoom == autoZoom)&&(identical(other.showPSWaveCircle, showPSWaveCircle) || other.showPSWaveCircle == showPSWaveCircle)&&(identical(other.alignPSWaveCircleToKyoshinMonitor, alignPSWaveCircleToKyoshinMonitor) || other.alignPSWaveCircleToKyoshinMonitor == alignPSWaveCircleToKyoshinMonitor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fillMode,animationRate,autoZoom,showPSWaveCircle);
+int get hashCode => Object.hash(runtimeType,fillMode,animationRate,autoZoom,showPSWaveCircle,alignPSWaveCircleToKyoshinMonitor);
 
 @override
 String toString() {
-  return 'HomeEewSettings(fillMode: $fillMode, animationRate: $animationRate, autoZoom: $autoZoom, showPSWaveCircle: $showPSWaveCircle)';
+  return 'HomeEewSettings(fillMode: $fillMode, animationRate: $animationRate, autoZoom: $autoZoom, showPSWaveCircle: $showPSWaveCircle, alignPSWaveCircleToKyoshinMonitor: $alignPSWaveCircleToKyoshinMonitor)';
 }
 
 
@@ -520,7 +540,7 @@ abstract mixin class _$HomeEewSettingsCopyWith<$Res> implements $HomeEewSettings
   factory _$HomeEewSettingsCopyWith(_HomeEewSettings value, $Res Function(_HomeEewSettings) _then) = __$HomeEewSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- HomeEewFillMode fillMode, HomeEewAnimationRate animationRate, bool autoZoom, bool showPSWaveCircle
+ HomeEewFillMode fillMode, HomeEewAnimationRate animationRate, bool autoZoom, bool showPSWaveCircle, bool alignPSWaveCircleToKyoshinMonitor
 });
 
 
@@ -537,12 +557,13 @@ class __$HomeEewSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeEewSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fillMode = null,Object? animationRate = null,Object? autoZoom = null,Object? showPSWaveCircle = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fillMode = null,Object? animationRate = null,Object? autoZoom = null,Object? showPSWaveCircle = null,Object? alignPSWaveCircleToKyoshinMonitor = null,}) {
   return _then(_HomeEewSettings(
 fillMode: null == fillMode ? _self.fillMode : fillMode // ignore: cast_nullable_to_non_nullable
 as HomeEewFillMode,animationRate: null == animationRate ? _self.animationRate : animationRate // ignore: cast_nullable_to_non_nullable
 as HomeEewAnimationRate,autoZoom: null == autoZoom ? _self.autoZoom : autoZoom // ignore: cast_nullable_to_non_nullable
 as bool,showPSWaveCircle: null == showPSWaveCircle ? _self.showPSWaveCircle : showPSWaveCircle // ignore: cast_nullable_to_non_nullable
+as bool,alignPSWaveCircleToKyoshinMonitor: null == alignPSWaveCircleToKyoshinMonitor ? _self.alignPSWaveCircleToKyoshinMonitor : alignPSWaveCircleToKyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

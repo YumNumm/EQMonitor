@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
@@ -86,6 +88,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       return;
     }
     final stopwatch = Stopwatch()..start();
+    final previous = state.value;
     state = const AsyncLoading<KyoshinMonitorState>();
     state = await AsyncValue.guard(() async {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
@@ -136,6 +139,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
       workerSw.stop();
 
+      // 取得できたので、オフセットを詰められないか試す。
+      ref
+          .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
+          .onFetchSucceeded(source: monitorSource, targetTime: targetTime);
+
       return KyoshinMonitorState(
         lastUpdatedAt: DateTime.now(),
         lastImageFetchTargetTime: targetTime,
@@ -148,6 +156,25 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         currentImageRaw: image,
       );
     });
+
+    // 404 は「その時刻の画像がまだ公開されていない」というだけなので、
+    // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
+    if (state case AsyncError(:final error)) {
+      if (error is DioException && error.response?.statusCode == 404) {
+        final monitorSource = ref
+            .read(kyoshinMonitorSettingsProvider)
+            .requireValue
+            .monitorSource;
+        ref
+            .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
+            .onFetchFailed(monitorSource);
+        state = AsyncData(
+          (previous ?? const KyoshinMonitorState()).copyWith(
+            status: KyoshinMonitorStatus.delayed,
+          ),
+        );
+      }
+    }
   }
 
   /// リプレイ再生で解析済みの観測点 GeoJSON を表示状態へ反映する。

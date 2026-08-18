@@ -1,4 +1,8 @@
 import 'package:intl/intl.dart';
+import 'package:kyoshin_monitor_api/src/util/jst.dart';
+
+/// タイムゾーン指定子 (`Z` または `±HH:MM` / `±HHMM`) を検出する。
+final _timeZoneDesignator = RegExp(r'([zZ]|[+-]\d{2}:?\d{2})$');
 
 /// 文字列からDateTime型に変換
 DateTime? dateTimeOrNullFromString(String? value) {
@@ -12,15 +16,30 @@ DateTime? dateTimeOrNullFromString(String? value) {
   }
 }
 
-DateTime dateTimeFromString(String value) =>
-    DateTime.parse(value.replaceAll('/', '-'));
+/// 文字列からDateTime型に変換する。
+///
+/// 強震モニタ / 長周期地震動モニタの Web API は `2026/08/19 00:17:30` のように
+/// **タイムゾーン指定のない JST** を返す。素の [DateTime.parse] はこれを端末の
+/// ローカル時刻として解釈してしまうため、指定子が無い場合は JST を補って
+/// 絶対時刻として解釈する。
+///
+/// 既にタイムゾーン指定子を持つ文字列はそのまま [DateTime.parse] に渡す。
+DateTime dateTimeFromString(String value) {
+  final normalized = value.replaceAll('/', '-');
+  // 時刻部を持たない文字列にオフセットを付けると parse できないため除外する。
+  if (!normalized.contains(':') || _timeZoneDesignator.hasMatch(normalized)) {
+    return DateTime.parse(normalized);
+  }
+  return DateTime.parse('$normalized+09:00');
+}
 
 /// DateTime型から文字列に変換
 String? dateTimeOrNullToString(DateTime? value) =>
     value != null ? dateTimeToString(value) : null;
 
+/// [DateTime] を Web API と同じ JST の壁時計文字列に変換する。
 String dateTimeToString(DateTime value) =>
-    DateFormat('yyyy/MM/dd HH:mm:ss').format(value);
+    DateFormat('yyyy/MM/dd HH:mm:ss').format(value.toJst());
 
 /// 文字列からdouble型に変換
 double? doubleOrNullFromString(String? value) =>

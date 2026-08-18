@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:kyoshin_monitor_api/src/api/kyoshin_monitor_web_api_client.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
+import 'package:kyoshin_monitor_api/src/util/jst.dart';
 
 class KyoshinMonitorWebApiDataSource {
-  new({required KyoshinMonitorWebApiClient client})
-    : _client = client;
+  new({required KyoshinMonitorWebApiClient client}) : _client = client;
 
   final KyoshinMonitorWebApiClient _client;
 
@@ -35,8 +35,8 @@ class KyoshinMonitorWebApiDataSource {
   /// PsWaveImg
   Future<List<int>> getPsWaveImageData(DateTime dateTime) =>
       _client.getPsWaveImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
+        date: formatDate(dateTime),
+        dateTime: formatDateTime(dateTime),
       );
 
   /// RealtimeImg
@@ -52,20 +52,31 @@ class KyoshinMonitorWebApiDataSource {
     return _client.getRealtimeImageData(
       type: type.urlString,
       layer: layer.urlString,
-      date: dateFormat.format(dateTime),
-      dateTime: dateTimeFormat.format(dateTime),
+      date: formatDate(dateTime),
+      dateTime: formatDateTime(dateTime),
     );
   }
 
   /// 予想震度
   Future<List<int>> getEstShindoImageData(DateTime dateTime) =>
       _client.getEstShindoImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
+        date: formatDate(dateTime),
+        dateTime: formatDateTime(dateTime),
       );
 
-  static DateFormat get dateFormat => DateFormat('yyyyMMdd');
-  static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');
+  /// URL 用の日付 (JST の `yyyyMMdd`)
+  ///
+  /// Web API のパスは JST を要求するため、端末のタイムゾーンに依存しないよう
+  /// [JstDateTimeX.toJst] を通してから整形する。
+  static String formatDate(DateTime dateTime) =>
+      _dateFormat.format(dateTime.toJst());
+
+  /// URL 用の日時 (JST の `yyyyMMddHHmmss`)
+  static String formatDateTime(DateTime dateTime) =>
+      _dateTimeFormat.format(dateTime.toJst());
+
+  static final DateFormat _dateFormat = DateFormat('yyyyMMdd');
+  static final DateFormat _dateTimeFormat = DateFormat('yyyyMMddHHmmss');
 }
 
 /// リアルタイム画像の種類

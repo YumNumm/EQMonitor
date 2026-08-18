@@ -60,6 +60,10 @@ _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
             'show_p_s_wave_circle',
             (v) => v as bool? ?? true,
           ),
+          alignPSWaveCircleToKyoshinMonitor: $checkedConvert(
+            'align_p_s_wave_circle_to_kyoshin_monitor',
+            (v) => v as bool? ?? false,
+          ),
         );
         return val;
       },
@@ -68,6 +72,8 @@ _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
         'animationRate': 'animation_rate',
         'autoZoom': 'auto_zoom',
         'showPSWaveCircle': 'show_p_s_wave_circle',
+        'alignPSWaveCircleToKyoshinMonitor':
+            'align_p_s_wave_circle_to_kyoshin_monitor',
       },
     );
 
@@ -77,6 +83,8 @@ Map<String, dynamic> _$HomeEewSettingsToJson(_HomeEewSettings instance) =>
       'animation_rate': _$HomeEewAnimationRateEnumMap[instance.animationRate]!,
       'auto_zoom': instance.autoZoom,
       'show_p_s_wave_circle': instance.showPSWaveCircle,
+      'align_p_s_wave_circle_to_kyoshin_monitor':
+          instance.alignPSWaveCircleToKyoshinMonitor,
     };
 
 const _$HomeEewFillModeEnumMap = {
