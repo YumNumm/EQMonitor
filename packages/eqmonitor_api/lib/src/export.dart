@@ -83,6 +83,7 @@ export 'models/device_locale.dart';
 export 'models/device_register_body.dart';
 export 'models/device_register_response.dart';
 export 'models/device_registration_type.dart';
+export 'models/device_role.dart';
 export 'models/device_me_response.dart';
 export 'models/apns_environment.dart';
 export 'models/v2_device_me_apns_kind_request_body.dart';

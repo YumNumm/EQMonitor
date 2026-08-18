@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'device_locale.dart';
 import 'device_registration_type.dart';
+import 'device_role.dart';
 import 'device_type.dart';
 
 part 'device_me_response.freezed.dart';
@@ -23,6 +24,7 @@ abstract class DeviceMeResponse with _$DeviceMeResponse {
     required String? userId,
     @JsonKey(name: 'is_pro')
     required bool isPro,
+    required DeviceRole role,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _DeviceMeResponse;

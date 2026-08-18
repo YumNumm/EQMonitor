@@ -24,6 +24,7 @@ _DeviceMeResponse _$DeviceMeResponseFromJson(
     ),
     userId: $checkedConvert('userId', (v) => v as String?),
     isPro: $checkedConvert('is_pro', (v) => v as bool),
+    role: $checkedConvert('role', (v) => $enumDecode(_$DeviceRoleEnumMap, v)),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
@@ -38,6 +39,7 @@ Map<String, dynamic> _$DeviceMeResponseToJson(_DeviceMeResponse instance) =>
       'registrationType': instance.registrationType,
       'userId': instance.userId,
       'is_pro': instance.isPro,
+      'role': instance.role,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
@@ -57,4 +59,9 @@ const _$DeviceLocaleEnumMap = {
 const _$DeviceRegistrationTypeEnumMap = {
   DeviceRegistrationType.appCheck: 'APP_CHECK',
   DeviceRegistrationType.challenge: 'CHALLENGE',
+};
+
+const _$DeviceRoleEnumMap = {
+  DeviceRole.admin: 'ADMIN',
+  DeviceRole.user: 'USER',
 };
