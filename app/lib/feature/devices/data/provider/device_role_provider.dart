@@ -7,9 +7,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_role_provider.g.dart';
 
-/// このデバイスに紐づくユーザーのロール。
+/// このデバイスのロール。
 ///
-/// デバイス未登録時・取得失敗時・ロール未提供時は null を返す。
+/// デバイス未登録時・取得失敗時は null を返す。
 /// 権限判定に使うため、取得できない場合に権限ありへフォールバックしない。
 @Riverpod(keepAlive: true)
 Future<DeviceRole?> deviceRole(Ref ref) async {
