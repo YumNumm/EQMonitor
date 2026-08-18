@@ -65,6 +65,10 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
           }),
         );
       };
+      // codes は初期filterにのみ使用し、以後の更新は latestCodes(useRef) と
+      // 下の更新用effectが担当する。keysに入れるとEEW更新のたびに
+      // レイヤーが再生成される。
+      // ignore_keys: codes
     }, [styleController]);
 
     useEffect(() {

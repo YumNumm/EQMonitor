@@ -43,6 +43,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           )
           .values
           .toList();
+      // 'e' は sortedBy のクロージャ引数であり外部の値ではない。
+      // eewRegions は先頭で実際に参照している。
+      // ignore_keys: e, eewRegions
     }, [eewRegions]);
     latestRegionMaxIntensities.value = regionMaxIntensities;
 
@@ -102,6 +105,10 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           }),
         );
       };
+      // BaseLayer は静的メンバ参照であり変数ではない。
+      // colorModel は addLayer の paint 生成に使っているため keys から外せない
+      // (プラグインがネストしたクロージャ内の参照を拾えず誤検出する)。
+      // ignore_keys: BaseLayer, colorModel
     }, [styleController, colorModel]);
 
     // データ更新

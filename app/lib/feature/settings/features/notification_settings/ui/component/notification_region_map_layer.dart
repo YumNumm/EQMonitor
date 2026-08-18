@@ -146,6 +146,10 @@ class NotificationRegionMapLayer extends HookConsumerWidget {
           }),
         );
       };
+      // これらは初期filterにのみ使う。選択変更への追従は下の
+      // 「filter更新」effect (keys に selection を持つ) が担当しており、
+      // keysに入れると選択のたびにレイヤーごと貼り直しになる。
+      // ignore_keys: region, regionCityCodes, cityCode
     }, [style, enqueue, filterBuilder, focusColor, boundaryColor]);
 
     useEffect(() {

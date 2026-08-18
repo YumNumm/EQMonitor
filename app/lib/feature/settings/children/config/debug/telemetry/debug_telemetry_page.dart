@@ -33,6 +33,9 @@ class DebugTelemetryPage extends HookConsumerWidget {
         unawaited(refresh());
         return null;
       },
+      // 初回のみ取得する意図の const []。ローカル関数を keys に入れると
+      // 毎ビルド再取得になる。
+      // ignore_keys: refresh
       const [],
     );
 
@@ -77,21 +80,20 @@ class DebugTelemetryPage extends HookConsumerWidget {
         children: [
           _SummaryCard(
             totalCount: totalCount.value,
-            unsyncedCount:
-                events.value.where((e) => !e.synced).length,
+            unsyncedCount: events.value.where((e) => !e.synced).length,
           ),
           const Divider(height: 1),
           Expanded(
             child: isLoading.value
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : events.value.isEmpty
-                    ? const Center(child: Text('イベントはまだありません'))
-                    : ListView.separated(
-                        itemCount: events.value.length,
-                        separatorBuilder: (_, _) => const Divider(height: 1),
-                        itemBuilder: (context, index) =>
-                            _EventTile(event: events.value[index]),
-                      ),
+                ? const Center(child: Text('イベントはまだありません'))
+                : ListView.separated(
+                    itemCount: events.value.length,
+                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    itemBuilder: (context, index) =>
+                        _EventTile(event: events.value[index]),
+                  ),
           ),
         ],
       ),
@@ -248,7 +250,10 @@ class _EventTile extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: context.designSystem.colorTheme.surfaceContainerHighest,
+                            color: context
+                                .designSystem
+                                .colorTheme
+                                .surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: SelectableText(

@@ -66,6 +66,9 @@ class _LiveMonitorMapViewport extends HookConsumerWidget {
       ),
       _ => null,
     };
+    // instanceKey はコールバック本体からは参照されないが、インスタンスを
+    // 作り直す契機そのものなので keys から外せない。
+    // ignore_keys: instanceKey
     final instanceIdentity = useMemoized(instanceOwner.switchInstance, [
       instanceKey,
     ]);

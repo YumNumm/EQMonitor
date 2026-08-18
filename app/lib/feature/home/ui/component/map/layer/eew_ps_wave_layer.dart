@@ -171,6 +171,9 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           ),
         );
       };
+      // BaseLayer / EewPsWaveLayer は静的メンバ参照であり変数ではない
+      // (プラグインが型名をローカル変数として誤検出する)。
+      // ignore_keys: BaseLayer, EewPsWaveLayer
     }, [styleController]);
 
     final animationController = useAnimationController(

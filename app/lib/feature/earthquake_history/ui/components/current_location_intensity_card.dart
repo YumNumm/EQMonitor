@@ -33,6 +33,9 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
       () => position != null
           ? LatLng(position.latitude, position.longitude)
           : null,
+      // Position はストリーム更新のたびに別インスタンスになるため、
+      // 意図的に緯度経度の値だけを keys にしている。
+      // ignore_keys: position
       [position?.latitude, position?.longitude],
     );
 

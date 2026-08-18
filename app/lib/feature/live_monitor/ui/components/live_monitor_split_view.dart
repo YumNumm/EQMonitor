@@ -26,6 +26,9 @@ class LiveMonitorSplitView extends HookConsumerWidget {
     final storedRatio = isPortrait
         ? settings.portraitRealtimeRatio
         : settings.landscapeRealtimeRatio;
+    // orientation は本体から参照しないが、縦横で別の ValueNotifier を持たせる
+    // ための契機。storedRatio が同値でも作り直したいので keys に残す。
+    // ignore_keys: orientation
     final localRatio = useMemoized(() => ValueNotifier(storedRatio), [
       orientation,
       storedRatio,

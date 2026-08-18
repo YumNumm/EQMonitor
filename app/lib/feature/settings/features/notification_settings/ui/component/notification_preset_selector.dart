@@ -52,6 +52,10 @@ class NotificationPresetSelector extends HookConsumerWidget {
         onChanged(NotificationPreset.none);
       }
       return null;
+      // onChanged は親が毎ビルド生成しうるコールバック。keysに入れると
+      // 親の再ビルドのたびにeffectが再実行される。ここで見たいのは
+      // 権限と選択中プリセットの変化だけ。
+      // ignore_keys: onChanged
     }, [permission, selectedPreset]);
 
     void handlePresetTap(NotificationPreset preset) {

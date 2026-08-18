@@ -86,6 +86,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
         isVisible.value = !isVisible.value;
       });
       return timer.cancel;
+      // isVisible はこのTimer自身がトグルする値。keysに入れると500msごとに
+      // Timerが破棄・再生成され点滅が破綻するため、意図的に含めない。
+      // ignore_keys: isVisible.value
     }, [enableBlink]);
 
     final iconOpacity = isVisible.value ? 1.0 : 0.75;
@@ -222,6 +225,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
           }),
         );
       };
+      // Assets は flutter_gen の静的クラス、latestIconOpacity は useRef。
+      // どちらもビルド間で変化しない。
+      // ignore_keys: Assets, latestIconOpacity
     }, [styleController]);
 
     useEffect(() {
@@ -255,6 +261,10 @@ class EewHypocenterLayer extends HookConsumerWidget {
       );
 
       return null;
+      // 3つとも enqueue に渡すクロージャ内で実際に参照している
+      // (updateGeoJsonSource の features 生成)。keys から外すと
+      // EEWの更新でソースが再描画されなくなるため残す。
+      // ignore_keys: normalEews, lowPreciseEews, iconOpacity
     }, [styleController, normalEews, lowPreciseEews, iconOpacity]);
 
     return const SizedBox.shrink();

@@ -356,6 +356,8 @@ class _CoordField extends HookWidget {
         controller.text = value == null ? '' : value.toString();
       }
       return null;
+      // controller は useTextEditingController が返す不変の参照。
+      // ignore_keys: controller
     }, [value]);
 
     return TextField(

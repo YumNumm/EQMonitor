@@ -40,6 +40,9 @@ class _RouteDropdownMenu extends HookWidget {
             .map((path) => DropdownMenuEntry<String>(value: path, label: path))
             .toList();
       },
+      // keys にリテラルではなく routeBases 自体を渡しているため、
+      // プラグインが keys 側の識別子を拾えず未指定と誤検出する。
+      // ignore_keys: routeBases
       routeBases,
     );
     final pathEditController = useTextEditingController();

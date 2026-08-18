@@ -205,6 +205,9 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         listenerDisposed = true;
         animationController.removeListener(listener);
       };
+      // 本体は ref.read 経由で読むため simulation の直接参照はないが、
+      // 上のコメントの通りリスナーの張り直し契機として意図的に keys に含める。
+      // ignore_keys: simulation
     }, [styleController, simulation, animationController]);
 
     return const SizedBox.shrink();

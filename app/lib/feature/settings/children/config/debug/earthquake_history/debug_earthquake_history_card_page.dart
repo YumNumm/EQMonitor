@@ -68,7 +68,7 @@ class _DebugBody extends HookWidget {
         count: count.value,
         seed: seed.value,
       ),
-      [mode.value, maxIntensity.value, count.value, seed.value],
+      [param, mode.value, maxIntensity.value, count.value, seed.value],
     );
 
     return ListView(

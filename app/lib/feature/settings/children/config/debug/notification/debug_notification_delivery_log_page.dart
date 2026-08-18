@@ -79,6 +79,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
     useEffect(() {
       unawaited(loadFirstPage());
       return null;
+      // loadFirstPage はローカル関数で毎ビルド識別子が変わるため keys に
+      // 入れると毎ビルド再取得になる。refreshTick は再取得の契機そのもの。
+      // ignore_keys: loadFirstPage, refreshTick.value
     }, [refreshTick.value]);
 
     return Scaffold(

@@ -127,25 +127,39 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           }),
         );
       };
-    }, [styleController, displayMode, colorModel]);
+      // BaseLayer は静的メンバ参照。regionMaxIntensities はレイヤー生成時の
+      // 初期filterにのみ使っており、以後の更新は下の「データ更新」effectが
+      // 担当する。keysに入れるとEEW更新のたびに全レイヤーが再生成される。
+      // colorModel は paint 生成に使っているため外せない。
+      // ignore_keys: BaseLayer, regionMaxIntensities, colorModel
+    }, [styleController, displayMode, colorModel, intensityFilterUpdater]);
 
     // 震度モード: データ更新
-    useEffect(() {
-      if (styleController == null || displayMode != EewDisplayMode.intensity) {
-        return null;
-      }
+    useEffect(
+      () {
+        if (styleController == null ||
+            displayMode != EewDisplayMode.intensity) {
+          return null;
+        }
 
-      unawaited(
-        enqueue(
-          () => intensityFilterUpdater.update(
-            styleController: styleController,
-            regionMaxIntensities: regionMaxIntensities,
+        unawaited(
+          enqueue(
+            () => intensityFilterUpdater.update(
+              styleController: styleController,
+              regionMaxIntensities: regionMaxIntensities,
+            ),
           ),
-        ),
-      );
+        );
 
-      return null;
-    }, [styleController, displayMode, regionMaxIntensities]);
+        return null;
+      },
+      [
+        styleController,
+        displayMode,
+        regionMaxIntensities,
+        intensityFilterUpdater,
+      ],
+    );
 
     // 警報モード: fill + line の2レイヤー
     useEffect(() {

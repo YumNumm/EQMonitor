@@ -47,6 +47,9 @@ class ThemeImportExportSection extends HookConsumerWidget {
         context: context,
         builder: (dialogContext) => HookBuilder(
           builder: (context) {
+            // HookBuilder は独立したフックスコープを作るため、この useState は
+            // 条件分岐下のフック呼び出しには当たらない。
+            // ignore: flutter_hooks_lint_plugin/nested_hooks
             final state = useState<Set<ThemeBrightnessMode>>({...theme.modes});
             return AlertDialog.adaptive(
               title: const Text('適用先を選択'),
