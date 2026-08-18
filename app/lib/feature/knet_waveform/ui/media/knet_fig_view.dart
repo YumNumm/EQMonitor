@@ -65,6 +65,11 @@ class _FigContent extends HookWidget {
     useEffect(() {
       unawaited(loadImage());
       return null;
+      // loadImage はローカル関数なので毎ビルド識別子が変わる。keysに入れると
+      // 毎ビルド再取得になる。selectedType/eventTime は loadImage 内で
+      // 実際に使っており（プラグインはローカル関数越しの参照を追えない）、
+      // 再ロードの契機そのものなので外せない。
+      // ignore_keys: loadImage, selectedType.value, eventTime
     }, [selectedType.value, eventTime]);
 
     return Column(

@@ -1686,6 +1686,8 @@ class _JsonEditor extends HookWidget {
         );
       }
       return null;
+      // controller は useTextEditingController が返す不変の参照。
+      // ignore_keys: controller
     }, [state.jsonText]);
 
     return Card.outlined(
@@ -2914,6 +2916,8 @@ class _ControlledTextFormField extends HookWidget {
         );
       }
       return null;
+      // controller は useTextEditingController が返す不変の参照。
+      // ignore_keys: controller
     }, [displayed]);
     return TextFormField(
       key: fieldKey,

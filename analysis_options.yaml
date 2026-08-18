@@ -30,6 +30,35 @@ plugins:
       avoid_print: true
       avoid_eqmonitor_api_in_ui: true
       avoid_mixed_declaration_categories: true
+  # flutter_hooks 向けの lint (eslint-plugin-react-hooks 相当)
+  # - exhaustive_keys: useEffect などの keys の過不足を検出
+  # - rules_of_hooks: if/for/while 内での hook 呼び出しを検出
+  flutter_hooks_lint_plugin:
+    version: ^0.8.0
+    diagnostics:
+      exhaustive_keys: true
+      rules_of_hooks: true
+
+# flutter_hooks_lint_plugin 自体のオプション。
+# analyzer の `plugins:` 配下ではなくトップレベルから読まれる
+# (flutter_hooks_lint_plugin/src/lint/config.dart の
+#  FlutterHooksRulesPluginOptions._rootKey)。
+flutter_hooks_lint_plugin:
+  exhaustive_keys:
+    # ここを書くとプラグイン既定値を「置き換える」ため、既定の4つも明記する。
+    constant_hooks:
+      - useRef
+      - useIsMounted
+      - useFocusNode
+      - useContext
+      # useCallback(..., const []) を返すため、ビルド間で参照が変わらない。
+      #
+      # なお useTextEditingController のような「callableなconstオブジェクト」
+      # 形式のフックはここに書いても効かない。プラグインは初期化子が
+      # MethodInvocation の場合しかフック名を見ないため
+      # (exhaustive_keys.dart の _LocalVariableVisitor)。
+      # それらの箇所は個別に `// ignore_keys:` で抑制している。
+      - useMapOperationQueue
 
 linter:
   rules:

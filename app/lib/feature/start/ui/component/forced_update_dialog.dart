@@ -33,6 +33,9 @@ class ForcedUpdateWrapper extends HookConsumerWidget {
     useEffect(() {
       scheduleCheck();
       return null;
+      // 初回のみ実行する意図の const []（更新時の再チェックは下の
+      // ref.listen が担当）。ローカル関数を keys に入れると毎ビルド走る。
+      // ignore_keys: scheduleCheck
     }, const []);
 
     // Start APIが更新されたときにも再チェックする

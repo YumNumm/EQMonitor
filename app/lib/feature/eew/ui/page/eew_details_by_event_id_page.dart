@@ -37,7 +37,8 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
         selectedIndex.value = simulation.currentIndex;
       }
       return null;
-    }, [simulation?.currentIndex]);
+      // isPlaying だけが変わる場合も追従する必要があるため simulation 全体を見る
+    }, [simulation]);
 
     return Scaffold(
       appBar: AppBar(

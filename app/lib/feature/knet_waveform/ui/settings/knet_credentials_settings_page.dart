@@ -25,6 +25,8 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
         }
       });
       return null;
+      // どちらも useTextEditingController が返す不変の参照。
+      // ignore_keys: userIdController, passwordController
     }, [credentials]);
 
     return Scaffold(

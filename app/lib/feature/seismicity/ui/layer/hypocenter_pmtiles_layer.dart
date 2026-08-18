@@ -85,6 +85,11 @@ class HypocenterPmTilesLayer extends HookWidget {
           ),
         );
       };
+      // archives はリストの同一性が毎ビルド変わりうるため、安定した
+      // archiveKey を再構築の契機として使っている（archives を直接 keys に
+      // 入れると毎ビルド全ソース・レイヤーを貼り直すことになる）。
+      // tick.value は定期リフレッシュの契機で、本体からは参照しない。
+      // ignore_keys: archives, archiveKey, tick.value
     }, [styleController, archiveKey, colorMode, tick.value]);
 
     return const SizedBox.shrink();

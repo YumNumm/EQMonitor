@@ -53,7 +53,7 @@ class _FnetCatalogList extends HookConsumerWidget {
         year: selectedMonth?.year ?? now.year,
         month: selectedMonth?.month ?? now.month,
       );
-    }, [selectedMonth]);
+    }, [selectedMonth, niedApiClient]);
 
     final snapshot = useFuture(future);
 

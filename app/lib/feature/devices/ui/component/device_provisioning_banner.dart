@@ -163,6 +163,11 @@ class _WaitingBanner extends HookWidget {
         remaining.value = calcRemaining();
       });
       return timer.cancel;
+      // calcRemaining が捕捉するのは resumeAt だけで、それは keys にある。
+      // ローカル関数は毎ビルド識別子が変わるため keys に入れると
+      // Timer が毎ビルド作り直される。resumeAt も calcRemaining 経由で
+      // 実際に使っているので外せない。
+      // ignore_keys: calcRemaining, resumeAt
     }, [resumeAt]);
 
     final colorTheme = context.designSystem.colorTheme;

@@ -76,6 +76,9 @@ class _MovieContent extends HookWidget {
     useEffect(() {
       unawaited(loadVideo(selectedType.value));
       return null;
+      // ローカル関数のため毎ビルド識別子が変わる。keysに入れると毎ビルド
+      // 動画を読み直してしまう。
+      // ignore_keys: loadVideo
     }, [selectedType.value]);
 
     // ページ離脱時にコントローラーを解放
@@ -83,6 +86,10 @@ class _MovieContent extends HookWidget {
       () => () {
         unawaited(controller.value?.dispose());
       },
+      // アンマウント時に「その時点の」controller を解放するための const []。
+      // keysに入れると差し替えのたびにcleanupが走り、loadVideo側の
+      // dispose と二重解放になる。
+      // ignore_keys: controller.value
       const [],
     );
 

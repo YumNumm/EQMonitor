@@ -378,22 +378,11 @@ class _ValueEditor extends HookConsumerWidget {
 
     switch (value) {
       case final bool boolValue:
-        final state = useState(boolValue);
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              title: Text(state.value.toString()),
-              value: state.value,
-              onChanged: (v) => state.value = v,
-            ),
-            _SaveButton(
-              onPressed: () => save(
-                (key) =>
-                    editorAction.setBool(ref, kind, key, value: state.value),
-              ),
-            ),
-          ],
+        return _BoolEditor(
+          initialValue: boolValue,
+          onSave: (newValue) => save(
+            (key) => editorAction.setBool(ref, kind, key, value: newValue),
+          ),
         );
       case final int intValue:
         final controller = useTextEditingController(text: intValue.toString());
@@ -445,6 +434,34 @@ class _ValueEditor extends HookConsumerWidget {
       default:
         return Text('未対応の型: ${value.runtimeType}');
     }
+  }
+}
+
+/// bool 用のエディタ。
+///
+/// `_ValueEditor.build` の switch の中で直接 `useState` を呼ぶと、
+/// 値の実行時型によってフックの呼び出し順が変わってしまう
+/// (Rules of Hooks 違反)。専用のHookWidgetへ切り出して回避する。
+class _BoolEditor extends HookWidget {
+  const new({required this.initialValue, required this.onSave});
+
+  final bool initialValue;
+  final ValueChanged<bool> onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    final state = useState(initialValue);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SwitchListTile(
+          title: Text(state.value.toString()),
+          value: state.value,
+          onChanged: (v) => state.value = v,
+        ),
+        _SaveButton(onPressed: () => onSave(state.value)),
+      ],
+    );
   }
 }
 

@@ -68,6 +68,9 @@ class SeismicityPage extends HookConsumerWidget {
       selectedArchiveIds.value = selected.map((archive) => archive.id).toSet();
       hasSynchronizedManifest.value = true;
       return null;
+      // このeffect自身が selectedArchiveIds を書き換えるため、keysに入れると
+      // 無限に再実行される。manifest の変化にのみ追従させる。
+      // ignore_keys: selectedArchiveIds.value
     }, [manifest]);
     final selectedArchives =
         manifest?.archives

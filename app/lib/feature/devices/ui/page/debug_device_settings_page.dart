@@ -114,6 +114,9 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
       tick();
       final timer = Timer.periodic(const Duration(seconds: 1), (_) => tick());
       return timer.cancel;
+      // マウント時に1度だけTimerを張る意図の const []。tick はローカル関数で
+      // 毎ビルド識別子が変わるため、keysに入れるとTimerが毎ビルド再生成される。
+      // ignore_keys: tick
     }, const []);
 
     final provisionStatus = ref.watch(deviceProvisioningProvider);
