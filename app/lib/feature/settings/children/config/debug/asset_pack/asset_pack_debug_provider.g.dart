@@ -10,49 +10,49 @@ part of 'asset_pack_debug_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
+/// Reads native diagnostics for the app-bundled Asset Pack.
 
-@ProviderFor(assetPackDebugInfo)
-final assetPackDebugInfoProvider = AssetPackDebugInfoProvider._();
+@ProviderFor(assetPackDiagnostics)
+final assetPackDiagnosticsProvider = AssetPackDiagnosticsProvider._();
 
-/// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
+/// Reads native diagnostics for the app-bundled Asset Pack.
 
-final class AssetPackDebugInfoProvider
+final class AssetPackDiagnosticsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<AssetPackDebugInfo>,
-          AssetPackDebugInfo,
-          FutureOr<AssetPackDebugInfo>
+          AsyncValue<AssetPackDiagnostics>,
+          AssetPackDiagnostics,
+          FutureOr<AssetPackDiagnostics>
         >
     with
-        $FutureModifier<AssetPackDebugInfo>,
-        $FutureProvider<AssetPackDebugInfo> {
-  /// Builds [AssetPackDebugInfo] for the Asset Pack debug page.
-  AssetPackDebugInfoProvider._()
+        $FutureModifier<AssetPackDiagnostics>,
+        $FutureProvider<AssetPackDiagnostics> {
+  /// Reads native diagnostics for the app-bundled Asset Pack.
+  AssetPackDiagnosticsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'assetPackDebugInfoProvider',
+        name: r'assetPackDiagnosticsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$assetPackDebugInfoHash();
+  String debugGetCreateSourceHash() => _$assetPackDiagnosticsHash();
 
   @$internal
   @override
-  $FutureProviderElement<AssetPackDebugInfo> $createElement(
+  $FutureProviderElement<AssetPackDiagnostics> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<AssetPackDebugInfo> create(Ref ref) {
-    return assetPackDebugInfo(ref);
+  FutureOr<AssetPackDiagnostics> create(Ref ref) {
+    return assetPackDiagnostics(ref);
   }
 }
 
-String _$assetPackDebugInfoHash() =>
-    r'bc8fc46820fdf790de5ea9392551db4d9b4ec987';
+String _$assetPackDiagnosticsHash() =>
+    r'40c7c32b335640919509c430d2098c0034a67166';

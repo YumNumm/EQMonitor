@@ -58,20 +58,15 @@ import Foundation
     let root = resolveBundledPackRoot(directoryName: packIdentifier)
     let ready = root != nil
     let json: [String: Any] = [
-      "schema_version": 2,
+      "schema_version": 3,
       "platform": platformName,
       "os_version": ProcessInfo.processInfo.operatingSystemVersionString,
       "pack_id": packIdentifier,
       "status": ready ? "ready" : "manifestMissing",
-      "system_availability": ready ? "available" : "unavailable",
       "detail": ready
         ? "The app-bundled Asset Pack is available."
         : "The app-bundled Asset Pack is missing.",
-      "manifest_url": NSNull(),
       "pack_root": root.map { $0 as Any } ?? NSNull(),
-      "manifest": NSNull(),
-      "assets": [],
-      "native_error": NSNull(),
     ]
     completion(jsonString(json) as NSString)
   }
