@@ -42,9 +42,6 @@ while IFS= read -r -d '' extension; do
     AppIntentExtension.appex)
       entitlements="$IOS_DIR/AppIntentExtension.entitlements"
       ;;
-    AssetDownloader.appex)
-      entitlements="$IOS_DIR/AssetDownloader/AssetDownloader.entitlements"
-      ;;
     FcmServiceExtension.appex)
       entitlements="$IOS_DIR/FcmServiceExtension/FcmServiceExtension.entitlements"
       ;;

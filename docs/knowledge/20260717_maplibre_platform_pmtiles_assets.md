@@ -8,7 +8,7 @@
 - 地震・津波区域だけのアーカイブは `countries` を持たず source-layer 名も異なるため、ベースマップ用に流用しない。
 - Flutter Asset へのコピー経路や MethodChannel は使わない（FFI / JNI）。
 - HTTPS へのサイレントフォールバックはしない。
-- 将来の Background Assets / PAD は `assets_util` 内で差し替える。
+- 配信経路（同梱 Pack / R2 更新）の切り替えは `assets_util` 内に閉じる。
 
 ## 構成確認
 

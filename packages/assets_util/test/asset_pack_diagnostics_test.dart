@@ -12,118 +12,41 @@ void main() {
         );
 
         expect(diagnostics.status, status);
-        expect(diagnostics.schemaVersion, 1);
+        expect(diagnostics.schemaVersion, 3);
         expect(diagnostics.packIdentifier, 'platform');
+        expect(diagnostics.packRoot, '/pack');
       });
     }
 
-    test('preserves file evidence and nullable paths', () {
+    test('accepts a null pack_root', () {
       final diagnostics = AssetPackDiagnostics.fromJsonString(
-        diagnosticsJson(
-          status: 'assetSizeMismatch',
-          manifestUrl: null,
-          packRoot: null,
-          assets: [
-            {
-              'path': 'map/all.pmtiles',
-              'status': 'sizeMismatch',
-              'exists': true,
-              'expected_size_bytes': 10,
-              'actual_size_bytes': 7,
-            },
-          ],
-        ),
+        diagnosticsJson(status: 'manifestMissing', packRoot: null),
       );
 
-      expect(diagnostics.manifestUrl, isNull);
       expect(diagnostics.packRoot, isNull);
-      expect(
-        diagnostics.assets.single.status,
-        AssetPackFileDiagnosticStatus.sizeMismatch,
-      );
-      expect(diagnostics.assets.single.expectedSizeBytes, 10);
-      expect(diagnostics.assets.single.actualSizeBytes, 7);
-      expect(diagnostics.assets.single.resolvedUrl, isNull);
-      expect(diagnostics.assets.single.nativeError, isNull);
-    });
-
-    test('decodes schema v2 per-file resolution evidence', () {
-      final diagnostics = AssetPackDiagnostics.fromJsonString(
-        diagnosticsJson(
-          status: 'assetMissing',
-          schemaVersion: 2,
-          assets: [
-            {
-              'path': 'parameters/stations.json',
-              'status': 'resolutionFailed',
-              'exists': false,
-              'expected_size_bytes': 10,
-              'actual_size_bytes': null,
-              'resolved_url': null,
-              'native_error': {
-                'domain': 'BAErrorDomain',
-                'code': 4,
-                'description': 'Unavailable',
-              },
-            },
-          ],
-        ),
-      );
-
-      expect(diagnostics.schemaVersion, 2);
-      expect(
-        diagnostics.assets.single.status,
-        AssetPackFileDiagnosticStatus.resolutionFailed,
-      );
-      expect(diagnostics.assets.single.nativeError?.domain, 'BAErrorDomain');
-    });
-
-    test('preserves native errors and manifest JSON', () {
-      final diagnostics = AssetPackDiagnostics.fromJsonString(
-        diagnosticsJson(
-          status: 'manifestUrlResolutionFailed',
-          manifest: {'schema_version': 1},
-          nativeError: {
-            'domain': 'BAErrorDomain',
-            'code': 12,
-            'description': 'Unavailable',
-          },
-        ),
-      );
-
-      expect(diagnostics.manifestJson, {'schema_version': 1});
-      expect(diagnostics.nativeError?.domain, 'BAErrorDomain');
-      expect(diagnostics.nativeError?.code, 12);
-      expect(diagnostics.nativeError?.description, 'Unavailable');
     });
 
     test('rejects unknown schema versions', () {
       expect(
         () => AssetPackDiagnostics.fromJsonString(
-          diagnosticsJson(status: 'ready', schemaVersion: 3),
+          diagnosticsJson(status: 'ready', schemaVersion: 2),
         ),
         throwsFormatException,
       );
     });
 
-    test('rejects non-object asset entries with a FormatException', () {
+    test('rejects unknown statuses', () {
       expect(
         () => AssetPackDiagnostics.fromJsonString(
-          jsonEncode({
-            'schema_version': 1,
-            'platform': 'ios',
-            'os_version': 'Version 26.4',
-            'pack_id': 'platform',
-            'status': 'ready',
-            'system_availability': 'available',
-            'detail': 'details',
-            'manifest_url': null,
-            'pack_root': null,
-            'manifest': null,
-            'assets': ['invalid'],
-            'native_error': null,
-          }),
+          diagnosticsJson(status: 'assetMissing'),
         ),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects a non-object root', () {
+      expect(
+        () => AssetPackDiagnostics.fromJsonString(jsonEncode(['invalid'])),
         throwsFormatException,
       );
     });
@@ -132,23 +55,14 @@ void main() {
 
 String diagnosticsJson({
   required String status,
-  int schemaVersion = 1,
-  String? manifestUrl = 'file:///pack/manifest.json',
+  int schemaVersion = 3,
   String? packRoot = '/pack',
-  Map<String, dynamic>? manifest,
-  List<Map<String, dynamic>> assets = const [],
-  Map<String, dynamic>? nativeError,
 }) => jsonEncode({
   'schema_version': schemaVersion,
   'platform': 'ios',
   'os_version': 'Version 26.4',
   'pack_id': 'platform',
   'status': status,
-  'system_availability': 'available',
   'detail': 'details',
-  'manifest_url': manifestUrl,
   'pack_root': packRoot,
-  'manifest': manifest,
-  'assets': assets,
-  'native_error': nativeError,
 });

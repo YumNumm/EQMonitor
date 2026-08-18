@@ -8,23 +8,22 @@ AppIntent / Widget 用の slim JSON（prefecture + city のみ、約 700KB）は
 
 ## 理由
 
-- clone / clean 直後に `GH_TOKEN` と `stage_from_release.sh --target ios-native`
-  が無いと Xcode Copy Bundle Resources が欠落ファイルで失敗する
+- clone / clean 直後に `stage_from_r2.sh --target all` を通していないと
+  Xcode Copy Bundle Resources が欠落ファイルで失敗する
 - slim は静的マスタに近く、`jma_map.pb`（約 9MB）より小さい
-- 正本は引き続き backend Release。CI の stage で上書き追従できる
+- 正本は引き続き R2 の署名済み Pack。CI の stage で上書き追従できる
 
 ## 運用
 
 ```bash
 # ローカル iOS ビルド: 通常は不要（コミット済み）
-# Release 更新後に slim を揃えたいとき / CI build-ios:
-GH_TOKEN=... tool/asset_pack/stage_from_release.sh --target ios-native
+# R2 の Pack 更新後に slim を揃えたいとき / CI build-ios:
+tool/asset_pack/stage_from_r2.sh --target all
 ```
 
 差分が出たらコミットする。
 
 ## 関連
 
-- `docs/knowledge/20260728_asset_pack_release_staging.md`
-- `docs/ios-background-assets.md`
+- `docs/asset-pack-cd.md`
 - `docs/todo/850_ios_missing_jma_code_table_json_build_break.md`

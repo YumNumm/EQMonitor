@@ -13,7 +13,7 @@ its containing parent app ('1287').
 
 `app/ios/Runner.xcodeproj/project.pbxproj` で、Runner だけ
 `CURRENT_PROJECT_VERSION = 1287` になっている一方、
-`AppIntentExtension` / `Widget` / `FcmServiceExtension` / `AssetDownloader`
+`AppIntentExtension` / `Widget` / `FcmServiceExtension`
 はすべて `CURRENT_PROJECT_VERSION = 1` のまま。
 
 ## 対応案
