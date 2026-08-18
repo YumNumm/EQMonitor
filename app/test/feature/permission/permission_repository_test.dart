@@ -44,6 +44,7 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.authorized)),
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async {},
       );
 
@@ -57,6 +58,7 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.provisional)),
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async {},
       );
 
@@ -73,6 +75,8 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
         requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async =>
+            LocationPermission.whileInUse,
         onLocationPermissionGranted: () async {
           await Future<void>.delayed(Duration.zero);
           syncRequested = true;
@@ -91,10 +95,45 @@ void main() {
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async => syncRequested = true,
       );
 
       final isGranted = await repository.requestForegroundLocationPermission();
+
+      expect(isGranted, isFalse);
+      expect(syncRequested, isFalse);
+    });
+  });
+
+  group('PermissionRepository.requestBackgroundLocationPermission', () {
+    test('always への昇格用の要求を使う', () async {
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        // 使用中の許可しか返さない要求が使われていたら false になる
+        requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async => LocationPermission.always,
+        onLocationPermissionGranted: () async {},
+      );
+
+      final isGranted = await repository.requestBackgroundLocationPermission();
+
+      expect(isGranted, isTrue);
+    });
+
+    test('whileInUse のままなら許可されていない', () async {
+      var syncRequested = false;
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async =>
+            LocationPermission.whileInUse,
+        onLocationPermissionGranted: () async => syncRequested = true,
+      );
+
+      final isGranted = await repository.requestBackgroundLocationPermission();
 
       expect(isGranted, isFalse);
       expect(syncRequested, isFalse);
