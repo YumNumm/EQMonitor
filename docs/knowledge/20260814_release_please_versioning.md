@@ -5,11 +5,14 @@
 ## タグ規約
 
 - リリースタグは `vX.Y.Z` 固定（例: `v3.0.0`）。コンポーネント名を付けない
-  - `release-please-config.json` の `include-component-in-tag: false` で担保する
-  - `deploy-app.yaml` は `v*-beta.*`、`create-beta-release.yaml` は `v${VERSION}-beta.N` を前提にしている
+  - `release-please-config.json` / `release-please-config.beta.json` の `include-component-in-tag: false` で担保する
+  - `deploy-app.yaml` は `v*-beta.*` を前提にする。通常の beta は beta Release Please PR の merge で切る
+  - 緊急・修復用の `create-beta-release.yaml` も `v${VERSION}-beta.N` 形式を前提にする
   - `eqmonitor_workspace-v3.0.0` のような名前になると既存タグ・CHANGELOG の compare リンクと不整合になる
 - Release PR のブランチ名 (`release-please--branches--develop--components--eqmonitor_workspace`) は
   `include-component-in-tag` の影響を受けない（release-please の `getBranchComponent` はコンポーネント名を常に使う）
+- beta 専用 track は `component: eqmonitor-beta` で本番 PR とブランチを分ける。詳細は
+  `docs/knowledge/20260819_dual_release_please_beta.md`
 
 ## バージョンを任意の値に固定する
 

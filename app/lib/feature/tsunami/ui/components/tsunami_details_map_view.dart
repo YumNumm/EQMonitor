@@ -239,6 +239,9 @@ class _TsunamiRegionLineLayer extends HookConsumerWidget {
           ),
         );
       };
+      // layerIds は静的な warningKinds から毎ビルド同じ内容で作り直される
+      // だけのリスト。keysに入れると同一性の変化だけでレイヤーを貼り直す。
+      // ignore_keys: layerIds
     }, [styleController]);
 
     useEffect(() {

@@ -47,6 +47,9 @@ class AppWebViewPage extends HookWidget {
           );
         },
       ),
+      // navigation はコールバック内で自身を更新するだけの値。keysに入れると
+      // ページ遷移のたびに InAppWebView が作り直されて表示が壊れる。
+      // ignore_keys: navigation.value
       [generation, url],
     );
 

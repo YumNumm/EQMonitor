@@ -62,6 +62,9 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 
       scrollController.addListener(onScroll);
       return () => scrollController.removeListener(onScroll);
+      // telegramListByEventIdProvider はトップレベルのproviderファミリで
+      // 再ビルドで変化する値ではない（プラグインがクラスフィールドと誤認する）。
+      // ignore_keys: telegramListByEventIdProvider
     }, [scrollController]);
 
     return Scaffold(

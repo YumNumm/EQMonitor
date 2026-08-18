@@ -113,6 +113,9 @@ class _CurrentLocationUnavailable extends HookWidget {
     useEffect(() {
       unawaited(Future.microtask(refreshPermission));
       return null;
+      // マウント時に1度だけ権限を読む意図の const []。ローカル関数は毎ビルド
+      // 識別子が変わるため、keysに入れると毎ビルド再取得してしまう。
+      // ignore_keys: refreshPermission
     }, const []);
 
     // 権限取得中はスケルトンを避けて軽量プレースホルダ

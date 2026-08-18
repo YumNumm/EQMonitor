@@ -15,7 +15,7 @@ abstract class RegisteredDevice with _$RegisteredDevice {
   }) = _RegisteredDevice;
 }
 
-enum DevicePlatform { ios, android }
+enum DevicePlatform { ios, android, desktop }
 
 enum DeviceLocale { ja, en, zh }
 
@@ -25,6 +25,7 @@ extension DeviceApiExtension on api.DeviceMeResponse {
     platform: switch (type) {
       .android => .android,
       .ios => .ios,
+      .desktop => .desktop,
     },
     userId: userId,
     locale: switch (locale) {
@@ -41,6 +42,7 @@ extension DevicePlatformApiExtension on DevicePlatform {
   api.DeviceType get toDeviceType => switch (this) {
     .ios => .ios,
     .android => .android,
+    .desktop => .desktop,
   };
 }
 

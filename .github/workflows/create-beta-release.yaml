@@ -1,14 +1,11 @@
 name: Create Beta Release
 
 on:
-  issue_comment:
-    types:
-      - created
   workflow_dispatch:
     inputs:
       version:
-        description: "Beta version override (e.g. v3.1.0-beta.1). Empty for auto-detect."
-        required: false
+        description: "Beta version (e.g. v3.1.0-beta.1). Required."
+        required: true
         type: string
       repair_existing_release:
         description: "Sanitize an existing beta release instead of creating one"
@@ -24,13 +21,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (
-        github.event.issue.pull_request &&
-        contains(github.event.issue.title, 'release') &&
-        github.event.comment.body == '/beta'
-      )
     steps:
       # https://github.com/actions/create-github-app-token
       - name: Generate eqmonitor GitHub App token
@@ -56,41 +46,25 @@ jobs:
           cache: false
           install_args: "python"
 
-      - name: Determine next beta version
+      - name: Determine beta version
         id: version
         env:
-          INPUT_VERSION: ${{ inputs.version || '' }}
-          PR_TITLE: ${{ github.event.issue.title || '' }}
+          INPUT_VERSION: ${{ inputs.version }}
           REPAIR_EXISTING_RELEASE: ${{ inputs.repair_existing_release || false }}
         run: |
           set -euo pipefail
+
+          if [ -z "$INPUT_VERSION" ]; then
+            echo "::error::version is required"
+            exit 1
+          fi
 
           if [ "$REPAIR_EXISTING_RELEASE" = "true" ] && [ -z "$INPUT_VERSION" ]; then
             echo "::error::version is required when repairing an existing release"
             exit 1
           fi
 
-          if [ -n "$INPUT_VERSION" ]; then
-            echo "version=${INPUT_VERSION}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Extract base version from Release PR title (e.g. "chore(main): release 3.1.0" -> "3.1.0")
-          BASE_VERSION=$(echo "$PR_TITLE" | grep -oP '\d+\.\d+\.\d+' | head -1)
-          if [ -z "$BASE_VERSION" ]; then
-            echo "::error::Could not determine base version from PR title: $PR_TITLE"
-            exit 1
-          fi
-
-          # Find the highest existing beta number for this version
-          HIGHEST=$(git tag -l "v${BASE_VERSION}-beta.*" | sed 's/.*-beta\.//' | sort -n | tail -1)
-          if [ -z "$HIGHEST" ]; then
-            NEXT=1
-          else
-            NEXT=$((HIGHEST + 1))
-          fi
-
-          echo "version=v${BASE_VERSION}-beta.${NEXT}" >> "$GITHUB_OUTPUT"
+          echo "version=${INPUT_VERSION}" >> "$GITHUB_OUTPUT"
 
       # タグは gh release create に作らせる。事前に push すると、後続が失敗したとき
       # release の無いタグだけが残り、次回のベータ番号が無駄に進んでしまう。
@@ -131,16 +105,3 @@ jobs:
             < release-notes.raw.md \
             > release-notes.md
           gh release edit "$BETA_VERSION" --notes-file release-notes.md
-
-      - name: Add reaction to comment
-        if: github.event_name == 'issue_comment'
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          github-token: ${{ steps.app-token.outputs.token }}
-          script: |
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'rocket'
-            });

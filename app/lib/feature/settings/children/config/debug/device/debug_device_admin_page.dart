@@ -69,6 +69,9 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
       }
     }
 
+    // fetch は関数参照で渡しているためプラグインが本体の参照を追えないが、
+    // deviceId は fetch 内で使用し、refreshTick は reload() の再取得契機。
+    // ignore_keys: deviceId, refreshTick.value
     final future = useMemoized(fetch, [deviceId, refreshTick.value]);
     final snapshot = useFuture(future);
 

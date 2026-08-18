@@ -61,7 +61,7 @@ class _AquaCatalogList extends HookConsumerWidget {
       );
       final parser = AquaHtmlParser();
       return parser.parseCatalog(bytes: Uint8List.fromList(response.data));
-    }, [selectedMonth]);
+    }, [selectedMonth, niedApiClient]);
 
     final snapshot = useFuture(future);
 

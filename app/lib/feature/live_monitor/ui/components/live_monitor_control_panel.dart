@@ -96,6 +96,10 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
 
       durationFocusNode.addListener(handleFocusChanged);
       return () => durationFocusNode.removeListener(handleFocusChanged);
+      // saveDuration は毎ビルド生成されるローカルなクロージャ。keysに入れると
+      // 毎ビルド リスナーの解除・再登録が走る。内部の値は ref.read で
+      // 都度読み直しているため、1度の登録で最新の状態を扱える。
+      // ignore_keys: saveDuration
     }, [durationController, durationFocusNode]);
 
     useEffect(() {

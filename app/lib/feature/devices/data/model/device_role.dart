@@ -1,21 +1,23 @@
-/// Device API が返すデバイス所有者のロール。
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+
+/// Device API が返すデバイスのロール。
 ///
-/// backend では better-auth の `user.role` として管理されており、
-/// `role === 'admin'` のみが管理者向け機能の判定に使われる。
+/// backend は環境変数 `ADMIN_DEVICE_IDS`(デバイス ID のカンマ区切り)に
+/// 列挙されたデバイスにのみ `ADMIN` を返し、それ以外は `USER` を返す。
+/// 管理者向け機能のゲートには [DeviceRole.admin] のみを使う。
 enum DeviceRole {
-  admin('admin'),
-  user('user');
+  admin('ADMIN'),
+  user('USER');
 
   new(this.value);
 
+  /// API が返すロールの値。デバッグ画面での表示にも使う。
   final String value;
+}
 
-  /// API の値から [DeviceRole] へ変換する。
-  ///
-  /// 未知の値・未提供(null)は、権限を推測せず null を返す。
-  static DeviceRole? fromApiValue(String? value) => switch (value) {
-    'admin' => DeviceRole.admin,
-    'user' => DeviceRole.user,
-    _ => null,
+extension DeviceRoleApiExtension on api.DeviceRole {
+  DeviceRole get toDeviceRole => switch (this) {
+    .admin => .admin,
+    .user => .user,
   };
 }
