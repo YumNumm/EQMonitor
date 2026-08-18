@@ -31,9 +31,9 @@ class NotificationMinIntensityField extends StatelessWidget {
       kind: kind,
     );
     final fallback = switch ((slotType, kind)) {
-      (NotificationSlotType.currentLocation, NotificationKind.eew) =>
+      (.currentLocation, .eew) =>
         currentLocationEewMinIntensity,
-      (NotificationSlotType.currentLocation, NotificationKind.earthquake) =>
+      (.currentLocation, .earthquake) =>
         currentLocationEarthquakeMinIntensity,
       _ => defaultNotificationSlotMinIntensity,
     };

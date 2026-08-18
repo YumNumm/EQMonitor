@@ -74,7 +74,7 @@ class SlotDetailPage extends HookConsumerWidget {
           : ListView(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
               children: [
-                const SettingsSectionHeader(text: '緊急地震速報（予報）'),
+                const SettingsSectionHeader(text: '緊急地震速報(予報)'),
                 _NotificationConditionCard(
                   slotType: slot.slotType,
                   kind: NotificationKind.eew,
@@ -100,7 +100,7 @@ class SlotDetailPage extends HookConsumerWidget {
                   ),
                 ),
                 if (slot.slotType != NotificationSlotType.region) ...[
-                  const SettingsSectionHeader(text: '緊急地震速報（警報）'),
+                  const SettingsSectionHeader(text: '緊急地震速報(警報)'),
                   _WarningSettingsCard(
                     slotType: slot.slotType,
                     enabled:
@@ -197,7 +197,7 @@ class SlotDetailPage extends HookConsumerWidget {
   }
 }
 
-extension NotificationSlotTypeLabel on NotificationSlotType {
+extension _NotificationSlotTypeLabel on NotificationSlotType {
   String get label => switch (this) {
     .currentLocation => '現在地',
     .nationwide => '全国',
@@ -351,10 +351,8 @@ class _WarningSettingsCard extends StatelessWidget {
                   onInterruptionLevelChanged(next);
                 }
               },
-              dropdownMenuEntries: [
-                for (final level in InterruptionLevel.values)
-                  DropdownMenuEntry(value: level, label: level.label),
-              ],
+              dropdownMenuEntries:
+                for (final level in InterruptionLevel.values.map((level) => DropdownMenuItem(value: level, child: Text(level.label)),
             ),
           ),
           const Divider(height: 1),
@@ -362,12 +360,11 @@ class _WarningSettingsCard extends StatelessWidget {
             padding: EdgeInsets.all(spacing.md),
             child: Text(
               switch (slotType) {
-                NotificationSlotType.currentLocation =>
-                  '現在地が警報地域に入ったときに配信されます。'
-                      'クリティカルにすると、おやすみモードやマナーモードを無視して通知します。',
+                .currentLocation =>
+                  '現在地が緊急地震速報の警報地域になった場合に通知を配信します。'
+                      '重大な通知に設定すると、おやすみモードやマナーモードを無視して通知します。',
                 _ =>
-                  '日本のどこかで緊急地震速報（警報）が発表されるたびに配信されます。'
-                      '発表回数が多いため、既定は「時間重要」です。',
+                  '緊急地震速報(警報)が発表された時に通知します。',
               },
               style: designSystem.typography.bodySmall.copyWith(
                 color: colorTheme.onSurfaceVariant,

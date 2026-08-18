@@ -30,7 +30,7 @@ class NotificationPermissionDialogAction {
       context: context,
       builder: (dialogContext) => _NotificationPermissionDialog(
         title: '通知権限が無効です',
-        body: '通知を受け取るには、通知の許可が必要です。許可しますか？',
+        body: '通知を受け取るには、通知の許可が必要です。許可しますか?',
         primaryActionLabel: openSettings ? '設定を開く' : '許可する',
         onPrimaryAction: () async {
           Navigator.of(dialogContext).pop();
@@ -62,7 +62,7 @@ class NotificationPermissionDialogAction {
       context: context,
       builder: (dialogContext) => _NotificationPermissionDialog(
         title: '重大な通知が許可されていません',
-        body: '緊急地震速報(警報)を確実に受け取るには、重大な通知の許可が必要です。許可しますか？',
+        body: 'マナーモードやおやすみモード中でも緊急地震速報(警報)を受け取るには、重大な通知の許可が必要です。',
         primaryActionLabel: openSettings ? '設定を開く' : '許可する',
         onPrimaryAction: () async {
           Navigator.of(dialogContext).pop();

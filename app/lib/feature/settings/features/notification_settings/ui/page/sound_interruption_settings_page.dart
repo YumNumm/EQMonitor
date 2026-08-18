@@ -59,7 +59,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
         earthquakeSettings?.collapseNotification ?? false;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('通知音・割り込みレベル')),
+      appBar: AppBar(title: const Text('通知音と通知の優先度')),
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
@@ -132,15 +132,6 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '震度別の音設定で個別にオーバーライドすることもできます',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.designSystem.colorTheme.onSurfaceVariant,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -179,14 +170,14 @@ class _SoundInterruptionCard extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
+        borderRadius: .circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           ListTile(
             title: const Text('通知音'),
@@ -194,26 +185,22 @@ class _SoundInterruptionCard extends StatelessWidget {
               key: ValueKey(sound),
               initialSelection: sound,
               requestFocusOnTap: false,
-              width: 148,
               onSelected: (selected) async {
                 if (selected != null) {
                   await onSoundChanged(selected);
                 }
               },
-              dropdownMenuEntries: [
-                for (final s in NotificationSound.values)
-                  DropdownMenuEntry(value: s, label: s.displayName),
-              ],
+              dropdownMenuEntries:
+NotificationSound.values.map((sound) => DropdownMenuEntry(value: sound, label: sound.displayName)).toList(),
             ),
           ),
           const Divider(height: 1),
           ListTile(
-            title: const Text('割り込みレベル'),
+            title: const Text('通知の優先度'),
             trailing: DropdownMenu<InterruptionLevel>(
               key: ValueKey(interruptionLevel),
               initialSelection: interruptionLevel,
               requestFocusOnTap: false,
-              width: 192,
               onSelected: (selected) async {
                 if (selected != null) {
                   await onInterruptionLevelChanged(selected);
@@ -224,10 +211,10 @@ class _SoundInterruptionCard extends StatelessWidget {
                   DropdownMenuEntry(
                     value: level,
                     label: switch (level) {
-                      InterruptionLevel.passive => 'パッシブ',
-                      InterruptionLevel.active => 'アクティブ',
-                      InterruptionLevel.timeSensitive => 'タイムセンシティブ',
-                      InterruptionLevel.critical => 'クリティカル',
+                      .passive => 'サイレント',
+                      .active => 'デフォルト',
+                      .timeSensitive => '即時通知',
+                      .critical => '重大な通知',
                     },
                   ),
               ],
@@ -235,8 +222,8 @@ class _SoundInterruptionCard extends StatelessWidget {
           ),
           const Divider(height: 1),
           ListTile(
-            title: const Text('続報をまとめて表示'),
-            subtitle: const Text('ONにすると、続報で前の通知を上書きします'),
+            title: const Text('通知の上書き'),
+            subtitle: const Text('緊急地震速報の続報が発表された時に、前の通知を上書きします'),
             trailing: AppSwitch(
               value: collapseNotification,
               onChanged: (value) async => onCollapseChanged(value: value),

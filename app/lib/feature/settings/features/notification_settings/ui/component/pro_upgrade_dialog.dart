@@ -27,7 +27,7 @@ class _ProUpgradeDialog extends ConsumerWidget {
     if (!isProFeaturesEnabled) {
       return AlertDialog(
         title: const Text('現在ご利用いただけません'),
-        content: const Text('EQMonitor Pro は現在提供を停止しています。'),
+        content: const Text('このビルドでは、'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

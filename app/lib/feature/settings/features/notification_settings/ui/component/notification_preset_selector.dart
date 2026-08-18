@@ -55,16 +55,16 @@ class NotificationPresetSelector extends HookConsumerWidget {
     }, [permission, selectedPreset]);
 
     void handlePresetTap(NotificationPreset preset) {
-      if (!isOsGranted && preset != NotificationPreset.none) {
+      if (!isOsGranted && preset != .none) {
         ref
             .read(notificationPermissionDialogActionProvider)
             .showOsPermission(context, ref);
         return;
       }
 
-      if (style == NotificationPresetSelectorStyle.settings &&
-          preset == NotificationPreset.custom &&
-          selectedPreset == NotificationPreset.custom) {
+      if (style == .settings &&
+          preset == .custom &&
+          selectedPreset == .custom) {
         onCustomSettingsTap?.call();
         return;
       }
@@ -88,7 +88,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
     }
 
     return switch (style) {
-      NotificationPresetSelectorStyle.onboarding => _OnboardingPresetList(
+      .onboarding => _OnboardingPresetList(
         presets: _onboardingPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
@@ -98,7 +98,7 @@ class NotificationPresetSelector extends HookConsumerWidget {
             .read(notificationPermissionDialogActionProvider)
             .showCriticalAlertPermission(context, ref),
       ),
-      NotificationPresetSelectorStyle.settings => _SettingsPresetGroup(
+      .settings => _SettingsPresetGroup(
         presets: _settingsPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
@@ -265,13 +265,10 @@ class _OnboardingPresetDescription extends StatelessWidget {
           _PresetBulletItem(
             text: 'すべての緊急地震速報・地震情報を通知します',
           ),
-          _PresetBulletItem(
-            text: '南海トラフ地震関連情報も通知します',
-          ),
         ],
       ),
       .custom => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _PresetBulletItem(
             text: '通知する地域や震度を細かく設定できます',
@@ -282,7 +279,7 @@ class _OnboardingPresetDescription extends StatelessWidget {
         ],
       ),
       NotificationPreset.none => _PresetBulletItem(
-        text: '通知を受け取りません。後から設定で変更できます',
+        text: '通知を受け取りません',
       ),
     };
   }
