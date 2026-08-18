@@ -23,18 +23,14 @@ enum AssetPackInstallPhase {
   completed,
 }
 
-class AssetPackInstallProgress {
-  const new({required this.phase, required this.progress});
+class const AssetPackInstallProgress({
+  required final AssetPackInstallPhase phase,
+  required final double progress,
+});
 
-  final AssetPackInstallPhase phase;
-  final double progress;
-}
-
-class AssetPackInstallException implements Exception {
-  const new(this.message);
-
-  final String message;
-
+class const AssetPackInstallException({
+  required final String message,
+}) implements Exception {
   @override
   String toString() => 'AssetPackInstallException: $message';
 }
@@ -116,7 +112,9 @@ class AssetPackUpdateInstaller {
     } on AssetPackInstallException {
       rethrow;
     } on Object catch (error) {
-      throw AssetPackInstallException('Asset Pack の更新を適用できませんでした: $error');
+      throw AssetPackInstallException(
+        message: 'Asset Pack の更新を適用できませんでした: $error',
+      );
     } finally {
       await deleteAssetPackTemporaryFile(file: archiveFile);
       await deleteAssetPackTemporaryDirectory(directory: stagingWorkspace);
@@ -129,11 +127,15 @@ class AssetPackUpdateInstaller {
   }) async {
     if (!archiveFile.existsSync() ||
         await archiveFile.length() != entry.archiveSizeBytes) {
-      throw const AssetPackInstallException('ダウンロードした ZIP のサイズが配信情報と一致しません。');
+      throw const AssetPackInstallException(
+        message: 'ダウンロードした ZIP のサイズが配信情報と一致しません。',
+      );
     }
     final digest = await sha256.bind(archiveFile.openRead()).first;
     if (digest.toString() != entry.archiveSha256) {
-      throw const AssetPackInstallException('ダウンロードした ZIP のハッシュが配信情報と一致しません。');
+      throw const AssetPackInstallException(
+        message: 'ダウンロードした ZIP のハッシュが配信情報と一致しません。',
+      );
     }
   }
 

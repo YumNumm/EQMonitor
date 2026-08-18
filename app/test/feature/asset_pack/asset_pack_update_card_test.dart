@@ -65,7 +65,7 @@ void main() {
     tester,
   ) async {
     FakeAssetPackUpdateNotifier.initialState =
-        const AssetPackUpdateAppRequiredState(entry);
+        const AssetPackUpdateAppRequiredState(entry: entry);
 
     await pumpUpdateCard(tester: tester);
 
@@ -77,7 +77,8 @@ void main() {
     tester,
   ) async {
     FakeAssetPackUpdateNotifier.initialState = const AssetPackUpdateError(
-      '現在のデータを使用します。',
+      message: '現在のデータを使用します。',
+      isUpdating: false,
     );
 
     await pumpUpdateCard(tester: tester);
@@ -98,7 +99,7 @@ class FakeAssetPackUpdateNotifier extends AssetPackUpdateNotifier {
   Future<void> check() async {}
 
   @override
-  Future<void> install(AssetPackDistributionEntry entry) async {
+  Future<void> install({required AssetPackDistributionEntry entry}) async {
     installCount++;
   }
 }

@@ -197,14 +197,6 @@ class SlotDetailPage extends HookConsumerWidget {
   }
 }
 
-extension _NotificationSlotTypeLabel on NotificationSlotType {
-  String get label => switch (this) {
-    .currentLocation => '現在地',
-    .nationwide => '全国',
-    .region => '地域',
-  };
-}
-
 class _NotificationConditionCard extends StatelessWidget {
   const new({
     required this.slotType,

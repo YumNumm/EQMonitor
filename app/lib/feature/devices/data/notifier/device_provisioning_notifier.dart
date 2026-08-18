@@ -37,15 +37,15 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
   Future<DeviceProvisioningStatus> build() async {
     final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
     if (!await repo.isProvisioned()) {
-      return DeviceProvisioningStatus.required;
+      return .required;
     }
     final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
     final token = await authRepo.readToken();
     if (token == null || token.isEmpty) {
       await repo.clearProvisioned();
-      return DeviceProvisioningStatus.required;
+      return .required;
     }
-    return DeviceProvisioningStatus.notRequired;
+    return .notRequired;
   }
 
   static final provisionMutation = Mutation<void>();

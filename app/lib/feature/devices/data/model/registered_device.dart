@@ -19,25 +19,18 @@ enum DevicePlatform { ios, android }
 
 enum DeviceLocale { ja, en, zh }
 
-extension DevicePlatformDisplay on DevicePlatform {
-  String get displayLabel => switch (this) {
-    .ios => 'iOS',
-    .android => 'Android',
-  };
-}
-
 extension DeviceApiExtension on api.DeviceMeResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
     id: id,
     platform: switch (type) {
-      api.DeviceType.android => DevicePlatform.android,
-      api.DeviceType.ios => DevicePlatform.ios,
+      .android => .android,
+      .ios => .ios,
     },
     userId: userId,
     locale: switch (locale) {
-      api.DeviceLocale.en => DeviceLocale.en,
-      api.DeviceLocale.zh => DeviceLocale.zh,
-      api.DeviceLocale.ja => DeviceLocale.ja,
+      .en => .en,
+      .zh => .zh,
+      .ja => .ja,
     },
     createdAtIso: createdAt.toIso8601String(),
     updatedAtIso: updatedAt.toIso8601String(),
@@ -46,15 +39,15 @@ extension DeviceApiExtension on api.DeviceMeResponse {
 
 extension DevicePlatformApiExtension on DevicePlatform {
   api.DeviceType get toDeviceType => switch (this) {
-    .ios => api.DeviceType.ios,
-    .android => api.DeviceType.android,
+    .ios => .ios,
+    .android => .android,
   };
 }
 
 extension DeviceLocaleApiExtension on DeviceLocale {
   api.DeviceLocale get toDeviceLocale => switch (this) {
-    .ja => api.DeviceLocale.ja,
-    .en => api.DeviceLocale.en,
-    .zh => api.DeviceLocale.zh,
+    .ja => .ja,
+    .en => .en,
+    .zh => .zh,
   };
 }

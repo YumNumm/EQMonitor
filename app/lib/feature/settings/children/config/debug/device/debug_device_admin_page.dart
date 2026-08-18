@@ -11,10 +11,10 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugDeviceAdminPage extends ConsumerWidget {
   const new({super.key});
@@ -325,8 +325,8 @@ class _Body extends HookConsumerWidget {
             children: [
               _InfoRow(label: 'デバイス ID', value: registeredDevice.id),
               _InfoRow(
-                label: 'プラットフォーム',
-                value: registeredDevice.platform.displayLabel,
+                label: 'Platform',
+                value: registeredDevice.platform.name,
               ),
               _InfoRow(label: 'ロケール', value: registeredDevice.locale.name),
             ],

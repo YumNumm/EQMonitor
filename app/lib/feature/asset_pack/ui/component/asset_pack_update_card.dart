@@ -50,16 +50,18 @@ class AssetPackUpdateCard extends HookConsumerWidget {
         title: 'アプリの更新が必要です',
         message:
             'Asset Pack v${entry.version} はアプリ v${entry.minimumAppVersion} '
-            '以降で利用できます。',
+            '以降で利用できます',
       ),
       AssetPackUpdateCompleted(:final version) => _AssetPackMessageCard(
         icon: Icons.check_circle_outline_rounded,
         title: 'Asset Pack を更新しました',
-        message: 'v$version のデータへ安全に切り替えました。',
+        message: '地図データ・観測点情報をv$version に更新しました',
       ),
-      AssetPackUpdateError(:final message) => _AssetPackErrorCard(
-        message: message,
-      ),
+      AssetPackUpdateError(:final message, :final isUpdating) when isUpdating =>
+        _AssetPackErrorCard(
+          message: message,
+        ),
+      AssetPackUpdateError() => const SizedBox.shrink(),
     };
   }
 }
@@ -104,7 +106,7 @@ class _AssetPackAvailableCard extends ConsumerWidget {
           ) async {
             await transaction
                 .get(assetPackUpdateProvider.notifier)
-                .install(entry);
+                .install(entry: entry);
           });
         },
       ),
@@ -145,8 +147,7 @@ class _AssetPackConsentDialog extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    '${sizeMiB.toStringAsFixed(1)} MiB をダウンロードします。'
-                    '完了後に検証してからデータを切り替えます。',
+                    '${sizeMiB.toStringAsFixed(1)} MB のデータをダウンロードします',
                   ),
                 );
               }
@@ -197,23 +198,21 @@ class _AssetPackInstallingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = switch (progress.phase) {
-      AssetPackInstallPhase.downloading =>
-        'ダウンロード中 ${(progress.progress * 100).round()}%',
-      AssetPackInstallPhase.verifying => 'ダウンロードを検証しています',
-      AssetPackInstallPhase.extracting => '安全に展開しています',
-      AssetPackInstallPhase.activating => 'データを切り替えています',
-      AssetPackInstallPhase.completed => '更新が完了しました',
+      .downloading => 'ダウンロード中 ${(progress.progress * 100).round()}%',
+      .verifying => 'ダウンロードを検証しています',
+      .extracting => '展開しています',
+      .activating => 'データを切り替えています',
+      .completed => '更新が完了しました',
     };
-    final determinateProgress =
-        progress.phase == AssetPackInstallPhase.downloading
+    final determinateProgress = progress.phase == .downloading
         ? progress.progress
         : null;
     return Card.outlined(
-      margin: EdgeInsets.zero,
+      margin: .zero,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               'Asset Pack v${entry.version}',

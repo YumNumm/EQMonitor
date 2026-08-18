@@ -11,22 +11,14 @@ enum ThemeColorFieldCategory {
   map,
 }
 
-class ThemeColorFieldDef {
-  const new({
-    required this.label,
-    required this.category,
-    required this.description,
-    required this.getter,
-    required this.setter,
-  });
-
-  final String label;
-  final ThemeColorFieldCategory category;
-
-  final String description;
-  final Color Function(ThemeColorSet colorSet) getter;
-  final ThemeColorSet Function(ThemeColorSet colorSet, Color color) setter;
-}
+class const ThemeColorFieldDef({
+  required final String label,
+  required final ThemeColorFieldCategory category,
+  required final String description,
+  required final Color Function(ThemeColorSet colorSet) getter,
+  required final ThemeColorSet Function(ThemeColorSet colorSet, Color color)
+  setter,
+});
 
 /// [ThemeColorFieldDef]の宣言的な一覧を保持するコンテナ。
 ///

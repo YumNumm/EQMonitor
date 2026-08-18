@@ -33,8 +33,6 @@ enum JmaMapType {
 }
 
 extension JmaMapEx on Map<JmaMapType, JmaMap_JmaMapData> {
-  // jmaMapProvider が正常終了すれば、同梱アセット由来の全既知 JmaMapType が
-  // 格納されていることがビルド時点で保証されている不変条件。
   JmaMap_JmaMapData get areaForecastLocalEew =>
       this[JmaMapType.areaForecastLocalEew].orFailBecause(
         'jmaMapProvider は既知の JmaMapType すべてを読み込む前提のため',

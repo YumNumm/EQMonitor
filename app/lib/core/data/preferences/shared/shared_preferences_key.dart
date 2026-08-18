@@ -1,4 +1,4 @@
-enum SharedPreferencesKey {
+enum SharedPreferencesKey(final String key) {
   secureStorageInitialized('SECURE_STORAGE_INITIALIZED'),
   ntpConfig('ntp_config'),
   earthquakeHistoryConfig('earthquake_history_config'),
@@ -59,7 +59,4 @@ enum SharedPreferencesKey {
   feedLastReadPublishedAt('feed_last_read_published_at'),
   eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled');
-
-  new(this.key);
-  final String key;
 }

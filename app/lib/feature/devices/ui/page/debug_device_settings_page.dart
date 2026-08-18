@@ -27,9 +27,9 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -484,9 +484,9 @@ class _DeviceInfoSection extends ConsumerWidget {
         AsyncData(:final value) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _KeyValueRow(label: 'サーバー上の ID', value: value.id),
-            _KeyValueRow(label: 'ユーザー', value: value.userId ?? '未登録'),
-            _KeyValueRow(label: '種別', value: value.platform.displayLabel),
+            _KeyValueRow(label: 'ID', value: value.id),
+            _KeyValueRow(label: 'UserID', value: value.userId ?? '未登録'),
+            _KeyValueRow(label: 'Platform', value: value.platform.name),
           ],
         ),
         AsyncError(:final error) => Text(

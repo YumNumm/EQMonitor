@@ -1,7 +1,10 @@
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 
-enum IntensityFieldGroup {
+enum IntensityFieldGroup({
+  required final String description,
+  required final bool hasForeground,
+}) {
   intensity(
     description: '震度アイコンや地震履歴の地域別塗りつぶし等で利用します',
     hasForeground: true,
@@ -11,30 +14,19 @@ enum IntensityFieldGroup {
     // 推計震度は分布図の塗りつぶしのみで文字を描画しないため文字色を持たない
     hasForeground: false,
   );
-
-  new({required this.description, required this.hasForeground});
-
-  final String description;
-  final bool hasForeground;
 }
 
-class IntensityFieldDef {
-  const new({
-    required this.label,
-    required this.group,
-    required this.entryGetter,
-    required this.entrySetter,
-  });
-
-  final String label;
-  final IntensityFieldGroup group;
-  final IntensityColorEntry Function(ThemeColorSet colorSet) entryGetter;
-  final ThemeColorSet Function(
+class const IntensityFieldDef({
+  required final String label,
+  required final IntensityFieldGroup group,
+  required final IntensityColorEntry Function(ThemeColorSet colorSet)
+  entryGetter,
+  required final ThemeColorSet Function(
     ThemeColorSet colorSet,
     IntensityColorEntry entry,
   )
-  entrySetter;
-}
+  entrySetter,
+});
 
 /// [IntensityFieldDef]の宣言的な一覧を保持するコンテナ。
 ///

@@ -10,55 +10,34 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'asset_pack_update_notifier.g.dart';
 
-sealed class AssetPackUpdateState {
-  const new();
-}
+sealed class const AssetPackUpdateState();
 
-final class AssetPackUpdateIdle extends AssetPackUpdateState {
-  const new();
-}
+final class const AssetPackUpdateIdle() extends AssetPackUpdateState;
 
-final class AssetPackUpdateChecking extends AssetPackUpdateState {
-  const new();
-}
+final class const AssetPackUpdateChecking() extends AssetPackUpdateState;
 
-final class AssetPackUpdateAvailableState extends AssetPackUpdateState {
-  const new({
-    required this.entry,
-    required this.changelogEntries,
-  });
+final class const AssetPackUpdateAvailableState({
+  required final AssetPackDistributionEntry entry,
+  required final List<AssetPackDistributionEntry> changelogEntries,
+}) extends AssetPackUpdateState;
 
-  final AssetPackDistributionEntry entry;
-  final List<AssetPackDistributionEntry> changelogEntries;
-}
+final class const AssetPackUpdateAppRequiredState({
+  required final AssetPackDistributionEntry entry,
+}) extends AssetPackUpdateState;
 
-final class AssetPackUpdateAppRequiredState extends AssetPackUpdateState {
-  const new(this.entry);
+final class const AssetPackUpdateInstalling({
+  required final AssetPackDistributionEntry entry,
+  required final AssetPackInstallProgress progress,
+}) extends AssetPackUpdateState;
 
-  final AssetPackDistributionEntry entry;
-}
+final class const AssetPackUpdateCompleted({
+  required final String version,
+}) extends AssetPackUpdateState;
 
-final class AssetPackUpdateInstalling extends AssetPackUpdateState {
-  const new({
-    required this.entry,
-    required this.progress,
-  });
-
-  final AssetPackDistributionEntry entry;
-  final AssetPackInstallProgress progress;
-}
-
-final class AssetPackUpdateCompleted extends AssetPackUpdateState {
-  const new(this.version);
-
-  final String version;
-}
-
-final class AssetPackUpdateError extends AssetPackUpdateState {
-  const new(this.message);
-
-  final String message;
-}
+final class const AssetPackUpdateError({
+  required final String message,
+  required final bool isUpdating,
+}) extends AssetPackUpdateState;
 
 @Riverpod(keepAlive: true)
 class AssetPackUpdateNotifier extends _$AssetPackUpdateNotifier {
@@ -94,17 +73,20 @@ class AssetPackUpdateNotifier extends _$AssetPackUpdateNotifier {
             ),
           ),
         AssetPackAppUpdateRequired(:final entry) =>
-          AssetPackUpdateAppRequiredState(entry),
+          AssetPackUpdateAppRequiredState(entry: entry),
       };
     } on Object catch (error, stackTrace) {
       talker.error('[AssetPack] update check failed', error, stackTrace);
       state = const AssetPackUpdateError(
-        'Asset Pack の更新情報を確認できませんでした。現在のデータを使用します。',
+        message: 'Asset Pack の更新情報を確認できませんでした。',
+        isUpdating: false,
       );
     }
   }
 
-  Future<void> install(AssetPackDistributionEntry entry) async {
+  Future<void> install({
+    required AssetPackDistributionEntry entry,
+  }) async {
     if (state is AssetPackUpdateInstalling) {
       return;
     }
@@ -118,11 +100,12 @@ class AssetPackUpdateNotifier extends _$AssetPackUpdateNotifier {
       );
       ref.invalidate(assetPackManifestProvider);
       ref.invalidate(assetPackRepositoryProvider);
-      state = AssetPackUpdateCompleted(entry.version);
+      state = AssetPackUpdateCompleted(version: entry.version);
     } on Object catch (error, stackTrace) {
       talker.error('[AssetPack] update install failed', error, stackTrace);
       state = const AssetPackUpdateError(
-        'Asset Pack を更新できませんでした。現在のデータを引き続き使用します。',
+        message: 'Asset Pack を更新できませんでした。',
+        isUpdating: true,
       );
     }
   }
