@@ -12,7 +12,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 
@@ -92,7 +91,7 @@ class _SliverListBody extends HookConsumerWidget {
   }
 }
 
-class _PagingBody extends StatelessWidget {
+class _PagingBody extends ConsumerWidget {
   const new({
     required this.dataSource,
     required this.parameter,
@@ -108,13 +107,16 @@ class _PagingBody extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 広告非表示時は広告分の高さを確保しない
+    final adBannerHeight = AdBanner.heightOf(ref);
+
     return RefreshIndicator(
       onRefresh: onRefresh,
       edgeOffset:
           MediaQuery.paddingOf(context).top +
           kToolbarHeight +
-          AdSize.banner.height.toDouble() +
+          adBannerHeight +
           EarthquakeHistoryParameterPersistentDelegate.height,
       child: CustomScrollView(
         slivers: [
@@ -122,10 +124,12 @@ class _PagingBody extends StatelessWidget {
             pinned: true,
             centerTitle: false,
             title: const Text('地震履歴'),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(AdSize.banner.height.toDouble()),
-              child: const AdBanner(),
-            ),
+            bottom: adBannerHeight == 0
+                ? null
+                : PreferredSize(
+                    preferredSize: Size.fromHeight(adBannerHeight),
+                    child: const AdBanner(),
+                  ),
           ),
           SliverPersistentHeader(
             pinned: true,
