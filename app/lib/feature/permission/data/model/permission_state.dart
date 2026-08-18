@@ -4,7 +4,7 @@ part 'permission_state.freezed.dart';
 
 @freezed
 abstract class PermissionState with _$PermissionState {
-  const factory PermissionState({
+  const factory({
     required bool isNotificationGranted,
     required bool isCriticalAlertSupported,
     required bool isCriticalAlertGranted,
