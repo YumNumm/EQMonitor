@@ -40,6 +40,7 @@ const _earthquakeGlobal = EarthquakeGlobalSettings(
 
 const _eewWarning = EewWarningSettings(
   target: EewWarningTarget.currentLocationOnly,
+  currentLocationInterruptionLevel: InterruptionLevel.critical,
   nationwideInterruptionLevel: null,
 );
 
@@ -88,6 +89,8 @@ class _RecordingGeneralNotifier extends GeneralNotificationSettingsNotifier {
       'notificationEnabled': notificationEnabled,
       'nankaiExtraordinaryEnabled': nankaiExtraordinaryEnabled,
       'nankaiRegularEnabled': nankaiRegularEnabled,
+      'vyse60Enabled': vyse60Enabled,
+      'earthquakeNoticeEnabled': earthquakeNoticeEnabled,
     });
   }
 }
@@ -136,6 +139,8 @@ class _RecordingEarthquakeGlobalNotifier
 
 class _RecordingEewWarningNotifier extends EewWarningConfigNotifier {
   final calls = <EewWarningTarget?>[];
+  final currentLocationLevels = <InterruptionLevel?>[];
+  final nationwideLevels = <InterruptionLevel?>[];
 
   @override
   Future<EewWarningSettings> build() async => _eewWarning;
@@ -143,9 +148,12 @@ class _RecordingEewWarningNotifier extends EewWarningConfigNotifier {
   @override
   Future<void> updateConfig({
     EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
     calls.add(target);
+    currentLocationLevels.add(currentLocationInterruptionLevel);
+    nationwideLevels.add(nationwideInterruptionLevel);
   }
 }
 
@@ -260,7 +268,22 @@ void main() {
       expect(general.calls.single['notificationEnabled'], isTrue);
       expect(general.calls.single['nankaiExtraordinaryEnabled'], isTrue);
       expect(general.calls.single['nankaiRegularEnabled'], isTrue);
+      expect(general.calls.single['vyse60Enabled'], isTrue);
+      expect(general.calls.single['earthquakeNoticeEnabled'], isTrue);
       expect(eewGlobal.calls.single['startLiveActivity'], isTrue);
+      // EEW 警報は現在地 + 全国対象にする（warningEnabled: true の後に上書き）
+      expect(
+        eewWarning.calls.single,
+        EewWarningTarget.currentLocationAndNationwide,
+      );
+      expect(
+        eewWarning.nationwideLevels.single,
+        InterruptionLevel.timeSensitive,
+      );
+      expect(
+        eewWarning.currentLocationLevels.single,
+        InterruptionLevel.critical,
+      );
       expect(preset.selected, [NotificationPreset.all]);
     });
 
@@ -360,6 +383,7 @@ void main() {
           ],
           eewWarning: EewWarningSettings(
             target: EewWarningTarget.currentLocationAndNationwide,
+            currentLocationInterruptionLevel: InterruptionLevel.critical,
             nationwideInterruptionLevel: InterruptionLevel.active,
           ),
           eewGlobal: _eewGlobal,

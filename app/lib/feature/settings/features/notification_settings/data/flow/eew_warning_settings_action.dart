@@ -32,6 +32,7 @@ class EewWarningSettingsAction {
     WidgetRef ref, {
     required bool enabled,
   }) async {
+    final current = ref.read(eewWarningConfigProvider).value;
     await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
       await tsx
           .get(eewWarningConfigProvider.notifier)
@@ -40,12 +41,40 @@ class EewWarningSettingsAction {
                 ? EewWarningTarget.currentLocationAndNationwide
                 : EewWarningTarget.currentLocationOnly,
             nationwideInterruptionLevel: enabled
-                ? InterruptionLevel.active
+                ? (current?.nationwideInterruptionLevel ??
+                      nationwideEewWarningDefaultLevel)
                 : null,
           );
     });
     ref
         .read(eewGlobalSettingsProvider.notifier)
         .synchronizeWarningEnabled(enabled: true);
+  }
+
+  /// 現在地の EEW 警報の割り込みレベルを変更する。
+  Future<void> updateCurrentLocationInterruptionLevel(
+    WidgetRef ref, {
+    required InterruptionLevel level,
+  }) async {
+    await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
+      await tsx
+          .get(eewWarningConfigProvider.notifier)
+          .updateConfig(currentLocationInterruptionLevel: level);
+    });
+  }
+
+  /// 全国対象の EEW 警報の割り込みレベルを変更する。
+  Future<void> updateNationwideInterruptionLevel(
+    WidgetRef ref, {
+    required InterruptionLevel level,
+  }) async {
+    await EewWarningConfigNotifier.updateConfigMutation.run(ref, (tsx) async {
+      await tsx
+          .get(eewWarningConfigProvider.notifier)
+          .updateConfig(
+            target: EewWarningTarget.currentLocationAndNationwide,
+            nationwideInterruptionLevel: level,
+          );
+    });
   }
 }

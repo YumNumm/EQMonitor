@@ -18,6 +18,10 @@ _EewWarningSettings _$EewWarningSettingsFromJson(Map<String, dynamic> json) =>
             'target',
             (v) => $enumDecode(_$EewWarningTargetEnumMap, v),
           ),
+          currentLocationInterruptionLevel: $checkedConvert(
+            'current_location_interruption_level',
+            (v) => $enumDecode(_$InterruptionLevelEnumMap, v),
+          ),
           nationwideInterruptionLevel: $checkedConvert(
             'nationwide_interruption_level',
             (v) => $enumDecodeNullable(_$InterruptionLevelEnumMap, v),
@@ -26,16 +30,21 @@ _EewWarningSettings _$EewWarningSettingsFromJson(Map<String, dynamic> json) =>
         return val;
       },
       fieldKeyMap: const {
+        'currentLocationInterruptionLevel':
+            'current_location_interruption_level',
         'nationwideInterruptionLevel': 'nationwide_interruption_level',
       },
     );
 
-Map<String, dynamic> _$EewWarningSettingsToJson(_EewWarningSettings instance) =>
-    <String, dynamic>{
-      'target': _$EewWarningTargetEnumMap[instance.target]!,
-      'nationwide_interruption_level':
-          _$InterruptionLevelEnumMap[instance.nationwideInterruptionLevel],
-    };
+Map<String, dynamic> _$EewWarningSettingsToJson(
+  _EewWarningSettings instance,
+) => <String, dynamic>{
+  'target': _$EewWarningTargetEnumMap[instance.target]!,
+  'current_location_interruption_level':
+      _$InterruptionLevelEnumMap[instance.currentLocationInterruptionLevel]!,
+  'nationwide_interruption_level':
+      _$InterruptionLevelEnumMap[instance.nationwideInterruptionLevel],
+};
 
 const _$EewWarningTargetEnumMap = {
   EewWarningTarget.currentLocationOnly: 'currentLocationOnly',

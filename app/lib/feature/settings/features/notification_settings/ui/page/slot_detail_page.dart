@@ -36,7 +36,8 @@ class SlotDetailPage extends HookConsumerWidget {
     final warningEnabled = ref.watch(
       eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
     );
-    final warningTarget = ref.watch(eewWarningConfigProvider).value?.target;
+    final warningConfig = ref.watch(eewWarningConfigProvider).value;
+    final warningTarget = warningConfig?.target;
 
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
@@ -101,11 +102,18 @@ class SlotDetailPage extends HookConsumerWidget {
                 if (slot.slotType != NotificationSlotType.region) ...[
                   const SettingsSectionHeader(text: '緊急地震速報（警報）'),
                   _WarningSettingsCard(
+                    slotType: slot.slotType,
                     enabled:
                         slot.slotType == NotificationSlotType.currentLocation
                         ? warningEnabled
                         : warningTarget ==
                               EewWarningTarget.currentLocationAndNationwide,
+                    interruptionLevel:
+                        slot.slotType == NotificationSlotType.currentLocation
+                        ? (warningConfig?.currentLocationInterruptionLevel ??
+                              currentLocationEewWarningDefaultLevel)
+                        : (warningConfig?.nationwideInterruptionLevel ??
+                              nationwideEewWarningDefaultLevel),
                     onChanged: (next) async {
                       switch (slot.slotType) {
                         case NotificationSlotType.currentLocation:
@@ -116,6 +124,23 @@ class SlotDetailPage extends HookConsumerWidget {
                           await ref
                               .read(eewWarningSettingsActionProvider)
                               .updateNationwide(ref, enabled: next);
+                        case NotificationSlotType.region:
+                          return;
+                      }
+                    },
+                    onInterruptionLevelChanged: (next) async {
+                      final action = ref.read(eewWarningSettingsActionProvider);
+                      switch (slot.slotType) {
+                        case NotificationSlotType.currentLocation:
+                          await action.updateCurrentLocationInterruptionLevel(
+                            ref,
+                            level: next,
+                          );
+                        case NotificationSlotType.nationwide:
+                          await action.updateNationwideInterruptionLevel(
+                            ref,
+                            level: next,
+                          );
                         case NotificationSlotType.region:
                           return;
                       }
@@ -268,10 +293,19 @@ class _NotificationConditionCard extends StatelessWidget {
 }
 
 class _WarningSettingsCard extends StatelessWidget {
-  const new({required this.enabled, required this.onChanged});
+  const new({
+    required this.slotType,
+    required this.enabled,
+    required this.interruptionLevel,
+    required this.onChanged,
+    required this.onInterruptionLevelChanged,
+  });
 
+  final NotificationSlotType slotType;
   final bool enabled;
+  final InterruptionLevel interruptionLevel;
   final ValueChanged<bool> onChanged;
+  final ValueChanged<InterruptionLevel> onInterruptionLevelChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -304,10 +338,37 @@ class _WarningSettingsCard extends StatelessWidget {
             onTap: () => onChanged(!enabled),
           ),
           const Divider(height: 1),
+          ListTile(
+            enabled: enabled,
+            title: const Text('割り込みレベル'),
+            trailing: DropdownMenu<InterruptionLevel>(
+              initialSelection: interruptionLevel,
+              enabled: enabled,
+              requestFocusOnTap: false,
+              width: 180,
+              onSelected: (next) {
+                if (next != null) {
+                  onInterruptionLevelChanged(next);
+                }
+              },
+              dropdownMenuEntries: [
+                for (final level in InterruptionLevel.values)
+                  DropdownMenuEntry(value: level, label: level.label),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
           Padding(
             padding: EdgeInsets.all(spacing.md),
             child: Text(
-              '緊急地震速報（警報）は、現在地や全国を対象に重大な通知として配信されます。',
+              switch (slotType) {
+                NotificationSlotType.currentLocation =>
+                  '現在地が警報地域に入ったときに配信されます。'
+                      'クリティカルにすると、おやすみモードやマナーモードを無視して通知します。',
+                _ =>
+                  '日本のどこかで緊急地震速報（警報）が発表されるたびに配信されます。'
+                      '発表回数が多いため、既定は「時間重要」です。',
+              },
               style: designSystem.typography.bodySmall.copyWith(
                 color: colorTheme.onSurfaceVariant,
               ),

@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/devices/data/persistence/shared_preferences_workflow_persistence.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_slots_builder.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_custom_snapshot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
@@ -60,6 +61,11 @@ class NotificationPresetApplier {
         await step('updateGlobals', () => _updateGlobals(preset, snapshot));
         if (preset == NotificationPreset.custom && snapshot != null) {
           await step('restoreCustomExtras', () => _restoreExtras(snapshot));
+        }
+        if (preset == NotificationPreset.all) {
+          // updateGlobals の warningEnabled: true でサーバ側の target が
+          // current_location_only にリセットされるため、その後に全国対象へ上書きする
+          await step('applyNationwideWarning', _applyNationwideWarning);
         }
         await step('selectPreset', () async {
           await _ref.read(notificationPresetProvider.notifier).select(preset);
@@ -120,6 +126,8 @@ class NotificationPresetApplier {
           notificationEnabled: true,
           nankaiExtraordinaryEnabled: true,
           nankaiRegularEnabled: true,
+          vyse60Enabled: true,
+          earthquakeNoticeEnabled: true,
         );
       case NotificationPreset.custom:
         final general = snapshot?.general;
@@ -171,11 +179,25 @@ class NotificationPresetApplier {
     await earthquakeNotifier.updateSettings(enabled: true);
   }
 
+  /// 「すべて」の EEW 警報を現在地 + 全国対象にする。
+  Future<void> _applyNationwideWarning() async {
+    await _ref
+        .read(eewWarningConfigProvider.notifier)
+        .updateConfig(
+          target: EewWarningTarget.currentLocationAndNationwide,
+          currentLocationInterruptionLevel:
+              currentLocationEewWarningDefaultLevel,
+          nationwideInterruptionLevel: nationwideEewWarningDefaultLevel,
+        );
+  }
+
   Future<void> _restoreExtras(NotificationCustomSnapshot snapshot) async {
     await _ref
         .read(eewWarningConfigProvider.notifier)
         .updateConfig(
           target: snapshot.eewWarning.target,
+          currentLocationInterruptionLevel:
+              snapshot.eewWarning.currentLocationInterruptionLevel,
           nationwideInterruptionLevel:
               snapshot.eewWarning.nationwideInterruptionLevel,
         );

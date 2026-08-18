@@ -8,6 +8,8 @@ void main() {
     test('converts current_location_only target', () {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationOnly,
+        currentLocationInterruptionLevel:
+            api.CurrentLocationInterruptionLevel.critical,
         nationwideInterruptionLevel: null,
       );
 
@@ -20,6 +22,8 @@ void main() {
     test('converts current_location_and_nationwide target', () {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationAndNationwide,
+        currentLocationInterruptionLevel:
+            api.CurrentLocationInterruptionLevel.critical,
         nationwideInterruptionLevel: api.NationwideInterruptionLevel.active,
       );
 
