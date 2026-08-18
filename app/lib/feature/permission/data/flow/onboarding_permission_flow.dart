@@ -1,22 +1,20 @@
 import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_permission_flow.g.dart';
 
 @riverpod
 OnboardingPermissionFlow onboardingPermissionFlow(Ref ref) =>
-    OnboardingPermissionFlow();
+    const OnboardingPermissionFlow();
 
-/// オンボーディングの権限ステップから呼ばれる Flow。
-class OnboardingPermissionFlow {
+class const OnboardingPermissionFlow() {
   Future<void> requestNotification(WidgetRef ref, BuildContext context) async {
     final isGranted = await PermissionNotifier.requestNotificationMutation.run(
       ref,
-      (transaction) async => transaction
-          .get(permissionProvider.notifier)
-          .requestNotification(),
+      (transaction) async =>
+          transaction.get(permissionProvider.notifier).requestNotification(),
     );
     if (!context.mounted || isGranted) {
       return;
@@ -25,13 +23,11 @@ class OnboardingPermissionFlow {
   }
 
   Future<void> requestCriticalAlert(WidgetRef ref, BuildContext context) async {
-    final isGranted =
-        await PermissionNotifier.requestCriticalAlertMutation.run(
-          ref,
-          (transaction) async => transaction
-              .get(permissionProvider.notifier)
-              .requestCriticalAlert(),
-        );
+    final isGranted = await PermissionNotifier.requestCriticalAlertMutation.run(
+      ref,
+      (transaction) async =>
+          transaction.get(permissionProvider.notifier).requestCriticalAlert(),
+    );
     if (!context.mounted || isGranted) {
       return;
     }
@@ -42,8 +38,8 @@ class OnboardingPermissionFlow {
     WidgetRef ref,
     BuildContext context,
   ) async {
-    final isGranted =
-        await PermissionNotifier.requestForegroundLocationMutation.run(
+    final isGranted = await PermissionNotifier.requestForegroundLocationMutation
+        .run(
           ref,
           (transaction) async => transaction
               .get(permissionProvider.notifier)
@@ -59,8 +55,8 @@ class OnboardingPermissionFlow {
     WidgetRef ref,
     BuildContext context,
   ) async {
-    final isGranted =
-        await PermissionNotifier.requestBackgroundLocationMutation.run(
+    final isGranted = await PermissionNotifier.requestBackgroundLocationMutation
+        .run(
           ref,
           (transaction) async => transaction
               .get(permissionProvider.notifier)
@@ -90,7 +86,7 @@ class OnboardingPermissionFlow {
 
   void _showPermissionDeniedSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('権限が許可されませんでした。必要になったら設定から変更できます。')),
+      const SnackBar(content: Text('権限が許可されませんでした')),
     );
   }
 }

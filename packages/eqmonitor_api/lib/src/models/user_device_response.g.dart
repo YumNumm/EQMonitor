@@ -36,6 +36,7 @@ Map<String, dynamic> _$UserDeviceResponseToJson(_UserDeviceResponse instance) =>
 const _$DeviceTypeEnumMap = {
   DeviceType.ios: 'IOS',
   DeviceType.android: 'ANDROID',
+  DeviceType.desktop: 'DESKTOP',
 };
 
 const _$DeviceLocaleEnumMap = {

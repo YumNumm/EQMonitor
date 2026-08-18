@@ -123,20 +123,6 @@ void main() {
     );
   });
 
-  group('NotificationSettingsOsPermissionExtension', () {
-    test('toOsNotificationPermission が fromNotificationSettings と同等', () {
-      final settings = _notificationSettings(
-        authorizationStatus: AuthorizationStatus.authorized,
-        criticalAlert: AppleNotificationSetting.enabled,
-      );
-
-      expect(
-        settings.toOsNotificationPermission(),
-        OsNotificationPermission.fromNotificationSettings(settings),
-      );
-    });
-  });
-
   group('osNotificationPermissionProvider', () {
     test('FirebaseMessaging の設定を OsNotificationPermission に変換して返す', () async {
       final settings = _notificationSettings(

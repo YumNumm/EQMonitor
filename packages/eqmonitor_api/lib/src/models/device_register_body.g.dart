@@ -29,6 +29,7 @@ Map<String, dynamic> _$DeviceRegisterBodyToJson(_DeviceRegisterBody instance) =>
 const _$DeviceTypeEnumMap = {
   DeviceType.ios: 'IOS',
   DeviceType.android: 'ANDROID',
+  DeviceType.desktop: 'DESKTOP',
 };
 
 const _$DeviceLocaleEnumMap = {
