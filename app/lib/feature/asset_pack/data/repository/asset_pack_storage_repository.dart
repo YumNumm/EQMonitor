@@ -1,18 +1,17 @@
 import 'dart:io';
 
-import 'package:assets_util/assets_util.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_content_validator.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_root_resolver.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/bundled_asset_pack_repository.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:version/version.dart';
 
 part 'asset_pack_storage_repository.g.dart';
 
 typedef ResolveBundledAssetPackRoot = Future<String> Function();
-typedef ResolveAssetPackStorageRoot = Future<Directory> Function();
 
 enum AssetPackSourceKind { bundled, downloaded }
 
@@ -255,10 +254,9 @@ Future<AssetPackStorageRepository> assetPackStorageRepository(Ref ref) async {
   );
   return AssetPackStorageRepository(
     preferences: preferences,
-    resolveBundledRoot: AssetsUtil.resolvePackRoot,
-    resolveStorageRoot: () async {
-      final supportDirectory = await getApplicationSupportDirectory();
-      return Directory(p.join(supportDirectory.path, 'eqmonitor_asset_packs'));
-    },
+    resolveBundledRoot: ref
+        .watch(bundledAssetPackRepositoryProvider)
+        .resolveRoot,
+    resolveStorageRoot: ref.watch(assetPackStorageRootResolverProvider).resolve,
   );
 }

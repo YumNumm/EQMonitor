@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:assets_util/assets_util.dart';
 import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_not_ready_exception.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-export 'package:assets_util/assets_util.dart' show AssetPackNotReadyException;
+export 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_not_ready_exception.dart';
 
 part 'asset_pack_repository.g.dart';
 
@@ -28,6 +28,8 @@ AssetPackRepository assetPackRepository(Ref ref) => AssetPackRepository(
   },
 );
 
+/// Pack ルートからの相対パスを、読み取り可能な絶対パスへ解決する。
+typedef ResolveAssetPackFile = Future<String> Function(String relativePath);
 typedef ResolveAssetPackSource = Future<AssetPackSource> Function();
 typedef DeactivateDownloadedAssetPackSource = Future<void> Function(
   AssetPackSource source,
@@ -48,16 +50,22 @@ class AssetPackRepository {
          resolvePackSource == null ||
              (resolvePackFile == null && resolvePackRoot == null),
        ),
+       assert(
+         resolvePackSource != null ||
+             resolvePackFile != null ||
+             resolvePackRoot != null,
+         'Asset Pack の解決手段をいずれか1つ指定してください',
+       ),
        _resolvePackSource = resolvePackSource,
        _deactivateDownloadedSource = deactivateDownloadedSource,
        _resolvePackFile =
            resolvePackFile ??
            (resolvePackRoot == null
-               ? AssetPackFileResolver.resolve
+               ? null
                : (relativePath) async =>
                      '${await resolvePackRoot()}/$relativePath');
 
-  final ResolveAssetPackFile _resolvePackFile;
+  final ResolveAssetPackFile? _resolvePackFile;
   final ResolveAssetPackSource? _resolvePackSource;
   final DeactivateDownloadedAssetPackSource? _deactivateDownloadedSource;
 
@@ -83,8 +91,19 @@ class AssetPackRepository {
         ),
       );
     }
-    final path = await _resolvePackFile('manifest.json');
-    return readAssetPackManifestFile(File(path));
+    return readAssetPackManifestFile(
+      File(await requireResolvePackFile()('manifest.json')),
+    );
+  }
+
+  /// [_resolvePackSource] を持たない構成でのみ使う、単一 Pack ルート向けの
+  /// ファイル解決。コンストラクタの assert でどちらか一方は必ず与えられるが、
+  /// release build で assert が無効な場合でも偽データを返さず失敗させる。
+  ResolveAssetPackFile requireResolvePackFile() {
+    if (_resolvePackFile case final resolvePackFile?) {
+      return resolvePackFile;
+    }
+    throw const AssetPackNotReadyException('Asset Pack の解決手段が設定されていません。');
   }
 
   /// Resolves the absolute [File] for [id], as listed in `manifest.json`,
@@ -121,7 +140,7 @@ class AssetPackRepository {
         'Asset Pack manifest does not contain required asset: $id',
       );
     }
-    final file = File(await _resolvePackFile(item.path));
+    final file = File(await requireResolvePackFile()(item.path));
     return verifyResolvedAssetPackAsset(
       file: file,
       item: item,
@@ -242,11 +261,4 @@ class AssetPackRepository {
     }
     return file;
   }
-}
-
-class AssetPackFileResolver {
-  const new _();
-
-  static Future<String> resolve(String relativePath) =>
-      AssetsUtil.resolvePackFile(relativePath: relativePath);
 }
