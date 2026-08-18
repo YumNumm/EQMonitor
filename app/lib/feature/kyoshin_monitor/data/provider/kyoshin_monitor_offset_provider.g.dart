@@ -74,4 +74,4 @@ final class KyoshinMonitorEffectiveOffsetProvider
 }
 
 String _$kyoshinMonitorEffectiveOffsetHash() =>
-    r'904821bb73027bec5e69d859bbe31263ebe313d5';
+    r'ea6b6e9cba7e97a6bcdd15faeae615d2379e4bc2';

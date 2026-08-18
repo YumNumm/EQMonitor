@@ -33,10 +33,12 @@ const _initialBurstInterval = Duration(seconds: 1);
 class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   @override
   Stream<KyoshinMonitorTimerState> build() async* {
-    // 画像の取得先が変わると公開遅延も変わるため、サンプルを作り直す。
+    // 画像の取得先が変わったら、往復時間の推定もその経路で測り直す。
+    // LPGM 系列が選ばれている場合は monitorSource に関わらず
+    // 長周期地震動モニタから取得するため effectiveMonitorSource を見る。
     final source = ref.watch(
       kyoshinMonitorSettingsProvider.select(
-        (v) => v.requireValue.monitorSource,
+        (v) => v.requireValue.effectiveMonitorSource,
       ),
     );
     final resyncInterval = ref.watch(
