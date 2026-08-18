@@ -81,7 +81,7 @@ class _NotificationPermissionDialogPolicy {
   static bool shouldOpenSettingsForOs({
     required OsNotificationPermission permission,
   }) {
-    return permission.authorizationStatus == AuthorizationStatus.denied &&
+    return permission.authorizationStatus == .denied &&
         _isApplePlatform;
   }
 
@@ -97,8 +97,8 @@ class _NotificationPermissionDialogPolicy {
   }
 
   static bool get _isApplePlatform =>
-      defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.macOS;
+      defaultTargetPlatform == .iOS ||
+      defaultTargetPlatform == .macOS;
 }
 
 class _NotificationPermissionRequester {

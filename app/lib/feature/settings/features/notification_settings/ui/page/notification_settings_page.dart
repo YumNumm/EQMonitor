@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
@@ -13,7 +14,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
@@ -22,14 +22,13 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/custom_preset_reset_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class NotificationSettingsPage extends StatelessWidget {
@@ -106,16 +105,6 @@ class _Body extends ConsumerWidget {
           NotificationPresetSelector(
             selectedPreset: selectedPreset,
             onChanged: (preset) async {
-              if (selectedPreset == NotificationPreset.custom &&
-                  preset != NotificationPreset.custom) {
-                final confirmed =
-                    await const CustomPresetResetConfirmDialogAction().show(
-                      context,
-                    );
-                if (!confirmed) {
-                  return;
-                }
-              }
               try {
                 await ref.read(notificationPresetApplierProvider).apply(preset);
               } on Object catch (error) {
@@ -503,15 +492,6 @@ class _SlotListSection extends ConsumerWidget {
             icon: const Icon(Icons.add),
             label: Text(
               isPro ? '地域を追加' : '地域を追加（$regionSlotCount/$maxRegions）',
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-          child: Text(
-            'ダウングレード時も設定は保持され、Freeの上限を超える項目は配信時に無効扱いになります。',
-            style: designSystem.typography.bodySmall.copyWith(
-              color: designSystem.colorTheme.onSurfaceVariant,
             ),
           ),
         ),

@@ -180,58 +180,65 @@ class _IntensityFieldTile extends StatelessWidget {
 
     return ListTile(
       title: Text(def.label),
-      subtitle: Row(
-        children: [
-          const Text('文字色: '),
-          SegmentedButton<bool>(
-            key: ValueKey('intensity-fg-mode-$keySuffix'),
-            segments: const [
-              ButtonSegment(value: true, label: Text('自動')),
-              ButtonSegment(value: false, label: Text('手動')),
-            ],
-            selected: {entry.foreground is IntensityTextColorAuto},
-            onSelectionChanged: (selection) {
-              final isAuto = selection.first;
-              onChanged(
-                entry.copyWith(
-                  foreground: isAuto
-                      ? const IntensityTextColor.auto()
-                      : IntensityTextColor.manual(
-                          color: entry.resolvedForeground,
+      subtitle: !def.group.hasForeground
+          ? null
+          : Row(
+              children: [
+                const Text('文字色: '),
+                SegmentedButton<bool>(
+                  key: ValueKey('intensity-fg-mode-$keySuffix'),
+                  segments: const [
+                    ButtonSegment(value: true, label: Text('自動')),
+                    ButtonSegment(value: false, label: Text('手動')),
+                  ],
+                  selected: {entry.foreground is IntensityTextColorAuto},
+                  onSelectionChanged: (selection) {
+                    final isAuto = selection.first;
+                    onChanged(
+                      entry.copyWith(
+                        foreground: isAuto
+                            ? const IntensityTextColor.auto()
+                            : IntensityTextColor.manual(
+                                color: entry.resolvedForeground,
+                              ),
+                      ),
+                    );
+                  },
+                ),
+                if (entry.foreground case IntensityTextColorManual(
+                  :final color,
+                ))
+                  GestureDetector(
+                    key: ValueKey('intensity-fg-manual-$keySuffix'),
+                    onTap: () async {
+                      final picked = await ThemeEditorPage._pickColor(
+                        context,
+                        color,
+                      );
+                      if (picked == null) {
+                        return;
+                      }
+                      onChanged(
+                        entry.copyWith(
+                          foreground: IntensityTextColor.manual(color: picked),
                         ),
-                ),
-              );
-            },
-          ),
-          if (entry.foreground case IntensityTextColorManual(:final color))
-            GestureDetector(
-              key: ValueKey('intensity-fg-manual-$keySuffix'),
-              onTap: () async {
-                final picked = await ThemeEditorPage._pickColor(context, color);
-                if (picked == null) {
-                  return;
-                }
-                onChanged(
-                  entry.copyWith(
-                    foreground: IntensityTextColor.manual(color: picked),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 8),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: context.designSystem.colorTheme.outline,
+                        ),
+                      ),
+                    ),
                   ),
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.only(left: 8),
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.designSystem.colorTheme.outline,
-                  ),
-                ),
-              ),
+              ],
             ),
-        ],
-      ),
       trailing: GestureDetector(
         key: ValueKey('intensity-bg-$keySuffix'),
         onTap: () async {

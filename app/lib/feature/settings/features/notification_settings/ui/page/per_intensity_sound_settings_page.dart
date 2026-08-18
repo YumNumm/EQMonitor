@@ -4,9 +4,8 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PerIntensitySoundSettingsPage extends ConsumerWidget {
   const new({super.key});
@@ -102,8 +101,8 @@ class _SlotOverrideTile extends StatelessWidget {
       NotificationSlotType.region => (
         '📍',
         slot.cityName != null
-            ? '${slot.regionName ?? slot.slotType.label} ${slot.cityName}'
-            : slot.regionName ?? slot.slotType.label,
+            ? '${slot.regionName ?? slot.slotType.name} ${slot.cityName}'
+            : slot.regionName ?? slot.slotType.name,
       ),
     };
 
@@ -112,8 +111,9 @@ class _SlotOverrideTile extends StatelessWidget {
       NotificationKind.earthquake => slot.earthquakeOverrides ?? [],
     };
 
-    final subtitle =
-        overrides.isEmpty ? '設定なし' : '${overrides.length}件のオーバーライド';
+    final subtitle = overrides.isEmpty
+        ? '設定なし'
+        : '${overrides.length}件のオーバーライド';
 
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 20)),

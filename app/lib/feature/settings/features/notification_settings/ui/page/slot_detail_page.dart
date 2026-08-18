@@ -16,8 +16,8 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SlotDetailPage extends HookConsumerWidget {
@@ -351,8 +351,14 @@ class _WarningSettingsCard extends StatelessWidget {
                   onInterruptionLevelChanged(next);
                 }
               },
-              dropdownMenuEntries:
-                for (final level in InterruptionLevel.values.map((level) => DropdownMenuItem(value: level, child: Text(level.label)),
+              dropdownMenuEntries: InterruptionLevel.values
+                  .map(
+                    (level) => DropdownMenuEntry(
+                      value: level,
+                      label: level.label,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           const Divider(height: 1),
@@ -363,8 +369,7 @@ class _WarningSettingsCard extends StatelessWidget {
                 .currentLocation =>
                   '現在地が緊急地震速報の警報地域になった場合に通知を配信します。'
                       '重大な通知に設定すると、おやすみモードやマナーモードを無視して通知します。',
-                _ =>
-                  '緊急地震速報(警報)が発表された時に通知します。',
+                _ => '緊急地震速報(警報)が発表された時に通知します。',
               },
               style: designSystem.typography.bodySmall.copyWith(
                 color: colorTheme.onSurfaceVariant,

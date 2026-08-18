@@ -35,7 +35,7 @@ class TestNotificationTile extends HookConsumerWidget {
                       pendingKind.value = kind;
                       try {
                         final sheetNavigator = Navigator.of(sheetContext);
-                        if (kind == TestNotificationKind.normal) {
+                        if (kind == .normal) {
                           sheetNavigator.pop();
                         }
                         await ref

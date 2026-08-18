@@ -28,7 +28,7 @@ class TestNotificationSheet extends HookWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const Text('送信する通知の種類を選んでください'),
             const SizedBox(height: 16),

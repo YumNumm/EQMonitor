@@ -23,9 +23,6 @@ class ThemeColorFieldDef {
   final String label;
   final ThemeColorFieldCategory category;
 
-  /// この色がアプリのどこで使われるかを説明する文。
-  ///
-  /// エディタUIのsubtitleに表示される。
   final String description;
   final Color Function(ThemeColorSet colorSet) getter;
   final ThemeColorSet Function(ThemeColorSet colorSet, Color color) setter;

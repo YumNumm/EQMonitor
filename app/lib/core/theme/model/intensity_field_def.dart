@@ -3,15 +3,19 @@ import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 
 enum IntensityFieldGroup {
   intensity(
-    description: '観測された震度の表示色。震度アイコンや地震履歴・地図上の震度塗りつぶしなど、震度表示のすべてに使用されます。',
+    description: '震度アイコンや地震履歴の地域別塗りつぶし等で利用します',
+    hasForeground: true,
   ),
   estimatedIntensity(
-    description: '緊急地震速報の予想震度の表示色。観測値が確定する前に、地図上の推計震度の塗りつぶしに使用されます。',
+    description: '最大震度5弱以上を観測する地震が発生した時に発表される推計震度分布図の塗りつぶしで利用します',
+    // 推計震度は分布図の塗りつぶしのみで文字を描画しないため文字色を持たない
+    hasForeground: false,
   );
 
-  new({required this.description});
+  new({required this.description, required this.hasForeground});
 
   final String description;
+  final bool hasForeground;
 }
 
 class IntensityFieldDef {
