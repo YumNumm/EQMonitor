@@ -89,7 +89,7 @@ void main() {
       );
     });
 
-    test('toApiNationwideInterruptionLevel returns null for unsupported', () {
+    test('toApiNationwideInterruptionLevel maps every level', () {
       expect(
         InterruptionLevel.passive.toApiNationwideInterruptionLevel,
         api.NationwideInterruptionLevel.passive,
@@ -100,11 +100,44 @@ void main() {
       );
       expect(
         InterruptionLevel.timeSensitive.toApiNationwideInterruptionLevel,
-        isNull,
+        api.NationwideInterruptionLevel.timeSensitive,
       );
       expect(
         InterruptionLevel.critical.toApiNationwideInterruptionLevel,
-        isNull,
+        api.NationwideInterruptionLevel.critical,
+      );
+    });
+
+    test('toApiCurrentLocationInterruptionLevel maps every level', () {
+      expect(
+        InterruptionLevel.passive.toApiCurrentLocationInterruptionLevel,
+        api.CurrentLocationInterruptionLevel.passive,
+      );
+      expect(
+        InterruptionLevel.active.toApiCurrentLocationInterruptionLevel,
+        api.CurrentLocationInterruptionLevel.active,
+      );
+      expect(
+        InterruptionLevel.timeSensitive.toApiCurrentLocationInterruptionLevel,
+        api.CurrentLocationInterruptionLevel.timeSensitive,
+      );
+      expect(
+        InterruptionLevel.critical.toApiCurrentLocationInterruptionLevel,
+        api.CurrentLocationInterruptionLevel.critical,
+      );
+    });
+
+    test('ApiCurrentLocationInterruptionLevelConverter maps back', () {
+      expect(
+        api
+            .CurrentLocationInterruptionLevel
+            .timeSensitive
+            .toAppInterruptionLevel,
+        InterruptionLevel.timeSensitive,
+      );
+      expect(
+        api.NationwideInterruptionLevel.critical.toAppInterruptionLevel,
+        InterruptionLevel.critical,
       );
     });
   });
@@ -127,5 +160,4 @@ void main() {
       );
     });
   });
-
 }

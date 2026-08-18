@@ -41,6 +41,7 @@ void main() {
       ],
       eewWarning: EewWarningSettings(
         target: EewWarningTarget.currentLocationAndNationwide,
+        currentLocationInterruptionLevel: InterruptionLevel.critical,
         nationwideInterruptionLevel: InterruptionLevel.active,
       ),
       eewGlobal: EewGlobalSettings(

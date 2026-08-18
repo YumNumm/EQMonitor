@@ -62,6 +62,18 @@ extension ApiNationwideInterruptionLevelConverter
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
     .passive => .passive,
     .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
+  };
+}
+
+extension ApiCurrentLocationInterruptionLevelConverter
+    on api.CurrentLocationInterruptionLevel {
+  InterruptionLevel get toAppInterruptionLevel => switch (this) {
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
   };
 }
 
@@ -81,12 +93,21 @@ extension InterruptionLevelToApi on InterruptionLevel {
         .critical => api.DefaultInterruptionLevel.critical,
       };
 
-  api.NationwideInterruptionLevel? get toApiNationwideInterruptionLevel =>
+  api.NationwideInterruptionLevel get toApiNationwideInterruptionLevel =>
       switch (this) {
         .passive => .passive,
         .active => .active,
-        _ => null,
+        .timeSensitive => .timeSensitive,
+        .critical => .critical,
       };
+
+  api.CurrentLocationInterruptionLevel
+  get toApiCurrentLocationInterruptionLevel => switch (this) {
+    .passive => .passive,
+    .active => .active,
+    .timeSensitive => .timeSensitive,
+    .critical => .critical,
+  };
 }
 
 extension NotificationOverrideToApi on NotificationOverride {

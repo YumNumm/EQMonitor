@@ -26,19 +26,25 @@ class NotificationMinIntensityField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolved =
-        value != null && JmaIntensity.selectableValues.contains(value)
-        ? value
-        : switch ((slotType, kind)) {
-            (NotificationSlotType.currentLocation, NotificationKind.eew) =>
-              currentLocationEewMinIntensity,
-            (
-              NotificationSlotType.currentLocation,
-              NotificationKind.earthquake,
-            ) =>
-              currentLocationEarthquakeMinIntensity,
-            _ => defaultNotificationSlotMinIntensity,
-          };
+    final options = notificationMinIntensityPolicy.optionsOf(
+      slotType: slotType,
+      kind: kind,
+    );
+    final fallback = switch ((slotType, kind)) {
+      (NotificationSlotType.currentLocation, NotificationKind.eew) =>
+        currentLocationEewMinIntensity,
+      (NotificationSlotType.currentLocation, NotificationKind.earthquake) =>
+        currentLocationEarthquakeMinIntensity,
+      _ => defaultNotificationSlotMinIntensity,
+    };
+    // 下限導入前に保存された値・選択肢外の値は下限へ引き上げて表示する
+    final resolved = notificationMinIntensityPolicy.clamp(
+      slotType: slotType,
+      kind: kind,
+      minIntensity: JmaIntensity.selectableValues.contains(value)
+          ? value
+          : fallback,
+    );
 
     return DropdownMenu<JmaIntensity>(
       initialSelection: resolved,
@@ -51,7 +57,7 @@ class NotificationMinIntensityField extends StatelessWidget {
         }
       },
       dropdownMenuEntries: [
-        for (final intensity in JmaIntensity.selectableValues)
+        for (final intensity in options)
           DropdownMenuEntry(
             value: intensity,
             label: intensity.minIntensityLabel,

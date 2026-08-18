@@ -224,7 +224,7 @@ abstract class DeviceApiClient {
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewWarning)
   Future<HttpResponse<EewWarningConfigResponse>> getV2DeviceMeSettingsEewWarning();
 
-  /// EEW 警報設定を更新（Free プランは nationwide 不可）
+  /// EEW 警報設定を更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEewWarning)
   Future<HttpResponse<EewWarningConfigResponse>> patchV2DeviceMeSettingsEewWarning({
     @Body() required EewWarningConfigRequest body,
