@@ -1,20 +1,21 @@
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final notificationPermissionDialogActionProvider = Provider(
-  (ref) => const NotificationPermissionDialogAction(),
-);
+part 'notification_permission_dialog.g.dart';
+
+@riverpod
+NotificationPermissionDialogAction notificationPermissionDialogAction(
+  Ref ref,
+) => const NotificationPermissionDialogAction();
 
 /// OS 通知権限・重大な通知権限が無効なときの案内ダイアログ表示を担う。
-class NotificationPermissionDialogAction {
-  const new();
-
+class const NotificationPermissionDialogAction() {
   Future<void> showOsPermission(BuildContext context, WidgetRef ref) async {
     final permission = await ref.read(osNotificationPermissionProvider.future);
     if (!context.mounted) {
@@ -62,7 +63,7 @@ class NotificationPermissionDialogAction {
       context: context,
       builder: (dialogContext) => _NotificationPermissionDialog(
         title: '重大な通知が許可されていません',
-        body: 'マナーモードやおやすみモード中でも緊急地震速報(警報)を受け取るには、重大な通知の許可が必要です。',
+        body: 'マナーモードやおやすみモード中でも緊急地震速報(警報)の通知を受け取るには、重大な通知の許可が必要です。',
         primaryActionLabel: openSettings ? '設定を開く' : '許可する',
         onPrimaryAction: () async {
           Navigator.of(dialogContext).pop();
@@ -77,12 +78,11 @@ class NotificationPermissionDialogAction {
   }
 }
 
-class _NotificationPermissionDialogPolicy {
+class _NotificationPermissionDialogPolicy() {
   static bool shouldOpenSettingsForOs({
     required OsNotificationPermission permission,
   }) {
-    return permission.authorizationStatus == .denied &&
-        _isApplePlatform;
+    return permission.authorizationStatus == .denied && _isApplePlatform;
   }
 
   static bool shouldOpenSettingsForCriticalAlert({
@@ -97,8 +97,7 @@ class _NotificationPermissionDialogPolicy {
   }
 
   static bool get _isApplePlatform =>
-      defaultTargetPlatform == .iOS ||
-      defaultTargetPlatform == .macOS;
+      defaultTargetPlatform == .iOS || defaultTargetPlatform == .macOS;
 }
 
 class _NotificationPermissionRequester {

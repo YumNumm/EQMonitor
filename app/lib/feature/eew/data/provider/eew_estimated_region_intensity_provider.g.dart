@@ -71,7 +71,7 @@ final class EewEstimatedRegionIntensityProvider
 }
 
 String _$eewEstimatedRegionIntensityHash() =>
-    r'6ced43b4afcc68c8c722224f1aa49eff5d8453ce';
+    r'e360bef6e2b800b1c9034abaaa278f404a986018';
 
 final class EewEstimatedRegionIntensityFamily extends $Family
     with

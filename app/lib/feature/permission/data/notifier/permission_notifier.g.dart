@@ -12,19 +12,19 @@ part of 'permission_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 /// アプリで利用する権限の状態を保持する Notifier。
 ///
-/// 初期化時に OS の権限状態を読み取り、既に許可済みの権限は granted として反映する。
+/// 初期化時とフォアグラウンド復帰時に OS の権限状態を読み取る。
 
 @ProviderFor(PermissionNotifier)
 final permissionProvider = PermissionNotifierProvider._();
 
 /// アプリで利用する権限の状態を保持する Notifier。
 ///
-/// 初期化時に OS の権限状態を読み取り、既に許可済みの権限は granted として反映する。
+/// 初期化時とフォアグラウンド復帰時に OS の権限状態を読み取る。
 final class PermissionNotifierProvider
     extends $AsyncNotifierProvider<PermissionNotifier, PermissionState> {
   /// アプリで利用する権限の状態を保持する Notifier。
   ///
-  /// 初期化時に OS の権限状態を読み取り、既に許可済みの権限は granted として反映する。
+  /// 初期化時とフォアグラウンド復帰時に OS の権限状態を読み取る。
   PermissionNotifierProvider._()
     : super(
         from: null,
@@ -45,11 +45,11 @@ final class PermissionNotifierProvider
 }
 
 String _$permissionNotifierHash() =>
-    r'1f3caa6844623e9a7df0edbcce88c7ce2344a036';
+    r'54c984f14a2aced710443d3ea2eef05fc31a751d';
 
 /// アプリで利用する権限の状態を保持する Notifier。
 ///
-/// 初期化時に OS の権限状態を読み取り、既に許可済みの権限は granted として反映する。
+/// 初期化時とフォアグラウンド復帰時に OS の権限状態を読み取る。
 
 abstract class _$PermissionNotifier extends $AsyncNotifier<PermissionState> {
   FutureOr<PermissionState> build();

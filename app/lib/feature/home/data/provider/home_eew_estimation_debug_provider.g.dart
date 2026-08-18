@@ -60,6 +60,8 @@ String _$isHomeEewEstimationDebugAvailableHash() =>
 /// ホーム画面のEEWカードに推計震度・到達予想時刻を表示するかどうか。
 ///
 /// 設定が有効でも、変更権限を失った場合は表示しない。
+/// EEW 受信中にロール取得の API 呼び出しを発生させないため、
+/// ローカルに保存された設定を先に確認する。
 
 @ProviderFor(isHomeEewEstimationVisible)
 final isHomeEewEstimationVisibleProvider =
@@ -68,6 +70,8 @@ final isHomeEewEstimationVisibleProvider =
 /// ホーム画面のEEWカードに推計震度・到達予想時刻を表示するかどうか。
 ///
 /// 設定が有効でも、変更権限を失った場合は表示しない。
+/// EEW 受信中にロール取得の API 呼び出しを発生させないため、
+/// ローカルに保存された設定を先に確認する。
 
 final class IsHomeEewEstimationVisibleProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
@@ -75,6 +79,8 @@ final class IsHomeEewEstimationVisibleProvider
   /// ホーム画面のEEWカードに推計震度・到達予想時刻を表示するかどうか。
   ///
   /// 設定が有効でも、変更権限を失った場合は表示しない。
+  /// EEW 受信中にロール取得の API 呼び出しを発生させないため、
+  /// ローカルに保存された設定を先に確認する。
   IsHomeEewEstimationVisibleProvider._()
     : super(
         from: null,
@@ -101,4 +107,4 @@ final class IsHomeEewEstimationVisibleProvider
 }
 
 String _$isHomeEewEstimationVisibleHash() =>
-    r'ce484783483cbf50d68e1dfd6b874b2bcfe749e0';
+    r'd99def15de4e07a2068034c7de1967a7e901d568';

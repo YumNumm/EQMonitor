@@ -68,22 +68,6 @@ class const OnboardingPermissionFlow() {
     _showPermissionDeniedSnackBar(context);
   }
 
-  void skipNotification(WidgetRef ref) {
-    ref.read(permissionProvider.notifier).skipNotification();
-  }
-
-  void skipCriticalAlert(WidgetRef ref) {
-    ref.read(permissionProvider.notifier).skipCriticalAlert();
-  }
-
-  void skipForegroundLocation(WidgetRef ref) {
-    ref.read(permissionProvider.notifier).skipForegroundLocation();
-  }
-
-  void skipBackgroundLocation(WidgetRef ref) {
-    ref.read(permissionProvider.notifier).skipBackgroundLocation();
-  }
-
   void _showPermissionDeniedSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('権限が許可されませんでした')),

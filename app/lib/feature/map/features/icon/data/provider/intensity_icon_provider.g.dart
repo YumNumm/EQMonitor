@@ -50,4 +50,4 @@ final class IntensityIconProvider
   }
 }
 
-String _$intensityIconHash() => r'45fa592e6b750f1d0289ab897583f328f835d588';
+String _$intensityIconHash() => r'1e4cf5537f7a7ae8558f7bf740e61dec2edb44b2';

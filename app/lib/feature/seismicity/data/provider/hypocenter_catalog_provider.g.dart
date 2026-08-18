@@ -172,7 +172,7 @@ final class HypocenterAnalysisProvider
 }
 
 String _$hypocenterAnalysisHash() =>
-    r'4ba87feb885ec7254213fac285fd4647667bd825';
+    r'0764ce11a0fd0f0024e6ccbceff45cdec97e2786';
 
 final class HypocenterAnalysisFamily extends $Family
     with

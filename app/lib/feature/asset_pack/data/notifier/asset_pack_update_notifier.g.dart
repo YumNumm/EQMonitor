@@ -44,7 +44,7 @@ final class AssetPackUpdateNotifierProvider
 }
 
 String _$assetPackUpdateNotifierHash() =>
-    r'3f3c0ba2d9454cb20339e40eacc296ba4246f0a0';
+    r'e438852882fde2d496b3db1c9bf1aaf09c32a62c';
 
 abstract class _$AssetPackUpdateNotifier
     extends $Notifier<AssetPackUpdateState> {

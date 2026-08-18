@@ -59,4 +59,4 @@ final class BackgroundLocationServiceProvider
 }
 
 String _$backgroundLocationServiceHash() =>
-    r'ac898481b27f0d2e7b5b939f9ea37d9591e5e92c';
+    r'2ef6191a80c686e1f96028d85e03b5974e0f3ad2';

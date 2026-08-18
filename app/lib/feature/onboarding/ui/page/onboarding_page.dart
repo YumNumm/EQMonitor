@@ -13,7 +13,6 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
 import 'package:eqmonitor/feature/permission/data/flow/onboarding_permission_flow.dart';
-import 'package:eqmonitor/feature/permission/data/model/permission_item_decision.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/provider/permission_request_processing_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
@@ -164,22 +163,21 @@ class _StepNavigationState {
     required this.onNext,
   });
 
-  factory initial(_OnboardingStep step) =>
-      _StepNavigationState(
-        buttonLabel: switch (step) {
-          _OnboardingStep.complete => 'はじめる',
-          _ => '次へ',
-        },
-        processingLabel: '処理しています...',
-        isNextEnabled: switch (step) {
-          _OnboardingStep.welcome => false,
-          _OnboardingStep.permissions => false,
-          _OnboardingStep.notificationSettings => false,
-          _OnboardingStep.complete => false,
-        },
-        isProcessing: false,
-        onNext: null,
-      );
+  factory initial(_OnboardingStep step) => _StepNavigationState(
+    buttonLabel: switch (step) {
+      _OnboardingStep.complete => 'はじめる',
+      _ => '次へ',
+    },
+    processingLabel: '処理しています...',
+    isNextEnabled: switch (step) {
+      _OnboardingStep.welcome => false,
+      _OnboardingStep.permissions => false,
+      _OnboardingStep.notificationSettings => false,
+      _OnboardingStep.complete => false,
+    },
+    isProcessing: false,
+    onNext: null,
+  );
 
   final String buttonLabel;
   final String processingLabel;

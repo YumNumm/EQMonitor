@@ -94,7 +94,7 @@ final class QzssSerialPortConnectionProvider
 }
 
 String _$qzssSerialPortConnectionHash() =>
-    r'90440ba11d14aa5212c40d944bd73d4abbb34796';
+    r'a71add3b0c061373827aaebbb6dbf754447d9976';
 
 /// QZSSシリアルポート接続管理プロバイダー
 

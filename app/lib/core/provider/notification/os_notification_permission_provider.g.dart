@@ -51,4 +51,4 @@ final class OsNotificationPermissionProvider
 }
 
 String _$osNotificationPermissionHash() =>
-    r'596815cffcd5b1230ea4a422dcc80df1c5ea740f';
+    r'cd56224be418223df1f98e27eb43061356359fe5';

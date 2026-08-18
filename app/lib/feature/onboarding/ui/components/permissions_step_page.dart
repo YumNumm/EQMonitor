@@ -11,6 +11,10 @@ class _PermissionsStepPage extends HookConsumerWidget {
     final permissionFlow = ref.watch(onboardingPermissionFlowProvider);
     final permissionState = ref.watch(permissionProvider);
     final isProcessing = ref.watch(permissionRequestProcessingProvider);
+    final isNotificationSkipped = useState(false);
+    final isCriticalAlertSkipped = useState(false);
+    final isForegroundLocationSkipped = useState(false);
+    final isBackgroundLocationSkipped = useState(false);
 
     void openWebView({required String title}) {
       OnboardingWebViewRoute(
@@ -19,22 +23,44 @@ class _PermissionsStepPage extends HookConsumerWidget {
       ).push<void>(context);
     }
 
-    useEffect(() {
-      if (!navigation.isActive) {
+    useEffect(
+      () {
+        if (!navigation.isActive) {
+          return null;
+        }
+        final state = permissionState.value;
+        final isNextEnabled =
+            state != null &&
+            (state.isNotificationGranted || isNotificationSkipped.value) &&
+            (!state.isCriticalAlertSupported ||
+                state.isCriticalAlertGranted ||
+                isCriticalAlertSkipped.value) &&
+            (state.isForegroundLocationGranted ||
+                isForegroundLocationSkipped.value) &&
+            (state.isBackgroundLocationGranted ||
+                isBackgroundLocationSkipped.value);
+        navigation.register(
+          _StepNavigationState(
+            buttonLabel: '次へ',
+            processingLabel: '権限を確認しています...',
+            isNextEnabled: isNextEnabled,
+            isProcessing: isProcessing || permissionState.isLoading,
+            onNext: navigation.nextPage,
+          ),
+        );
         return null;
-      }
-      final state = permissionState.value;
-      navigation.register(
-        _StepNavigationState(
-          buttonLabel: '次へ',
-          processingLabel: '権限を確認しています...',
-          isNextEnabled: state?.canContinue ?? false,
-          isProcessing: isProcessing || permissionState.isLoading,
-          onNext: navigation.nextPage,
-        ),
-      );
-      return null;
-    }, [navigation, navigation.isActive, permissionState, isProcessing]);
+      },
+      [
+        navigation,
+        navigation.isActive,
+        permissionState,
+        isProcessing,
+        isNotificationSkipped.value,
+        isCriticalAlertSkipped.value,
+        isForegroundLocationSkipped.value,
+        isBackgroundLocationSkipped.value,
+      ],
+    );
 
     return permissionState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -52,23 +78,28 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 _PermissionActionCard(
                   title: '通知を許可',
                   description: '地震情報や緊急地震速報を通知でお知らせします。通知を送る条件や地域はこの後設定できます',
-                  decision: state.notification,
+                  isGranted: state.isNotificationGranted,
+                  isSkipped: isNotificationSkipped.value,
                   isEnabled: !isProcessing,
-                  onSkip: () => permissionFlow.skipNotification(ref),
+                  onSkip: () {
+                    isNotificationSkipped.value = true;
+                    isCriticalAlertSkipped.value = true;
+                  },
                   onAllow: () =>
                       permissionFlow.requestNotification(ref, context),
                 ),
-                if (state.isCriticalAlertVisible) ...[
+                if (state.isCriticalAlertSupported) ...[
                   SizedBox(height: designSystem.spacing.md),
                   _PermissionActionCard(
                     title: '重大な通知を許可',
                     description: '現在地を警報地域とする緊急地震速報(警報)が発表されたときに、おやすみモードやマナーモードを無視して強制的に通知を配信します。',
-                    decision: state.criticalAlert,
-                    isEnabled: !isProcessing && state.canRequestCriticalAlert,
-                    disabledReason: state.canRequestCriticalAlert
+                    isGranted: state.isCriticalAlertGranted,
+                    isSkipped: isCriticalAlertSkipped.value,
+                    isEnabled: !isProcessing && state.isNotificationGranted,
+                    disabledReason: state.isNotificationGranted
                         ? null
                         : '先に通知を許可してください',
-                    onSkip: () => permissionFlow.skipCriticalAlert(ref),
+                    onSkip: () => isCriticalAlertSkipped.value = true,
                     onAllow: () =>
                         permissionFlow.requestCriticalAlert(ref, context),
                   ),
@@ -100,9 +131,13 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 _PermissionActionCard(
                   title: 'アプリを開いている時の位置情報',
                   description: '緊急地震速報発表時に現在地の予想震度と到達までの時間を表示します。気象庁が現在地の予想震度と到達予想時刻を発表した場合に限ります。詳しい情報\n地震情報を開いた時に、現在地付近で観測した震度を表示します',
-                  decision: state.foregroundLocation,
+                  isGranted: state.isForegroundLocationGranted,
+                  isSkipped: isForegroundLocationSkipped.value,
                   isEnabled: !isProcessing,
-                  onSkip: () => permissionFlow.skipForegroundLocation(ref),
+                  onSkip: () {
+                    isForegroundLocationSkipped.value = true;
+                    isBackgroundLocationSkipped.value = true;
+                  },
                   onAllow: () =>
                       permissionFlow.requestForegroundLocation(ref, context),
                   linkLabel: '詳しい情報',
@@ -112,13 +147,13 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 _PermissionActionCard(
                   title: 'アプリを開いていない時の位置情報',
                   description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意!: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
-                  decision: state.backgroundLocation,
-                  isEnabled:
-                      !isProcessing && state.canRequestBackgroundLocation,
-                  disabledReason: state.canRequestBackgroundLocation
+                  isGranted: state.isBackgroundLocationGranted,
+                  isSkipped: isBackgroundLocationSkipped.value,
+                  isEnabled: !isProcessing && state.isForegroundLocationGranted,
+                  disabledReason: state.isForegroundLocationGranted
                       ? null
                       : '先にアプリ使用中の位置情報を許可してください',
-                  onSkip: () => permissionFlow.skipBackgroundLocation(ref),
+                  onSkip: () => isBackgroundLocationSkipped.value = true,
                   onAllow: () =>
                       permissionFlow.requestBackgroundLocation(ref, context),
                 ),
@@ -171,7 +206,8 @@ class _PermissionActionCard extends StatelessWidget {
   const new({
     required this.title,
     required this.description,
-    required this.decision,
+    required this.isGranted,
+    required this.isSkipped,
     required this.isEnabled,
     required this.onSkip,
     required this.onAllow,
@@ -182,7 +218,8 @@ class _PermissionActionCard extends StatelessWidget {
 
   final String title;
   final String description;
-  final PermissionItemDecision decision;
+  final bool isGranted;
+  final bool isSkipped;
   final bool isEnabled;
   final VoidCallback onSkip;
   final Future<void> Function() onAllow;
@@ -193,8 +230,6 @@ class _PermissionActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final isGranted = decision == PermissionItemDecision.granted;
-    final isSkipped = decision == PermissionItemDecision.skipped;
     final actionButtons = isGranted
         ? const [Icon(Icons.check), Text('許可しました')]
         : [

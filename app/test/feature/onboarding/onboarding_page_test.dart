@@ -5,6 +5,8 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
+import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
+import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,19 +46,43 @@ void main() {
     expect(find.text('予期しないエラーが発生しました'), findsOneWidget);
     expect(_nextButton(tester).onPressed, isNull);
   });
+
+  testWidgets('権限のスキップ状態はオンボーディング画面内で管理する', (tester) async {
+    await tester.pumpWidget(
+      _wrap(notifier: _ImmediateDeviceProvisioningNotifier()),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    await tester.tap(find.text('次へ'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    await tester.tap(find.text('スキップ').first);
+    await tester.pump();
+    expect(find.text('スキップしました'), findsNWidgets(2));
+
+    await tester.tap(find.text('スキップ').first);
+    await tester.pump();
+    expect(find.text('スキップしました'), findsNWidgets(4));
+    expect(_nextButton(tester).onPressed, isNotNull);
+  });
 }
 
 FilledButton _nextButton(WidgetTester tester) =>
     tester.widget<FilledButton>(find.byType(FilledButton).last);
 
-Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
+Widget _wrap({required DeviceProvisioningNotifier notifier}) {
   final theme = AppThemeDataBuilder.build(
     colorSet: AppTheme.eqmonitorDefault().light!,
     brightness: Brightness.light,
   );
 
   return ProviderScope(
-    overrides: [deviceProvisioningProvider.overrideWith(() => notifier)],
+    overrides: [
+      deviceProvisioningProvider.overrideWith(() => notifier),
+      permissionProvider.overrideWith(_DeniedPermissionNotifier.new),
+    ],
     child: MaterialApp(
       theme: theme,
       builder: (context, child) => DefaultAssetBundle(
@@ -65,6 +91,24 @@ Widget _wrap({required _ControlledDeviceProvisioningNotifier notifier}) {
       ),
       home: const OnboardingPage(),
     ),
+  );
+}
+
+final class _ImmediateDeviceProvisioningNotifier
+    extends DeviceProvisioningNotifier {
+  @override
+  Future<DeviceProvisioningStatus> build() async =>
+      DeviceProvisioningStatus.notRequired;
+}
+
+final class _DeniedPermissionNotifier extends PermissionNotifier {
+  @override
+  Future<PermissionState> build() async => const PermissionState(
+    isNotificationGranted: false,
+    isCriticalAlertSupported: true,
+    isCriticalAlertGranted: false,
+    isForegroundLocationGranted: false,
+    isBackgroundLocationGranted: false,
   );
 }
 

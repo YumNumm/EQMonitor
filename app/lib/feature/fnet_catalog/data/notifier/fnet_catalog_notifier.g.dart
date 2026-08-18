@@ -53,7 +53,7 @@ final class FnetCatalogNotifierProvider
 }
 
 String _$fnetCatalogNotifierHash() =>
-    r'51b2970b8ace4be75b206eb581091ddd988fd569';
+    r'4eddd9a49c71b73c6f518f4e03654d52fe1909d0';
 
 final class FnetCatalogNotifierFamily extends $Family
     with
