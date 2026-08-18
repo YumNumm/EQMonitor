@@ -92,7 +92,8 @@ class _ModeSection extends ConsumerWidget {
           Align(
             alignment: .centerRight,
             child: FilledButton.tonal(
-              onPressed: () => ThemeEditorRoute(mode: mode.name).go(context),
+              onPressed: () async =>
+                  ThemeEditorRoute(mode: mode.name).push<void>(context),
               child: const Text('編集'),
             ),
           ),
