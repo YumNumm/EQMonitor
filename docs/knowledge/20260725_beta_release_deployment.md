@@ -1,9 +1,12 @@
 # beta Releaseの外部配布とGitHub Deployment確認
 
-## `/beta` から外部配布までの流れ
+## beta から外部配布までの流れ
 
-Release PRへ `/beta` とコメントすると、`Create Beta Release` がGitHub Appの
-installation tokenで `v<version>-beta.<number>` タグをpushする。
+通常は **beta Release Please PR を merge** すると Release Please が
+`v<version>-beta.<number>` タグと GitHub prerelease を作成する。
+詳細は `docs/knowledge/20260819_dual_release_please_beta.md`。
+
+緊急時のみ `Create Beta Release` の `workflow_dispatch` で同じ形式のタグを作れる。
 
 `Deploy App` は `v*-beta.*` のtag pushを監視し、betaでは次を配布する。
 
@@ -115,3 +118,5 @@ gh workflow run create-beta-release.yaml \
 Releaseは作成しない。`version` 未指定、Release不在、API失敗時はjobをfailureにする。
 
 実行後はRelease本文で誤メンションが消え、正式な作者表記が残っていることを確認する。
+
+通常の beta 配布は beta Release Please PR の merge を使う（`/beta` コメントは廃止）。
