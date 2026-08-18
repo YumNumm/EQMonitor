@@ -19,6 +19,11 @@ _EewWarningConfigRequest _$EewWarningConfigRequestFromJson(
         'target',
         (v) => $enumDecodeNullable(_$TargetEnumMap, v),
       ),
+      currentLocationInterruptionLevel: $checkedConvert(
+        'current_location_interruption_level',
+        (v) =>
+            $enumDecodeNullable(_$CurrentLocationInterruptionLevelEnumMap, v),
+      ),
       nationwideInterruptionLevel: $checkedConvert(
         'nationwide_interruption_level',
         (v) => $enumDecodeNullable(_$NationwideInterruptionLevelEnumMap, v),
@@ -27,6 +32,7 @@ _EewWarningConfigRequest _$EewWarningConfigRequestFromJson(
     return val;
   },
   fieldKeyMap: const {
+    'currentLocationInterruptionLevel': 'current_location_interruption_level',
     'nationwideInterruptionLevel': 'nationwide_interruption_level',
   },
 );
@@ -35,6 +41,8 @@ Map<String, dynamic> _$EewWarningConfigRequestToJson(
   _EewWarningConfigRequest instance,
 ) => <String, dynamic>{
   'target': ?instance.target,
+  'current_location_interruption_level':
+      ?instance.currentLocationInterruptionLevel,
   'nationwide_interruption_level': ?instance.nationwideInterruptionLevel,
 };
 
@@ -43,7 +51,16 @@ const _$TargetEnumMap = {
   Target.currentLocationAndNationwide: 'current_location_and_nationwide',
 };
 
+const _$CurrentLocationInterruptionLevelEnumMap = {
+  CurrentLocationInterruptionLevel.passive: 'passive',
+  CurrentLocationInterruptionLevel.active: 'active',
+  CurrentLocationInterruptionLevel.timeSensitive: 'time_sensitive',
+  CurrentLocationInterruptionLevel.critical: 'critical',
+};
+
 const _$NationwideInterruptionLevelEnumMap = {
   NationwideInterruptionLevel.passive: 'passive',
   NationwideInterruptionLevel.active: 'active',
+  NationwideInterruptionLevel.timeSensitive: 'time_sensitive',
+  NationwideInterruptionLevel.critical: 'critical',
 };

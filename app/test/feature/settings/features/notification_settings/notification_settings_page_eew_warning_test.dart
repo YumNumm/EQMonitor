@@ -251,6 +251,7 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
   @override
   Future<EewWarningSettings> build() async => const EewWarningSettings(
     target: EewWarningTarget.currentLocationAndNationwide,
+    currentLocationInterruptionLevel: InterruptionLevel.critical,
     nationwideInterruptionLevel: InterruptionLevel.active,
   );
 }

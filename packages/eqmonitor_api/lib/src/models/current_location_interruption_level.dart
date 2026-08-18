@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum NationwideInterruptionLevel {
+enum CurrentLocationInterruptionLevel {
   @JsonValue('passive')
   passive('passive'),
   @JsonValue('active')
@@ -15,7 +15,7 @@ enum NationwideInterruptionLevel {
   @JsonValue('critical')
   critical('critical');
 
-  const NationwideInterruptionLevel(this.json);
+  const CurrentLocationInterruptionLevel(this.json);
 
   final String? json;
   String toJson() {

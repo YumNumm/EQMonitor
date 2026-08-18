@@ -37,7 +37,7 @@ void main() {
   });
 
   group('putCurrentLocation', () {
-    test('sends selected minimum intensities when enabling', () async {
+    test('clamps minimum intensities below the floor when enabling', () async {
       final slot = await repository.putCurrentLocation(
         eewEnabled: true,
         eewMinIntensity: JmaIntensity.three,
@@ -51,7 +51,7 @@ void main() {
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
       expect(
         adapter.lastRequestBody!['eew_min_intensity'],
-        api.JmaIntensity.value3,
+        api.JmaIntensity.value4,
       );
       expect(adapter.lastRequestBody!['earthquake_enabled'], isTrue);
       expect(
@@ -158,7 +158,7 @@ void main() {
   });
 
   group('updateRegion', () {
-    test('sends default eew minimum intensity when enabling eew', () async {
+    test('clamps the default eew minimum intensity to the floor', () async {
       await repository.updateRegion(
         slotId: 'slot-123',
         eewEnabled: true,
@@ -168,7 +168,7 @@ void main() {
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
       expect(
         adapter.lastRequestBody!['eew_min_intensity'],
-        api.JmaIntensity.value3,
+        api.JmaIntensity.value4,
       );
       expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
       expect(
@@ -212,6 +212,10 @@ void main() {
       final settings = await repository.getEewWarningConfig();
 
       expect(settings.target, EewWarningTarget.currentLocationOnly);
+      expect(
+        settings.currentLocationInterruptionLevel,
+        InterruptionLevel.critical,
+      );
       expect(settings.nationwideInterruptionLevel, isNull);
     });
   });
@@ -220,11 +224,23 @@ void main() {
     test('sends patch and returns updated settings', () async {
       final settings = await repository.patchEewWarningConfig(
         target: EewWarningTarget.currentLocationAndNationwide,
-        nationwideInterruptionLevel: InterruptionLevel.active,
+        currentLocationInterruptionLevel: InterruptionLevel.critical,
+        nationwideInterruptionLevel: InterruptionLevel.timeSensitive,
       );
 
+      expect(
+        adapter.lastRequestBody!['current_location_interruption_level'],
+        api.CurrentLocationInterruptionLevel.critical,
+      );
+      expect(
+        adapter.lastRequestBody!['nationwide_interruption_level'],
+        api.NationwideInterruptionLevel.timeSensitive,
+      );
       expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
-      expect(settings.nationwideInterruptionLevel, InterruptionLevel.active);
+      expect(
+        settings.nationwideInterruptionLevel,
+        InterruptionLevel.timeSensitive,
+      );
     });
   });
 
@@ -394,12 +410,14 @@ final List<Map<String, Object?>> _slotsListResponse = [
 
 const Map<String, String?> _eewWarningResponse = {
   'target': 'current_location_only',
+  'current_location_interruption_level': 'critical',
   'nationwide_interruption_level': null,
 };
 
 const _eewWarningResponseNationwide = {
   'target': 'current_location_and_nationwide',
-  'nationwide_interruption_level': 'active',
+  'current_location_interruption_level': 'critical',
+  'nationwide_interruption_level': 'time_sensitive',
 };
 
 const Map<String, Object?> _eewGlobalResponseEnabled = {

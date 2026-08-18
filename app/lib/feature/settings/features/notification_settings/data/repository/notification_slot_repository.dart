@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
@@ -24,17 +25,26 @@ Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
 /// 無条件発火しないよう [defaultNotificationSlotMinIntensity] を補う。
 /// [enabled] が false/未指定のときは [minIntensity] をそのまま返す
 /// (無効スロットの震度指定は意味を持たないため補完しない)。
+///
+/// 現在地・地域スロットは UI を経由しない経路でも下限を下回らないよう
+/// [NotificationMinIntensityPolicy.clamp] で引き上げる。
 class NotificationSlotMinIntensityResolver {
   const new();
 
   JmaIntensity? resolve({
+    required NotificationSlotType slotType,
+    required NotificationKind kind,
     required bool? enabled,
     required JmaIntensity? minIntensity,
   }) {
     if (enabled != true) {
       return minIntensity;
     }
-    return minIntensity ?? defaultNotificationSlotMinIntensity;
+    return notificationMinIntensityPolicy.clamp(
+      slotType: slotType,
+      kind: kind,
+      minIntensity: minIntensity ?? defaultNotificationSlotMinIntensity,
+    );
   }
 }
 
@@ -68,17 +78,29 @@ class NotificationSlotRepository {
           body: api.UpsertSingletonSlotRequest(
             eewEnabled: resolvedEewEnabled,
             eewMinIntensity: resolvedEewEnabled
-                ? (eewMinIntensity ?? currentLocationEewMinIntensity)
-                      .toApiJmaIntensity
+                ? notificationMinIntensityPolicy
+                      .clamp(
+                        slotType: NotificationSlotType.currentLocation,
+                        kind: NotificationKind.eew,
+                        minIntensity:
+                            eewMinIntensity ?? currentLocationEewMinIntensity,
+                      )
+                      ?.toApiJmaIntensity
                 : null,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
                 .toList(),
             earthquakeEnabled: resolvedEarthquakeEnabled,
             earthquakeMinIntensity: resolvedEarthquakeEnabled
-                ? (earthquakeMinIntensity ??
-                          currentLocationEarthquakeMinIntensity)
-                      .toApiJmaIntensity
+                ? notificationMinIntensityPolicy
+                      .clamp(
+                        slotType: NotificationSlotType.currentLocation,
+                        kind: NotificationKind.earthquake,
+                        minIntensity:
+                            earthquakeMinIntensity ??
+                            currentLocationEarthquakeMinIntensity,
+                      )
+                      ?.toApiJmaIntensity
                 : null,
             earthquakeOverrides: earthquakeOverrides
                 ?.map((o) => o.toApiSlotOverride())
@@ -91,14 +113,32 @@ class NotificationSlotRepository {
   /// 通知スロットを全件置換する
   ///
   /// 既存スロットはサーバ側で削除されるため、渡した構成がそのまま反映される。
+  /// カスタム設定のスナップショット復元など下限導入前の値が混じる経路があるため、
+  /// 最小震度はスロット種別ごとの下限まで引き上げてから送信する。
   Future<List<NotificationSlot>> replaceSlots(
     List<NotificationSlotDraft> slots,
   ) async {
     final response = await _api.device.putV2DeviceMeSettingsSlots(
-      body: slots.map((slot) => slot.toApiReplaceSlotEntry()).toList(),
+      body: slots
+          .map((slot) => _clampDraftMinIntensity(slot).toApiReplaceSlotEntry())
+          .toList(),
     );
     return response.data.map((s) => s.toNotificationSlot()).toList();
   }
+
+  NotificationSlotDraft _clampDraftMinIntensity(NotificationSlotDraft slot) =>
+      slot.copyWith(
+        eewMinIntensity: notificationMinIntensityPolicy.clamp(
+          slotType: slot.slotType,
+          kind: NotificationKind.eew,
+          minIntensity: slot.eewMinIntensity,
+        ),
+        earthquakeMinIntensity: notificationMinIntensityPolicy.clamp(
+          slotType: slot.slotType,
+          kind: NotificationKind.earthquake,
+          minIntensity: slot.earthquakeMinIntensity,
+        ),
+      );
 
   Future<void> deleteCurrentLocation() async {
     await _api.device.deleteV2DeviceMeSettingsSlotsCurrentLocation();
@@ -130,12 +170,19 @@ class NotificationSlotRepository {
       body: api.UpsertSingletonSlotRequest(
         eewEnabled: resolvedEewEnabled,
         eewMinIntensity: _minIntensityResolver
-            .resolve(enabled: resolvedEewEnabled, minIntensity: eewMinIntensity)
+            .resolve(
+              slotType: NotificationSlotType.nationwide,
+              kind: NotificationKind.eew,
+              enabled: resolvedEewEnabled,
+              minIntensity: eewMinIntensity,
+            )
             ?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: resolvedEarthquakeEnabled,
         earthquakeMinIntensity: _minIntensityResolver
             .resolve(
+              slotType: NotificationSlotType.nationwide,
+              kind: NotificationKind.earthquake,
               enabled: resolvedEarthquakeEnabled,
               minIntensity: earthquakeMinIntensity,
             )
@@ -172,12 +219,19 @@ class NotificationSlotRepository {
         cityName: cityName,
         eewEnabled: eewEnabled,
         eewMinIntensity: _minIntensityResolver
-            .resolve(enabled: eewEnabled, minIntensity: eewMinIntensity)
+            .resolve(
+              slotType: NotificationSlotType.region,
+              kind: NotificationKind.eew,
+              enabled: eewEnabled,
+              minIntensity: eewMinIntensity,
+            )
             ?.toApiJmaIntensity,
         eewOverrides: eewOverrides?.map((o) => o.toApiSlotOverride()).toList(),
         earthquakeEnabled: earthquakeEnabled,
         earthquakeMinIntensity: _minIntensityResolver
             .resolve(
+              slotType: NotificationSlotType.region,
+              kind: NotificationKind.earthquake,
               enabled: earthquakeEnabled,
               minIntensity: earthquakeMinIntensity,
             )
@@ -211,7 +265,12 @@ class NotificationSlotRepository {
             cityName: cityName,
             eewEnabled: eewEnabled,
             eewMinIntensity: _minIntensityResolver
-                .resolve(enabled: eewEnabled, minIntensity: eewMinIntensity)
+                .resolve(
+                  slotType: NotificationSlotType.region,
+                  kind: NotificationKind.eew,
+                  enabled: eewEnabled,
+                  minIntensity: eewMinIntensity,
+                )
                 ?.toApiJmaIntensity,
             eewOverrides: eewOverrides
                 ?.map((o) => o.toApiSlotOverride())
@@ -219,6 +278,8 @@ class NotificationSlotRepository {
             earthquakeEnabled: earthquakeEnabled,
             earthquakeMinIntensity: _minIntensityResolver
                 .resolve(
+                  slotType: NotificationSlotType.region,
+                  kind: NotificationKind.earthquake,
                   enabled: earthquakeEnabled,
                   minIntensity: earthquakeMinIntensity,
                 )
@@ -246,11 +307,14 @@ class NotificationSlotRepository {
 
   Future<EewWarningSettings> patchEewWarningConfig({
     EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
     final response = await _api.device.patchV2DeviceMeSettingsEewWarning(
       body: api.EewWarningConfigRequest(
         target: target?.toApiTarget,
+        currentLocationInterruptionLevel: currentLocationInterruptionLevel
+            ?.toApiCurrentLocationInterruptionLevel,
         nationwideInterruptionLevel:
             nationwideInterruptionLevel?.toApiNationwideInterruptionLevel,
       ),

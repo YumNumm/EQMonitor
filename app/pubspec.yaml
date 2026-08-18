@@ -149,6 +149,7 @@ dependencies:
   paging_view: ^2.8.1
   path: ^1.9.0
   path_provider: ^2.1.5
+  permission_handler: ^13.0.1
   purchases_flutter: ^10.0.1
   riverpod: ^3.3.2
   riverpod_annotation: ^4.0.3

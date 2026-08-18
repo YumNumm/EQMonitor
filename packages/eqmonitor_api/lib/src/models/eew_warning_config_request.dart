@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'current_location_interruption_level.dart';
 import 'nationwide_interruption_level.dart';
 import 'target.dart';
 
@@ -15,6 +16,8 @@ abstract class EewWarningConfigRequest with _$EewWarningConfigRequest {
   const factory EewWarningConfigRequest({
     @JsonKey(includeIfNull: false)
     Target? target,
+    @JsonKey(includeIfNull: false,name: 'current_location_interruption_level')
+    CurrentLocationInterruptionLevel? currentLocationInterruptionLevel,
     @JsonKey(includeIfNull: false,name: 'nationwide_interruption_level')
     NationwideInterruptionLevel? nationwideInterruptionLevel,
   }) = _EewWarningConfigRequest;

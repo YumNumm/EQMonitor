@@ -13,7 +13,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _warningDescription = '緊急地震速報（警報）は、現在地や全国を対象に重大な通知として配信されます。';
+const _currentLocationWarningDescription =
+    '現在地が警報地域に入ったときに配信されます。'
+    'クリティカルにすると、おやすみモードやマナーモードを無視して通知します。';
+const _nationwideWarningDescription =
+    '日本のどこかで緊急地震速報（警報）が発表されるたびに配信されます。'
+    '発表回数が多いため、既定は「時間重要」です。';
 
 void main() {
   testWidgets('current location updates warning and selected EEW intensity', (
@@ -38,7 +43,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('緊急地震速報（警報）'), findsOneWidget);
-    expect(find.text(_warningDescription), findsOneWidget);
+    expect(find.text(_currentLocationWarningDescription), findsOneWidget);
     expect(find.byType(DropdownMenu<JmaIntensity>), findsNWidgets(2));
 
     final warningTile = find.widgetWithText(ListTile, '有効').at(1);
@@ -62,9 +67,30 @@ void main() {
 
     final eewDropdown = find.byType(DropdownMenu<JmaIntensity>).first;
     final dropdown = tester.widget<DropdownMenu<JmaIntensity>>(eewDropdown);
-    dropdown.onSelected?.call(JmaIntensity.three);
+    // 現在地の EEW は震度4未満・「すべて」を選択肢に持たない
+    expect(
+      dropdown.dropdownMenuEntries.map((e) => e.value),
+      const [
+        JmaIntensity.four,
+        JmaIntensity.fiveLower,
+        JmaIntensity.fiveUpper,
+        JmaIntensity.sixLower,
+        JmaIntensity.sixUpper,
+        JmaIntensity.seven,
+      ],
+    );
+    dropdown.onSelected?.call(JmaIntensity.fiveLower);
     await tester.pumpAndSettle();
-    expect(slotsNotifier.lastEewMinIntensity, JmaIntensity.three);
+    expect(slotsNotifier.lastEewMinIntensity, JmaIntensity.fiveLower);
+
+    final earthquakeDropdown = tester.widget<DropdownMenu<JmaIntensity>>(
+      find.byType(DropdownMenu<JmaIntensity>).at(1),
+    );
+    // 現在地の地震情報は震度1以上のみ
+    expect(
+      earthquakeDropdown.dropdownMenuEntries.first.value,
+      JmaIntensity.one,
+    );
   });
 
   testWidgets('nationwide warning can be enabled without Pro', (tester) async {
@@ -85,7 +111,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('緊急地震速報（警報）'), findsOneWidget);
-    expect(find.text(_warningDescription), findsOneWidget);
+    expect(find.text(_nationwideWarningDescription), findsOneWidget);
 
     final warningTile = find.widgetWithText(ListTile, '有効').at(1);
     await tester.ensureVisible(warningTile);
@@ -98,7 +124,7 @@ void main() {
     );
     expect(
       warningNotifier.lastNationwideInterruptionLevel,
-      InterruptionLevel.active,
+      InterruptionLevel.timeSensitive,
     );
     expect(eewNotifier.state.requireValue.warningEnabled, isTrue);
 
@@ -123,7 +149,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('緊急地震速報（警報）'), findsNothing);
-    expect(find.text(_warningDescription), findsNothing);
+    expect(find.text(_currentLocationWarningDescription), findsNothing);
+    expect(find.text(_nationwideWarningDescription), findsNothing);
     expect(find.byType(AppSwitch), findsNWidgets(2));
   });
 }
@@ -208,24 +235,31 @@ class _RecordingEewWarningConfigNotifier extends EewWarningConfigNotifier {
 
   final EewWarningTarget initialTarget;
   EewWarningTarget? lastTarget;
+  InterruptionLevel? lastCurrentLocationInterruptionLevel;
   InterruptionLevel? lastNationwideInterruptionLevel;
 
   @override
   Future<EewWarningSettings> build() async => EewWarningSettings(
     target: initialTarget,
+    currentLocationInterruptionLevel: InterruptionLevel.critical,
     nationwideInterruptionLevel: null,
   );
 
   @override
   Future<void> updateConfig({
     EewWarningTarget? target,
+    InterruptionLevel? currentLocationInterruptionLevel,
     InterruptionLevel? nationwideInterruptionLevel,
   }) async {
     lastTarget = target;
+    lastCurrentLocationInterruptionLevel = currentLocationInterruptionLevel;
     lastNationwideInterruptionLevel = nationwideInterruptionLevel;
     state = AsyncData(
       EewWarningSettings(
         target: target ?? state.requireValue.target,
+        currentLocationInterruptionLevel:
+            currentLocationInterruptionLevel ??
+            state.requireValue.currentLocationInterruptionLevel,
         nationwideInterruptionLevel: nationwideInterruptionLevel,
       ),
     );
