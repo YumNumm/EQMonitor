@@ -8,7 +8,6 @@ workspace:
   # ignore: path_does_not_exist
   - packages/*
   - packages/eqmonitor_map/example
-  - packages/assets_util/example
   # ignore: path_does_not_exist
   - tools/*
 dependencies:

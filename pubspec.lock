@@ -1403,14 +1403,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  jnigen:
-    dependency: transitive
-    description:
-      name: jnigen
-      sha256: "6079cbd103ac24892f597af5be17c43f817b93cb25acb3b51197684f0b102e87"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.16.0"
   json_annotation:
     dependency: transitive
     description:

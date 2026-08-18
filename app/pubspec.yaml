@@ -183,8 +183,6 @@ dependencies:
   workflows:
     path: ../packages/workflows
   flutter_inappwebview: ^6.2.0-beta.3
-  assets_util:
-    path: ../packages/assets_util
   vibration: ^3.2.0
   wakelock_plus: ^1.7.0
   archive: ^4.0.9
@@ -214,6 +212,13 @@ dev_dependencies:
 flutter_gen:
   output: lib/core/gen/ # Optional (default: lib/gen/)
   line_length: 80
+
+  assets:
+    # 同梱 Asset Pack はビルド前に staging される可変の中身なので、FlutterGen の
+    # 生成物に混ぜない(staging の有無で assets.gen.dart が毎回変わってしまう)。
+    # 参照は BundledAssetPackRepository が AssetManifest 経由で行う。
+    exclude:
+      - assets/platform/**
 
   integrations:
     image: true
@@ -246,6 +251,9 @@ flutter:
     - assets/fonts/
     - assets/docs/
     - assets/debug/
+    - assets/platform/
+    - assets/platform/map/
+    - assets/platform/parameters/
 
   fonts:
     - family: NotoSansJP
