@@ -21,7 +21,7 @@ void main() {
   );
 
   group('mapAutomaticFocusTargetForBounds', () {
-    test('狭いboundsはMercator中心とzoom 8のtargetになる', () {
+    test('狭いboundsはMercator中心とzoom上限のtargetになる', () {
       final target = MapAutomaticFocusController.targetForBounds(
         bounds: bounds,
         viewportSize: const Size(375, 667),
@@ -31,10 +31,10 @@ void main() {
       expect(target, isNotNull);
       expect(target?.center.lon, 139.5);
       expect(target?.center.lat, closeTo(35.5015, 0.0001));
-      expect(target?.zoom, 8);
+      expect(target?.zoom, mapAutomaticFocusMaxZoom);
     });
 
-    test('広いboundsはviewportへ収まるzoom 8未満のtargetになる', () {
+    test('広いboundsはviewportへ収まるzoom上限未満のtargetになる', () {
       const wideBounds = LngLatBounds(
         longitudeWest: 122.5,
         longitudeEast: 146,
@@ -49,7 +49,7 @@ void main() {
       );
 
       expect(target, isNotNull);
-      expect(target?.zoom, lessThan(8));
+      expect(target?.zoom, lessThan(mapAutomaticFocusMaxZoom));
       expect(target?.zoom, greaterThanOrEqualTo(0));
       final zoom = target?.zoom;
       if (zoom == null) {
@@ -233,7 +233,7 @@ void main() {
   });
 
   group('MapAutomaticFocusController', () {
-    test('事前計算したzoom 8のcameraを一度だけ送る', () async {
+    test('事前計算したzoom上限のcameraを一度だけ送る', () async {
       final controller = MockMapController();
       when(
         controller.animateCamera(
@@ -259,7 +259,7 @@ void main() {
       verify(
         controller.animateCamera(
           center: anyNamed('center'),
-          zoom: 8,
+          zoom: mapAutomaticFocusMaxZoom,
           bearing: 0,
           pitch: 0,
         ),
@@ -470,7 +470,7 @@ void main() {
       verify(
         controller.animateCamera(
           center: anyNamed('center'),
-          zoom: 8,
+          zoom: mapAutomaticFocusMaxZoom,
           bearing: 0,
           pitch: 0,
         ),
