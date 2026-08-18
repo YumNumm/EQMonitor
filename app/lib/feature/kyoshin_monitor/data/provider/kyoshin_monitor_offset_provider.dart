@@ -41,7 +41,7 @@ Duration? kyoshinMonitorEffectiveOffset(Ref ref) {
       return KyoshinMonitorDelayAdjuster.effectiveOffset(
         publishDelay: publishDelay,
         adjustment: api.autoOffsetIncrement
-            ? adjustments[settings.monitorSource] ?? Duration.zero
+            ? adjustments[settings.delayProfile] ?? Duration.zero
             : Duration.zero,
         config: api.delayAdjustConfig,
       );

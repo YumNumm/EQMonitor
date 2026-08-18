@@ -170,11 +170,11 @@ _KyoshinMonitorSettingsApiModel _$KyoshinMonitorSettingsApiModelFromJson(
         (v) =>
             (v as Map<String, dynamic>?)?.map(
               (k, e) => MapEntry(
-                $enumDecode(_$KyoshinMonitorSourceEnumMap, k),
+                $enumDecode(_$KyoshinMonitorDelayProfileEnumMap, k),
                 Duration(microseconds: (e as num).toInt()),
               ),
             ) ??
-            const <KyoshinMonitorSource, Duration>{},
+            const <KyoshinMonitorDelayProfile, Duration>{},
       ),
       minOffset: $checkedConvert(
         'min_offset',
@@ -212,7 +212,8 @@ Map<String, dynamic> _$KyoshinMonitorSettingsApiModelToJson(
       _$KyoshinMonitorDelayAdjustTypeEnumMap[instance.delayAdjustType]!,
   'auto_offset_increment': instance.autoOffsetIncrement,
   'offset_adjustments': instance.offsetAdjustments.map(
-    (k, e) => MapEntry(_$KyoshinMonitorSourceEnumMap[k]!, e.inMicroseconds),
+    (k, e) =>
+        MapEntry(_$KyoshinMonitorDelayProfileEnumMap[k]!, e.inMicroseconds),
   ),
   'min_offset': instance.minOffset.inMicroseconds,
   'max_offset': instance.maxOffset.inMicroseconds,
@@ -229,4 +230,9 @@ const _$KyoshinMonitorDelayAdjustTypeEnumMap = {
   KyoshinMonitorDelayAdjustType.imageFetch404DeviceTime:
       'imageFetch404DeviceTime',
   KyoshinMonitorDelayAdjustType.imageFetch404Ntp: 'imageFetch404Ntp',
+};
+
+const _$KyoshinMonitorDelayProfileEnumMap = {
+  KyoshinMonitorDelayProfile.kmoni: 'kmoni',
+  KyoshinMonitorDelayProfile.lpgm: 'lpgm',
 };
