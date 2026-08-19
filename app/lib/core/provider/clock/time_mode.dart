@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'time_mode.freezed.dart';
+part 'time_mode.g.dart';
 
 /// アプリの再生モード。
 ///
@@ -19,4 +20,7 @@ sealed class TimeMode with _$TimeMode {
   /// `currentTime` はリプレイファイル上の現在の再生位置。
   const factory replay({required DateTime currentTime}) =
       ReplayTimeMode;
+
+
+  factory fromJson(Map<String, dynamic> json) => _$TimeModeFromJson(json);
 }

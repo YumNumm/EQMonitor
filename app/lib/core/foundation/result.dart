@@ -10,6 +10,16 @@ sealed class const Result<S, E extends Exception>() {
       return Failure(e, stackTrace);
     }
   }
+
+  S unwrap() => switch (this) {
+    Success(:final value) => value,
+    Failure(:final exception) => throw exception,
+  };
+
+  S unwrapOr(S defaultValue) => switch (this) {
+    Success(:final value) => value,
+    Failure() => defaultValue,
+  };
 }
 
 final class const Success<S, E extends Exception>(final S value)

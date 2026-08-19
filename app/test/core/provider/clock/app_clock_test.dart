@@ -14,7 +14,8 @@ class _StubNtp extends Ntp {
   final DateTime? _fixedNow;
 
   @override
-  Future<NtpState> build() async => const NtpState();
+  Future<NtpState> build() async =>
+      NtpState(offset: Duration.zero, updatedAt: DateTime.now());
 
   @override
   DateTime? now() => _fixedNow;

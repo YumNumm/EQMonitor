@@ -20,17 +20,16 @@ Duration? kyoshinMonitorEffectiveOffset(Ref ref) {
 
   // NTP が同期したら公開遅延を再計算する必要があるため watch する。
   ref.watch(ntpProvider);
-  final ntpOffset = ref.read(ntpProvider.notifier).offset;
+  final ntpOffset = ref.read(ntpProvider).value?.offset ?? Duration.zero;
   final publishDelay = timerState.publishDelay(ntpOffset);
 
   final api = settings.api;
   switch (api.delayAdjustType) {
-    case KyoshinMonitorDelayAdjustType.latestJson:
-    case KyoshinMonitorDelayAdjustType.latestJsonMultiple:
-      // 実測値をそのまま使う。
+    case .latestJson:
+    case .latestJsonMultiple:
       return publishDelay;
-    case KyoshinMonitorDelayAdjustType.imageFetch404DeviceTime:
-    case KyoshinMonitorDelayAdjustType.imageFetch404Ntp:
+    case .imageFetch404DeviceTime:
+    case .imageFetch404Ntp:
       final adjustments = ref.watch(kyoshinMonitorOffsetAdjustmentProvider);
       return KyoshinMonitorDelayAdjuster.effectiveOffset(
         publishDelay: publishDelay,

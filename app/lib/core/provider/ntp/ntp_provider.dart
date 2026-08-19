@@ -22,11 +22,12 @@ class Ntp extends _$Ntp {
       syncMutation.run(ref, (trx) => _sync());
     });
     ref.onDispose(timer.cancel);
-    final offset = await _resolveOffset(config);
-    if (offset == null) {
-      return const NtpState();
-    }
-    return NtpState(offset: offset, updatedAt: clock.now());
+    final result = await _resolveOffset(config);
+    final offset = result.unwrap();
+    return NtpState(
+      offset: offset,
+      updatedAt: clock.now(),
+    );
   }
 
   static final syncMutation = Mutation<void>();
@@ -34,13 +35,12 @@ class Ntp extends _$Ntp {
   Future<void> _sync() async {
     final config = await ref.read(ntpConfigProvider.future);
     final offset = await _resolveOffset(config);
-    if (offset == null) {
-      return;
-    }
 
-    final previous = state.value ?? const NtpState();
     state = AsyncData(
-      previous.copyWith(offset: offset, updatedAt: clock.now()),
+      NtpState(
+        offset: offset.unwrap(),
+        updatedAt: clock.now(),
+      ),
     );
   }
 
@@ -63,7 +63,7 @@ class Ntp extends _$Ntp {
           talker.logCustom(
             NtpLog('NTP Time Sync: $address offset ${offset}ms'),
           );
-          return Result.success(Duration(milliseconds: offset));
+          return Success(Duration(milliseconds: offset));
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           talker.logCustom(
@@ -81,7 +81,7 @@ class Ntp extends _$Ntp {
         '(${config.addresses.join(', ')})',
       ),
     );
-    return null;
+    return Failure(NtpException());
   }
 }
 

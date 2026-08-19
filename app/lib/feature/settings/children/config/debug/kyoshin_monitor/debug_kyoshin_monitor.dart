@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
@@ -67,11 +66,6 @@ class _Body extends ConsumerWidget {
                 AsyncData(:final value) =>
                   const JsonEncoder.withIndent('  ').convert({
                     ...value.toJson(),
-                    'shift': value.shift.toString(),
-                    'round_trip_time': value.roundTripTime.toString(),
-                    'publish_delay_with_ntp': value
-                        .publishDelay(ref.read(ntpProvider.notifier).offset)
-                        .toString(),
                   }),
                 AsyncError(:final error) => error.toString(),
                 _ => 'Loading...',
@@ -86,15 +80,12 @@ class _Body extends ConsumerWidget {
               Text('時刻同期 / オフセット', style: titleTextStyle),
               Text(
                 const JsonEncoder.withIndent('  ').convert({
-                  'ntp_offset': ref
-                      .read(ntpProvider.notifier)
-                      .offset
-                      ?.toString(),
+                  'ntp_offset': ref.watch(ntpProvider).value?.offset.toString(),
                   'ntp_last_synced_at': ref
                       .watch(ntpProvider)
                       .value
                       ?.updatedAt
-                      ?.toIso8601String(),
+                      .toIso8601String(),
                   'effective_offset': ref
                       .watch(kyoshinMonitorEffectiveOffsetProvider)
                       ?.toString(),

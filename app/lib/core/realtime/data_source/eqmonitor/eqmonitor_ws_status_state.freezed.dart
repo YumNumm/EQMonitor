@@ -15,12 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EqMonitorWsStatusState {
 
- WsPhase get phase; String? get currentUrl;/// 直近にサーバー起因 ping を受信した時刻。
- DateTime? get lastPingAt;/// サーバー起因 ping の受信間隔（サーバー実装では 15 秒）。
-///
-/// ネットワーク RTT ではない。RTT はクライアント起因 ping で計測する
-/// `eqmonitorWsPingProbeProvider` 側が持つ。
- Duration? get serverPingInterval;
+ WsPhase get phase; DateTime? get lastPingAt; Duration? get serverPingInterval;
 /// Create a copy of EqMonitorWsStatusState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +26,16 @@ $EqMonitorWsStatusStateCopyWith<EqMonitorWsStatusState> get copyWith => _$EqMoni
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EqMonitorWsStatusState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.currentUrl, currentUrl) || other.currentUrl == currentUrl)&&(identical(other.lastPingAt, lastPingAt) || other.lastPingAt == lastPingAt)&&(identical(other.serverPingInterval, serverPingInterval) || other.serverPingInterval == serverPingInterval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EqMonitorWsStatusState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.lastPingAt, lastPingAt) || other.lastPingAt == lastPingAt)&&(identical(other.serverPingInterval, serverPingInterval) || other.serverPingInterval == serverPingInterval));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,currentUrl,lastPingAt,serverPingInterval);
+int get hashCode => Object.hash(runtimeType,phase,lastPingAt,serverPingInterval);
 
 @override
 String toString() {
-  return 'EqMonitorWsStatusState(phase: $phase, currentUrl: $currentUrl, lastPingAt: $lastPingAt, serverPingInterval: $serverPingInterval)';
+  return 'EqMonitorWsStatusState(phase: $phase, lastPingAt: $lastPingAt, serverPingInterval: $serverPingInterval)';
 }
 
 
@@ -51,7 +46,7 @@ abstract mixin class $EqMonitorWsStatusStateCopyWith<$Res>  {
   factory $EqMonitorWsStatusStateCopyWith(EqMonitorWsStatusState value, $Res Function(EqMonitorWsStatusState) _then) = _$EqMonitorWsStatusStateCopyWithImpl;
 @useResult
 $Res call({
- WsPhase phase, String? currentUrl, DateTime? lastPingAt, Duration? serverPingInterval
+ WsPhase phase, DateTime? lastPingAt, Duration? serverPingInterval
 });
 
 
@@ -68,11 +63,10 @@ class _$EqMonitorWsStatusStateCopyWithImpl<$Res>
 
 /// Create a copy of EqMonitorWsStatusState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? currentUrl = freezed,Object? lastPingAt = freezed,Object? serverPingInterval = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? lastPingAt = freezed,Object? serverPingInterval = freezed,}) {
   return _then(EqMonitorWsStatusState(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
-as WsPhase,currentUrl: freezed == currentUrl ? _self.currentUrl : currentUrl // ignore: cast_nullable_to_non_nullable
-as String?,lastPingAt: freezed == lastPingAt ? _self.lastPingAt : lastPingAt // ignore: cast_nullable_to_non_nullable
+as WsPhase,lastPingAt: freezed == lastPingAt ? _self.lastPingAt : lastPingAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,serverPingInterval: freezed == serverPingInterval ? _self.serverPingInterval : serverPingInterval // ignore: cast_nullable_to_non_nullable
 as Duration?,
   ));
@@ -159,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WsPhase phase,  String? currentUrl,  DateTime? lastPingAt,  Duration? serverPingInterval)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WsPhase phase,  DateTime? lastPingAt,  Duration? serverPingInterval)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EqMonitorWsStatusState() when $default != null:
-return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingInterval);case _:
+return $default(_that.phase,_that.lastPingAt,_that.serverPingInterval);case _:
   return orElse();
 
 }
@@ -180,10 +174,10 @@ return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingIn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WsPhase phase,  String? currentUrl,  DateTime? lastPingAt,  Duration? serverPingInterval)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WsPhase phase,  DateTime? lastPingAt,  Duration? serverPingInterval)  $default,) {final _that = this;
 switch (_that) {
 case _EqMonitorWsStatusState():
-return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingInterval);case _:
+return $default(_that.phase,_that.lastPingAt,_that.serverPingInterval);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +194,10 @@ return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingIn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WsPhase phase,  String? currentUrl,  DateTime? lastPingAt,  Duration? serverPingInterval)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WsPhase phase,  DateTime? lastPingAt,  Duration? serverPingInterval)?  $default,) {final _that = this;
 switch (_that) {
 case _EqMonitorWsStatusState() when $default != null:
-return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingInterval);case _:
+return $default(_that.phase,_that.lastPingAt,_that.serverPingInterval);case _:
   return null;
 
 }
@@ -215,17 +209,11 @@ return $default(_that.phase,_that.currentUrl,_that.lastPingAt,_that.serverPingIn
 
 
 class _EqMonitorWsStatusState implements EqMonitorWsStatusState {
-  const _EqMonitorWsStatusState({this.phase = WsPhase.connecting, this.currentUrl, this.lastPingAt, this.serverPingInterval});
+  const _EqMonitorWsStatusState({this.phase = WsPhase.connecting, this.lastPingAt, this.serverPingInterval});
   
 
 @override@JsonKey() final  WsPhase phase;
-@override final  String? currentUrl;
-/// 直近にサーバー起因 ping を受信した時刻。
 @override final  DateTime? lastPingAt;
-/// サーバー起因 ping の受信間隔（サーバー実装では 15 秒）。
-///
-/// ネットワーク RTT ではない。RTT はクライアント起因 ping で計測する
-/// `eqmonitorWsPingProbeProvider` 側が持つ。
 @override final  Duration? serverPingInterval;
 
 /// Create a copy of EqMonitorWsStatusState
@@ -238,16 +226,16 @@ _$EqMonitorWsStatusStateCopyWith<_EqMonitorWsStatusState> get copyWith => __$EqM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EqMonitorWsStatusState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.currentUrl, currentUrl) || other.currentUrl == currentUrl)&&(identical(other.lastPingAt, lastPingAt) || other.lastPingAt == lastPingAt)&&(identical(other.serverPingInterval, serverPingInterval) || other.serverPingInterval == serverPingInterval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EqMonitorWsStatusState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.lastPingAt, lastPingAt) || other.lastPingAt == lastPingAt)&&(identical(other.serverPingInterval, serverPingInterval) || other.serverPingInterval == serverPingInterval));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,currentUrl,lastPingAt,serverPingInterval);
+int get hashCode => Object.hash(runtimeType,phase,lastPingAt,serverPingInterval);
 
 @override
 String toString() {
-  return 'EqMonitorWsStatusState(phase: $phase, currentUrl: $currentUrl, lastPingAt: $lastPingAt, serverPingInterval: $serverPingInterval)';
+  return 'EqMonitorWsStatusState(phase: $phase, lastPingAt: $lastPingAt, serverPingInterval: $serverPingInterval)';
 }
 
 
@@ -258,7 +246,7 @@ abstract mixin class _$EqMonitorWsStatusStateCopyWith<$Res> implements $EqMonito
   factory _$EqMonitorWsStatusStateCopyWith(_EqMonitorWsStatusState value, $Res Function(_EqMonitorWsStatusState) _then) = __$EqMonitorWsStatusStateCopyWithImpl;
 @override @useResult
 $Res call({
- WsPhase phase, String? currentUrl, DateTime? lastPingAt, Duration? serverPingInterval
+ WsPhase phase, DateTime? lastPingAt, Duration? serverPingInterval
 });
 
 
@@ -275,11 +263,10 @@ class __$EqMonitorWsStatusStateCopyWithImpl<$Res>
 
 /// Create a copy of EqMonitorWsStatusState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? currentUrl = freezed,Object? lastPingAt = freezed,Object? serverPingInterval = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? lastPingAt = freezed,Object? serverPingInterval = freezed,}) {
   return _then(_EqMonitorWsStatusState(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
-as WsPhase,currentUrl: freezed == currentUrl ? _self.currentUrl : currentUrl // ignore: cast_nullable_to_non_nullable
-as String?,lastPingAt: freezed == lastPingAt ? _self.lastPingAt : lastPingAt // ignore: cast_nullable_to_non_nullable
+as WsPhase,lastPingAt: freezed == lastPingAt ? _self.lastPingAt : lastPingAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,serverPingInterval: freezed == serverPingInterval ? _self.serverPingInterval : serverPingInterval // ignore: cast_nullable_to_non_nullable
 as Duration?,
   ));

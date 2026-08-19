@@ -4,11 +4,11 @@ part 'ntp_state.freezed.dart';
 part 'ntp_state.g.dart';
 
 @freezed
-abstract class NtpState  with _$NtpState {
-  const factory NtpState({
-    required final Duration offset,
-    required final DateTime updatedAt,
+abstract class NtpState with _$NtpState {
+  const factory({
+    required Duration offset,
+    required DateTime updatedAt,
   }) = _NtpState;
 
-  factory fromJson(Map<String, dynamic> json) => _$NtpStateModelFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$NtpStateFromJson(json);
 }
