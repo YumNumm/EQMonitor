@@ -7,6 +7,28 @@ void main() {
       expect(WsMessage.fromJson({'type': 'ping'}), isA<WsPingMessage>());
     });
 
+    test('pong parses as WsPongMessage carrying the echoed pingId', () {
+      final message = WsMessage.fromJson({'type': 'pong', 'pingId': '7'});
+
+      expect(message, isA<WsPongMessage>());
+      expect((message as WsPongMessage).pingId, '7');
+    });
+
+    test('pong without pingId still parses', () {
+      final message = WsMessage.fromJson({'type': 'pong'});
+
+      expect((message as WsPongMessage).pingId, isNull);
+    });
+
+    test('consecutive pongs are not equal, so Riverpod will notify', () {
+      // Riverpod は前回の state と `==` なら listener に通知しない。
+      // pingId が異なる限り pong は毎回別の値になる。
+      expect(
+        WsMessage.fromJson({'type': 'pong', 'pingId': '1'}),
+        isNot(WsMessage.fromJson({'type': 'pong', 'pingId': '2'})),
+      );
+    });
+
     test('unknown type is rejected', () {
       expect(
         () => WsMessage.fromJson({'type': 'unknown_type'}),
@@ -52,10 +74,16 @@ void main() {
     });
   });
 
-  test('WsPongMessage round-trips type=pong', () {
-    const original = WsPongMessage();
-    final decoded = WsPongMessage.fromJson(original.toJson());
+  test('WsClientPongMessage round-trips type=pong', () {
+    const original = WsClientPongMessage();
+    final decoded = WsClientPongMessage.fromJson(original.toJson());
 
     expect(decoded.type, 'pong');
+  });
+
+  test('WsClientPingMessage serialises type=ping with a pingId', () {
+    const original = WsClientPingMessage(pingId: '42');
+
+    expect(original.toJson(), {'pingId': '42', 'type': 'ping'});
   });
 }

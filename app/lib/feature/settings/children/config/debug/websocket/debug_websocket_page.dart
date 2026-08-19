@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_ping_probe.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
@@ -16,6 +17,8 @@ class DebugWebSocketPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = useState<List<({DateTime at, RealtimeEvent event})>>([]);
     final wsStatus = ref.watch(eqMonitorWsStatusProvider);
+    // この画面を開いている間だけクライアント起因 ping を送出して RTT を測る。
+    final rtt = ref.watch(eqmonitorWsPingProbeProvider);
 
     ref.listen(realtimeEventsProvider, (_, next) {
       next.whenData((event) {
@@ -37,15 +40,18 @@ class DebugWebSocketPage extends HookConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                ref.invalidate(eqMonitorWsStatusProvider, asReload: true),
+            onPressed: () {
+              ref
+                ..invalidate(eqMonitorWsStatusProvider, asReload: true)
+                ..invalidate(eqmonitorWsPingProbeProvider, asReload: true);
+            },
           ),
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _WsStatusCard(wsStatus: wsStatus),
+          _WsStatusCard(wsStatus: wsStatus, rtt: rtt),
           const Divider(height: 1),
           Expanded(
             child: messages.value.isEmpty
@@ -66,9 +72,10 @@ class DebugWebSocketPage extends HookConsumerWidget {
 }
 
 class _WsStatusCard extends HookWidget {
-  const new({required this.wsStatus});
+  const new({required this.wsStatus, required this.rtt});
 
   final EqMonitorWsStatusState wsStatus;
+  final WsRttSample? rtt;
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +97,24 @@ class _WsStatusCard extends HookWidget {
       WsPhase.disconnected => context.designSystem.colorTheme.error,
     };
 
+    final now = DateTime.now();
+
     final lastPingAt = wsStatus.lastPingAt;
-    final pingLabel = lastPingAt == null
-        ? 'なし'
-        : _elapsedLabel(DateTime.now().difference(lastPingAt));
+    final interval = wsStatus.serverPingInterval;
+    final serverPingLabel = switch ((lastPingAt, interval)) {
+      (null, _) => 'なし',
+      (final at?, null) => _elapsedLabel(now.difference(at)),
+      (final at?, final i?) =>
+        '${_elapsedLabel(now.difference(at))} (間隔 ${i.inMilliseconds}ms)',
+    };
+
+    // 応答が返るまで、または pong を返さないサーバーでは null のまま。
+    final rttLabel = switch (rtt) {
+      null => '計測中…',
+      final sample =>
+        '${sample.rtt.inMilliseconds}ms '
+            '(${_elapsedLabel(now.difference(sample.measuredAt))})',
+    };
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -117,14 +138,12 @@ class _WsStatusCard extends HookWidget {
             ),
           ],
           const SizedBox(height: 4),
-          Text('最終 ping: $pingLabel', style: theme.textTheme.bodySmall),
-          if (wsStatus.pingRtt case final pingRtt?) ...[
-            const SizedBox(height: 2),
-            Text(
-              'Ping RTT: ${pingRtt.inMilliseconds}ms',
-              style: theme.textTheme.bodySmall,
-            ),
-          ],
+          Text('RTT: $rttLabel', style: theme.textTheme.bodySmall),
+          const SizedBox(height: 2),
+          Text(
+            'サーバー ping 受信: $serverPingLabel',
+            style: theme.textTheme.bodySmall,
+          ),
         ],
       ),
     );

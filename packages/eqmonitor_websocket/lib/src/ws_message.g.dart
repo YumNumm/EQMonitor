@@ -28,6 +28,15 @@ WsPingMessage _$WsPingMessageFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {r'$type': 'type'});
 
+WsPongMessage _$WsPongMessageFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WsPongMessage', json, ($checkedConvert) {
+      final val = WsPongMessage(
+        pingId: $checkedConvert('pingId', (v) => v as String?),
+        $type: $checkedConvert('type', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'type'});
+
 WsReadyMessage _$WsReadyMessageFromJson(Map<String, dynamic> json) =>
     $checkedCreate('WsReadyMessage', json, ($checkedConvert) {
       final val = WsReadyMessage(
