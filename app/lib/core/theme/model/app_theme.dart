@@ -133,7 +133,8 @@ abstract class AppTheme with _$AppTheme {
         ),
       ),
       mapColors: MapColors(
-        background: Color(0xFF0D1B4A),
+        // 海: 白ベースの淡い色 (陸は白、海岸線で陸海を区別する)
+        background: Color(0xFFEDF3F9),
         worldLand: Color(0xFFFFFFFF),
         worldLine: Color(0xFF6B7280),
         japanLand: Color(0xFFFFFFFF),
@@ -266,6 +267,11 @@ abstract class AppTheme with _$AppTheme {
   bool supportsMode(ThemeBrightnessMode mode) => modes.contains(mode);
 
   // JMA標準カラー: eqmonitorDefaultベースで震度色のみ差し替え
+  //
+  // 色値は気象庁の震度分布図の配色に合わせる。
+  // 震度2が水色(#00AAFF)、震度3が青(#0041FF)で、2の方が明るい。
+  // backend/packages/seismic-intensity-geojson の INTENSITY_FILL_COLORS
+  // (推計震度分布の震度4以上) と同じ値を使うこと。
   static AppTheme jmaStandard() {
     final base = AppTheme.eqmonitorDefault();
     const jmaIntensity = IntensityColors(
@@ -278,39 +284,39 @@ abstract class AppTheme with _$AppTheme {
         foreground: IntensityTextColor.auto(),
       ),
       one: IntensityColorEntry(
-        background: Color(0xFF80C0E0),
+        background: Color(0xFFF2F2F2),
         foreground: IntensityTextColor.auto(),
       ),
       two: IntensityColorEntry(
-        background: Color(0xFF0000FF),
-        foreground: IntensityTextColor.auto(),
-      ),
-      three: IntensityColorEntry(
         background: Color(0xFF00AAFF),
         foreground: IntensityTextColor.auto(),
       ),
+      three: IntensityColorEntry(
+        background: Color(0xFF0041FF),
+        foreground: IntensityTextColor.auto(),
+      ),
       four: IntensityColorEntry(
-        background: Color(0xFFFFFF00),
+        background: Color(0xFFFAE6A0),
         foreground: IntensityTextColor.auto(),
       ),
       fiveLower: IntensityColorEntry(
-        background: Color(0xFFFFAA00),
+        background: Color(0xFFFFE600),
         foreground: IntensityTextColor.auto(),
       ),
       fiveUpper: IntensityColorEntry(
-        background: Color(0xFFFF5500),
+        background: Color(0xFFFF9900),
         foreground: IntensityTextColor.auto(),
       ),
       sixLower: IntensityColorEntry(
-        background: Color(0xFFFF0000),
+        background: Color(0xFFFF2800),
         foreground: IntensityTextColor.auto(),
       ),
       sixUpper: IntensityColorEntry(
-        background: Color(0xFFCC0000),
+        background: Color(0xFFA50021),
         foreground: IntensityTextColor.auto(),
       ),
       seven: IntensityColorEntry(
-        background: Color(0xFFAA0088),
+        background: Color(0xFFB40068),
         foreground: IntensityTextColor.auto(),
       ),
     );
