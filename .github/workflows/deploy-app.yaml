@@ -283,9 +283,21 @@ jobs:
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
             BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
           fi
+          # pubspec の `3.0.0-beta.11` を flutter にそのまま渡すと、iOS 向けサニタイズが
+          # 数字とドット以外を除去して CFBundleShortVersionString が `3.0.0.11` になる。
+          # 4 セグメントは App Store Connect に ITMS-90060 で弾かれるため、
+          # プレリリース識別子とビルドメタデータを落とした x.y.z を明示的に渡す。
+          BUILD_NAME=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' pubspec.yaml)
+          BUILD_NAME=${BUILD_NAME%%-*}
+          BUILD_NAME=${BUILD_NAME%%+*}
+          if ! [[ "$BUILD_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
+            exit 1
+          fi
           flutter build ios --config-only \
             --no-codesign \
             --no-pub \
+            --build-name="$BUILD_NAME" \
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=../environment/.env.prod \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
