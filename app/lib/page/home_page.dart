@@ -4,9 +4,9 @@ import 'package:eqmonitor/core/component/banner/app_banner.dart';
 import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/home_eew_card.dart';
@@ -20,7 +20,6 @@ import 'package:eqmonitor/feature/location/data/notifier/location_permission_ban
 import 'package:eqmonitor/feature/permission/data/notification_permission_provider.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/notification_permission_banner_dismissed_notifier.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
-import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
@@ -149,9 +148,7 @@ class _HomeActionsCard extends ConsumerWidget {
       indent: spacing.lg,
       endIndent: spacing.lg,
     );
-    final isDebugMenuVisible =
-        ref.watch(buildConfigProvider).isDeveloperUiEnabled &&
-        (ref.watch(debugProvider).value ?? false);
+    final isDebugMenuVisible = ref.watch(isDebugMenuAvailableProvider);
 
     return HomeSheetCard(
       children: [

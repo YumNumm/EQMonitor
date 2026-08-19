@@ -10,6 +10,7 @@ import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
@@ -105,7 +106,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
 
     final buildConfig = ref.read(buildConfigProvider);
-    if (!buildConfig.isDeveloperUiEnabled &&
+    if (!ref.read(isDebugMenuAvailableProvider) &&
         state.matchedLocation.startsWith(const DebugRoute().location)) {
       return const HomeRoute().location;
     }
