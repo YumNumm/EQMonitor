@@ -190,8 +190,14 @@ class _SoundInterruptionCard extends StatelessWidget {
                   await onSoundChanged(selected);
                 }
               },
-              dropdownMenuEntries:
-NotificationSound.values.map((sound) => DropdownMenuEntry(value: sound, label: sound.displayName)).toList(),
+              dropdownMenuEntries: NotificationSound.values
+                  .map(
+                    (sound) => DropdownMenuEntry(
+                      value: sound,
+                      label: sound.displayName,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           const Divider(height: 1),
@@ -208,15 +214,7 @@ NotificationSound.values.map((sound) => DropdownMenuEntry(value: sound, label: s
               },
               dropdownMenuEntries: [
                 for (final level in InterruptionLevel.values)
-                  DropdownMenuEntry(
-                    value: level,
-                    label: switch (level) {
-                      .passive => 'サイレント',
-                      .active => 'デフォルト',
-                      .timeSensitive => '即時通知',
-                      .critical => '重大な通知',
-                    },
-                  ),
+                  DropdownMenuEntry(value: level, label: level.label),
               ],
             ),
           ),
