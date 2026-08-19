@@ -455,7 +455,7 @@ class _OverrideFormDialog extends HookWidget {
                 children: [
                   for (final level in InterruptionLevel.values)
                     RadioListTile<InterruptionLevel>(
-                      title: Text(level.name),
+                      title: Text(level.label),
                       value: level,
                       contentPadding: EdgeInsets.zero,
                       dense: true,
