@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_ping_probe.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,6 +14,7 @@ class ConnectionStatusCard extends ConsumerWidget {
     final webSocketStatus = ref.watch(
       eqMonitorWsStatusProvider,
     );
+    final webSocketRtt = ref.watch(eqmonitorWsPingProbeProvider.select((v) => v?.rtt.));
 
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
@@ -28,7 +30,7 @@ class ConnectionStatusCard extends ConsumerWidget {
       ),
       (true, .connected) => (
         Icons.cell_tower_rounded,
-        'リアルタイム 接続 (${webSocketStatus.serverPingInterval})',
+        'リアルタイム 接続 (ping: ${webSocketRtt?.toStringAsFixed(1)}ms)',
         colorTheme.status.success,
       ),
       (true, _) => (
