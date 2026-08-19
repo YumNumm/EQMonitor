@@ -82,6 +82,11 @@
 	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>CurrentLocationIntensity</key>
+		<string>現在地の市区町村の震度を表示するために、正確な位置情報を利用します</string>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>現在地に即した地震情報を表示するために、位置情報を利用します</string>
 	<key>NSPhotoLibraryUsageDescription</key>
