@@ -14,8 +14,6 @@ class ConnectionStatusCard extends ConsumerWidget {
     final webSocketStatus = ref.watch(
       eqMonitorWsStatusProvider,
     );
-    final webSocketRtt = ref.watch(eqmonitorWsPingProbeProvider.select((v) => v?.rtt.));
-
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
 
@@ -30,7 +28,7 @@ class ConnectionStatusCard extends ConsumerWidget {
       ),
       (true, .connected) => (
         Icons.cell_tower_rounded,
-        'リアルタイム 接続 (ping: ${webSocketRtt?.toStringAsFixed(1)}ms)',
+        'リアルタイム 接続',
         colorTheme.status.success,
       ),
       (true, _) => (
