@@ -17,7 +17,7 @@ part 'kyoshin_monitor_offset_adjustment_notifier.g.dart';
 /// メモリ上の値は即時反映し、保存だけ遅延させる。
 const _persistDebounce = Duration(seconds: 30);
 
-/// データソース別の、`latest.json` 実測値からの補正量。
+/// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
 /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
 /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
@@ -26,7 +26,7 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
   Timer? _persistTimer;
 
   @override
-  Map<KyoshinMonitorSource, Duration> build() {
+  Map<KyoshinMonitorDelayProfile, Duration> build() {
     ref.onDispose(() {
       _persistTimer?.cancel();
       _persistTimer = null;
@@ -59,21 +59,22 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
       });
     }
 
-    return initial ?? const <KyoshinMonitorSource, Duration>{};
+    return initial ?? const <KyoshinMonitorDelayProfile, Duration>{};
   }
 
-  Duration of(KyoshinMonitorSource source) => state[source] ?? Duration.zero;
+  Duration of(KyoshinMonitorDelayProfile profile) =>
+      state[profile] ?? Duration.zero;
 
   /// 画像が未公開 (404) だった。
-  void onFetchFailed(KyoshinMonitorSource source) {
+  void onFetchFailed(KyoshinMonitorDelayProfile profile) {
     final api = _api;
     if (api == null || !api.autoOffsetIncrement) {
       return;
     }
     _update(
-      source,
+      profile,
       KyoshinMonitorDelayAdjuster.onFetchFailed(
-        adjustment: of(source),
+        adjustment: of(profile),
         config: api.delayAdjustConfig,
       ),
     );
@@ -83,7 +84,7 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
   ///
   /// [targetTime] の秒が 0 のときだけ、オフセットを詰められないか試す。
   void onFetchSucceeded({
-    required KyoshinMonitorSource source,
+    required KyoshinMonitorDelayProfile profile,
     required DateTime targetTime,
   }) {
     final api = _api;
@@ -98,9 +99,9 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
       ref.read(ntpProvider.notifier).offset,
     );
     _update(
-      source,
+      profile,
       KyoshinMonitorDelayAdjuster.onFetchSucceeded(
-        adjustment: of(source),
+        adjustment: of(profile),
         publishDelay: publishDelay,
         targetTime: targetTime,
         config: api.delayAdjustConfig,
@@ -111,14 +112,14 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
   KyoshinMonitorSettingsApiModel? get _api =>
       ref.read(kyoshinMonitorSettingsProvider).value?.api;
 
-  void _update(KyoshinMonitorSource source, Duration adjustment) {
-    if (of(source) == adjustment) {
+  void _update(KyoshinMonitorDelayProfile profile, Duration adjustment) {
+    if (of(profile) == adjustment) {
       return;
     }
-    state = {...state, source: adjustment};
+    state = {...state, profile: adjustment};
     talker.logCustom(
       KyoshinMonitorLog(
-        'offset adjustment: ${source.name} '
+        'offset adjustment: ${profile.name} '
         '${adjustment.inMilliseconds}ms',
       ),
     );

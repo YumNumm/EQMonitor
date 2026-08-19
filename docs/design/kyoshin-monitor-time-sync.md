@@ -329,12 +329,37 @@ Stage 2 のオフセットは `latest_time` の 1 秒量子化ぶん保守的な
 
 ### オフセットの保持粒度と永続化
 
-**データソース別（`kmoni` / `lmoni`）に分けて永続化する。**
+**画像の生成パイプライン別（`kmoni` / `lpgm`）に分けて永続化する。**
 
-- 実測で両者の公開遅延が 0.66 秒違うため、共通値にすると切り替えのたびに
-  Stage 3 の再収束（最大数秒ぶんの 404）が発生する
-- 長周期系列間（`abrspmx` / `abrsp1s`〜`abrsp7s`）には有意差が無かったため、
-  系列別に分ける必要はない
+ここは「ホスト別」ではないことが重要。`latest.json` はどちらのホストから取っても
+強震モニタのパイプラインの時刻を返す（長周期地震動モニタの `/img_svr/` は
+強震モニタへのリバースプロキシ）ため、そこから求まる `publishDelay` は常に
+強震モニタ基準になる。0.66 秒の差を吸収しているのは 404 フィードバックの
+学習分だけなので、学習値はパイプラインで分けなければならない。
+
+そして UI は長周期地震動モニタを選んでいるときに LPGM 系列だけでなく
+**震度などの非 LPGM 系列も選べる**。非 LPGM 系列は `/img_svr/` 経由で
+強震モニタのパイプラインから配信されるため、ホストで分けると
+
+| 設定 | 実際のパイプライン | ホスト別のキー |
+|---|---|---|
+| lmoni + `abrsp2s` | LPGM (0.57s) | `lmoni` |
+| lmoni + `shindo` | 強震モニタ (1.23s) | `lmoni`（衝突） |
+
+のように 0.66 秒違う 2 つのパイプラインが 1 つの学習値を取り合ってしまう。
+症状は「LPGM → 震度に切り替えた直後に数秒間 404 で空白コマ」「震度 → LPGM に
+戻すと毎分 100ms しか詰まらないため約 6 分間ムダに古い画像を表示」。
+
+したがって
+
+- 学習キー: `KyoshinMonitorDelayProfile { kmoni, lpgm }`
+  （`realtimeDataType.isLpgm` で決まる = `KyoshinMonitorSettingsModelX.delayProfile`）
+- `latest.json` の取得先ホスト: `KyoshinMonitorSettingsModelX.effectiveMonitorSource`
+  （LPGM 系列なら `monitorSource` に関わらず lmoni）
+- 画像取得の分岐も `effectiveMonitorSource` に一本化し、
+  「取得ホスト」と「学習キー」が構造的にずれないようにする
+- 長周期系列間（`abrspmx` / `abrsp1s`〜`abrsp7s`）には有意差が無かったため
+  （実測いずれも 0.6〜0.7s）、系列別に分ける必要はない
 - SharedPreferences に保存し、次回起動時は Stage 3 到達済みの値から始める
 
 `KyoshinMonitorSettingsApiModel` への追加案:
@@ -496,6 +521,13 @@ JS を読んだところ `/img_svr/webservice/server/pros/latest.json` に存在
 `latest.json` を叩く**方式にした (`LpgmKyoshinMonitorWebApiClient.getLatestDataTime`)。
 内容は同じでも、画像と同一ホスト・同一経路で測ることで往復時間の推定が実態に近くなる。
 
+### 学習キーはホストではなくパイプライン
+
+当初はデータソース（ホスト）別に補正量を持つ設計だったが、長周期地震動モニタを
+選んだままデータ種別を LPGM ⇄ 非 LPGM で切り替えると、公開遅延が 0.66 秒違う
+2 つのパイプラインが 1 つの学習値を共有してしまう（上記「オフセットの保持粒度と
+永続化」参照）。`KyoshinMonitorDelayProfile` を導入してパイプラインで分けた。
+
 ### 補正量は「絶対値」ではなく「実測値からの差分」で保持する
 
 設計では Stage 3 のオフセットを絶対値として持つ想定だったが、それだと
@@ -575,6 +607,32 @@ JS を読んだところ `/img_svr/webservice/server/pros/latest.json` に存在
 `DeviceType.desktop` を網羅していない) により 43 ファイルが読み込めず完走しない。
 `DeviceType` に `desktop` が追加された際に `registered_device.dart` の switch が
 更新されていないもので、`develop` 時点から存在する。別途対応が必要。
+
+## 長周期地震動モニタ固有系列の動作確認
+
+`monitorSource = lmoni` + LPGM 系列（例: `abrsp2s` = 階級データ周期2秒台）での
+経路を実測込みで確認した。
+
+| 段階 | 結果 |
+|---|---|
+| `latest.json` | lmoni の `/img_svr/webservice/server/pros/latest.json` → 200 |
+| 画像 | `/monitor/data/data/map_img/RealTimeImg/abrsp2s_s/{date}/{dateTime}.abrsp2s_s.gif` → 200 |
+| レイヤー | `isLpgm` により地上 (`_s`) 固定（`effectiveRealtimeLayer`） |
+| スケール画像 | `ScaleImg2/nied_abrsp2s_s_w_scale.gif` → 200 |
+| 観測点の色 | geoJson の `color` は画像の生 RGB なので階級色がそのまま出る |
+| スケールカード | LPGM は連続スケールなしとしてラベル表示に切替済み |
+| 学習キー | `KyoshinMonitorDelayProfile.lpgm` |
+
+`abrspmx` / `abrsp1s` / `abrsp2s` / `abrsp5s` はいずれも画像 200 を確認。
+
+### 本設計の対象外だが既存の課題
+
+`kyoshin_monitor_image_parser` が出力する geoJson の `intensity` プロパティは
+`scale * 10 - 3`（震度換算）で、**データ種別に関わらず常にこの式**が使われる。
+`homeKyoshinMonitorObservationGeoJson` の「最低リアルタイム震度」フィルタは
+この値で判定しているため、長周期地震動階級・最大加速度・最大速度・最大変位を
+選んでいるときのしきい値の意味は震度ではない。表示色は生 RGB なので正しい。
+時刻同期とは独立した課題なので本 PR では扱わない。
 
 ## 未確認事項
 

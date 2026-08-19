@@ -10,7 +10,7 @@ part of 'kyoshin_monitor_offset_adjustment_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// データソース別の、`latest.json` 実測値からの補正量。
+/// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
 /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
 /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
@@ -19,7 +19,7 @@ part of 'kyoshin_monitor_offset_adjustment_notifier.dart';
 final kyoshinMonitorOffsetAdjustmentProvider =
     KyoshinMonitorOffsetAdjustmentProvider._();
 
-/// データソース別の、`latest.json` 実測値からの補正量。
+/// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
 /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
 /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
@@ -27,9 +27,9 @@ final class KyoshinMonitorOffsetAdjustmentProvider
     extends
         $NotifierProvider<
           KyoshinMonitorOffsetAdjustment,
-          Map<KyoshinMonitorSource, Duration>
+          Map<KyoshinMonitorDelayProfile, Duration>
         > {
-  /// データソース別の、`latest.json` 実測値からの補正量。
+  /// パイプライン別の、`latest.json` 実測値からの補正量。
   ///
   /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
   /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
@@ -52,44 +52,43 @@ final class KyoshinMonitorOffsetAdjustmentProvider
   KyoshinMonitorOffsetAdjustment create() => KyoshinMonitorOffsetAdjustment();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<KyoshinMonitorSource, Duration> value) {
+  Override overrideWithValue(Map<KyoshinMonitorDelayProfile, Duration> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Map<KyoshinMonitorSource, Duration>>(
-        value,
-      ),
+      providerOverride:
+          $SyncValueProvider<Map<KyoshinMonitorDelayProfile, Duration>>(value),
     );
   }
 }
 
 String _$kyoshinMonitorOffsetAdjustmentHash() =>
-    r'f70c14cd7befc0b38fa31659dd118b87b2b346e9';
+    r'01384492a647ccfeedf42b12dc3b6f266afbc614';
 
-/// データソース別の、`latest.json` 実測値からの補正量。
+/// パイプライン別の、`latest.json` 実測値からの補正量。
 ///
 /// 画像取得の 404 / 成功をフィードバックとして受け取り、公開遅延の見積もりを
 /// 詰めていく。値は設定へ永続化され、次回起動時は収束済みの状態から始まる。
 
 abstract class _$KyoshinMonitorOffsetAdjustment
-    extends $Notifier<Map<KyoshinMonitorSource, Duration>> {
-  Map<KyoshinMonitorSource, Duration> build();
+    extends $Notifier<Map<KyoshinMonitorDelayProfile, Duration>> {
+  Map<KyoshinMonitorDelayProfile, Duration> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
-              Map<KyoshinMonitorSource, Duration>,
-              Map<KyoshinMonitorSource, Duration>
+              Map<KyoshinMonitorDelayProfile, Duration>,
+              Map<KyoshinMonitorDelayProfile, Duration>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                Map<KyoshinMonitorSource, Duration>,
-                Map<KyoshinMonitorSource, Duration>
+                Map<KyoshinMonitorDelayProfile, Duration>,
+                Map<KyoshinMonitorDelayProfile, Duration>
               >,
-              Map<KyoshinMonitorSource, Duration>,
+              Map<KyoshinMonitorDelayProfile, Duration>,
               Object?,
               Object?
             >;

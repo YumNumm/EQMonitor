@@ -94,7 +94,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
       final realtimeDataType = settings.realtimeDataType;
       final realtimeLayer = settings.effectiveRealtimeLayer;
-      final monitorSource = settings.monitorSource;
+      final monitorSource = settings.effectiveMonitorSource;
 
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
@@ -103,11 +103,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       final fetchSw = Stopwatch()..start();
       final List<int> image;
 
-      // LMoniデータソースを使うケース:
-      // 1. ソースがlmoniに設定されている
-      // 2. LPGMデータ種別が選択されている (LMoni専用)
-      if (monitorSource == KyoshinMonitorSource.lmoni ||
-          realtimeDataType.isLpgm) {
+      // LPGMデータ種別が選択されている場合は monitorSource に関わらず
+      // LMoniになる (effectiveMonitorSource が吸収している)。
+      if (monitorSource == KyoshinMonitorSource.lmoni) {
         final lpgmDataSource = ref.read(
           lpgmKyoshinMonitorWebApiDataSourceProvider,
         );
@@ -142,7 +140,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       // 取得できたので、オフセットを詰められないか試す。
       ref
           .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
-          .onFetchSucceeded(source: monitorSource, targetTime: targetTime);
+          .onFetchSucceeded(
+            profile: settings.delayProfile,
+            targetTime: targetTime,
+          );
 
       return KyoshinMonitorState(
         lastUpdatedAt: DateTime.now(),
@@ -161,13 +162,13 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
     if (state case AsyncError(:final error)) {
       if (error is DioException && error.response?.statusCode == 404) {
-        final monitorSource = ref
+        final delayProfile = ref
             .read(kyoshinMonitorSettingsProvider)
             .requireValue
-            .monitorSource;
+            .delayProfile;
         ref
             .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
-            .onFetchFailed(monitorSource);
+            .onFetchFailed(delayProfile);
         state = AsyncData(
           (previous ?? const KyoshinMonitorState()).copyWith(
             status: KyoshinMonitorStatus.delayed,
