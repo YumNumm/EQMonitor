@@ -1,17 +1,19 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutThisAppPage extends HookWidget {
+class AboutThisAppPage extends HookConsumerWidget {
   const new({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final designSystem = context.designSystem;
     final assetBundle = DefaultAssetBundle.of(context);
     final markdownFuture = useMemoized(
@@ -114,8 +116,48 @@ class AboutThisAppPage extends HookWidget {
                 },
               ),
             ),
+            const _DeviceIdTile(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DeviceIdTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final designSystem = context.designSystem;
+    final deviceId = switch (ref.watch(deviceIdProvider)) {
+      AsyncData(:final value) => value,
+      AsyncError() => '取得に失敗しました',
+      _ => '取得中...',
+    };
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: designSystem.spacing.sm,
+        horizontal: designSystem.spacing.lg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'デバイスID',
+            style: designSystem.typography.bodySmall.copyWith(
+              color: designSystem.colorTheme.onSurfaceVariant,
+            ),
+          ),
+          SizedBox(height: designSystem.spacing.xs),
+          SelectableText(
+            deviceId,
+            style: designSystem.typography.monoSmall.copyWith(
+              color: designSystem.colorTheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }
