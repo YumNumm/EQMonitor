@@ -5,7 +5,7 @@ part 'parameter_common.g.dart';
 
 @freezed
 abstract class LocalizedName with _$LocalizedName {
-  const factory LocalizedName({
+  const factory({
     required String ja,
     String? en,
     String? zhHans,
@@ -23,6 +23,6 @@ abstract class LocalizedName with _$LocalizedName {
     String? mn,
   }) = _LocalizedName;
 
-  factory LocalizedName.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$LocalizedNameFromJson(json);
 }

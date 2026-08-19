@@ -24,6 +24,7 @@ import '../models/migrate_request.dart';
 import '../models/migration_response.dart';
 import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
+import '../models/replace_slot_entry.dart';
 import '../models/shake_detection_setting_request.dart';
 import '../models/shake_detection_setting_response.dart';
 import '../models/shake_detection_sub_region_response.dart';
@@ -54,7 +55,7 @@ abstract class DeviceApiClient {
     @Body() required DeviceRegisterBody body,
   });
 
-  /// デバイス情報を取得
+  /// デバイス情報を取得。role は ADMIN_DEVICE_IDS に列挙されたデバイスのみ ADMIN、それ以外は USER。
   @GET(DeviceApiClientUrls.getV2DeviceMe)
   Future<HttpResponse<DeviceMeResponse>> getV2DeviceMe();
 
@@ -162,6 +163,12 @@ abstract class DeviceApiClient {
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlots)
   Future<HttpResponse<List<SlotResponse>>> getV2DeviceMeSettingsSlots();
 
+  /// 通知スロットを一括置換（既存スロットを全削除してから投入。空配列で全削除）
+  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsSlots)
+  Future<HttpResponse<List<SlotResponse>>> putV2DeviceMeSettingsSlots({
+    @Body() required List<ReplaceSlotEntry> body,
+  });
+
   /// 現在地スロットを取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsSlotsCurrentLocation)
   Future<HttpResponse<SlotResponse>> getV2DeviceMeSettingsSlotsCurrentLocation();
@@ -217,7 +224,7 @@ abstract class DeviceApiClient {
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsEewWarning)
   Future<HttpResponse<EewWarningConfigResponse>> getV2DeviceMeSettingsEewWarning();
 
-  /// EEW 警報設定を更新（Free プランは nationwide 不可）
+  /// EEW 警報設定を更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceMeSettingsEewWarning)
   Future<HttpResponse<EewWarningConfigResponse>> patchV2DeviceMeSettingsEewWarning({
     @Body() required EewWarningConfigRequest body,
@@ -298,6 +305,8 @@ abstract class DeviceApiClientUrls {
 	static const deleteV2DeviceMeSettingsTsunamiRegionsRegionId = "/v2/device/me/settings/tsunami/regions/{regionId}";
 	/// /v2/device/me/settings/slots
 	static const getV2DeviceMeSettingsSlots = "/v2/device/me/settings/slots";
+	/// /v2/device/me/settings/slots
+	static const putV2DeviceMeSettingsSlots = "/v2/device/me/settings/slots";
 	/// /v2/device/me/settings/slots/current-location
 	static const getV2DeviceMeSettingsSlotsCurrentLocation = "/v2/device/me/settings/slots/current-location";
 	/// /v2/device/me/settings/slots/current-location

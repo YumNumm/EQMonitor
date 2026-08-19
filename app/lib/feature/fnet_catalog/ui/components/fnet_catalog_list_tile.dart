@@ -1,14 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 
 /// F-netカタログのリストタイル
 class FnetCatalogListTile extends StatelessWidget {
-  const FnetCatalogListTile({
-    required this.event,
-    super.key,
-  });
+  const new({required this.event, super.key});
 
   final FnetEvent event;
 
@@ -97,20 +94,14 @@ class FnetCatalogListTile extends StatelessWidget {
       maxChildSize: 0.95,
       expand: false,
       builder: (context, scrollController) {
-        return _DetailSheet(
-          event: event,
-          scrollController: scrollController,
-        );
+        return _DetailSheet(event: event, scrollController: scrollController);
       },
     ),
   );
 }
 
 class _MagnitudeChip extends StatelessWidget {
-  const _MagnitudeChip({
-    required this.label,
-    required this.magnitude,
-  });
+  const new({required this.label, required this.magnitude});
 
   final String label;
   final double magnitude;
@@ -147,17 +138,14 @@ class _MagnitudeChip extends StatelessWidget {
       return Colors.orange;
     }
     if (magnitude >= 4.0) {
-      return Colors.yellow[700]!;
+      return Colors.yellow.shade700;
     }
     return Colors.green;
   }
 }
 
 class _InfoItem extends StatelessWidget {
-  const _InfoItem({
-    required this.label,
-    required this.value,
-  });
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -186,10 +174,7 @@ class _InfoItem extends StatelessWidget {
 }
 
 class _DetailSheet extends StatelessWidget {
-  const _DetailSheet({
-    required this.event,
-    required this.scrollController,
-  });
+  const new({required this.event, required this.scrollController});
 
   final FnetEvent event;
   final ScrollController scrollController;
@@ -211,7 +196,8 @@ class _DetailSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: context.designSystem.colorTheme.onSurfaceVariant.withValues(alpha: 0.4),
+              color: context.designSystem.colorTheme.onSurfaceVariant
+                  .withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -341,10 +327,7 @@ class _DetailSheet extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({
-    required this.title,
-    required this.children,
-  });
+  const new({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
@@ -369,10 +352,7 @@ class _Section extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.label,
-    required this.value,
-  });
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -388,14 +368,10 @@ class _InfoRow extends StatelessWidget {
             width: 140,
             child: Text(
               label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
-          Expanded(
-            child: Text(value),
-          ),
+          Expanded(child: Text(value)),
         ],
       ),
     );

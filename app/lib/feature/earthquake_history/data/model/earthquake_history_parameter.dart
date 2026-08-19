@@ -16,7 +16,7 @@ enum RegionSearchType { prefecture, region, city, station }
 
 @freezed
 sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
-  const factory EarthquakeHistoryParameter.all({
+  const factory all({
     required EarthquakeSortBy sortBy,
     required SortOrder sortOrder,
     double? magnitudeGte,
@@ -40,7 +40,7 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? longitudeLte,
   }) = EarthquakeHistoryParameterAll;
 
-  const factory EarthquakeHistoryParameter.prefecture({
+  const factory prefecture({
     required EarthquakeSortBy sortBy,
     required SortOrder sortOrder,
     required String prefectureCode,
@@ -68,7 +68,7 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? longitudeLte,
   }) = EarthquakeHistoryParameterPrefecture;
 
-  const factory EarthquakeHistoryParameter.region({
+  const factory region({
     required EarthquakeSortBy sortBy,
     required SortOrder sortOrder,
     required String regionCode,
@@ -96,7 +96,7 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? longitudeLte,
   }) = EarthquakeHistoryParameterRegion;
 
-  const factory EarthquakeHistoryParameter.city({
+  const factory city({
     required EarthquakeSortBy sortBy,
     required SortOrder sortOrder,
     required String cityCode,
@@ -124,7 +124,7 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? longitudeLte,
   }) = EarthquakeHistoryParameterCity;
 
-  const factory EarthquakeHistoryParameter.station({
+  const factory station({
     required EarthquakeSortBy sortBy,
     required SortOrder sortOrder,
     required String stationCode,
@@ -152,6 +152,16 @@ sealed class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? longitudeLte,
   }) = EarthquakeHistoryParameterStation;
 
-  factory EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryParameterFromJson(json);
+}
+
+extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
+  /// フィルタや並び替えが変更されていない初期状態（全件・event ID 降順）か。
+  bool get isDefaultAll =>
+      this ==
+      const EarthquakeHistoryParameter.all(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      );
 }

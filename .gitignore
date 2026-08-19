@@ -164,6 +164,7 @@ macos/GoogleService-Info.plist
 ios/*.p8
 
 *.pem
+!tool/asset_pack/trusted_keys/*.pem
 
 # Secret Folder
 secret/
@@ -194,10 +195,13 @@ app/android/assetpacks/eqmonitor_assets/src/main/assets/**
 # Debug-only staging (`--target android-debug`): PAD packs never reach an APK
 # build, so `flutter run` reads the pack from the debug source set instead.
 app/android/app/src/debug/assets/
-app/assets/platform/map/
-app/assets/platform/parameters/
+# pubspec.yaml が assets として宣言するディレクトリは、Pack を staging して
+# いない clean checkout にも存在している必要がある(無いと flutter build が
+# 失敗する)。中身だけ無視して .gitkeep は残す。
+app/assets/platform/map/*
+!app/assets/platform/map/.gitkeep
+app/assets/platform/parameters/*
+!app/assets/platform/parameters/.gitkeep
 app/assets/platform/manifest.json
 app/assets/platform/**/*.pmtiles
 
-# asc workflow run state
-.asc/runs/

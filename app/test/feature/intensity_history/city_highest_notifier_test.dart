@@ -49,7 +49,7 @@ HighestIntensityItem _item(String code, JmaIntensity intensity) =>
     );
 
 class _SwrFakeRepository extends IntensityHighestRepository {
-  _SwrFakeRepository()
+  new()
     : super(earthquake: ApiClient(Dio()).earthquake, parameter: _parameter);
 
   bool cacheHit = false;

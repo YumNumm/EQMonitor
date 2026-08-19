@@ -5,13 +5,13 @@ import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class DebugJmaMapPage extends HookConsumerWidget {
-  const DebugJmaMapPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +33,10 @@ class DebugJmaMapPage extends HookConsumerWidget {
     );
     final distance = useState<double?>(null);
     final isLoading = useState(false);
+
+    final searchResultValue = searchResult.value;
+    final observationPointResultValue = observationPointResult.value;
+    final distanceValue = distance.value;
 
     // 現在位置を使用
     Future<void> useCurrentLocation() async {
@@ -97,15 +101,13 @@ class DebugJmaMapPage extends HookConsumerWidget {
         final noResults =
             searchResult.value == null && observationPointResult.value == null;
         if (noResults && context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('検索結果がありません')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('検索結果がありません')));
         }
       } on Exception catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('エラー: $e')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('エラー: $e')));
         }
       } finally {
         isLoading.value = false;
@@ -228,16 +230,13 @@ class DebugJmaMapPage extends HookConsumerWidget {
                         items: JmaMapType.values.map((type) {
                           return DropdownMenuItem(
                             value: type,
-                            child: Text(
-                              switch (type) {
-                                JmaMapType.areaForecastLocalEew =>
-                                  '地震情報／緊急地震速報',
-                                JmaMapType.areaForecastLocalE => '地震情報',
-                                JmaMapType.areaInformationCity => '市区町村等',
-                                JmaMapType.areaTsunami => '津波予報区',
-                                JmaMapType.observationPoint => '地震観測点',
-                              },
-                            ),
+                            child: Text(switch (type) {
+                              JmaMapType.areaForecastLocalEew => '地震情報／緊急地震速報',
+                              JmaMapType.areaForecastLocalE => '地震情報',
+                              JmaMapType.areaInformationCity => '市区町村等',
+                              JmaMapType.areaTsunami => '津波予報区',
+                              JmaMapType.observationPoint => '地震観測点',
+                            }),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -257,7 +256,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
               const SizedBox(height: 16),
 
               // 検索結果
-              if (searchResult.value != null) ...[
+              if (searchResultValue != null) ...[
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -272,7 +271,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _ResultInfo(item: searchResult.value!),
+                        _ResultInfo(item: searchResultValue),
                       ],
                     ),
                   ),
@@ -280,7 +279,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
               ],
 
               // 地震観測点の検索結果
-              if (observationPointResult.value != null) ...[
+              if (observationPointResultValue != null) ...[
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -296,12 +295,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         _ObservationPointInfo(
-                          item: observationPointResult.value!,
+                          item: observationPointResultValue,
                         ),
-                        if (distance.value != null)
+                        if (distanceValue != null)
                           _InfoRow(
                             label: '距離',
-                            value: '${distance.value!.toStringAsFixed(2)} km',
+                            value: '${distanceValue.toStringAsFixed(2)} km',
                           ),
                       ],
                     ),
@@ -317,37 +316,41 @@ class DebugJmaMapPage extends HookConsumerWidget {
 }
 
 class _ResultInfo extends StatelessWidget {
-  const _ResultInfo({required this.item});
+  const new({required this.item});
 
   final MapDataItem item;
 
   @override
   Widget build(BuildContext context) {
+    final property = item.property;
+    final polylabel = item.polylabel;
+    final bounds = item.bounds;
+    final distanceToCoastlineKm = item.distanceToCoastlineKm;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (item.property != null) ...[
-          if (item.property!.code.isNotEmpty)
-            _InfoRow(label: 'コード', value: item.property!.code),
-          if (item.property!.name.isNotEmpty)
-            _InfoRow(label: '名前', value: item.property!.name),
-          if (item.property!.nameKana.isNotEmpty)
-            _InfoRow(label: '名前（カナ）', value: item.property!.nameKana),
+        if (property != null) ...[
+          if (property.code.isNotEmpty)
+            _InfoRow(label: 'コード', value: property.code),
+          if (property.name.isNotEmpty)
+            _InfoRow(label: '名前', value: property.name),
+          if (property.nameKana.isNotEmpty)
+            _InfoRow(label: '名前（カナ）', value: property.nameKana),
         ],
-        if (item.polylabel != null) ...[
-          _InfoRow(label: '緯度', value: item.polylabel!.lat.toString()),
-          _InfoRow(label: '経度', value: item.polylabel!.lng.toString()),
+        if (polylabel != null) ...[
+          _InfoRow(label: '緯度', value: polylabel.lat.toString()),
+          _InfoRow(label: '経度', value: polylabel.lng.toString()),
         ],
-        if (item.bounds != null) ...[
-          _InfoRow(label: '南西緯度', value: item.bounds!.southWest.lat.toString()),
-          _InfoRow(label: '南西経度', value: item.bounds!.southWest.lng.toString()),
-          _InfoRow(label: '北東緯度', value: item.bounds!.northEast.lat.toString()),
-          _InfoRow(label: '北東経度', value: item.bounds!.northEast.lng.toString()),
+        if (bounds != null) ...[
+          _InfoRow(label: '南西緯度', value: bounds.southWest.lat.toString()),
+          _InfoRow(label: '南西経度', value: bounds.southWest.lng.toString()),
+          _InfoRow(label: '北東緯度', value: bounds.northEast.lat.toString()),
+          _InfoRow(label: '北東経度', value: bounds.northEast.lng.toString()),
         ],
-        if (item.distanceToCoastlineKm != null)
+        if (distanceToCoastlineKm != null)
           _InfoRow(
             label: '海岸線までの距離',
-            value: '${item.distanceToCoastlineKm!.toStringAsFixed(1)} km',
+            value: '${distanceToCoastlineKm.toStringAsFixed(1)} km',
           ),
       ],
     );
@@ -355,7 +358,7 @@ class _ResultInfo extends StatelessWidget {
 }
 
 class _ObservationPointInfo extends StatelessWidget {
-  const _ObservationPointInfo({required this.item});
+  const new({required this.item});
 
   final EarthquakeParameterStationItem item;
 
@@ -374,7 +377,7 @@ class _ObservationPointInfo extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

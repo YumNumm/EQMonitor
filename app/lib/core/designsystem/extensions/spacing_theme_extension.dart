@@ -1,7 +1,7 @@
 // ignore_for_file: annotate_overrides
 
 import 'package:eqmonitor/core/designsystem/extensions/double_theme_encoder.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'spacing_theme_extension.tailor.dart';
@@ -10,7 +10,7 @@ part 'spacing_theme_extension.tailor.dart';
 @tailorMixinComponent
 class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
     with _$SpacingThemeExtensionTailorMixin {
-  const SpacingThemeExtension({
+  const new({
     required this.xs,
     required this.sm,
     required this.md,
@@ -21,7 +21,7 @@ class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
     required this.xxxxl,
   });
 
-  factory SpacingThemeExtension.standard() => const SpacingThemeExtension(
+  factory standard() => const SpacingThemeExtension(
     xs: 4,
     sm: 8,
     md: 12,

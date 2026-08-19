@@ -8,7 +8,7 @@ enum LiveMonitorDisplayMode { automatic, split }
 @freezed
 abstract class LiveMonitorSettings with _$LiveMonitorSettings {
   @JsonSerializable(fieldRename: FieldRename.snake)
-  const factory LiveMonitorSettings({
+  const factory({
     @Default(LiveMonitorDisplayMode.automatic)
     LiveMonitorDisplayMode displayMode,
     @Default(10) int earthquakeDisplaySeconds,
@@ -17,6 +17,6 @@ abstract class LiveMonitorSettings with _$LiveMonitorSettings {
     @Default(0.5) double landscapeRealtimeRatio,
   }) = _LiveMonitorSettings;
 
-  factory LiveMonitorSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$LiveMonitorSettingsFromJson(json);
 }

@@ -5,13 +5,13 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedDetailsPage extends ConsumerWidget {
-  const FeedDetailsPage({required this.telegramHash, super.key});
+  const new({required this.telegramHash, super.key});
 
   final String telegramHash;
 
@@ -45,7 +45,7 @@ class FeedDetailsPage extends ConsumerWidget {
 }
 
 class FeedDetailsBody extends StatelessWidget {
-  const FeedDetailsBody({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final FeedDetail item;
 
@@ -53,7 +53,7 @@ class FeedDetailsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
-    final rawUrl = feedItemUrl(item.data);
+    final rawUrl = item.data.url;
     final url = (rawUrl != null && rawUrl.isNotEmpty)
         ? Uri.tryParse(rawUrl)
         : null;
@@ -80,7 +80,7 @@ class FeedDetailsBody extends StatelessWidget {
               Flexible(
                 child: Text(
                   dateStr,
-                  style: theme.textTheme.labelSmall!.copyWith(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     fontFamily: FontFamily.googleSansCode,
                     fontFamilyFallback: const [FontFamily.notoSansJP],
                     letterSpacing: -0.2,
@@ -112,7 +112,7 @@ class FeedDetailsBody extends StatelessWidget {
     return switch (item.data) {
       FeedItemDataEarthquakeNankai(:final text, :final earthquakeInfo) =>
         text ?? earthquakeInfo?.text ?? item.summary ?? '',
-      final data => feedItemDataText(data),
+      final data => data.text,
     };
   }
 }

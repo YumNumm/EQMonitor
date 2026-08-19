@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class DepthFilterChip extends StatelessWidget {
-  const DepthFilterChip({this.min, this.max, this.onChanged, super.key});
+  const new({this.min, this.max, this.onChanged, super.key});
 
   /// マグニチュードの範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
@@ -48,7 +48,7 @@ class DepthFilterChip extends StatelessWidget {
 }
 
 class _DepthFilterModal extends HookWidget {
-  const _DepthFilterModal({
+  const new({
     this.currentMin = initialMin,
     this.currentMax = initialMax,
   });

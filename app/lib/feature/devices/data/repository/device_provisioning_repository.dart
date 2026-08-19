@@ -26,7 +26,7 @@ Future<DeviceProvisioningRepository> deviceProvisioningRepository(
 }
 
 class DeviceProvisioningRepository {
-  DeviceProvisioningRepository({
+  new({
     required SharedPreferencesDataSource dataSource,
     required SharedPreferencesWorkflowPersistence persistence,
   }) : _dataSource = dataSource,

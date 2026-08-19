@@ -5,11 +5,11 @@ import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detect
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_measured_card_overlay.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorRealtimeCards extends ConsumerWidget {
-  const LiveMonitorRealtimeCards({
+  const new({
     this.maximumHeight,
     this.onHeightChanged,
     super.key,
@@ -20,10 +20,10 @@ class LiveMonitorRealtimeCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = orderedLiveMonitorEews(
+    final eews = LiveMonitorEarthquakeCardPresenter.orderedEews(
       ref.watch(eewAliveTelegramProvider) ?? const [],
     );
-    final shakes = orderedLiveMonitorShakes(
+    final shakes = LiveMonitorEarthquakeCardPresenter.orderedShakes(
       ref.watch(shakeDetectionVisibleProvider),
     );
     if (eews.isEmpty && shakes.isEmpty) {

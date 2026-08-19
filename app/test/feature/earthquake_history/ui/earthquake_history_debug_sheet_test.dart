@@ -38,7 +38,7 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dar
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -157,9 +157,8 @@ void main() {
       final layerNotifier = _TrackingMapLayerParameterNotifier();
       final container = ProviderContainer(
         overrides: [
-          earthquakeHistoryDetailsProvider(
-            _eventId,
-          ).overrideWith(() => _ReadyDetailsNotifier(_baseEarthquake)),
+          earthquakeHistoryDetailsProvider(_eventId)
+              .overrideWith(() => _ReadyDetailsNotifier(_baseEarthquake)),
           earthquakeHistoryMapLayerParameterProvider.overrideWith(
             () => layerNotifier,
           ),
@@ -174,9 +173,8 @@ void main() {
               extensions: [DesignSystemThemeExtension.light()],
             ),
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(textScale)),
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(textScale)),
               child: child ?? const SizedBox.shrink(),
             ),
             home: Consumer(
@@ -219,9 +217,8 @@ void main() {
     final layerNotifier = _TrackingMapLayerParameterNotifier();
     final container = ProviderContainer(
       overrides: [
-        earthquakeHistoryDetailsProvider(
-          _eventId,
-        ).overrideWith(() => _ReadyDetailsNotifier(_baseEarthquake)),
+        earthquakeHistoryDetailsProvider(_eventId)
+            .overrideWith(() => _ReadyDetailsNotifier(_baseEarthquake)),
         earthquakeHistoryMapLayerParameterProvider.overrideWith(
           () => layerNotifier,
         ),
@@ -252,9 +249,8 @@ void main() {
             extensions: [DesignSystemThemeExtension.light()],
           ),
           builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: const TextScaler.linear(2)),
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(2)),
             child: child ?? const SizedBox.shrink(),
           ),
           home: Consumer(
@@ -305,9 +301,8 @@ void main() {
         key: const ValueKey('details-loading'),
         retry: (_, _) => null,
         overrides: [
-          earthquakeHistoryDetailsProvider(
-            _eventId,
-          ).overrideWith(_LoadingDetailsNotifier.new),
+          earthquakeHistoryDetailsProvider(_eventId)
+              .overrideWith(_LoadingDetailsNotifier.new),
         ],
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
@@ -330,9 +325,8 @@ void main() {
         key: const ValueKey('details-error'),
         retry: (_, _) => null,
         overrides: [
-          earthquakeHistoryDetailsProvider(
-            _eventId,
-          ).overrideWith(_ErrorDetailsNotifier.new),
+          earthquakeHistoryDetailsProvider(_eventId)
+              .overrideWith(_ErrorDetailsNotifier.new),
         ],
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
@@ -358,9 +352,8 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryDetailsProvider(
-            _eventId,
-          ).overrideWith(() => notifier),
+          earthquakeHistoryDetailsProvider(_eventId)
+              .overrideWith(() => notifier),
         ],
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
@@ -429,35 +422,35 @@ void main() {
 
   test('release相当ではdebug設定が明示的にtrueの時だけ表示する', () {
     expect(
-      shouldShowEarthquakeHistoryDebugger(
+      const EarthquakeHistoryDebuggerVisibility().shouldShow(
         isDebugBuild: false,
         debugPreference: const AsyncData(false),
       ),
       isFalse,
     );
     expect(
-      shouldShowEarthquakeHistoryDebugger(
+      const EarthquakeHistoryDebuggerVisibility().shouldShow(
         isDebugBuild: false,
         debugPreference: const AsyncLoading(),
       ),
       isFalse,
     );
     expect(
-      shouldShowEarthquakeHistoryDebugger(
+      const EarthquakeHistoryDebuggerVisibility().shouldShow(
         isDebugBuild: false,
         debugPreference: AsyncError(StateError('failed'), StackTrace.empty),
       ),
       isFalse,
     );
     expect(
-      shouldShowEarthquakeHistoryDebugger(
+      const EarthquakeHistoryDebuggerVisibility().shouldShow(
         isDebugBuild: false,
         debugPreference: const AsyncData(true),
       ),
       isTrue,
     );
     expect(
-      shouldShowEarthquakeHistoryDebugger(
+      const EarthquakeHistoryDebuggerVisibility().shouldShow(
         isDebugBuild: true,
         debugPreference: const AsyncLoading(),
       ),
@@ -506,7 +499,7 @@ final _baseEarthquake = Earthquake(
 );
 
 final class _ReadyDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _ReadyDetailsNotifier(this.base);
+  new(this.base);
 
   final Earthquake base;
 
@@ -526,7 +519,7 @@ final class _ErrorDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
 }
 
 final class _MutableDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _MutableDetailsNotifier(this.base);
+  new(this.base);
 
   final Earthquake base;
   Completer<Earthquake>? _refresh;
@@ -603,7 +596,7 @@ final class _FakeMapLibreMapState extends MapLibreMapState {
 }
 
 final class _ProductionFixture {
-  const _ProductionFixture({
+  const new({
     required this.container,
     required this.repository,
     required this.realtimeController,
@@ -658,7 +651,7 @@ _ProductionFixture _productionFixture() {
 }
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -667,7 +660,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _SpyRepository extends EarthquakeHistoryRepository {
-  _SpyRepository({required this.initial, required this.cacheClient})
+  new({required this.initial, required this.cacheClient})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

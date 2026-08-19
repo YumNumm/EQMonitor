@@ -3,10 +3,11 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew_global_settings.freezed.dart';
+part 'eew_global_settings.g.dart';
 
 @freezed
 abstract class EewGlobalSettings with _$EewGlobalSettings {
-  const factory EewGlobalSettings({
+  const factory({
     required bool enabled,
     required String defaultSound,
     required InterruptionLevel defaultInterruptionLevel,
@@ -14,6 +15,9 @@ abstract class EewGlobalSettings with _$EewGlobalSettings {
     required bool collapseNotification,
     required bool warningEnabled,
   }) = _EewGlobalSettings;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$EewGlobalSettingsFromJson(json);
 }
 
 extension EewSettingsResponseConverter on api.EewSettingsResponse {

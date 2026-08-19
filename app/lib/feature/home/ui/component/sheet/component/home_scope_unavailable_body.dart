@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -12,7 +12,7 @@ import 'package:geolocator/geolocator.dart';
 /// 文言と再試行導線をスコープごとに切り替える。
 /// 位置情報がらみのケースでは権限状態に応じてさらに細かく分岐する。
 class HomeScopeUnavailableBody extends StatelessWidget {
-  const HomeScopeUnavailableBody({
+  const new({
     required this.scope,
     required this.onRetry,
     this.onConfigureRegion,
@@ -38,7 +38,7 @@ class HomeScopeUnavailableBody extends StatelessWidget {
 }
 
 class _UnavailableContainer extends StatelessWidget {
-  const _UnavailableContainer({
+  const new({
     required this.icon,
     required this.message,
     this.actions = const [],
@@ -97,7 +97,7 @@ class _UnavailableContainer extends StatelessWidget {
 }
 
 class _CurrentLocationUnavailable extends HookWidget {
-  const _CurrentLocationUnavailable({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 
@@ -113,10 +113,14 @@ class _CurrentLocationUnavailable extends HookWidget {
     useEffect(() {
       unawaited(Future.microtask(refreshPermission));
       return null;
+      // マウント時に1度だけ権限を読む意図の const []。ローカル関数は毎ビルド
+      // 識別子が変わるため、keysに入れると毎ビルド再取得してしまう。
+      // ignore_keys: refreshPermission
     }, const []);
 
     // 権限取得中はスケルトンを避けて軽量プレースホルダ
-    if (permission.value == null) {
+    final currentPermission = permission.value;
+    if (currentPermission == null) {
       return const _UnavailableContainer(
         icon: Icons.location_searching_outlined,
         message: '現在地を取得しています…',
@@ -125,7 +129,7 @@ class _CurrentLocationUnavailable extends HookWidget {
 
     // 権限がない / 永続拒否 / それでも取れない、それぞれに合わせて文言と
     // アクションを切り替える。
-    return switch (permission.value!) {
+    return switch (currentPermission) {
       LocationPermission.denied => _UnavailableContainer(
         icon: Icons.location_off_outlined,
         message: '位置情報の利用が許可されていません。許可すると現在地周辺の地震を表示できます。',
@@ -174,7 +178,7 @@ class _CurrentLocationUnavailable extends HookWidget {
 }
 
 class _CustomUnavailable extends StatelessWidget {
-  const _CustomUnavailable({this.onConfigureRegion});
+  const new({this.onConfigureRegion});
 
   final VoidCallback? onConfigureRegion;
 

@@ -3,7 +3,7 @@ import 'package:telemetry_store/src/models/upload_result.dart';
 import 'package:telemetry_store/src/uploader/event_sender.dart';
 
 class TelemetryUploader {
-  TelemetryUploader({
+  new({
     required TelemetryDatabase db,
     required EventSender sender,
     this.batchSize = 100,

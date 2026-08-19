@@ -11,7 +11,9 @@ enum NationwideInterruptionLevel {
   @JsonValue('active')
   active('active'),
   @JsonValue('time_sensitive')
-  timeSensitive('time_sensitive');
+  timeSensitive('time_sensitive'),
+  @JsonValue('critical')
+  critical('critical');
 
   const NationwideInterruptionLevel(this.json);
 

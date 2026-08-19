@@ -11,38 +11,26 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
+}
 
-    // Workaround: Flutter 3.44's built-in Kotlin (2.0.0) and KGP 2.2.21 declared
-    // in settings.gradle.kts conflict in the build classpath, causing
-    // extractXxxAnnotations to fail with "Could not generate a decorated class
-    // for AndroidLintWorkAction". These tasks are only needed for AAR publishing,
-    // not for app builds — but their output (typedefs.txt) is still wired as
-    // input to LibraryAarJarsTask (syncXxxLibJars), so we can't simply disable
-    // them. Instead, replace their actions with a no-op that touches the
-    // declared output files, so downstream tasks see a valid empty input.
-    //
-    // afterEvaluate is registered BEFORE evaluationDependsOn so the hook is in
-    // place before each subproject is forced to evaluate.
-    afterEvaluate {
-        tasks.matching { it.name.startsWith("extract") && it.name.endsWith("Annotations") }.configureEach {
-            actions.clear()
-            doLast {
-                outputs.files.forEach { file ->
-                    if (file.extension.isNotEmpty()) {
-                        file.parentFile?.mkdirs()
-                        if (!file.exists()) file.createNewFile()
-                    } else {
-                        file.mkdirs()
-                    }
-                }
-            }
-        }
-        tasks.matching { it.name.startsWith("lintVital") || (it.name.startsWith("lint") && it.name.endsWith("Analyze")) }.configureEach {
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+// pub 依存 module の lintVital は third-party の生成物で結果を扱うことがないため
+// 無効化する (release build 時間の節約)。
+// かつて CI で AndroidLintWorkAction が初期化できなかった根本原因は
+// JDK 17.0.2 の cgroup v2 検出 NPE で、mise.toml の Temurin 更新で解消済み。
+// extract*Annotations は下流 (syncReleaseLibJars) が typedefs.txt を要求するため
+// 無効化してはならない。
+// NOTE: AGP 9 では lint DSL (checkReleaseBuilds) の設定が評価順の都合で
+// "It is too late to set checkReleaseBuilds" になるため、タスク自体を無効化する。
+subprojects {
+    tasks.configureEach {
+        if (name.startsWith("lintVital")) {
             enabled = false
         }
     }
-
-    project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {

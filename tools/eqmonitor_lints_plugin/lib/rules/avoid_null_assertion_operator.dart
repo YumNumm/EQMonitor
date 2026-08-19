@@ -5,13 +5,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidNullAssertionOperator extends AnalysisRule {
-  AvoidNullAssertionOperator()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+  new()
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_null_assertion_operator',
@@ -30,11 +28,17 @@ class AvoidNullAssertionOperator extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) => registry.addPostfixExpression(this, _Visitor(this));
+  ) {
+    final path = context.definingUnit.unit.declaredFragment?.source.fullName;
+    if (path != null && LintTargetScope.isExcluded(path: path)) {
+      return;
+    }
+    registry.addPostfixExpression(this, _Visitor(this));
+  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

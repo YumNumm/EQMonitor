@@ -15,7 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// `homeConfigurationProvider` を任意の状態で固定するためのスタブ。
 class _StubHomeConfiguration extends HomeConfigurationNotifier {
-  _StubHomeConfiguration(this._value);
+  new(this._value);
 
   final HomeConfigurationModel _value;
 

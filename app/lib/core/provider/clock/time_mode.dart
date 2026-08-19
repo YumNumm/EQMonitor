@@ -10,13 +10,13 @@ part 'time_mode.freezed.dart';
 /// - [ReplayTimeMode] : リプレイファイル再生（再生位置の `currentTime`）
 @freezed
 sealed class TimeMode with _$TimeMode {
-  const factory TimeMode.realtime() = RealtimeTimeMode;
+  const factory realtime() = RealtimeTimeMode;
 
   /// `offset` は過去方向（負の [Duration]）を表す。
-  const factory TimeMode.timeShift({required Duration offset}) =
+  const factory timeShift({required Duration offset}) =
       TimeShiftTimeMode;
 
   /// `currentTime` はリプレイファイル上の現在の再生位置。
-  const factory TimeMode.replay({required DateTime currentTime}) =
+  const factory replay({required DateTime currentTime}) =
       ReplayTimeMode;
 }

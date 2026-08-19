@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/theme/migration/theme_migration.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_theme_notifier.g.dart';
@@ -31,7 +31,9 @@ class AppThemeNotifier extends _$AppThemeNotifier {
       SharedPreferencesKey.appThemeDark,
     );
     if (savedLight == null && savedDark == null) {
-      final migrated = await migrateFromLegacyIntensityColors(dataSource);
+      final migrated = await ThemeMigration.migrateFromLegacyIntensityColors(
+        dataSource,
+      );
       if (migrated != null) {
         // 新形式の保存が完了してから旧キーを削除する。
         // 途中でプロセスが終了しても旧キーが残るため、
@@ -157,6 +159,6 @@ ThemeColorSet colorSetForBrightness(Ref ref, Brightness brightness) {
 }
 
 final class AppThemeImportException implements Exception {
-  const AppThemeImportException(this.message);
+  const new(this.message);
   final String message;
 }

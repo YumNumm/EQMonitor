@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _CompleteStepPage extends HookConsumerWidget {
-  const _CompleteStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -11,20 +11,9 @@ class _CompleteStepPage extends HookConsumerWidget {
     final completeMutation = ref.watch(OnboardingCompleted.completeMutation);
     final isProcessing = completeMutation is MutationPending;
 
-    Future<void> completeOnboarding() async {
-      await OnboardingCompleted.completeMutation.run(
-        ref,
-        (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
-      );
-      // 新規ユーザーは既読版数を現在版に初期化し、初回ホームでバナーを出さない。
-      final version = ref.read(packageInfoProvider).version;
-      await ref
-          .read(updateBannerSeenVersionProvider.notifier)
-          .markSeen(version);
-      if (context.mounted) {
-        const HomeRoute().go(context);
-      }
-    }
+    Future<void> completeOnboarding() => ref
+        .read(completeOnboardingFlowProvider)
+        .complete(ref: ref, context: context);
 
     useEffect(() {
       navigation.register(

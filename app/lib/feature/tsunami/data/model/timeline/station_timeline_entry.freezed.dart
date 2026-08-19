@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'station_timeline_entry.dart';
@@ -9,6 +9,7 @@ part of 'station_timeline_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$StationForecastTimelineEntryCopyWithImpl<$Res>
 /// Create a copy of StationForecastTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? highTideAt = freezed,Object? firstHeightArrivalTime = freezed,Object? firstHeightCondition = freezed,Object? firstHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StationForecastTimelineEntry(
 highTideAt: freezed == highTideAt ? _self.highTideAt : highTideAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,firstHeightCondition: freezed == firstHeightCondition ? _self.firstHeightCondition : firstHeightCondition // ignore: cast_nullable_to_non_nullable
@@ -344,7 +345,7 @@ class _$StationObservationTimelineEntryCopyWithImpl<$Res>
 /// Create a copy of StationObservationTimelineEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? sensor = freezed,Object? firstHeightArrivalTime = freezed,Object? firstHeightInitial = freezed,Object? firstHeightIsUnidentifiable = freezed,Object? firstHeightIsMissing = freezed,Object? firstHeightRevise = freezed,Object? maxHeightDateTime = freezed,Object? maxHeightValue = freezed,Object? maxHeightIsOver = freezed,Object? maxHeightIsRising = freezed,Object? maxHeightCondition = freezed,Object? maxHeightIsMissing = freezed,Object? maxHeightRevise = freezed,Object? telegramId = null,Object? headline = freezed,Object? title = null,Object? publishedAt = null,Object? revokedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StationObservationTimelineEntry(
 sensor: freezed == sensor ? _self.sensor : sensor // ignore: cast_nullable_to_non_nullable
 as String?,firstHeightArrivalTime: freezed == firstHeightArrivalTime ? _self.firstHeightArrivalTime : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,firstHeightInitial: freezed == firstHeightInitial ? _self.firstHeightInitial : firstHeightInitial // ignore: cast_nullable_to_non_nullable

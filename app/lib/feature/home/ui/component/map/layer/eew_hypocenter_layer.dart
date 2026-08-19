@@ -4,14 +4,15 @@ import 'dart:convert';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/util/map/remove_map_style_resources.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewHypocenterLayer extends HookConsumerWidget {
-  const EewHypocenterLayer({
+  const new({
     required this.eews,
     this.enableBlink = false,
     super.key,
@@ -30,7 +31,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
   );
 
   static Map<String, dynamic> _convertEew(EewTelegramItem eew, double opacity) {
-    final hypo = eew.hypocenter!;
+    final hypo = eew.hypocenter.orFailBecause(
+      '呼び出し元でhypocenter/latitude/longitudeがnullでないことをフィルタ済み',
+    );
     return {
       'type': 'Feature',
       'geometry': {
@@ -83,6 +86,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
         isVisible.value = !isVisible.value;
       });
       return timer.cancel;
+      // isVisible はこのTimer自身がトグルする値。keysに入れると500msごとに
+      // Timerが破棄・再生成され点滅が破綻するため、意図的に含めない。
+      // ignore_keys: isVisible.value
     }, [enableBlink]);
 
     final iconOpacity = isVisible.value ? 1.0 : 0.75;
@@ -210,7 +216,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() {
             isInitialized.value = false;
-            return removeMapStyleResources(
+            return MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [layerId.normal, layerId.lowPrecise],
               sourceIds: [sourceId.normal, sourceId.lowPrecise],
@@ -219,6 +225,9 @@ class EewHypocenterLayer extends HookConsumerWidget {
           }),
         );
       };
+      // Assets は flutter_gen の静的クラス、latestIconOpacity は useRef。
+      // どちらもビルド間で変化しない。
+      // ignore_keys: Assets, latestIconOpacity
     }, [styleController]);
 
     useEffect(() {
@@ -252,6 +261,10 @@ class EewHypocenterLayer extends HookConsumerWidget {
       );
 
       return null;
+      // 3つとも enqueue に渡すクロージャ内で実際に参照している
+      // (updateGeoJsonSource の features 生成)。keys から外すと
+      // EEWの更新でソースが再描画されなくなるため残す。
+      // ignore_keys: normalEews, lowPreciseEews, iconOpacity
     }, [styleController, normalEews, lowPreciseEews, iconOpacity]);
 
     return const SizedBox.shrink();

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'jma_code_table_parameter_code_tables.dart';
@@ -9,6 +9,7 @@ part of 'jma_code_table_parameter_code_tables.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$JmaCodeTableParameterCodeTablesCopyWithImpl<$Res>
 /// Create a copy of JmaCodeTableParameterCodeTables
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? areaForecastLocalEew = null,Object? areaInformationPrefectureEarthquake = null,Object? areaInformationCity = null,Object? areaEpicenter = null,Object? areaEpicenterAbbreviation = null,Object? areaEpicenterDetail = null,}) {
-  return _then(_self.copyWith(
+  return _then(JmaCodeTableParameterCodeTables(
 areaForecastLocalEew: null == areaForecastLocalEew ? _self.areaForecastLocalEew : areaForecastLocalEew // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableAreaForecastLocalEewItem>,areaInformationPrefectureEarthquake: null == areaInformationPrefectureEarthquake ? _self.areaInformationPrefectureEarthquake : areaInformationPrefectureEarthquake // ignore: cast_nullable_to_non_nullable
 as List<JmaCodeTableItem>,areaInformationCity: null == areaInformationCity ? _self.areaInformationCity : areaInformationCity // ignore: cast_nullable_to_non_nullable
@@ -214,7 +215,7 @@ return $default(_that.areaForecastLocalEew,_that.areaInformationPrefectureEarthq
 @JsonSerializable()
 
 class _JmaCodeTableParameterCodeTables implements JmaCodeTableParameterCodeTables {
-  const _JmaCodeTableParameterCodeTables({@JsonKey(name: 'area_forecast_local_eew') required final  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake') required final  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city') required final  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter') required final  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation') required final  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail') required final  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaInformationCity = areaInformationCity,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
+  const _JmaCodeTableParameterCodeTables({@JsonKey(name: 'area_forecast_local_eew') required  List<JmaCodeTableAreaForecastLocalEewItem> areaForecastLocalEew, @JsonKey(name: 'area_information_prefecture_earthquake') required  List<JmaCodeTableItem> areaInformationPrefectureEarthquake, @JsonKey(name: 'area_information_city') required  List<JmaCodeTableAreaInformationCityItem> areaInformationCity, @JsonKey(name: 'area_epicenter') required  List<JmaCodeTableItem> areaEpicenter, @JsonKey(name: 'area_epicenter_abbreviation') required  List<JmaCodeTableItem> areaEpicenterAbbreviation, @JsonKey(name: 'area_epicenter_detail') required  List<JmaCodeTableItem> areaEpicenterDetail}): _areaForecastLocalEew = areaForecastLocalEew,_areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake,_areaInformationCity = areaInformationCity,_areaEpicenter = areaEpicenter,_areaEpicenterAbbreviation = areaEpicenterAbbreviation,_areaEpicenterDetail = areaEpicenterDetail;
   factory _JmaCodeTableParameterCodeTables.fromJson(Map<String, dynamic> json) => _$JmaCodeTableParameterCodeTablesFromJson(json);
 
  final  List<JmaCodeTableAreaForecastLocalEewItem> _areaForecastLocalEew;

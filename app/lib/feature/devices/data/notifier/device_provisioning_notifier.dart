@@ -37,15 +37,15 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
   Future<DeviceProvisioningStatus> build() async {
     final repo = await ref.watch(deviceProvisioningRepositoryProvider.future);
     if (!await repo.isProvisioned()) {
-      return DeviceProvisioningStatus.required;
+      return .required;
     }
     final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
     final token = await authRepo.readToken();
     if (token == null || token.isEmpty) {
       await repo.clearProvisioned();
-      return DeviceProvisioningStatus.required;
+      return .required;
     }
-    return DeviceProvisioningStatus.notRequired;
+    return .notRequired;
   }
 
   static final provisionMutation = Mutation<void>();
@@ -63,7 +63,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
             '[Provisioning] legacy device detected; '
             'running v2→v3 migration workflow',
           );
-          await runV3MigrationWorkflow(
+          await const DeviceMigrationWorkflow().run(
             runner: repo.buildRunner(),
             repository: deviceRepo,
             deviceId: deviceId,
@@ -96,7 +96,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
         talker.error('[Provisioning] failed', e, st);
         rethrow;
       } on DioException catch (e, st) {
-        final mapped = mapDioToProvisioningException(e, st);
+        final mapped = DioExceptionMapper.map(e, st);
         talker.error('[Provisioning] failed', mapped, st);
         throw mapped;
       } catch (e, st) {

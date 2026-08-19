@@ -11,14 +11,14 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/current_locat
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 /// 現在地に対応する震度を表示する。
 class CurrentLocationIntensityCard extends HookConsumerWidget {
-  const CurrentLocationIntensityCard({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 
@@ -33,6 +33,9 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
       () => position != null
           ? LatLng(position.latitude, position.longitude)
           : null,
+      // Position はストリーム更新のたびに別インスタンスになるため、
+      // 意図的に緯度経度の値だけを keys にしている。
+      // ignore_keys: position
       [position?.latitude, position?.longitude],
     );
 
@@ -125,7 +128,7 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
 }
 
 class _CurrentLocationIntensityContent extends StatelessWidget {
-  const _CurrentLocationIntensityContent({
+  const new({
     required this.intensity,
     required this.lpgmIntensity,
     required this.title,

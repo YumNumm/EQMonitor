@@ -124,7 +124,7 @@ void main() {
 }
 
 final class _MigrateAdapter implements HttpClientAdapter {
-  _MigrateAdapter({
+  new({
     this.migrateStatus = 200,
     this.getMeStatus = 200,
     this.firstGetMeStatus,
@@ -201,6 +201,7 @@ final class _MigrateAdapter implements HttpClientAdapter {
           'registrationType': 'APP_CHECK',
           'userId': null,
           'is_pro': false,
+          'role': 'USER',
           'createdAt': '2026-06-05T00:00:00.000Z',
           'updatedAt': '2026-06-05T00:00:00.000Z',
         }),
@@ -227,7 +228,7 @@ final class _MigrateAdapter implements HttpClientAdapter {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

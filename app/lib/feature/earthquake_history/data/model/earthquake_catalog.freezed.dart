@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_catalog.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_catalog.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -63,7 +64,7 @@ class _$EarthquakeCatalogCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalog
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? hypocenters = null,Object? stationRecords = null,Object? damageScaleLabel = freezed,Object? tsunamiScaleLabel = freezed,Object? linkMatchConfidence = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalog(
 hypocenters: null == hypocenters ? _self.hypocenters : hypocenters // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeCatalogHypocenter>,stationRecords: null == stationRecords ? _self.stationRecords : stationRecords // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeCatalogStationRecord>,damageScaleLabel: freezed == damageScaleLabel ? _self.damageScaleLabel : damageScaleLabel // ignore: cast_nullable_to_non_nullable
@@ -210,7 +211,7 @@ return $default(_that.hypocenters,_that.stationRecords,_that.damageScaleLabel,_t
 
 
 class _EarthquakeCatalog implements EarthquakeCatalog {
-  const _EarthquakeCatalog({required final  List<EarthquakeCatalogHypocenter> hypocenters, required final  List<EarthquakeCatalogStationRecord> stationRecords, required this.damageScaleLabel, required this.tsunamiScaleLabel, required this.linkMatchConfidence}): _hypocenters = hypocenters,_stationRecords = stationRecords;
+  const _EarthquakeCatalog({required  List<EarthquakeCatalogHypocenter> hypocenters, required  List<EarthquakeCatalogStationRecord> stationRecords, required this.damageScaleLabel, required this.tsunamiScaleLabel, required this.linkMatchConfidence}): _hypocenters = hypocenters,_stationRecords = stationRecords;
   
 
  final  List<EarthquakeCatalogHypocenter> _hypocenters;
@@ -344,7 +345,7 @@ class _$EarthquakeCatalogHypocenterCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogHypocenter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? seq = null,Object? epicenterName = null,Object? stationCount = null,Object? recordTypeLabel = null,Object? originTime = freezed,Object? originTimeStderrSeconds = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? depthKm = freezed,Object? depthIsFree = null,Object? depthStderrKm = freezed,Object? maxIntensity = freezed,Object? determinationFlagLabel = freezed,Object? evaluationLabel = freezed,Object? magnitudes = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogHypocenter(
 seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
 as int,epicenterName: null == epicenterName ? _self.epicenterName : epicenterName // ignore: cast_nullable_to_non_nullable
 as String,stationCount: null == stationCount ? _self.stationCount : stationCount // ignore: cast_nullable_to_non_nullable
@@ -501,7 +502,7 @@ return $default(_that.seq,_that.epicenterName,_that.stationCount,_that.recordTyp
 
 
 class _EarthquakeCatalogHypocenter implements EarthquakeCatalogHypocenter {
-  const _EarthquakeCatalogHypocenter({required this.seq, required this.epicenterName, required this.stationCount, required this.recordTypeLabel, required this.originTime, required this.originTimeStderrSeconds, required this.latitude, required this.longitude, required this.depthKm, required this.depthIsFree, required this.depthStderrKm, required this.maxIntensity, required this.determinationFlagLabel, required this.evaluationLabel, required final  List<EarthquakeCatalogMagnitude> magnitudes}): _magnitudes = magnitudes;
+  const _EarthquakeCatalogHypocenter({required this.seq, required this.epicenterName, required this.stationCount, required this.recordTypeLabel, required this.originTime, required this.originTimeStderrSeconds, required this.latitude, required this.longitude, required this.depthKm, required this.depthIsFree, required this.depthStderrKm, required this.maxIntensity, required this.determinationFlagLabel, required this.evaluationLabel, required  List<EarthquakeCatalogMagnitude> magnitudes}): _magnitudes = magnitudes;
   
 
 @override final  int seq;
@@ -649,7 +650,7 @@ class _$EarthquakeCatalogMagnitudeCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogMagnitude
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? typeLabel = null,Object? value = null,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogMagnitude(
 typeLabel: null == typeLabel ? _self.typeLabel : typeLabel // ignore: cast_nullable_to_non_nullable
 as String,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as double,
@@ -909,7 +910,7 @@ class _$EarthquakeCatalogStationRecordCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogStationRecord
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? stationCode = null,Object? intensityClass = null,Object? instrumentalIntensity = freezed,Object? observedAt = freezed,Object? maxAcceleration = freezed,Object? maxAccelTime = freezed,Object? periods = freezed,Object? observationCount = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogStationRecord(
 stationCode: null == stationCode ? _self.stationCode : stationCode // ignore: cast_nullable_to_non_nullable
 as String,intensityClass: null == intensityClass ? _self.intensityClass : intensityClass // ignore: cast_nullable_to_non_nullable
 as ShindoDbIntensityClass,instrumentalIntensity: freezed == instrumentalIntensity ? _self.instrumentalIntensity : instrumentalIntensity // ignore: cast_nullable_to_non_nullable
@@ -1235,7 +1236,7 @@ class _$EarthquakeCatalogMaxAccelerationCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogMaxAcceleration
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? synthesizedGal = freezed,Object? nsGal = freezed,Object? ewGal = freezed,Object? udGal = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogMaxAcceleration(
 synthesizedGal: freezed == synthesizedGal ? _self.synthesizedGal : synthesizedGal // ignore: cast_nullable_to_non_nullable
 as double?,nsGal: freezed == nsGal ? _self.nsGal : nsGal // ignore: cast_nullable_to_non_nullable
 as double?,ewGal: freezed == ewGal ? _self.ewGal : ewGal // ignore: cast_nullable_to_non_nullable
@@ -1501,7 +1502,7 @@ class _$EarthquakeCatalogPeriodsCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogPeriods
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? ns = freezed,Object? ew = freezed,Object? ud = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogPeriods(
 ns: freezed == ns ? _self.ns : ns // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogPeriodComponent?,ew: freezed == ew ? _self.ew : ew // ignore: cast_nullable_to_non_nullable
 as EarthquakeCatalogPeriodComponent?,ud: freezed == ud ? _self.ud : ud // ignore: cast_nullable_to_non_nullable
@@ -1836,7 +1837,7 @@ class _$EarthquakeCatalogPeriodComponentCopyWithImpl<$Res>
 /// Create a copy of EarthquakeCatalogPeriodComponent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? maxAccelPeriodText = freezed,Object? predominantPeriodText = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EarthquakeCatalogPeriodComponent(
 maxAccelPeriodText: freezed == maxAccelPeriodText ? _self.maxAccelPeriodText : maxAccelPeriodText // ignore: cast_nullable_to_non_nullable
 as String?,predominantPeriodText: freezed == predominantPeriodText ? _self.predominantPeriodText : predominantPeriodText // ignore: cast_nullable_to_non_nullable
 as String?,

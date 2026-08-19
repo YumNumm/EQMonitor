@@ -2,22 +2,27 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-Future<void> lightHapticFunction(FutureOr<void> Function() fn) async {
-  await HapticFeedback.lightImpact();
-  await fn();
-}
+/// ハプティックフィードバックを伴って [fn] を実行するためのユーティリティ。
+class HapticUtil {
+  const new _();
 
-Future<void> mediumHapticFunction(FutureOr<void> Function() fn) async {
-  await HapticFeedback.mediumImpact();
-  await fn();
-}
+  static Future<void> light(FutureOr<void> Function() fn) async {
+    await HapticFeedback.lightImpact();
+    await fn();
+  }
 
-Future<void> heavyHapticFunction(FutureOr<void> Function() fn) async {
-  await HapticFeedback.heavyImpact();
-  await fn();
-}
+  static Future<void> medium(FutureOr<void> Function() fn) async {
+    await HapticFeedback.mediumImpact();
+    await fn();
+  }
 
-Future<void> selectionHapticFunction(FutureOr<void> Function() fn) async {
-  await HapticFeedback.selectionClick();
-  await fn();
+  static Future<void> heavy(FutureOr<void> Function() fn) async {
+    await HapticFeedback.heavyImpact();
+    await fn();
+  }
+
+  static Future<void> selection(FutureOr<void> Function() fn) async {
+    await HapticFeedback.selectionClick();
+    await fn();
+  }
 }

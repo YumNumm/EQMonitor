@@ -7,7 +7,7 @@ import 'package:nied_api_client/src/hinet/jmalist/api/hinet_jmalist_api_client.d
 /// 防災科研のHi-netシステムのAPIにアクセスします
 class HinetApiClient {
   /// Hi-net APIクライアントを作成
-  HinetApiClient(this._dio);
+  new(this._dio);
 
   final Dio _dio;
 

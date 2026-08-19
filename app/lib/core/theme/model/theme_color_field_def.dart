@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum ThemeColorFieldCategory {
   primary,
@@ -11,32 +11,21 @@ enum ThemeColorFieldCategory {
   map,
 }
 
-class ThemeColorFieldDef {
-  const ThemeColorFieldDef({
-    required this.label,
-    required this.category,
-    required this.description,
-    required this.getter,
-    required this.setter,
-  });
-
-  final String label;
-  final ThemeColorFieldCategory category;
-
-  /// この色がアプリのどこで使われるかを説明する文。
-  ///
-  /// エディタUIのsubtitleに表示される。
-  final String description;
-  final Color Function(ThemeColorSet colorSet) getter;
-  final ThemeColorSet Function(ThemeColorSet colorSet, Color color) setter;
-}
+class const ThemeColorFieldDef({
+  required final String label,
+  required final ThemeColorFieldCategory category,
+  required final String description,
+  required final Color Function(ThemeColorSet colorSet) getter,
+  required final ThemeColorSet Function(ThemeColorSet colorSet, Color color)
+  setter,
+});
 
 /// [ThemeColorFieldDef]の宣言的な一覧を保持するコンテナ。
 ///
 /// `ThemeColorSet`の全編集可能カラーフィールドを網羅する。
 /// エディタUI(Task 5/6)は[all]を描画するだけで完結する。
 class ThemeColorFieldDefs {
-  const ThemeColorFieldDefs._();
+  const new _();
 
   static final List<ThemeColorFieldDef> all = [
     ThemeColorFieldDef(

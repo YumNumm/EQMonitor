@@ -1,5 +1,5 @@
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,7 +10,7 @@ LiveMonitorExitAction liveMonitorExitAction(Ref ref) =>
     const LiveMonitorExitAction();
 
 class LiveMonitorExitAction {
-  const LiveMonitorExitAction();
+  const new();
 
   Future<void> confirm({
     required WidgetRef ref,

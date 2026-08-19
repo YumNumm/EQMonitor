@@ -16,9 +16,9 @@ part of 'eqmonitor_map_debug_source_provider.dart';
 /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
 /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
 /// ([AssetPackNotReadyException])の場合だけ、このデバッグページに限定した
-/// override([_resolveDebugOverride])を試し、それも無ければ例外をそのまま
-/// 再送出する(brief要求「AssetPackNotReadyExceptionはエラー表示へ流し、
-/// 地図を空で描かない」)。
+/// override([EqmonitorMapDebugSourceResolver.resolveDebugOverride])を試し、
+/// それも無ければ例外をそのまま再送出する(brief要求
+/// 「AssetPackNotReadyExceptionはエラー表示へ流し、地図を空で描かない」)。
 
 @ProviderFor(eqmonitorMapDebugSource)
 final eqmonitorMapDebugSourceProvider = EqmonitorMapDebugSourceProvider._();
@@ -29,9 +29,9 @@ final eqmonitorMapDebugSourceProvider = EqmonitorMapDebugSourceProvider._();
 /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
 /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
 /// ([AssetPackNotReadyException])の場合だけ、このデバッグページに限定した
-/// override([_resolveDebugOverride])を試し、それも無ければ例外をそのまま
-/// 再送出する(brief要求「AssetPackNotReadyExceptionはエラー表示へ流し、
-/// 地図を空で描かない」)。
+/// override([EqmonitorMapDebugSourceResolver.resolveDebugOverride])を試し、
+/// それも無ければ例外をそのまま再送出する(brief要求
+/// 「AssetPackNotReadyExceptionはエラー表示へ流し、地図を空で描かない」)。
 
 final class EqmonitorMapDebugSourceProvider
     extends
@@ -49,9 +49,9 @@ final class EqmonitorMapDebugSourceProvider
   /// 通常は`AssetPackRepository.resolveAsset(AssetPackAssetId.baseMapPmtiles)`
   /// が返す検証済み`File`をそのまま使う。Asset Packが未準備
   /// ([AssetPackNotReadyException])の場合だけ、このデバッグページに限定した
-  /// override([_resolveDebugOverride])を試し、それも無ければ例外をそのまま
-  /// 再送出する(brief要求「AssetPackNotReadyExceptionはエラー表示へ流し、
-  /// 地図を空で描かない」)。
+  /// override([EqmonitorMapDebugSourceResolver.resolveDebugOverride])を試し、
+  /// それも無ければ例外をそのまま再送出する(brief要求
+  /// 「AssetPackNotReadyExceptionはエラー表示へ流し、地図を空で描かない」)。
   EqmonitorMapDebugSourceProvider._()
     : super(
         from: null,
@@ -79,4 +79,4 @@ final class EqmonitorMapDebugSourceProvider
 }
 
 String _$eqmonitorMapDebugSourceHash() =>
-    r'f9d3575b50b3cd15de1e8fffbbc37cb436ca4a36';
+    r'a317276730d17bb184db48c0596f12fc0ebaccb7';

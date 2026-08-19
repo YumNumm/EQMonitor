@@ -4,12 +4,12 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class IntensityIconDebugPage extends HookConsumerWidget {
-  const IntensityIconDebugPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class IntensityIconDebugPage extends HookConsumerWidget {
 }
 
 class _SizeSlider extends StatelessWidget {
-  const _SizeSlider({required this.size});
+  const new({required this.size});
 
   final ValueNotifier<double> size;
 
@@ -78,7 +78,7 @@ class _SizeSlider extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({
+  const new({
     required this.title,
     required this.providerName,
     required this.onInvalidate,
@@ -131,7 +131,7 @@ class _Section extends StatelessWidget {
 }
 
 class _JmaIntensityGrid extends ConsumerWidget {
-  const _JmaIntensityGrid({required this.size});
+  const new({required this.size});
 
   final double size;
 
@@ -198,7 +198,7 @@ class _JmaIntensityGrid extends ConsumerWidget {
 }
 
 class _JmaLpgmIntensityGrid extends ConsumerWidget {
-  const _JmaLpgmIntensityGrid({required this.size});
+  const new({required this.size});
 
   final double size;
 
@@ -265,7 +265,7 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
 }
 
 class _RenderedImage extends StatelessWidget {
-  const _RenderedImage({required this.bytes, required this.size});
+  const new({required this.bytes, required this.size});
 
   final Uint8List? bytes;
   final double size;
@@ -285,7 +285,7 @@ class _RenderedImage extends StatelessWidget {
 }
 
 class _HeaderCell extends StatelessWidget {
-  const _HeaderCell(this.text);
+  const new(this.text);
 
   final String text;
 
@@ -302,7 +302,7 @@ class _HeaderCell extends StatelessWidget {
 }
 
 class _IconCell extends StatelessWidget {
-  const _IconCell({required this.child});
+  const new({required this.child});
 
   final Widget child;
 

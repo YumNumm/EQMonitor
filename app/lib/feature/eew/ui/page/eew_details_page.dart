@@ -1,13 +1,13 @@
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsPage extends HookConsumerWidget {
-  const EewDetailsPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -27,7 +27,7 @@ class EewDetailsPage extends HookConsumerWidget {
 }
 
 class _EewList extends StatelessWidget {
-  const _EewList({required this.eews});
+  const new({required this.eews});
 
   final List<EewTelegramItem> eews;
 
@@ -51,7 +51,7 @@ class _EewList extends StatelessWidget {
 }
 
 class _EewDetailsPageSkeleton extends StatelessWidget {
-  const _EewDetailsPageSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -88,16 +88,17 @@ class _EewDetailsPageSkeleton extends StatelessWidget {
 }
 
 class _EewCard extends StatelessWidget {
-  const _EewCard({required this.eew});
+  const new({required this.eew});
 
   final EewTelegramItem eew;
 
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final originTime = eew.originTime != null
-        ? dateFormat.format(eew.originTime!)
-        : '不明';
+    final originTime = switch (eew.originTime) {
+      final originTime? => dateFormat.format(originTime),
+      null => '不明',
+    };
     final reportTime = dateFormat.format(eew.reportTime);
     final hypocenter = eew.hypocenter;
 

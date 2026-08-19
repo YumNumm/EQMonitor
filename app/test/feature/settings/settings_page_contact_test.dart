@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/settings_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -62,7 +62,9 @@ void main() {
           ),
           adsOptOutProvider.overrideWithBuild((ref, notifier) => false),
           buildConfigProvider.overrideWithValue(_buildConfig),
-          openContactProvider.overrideWithValue((_, _) async => opened = true),
+          openContactProvider.overrideWithValue(
+            _FakeOpenContactAction(() => opened = true),
+          ),
           packageInfoProvider.overrideWithValue(_packageInfo),
         ],
         child: const _TestApp(home: SettingsPage()),
@@ -103,8 +105,19 @@ final _packageInfo = PackageInfo(
   buildNumber: '456',
 );
 
+class _FakeOpenContactAction extends OpenContactAction {
+  const new(this._onCall);
+
+  final void Function() _onCall;
+
+  @override
+  Future<void> call(WidgetRef ref, BuildContext context) async {
+    _onCall();
+  }
+}
+
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.home});
+  const new({required this.home});
 
   final Widget home;
 

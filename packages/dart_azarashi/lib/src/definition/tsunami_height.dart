@@ -11,7 +11,7 @@ enum JmaTsunamiHeight {
   unknown(14, '不明'),
   other(15, 'その他の津波の高さ');
 
-  const JmaTsunamiHeight(this.code, this.name);
+  new(this.code, this.name);
 
   final int code;
   final String name;

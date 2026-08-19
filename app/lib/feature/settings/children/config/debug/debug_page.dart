@@ -9,26 +9,33 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/devices/data/provider/device_role_provider.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_eew_estimation_debug_notifier.dart';
+import 'package:eqmonitor/feature/home/data/provider/home_eew_estimation_debug_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/page/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/startup/debug_startup_timing_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/start/data/flow/forced_update_dialog_presenter.dart';
+import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
+import 'package:eqmonitor/feature/start/data/model/store_url_model.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugPage extends ConsumerWidget {
-  const DebugPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +47,7 @@ class DebugPage extends ConsumerWidget {
 }
 
 class _DebugWidget extends ConsumerWidget {
-  const _DebugWidget();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -131,6 +138,17 @@ class _DebugWidget extends ConsumerWidget {
                 subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
                 leading: const Icon(Icons.widgets_outlined),
                 onTap: () => const DebugAppGroupRoute().push<void>(context),
+              ),
+            if (Platform.isIOS)
+              ListTile(
+                title: const Text('Live Activity テスト'),
+                subtitle: const Text('アプリ内から EEW / 揺れ検知の Live Activity を開始・更新・終了'),
+                leading: const Icon(Icons.bolt_outlined),
+                onTap: () => Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (_) => const DebugLiveActivityPage(),
+                  ),
+                ),
               ),
             ListTile(
               title: const Text('Asset Pack'),
@@ -236,6 +254,7 @@ class _DebugWidget extends ConsumerWidget {
                 );
               },
             ),
+            const _HomeEewEstimationTile(),
             ListTile(
               title: const Text('EEW Card'),
               subtitle: Text(
@@ -339,13 +358,6 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async => const PlaygroundRoute().push(context),
             ),
             ListTile(
-              title: const Text('揺れ検知履歴'),
-              subtitle: const Text('このセッション中の揺れ検知イベント一覧'),
-              leading: const Icon(Icons.sensors_rounded),
-              onTap: () async =>
-                  const ShakeDetectionHistoryRoute().push<void>(context),
-            ),
-            ListTile(
               title: const Text('震度アイコン確認'),
               subtitle: Text(
                 '全震度・全タイプのアイコンをプレビュー',
@@ -434,7 +446,7 @@ class _DebugWidget extends ConsumerWidget {
 }
 
 class _AppCheckSection extends ConsumerWidget {
-  const _AppCheckSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -490,15 +502,13 @@ class _AppCheckSection extends ConsumerWidget {
               final token = await FirebaseAppCheck.instance
                   .getLimitedUseToken();
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Token: $token')));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Token: $token')));
               }
             } on Exception catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('エラー: $e')));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('エラー: $e')));
               }
             }
           },
@@ -521,7 +531,7 @@ class _AppCheckSection extends ConsumerWidget {
 }
 
 class _ParameterDebugSection extends HookConsumerWidget {
-  const _ParameterDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -607,8 +617,51 @@ class _ParameterDebugSection extends HookConsumerWidget {
   }
 }
 
+class _HomeEewEstimationTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDebugEnabled = ref.watch(debugProvider).value ?? false;
+    final roleAsync = ref.watch(deviceRoleProvider);
+    final isAvailable =
+        ref.watch(isHomeEewEstimationDebugAvailableProvider).value ?? false;
+    final isEnabled = ref.watch(homeEewEstimationDebugProvider).value ?? false;
+
+    final subtitle = isAvailable
+        ? 'JMAが現在地の予想震度を発表していない場合に、推計震度とS波到達予想時刻をホームのEEWカードへ表示'
+        : switch ((isDebugEnabled, roleAsync)) {
+            (false, _) => 'デバッグモードが無効のため変更できません',
+            (_, AsyncLoading()) => 'デバイスのロールを確認中です',
+            (_, AsyncError()) => 'デバイスのロールを取得できませんでした',
+            (_, AsyncData(:final value)) =>
+              'Admin ロールのデバイスのみ変更できます'
+                  '(現在のロール: ${value?.value ?? '未提供'})',
+          };
+
+    return ListTile(
+      title: const Text('ホームに推計震度・到達予想時刻を表示'),
+      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+      leading: const Icon(Icons.speed),
+      trailing: AppSwitch(
+        value: isEnabled && isAvailable,
+        onChanged: isAvailable
+            ? (value) async => ref
+                  .read(homeEewEstimationDebugProvider.notifier)
+                  .save(isEnabled: value)
+            : null,
+      ),
+      onTap: isAvailable
+          ? () async => ref
+                .read(homeEewEstimationDebugProvider.notifier)
+                .save(isEnabled: !isEnabled)
+          : null,
+    );
+  }
+}
+
 class _BackgroundLocationDebugSection extends ConsumerWidget {
-  const _BackgroundLocationDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -656,11 +709,12 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
 }
 
 class _StartApiDebugSection extends ConsumerWidget {
-  const _StartApiDebugSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startAsync = ref.watch(startProvider);
+    final startValue = startAsync.value;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -690,8 +744,8 @@ class _StartApiDebugSection extends ConsumerWidget {
             title: const Text('エラー'),
             subtitle: Text(error.toString()),
           ),
-          _ when startAsync.hasValue => _StartApiDebugContent(
-            data: startAsync.value!,
+          _ when startValue != null => _StartApiDebugContent(
+            data: startValue,
             hasError: startAsync.hasError,
             error: startAsync.error,
           ),
@@ -703,7 +757,7 @@ class _StartApiDebugSection extends ConsumerWidget {
 }
 
 class _StartApiDebugContent extends ConsumerWidget {
-  const _StartApiDebugContent({
+  const new({
     required this.data,
     required this.hasError,
     required this.error,
@@ -737,11 +791,11 @@ class _StartApiDebugContent extends ConsumerWidget {
             ),
           ),
         ),
-        if (data.flags.maintenance.message != null)
+        if (data.flags.maintenance.message case final message?)
           ListTile(
             dense: true,
             title: const Text('maintenance.message'),
-            subtitle: Text(data.flags.maintenance.message!),
+            subtitle: Text(message),
           ),
         AppSwitchListTile(
           title: 'planConstraints.isPro',
@@ -770,25 +824,29 @@ class _StartApiDebugContent extends ConsumerWidget {
           title: const Text('latest.version'),
           trailing: Text(data.app.version.latest?.version ?? '(なし)'),
         ),
-        AppSwitchListTile(
-          title: 'latest.showWhatsNew',
-          subtitle: "What's New バナー表示",
-          value: data.app.version.latest?.showWhatsNew ?? false,
-          onChanged: data.app.version.latest != null
-              ? (v) => _override(
-                  ref,
-                  data.copyWith(
-                    app: data.app.copyWith(
-                      version: data.app.version.copyWith(
-                        latest: data.app.version.latest!.copyWith(
-                          showWhatsNew: v,
-                        ),
-                      ),
-                    ),
+        switch (data.app.version.latest) {
+          final latest? => AppSwitchListTile(
+            title: 'latest.showWhatsNew',
+            subtitle: "What's New バナー表示",
+            value: latest.showWhatsNew,
+            onChanged: (v) => _override(
+              ref,
+              data.copyWith(
+                app: data.app.copyWith(
+                  version: data.app.version.copyWith(
+                    latest: latest.copyWith(showWhatsNew: v),
                   ),
-                )
-              : null,
-        ),
+                ),
+              ),
+            ),
+          ),
+          null => const AppSwitchListTile(
+            title: 'latest.showWhatsNew',
+            subtitle: "What's New バナー表示",
+            value: false,
+            onChanged: null,
+          ),
+        },
         ListTile(
           dense: true,
           title: const Text('requiredVersions'),
@@ -802,6 +860,29 @@ class _StartApiDebugContent extends ConsumerWidget {
                       .join(', ')
                 : '(なし)',
           ),
+        ),
+        ListTile(
+          dense: true,
+          title: const Text('強制アップデートダイアログ'),
+          subtitle: const Text('閉じられるプレビューを表示'),
+          leading: const Icon(Icons.system_update_alt),
+          onTap: () async {
+            final storeUrl = data.app.storeUrl;
+            await ref
+                .read(forcedUpdateDialogPresenterProvider)
+                .showForcedUpdateDialog(
+                  context,
+                  req: const RequiredVersionModel(
+                    version: '99.0.0',
+                    message: '【デバッグ】最新バージョンへのアップデートが必要です。',
+                  ),
+                  storeUrl: StoreUrlModel(
+                    ios: storeUrl.ios,
+                    android: storeUrl.android,
+                  ),
+                  dismissible: false,
+                );
+          },
         ),
       ],
     );

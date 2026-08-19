@@ -3,10 +3,10 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hy
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_earthquake_card_presenter.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_publication_card.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_measured_card_overlay.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorEarthquakeOverlay extends StatelessWidget {
-  const LiveMonitorEarthquakeOverlay({
+  const new({
     required this.earthquake,
     required this.presentation,
     required this.initialNow,

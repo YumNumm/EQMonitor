@@ -9,6 +9,8 @@
 import SwiftUI
 import AppIntents
 
+/// `EarthquakeSnippetIntent`（iOS 26 以降）から描画されるカード。
+@available(iOS 26.0, *)
 struct EarthquakeSnippetView: View {
     let title: String
     let items: [EarthquakeDisplayItem]
@@ -67,6 +69,7 @@ struct EarthquakeSnippetView: View {
     }
 }
 
+@available(iOS 26.0, *)
 private struct EarthquakeSnippetRow: View {
     let item: EarthquakeDisplayItem
 

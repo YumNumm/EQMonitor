@@ -1,7 +1,7 @@
 part of '../page/onboarding_page.dart';
 
 class _NotificationSettingsStepPage extends HookConsumerWidget {
-  const _NotificationSettingsStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -17,7 +17,7 @@ class _NotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
-  const _MigratedNotificationSettingsStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -91,7 +91,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
-  const _NewUserNotificationSettingsStepPage({required this.navigation});
+  const new({required this.navigation});
 
   final _OnboardingStepNavigation navigation;
 
@@ -118,9 +118,6 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
 
         if (preset == NotificationPreset.custom) {
           isProcessing.value = false;
-          await ref
-              .read(notificationPresetProvider.notifier)
-              .select(NotificationPreset.custom);
           await Navigator.of(context).push<void>(
             MaterialPageRoute<void>(
               builder: (_) => const _OnboardingCustomSettingsWrapper(),
@@ -158,7 +155,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             SizedBox(height: designSystem.spacing.xxxxl),
             Text('通知設定', style: designSystem.typography.displayMedium),
@@ -166,17 +163,21 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
             Text(
               '細かい設定は後からでも変更できます',
               style: designSystem.typography.bodySmall.copyWith(
-                color: designSystem.colorTheme.outline,
+                color: designSystem.colorTheme.onSurfaceVariant,
               ),
             ),
             SizedBox(height: designSystem.spacing.xl),
             NotificationPresetSelector(
               selectedPreset: selectedPreset.value,
               onChanged: (preset) {
+                if (selectedPreset.value == preset) {
+                  return;
+                }
+                unawaited(HapticFeedback.lightImpact());
                 selectedPreset.value = preset;
                 hasSaveError.value = false;
               },
-              style: NotificationPresetSelectorStyle.onboarding,
+              style: .onboarding,
             ),
             if (hasSaveError.value) ...[
               SizedBox(height: designSystem.spacing.md),
@@ -196,7 +197,7 @@ class _NewUserNotificationSettingsStepPage extends HookConsumerWidget {
 }
 
 class _OnboardingCustomSettingsWrapper extends StatelessWidget {
-  const _OnboardingCustomSettingsWrapper();
+  const new();
 
   @override
   Widget build(BuildContext context) {

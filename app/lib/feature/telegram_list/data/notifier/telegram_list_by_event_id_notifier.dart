@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,8 +15,18 @@ typedef TelegramListByEventIdState = ({
 
 @riverpod
 class TelegramListByEventId extends _$TelegramListByEventId {
+  var _refreshGeneration = 0;
+
   @override
   Future<TelegramListByEventIdState> build(String eventId) async {
+    _refreshGeneration += 1;
+    ref.listen(realtimeEventsProvider, (_, next) {
+      if (next case AsyncData(
+        value: RealtimeEarthquakeUpsertEvent(:final record),
+      ) when record.eventId == eventId) {
+        ref.invalidateSelf();
+      }
+    });
     final client = await ref.read(apiClientProvider.future);
     final response = await client.telegram.getV2TelegramEventIdEventId(
       eventId: eventId,
@@ -27,8 +39,10 @@ class TelegramListByEventId extends _$TelegramListByEventId {
         if (comparedByReportAt != 0) {
           return comparedByReportAt;
         }
-        if (a.serialNo != null && b.serialNo != null) {
-          return b.serialNo!.compareTo(a.serialNo!);
+        final aSerialNo = a.serialNo;
+        final bSerialNo = b.serialNo;
+        if (aSerialNo != null && bSerialNo != null) {
+          return bSerialNo.compareTo(aSerialNo);
         }
         return 0;
       }),
@@ -45,7 +59,8 @@ class TelegramListByEventId extends _$TelegramListByEventId {
       return;
     }
 
-    state = await state.guardPlus(() async {
+    final refreshGeneration = _refreshGeneration;
+    final nextState = await state.guardPlus(() async {
       final client = await ref.read(apiClientProvider.future);
       final response = await client.telegram.getV2TelegramEventIdEventId(
         eventId: eventId,
@@ -59,6 +74,9 @@ class TelegramListByEventId extends _$TelegramListByEventId {
       ].sorted((a, b) => b.pressAt.compareTo(a.pressAt));
       return (items: mergedItems, nextToken: data.nextToken);
     });
+    if (refreshGeneration == _refreshGeneration) {
+      state = nextState;
+    }
   }
 }
 

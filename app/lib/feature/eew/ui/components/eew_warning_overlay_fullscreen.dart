@@ -5,10 +5,10 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayFullscreen extends StatelessWidget {
-  const EewWarningOverlayFullscreen({
+  const new({
     required this.displayModel,
     required this.onMinimize,
     required this.onClose,
@@ -23,11 +23,11 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final arrivalText = formatEewWarningOverlayArrival(
+    final arrivalText = const EewWarningOverlayArrivalFormatter().format(
       state: displayModel.arrivalState,
       secondsUntilArrival: displayModel.secondsUntilArrival,
     );
-    final intensityText = formatEewWarningOverlayIntensity(
+    final intensityText = const EewWarningOverlayIntensityFormatter().format(
       intensity: displayModel.localIntensity,
       isOver: displayModel.localIntensityIsOver,
     );
@@ -43,7 +43,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
 
     return BlockSemantics(
       child: Semantics(
-        label: formatEewWarningOverlaySemanticsLabel(
+        label: const EewWarningOverlayLabelFormatter().semanticsLabel(
           source: displayModel.source,
         ),
         scopesRoute: true,
@@ -145,7 +145,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
 }
 
 class _EewWarningHeadline extends StatelessWidget {
-  const _EewWarningHeadline({required this.displayModel});
+  const new({required this.displayModel});
 
   final EewWarningOverlayDisplayModel displayModel;
 
@@ -171,7 +171,7 @@ class _EewWarningHeadline extends StatelessWidget {
 }
 
 class _EewWarningLocalIntensity extends StatelessWidget {
-  const _EewWarningLocalIntensity({
+  const new({
     required this.displayModel,
     required this.arrivalText,
     required this.intensityText,
@@ -229,7 +229,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
 }
 
 class _EewWarningDetails extends StatelessWidget {
-  const _EewWarningDetails({
+  const new({
     required this.displayModel,
     required this.magnitudeText,
     required this.depthText,
@@ -277,7 +277,7 @@ class _EewWarningDetails extends StatelessWidget {
 }
 
 class _EewWarningDetailRow extends StatelessWidget {
-  const _EewWarningDetailRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

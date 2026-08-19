@@ -34,4 +34,21 @@ class EewWarningConfigNotifier extends _$EewWarningConfigNotifier {
     );
     state = AsyncData(result);
   }
+
+  /// EEW 警報の有効トグルを OFF/ON したときのローカル状態同期。
+  ///
+  /// サーバ側は `warning_enabled: true` で target を現在地のみへ戻すため、
+  /// 現在地の割り込みレベル以外を初期状態に揃える。
+  void synchronizeWithGlobalToggle() {
+    final currentLevel =
+        state.value?.currentLocationInterruptionLevel ??
+        currentLocationEewWarningDefaultLevel;
+    state = AsyncData(
+      EewWarningSettings(
+        target: EewWarningTarget.currentLocationOnly,
+        currentLocationInterruptionLevel: currentLevel,
+        nationwideInterruptionLevel: null,
+      ),
+    );
+  }
 }

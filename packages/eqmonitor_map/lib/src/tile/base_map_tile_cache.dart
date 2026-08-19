@@ -1,13 +1,20 @@
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_async_generation.dart';
+import 'package:eqmonitor_map/src/foundation/async_generation_token.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
+import 'package:eqmonitor_map/src/tile/map_tile_fallback_policy.dart';
+import 'package:eqmonitor_map/src/tile/map_tile_pipeline_budget.dart';
 import 'package:flutter/foundation.dart';
 
 /// decode済み[BaseMapTileGeometry]のcache。
 ///
 /// # cache key
 ///
-/// keyは`(sourceInstanceId, CanonicalTileId)`の組。`CanonicalTileId.z`は
+/// keyは`(sourceInstanceId, CanonicalTileId)`の組。この`sourceInstanceId`は
+/// cacheにとっては不透明な識別子文字列であり、呼び出し側は
+/// `VerifiedTileSourceCacheIdentity.cacheIdentity`(内容digestを含む)を渡す
+/// 責務を負う。そうしないと、source が`sourceInstanceId`を据え置いたまま
+/// 中身を差し替えたときにexact lookupが前revisionのgeometryを返す。
+/// `CanonicalTileId.z`は
 /// tileが属するpyramid上の整数zoomであり、camera側の連続値`zoom`
 /// (`MapCamera.zoom`)はkeyに一切含めない。camera zoomが小数だけ動いても
 /// 要求する[CanonicalTileId]が変わらない限り(`TileCoverCalculator.cover`が
@@ -65,14 +72,13 @@ import 'package:flutter/foundation.dart';
 /// # incarnation token
 ///
 /// 進行中のdecodeをcamera変更でcancelできるよう、
-/// `flutter_scene/flutter_scene_async_generation.dart`の
-/// `SceneSpikeAsyncGenerationOwner`/`SceneSpikeAsyncGenerationToken`を
-/// 再利用する(spike期に実装済みの汎用incarnation token機構であり、Scene
-/// 固有の要素を持たないため、Task 1の逐語コピー差し戻しとは異なりこの
-/// packageの別レイヤーから素直に再利用できる)。[beginDecode]で発行した
+/// `foundation/async_generation_token.dart`の
+/// [AsyncGenerationOwner]/[AsyncGenerationToken]を利用する(spike期に
+/// `flutter_scene/`へ置いていた汎用incarnation token機構を、Scene 非依存の
+/// foundation レイヤーへ昇格させたもの)。[beginDecode]で発行した
 /// tokenを[put]へ渡すと、[cancelInFlight]が呼ばれた後のtokenでの[put]は
 /// 黙って無視される(古い結果をcacheへ入れない)。cancelはエラーにしない
-/// ([SceneSpikeAsyncGenerationOwner]自体が例外を投げない設計)。
+/// ([AsyncGenerationOwner]自体が例外を投げない設計)。
 ///
 /// # 子→親fallback
 ///
@@ -85,9 +91,11 @@ import 'package:flutter/foundation.dart';
 /// 見つかった祖先で打ち切る。遡る段数の上限`maxParentSteps`は呼び出し側が
 /// 渡す(Global Constraints)。
 final class BaseMapTileCache {
-  BaseMapTileCache({
+  new({
     required this.maxEntries,
     required this.maxParentFallbackSteps,
+    this.fallbackPolicy = MapTileFallbackPolicy.basemap,
+    this.budget,
   }) : assert(maxEntries > 0, 'maxEntries must be positive'),
        assert(
          maxParentFallbackSteps >= 0,
@@ -104,9 +112,23 @@ final class BaseMapTileCache {
   /// 一致を強制することはしない(cacheとlookupは疎結合なままにする)。
   final int maxParentFallbackSteps;
 
-  final _generationOwner = SceneSpikeAsyncGenerationOwner();
+  /// 欠損 tile の代替可否を決める policy。既定は背景地図向けの
+  /// [MapTileFallbackPolicy.basemap](親/子 fallback を許可)。hazard レイヤーの
+  /// cache は[MapTileFallbackPolicy.hazard]を明示的に渡し、fail closed にする。
+  final MapTileFallbackPolicy fallbackPolicy;
+
+  /// pin 上限などの資源上限。[pin]を使う場合は必須(pin 数の上限を呼び出し側が
+  /// 明示するため)。`null`のときは pinning 不可(Global Constraints「上限は
+  /// 呼び出し側が渡す」に従い、暗黙の pin 上限を持たない)。
+  final MapTilePipelineBudget? budget;
+
+  final _generationOwner = AsyncGenerationOwner();
 
   final Map<(String, CanonicalTileId), BaseMapTileGeometry> _entries = {};
+
+  /// LRU / zoom 窓 eviction から保護する entry の key 集合。上限は
+  /// [budget]`.maxPinnedEntries`。
+  final Set<(String, CanonicalTileId)> _pinned = {};
   int? _activeZoom;
 
   /// 現在のentry件数(test用)。
@@ -114,7 +136,45 @@ final class BaseMapTileCache {
   int get length => _entries.length;
 
   /// 新しいdecode試行のtokenを発行する。
-  SceneSpikeAsyncGenerationToken beginDecode() => _generationOwner.begin();
+  AsyncGenerationToken beginDecode() => _generationOwner.begin();
+
+  /// [tileId]の entry を eviction から保護する。既に put 済みでなければならず、
+  /// pin 数は[budget]`.maxPinnedEntries`を超えられない。
+  ///
+  /// - [budget]未設定: [StateError](暗黙の pin 上限を持たないため)。
+  /// - 未 cache の key: [ArgumentError]。
+  /// - pin 上限超過: [StateError]。
+  void pin({
+    required String sourceInstanceId,
+    required CanonicalTileId tileId,
+  }) {
+    final budget = this.budget;
+    if (budget == null) {
+      throw StateError('pinning requires a MapTilePipelineBudget.');
+    }
+    final key = (sourceInstanceId, tileId);
+    if (!_entries.containsKey(key)) {
+      throw ArgumentError.value(
+        tileId,
+        'tileId',
+        'cannot pin a tile that is not cached',
+      );
+    }
+    if (!_pinned.contains(key) && _pinned.length >= budget.maxPinnedEntries) {
+      throw StateError(
+        'pin budget exceeded (max ${budget.maxPinnedEntries}).',
+      );
+    }
+    _pinned.add(key);
+  }
+
+  /// [tileId]の pin を解除する。以後、通常の LRU / zoom 窓 eviction の対象へ戻る。
+  void unpin({
+    required String sourceInstanceId,
+    required CanonicalTileId tileId,
+  }) {
+    _pinned.remove((sourceInstanceId, tileId));
+  }
 
   /// 進行中のdecodeを無効化する。camera変更時などに呼ぶ。
   void cancelInFlight() => _generationOwner.cancel();
@@ -141,7 +201,7 @@ final class BaseMapTileCache {
     required String sourceInstanceId,
     required CanonicalTileId tileId,
     required BaseMapTileGeometry geometry,
-    required SceneSpikeAsyncGenerationToken token,
+    required AsyncGenerationToken token,
   }) {
     if (!token.isCurrent) {
       return;
@@ -165,16 +225,25 @@ final class BaseMapTileCache {
       return;
     }
     _entries.removeWhere((key, value) {
+      if (_pinned.contains(key)) {
+        return false;
+      }
       final z = key.$2.z;
       return z > activeZoom + 1 || z < activeZoom - maxParentFallbackSteps;
     });
   }
 
   /// `_entries`の先頭(挿入順で最古、かつ[get]がhitするたびに末尾へ
-  /// 移動させているため実質「最も長く未参照のentry」)から破棄する。
+  /// 移動させているため実質「最も長く未参照のentry」)から破棄する。pin された
+  /// entry は保護し、破棄しない(pin 数は[budget]で上限が課されているため、
+  /// pin だけで無制限に膨らむことはない)。
   void _evictOverCapacity() {
     while (_entries.length > maxEntries) {
-      _entries.remove(_entries.keys.first);
+      final evictable = _entries.keys.where((key) => !_pinned.contains(key));
+      if (evictable.isEmpty) {
+        break;
+      }
+      _entries.remove(evictable.first);
     }
   }
 
@@ -187,6 +256,11 @@ final class BaseMapTileCache {
     final exact = get(sourceInstanceId: sourceInstanceId, tileId: tileId);
     if (exact != null) {
       return BaseMapTileFallbackExact(exact);
+    }
+
+    // hazard レイヤーは古い/別解像度の tile でごまかさず fail closed する。
+    if (!fallbackPolicy.allowsSpatialFallback) {
+      return const BaseMapTileFallbackMiss();
     }
 
     final childIds = tileId.children();
@@ -225,25 +299,26 @@ final class BaseMapTileCache {
   void dispose() {
     _generationOwner.dispose();
     _entries.clear();
+    _pinned.clear();
   }
 }
 
 /// [BaseMapTileCache.lookupWithFallback]の結果。
 @immutable
 sealed class BaseMapTileFallbackResult {
-  const BaseMapTileFallbackResult();
+  const new();
 }
 
 /// 要求どおりのtileがcache済みだった場合。
 final class BaseMapTileFallbackExact extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackExact(this.geometry);
+  const new(this.geometry);
 
   final BaseMapTileGeometry geometry;
 }
 
 /// 要求tileは未cacheだが、`z+1`の子4枚が全てcache済みだった場合。
 final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackChildren(this.children)
+  const new(this.children)
     : assert(children.length == 4, 'children must always contain 4 tiles');
 
   /// `CanonicalTileId.children()`と同じ並び順(4件、全て非null)。
@@ -253,7 +328,7 @@ final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
 /// 要求tileも子4枚も未cacheで、`stepsUp`段上の祖先[tileId]がcache済み
 /// だった場合。
 final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackParent(
+  const new(
     this.geometry, {
     required this.tileId,
     required this.stepsUp,
@@ -267,5 +342,5 @@ final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
 /// 要求tile・子4枚・`maxParentSteps`段以内の祖先のいずれもcacheされていない
 /// 場合。
 final class BaseMapTileFallbackMiss extends BaseMapTileFallbackResult {
-  const BaseMapTileFallbackMiss();
+  const new();
 }

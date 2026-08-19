@@ -1,19 +1,22 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 震度地域リスト（震度階級ごとにグループ化、差分注釈付き）
 class IntensityRegionList extends StatelessWidget {
-  const IntensityRegionList({
+  const new({
     required this.entries,
+    this.groupByPrefecture = false,
     this.prefectureMap,
     super.key,
   });
 
   final List<IntensityRegionDiffEntry> entries;
+
+  /// 市区町村コード先頭2桁で都道府県ごとにグループ化するか。
+  final bool groupByPrefecture;
 
   /// 市区町村コード先頭2桁 → 都道府県名 のマップ（VXSE53用）
   final Map<String, String>? prefectureMap;
@@ -23,8 +26,6 @@ class IntensityRegionList extends StatelessWidget {
     if (entries.isEmpty) {
       return const SizedBox.shrink();
     }
-
-    final intensityColors = context.designSystem.colorTheme.intensity;
 
     // 震度階級ごとにグループ化
     final grouped = groupBy<IntensityRegionDiffEntry, JmaIntensity>(
@@ -44,7 +45,7 @@ class IntensityRegionList extends StatelessWidget {
             _IntensityRow(
               intensity: intensity,
               entries: entries,
-              intensityColors: intensityColors,
+              groupByPrefecture: groupByPrefecture,
               prefectureMap: prefectureMap,
             ),
       ],
@@ -53,52 +54,33 @@ class IntensityRegionList extends StatelessWidget {
 }
 
 class _IntensityRow extends StatelessWidget {
-  const _IntensityRow({
+  const new({
     required this.intensity,
     required this.entries,
-    required this.intensityColors,
+    required this.groupByPrefecture,
     this.prefectureMap,
   });
 
   final JmaIntensity intensity;
   final List<IntensityRegionDiffEntry> entries;
-  final IntensityColors intensityColors;
+  final bool groupByPrefecture;
   final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
-    final colorEntry = intensityColors.fromJmaIntensity(intensity);
-    final theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 震度バッジ
-          Container(
-            width: 36,
-            height: 22,
-            decoration: BoxDecoration(
-              color: colorEntry.background,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              '${intensity.mainText}${intensity.suffix}',
-              style: TextStyle(
-                color: colorEntry.resolvedForeground,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                height: 1,
-              ),
-            ),
-          ),
+          JmaIntensityIcon(intensity: intensity, type: .filled, size: 28),
           const SizedBox(width: 8),
-          // 地域名リスト
           Expanded(
-            child: prefectureMap != null
-                ? _buildPrefectureGrouped(theme)
+            child: groupByPrefecture
+                ? _PrefectureRegionList(
+                    entries: entries,
+                    prefectureMap: prefectureMap,
+                  )
                 : Wrap(
                     spacing: 4,
                     runSpacing: 2,
@@ -111,39 +93,72 @@ class _IntensityRow extends StatelessWidget {
       ),
     );
   }
+}
 
-  /// 都道府県でグループ化して表示
-  Widget _buildPrefectureGrouped(ThemeData theme) {
+class _PrefectureRegionList extends StatelessWidget {
+  const new({
+    required this.entries,
+    required this.prefectureMap,
+  });
+
+  final List<IntensityRegionDiffEntry> entries;
+  final Map<String, String>? prefectureMap;
+
+  @override
+  Widget build(BuildContext context) {
     final byPrefecture = <String, List<IntensityRegionDiffEntry>>{};
     for (final entry in entries) {
       final prefCode = entry.code.length >= 2 ? entry.code.substring(0, 2) : '';
       (byPrefecture[prefCode] ??= []).add(entry);
     }
 
-    // 都道府県コード順にソート
     final sortedPrefCodes = byPrefecture.keys.toList()..sort();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final prefCode in sortedPrefCodes)
+          if (byPrefecture[prefCode] case final entries?)
+            _PrefectureRegionRow(
+              prefectureName: prefectureMap?[prefCode] ?? prefCode,
+              entries: entries,
+            ),
+      ],
+    );
+  }
+}
+
+class _PrefectureRegionRow extends StatelessWidget {
+  const new({
+    required this.prefectureName,
+    required this.entries,
+  });
+
+  final String prefectureName;
+  final List<IntensityRegionDiffEntry> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Wrap(
       spacing: 4,
       runSpacing: 2,
       children: [
-        for (final prefCode in sortedPrefCodes) ...[
-          Text(
-            prefectureMap![prefCode] ?? prefCode,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        Text(
+          prefectureName,
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
-          for (final entry in byPrefecture[prefCode]!)
-            _RegionChip(entry: entry),
-        ],
+        ),
+        for (final entry in entries) _RegionChip(entry: entry),
       ],
     );
   }
 }
 
 class _RegionChip extends StatelessWidget {
-  const _RegionChip({required this.entry});
+  const new({required this.entry});
 
   final IntensityRegionDiffEntry entry;
 

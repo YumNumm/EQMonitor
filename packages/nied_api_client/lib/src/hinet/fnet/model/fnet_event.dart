@@ -6,7 +6,7 @@ part 'fnet_event.g.dart';
 /// F-netの地震イベント
 @freezed
 abstract class FnetEvent with _$FnetEvent {
-  const factory FnetEvent({
+  const factory({
     /// 発生時刻(UT)
     required DateTime originTime,
 
@@ -56,23 +56,23 @@ abstract class FnetEvent with _$FnetEvent {
     required int numberOfStations,
   }) = _FnetEvent;
 
-  factory FnetEvent.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$FnetEventFromJson(json);
 }
 
 /// 角度のペア（2つの節面を表す）
 @freezed
 abstract class FnetAnglePair with _$FnetAnglePair {
-  const factory FnetAnglePair({
+  const factory({
     required double plane1,
     required double plane2,
   }) = _FnetAnglePair;
 
-  factory FnetAnglePair.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$FnetAnglePairFromJson(json);
 
   /// 文字列からパース（例: "68;181"）
-  factory FnetAnglePair.fromString(String value) {
+  factory fromString(String value) {
     final parts = value.split(';');
     if (parts.length != 2) {
       throw FormatException('Invalid angle pair format: $value');
@@ -87,7 +87,7 @@ abstract class FnetAnglePair with _$FnetAnglePair {
 /// モーメントテンソル成分
 @freezed
 abstract class FnetMomentTensor with _$FnetMomentTensor {
-  const factory FnetMomentTensor({
+  const factory({
     required double mxx,
     required double mxy,
     required double mxz,
@@ -96,6 +96,6 @@ abstract class FnetMomentTensor with _$FnetMomentTensor {
     required double mzz,
   }) = _FnetMomentTensor;
 
-  factory FnetMomentTensor.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$FnetMomentTensorFromJson(json);
 }

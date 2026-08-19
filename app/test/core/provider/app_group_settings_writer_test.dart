@@ -17,7 +17,7 @@ void main() {
 
   group('writeCurrentLocationRegionToAppGroup', () {
     test('地域を書き込むと code/name が保存され changed=true', () async {
-      final changed = await writeCurrentLocationRegionToAppGroup(
+      final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: 130010,
         regionName: '東京都２３区',
@@ -35,12 +35,12 @@ void main() {
     });
 
     test('同じ値の再書き込みは changed=false', () async {
-      await writeCurrentLocationRegionToAppGroup(
+      await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: 130010,
         regionName: '東京都２３区',
       );
-      final changed = await writeCurrentLocationRegionToAppGroup(
+      final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: 130010,
         regionName: '東京都２３区',
@@ -50,12 +50,12 @@ void main() {
     });
 
     test('null を渡すとキーが削除される', () async {
-      await writeCurrentLocationRegionToAppGroup(
+      await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: 130010,
         regionName: '東京都２３区',
       );
-      final changed = await writeCurrentLocationRegionToAppGroup(
+      final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: null,
         regionName: null,
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('既にキーが無い状態で null 書き込みは changed=false', () async {
-      final changed = await writeCurrentLocationRegionToAppGroup(
+      final changed = await AppGroupSettingsWriter.writeCurrentLocationRegion(
         prefs,
         regionCode: null,
         regionName: null,

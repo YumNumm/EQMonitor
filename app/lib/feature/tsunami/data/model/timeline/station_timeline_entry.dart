@@ -13,7 +13,7 @@ typedef StationObservationTimeline = List<StationObservationTimelineEntry>;
 @freezed
 abstract class StationForecastTimelineEntry
     with _$StationForecastTimelineEntry {
-  const factory StationForecastTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required DateTime? highTideAt,
     required DateTime? firstHeightArrivalTime,
@@ -32,7 +32,7 @@ abstract class StationForecastTimelineEntry
 @freezed
 abstract class StationObservationTimelineEntry
     with _$StationObservationTimelineEntry {
-  const factory StationObservationTimelineEntry({
+  const factory({
     // 追跡項目のフィールド
     required String? sensor,
     // first_height フィールド

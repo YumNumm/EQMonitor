@@ -9,7 +9,9 @@ enum DeviceType {
   @JsonValue('IOS')
   ios('IOS'),
   @JsonValue('ANDROID')
-  android('ANDROID');
+  android('ANDROID'),
+  @JsonValue('DESKTOP')
+  desktop('DESKTOP');
 
   const DeviceType(this.json);
 

@@ -8,5 +8,5 @@ part 'os_notification_permission_provider.g.dart';
 Future<OsNotificationPermission> osNotificationPermission(Ref ref) async {
   final messaging = ref.watch(firebaseMessagingProvider);
   final settings = await messaging.getNotificationSettings();
-  return settings.toOsNotificationPermission();
+  return OsNotificationPermission.fromNotificationSettings(settings);
 }

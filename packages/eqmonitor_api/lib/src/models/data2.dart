@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'schema_version.dart';
 import 'archives.dart';
 
 part 'data2.freezed.dart';
@@ -12,6 +13,10 @@ part 'data2.g.dart';
 @Freezed()
 abstract class Data2 with _$Data2 {
   const factory Data2({
+    @JsonKey(name: 'schema_version')
+    required SchemaVersion schemaVersion,
+    @JsonKey(name: 'generated_at')
+    required DateTime generatedAt,
     required List<Archives> archives,
   }) = _Data2;
 

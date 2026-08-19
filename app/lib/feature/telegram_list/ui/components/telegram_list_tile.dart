@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TelegramListTile extends StatelessWidget {
-  const TelegramListTile({required this.telegram, this.onTap, super.key});
+  const new({required this.telegram, this.onTap, super.key});
 
   final TelegramItem telegram;
   final VoidCallback? onTap;
@@ -44,10 +44,10 @@ class TelegramListTile extends StatelessWidget {
             value: dateFormat.format(telegram.pressAt.toLocal()),
           ),
           _InfoRow(label: '発表元', value: telegram.publishingOffice.join(', ')),
-          if (telegram.headline != null) ...[
+          if (telegram.headline case final headline?) ...[
             const SizedBox(height: 4),
             Text(
-              telegram.headline!,
+              headline,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: designSystem.colorTheme.onSurfaceVariant,
                 fontSize: 12,
@@ -73,7 +73,7 @@ class TelegramListTile extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

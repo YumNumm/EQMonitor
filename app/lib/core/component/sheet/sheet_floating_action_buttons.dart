@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
 class SheetFloatingActionButtons extends HookWidget {
-  const SheetFloatingActionButtons({
+  const new({
     required this.controller,
     required this.fab,
     super.key,

@@ -12,7 +12,7 @@ part 'parameter_json_parser.g.dart';
 ParameterJsonParser parameterJsonParser(Ref ref) => const ParameterJsonParser();
 
 final class ParameterJsonParser {
-  const ParameterJsonParser();
+  const new();
 
   ParameterSet parseSet({
     required AssetPackManifest manifest,

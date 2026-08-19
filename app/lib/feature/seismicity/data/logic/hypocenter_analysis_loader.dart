@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:eqmonitor/feature/seismicity/data/repository/hypocenter_analysis_repository.dart';
 
 class HypocenterAnalysisLoader {
-  const HypocenterAnalysisLoader({
+  const new({
     required HypocenterArchiveEventRepository repository,
   }) : _repository = repository;
 

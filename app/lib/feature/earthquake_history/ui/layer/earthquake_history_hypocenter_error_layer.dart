@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -18,7 +18,7 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// 震源座標の精度から誤差範囲を計算し、白い点線の矩形で表示する。
 class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
-  const EarthquakeHistoryHypocenterErrorLayer({
+  const new({
     required this.earthquake,
     this.parameter = const EarthquakeHistoryMapLayerParameter(),
     super.key,
@@ -77,7 +77,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
         geoJsonUpdater.reset();
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: const [
                 EarthquakeHistoryHypocenterErrorLayerBuilder.layerId,
@@ -144,11 +144,11 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
 }
 
 class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
-  const EarthquakeHistoryHypocenterErrorGeoJsonBuilder();
+  const new();
 
   String build({required Coordinate? coordinates, required int decimalPlaces}) {
     final polygon = switch (coordinates) {
-      CoordinateLatLng() => hypocenterErrorPolygon(
+      CoordinateLatLng() => HypocenterErrorRangeUtil.errorPolygon(
         lat: coordinates.latitude,
         lon: coordinates.longitude,
         decimalPlaces: decimalPlaces,
@@ -173,7 +173,7 @@ class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
 }
 
 class EarthquakeHistoryHypocenterErrorLayerBuilder {
-  const EarthquakeHistoryHypocenterErrorLayerBuilder();
+  const new();
 
   static const sourceId = 'eq-history-hypocenter-error';
   static const layerId = 'eq-history-hypocenter-error-line';

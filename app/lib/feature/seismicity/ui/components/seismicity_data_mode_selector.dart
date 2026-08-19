@@ -1,8 +1,8 @@
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_data_mode.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SeismicityDataModeSelector extends StatelessWidget {
-  const SeismicityDataModeSelector({
+  const new({
     required this.value,
     required this.onChanged,
     super.key,

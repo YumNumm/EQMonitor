@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.da
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -118,7 +118,7 @@ final class _SyncBuildTracker {
 }
 
 final class _TrackedPushTokenSyncNotifier extends PushTokenSyncNotifier {
-  _TrackedPushTokenSyncNotifier(this.tracker);
+  new(this.tracker);
 
   final _SyncBuildTracker tracker;
 

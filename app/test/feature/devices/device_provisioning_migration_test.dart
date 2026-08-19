@@ -155,7 +155,7 @@ void main() {
 }
 
 // 400 BadRequest を表す非再試行エラー。
-// 400 は mapDioToProvisioningException で InvalidRequestException に変換される。
+// 400 は DioExceptionMapper.map で InvalidRequestException に変換される。
 // RetryController は isRetryable=false で即座に rethrow するため遅延なし。
 Result<void, Exception> _badRequest() {
   final options = RequestOptions(path: '/v2/device/me/migrate');
@@ -187,7 +187,7 @@ final class _NoopPushTokenSync extends PushTokenSyncNotifier {
 // private class なので import 不可のためここに再定義する。
 
 class FakeDeviceRepository extends DeviceRepository {
-  FakeDeviceRepository({
+  new({
     required Result<RegisteredDevice, Exception> Function() getResult,
     required Result<RegisteredDevice, Exception> Function() putResult,
     required Result<void, Exception> Function() migrateResult,
@@ -238,7 +238,7 @@ class FakeDeviceRepository extends DeviceRepository {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

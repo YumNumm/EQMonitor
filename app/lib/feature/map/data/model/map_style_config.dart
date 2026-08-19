@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'map_style_config.freezed.dart';
@@ -8,14 +9,14 @@ part 'map_style_config.g.dart';
 /// マップのスタイル設定
 @freezed
 abstract class MapStyleConfig with _$MapStyleConfig {
-  const factory MapStyleConfig({
+  const factory({
     required MapStyleTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
     MapStyleColorScheme? colorScheme,
     @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
   }) = _MapStyleConfig;
 
-  factory MapStyleConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MapStyleConfigFromJson(json);
 }
 
@@ -25,7 +26,7 @@ enum MapStyleTheme { light, dark, system }
 /// マップのカラースキーム
 @freezed
 abstract class MapStyleColorScheme with _$MapStyleColorScheme {
-  const factory MapStyleColorScheme({
+  const factory({
     @ColorJsonConverter() required Color backgroundColor,
     @ColorJsonConverter() required Color landColor,
     @ColorJsonConverter() required Color lineColor,
@@ -33,11 +34,11 @@ abstract class MapStyleColorScheme with _$MapStyleColorScheme {
     @ColorJsonConverter() required Color japanLineColor,
   }) = _MapStyleColorScheme;
 
-  factory MapStyleColorScheme.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$MapStyleColorSchemeFromJson(json);
 
   /// ライトテーマのカラースキーム
-  factory MapStyleColorScheme.light() {
+  factory light() {
     const colorScheme = ColorScheme.light();
     return MapStyleColorScheme(
       backgroundColor: colorScheme.surface,
@@ -49,14 +50,14 @@ abstract class MapStyleColorScheme with _$MapStyleColorScheme {
   }
 
   /// ダークテーマのカラースキーム
-  factory MapStyleColorScheme.dark() {
+  factory dark() {
     const colorScheme = ColorScheme.dark();
     return MapStyleColorScheme(
       backgroundColor: Color.lerp(
         colorScheme.surfaceContainerLowest,
         Colors.blue.shade900,
         0.1,
-      )!,
+      ).orFailBecause('両引数が非nullのためColor.lerpは必ず非nullを返す'),
       landColor: colorScheme.surfaceContainerHighest,
       lineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerHighest,

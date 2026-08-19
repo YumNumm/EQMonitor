@@ -6,12 +6,13 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeEditorPage extends ConsumerWidget {
-  const ThemeEditorPage({required this.mode, super.key});
+  const new({required this.mode, super.key});
 
   final ThemeBrightnessMode mode;
 
@@ -120,7 +121,7 @@ class ThemeEditorPage extends ConsumerWidget {
 }
 
 class _ColorFieldTile extends StatelessWidget {
-  const _ColorFieldTile({
+  const new({
     required this.def,
     required this.colorSet,
     required this.onChanged,
@@ -162,7 +163,7 @@ class _ColorFieldTile extends StatelessWidget {
 }
 
 class _IntensityFieldTile extends StatelessWidget {
-  const _IntensityFieldTile({
+  const new({
     required this.def,
     required this.colorSet,
     required this.onChanged,
@@ -179,58 +180,65 @@ class _IntensityFieldTile extends StatelessWidget {
 
     return ListTile(
       title: Text(def.label),
-      subtitle: Row(
-        children: [
-          const Text('文字色: '),
-          SegmentedButton<bool>(
-            key: ValueKey('intensity-fg-mode-$keySuffix'),
-            segments: const [
-              ButtonSegment(value: true, label: Text('自動')),
-              ButtonSegment(value: false, label: Text('手動')),
-            ],
-            selected: {entry.foreground is IntensityTextColorAuto},
-            onSelectionChanged: (selection) {
-              final isAuto = selection.first;
-              onChanged(
-                entry.copyWith(
-                  foreground: isAuto
-                      ? const IntensityTextColor.auto()
-                      : IntensityTextColor.manual(
-                          color: entry.resolvedForeground,
+      subtitle: !def.group.hasForeground
+          ? null
+          : Row(
+              children: [
+                const Text('文字色: '),
+                SegmentedButton<bool>(
+                  key: ValueKey('intensity-fg-mode-$keySuffix'),
+                  segments: const [
+                    ButtonSegment(value: true, label: Text('自動')),
+                    ButtonSegment(value: false, label: Text('手動')),
+                  ],
+                  selected: {entry.foreground is IntensityTextColorAuto},
+                  onSelectionChanged: (selection) {
+                    final isAuto = selection.first;
+                    onChanged(
+                      entry.copyWith(
+                        foreground: isAuto
+                            ? const IntensityTextColor.auto()
+                            : IntensityTextColor.manual(
+                                color: entry.resolvedForeground,
+                              ),
+                      ),
+                    );
+                  },
+                ),
+                if (entry.foreground case IntensityTextColorManual(
+                  :final color,
+                ))
+                  GestureDetector(
+                    key: ValueKey('intensity-fg-manual-$keySuffix'),
+                    onTap: () async {
+                      final picked = await ThemeEditorPage._pickColor(
+                        context,
+                        color,
+                      );
+                      if (picked == null) {
+                        return;
+                      }
+                      onChanged(
+                        entry.copyWith(
+                          foreground: IntensityTextColor.manual(color: picked),
                         ),
-                ),
-              );
-            },
-          ),
-          if (entry.foreground case IntensityTextColorManual(:final color))
-            GestureDetector(
-              key: ValueKey('intensity-fg-manual-$keySuffix'),
-              onTap: () async {
-                final picked = await ThemeEditorPage._pickColor(context, color);
-                if (picked == null) {
-                  return;
-                }
-                onChanged(
-                  entry.copyWith(
-                    foreground: IntensityTextColor.manual(color: picked),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 8),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: context.designSystem.colorTheme.outline,
+                        ),
+                      ),
+                    ),
                   ),
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.only(left: 8),
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.designSystem.colorTheme.outline,
-                  ),
-                ),
-              ),
+              ],
             ),
-        ],
-      ),
       trailing: GestureDetector(
         key: ValueKey('intensity-bg-$keySuffix'),
         onTap: () async {
@@ -257,26 +265,21 @@ class _IntensityFieldTile extends StatelessWidget {
   }
 }
 
-class _ColorPickerDialog extends StatefulWidget {
-  const _ColorPickerDialog({required this.initial});
+class _ColorPickerDialog extends HookWidget {
+  const new({required this.initial});
 
   final Color initial;
 
   @override
-  State<_ColorPickerDialog> createState() => _ColorPickerDialogState();
-}
-
-class _ColorPickerDialogState extends State<_ColorPickerDialog> {
-  late Color _current = widget.initial;
-
-  @override
   Widget build(BuildContext context) {
+    final current = useState(initial);
+
     return AlertDialog.adaptive(
       title: const Text('色を選択'),
       content: SingleChildScrollView(
         child: ColorPicker(
-          pickerColor: _current,
-          onColorChanged: (color) => setState(() => _current = color),
+          pickerColor: current.value,
+          onColorChanged: (color) => current.value = color,
         ),
       ),
       actions: [
@@ -285,7 +288,7 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
           child: const Text('キャンセル'),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop(_current),
+          onPressed: () => Navigator.of(context).pop(current.value),
           child: const Text('適用'),
         ),
       ],

@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class LiveMonitorSplitViewportObserver extends SingleChildRenderObjectWidget {
-  const LiveMonitorSplitViewportObserver({
+  const new({
     required this.active,
     required this.environment,
     required this.onMeasurementChanged,
@@ -37,7 +37,7 @@ class LiveMonitorSplitViewportObserver extends SingleChildRenderObjectWidget {
 }
 
 class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
-  LiveMonitorSplitViewportRenderObject({
+  new({
     required bool active,
     required LiveMonitorSplitViewportEnvironment environment,
     required ValueChanged<LiveMonitorSplitViewportMeasurement>
@@ -54,6 +54,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
   LiveMonitorSplitViewportMeasurement? _pendingMeasurement;
   bool _measurementIsCurrent;
   bool _reportScheduled = false;
+  static const _splitRatioCalculator = LiveMonitorSplitRatioCalculator();
 
   set active(bool value) {
     if (_active == value) {
@@ -102,7 +103,7 @@ class LiveMonitorSplitViewportRenderObject extends RenderProxyBox {
       viewInsets: _environment.viewInsets,
       orientation: _environment.orientation,
     );
-    final shouldReport = shouldReportLiveMonitorSplitViewportMeasurement(
+    final shouldReport = _splitRatioCalculator.shouldReportMeasurement(
       previous: _reportedMeasurement,
       current: measurement,
     );

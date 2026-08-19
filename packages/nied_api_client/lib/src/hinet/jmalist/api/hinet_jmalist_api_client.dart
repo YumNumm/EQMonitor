@@ -4,7 +4,7 @@ import 'package:nied_api_client/src/hinet/jmalist/parser/hinet_jmalist_parser.da
 
 /// [HinetJmalistApiClient.fetchRange] の進捗。
 class HinetJmalistFetchProgress {
-  const HinetJmalistFetchProgress({
+  const new({
     required this.completedRequests,
     required this.totalRequests,
   });
@@ -21,7 +21,7 @@ class HinetJmalistFetchProgress {
 /// ([failedFrom]/[failedTo])、元の例外([cause])を保持する。呼び出し側は
 /// 部分結果を破棄せず活用するかどうかを判断できる。
 class HinetJmalistPartialFetchException implements Exception {
-  const HinetJmalistPartialFetchException({
+  const new({
     required this.partialResult,
     required this.failedFrom,
     required this.failedTo,
@@ -56,7 +56,7 @@ class HinetJmalistPartialFetchException implements Exception {
 /// NIED により震源情報の二次配布が禁止されているため、このクライアントは
 /// 一般公開機能から到達不可能なデバッグ画面専用として扱うこと。
 class HinetJmalistApiClient {
-  HinetJmalistApiClient(
+  new(
     this._dio, {
     this.requestInterval = const Duration(seconds: 2),
     this.parser = const HinetJmalistParser(),

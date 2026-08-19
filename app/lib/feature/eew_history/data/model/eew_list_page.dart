@@ -5,7 +5,7 @@ part 'eew_list_page.freezed.dart';
 
 @freezed
 abstract class EewListPage with _$EewListPage {
-  const factory EewListPage({
+  const factory({
     required List<EewTelegramItem> items,
     required String? nextToken,
   }) = _EewListPage;

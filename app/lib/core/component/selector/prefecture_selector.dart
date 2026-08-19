@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 都道府県選択結果
@@ -8,7 +8,7 @@ typedef PrefectureSelection = ({String code, String name});
 
 /// 都道府県選択ドロップダウン
 class PrefectureSelector extends ConsumerWidget {
-  const PrefectureSelector({
+  const new({
     required this.selectedCode,
     required this.onChanged,
     this.hintText = '都道府県を選択',

@@ -1,6 +1,6 @@
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_bounds.dart';
 import 'package:eqmonitor/feature/seismicity/ui/hook/use_rectangle_selection.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
@@ -11,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 /// [onSelectionEnd] を呼ぶ。[enabled] が false の場合は
 /// [IgnorePointer] で下のマップ操作(パン/ズーム)を妨げない。
 class SeismicitySelectionOverlay extends HookWidget {
-  const SeismicitySelectionOverlay({
+  const new({
     required this.enabled,
     required this.mapController,
     required this.onSelectionEnd,
@@ -24,7 +24,7 @@ class SeismicitySelectionOverlay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selection = useRectangleSelection();
+    final selection = RectangleSelectionHook.use();
 
     return IgnorePointer(
       ignoring: !enabled,
@@ -45,7 +45,7 @@ class SeismicitySelectionOverlay extends HookWidget {
   }
 
   void _handleDragEnd(RectangleSelectionState selection) {
-    // 退化した(ほぼ動いていない)矩形は useRectangleSelection.endDrag が
+    // 退化した(ほぼ動いていない)矩形は RectangleSelectionHook.use().endDrag が
     // null を返すため、ここでは選択なしとして扱う。
     final rect = selection.endDrag();
     if (rect == null) {
@@ -81,7 +81,7 @@ class SeismicitySelectionOverlay extends HookWidget {
 }
 
 class _SelectionPainter extends CustomPainter {
-  const _SelectionPainter({required this.start, required this.current});
+  const new({required this.start, required this.current});
 
   final Offset? start;
   final Offset? current;

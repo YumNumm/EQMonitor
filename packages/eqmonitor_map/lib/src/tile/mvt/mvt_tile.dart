@@ -11,13 +11,13 @@ enum MvtGeometryType {
 /// decode結果のtile。frame hot pathで毎tile生成されるdecode結果であり
 /// 永続化しないため、Freezedにはしない。
 final class MvtTile {
-  const MvtTile({required this.layers});
+  const new({required this.layers});
 
   final List<MvtLayer> layers;
 }
 
 final class MvtLayer {
-  const MvtLayer({
+  const new({
     required this.name,
     required this.version,
     required this.extent,
@@ -33,7 +33,7 @@ final class MvtLayer {
 /// properties(tag/key/value)とfeature IDはwire上ではskipするが、この
 /// 縦切りではlayer名だけでstylingが足りるためモデルへ持たせない。
 final class MvtFeature {
-  const MvtFeature({required this.type, required this.rings});
+  const new({required this.type, required this.rings});
 
   final MvtGeometryType type;
 

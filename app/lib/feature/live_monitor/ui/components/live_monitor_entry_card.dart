@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorEntryCard extends StatelessWidget {
-  const LiveMonitorEntryCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

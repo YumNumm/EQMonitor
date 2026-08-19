@@ -1,10 +1,19 @@
 name: eqmonitor_lints_plugin
-description: Custom analyzer plugin (lint rules) for EQMonitor. Standalone (not in pub workspace) to use analyzer 13 independently of the app workspace.
+description: Custom analyzer plugin (lint rules) for EQMonitor. Keeps a wide analyzer constraint so it can co-resolve with other analyzer plugins in the analysis server's synthetic plugin package.
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.14.0-29.0.dev
+
+resolution: workspace
 
 dependencies:
   analysis_server_plugin: ^0.3.8
-  analyzer: ^13.0.0
+  # analysis server は analysis_options.yaml の `plugins:` に並ぶ全プラグインを
+  # 1つの合成パッケージへまとめて `pub upgrade` する。
+  # flutter_hooks_lint_plugin ^0.8.0 が analyzer ^14.1.0 を要求するため、
+  # ここを ^13.0.0 に固定すると両プラグインが解決不能になる。
+  analyzer: ">=13.0.0 <15.0.0"
+
+dev_dependencies:
+  test: ^1.15.0

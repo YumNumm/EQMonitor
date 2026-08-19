@@ -9,7 +9,7 @@ part 'qzss_dc_report.g.dart';
 /// Hypocenter coordinates data class.
 @JsonSerializable()
 class HypocenterCoordinates {
-  const HypocenterCoordinates({
+  const new({
     required this.latNs,
     required this.latD,
     required this.latM,
@@ -20,7 +20,7 @@ class HypocenterCoordinates {
     required this.lonS,
   });
 
-  factory HypocenterCoordinates.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HypocenterCoordinatesFromJson(json);
 
   final int latNs;
@@ -57,10 +57,10 @@ class HypocenterCoordinates {
 /// This is a sealed class representing all types of DCR/DCX reports.
 @freezed
 sealed class QzssDcReport with _$QzssDcReport {
-  const QzssDcReport._();
+  const new _();
 
   /// Earthquake Early Warning Report.
-  const factory QzssDcReport.earthquakeEarlyWarning({
+  const factory earthquakeEarlyWarning({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -104,7 +104,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportEarthquakeEarlyWarning;
 
   /// Hypocenter Report.
-  const factory QzssDcReport.hypocenter({
+  const factory hypocenter({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -138,7 +138,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportHypocenter;
 
   /// Seismic Intensity Report.
-  const factory QzssDcReport.seismicIntensity({
+  const factory seismicIntensity({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -167,7 +167,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportSeismicIntensity;
 
   /// Tsunami Report.
-  const factory QzssDcReport.tsunami({
+  const factory tsunami({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -200,7 +200,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportTsunami;
 
   /// Nankai Trough Earthquake Report.
-  const factory QzssDcReport.nankaiTroughEarthquake({
+  const factory nankaiTroughEarthquake({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -229,7 +229,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportNankaiTroughEarthquake;
 
   /// Northwest Pacific Tsunami Report.
-  const factory QzssDcReport.northwestPacificTsunami({
+  const factory northwestPacificTsunami({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -260,7 +260,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportNorthwestPacificTsunami;
 
   /// Flood Report.
-  const factory QzssDcReport.flood({
+  const factory flood({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -288,7 +288,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportFlood;
 
   /// Marine Report.
-  const factory QzssDcReport.marine({
+  const factory marine({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -316,7 +316,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportMarine;
 
   /// Weather Report.
-  const factory QzssDcReport.weather({
+  const factory weather({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -346,7 +346,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportWeather;
 
   /// Volcano Report.
-  const factory QzssDcReport.volcano({
+  const factory volcano({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -378,7 +378,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportVolcano;
 
   /// Ash Fall Report.
-  const factory QzssDcReport.ashFall({
+  const factory ashFall({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -412,7 +412,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportAshFall;
 
   /// Typhoon Report.
-  const factory QzssDcReport.typhoon({
+  const factory typhoon({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -453,7 +453,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportTyphoon;
 
   /// DCX Null Message.
-  const factory QzssDcReport.dcxNull({
+  const factory dcxNull({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -467,7 +467,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportDcxNull;
 
   /// DCX Outside Japan Message.
-  const factory QzssDcReport.dcxOutsideJapan({
+  const factory dcxOutsideJapan({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -481,7 +481,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportDcxOutsideJapan;
 
   /// DCX L-Alert Message.
-  const factory QzssDcReport.dcxLAlert({
+  const factory dcxLAlert({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -495,7 +495,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportDcxLAlert;
 
   /// DCX J-Alert Message.
-  const factory QzssDcReport.dcxJAlert({
+  const factory dcxJAlert({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -509,7 +509,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportDcxJAlert;
 
   /// DCX Municipality-Transmitted Information Message.
-  const factory QzssDcReport.dcxMTInfo({
+  const factory dcxMTInfo({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -523,7 +523,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   }) = QzssDcReportDcxMTInfo;
 
   /// DCX Unknown Message.
-  const factory QzssDcReport.dcxUnknown({
+  const factory dcxUnknown({
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
@@ -536,6 +536,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     int? satellitePrn,
   }) = QzssDcReportDcxUnknown;
 
-  factory QzssDcReport.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$QzssDcReportFromJson(json);
 }

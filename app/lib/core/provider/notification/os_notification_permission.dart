@@ -1,31 +1,21 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class OsNotificationPermission {
-  const OsNotificationPermission._({
-    required this.authorizationStatus,
-    required AppleNotificationSetting criticalAlert,
-  }) : _criticalAlert = criticalAlert;
-
-  factory OsNotificationPermission.fromNotificationSettings(
+class const OsNotificationPermission._({
+  required final AuthorizationStatus authorizationStatus,
+  required final AppleNotificationSetting _criticalAlert,
+}) {
+  factory fromNotificationSettings(
     NotificationSettings settings,
-  ) {
-    return OsNotificationPermission._(
-      authorizationStatus: settings.authorizationStatus,
-      criticalAlert: settings.criticalAlert,
-    );
-  }
+  ) => OsNotificationPermission._(
+    authorizationStatus: settings.authorizationStatus,
+    criticalAlert: settings.criticalAlert,
+  );
 
-  final AuthorizationStatus authorizationStatus;
-  final AppleNotificationSetting _criticalAlert;
+  bool get isOsNotificationGranted => authorizationStatus == .authorized;
 
-  bool get isOsNotificationGranted =>
-      authorizationStatus == AuthorizationStatus.authorized;
+  bool get isCriticalAlertSupported => _criticalAlert != .notSupported;
 
-  bool get isCriticalAlertSupported =>
-      _criticalAlert != AppleNotificationSetting.notSupported;
-
-  bool get isCriticalAlertGranted =>
-      _criticalAlert == AppleNotificationSetting.enabled;
+  bool get isCriticalAlertGranted => _criticalAlert == .enabled;
 
   @override
   bool operator ==(Object other) {
@@ -37,9 +27,4 @@ class OsNotificationPermission {
 
   @override
   int get hashCode => Object.hash(authorizationStatus, _criticalAlert);
-}
-
-extension NotificationSettingsOsPermissionExtension on NotificationSettings {
-  OsNotificationPermission toOsNotificationPermission() =>
-      OsNotificationPermission.fromNotificationSettings(this);
 }

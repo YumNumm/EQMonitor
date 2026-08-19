@@ -5,10 +5,10 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayBanner extends StatelessWidget {
-  const EewWarningOverlayBanner({
+  const new({
     required this.displayModel,
     required this.onExpand,
     required this.onClose,
@@ -23,15 +23,15 @@ class EewWarningOverlayBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final arrivalText = formatEewWarningOverlayArrival(
+    final arrivalText = const EewWarningOverlayArrivalFormatter().format(
       state: displayModel.arrivalState,
       secondsUntilArrival: displayModel.secondsUntilArrival,
     );
-    final intensityText = formatEewWarningOverlayIntensity(
+    final intensityText = const EewWarningOverlayIntensityFormatter().format(
       intensity: displayModel.localIntensity,
       isOver: displayModel.localIntensityIsOver,
     );
-    final bannerLabel = formatEewWarningOverlayBannerLabel(
+    final bannerLabel = const EewWarningOverlayLabelFormatter().bannerLabel(
       source: displayModel.source,
       reportLabel: displayModel.reportLabel,
     );

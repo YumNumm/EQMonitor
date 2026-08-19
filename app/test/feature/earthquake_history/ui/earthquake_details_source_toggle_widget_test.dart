@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/collapsible_s
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,7 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// ページ全体（MapLibre含む）を pump せずに、
 /// _LoadedContent のソース切り替えロジックを直接検証するハーネス。
 class _SourceToggleHarness extends HookConsumerWidget {
-  const _SourceToggleHarness({required this.earthquake});
+  const new({required this.earthquake});
 
   final Earthquake earthquake;
 

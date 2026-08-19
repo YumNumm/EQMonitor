@@ -1,25 +1,22 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_paging_list.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
-  const EarthquakeHistoryPage({super.key, this.initialParameter});
+  const new({super.key, this.initialParameter});
 
   final EarthquakeHistoryParameter? initialParameter;
 
@@ -30,7 +27,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 }
 
 class _SliverListBody extends HookConsumerWidget {
-  const _SliverListBody({this.initialParameter});
+  const new({this.initialParameter});
 
   final EarthquakeHistoryParameter? initialParameter;
 
@@ -46,6 +43,7 @@ class _SliverListBody extends HookConsumerWidget {
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
     );
+    final configAsync = ref.watch(earthquakeHistoryConfigProvider);
 
     // デフォルト(発生時刻↓)以外のソート中は、戻る操作でページを閉じずに
     // ソートをデフォルトへ戻す
@@ -63,45 +61,62 @@ class _SliverListBody extends HookConsumerWidget {
           );
         }
       },
-      child: dataSourceAsync.when(
-        loading: () => const _EarthquakeHistorySkeleton(),
+      child: configAsync.when(
+        loading: () => const EarthquakeHistorySkeleton(),
         error: (error, _) => ErrorCard(
           error: error,
-          onReload: () async =>
-              ref.refresh(earthquakeHistoryDataSourceProvider(parameter.value)),
+          onReload: () async {
+            ref.invalidate(earthquakeHistoryConfigProvider);
+            await ref.read(earthquakeHistoryConfigProvider.future);
+          },
         ),
-        data: (dataSource) => _PagingBody(
-          dataSource: dataSource,
-          parameter: parameter,
-          onParameterChanged: (result) => parameter.value = result,
-          onRefresh: () => dataSource.refresh(),
+        data: (config) => dataSourceAsync.when(
+          loading: () => const EarthquakeHistorySkeleton(),
+          error: (error, _) => ErrorCard(
+            error: error,
+            onReload: () async => ref.refresh(
+              earthquakeHistoryDataSourceProvider(parameter.value),
+            ),
+          ),
+          data: (dataSource) => _PagingBody(
+            dataSource: dataSource,
+            parameter: parameter,
+            config: config.list,
+            onParameterChanged: (result) => parameter.value = result,
+            onRefresh: () => dataSource.refresh(),
+          ),
         ),
       ),
     );
   }
 }
 
-class _PagingBody extends StatelessWidget {
-  const _PagingBody({
+class _PagingBody extends ConsumerWidget {
+  const new({
     required this.dataSource,
     required this.parameter,
+    required this.config,
     required this.onParameterChanged,
     required this.onRefresh,
   });
 
   final EarthquakeHistoryDataSource dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
+  final EarthquakeHistoryListConfig config;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 広告非表示時は広告分の高さを確保しない
+    final adBannerHeight = AdBanner.heightOf(ref);
+
     return RefreshIndicator(
       onRefresh: onRefresh,
       edgeOffset:
           MediaQuery.paddingOf(context).top +
           kToolbarHeight +
-          AdSize.banner.height.toDouble() +
+          adBannerHeight +
           EarthquakeHistoryParameterPersistentDelegate.height,
       child: CustomScrollView(
         slivers: [
@@ -109,10 +124,12 @@ class _PagingBody extends StatelessWidget {
             pinned: true,
             centerTitle: false,
             title: const Text('地震履歴'),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(AdSize.banner.height.toDouble()),
-              child: const AdBanner(),
-            ),
+            bottom: adBannerHeight == 0
+                ? null
+                : PreferredSize(
+                    preferredSize: Size.fromHeight(adBannerHeight),
+                    child: const AdBanner(),
+                  ),
           ),
           SliverPersistentHeader(
             pinned: true,
@@ -126,40 +143,10 @@ class _PagingBody extends StatelessWidget {
               isRevalidating: dataSource.isRevalidating,
             ),
           ),
-          SliverGroupedPagingList<String?, String, EarthquakePartial>(
+          EarthquakeHistoryPagingList(
             dataSource: dataSource,
-            stickyHeader: true,
-            headerBuilder: (_, date, _) => _DateHeader(date: date),
-            itemBuilder: (context, item, globalIndex, localIndex) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                EarthquakeHistoryListTile(
-                  item: item,
-                  searchParameter: parameter.value,
-                  onTap: () async => EarthquakeHistoryDetailsRoute(
-                    eventId: item.earthquake.eventId,
-                  ).push<void>(context),
-                  visualDensity: VisualDensity.compact,
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0,
-                  color: context.designSystem.colorTheme.onInverseSurface,
-                ),
-              ],
-            ),
-            initialLoadingWidget: const _EarthquakeHistorySkeleton(
-              scrollable: false,
-            ),
-            appendLoadingWidget: const _EarthquakeHistorySkeleton(
-              itemCount: 2,
-              scrollable: false,
-            ),
-            errorBuilder: (context, error, stackTrace) => ErrorCard(
-              error: error,
-              onReload: () async => dataSource.refresh(),
-            ),
-            emptyWidget: const EarthquakeHistoryNotFound(),
+            parameter: parameter.value,
+            config: config,
           ),
           SliverToBoxAdapter(
             child: AppendLoadStateBuilder(
@@ -170,60 +157,6 @@ class _PagingBody extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _EarthquakeHistorySkeleton extends StatelessWidget {
-  const _EarthquakeHistorySkeleton({
-    this.itemCount = 5,
-    this.scrollable = true,
-  });
-
-  final int itemCount;
-  final bool scrollable;
-
-  @override
-  Widget build(BuildContext context) {
-    final tiles = [
-      for (final i in List.generate(itemCount, (i) => i))
-        ListTile(
-          leading: const CircleAvatar(radius: 16),
-          title: Text('震源地 $i'),
-          subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
-          trailing: const Icon(Icons.chevron_right_rounded),
-        ),
-    ];
-
-    return Skeletonizer(
-      child: scrollable
-          ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
-    );
-  }
-}
-
-class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
-
-  final String date;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final designSystem = context.designSystem;
-    return Container(
-      color: designSystem.colorTheme.surfaceContainer,
-      padding: EdgeInsets.symmetric(
-        horizontal: designSystem.spacing.lg,
-        vertical: designSystem.spacing.xs,
-      ),
-      child: Text(
-        date,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: designSystem.colorTheme.onSurface,
-        ),
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_feed_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,7 +26,7 @@ FeedItem _item({
 );
 
 class _FakeFeedNotifier extends FeedNotifier {
-  _FakeFeedNotifier(this.items);
+  new(this.items);
 
   final List<FeedItem> items;
 
@@ -35,7 +35,7 @@ class _FakeFeedNotifier extends FeedNotifier {
 }
 
 class _FakeFeedLastRead extends FeedLastRead {
-  _FakeFeedLastRead(this.initial);
+  new(this.initial);
 
   final DateTime? initial;
   final markReadCalls = <DateTime>[];

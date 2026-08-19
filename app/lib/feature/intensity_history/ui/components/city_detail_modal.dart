@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -21,57 +21,59 @@ enum _AreaDetailType {
   prefecture(label: '都道府県'),
   city(label: '市区町村');
 
-  const _AreaDetailType({required this.label});
+  new({required this.label});
   final String label;
 }
 
-Future<void> showPrefectureDetailModal(
-  BuildContext context, {
-  required String prefectureCode,
-  required String prefectureName,
-  HighestIntensityEntry? summary,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  clipBehavior: Clip.antiAlias,
-  builder: (context) => _AreaDetailModal(
-    areaType: _AreaDetailType.prefecture,
-    areaName: prefectureName,
-    parentAreaName: null,
-    parameter: EarthquakeHistoryParameter.prefecture(
-      prefectureCode: prefectureCode,
-      sortBy: EarthquakeSortBy.eventId,
-      sortOrder: SortOrder.desc,
+class AreaDetailModalAction {
+  Future<void> showPrefecture(
+    BuildContext context, {
+    required String prefectureCode,
+    required String prefectureName,
+    HighestIntensityEntry? summary,
+  }) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    clipBehavior: Clip.antiAlias,
+    builder: (context) => _AreaDetailModal(
+      areaType: _AreaDetailType.prefecture,
+      areaName: prefectureName,
+      parentAreaName: null,
+      parameter: EarthquakeHistoryParameter.prefecture(
+        prefectureCode: prefectureCode,
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      ),
+      summary: summary,
     ),
-    summary: summary,
-  ),
-);
+  );
 
-Future<void> showCityDetailModal(
-  BuildContext context, {
-  required String cityCode,
-  required String cityName,
-  required String regionName,
-  HighestIntensityEntry? summary,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  clipBehavior: Clip.antiAlias,
-  builder: (context) => _AreaDetailModal(
-    areaType: _AreaDetailType.city,
-    areaName: cityName,
-    parentAreaName: regionName,
-    parameter: EarthquakeHistoryParameter.city(
-      cityCode: cityCode,
-      sortBy: EarthquakeSortBy.eventId,
-      sortOrder: SortOrder.desc,
+  Future<void> showCity(
+    BuildContext context, {
+    required String cityCode,
+    required String cityName,
+    required String regionName,
+    HighestIntensityEntry? summary,
+  }) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    clipBehavior: Clip.antiAlias,
+    builder: (context) => _AreaDetailModal(
+      areaType: _AreaDetailType.city,
+      areaName: cityName,
+      parentAreaName: regionName,
+      parameter: EarthquakeHistoryParameter.city(
+        cityCode: cityCode,
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+      ),
+      summary: summary,
     ),
-    summary: summary,
-  ),
-);
+  );
+}
 
 class _AreaDetailModal extends ConsumerWidget {
-  const _AreaDetailModal({
+  const new({
     required this.areaType,
     required this.areaName,
     required this.parentAreaName,
@@ -119,9 +121,8 @@ class _AreaDetailModal extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
                   '観測した地震',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -161,7 +162,7 @@ class _AreaDetailModal extends ConsumerWidget {
 }
 
 class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
-  const _AreaEarthquakeListSliverGroup({
+  const new({
     required this.parameter,
     required this.page,
   });
@@ -213,7 +214,9 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
                         activeCursor.value = nextToken;
                         try {
                           await ref
-                              .read(earthquakeHistoryProvider(parameter).notifier)
+                              .read(
+                                earthquakeHistoryProvider(parameter).notifier,
+                              )
                               .fetchNextData();
                         } finally {
                           if (activeCursor.value == nextToken) {
@@ -232,7 +235,7 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
 }
 
 class _InitialLoadingSliver extends StatelessWidget {
-  const _InitialLoadingSliver();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +275,7 @@ class _DragHandle extends StatelessWidget {
 }
 
 class _SummarySection extends StatelessWidget {
-  const _SummarySection({
+  const new({
     required this.areaType,
     required this.parentAreaName,
     required this.areaName,

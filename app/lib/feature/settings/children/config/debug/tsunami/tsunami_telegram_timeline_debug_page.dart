@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/timeline/tsunami_timeline.d
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_meta.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegram_timeline_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
@@ -18,23 +18,16 @@ import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 /// [tsunamiId] に対応する [TsunamiTimeline] を取得し、
 /// 各地域・観測点・沖合観測局の追跡項目を 2 次元スクロールテーブルで表示する。
 class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
-  const TsunamiTelegramTimelineDebugPage({
-    required this.tsunamiId,
-    super.key,
-  });
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncValue = ref.watch(
-      tsunamiTelegramTimelineProvider(tsunamiId),
-    );
+    final asyncValue = ref.watch(tsunamiTelegramTimelineProvider(tsunamiId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Timeline: $tsunamiId'),
-      ),
+      appBar: AppBar(title: Text('Timeline: $tsunamiId')),
       body: Stack(
         children: [
           switch (asyncValue) {
@@ -62,7 +55,7 @@ class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
 }
 
 class _TimelineBody extends StatelessWidget {
-  const _TimelineBody({required this.timeline});
+  const new({required this.timeline});
 
   final TsunamiTimeline timeline;
 
@@ -120,12 +113,8 @@ class _TimelineBody extends StatelessWidget {
           ),
         };
       },
-      cellBuilder: (context, vicinity) => _buildCell(
-        context,
-        vicinity,
-        rows: rows,
-        telegrams: telegrams,
-      ),
+      cellBuilder: (context, vicinity) =>
+          _buildCell(context, vicinity, rows: rows, telegrams: telegrams),
     );
   }
 
@@ -167,15 +156,9 @@ class _TimelineBody extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
-              Text(
-                _fmtDt(t.publishedAt),
-                style: theme.textTheme.labelSmall,
-              ),
+              Text(_fmtDt(t.publishedAt), style: theme.textTheme.labelSmall),
               if (t.serialNo != null)
-                Text(
-                  '#${t.serialNo}',
-                  style: theme.textTheme.labelSmall,
-                ),
+                Text('#${t.serialNo}', style: theme.textTheme.labelSmall),
             ],
           ),
         ),
@@ -322,21 +305,21 @@ class _TimelineBody extends StatelessWidget {
     return null;
   }
 
-  String? _forecastFirstHeightCell(
-    FirstHeightTimeline entries,
-    String id,
-  ) {
+  String? _forecastFirstHeightCell(FirstHeightTimeline entries, String id) {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.arrivalTime != null) {
-          parts.add(_fmtDt(e.arrivalTime!));
+        final arrivalTime = e.arrivalTime;
+        if (arrivalTime != null) {
+          parts.add(_fmtDt(arrivalTime));
         }
-        if (e.condition != null) {
-          parts.add(e.condition!.name);
+        final condition = e.condition;
+        if (condition != null) {
+          parts.add(condition.name);
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -344,24 +327,24 @@ class _TimelineBody extends StatelessWidget {
     return null;
   }
 
-  String? _forecastMaxHeightCell(
-    MaxHeightTimeline entries,
-    String id,
-  ) {
+  String? _forecastMaxHeightCell(MaxHeightTimeline entries, String id) {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.qualitative != null) {
-          parts.add(e.qualitative!.name);
+        final qualitative = e.qualitative;
+        if (qualitative != null) {
+          parts.add(qualitative.name);
         }
-        if (e.value != null) {
-          parts.add('${e.value}m${e.isOver == true ? '+' : ''}');
+        final value = e.value;
+        if (value != null) {
+          parts.add('${value}m${e.isOver == true ? '+' : ''}');
         }
         if (e.isImportant == true) {
           parts.add('重要');
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -376,14 +359,16 @@ class _TimelineBody extends StatelessWidget {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.arrivalTime != null) {
-          parts.add(_fmtDt(e.arrivalTime!));
+        final arrivalTime = e.arrivalTime;
+        if (arrivalTime != null) {
+          parts.add(_fmtDt(arrivalTime));
         }
         if (e.isAlreadyArrived == true) {
           parts.add('到達済');
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -398,17 +383,20 @@ class _TimelineBody extends StatelessWidget {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.qualitative != null) {
-          parts.add(e.qualitative!.name);
+        final qualitative = e.qualitative;
+        if (qualitative != null) {
+          parts.add(qualitative.name);
         }
-        if (e.value != null) {
-          parts.add('${e.value}m${e.isOver == true ? '+' : ''}');
+        final value = e.value;
+        if (value != null) {
+          parts.add('${value}m${e.isOver == true ? '+' : ''}');
         }
         if (e.isObserving == true) {
           parts.add('観測中');
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -423,19 +411,23 @@ class _TimelineBody extends StatelessWidget {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.firstHeightArrivalTime != null) {
-          parts.add('第1波:${_fmtDt(e.firstHeightArrivalTime!)}');
+        final firstHeightArrivalTime = e.firstHeightArrivalTime;
+        if (firstHeightArrivalTime != null) {
+          parts.add('第1波:${_fmtDt(firstHeightArrivalTime)}');
         }
-        if (e.firstHeightInitial != null) {
-          parts.add(e.firstHeightInitial!.name);
+        final firstHeightInitial = e.firstHeightInitial;
+        if (firstHeightInitial != null) {
+          parts.add(firstHeightInitial.name);
         }
-        if (e.maxHeightValue != null) {
+        final maxHeightValue = e.maxHeightValue;
+        if (maxHeightValue != null) {
           parts.add(
-            '最大:${e.maxHeightValue}m${e.maxHeightIsOver == true ? '+' : ''}',
+            '最大:${maxHeightValue}m${e.maxHeightIsOver == true ? '+' : ''}',
           );
         }
-        if (e.firstHeightRevise != null) {
-          parts.add('[${e.firstHeightRevise!.name}]');
+        final firstHeightRevise = e.firstHeightRevise;
+        if (firstHeightRevise != null) {
+          parts.add('[${firstHeightRevise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -443,24 +435,25 @@ class _TimelineBody extends StatelessWidget {
     return null;
   }
 
-  String? _stationForecastCell(
-    StationForecastTimeline entries,
-    String id,
-  ) {
+  String? _stationForecastCell(StationForecastTimeline entries, String id) {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.firstHeightArrivalTime != null) {
-          parts.add('第1波:${_fmtDt(e.firstHeightArrivalTime!)}');
+        final firstHeightArrivalTime = e.firstHeightArrivalTime;
+        if (firstHeightArrivalTime != null) {
+          parts.add('第1波:${_fmtDt(firstHeightArrivalTime)}');
         }
-        if (e.highTideAt != null) {
-          parts.add('満潮:${_fmtDt(e.highTideAt!)}');
+        final highTideAt = e.highTideAt;
+        if (highTideAt != null) {
+          parts.add('満潮:${_fmtDt(highTideAt)}');
         }
-        if (e.firstHeightCondition != null) {
-          parts.add(e.firstHeightCondition!.name);
+        final firstHeightCondition = e.firstHeightCondition;
+        if (firstHeightCondition != null) {
+          parts.add(firstHeightCondition.name);
         }
-        if (e.firstHeightRevise != null) {
-          parts.add('[${e.firstHeightRevise!.name}]');
+        final firstHeightRevise = e.firstHeightRevise;
+        if (firstHeightRevise != null) {
+          parts.add('[${firstHeightRevise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -475,11 +468,13 @@ class _TimelineBody extends StatelessWidget {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.arrivalTime != null) {
-          parts.add(_fmtDt(e.arrivalTime!));
+        final arrivalTime = e.arrivalTime;
+        if (arrivalTime != null) {
+          parts.add(_fmtDt(arrivalTime));
         }
-        if (e.initial != null) {
-          parts.add(e.initial!.name);
+        final initial = e.initial;
+        if (initial != null) {
+          parts.add(initial.name);
         }
         if (e.isUnidentifiable == true) {
           parts.add('不明');
@@ -487,8 +482,9 @@ class _TimelineBody extends StatelessWidget {
         if (e.isMissing == true) {
           parts.add('欠測');
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -503,11 +499,13 @@ class _TimelineBody extends StatelessWidget {
     for (final e in entries) {
       if (e.telegramId == id) {
         final parts = <String>[];
-        if (e.value != null) {
-          parts.add('${e.value}m${e.isOver == true ? '+' : ''}');
+        final value = e.value;
+        if (value != null) {
+          parts.add('${value}m${e.isOver == true ? '+' : ''}');
         }
-        if (e.condition != null) {
-          parts.add(e.condition!.name);
+        final condition = e.condition;
+        if (condition != null) {
+          parts.add(condition.name);
         }
         if (e.isRising == true) {
           parts.add('上昇中');
@@ -515,8 +513,9 @@ class _TimelineBody extends StatelessWidget {
         if (e.isMissing == true) {
           parts.add('欠測');
         }
-        if (e.revise != null) {
-          parts.add('[${e.revise!.name}]');
+        final revise = e.revise;
+        if (revise != null) {
+          parts.add('[${revise.name}]');
         }
         return parts.isEmpty ? '(empty)' : parts.join('\n');
       }
@@ -537,12 +536,12 @@ class _TimelineBody extends StatelessWidget {
 
 /// タイムラインの 1 行を表すスペック。
 sealed class _TimelineRowSpec {
-  const _TimelineRowSpec();
+  const new();
 }
 
 /// セクション見出し行（地域・観測点・沖合観測局）。
 class _SectionRowSpec extends _TimelineRowSpec {
-  const _SectionRowSpec(this.label, {this.indent = 0});
+  const new(this.label, {this.indent = 0});
 
   final String label;
   final double indent;
@@ -550,7 +549,7 @@ class _SectionRowSpec extends _TimelineRowSpec {
 
 /// 値を表示するデータ行。
 class _DataRowSpec extends _TimelineRowSpec {
-  const _DataRowSpec(this.label, this.cellBuilder, {this.indent = 0});
+  const new(this.label, this.cellBuilder, {this.indent = 0});
 
   final String label;
 

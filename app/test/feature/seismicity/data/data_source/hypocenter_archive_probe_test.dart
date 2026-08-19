@@ -45,7 +45,7 @@ void main() {
 }
 
 final class _ProbeAdapter implements HttpClientAdapter {
-  _ProbeAdapter({
+  new({
     required this.statusCode,
     this.contentRange = 'bytes 0-127/1024',
   });

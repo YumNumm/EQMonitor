@@ -6,32 +6,40 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SoundInterruptionSettingsPage extends HookConsumerWidget {
-  const SoundInterruptionSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eewSettings = ref.watch(eewGlobalSettingsProvider).value;
-    final earthquakeSettings =
-        ref.watch(earthquakeGlobalSettingsProvider).value;
+    final earthquakeSettings = ref
+        .watch(earthquakeGlobalSettingsProvider)
+        .value;
 
-    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (_, next) async {
+    ref.listen(EewGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
       if (next is MutationError && context.mounted) {
-        await showErrorDialog(context, error: next.error);
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
       }
     });
-    ref.listen(
-      EarthquakeGlobalSettingsNotifier.updateSettingsMutation,
-      (_, next) async {
-        if (next is MutationError && context.mounted) {
-          await showErrorDialog(context, error: next.error);
-        }
-      },
-    );
+    ref.listen(EarthquakeGlobalSettingsNotifier.updateSettingsMutation, (
+      _,
+      next,
+    ) async {
+      if (next is MutationError && context.mounted) {
+        await ref
+            .read(errorDialogActionProvider)
+            .show(context, error: next.error);
+      }
+    });
 
     final eewSound = NotificationSound.fromApiValue(
       eewSettings?.defaultSound ?? NotificationSound.defaultSound.apiValue,
@@ -45,11 +53,13 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
           NotificationSound.defaultSound.apiValue,
     );
     final earthquakeLevel =
-        earthquakeSettings?.defaultInterruptionLevel ?? InterruptionLevel.active;
-    final earthquakeCollapse = earthquakeSettings?.collapseNotification ?? false;
+        earthquakeSettings?.defaultInterruptionLevel ??
+        InterruptionLevel.active;
+    final earthquakeCollapse =
+        earthquakeSettings?.collapseNotification ?? false;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('通知音・割り込みレベル')),
+      appBar: AppBar(title: const Text('通知音と通知の優先度')),
       body: ListView(
         padding: const EdgeInsets.only(top: 16, bottom: 24),
         children: [
@@ -59,34 +69,31 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
             interruptionLevel: eewLevel,
             collapseNotification: eewCollapse,
             onSoundChanged: (sound) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(defaultSound: sound.apiValue);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(defaultSound: sound.apiValue);
+              });
             },
             onInterruptionLevelChanged: (level) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(defaultInterruptionLevel: level);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(defaultInterruptionLevel: level);
+              });
             },
             onCollapseChanged: ({required value}) async {
-              await EewGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewGlobalSettingsProvider.notifier)
-                      .updateSettings(collapseNotification: value);
-                },
-              );
+              await EewGlobalSettingsNotifier.updateSettingsMutation.run(ref, (
+                tsx,
+              ) async {
+                await tsx
+                    .get(eewGlobalSettingsProvider.notifier)
+                    .updateSettings(collapseNotification: value);
+              });
             },
           ),
           const SettingsSectionHeader(text: '地震情報'),
@@ -125,15 +132,6 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '震度別の音設定で個別にオーバーライドすることもできます',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.designSystem.colorTheme.onSurfaceVariant,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -141,7 +139,7 @@ class SoundInterruptionSettingsPage extends HookConsumerWidget {
 }
 
 class _SoundInterruptionCard extends StatelessWidget {
-  const _SoundInterruptionCard({
+  const new({
     required this.sound,
     required this.interruptionLevel,
     required this.collapseNotification,
@@ -172,14 +170,14 @@ class _SoundInterruptionCard extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.card),
+        borderRadius: .circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           ListTile(
             title: const Text('通知音'),
@@ -187,26 +185,22 @@ class _SoundInterruptionCard extends StatelessWidget {
               key: ValueKey(sound),
               initialSelection: sound,
               requestFocusOnTap: false,
-              width: 148,
               onSelected: (selected) async {
                 if (selected != null) {
                   await onSoundChanged(selected);
                 }
               },
-              dropdownMenuEntries: [
-                for (final s in NotificationSound.values)
-                  DropdownMenuEntry(value: s, label: s.displayName),
-              ],
+              dropdownMenuEntries:
+NotificationSound.values.map((sound) => DropdownMenuEntry(value: sound, label: sound.displayName)).toList(),
             ),
           ),
           const Divider(height: 1),
           ListTile(
-            title: const Text('割り込みレベル'),
+            title: const Text('通知の優先度'),
             trailing: DropdownMenu<InterruptionLevel>(
               key: ValueKey(interruptionLevel),
               initialSelection: interruptionLevel,
               requestFocusOnTap: false,
-              width: 192,
               onSelected: (selected) async {
                 if (selected != null) {
                   await onInterruptionLevelChanged(selected);
@@ -217,10 +211,10 @@ class _SoundInterruptionCard extends StatelessWidget {
                   DropdownMenuEntry(
                     value: level,
                     label: switch (level) {
-                      InterruptionLevel.passive => 'パッシブ',
-                      InterruptionLevel.active => 'アクティブ',
-                      InterruptionLevel.timeSensitive => 'タイムセンシティブ',
-                      InterruptionLevel.critical => 'クリティカル',
+                      .passive => 'サイレント',
+                      .active => 'デフォルト',
+                      .timeSensitive => '即時通知',
+                      .critical => '重大な通知',
                     },
                   ),
               ],
@@ -228,8 +222,8 @@ class _SoundInterruptionCard extends StatelessWidget {
           ),
           const Divider(height: 1),
           ListTile(
-            title: const Text('続報をまとめて表示'),
-            subtitle: const Text('ONにすると、続報で前の通知を上書きします'),
+            title: const Text('通知の上書き'),
+            subtitle: const Text('緊急地震速報の続報が発表された時に、前の通知を上書きします'),
             trailing: AppSwitch(
               value: collapseNotification,
               onChanged: (value) async => onCollapseChanged(value: value),

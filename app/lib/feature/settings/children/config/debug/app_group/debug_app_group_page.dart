@@ -3,12 +3,12 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/app_group_values_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_action.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugAppGroupPage extends HookConsumerWidget {
-  const DebugAppGroupPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class DebugAppGroupPage extends HookConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.values, required this.action});
+  const new({required this.values, required this.action});
 
   final AppGroupValues values;
   final DebugAppGroupAction action;
@@ -85,7 +85,7 @@ class _Body extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.title);
+  const new(this.title);
 
   final String title;
 

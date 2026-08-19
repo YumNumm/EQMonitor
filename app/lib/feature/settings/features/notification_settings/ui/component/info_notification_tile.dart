@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void showInfoBottomSheet(
-  BuildContext context, {
-  required String title,
-  required List<InfoLink> links,
-}) {
-  unawaited(
-    showModalBottomSheet<void>(
+/// 通知項目の補足リンク一覧をボトムシートで表示する。
+class InfoNotificationBottomSheetAction {
+  const new();
+
+  Future<void> show(
+    BuildContext context, {
+    required String title,
+    required List<InfoLink> links,
+  }) {
+    return showModalBottomSheet<void>(
       context: context,
       builder: (context) => SafeArea(
         child: Padding(
@@ -44,12 +47,12 @@ void showInfoBottomSheet(
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class InfoNotificationTile extends StatelessWidget {
-  const InfoNotificationTile({
+  const new({
     required this.title,
     required this.subtitleText,
     required this.value,
@@ -78,10 +81,12 @@ class InfoNotificationTile extends StatelessWidget {
             TextSpan(text: subtitleText),
             WidgetSpan(
               child: GestureDetector(
-                onTap: () => showInfoBottomSheet(
-                  context,
-                  title: bottomSheetTitle,
-                  links: bottomSheetLinks,
+                onTap: () => unawaited(
+                  const InfoNotificationBottomSheetAction().show(
+                    context,
+                    title: bottomSheetTitle,
+                    links: bottomSheetLinks,
+                  ),
                 ),
                 child: Text(
                   '詳しい情報',
@@ -106,7 +111,7 @@ class InfoNotificationTile extends StatelessWidget {
 }
 
 class ComingSoonBadge extends StatelessWidget {
-  const ComingSoonBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

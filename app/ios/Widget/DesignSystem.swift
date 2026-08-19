@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 // MARK: - Adaptive Color Palette
 
@@ -27,7 +26,6 @@ extension Color {
     static let eqTextTertiary = DesignTokens.textTertiary
 }
 
-
 // MARK: - Surface Gradient
 
 extension ShapeStyle where Self == LinearGradient {
@@ -38,14 +36,5 @@ extension ShapeStyle where Self == LinearGradient {
             startPoint: .top,
             endPoint: .bottom
         )
-    }
-}
-
-// MARK: - Liquid Glass Helpers
-
-extension View {
-    func eqGlass(cornerRadius: CGFloat, tint: Color? = nil) -> some View {
-        let glass: Glass = tint.map { Glass.regular.tint($0) } ?? .regular
-        return self.glassEffect(glass, in: .rect(cornerRadius: cornerRadius, style: .continuous))
     }
 }

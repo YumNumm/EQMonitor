@@ -2,22 +2,26 @@ import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/eew_warning_settings_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/flow/slot_update_action.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_forecast_threshold_policy.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_min_intensity_field.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/formatter/notification_slot_formatter.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SlotDetailPage extends HookConsumerWidget {
-  const SlotDetailPage({required this.slotId, required this.isPro, super.key});
+  const new({required this.slotId, required this.isPro, super.key});
 
   final String slotId;
   final bool isPro;
@@ -29,11 +33,18 @@ class SlotDetailPage extends HookConsumerWidget {
         (v) => v.value?.where((s) => s.id == slotId).firstOrNull,
       ),
     );
+    final warningEnabled = ref.watch(
+      eewGlobalSettingsProvider.select((s) => s.value?.warningEnabled ?? true),
+    );
+    final warningConfig = ref.watch(eewWarningConfigProvider).value;
+    final warningTarget = warningConfig?.target;
 
     void listenMutationError(Mutation<void> mutation) {
       ref.listen(mutation, (_, next) async {
         if (next is MutationError && context.mounted) {
-          await showErrorDialog(context, error: next.error);
+          await ref
+              .read(errorDialogActionProvider)
+              .show(context, error: next.error);
         }
       });
     }
@@ -42,6 +53,8 @@ class SlotDetailPage extends HookConsumerWidget {
     listenMutationError(NotificationSlotsNotifier.putNationwideMutation);
     listenMutationError(NotificationSlotsNotifier.updateRegionMutation);
     listenMutationError(NotificationSlotsNotifier.removeRegionMutation);
+    listenMutationError(EewGlobalSettingsNotifier.updateSettingsMutation);
+    listenMutationError(EewWarningConfigNotifier.updateConfigMutation);
 
     final String title;
     if (slot == null) {
@@ -61,14 +74,12 @@ class SlotDetailPage extends HookConsumerWidget {
           : ListView(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
               children: [
-                const SettingsSectionHeader(text: '緊急地震速報（予報）'),
+                const SettingsSectionHeader(text: '緊急地震速報(予報)'),
                 _NotificationConditionCard(
+                  slotType: slot.slotType,
+                  kind: NotificationKind.eew,
                   enabled: slot.eewEnabled,
                   minIntensity: slot.eewMinIntensity,
-                  thresholdTitle: '通知する予想震度のしきい値',
-                  thresholdSubtitle:
-                      NotificationSlotFormatter.thresholdSubtitle(slot),
-                  eewSlotType: slot.slotType,
                   isPro: isPro,
                   overrides: slot.eewOverrides ?? [],
                   onEnabledChanged: (next) => ref
@@ -82,19 +93,66 @@ class SlotDetailPage extends HookConsumerWidget {
                       builder: (_) => OverrideEditPage(
                         slotId: slot.id,
                         slotType: slot.slotType,
-                        overrideType: OverrideType.eew,
+                        overrideType: NotificationKind.eew,
                         currentOverrides: slot.eewOverrides ?? [],
                       ),
                     ),
                   ),
                 ),
+                if (slot.slotType != NotificationSlotType.region) ...[
+                  const SettingsSectionHeader(text: '緊急地震速報(警報)'),
+                  _WarningSettingsCard(
+                    slotType: slot.slotType,
+                    enabled:
+                        slot.slotType == NotificationSlotType.currentLocation
+                        ? warningEnabled
+                        : warningTarget ==
+                              EewWarningTarget.currentLocationAndNationwide,
+                    interruptionLevel:
+                        slot.slotType == NotificationSlotType.currentLocation
+                        ? (warningConfig?.currentLocationInterruptionLevel ??
+                              currentLocationEewWarningDefaultLevel)
+                        : (warningConfig?.nationwideInterruptionLevel ??
+                              nationwideEewWarningDefaultLevel),
+                    onChanged: (next) async {
+                      switch (slot.slotType) {
+                        case NotificationSlotType.currentLocation:
+                          await ref
+                              .read(eewWarningSettingsActionProvider)
+                              .updateCurrentLocation(ref, enabled: next);
+                        case NotificationSlotType.nationwide:
+                          await ref
+                              .read(eewWarningSettingsActionProvider)
+                              .updateNationwide(ref, enabled: next);
+                        case NotificationSlotType.region:
+                          return;
+                      }
+                    },
+                    onInterruptionLevelChanged: (next) async {
+                      final action = ref.read(eewWarningSettingsActionProvider);
+                      switch (slot.slotType) {
+                        case NotificationSlotType.currentLocation:
+                          await action.updateCurrentLocationInterruptionLevel(
+                            ref,
+                            level: next,
+                          );
+                        case NotificationSlotType.nationwide:
+                          await action.updateNationwideInterruptionLevel(
+                            ref,
+                            level: next,
+                          );
+                        case NotificationSlotType.region:
+                          return;
+                      }
+                    },
+                  ),
+                ],
                 const SettingsSectionHeader(text: '地震情報'),
                 _NotificationConditionCard(
+                  slotType: slot.slotType,
+                  kind: NotificationKind.earthquake,
                   enabled: slot.earthquakeEnabled,
                   minIntensity: slot.earthquakeMinIntensity,
-                  thresholdTitle: '最小震度',
-                  thresholdSubtitle: null,
-                  eewSlotType: null,
                   isPro: isPro,
                   overrides: slot.earthquakeOverrides ?? [],
                   onEnabledChanged: (next) => ref
@@ -108,7 +166,7 @@ class SlotDetailPage extends HookConsumerWidget {
                       builder: (_) => OverrideEditPage(
                         slotId: slot.id,
                         slotType: slot.slotType,
-                        overrideType: OverrideType.earthquake,
+                        overrideType: NotificationKind.earthquake,
                         currentOverrides: slot.earthquakeOverrides ?? [],
                       ),
                     ),
@@ -139,21 +197,12 @@ class SlotDetailPage extends HookConsumerWidget {
   }
 }
 
-extension NotificationSlotTypeLabel on NotificationSlotType {
-  String get label => switch (this) {
-    .currentLocation => '現在地',
-    .nationwide => '全国',
-    .region => '地域',
-  };
-}
-
 class _NotificationConditionCard extends StatelessWidget {
-  const _NotificationConditionCard({
+  const new({
+    required this.slotType,
+    required this.kind,
     required this.enabled,
     required this.minIntensity,
-    required this.thresholdTitle,
-    required this.thresholdSubtitle,
-    required this.eewSlotType,
     required this.isPro,
     required this.overrides,
     required this.onEnabledChanged,
@@ -161,11 +210,10 @@ class _NotificationConditionCard extends StatelessWidget {
     required this.onOverrideTap,
   });
 
+  final NotificationSlotType slotType;
+  final NotificationKind kind;
   final bool enabled;
   final JmaIntensity? minIntensity;
-  final String thresholdTitle;
-  final String? thresholdSubtitle;
-  final NotificationSlotType? eewSlotType;
   final bool isPro;
   final List<NotificationOverride> overrides;
   final ValueChanged<bool> onEnabledChanged;
@@ -178,7 +226,6 @@ class _NotificationConditionCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
-    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -205,19 +252,18 @@ class _NotificationConditionCard extends StatelessWidget {
           const Divider(height: 1),
           ListTile(
             enabled: enabled,
-            title: Text(thresholdTitle),
-            subtitle: switch (thresholdSubtitle) {
-              final String subtitle => Text(subtitle),
-              null => null,
-            },
-            trailing: _IntensityDropdown(
+            title: const Text('最小震度'),
+            trailing: NotificationMinIntensityField(
+              slotType: slotType,
+              kind: kind,
               value: minIntensity,
               enabled: enabled,
-              eewSlotType: eewSlotType,
               onChanged: onMinIntensityChanged,
             ),
           ),
-          if (isIos) ...[
+          // 震度別設定は音・割り込みレベルの上書きであり iOS 固有の契約のため、
+          // Android では OS の通知チャンネル設定へ委ねて非表示にする。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
             const Divider(height: 1),
             if (isPro)
               ListTile(
@@ -233,7 +279,7 @@ class _NotificationConditionCard extends StatelessWidget {
                 title: '震度別設定',
                 subtitle: 'Proで利用できます',
                 locked: true,
-                onTap: () => const PaywallRoute().push<void>(context),
+                onTap: () async => const ProUpgradeDialogAction().show(context),
               ),
           ],
         ],
@@ -242,59 +288,103 @@ class _NotificationConditionCard extends StatelessWidget {
   }
 }
 
-class _IntensityDropdown extends StatelessWidget {
-  const _IntensityDropdown({
-    required this.value,
+class _WarningSettingsCard extends StatelessWidget {
+  const new({
+    required this.slotType,
     required this.enabled,
-    required this.eewSlotType,
+    required this.interruptionLevel,
     required this.onChanged,
+    required this.onInterruptionLevelChanged,
   });
 
-  final JmaIntensity? value;
+  final NotificationSlotType slotType;
   final bool enabled;
-  final NotificationSlotType? eewSlotType;
-  final ValueChanged<JmaIntensity> onChanged;
+  final InterruptionLevel interruptionLevel;
+  final ValueChanged<bool> onChanged;
+  final ValueChanged<InterruptionLevel> onInterruptionLevelChanged;
 
   @override
   Widget build(BuildContext context) {
-    final slotType = eewSlotType;
-    final values = slotType == null
-        ? JmaIntensity.selectableValues
-        : EewForecastThresholdPolicy.valuesFor(slotType);
-    final resolved = slotType == null
-        ? value != null && values.contains(value)
-              ? value
-              : JmaIntensity.three
-        : EewForecastThresholdPolicy.selectedValueFor(
-            slotType: slotType,
-            value: value,
-          );
+    final designSystem = context.designSystem;
+    final colorTheme = designSystem.colorTheme;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
+    final levels = interruptionLevelsFor(slotType);
 
-    return DropdownMenu<JmaIntensity>(
-      initialSelection: resolved,
-      enabled: enabled,
-      requestFocusOnTap: false,
-      width: 160,
-      onSelected: (next) {
-        if (next != null) {
-          onChanged(next);
-        }
-      },
-      dropdownMenuEntries: [
-        for (final intensity in values)
-          DropdownMenuEntry(
-            value: intensity,
-            label: slotType == null
-                ? '震度${intensity.label}'
-                : NotificationSlotFormatter.intensityLabel(intensity),
+    return Card.outlined(
+      margin: EdgeInsets.fromLTRB(
+        spacing.lg,
+        spacing.sm,
+        spacing.lg,
+        spacing.md,
+      ),
+      color: colorTheme.surfaceContainerHigh,
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: colorTheme.outlineVariant),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: const Text('有効'),
+            trailing: AppSwitch(value: enabled, onChanged: onChanged),
+            onTap: () => onChanged(!enabled),
           ),
-      ],
+          // 割り込みレベルは iOS の通知契約の設定。Android の重要度は
+          // Notification Channel 側で管理するため、OS の設定へ委ねる。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            ListTile(
+              enabled: enabled,
+              title: const Text('割り込みレベル'),
+              trailing: DropdownMenu<InterruptionLevel>(
+                initialSelection: levels.contains(interruptionLevel)
+                    ? interruptionLevel
+                    : levels.last,
+                enabled: enabled,
+                requestFocusOnTap: false,
+                width: 180,
+                onSelected: (next) {
+                  if (next != null) {
+                    onInterruptionLevelChanged(next);
+                  }
+                },
+                dropdownMenuEntries: levels
+                    .map(
+                      (level) =>
+                          DropdownMenuEntry(value: level, label: level.label),
+                    )
+                    .toList(),
+              ),
+            ),
+          ],
+          const Divider(height: 1),
+          Padding(
+            padding: EdgeInsets.all(spacing.md),
+            child: Text(
+              switch (slotType) {
+                .currentLocation =>
+                  '現在地が緊急地震速報の警報地域になった場合に通知を配信します。'
+                      '重大な通知に設定すると、おやすみモードやマナーモードを無視して通知します。',
+                _ => '緊急地震速報(警報)が発表された時に通知します。',
+              },
+              style: designSystem.typography.bodySmall.copyWith(
+                color: colorTheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _DeleteRegionTile extends StatelessWidget {
-  const _DeleteRegionTile({required this.onTap});
+  const new({required this.onTap});
 
   final Future<void> Function() onTap;
 

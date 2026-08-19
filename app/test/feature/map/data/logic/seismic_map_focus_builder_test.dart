@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/map/data/logic/seismic_map_focus_builder.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre/maplibre.dart';
 
@@ -124,6 +124,52 @@ void main() {
     );
 
     expect(bounds, _fallback);
+  });
+
+  test('EEW単独でも中心から最小半径ぶんのboundsを確保する', () {
+    final bounds = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: [_eew(latitude: 35, longitude: 139)],
+      shakes: const [],
+    );
+
+    // 最小半径 50km は緯度およそ 0.449 度に相当する。
+    expect(bounds.latitudeNorth - 35, greaterThan(0.4));
+    expect(35 - bounds.latitudeSouth, greaterThan(0.4));
+    // 経度方向は cos(緯度) で割るぶん緯度方向より広くなる。
+    expect(
+      bounds.longitudeEast - bounds.longitudeWest,
+      greaterThan(bounds.latitudeNorth - bounds.latitudeSouth),
+    );
+  });
+
+  test('最小半径より広い揺れ検知の矩形は縮められない', () {
+    final bounds = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: const [],
+      shakes: [_shake(minLat: 33, maxLat: 38, minLng: 130, maxLng: 140)],
+    );
+
+    expect(bounds.latitudeSouth, closeTo(33 - seismicMapFocusMargin, 1e-9));
+    expect(bounds.latitudeNorth, closeTo(38 + seismicMapFocusMargin, 1e-9));
+    expect(bounds.longitudeWest, closeTo(130 - seismicMapFocusMargin, 1e-9));
+    expect(bounds.longitudeEast, closeTo(140 + seismicMapFocusMargin, 1e-9));
+  });
+
+  test('複数EEWの震源をすべて内包する', () {
+    final bounds = builder.forRealtime(
+      fallbackBounds: _fallback,
+      eews: [
+        _eew(latitude: 35, longitude: 139),
+        _eew(latitude: 43, longitude: 145),
+      ],
+      shakes: const [],
+    );
+
+    expect(bounds.latitudeSouth, lessThan(35));
+    expect(bounds.latitudeNorth, greaterThan(43));
+    expect(bounds.longitudeWest, lessThan(139));
+    expect(bounds.longitudeEast, greaterThan(145));
   });
 
   test('不正座標は除外して有効なEEWのみをfocusに使う', () {

@@ -8,38 +8,94 @@ part 'seismicity_pmtiles_exception.freezed.dart';
 sealed class SeismicityPmTilesException
     with _$SeismicityPmTilesException
     implements Exception {
-  const factory SeismicityPmTilesException.invalidDescriptor({
+  const factory invalidDescriptor({
     required String reason,
   }) = SeismicityPmTilesInvalidDescriptorException;
 
-  const factory SeismicityPmTilesException.invalidRange({
+  const factory invalidRange({
     required int offset,
     required int length,
     required int sizeBytes,
   }) = SeismicityPmTilesInvalidRangeException;
 
-  const factory SeismicityPmTilesException.corruptArchive({
+  const factory corruptArchive({
     required String reason,
   }) = SeismicityPmTilesCorruptArchiveException;
 
-  const factory SeismicityPmTilesException.unsupportedCompression({
+  const factory unsupportedCompression({
     required int compression,
   }) = SeismicityPmTilesUnsupportedCompressionException;
 
-  const factory SeismicityPmTilesException.unsupportedSource({
+  const factory unsupportedSource({
     required SeismicityPmTilesSource source,
   }) = SeismicityPmTilesUnsupportedSourceException;
 
-  const factory SeismicityPmTilesException.sourceReadFailed({
+  const factory sourceReadFailed({
     required SeismicityPmTilesSource source,
     required String reason,
   }) = SeismicityPmTilesSourceReadFailedException;
 
-  const factory SeismicityPmTilesException.tileNotFound({
+  const factory networkRequestFailed({
+    required SeismicityPmTilesSource source,
+    required int? statusCode,
+  }) = SeismicityPmTilesNetworkRequestFailedException;
+
+  const factory invalidNetworkResponse({
+    required SeismicityPmTilesSource source,
+    required int statusCode,
+    required String reason,
+  }) = SeismicityPmTilesInvalidNetworkResponseException;
+
+  const factory archiveChanged({
+    required SeismicityPmTilesSource source,
+    required String? expectedEtag,
+    required String? receivedEtag,
+    required int statusCode,
+  }) = SeismicityPmTilesArchiveChangedException;
+
+  const factory cancelled({
+    required SeismicityPmTilesSource source,
+  }) = SeismicityPmTilesCancelledException;
+
+  const factory closed({
+    required SeismicityPmTilesSource source,
+  }) = SeismicityPmTilesClosedException;
+
+  const factory unsupportedSchema({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesUnsupportedSchemaException;
+
+  const factory invalidVectorTile({
+    required int tileId,
+    required String reason,
+  }) = SeismicityPmTilesInvalidVectorTileException;
+
+  const factory invalidHypocenterFeature({
+    required int tileId,
+    required int featureIndex,
+    required String field,
+    required String reason,
+  }) = SeismicityPmTilesInvalidHypocenterFeatureException;
+
+  const factory duplicateConflict({
+    required String hypocenterId,
+  }) = SeismicityPmTilesDuplicateConflictException;
+
+  const factory featureCountMismatch({
+    required int expected,
+    required int actual,
+  }) = SeismicityPmTilesFeatureCountMismatchException;
+
+  const factory decoderWorkerFailed({
+    required String reason,
+  }) = SeismicityPmTilesDecoderWorkerFailedException;
+
+  const factory tileNotFound({
     required int tileId,
   }) = SeismicityPmTilesTileNotFoundException;
 
-  const factory SeismicityPmTilesException.invalidTileId({
+  const factory invalidTileId({
     required int tileId,
     required int minTileId,
     required int maxTileId,

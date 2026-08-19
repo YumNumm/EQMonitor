@@ -11,7 +11,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// ファイルは可変長 TLV ブロックで構成される情報ブロックと、
 /// 1秒単位のデータブロック（デルタ圧縮）から成る。
 class KnetBinaryParser {
-  const KnetBinaryParser();
+  const new();
 
   static const _kwinSignature = [0x0a, 0x02, 0x00, 0x00];
 
@@ -452,7 +452,7 @@ class KnetBinaryParser {
 
 /// KWIN バイナリパース結果
 class KnetBinaryRecord {
-  const KnetBinaryRecord({
+  const new({
     required this.earthquakeInfo,
     required this.stationInfo,
     required this.recordTime,
@@ -478,7 +478,7 @@ class KnetBinaryRecord {
 
 /// KWIN バイナリの 1 チャンネル分データ
 class KnetBinaryChannel {
-  const KnetBinaryChannel({
+  const new({
     required this.direction,
     required this.scaleFactorNumerator,
     required this.scaleFactorDenominator,
@@ -504,7 +504,7 @@ class KnetBinaryChannel {
 }
 
 class _SecondBlock {
-  const _SecondBlock({required this.timestamp, required this.channelData});
+  const new({required this.timestamp, required this.channelData});
   final DateTime timestamp;
   final List<List<int>> channelData;
 }

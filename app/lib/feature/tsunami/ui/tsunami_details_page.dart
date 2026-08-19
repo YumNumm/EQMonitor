@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -12,12 +11,12 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_earthquake_card.
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_region_list.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_status_card.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TsunamiDetailsPage extends HookConsumerWidget {
-  const TsunamiDetailsPage({required this.tsunamiId, super.key});
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 
@@ -31,32 +30,24 @@ class TsunamiDetailsPage extends HookConsumerWidget {
     return switch (state) {
       AsyncLoading() => Scaffold(
         appBar: AppBar(),
-        body: const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        body: const Center(child: CircularProgressIndicator.adaptive()),
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
         body: ErrorCard(
           error: error,
-          onReload: () async => ref.refresh(
-            tsunamiDetailsProvider(tsunamiId),
-          ),
+          onReload: () async => ref.refresh(tsunamiDetailsProvider(tsunamiId)),
         ),
       ),
       AsyncData() => _buildContent(context, ref),
     };
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
     final colorTheme = context.designSystem.colorTheme;
-    final effectiveState = ref.watch(
-      effectiveTsunamiStateProvider(tsunamiId),
-    );
-    final tsunami = effectiveState ??
+    final effectiveState = ref.watch(effectiveTsunamiStateProvider(tsunamiId));
+    final tsunami =
+        effectiveState ??
         ref.watch(tsunamiDetailsProvider(tsunamiId)).requireValue;
 
     return Scaffold(

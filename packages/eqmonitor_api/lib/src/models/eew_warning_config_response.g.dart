@@ -58,4 +58,5 @@ const _$NationwideInterruptionLevelEnumMap = {
   NationwideInterruptionLevel.passive: 'passive',
   NationwideInterruptionLevel.active: 'active',
   NationwideInterruptionLevel.timeSensitive: 'time_sensitive',
+  NationwideInterruptionLevel.critical: 'critical',
 };

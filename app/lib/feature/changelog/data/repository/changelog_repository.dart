@@ -7,7 +7,7 @@ part 'changelog_repository.g.dart';
 ChangelogRepository changelogRepository(Ref ref) => const ChangelogRepository();
 
 class ChangelogRepository {
-  const ChangelogRepository();
+  const new();
 
   Future<api.ChangelogResponse> fetch(api.ApiClient client) async {
     final response = await client.changelog.getV1Changelog();

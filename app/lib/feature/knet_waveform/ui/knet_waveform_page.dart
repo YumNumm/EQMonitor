@@ -2,13 +2,13 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class KnetWaveformPage extends ConsumerWidget {
-  const KnetWaveformPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +34,7 @@ class KnetWaveformPage extends ConsumerWidget {
 }
 
 class _UnconfiguredView extends StatelessWidget {
-  const _UnconfiguredView({required this.onSetup});
+  const new({required this.onSetup});
 
   final VoidCallback onSetup;
 
@@ -79,7 +79,7 @@ class _UnconfiguredView extends StatelessWidget {
 }
 
 class _ConfiguredView extends StatelessWidget {
-  const _ConfiguredView({required this.userId});
+  const new({required this.userId});
 
   final String userId;
 
@@ -190,7 +190,7 @@ class _ConfiguredView extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _YearPickerDialog extends ConsumerWidget {
-  const _YearPickerDialog();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -235,7 +235,7 @@ class _YearPickerDialog extends ConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _MonthPickerDialog extends ConsumerWidget {
-  const _MonthPickerDialog({required this.year});
+  const new({required this.year});
 
   final int year;
 
@@ -282,7 +282,7 @@ class _MonthPickerDialog extends ConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _RecordPickerDialog extends HookConsumerWidget {
-  const _RecordPickerDialog({required this.year, required this.month});
+  const new({required this.year, required this.month});
 
   final int year;
   final int month;

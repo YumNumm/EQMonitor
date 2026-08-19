@@ -4,9 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 
 class _FakeMessaging extends Fake implements FirebaseMessaging {
-  _FakeMessaging(this._requestSettings);
+  new(
+    this._requestSettings, {
+    NotificationSettings? currentSettings,
+  }) : _currentSettings = currentSettings ?? _requestSettings;
 
   final NotificationSettings _requestSettings;
+  final NotificationSettings _currentSettings;
+
+  @override
+  Future<NotificationSettings> getNotificationSettings() async =>
+      _currentSettings;
 
   @override
   Future<NotificationSettings> requestPermission({
@@ -43,8 +51,11 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.authorized)),
+        readLocationPermission: () async => LocationPermission.denied,
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async {},
+        openNotificationSettings: () async {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
@@ -56,14 +67,59 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.provisional)),
+        readLocationPermission: () async => LocationPermission.denied,
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async {},
+        openNotificationSettings: () async {},
       );
 
       final isGranted = await repository.requestNotificationPermission();
 
       expect(isGranted, isFalse);
     });
+
+    test('denied opens settings but is not granted', () async {
+      var settingsOpened = false;
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        readLocationPermission: () async => LocationPermission.denied,
+        requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
+        onLocationPermissionGranted: () async {},
+        openNotificationSettings: () async => settingsOpened = true,
+      );
+
+      final isGranted = await repository.requestNotificationPermission();
+
+      expect(isGranted, isFalse);
+      expect(settingsOpened, isTrue);
+    });
+
+    test(
+      'request result is authorized but OS state is denied is not granted',
+      () async {
+        var settingsOpened = false;
+        final repository = PermissionRepository(
+          readMessaging: () => _FakeMessaging(
+            _settings(AuthorizationStatus.authorized),
+            currentSettings: _settings(AuthorizationStatus.denied),
+          ),
+          readLocationPermission: () async => LocationPermission.denied,
+          requestLocationPermission: () async => LocationPermission.denied,
+          requestAlwaysLocationPermission: () async =>
+              LocationPermission.denied,
+          onLocationPermissionGranted: () async {},
+          openNotificationSettings: () async => settingsOpened = true,
+        );
+
+        final isGranted = await repository.requestNotificationPermission();
+
+        expect(isGranted, isFalse);
+        expect(settingsOpened, isTrue);
+      },
+    );
   });
 
   group('PermissionRepository.requestForegroundLocationPermission', () {
@@ -72,11 +128,15 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        readLocationPermission: () async => LocationPermission.denied,
         requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async =>
+            LocationPermission.whileInUse,
         onLocationPermissionGranted: () async {
           await Future<void>.delayed(Duration.zero);
           syncRequested = true;
         },
+        openNotificationSettings: () async {},
       );
 
       final isGranted = await repository.requestForegroundLocationPermission();
@@ -90,11 +150,52 @@ void main() {
       final repository = PermissionRepository(
         readMessaging: () =>
             _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        readLocationPermission: () async => LocationPermission.denied,
         requestLocationPermission: () async => LocationPermission.denied,
+        requestAlwaysLocationPermission: () async => LocationPermission.denied,
         onLocationPermissionGranted: () async => syncRequested = true,
+        openNotificationSettings: () async {},
       );
 
       final isGranted = await repository.requestForegroundLocationPermission();
+
+      expect(isGranted, isFalse);
+      expect(syncRequested, isFalse);
+    });
+  });
+
+  group('PermissionRepository.requestBackgroundLocationPermission', () {
+    test('always への昇格用の要求を使う', () async {
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        readLocationPermission: () async => LocationPermission.whileInUse,
+        // 使用中の許可しか返さない要求が使われていたら false になる
+        requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async => LocationPermission.always,
+        onLocationPermissionGranted: () async {},
+        openNotificationSettings: () async {},
+      );
+
+      final isGranted = await repository.requestBackgroundLocationPermission();
+
+      expect(isGranted, isTrue);
+    });
+
+    test('whileInUse のままなら許可されていない', () async {
+      var syncRequested = false;
+      final repository = PermissionRepository(
+        readMessaging: () =>
+            _FakeMessaging(_settings(AuthorizationStatus.denied)),
+        readLocationPermission: () async => LocationPermission.whileInUse,
+        requestLocationPermission: () async => LocationPermission.whileInUse,
+        requestAlwaysLocationPermission: () async =>
+            LocationPermission.whileInUse,
+        onLocationPermissionGranted: () async => syncRequested = true,
+        openNotificationSettings: () async {},
+      );
+
+      final isGranted = await repository.requestBackgroundLocationPermission();
 
       expect(isGranted, isFalse);
       expect(syncRequested, isFalse);

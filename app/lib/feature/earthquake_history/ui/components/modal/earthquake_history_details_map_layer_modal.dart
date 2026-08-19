@@ -5,13 +5,13 @@ import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsMapLayerModal({super.key});
+  const new({super.key});
 
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
     AppSheetRoute(
@@ -41,7 +41,9 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
                   tileMode: .mirror,
                 ),
                 inner: ColorFilter.mode(
-                  designSystem.colorTheme.surfaceContainerLow.withValues(alpha: 0.7),
+                  designSystem.colorTheme.surfaceContainerLow.withValues(
+                    alpha: 0.7,
+                  ),
                   .srcATop,
                 ),
               ),
@@ -73,7 +75,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
 }
 
 class _LocationSettingCards extends ConsumerWidget {
-  const _LocationSettingCards();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,7 +102,7 @@ class _LocationSettingCards extends ConsumerWidget {
                     title: '非表示',
                     icon: Icons.location_off_outlined,
                     isSelected: !config.common.showLocation,
-                    onTap: () => lightHapticFunction(
+                    onTap: () => HapticUtil.light(
                       () => HomeConfigurationNotifier.saveMutation.run(
                         ref,
                         (tsx) async => tsx
@@ -121,7 +123,7 @@ class _LocationSettingCards extends ConsumerWidget {
                     title: '表示',
                     icon: Icons.location_on_outlined,
                     isSelected: config.common.showLocation,
-                    onTap: () => lightHapticFunction(() async {
+                    onTap: () => HapticUtil.light(() async {
                       var p = await Geolocator.checkPermission();
                       if (p == LocationPermission.denied) {
                         p = await Geolocator.requestPermission();
@@ -160,7 +162,7 @@ class _LocationSettingCards extends ConsumerWidget {
 }
 
 class _LocationCard extends StatelessWidget {
-  const _LocationCard({
+  const new({
     required this.title,
     required this.icon,
     required this.isSelected,

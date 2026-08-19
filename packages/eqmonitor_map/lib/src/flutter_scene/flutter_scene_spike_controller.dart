@@ -15,7 +15,7 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math_64.dart' as model_math;
 
 class FlutterSceneSpikeController extends ChangeNotifier {
-  factory FlutterSceneSpikeController.create({SceneSpikeMetrics? metrics}) {
+  factory create({SceneSpikeMetrics? metrics}) {
     final currentMetrics = metrics ?? SceneSpikeMetrics();
     final initialFrame = SpikeMeshFrame.initial();
     final adapter = FlutterSceneSpikeAdapter(initialFrame: initialFrame);
@@ -30,19 +30,30 @@ class FlutterSceneSpikeController extends ChangeNotifier {
     );
   }
 
-  FlutterSceneSpikeController.withDependencies({
+  factory withDependencies({
     required SceneSpikeControllerAdapter adapter,
     required SceneSpikeMetrics metrics,
     required EqmonitorOrthographicProjection projection,
     required SpikeMeshFrame initialFrame,
     required Future<void> Function() initializeSceneStaticResources,
     scene.NodeCamera? camera,
-  }) : _adapter = adapter,
-       _metrics = metrics,
-       _projection = projection,
-       _camera = camera,
-       _frame = initialFrame,
-       _initializeSceneStaticResources = initializeSceneStaticResources;
+  }) => FlutterSceneSpikeController._(
+    adapter: adapter,
+    metrics: metrics,
+    projection: projection,
+    initialFrame: initialFrame,
+    initializeSceneStaticResources: initializeSceneStaticResources,
+    camera: camera,
+  );
+
+  new _({
+    required this._adapter,
+    required this._metrics,
+    required this._projection,
+    required SpikeMeshFrame initialFrame,
+    required this._initializeSceneStaticResources,
+    this._camera,
+  }) : _frame = initialFrame;
 
   final SceneSpikeControllerAdapter _adapter;
   final SceneSpikeMetrics _metrics;

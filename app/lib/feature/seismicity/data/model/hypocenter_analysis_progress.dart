@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 final class HypocenterAnalysisProgress {
-  const HypocenterAnalysisProgress({
+  const new({
     required this.completedArchives,
     required this.totalArchives,
     required this.fetchedEvents,

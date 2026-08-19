@@ -7,9 +7,17 @@ part 'notification_slot.freezed.dart';
 
 enum NotificationSlotType { currentLocation, nationwide, region }
 
+extension NotificationSlotTypeLabel on NotificationSlotType {
+  String get label => switch (this) {
+    .currentLocation => '現在地',
+    .nationwide => '全国',
+    .region => '地域',
+  };
+}
+
 @freezed
 abstract class NotificationSlot with _$NotificationSlot {
-  const factory NotificationSlot({
+  const factory({
     required String id,
     required NotificationSlotType slotType,
     required int? regionId,

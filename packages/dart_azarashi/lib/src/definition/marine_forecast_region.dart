@@ -52,7 +52,7 @@ enum JmaMarineForecastRegion {
   okinawaSouth(6030, '沖縄南方海上'),
   other(10000, 'その他の地方海上予報区');
 
-  const JmaMarineForecastRegion(this.code, this.nameJa);
+  new(this.code, this.nameJa);
 
   final int code;
   final String nameJa;

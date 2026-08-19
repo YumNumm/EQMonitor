@@ -9,7 +9,7 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor/feature/eew_history/data/repository/eew_list_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -66,7 +66,7 @@ Future<EewListDataSource> eewListDataSource(
 
 class EewListDataSource
     extends GroupedDataSource<String?, String, EewTelegramItem> {
-  EewListDataSource({
+  new({
     required EewListRepository repository,
     required EewListParameter parameter,
   }) : _repository = repository,

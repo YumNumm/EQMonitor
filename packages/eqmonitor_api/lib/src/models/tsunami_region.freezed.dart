@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_region.dart';
@@ -9,6 +9,7 @@ part of 'tsunami_region.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -67,7 +68,7 @@ class _$TsunamiRegionCopyWithImpl<$Res>
 /// Create a copy of TsunamiRegion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kind = null,Object? lastKind = null,Object? stations = null,Object? forecast = freezed,Object? estimation = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiRegion(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
@@ -240,7 +241,7 @@ return $default(_that.code,_that.name,_that.kind,_that.lastKind,_that.stations,_
 @JsonSerializable()
 
 class _TsunamiRegion implements TsunamiRegion {
-  const _TsunamiRegion({required this.code, required this.name, required this.kind, @JsonKey(name: 'last_kind') required this.lastKind, required final  List<TsunamiRegionStation> stations, @JsonKey(includeIfNull: false) this.forecast, @JsonKey(includeIfNull: false) this.estimation}): _stations = stations;
+  const _TsunamiRegion({required this.code, required this.name, required this.kind, @JsonKey(name: 'last_kind') required this.lastKind, required  List<TsunamiRegionStation> stations, @JsonKey(includeIfNull: false) this.forecast, @JsonKey(includeIfNull: false) this.estimation}): _stations = stations;
   factory _TsunamiRegion.fromJson(Map<String, dynamic> json) => _$TsunamiRegionFromJson(json);
 
 /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による

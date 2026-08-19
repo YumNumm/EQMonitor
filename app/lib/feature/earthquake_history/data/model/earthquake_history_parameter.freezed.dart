@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'earthquake_history_parameter.dart';
@@ -9,6 +9,7 @@ part of 'earthquake_history_parameter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
@@ -306,7 +307,7 @@ return station(_that.sortBy,_that.sortOrder,_that.stationCode,_that.limit,_that.
 @JsonSerializable()
 
 class EarthquakeHistoryParameterAll implements EarthquakeHistoryParameter {
-  const EarthquakeHistoryParameterAll({required this.sortBy, required this.sortOrder, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte, final  List<TelegramStatus>? statuses, final  List<int>? epicenterCodes, this.earthquakeType, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, final  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'all';
+  const EarthquakeHistoryParameterAll({required this.sortBy, required this.sortOrder, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte,  List<TelegramStatus>? statuses,  List<int>? epicenterCodes, this.earthquakeType, this.datasource,  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte,  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'all';
   factory EarthquakeHistoryParameterAll.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterAllFromJson(json);
 
 @override final  EarthquakeSortBy sortBy;
@@ -467,7 +468,7 @@ $DateCopyWith<$Res>? get originTimeLte {
 @JsonSerializable()
 
 class EarthquakeHistoryParameterPrefecture implements EarthquakeHistoryParameter {
-  const EarthquakeHistoryParameterPrefecture({required this.sortBy, required this.sortOrder, required this.prefectureCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte, final  List<TelegramStatus>? statuses, final  List<int>? epicenterCodes, this.earthquakeType, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, final  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'prefecture';
+  const EarthquakeHistoryParameterPrefecture({required this.sortBy, required this.sortOrder, required this.prefectureCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte,  List<TelegramStatus>? statuses,  List<int>? epicenterCodes, this.earthquakeType, this.datasource,  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte,  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'prefecture';
   factory EarthquakeHistoryParameterPrefecture.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterPrefectureFromJson(json);
 
 @override final  EarthquakeSortBy sortBy;
@@ -634,7 +635,7 @@ $DateCopyWith<$Res>? get originTimeLte {
 @JsonSerializable()
 
 class EarthquakeHistoryParameterRegion implements EarthquakeHistoryParameter {
-  const EarthquakeHistoryParameterRegion({required this.sortBy, required this.sortOrder, required this.regionCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte, final  List<TelegramStatus>? statuses, final  List<int>? epicenterCodes, this.earthquakeType, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, final  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'region';
+  const EarthquakeHistoryParameterRegion({required this.sortBy, required this.sortOrder, required this.regionCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte,  List<TelegramStatus>? statuses,  List<int>? epicenterCodes, this.earthquakeType, this.datasource,  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte,  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'region';
   factory EarthquakeHistoryParameterRegion.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterRegionFromJson(json);
 
 @override final  EarthquakeSortBy sortBy;
@@ -801,7 +802,7 @@ $DateCopyWith<$Res>? get originTimeLte {
 @JsonSerializable()
 
 class EarthquakeHistoryParameterCity implements EarthquakeHistoryParameter {
-  const EarthquakeHistoryParameterCity({required this.sortBy, required this.sortOrder, required this.cityCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte, final  List<TelegramStatus>? statuses, final  List<int>? epicenterCodes, this.earthquakeType, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, final  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'city';
+  const EarthquakeHistoryParameterCity({required this.sortBy, required this.sortOrder, required this.cityCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte,  List<TelegramStatus>? statuses,  List<int>? epicenterCodes, this.earthquakeType, this.datasource,  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte,  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'city';
   factory EarthquakeHistoryParameterCity.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterCityFromJson(json);
 
 @override final  EarthquakeSortBy sortBy;
@@ -968,7 +969,7 @@ $DateCopyWith<$Res>? get originTimeLte {
 @JsonSerializable()
 
 class EarthquakeHistoryParameterStation implements EarthquakeHistoryParameter {
-  const EarthquakeHistoryParameterStation({required this.sortBy, required this.sortOrder, required this.stationCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte, final  List<TelegramStatus>? statuses, final  List<int>? epicenterCodes, this.earthquakeType, this.datasource, final  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte, final  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'station';
+  const EarthquakeHistoryParameterStation({required this.sortBy, required this.sortOrder, required this.stationCode, this.limit, this.cursor, this.magnitudeGte, this.magnitudeLte, this.depthGte, this.depthLte, this.intensityGte, this.intensityLte,  List<TelegramStatus>? statuses,  List<int>? epicenterCodes, this.earthquakeType, this.datasource,  List<EarthquakeTelegramType>? telegramTypes, this.originTimeGte, this.originTimeLte, this.maxLpgmIntensityGte, this.maxLpgmIntensityLte, this.latitudeGte, this.latitudeLte, this.longitudeGte, this.longitudeLte,  String? $type}): _statuses = statuses,_epicenterCodes = epicenterCodes,_telegramTypes = telegramTypes,$type = $type ?? 'station';
   factory EarthquakeHistoryParameterStation.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterStationFromJson(json);
 
 @override final  EarthquakeSortBy sortBy;

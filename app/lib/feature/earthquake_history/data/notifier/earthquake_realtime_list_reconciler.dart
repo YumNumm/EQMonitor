@@ -13,28 +13,28 @@ import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 sealed class EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListDecision();
+  const new();
 }
 
 final class EarthquakeRealtimeListUpsert
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListUpsert(this.item);
+  const new(this.item);
 
   final EarthquakePartial item;
 }
 
 final class EarthquakeRealtimeListRemove
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListRemove();
+  const new();
 }
 
 final class EarthquakeRealtimeListPreserve
     extends EarthquakeRealtimeListDecision {
-  const EarthquakeRealtimeListPreserve();
+  const new();
 }
 
 final class EarthquakeRealtimeListReconciler {
-  const EarthquakeRealtimeListReconciler({
+  const new({
     required this.parameter,
     required this.repository,
   });
@@ -46,14 +46,8 @@ final class EarthquakeRealtimeListReconciler {
     required api.Earthquake record,
     required EarthquakePartial? previous,
   }) {
-    final full = record.toEarthquake(
-      parameter: repository.earthquakeParameter,
-      shindoDbStations: repository.shindoDbStations,
-    );
-    final partial = earthquakePartialFromRealtimeRecord(
-      record: record,
-      repository: repository,
-    );
+    final full = repository.toEarthquakeFromRealtimeRecord(record);
+    final partial = _toPartial(full: full, record: record);
     if (!_matchesBase(full)) {
       return const EarthquakeRealtimeListRemove();
     }
@@ -239,33 +233,29 @@ final class EarthquakeRealtimeListReconciler {
     return (gte == null || value.compareTo(gte) >= 0) &&
         (lte == null || value.compareTo(lte) <= 0);
   }
-}
 
-EarthquakePartialNormal earthquakePartialFromRealtimeRecord({
-  required api.Earthquake record,
-  required EarthquakeHistoryRepository repository,
-}) {
-  final full = record.toEarthquake(
-    parameter: repository.earthquakeParameter,
-    shindoDbStations: repository.shindoDbStations,
-  );
-  final intensity = full.intensity;
-  return EarthquakePartialNormal(
-    eventId: full.eventId,
-    status: full.status,
-    originTime: full.originTime,
-    originTimePrecision: full.originTimePrecision,
-    arrivalTime: full.arrivalTime,
-    dataSources: full.dataSources,
-    hypocenter: full.hypocenter,
-    intensity: intensity == null
-        ? null
-        : EarthquakeIntensityPartial(
-            maxIntensity: intensity.maxIntensity,
-            maxLpgmIntensity: intensity.maxLpgmIntensity,
-          ),
-    earthquakeType: record.earthquakeType.toEarthquakeType,
-    telegramTypes: full.telegramTypes,
-    estimatedIntensityTileUrl: full.estimatedIntensityTileUrl,
-  );
+  EarthquakePartialNormal _toPartial({
+    required Earthquake full,
+    required api.Earthquake record,
+  }) {
+    final intensity = full.intensity;
+    return EarthquakePartialNormal(
+      eventId: full.eventId,
+      status: full.status,
+      originTime: full.originTime,
+      originTimePrecision: full.originTimePrecision,
+      arrivalTime: full.arrivalTime,
+      dataSources: full.dataSources,
+      hypocenter: full.hypocenter,
+      intensity: intensity == null
+          ? null
+          : EarthquakeIntensityPartial(
+              maxIntensity: intensity.maxIntensity,
+              maxLpgmIntensity: intensity.maxLpgmIntensity,
+            ),
+      earthquakeType: record.earthquakeType.toEarthquakeType,
+      telegramTypes: full.telegramTypes,
+      estimatedIntensityTileUrl: full.estimatedIntensityTileUrl,
+    );
+  }
 }

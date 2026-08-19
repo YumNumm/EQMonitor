@@ -11,13 +11,13 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugDeviceAdminPage extends ConsumerWidget {
-  const DebugDeviceAdminPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class DebugDeviceAdminPage extends ConsumerWidget {
 }
 
 class _DebugDeviceAdminBody extends HookConsumerWidget {
-  const _DebugDeviceAdminBody({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -69,6 +69,9 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
       }
     }
 
+    // fetch は関数参照で渡しているためプラグインが本体の参照を追えないが、
+    // deviceId は fetch 内で使用し、refreshTick は reload() の再取得契機。
+    // ignore_keys: deviceId, refreshTick.value
     final future = useMemoized(fetch, [deviceId, refreshTick.value]);
     final snapshot = useFuture(future);
 
@@ -94,19 +97,19 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
           ),
         ),
         Expanded(
-          child: switch (snapshot.connectionState) {
-            ConnectionState.waiting => const Center(
+          child: switch ((snapshot.connectionState, snapshot.data)) {
+            (ConnectionState.waiting, _) => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
-            ConnectionState.done =>
-              snapshot.hasError
-                  ? _ErrorBody(message: snapshot.error.toString())
-                  : _Body(
-                      deviceId: deviceId,
-                      device: snapshot.data!.device,
-                      settings: snapshot.data!.settings,
-                      onReload: reload,
-                    ),
+            (ConnectionState.done, _) when snapshot.hasError => _ErrorBody(
+              message: snapshot.error.toString(),
+            ),
+            (ConnectionState.done, final data?) => _Body(
+              deviceId: deviceId,
+              device: data.device,
+              settings: data.settings,
+              onReload: reload,
+            ),
             _ => const SizedBox.shrink(),
           },
         ),
@@ -116,7 +119,7 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
 }
 
 class _Body extends HookConsumerWidget {
-  const _Body({
+  const new({
     required this.deviceId,
     required this.device,
     required this.settings,
@@ -253,9 +256,8 @@ class _Body extends HookConsumerWidget {
 
     Future<void> saveNotificationSettings() async {
       if (device == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('先にデバイスを登録してください')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('先にデバイスを登録してください')));
         return;
       }
       await runWithBusy(() async {
@@ -314,18 +316,25 @@ class _Body extends HookConsumerWidget {
         const SizedBox(height: 24),
         Text('サーバー上の状態', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
-        if (device == null)
-          Text(
+        switch (device) {
+          null => Text(
             '未登録（またはこの端末 ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
             ),
-          )
-        else ...[
-          _InfoRow(label: 'デバイス ID', value: device!.id),
-          _InfoRow(label: 'プラットフォーム', value: device!.platform.displayLabel),
-          _InfoRow(label: 'ロケール', value: device!.locale.name),
-        ],
+          ),
+          final registeredDevice => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _InfoRow(label: 'デバイス ID', value: registeredDevice.id),
+              _InfoRow(
+                label: 'Platform',
+                value: registeredDevice.platform.name,
+              ),
+              _InfoRow(label: 'ロケール', value: registeredDevice.locale.name),
+            ],
+          ),
+        },
         const SizedBox(height: 16),
         Text('デバイスの登録・編集・削除', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 4),
@@ -419,7 +428,7 @@ class _Body extends HookConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -453,7 +462,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.message});
+  const new({required this.message});
 
   final String message;
 

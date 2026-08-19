@@ -66,6 +66,17 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         }
     }
 
+    /// 震源名が無いときの見出し（「最大震度◯を観測」）に埋める文字列。
+    /// 「未入電」は電文の受信状況を指す内部事情で、見出しに混ぜると
+    /// 「最大震度5弱以上未入電を観測」のような読みづらい文になるため落とす。
+    var titleText: String {
+        switch self {
+        case .fiveLowerNoInput: return "5弱以上"
+        case .sixLowerNoInput: return "6弱以上"
+        default: return displayString
+        }
+    }
+
     /// 震度のメイン数字部分
     var mainNumber: String {
         switch self {

@@ -1,3 +1,6 @@
 [submodule "backend"]
 	path = backend
 	url = git@github.com:YumNumm/eqmonitor-backend.git
+[submodule "third_party/flutter_scene"]
+	path = third_party/flutter_scene
+	url = https://github.com/YumNumm/flutter_scene.git

@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// 震源サマリ表示コンポーネント
@@ -10,9 +9,9 @@ import 'package:intl/intl.dart';
 /// VXSE52, VXSE53, VXSE61, VXSE62 タイルで使用。
 /// 震源名・M・深さ・発生時刻を表示し、前報との差分があればチップで示す。
 class HypocenterSummary extends StatelessWidget {
-  const HypocenterSummary({required this.quake, this.diff, super.key});
+  const new({required this.quake, this.diff, super.key});
 
-  final EarthquakeTelegramBodyQuake quake;
+  final EarthquakeTelegramBodyQuakeModel quake;
   final HypocenterDiff? diff;
 
   @override
@@ -59,9 +58,9 @@ class HypocenterSummary extends StatelessWidget {
             ],
           ),
         ),
-        if (quake.originTime != null) ...[
+        if (quake.originTime case final originTime?) ...[
           const SizedBox(height: 2),
-          _OriginTimeLine(originTime: quake.originTime!),
+          _OriginTimeLine(originTime: originTime),
         ],
         if (diffChips.isNotEmpty) ...[
           const SizedBox(height: 4),
@@ -73,7 +72,7 @@ class HypocenterSummary extends StatelessWidget {
 }
 
 class _OriginTimeLine extends StatelessWidget {
-  const _OriginTimeLine({required this.originTime});
+  const new({required this.originTime});
 
   final String originTime;
 
@@ -99,7 +98,7 @@ class _OriginTimeLine extends StatelessWidget {
 }
 
 class _DiffChip extends StatelessWidget {
-  const _DiffChip({required this.text});
+  const new({required this.text});
 
   final String text;
 

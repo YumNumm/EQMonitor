@@ -1,17 +1,16 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/dialog/notification_permission_dialog.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum NotificationPresetSelectorStyle { onboarding, settings }
 
 class NotificationPresetSelector extends HookConsumerWidget {
-  const NotificationPresetSelector({
+  const new({
     required this.selectedPreset,
     required this.onChanged,
     required this.style,
@@ -46,27 +45,30 @@ class NotificationPresetSelector extends HookConsumerWidget {
     };
     final isOsGranted = permission?.isOsNotificationGranted ?? false;
 
-    useEffect(
-      () {
-        if (permission != null &&
-            !permission.isOsNotificationGranted &&
-            selectedPreset != NotificationPreset.none) {
-          onChanged(NotificationPreset.none);
-        }
-        return null;
-      },
-      [permission, selectedPreset],
-    );
+    useEffect(() {
+      if (permission != null &&
+          !permission.isOsNotificationGranted &&
+          selectedPreset != NotificationPreset.none) {
+        onChanged(NotificationPreset.none);
+      }
+      return null;
+      // onChanged は親が毎ビルド生成しうるコールバック。keysに入れると
+      // 親の再ビルドのたびにeffectが再実行される。ここで見たいのは
+      // 権限と選択中プリセットの変化だけ。
+      // ignore_keys: onChanged
+    }, [permission, selectedPreset]);
 
     void handlePresetTap(NotificationPreset preset) {
-      if (!isOsGranted && preset != NotificationPreset.none) {
-        showOsNotificationPermissionDialog(context, ref);
+      if (!isOsGranted && preset != .none) {
+        ref
+            .read(notificationPermissionDialogActionProvider)
+            .showOsPermission(context, ref);
         return;
       }
 
-      if (style == NotificationPresetSelectorStyle.settings &&
-          preset == NotificationPreset.custom &&
-          selectedPreset == NotificationPreset.custom) {
+      if (style == .settings &&
+          preset == .custom &&
+          selectedPreset == .custom) {
         onCustomSettingsTap?.call();
         return;
       }
@@ -90,31 +92,33 @@ class NotificationPresetSelector extends HookConsumerWidget {
     }
 
     return switch (style) {
-      NotificationPresetSelectorStyle.onboarding => _OnboardingPresetList(
+      .onboarding => _OnboardingPresetList(
         presets: _onboardingPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,
         onPresetTap: handlePresetTap,
-        onCriticalWarningTap: () =>
-            showCriticalAlertPermissionDialog(context, ref),
+        onCriticalWarningTap: () => ref
+            .read(notificationPermissionDialogActionProvider)
+            .showCriticalAlertPermission(context, ref),
       ),
-      NotificationPresetSelectorStyle.settings => _SettingsPresetGroup(
+      .settings => _SettingsPresetGroup(
         presets: _settingsPresetOrder,
         selectedPreset: selectedPreset,
         isPresetEnabled: isPresetEnabled,
         shouldShowCriticalWarning: shouldShowCriticalWarning,
         onPresetTap: handlePresetTap,
         onCustomSettingsTap: onCustomSettingsTap,
-        onCriticalWarningTap: () =>
-            showCriticalAlertPermissionDialog(context, ref),
+        onCriticalWarningTap: () => ref
+            .read(notificationPermissionDialogActionProvider)
+            .showCriticalAlertPermission(context, ref),
       ),
     };
   }
 }
 
 class _OnboardingPresetList extends StatelessWidget {
-  const _OnboardingPresetList({
+  const new({
     required this.presets,
     required this.selectedPreset,
     required this.isPresetEnabled,
@@ -154,7 +158,7 @@ class _OnboardingPresetList extends StatelessWidget {
 }
 
 class _OnboardingPresetCard extends StatelessWidget {
-  const _OnboardingPresetCard({
+  const new({
     required this.preset,
     required this.isSelected,
     required this.isEnabled,
@@ -203,15 +207,13 @@ class _OnboardingPresetCard extends StatelessWidget {
                     isSelected
                         ? Icons.radio_button_checked
                         : Icons.radio_button_unchecked,
-                    color: isSelected
-                        ? colorTheme.primary
-                        : colorTheme.outline,
+                    color: isSelected ? colorTheme.primary : colorTheme.outline,
                     size: 20,
                   ),
                   SizedBox(width: designSystem.spacing.sm),
                   Expanded(
                     child: Text(
-                      _presetTitle(preset),
+                      const _NotificationPresetLabel().title(preset),
                       style: designSystem.typography.titleMedium,
                     ),
                   ),
@@ -230,9 +232,7 @@ class _OnboardingPresetCard extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: designSystem.spacing.lg + designSystem.spacing.xs,
                   ),
-                  child: _CriticalAlertWarningLink(
-                    onTap: onCriticalWarningTap,
-                  ),
+                  child: _CriticalAlertWarningLink(onTap: onCriticalWarningTap),
                 ),
               ],
             ],
@@ -244,72 +244,64 @@ class _OnboardingPresetCard extends StatelessWidget {
 }
 
 class _OnboardingPresetDescription extends StatelessWidget {
-  const _OnboardingPresetDescription({required this.preset});
+  const new({required this.preset});
 
   final NotificationPreset preset;
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-
     return switch (preset) {
-      NotificationPreset.recommended => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      .recommended => Column(
+        crossAxisAlignment: .start,
         children: [
-          _PresetBulletItem(
-            text: '現在地の緊急地震速報(警報)',
-            designSystem: designSystem,
-          ),
+          _PresetBulletItem(text: '現在地の緊急地震速報(警報)'),
           _PresetBulletItem(
             text: '現在地で予想震度4以上の緊急地震速報(予報)',
-            designSystem: designSystem,
           ),
           _PresetBulletItem(
             text: '現在地で震度1以上を観測した地震情報',
-            designSystem: designSystem,
           ),
         ],
       ),
-      NotificationPreset.all => _PresetBulletItem(
-        text: '推奨設定に加え、全国の緊急地震速報・地震情報も通知します',
-        designSystem: designSystem,
+      .all => Column(
+        crossAxisAlignment: .start,
+        children: [
+          _PresetBulletItem(
+            text: 'すべての緊急地震速報・地震情報を通知します',
+          ),
+        ],
       ),
-      NotificationPreset.custom => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      .custom => Column(
+        crossAxisAlignment: .start,
         children: [
           _PresetBulletItem(
             text: '通知する地域や震度を細かく設定できます',
-            designSystem: designSystem,
           ),
           _PresetBulletItem(
-            text: 'Proではさらに通知音や割り込みレベルを設定できます',
-            designSystem: designSystem,
+            text: 'EQMonitor Pro(有料プラン)ではさらに通知音や割り込みレベルを設定できます',
           ),
         ],
       ),
       NotificationPreset.none => _PresetBulletItem(
-        text: '通知を受け取りません。後から設定で変更できます',
-        designSystem: designSystem,
+        text: '通知を受け取りません',
       ),
     };
   }
 }
 
 class _PresetBulletItem extends StatelessWidget {
-  const _PresetBulletItem({
-    required this.text,
-    required this.designSystem,
-  });
+  const new({required this.text});
 
   final String text;
-  final DesignSystemThemeExtension designSystem;
 
   @override
   Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
     return Padding(
       padding: EdgeInsets.only(bottom: designSystem.spacing.xs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '・',
@@ -332,7 +324,7 @@ class _PresetBulletItem extends StatelessWidget {
 }
 
 class _SettingsPresetGroup extends StatelessWidget {
-  const _SettingsPresetGroup({
+  const new({
     required this.presets,
     required this.selectedPreset,
     required this.isPresetEnabled,
@@ -393,7 +385,7 @@ class _SettingsPresetGroup extends StatelessWidget {
 }
 
 class _SettingsPresetTile extends StatelessWidget {
-  const _SettingsPresetTile({
+  const new({
     required this.preset,
     required this.isSelected,
     required this.isEnabled,
@@ -422,6 +414,7 @@ class _SettingsPresetTile extends StatelessWidget {
     final subtitleColor = isEnabled
         ? colorTheme.onSurfaceVariant
         : Theme.of(context).disabledColor;
+    final customSettingsTap = onCustomSettingsTap;
 
     return InkWell(
       onTap: onTap,
@@ -440,7 +433,7 @@ class _SettingsPresetTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _presetTitle(preset),
+                    const _NotificationPresetLabel().title(preset),
                     style: designSystem.typography.titleMedium.copyWith(
                       color: titleColor,
                       fontWeight: FontWeight.w700,
@@ -448,7 +441,7 @@ class _SettingsPresetTile extends StatelessWidget {
                   ),
                   SizedBox(height: spacing.xs),
                   Text(
-                    _settingsSubtitle(preset),
+                    const _NotificationPresetLabel().settingsSubtitle(preset),
                     style: designSystem.typography.bodySmall.copyWith(
                       color: subtitleColor,
                     ),
@@ -461,11 +454,11 @@ class _SettingsPresetTile extends StatelessWidget {
               ),
             ),
             if (preset == NotificationPreset.custom &&
-                onCustomSettingsTap != null) ...[
+                customSettingsTap != null) ...[
               SizedBox(width: spacing.sm),
               _CustomPresetTrailing(
                 enabled: isSelected && isEnabled,
-                onTap: onCustomSettingsTap!,
+                onTap: customSettingsTap,
               ),
             ],
           ],
@@ -476,7 +469,7 @@ class _SettingsPresetTile extends StatelessWidget {
 }
 
 class _PresetSelectionMark extends StatelessWidget {
-  const _PresetSelectionMark({required this.isSelected});
+  const new({required this.isSelected});
 
   final bool isSelected;
 
@@ -500,10 +493,7 @@ class _PresetSelectionMark extends StatelessWidget {
 }
 
 class _CustomPresetTrailing extends StatelessWidget {
-  const _CustomPresetTrailing({
-    required this.enabled,
-    required this.onTap,
-  });
+  const new({required this.enabled, required this.onTap});
 
   final bool enabled;
   final VoidCallback onTap;
@@ -537,7 +527,7 @@ class _CustomPresetTrailing extends StatelessWidget {
 }
 
 class _CriticalAlertWarningLink extends HookWidget {
-  const _CriticalAlertWarningLink({required this.onTap});
+  const new({required this.onTap});
 
   final VoidCallback onTap;
 
@@ -546,13 +536,10 @@ class _CriticalAlertWarningLink extends HookWidget {
     final designSystem = context.designSystem;
     final recognizer = useMemoized(TapGestureRecognizer.new);
 
-    useEffect(
-      () {
-        recognizer.onTap = onTap;
-        return recognizer.dispose;
-      },
-      [recognizer, onTap],
-    );
+    useEffect(() {
+      recognizer.onTap = onTap;
+      return recognizer.dispose;
+    }, [recognizer, onTap]);
 
     return Text.rich(
       TextSpan(
@@ -567,21 +554,20 @@ class _CriticalAlertWarningLink extends HookWidget {
   }
 }
 
-String _presetTitle(NotificationPreset preset) {
-  return switch (preset) {
+/// [NotificationPreset] の表示ラベルを組み立てる。
+class _NotificationPresetLabel {
+  const new();
+
+  String title(NotificationPreset preset) => switch (preset) {
     NotificationPreset.recommended => '推奨設定',
     NotificationPreset.all => 'すべて',
     NotificationPreset.custom => 'カスタム',
     NotificationPreset.none => '通知しない',
   };
-}
 
-String _settingsSubtitle(NotificationPreset preset) {
-  return switch (preset) {
-    NotificationPreset.recommended =>
-      '現在地の震度に応じて、EEWと地震情報を自動で通知します',
-    NotificationPreset.all =>
-      '推奨設定に加え、全国の緊急地震速報・地震情報も通知します',
+  String settingsSubtitle(NotificationPreset preset) => switch (preset) {
+    NotificationPreset.recommended => '現在地の震度に応じて、EEWと地震情報を自動で通知します',
+    NotificationPreset.all => '推奨設定に加え、全国のすべての地震・南海トラフ地震関連情報も通知します',
     NotificationPreset.custom => '通知の種類ごとに条件を細かく設定します',
     NotificationPreset.none => '通知を受け取りません。後から設定で変更できます',
   };

@@ -9,13 +9,14 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_trailing_icon_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
 class JmaIntensityContent extends HookWidget {
-  const JmaIntensityContent({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 
@@ -88,7 +89,7 @@ class JmaIntensityContent extends HookWidget {
 
 /// 長周期地震動階級の各地のツリー表示
 class LpgmIntensityContent extends HookWidget {
-  const LpgmIntensityContent({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 
@@ -164,7 +165,7 @@ class _PreliminaryBadge extends StatelessWidget {
 }
 
 class _PreliminaryIntensityLevelSection extends StatelessWidget {
-  const _PreliminaryIntensityLevelSection({
+  const new({
     required this.intensity,
     required this.regions,
     required this.dividerColor,
@@ -209,7 +210,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
 }
 
 class _IntensityLevelSection extends HookWidget {
-  const _IntensityLevelSection({
+  const new({
     required this.intensity,
     required this.dividerColor,
     required this.prefectures,
@@ -309,7 +310,7 @@ class _IntensityLevelSection extends HookWidget {
 }
 
 class _LpgmIntensityLevelSection extends HookWidget {
-  const _LpgmIntensityLevelSection({
+  const new({
     required this.intensity,
     required this.dividerColor,
     required this.prefectures,
@@ -403,7 +404,7 @@ class _LpgmIntensityLevelSection extends HookWidget {
 }
 
 class _PrefectureTile extends HookWidget {
-  const _PrefectureTile({required this.prefecture, required this.eventId});
+  const new({required this.prefecture, required this.eventId});
 
   final PrefectureIntensityNode prefecture;
   final String eventId;
@@ -413,7 +414,7 @@ class _PrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
     );
@@ -448,7 +449,7 @@ class _PrefectureTile extends HookWidget {
 }
 
 class _LpgmPrefectureTile extends HookWidget {
-  const _LpgmPrefectureTile({required this.prefecture, required this.eventId});
+  const new({required this.prefecture, required this.eventId});
 
   final PrefectureLpgmIntensityNode prefecture;
   final String eventId;
@@ -458,7 +459,7 @@ class _LpgmPrefectureTile extends HookWidget {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
     );
@@ -493,7 +494,7 @@ class _LpgmPrefectureTile extends HookWidget {
 }
 
 class _CityTile extends HookWidget {
-  const _CityTile({required this.city, required this.eventId});
+  const new({required this.city, required this.eventId});
 
   final CityIntensityNode city;
   final String? eventId;
@@ -503,7 +504,7 @@ class _CityTile extends HookWidget {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
 
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
@@ -536,7 +537,7 @@ class _CityTile extends HookWidget {
 }
 
 class _LpgmCityTile extends HookWidget {
-  const _LpgmCityTile({required this.city, required this.eventId});
+  const new({required this.city, required this.eventId});
 
   final CityLpgmIntensityNode city;
   final String? eventId;
@@ -545,7 +546,7 @@ class _LpgmCityTile extends HookWidget {
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
@@ -604,15 +605,4 @@ class _LpgmCityTile extends HookWidget {
       ],
     );
   }
-}
-
-Widget? _buildTrailing({required bool hasChildren, required bool isExpanded}) {
-  if (!hasChildren) {
-    return null;
-  }
-  return AnimatedRotation(
-    turns: isExpanded ? 0.5 : 0.0,
-    duration: const Duration(milliseconds: 200),
-    child: const Icon(Icons.expand_more),
-  );
 }

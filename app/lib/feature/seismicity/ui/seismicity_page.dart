@@ -29,7 +29,7 @@ import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_span_selec
 import 'package:eqmonitor/feature/seismicity/ui/layer/hypocenter_pmtiles_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +37,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 地震活動画面(震央分布 + 矩形選択によるM-T図・積算・深さ断面)。
 class SeismicityPage extends HookConsumerWidget {
-  const SeismicityPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,6 +68,9 @@ class SeismicityPage extends HookConsumerWidget {
       selectedArchiveIds.value = selected.map((archive) => archive.id).toSet();
       hasSynchronizedManifest.value = true;
       return null;
+      // このeffect自身が selectedArchiveIds を書き換えるため、keysに入れると
+      // 無限に再実行される。manifest の変化にのみ追従させる。
+      // ignore_keys: selectedArchiveIds.value
     }, [manifest]);
     final selectedArchives =
         manifest?.archives
@@ -297,7 +300,7 @@ class SeismicityPage extends HookConsumerWidget {
 }
 
 class _MapBody extends HookConsumerWidget {
-  const _MapBody({
+  const new({
     required this.styleString,
     required this.mode,
     required this.datasetAsync,

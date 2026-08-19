@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 震度凡例オーバーレイウィジェット
 ///
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 /// [showingLpgmIntensity] が true の場合は長周期地震動階級を表示する。
 /// [shindoDbTree] が指定された場合は震度DBモードの凡例を表示する。
 class EarthquakeHistoryMapLegend extends StatelessWidget {
-  const EarthquakeHistoryMapLegend({
+  const new({
     required this.intensity,
     this.showingLpgmIntensity = false,
     this.shindoDbTree,
@@ -26,18 +26,20 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (shindoDbTree != null) {
+    final tree = shindoDbTree;
+    if (tree != null) {
       return Card(
         color: context.designSystem.colorTheme.surface.withValues(alpha: 0.85),
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: _ShindoDbLegend(tree: shindoDbTree!),
+          child: _ShindoDbLegend(tree: tree),
         ),
       );
     }
 
-    if (intensity == null) {
+    final currentIntensity = intensity;
+    if (currentIntensity == null) {
       return const SizedBox.shrink();
     }
 
@@ -47,15 +49,15 @@ class EarthquakeHistoryMapLegend extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: showingLpgmIntensity
-            ? _LpgmLegend(intensity: intensity!)
-            : _JmaLegend(intensity: intensity!),
+            ? _LpgmLegend(intensity: currentIntensity)
+            : _JmaLegend(intensity: currentIntensity),
       ),
     );
   }
 }
 
 class _JmaLegend extends StatelessWidget {
-  const _JmaLegend({required this.intensity});
+  const new({required this.intensity});
   final EarthquakeIntensity intensity;
 
   @override
@@ -78,7 +80,7 @@ class _JmaLegend extends StatelessWidget {
 }
 
 class _LpgmLegend extends StatelessWidget {
-  const _LpgmLegend({required this.intensity});
+  const new({required this.intensity});
   final EarthquakeIntensity intensity;
 
   @override
@@ -104,7 +106,7 @@ class _LpgmLegend extends StatelessWidget {
 }
 
 class _ShindoDbLegend extends StatelessWidget {
-  const _ShindoDbLegend({required this.tree});
+  const new({required this.tree});
   final ShindoDbIntensityTree tree;
 
   @override

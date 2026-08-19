@@ -6,7 +6,7 @@ import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_limits.dart';
 
 final class PmTilesV3HeaderDecoder {
-  const PmTilesV3HeaderDecoder();
+  const new();
 
   static const headerLength = 127;
   static const mvtTileType = 1;

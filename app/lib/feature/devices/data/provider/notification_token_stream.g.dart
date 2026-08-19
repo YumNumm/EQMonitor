@@ -51,7 +51,7 @@ final class NotificationTokenStreamProvider
 }
 
 String _$notificationTokenStreamHash() =>
-    r'7f36393a44b21f517cc9595fcc2e6c5ba359a55c';
+    r'e826d309f71108269159d135cfb266fa7a5a2f81';
 
 @ProviderFor(_firebaseMessagingTokenStream)
 final _firebaseMessagingTokenStreamProvider =
@@ -86,27 +86,28 @@ final class _FirebaseMessagingTokenStreamProvider
 }
 
 String _$_firebaseMessagingTokenStreamHash() =>
-    r'531082fafb2b2c1693d45b8e952495605f037425';
+    r'591364b9f4a43387d577e93968f9c92ca3136354';
 
-@ProviderFor(_apnsTokenStream)
-final _apnsTokenStreamProvider = _ApnsTokenStreamProvider._();
+@ProviderFor(apnsNotificationTokenStream)
+final apnsNotificationTokenStreamProvider =
+    ApnsNotificationTokenStreamProvider._();
 
-final class _ApnsTokenStreamProvider
+final class ApnsNotificationTokenStreamProvider
     extends $FunctionalProvider<AsyncValue<String>, String, Stream<String>>
     with $FutureModifier<String>, $StreamProvider<String> {
-  _ApnsTokenStreamProvider._()
+  ApnsNotificationTokenStreamProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'_apnsTokenStreamProvider',
+        name: r'apnsNotificationTokenStreamProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$_apnsTokenStreamHash();
+  String debugGetCreateSourceHash() => _$apnsNotificationTokenStreamHash();
 
   @$internal
   @override
@@ -115,11 +116,12 @@ final class _ApnsTokenStreamProvider
 
   @override
   Stream<String> create(Ref ref) {
-    return _apnsTokenStream(ref);
+    return apnsNotificationTokenStream(ref);
   }
 }
 
-String _$_apnsTokenStreamHash() => r'8a2958cfd75fb295e13e223ebba4e3dbb07cb145';
+String _$apnsNotificationTokenStreamHash() =>
+    r'1bebe9e03f8351df51eef0a40b955116781c51f1';
 
 @ProviderFor(apnsPushToStartTokenStream)
 final apnsPushToStartTokenStreamProvider =

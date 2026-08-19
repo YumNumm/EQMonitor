@@ -1,11 +1,11 @@
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_fig_view.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_movie_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// K-NET all/fig PNG・all/movie MP4 を表示するページ
 class KnetMediaPage extends StatelessWidget {
-  const KnetMediaPage({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   /// 地震発生時刻（JST）
   final DateTime eventTime;

@@ -21,7 +21,7 @@ void main() {
 }
 
 final class _RecordingFeedRepository extends FeedRepository {
-  _RecordingFeedRepository() : super(api: api.ApiClient(Dio()));
+  new() : super(api: api.ApiClient(Dio()));
 
   final List<api.ApiClient?> clients = [];
   final List<String?> cursors = [];

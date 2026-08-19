@@ -16,12 +16,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryParameterPersistentDelegate
     extends SliverPersistentHeaderDelegate {
-  const EarthquakeHistoryParameterPersistentDelegate({
+  const new({
     required this.parameter,
     required this.onChanged,
   });
@@ -56,7 +56,7 @@ class EarthquakeHistoryParameterPersistentDelegate
 }
 
 class _FilterChipBar extends ConsumerWidget {
-  const _FilterChipBar({required this.parameter, required this.onChanged});
+  const new({required this.parameter, required this.onChanged});
 
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;

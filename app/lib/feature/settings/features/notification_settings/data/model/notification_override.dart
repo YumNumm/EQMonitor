@@ -3,14 +3,18 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_override.freezed.dart';
+part 'notification_override.g.dart';
 
 @freezed
 abstract class NotificationOverride with _$NotificationOverride {
-  const factory NotificationOverride({
+  const factory({
     required JmaIntensity minJmaIntensity,
     required String sound,
     required InterruptionLevel interruptionLevel,
   }) = _NotificationOverride;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$NotificationOverrideFromJson(json);
 }
 
 // InterruptionLevel のアプリ側 enum
@@ -53,8 +57,8 @@ extension ApiDefaultInterruptionLevelConverter on api.DefaultInterruptionLevel {
   };
 }
 
-extension ApiCurrentLocationInterruptionLevelConverter
-    on api.CurrentLocationInterruptionLevel {
+extension ApiNationwideInterruptionLevelConverter
+    on api.NationwideInterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
     .passive => .passive,
     .active => .active,
@@ -63,12 +67,13 @@ extension ApiCurrentLocationInterruptionLevelConverter
   };
 }
 
-extension ApiNationwideInterruptionLevelConverter
-    on api.NationwideInterruptionLevel {
+extension ApiCurrentLocationInterruptionLevelConverter
+    on api.CurrentLocationInterruptionLevel {
   InterruptionLevel get toAppInterruptionLevel => switch (this) {
     .passive => .passive,
     .active => .active,
     .timeSensitive => .timeSensitive,
+    .critical => .critical,
   };
 }
 
@@ -88,6 +93,14 @@ extension InterruptionLevelToApi on InterruptionLevel {
         .critical => api.DefaultInterruptionLevel.critical,
       };
 
+  api.NationwideInterruptionLevel get toApiNationwideInterruptionLevel =>
+      switch (this) {
+        .passive => .passive,
+        .active => .active,
+        .timeSensitive => .timeSensitive,
+        .critical => .critical,
+      };
+
   api.CurrentLocationInterruptionLevel
   get toApiCurrentLocationInterruptionLevel => switch (this) {
     .passive => .passive,
@@ -95,16 +108,6 @@ extension InterruptionLevelToApi on InterruptionLevel {
     .timeSensitive => .timeSensitive,
     .critical => .critical,
   };
-
-  api.NationwideInterruptionLevel get toApiNationwideInterruptionLevel =>
-      switch (this) {
-        .passive => .passive,
-        .active => .active,
-        .timeSensitive => .timeSensitive,
-        .critical => throw StateError(
-          'critical cannot be used for nationwide EEW warnings',
-        ),
-      };
 }
 
 extension NotificationOverrideToApi on NotificationOverride {

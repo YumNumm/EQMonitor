@@ -4,13 +4,12 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
+import 'package:eqmonitor_lints_plugin/src/top_level_function_exemption.dart';
 
 class AvoidTopLevelFunctions extends AnalysisRule {
-  AvoidTopLevelFunctions()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+  new()
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_top_level_functions',
@@ -30,34 +29,28 @@ class AvoidTopLevelFunctions extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) => registry.addFunctionDeclaration(this, _Visitor(this));
+  ) {
+    final path = context.definingUnit.unit.declaredFragment?.source.fullName;
+    if (path != null && LintTargetScope.isExcluded(path: path)) {
+      return;
+    }
+    registry.addFunctionDeclaration(this, _Visitor(this));
+  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
-
-  static const _riverpodNames = {'riverpod', 'Riverpod'};
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.parent is! CompilationUnit) {
       return;
     }
-    // @riverpod / @Riverpod 付き関数プロバイダは慣用的なため自動で除外する。
-    if (_hasRiverpodAnnotation(node.metadata)) {
+    if (TopLevelFunctionExemption.isExempt(node: node)) {
       return;
     }
     rule.reportAtToken(node.name);
-  }
-
-  bool _hasRiverpodAnnotation(NodeList<Annotation> metadata) {
-    for (final annotation in metadata) {
-      if (_riverpodNames.contains(annotation.name.name)) {
-        return true;
-      }
-    }
-    return false;
   }
 }

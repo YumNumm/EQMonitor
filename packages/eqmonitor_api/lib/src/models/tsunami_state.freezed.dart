@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tsunami_state.dart';
@@ -9,6 +9,7 @@ part of 'tsunami_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$TsunamiStateCopyWithImpl<$Res>
 /// Create a copy of TsunamiState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventIds = null,Object? isActive = null,Object? isCanceled = null,Object? updatedAt = null,Object? earthquakes = null,Object? latestTelegrams = null,Object? regions = null,Object? offshoreStations = null,}) {
-  return _then(_self.copyWith(
+  return _then(TsunamiState(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self.eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
@@ -217,7 +218,7 @@ return $default(_that.id,_that.eventIds,_that.isActive,_that.isCanceled,_that.up
 @JsonSerializable()
 
 class _TsunamiState implements TsunamiState {
-  const _TsunamiState({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, @JsonKey(name: 'is_active') required this.isActive, @JsonKey(name: 'is_canceled') required this.isCanceled, @JsonKey(name: 'updated_at') required this.updatedAt, required final  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams') required final  List<LatestTelegram> latestTelegrams, required final  List<TsunamiRegion> regions, @JsonKey(name: 'offshore_stations') required final  List<TsunamiOffshoreStation> offshoreStations}): _eventIds = eventIds,_earthquakes = earthquakes,_latestTelegrams = latestTelegrams,_regions = regions,_offshoreStations = offshoreStations;
+  const _TsunamiState({required this.id, @JsonKey(name: 'event_ids') required  List<String> eventIds, @JsonKey(name: 'is_active') required this.isActive, @JsonKey(name: 'is_canceled') required this.isCanceled, @JsonKey(name: 'updated_at') required this.updatedAt, required  List<TsunamiStateEarthquake> earthquakes, @JsonKey(name: 'latest_telegrams') required  List<LatestTelegram> latestTelegrams, required  List<TsunamiRegion> regions, @JsonKey(name: 'offshore_stations') required  List<TsunamiOffshoreStation> offshoreStations}): _eventIds = eventIds,_earthquakes = earthquakes,_latestTelegrams = latestTelegrams,_regions = regions,_offshoreStations = offshoreStations;
   factory _TsunamiState.fromJson(Map<String, dynamic> json) => _$TsunamiStateFromJson(json);
 
 @override final  String id;

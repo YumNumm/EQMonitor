@@ -5,8 +5,8 @@ part 'ntp_state.g.dart';
 
 @freezed
 abstract class NtpState with _$NtpState {
-  const factory NtpState({int? offset, DateTime? updatedAt}) = _NtpStateModel;
+  const factory({int? offset, DateTime? updatedAt}) = _NtpStateModel;
 
-  factory NtpState.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$NtpStateModelFromJson(json);
 }

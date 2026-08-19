@@ -1,6 +1,6 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
-/// アプリ側の長周期地震動階級（観測・予想共通）
+/// 長周期地震動階級
 enum JmaLpgmIntensity {
   unknown,
   zero,
@@ -18,7 +18,6 @@ enum JmaLpgmIntensity {
     .four => '4',
   };
 
-  /// ソート・比較用の順序
   int get orderIndex => switch (this) {
     .unknown => -1,
     .zero => 0,

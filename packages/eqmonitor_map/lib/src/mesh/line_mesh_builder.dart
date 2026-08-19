@@ -36,7 +36,7 @@ const _antiParallelEpsilon = 1e-6;
 /// builder内部では頂点の除去(重複・零長segment)以外に座標を生成・加工
 /// しない。
 final class LineMeshBuilder {
-  LineMeshBuilder({required this.limits, required this.miterLimit}) {
+  new({required this.limits, required this.miterLimit}) {
     if (limits.maxVerticesPerSegment <= 0 ||
         limits.maxVerticesPerSegment > _maxIndexableVerticesPerSegment) {
       throw ArgumentError.value(

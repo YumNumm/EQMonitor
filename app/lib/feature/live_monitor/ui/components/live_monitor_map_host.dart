@@ -7,13 +7,13 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class LiveMonitorMapHost extends StatelessWidget {
-  const LiveMonitorMapHost({
+  const new({
     required this.slotId,
     required this.focus,
     required this.layers,
@@ -38,7 +38,7 @@ class LiveMonitorMapHost extends StatelessWidget {
 }
 
 class _LiveMonitorMapViewport extends HookConsumerWidget {
-  const _LiveMonitorMapViewport({
+  const new({
     required this.slotId,
     required this.focus,
     required this.layers,
@@ -66,6 +66,9 @@ class _LiveMonitorMapViewport extends HookConsumerWidget {
       ),
       _ => null,
     };
+    // instanceKey はコールバック本体からは参照されないが、インスタンスを
+    // 作り直す契機そのものなので keys から外せない。
+    // ignore_keys: instanceKey
     final instanceIdentity = useMemoized(instanceOwner.switchInstance, [
       instanceKey,
     ]);
@@ -136,7 +139,7 @@ class _LiveMonitorMapViewport extends HookConsumerWidget {
 }
 
 class _LiveMonitorMapContent extends StatelessWidget {
-  const _LiveMonitorMapContent({
+  const new({
     required this.slotId,
     required this.styleString,
     required this.mapSettings,
@@ -154,7 +157,7 @@ class _LiveMonitorMapContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MapLibreMap(
       key: ValueKey((slotId, styleString, mapSettings)),
-      options: homeMapOptionsFromSettings(
+      options: const HomeMapOptionsBuilder().build(
         context: context,
         styleString: styleString,
         map: mapSettings,
@@ -180,7 +183,7 @@ extension LiveMonitorMapPaddingFlutterX on LiveMonitorMapPadding {
 }
 
 class _LiveMonitorMapLoadingCard extends StatelessWidget {
-  const _LiveMonitorMapLoadingCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +206,7 @@ class _LiveMonitorMapLoadingCard extends StatelessWidget {
 }
 
 class _LiveMonitorMapErrorCard extends StatelessWidget {
-  const _LiveMonitorMapErrorCard({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

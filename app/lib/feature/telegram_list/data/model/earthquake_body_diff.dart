@@ -22,7 +22,7 @@ enum IntensityDiffType {
 /// 震度地域の差分情報
 @freezed
 abstract class IntensityRegionDiffEntry with _$IntensityRegionDiffEntry {
-  const factory IntensityRegionDiffEntry({
+  const factory({
     required String code,
     required String name,
     required JmaIntensity intensity,
@@ -30,14 +30,14 @@ abstract class IntensityRegionDiffEntry with _$IntensityRegionDiffEntry {
     JmaIntensity? previousIntensity,
   }) = _IntensityRegionDiffEntry;
 
-  factory IntensityRegionDiffEntry.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$IntensityRegionDiffEntryFromJson(json);
 }
 
 /// 震源要素の差分情報
 @freezed
 abstract class HypocenterDiff with _$HypocenterDiff {
-  const factory HypocenterDiff({
+  const factory({
     String? oldMagnitude,
     String? newMagnitude,
     num? oldDepth,
@@ -48,14 +48,21 @@ abstract class HypocenterDiff with _$HypocenterDiff {
     JmaIntensity? newMaxIntensity,
   }) = _HypocenterDiff;
 
-  const HypocenterDiff._();
+  const new _();
 
-  factory HypocenterDiff.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HypocenterDiffFromJson(json);
 
-  bool hasMagnitudeChange() => oldMagnitude != newMagnitude;
-  bool hasDepthChange() => oldDepth != newDepth;
-  bool hasEpicenterNameChange() => oldEpicenterName != newEpicenterName;
+  bool hasMagnitudeChange() =>
+      oldMagnitude != null &&
+      newMagnitude != null &&
+      oldMagnitude != newMagnitude;
+  bool hasDepthChange() =>
+      oldDepth != null && newDepth != null && oldDepth != newDepth;
+  bool hasEpicenterNameChange() =>
+      oldEpicenterName != null &&
+      newEpicenterName != null &&
+      oldEpicenterName != newEpicenterName;
   bool hasMaxIntensityChange() => oldMaxIntensity != newMaxIntensity;
 
   bool hasAnyChange() =>

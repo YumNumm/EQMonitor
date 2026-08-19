@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_client_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
 
 /// K-NET all/fig PNG 図を表示するビュー
 class KnetFigView extends HookConsumerWidget {
-  const KnetFigView({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   final DateTime eventTime;
 
@@ -26,9 +26,7 @@ class KnetFigView extends HookConsumerWidget {
       ),
       data: (client) {
         if (client == null) {
-          return const Center(
-            child: Text('認証情報が設定されていません'),
-          );
+          return const Center(child: Text('認証情報が設定されていません'));
         }
         return _FigContent(eventTime: eventTime, client: client);
       },
@@ -37,7 +35,7 @@ class KnetFigView extends HookConsumerWidget {
 }
 
 class _FigContent extends HookWidget {
-  const _FigContent({required this.eventTime, required this.client});
+  const new({required this.eventTime, required this.client});
 
   final DateTime eventTime;
   final KnetDownloadClient client;
@@ -64,13 +62,15 @@ class _FigContent extends HookWidget {
       }
     }
 
-    useEffect(
-      () {
-        unawaited(loadImage());
-        return null;
-      },
-      [selectedType.value, eventTime],
-    );
+    useEffect(() {
+      unawaited(loadImage());
+      return null;
+      // loadImage はローカル関数なので毎ビルド識別子が変わる。keysに入れると
+      // 毎ビルド再取得になる。selectedType/eventTime は loadImage 内で
+      // 実際に使っており（プラグインはローカル関数越しの参照を追えない）、
+      // 再ロードの契機そのものなので外せない。
+      // ignore_keys: loadImage, selectedType.value, eventTime
+    }, [selectedType.value, eventTime]);
 
     return Column(
       children: [
@@ -92,10 +92,7 @@ class _FigContent extends HookWidget {
 }
 
 class _FigTypeSelector extends StatelessWidget {
-  const _FigTypeSelector({
-    required this.selected,
-    required this.onChanged,
-  });
+  const new({required this.selected, required this.onChanged});
 
   final KnetFigType selected;
   final ValueChanged<KnetFigType> onChanged;
@@ -120,7 +117,7 @@ class _FigTypeSelector extends StatelessWidget {
 }
 
 class _ImageArea extends StatelessWidget {
-  const _ImageArea({
+  const new({
     required this.isLoading,
     required this.onRetry,
     this.errorMessage,
@@ -138,10 +135,11 @@ class _ImageArea extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (errorMessage != null) {
-      return _ErrorView(message: errorMessage!, onRetry: onRetry);
+    if (errorMessage case final errorMessage?) {
+      return _ErrorView(message: errorMessage, onRetry: onRetry);
     }
 
+    final imageBytes = this.imageBytes;
     if (imageBytes == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -151,7 +149,7 @@ class _ImageArea extends StatelessWidget {
       maxScale: 5,
       child: Center(
         child: Image.memory(
-          imageBytes!,
+          imageBytes,
           fit: BoxFit.contain,
           errorBuilder: (context, error, _) =>
               _ErrorView(message: error.toString(), onRetry: onRetry),
@@ -162,7 +160,7 @@ class _ImageArea extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const new({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

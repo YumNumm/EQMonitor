@@ -6,7 +6,7 @@ part 'shake_detection_snapshot.freezed.dart';
 
 @Freezed()
 abstract class ShakeDetectionSnapshot with _$ShakeDetectionSnapshot {
-  const factory ShakeDetectionSnapshot({
+  const factory({
     required int revision,
     required DateTime responseAt,
     required List<ShakeDetectionEvent> events,

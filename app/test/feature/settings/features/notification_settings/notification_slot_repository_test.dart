@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -36,16 +37,27 @@ void main() {
   });
 
   group('putCurrentLocation', () {
-    test('sends request and returns slot', () async {
+    test('clamps minimum intensities below the floor when enabling', () async {
       final slot = await repository.putCurrentLocation(
         eewEnabled: true,
-        eewMinIntensity: JmaIntensity.four,
+        eewMinIntensity: JmaIntensity.three,
+        earthquakeEnabled: true,
+        earthquakeMinIntensity: JmaIntensity.two,
       );
 
       expect(slot.slotType, NotificationSlotType.currentLocation);
       expect(slot.eewEnabled, isTrue);
       expect(adapter.lastRequestBody, isNotNull);
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['eew_min_intensity'],
+        api.JmaIntensity.value4,
+      );
+      expect(adapter.lastRequestBody!['earthquake_enabled'], isTrue);
+      expect(
+        adapter.lastRequestBody!['earthquake_min_intensity'],
+        api.JmaIntensity.value2,
+      );
     });
 
     test('sends eew_enabled/earthquake_enabled=false when called without '
@@ -93,6 +105,43 @@ void main() {
     });
   });
 
+  group('replaceSlots', () {
+    test('sends the slot list and returns the parsed slots', () async {
+      final slots = await repository.replaceSlots(const [
+        NotificationSlotDraft(
+          slotType: NotificationSlotType.currentLocation,
+          eewEnabled: true,
+          eewMinIntensity: JmaIntensity.four,
+          earthquakeEnabled: true,
+          earthquakeMinIntensity: JmaIntensity.one,
+        ),
+        NotificationSlotDraft(
+          slotType: NotificationSlotType.nationwide,
+          eewEnabled: true,
+          eewMinIntensity: JmaIntensity.zero,
+          earthquakeEnabled: true,
+          earthquakeMinIntensity: JmaIntensity.zero,
+        ),
+      ]);
+
+      expect(slots, hasLength(2));
+      expect(adapter.lastRequestList, isNotNull);
+      expect(adapter.lastRequestList, hasLength(2));
+      final nationwide = adapter.lastRequestList!
+          .cast<Map<String, dynamic>>()
+          .firstWhere(
+            (e) => e['slot_type'] == api.SlotType.nationwide,
+          );
+      expect(nationwide['eew_min_intensity'], api.JmaIntensity.value0);
+      expect(nationwide['earthquake_min_intensity'], api.JmaIntensity.value0);
+    });
+
+    test('sends an empty array to delete every slot', () async {
+      await repository.replaceSlots(const []);
+      expect(adapter.lastRequestList, isEmpty);
+    });
+  });
+
   group('addRegion', () {
     test('sends create request with regionId', () async {
       final slot = await repository.addRegion(
@@ -109,7 +158,7 @@ void main() {
   });
 
   group('updateRegion', () {
-    test('sends default eew minimum intensity when enabling eew', () async {
+    test('clamps the default eew minimum intensity to the floor', () async {
       await repository.updateRegion(
         slotId: 'slot-123',
         eewEnabled: true,
@@ -119,7 +168,7 @@ void main() {
       expect(adapter.lastRequestBody!['eew_enabled'], isTrue);
       expect(
         adapter.lastRequestBody!['eew_min_intensity'],
-        api.JmaIntensity.value3,
+        api.JmaIntensity.value4,
       );
       expect(adapter.lastRequestBody!['earthquake_enabled'], isFalse);
       expect(
@@ -172,32 +221,22 @@ void main() {
   });
 
   group('patchEewWarningConfig', () {
-    test('sends current and nationwide interruption levels', () async {
+    test('sends patch and returns updated settings', () async {
       final settings = await repository.patchEewWarningConfig(
         target: EewWarningTarget.currentLocationAndNationwide,
-        currentLocationInterruptionLevel: InterruptionLevel.active,
+        currentLocationInterruptionLevel: InterruptionLevel.critical,
         nationwideInterruptionLevel: InterruptionLevel.timeSensitive,
       );
 
       expect(
-        adapter.lastRequestBody,
-        containsPair(
-          'current_location_interruption_level',
-          api.CurrentLocationInterruptionLevel.active,
-        ),
+        adapter.lastRequestBody!['current_location_interruption_level'],
+        api.CurrentLocationInterruptionLevel.critical,
       );
       expect(
-        adapter.lastRequestBody,
-        containsPair(
-          'nationwide_interruption_level',
-          api.NationwideInterruptionLevel.timeSensitive,
-        ),
+        adapter.lastRequestBody!['nationwide_interruption_level'],
+        api.NationwideInterruptionLevel.timeSensitive,
       );
       expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
-      expect(
-        settings.currentLocationInterruptionLevel,
-        InterruptionLevel.active,
-      );
       expect(
         settings.nationwideInterruptionLevel,
         InterruptionLevel.timeSensitive,
@@ -219,6 +258,7 @@ void main() {
 
 final class _SlotApiAdapter implements HttpClientAdapter {
   Map<String, dynamic>? lastRequestBody;
+  List<dynamic>? lastRequestList;
   String? lastDeletedSlotId;
 
   @override
@@ -242,6 +282,13 @@ final class _SlotApiAdapter implements HttpClientAdapter {
       lastRequestBody = Map<String, dynamic>.from(
         options.data as Map<String, dynamic>,
       );
+    }
+    if (options.data is List) {
+      lastRequestList = List<dynamic>.from(options.data as List);
+    }
+
+    if (path.endsWith('/slots') && method == 'PUT') {
+      return _jsonResponse(jsonEncode(_slotsListResponse));
     }
 
     if (path.endsWith('/slots') && method == 'GET') {
@@ -369,7 +416,7 @@ const Map<String, String?> _eewWarningResponse = {
 
 const _eewWarningResponseNationwide = {
   'target': 'current_location_and_nationwide',
-  'current_location_interruption_level': 'active',
+  'current_location_interruption_level': 'critical',
   'nationwide_interruption_level': 'time_sensitive',
 };
 

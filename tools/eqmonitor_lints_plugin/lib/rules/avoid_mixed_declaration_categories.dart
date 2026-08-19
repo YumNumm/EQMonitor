@@ -4,13 +4,11 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:eqmonitor_lints_plugin/src/lint_target_scope.dart';
 
 class AvoidMixedDeclarationCategories extends AnalysisRule {
-  AvoidMixedDeclarationCategories()
-    : super(
-        name: _code.name,
-        description: _code.problemMessage,
-      );
+  new()
+    : super(name: _code.name, description: _code.problemMessage);
 
   static const _code = LintCode(
     'avoid_mixed_declaration_categories',
@@ -29,7 +27,13 @@ class AvoidMixedDeclarationCategories extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) => registry.addCompilationUnit(this, _Visitor(this));
+  ) {
+    final path = context.definingUnit.unit.declaredFragment?.source.fullName;
+    if (path != null && LintTargetScope.isExcluded(path: path)) {
+      return;
+    }
+    registry.addCompilationUnit(this, _Visitor(this));
+  }
 }
 
 /// ファイル内のトップレベル class 系宣言のカテゴリ。
@@ -46,7 +50,7 @@ enum _Category {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
+  new(this.rule);
 
   final AnalysisRule rule;
 

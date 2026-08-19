@@ -17,28 +17,33 @@ class JapanMainIslandBounds {
   );
 }
 
-/// [HomeMapSettings.defaultBounds] に対応する [LngLatBounds]。
-LngLatBounds lngLatBoundsForHomeMapSettings(HomeMapSettings settings) {
-  switch (settings.defaultBounds) {
-    case .mainIsland:
-      return JapanMainIslandBounds.lngLatBounds;
-    case .all:
-      return const LngLatBounds(
-        longitudeWest: JapanBounds.minLng,
-        longitudeEast: JapanBounds.maxLng,
-        latitudeSouth: JapanBounds.minLat,
-        latitudeNorth: JapanBounds.maxLat,
-      );
-    case .custom:
-      final c = settings.customBounds;
-      if (c == null) {
+/// [HomeMapSettings] からホームマップの表示範囲を解決するクラス
+class HomeMapBoundsResolver {
+  const new();
+
+  /// [HomeMapSettings.defaultBounds] に対応する [LngLatBounds]。
+  LngLatBounds resolve(HomeMapSettings settings) {
+    switch (settings.defaultBounds) {
+      case .mainIsland:
         return JapanMainIslandBounds.lngLatBounds;
-      }
-      return LngLatBounds(
-        longitudeWest: c.southWest.lon,
-        longitudeEast: c.northEast.lon,
-        latitudeSouth: c.southWest.lat,
-        latitudeNorth: c.northEast.lat,
-      );
+      case .all:
+        return const LngLatBounds(
+          longitudeWest: JapanBounds.minLng,
+          longitudeEast: JapanBounds.maxLng,
+          latitudeSouth: JapanBounds.minLat,
+          latitudeNorth: JapanBounds.maxLat,
+        );
+      case .custom:
+        final c = settings.customBounds;
+        if (c == null) {
+          return JapanMainIslandBounds.lngLatBounds;
+        }
+        return LngLatBounds(
+          longitudeWest: c.southWest.lon,
+          longitudeEast: c.northEast.lon,
+          latitudeSouth: c.southWest.lat,
+          latitudeNorth: c.northEast.lat,
+        );
+    }
   }
 }

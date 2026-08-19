@@ -3,11 +3,11 @@ import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ErrorCard extends ConsumerWidget {
-  const ErrorCard({
+  const new({
     required this.error,
     super.key,
     this.title,
@@ -76,18 +76,19 @@ class ErrorCard extends ConsumerWidget {
               children: [
                 if (onReload case final reload?)
                   FilledButton.tonalIcon(
-                    onPressed: () => FullScreenCircularProgressIndicator
-                        .showUntil(context, reload),
+                    onPressed: () =>
+                        FullScreenCircularProgressIndicator.showUntil(
+                          context,
+                          reload,
+                        ),
                     icon: const Icon(Icons.refresh_rounded, size: 18),
                     label: const Text('再試行'),
                   ),
                 if (showDetails)
                   TextButton(
-                    onPressed: () => showErrorDetailsSheet(
-                      context,
-                      error: error,
-                      stackTrace: stackTrace,
-                    ),
+                    onPressed: () => ref
+                        .read(errorDetailsSheetActionProvider)
+                        .show(context, error: error, stackTrace: stackTrace),
                     child: const Text('詳細'),
                   ),
                 if (showContact)

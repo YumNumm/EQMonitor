@@ -20,7 +20,7 @@ EewTelegramItem _makeEew({
 );
 
 class _FakeEewAliveTelegram extends EewAliveTelegram {
-  _FakeEewAliveTelegram(this._value);
+  new(this._value);
   final List<EewTelegramItem>? _value;
 
   @override

@@ -1,17 +1,18 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
+import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
+import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/changelog/data/provider/changelog_entries_provider.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class ChangelogPage extends ConsumerWidget {
-  const ChangelogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(changelogProvider);
+    final state = ref.watch(changelogEntriesProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('変更履歴')),
@@ -40,16 +41,16 @@ class ChangelogPage extends ConsumerWidget {
             ],
           ),
         ),
-        AsyncData(:final value) => _ChangelogList(entries: value.entries),
+        AsyncData(:final value) => _ChangelogList(entries: value),
       },
     );
   }
 }
 
 class _ChangelogList extends StatelessWidget {
-  const _ChangelogList({required this.entries});
+  const new({required this.entries});
 
-  final List<api.ChangelogEntry> entries;
+  final List<ChangelogEntryModel> entries;
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +67,9 @@ class _ChangelogList extends StatelessWidget {
 }
 
 class ChangelogEntryCard extends StatelessWidget {
-  const ChangelogEntryCard({required this.entry, super.key});
+  const new({required this.entry, super.key});
 
-  final api.ChangelogEntry entry;
+  final ChangelogEntryModel entry;
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +96,7 @@ class ChangelogEntryCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           if (content != null && content.isNotEmpty)
-            MarkdownBody(
-              data: content,
-              styleSheet: MarkdownStyleSheet.fromTheme(theme),
-            )
+            _ThemedMarkdownBody(data: content)
           else
             for (final section in entry.sections)
               _SectionWidget(section: section),
@@ -110,21 +108,49 @@ class ChangelogEntryCard extends StatelessWidget {
 }
 
 class _SectionWidget extends StatelessWidget {
-  const _SectionWidget({required this.section});
+  const new({required this.section});
 
-  final api.ChangelogSection section;
+  final ChangelogSectionModel section;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final markdownContent =
         '### ${section.title}\n\n${section.items.map((i) => '- $i').join('\n')}';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: MarkdownBody(
-        data: markdownContent,
-        styleSheet: MarkdownStyleSheet.fromTheme(theme),
+      child: _ThemedMarkdownBody(data: markdownContent),
+    );
+  }
+}
+
+/// `flutter_markdown` は Flutter 本体の `ThemeData` を要求するため、
+/// material_ui へ移行したアプリのテーマを直接渡せない。
+/// テキストスタイルのみを明示的に受け渡して配色崩れを防ぐ。
+class _ThemedMarkdownBody extends StatelessWidget {
+  const new({required this.data});
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return MarkdownBody(
+      data: data,
+      styleSheet: MarkdownStyleSheet(
+        p: textTheme.bodyMedium,
+        h1: textTheme.headlineSmall,
+        h2: textTheme.titleLarge,
+        h3: textTheme.titleMedium,
+        h4: textTheme.titleSmall,
+        h5: textTheme.titleSmall,
+        h6: textTheme.titleSmall,
+        listBullet: textTheme.bodyMedium,
+        strong: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+        em: textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+        a: textTheme.bodyMedium?.copyWith(decoration: TextDecoration.underline),
+        code: textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final intensityHistoryErrorOverlayActionProvider =
@@ -10,19 +10,22 @@ final intensityHistoryErrorOverlayActionProvider =
     );
 
 class IntensityHistoryErrorOverlayAction {
-  const IntensityHistoryErrorOverlayAction();
+  const new();
 
   Future<void> showDetails({
+    required WidgetRef ref,
     required BuildContext context,
     required Object error,
     required StackTrace? stackTrace,
   }) {
-    return showErrorDetailsSheet(context, error: error, stackTrace: stackTrace);
+    return ref
+        .read(errorDetailsSheetActionProvider)
+        .show(context, error: error, stackTrace: stackTrace);
   }
 }
 
 class IntensityHistoryErrorOverlay extends ConsumerWidget {
-  const IntensityHistoryErrorOverlay({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,6 +81,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                     visualDensity: VisualDensity.compact,
                   ),
                   onPressed: () => action.showDetails(
+                    ref: ref,
                     context: context,
                     error: error,
                     stackTrace: stackTrace,

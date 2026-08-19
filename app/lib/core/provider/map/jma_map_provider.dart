@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:flutter/services.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,12 +34,19 @@ enum JmaMapType {
 
 extension JmaMapEx on Map<JmaMapType, JmaMap_JmaMapData> {
   JmaMap_JmaMapData get areaForecastLocalEew =>
-      this[JmaMapType.areaForecastLocalEew]!;
+      this[JmaMapType.areaForecastLocalEew].orFailBecause(
+        'jmaMapProvider は既知の JmaMapType すべてを読み込む前提のため',
+      );
   JmaMap_JmaMapData get areaForecastLocalE =>
-      this[JmaMapType.areaForecastLocalE]!;
+      this[JmaMapType.areaForecastLocalE].orFailBecause(
+        'jmaMapProvider は既知の JmaMapType すべてを読み込む前提のため',
+      );
   JmaMap_JmaMapData get areaInformationCity =>
-      this[JmaMapType.areaInformationCity]!;
-  JmaMap_JmaMapData get areaTsunami => this[JmaMapType.areaTsunami]!;
+      this[JmaMapType.areaInformationCity].orFailBecause(
+        'jmaMapProvider は既知の JmaMapType すべてを読み込む前提のため',
+      );
+  JmaMap_JmaMapData get areaTsunami => this[JmaMapType.areaTsunami]
+      .orFailBecause('jmaMapProvider は既知の JmaMapType すべてを読み込む前提のため');
 }
 
 extension JmaMapTypeEx on JmaMap_JmaMapData_JmaMapType {

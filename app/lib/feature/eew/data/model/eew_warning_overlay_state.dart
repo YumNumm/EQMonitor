@@ -7,7 +7,7 @@ enum EewWarningOverlayMode { hidden, fullscreen, minimized }
 
 @Freezed(toJson: false)
 abstract class EewWarningOverlayState with _$EewWarningOverlayState {
-  const factory EewWarningOverlayState({
+  const factory({
     @Default(EewWarningOverlayMode.hidden) EewWarningOverlayMode mode,
     EewWarningOverlayDisplayModel? displayModel,
     @Default(<String>{}) Set<String> seenEventIds,

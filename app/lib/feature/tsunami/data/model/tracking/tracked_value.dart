@@ -7,7 +7,7 @@ typedef Tracked<T> = List<TrackedValue<T>>;
 
 @freezed
 abstract class TrackedValue<T> with _$TrackedValue<T> {
-  const factory TrackedValue({
+  const factory({
     required T value,
     required String telegramId,
   }) = _TrackedValue<T>;

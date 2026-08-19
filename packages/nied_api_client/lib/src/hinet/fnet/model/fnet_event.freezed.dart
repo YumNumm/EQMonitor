@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'fnet_event.dart';
@@ -9,6 +9,7 @@ part of 'fnet_event.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -82,7 +83,7 @@ class _$FnetEventCopyWithImpl<$Res>
 /// Create a copy of FnetEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? originTime = null,Object? latitude = null,Object? longitude = null,Object? jmaDepth = null,Object? jmaMagnitude = null,Object? regionName = null,Object? strike = null,Object? dip = null,Object? rake = null,Object? seismicMoment = null,Object? mtDepth = null,Object? momentMagnitude = null,Object? varianceReduction = null,Object? momentTensor = null,Object? unit = null,Object? numberOfStations = null,}) {
-  return _then(_self.copyWith(
+  return _then(FnetEvent(
 originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
@@ -478,7 +479,7 @@ class _$FnetAnglePairCopyWithImpl<$Res>
 /// Create a copy of FnetAnglePair
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? plane1 = null,Object? plane2 = null,}) {
-  return _then(_self.copyWith(
+  return _then(FnetAnglePair(
 plane1: null == plane1 ? _self.plane1 : plane1 // ignore: cast_nullable_to_non_nullable
 as double,plane2: null == plane2 ? _self.plane2 : plane2 // ignore: cast_nullable_to_non_nullable
 as double,
@@ -744,7 +745,7 @@ class _$FnetMomentTensorCopyWithImpl<$Res>
 /// Create a copy of FnetMomentTensor
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? mxx = null,Object? mxy = null,Object? mxz = null,Object? myy = null,Object? myz = null,Object? mzz = null,}) {
-  return _then(_self.copyWith(
+  return _then(FnetMomentTensor(
 mxx: null == mxx ? _self.mxx : mxx // ignore: cast_nullable_to_non_nullable
 as double,mxy: null == mxy ? _self.mxy : mxy // ignore: cast_nullable_to_non_nullable
 as double,mxz: null == mxz ? _self.mxz : mxz // ignore: cast_nullable_to_non_nullable

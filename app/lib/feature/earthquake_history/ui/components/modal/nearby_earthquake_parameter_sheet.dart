@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// 震源近傍の地震探索パラメータを調整する BottomSheet
 class NearbyEarthquakeParameterSheet extends HookWidget {
-  const NearbyEarthquakeParameterSheet({
+  const new({
     required this.initial,
     required this.hasDepth,
     super.key,
@@ -99,7 +99,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
 }
 
 class _SliderRow extends StatelessWidget {
-  const _SliderRow({
+  const new({
     required this.label,
     required this.value,
     required this.min,

@@ -7,10 +7,10 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
 import 'package:eqmonitor/feature/home/data/service/home_map_camera_coordinator.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' show ShakeDetectionLevel;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:test/test.dart';
@@ -30,7 +30,7 @@ class _TestShakes extends Notifier<List<ShakeDetectionEvent>> {
 }
 
 class _MutableEewAliveTelegram extends EewAliveTelegram {
-  _MutableEewAliveTelegram(this.initial);
+  new(this.initial);
 
   final List<EewTelegramItem> initial;
 
@@ -159,17 +159,16 @@ ProviderContainer _container({
 }
 
 void main() {
-  group('resolveHomeMapCameraUpdateAction', () {
+  group('HomeMapCameraUpdateActionResolver.resolve', () {
+    const resolver = HomeMapCameraUpdateActionResolver();
+
     test('realtime targetがありhomeならfitToRealtime', () {
-      final action = resolveHomeMapCameraUpdateAction(
-        hasRealtimeTargets: true,
-        isAtHome: true,
-      );
+      final action = resolver.resolve(hasRealtimeTargets: true, isAtHome: true);
       expect(action, HomeMapCameraUpdateAction.fitToRealtime);
     });
 
     test('realtime targetがなくhome外ならreturnToHome', () {
-      final action = resolveHomeMapCameraUpdateAction(
+      final action = resolver.resolve(
         hasRealtimeTargets: false,
         isAtHome: false,
       );
@@ -177,7 +176,7 @@ void main() {
     });
 
     test('realtime targetがなくhomeならnone', () {
-      final action = resolveHomeMapCameraUpdateAction(
+      final action = resolver.resolve(
         hasRealtimeTargets: false,
         isAtHome: true,
       );

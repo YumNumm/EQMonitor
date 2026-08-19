@@ -1,4 +1,5 @@
-import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_grid_cell_builder.g.dart';
@@ -8,7 +9,7 @@ ShakeDetectionGridCellBuilder shakeDetectionGridCellBuilder(Ref ref) =>
     ShakeDetectionGridCellBuilder();
 
 class ShakeDetectionGridCell {
-  const ShakeDetectionGridCell({
+  const new({
     required this.minLat,
     required this.minLng,
     required this.level,
@@ -49,14 +50,14 @@ class ShakeDetectionGridCellBuilder {
 
   /// 複数イベントの観測点を集約し、レベル昇順（高レベルが末尾＝上）で返す
   List<ShakeDetectionGridCell> buildFromPointGroups({
-    required List<List<Points>> pointGroups,
+    required List<List<api.Points>> pointGroups,
   }) {
     final cells = [for (final points in pointGroups) ...build(points: points)];
     cells.sort((a, b) => a.level.index.compareTo(b.level.index));
     return cells;
   }
 
-  List<ShakeDetectionGridCell> build({required List<Points> points}) {
+  List<ShakeDetectionGridCell> build({required List<api.Points> points}) {
     if (points.isEmpty) {
       return const [];
     }

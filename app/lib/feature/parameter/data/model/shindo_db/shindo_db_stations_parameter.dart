@@ -9,31 +9,31 @@ part 'shindo_db_stations_parameter.g.dart';
 
 @freezed
 abstract class ShindoDbStationsParameter with _$ShindoDbStationsParameter {
-  const factory ShindoDbStationsParameter({
+  const factory({
     required ParameterMetadata metadata,
     required List<ShindoDbStationItem> stations,
   }) = _ShindoDbStationsParameter;
 
-  factory ShindoDbStationsParameter.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$ShindoDbStationsParameterFromJson(json);
 }
 
 @Freezed(fromJson: false)
 abstract class ShindoDbStationItem with _$ShindoDbStationItem {
-  const factory ShindoDbStationItem({
+  const factory({
     required String code,
     required String name,
     required LatLng location,
     String? cityCode,
   }) = _ShindoDbStationItem;
 
-  factory ShindoDbStationItem.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       ShindoDbStationItem(
-        code: json['code']! as String,
-        name: json['name']! as String,
+        code: json['code'] as String,
+        name: json['name'] as String,
         location: LatLng(
-          (json['latitude']! as num).toDouble(),
-          (json['longitude']! as num).toDouble(),
+          (json['latitude'] as num).toDouble(),
+          (json['longitude'] as num).toDouble(),
         ),
         cityCode: json['city_code'] as String?,
       );

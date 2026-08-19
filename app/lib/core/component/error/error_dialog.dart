@@ -1,40 +1,34 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-Future<void> showErrorDialog(
-  BuildContext context, {
-  required Object error,
-  String? title,
-  StackTrace? stackTrace,
-}) {
-  return showDialog<void>(
-    context: context,
-    builder: (context) => _ErrorDialogBody(
-      error: error,
-      title: title,
-      stackTrace: stackTrace,
-    ),
-  );
-}
+part 'error_dialog.g.dart';
 
-String _defaultTitle(Object error) {
-  if (error is DioException) {
-    final statusCode = error.response?.statusCode;
-    if (statusCode != null) {
-      return 'エラーが発生しました ($statusCode)';
-    }
-    if (error.type == DioExceptionType.connectionError) {
-      return 'ネットワークエラー';
-    }
+@riverpod
+ErrorDialogAction errorDialogAction(Ref ref) => const ErrorDialogAction();
+
+class ErrorDialogAction {
+  const new();
+
+  Future<void> show(
+    BuildContext context, {
+    required Object error,
+    String? title,
+    StackTrace? stackTrace,
+  }) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) =>
+          _ErrorDialogBody(error: error, title: title, stackTrace: stackTrace),
+    );
   }
-  return 'エラーが発生しました';
 }
 
 class _ErrorDialogBody extends ConsumerWidget {
-  const _ErrorDialogBody({
+  const new({
     required this.error,
     required this.title,
     required this.stackTrace,
@@ -47,16 +41,22 @@ class _ErrorDialogBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final message = ref.read(errorMessageBuilderProvider).build(error: error);
+    final resolvedTitle =
+        title ??
+        switch (error) {
+          DioException(:final response?) when response.statusCode != null =>
+            'エラーが発生しました (${response.statusCode})',
+          DioException(type: DioExceptionType.connectionError) => 'ネットワークエラー',
+          _ => 'エラーが発生しました',
+        };
     return AlertDialog(
-      title: Text(title ?? _defaultTitle(error)),
+      title: Text(resolvedTitle),
       content: Text(message),
       actions: [
         TextButton(
-          onPressed: () => showErrorDetailsSheet(
-            context,
-            error: error,
-            stackTrace: stackTrace,
-          ),
+          onPressed: () => ref
+              .read(errorDetailsSheetActionProvider)
+              .show(context, error: error, stackTrace: stackTrace),
           child: const Text('詳細'),
         ),
         TextButton(

@@ -4,7 +4,7 @@ enum EarthquakeActivityBinInterval {
   oneDay(duration: Duration(days: 1), label: '1日'),
   oneWeek(duration: Duration(days: 7), label: '1週間');
 
-  const EarthquakeActivityBinInterval({
+  new({
     required this.duration,
     required this.label,
   });

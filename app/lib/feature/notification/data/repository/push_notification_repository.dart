@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,7 +14,7 @@ Future<PushNotificationRepository> pushNotificationRepository(Ref ref) async =>
     PushNotificationRepository(await ref.watch(apiClientProvider.future));
 
 class PushNotificationRepository {
-  PushNotificationRepository(this._api);
+  new(this._api);
 
   final api.ApiClient _api;
 

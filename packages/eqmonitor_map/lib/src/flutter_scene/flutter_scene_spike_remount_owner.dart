@@ -8,17 +8,22 @@ typedef FlutterSceneSpikeControllerFactory =
     );
 
 class FlutterSceneSpikeRemountOwner extends ChangeNotifier {
-  factory FlutterSceneSpikeRemountOwner.create() =>
+  factory create() =>
       FlutterSceneSpikeRemountOwner.withDependencies(
         controllerFactory: (metrics) => FlutterSceneSpikeController.create(
           metrics: metrics,
         ),
       );
 
-  FlutterSceneSpikeRemountOwner.withDependencies({
+  factory withDependencies({
     required FlutterSceneSpikeControllerFactory controllerFactory,
-  }) : _controllerFactory = controllerFactory,
-       _metrics = SceneSpikeMetrics() {
+  }) => FlutterSceneSpikeRemountOwner._(
+    controllerFactory: controllerFactory,
+  );
+
+  new _({
+    required this._controllerFactory,
+  }) : _metrics = SceneSpikeMetrics() {
     _controller = _controllerFactory(_metrics);
   }
 

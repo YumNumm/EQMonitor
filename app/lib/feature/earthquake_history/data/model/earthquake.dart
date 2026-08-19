@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
@@ -17,7 +18,7 @@ part 'earthquake.g.dart';
 
 @freezed
 abstract class Earthquake with _$Earthquake {
-  const factory Earthquake({
+  const factory({
     required String eventId,
     required TelegramStatus status,
     required DateTime? originTime,
@@ -39,7 +40,7 @@ abstract class Earthquake with _$Earthquake {
     EarthquakeCatalog? catalog,
   }) = _Earthquake;
 
-  factory Earthquake.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeFromJson(json);
 }
 
@@ -70,7 +71,9 @@ extension EarthquakeApiExtension on api.Earthquake {
         })
         .whereType<EarthquakeTelegramMetadata>()
         .toList(),
-    telegramComments: extractTelegramComments(telegrams),
+    telegramComments: const EarthquakeTelegramCommentSelector().extract(
+      telegrams,
+    ),
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
     catalog: catalog?.toEarthquakeCatalog,

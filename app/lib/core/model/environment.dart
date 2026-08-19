@@ -13,7 +13,7 @@ enum Flavor { dev, prod }
 
 @freezed
 abstract class BuildConfig with _$BuildConfig {
-  const factory BuildConfig({
+  const factory({
     required String restApiUrl,
     required String appIdSuffix,
     required String appName,
@@ -26,12 +26,15 @@ abstract class BuildConfig with _$BuildConfig {
     required String buildCommitMessage,
     required String revenueCatApiKeyIos,
     required String revenueCatApiKeyAndroid,
+    @Default(false) bool isBetaTesting,
+    @Default(false) bool isProFeaturesEnabled,
+    @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
 
-  factory BuildConfig.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$BuildConfigFromJson(json);
 
-  factory BuildConfig.fromEnvironment() => BuildConfig(
+  factory fromEnvironment() => BuildConfig(
     restApiUrl: const String.fromEnvironment('REST_API_URL'),
     appIdSuffix: const String.fromEnvironment('APP_ID_SUFFIX'),
     appName: const String.fromEnvironment('APP_NAME'),
@@ -50,11 +53,21 @@ abstract class BuildConfig with _$BuildConfig {
     revenueCatApiKeyAndroid: const String.fromEnvironment(
       'REVENUECAT_API_KEY_ANDROID',
     ),
+    isBetaTesting: const bool.fromEnvironment('IS_BETA_TESTING'),
+    isProFeaturesEnabled: const bool.fromEnvironment('IS_PRO_FEATURES_ENABLED'),
+    isShakeDetectionEnabled: const bool.fromEnvironment(
+      'IS_SHAKE_DETECTION_ENABLED',
+      defaultValue: true,
+    ),
   );
 
-  const BuildConfig._();
+  const new _();
 
-  bool get isBetaTesting => const bool.fromEnvironment('IS_BETA_TESTING');
+  /// デバッグ向け UI（デバッグメニュー・HTTP キャッシュ操作）を表示してよいか。
+  ///
+  /// BETA 配布かつ production flavor のビルドでは、一般ユーザーへ配布されるため
+  /// デバッグ向け UI を隠す。
+  bool get isDeveloperUiEnabled => !(isBetaTesting && flavor == Flavor.prod);
 
   /// プラットフォームに応じた RevenueCat の API キーを返す。
   /// 後続 PR の Paywall / サブスク状態取得実装で利用する想定。

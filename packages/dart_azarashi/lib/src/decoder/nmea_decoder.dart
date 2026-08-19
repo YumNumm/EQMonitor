@@ -10,7 +10,7 @@ const nmeaQzssDcrMessageHeader = r'$QZQSM';
 /// See IS-QZSS-DCR-015 Section 4.3.1 for format specification.
 class NmeaDecoder {
   /// Creates a new [NmeaDecoder].
-  const NmeaDecoder();
+  const new();
 
   /// Decodes a NMEA format message.
   ///

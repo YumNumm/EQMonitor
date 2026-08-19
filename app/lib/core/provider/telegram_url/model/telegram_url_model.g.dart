@@ -8,22 +8,15 @@ part of 'telegram_url_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_TelegramUrlModel _$TelegramUrlModelFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_TelegramUrlModel',
-      json,
-      ($checkedConvert) {
-        final val = _TelegramUrlModel(
-          restApiUrl: $checkedConvert('rest_api_url', (v) => v as String),
-          wsApiUrl: $checkedConvert('ws_api_url', (v) => v as String),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'restApiUrl': 'rest_api_url',
-        'wsApiUrl': 'ws_api_url',
-      },
-    );
+_TelegramUrlModel _$TelegramUrlModelFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_TelegramUrlModel', json, ($checkedConvert) {
+  final val = _TelegramUrlModel(
+    restApiUrl: $checkedConvert('rest_api_url', (v) => v as String),
+    wsApiUrl: $checkedConvert('ws_api_url', (v) => v as String),
+  );
+  return val;
+}, fieldKeyMap: const {'restApiUrl': 'rest_api_url', 'wsApiUrl': 'ws_api_url'});
 
 Map<String, dynamic> _$TelegramUrlModelToJson(_TelegramUrlModel instance) =>
     <String, dynamic>{

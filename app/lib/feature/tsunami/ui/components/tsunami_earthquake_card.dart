@@ -1,12 +1,13 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state_earthquake.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/depth_type.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/value/magnitude_type.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiEarthquakeCard extends StatelessWidget {
-  const TsunamiEarthquakeCard({
+  const new({
     required this.earthquake,
     required this.eventIds,
     super.key,
@@ -21,15 +22,14 @@ class TsunamiEarthquakeCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final hypo = earthquake.hypocenter;
 
-    final magnitudeStr = hypo.magnitude.type == MagnitudeType.normal
-        ? 'M${hypo.magnitude.value}'
+    final magnitudeStr = hypo.magnitudeType == MagnitudeType.normal
+        ? 'M${hypo.magnitudeValue}'
         : 'M不明';
-    final depthStr = hypo.depth.type == DepthType.normal
-        ? '深さ${hypo.depth.value}km'
+    final depthStr = hypo.depthType == DepthType.normal
+        ? '深さ${hypo.depthValue}km'
         : '深さ不明';
-    final timeStr = DateFormat(
-      'yyyy/MM/dd HH:mm',
-    ).format(earthquake.originTime.toLocal());
+    final timeStr = DateFormat('yyyy/MM/dd HH:mm')
+        .format(earthquake.originTime.toLocal());
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -41,9 +41,9 @@ class TsunamiEarthquakeCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: eventIds.isNotEmpty
-              ? () => EarthquakeHistoryDetailsRoute(
-                  eventId: eventIds.first,
-                ).push<void>(context)
+              ? () =>
+                    EarthquakeHistoryDetailsRoute(eventId: eventIds.first)
+                        .push<void>(context)
               : null,
           child: Padding(
             padding: const EdgeInsets.all(16),

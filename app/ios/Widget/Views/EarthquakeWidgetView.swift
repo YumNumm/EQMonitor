@@ -161,7 +161,8 @@ private struct WidgetHeader: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
-                Text("更新 \(formattedTime)")
+                // 行に並ぶ発生時刻が JST 固定なので、更新時刻も JST に揃える
+                Text("更新 \(JSTDateFormat.timeShort(updateTime))")
                     .font(AppFonts.code(size: compact ? 9 : 10))
                     .foregroundStyle(.white.opacity(0.7))
             }
@@ -172,14 +173,6 @@ private struct WidgetHeader: View {
         .padding(.vertical, compact ? 8 : 10)
         .frame(width: width, alignment: .leading)
         .background(Color.eqBrand)
-    }
-
-    private var formattedTime: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        formatter.locale = Locale(identifier: "ja_JP")
-        formatter.timeZone = TimeZone.current
-        return formatter.string(from: updateTime)
     }
 }
 
@@ -442,6 +435,38 @@ struct IntensityView: View {
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [],
+        error: nil
+    )
+}
+
+/// 震度速報は震源未確定 + 未入電（「5弱以上」）になりやすい。
+/// バッジから文字がはみ出さないか確認するためのプレビュー。
+#Preview("Small - 未入電", as: .systemSmall) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [
+            EarthquakeDisplayItem(
+                id: "20260106130000",
+                hypocenterName: "最大震度5弱以上を観測",
+                magnitude: "M不明",
+                magnitudeValue: nil,
+                maxIntensity: .fiveLowerNoInput,
+                depth: "",
+                originTime: Date().addingTimeInterval(-120)
+            ),
+            EarthquakeDisplayItem(
+                id: "20260106125500",
+                hypocenterName: "最大震度6弱以上を観測",
+                magnitude: "M不明",
+                magnitudeValue: nil,
+                maxIntensity: .sixLowerNoInput,
+                depth: "",
+                originTime: Date().addingTimeInterval(-300)
+            )
+        ],
         error: nil
     )
 }

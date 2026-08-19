@@ -1,17 +1,17 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/telegram_detail_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_details_notifier.dart';
 import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_list_by_event_id_notifier.dart';
+import 'package:eqmonitor/feature/telegram_list/data/provider/telegram_details_model_provider.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/earthquake_telegram_tile.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -39,14 +39,14 @@ const Set<TelegramType> _earthquakeTypes = {
 // ---------------------------------------------------------------------------
 
 class TelegramListByEventIdPage extends HookConsumerWidget {
-  const TelegramListByEventIdPage({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(telegramListByEventIdProvider(eventId));
-    final asyncDetails = ref.watch(telegramDetailsProvider(eventId));
+    final asyncDetails = ref.watch(telegramDetailsModelProvider(eventId));
     final scrollController = useScrollController();
 
     // Pagination: fetch next page when near bottom.
@@ -62,6 +62,9 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 
       scrollController.addListener(onScroll);
       return () => scrollController.removeListener(onScroll);
+      // telegramListByEventIdProvider はトップレベルのproviderファミリで
+      // 再ビルドで変化する値ではない（プラグインがクラスフィールドと誤認する）。
+      // ignore_keys: telegramListByEventIdProvider
     }, [scrollController]);
 
     return Scaffold(
@@ -121,7 +124,7 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
 /// A flat widget list rendered inside a single [ListView] so that the
 /// scroll-based pagination still fires from [scrollController].
 class _SectionedList extends StatelessWidget {
-  const _SectionedList({
+  const new({
     required this.items,
     required this.hasNext,
     required this.isLoading,
@@ -135,7 +138,7 @@ class _SectionedList extends StatelessWidget {
   final bool hasNext;
   final bool isLoading;
   final ScrollController scrollController;
-  final Map<String, api.TelegramDetailResponse> details;
+  final Map<String, TelegramDetailModel> details;
   final Object? error;
   final Future<void> Function()? onReload;
 
@@ -171,9 +174,9 @@ class _SectionedList extends StatelessWidget {
       widgets.add(
         _EewNavigationCard(
           count: eewItems.length,
-          onTap: () => EewDetailsByEventIdRoute(
-            eventId: eewItems.first.eventId,
-          ).push<void>(context),
+          onTap: () =>
+              EewDetailsByEventIdRoute(eventId: eewItems.first.eventId)
+                  .push<void>(context),
         ),
       );
     }
@@ -183,18 +186,14 @@ class _SectionedList extends StatelessWidget {
       for (final telegram in earthquakeItems) {
         final info = seqInfo[telegram.id];
         final detail = details[telegram.id];
-        final body = detail?.telegram.body;
+        final body = detail?.earthquakeBody;
 
-        if (body is api.TelegramBodyUnionEarthquakeTelegramBody) {
+        if (body != null) {
           // Look up previous body.
-          api.TelegramBodyUnionEarthquakeTelegramBody? previousBody;
-          if (info != null && info.previousId != null) {
-            final prevDetail = details[info.previousId];
-            final prevBody = prevDetail?.telegram.body;
-            if (prevBody is api.TelegramBodyUnionEarthquakeTelegramBody) {
-              previousBody = prevBody;
-            }
-          }
+          final previousId = info?.previousId;
+          final previousBody = previousId != null
+              ? details[previousId]?.earthquakeBody
+              : null;
 
           widgets.add(
             EarthquakeTelegramTile(
@@ -280,7 +279,7 @@ class _SectionedList extends StatelessWidget {
 }
 
 class _SequenceInfo {
-  const _SequenceInfo({required this.sequenceNumber, this.previousId});
+  const new({required this.sequenceNumber, this.previousId});
   final int sequenceNumber;
   final String? previousId;
 }
@@ -290,7 +289,7 @@ class _SequenceInfo {
 // ---------------------------------------------------------------------------
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const new({required this.title});
 
   final String title;
 
@@ -315,7 +314,7 @@ class _SectionHeader extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _EewNavigationCard extends StatelessWidget {
-  const _EewNavigationCard({required this.count, required this.onTap});
+  const new({required this.count, required this.onTap});
 
   final int count;
   final VoidCallback onTap;
@@ -347,7 +346,7 @@ class _EewNavigationCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _TelegramListSkeleton extends StatelessWidget {
-  const _TelegramListSkeleton();
+  const new();
 
   @override
   Widget build(BuildContext context) {

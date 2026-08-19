@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeTypeFilterChip extends StatelessWidget {
-  const EarthquakeTypeFilterChip({
+  const new({
     this.earthquakeType,
     this.onChanged,
     super.key,
@@ -14,6 +14,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final earthquakeType = this.earthquakeType;
     final isDefault = earthquakeType == null;
 
     return RawChip(
@@ -28,10 +29,10 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
           onChanged?.call(result.value);
         }
       },
-      label: isDefault
+      label: earthquakeType == null
           ? const Text('種別')
           : Text(
-              earthquakeType!.displayLabel,
+              earthquakeType.displayLabel,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null),
@@ -42,7 +43,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 }
 
 class _EarthquakeTypeFilterModal extends StatelessWidget {
-  const _EarthquakeTypeFilterModal({this.currentType});
+  const new({this.currentType});
 
   final EarthquakeType? currentType;
 

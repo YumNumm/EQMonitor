@@ -8,7 +8,7 @@ part 'knet_record.g.dart';
 /// K-NET/KiK-net 強震記録（ASCII フォーマット）
 @freezed
 abstract class KnetRecord with _$KnetRecord {
-  const factory KnetRecord({
+  const factory({
     /// 地震情報（即時公開データでは null）
     required KnetEarthquakeInfo? earthquakeInfo,
 
@@ -49,9 +49,9 @@ abstract class KnetRecord with _$KnetRecord {
     required KnetNetworkType networkType,
   }) = _KnetRecord;
 
-  const KnetRecord._();
+  const new _();
 
-  factory KnetRecord.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KnetRecordFromJson(json);
 
   /// スケールファクタ（分子/分母）
@@ -65,7 +65,7 @@ abstract class KnetRecord with _$KnetRecord {
 /// 地震情報
 @freezed
 abstract class KnetEarthquakeInfo with _$KnetEarthquakeInfo {
-  const factory KnetEarthquakeInfo({
+  const factory({
     /// 地震発生時刻
     required DateTime originTime,
 
@@ -82,14 +82,14 @@ abstract class KnetEarthquakeInfo with _$KnetEarthquakeInfo {
     required double magnitude,
   }) = _KnetEarthquakeInfo;
 
-  factory KnetEarthquakeInfo.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KnetEarthquakeInfoFromJson(json);
 }
 
 /// 観測点情報
 @freezed
 abstract class KnetStationInfo with _$KnetStationInfo {
-  const factory KnetStationInfo({
+  const factory({
     /// 観測点コード
     required String stationCode,
 
@@ -103,6 +103,6 @@ abstract class KnetStationInfo with _$KnetStationInfo {
     required double heightM,
   }) = _KnetStationInfo;
 
-  factory KnetStationInfo.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$KnetStationInfoFromJson(json);
 }

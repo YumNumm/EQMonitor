@@ -7,7 +7,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_api_exception.dart';
 
 class HypocenterArchiveProbe {
-  const HypocenterArchiveProbe({required Dio dio}) : _dio = dio;
+  const new({required Dio dio}) : _dio = dio;
 
   final Dio _dio;
 

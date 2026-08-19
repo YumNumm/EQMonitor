@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3CompressionDecoder {
-  const PmTilesV3CompressionDecoder();
+  const new();
 
   static const none = 1;
   static const gzipCompression = 2;

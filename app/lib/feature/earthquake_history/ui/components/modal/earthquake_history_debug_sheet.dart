@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final earthquakeHistoryDebugSheetActionProvider = Provider(
@@ -14,7 +14,7 @@ final earthquakeHistoryDebugSheetActionProvider = Provider(
 );
 
 class EarthquakeHistoryDebugSheetAction {
-  const EarthquakeHistoryDebugSheetAction();
+  const new();
 
   Future<void> show({required BuildContext context, required String eventId}) {
     final size = MediaQuery.sizeOf(context);
@@ -44,7 +44,7 @@ class EarthquakeHistoryDebugSheetAction {
 }
 
 class EarthquakeHistoryDebugSheet extends ConsumerWidget {
-  const EarthquakeHistoryDebugSheet({required this.eventId, super.key});
+  const new({required this.eventId, super.key});
 
   final String eventId;
 
@@ -62,7 +62,7 @@ class EarthquakeHistoryDebugSheet extends ConsumerWidget {
 }
 
 class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
-  const _EarthquakeHistoryDebugSheetContent({required this.current});
+  const new({required this.current});
 
   final Earthquake current;
 
@@ -124,7 +124,7 @@ class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
 }
 
 class _SheetHandle extends StatelessWidget {
-  const _SheetHandle();
+  const new();
 
   @override
   Widget build(BuildContext context) => Center(

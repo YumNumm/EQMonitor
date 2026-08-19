@@ -31,7 +31,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -40,7 +40,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _SpyRepository extends EarthquakeHistoryRepository {
-  _SpyRepository({required this.initial, required this.cacheClient})
+  new({required this.initial, required this.cacheClient})
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,
@@ -65,7 +65,7 @@ final class _SpyRepository extends EarthquakeHistoryRepository {
 }
 
 final class _CompletingRepository extends EarthquakeHistoryRepository {
-  _CompletingRepository({
+  new({
     required this.cacheClient,
     required this.cacheResult,
     required this.networkResults,
@@ -869,7 +869,7 @@ void main() {
 }
 
 final class _CacheHitRefreshFixture {
-  const _CacheHitRefreshFixture({
+  const new({
     required this.controller,
     required this.container,
     required this.refreshResult,

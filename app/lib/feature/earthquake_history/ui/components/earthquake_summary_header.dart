@@ -7,14 +7,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/depth_text.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeSummaryHeader extends StatelessWidget {
-  const EarthquakeSummaryHeader({
+  const new({
     required this.item,
     this.showStatusWatermark = false,
     super.key,
@@ -26,20 +28,32 @@ class EarthquakeSummaryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxIntensity = item.intensity?.maxIntensity;
+    final earthquakeType = item.earthquakeType ?? EarthquakeType.normal;
     final colorTheme = context.designSystem.colorTheme;
+
+    // 火山噴火は震度が観測されないため常に種別アイコンを表示する。
+    // 遠地地震は国内で震度を観測した場合のみ最大震度を表示する。
+    final leading = switch ((earthquakeType, maxIntensity)) {
+      (EarthquakeType.volcano, _) || (EarthquakeType.distant, null) =>
+        EarthquakeTypeIcon(type: earthquakeType, size: _leadingIconSize),
+      (_, final JmaIntensity intensity) => _MaxIntensityWidget(
+        intensity: intensity,
+      ),
+      _ => null,
+    };
 
     return Stack(
       alignment: Alignment.center,
       children: [
         Row(
           children: [
-            if (maxIntensity != null)
-              _MaxIntensityWidget(intensity: maxIntensity),
+            if (leading != null) leading,
             const SizedBox(width: 4),
             Expanded(
               child: _EarthquakeInformationBody(
                 item: item,
                 hypocenter: item.hypocenter,
+                earthquakeType: earthquakeType,
                 hasIntensityDetails:
                     item.intensity?.intensityTree.isNotEmpty ?? false,
               ),
@@ -70,8 +84,11 @@ class EarthquakeSummaryHeader extends StatelessWidget {
   }
 }
 
+/// 最大震度アイコン・地震種別アイコンの表示サイズ。
+const _leadingIconSize = 60.0;
+
 class _MaxIntensityWidget extends StatelessWidget {
-  const _MaxIntensityWidget({required this.intensity});
+  const new({required this.intensity});
 
   final JmaIntensity intensity;
 
@@ -82,21 +99,27 @@ class _MaxIntensityWidget extends StatelessWidget {
       children: [
         const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        JmaIntensityIcon(type: .filled, size: 60, intensity: intensity),
+        JmaIntensityIcon(
+          type: .filled,
+          size: _leadingIconSize,
+          intensity: intensity,
+        ),
       ],
     );
   }
 }
 
 class _EarthquakeInformationBody extends StatelessWidget {
-  const _EarthquakeInformationBody({
+  const new({
     required this.item,
     required this.hypocenter,
+    required this.earthquakeType,
     required this.hasIntensityDetails,
   });
 
   final Earthquake item;
   final EarthquakeHypocenter? hypocenter;
+  final EarthquakeType earthquakeType;
   final bool hasIntensityDetails;
 
   @override
@@ -110,6 +133,11 @@ class _EarthquakeInformationBody extends StatelessWidget {
     final isDepthUnknown = depth == null || depth is EarthquakeDepthUnknown;
     final isMagnitudeAndDepthUnknown = isMagnitudeUnknown && isDepthUnknown;
     final isEarthquakeNull = isMagnitudeAndDepthUnknown && hypocenter == null;
+    // 遠地地震・火山噴火は震源要素の一部が発表されないため、
+    // 「調査中」ではなく判明している要素だけを表示する。
+    final isOverseasEvent =
+        earthquakeType == EarthquakeType.distant ||
+        earthquakeType == EarthquakeType.volcano;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
     final timeText = switch ((item.originTime, item.arrivalTime)) {
       (final DateTime originTime, _) =>
@@ -118,6 +146,15 @@ class _EarthquakeInformationBody extends StatelessWidget {
         '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
       _ => null,
     };
+    final hypocenterWidget = _HypocenterWidget(
+      // 火山噴火は地震ではないため「震源地」とは表現しない。
+      label: switch (earthquakeType) {
+        EarthquakeType.volcano => '発生場所',
+        EarthquakeType.distant || EarthquakeType.normal => '震源地',
+      },
+      epicenterName: epicenterName,
+      epicenterDetailName: epicenterDetailName,
+    );
 
     return Wrap(
       spacing: 8,
@@ -125,27 +162,26 @@ class _EarthquakeInformationBody extends StatelessWidget {
       alignment: WrapAlignment.center,
       children: [
         const Row(),
-        if (isEarthquakeNull)
+        if (isOverseasEvent) ...[
+          if (!isMagnitudeUnknown)
+            MagnitudeText(magnitude: magnitude, variant: .display)
+          else if (earthquakeType == EarthquakeType.volcano)
+            const _VolcanoEruptionWidget(),
+          if (!isDepthUnknown) DepthText(depth: depth),
+          const SizedBox(width: double.infinity),
+          hypocenterWidget,
+        ] else if (isEarthquakeNull)
           _EarthquakeNullWidget(hasIntensityDetails: hasIntensityDetails)
         else if (isMagnitudeAndDepthUnknown) ...[
           _MagnitudeDepthUnknownWidget(
             hasIntensityDetails: hasIntensityDetails,
           ),
-          _HypocenterWidget(
-            epicenterName: epicenterName,
-            epicenterDetailName: epicenterDetailName,
-          ),
+          hypocenterWidget,
         ] else ...[
-          MagnitudeText(
-            magnitude: hypocenter?.magnitude,
-            variant: MagnitudeTextVariant.display,
-          ),
-          DepthText(depth: hypocenter?.depth),
+          MagnitudeText(magnitude: magnitude, variant: .display),
+          DepthText(depth: depth),
           const SizedBox(width: double.infinity),
-          _HypocenterWidget(
-            epicenterName: epicenterName,
-            epicenterDetailName: epicenterDetailName,
-          ),
+          hypocenterWidget,
         ],
         const Row(),
         if (timeText != null) Wrap(children: [Text(timeText)]),
@@ -155,11 +191,13 @@ class _EarthquakeInformationBody extends StatelessWidget {
 }
 
 class _HypocenterWidget extends StatelessWidget {
-  const _HypocenterWidget({
+  const new({
+    required this.label,
     required this.epicenterName,
     required this.epicenterDetailName,
   });
 
+  final String label;
   final String? epicenterName;
   final String? epicenterDetailName;
 
@@ -175,7 +213,7 @@ class _HypocenterWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
-        Text('震源地', style: textTheme.labelStyle(bodySmall)),
+        Text(label, style: textTheme.labelStyle(bodySmall)),
         const SizedBox(width: 4),
         Flexible(
           child: Text.rich(
@@ -201,8 +239,21 @@ class _HypocenterWidget extends StatelessWidget {
   }
 }
 
+/// 火山噴火でマグニチュードが発表されない場合に、
+/// 「M不明」の代わりに事象そのものを示す表示。
+class _VolcanoEruptionWidget extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Text('火山の噴火', style: textTheme.valueStyle(textTheme.headlineMedium));
+  }
+}
+
 class _MagnitudeDepthUnknownWidget extends StatelessWidget {
-  const _MagnitudeDepthUnknownWidget({required this.hasIntensityDetails});
+  const new({required this.hasIntensityDetails});
 
   final bool hasIntensityDetails;
 
@@ -216,7 +267,7 @@ class _MagnitudeDepthUnknownWidget extends StatelessWidget {
 }
 
 class _EarthquakeNullWidget extends StatelessWidget {
-  const _EarthquakeNullWidget({required this.hasIntensityDetails});
+  const new({required this.hasIntensityDetails});
 
   final bool hasIntensityDetails;
 
@@ -230,7 +281,7 @@ class _EarthquakeNullWidget extends StatelessWidget {
 }
 
 class _UnknownInfoWidget extends StatelessWidget {
-  const _UnknownInfoWidget({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

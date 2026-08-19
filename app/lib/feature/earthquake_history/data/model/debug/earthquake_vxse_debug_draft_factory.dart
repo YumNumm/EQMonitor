@@ -97,7 +97,7 @@ const earthquakeVxseDebugSampleLpgmRegion = LpgmIntensityRegion(
 );
 
 class EarthquakeVxseDebugDraftFactory {
-  const EarthquakeVxseDebugDraftFactory();
+  const new();
 
   EarthquakeVxseDebugDraft create({
     required Earthquake current,
@@ -189,119 +189,119 @@ class EarthquakeVxseDebugDraftFactory {
       ),
     };
   }
-}
 
-DateTime latestEarthquakeTelegramReportedAt({
-  required List<EarthquakeTelegramMetadata> metadata,
-  required EarthquakeTelegramType type,
-}) {
-  final reportedAt = metadata
-      .where((entry) => entry.type == type)
-      .map((entry) => entry.reportedAt)
-      .toList();
-  if (reportedAt.isEmpty) {
-    return earthquakeVxseDebugSampleReportedAt;
+  DateTime latestEarthquakeTelegramReportedAt({
+    required List<EarthquakeTelegramMetadata> metadata,
+    required EarthquakeTelegramType type,
+  }) {
+    final reportedAt = metadata
+        .where((entry) => entry.type == type)
+        .map((entry) => entry.reportedAt)
+        .toList();
+    if (reportedAt.isEmpty) {
+      return earthquakeVxseDebugSampleReportedAt;
+    }
+    return reportedAt.reduce(
+      (latest, next) => next.isAfter(latest) ? next : latest,
+    );
   }
-  return reportedAt.reduce(
-    (latest, next) => next.isAfter(latest) ? next : latest,
-  );
-}
 
-Map<JmaIntensity, List<IntensityRegion>> intensityRegionsOrSample({
-  required Map<JmaIntensity, List<IntensityRegion>>? regions,
-}) => regions == null || regions.isEmpty
-    ? const {
+  Map<JmaIntensity, List<IntensityRegion>> intensityRegionsOrSample({
+    required Map<JmaIntensity, List<IntensityRegion>>? regions,
+  }) => regions == null || regions.isEmpty
+      ? const {
+          earthquakeVxseDebugSampleMaxIntensity: [
+            earthquakeVxseDebugSampleIntensityRegion,
+          ],
+        }
+      : regions;
+
+  Map<JmaIntensity, List<IntensityPrefecture>> intensityPrefecturesOrSample({
+    required Map<JmaIntensity, List<PrefectureIntensityNode>>? intensityTree,
+  }) {
+    if (intensityTree == null || intensityTree.isEmpty) {
+      return const {
         earthquakeVxseDebugSampleMaxIntensity: [
-          earthquakeVxseDebugSampleIntensityRegion,
+          earthquakeVxseDebugSampleIntensityPrefecture,
         ],
-      }
-    : regions;
-
-Map<JmaIntensity, List<IntensityPrefecture>> intensityPrefecturesOrSample({
-  required Map<JmaIntensity, List<PrefectureIntensityNode>>? intensityTree,
-}) {
-  if (intensityTree == null || intensityTree.isEmpty) {
-    return const {
-      earthquakeVxseDebugSampleMaxIntensity: [
-        earthquakeVxseDebugSampleIntensityPrefecture,
-      ],
+      };
+    }
+    return {
+      for (final entry in intensityTree.entries)
+        entry.key: entry.value.map((node) => node.prefecture).toList(),
     };
   }
-  return {
-    for (final entry in intensityTree.entries)
-      entry.key: entry.value.map((node) => node.prefecture).toList(),
-  };
-}
 
-Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTreeOrSample({
-  required Map<JmaIntensity, List<PrefectureIntensityNode>>? tree,
-}) => tree == null || tree.isEmpty
-    ? const {
-        earthquakeVxseDebugSampleMaxIntensity: [
-          PrefectureIntensityNode(
-            prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
-            cities: [
-              CityIntensityNode(
-                city: earthquakeVxseDebugSampleCity,
-                maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
-                stations: [
-                  StationIntensityNode(
-                    station: earthquakeVxseDebugSampleStation,
-                    intensity: earthquakeVxseDebugSampleStationIntensity,
-                  ),
-                ],
-                maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
-              ),
-            ],
-          ),
-        ],
-      }
-    : tree;
-
-Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegionsOrSample({
-  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>? tree,
-}) {
-  if (tree == null || tree.isEmpty) {
-    return const {
-      earthquakeVxseDebugSampleMaxLpgmIntensity: [
-        earthquakeVxseDebugSampleLpgmRegion,
-      ],
-    };
-  }
-  return {
-    for (final entry in tree.entries)
-      entry.key: entry.value
-          .map(
-            (node) => LpgmIntensityRegion(
-              region: node.region,
-              maxLpgmIntensity: node.maxLpgmIntensity,
+  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTreeOrSample({
+    required Map<JmaIntensity, List<PrefectureIntensityNode>>? tree,
+  }) => tree == null || tree.isEmpty
+      ? const {
+          earthquakeVxseDebugSampleMaxIntensity: [
+            PrefectureIntensityNode(
+              prefecture: earthquakeVxseDebugSampleIntensityPrefecture,
+              cities: [
+                CityIntensityNode(
+                  city: earthquakeVxseDebugSampleCity,
+                  maxIntensity: earthquakeVxseDebugSampleMaxIntensity,
+                  stations: [
+                    StationIntensityNode(
+                      station: earthquakeVxseDebugSampleStation,
+                      intensity: earthquakeVxseDebugSampleStationIntensity,
+                    ),
+                  ],
+                  maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+                ),
+              ],
             ),
-          )
-          .toList(),
-  };
-}
+          ],
+        }
+      : tree;
 
-Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmTreeOrSample({
-  required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>? tree,
-}) => tree == null || tree.isEmpty
-    ? const {
+  Map<JmaLpgmIntensity, List<LpgmIntensityRegion>> lpgmRegionsOrSample({
+    required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>? tree,
+  }) {
+    if (tree == null || tree.isEmpty) {
+      return const {
         earthquakeVxseDebugSampleMaxLpgmIntensity: [
-          PrefectureLpgmIntensityNode(
-            region: earthquakeVxseDebugSampleRegion,
-            maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
-            cities: [
-              CityLpgmIntensityNode(
-                city: earthquakeVxseDebugSampleCity,
-                maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
-                stations: [
-                  StationLpgmIntensityNode(
-                    station: earthquakeVxseDebugSampleStation,
-                    intensity: earthquakeVxseDebugSampleStationIntensity,
-                  ),
-                ],
-              ),
-            ],
-          ),
+          earthquakeVxseDebugSampleLpgmRegion,
         ],
-      }
-    : tree;
+      };
+    }
+    return {
+      for (final entry in tree.entries)
+        entry.key: entry.value
+            .map(
+              (node) => LpgmIntensityRegion(
+                region: node.region,
+                maxLpgmIntensity: node.maxLpgmIntensity,
+              ),
+            )
+            .toList(),
+    };
+  }
+
+  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmTreeOrSample({
+    required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>? tree,
+  }) => tree == null || tree.isEmpty
+      ? const {
+          earthquakeVxseDebugSampleMaxLpgmIntensity: [
+            PrefectureLpgmIntensityNode(
+              region: earthquakeVxseDebugSampleRegion,
+              maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+              cities: [
+                CityLpgmIntensityNode(
+                  city: earthquakeVxseDebugSampleCity,
+                  maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
+                  stations: [
+                    StationLpgmIntensityNode(
+                      station: earthquakeVxseDebugSampleStation,
+                      intensity: earthquakeVxseDebugSampleStationIntensity,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        }
+      : tree;
+}

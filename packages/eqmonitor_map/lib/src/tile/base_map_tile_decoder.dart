@@ -32,7 +32,7 @@ enum BaseMapLayerKind { background, fill, line }
 /// (地図としては同じpolygon地物を塗りと境界線の両方で描く)。
 @immutable
 class BaseMapLayerSpec {
-  const BaseMapLayerSpec({
+  const new({
     required this.styleLayerId,
     required this.kind,
     required this.color,
@@ -124,14 +124,23 @@ const baseMapLayerSpecs = <BaseMapLayerSpec>[
 /// `MvtTile`/`FillMesh`/`LineMesh`と同じ理由でFreezedにはしない。
 @immutable
 sealed class BaseMapTileLayerGeometry {
-  const BaseMapTileLayerGeometry({required this.styleLayerId});
+  const new({
+    required this.styleLayerId,
+    required this.extent,
+  });
 
   final String styleLayerId;
+
+  /// 対応するMVT source layerが存在する場合に、そのlayerが宣言したextent。
+  ///
+  /// `null`はsparse tileでsource layer自体が欠損している場合のみを表す。
+  final int? extent;
 }
 
 final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
-  const BaseMapTileFillLayerGeometry({
+  const new({
     required super.styleLayerId,
+    required super.extent,
     required this.meshes,
   });
 
@@ -139,8 +148,9 @@ final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
 }
 
 final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
-  const BaseMapTileLineLayerGeometry({
+  const new({
     required super.styleLayerId,
+    required super.extent,
     required this.meshes,
   });
 
@@ -149,7 +159,7 @@ final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
 
 @immutable
 class BaseMapTileGeometry {
-  const BaseMapTileGeometry({required this.layers});
+  const new({required this.layers});
 
   /// [baseMapLayerSpecs]から[BaseMapLayerKind.background]を除いた行と
   /// 同じ順序・同じ件数。
@@ -160,7 +170,7 @@ class BaseMapTileGeometry {
 /// decoder内部に固定fallbackは置かない(`MvtDecodeLimits`と同じ運用方針)。
 @freezed
 abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
-  const factory BaseMapTileDecodeLimits({
+  const factory({
     required MvtDecodeLimits mvtLimits,
     required FillMeshBuilderLimits fillLimits,
     required LineMeshBuilderLimits lineLimits,
@@ -194,7 +204,7 @@ abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
 /// コピー時間よりゾーンコピー自体の分岐・APIの複雑さの方が上回る。
 /// 根拠なく重い機構を入れない(Global Constraints)ため採用しない。
 final class BaseMapTileDecoder {
-  const BaseMapTileDecoder();
+  const new();
 
   Future<BaseMapTileGeometry> decode({
     required Uint8List tileBytes,
@@ -224,23 +234,33 @@ BaseMapTileGeometry decodeBaseMapTileSync(
       case BaseMapLayerKind.background:
         continue;
       case BaseMapLayerKind.fill:
+        final sourceLayerName = spec.sourceLayerName;
+        if (sourceLayerName == null) {
+          throw StateError('${spec.styleLayerId} has no source layer.');
+        }
+        final sourceLayer = _findLayer(tile, sourceLayerName);
         layers.add(
           BaseMapTileFillLayerGeometry(
             styleLayerId: spec.styleLayerId,
+            extent: sourceLayer?.extent,
             meshes: _buildFillMeshes(
-              tile: tile,
-              sourceLayerName: spec.sourceLayerName!,
+              layer: sourceLayer,
               builder: fillBuilder,
             ),
           ),
         );
       case BaseMapLayerKind.line:
+        final sourceLayerName = spec.sourceLayerName;
+        if (sourceLayerName == null) {
+          throw StateError('${spec.styleLayerId} has no source layer.');
+        }
+        final sourceLayer = _findLayer(tile, sourceLayerName);
         layers.add(
           BaseMapTileLineLayerGeometry(
             styleLayerId: spec.styleLayerId,
+            extent: sourceLayer?.extent,
             meshes: _buildLineMeshes(
-              tile: tile,
-              sourceLayerName: spec.sourceLayerName!,
+              layer: sourceLayer,
               builder: lineBuilder,
             ),
           ),
@@ -260,11 +280,9 @@ MvtLayer? _findLayer(MvtTile tile, String name) {
 }
 
 List<FillMesh> _buildFillMeshes({
-  required MvtTile tile,
-  required String sourceLayerName,
+  required MvtLayer? layer,
   required FillMeshBuilder builder,
 }) {
-  final layer = _findLayer(tile, sourceLayerName);
   if (layer == null) {
     // sparse archiveの欠損、または`areaInformationCityQuake`のz6未満のように
     // このzoomにそのsource layerが存在しない場合。空meshで表現し、
@@ -281,11 +299,9 @@ List<FillMesh> _buildFillMeshes({
 }
 
 List<LineMesh> _buildLineMeshes({
-  required MvtTile tile,
-  required String sourceLayerName,
+  required MvtLayer? layer,
   required LineMeshBuilder builder,
 }) {
-  final layer = _findLayer(tile, sourceLayerName);
   if (layer == null) {
     return const [];
   }

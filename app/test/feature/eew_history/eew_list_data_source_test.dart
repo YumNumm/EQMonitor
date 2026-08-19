@@ -26,7 +26,7 @@ EewTelegramItem _eew({
 );
 
 class _FakeEewListRepository extends EewListRepository {
-  _FakeEewListRepository() : super(eew: api.ApiClient(Dio()).eew);
+  new() : super(eew: api.ApiClient(Dio()).eew);
 
   final cursors = <String?>[];
   String? nextToken;

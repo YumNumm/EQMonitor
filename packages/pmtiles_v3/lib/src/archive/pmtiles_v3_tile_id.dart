@@ -1,7 +1,7 @@
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
 final class PmTilesV3TileId {
-  const PmTilesV3TileId();
+  const new();
 
   static const maxZoom = 31;
   static const int maxValue = ((1 << 62) - 1) ~/ 3 + (1 << 62) - 1;
@@ -48,6 +48,36 @@ final class PmTilesV3TileId {
     return range.start + hilbertDistance(levelTiles: levelTiles, x: x, y: y);
   }
 
+  /// PMTiles v3のtile IDをXYZタイル座標へ逆変換する。
+  ({int z, int x, int y}) zxyForTileId({required int tileId}) {
+    validateArgument(tileId: tileId);
+    var zoom = 0;
+    var range = rangeForZoom(zoom: zoom);
+    while (tileId >= range.endExclusive) {
+      zoom++;
+      range = rangeForZoom(zoom: zoom);
+    }
+
+    var x = 0;
+    var y = 0;
+    var distance = tileId - range.start;
+    for (var scale = 1; scale < 1 << zoom; scale <<= 1) {
+      final rx = 1 & (distance >> 1);
+      final ry = 1 & (distance ^ rx);
+      final rotated = rotateInverse(
+        scale: scale,
+        x: x,
+        y: y,
+        rx: rx,
+        ry: ry,
+      );
+      x = rotated.x + scale * rx;
+      y = rotated.y + scale * ry;
+      distance >>= 2;
+    }
+    return (z: zoom, x: x, y: y);
+  }
+
   /// 一辺`levelTiles`のHilbert曲線上で(x, y)が何番目かを返す。
   ///
   /// protomaps/PMTiles の公式リファレンス実装
@@ -80,4 +110,19 @@ final class PmTilesV3TileId {
     }
     return distance;
   }
+}
+
+({int x, int y}) rotateInverse({
+  required int scale,
+  required int x,
+  required int y,
+  required int rx,
+  required int ry,
+}) {
+  if (ry != 0) {
+    return (x: x, y: y);
+  }
+  final rotatedX = rx == 1 ? scale - 1 - x : x;
+  final rotatedY = rx == 1 ? scale - 1 - y : y;
+  return (x: rotatedY, y: rotatedX);
 }

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,7 +12,7 @@ EarthquakeVxseDebugAction earthquakeVxseDebugAction(Ref ref) =>
     const EarthquakeVxseDebugAction();
 
 class EarthquakeVxseDebugAction {
-  const EarthquakeVxseDebugAction();
+  const new();
 
   void apply({
     required WidgetRef ref,

@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// complete ステップの完了処理が呼ぶ副作用を単体で検証する。
-// （完了処理は onboardingCompleted + seenVersion 初期化 + Home 遷移だが、
-//  ここでは seenVersion 初期化の副作用のみを対象とする）
+// CompleteOnboardingFlow が呼ぶ副作用を単体で検証する。
+// （flow は onboardingCompleted + seenVersion 初期化 + Home 遷移を行うが、
+//  ここでは初回起動でバナーを出さないための seenVersion 初期化のみを対象とする）
 final _packageInfo = PackageInfo(
   appName: 'EQMonitor',
   packageName: 'net.yumnumm.eqmonitor',

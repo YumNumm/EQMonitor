@@ -7,27 +7,29 @@ const _retryMaxDelay = Duration(seconds: 60);
 const _retryMaxAttempts = 6;
 
 sealed class RetryControllerState {
-  const RetryControllerState();
+  const new();
 }
 
 /// 待機中 — まだ実行していない、または正常完了後。
 final class RetryIdle extends RetryControllerState {
-  const RetryIdle();
+  const new();
 }
 
 /// 実行中。
 final class RetryRunning extends RetryControllerState {
-  const RetryRunning({required this.attempt});
+  const new({required this.attempt});
+
   final int attempt;
 }
 
 /// 次の試行まで待機中。
 final class RetryWaiting extends RetryControllerState {
-  const RetryWaiting({
+  const new({
     required this.attempt,
     required this.resumeAt,
     required this.lastError,
   });
+
   final int attempt;
   final DateTime resumeAt;
   final DeviceProvisioningException lastError;
@@ -35,7 +37,8 @@ final class RetryWaiting extends RetryControllerState {
 
 /// 最大試行回数到達、またはリトライ不可エラー。
 final class RetryExhausted extends RetryControllerState {
-  const RetryExhausted({required this.lastError});
+  const new({required this.lastError});
+
   final DeviceProvisioningException lastError;
 }
 
@@ -44,10 +47,11 @@ final class RetryExhausted extends RetryControllerState {
 /// delayOverride はテスト用に時間進行を置き換えるための注入口
 /// （デフォルト: Future.delayed）。
 class RetryController {
-  RetryController({Future<void> Function(Duration)? delayOverride})
-    : _delay = delayOverride ?? Future.delayed;
+  new({Future<void> Function(Duration)? delayOverride})
+    : _delay = delayOverride ?? Future<void>.delayed;
 
   final Future<void> Function(Duration) _delay;
+
   final _random = Random();
 
   RetryControllerState _state = const RetryIdle();
@@ -102,8 +106,8 @@ class RetryController {
   }
 
   Duration _computeDelay(DeviceProvisioningException e, int attempt) {
-    if (e is RateLimitedException && e.retryAfter != null) {
-      return e.retryAfter!;
+    if (e case RateLimitedException(retryAfter: final Duration retryAfter)) {
+      return retryAfter;
     }
     final base = _retryBaseDelay.inMilliseconds * (1 << attempt);
     final jitter = _random.nextInt(1000);

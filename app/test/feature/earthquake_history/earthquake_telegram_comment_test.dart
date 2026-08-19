@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
@@ -31,7 +32,7 @@ void main() {
   group('extractTelegramComments', () {
     test('コメント付きの対象電文を変換する', () {
       final reportedAt = DateTime(2026, 7, 13, 12);
-      final result = extractTelegramComments([
+      final result = const EarthquakeTelegramCommentSelector().extract([
         _telegram(
           type: api.TelegramType.vxse53,
           reportedAt: reportedAt,
@@ -53,7 +54,7 @@ void main() {
     });
 
     test('commentsがnullの電文は除外する', () {
-      final result = extractTelegramComments([
+      final result = const EarthquakeTelegramCommentSelector().extract([
         _telegram(
           type: api.TelegramType.vxse53,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -63,7 +64,7 @@ void main() {
     });
 
     test('additionalもfreeもnullの電文は除外する', () {
-      final result = extractTelegramComments([
+      final result = const EarthquakeTelegramCommentSelector().extract([
         _telegram(
           type: api.TelegramType.vxse53,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -74,7 +75,7 @@ void main() {
     });
 
     test('対象外タイプ（VXSE45等）は除外する', () {
-      final result = extractTelegramComments([
+      final result = const EarthquakeTelegramCommentSelector().extract([
         _telegram(
           type: api.TelegramType.vxse45,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -99,7 +100,7 @@ void main() {
     );
 
     test('VXSE53があれば53のコメントを採用し51/52は無視する', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse51,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -115,7 +116,7 @@ void main() {
     });
 
     test('VXSE53が複数あればreportedAtが最新のものを採用する', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse53,
           reportedAt: DateTime(2026, 7, 13, 12, 20),
@@ -131,7 +132,7 @@ void main() {
     });
 
     test('VXSE53がなければ51と52のコメントを結合する', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse51,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -147,7 +148,7 @@ void main() {
     });
 
     test('VXSE6xのコメントは53に追加して表示する', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse53,
           reportedAt: DateTime(2026, 7, 13, 12, 10),
@@ -163,7 +164,7 @@ void main() {
     });
 
     test('additionalとfreeの両方があればその順で表示し、同一文言は重複除去する', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse51,
           reportedAt: DateTime(2026, 7, 13, 12),
@@ -180,7 +181,7 @@ void main() {
     });
 
     test('全角英数は半角に変換される', () {
-      final lines = selectTelegramCommentLines([
+      final lines = const EarthquakeTelegramCommentSelector().selectLines([
         comment(
           type: EarthquakeTelegramType.vxse53,
           reportedAt: DateTime(2026, 7, 13, 12, 10),
@@ -191,7 +192,10 @@ void main() {
     });
 
     test('空入力なら空リストを返す', () {
-      expect(selectTelegramCommentLines([]), isEmpty);
+      expect(
+        const EarthquakeTelegramCommentSelector().selectLines([]),
+        isEmpty,
+      );
     });
   });
 }

@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDebugModal extends ConsumerWidget {
-  const EarthquakeHistoryDebugModal({super.key});
+  const new({super.key});
 
   static Future<void> show({required BuildContext context}) =>
       showModalBottomSheet(

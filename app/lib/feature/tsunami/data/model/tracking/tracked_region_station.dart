@@ -7,7 +7,7 @@ part 'tracked_region_station.freezed.dart';
 
 @freezed
 abstract class TrackedRegionStation with _$TrackedRegionStation {
-  const factory TrackedRegionStation({
+  const factory({
     required String code,
     required String name,
     required Tracked<TsunamiStationForecast?> forecast,

@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
 /// フォールバックする。矩形選択後の分析はすべてクライアント側で完結するため、
 /// このリポジトリが返す [SeismicityDataset.events] が唯一の分析用データソース。
 class SeismicityRepository {
-  SeismicityRepository({
+  new({
     required Dio manifestDio,
     required Dio geoJsonDio,
     SeismicityLocalCacheDataSource? cache,

@@ -4,12 +4,12 @@ import 'package:eqmonitor/core/util/byte_size_formatter.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_entries_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/http_cache_key_display.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugHttpCachePage extends HookConsumerWidget {
-  const DebugHttpCachePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,7 +94,7 @@ class DebugHttpCachePage extends HookConsumerWidget {
 }
 
 class _HttpCacheHeader extends StatelessWidget {
-  const _HttpCacheHeader({
+  const new({
     required this.totalSizeLabel,
     required this.entryCount,
   });
@@ -115,7 +115,7 @@ class _HttpCacheHeader extends StatelessWidget {
 }
 
 class _HttpCacheEntryTile extends HookConsumerWidget {
-  const _HttpCacheEntryTile({
+  const new({
     required this.entry,
     required this.formatter,
     required this.keyDisplay,

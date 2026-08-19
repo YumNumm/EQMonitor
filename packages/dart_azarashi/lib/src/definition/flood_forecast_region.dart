@@ -2,7 +2,7 @@
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-47.
 class JmaFloodForecastRegion {
-  const JmaFloodForecastRegion._();
+  const new _();
 
   /// Map of flood forecast region codes to names.
   static const regions = <int, String>{

@@ -1,12 +1,12 @@
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_entries_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugSecureStoragePage extends HookConsumerWidget {
-  const DebugSecureStoragePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +38,7 @@ class DebugSecureStoragePage extends HookConsumerWidget {
 }
 
 class _EntriesList extends HookConsumerWidget {
-  const _EntriesList({required this.entries});
+  const new({required this.entries});
 
   final AsyncValue<List<({String key, String value})>> entries;
 
@@ -134,7 +134,7 @@ class _EntriesList extends HookConsumerWidget {
 }
 
 class _EditDialog extends HookConsumerWidget {
-  const _EditDialog({required this.entry});
+  const new({required this.entry});
 
   final ({String key, String value}) entry;
 
@@ -171,7 +171,7 @@ class _EditDialog extends HookConsumerWidget {
 }
 
 class _AddDialog extends HookConsumerWidget {
-  const _AddDialog();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

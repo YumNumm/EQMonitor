@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'eew_warning_settings.dart';
@@ -9,8 +9,10 @@ part of 'eew_warning_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$EewWarningSettings {
 
@@ -21,6 +23,8 @@ mixin _$EewWarningSettings {
 @pragma('vm:prefer-inline')
 $EewWarningSettingsCopyWith<EewWarningSettings> get copyWith => _$EewWarningSettingsCopyWithImpl<EewWarningSettings>(this as EewWarningSettings, _$identity);
 
+  /// Serializes this EewWarningSettings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EewWarningSettings&&(identical(other.target, target) || other.target == target)&&(identical(other.currentLocationInterruptionLevel, currentLocationInterruptionLevel) || other.currentLocationInterruptionLevel == currentLocationInterruptionLevel)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,target,currentLocationInterruptionLevel,nationwideInterruptionLevel);
 
@@ -63,7 +67,7 @@ class _$EewWarningSettingsCopyWithImpl<$Res>
 /// Create a copy of EewWarningSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? target = null,Object? currentLocationInterruptionLevel = null,Object? nationwideInterruptionLevel = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EewWarningSettings(
 target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
 as EewWarningTarget,currentLocationInterruptionLevel: null == currentLocationInterruptionLevel ? _self.currentLocationInterruptionLevel : currentLocationInterruptionLevel // ignore: cast_nullable_to_non_nullable
 as InterruptionLevel,nationwideInterruptionLevel: freezed == nationwideInterruptionLevel ? _self.nationwideInterruptionLevel : nationwideInterruptionLevel // ignore: cast_nullable_to_non_nullable
@@ -205,11 +209,11 @@ return $default(_that.target,_that.currentLocationInterruptionLevel,_that.nation
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _EewWarningSettings implements EewWarningSettings {
   const _EewWarningSettings({required this.target, required this.currentLocationInterruptionLevel, required this.nationwideInterruptionLevel});
-  
+  factory _EewWarningSettings.fromJson(Map<String, dynamic> json) => _$EewWarningSettingsFromJson(json);
 
 @override final  EewWarningTarget target;
 @override final  InterruptionLevel currentLocationInterruptionLevel;
@@ -221,14 +225,17 @@ class _EewWarningSettings implements EewWarningSettings {
 @pragma('vm:prefer-inline')
 _$EewWarningSettingsCopyWith<_EewWarningSettings> get copyWith => __$EewWarningSettingsCopyWithImpl<_EewWarningSettings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EewWarningSettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewWarningSettings&&(identical(other.target, target) || other.target == target)&&(identical(other.currentLocationInterruptionLevel, currentLocationInterruptionLevel) || other.currentLocationInterruptionLevel == currentLocationInterruptionLevel)&&(identical(other.nationwideInterruptionLevel, nationwideInterruptionLevel) || other.nationwideInterruptionLevel == nationwideInterruptionLevel));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,target,currentLocationInterruptionLevel,nationwideInterruptionLevel);
 

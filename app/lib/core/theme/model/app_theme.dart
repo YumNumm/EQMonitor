@@ -5,8 +5,8 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/map_colors.dart';
 import 'package:eqmonitor/core/theme/model/status_colors.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'app_theme.freezed.dart';
 part 'app_theme.g.dart';
@@ -15,7 +15,7 @@ enum ThemeBrightnessMode { light, dark }
 
 @freezed
 abstract class AppTheme with _$AppTheme {
-  const factory AppTheme({
+  const factory({
     required String name,
     required int version,
     required String author,
@@ -24,11 +24,10 @@ abstract class AppTheme with _$AppTheme {
     ThemeColorSet? dark,
   }) = _AppTheme;
 
-  factory AppTheme.fromJson(Map<String, dynamic> json) =>
-      _$AppThemeFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AppThemeFromJson(json);
 
   // 設計ドキュメントに記載のEQMonitor Defaultプリセット（全色値のコード）
-  factory AppTheme.eqmonitorDefault() => const AppTheme(
+  factory eqmonitorDefault() => const AppTheme(
     name: 'EQMonitor Default',
     version: 1,
     author: 'EQMonitor',
@@ -109,7 +108,7 @@ abstract class AppTheme with _$AppTheme {
       ),
       estimatedIntensity: EstimatedIntensityColors(
         four: IntensityColorEntry(
-          background: Color(0xFFFAE6A0),
+          background: Color.fromARGB(255, 202, 158, 0),
           foreground: IntensityTextColor.auto(),
         ),
         fiveLower: IntensityColorEntry(
@@ -129,7 +128,7 @@ abstract class AppTheme with _$AppTheme {
           foreground: IntensityTextColor.auto(),
         ),
         seven: IntensityColorEntry(
-          background: Color(0xFFB40068),
+          background: Color(0xFFA2005E),
           foreground: IntensityTextColor.auto(),
         ),
       ),
@@ -217,7 +216,7 @@ abstract class AppTheme with _$AppTheme {
       ),
       estimatedIntensity: EstimatedIntensityColors(
         four: IntensityColorEntry(
-          background: Color(0xFFFAE6A0),
+          background: Color.fromARGB(255, 202, 158, 0),
           foreground: IntensityTextColor.auto(),
         ),
         fiveLower: IntensityColorEntry(
@@ -237,7 +236,7 @@ abstract class AppTheme with _$AppTheme {
           foreground: IntensityTextColor.auto(),
         ),
         seven: IntensityColorEntry(
-          background: Color(0xFFB40068),
+          background: Color(0xFFA2005E),
           foreground: IntensityTextColor.auto(),
         ),
       ),
@@ -251,12 +250,12 @@ abstract class AppTheme with _$AppTheme {
     ),
   );
 
-  const AppTheme._();
+  const new _();
 
   ThemeColorSet colorSetFor(Brightness brightness) {
     final colorSet = switch (brightness) {
-      Brightness.light => light ?? dark,
-      Brightness.dark => dark ?? light,
+      .light => light ?? dark,
+      .dark => dark ?? light,
     };
     if (colorSet == null) {
       throw StateError('AppTheme has no color set for $brightness');

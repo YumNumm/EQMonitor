@@ -3,13 +3,14 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/repository/shake_detection_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
 final class _ShakeDetectionAdapter implements HttpClientAdapter {
-  _ShakeDetectionAdapter({required this.statusCode, this.responseBody});
+  new({required this.statusCode, this.responseBody});
 
   final int statusCode;
   final String? responseBody;
@@ -94,7 +95,7 @@ void main() {
     expect(event.serialNo, 3);
     expect(event.createdAt, DateTime.parse('2026-07-18T12:34:30.000Z'));
     expect(event.updatedAt, DateTime.parse('2026-07-18T12:34:55.000Z'));
-    expect(event.level, api.ShakeDetectionLevel.strong);
+    expect(event.level, ShakeDetectionLevel.strong);
     expect(event.pointCount, 1);
     expect(event.minLat, 35);
     expect(event.maxLat, 36);

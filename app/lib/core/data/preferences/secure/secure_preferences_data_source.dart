@@ -14,7 +14,7 @@ Future<SecurePreferencesDataSource> securePreferencesDataSource(Ref ref) async {
 
 class SecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
-  SecurePreferencesDataSource({required FlutterSecureStorage secureStorage})
+  new({required FlutterSecureStorage secureStorage})
     : _secureStorage = secureStorage;
 
   final FlutterSecureStorage _secureStorage;
@@ -30,10 +30,8 @@ class SecurePreferencesDataSource
       _secureStorage.read(key: key.key);
 
   @override
-  Future<void> setInt({
-    required SecureStorageKey key,
-    required int value,
-  }) => _secureStorage.write(key: key.key, value: value.toString());
+  Future<void> setInt({required SecureStorageKey key, required int value}) =>
+      _secureStorage.write(key: key.key, value: value.toString());
 
   @override
   Future<int?> getInt({required SecureStorageKey key}) => _secureStorage
@@ -52,10 +50,8 @@ class SecurePreferencesDataSource
       .then((value) => value != null ? double.tryParse(value) : null);
 
   @override
-  Future<void> setBool({
-    required SecureStorageKey key,
-    required bool value,
-  }) => _secureStorage.write(key: key.key, value: value.toString());
+  Future<void> setBool({required SecureStorageKey key, required bool value}) =>
+      _secureStorage.write(key: key.key, value: value.toString());
 
   @override
   Future<bool?> getBool({required SecureStorageKey key}) => _secureStorage

@@ -1,14 +1,13 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
-  const ShakeDetectionCard({
+  const new({
     required this.event,
     this.outerPadding = const EdgeInsets.symmetric(horizontal: 4),
     super.key,
@@ -49,7 +48,7 @@ class ShakeDetectionCard extends ConsumerWidget {
 }
 
 class _ShakeDetectionCardHeader extends StatelessWidget {
-  const _ShakeDetectionCardHeader({required this.event});
+  const new({required this.event});
 
   final ShakeDetectionEvent event;
 
@@ -113,7 +112,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
 }
 
 class _ShakeDetectionCardBody extends StatelessWidget {
-  const _ShakeDetectionCardBody({
+  const new({
     required this.event,
     required this.regionsAsync,
   });

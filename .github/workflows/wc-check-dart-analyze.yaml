@@ -5,7 +5,6 @@ on:
 
 permissions:
   contents: read
-  checks: write
 
 jobs:
   flutter-analyze:
@@ -14,15 +13,18 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      checks: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
+      # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
+      - name: Init flutter_scene submodule
+        uses: ./.github/actions/init-flutter-scene-submodule
+
       - name: Install Mise dependencies
-        uses: jdx/mise-action@9e7f7633ff6f6d6048a9418a68d48f288f50eb14 # v4.2.3
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           install_args: "flutter"
 
@@ -35,19 +37,16 @@ jobs:
       - name: Resolve dependencies
         run: mise exec -- dart pub get --enforce-lockfile
 
-      # https://github.com/invertase/github-action-dart-analyzer
-      - name: Report analyze
-        uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b # v3.0.0
-        with:
-          fatal-infos: true
-          working-directory: app
+      - name: Register Dart analyzer problem matcher
+        run: echo "::add-matcher::.github/problem-matchers/dart-analyzer.json"
 
-      # eqmonitor_custom_lints (avoid_direct_color_scheme 等) は
-      # analysis_options.yaml の `plugins:` 経由で上記 dart analyze から
-      # 既に実行されるため、ここではルール実装自体の回帰防止として
-      # パッケージ単体のユニットテストのみ実行する。
-      - name: Test eqmonitor_custom_lints
-        working-directory: tools/eqmonitor_custom_lints
+      - name: Analyze app
+        run: mise exec -- dart analyze app --fatal-infos --format machine
+
+      # tools/ は melos workspace 外のため `melos run test` の対象にならない。
+      # ルール実装の回帰防止としてここで実行する。
+      - name: Test eqmonitor_lints_plugin
+        working-directory: tools/eqmonitor_lints_plugin
         run: |
           mise exec -- dart pub get
           mise exec -- dart test

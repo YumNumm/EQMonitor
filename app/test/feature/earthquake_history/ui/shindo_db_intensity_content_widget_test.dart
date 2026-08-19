@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lat_lng/lat_lng.dart';
 

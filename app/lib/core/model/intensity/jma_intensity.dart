@@ -69,7 +69,7 @@ enum JmaIntensity {
     .seven => 11,
   };
 
-  /// 通知設定 UI で選択可能な震度の一覧（unknown / fiveUnknown を除く）
+  /// 通知設定 UI で選択可能な震度の一覧
   static const List<JmaIntensity> selectableValues = [
     JmaIntensity.zero,
     JmaIntensity.one,

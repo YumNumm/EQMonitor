@@ -50,4 +50,4 @@ final class LiveMonitorLatestEarthquakeProvider
 }
 
 String _$liveMonitorLatestEarthquakeHash() =>
-    r'652c0fd525705df3ce1924561e9155e4ccbbc0f6';
+    r'07312b844c6dbff30a25fc7f4e4129f055f874d0';

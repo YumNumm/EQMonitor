@@ -9,7 +9,7 @@ part 'eew_telegram_item.freezed.dart';
 
 @Freezed()
 abstract class EewTelegramItem with _$EewTelegramItem {
-  const factory EewTelegramItem({
+  const factory({
     required String eventId,
     required TelegramStatus status,
     required TelegramInfoType infoType,
@@ -28,14 +28,13 @@ abstract class EewTelegramItem with _$EewTelegramItem {
     EewWarningInfo? warning,
     EewAccuracyInfo? accuracy,
   }) = _EewTelegramItem;
-  const EewTelegramItem._();
+  const new _();
 
   bool get isLowPreciseHypocenter =>
       isPlum || accuracy == null || accuracy?.epicenter == 1;
 
   /// レベル法: 震央精度が1点相当かつ発震時刻なし（Live Activity `isLevel` と同義）
-  bool get isLevelMethod =>
-      accuracy?.epicenter == 1 && originTime == null;
+  bool get isLevelMethod => accuracy?.epicenter == 1 && originTime == null;
 
   /// IPF法1点検知: 震央精度1点相当・発震時刻あり・PLUMでない（Live Activity `isOnePoint` と同義）
   bool get isOnePointDetection =>
@@ -48,7 +47,7 @@ abstract class EewTelegramItem with _$EewTelegramItem {
 
 @Freezed()
 abstract class EewHypocenterInfo with _$EewHypocenterInfo {
-  const factory EewHypocenterInfo({
+  const factory({
     required String code,
     required String name,
     String? detailedCode,
@@ -63,7 +62,7 @@ abstract class EewHypocenterInfo with _$EewHypocenterInfo {
 
 @Freezed()
 abstract class EewForecastIntensityInfo with _$EewForecastIntensityInfo {
-  const factory EewForecastIntensityInfo({
+  const factory({
     required List<EewForecastRegionInfo> regions,
     JmaIntensity? maxIntensity,
     @Default(false) bool maxIntensityIsOver,
@@ -74,7 +73,7 @@ abstract class EewForecastIntensityInfo with _$EewForecastIntensityInfo {
 
 @Freezed()
 abstract class EewForecastRegionInfo with _$EewForecastRegionInfo {
-  const factory EewForecastRegionInfo({
+  const factory({
     required String code,
     required String name,
     required bool isPlum,
@@ -90,7 +89,7 @@ abstract class EewForecastRegionInfo with _$EewForecastRegionInfo {
 
 @Freezed()
 abstract class EewWarningInfo with _$EewWarningInfo {
-  const factory EewWarningInfo({
+  const factory({
     required List<EewWarningZoneInfo> zones,
     required List<EewWarningZoneInfo> prefectures,
     required List<EewWarningZoneInfo> regions,
@@ -99,7 +98,7 @@ abstract class EewWarningInfo with _$EewWarningInfo {
 
 @Freezed()
 abstract class EewWarningZoneInfo with _$EewWarningZoneInfo {
-  const factory EewWarningZoneInfo({
+  const factory({
     required String code,
     required String name,
     required bool hadWarning,
@@ -118,7 +117,7 @@ abstract class EewAccuracyInfo with _$EewAccuracyInfo {
         eew.accuracy.numberOfMagnitudeCalculation,
     }
     */
-  const factory EewAccuracyInfo({
+  const factory({
     /// 震央位置の精度値（0〜9）
     ///
     /// 0 : 不明
@@ -260,11 +259,8 @@ extension on api.EewWarning {
 }
 
 extension on api.EewWarningZoneItem {
-  EewWarningZoneInfo _toEewWarningZoneInfo() => EewWarningZoneInfo(
-    code: code,
-    name: name,
-    hadWarning: hadWarning,
-  );
+  EewWarningZoneInfo _toEewWarningZoneInfo() =>
+      EewWarningZoneInfo(code: code, name: name, hadWarning: hadWarning);
 }
 
 extension on api.EewAccuracy {

@@ -1,15 +1,14 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ShakeDetectionSettingsPage extends StatelessWidget {
-  const ShakeDetectionSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class ShakeDetectionSettingsPage extends StatelessWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -177,7 +176,7 @@ class _Body extends ConsumerWidget {
 }
 
 class _ShakeEntryCard extends StatelessWidget {
-  const _ShakeEntryCard({
+  const new({
     required this.entry,
     required this.isBusy,
     required this.onDelete,
@@ -187,7 +186,7 @@ class _ShakeEntryCard extends StatelessWidget {
   final ShakeDetectionEntry entry;
   final bool isBusy;
   final VoidCallback onDelete;
-  final ValueChanged<api.ShakeDetectionLevel> onLevelChanged;
+  final ValueChanged<ShakeDetectionLevel> onLevelChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -200,19 +199,19 @@ class _ShakeEntryCard extends StatelessWidget {
       subtitle: isBusy
           ? const LinearProgressIndicator()
           : DropdownButtonHideUnderline(
-              child: DropdownButton<api.ShakeDetectionLevel>(
+              child: DropdownButton<ShakeDetectionLevel>(
                 value: entry.minLevel,
                 isDense: true,
-                items: api.ShakeDetectionLevel.values
+                items: ShakeDetectionLevel.values
                     .map(
                       (level) => DropdownMenuItem(
                         value: level,
                         child: Text(switch (level) {
-                          api.ShakeDetectionLevel.weaker => '最小（Weaker）',
-                          api.ShakeDetectionLevel.weak => '小（Weak）',
-                          api.ShakeDetectionLevel.medium => '中（Medium）',
-                          api.ShakeDetectionLevel.strong => '大（Strong）',
-                          api.ShakeDetectionLevel.stronger => '最大（Stronger）',
+                          ShakeDetectionLevel.weaker => '最小（Weaker）',
+                          ShakeDetectionLevel.weak => '小（Weak）',
+                          ShakeDetectionLevel.medium => '中（Medium）',
+                          ShakeDetectionLevel.strong => '大（Strong）',
+                          ShakeDetectionLevel.stronger => '最大（Stronger）',
                         }),
                       ),
                     )
@@ -242,7 +241,7 @@ class _ShakeEntryCard extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 

@@ -8,28 +8,21 @@ part of 'user_device_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_UserDeviceResponse _$UserDeviceResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      '_UserDeviceResponse',
-      json,
-      ($checkedConvert) {
-        final val = _UserDeviceResponse(
-          id: $checkedConvert('id', (v) => v as String),
-          type: $checkedConvert(
-            'type',
-            (v) => $enumDecode(_$DeviceTypeEnumMap, v),
-          ),
-          locale: $checkedConvert(
-            'locale',
-            (v) => $enumDecode(_$DeviceLocaleEnumMap, v),
-          ),
-          createdAt: $checkedConvert('created_at', (v) => v as String),
-          updatedAt: $checkedConvert('updated_at', (v) => v as String),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'createdAt': 'created_at', 'updatedAt': 'updated_at'},
-    );
+_UserDeviceResponse _$UserDeviceResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_UserDeviceResponse', json, ($checkedConvert) {
+  final val = _UserDeviceResponse(
+    id: $checkedConvert('id', (v) => v as String),
+    type: $checkedConvert('type', (v) => $enumDecode(_$DeviceTypeEnumMap, v)),
+    locale: $checkedConvert(
+      'locale',
+      (v) => $enumDecode(_$DeviceLocaleEnumMap, v),
+    ),
+    createdAt: $checkedConvert('created_at', (v) => v as String),
+    updatedAt: $checkedConvert('updated_at', (v) => v as String),
+  );
+  return val;
+}, fieldKeyMap: const {'createdAt': 'created_at', 'updatedAt': 'updated_at'});
 
 Map<String, dynamic> _$UserDeviceResponseToJson(_UserDeviceResponse instance) =>
     <String, dynamic>{
@@ -43,6 +36,7 @@ Map<String, dynamic> _$UserDeviceResponseToJson(_UserDeviceResponse instance) =>
 const _$DeviceTypeEnumMap = {
   DeviceType.ios: 'IOS',
   DeviceType.android: 'ANDROID',
+  DeviceType.desktop: 'DESKTOP',
 };
 
 const _$DeviceLocaleEnumMap = {

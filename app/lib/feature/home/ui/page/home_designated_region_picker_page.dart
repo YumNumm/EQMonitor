@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// 都道府県/市区町村のいずれかを、リストもしくは地図から選択して
 /// [EarthquakeHistoryParameter] を返す。
 class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
-  const HomeDesignatedRegionPickerPage({super.key, this.initialParameter});
+  const new({super.key, this.initialParameter});
 
   final EarthquakeHistoryParameter? initialParameter;
 
@@ -50,12 +50,13 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
     });
     // ユーザー操作で明示的に設定された地域名。未設定時は [resolvedName] で補完する。
     final selectedName = useState<String?>(null);
+    final selectedCodeValue = selectedCode.value;
     // selectedCode/selectedType からパラメータ木を辿って地域名を解決する。
     // (初期パラメータ復元時など selectedName が未設定のケースを補完する)
     final resolvedName =
-        (selectedCode.value != null && selectedCode.value!.isNotEmpty)
+        (selectedCodeValue != null && selectedCodeValue.isNotEmpty)
         ? ref
-              .watch(regionNameProvider(selectedType.value, selectedCode.value!))
+              .watch(regionNameProvider(selectedType.value, selectedCodeValue))
               .value
         : null;
     final displayName = selectedName.value ?? resolvedName;
@@ -73,8 +74,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
       }
     }
 
-    final canApply =
-        selectedCode.value != null && selectedCode.value!.isNotEmpty;
+    final canApply = selectedCodeValue != null && selectedCodeValue.isNotEmpty;
 
     /// 選択中の種別([selectedType])とコードから対応する
     /// [EarthquakeHistoryParameter] を生成する。
@@ -114,8 +114,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
         actions: [
           if (canApply)
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pop(buildParameter()),
+              onPressed: () => Navigator.of(context).pop(buildParameter()),
               child: const Text('決定'),
             ),
         ],

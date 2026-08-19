@@ -8,16 +8,11 @@ import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/geo/tile_matrix.dart';
+import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
-// `mvtDefaultExtent`だけを使う。`BaseMapTileGeometry`はどの`extent`で
-// decodeしたかを保持しない([BaseMapTileLayerGeometry]参照)ため、Task 10は
-// tile側と同じ既定値をtile行列へそのまま渡すしかない
-// ([mvtDefaultExtent]のdoc comment、`docs/map_spec_v3.md`が前提とする
-// tippecanoe既定出力と一致)。
-import 'package:eqmonitor_map/src/tile/mvt/mvt_decoder.dart'
-    show mvtDefaultExtent;
+import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +29,7 @@ part 'base_map_view.freezed.dart';
 /// (Global Constraints「上限値は呼び出し側が渡す`limits`引数で明示する」)。
 @freezed
 abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
-  const factory MapBaseLayerLimits({
+  const factory({
     /// pan/pinch zoom gestureが許すcamera zoomの下限、および
     /// [TileCoverCalculator.cover]へそのまま渡すtile zoomの下限。
     ///
@@ -77,6 +72,14 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// 浅くしか保持しなければ遡っても見つからない)ため、1つの値を両方へ
     /// 渡す。
     required int maxParentFallbackSteps,
+
+    /// 同時に走らせる tile decode の上限([MapTileScheduler]へ渡す)。
+    ///
+    /// 1 frame の cover に含まれる欠損 tile 全部へ無制限に `Isolate.run` decode を
+    /// 張ると、cover が大きく変わった瞬間に多数の isolate を同時 spawn して
+    /// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
+    /// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
+    required int maxInFlightDecodes,
   }) = _MapBaseLayerLimits;
 }
 
@@ -89,7 +92,7 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
 /// 後から[BaseMapView]が再構築されても(同じ[source]/[limits]である限り)
 /// 現在のcamera状態を保つ。
 class BaseMapView extends HookWidget {
-  const BaseMapView({
+  const new({
     required this.source,
     required this.initialCamera,
     required this.limits,
@@ -163,6 +166,7 @@ class BaseMapView extends HookWidget {
               onScaleUpdate: (details) => controller.updateGesture(
                 cumulativeScale: details.scale,
                 focalPointDelta: details.focalPointDelta,
+                focalPoint: details.localFocalPoint,
               ),
               onScaleEnd: (_) => controller.endGesture(),
               child: scene.SceneView(
@@ -184,7 +188,7 @@ class BaseMapView extends HookWidget {
 }
 
 class _BaseMapViewError extends StatelessWidget {
-  const _BaseMapViewError({required this.error});
+  const new({required this.error});
 
   // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
   // ではない。
@@ -210,7 +214,7 @@ class _BaseMapViewError extends StatelessWidget {
 }
 
 class _BaseMapDebugHud extends StatelessWidget {
-  const _BaseMapDebugHud({required this.controller});
+  const new({required this.controller});
 
   // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
   // ではない。
@@ -245,7 +249,7 @@ class _BaseMapDebugHud extends StatelessWidget {
 /// gesture・decode・Scene node管理を持つ内部controller。[BaseMapView]の外へは
 /// 公開しない(brief要求)。
 class _BaseMapController extends ChangeNotifier {
-  _BaseMapController({
+  new({
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
@@ -256,7 +260,8 @@ class _BaseMapController extends ChangeNotifier {
 
   final sceneGraph = scene.Scene();
 
-  // camera/projectionは各tileのnodeへ焼き込む(`_combinedTransformFor`)ため、
+  // camera/projectionは各tileのnodeへ焼き込む
+  // (`baseMapTileViewProjectionMatrixFor`)ため、
   // Scene側のcameraは何も変換しない恒等camera一つで足りる
   // (`_IdentityCameraProjection`のdoc comment参照)。
   final camera = scene.NodeCamera(
@@ -270,6 +275,9 @@ class _BaseMapController extends ChangeNotifier {
   );
   late final _sceneMeshCache = _TileSceneMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
+  );
+  late final _scheduler = MapTileScheduler(
+    maxInFlightDecodes: limits.maxInFlightDecodes,
   );
   static const _decoder = BaseMapTileDecoder();
   static const _geometryFactory = BaseMapGeometryFactory();
@@ -424,6 +432,7 @@ class _BaseMapController extends ChangeNotifier {
   void updateGesture({
     required double cumulativeScale,
     required Offset focalPointDelta,
+    required Offset focalPoint,
   }) {
     final gestureStartZoom = _gestureStartZoom;
     if (gestureStartZoom == null) {
@@ -434,6 +443,8 @@ class _BaseMapController extends ChangeNotifier {
       gestureStartZoom: gestureStartZoom,
       cumulativeScale: cumulativeScale,
       focalPointDelta: focalPointDelta,
+      focalPoint: focalPoint,
+      viewportLogicalSize: _viewport?.logicalSize,
       minZoom: limits.minZoom,
       maxZoom: limits.maxZoom,
     );
@@ -476,100 +487,53 @@ class _BaseMapController extends ChangeNotifier {
     if (materialsByStyleLayerId == null) {
       return;
     }
-    final resolved = [
-      for (final tile in cover)
-        (
-          tile: tile,
-          result: _cache.lookupWithFallback(
-            sourceInstanceId: source.sourceInstanceId,
-            tileId: tile.canonical,
-            maxParentSteps: limits.maxParentFallbackSteps,
-          ),
-        ),
-    ];
-    final transformCache = <(int, CanonicalTileId), scene_math.Matrix4>{};
-    scene_math.Matrix4 transformFor(int wrap, CanonicalTileId tileId) =>
+    final plans = buildBaseMapRenderPlans(
+      requestedCover: cover,
+      sourceInstanceId: source.cacheIdentity,
+      cache: _cache,
+      maxParentSteps: limits.maxParentFallbackSteps,
+      zoom: _camera.zoom,
+    );
+    final transformCache = <(UnwrappedTileId, int), scene_math.Matrix4>{};
+    scene_math.Matrix4 transformFor(BaseMapTileTransformInput input) =>
         transformCache.putIfAbsent(
-          (wrap, tileId),
-          () => _combinedTransformFor(
-            wrap: wrap,
-            tileId: tileId,
-            viewport: viewport,
+          (input.tileId, input.extent),
+          () => scene_math.Matrix4.fromList(
+            baseMapTileViewProjectionMatrixFor(
+              camera: _camera,
+              viewport: viewport,
+              tileId: input.tileId,
+              zoom: input.zoom,
+              extent: input.extent,
+            ).storage,
           ),
         );
-
-    // 描画順はlayer順を外側、tile順を内側にする(`docs/map_spec_v3.md`の
-    // layer順に従う。tile側のsortには依存しない)。
-    final nodes = <scene.Node>[];
-    for (final spec in baseMapLayerSpecs) {
-      if (spec.kind == BaseMapLayerKind.background) {
-        // backgroundはtileを持たない全画面色であり、`ColoredBox`側で描く。
-        continue;
-      }
-      for (final entry in resolved) {
-        switch (entry.result) {
-          case BaseMapTileFallbackMiss():
-            continue;
-          case BaseMapTileFallbackExact(:final geometry):
-            nodes.addAll(
-              _nodesFor(
-                spec: spec,
-                wrap: entry.tile.wrap,
-                tileId: entry.tile.canonical,
-                geometry: geometry,
-                materialsByStyleLayerId: materialsByStyleLayerId,
-                transform: transformFor(entry.tile.wrap, entry.tile.canonical),
-              ),
-            );
-          case BaseMapTileFallbackParent(:final geometry, :final tileId):
-            nodes.addAll(
-              _nodesFor(
-                spec: spec,
-                wrap: entry.tile.wrap,
-                tileId: tileId,
-                geometry: geometry,
-                materialsByStyleLayerId: materialsByStyleLayerId,
-                transform: transformFor(entry.tile.wrap, tileId),
-              ),
-            );
-          case BaseMapTileFallbackChildren(:final children):
-            final childIds = entry.tile.canonical.children();
-            for (var i = 0; i < children.length; i++) {
-              nodes.addAll(
-                _nodesFor(
-                  spec: spec,
-                  wrap: entry.tile.wrap,
-                  tileId: childIds[i],
-                  geometry: children[i],
-                  materialsByStyleLayerId: materialsByStyleLayerId,
-                  transform: transformFor(entry.tile.wrap, childIds[i]),
-                ),
-              );
-            }
-        }
-      }
-    }
+    final nodes = <scene.Node>[
+      for (final plan in plans)
+        ..._nodesFor(
+          plan: plan,
+          materialsByStyleLayerId: materialsByStyleLayerId,
+          transform: transformFor(plan.transformInput),
+        ),
+    ];
     sceneGraph
       ..removeAll()
       ..addAll(nodes);
   }
 
   Iterable<scene.Node> _nodesFor({
-    required BaseMapLayerSpec spec,
-    required int wrap,
-    required CanonicalTileId tileId,
-    required BaseMapTileGeometry geometry,
+    required BaseMapLayerRenderPlan plan,
     required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
     required scene_math.Matrix4 transform,
   }) {
     final meshesByLayer = _sceneMeshCache.getOrBuild(
-      sourceInstanceId: source.sourceInstanceId,
-      tileId: tileId,
-      geometry: geometry,
+      sourceInstanceId: source.cacheIdentity,
+      tileId: plan.transformInput.tileId.canonical,
+      geometry: plan.tileGeometry,
       geometryFactory: _geometryFactory,
       materialsByStyleLayerId: materialsByStyleLayerId,
     );
-    final meshes = meshesByLayer[spec.styleLayerId];
+    final meshes = meshesByLayer[plan.layerGeometry.styleLayerId];
     if (meshes == null || meshes.isEmpty) {
       return const [];
     }
@@ -579,44 +543,32 @@ class _BaseMapController extends ChangeNotifier {
     ];
   }
 
-  scene_math.Matrix4 _combinedTransformFor({
-    required int wrap,
-    required CanonicalTileId tileId,
-    required MapViewport viewport,
-  }) {
-    final combined =
-        viewProjectionMatrixFor(camera: _camera, viewport: viewport).multiplied(
-          tileMatrixFor(
-            tileId: UnwrappedTileId(wrap: wrap, canonical: tileId),
-            zoom: _camera.zoom,
-            extent: mvtDefaultExtent,
-          ),
-        );
-    // double精度のまま合成した後に一度だけfloat32へ丸める
-    // (`geo/tile_matrix.dart`のdoc comment「tile側だけを先にfloat32へ丸める
-    // と...rebasingの意味が失われる」)。`Matrix4.fromList`は
-    // `FlutterSceneOrthographicProjection`と同じ変換方法。
-    return scene_math.Matrix4.fromList(combined.storage);
-  }
-
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
     final repository = _repository;
     if (repository == null) {
       return;
     }
-    for (final tile in cover) {
+    // 既に decode 済み(cache hit)/欠損確定の tile は scheduler の対象外にする。
+    final completed = <CanonicalTileId>{
+      for (final tile in cover)
+        if (_knownAbsentTiles.contains(tile.canonical) ||
+            _cache.get(
+                  sourceInstanceId: source.cacheIdentity,
+                  tileId: tile.canonical,
+                ) !=
+                null)
+          tile.canonical,
+    };
+    // scheduler が中心近傍優先・canonical 単位の coalesce・backpressure を適用し、
+    // 今 frame で開始してよい分だけ返す。残りは decode 完了ごとに `_refresh`→
+    // `_requestMissingDecodes` が再評価して順に開始する(drain ループ)。
+    final toStart = _scheduler.selectNext(
+      coverOrdered: [for (final tile in cover) tile.toUnwrapped()],
+      inFlight: _pendingDecodes,
+      completed: completed,
+    );
+    for (final tile in toStart) {
       final tileId = tile.canonical;
-      if (_pendingDecodes.contains(tileId) ||
-          _knownAbsentTiles.contains(tileId)) {
-        continue;
-      }
-      if (_cache.get(
-            sourceInstanceId: source.sourceInstanceId,
-            tileId: tileId,
-          ) !=
-          null) {
-        continue;
-      }
       _pendingDecodes.add(tileId);
       unawaited(_decodeTile(repository: repository, tileId: tileId));
     }
@@ -641,7 +593,7 @@ class _BaseMapController extends ChangeNotifier {
         limits: limits.decodeLimits,
       );
       _cache.put(
-        sourceInstanceId: source.sourceInstanceId,
+        sourceInstanceId: source.cacheIdentity,
         tileId: tileId,
         geometry: geometry,
         token: token,
@@ -676,10 +628,11 @@ class _BaseMapController extends ChangeNotifier {
 }
 
 /// 何も変換しないcamera projection。各tileのnodeにcamera/projectionを
-/// 焼き込んだ完成済みのclip座標(`_combinedTransformFor`)を持たせるため、
+/// 焼き込んだ完成済みのclip座標(`baseMapTileViewProjectionMatrixFor`)を
+/// 持たせるため、
 /// Scene側のcameraが二重に変換をかけないようにする。
 class _IdentityCameraProjection implements scene.CameraProjection {
-  const _IdentityCameraProjection();
+  const new();
 
   @override
   scene_math.Matrix4 getProjectionMatrix(double aspectRatio) =>
@@ -699,7 +652,7 @@ class _IdentityCameraProjection implements scene.CameraProjection {
 /// (`_rebuildSceneNodes`は毎frame呼ばれ得るが、同じtileが要求され続ける限り
 /// ここでhitし続け、GPU再アップロードは起きない)。
 class _TileSceneMeshCache {
-  _TileSceneMeshCache({required this.maxEntries})
+  new({required this.maxEntries})
     : assert(maxEntries > 0, 'maxEntries must be positive');
 
   final int maxEntries;
@@ -762,6 +715,17 @@ class _TileSceneMeshCache {
 /// (`base_map_material_library.dart`の`halfLineWidthWorldFor`のdoc
 /// comment参照)を使い、[focalPointDelta]を[camera]のzoomにおけるworld
 /// pixel量としてそのままworld中心へ加算する。
+///
+/// [focalPoint]は`ScaleUpdateDetails.localFocalPoint`(2本指の中間点、
+/// widget-local座標)、[viewportLogicalSize]はその widget の logical size。
+/// **両方を渡したときだけ zoom が焦点基準になる。** [MapCamera]は中心と
+/// zoomでしか定義されないため、焦点を渡さないと zoom は必然的に画面中央
+/// 基準になり、指の下の地点が中央へ滑る。
+///
+/// 焦点固定は正規化world座標(zoom非依存)で行う。pan適用後の焦点直下の
+/// 地点を求め、**clamp後の**zoomにおけるworldサイズで、その地点が同じ
+/// 画面位置に来るような中心を逆算する。clamp前のzoomでアンカーを計算
+/// すると、zoom上限に張り付いたまま指を動かしたときに地図が滑る。
 MapCamera cameraAfterGestureUpdate({
   required MapCamera camera,
   required double gestureStartZoom,
@@ -769,6 +733,8 @@ MapCamera cameraAfterGestureUpdate({
   required Offset focalPointDelta,
   required int minZoom,
   required int maxZoom,
+  Offset? focalPoint,
+  Size? viewportLogicalSize,
   MapMercatorProjection projection = const MapMercatorProjection(),
 }) {
   final worldSize = projection.worldSizeForZoom(camera.zoom);
@@ -777,18 +743,39 @@ MapCamera cameraAfterGestureUpdate({
     x: worldCenter.x - focalPointDelta.dx,
     y: worldCenter.y - focalPointDelta.dy,
   );
-  final pannedLngLat = projection.normalizedToLngLat(
-    x: pannedWorldCenter.x / worldSize,
-    y: pannedWorldCenter.y / worldSize,
-  );
   final unclampedZoom = gestureStartZoom + _log2(cumulativeScale);
   final clampedZoom = unclampedZoom.clamp(
     minZoom.toDouble(),
     maxZoom.toDouble(),
   );
+
+  // 焦点の画面中央からのずれ。1 logical pixel == 1 world pixel なので
+  // そのまま world 上のずれとして扱える。
+  final fromCenter = (focalPoint == null || viewportLogicalSize == null)
+      ? Offset.zero
+      : focalPoint -
+            Offset(
+              viewportLogicalSize.width / 2,
+              viewportLogicalSize.height / 2,
+            );
+
+  final anchorNormalized = (
+    x: (pannedWorldCenter.x + fromCenter.dx) / worldSize,
+    y: (pannedWorldCenter.y + fromCenter.dy) / worldSize,
+  );
+  final zoomedWorldSize = projection.worldSizeForZoom(clampedZoom);
+  final zoomedWorldCenter = (
+    x: anchorNormalized.x * zoomedWorldSize - fromCenter.dx,
+    y: anchorNormalized.y * zoomedWorldSize - fromCenter.dy,
+  );
+
+  final lngLat = projection.normalizedToLngLat(
+    x: zoomedWorldCenter.x / zoomedWorldSize,
+    y: zoomedWorldCenter.y / zoomedWorldSize,
+  );
   return MapCamera(
-    centerLongitude: pannedLngLat.longitude,
-    centerLatitude: pannedLngLat.latitude,
+    centerLongitude: lngLat.longitude,
+    centerLatitude: lngLat.latitude,
     zoom: clampedZoom,
   );
 }

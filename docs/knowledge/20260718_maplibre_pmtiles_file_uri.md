@@ -20,7 +20,7 @@ MapLibre Native Android の現行ドキュメントは次を明記している�
 - 同梱アーカイブの `vector_layers[].id` が `countries`、`areaForecastLocalE`、
   `areaForecastLocalEew`、`areaInformationCityQuake` を含むことを配布前に確認する
 
-## 将来の Background Assets / Play Asset Delivery
+## 配信経路を差し替える場合
 
 差し替え点は `assets_util` の `resolveLocalPath` 実装。
 MapStyleUtil / MapLibre 側の `pmtiles://file://` 契約は維持する。

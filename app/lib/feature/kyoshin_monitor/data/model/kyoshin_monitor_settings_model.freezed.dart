@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'kyoshin_monitor_settings_model.dart';
@@ -9,6 +9,7 @@ part of 'kyoshin_monitor_settings_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -74,7 +75,7 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res>
 /// Create a copy of KyoshinMonitorSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? showScale = null,Object? useKmoni = null,Object? kmoniMarkerType = null,Object? monitorSource = null,Object? realtimeDataType = null,Object? realtimeLayer = null,Object? api = null,}) {
-  return _then(_self.copyWith(
+  return _then(KyoshinMonitorSettingsModel(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,showScale: null == showScale ? _self.showScale : showScale // ignore: cast_nullable_to_non_nullable
 as bool,useKmoni: null == useKmoni ? _self.useKmoni : useKmoni // ignore: cast_nullable_to_non_nullable
@@ -335,8 +336,21 @@ mixin _$KyoshinMonitorSettingsApiModel {
 
 /// 強震モニタ APIのベースURL
 @JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) KyoshinMonitorEndpoint get endpoint;/// 画像取得頻度
-@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration get imageFetchInterval;/// 遅延調整間隔
- Duration get delayAdjustInterval;
+@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration get imageFetchInterval;/// `latest.json` の再同期間隔
+///
+/// 長周期地震動モニタの公式フロントエンドと同じ60秒。
+/// 端末時計のドリフトは NTP 側で吸収されるが、サーバの公開遅延の
+/// 変動を追うためにここでも定期的に測り直す。
+ Duration get delayAdjustInterval;/// 遅延調整の方式
+@JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp) KyoshinMonitorDelayAdjustType get delayAdjustType;/// 画像取得の404をもとにオフセットを自動調整するかどうか
+ bool get autoOffsetIncrement;/// パイプライン別の、`latest.json` 実測値からの補正量。
+///
+/// 強震モニタと長周期地震動階級では画像の公開遅延が約 0.66 秒違う
+/// (実測: 1.23s と 0.57s) ため、共通の値にすると切り替えのたびに
+/// 再収束のための 404 が発生する。永続化して次回起動時も引き継ぐ。
+ Map<KyoshinMonitorDelayProfile, Duration> get offsetAdjustments;/// 公開遅延の下限
+ Duration get minOffset;/// 公開遅延の上限
+ Duration get maxOffset;
 /// Create a copy of KyoshinMonitorSettingsApiModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -349,16 +363,16 @@ $KyoshinMonitorSettingsApiModelCopyWith<KyoshinMonitorSettingsApiModel> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorSettingsApiModel&&(identical(other.endpoint, endpoint) || other.endpoint == endpoint)&&(identical(other.imageFetchInterval, imageFetchInterval) || other.imageFetchInterval == imageFetchInterval)&&(identical(other.delayAdjustInterval, delayAdjustInterval) || other.delayAdjustInterval == delayAdjustInterval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorSettingsApiModel&&(identical(other.endpoint, endpoint) || other.endpoint == endpoint)&&(identical(other.imageFetchInterval, imageFetchInterval) || other.imageFetchInterval == imageFetchInterval)&&(identical(other.delayAdjustInterval, delayAdjustInterval) || other.delayAdjustInterval == delayAdjustInterval)&&(identical(other.delayAdjustType, delayAdjustType) || other.delayAdjustType == delayAdjustType)&&(identical(other.autoOffsetIncrement, autoOffsetIncrement) || other.autoOffsetIncrement == autoOffsetIncrement)&&const DeepCollectionEquality().equals(other.offsetAdjustments, offsetAdjustments)&&(identical(other.minOffset, minOffset) || other.minOffset == minOffset)&&(identical(other.maxOffset, maxOffset) || other.maxOffset == maxOffset));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,endpoint,imageFetchInterval,delayAdjustInterval);
+int get hashCode => Object.hash(runtimeType,endpoint,imageFetchInterval,delayAdjustInterval,delayAdjustType,autoOffsetIncrement,const DeepCollectionEquality().hash(offsetAdjustments),minOffset,maxOffset);
 
 @override
 String toString() {
-  return 'KyoshinMonitorSettingsApiModel(endpoint: $endpoint, imageFetchInterval: $imageFetchInterval, delayAdjustInterval: $delayAdjustInterval)';
+  return 'KyoshinMonitorSettingsApiModel(endpoint: $endpoint, imageFetchInterval: $imageFetchInterval, delayAdjustInterval: $delayAdjustInterval, delayAdjustType: $delayAdjustType, autoOffsetIncrement: $autoOffsetIncrement, offsetAdjustments: $offsetAdjustments, minOffset: $minOffset, maxOffset: $maxOffset)';
 }
 
 
@@ -369,7 +383,7 @@ abstract mixin class $KyoshinMonitorSettingsApiModelCopyWith<$Res>  {
   factory $KyoshinMonitorSettingsApiModelCopyWith(KyoshinMonitorSettingsApiModel value, $Res Function(KyoshinMonitorSettingsApiModel) _then) = _$KyoshinMonitorSettingsApiModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) KyoshinMonitorEndpoint endpoint,@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration imageFetchInterval, Duration delayAdjustInterval
+@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) KyoshinMonitorEndpoint endpoint,@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration imageFetchInterval, Duration delayAdjustInterval,@JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp) KyoshinMonitorDelayAdjustType delayAdjustType, bool autoOffsetIncrement, Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments, Duration minOffset, Duration maxOffset
 });
 
 
@@ -386,11 +400,16 @@ class _$KyoshinMonitorSettingsApiModelCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorSettingsApiModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? endpoint = null,Object? imageFetchInterval = null,Object? delayAdjustInterval = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? endpoint = null,Object? imageFetchInterval = null,Object? delayAdjustInterval = null,Object? delayAdjustType = null,Object? autoOffsetIncrement = null,Object? offsetAdjustments = null,Object? minOffset = null,Object? maxOffset = null,}) {
+  return _then(KyoshinMonitorSettingsApiModel(
 endpoint: null == endpoint ? _self.endpoint : endpoint // ignore: cast_nullable_to_non_nullable
 as KyoshinMonitorEndpoint,imageFetchInterval: null == imageFetchInterval ? _self.imageFetchInterval : imageFetchInterval // ignore: cast_nullable_to_non_nullable
 as Duration,delayAdjustInterval: null == delayAdjustInterval ? _self.delayAdjustInterval : delayAdjustInterval // ignore: cast_nullable_to_non_nullable
+as Duration,delayAdjustType: null == delayAdjustType ? _self.delayAdjustType : delayAdjustType // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorDelayAdjustType,autoOffsetIncrement: null == autoOffsetIncrement ? _self.autoOffsetIncrement : autoOffsetIncrement // ignore: cast_nullable_to_non_nullable
+as bool,offsetAdjustments: null == offsetAdjustments ? _self.offsetAdjustments : offsetAdjustments // ignore: cast_nullable_to_non_nullable
+as Map<KyoshinMonitorDelayProfile, Duration>,minOffset: null == minOffset ? _self.minOffset : minOffset // ignore: cast_nullable_to_non_nullable
+as Duration,maxOffset: null == maxOffset ? _self.maxOffset : maxOffset // ignore: cast_nullable_to_non_nullable
 as Duration,
   ));
 }
@@ -476,10 +495,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval, @JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp)  KyoshinMonitorDelayAdjustType delayAdjustType,  bool autoOffsetIncrement,  Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments,  Duration minOffset,  Duration maxOffset)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsApiModel() when $default != null:
-return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval,_that.delayAdjustType,_that.autoOffsetIncrement,_that.offsetAdjustments,_that.minOffset,_that.maxOffset);case _:
   return orElse();
 
 }
@@ -497,10 +516,10 @@ return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterva
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval, @JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp)  KyoshinMonitorDelayAdjustType delayAdjustType,  bool autoOffsetIncrement,  Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments,  Duration minOffset,  Duration maxOffset)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsApiModel():
-return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval,_that.delayAdjustType,_that.autoOffsetIncrement,_that.offsetAdjustments,_that.minOffset,_that.maxOffset);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -517,10 +536,10 @@ return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterva
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval, @JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp)  KyoshinMonitorDelayAdjustType delayAdjustType,  bool autoOffsetIncrement,  Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments,  Duration minOffset,  Duration maxOffset)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsApiModel() when $default != null:
-return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval,_that.delayAdjustType,_that.autoOffsetIncrement,_that.offsetAdjustments,_that.minOffset,_that.maxOffset);case _:
   return null;
 
 }
@@ -532,15 +551,44 @@ return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterva
 @JsonSerializable()
 
 class _KyoshinMonitorSettingsApiModel implements KyoshinMonitorSettingsApiModel {
-  const _KyoshinMonitorSettingsApiModel({@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) this.endpoint = KyoshinMonitorEndpoint.kmoni, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') this.imageFetchInterval = const Duration(seconds: 1), this.delayAdjustInterval = const Duration(minutes: 10)});
+  const _KyoshinMonitorSettingsApiModel({@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) this.endpoint = KyoshinMonitorEndpoint.kmoni, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') this.imageFetchInterval = const Duration(seconds: 1), this.delayAdjustInterval = const Duration(seconds: 60), @JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp) this.delayAdjustType = KyoshinMonitorDelayAdjustType.imageFetch404Ntp, this.autoOffsetIncrement = true,  Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments = const <KyoshinMonitorDelayProfile, Duration>{}, this.minOffset = const Duration(milliseconds: 600), this.maxOffset = const Duration(milliseconds: 5000)}): _offsetAdjustments = offsetAdjustments;
   factory _KyoshinMonitorSettingsApiModel.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorSettingsApiModelFromJson(json);
 
 /// 強震モニタ APIのベースURL
 @override@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) final  KyoshinMonitorEndpoint endpoint;
 /// 画像取得頻度
 @override@JsonKey()@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') final  Duration imageFetchInterval;
-/// 遅延調整間隔
+/// `latest.json` の再同期間隔
+///
+/// 長周期地震動モニタの公式フロントエンドと同じ60秒。
+/// 端末時計のドリフトは NTP 側で吸収されるが、サーバの公開遅延の
+/// 変動を追うためにここでも定期的に測り直す。
 @override@JsonKey() final  Duration delayAdjustInterval;
+/// 遅延調整の方式
+@override@JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp) final  KyoshinMonitorDelayAdjustType delayAdjustType;
+/// 画像取得の404をもとにオフセットを自動調整するかどうか
+@override@JsonKey() final  bool autoOffsetIncrement;
+/// パイプライン別の、`latest.json` 実測値からの補正量。
+///
+/// 強震モニタと長周期地震動階級では画像の公開遅延が約 0.66 秒違う
+/// (実測: 1.23s と 0.57s) ため、共通の値にすると切り替えのたびに
+/// 再収束のための 404 が発生する。永続化して次回起動時も引き継ぐ。
+ final  Map<KyoshinMonitorDelayProfile, Duration> _offsetAdjustments;
+/// パイプライン別の、`latest.json` 実測値からの補正量。
+///
+/// 強震モニタと長周期地震動階級では画像の公開遅延が約 0.66 秒違う
+/// (実測: 1.23s と 0.57s) ため、共通の値にすると切り替えのたびに
+/// 再収束のための 404 が発生する。永続化して次回起動時も引き継ぐ。
+@override@JsonKey() Map<KyoshinMonitorDelayProfile, Duration> get offsetAdjustments {
+  if (_offsetAdjustments is EqualUnmodifiableMapView) return _offsetAdjustments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_offsetAdjustments);
+}
+
+/// 公開遅延の下限
+@override@JsonKey() final  Duration minOffset;
+/// 公開遅延の上限
+@override@JsonKey() final  Duration maxOffset;
 
 /// Create a copy of KyoshinMonitorSettingsApiModel
 /// with the given fields replaced by the non-null parameter values.
@@ -555,16 +603,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorSettingsApiModel&&(identical(other.endpoint, endpoint) || other.endpoint == endpoint)&&(identical(other.imageFetchInterval, imageFetchInterval) || other.imageFetchInterval == imageFetchInterval)&&(identical(other.delayAdjustInterval, delayAdjustInterval) || other.delayAdjustInterval == delayAdjustInterval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorSettingsApiModel&&(identical(other.endpoint, endpoint) || other.endpoint == endpoint)&&(identical(other.imageFetchInterval, imageFetchInterval) || other.imageFetchInterval == imageFetchInterval)&&(identical(other.delayAdjustInterval, delayAdjustInterval) || other.delayAdjustInterval == delayAdjustInterval)&&(identical(other.delayAdjustType, delayAdjustType) || other.delayAdjustType == delayAdjustType)&&(identical(other.autoOffsetIncrement, autoOffsetIncrement) || other.autoOffsetIncrement == autoOffsetIncrement)&&const DeepCollectionEquality().equals(other._offsetAdjustments, _offsetAdjustments)&&(identical(other.minOffset, minOffset) || other.minOffset == minOffset)&&(identical(other.maxOffset, maxOffset) || other.maxOffset == maxOffset));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,endpoint,imageFetchInterval,delayAdjustInterval);
+int get hashCode => Object.hash(runtimeType,endpoint,imageFetchInterval,delayAdjustInterval,delayAdjustType,autoOffsetIncrement,const DeepCollectionEquality().hash(_offsetAdjustments),minOffset,maxOffset);
 
 @override
 String toString() {
-  return 'KyoshinMonitorSettingsApiModel(endpoint: $endpoint, imageFetchInterval: $imageFetchInterval, delayAdjustInterval: $delayAdjustInterval)';
+  return 'KyoshinMonitorSettingsApiModel(endpoint: $endpoint, imageFetchInterval: $imageFetchInterval, delayAdjustInterval: $delayAdjustInterval, delayAdjustType: $delayAdjustType, autoOffsetIncrement: $autoOffsetIncrement, offsetAdjustments: $offsetAdjustments, minOffset: $minOffset, maxOffset: $maxOffset)';
 }
 
 
@@ -575,7 +623,7 @@ abstract mixin class _$KyoshinMonitorSettingsApiModelCopyWith<$Res> implements $
   factory _$KyoshinMonitorSettingsApiModelCopyWith(_KyoshinMonitorSettingsApiModel value, $Res Function(_KyoshinMonitorSettingsApiModel) _then) = __$KyoshinMonitorSettingsApiModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) KyoshinMonitorEndpoint endpoint,@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration imageFetchInterval, Duration delayAdjustInterval
+@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni) KyoshinMonitorEndpoint endpoint,@Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second') Duration imageFetchInterval, Duration delayAdjustInterval,@JsonKey(unknownEnumValue: KyoshinMonitorDelayAdjustType.imageFetch404Ntp) KyoshinMonitorDelayAdjustType delayAdjustType, bool autoOffsetIncrement, Map<KyoshinMonitorDelayProfile, Duration> offsetAdjustments, Duration minOffset, Duration maxOffset
 });
 
 
@@ -592,11 +640,16 @@ class __$KyoshinMonitorSettingsApiModelCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorSettingsApiModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? endpoint = null,Object? imageFetchInterval = null,Object? delayAdjustInterval = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? endpoint = null,Object? imageFetchInterval = null,Object? delayAdjustInterval = null,Object? delayAdjustType = null,Object? autoOffsetIncrement = null,Object? offsetAdjustments = null,Object? minOffset = null,Object? maxOffset = null,}) {
   return _then(_KyoshinMonitorSettingsApiModel(
 endpoint: null == endpoint ? _self.endpoint : endpoint // ignore: cast_nullable_to_non_nullable
 as KyoshinMonitorEndpoint,imageFetchInterval: null == imageFetchInterval ? _self.imageFetchInterval : imageFetchInterval // ignore: cast_nullable_to_non_nullable
 as Duration,delayAdjustInterval: null == delayAdjustInterval ? _self.delayAdjustInterval : delayAdjustInterval // ignore: cast_nullable_to_non_nullable
+as Duration,delayAdjustType: null == delayAdjustType ? _self.delayAdjustType : delayAdjustType // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorDelayAdjustType,autoOffsetIncrement: null == autoOffsetIncrement ? _self.autoOffsetIncrement : autoOffsetIncrement // ignore: cast_nullable_to_non_nullable
+as bool,offsetAdjustments: null == offsetAdjustments ? _self._offsetAdjustments : offsetAdjustments // ignore: cast_nullable_to_non_nullable
+as Map<KyoshinMonitorDelayProfile, Duration>,minOffset: null == minOffset ? _self.minOffset : minOffset // ignore: cast_nullable_to_non_nullable
+as Duration,maxOffset: null == maxOffset ? _self.maxOffset : maxOffset // ignore: cast_nullable_to_non_nullable
 as Duration,
   ));
 }

@@ -11,24 +11,27 @@ import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 class EewCard extends ConsumerWidget {
-  const EewCard({
+  const new({
     required this.eew,
     required this.index,
     this.nowOverride,
-    this.userRegionEstimate,
+    this.estimatedRegions,
     super.key,
   });
 
   final EewTelegramItem eew;
   final String? index;
   final DateTime? nowOverride;
-  final EewEstimatedRegion? userRegionEstimate;
+
+  /// 距離減衰式による推計震度。JMAが現在地の予想震度を発表していない場合の
+  /// フォールバックとして利用する。
+  final List<EewEstimatedRegion>? estimatedRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +75,9 @@ class EewCard extends ConsumerWidget {
     final localRegion = localForecastRegion(eew, regionCode);
 
     // JMAのlocalRegionがない場合、推定値をフォールバック
-    final estimate = userRegionEstimate;
+    final estimate = regionCode != null
+        ? estimatedRegions?.firstWhereOrNull((e) => e.regionCode == regionCode)
+        : null;
     final effectiveLocalIntensity =
         localRegion?.intensity ?? estimate?.jmaIntensity;
     final effectiveRegionName = regionDisplayName ?? estimate?.regionName;
@@ -109,7 +114,7 @@ class EewCard extends ConsumerWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (index != null) _BackgroundIndexText(index: index!),
+        if (index case final index?) _BackgroundIndexText(index: index),
         _EewMainCard(
           eew: eew,
           isWarning: isWarning,
@@ -144,7 +149,7 @@ class EewCard extends ConsumerWidget {
 }
 
 class _EewMainCard extends StatelessWidget {
-  const _EewMainCard({
+  const new({
     required this.eew,
     required this.isWarning,
     required this.happenedTime,
@@ -183,12 +188,13 @@ class _EewMainCard extends StatelessWidget {
         ? _warningHeaderColor
         : _forecastHeaderColor;
 
+    final regionDisplayName = this.regionDisplayName;
     final showLocalForecast =
         (localForecastIntensity != null ||
             secondsUntilArrival != null ||
             showArrived) &&
         regionDisplayName != null &&
-        regionDisplayName!.isNotEmpty &&
+        regionDisplayName.isNotEmpty &&
         localForecastIntensity != null;
 
     return Card(
@@ -244,7 +250,7 @@ class _EewMainCard extends StatelessWidget {
                       if (showLocalForecast)
                         _EewLocalForecastSection(
                           intensity: localForecastIntensity,
-                          regionDisplayName: regionDisplayName!,
+                          regionDisplayName: regionDisplayName,
                         ),
                     ],
                   ),
@@ -268,7 +274,7 @@ class _EewMainCard extends StatelessWidget {
 }
 
 class _EewCardHeader extends StatelessWidget {
-  const _EewCardHeader({
+  const new({
     required this.eew,
     required this.isWarning,
     required this.headerBackgroundColor,
@@ -403,7 +409,7 @@ class _EewCardHeader extends StatelessWidget {
 }
 
 class _EewMaxIntensitySection extends StatelessWidget {
-  const _EewMaxIntensitySection({
+  const new({
     required this.maxIntensity,
     required this.depth,
   });
@@ -435,7 +441,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
 }
 
 class _EewHypocenterSection extends StatelessWidget {
-  const _EewHypocenterSection({required this.eew, required this.happenedTime});
+  const new({required this.eew, required this.happenedTime});
 
   final EewTelegramItem eew;
   final DateTime happenedTime;
@@ -512,7 +518,7 @@ class _EewHypocenterSection extends StatelessWidget {
 }
 
 class _EewLocalForecastSection extends StatelessWidget {
-  const _EewLocalForecastSection({
+  const new({
     required this.intensity,
     required this.regionDisplayName,
   });
@@ -548,9 +554,9 @@ class _EewLocalForecastSection extends StatelessWidget {
             ),
           ],
         ),
-        if (intensity != null) ...[
+        if (intensity case final intensity?) ...[
           const SizedBox(height: 2),
-          JmaIntensityIcon(intensity: intensity!, type: .filled),
+          JmaIntensityIcon(intensity: intensity, type: .filled),
         ],
       ],
     );
@@ -558,7 +564,7 @@ class _EewLocalForecastSection extends StatelessWidget {
 }
 
 class _EewLpgmSection extends StatelessWidget {
-  const _EewLpgmSection({required this.intensity});
+  const new({required this.intensity});
 
   final JmaLpgmIntensity intensity;
 
@@ -585,7 +591,7 @@ class _EewLpgmSection extends StatelessWidget {
 }
 
 class _BackgroundIndexText extends StatelessWidget {
-  const _BackgroundIndexText({required this.index});
+  const new({required this.index});
 
   final String index;
 
@@ -610,7 +616,7 @@ class _BackgroundIndexText extends StatelessWidget {
 }
 
 class _SecondaryLabel extends StatelessWidget {
-  const _SecondaryLabel({required this.text});
+  const new({required this.text});
 
   final String text;
 
@@ -628,7 +634,7 @@ class _SecondaryLabel extends StatelessWidget {
 }
 
 class _MagnitudeRow extends StatelessWidget {
-  const _MagnitudeRow({required this.magnitude});
+  const new({required this.magnitude});
 
   final double magnitude;
 
@@ -662,7 +668,7 @@ class _MagnitudeRow extends StatelessWidget {
 }
 
 class _DepthRow extends StatelessWidget {
-  const _DepthRow({required this.depth});
+  const new({required this.depth});
 
   final int depth;
 

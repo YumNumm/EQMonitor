@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
@@ -26,6 +27,8 @@ import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_recorder_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_uploader_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +36,95 @@ import 'package:telemetry_store/telemetry_store.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  test(
+    'APNs EventChannel callback is upserted once through production wiring',
+    () async {
+      const channelName = 'net.yumnumm.eqmonitor/apns-token';
+      const codec = StandardMethodCodec();
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final listenReceived = Completer<void>();
+      messenger.setMockMessageHandler(channelName, (message) async {
+        final call = codec.decodeMethodCall(message);
+        if (call.method == 'listen' && !listenReceived.isCompleted) {
+          listenReceived.complete();
+        }
+        return codec.encodeSuccessEnvelope(null);
+      });
+      addTearDown(() => messenger.setMockMessageHandler(channelName, null));
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final repository = _RecordingDeviceRepository();
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith(
+            (ref) async => _MemoryDeviceAuthRepository(),
+          ),
+          firebaseMessagingProvider.overrideWithValue(
+            _ApnsOnlyFirebaseMessaging(),
+          ),
+          pushTokenPlatformCapabilitiesProvider.overrideWithValue(
+            const PushTokenPlatformCapabilities(
+              supportsFcm: false,
+              supportsApns: true,
+            ),
+          ),
+          deviceRepositoryProvider.overrideWith((ref) async => repository),
+          telemetryRecorderProvider.overrideWithValue(_NoopTelemetryRecorder()),
+          telemetryUploaderProvider.overrideWithValue(_NoopTelemetryUploader()),
+        ],
+      );
+      addTearDown(repository.close);
+      addTearDown(container.dispose);
+      final apnsStreamErrored = Completer<void>();
+      final apnsSubscription = container.listen(
+        apnsNotificationTokenStreamProvider,
+        (_, next) {
+          if (next.hasError && !apnsStreamErrored.isCompleted) {
+            apnsStreamErrored.complete();
+          }
+        },
+        fireImmediately: true,
+      );
+      addTearDown(apnsSubscription.close);
+
+      await container.read(pushTokenSyncWiringProvider.future);
+      await listenReceived.future;
+      final upserted = repository.callEvents.stream.firstWhere(
+        (call) =>
+            call.kind == PushTokenKind.apnsNotification &&
+            call.token == 'callback-token',
+      );
+      await _sendApnsEvent(
+        channelName: channelName,
+        event: codec.encodeSuccessEnvelope('callback-token'),
+      );
+      await upserted.timeout(const Duration(seconds: 5));
+
+      await _sendApnsEvent(
+        channelName: channelName,
+        event: codec.encodeSuccessEnvelope('callback-token'),
+      );
+      await _sendApnsEvent(
+        channelName: channelName,
+        event: codec.encodeSuccessEnvelope(42),
+      );
+      await apnsStreamErrored.future.timeout(const Duration(seconds: 5));
+
+      expect(
+        repository.calls.where(
+          (call) => call.kind == PushTokenKind.apnsNotification,
+        ),
+        [(kind: PushTokenKind.apnsNotification, token: 'callback-token')],
+      );
+    },
+  );
 
   test('same token is upserted once in each fresh app session', () async {
     SharedPreferences.setMockInitialValues({
@@ -166,9 +258,9 @@ void main() {
       final recoveredCall = repository.callEvents.stream.firstWhere(
         (call) => call.token == 'recovered-token',
       );
-      final provisioningNotifier =
-          container.read(deviceProvisioningProvider.notifier)
-              as _FailingThenRecoverableProvisioningNotifier;
+      final provisioningNotifier = container.read(
+        deviceProvisioningProvider.notifier,
+      ) as _FailingThenRecoverableProvisioningNotifier;
       provisioningNotifier.recover();
       await wiringRecomputed.future.timeout(const Duration(seconds: 5));
       tokens.add(const NotificationToken(fcmToken: 'recovered-token'));
@@ -453,7 +545,7 @@ _WiringHarness _createHarness({
 }
 
 final class _WiringHarness {
-  _WiringHarness({
+  new({
     required this.container,
     required this.tokens,
     required this.acks,
@@ -491,7 +583,7 @@ final class _WiringHarness {
 }
 
 final class _RecordingDeviceRepository extends DeviceRepository {
-  _RecordingDeviceRepository({this.failFcmRetryably = false})
+  new({this.failFcmRetryably = false})
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -520,7 +612,7 @@ final class _RecordingDeviceRepository extends DeviceRepository {
 }
 
 final class _PendingFailureDeviceRepository extends DeviceRepository {
-  _PendingFailureDeviceRepository()
+  new()
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -553,7 +645,7 @@ final class _PendingFailureDeviceRepository extends DeviceRepository {
 }
 
 final class _StartupDeviceRepository extends DeviceRepository {
-  _StartupDeviceRepository()
+  new()
     : super(
         api: api.ApiClient(Dio()),
         authRepository: _MemoryDeviceAuthRepository(),
@@ -593,7 +685,7 @@ final class _StartupDeviceRepository extends DeviceRepository {
 
 final class _RecordingProvisioningRepository
     extends DeviceProvisioningRepository {
-  _RecordingProvisioningRepository({required SharedPreferences prefs})
+  new({required SharedPreferences prefs})
     : super(
         dataSource: SharedPreferencesDataSource(sharedPreferences: prefs),
         persistence: SharedPreferencesWorkflowPersistence(
@@ -629,7 +721,7 @@ final class _FailingThenRecoverableProvisioningNotifier
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   @override
   Future<void> saveToken({required String token}) async {}
@@ -719,4 +811,46 @@ final class _NoopTelemetryUploader extends Fake implements TelemetryUploader {
   @override
   Future<UploadResult> flush() async =>
       const UploadResult(sentCount: 0, failedCount: 0);
+}
+
+final class _ApnsOnlyFirebaseMessaging extends Fake
+    implements FirebaseMessaging {
+  @override
+  Future<NotificationSettings> requestPermission({
+    bool alert = true,
+    bool announcement = false,
+    bool badge = true,
+    bool carPlay = false,
+    bool criticalAlert = false,
+    bool provisional = false,
+    bool sound = true,
+    bool providesAppNotificationSettings = false,
+  }) async => NotificationSettings(
+    alert: AppleNotificationSetting.notSupported,
+    announcement: AppleNotificationSetting.notSupported,
+    authorizationStatus: AuthorizationStatus.provisional,
+    badge: AppleNotificationSetting.notSupported,
+    carPlay: AppleNotificationSetting.notSupported,
+    lockScreen: AppleNotificationSetting.notSupported,
+    notificationCenter: AppleNotificationSetting.notSupported,
+    showPreviews: AppleShowPreviewSetting.notSupported,
+    timeSensitive: AppleNotificationSetting.notSupported,
+    criticalAlert: AppleNotificationSetting.notSupported,
+    sound: AppleNotificationSetting.notSupported,
+    providesAppNotificationSettings: AppleNotificationSetting.notSupported,
+  );
+
+  @override
+  Future<String?> getAPNSToken() async => null;
+}
+
+Future<void> _sendApnsEvent({
+  required String channelName,
+  required ByteData event,
+}) async {
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  final handled = Completer<ByteData?>();
+  await messenger.handlePlatformMessage(channelName, event, handled.complete);
+  await handled.future;
 }

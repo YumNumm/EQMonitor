@@ -9,7 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
 class HypocenterPmTilesLayer extends HookWidget {
-  const HypocenterPmTilesLayer({
+  const new({
     required this.archives,
     required this.colorMode,
     super.key,
@@ -72,7 +72,7 @@ class HypocenterPmTilesLayer extends HookWidget {
         }
         unawaited(
           enqueue(
-            () => removeMapStyleResources(
+            () => MapStyleResourceRemover.remove(
               styleController: styleController,
               layerIds: [
                 for (final value in ids) ...[
@@ -85,6 +85,11 @@ class HypocenterPmTilesLayer extends HookWidget {
           ),
         );
       };
+      // archives はリストの同一性が毎ビルド変わりうるため、安定した
+      // archiveKey を再構築の契機として使っている（archives を直接 keys に
+      // 入れると毎ビルド全ソース・レイヤーを貼り直すことになる）。
+      // tick.value は定期リフレッシュの契機で、本体からは参照しない。
+      // ignore_keys: archives, archiveKey, tick.value
     }, [styleController, archiveKey, colorMode, tick.value]);
 
     return const SizedBox.shrink();
@@ -92,7 +97,7 @@ class HypocenterPmTilesLayer extends HookWidget {
 }
 
 class HypocenterPmTilesStyleBuilder {
-  const HypocenterPmTilesStyleBuilder();
+  const new();
 
   HypocenterPmTilesStyleIds idsFor(HypocenterArchive archive) {
     final suffix = '${archive.id.partition.name}-${archive.id.jstLabel}'
@@ -225,7 +230,7 @@ class HypocenterPmTilesStyleBuilder {
 }
 
 class HypocenterPmTilesStyleIds {
-  const HypocenterPmTilesStyleIds({
+  const new({
     required this.sourceId,
     required this.clusterLayerId,
     required this.hypocenterLayerId,
@@ -237,7 +242,7 @@ class HypocenterPmTilesStyleIds {
 }
 
 class HypocenterPmTilesLayers {
-  const HypocenterPmTilesLayers({
+  const new({
     required this.cluster,
     required this.hypocenter,
   });

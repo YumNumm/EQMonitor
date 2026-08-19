@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
+import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
@@ -22,7 +23,7 @@ Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
 );
 
 class DeviceRepository {
-  DeviceRepository({
+  new({
     required api.ApiClient api,
     required DeviceAuthRepository authRepository,
     required api.ApnsEnvironment apnsEnvironment,
@@ -38,6 +39,17 @@ class DeviceRepository {
       Result.capture(() async {
         final response = await _api.device.getV2DeviceMe();
         return response.data.toRegisteredDevice;
+      });
+
+  /// このデバイスのロールを取得する。
+  ///
+  /// backend は `ADMIN_DEVICE_IDS` に列挙されたデバイスにのみ `ADMIN` を返す。
+  /// 未知の値が来た場合は生成モデルのデコードが失敗し、Failure になる。
+  /// 権限を推測して Admin 扱いにするフォールバックは意図的に入れていない。
+  Future<Result<DeviceRole, Exception>> getDeviceRole() =>
+      Result.capture(() async {
+        final response = await _api.device.getV2DeviceMe();
+        return response.data.role.toDeviceRole;
       });
 
   Future<Result<RegisteredDevice, Exception>> registerDevice({

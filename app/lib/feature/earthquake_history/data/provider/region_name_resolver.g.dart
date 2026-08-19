@@ -73,7 +73,7 @@ final class RegionNameProvider
   }
 }
 
-String _$regionNameHash() => r'15fcafb1930da4ee216931340e1a8fa0db99e3f9';
+String _$regionNameHash() => r'ee1fcc9db1ea0ceb2669025d29a47dcdd8c3d646';
 
 /// AsyncValue でラップした riverpod プロバイダ(UI 用)。
 ///

@@ -1,43 +1,39 @@
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 
-enum IntensityFieldGroup {
+enum IntensityFieldGroup({
+  required final String description,
+  required final bool hasForeground,
+}) {
   intensity(
-    description: '観測された震度の表示色。震度アイコンや地震履歴・地図上の震度塗りつぶしなど、震度表示のすべてに使用されます。',
+    description: '震度アイコンや地震履歴の地域別塗りつぶし等で利用します',
+    hasForeground: true,
   ),
   estimatedIntensity(
-    description: '緊急地震速報の予想震度の表示色。観測値が確定する前に、地図上の推計震度の塗りつぶしに使用されます。',
+    description: '最大震度5弱以上を観測する地震が発生した時に発表される推計震度分布図の塗りつぶしで利用します',
+    // 推計震度は分布図の塗りつぶしのみで文字を描画しないため文字色を持たない
+    hasForeground: false,
   );
-
-  const IntensityFieldGroup({required this.description});
-
-  final String description;
 }
 
-class IntensityFieldDef {
-  const IntensityFieldDef({
-    required this.label,
-    required this.group,
-    required this.entryGetter,
-    required this.entrySetter,
-  });
-
-  final String label;
-  final IntensityFieldGroup group;
-  final IntensityColorEntry Function(ThemeColorSet colorSet) entryGetter;
-  final ThemeColorSet Function(
+class const IntensityFieldDef({
+  required final String label,
+  required final IntensityFieldGroup group,
+  required final IntensityColorEntry Function(ThemeColorSet colorSet)
+  entryGetter,
+  required final ThemeColorSet Function(
     ThemeColorSet colorSet,
     IntensityColorEntry entry,
   )
-  entrySetter;
-}
+  entrySetter,
+});
 
 /// [IntensityFieldDef]の宣言的な一覧を保持するコンテナ。
 ///
 /// `IntensityColors`(11件)/`EstimatedIntensityColors`(6件)の
 /// 全エントリを網羅する。エディタUI(Task 5/6)は[all]を描画するだけで完結する。
 class IntensityFieldDefs {
-  const IntensityFieldDefs._();
+  const new _();
 
   static final List<IntensityFieldDef> all = [
     IntensityFieldDef(

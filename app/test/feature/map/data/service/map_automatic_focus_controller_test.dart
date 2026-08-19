@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_map_instance_owner.dart';
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -21,8 +21,8 @@ void main() {
   );
 
   group('mapAutomaticFocusTargetForBounds', () {
-    test('狭いboundsはMercator中心とzoom 8のtargetになる', () {
-      final target = mapAutomaticFocusTargetForBounds(
+    test('狭いboundsはMercator中心とzoom上限のtargetになる', () {
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: bounds,
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
@@ -31,10 +31,10 @@ void main() {
       expect(target, isNotNull);
       expect(target?.center.lon, 139.5);
       expect(target?.center.lat, closeTo(35.5015, 0.0001));
-      expect(target?.zoom, 8);
+      expect(target?.zoom, mapAutomaticFocusMaxZoom);
     });
 
-    test('広いboundsはviewportへ収まるzoom 8未満のtargetになる', () {
+    test('広いboundsはviewportへ収まるzoom上限未満のtargetになる', () {
       const wideBounds = LngLatBounds(
         longitudeWest: 122.5,
         longitudeEast: 146,
@@ -42,14 +42,14 @@ void main() {
         latitudeNorth: 46,
       );
 
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: wideBounds,
         viewportSize: const Size(375, 667),
         padding: EdgeInsets.zero,
       );
 
       expect(target, isNotNull);
-      expect(target?.zoom, lessThan(8));
+      expect(target?.zoom, lessThan(mapAutomaticFocusMaxZoom));
       expect(target?.zoom, greaterThanOrEqualTo(0));
       final zoom = target?.zoom;
       if (zoom == null) {
@@ -61,8 +61,10 @@ void main() {
           360 *
           worldSize;
       final latitudeSpanPixels =
-          (mapAutomaticFocusMercatorY(latitude: wideBounds.latitudeNorth) -
-                  mapAutomaticFocusMercatorY(
+          (MapAutomaticFocusController.mercatorY(
+                    latitude: wideBounds.latitudeNorth,
+                  ) -
+                  MapAutomaticFocusController.mercatorY(
                     latitude: wideBounds.latitudeSouth,
                   ))
               .abs() /
@@ -73,7 +75,7 @@ void main() {
     });
 
     test('padding控除後のviewport幅が0ならtargetを作らない', () {
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: bounds,
         viewportSize: const Size(100, 100),
         padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -83,7 +85,7 @@ void main() {
     });
 
     test('padding控除後のviewport高さが負ならtargetを作らない', () {
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: bounds,
         viewportSize: const Size(100, 100),
         padding: const EdgeInsets.symmetric(vertical: 51),
@@ -93,7 +95,7 @@ void main() {
     });
 
     test('緯度にNaNを含むboundsはtargetを作らない', () {
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: const LngLatBounds(
           longitudeWest: 139,
           longitudeEast: 140,
@@ -112,7 +114,7 @@ void main() {
         double.negativeInfinity,
         double.infinity,
       ]) {
-        final target = mapAutomaticFocusTargetForBounds(
+        final target = MapAutomaticFocusController.targetForBounds(
           bounds: LngLatBounds(
             longitudeWest: 139,
             longitudeEast: 140,
@@ -128,7 +130,7 @@ void main() {
     });
 
     test('南端緯度が北端緯度を超えるboundsはtargetを作らない', () {
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: const LngLatBounds(
           longitudeWest: 139,
           longitudeEast: 140,
@@ -163,7 +165,7 @@ void main() {
       ),
     ]) {
       test('$nameのboundsはtargetを作らない', () {
-        final target = mapAutomaticFocusTargetForBounds(
+        final target = MapAutomaticFocusController.targetForBounds(
           bounds: invalidBounds,
           viewportSize: const Size(375, 667),
           padding: EdgeInsets.zero,
@@ -203,7 +205,7 @@ void main() {
       ),
     ]) {
       test('$nameのboundsはtargetを作らない', () {
-        final target = mapAutomaticFocusTargetForBounds(
+        final target = MapAutomaticFocusController.targetForBounds(
           bounds: invalidBounds,
           viewportSize: const Size(375, 667),
           padding: EdgeInsets.zero,
@@ -214,7 +216,7 @@ void main() {
     }
 
     test('日付変更線を横断する有効boundsはtargetを作る', () {
-      final target = mapAutomaticFocusTargetForBounds(
+      final target = MapAutomaticFocusController.targetForBounds(
         bounds: const LngLatBounds(
           longitudeWest: 170,
           longitudeEast: -170,
@@ -231,7 +233,7 @@ void main() {
   });
 
   group('MapAutomaticFocusController', () {
-    test('事前計算したzoom 8のcameraを一度だけ送る', () async {
+    test('事前計算したzoom上限のcameraを一度だけ送る', () async {
       final controller = MockMapController();
       when(
         controller.animateCamera(
@@ -257,7 +259,7 @@ void main() {
       verify(
         controller.animateCamera(
           center: anyNamed('center'),
-          zoom: 8,
+          zoom: mapAutomaticFocusMaxZoom,
           bearing: 0,
           pitch: 0,
         ),
@@ -468,7 +470,7 @@ void main() {
       verify(
         controller.animateCamera(
           center: anyNamed('center'),
-          zoom: 8,
+          zoom: mapAutomaticFocusMaxZoom,
           bearing: 0,
           pitch: 0,
         ),

@@ -8,13 +8,13 @@ part 'earthquake_list_response.g.dart';
 
 @freezed
 abstract class EarthquakeListResponse with _$EarthquakeListResponse {
-  const factory EarthquakeListResponse({
+  const factory({
     required List<EarthquakePartial> items,
     required String? nextToken,
     required String? nextPooling,
   }) = _EarthquakeListResponse;
 
-  factory EarthquakeListResponse.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeListResponseFromJson(json);
 }
 

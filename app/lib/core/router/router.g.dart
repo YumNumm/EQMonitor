@@ -19,8 +19,6 @@ List<RouteBase> get $appRoutes => [
   $intensityHistoryRoute,
   $earthquakeHistoryDetailsRoute,
   $earthquakeActivityRoute,
-  $shakeDetectionHistoryRoute,
-  $shakeDetectionHistoryDetailsRoute,
   $liveMonitorRoute,
   $telegramListByEventIdRoute,
   $homeRoute,
@@ -34,8 +32,11 @@ List<RouteBase> get $appRoutes => [
   $subscriptionSettingsRoute,
 ];
 
-RouteBase get $splashRoute =>
-    GoRouteData.$route(path: '/splash', factory: $SplashRoute._fromState);
+RouteBase get $splashRoute => GoRouteData.$route(
+  path: '/splash',
+  hasOverriddenOnExit: false,
+  factory: $SplashRoute._fromState,
+);
 
 mixin $SplashRoute on GoRouteData {
   static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
@@ -59,6 +60,7 @@ mixin $SplashRoute on GoRouteData {
 
 RouteBase get $onboardingRoute => GoRouteData.$route(
   path: '/onboarding',
+  hasOverriddenOnExit: false,
   factory: $OnboardingRoute._fromState,
 );
 
@@ -85,6 +87,7 @@ mixin $OnboardingRoute on GoRouteData {
 
 RouteBase get $onboardingWebViewRoute => GoRouteData.$route(
   path: '/onboarding/web-view',
+  hasOverriddenOnExit: false,
   factory: $OnboardingWebViewRoute._fromState,
 );
 
@@ -119,6 +122,7 @@ mixin $OnboardingWebViewRoute on GoRouteData {
 
 RouteBase get $betaTestingWarningRoute => GoRouteData.$route(
   path: '/beta-warning',
+  hasOverriddenOnExit: false,
   factory: $BetaTestingWarningRoute._fromState,
 );
 
@@ -145,6 +149,7 @@ mixin $BetaTestingWarningRoute on GoRouteData {
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
+  hasOverriddenOnExit: false,
   factory: $EarthquakeHistoryRoute._fromState,
 );
 
@@ -177,6 +182,7 @@ mixin $EarthquakeHistoryRoute on GoRouteData {
 
 RouteBase get $eewHistoryRoute => GoRouteData.$route(
   path: '/eew-history',
+  hasOverriddenOnExit: false,
   factory: $EewHistoryRoute._fromState,
 );
 
@@ -203,6 +209,7 @@ mixin $EewHistoryRoute on GoRouteData {
 
 RouteBase get $seismicityRoute => GoRouteData.$route(
   path: '/seismicity',
+  hasOverriddenOnExit: false,
   factory: $SeismicityRoute._fromState,
 );
 
@@ -229,6 +236,7 @@ mixin $SeismicityRoute on GoRouteData {
 
 RouteBase get $intensityHistoryRoute => GoRouteData.$route(
   path: '/intensity-history',
+  hasOverriddenOnExit: false,
   factory: $IntensityHistoryRoute._fromState,
 );
 
@@ -266,6 +274,7 @@ mixin $IntensityHistoryRoute on GoRouteData {
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
   path: '/earthquake-history-details/:eventId',
+  hasOverriddenOnExit: false,
   factory: $EarthquakeHistoryDetailsRoute._fromState,
 );
 
@@ -297,6 +306,7 @@ mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
 
 RouteBase get $earthquakeActivityRoute => GoRouteData.$route(
   path: '/earthquake-activity',
+  hasOverriddenOnExit: false,
   factory: $EarthquakeActivityRoute._fromState,
 );
 
@@ -325,70 +335,9 @@ mixin $EarthquakeActivityRoute on GoRouteData {
       context.replace(location, extra: _self.$extra);
 }
 
-RouteBase get $shakeDetectionHistoryRoute => GoRouteData.$route(
-  path: '/shake-detection-history',
-  factory: $ShakeDetectionHistoryRoute._fromState,
-);
-
-mixin $ShakeDetectionHistoryRoute on GoRouteData {
-  static ShakeDetectionHistoryRoute _fromState(GoRouterState state) =>
-      const ShakeDetectionHistoryRoute();
-
-  @override
-  String get location => GoRouteData.$location('/shake-detection-history');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $shakeDetectionHistoryDetailsRoute => GoRouteData.$route(
-  path: '/shake-detection-history-details/:eventId',
-  factory: $ShakeDetectionHistoryDetailsRoute._fromState,
-);
-
-mixin $ShakeDetectionHistoryDetailsRoute on GoRouteData {
-  static ShakeDetectionHistoryDetailsRoute _fromState(GoRouterState state) =>
-      ShakeDetectionHistoryDetailsRoute(
-        eventId: state.pathParameters['eventId']!,
-        $extra: state.extra as ShakeDetectionEvent,
-      );
-
-  ShakeDetectionHistoryDetailsRoute get _self =>
-      this as ShakeDetectionHistoryDetailsRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/shake-detection-history-details/${Uri.encodeComponent(_self.eventId)}',
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
-
-  @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
-
-  @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
-}
-
 RouteBase get $liveMonitorRoute => GoRouteData.$route(
   path: '/live-monitor',
+  hasOverriddenOnExit: false,
   factory: $LiveMonitorRoute._fromState,
 );
 
@@ -415,6 +364,7 @@ mixin $LiveMonitorRoute on GoRouteData {
 
 RouteBase get $telegramListByEventIdRoute => GoRouteData.$route(
   path: '/telegram-list/:eventId',
+  hasOverriddenOnExit: false,
   factory: $TelegramListByEventIdRoute._fromState,
 );
 
@@ -445,14 +395,17 @@ mixin $TelegramListByEventIdRoute on GoRouteData {
 
 RouteBase get $homeRoute => GoRouteData.$route(
   path: '/',
+  hasOverriddenOnExit: false,
   factory: $HomeRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'map-layer',
+      hasOverriddenOnExit: false,
       factory: $HomeMapLayerRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'eew-details-by-event-id/:eventId',
+      hasOverriddenOnExit: false,
       factory: $EewDetailsByEventIdRoute._fromState,
     ),
   ],
@@ -524,8 +477,11 @@ mixin $EewDetailsByEventIdRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $talkerRoute =>
-    GoRouteData.$route(path: '/talker', factory: $TalkerRoute._fromState);
+RouteBase get $talkerRoute => GoRouteData.$route(
+  path: '/talker',
+  hasOverriddenOnExit: false,
+  factory: $TalkerRoute._fromState,
+);
 
 mixin $TalkerRoute on GoRouteData {
   static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
@@ -549,18 +505,22 @@ mixin $TalkerRoute on GoRouteData {
 
 RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
+  hasOverriddenOnExit: false,
   factory: $SettingsRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'display',
+      hasOverriddenOnExit: false,
       factory: $DisplayRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'theme',
+          hasOverriddenOnExit: false,
           factory: $ThemeSettingsRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'editor/:mode',
+              hasOverriddenOnExit: false,
               factory: $ThemeEditorRoute._fromState,
             ),
           ],
@@ -569,200 +529,259 @@ RouteBase get $settingsRoute => GoRouteData.$route(
     ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
+      hasOverriddenOnExit: false,
       factory: $KyoshinMonitorAboutRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'observation-network',
+          hasOverriddenOnExit: false,
           factory: $KyoshinMonitorAboutObservationNetworkRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'data-type',
+          hasOverriddenOnExit: false,
+          factory: $KyoshinMonitorDataTypeRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'term-of-service',
+      hasOverriddenOnExit: false,
       factory: $TermOfServiceRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'privacy-policy',
+      hasOverriddenOnExit: false,
       factory: $PrivacyPolicyRoute._fromState,
     ),
-    GoRouteData.$route(path: 'license', factory: $LicenseRoute._fromState),
+    GoRouteData.$route(
+      path: 'license',
+      hasOverriddenOnExit: false,
+      factory: $LicenseRoute._fromState,
+    ),
     GoRouteData.$route(
       path: 'notification',
+      hasOverriddenOnExit: false,
       factory: $NotificationSettingsRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'shake',
+          hasOverriddenOnExit: false,
           factory: $ShakeDetectionSettingsRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'history',
+          hasOverriddenOnExit: false,
           factory: $NotificationHistoryRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'earthquake-history',
+      hasOverriddenOnExit: false,
       factory: $EarthquakeHistoryConfigRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'home-widget',
+      hasOverriddenOnExit: false,
       factory: $HomeWidgetSettingsRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'about-this-app',
+      hasOverriddenOnExit: false,
       factory: $AboutThisAppRoute._fromState,
     ),
-    GoRouteData.$route(path: 'changelog', factory: $ChangelogRoute._fromState),
+    GoRouteData.$route(
+      path: 'changelog',
+      hasOverriddenOnExit: false,
+      factory: $ChangelogRoute._fromState,
+    ),
     GoRouteData.$route(
       path: 'debug',
+      hasOverriddenOnExit: false,
       factory: $DebugRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'api-endpoint-selector',
+          hasOverriddenOnExit: false,
           factory: $HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'kyoshin-monitor',
+          hasOverriddenOnExit: false,
           factory: $DebugKyoshinMonitorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'eew-card',
+          hasOverriddenOnExit: false,
           factory: $DebugEewCardRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'earthquake-history-card',
+          hasOverriddenOnExit: false,
           factory: $DebugEarthquakeHistoryCardRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'earthquake-history-list-tile',
+          hasOverriddenOnExit: false,
           factory: $DebugEarthquakeHistoryListTileRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'shake-detection-card',
+          hasOverriddenOnExit: false,
           factory: $DebugShakeDetectionCardRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'shake-detection-insert',
+          hasOverriddenOnExit: false,
           factory: $DebugShakeDetectionInsertRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'jma-map',
+          hasOverriddenOnExit: false,
           factory: $DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'eqmonitor-map',
+          hasOverriddenOnExit: false,
           factory: $EqmonitorMapDebugRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
+          hasOverriddenOnExit: false,
           factory: $PlaygroundRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'websocket',
+          hasOverriddenOnExit: false,
           factory: $DebugWebSocketRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'notification-delivery-log',
+          hasOverriddenOnExit: false,
           factory: $DebugNotificationDeliveryLogRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'device-admin',
+          hasOverriddenOnExit: false,
           factory: $DebugDeviceAdminRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'device-settings',
+          hasOverriddenOnExit: false,
           factory: $DebugDeviceSettingsRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'navigation',
+          hasOverriddenOnExit: false,
           factory: $DebugNavigationRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'app-group',
+          hasOverriddenOnExit: false,
           factory: $DebugAppGroupRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'asset-pack',
+          hasOverriddenOnExit: false,
           factory: $AssetPackDebugRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'shared-preferences',
+          hasOverriddenOnExit: false,
           factory: $DebugSharedPreferencesRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'secure-storage',
+          hasOverriddenOnExit: false,
           factory: $DebugSecureStorageRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'http-cache',
+          hasOverriddenOnExit: false,
           factory: $DebugHttpCacheRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'intensity-icon',
+          hasOverriddenOnExit: false,
           factory: $DebugIntensityIconRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'telemetry',
+          hasOverriddenOnExit: false,
           factory: $DebugTelemetryRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'tsunami-details',
+          hasOverriddenOnExit: false,
           factory: $DebugTsunamiDetailsRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'timeline/:tsunamiId',
+              hasOverriddenOnExit: false,
               factory: $DebugTsunamiTimelineRoute._fromState,
             ),
           ],
         ),
         GoRouteData.$route(
           path: 'nied',
+          hasOverriddenOnExit: false,
           factory: $NiedRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'aqua',
+              hasOverriddenOnExit: false,
               factory: $AquaRoute._fromState,
               routes: [
                 GoRouteData.$route(
                   path: 'catalog',
+                  hasOverriddenOnExit: false,
                   factory: $AquaCatalogRoute._fromState,
                 ),
               ],
             ),
             GoRouteData.$route(
               path: 'fnet',
+              hasOverriddenOnExit: false,
               factory: $FnetRoute._fromState,
               routes: [
                 GoRouteData.$route(
                   path: 'catalog',
+                  hasOverriddenOnExit: false,
                   factory: $FnetCatalogRoute._fromState,
                 ),
               ],
             ),
             GoRouteData.$route(
               path: 'knet',
+              hasOverriddenOnExit: false,
               factory: $KnetWaveformRoute._fromState,
               routes: [
                 GoRouteData.$route(
                   path: 'settings',
+                  hasOverriddenOnExit: false,
                   factory: $KnetCredentialsSettingsRoute._fromState,
                 ),
                 GoRouteData.$route(
                   path: 'media',
+                  hasOverriddenOnExit: false,
                   factory: $KnetMediaRoute._fromState,
                 ),
                 GoRouteData.$route(
                   path: 'records',
+                  hasOverriddenOnExit: false,
                   factory: $KnetRecordListRoute._fromState,
                 ),
                 GoRouteData.$route(
                   path: 'waveform',
+                  hasOverriddenOnExit: false,
                   factory: $KnetStationWaveformRoute._fromState,
                 ),
               ],
             ),
             GoRouteData.$route(
               path: 'hinet-seismicity',
+              hasOverriddenOnExit: false,
               factory: $HinetSeismicityRoute._fromState,
             ),
           ],
@@ -904,84 +923,68 @@ mixin $KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $TermOfServiceRoute on GoRouteData {
-  static TermOfServiceRoute _fromState(GoRouterState state) =>
-      TermOfServiceRoute(
-        showAcceptButton:
-            _$convertMapValue(
-              'show-accept-button',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        $extra: state.extra as void Function({bool isAccepted})?,
-      );
-
-  TermOfServiceRoute get _self => this as TermOfServiceRoute;
+mixin $KyoshinMonitorDataTypeRoute on GoRouteData {
+  static KyoshinMonitorDataTypeRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorDataTypeRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/settings/term-of-service',
-    queryParams: {
-      if (_self.showAcceptButton != false)
-        'show-accept-button': _self.showAcceptButton.toString(),
-    },
-  );
+  String get location =>
+      GoRouteData.$location('/settings/kyoshin-monitor-about/data-type');
 
   @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+  void go(BuildContext context) => context.go(location);
 
   @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
+      context.pushReplacement(location);
 
   @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $TermOfServiceRoute on GoRouteData {
+  static TermOfServiceRoute _fromState(GoRouterState state) =>
+      const TermOfServiceRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/term-of-service');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 mixin $PrivacyPolicyRoute on GoRouteData {
   static PrivacyPolicyRoute _fromState(GoRouterState state) =>
-      PrivacyPolicyRoute(
-        showAcceptButton:
-            _$convertMapValue(
-              'show-accept-button',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        $extra: state.extra as void Function({bool isAccepted})?,
-      );
-
-  PrivacyPolicyRoute get _self => this as PrivacyPolicyRoute;
+      const PrivacyPolicyRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/settings/privacy-policy',
-    queryParams: {
-      if (_self.showAcceptButton != false)
-        'show-accept-button': _self.showAcceptButton.toString(),
-    },
-  );
+  String get location => GoRouteData.$location('/settings/privacy-policy');
 
   @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+  void go(BuildContext context) => context.go(location);
 
   @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
+      context.pushReplacement(location);
 
   @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
+  void replace(BuildContext context) => context.replace(location);
 }
 
 mixin $LicenseRoute on GoRouteData {
@@ -1939,28 +1942,11 @@ mixin $HinetSeismicityRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
-}
-
-bool _$boolConverter(String value) {
-  switch (value) {
-    case 'true':
-      return true;
-    case 'false':
-      return false;
-    default:
-      throw UnsupportedError('Cannot convert "$value" into a bool.');
-  }
-}
-
-RouteBase get $feedRoute =>
-    GoRouteData.$route(path: '/feed', factory: $FeedRoute._fromState);
+RouteBase get $feedRoute => GoRouteData.$route(
+  path: '/feed',
+  hasOverriddenOnExit: false,
+  factory: $FeedRoute._fromState,
+);
 
 mixin $FeedRoute on GoRouteData {
   static FeedRoute _fromState(GoRouterState state) => const FeedRoute();
@@ -1984,6 +1970,7 @@ mixin $FeedRoute on GoRouteData {
 
 RouteBase get $feedDetailsRoute => GoRouteData.$route(
   path: '/feed/source/:telegramHash',
+  hasOverriddenOnExit: false,
   factory: $FeedDetailsRoute._fromState,
 );
 
@@ -2014,6 +2001,7 @@ mixin $FeedDetailsRoute on GoRouteData {
 
 RouteBase get $feedItemDetailsRoute => GoRouteData.$route(
   path: '/feed/detail/:id',
+  hasOverriddenOnExit: false,
   factory: $FeedItemDetailsRoute._fromState,
 );
 
@@ -2048,6 +2036,7 @@ mixin $FeedItemDetailsRoute on GoRouteData {
 
 RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(
   path: '/tsunami/:tsunamiId',
+  hasOverriddenOnExit: false,
   factory: $TsunamiDetailsRoute._fromState,
 );
 
@@ -2077,6 +2066,7 @@ mixin $TsunamiDetailsRoute on GoRouteData {
 
 RouteBase get $paywallRoute => GoRouteData.$route(
   path: '/subscription/paywall',
+  hasOverriddenOnExit: false,
   factory: $PaywallRoute._fromState,
 );
 
@@ -2102,6 +2092,7 @@ mixin $PaywallRoute on GoRouteData {
 
 RouteBase get $subscriptionSettingsRoute => GoRouteData.$route(
   path: '/subscription/settings',
+  hasOverriddenOnExit: false,
   factory: $SubscriptionSettingsRoute._fromState,
 );
 
@@ -2172,4 +2163,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'7cc48d7ff9ab9df8722f4156f0d2c1c42260e640';
+String _$goRouterHash() => r'374bb8a49a7410728dca91eef90bc879261be244';

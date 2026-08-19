@@ -12,7 +12,7 @@ EewWarningRepresentativeSelector eewWarningRepresentativeSelector(Ref ref) =>
     );
 
 class EewWarningRepresentativeSelector {
-  EewWarningRepresentativeSelector({
+  new({
     EewWarningArrivalClassifier? arrivalClassifier,
   }) : _arrivalClassifier = arrivalClassifier ?? EewWarningArrivalClassifier();
 

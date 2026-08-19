@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -5,8 +6,9 @@ part 'tsunami_telegram_meta.freezed.dart';
 
 @freezed
 abstract class TsunamiTelegramMeta with _$TsunamiTelegramMeta {
-  const factory TsunamiTelegramMeta({
+  const factory({
     required String telegramId,
+    required TelegramType type,
     required int? serialNo,
     required String title,
     required String? headline,
@@ -21,6 +23,7 @@ abstract class TsunamiTelegramMeta with _$TsunamiTelegramMeta {
 extension LatestTelegramApiExt on api.LatestTelegram {
   TsunamiTelegramMeta toTelegramMeta() => TsunamiTelegramMeta(
     telegramId: id,
+    type: type.toTelegramType,
     serialNo: serialNo?.toInt(),
     title: title,
     headline: headline,

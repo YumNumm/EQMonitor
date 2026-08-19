@@ -1,15 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'test_notification_delivery.freezed.dart';
-
-enum TestNotificationKind {
-  silent,
-  normal,
-  critical,
-}
+enum TestNotificationKind { silent, normal, critical }
 
 enum TestScenarioType {
   eewWarning,
@@ -37,32 +30,11 @@ enum TestScenarioType {
   tsunamiOffshore,
 }
 
-@freezed
-abstract class TestNotificationDeliveryResult
-    with _$TestNotificationDeliveryResult {
-  const factory TestNotificationDeliveryResult({
-    required String message,
-    required TestNotificationFramework framework,
-  }) = _TestNotificationDeliveryResult;
-}
-
-enum TestNotificationFramework {
-  fcm,
-  apns,
-}
-
-extension TestNotificationFrameworkDisplay on TestNotificationFramework {
-  String get displayLabel => switch (this) {
-    .fcm => 'FCM',
-    .apns => 'APNs',
-  };
-}
-
 extension TestNotificationKindDisplay on TestNotificationKind {
   String get displayLabel => switch (this) {
     .silent => 'サイレント',
     .normal => '通常',
-    .critical => 'クリティカル',
+    .critical => '重大な通知',
   };
 }
 
@@ -92,18 +64,6 @@ extension TestScenarioTypeDisplay on TestScenarioType {
     .tsunamiMaxHeightUpdate => 'TSUNAMI_MAX_HEIGHT_UPDATE',
     .tsunamiOffshore => 'TSUNAMI_OFFSHORE',
   };
-}
-
-extension TestNotificationDeliveryResultApiExtension
-    on api.TestNotificationResponse {
-  TestNotificationDeliveryResult get toTestNotificationDeliveryResult =>
-      TestNotificationDeliveryResult(
-        message: message,
-        framework: switch (framework) {
-          .fcm => .fcm,
-          .apns => .apns,
-        },
-      );
 }
 
 extension TestNotificationKindApiExtension on TestNotificationKind {
@@ -148,7 +108,7 @@ extension TestScenarioTypeApiExtension on TestScenarioType {
 
 /// テストシナリオ実行結果
 class TestScenarioDeliveryResult {
-  const TestScenarioDeliveryResult({
+  const new({
     required this.eventId,
     required this.stepsPlanned,
     required this.telegramTypes,
@@ -160,7 +120,7 @@ class TestScenarioDeliveryResult {
 }
 
 class TestScenarioTypeDeliveryResult {
-  const TestScenarioTypeDeliveryResult({
+  const new({
     required this.message,
     required this.scenario,
     required this.eventId,

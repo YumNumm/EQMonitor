@@ -1,12 +1,12 @@
 import 'package:dart_azarashi/dart_azarashi.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/qzss_dcr/data/provider/qzss_serial_port_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class QzssDcrReportWidget extends HookConsumerWidget {
-  const QzssDcrReportWidget({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -151,7 +151,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
+  const new({
     required this.label,
     required this.value,
     this.icon,

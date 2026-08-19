@@ -6,14 +6,14 @@ import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 class HypocenterIconPage extends ConsumerWidget {
-  const HypocenterIconPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +40,7 @@ class HypocenterIconPage extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const new({required this.title});
 
   final String title;
 
@@ -54,7 +54,7 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _SubSectionHeader extends StatelessWidget {
-  const _SubSectionHeader({required this.title});
+  const new({required this.title});
 
   final String title;
 
@@ -71,7 +71,7 @@ class _SubSectionHeader extends StatelessWidget {
 }
 
 class _HypocenterIconsSection extends StatelessWidget {
-  const _HypocenterIconsSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +193,7 @@ class _HypocenterIconsSection extends StatelessWidget {
 }
 
 class _JmaIntensityShowcase extends StatelessWidget {
-  const _JmaIntensityShowcase();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +224,7 @@ class _JmaIntensityShowcase extends StatelessWidget {
 }
 
 class _JmaLpgmIntensityShowcase extends StatelessWidget {
-  const _JmaLpgmIntensityShowcase();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +255,7 @@ class _JmaLpgmIntensityShowcase extends StatelessWidget {
 }
 
 class _IconLabel extends StatelessWidget {
-  const _IconLabel({required this.label, required this.child});
+  const new({required this.label, required this.child});
 
   final String label;
   final Widget child;
@@ -274,7 +274,7 @@ class _IconLabel extends StatelessWidget {
 }
 
 class _HypocenterPainter extends CustomPainter {
-  const _HypocenterPainter({required this.type});
+  const new({required this.type});
 
   final HypocenterType type;
 

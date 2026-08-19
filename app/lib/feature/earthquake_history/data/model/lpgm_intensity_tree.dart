@@ -10,52 +10,52 @@ part 'lpgm_intensity_tree.g.dart';
 /// 都道府県単位の長周期地震動階級ノード
 @freezed
 abstract class PrefectureLpgmIntensityNode with _$PrefectureLpgmIntensityNode {
-  const factory PrefectureLpgmIntensityNode({
+  const factory({
     @EarthquakeParameterRegionItemJsonConverter()
     required EarthquakeParameterRegionItem region,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required List<CityLpgmIntensityNode> cities,
   }) = _PrefectureLpgmIntensityNode;
 
-  factory PrefectureLpgmIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$PrefectureLpgmIntensityNodeFromJson(json);
 }
 
 @freezed
 abstract class LpgmIntensityRegion with _$LpgmIntensityRegion {
-  const factory LpgmIntensityRegion({
+  const factory({
     @EarthquakeParameterRegionItemJsonConverter()
     required EarthquakeParameterRegionItem region,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) = _LpgmIntensityRegion;
 
-  factory LpgmIntensityRegion.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$LpgmIntensityRegionFromJson(json);
 }
 
 /// 市区町村単位の長周期地震動階級ノード
 @freezed
 abstract class CityLpgmIntensityNode with _$CityLpgmIntensityNode {
-  const factory CityLpgmIntensityNode({
+  const factory({
     @EarthquakeParameterCityItemJsonConverter()
     required EarthquakeParameterCityItem city,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required List<StationLpgmIntensityNode> stations,
   }) = _CityLpgmIntensityNode;
 
-  factory CityLpgmIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$CityLpgmIntensityNodeFromJson(json);
 }
 
 /// 観測点単位の長周期地震動階級ノード
 @freezed
 abstract class StationLpgmIntensityNode with _$StationLpgmIntensityNode {
-  const factory StationLpgmIntensityNode({
+  const factory({
     @EarthquakeParameterStationItemJsonConverter()
     required EarthquakeParameterStationItem station,
     required IntensityStation? intensity,
   }) = _StationLpgmIntensityNode;
 
-  factory StationLpgmIntensityNode.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$StationLpgmIntensityNodeFromJson(json);
 }

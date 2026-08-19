@@ -16,7 +16,7 @@ Future<TsunamiHistoryDataSource> tsunamiHistoryDataSource(Ref ref) async {
 
 class TsunamiHistoryDataSource
     extends GroupedDataSource<String?, String, api.TsunamiState> {
-  TsunamiHistoryDataSource({required api.ApiClient client}) : _client = client;
+  new({required api.ApiClient client}) : _client = client;
 
   final api.ApiClient _client;
 

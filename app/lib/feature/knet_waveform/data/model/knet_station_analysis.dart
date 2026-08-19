@@ -2,7 +2,7 @@ import 'package:knet_waveform_parser/knet_waveform_parser.dart';
 
 /// 1観測点の波形解析結果
 class KnetStationAnalysis {
-  const KnetStationAnalysis({
+  const new({
     required this.pga,
     required this.pgv,
     required this.pgd,

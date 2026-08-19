@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
+import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate_message.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:jma_map/jma_map.dart';
@@ -46,13 +47,13 @@ void jmaMapWorkerEntryPoint(JmaMapWorkerArgument argument) {
       return;
     }
     if (message is JmaMapCalculateMessage) {
-      _runCalculate(mainSendPort, jmaMap, message);
+      JmaMapWorkerCalculator.calculate(mainSendPort, jmaMap, message);
     }
   });
 }
 
 final class JmaMapWorkerArgument {
-  const JmaMapWorkerArgument({
+  const new({
     required this.mainSendPort,
     required this.mapDataBytesByType,
   });
@@ -62,7 +63,7 @@ final class JmaMapWorkerArgument {
 }
 
 final class JmaMapWorkerStartupError {
-  const JmaMapWorkerStartupError({
+  const new({
     required this.errorMessage,
     required this.errorStack,
   });
@@ -71,59 +72,64 @@ final class JmaMapWorkerStartupError {
   final String errorStack;
 }
 
-void _runCalculate(
-  SendPort mainSendPort,
-  Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
-  JmaMapCalculateMessage message,
-) {
-  try {
-    final mapData = jmaMap[message.type]!;
-    final (:item, :distanceKm) = JmaMapUtility().findNearestItem(
-      JmaMap_LatLng(lat: message.lat, lng: message.lng),
-      mapData,
-    );
+/// Worker Isolate 内で最近傍地物を計算し、結果を [mainSendPort] へ送信する。
+class JmaMapWorkerCalculator {
+  static void calculate(
+    SendPort mainSendPort,
+    Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
+    JmaMapCalculateMessage message,
+  ) {
+    try {
+      // spawn 時に jmaMapProvider が読み込んだ既知の JmaMapType すべてが
+      // mapDataBytesByType として渡されるため、ここでの lookup は必ず成功する。
+      final mapData = jmaMap[message.type].orFailBecause(
+        'JmaMapIsolate.spawn は jmaMapProvider が読み込んだ既知の JmaMapType '
+        'すべてを worker へ渡す前提のため',
+      );
+      final (:item, :distanceKm) = JmaMapUtility().findNearestItem(
+        JmaMap_LatLng(lat: message.lat, lng: message.lng),
+        mapData,
+      );
 
-    MapDataItem? result;
-    if (item != null) {
-      result = MapDataItem(
-        bounds: item.hasBounds()
-            ? MapDataBounds(
-                southWest: MapDataLatLng(
-                  lat: item.bounds.southWest.lat,
-                  lng: item.bounds.southWest.lng,
-                ),
-                northEast: MapDataLatLng(
-                  lat: item.bounds.northEast.lat,
-                  lng: item.bounds.northEast.lng,
-                ),
-              )
-            : null,
-        property: item.hasProperty()
-            ? MapDataProperty(
-                code: item.property.code,
-                name: item.property.name,
-                nameKana: item.property.nameKana,
-              )
-            : null,
-        polylabel: item.hasPolylabel()
-            ? MapDataLatLng(
-                lat: item.polylabel.lat,
-                lng: item.polylabel.lng,
-              )
-            : null,
-        distanceToCoastlineKm: distanceKm,
+      MapDataItem? result;
+      if (item != null) {
+        result = MapDataItem(
+          bounds: item.hasBounds()
+              ? MapDataBounds(
+                  southWest: MapDataLatLng(
+                    lat: item.bounds.southWest.lat,
+                    lng: item.bounds.southWest.lng,
+                  ),
+                  northEast: MapDataLatLng(
+                    lat: item.bounds.northEast.lat,
+                    lng: item.bounds.northEast.lng,
+                  ),
+                )
+              : null,
+          property: item.hasProperty()
+              ? MapDataProperty(
+                  code: item.property.code,
+                  name: item.property.name,
+                  nameKana: item.property.nameKana,
+                )
+              : null,
+          polylabel: item.hasPolylabel()
+              ? MapDataLatLng(lat: item.polylabel.lat, lng: item.polylabel.lng)
+              : null,
+          distanceToCoastlineKm: distanceKm,
+        );
+      }
+
+      mainSendPort.send(JmaMapResponseMessage(id: message.id, result: result));
+    } on Object catch (e, st) {
+      mainSendPort.send(
+        JmaMapResponseMessage(
+          id: message.id,
+          errorMessage: e.toString(),
+          errorStack: st.toString(),
+        ),
       );
     }
-
-    mainSendPort.send(JmaMapResponseMessage(id: message.id, result: result));
-  } on Object catch (e, st) {
-    mainSendPort.send(
-      JmaMapResponseMessage(
-        id: message.id,
-        errorMessage: e.toString(),
-        errorStack: st.toString(),
-      ),
-    );
   }
 }
 
@@ -133,7 +139,7 @@ void _runCalculate(
 
 /// 常駐 Worker Isolate への JMA マップ検索ハンドル。
 final class JmaMapIsolate {
-  JmaMapIsolate._({
+  new _({
     required Isolate isolate,
     required ReceivePort mainReceive,
     required SendPort workerSendPort,
@@ -183,11 +189,13 @@ final class JmaMapIsolate {
         if (completer == null) {
           return;
         }
-        if (message.errorMessage != null) {
-          final st = message.errorStack != null
-              ? StackTrace.fromString(message.errorStack!)
+        final errorMessage = message.errorMessage;
+        final errorStack = message.errorStack;
+        if (errorMessage != null) {
+          final st = errorStack != null
+              ? StackTrace.fromString(errorStack)
               : StackTrace.empty;
-          completer.completeError(Exception(message.errorMessage), st);
+          completer.completeError(Exception(errorMessage), st);
         } else {
           completer.complete(message.result);
         }
@@ -233,12 +241,7 @@ final class JmaMapIsolate {
     final completer = Completer<MapDataItem?>();
     _pending[id] = completer;
     _workerSendPort.send(
-      JmaMapCalculateMessage(
-        id: id,
-        type: type,
-        lat: latitude,
-        lng: longitude,
-      ),
+      JmaMapCalculateMessage(id: id, type: type, lat: latitude, lng: longitude),
     );
     return completer.future;
   }

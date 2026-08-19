@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_intensity_region_model.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_body_diff_calculator.g.dart';
@@ -10,13 +11,13 @@ EarthquakeBodyDiffCalculator earthquakeBodyDiffCalculator(Ref ref) =>
     const EarthquakeBodyDiffCalculator();
 
 class EarthquakeBodyDiffCalculator {
-  const EarthquakeBodyDiffCalculator();
+  const new();
 
   /// [current] が現報、[previous] が前報の震度地域リスト。
   /// [previous] が null または空の場合は初報扱いで全て [IntensityDiffType.same]。
   List<IntensityRegionDiffEntry> computeIntensityRegionDiff({
-    required List<api.EarthquakeTelegramBodyIntensityRegion> current,
-    List<api.EarthquakeTelegramBodyIntensityRegion>? previous,
+    required List<EarthquakeTelegramBodyIntensityRegionModel> current,
+    List<EarthquakeTelegramBodyIntensityRegionModel>? previous,
   }) {
     final currentEntries = [
       for (final entry in current)
@@ -30,7 +31,7 @@ class EarthquakeBodyDiffCalculator {
           IntensityRegionDiffEntry(
             code: entry.code,
             name: entry.name,
-            intensity: intensity.toJmaIntensity,
+            intensity: intensity,
             diffType: IntensityDiffType.same,
           ),
       ];
@@ -48,17 +49,16 @@ class EarthquakeBodyDiffCalculator {
       for (final (:entry, :intensity) in currentEntries)
         computeIntensityRegionDiffEntry(
           entry: entry,
-          intensity: intensity.toJmaIntensity,
-          previousIntensity:
-              previousIntensityByCode[entry.code]?.toJmaIntensity,
+          intensity: intensity,
+          previousIntensity: previousIntensityByCode[entry.code],
         ),
     ];
   }
 
   /// 差分がない場合は null を返す。
   HypocenterDiff? computeHypocenterDiff({
-    required api.EarthquakeTelegramBodyQuake? current,
-    api.EarthquakeTelegramBodyQuake? previous,
+    required EarthquakeTelegramBodyQuakeModel? current,
+    EarthquakeTelegramBodyQuakeModel? previous,
   }) {
     if (current == null) {
       return null;
@@ -71,8 +71,8 @@ class EarthquakeBodyDiffCalculator {
       newDepth: current.depth,
       oldEpicenterName: previous?.epicenterName,
       newEpicenterName: current.epicenterName,
-      oldMaxIntensity: previous?.maxIntensity?.toJmaIntensity,
-      newMaxIntensity: current.maxIntensity?.toJmaIntensity,
+      oldMaxIntensity: previous?.maxIntensity,
+      newMaxIntensity: current.maxIntensity,
     );
 
     if (!diff.hasAnyChange()) {
@@ -83,7 +83,7 @@ class EarthquakeBodyDiffCalculator {
   }
 
   IntensityRegionDiffEntry computeIntensityRegionDiffEntry({
-    required api.EarthquakeTelegramBodyIntensityRegion entry,
+    required EarthquakeTelegramBodyIntensityRegionModel entry,
     required JmaIntensity intensity,
     required JmaIntensity? previousIntensity,
   }) {

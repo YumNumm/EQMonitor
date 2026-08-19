@@ -1,4 +1,4 @@
-enum SharedPreferencesKey {
+enum SharedPreferencesKey(final String key) {
   secureStorageInitialized('SECURE_STORAGE_INITIALIZED'),
   ntpConfig('ntp_config'),
   earthquakeHistoryConfig('earthquake_history_config'),
@@ -18,6 +18,12 @@ enum SharedPreferencesKey {
   changelogEtag('changelog_etag'),
   changelogBody('changelog_body'),
   whatsNewSeenVersion('whats_new_seen_version'),
+  assetPackDistributionEtag('asset_pack_distribution_etag'),
+  assetPackDistributionManifest('asset_pack_distribution_manifest'),
+  assetPackDistributionSignature('asset_pack_distribution_signature'),
+  assetPackAcceptedRevision('asset_pack_accepted_revision'),
+  assetPackAcceptedLatestVersion('asset_pack_accepted_latest_version'),
+  assetPackActiveDownloadedVersion('asset_pack_active_downloaded_version'),
 
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
@@ -31,6 +37,7 @@ enum SharedPreferencesKey {
   isEstimatedIntensityOnEewReplayAllowed(
     'is_estimated_intensity_on_eew_replay_allowed',
   ),
+  isHomeEewEstimationDebugEnabled('is_home_eew_estimation_debug_enabled'),
   widgetRegionSelection('widget_region_selection'),
   httpCacheDisabled('http_cache_disabled'),
   httpCacheScopeMigrationVersion('http_cache_scope_migration_version'),
@@ -39,6 +46,7 @@ enum SharedPreferencesKey {
     'notification_permission_banner_dismissed',
   ),
   notificationPreset('notification_preset'),
+  notificationCustomSnapshot('notification_custom_snapshot'),
   appThemeLight('app_theme_light'),
   appThemeDark('app_theme_dark'),
 
@@ -49,8 +57,6 @@ enum SharedPreferencesKey {
   bglDebugNotifyPrefecture('bgl_debug_prefecture'),
   bglDebugNotifyApiUpdate('bgl_debug_api_update'),
   feedLastReadPublishedAt('feed_last_read_published_at'),
+  eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled');
-
-  const SharedPreferencesKey(this.key);
-  final String key;
 }

@@ -17,24 +17,26 @@ import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
+import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_device_settings_page.g.dart';
 
 class DebugDeviceSettingsPage extends HookConsumerWidget {
-  const DebugDeviceSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,10 +68,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                   _NotificationSettingsSection(
                     deviceId: deviceIdAsync.requireValue,
                   ),
-                if (deviceIdAsync.hasValue)
-                  _TestNotificationSection(
-                    deviceId: deviceIdAsync.requireValue,
-                  ),
+                if (deviceIdAsync.hasValue) const _TestNotificationSection(),
                 if (deviceIdAsync.hasValue)
                   _TestScenarioSection(deviceId: deviceIdAsync.requireValue),
                 if (deviceIdAsync.hasValue)
@@ -91,7 +90,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 // ── プロビジョニング起動状態セクション ──────────────────────────────────────
 
 class _ProvisioningStartupSection extends HookConsumerWidget {
-  const _ProvisioningStartupSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -115,6 +114,9 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
       tick();
       final timer = Timer.periodic(const Duration(seconds: 1), (_) => tick());
       return timer.cancel;
+      // マウント時に1度だけTimerを張る意図の const []。tick はローカル関数で
+      // 毎ビルド識別子が変わるため、keysに入れるとTimerが毎ビルド再生成される。
+      // ignore_keys: tick
     }, const []);
 
     final provisionStatus = ref.watch(deviceProvisioningProvider);
@@ -195,9 +197,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             children: [
               Text(
                 'リトライ状態: ',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorTheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorTheme.onSurfaceVariant),
               ),
               const SizedBox(width: 4),
               retryChip,
@@ -207,9 +208,8 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             const SizedBox(height: 4),
             Text(
               (retryState.value as RetryWaiting).lastError.userMessage,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorTheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: colorTheme.onSurfaceVariant),
             ),
           ],
           if (isLoading) ...[
@@ -250,7 +250,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
 }
 
 class _StatusChip extends StatelessWidget {
-  const _StatusChip({
+  const new({
     required this.label,
     required this.color,
     required this.textColor,
@@ -280,9 +280,8 @@ class _StatusChip extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: textColor),
+              style: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: textColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -295,7 +294,7 @@ class _StatusChip extends StatelessWidget {
 // ── デバイス操作セクション ───────────────────────────────────────────────────
 
 class _DeviceLifecycleSection extends HookConsumerWidget {
-  const _DeviceLifecycleSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -395,7 +394,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
 // ── OS通知許可セクション ──────────────────────────────────────────────────────
 
 class _NotificationPermissionSection extends ConsumerWidget {
-  const _NotificationPermissionSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -472,7 +471,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
 // ── デバイス情報（サーバー取得）────────────────────────────────────────────
 
 class _DeviceInfoSection extends ConsumerWidget {
-  const _DeviceInfoSection({required this.deviceIdAsync});
+  const new({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
@@ -488,9 +487,9 @@ class _DeviceInfoSection extends ConsumerWidget {
         AsyncData(:final value) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _KeyValueRow(label: 'サーバー上の ID', value: value.id),
-            _KeyValueRow(label: 'ユーザー', value: value.userId ?? '未登録'),
-            _KeyValueRow(label: '種別', value: value.platform.displayLabel),
+            _KeyValueRow(label: 'ID', value: value.id),
+            _KeyValueRow(label: 'UserID', value: value.userId ?? '未登録'),
+            _KeyValueRow(label: 'Platform', value: value.platform.name),
           ],
         ),
         AsyncError(:final error) => Text(
@@ -524,7 +523,7 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
 // ── プッシュトークン同期 ────────────────────────────────────────────────────
 
 class _TokenSection extends HookConsumerWidget {
-  const _TokenSection({required this.syncSnapshot});
+  const new({required this.syncSnapshot});
 
   final AsyncValue<PushTokenSyncSnapshot> syncSnapshot;
 
@@ -613,7 +612,7 @@ class _TokenSection extends HookConsumerWidget {
 }
 
 class _TokenStatusRow extends StatelessWidget {
-  const _TokenStatusRow({
+  const new({
     required this.label,
     required this.kindState,
     required this.isResendEnabled,
@@ -684,7 +683,7 @@ class _TokenStatusRow extends StatelessWidget {
 // ── 設定プロバイダー状態 ──────────────────────────────────────────────────────
 
 class _SettingsProviderStatusSection extends ConsumerWidget {
-  const _SettingsProviderStatusSection();
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -706,7 +705,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
 }
 
 class _ProviderStatusRow extends StatelessWidget {
-  const _ProviderStatusRow({required this.label, required this.state});
+  const new({required this.label, required this.state});
 
   final String label;
   final AsyncValue<Object?> state;
@@ -745,7 +744,7 @@ class _ProviderStatusRow extends StatelessWidget {
 // ── 全般通知設定 ────────────────────────────────────────────────────────────
 
 class _NotificationSettingsSection extends HookConsumerWidget {
-  const _NotificationSettingsSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -881,75 +880,26 @@ Future<GeneralNotificationSettings> _notificationSettings(
 // ── テスト通知 ───────────────────────────────────────────────────────────────
 
 class _TestNotificationSection extends HookConsumerWidget {
-  const _TestNotificationSection({required this.deviceId});
-
-  final String deviceId;
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingKind = useState<TestNotificationKind?>(null);
 
-    Future<void> send(TestNotificationKind kind) async {
-      pendingKind.value = kind;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(
-        pushNotificationRepositoryProvider.future,
-      );
-      final result = await notificationRepository.sendTestNotification(
-        deviceId: deviceId,
-        kind: kind,
-      );
-      pendingKind.value = null;
-      if (!context.mounted) {
-        return;
-      }
-      switch (result) {
-        case Success(:final value):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
-                '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
-            ),
-          );
-        case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('送信に失敗: $exception'),
-              backgroundColor: context.designSystem.colorTheme.error,
-            ),
-          );
-      }
-    }
-
     return _SectionCard(
       title: 'テスト通知',
-      subtitle: 'サイレント・通常・クリティカルをサーバー経由で送信します',
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children:
-            [
-              TestNotificationKind.silent,
-              TestNotificationKind.normal,
-              TestNotificationKind.critical,
-            ].map((kind) {
-              final isPending = pendingKind.value == kind;
-              return FilledButton.tonal(
-                onPressed: pendingKind.value != null && !isPending
-                    ? null
-                    : () async => send(kind),
-                child: isPending
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator.adaptive(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(kind.displayLabel),
-              );
-            }).toList(),
+      subtitle: '通常・重大な通知をサーバー経由で送信します',
+      child: TestNotificationKindButtons(
+        pendingKind: pendingKind.value,
+        onPressed: (kind) async {
+          pendingKind.value = kind;
+          await ref
+              .read(testNotificationSendActionProvider)
+              .handle(ref: ref, context: context, kind: kind);
+          if (context.mounted) {
+            pendingKind.value = null;
+          }
+        },
       ),
     );
   }
@@ -958,7 +908,7 @@ class _TestNotificationSection extends HookConsumerWidget {
 // ── テストシナリオ実行 ───────────────────────────────────────────────────────
 
 class _TestScenarioSection extends HookConsumerWidget {
-  const _TestScenarioSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1058,7 +1008,7 @@ class _TestScenarioSection extends HookConsumerWidget {
 }
 
 class _TestScenarioTypeSection extends HookConsumerWidget {
-  const _TestScenarioTypeSection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1164,7 +1114,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
 // ── 通知履歴 ─────────────────────────────────────────────────────────────────
 
 class _HistorySection extends ConsumerWidget {
-  const _HistorySection({required this.deviceId});
+  const new({required this.deviceId});
 
   final String deviceId;
 
@@ -1232,7 +1182,7 @@ Future<List<PushNotificationLogEntry>> _notificationHistory(
 }
 
 class _NotificationHistoryTile extends StatelessWidget {
-  const _NotificationHistoryTile({required this.item});
+  const new({required this.item});
 
   final PushNotificationLogEntry item;
 
@@ -1304,7 +1254,7 @@ Future<NotificationSettings> _osNotificationPermission(Ref ref) async {
 // ── 共通ウィジェット ───────────────────────────────────────────────────────
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
+  const new({
     required this.title,
     required this.child,
     this.subtitle,
@@ -1340,10 +1290,10 @@ class _SectionCard extends StatelessWidget {
                           title,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        if (subtitle != null) ...[
+                        if (subtitle case final subtitle?) ...[
                           const SizedBox(height: 4),
                           Text(
-                            subtitle!,
+                            subtitle,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: colorTheme.onSurfaceVariant),
                           ),
@@ -1365,7 +1315,7 @@ class _SectionCard extends StatelessWidget {
 }
 
 class _KeyValueRow extends StatelessWidget {
-  const _KeyValueRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

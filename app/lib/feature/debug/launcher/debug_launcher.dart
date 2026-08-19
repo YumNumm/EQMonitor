@@ -13,26 +13,28 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-/// 現在表示中の画面のロケーションを返す。
+/// go_router の現在表示中の画面ロケーションを解決する。
 ///
 /// go_router は `push` (imperative navigation) でルートを積んでも
 /// [RouteMatchList.uri] を更新しないため、`currentConfiguration.uri` だけでは
 /// push で開いた画面（例: デバッグ画面）を検出できない。
 /// スタック最上段が [ImperativeRouteMatch] の場合はそのロケーションを参照する。
-String currentLocation(GoRouter router) {
-  final configuration = router.routerDelegate.currentConfiguration;
-  final lastMatch = configuration.matches.lastOrNull;
-  if (lastMatch is ImperativeRouteMatch) {
-    return lastMatch.matches.uri.toString();
+class GoRouterCurrentLocationResolver {
+  static String resolve(GoRouter router) {
+    final configuration = router.routerDelegate.currentConfiguration;
+    final lastMatch = configuration.matches.lastOrNull;
+    if (lastMatch is ImperativeRouteMatch) {
+      return lastMatch.matches.uri.toString();
+    }
+    return configuration.uri.toString();
   }
-  return configuration.uri.toString();
 }
 
 /// 端末シェイクまたは Shift+D でデバッグページを開くラッパー。
 ///
 /// kDebugMode / Beta ビルドでのみ有効化することを想定。
 class DebugLauncher extends HookConsumerWidget {
-  const DebugLauncher({required this.child, super.key});
+  const new({required this.child, super.key});
 
   final Widget child;
 
@@ -53,6 +55,9 @@ class DebugLauncher extends HookConsumerWidget {
           return true;
         }
         final buildCfg = ref.read(buildConfigProvider);
+        if (!buildCfg.isDeveloperUiEnabled) {
+          return false;
+        }
         if (buildCfg.isBetaTesting) {
           return true;
         }
@@ -69,7 +74,8 @@ class DebugLauncher extends HookConsumerWidget {
         }
         lastOpen.value = now;
         final router = ref.read(goRouterProvider);
-        if (currentLocation(router).startsWith(const DebugRoute().location)) {
+        if (GoRouterCurrentLocationResolver.resolve(router)
+            .startsWith(const DebugRoute().location)) {
           return;
         }
         unawaited(router.push<void>(const DebugRoute().location));

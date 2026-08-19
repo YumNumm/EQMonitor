@@ -11,7 +11,7 @@ part 'tracked_region.freezed.dart';
 
 @freezed
 abstract class TrackedRegion with _$TrackedRegion {
-  const factory TrackedRegion({
+  const factory({
     required String code,
     required String name,
     required Tracked<TsunamiWarningKind> kind,

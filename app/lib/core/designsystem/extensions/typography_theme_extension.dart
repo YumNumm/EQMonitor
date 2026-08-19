@@ -2,7 +2,7 @@
 
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'typography_theme_extension.tailor.dart';
@@ -14,7 +14,7 @@ const japaneseFontFamilyFallback = <String>[FontFamily.notoSansJP];
 @tailorMixinComponent
 class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
     with _$TypographyThemeExtensionTailorMixin {
-  const TypographyThemeExtension({
+  const new({
     required this.displayLarge,
     required this.displayMedium,
     required this.headlineLarge,
@@ -34,10 +34,10 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
     required this.monoSmall,
   });
 
-  factory TypographyThemeExtension.fromColorTheme(ThemeColorSet colorTheme) =>
+  factory fromColorTheme(ThemeColorSet colorTheme) =>
       TypographyThemeExtension._base(colorTheme);
 
-  factory TypographyThemeExtension._base(ThemeColorSet colorTheme) {
+  factory _base(ThemeColorSet colorTheme) {
     return TypographyThemeExtension(
       displayLarge: TextStyle(
         fontFamily: primaryFontFamily,

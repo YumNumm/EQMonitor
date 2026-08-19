@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:cache/cache.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/provider/api_user_agent_builder.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
+import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
@@ -18,7 +20,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'api_dio_factory.g.dart';
 
 final class ApiDioFactory {
-  const ApiDioFactory({
+  const new({
     required this.baseUrl,
     required this.headers,
     required this.baseInterceptors,
@@ -29,7 +31,7 @@ final class ApiDioFactory {
   final List<Interceptor> baseInterceptors;
 
   Dio build({HttpCacheStore? httpCacheStore}) {
-    final dio = Dio(buildApiBaseOptions(baseUrl: baseUrl));
+    final dio = Dio(DioBaseOptionsFactory.build(baseUrl: baseUrl));
     dio.options
       ..headers.addAll(headers)
       ..connectTimeout = const Duration(seconds: 10)
@@ -60,6 +62,13 @@ final class ApiDioFactory {
 Future<ApiDioFactory> apiDioFactory(Ref ref) async {
   final package = ref.watch(packageInfoProvider);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
+  final userAgent = const ApiUserAgentBuilder().build(
+    packageInfo: package,
+    androidDeviceInfo: Platform.isAndroid
+        ? ref.watch(androidDeviceInfoProvider)
+        : null,
+    iosDeviceInfo: Platform.isIOS ? ref.watch(iosDeviceInfoProvider) : null,
+  );
   final baseInterceptors = <Interceptor>[
     ref.watch(appCheckInterceptorProvider),
     await ref.watch(deviceIdInterceptorProvider.future),
@@ -71,6 +80,7 @@ Future<ApiDioFactory> apiDioFactory(Ref ref) async {
   return ApiDioFactory(
     baseUrl: telegramUrl.restApiUrl,
     headers: {
+      HttpHeaders.userAgentHeader: userAgent,
       'x-eqmonitor-version': '${package.version}+${package.buildNumber}',
       'x-eqmonitor-platform': Platform.isAndroid ? 'android' : 'ios',
     },

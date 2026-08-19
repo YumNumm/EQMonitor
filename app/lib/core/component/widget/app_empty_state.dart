@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppEmptyState extends StatelessWidget {
-  const AppEmptyState({
+  const new({
     required this.message,
     super.key,
     this.icon = Icons.inbox_outlined,
@@ -20,13 +20,19 @@ class AppEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
+    final action = this.action;
+    final actionLabel = this.actionLabel;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 48, color: designSystem.colorTheme.onSurfaceVariant),
+            Icon(
+              icon,
+              size: 48,
+              color: designSystem.colorTheme.onSurfaceVariant,
+            ),
             SizedBox(height: designSystem.spacing.sm),
             Text(
               message,
@@ -45,7 +51,7 @@ class AppEmptyState extends StatelessWidget {
             ],
             if (action != null && actionLabel != null) ...[
               SizedBox(height: designSystem.spacing.md),
-              TextButton(onPressed: action, child: Text(actionLabel!)),
+              TextButton(onPressed: action, child: Text(actionLabel)),
             ],
           ],
         ),

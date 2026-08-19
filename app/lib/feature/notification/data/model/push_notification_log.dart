@@ -6,18 +6,18 @@ part 'push_notification_log.g.dart';
 
 @freezed
 abstract class PushNotificationHistory with _$PushNotificationHistory {
-  const factory PushNotificationHistory({
+  const factory({
     required List<PushNotificationLogEntry> items,
     String? nextCursor,
   }) = _PushNotificationHistory;
 
-  factory PushNotificationHistory.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$PushNotificationHistoryFromJson(json);
 }
 
 @freezed
 abstract class PushNotificationLogEntry with _$PushNotificationLogEntry {
-  const factory PushNotificationLogEntry({
+  const factory({
     required String streamId,
     required String deviceId,
     required PushNotificationDeliveryFramework framework,
@@ -35,7 +35,7 @@ abstract class PushNotificationLogEntry with _$PushNotificationLogEntry {
     String? interruptionLevel,
   }) = _PushNotificationLogEntry;
 
-  factory PushNotificationLogEntry.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$PushNotificationLogEntryFromJson(json);
 }
 

@@ -1,10 +1,10 @@
 import 'package:eqmonitor/feature/shake_detection/data/logic/shake_detection_debug_preset_factory.dart';
 import 'package:eqmonitor/feature/shake_detection/data/notifier/shake_detection_debug_overlay.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugShakeDetectionInsertPage extends ConsumerWidget {
-  const DebugShakeDetectionInsertPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

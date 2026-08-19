@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,16 +13,14 @@ import 'package:nied_api_client/nied_api_client.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class FnetCatalogPage extends HookConsumerWidget {
-  const FnetCatalogPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedMonth = useState<Month?>(null);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('F-net 地震カタログ'),
-      ),
+      appBar: AppBar(title: const Text('F-net 地震カタログ')),
       body: Column(
         children: [
           _MonthSelector(
@@ -31,9 +29,7 @@ class FnetCatalogPage extends HookConsumerWidget {
               selectedMonth.value = month;
             },
           ),
-          Expanded(
-            child: _FnetCatalogList(selectedMonth: selectedMonth.value),
-          ),
+          Expanded(child: _FnetCatalogList(selectedMonth: selectedMonth.value)),
         ],
       ),
     );
@@ -41,7 +37,7 @@ class FnetCatalogPage extends HookConsumerWidget {
 }
 
 class _FnetCatalogList extends HookConsumerWidget {
-  const _FnetCatalogList({required this.selectedMonth});
+  const new({required this.selectedMonth});
 
   final Month? selectedMonth;
 
@@ -51,16 +47,13 @@ class _FnetCatalogList extends HookConsumerWidget {
     final designSystem = context.designSystem;
     final niedApiClient = ref.watch(niedApiClientProvider);
 
-    final future = useMemoized(
-      () async {
-        final now = DateTime.now();
-        return niedApiClient.fnet.getCatalog(
-          year: selectedMonth?.year ?? now.year,
-          month: selectedMonth?.month ?? now.month,
-        );
-      },
-      [selectedMonth],
-    );
+    final future = useMemoized(() async {
+      final now = DateTime.now();
+      return niedApiClient.fnet.getCatalog(
+        year: selectedMonth?.year ?? now.year,
+        month: selectedMonth?.month ?? now.month,
+      );
+    }, [selectedMonth, niedApiClient]);
 
     final snapshot = useFuture(future);
 
@@ -107,7 +100,7 @@ class _FnetCatalogList extends HookConsumerWidget {
         SliverSafeArea(
           sliver: SliverMainAxisGroup(
             slivers: [
-              for (final date in groupedByDate.keys) ...[
+              for (final entry in groupedByDate.entries) ...[
                 SliverStickyHeader(
                   header: ColoredBox(
                     color: designSystem.colorTheme.surfaceContainerHighest,
@@ -117,8 +110,8 @@ class _FnetCatalogList extends HookConsumerWidget {
                         vertical: 8,
                       ),
                       child: Text(
-                        '${date.year}/${date.month}/${date.day}',
-                        style: theme.textTheme.titleSmall!.copyWith(
+                        '${entry.key.year}/${entry.key.month}/${entry.key.day}',
+                        style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: designSystem.colorTheme.onSurface,
                           fontFamily: FontFamily.googleSansCode,
@@ -127,9 +120,9 @@ class _FnetCatalogList extends HookConsumerWidget {
                     ),
                   ),
                   sliver: SliverList.builder(
-                    itemCount: groupedByDate[date]!.length,
+                    itemCount: entry.value.length,
                     itemBuilder: (context, index) {
-                      final event = groupedByDate[date]![index];
+                      final event = entry.value[index];
                       return _EventCard(event: event);
                     },
                   ),
@@ -144,7 +137,7 @@ class _FnetCatalogList extends HookConsumerWidget {
 }
 
 class _MonthSelector extends StatelessWidget {
-  const _MonthSelector({
+  const new({
     required this.selectedMonth,
     required this.onMonthChanged,
   });
@@ -162,28 +155,23 @@ class _MonthSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: designSystem.colorTheme.surfaceContainerHighest,
         border: Border(
-          bottom: BorderSide(
-            color: designSystem.colorTheme.outlineVariant,
-          ),
+          bottom: BorderSide(color: designSystem.colorTheme.outlineVariant),
         ),
       ),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              selectedMonth == null
-                  ? '対象月: 最新'
-                  : '対象月: ${selectedMonth!.year}年${selectedMonth!.month}月',
-              style: theme.textTheme.titleSmall,
-            ),
+            child: Text(switch (selectedMonth) {
+              null => '対象月: 最新',
+              final month => '対象月: ${month.year}年${month.month}月',
+            }, style: theme.textTheme.titleSmall),
           ),
           OutlinedButton.icon(
             onPressed: () async {
               final result = await showAdaptiveDialog<Month?>(
                 context: context,
-                builder: (context) => _MonthPickerDialog(
-                  initialMonth: selectedMonth,
-                ),
+                builder: (context) =>
+                    _MonthPickerDialog(initialMonth: selectedMonth),
               );
               if (result != null) {
                 onMonthChanged(result);
@@ -206,7 +194,7 @@ class _MonthSelector extends StatelessWidget {
 }
 
 class _MonthPickerDialog extends HookWidget {
-  const _MonthPickerDialog({required this.initialMonth});
+  const new({required this.initialMonth});
 
   final Month? initialMonth;
 
@@ -244,10 +232,7 @@ class _MonthPickerDialog extends HookWidget {
               label: const Text('年'),
               dropdownMenuEntries: years
                   .map(
-                    (year) => DropdownMenuEntry(
-                      value: year,
-                      label: '$year年',
-                    ),
+                    (year) => DropdownMenuEntry(value: year, label: '$year年'),
                   )
                   .toList(),
               onSelected: (value) {
@@ -264,10 +249,8 @@ class _MonthPickerDialog extends HookWidget {
               label: const Text('月'),
               dropdownMenuEntries: availableMonths
                   .map(
-                    (month) => DropdownMenuEntry(
-                      value: month,
-                      label: '$month月',
-                    ),
+                    (month) =>
+                        DropdownMenuEntry(value: month, label: '$month月'),
                   )
                   .toList(),
               onSelected: (value) {
@@ -286,12 +269,9 @@ class _MonthPickerDialog extends HookWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(
-              Month(
-                year: selectedYear.value,
-                month: selectedMonth.value,
-              ),
-            );
+            Navigator.of(
+              context,
+            ).pop(Month(year: selectedYear.value, month: selectedMonth.value));
           },
           child: const Text('OK'),
         ),
@@ -301,7 +281,7 @@ class _MonthPickerDialog extends HookWidget {
 }
 
 class _EventCard extends HookWidget {
-  const _EventCard({required this.event});
+  const new({required this.event});
 
   final FnetEvent event;
 
@@ -322,13 +302,13 @@ class _EventCard extends HookWidget {
           children: [
             Text(
               event.regionName,
-              style: theme.textTheme.titleMedium!.copyWith(
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            DefaultTextStyle(
-              style: theme.textTheme.bodyMedium!.copyWith(
+            DefaultTextStyle.merge(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [FontFamily.notoSansJP],
               ),
@@ -359,12 +339,8 @@ class _EventCard extends HookWidget {
                   Text(
                     '地震モーメント: ${event.seismicMoment.toStringAsExponential(2)} Nm',
                   ),
-                  Text(
-                    '分散低減率: ${event.varianceReduction.toStringAsFixed(1)}%',
-                  ),
-                  Text(
-                    '観測点数: ${event.numberOfStations}',
-                  ),
+                  Text('分散低減率: ${event.varianceReduction.toStringAsFixed(1)}%'),
+                  Text('観測点数: ${event.numberOfStations}'),
                 ],
               ),
             ),

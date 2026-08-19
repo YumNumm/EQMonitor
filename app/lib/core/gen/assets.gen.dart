@@ -37,6 +37,10 @@ class $AssetsDocsGen {
   List<String> get values => [aboutThisApp, privacyPolicy, termOfService];
 }
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -87,6 +91,7 @@ abstract final class Assets {
       'assets/KyoshinShindoColorMap.json';
   static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const String jmaMap = 'assets/jma_map.pb';
   static const String tjma2001 = 'assets/tjma2001.csv';

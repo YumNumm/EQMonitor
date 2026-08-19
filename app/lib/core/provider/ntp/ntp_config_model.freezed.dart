@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'ntp_config_model.dart';
@@ -9,13 +9,19 @@ part of 'ntp_config_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$NtpConfigModel {
 
- String get lookUpAddress; Duration get timeout; Duration get interval;
+ String get lookUpAddress;/// [lookUpAddress] が使えなかった場合に順に試すサーバ。
+///
+/// モバイル網では UDP:123 が閉じられていることがあるため、
+/// 経路の異なるサーバを複数用意しておく。
+ List<String> get fallbackAddresses; Duration get timeout; Duration get interval;/// 1つのサーバに対する試行回数
+ int get maxAttemptsPerAddress;
 /// Create a copy of NtpConfigModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +34,16 @@ $NtpConfigModelCopyWith<NtpConfigModel> get copyWith => _$NtpConfigModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&const DeepCollectionEquality().equals(other.fallbackAddresses, fallbackAddresses)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.maxAttemptsPerAddress, maxAttemptsPerAddress) || other.maxAttemptsPerAddress == maxAttemptsPerAddress));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,lookUpAddress,timeout,interval);
+int get hashCode => Object.hash(runtimeType,lookUpAddress,const DeepCollectionEquality().hash(fallbackAddresses),timeout,interval,maxAttemptsPerAddress);
 
 @override
 String toString() {
-  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, timeout: $timeout, interval: $interval)';
+  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, fallbackAddresses: $fallbackAddresses, timeout: $timeout, interval: $interval, maxAttemptsPerAddress: $maxAttemptsPerAddress)';
 }
 
 
@@ -48,7 +54,7 @@ abstract mixin class $NtpConfigModelCopyWith<$Res>  {
   factory $NtpConfigModelCopyWith(NtpConfigModel value, $Res Function(NtpConfigModel) _then) = _$NtpConfigModelCopyWithImpl;
 @useResult
 $Res call({
- String lookUpAddress, Duration timeout, Duration interval
+ String lookUpAddress, List<String> fallbackAddresses, Duration timeout, Duration interval, int maxAttemptsPerAddress
 });
 
 
@@ -65,12 +71,14 @@ class _$NtpConfigModelCopyWithImpl<$Res>
 
 /// Create a copy of NtpConfigModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? lookUpAddress = null,Object? timeout = null,Object? interval = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? lookUpAddress = null,Object? fallbackAddresses = null,Object? timeout = null,Object? interval = null,Object? maxAttemptsPerAddress = null,}) {
+  return _then(NtpConfigModel(
 lookUpAddress: null == lookUpAddress ? _self.lookUpAddress : lookUpAddress // ignore: cast_nullable_to_non_nullable
-as String,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
+as String,fallbackAddresses: null == fallbackAddresses ? _self.fallbackAddresses : fallbackAddresses // ignore: cast_nullable_to_non_nullable
+as List<String>,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
 as Duration,interval: null == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
-as Duration,
+as Duration,maxAttemptsPerAddress: null == maxAttemptsPerAddress ? _self.maxAttemptsPerAddress : maxAttemptsPerAddress // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -155,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String lookUpAddress,  Duration timeout,  Duration interval)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String lookUpAddress,  List<String> fallbackAddresses,  Duration timeout,  Duration interval,  int maxAttemptsPerAddress)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NtpConfigModel() when $default != null:
-return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
+return $default(_that.lookUpAddress,_that.fallbackAddresses,_that.timeout,_that.interval,_that.maxAttemptsPerAddress);case _:
   return orElse();
 
 }
@@ -176,10 +184,10 @@ return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String lookUpAddress,  Duration timeout,  Duration interval)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String lookUpAddress,  List<String> fallbackAddresses,  Duration timeout,  Duration interval,  int maxAttemptsPerAddress)  $default,) {final _that = this;
 switch (_that) {
 case _NtpConfigModel():
-return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
+return $default(_that.lookUpAddress,_that.fallbackAddresses,_that.timeout,_that.interval,_that.maxAttemptsPerAddress);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +204,10 @@ return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String lookUpAddress,  Duration timeout,  Duration interval)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String lookUpAddress,  List<String> fallbackAddresses,  Duration timeout,  Duration interval,  int maxAttemptsPerAddress)?  $default,) {final _that = this;
 switch (_that) {
 case _NtpConfigModel() when $default != null:
-return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
+return $default(_that.lookUpAddress,_that.fallbackAddresses,_that.timeout,_that.interval,_that.maxAttemptsPerAddress);case _:
   return null;
 
 }
@@ -211,12 +219,29 @@ return $default(_that.lookUpAddress,_that.timeout,_that.interval);case _:
 @JsonSerializable()
 
 class _NtpConfigModel implements NtpConfigModel {
-  const _NtpConfigModel({this.lookUpAddress = 'ntp.nict.jp', this.timeout = const Duration(seconds: 10), this.interval = const Duration(minutes: 30)});
+  const _NtpConfigModel({this.lookUpAddress = 'ntp.nict.jp',  List<String> fallbackAddresses = const ['time.google.com', 'time.cloudflare.com'], this.timeout = const Duration(seconds: 3), this.interval = const Duration(minutes: 10), this.maxAttemptsPerAddress = 2}): _fallbackAddresses = fallbackAddresses;
   factory _NtpConfigModel.fromJson(Map<String, dynamic> json) => _$NtpConfigModelFromJson(json);
 
 @override@JsonKey() final  String lookUpAddress;
+/// [lookUpAddress] が使えなかった場合に順に試すサーバ。
+///
+/// モバイル網では UDP:123 が閉じられていることがあるため、
+/// 経路の異なるサーバを複数用意しておく。
+ final  List<String> _fallbackAddresses;
+/// [lookUpAddress] が使えなかった場合に順に試すサーバ。
+///
+/// モバイル網では UDP:123 が閉じられていることがあるため、
+/// 経路の異なるサーバを複数用意しておく。
+@override@JsonKey() List<String> get fallbackAddresses {
+  if (_fallbackAddresses is EqualUnmodifiableListView) return _fallbackAddresses;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_fallbackAddresses);
+}
+
 @override@JsonKey() final  Duration timeout;
 @override@JsonKey() final  Duration interval;
+/// 1つのサーバに対する試行回数
+@override@JsonKey() final  int maxAttemptsPerAddress;
 
 /// Create a copy of NtpConfigModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +256,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&const DeepCollectionEquality().equals(other._fallbackAddresses, _fallbackAddresses)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval)&&(identical(other.maxAttemptsPerAddress, maxAttemptsPerAddress) || other.maxAttemptsPerAddress == maxAttemptsPerAddress));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,lookUpAddress,timeout,interval);
+int get hashCode => Object.hash(runtimeType,lookUpAddress,const DeepCollectionEquality().hash(_fallbackAddresses),timeout,interval,maxAttemptsPerAddress);
 
 @override
 String toString() {
-  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, timeout: $timeout, interval: $interval)';
+  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, fallbackAddresses: $fallbackAddresses, timeout: $timeout, interval: $interval, maxAttemptsPerAddress: $maxAttemptsPerAddress)';
 }
 
 
@@ -251,7 +276,7 @@ abstract mixin class _$NtpConfigModelCopyWith<$Res> implements $NtpConfigModelCo
   factory _$NtpConfigModelCopyWith(_NtpConfigModel value, $Res Function(_NtpConfigModel) _then) = __$NtpConfigModelCopyWithImpl;
 @override @useResult
 $Res call({
- String lookUpAddress, Duration timeout, Duration interval
+ String lookUpAddress, List<String> fallbackAddresses, Duration timeout, Duration interval, int maxAttemptsPerAddress
 });
 
 
@@ -268,12 +293,14 @@ class __$NtpConfigModelCopyWithImpl<$Res>
 
 /// Create a copy of NtpConfigModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? lookUpAddress = null,Object? timeout = null,Object? interval = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? lookUpAddress = null,Object? fallbackAddresses = null,Object? timeout = null,Object? interval = null,Object? maxAttemptsPerAddress = null,}) {
   return _then(_NtpConfigModel(
 lookUpAddress: null == lookUpAddress ? _self.lookUpAddress : lookUpAddress // ignore: cast_nullable_to_non_nullable
-as String,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
+as String,fallbackAddresses: null == fallbackAddresses ? _self._fallbackAddresses : fallbackAddresses // ignore: cast_nullable_to_non_nullable
+as List<String>,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
 as Duration,interval: null == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
-as Duration,
+as Duration,maxAttemptsPerAddress: null == maxAttemptsPerAddress ? _self.maxAttemptsPerAddress : maxAttemptsPerAddress // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

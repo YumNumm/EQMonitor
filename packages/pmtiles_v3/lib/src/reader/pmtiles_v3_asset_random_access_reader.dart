@@ -7,11 +7,10 @@ import 'package:pmtiles_v3/src/reader/pmtiles_v3_range_validator.dart';
 
 final class PmTilesV3AssetRandomAccessReader
     implements PmTilesRandomAccessReader {
-  PmTilesV3AssetRandomAccessReader({
+  new({
     required Uint8List bytes,
-    PmTilesV3RangeValidator rangeValidator = const PmTilesV3RangeValidator(),
-  }) : _bytes = Uint8List.fromList(bytes),
-       _rangeValidator = rangeValidator;
+    this._rangeValidator = const PmTilesV3RangeValidator(),
+  }) : _bytes = Uint8List.fromList(bytes);
 
   static Future<PmTilesV3AssetRandomAccessReader> open({
     required String assetKey,

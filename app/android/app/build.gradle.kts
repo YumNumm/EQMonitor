@@ -1,10 +1,22 @@
 import java.util.Base64
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.Sync
 
 plugins {
     id("com.android.application")
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+abstract class StageBundledAssetPackTask : Sync() {
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    init {
+        into(outputDirectory)
+    }
 }
 
 val dartDefines = mutableMapOf<String, String>()
@@ -25,22 +37,30 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val stageBundledAssetPack = tasks.register<StageBundledAssetPackTask>(
+    "stageBundledAssetPack",
+) {
+    from("../../assets/platform") {
+        into("platform")
+    }
+    outputDirectory.set(layout.buildDirectory.dir("generated/bundledAssetPack"))
+}
+
 android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
-    compileSdk = 36
+    // permission_handler_android 14.x が compileSdk 37 以上を要求する
+    compileSdk = 37
     ndkVersion = "29.0.14206865"
 
-    assetPacks += setOf(":assetpacks:eqmonitor_assets")
-
+    // AGP 9 では既定で無効。app_name を dart-define から差し替えるために必要
+    buildFeatures {
+        resValues = true
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     sourceSets {
@@ -48,7 +68,6 @@ android {
             java.srcDirs("src/main/kotlin")
         }
     }
-
     defaultConfig {
         applicationId = "net.yumnumm.eqmonitor"
         dartDefines["appIdSuffix"]?.let {
@@ -82,11 +101,30 @@ android {
             )
             multiDexEnabled = true
             resValue("string", "app_name", "EQMonitor")
+            // クラッシュログのシンボリケート用に native-debug-symbols.zip を生成する
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
         getByName("debug") {
             versionNameSuffix = ".d"
             resValue("string", "app_name", "EQMonitor (Debug)")
         }
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            stageBundledAssetPack,
+            StageBundledAssetPackTask::outputDirectory,
+        )
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

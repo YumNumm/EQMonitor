@@ -6,13 +6,13 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activ
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_activity_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeActivityPage extends HookConsumerWidget {
-  const EarthquakeActivityPage({required this.initialQuery, super.key});
+  const new({required this.initialQuery, super.key});
 
   final EarthquakeActivityQuery initialQuery;
 
@@ -133,7 +133,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
 }
 
 class _ActivityControls extends StatelessWidget {
-  const _ActivityControls({
+  const new({
     required this.query,
     required this.interval,
     required this.onQueryChanged,
@@ -217,7 +217,7 @@ class _ActivityControls extends StatelessWidget {
 }
 
 class _ActivitySummary extends StatelessWidget {
-  const _ActivitySummary({required this.query, required this.items});
+  const new({required this.query, required this.items});
   final EarthquakeActivityQuery query;
   final List<EarthquakePartialNormal> items;
   @override
@@ -238,7 +238,7 @@ class _ActivitySummary extends StatelessWidget {
 }
 
 class _ActivityChart extends StatelessWidget {
-  const _ActivityChart({required this.bins});
+  const new({required this.bins});
   final List<EarthquakeActivityBin> bins;
   @override
   Widget build(BuildContext context) {

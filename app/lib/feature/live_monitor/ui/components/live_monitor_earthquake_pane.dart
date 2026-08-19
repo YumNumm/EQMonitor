@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -10,12 +11,12 @@ import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_layers.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_host.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LiveMonitorEarthquakePane extends HookConsumerWidget {
-  const LiveMonitorEarthquakePane({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +61,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
         (configuration) => configuration.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final homeMapBounds = lngLatBoundsForHomeMapSettings(mapSettings);
+    final homeMapBounds = const HomeMapBoundsResolver().resolve(mapSettings);
     final homeBounds = LiveMonitorGeoBounds(
       minLat: homeMapBounds.latitudeSouth,
       maxLat: homeMapBounds.latitudeNorth,
@@ -68,7 +69,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
       maxLng: homeMapBounds.longitudeEast,
     );
     final systemInsets = MediaQuery.paddingOf(context);
-    final obscuredInsets = liveMonitorMapObscuredInsets(
+    final obscuredInsets = LiveMonitorMapFocusBuilder.obscuredInsets(
       systemTopInset: systemInsets.top,
       systemBottomInset: systemInsets.bottom,
       topCardHeight: topCardHeight.value,
@@ -124,7 +125,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Material(
-                    color: Theme.of(context).colorScheme.errorContainer,
+                    color: context.designSystem.colorTheme.errorContainer,
                     borderRadius: BorderRadius.circular(20),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(
@@ -144,7 +145,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
 }
 
 class LiveMonitorLatestEarthquakeUnavailable extends StatelessWidget {
-  const LiveMonitorLatestEarthquakeUnavailable({
+  const new({
     required this.message,
     required this.onRetry,
     super.key,

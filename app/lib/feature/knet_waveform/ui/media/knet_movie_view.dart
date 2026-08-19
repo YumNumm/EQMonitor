@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_client_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
@@ -10,7 +10,7 @@ import 'package:video_player/video_player.dart';
 
 /// K-NET all/movie MP4 をストリーミング再生するビュー
 class KnetMovieView extends HookConsumerWidget {
-  const KnetMovieView({required this.eventTime, super.key});
+  const new({required this.eventTime, super.key});
 
   final DateTime eventTime;
 
@@ -36,7 +36,7 @@ class KnetMovieView extends HookConsumerWidget {
 }
 
 class _MovieContent extends HookWidget {
-  const _MovieContent({required this.eventTime, required this.client});
+  const new({required this.eventTime, required this.client});
 
   final DateTime eventTime;
   final KnetDownloadClient client;
@@ -73,19 +73,23 @@ class _MovieContent extends HookWidget {
     }
 
     // 動画タイプが変わったら再ロード
-    useEffect(
-      () {
-        unawaited(loadVideo(selectedType.value));
-        return null;
-      },
-      [selectedType.value],
-    );
+    useEffect(() {
+      unawaited(loadVideo(selectedType.value));
+      return null;
+      // ローカル関数のため毎ビルド識別子が変わる。keysに入れると毎ビルド
+      // 動画を読み直してしまう。
+      // ignore_keys: loadVideo
+    }, [selectedType.value]);
 
     // ページ離脱時にコントローラーを解放
     useEffect(
       () => () {
         unawaited(controller.value?.dispose());
       },
+      // アンマウント時に「その時点の」controller を解放するための const []。
+      // keysに入れると差し替えのたびにcleanupが走り、loadVideo側の
+      // dispose と二重解放になる。
+      // ignore_keys: controller.value
       const [],
     );
 
@@ -109,10 +113,7 @@ class _MovieContent extends HookWidget {
 }
 
 class _MovieTypeSelector extends StatelessWidget {
-  const _MovieTypeSelector({
-    required this.selected,
-    required this.onChanged,
-  });
+  const new({required this.selected, required this.onChanged});
 
   final KnetMovieType selected;
   final ValueChanged<KnetMovieType> onChanged;
@@ -137,7 +138,7 @@ class _MovieTypeSelector extends StatelessWidget {
 }
 
 class _VideoArea extends HookWidget {
-  const _VideoArea({
+  const new({
     required this.controller,
     required this.isInitialized,
     required this.onRetry,
@@ -151,8 +152,8 @@ class _VideoArea extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (errorMessage != null) {
-      return _ErrorView(message: errorMessage!, onRetry: onRetry);
+    if (errorMessage case final errorMessage?) {
+      return _ErrorView(message: errorMessage, onRetry: onRetry);
     }
 
     final ctrl = controller;
@@ -196,7 +197,7 @@ class _VideoArea extends HookWidget {
 }
 
 class _VideoControls extends StatelessWidget {
-  const _VideoControls({
+  const new({
     required this.controller,
     required this.isPlaying,
     required this.duration,
@@ -280,7 +281,7 @@ class _VideoControls extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const new({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

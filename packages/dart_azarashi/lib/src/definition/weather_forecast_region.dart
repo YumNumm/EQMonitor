@@ -2,7 +2,7 @@
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-43.
 class JmaWeatherForecastRegion {
-  const JmaWeatherForecastRegion._();
+  const new _();
 
   /// Map of weather forecast region codes to names.
   static const regions = <int, String>{

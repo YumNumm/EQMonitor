@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 一覧で取得済みの [FeedItem] を表示するお知らせ詳細ページ。
@@ -13,7 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// （id 指定で1件取得するAPIは存在しないため、解決できない場合は
 /// 見つからない旨を表示して一覧へ誘導する）
 class FeedItemDetailsPage extends ConsumerWidget {
-  const FeedItemDetailsPage({required this.id, this.item, super.key});
+  const new({required this.id, this.item, super.key});
 
   final String id;
   final FeedItem? item;
@@ -43,7 +43,7 @@ class FeedItemDetailsPage extends ConsumerWidget {
 }
 
 class _FeedItemNotFound extends StatelessWidget {
-  const _FeedItemNotFound();
+  const new();
 
   @override
   Widget build(BuildContext context) {

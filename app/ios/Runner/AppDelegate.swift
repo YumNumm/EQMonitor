@@ -31,11 +31,24 @@ import background_location_tracker
     }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "ApnsTokenEventChannel"
+    ) {
+      ApnsTokenEventChannel.register(with: registrar)
+    }
+
     // Register App Group container path method channel.
     if let registrar = engineBridge.pluginRegistry.registrar(
       forPlugin: "AppGroupMethodChannel"
     ) {
       AppGroupMethodChannel.register(with: registrar)
+    }
+
+    // Register the debug-only Live Activity local start/update/end channel.
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "LiveActivityDebugMethodChannel"
+    ) {
+      LiveActivityDebugMethodChannel.register(with: registrar)
     }
 
     // Register the widget reload method channel.
@@ -60,5 +73,16 @@ import background_location_tracker
         }
       }
     }
+  }
+
+  override func application(
+    _ application: UIApplication,
+    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+  ) {
+    super.application(
+      application,
+      didRegisterForRemoteNotificationsWithDeviceToken: deviceToken
+    )
+    ApnsTokenEventChannel.shared.publish(deviceToken)
   }
 }

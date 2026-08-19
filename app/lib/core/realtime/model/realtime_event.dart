@@ -15,48 +15,48 @@ enum RealtimeSource { eqmonitor, dmdata }
 
 @Freezed()
 sealed class RealtimeEvent with _$RealtimeEvent {
-  const factory RealtimeEvent.ready({required RealtimeSource source}) =
+  const factory ready({required RealtimeSource source}) =
       RealtimeReadyEvent;
 
-  const factory RealtimeEvent.eewUpsert({
+  const factory eewUpsert({
     required EewItemWithRelations record,
     required RealtimeSource source,
   }) = RealtimeEewUpsertEvent;
 
-  const factory RealtimeEvent.earthquakeUpsert({
+  const factory earthquakeUpsert({
     required Earthquake record,
     required RealtimeSource source,
   }) = RealtimeEarthquakeUpsertEvent;
 
-  const factory RealtimeEvent.earthquakeDelete({
+  const factory earthquakeDelete({
     required String eventId,
     required RealtimeSource source,
   }) = RealtimeEarthquakeDeleteEvent;
 
-  const factory RealtimeEvent.tsunamiUpsert({
+  const factory tsunamiUpsert({
     required String eventId,
     required RealtimeSource source,
     String? groupId,
   }) = RealtimeTsunamiUpsertEvent;
 
-  const factory RealtimeEvent.tsunamiDelete({
+  const factory tsunamiDelete({
     required String eventId,
     required RealtimeSource source,
     String? groupId,
   }) = RealtimeTsunamiDeleteEvent;
 
-  const factory RealtimeEvent.shakeSnapshot({
+  const factory shakeSnapshot({
     required RealtimeShakeDetectionSnapshotPayload record,
     required RealtimeSource source,
   }) = RealtimeShakeSnapshotEvent;
 
-  const factory RealtimeEvent.estimatedIntensityUpsert({
+  const factory estimatedIntensityUpsert({
     required String eventId,
     required String estimatedIntensityTile,
     required DateTime? generatedAt,
     required RealtimeSource source,
   }) = RealtimeEstimatedIntensityUpsertEvent;
 
-  factory RealtimeEvent.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$RealtimeEventFromJson(json);
 }

@@ -8,14 +8,15 @@ import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart'
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EewDetailsMapView extends HookConsumerWidget {
-  const EewDetailsMapView({
+  const new({
     required this.selectedEew,
     required this.displayMode,
     required this.initialCenter,
@@ -37,8 +38,8 @@ class EewDetailsMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null => _MapContent(
-        styleString: value.styleString!,
+      AsyncData(value: MapConfiguration(:final styleString?)) => _MapContent(
+        styleString: styleString,
         selectedEew: selectedEew,
         initialCenter: initialCenter,
         initZoom: initZoom,
@@ -53,7 +54,7 @@ class EewDetailsMapView extends HookConsumerWidget {
 }
 
 class _MapContent extends ConsumerWidget {
-  const _MapContent({
+  const new({
     required this.styleString,
     required this.selectedEew,
     required this.displayMode,
@@ -78,7 +79,9 @@ class _MapContent extends ConsumerWidget {
         (v) => v.value?.map ?? const HomeMapSettings(),
       ),
     );
-    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
+    final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
+      mapSettings,
+    );
     final mapOptions = MapOptions(
       initCenter: initialCenter,
       initZoom: initZoom,

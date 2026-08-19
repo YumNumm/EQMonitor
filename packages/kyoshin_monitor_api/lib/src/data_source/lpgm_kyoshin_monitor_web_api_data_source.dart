@@ -1,13 +1,16 @@
-import 'package:intl/intl.dart';
 import 'package:kyoshin_monitor_api/src/api/lpgm_kyoshin_monitor_web_api_client.dart';
 import 'package:kyoshin_monitor_api/src/data_source/kyoshin_monitor_web_api_data_source.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 
 class LpgmKyoshinMonitorWebApiDataSource {
-  LpgmKyoshinMonitorWebApiDataSource({
+  new({
     required LpgmKyoshinMonitorWebApiClient client,
   }) : _client = client;
 
   final LpgmKyoshinMonitorWebApiClient _client;
+
+  /// データ時間
+  Future<DataTime> getLatestDataTime() => _client.getLatestDataTime();
 
   /// ベース画像
   Future<List<int>> getBaseMapImageData(BaseMapTheme theme) =>
@@ -27,22 +30,32 @@ class LpgmKyoshinMonitorWebApiDataSource {
   /// PsWaveImg
   Future<List<int>> getPsWaveImageData(DateTime dateTime) =>
       _client.getPsWaveImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
+        date: KyoshinMonitorWebApiDataSource.formatDate(dateTime),
+        dateTime: KyoshinMonitorWebApiDataSource.formatDateTime(dateTime),
       );
 
   /// RealtimeImg
-  Future<List<int>> getRealtimeImageData(
-    RealtimeDataType type,
-    RealtimeLayer layer,
-    DateTime dateTime,
-  ) => _client.getRealtimeImageData(
-    type: type.urlString,
-    layer: layer.urlString,
-    date: dateFormat.format(dateTime),
-    dateTime: dateTimeFormat.format(dateTime),
-  );
-
-  static DateFormat get dateFormat => DateFormat('yyyyMMdd');
-  static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');
+  Future<List<int>> getRealtimeImageData({
+    required RealtimeDataType type,
+    required RealtimeLayer layer,
+    required DateTime dateTime,
+  }) {
+    final date = KyoshinMonitorWebApiDataSource.formatDate(dateTime);
+    final formattedDateTime = KyoshinMonitorWebApiDataSource.formatDateTime(
+      dateTime,
+    );
+    if (type.isLpgm) {
+      return _client.getLpgmRealtimeImageData(
+        type: type.urlString,
+        date: date,
+        dateTime: formattedDateTime,
+      );
+    }
+    return _client.getKyoshinRealtimeImageData(
+      type: type.urlString,
+      layer: layer.urlString,
+      date: date,
+      dateTime: formattedDateTime,
+    );
+  }
 }

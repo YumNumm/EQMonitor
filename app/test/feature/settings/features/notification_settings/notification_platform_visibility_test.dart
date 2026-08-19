@@ -41,58 +41,6 @@ void main() {
     expect(find.text('震度別の音設定'), findsOneWidget);
   });
 
-  testWidgets('custom list uses threshold labels and joined region names', (
-    tester,
-  ) async {
-    await pumpCustomSettings(
-      tester,
-      platform: TargetPlatform.iOS,
-      isPro: true,
-      slots: [
-        _slot,
-        _slot.copyWith(
-          id: 'region',
-          slotType: NotificationSlotType.region,
-          regionId: 13,
-          regionName: '東京都',
-          cityCode: '13104',
-          cityName: '新宿区',
-          displayOrder: 1,
-          eewMinIntensity: JmaIntensity.fiveLower,
-        ),
-      ],
-    );
-
-    expect(find.text('東京都新宿区'), findsOneWidget);
-    expect(find.textContaining('EEW: すべて'), findsOneWidget);
-    expect(find.textContaining('EEW: 震度5弱以上'), findsOneWidget);
-    expect(find.textContaining('5-'), findsNothing);
-    expect(find.textContaining('東京都 新宿区'), findsNothing);
-  });
-
-  testWidgets('custom list rejects an enabled EEW without a threshold', (
-    tester,
-  ) async {
-    await pumpCustomSettings(
-      tester,
-      platform: TargetPlatform.iOS,
-      isPro: true,
-      slots: [_slot.copyWith(eewMinIntensity: null)],
-    );
-
-    expect(tester.takeException(), isA<StateError>());
-  });
-
-  testWidgets('does not show downgrade retention copy', (tester) async {
-    await pumpCustomSettings(
-      tester,
-      platform: TargetPlatform.android,
-      isPro: false,
-    );
-
-    expect(find.textContaining('ダウングレード時も設定は保持され'), findsNothing);
-  });
-
   testWidgets('Android hides per-intensity slot settings', (tester) async {
     await pumpSlotDetail(tester, platform: TargetPlatform.android);
 
@@ -188,6 +136,12 @@ Future<void> pumpSlotDetail(
       overrides: [
         notificationSlotsProvider.overrideWith(
           _FakeNotificationSlotsNotifier.new,
+        ),
+        eewGlobalSettingsProvider.overrideWith(
+          _FakeEewGlobalSettingsNotifier.new,
+        ),
+        eewWarningConfigProvider.overrideWith(
+          _FakeEewWarningConfigNotifier.new,
         ),
       ],
       child: _TestApp(

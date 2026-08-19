@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class IntensityFilterChip extends StatelessWidget {
-  const IntensityFilterChip({this.min, this.max, this.onChanged, super.key});
+  const new({this.min, this.max, this.onChanged, super.key});
 
   final void Function(JmaIntensity?, JmaIntensity?)? onChanged;
 
@@ -47,7 +47,7 @@ class IntensityFilterChip extends StatelessWidget {
 }
 
 class _IntensityFilterModal extends HookWidget {
-  const _IntensityFilterModal({
+  const new({
     this.currentMin = initialMin,
     this.currentMax = initialMax,
   });

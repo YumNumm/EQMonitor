@@ -1,4 +1,4 @@
-# iOS CD: xcodebuild | xcbeautify は pipefail 必須 / AssetDownloader の deployment target
+# iOS CD: xcodebuild | xcbeautify は pipefail 必須
 
 ## 症状
 
@@ -31,13 +31,7 @@ fi
 
 `Create IPA` / `Create Ad-Hoc IPA` も同様に `set -o pipefail` を付ける。
 
-## AssetDownloader の IPHONEOS_DEPLOYMENT_TARGET
-
-CI の Xcode 26.3 は deployment target の上限が **26.2.99**。
-`AssetDownloader` が `26.5` だと warning（環境によっては失敗要因）になる。
-Runner 本体に合わせて **26.0** に揃える。
-
 ## 関連
 
-- jma_code_table 欠落は別件で解消済み（`stage_from_release.sh --target ios-native`）
+- jma_code_table 欠落は別件で解消済み（`stage_from_r2.sh --target all`）
 - ローカル Xcode 26.6 では別途 `actool` の nil crash が出ることがある（CI 26.3 とは症状が異なる）

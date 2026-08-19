@@ -12,7 +12,7 @@ enum SceneSpikeLifecyclePhase {
 
 @Freezed(copyWith: false, fromJson: false, toJson: false)
 sealed class SceneSpikeLifecycleState with _$SceneSpikeLifecycleState {
-  const factory SceneSpikeLifecycleState.internal({
+  const factory internal({
     required SceneSpikeLifecyclePhase phase,
     required int appResourceGeneration,
     required bool mayTick,
@@ -20,7 +20,7 @@ sealed class SceneSpikeLifecycleState with _$SceneSpikeLifecycleState {
     required bool requiresResourceRebuild,
   }) = _SceneSpikeLifecycleState;
 
-  factory SceneSpikeLifecycleState.initial() =>
+  factory initial() =>
       const SceneSpikeLifecycleState.internal(
         phase: .detached,
         appResourceGeneration: 0,
@@ -32,17 +32,17 @@ sealed class SceneSpikeLifecycleState with _$SceneSpikeLifecycleState {
 
 @Freezed(copyWith: false, fromJson: false, toJson: false)
 sealed class SceneSpikeLifecycleEvent with _$SceneSpikeLifecycleEvent {
-  const factory SceneSpikeLifecycleEvent.attached() = _Attached;
-  const factory SceneSpikeLifecycleEvent.backgrounded() = _Backgrounded;
-  const factory SceneSpikeLifecycleEvent.foregrounded() = _Foregrounded;
-  const factory SceneSpikeLifecycleEvent.surfaceRecreated() = _SurfaceRecreated;
-  const factory SceneSpikeLifecycleEvent.rebuildCompleted() = _RebuildCompleted;
-  const factory SceneSpikeLifecycleEvent.detached() = _Detached;
-  const factory SceneSpikeLifecycleEvent.disposed() = _Disposed;
+  const factory attached() = _Attached;
+  const factory backgrounded() = _Backgrounded;
+  const factory foregrounded() = _Foregrounded;
+  const factory surfaceRecreated() = _SurfaceRecreated;
+  const factory rebuildCompleted() = _RebuildCompleted;
+  const factory detached() = _Detached;
+  const factory disposed() = _Disposed;
 }
 
 class SceneSpikeLifecycleReducer {
-  const SceneSpikeLifecycleReducer();
+  const new();
 
   SceneSpikeLifecycleState reduce({
     required SceneSpikeLifecycleState state,

@@ -2,7 +2,7 @@ import 'dart:math';
 
 /// 応答スペクトル計算結果
 class ResponseSpectrumResult {
-  const ResponseSpectrumResult({
+  const new({
     required this.periods,
     required this.sa,
     required this.sv,
@@ -48,7 +48,7 @@ class ResponseSpectrumResult {
 ///
 /// 参考: Nigam & Jennings (1969), BSSA vol. 59
 class KnetResponseSpectrum {
-  const KnetResponseSpectrum._();
+  const new _();
 
   /// 応答スペクトルを計算する
   ///

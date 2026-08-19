@@ -6,7 +6,7 @@ enum Language {
   /// 英語
   english('en');
 
-  const Language(this.code);
+  new(this.code);
 
   /// 言語コード
   final String code;

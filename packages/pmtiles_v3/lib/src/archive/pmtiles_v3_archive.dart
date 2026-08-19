@@ -35,7 +35,7 @@ abstract interface class PmTilesV3Archive {
 }
 
 final class PmTilesV3ArchiveOpener {
-  const PmTilesV3ArchiveOpener({
+  const new({
     this.headerDecoder = const PmTilesV3HeaderDecoder(),
     this.directoryDecoder = const PmTilesV3DirectoryDecoder(),
     this.compressionDecoder = const PmTilesV3CompressionDecoder(),
@@ -131,7 +131,7 @@ final class PmTilesV3ArchiveOpener {
 }
 
 final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
-  _PmTilesV3ArchiveImpl({
+  new({
     required this.reader,
     required this.header,
     required this.rootEntries,
@@ -230,7 +230,7 @@ final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
 }
 
 final class PmTilesV3DirectoryValidator {
-  const PmTilesV3DirectoryValidator({required this.header});
+  const new({required this.header});
 
   final PmTilesV3Header header;
 
@@ -306,7 +306,7 @@ final class PmTilesV3DirectoryValidator {
 }
 
 final class PmTilesV3DirectoryTraversal {
-  PmTilesV3DirectoryTraversal({
+  new({
     required this.reader,
     required this.header,
     required this.directoryDecoder,

@@ -96,56 +96,66 @@ enum HomeMapDefaultBounds {
 @freezed
 abstract class HomeShakeDetectionSettings with _$HomeShakeDetectionSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeShakeDetectionSettings({
+  const factory({
     @Default(true) bool show,
     @Default(HomeShakeDetectionAnimationMode.blink)
     HomeShakeDetectionAnimationMode animationMode,
   }) = _HomeShakeDetectionSettings;
 
-  factory HomeShakeDetectionSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeShakeDetectionSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeEewSettings with _$HomeEewSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeEewSettings({
+  const factory({
     @Default(HomeEewFillMode.intensity) HomeEewFillMode fillMode,
     @Default(HomeEewAnimationRate.unlimited) HomeEewAnimationRate animationRate,
     @Default(true) bool autoZoom,
     @Default(true) bool showPSWaveCircle,
+
+    /// P/S波到達予想円の時刻基準を、強震モニタ画像の取得対象時刻に合わせるか。
+    ///
+    /// `false` (既定) は NTP 補正済みの正確な現在時刻を使う。円は本来
+    /// 「いま波がどこまで来ているか」を示すものなので、既定では画像との
+    /// 見た目の一致より実時間の正確さを優先する。
+    ///
+    /// `true` にすると観測点の色と円の位置が完全に同期して見える代わりに、
+    /// 円がサーバの公開遅延ぶん (実測: 強震モニタ約1.2秒 / 長周期地震動
+    /// モニタ約0.6秒) 過去にずれる。
+    @Default(false) bool alignPSWaveCircleToKyoshinMonitor,
   }) = _HomeEewSettings;
 
-  factory HomeEewSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeEewSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeKyoshinMonitorSettings({
+  const factory({
     @Default(null) double? minRealtimeShindo,
     @Default(HomeKmoniMarkerSize.medium) HomeKmoniMarkerSize markerSize,
   }) = _HomeKyoshinMonitorSettings;
 
-  factory HomeKyoshinMonitorSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeKyoshinMonitorSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeMapGridSettings with _$HomeMapGridSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeMapGridSettings({@Default(false) bool enabled}) =
-      _HomeMapGridSettings;
+  const factory({@Default(false) bool enabled}) = _HomeMapGridSettings;
 
-  factory HomeMapGridSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapGridSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeMapSettings with _$HomeMapSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeMapSettings({
+  const factory({
     @Default(null) double? maxZoom,
     @Default(HomeMapDefaultBounds.mainIsland)
     HomeMapDefaultBounds defaultBounds,
@@ -153,28 +163,28 @@ abstract class HomeMapSettings with _$HomeMapSettings {
     @Default(false) bool lockBearing,
   }) = _HomeMapSettings;
 
-  factory HomeMapSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeMapSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeCommonSettings with _$HomeCommonSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeCommonSettings({
+  const factory({
     @Default(false) bool showLocation,
     @Default(HomeEarthquakeHistoryScope.nationwide)
     HomeEarthquakeHistoryScope earthquakeHistoryScope,
     EarthquakeHistoryParameter? parameter,
   }) = _HomeCommonSettings;
 
-  factory HomeCommonSettings.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeCommonSettingsFromJson(json);
 }
 
 @freezed
 abstract class HomeConfigurationModel with _$HomeConfigurationModel {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-  const factory HomeConfigurationModel({
+  const factory({
     @Default(HomeEewSettings()) HomeEewSettings eew,
     @Default(HomeKyoshinMonitorSettings())
     HomeKyoshinMonitorSettings kyoshinMonitor,
@@ -185,6 +195,6 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(HomeMapGridSettings()) HomeMapGridSettings mapGrid,
   }) = _HomeConfigurationModel;
 
-  factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$HomeConfigurationModelFromJson(json);
 }

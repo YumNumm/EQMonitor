@@ -173,7 +173,7 @@ void main() {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 
@@ -261,7 +261,7 @@ final class _MemorySecurePreferencesDataSource
 }
 
 final class _DeviceRegisterAdapter implements HttpClientAdapter {
-  _DeviceRegisterAdapter({
+  new({
     this.failFirstMeRequest = false,
     this.rejectStaleAuthorization = false,
   });
@@ -317,6 +317,7 @@ final class _DeviceRegisterAdapter implements HttpClientAdapter {
           'registrationType': 'APP_CHECK',
           'userId': null,
           'is_pro': false,
+          'role': 'USER',
           'createdAt': '2026-06-05T00:00:00.000Z',
           'updatedAt': '2026-06-05T00:00:00.000Z',
         }),

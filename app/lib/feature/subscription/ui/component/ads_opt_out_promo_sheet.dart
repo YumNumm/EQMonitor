@@ -1,13 +1,14 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/ads/data/flow/ads_opt_out_flow.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 広告 opt-out 前に Pro へ誘導する販促ボトムシート。
 ///
 /// `AdsOptOutPromoSheet.show(context)` で表示する。
 class AdsOptOutPromoSheet extends ConsumerWidget {
-  const AdsOptOutPromoSheet({super.key});
+  const new({super.key});
 
   static Future<void> show(BuildContext context) async {
     await showModalBottomSheet<void>(
@@ -24,6 +25,9 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final colorTheme = context.designSystem.colorTheme;
     final flow = ref.watch(adsOptOutFlowProvider);
+    final isProFeaturesEnabled = ref
+        .watch(buildConfigProvider)
+        .isProFeaturesEnabled;
 
     return SafeArea(
       top: false,
@@ -61,17 +65,19 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
               style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            if (isProFeaturesEnabled) ...[
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
+                onPressed: () async => flow.showPaywall(ref, context),
+                child: const Text('EQMonitor Pro を見る'),
               ),
-              onPressed: () async => flow.showPaywall(ref, context),
-              child: const Text('EQMonitor Pro を見る'),
-            ),
-            const SizedBox(height: 8),
+              const SizedBox(height: 8),
+            ],
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),

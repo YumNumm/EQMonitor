@@ -10,11 +10,11 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/provider/theme_presets_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/theme/theme_json_dialogs.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeSettingsPage extends StatelessWidget {
-  const ThemeSettingsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ThemeSettingsPage extends StatelessWidget {
 }
 
 class _ModeSection extends ConsumerWidget {
-  const _ModeSection({required this.mode});
+  const new({required this.mode});
 
   final ThemeBrightnessMode mode;
 
@@ -69,13 +69,10 @@ class _ModeSection extends ConsumerWidget {
           const SizedBox(height: 8),
           RadioGroup<AppTheme>(
             groupValue: currentTheme,
-            onChanged: (themeName) async {
-              if (themeName == null) {
+            onChanged: (preset) async {
+              if (preset == null) {
                 return;
               }
-              final preset = presets.firstWhere(
-                (preset) => preset.name == themeName,
-              );
               await ref
                   .read(appThemeProvider.notifier)
                   .setThemeForMode(mode, preset);
@@ -95,7 +92,8 @@ class _ModeSection extends ConsumerWidget {
           Align(
             alignment: .centerRight,
             child: FilledButton.tonal(
-              onPressed: () => ThemeEditorRoute(mode: mode.name).go(context),
+              onPressed: () async =>
+                  ThemeEditorRoute(mode: mode.name).push<void>(context),
               child: const Text('編集'),
             ),
           ),
@@ -106,7 +104,7 @@ class _ModeSection extends ConsumerWidget {
 }
 
 class _ThemePreview extends StatelessWidget {
-  const _ThemePreview({required this.colorSet});
+  const new({required this.colorSet});
 
   final ThemeColorSet colorSet;
 
@@ -154,7 +152,7 @@ class _ThemePreview extends StatelessWidget {
 }
 
 class _Swatch extends StatelessWidget {
-  const _Swatch({required this.color, required this.label});
+  const new({required this.color, required this.label});
 
   final Color color;
   final String label;

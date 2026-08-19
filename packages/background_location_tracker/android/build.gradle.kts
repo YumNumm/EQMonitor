@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.LibraryExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "net.yumnumm.background_location_tracker"
 version = "1.0"
 
@@ -6,7 +9,7 @@ plugins {
     id("kotlin-android")
 }
 
-android {
+extensions.configure<LibraryExtension>("android") {
     namespace = "net.yumnumm.background_location_tracker"
     compileSdk = 35
 
@@ -18,9 +21,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
 
-    kotlinOptions {
-        jvmTarget = "17"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 

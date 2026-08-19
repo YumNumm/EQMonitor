@@ -36,6 +36,7 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dar
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_snapshot.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -48,7 +49,7 @@ final _now = DateTime.utc(2026, 7, 27, 12);
 final _reportedAt = DateTime.utc(2026, 7, 27, 11, 59);
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -57,7 +58,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 final class _MutableEews extends EewAliveTelegram {
-  _MutableEews(this.initial);
+  new(this.initial);
 
   final List<EewTelegramItem>? initial;
 
@@ -68,7 +69,7 @@ final class _MutableEews extends EewAliveTelegram {
 }
 
 final class _MutableShakeSnapshot extends ShakeDetectionAcceptedSnapshot {
-  _MutableShakeSnapshot(this.initial);
+  new(this.initial);
 
   final ShakeDetectionSnapshot? initial;
 
@@ -94,7 +95,7 @@ final class _FixedAppClock extends AppClock {
 }
 
 final class _PageStore {
-  _PageStore(this.page);
+  new(this.page);
 
   PaginatedResponse<EarthquakePartial> page;
   Completer<PaginatedResponse<EarthquakePartial>>? firstLoad;
@@ -129,7 +130,7 @@ final class _StaticSettings extends LiveMonitorSettingsNotifier {
 }
 
 final class _StubHistoryNotifier extends EarthquakeHistoryNotifier {
-  _StubHistoryNotifier(this.store);
+  new(this.store);
 
   final _PageStore store;
 
@@ -163,7 +164,7 @@ final class _DetailStore {
 }
 
 final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _StubDetailsNotifier(this.store);
+  new(this.store);
 
   final _DetailStore store;
 
@@ -172,7 +173,7 @@ final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
 }
 
 final class _DetectedEventFixture {
-  _DetectedEventFixture({
+  new({
     required this.container,
     required this.realtime,
     required this.eews,
@@ -206,7 +207,7 @@ final class _DetectedEventFixture {
 }
 
 final class _IntegratedCanonicalFixture {
-  _IntegratedCanonicalFixture({
+  new({
     required this.container,
     required this.realtime,
     required this.events,
@@ -1759,16 +1760,14 @@ _DetectedEventFixture createFixture({
       appLifecycleProvider.overrideWith(() => lifecycle),
       appClockProvider.overrideWith(_FixedAppClock.new),
       liveMonitorSettingsProvider.overrideWith(_StaticSettings.new),
-      earthquakeHistoryProvider(
-        liveMonitorLatestParameter,
-      ).overrideWith(() => _StubHistoryNotifier(pageStore)),
+      earthquakeHistoryProvider(liveMonitorLatestParameter)
+          .overrideWith(() => _StubHistoryNotifier(pageStore)),
       earthquakeHistoryRepositoryProvider.overrideWith(
         (ref) async => repository,
       ),
       for (final eventId in {'Q', 'OUTSIDE', ...eventIds})
-        earthquakeHistoryDetailsProvider(
-          eventId,
-        ).overrideWith(() => _StubDetailsNotifier(detailStore)),
+        earthquakeHistoryDetailsProvider(eventId)
+            .overrideWith(() => _StubDetailsNotifier(detailStore)),
     ],
   );
   final events = <LiveMonitorEventEnvelope>[];
@@ -1806,9 +1805,8 @@ _IntegratedCanonicalFixture createIntegratedCanonicalFixture() {
       appLifecycleProvider.overrideWith(() => lifecycle),
       appClockProvider.overrideWith(_FixedAppClock.new),
       liveMonitorSettingsProvider.overrideWith(_StaticSettings.new),
-      earthquakeHistoryProvider(
-        liveMonitorLatestParameter,
-      ).overrideWith(() => _StubHistoryNotifier(pageStore)),
+      earthquakeHistoryProvider(liveMonitorLatestParameter)
+          .overrideWith(() => _StubHistoryNotifier(pageStore)),
     ],
   );
   return _IntegratedCanonicalFixture(
@@ -1874,7 +1872,7 @@ ShakeDetectionEvent shakeEvent({
   createdAt: _now,
   updatedAt: _now,
   expiresAt: expiresAt ?? _now.add(const Duration(minutes: 1)),
-  level: api.ShakeDetectionLevel.medium,
+  level: ShakeDetectionLevel.medium,
   pointCount: 1,
   minLat: 35,
   maxLat: 36,

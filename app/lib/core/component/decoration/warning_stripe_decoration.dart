@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class WarningStripeDecoration extends StatelessWidget {
-  const WarningStripeDecoration({
+  const new({
     required this.colors,
     super.key,
     this.height = 8.0,
@@ -25,7 +25,7 @@ class WarningStripeDecoration extends StatelessWidget {
 }
 
 class _StripePainter extends CustomPainter {
-  _StripePainter({required this.colors, required this.stripeWidth});
+  new({required this.colors, required this.stripeWidth});
 
   final List<Color> colors;
   final double stripeWidth;

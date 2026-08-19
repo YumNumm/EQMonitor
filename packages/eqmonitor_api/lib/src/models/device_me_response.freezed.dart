@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'device_me_response.dart';
@@ -9,13 +9,14 @@ part of 'device_me_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$DeviceMeResponse {
 
- String get id; DeviceType get type; DeviceLocale get locale;@JsonKey(includeIfNull: true) DeviceRegistrationType? get registrationType;@JsonKey(includeIfNull: true) String? get userId;@JsonKey(name: 'is_pro') bool get isPro; DateTime get createdAt; DateTime get updatedAt;
+ String get id; DeviceType get type; DeviceLocale get locale;@JsonKey(includeIfNull: true) DeviceRegistrationType? get registrationType;@JsonKey(includeIfNull: true) String? get userId;@JsonKey(name: 'is_pro') bool get isPro; DeviceRole get role; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $DeviceMeResponseCopyWith<DeviceMeResponse> get copyWith => _$DeviceMeResponseCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceMeResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.registrationType, registrationType) || other.registrationType == registrationType)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.isPro, isPro) || other.isPro == isPro)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceMeResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.registrationType, registrationType) || other.registrationType == registrationType)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.isPro, isPro) || other.isPro == isPro)&&(identical(other.role, role) || other.role == role)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,locale,registrationType,userId,isPro,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,type,locale,registrationType,userId,isPro,role,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'DeviceMeResponse(id: $id, type: $type, locale: $locale, registrationType: $registrationType, userId: $userId, isPro: $isPro, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'DeviceMeResponse(id: $id, type: $type, locale: $locale, registrationType: $registrationType, userId: $userId, isPro: $isPro, role: $role, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $DeviceMeResponseCopyWith<$Res>  {
   factory $DeviceMeResponseCopyWith(DeviceMeResponse value, $Res Function(DeviceMeResponse) _then) = _$DeviceMeResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId,@JsonKey(name: 'is_pro') bool isPro, DateTime createdAt, DateTime updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId,@JsonKey(name: 'is_pro') bool isPro, DeviceRole role, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -65,15 +66,16 @@ class _$DeviceMeResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? isPro = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? isPro = null,Object? role = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(DeviceMeResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as DeviceLocale,registrationType: freezed == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
 as DeviceRegistrationType?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as DeviceRole,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -160,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DeviceRole role,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse() when $default != null:
-return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.role,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +183,10 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DeviceRole role,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse():
-return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.role,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +203,10 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(includeIfNull: true)  DeviceRegistrationType? registrationType, @JsonKey(includeIfNull: true)  String? userId, @JsonKey(name: 'is_pro')  bool isPro,  DeviceRole role,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceMeResponse() when $default != null:
-return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.userId,_that.isPro,_that.role,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,7 +218,7 @@ return $default(_that.id,_that.type,_that.locale,_that.registrationType,_that.us
 @JsonSerializable()
 
 class _DeviceMeResponse implements DeviceMeResponse {
-  const _DeviceMeResponse({required this.id, required this.type, required this.locale, @JsonKey(includeIfNull: true) required this.registrationType, @JsonKey(includeIfNull: true) required this.userId, @JsonKey(name: 'is_pro') required this.isPro, required this.createdAt, required this.updatedAt});
+  const _DeviceMeResponse({required this.id, required this.type, required this.locale, @JsonKey(includeIfNull: true) required this.registrationType, @JsonKey(includeIfNull: true) required this.userId, @JsonKey(name: 'is_pro') required this.isPro, required this.role, required this.createdAt, required this.updatedAt});
   factory _DeviceMeResponse.fromJson(Map<String, dynamic> json) => _$DeviceMeResponseFromJson(json);
 
 @override final  String id;
@@ -225,6 +227,7 @@ class _DeviceMeResponse implements DeviceMeResponse {
 @override@JsonKey(includeIfNull: true) final  DeviceRegistrationType? registrationType;
 @override@JsonKey(includeIfNull: true) final  String? userId;
 @override@JsonKey(name: 'is_pro') final  bool isPro;
+@override final  DeviceRole role;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 
@@ -241,16 +244,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceMeResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.registrationType, registrationType) || other.registrationType == registrationType)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.isPro, isPro) || other.isPro == isPro)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceMeResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.registrationType, registrationType) || other.registrationType == registrationType)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.isPro, isPro) || other.isPro == isPro)&&(identical(other.role, role) || other.role == role)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,locale,registrationType,userId,isPro,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,type,locale,registrationType,userId,isPro,role,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'DeviceMeResponse(id: $id, type: $type, locale: $locale, registrationType: $registrationType, userId: $userId, isPro: $isPro, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'DeviceMeResponse(id: $id, type: $type, locale: $locale, registrationType: $registrationType, userId: $userId, isPro: $isPro, role: $role, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -261,7 +264,7 @@ abstract mixin class _$DeviceMeResponseCopyWith<$Res> implements $DeviceMeRespon
   factory _$DeviceMeResponseCopyWith(_DeviceMeResponse value, $Res Function(_DeviceMeResponse) _then) = __$DeviceMeResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId,@JsonKey(name: 'is_pro') bool isPro, DateTime createdAt, DateTime updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(includeIfNull: true) DeviceRegistrationType? registrationType,@JsonKey(includeIfNull: true) String? userId,@JsonKey(name: 'is_pro') bool isPro, DeviceRole role, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -278,7 +281,7 @@ class __$DeviceMeResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceMeResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? isPro = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? locale = null,Object? registrationType = freezed,Object? userId = freezed,Object? isPro = null,Object? role = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_DeviceMeResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -286,7 +289,8 @@ as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nul
 as DeviceLocale,registrationType: freezed == registrationType ? _self.registrationType : registrationType // ignore: cast_nullable_to_non_nullable
 as DeviceRegistrationType?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,isPro: null == isPro ? _self.isPro : isPro // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as DeviceRole,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

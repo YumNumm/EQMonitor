@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/feature/devices/data/data_source/apns_token_callback_data_source.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_platform_capabilities.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_platform_capabilities.dart';
@@ -45,6 +46,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           firebaseMessagingProvider.overrideWithValue(_FakeFirebaseMessaging()),
+          apnsTokenCallbackDataSourceProvider.overrideWithValue(
+            const _FakeApnsTokenCallbackDataSource(),
+          ),
           pushTokenPlatformCapabilitiesProvider.overrideWithValue(
             PushTokenPlatformCapabilities.forPlatform(
               platform: PushTokenPlatform.ios,
@@ -99,6 +103,14 @@ void main() {
 
     expect(pushToStartStreamReadCount, 1);
   });
+}
+
+final class _FakeApnsTokenCallbackDataSource
+    implements ApnsTokenCallbackDataSource {
+  const new();
+
+  @override
+  Stream<String> get tokenUpdates => const Stream.empty();
 }
 
 final class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {

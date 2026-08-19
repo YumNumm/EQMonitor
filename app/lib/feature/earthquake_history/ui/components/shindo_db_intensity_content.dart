@@ -3,13 +3,14 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_trailing_icon_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ShindoDbIntensityContent extends HookWidget {
-  const ShindoDbIntensityContent({required this.tree, super.key});
+  const new({required this.tree, super.key});
 
   final ShindoDbIntensityTree tree;
 
@@ -56,7 +57,7 @@ class ShindoDbIntensityContent extends HookWidget {
 }
 
 class _ShindoDbIntensityLevelSection extends HookWidget {
-  const _ShindoDbIntensityLevelSection({
+  const new({
     required this.intensityClass,
     required this.prefectures,
     required this.unresolvedStations,
@@ -151,7 +152,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
 }
 
 class _ShindoDbPrefectureTile extends HookWidget {
-  const _ShindoDbPrefectureTile({required this.prefecture});
+  const new({required this.prefecture});
 
   final ShindoDbPrefectureNode prefecture;
 
@@ -159,7 +160,7 @@ class _ShindoDbPrefectureTile extends HookWidget {
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasCities,
       isExpanded: isExpanded.value,
     );
@@ -194,7 +195,7 @@ class _ShindoDbPrefectureTile extends HookWidget {
 }
 
 class _ShindoDbCityTile extends HookWidget {
-  const _ShindoDbCityTile({required this.city});
+  const new({required this.city});
 
   final ShindoDbCityNode city;
 
@@ -202,7 +203,7 @@ class _ShindoDbCityTile extends HookWidget {
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasStations = city.stations.isNotEmpty;
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: hasStations,
       isExpanded: isExpanded.value,
     );
@@ -229,14 +230,14 @@ class _ShindoDbCityTile extends HookWidget {
 }
 
 class _ShindoDbUnresolvedTile extends HookWidget {
-  const _ShindoDbUnresolvedTile({required this.stations});
+  const new({required this.stations});
 
   final List<ShindoDbStationNode> stations;
 
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
-    final trailing = _buildTrailing(
+    final trailing = const ExpandTrailingIconBuilder().build(
       hasChildren: true,
       isExpanded: isExpanded.value,
     );
@@ -265,7 +266,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
 }
 
 class _ShindoDbStationChips extends StatelessWidget {
-  const _ShindoDbStationChips({required this.stations});
+  const new({required this.stations});
 
   final List<ShindoDbStationNode> stations;
 
@@ -302,15 +303,4 @@ class _ShindoDbStationChips extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget? _buildTrailing({required bool hasChildren, required bool isExpanded}) {
-  if (!hasChildren) {
-    return null;
-  }
-  return AnimatedRotation(
-    turns: isExpanded ? 0.5 : 0.0,
-    duration: const Duration(milliseconds: 200),
-    child: const Icon(Icons.expand_more),
-  );
 }

@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class KyoshinMonitorAboutPage extends HookConsumerWidget {
-  const KyoshinMonitorAboutPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,31 +25,6 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                   '強震モニタは、防災科学技術研究所が運用する、全国を網羅する強震観測網(K-NET、KiK-net)のデータをリアルタイムに表示するシステムです。\n'
                   '日本全国の観測点の揺れの状況を青から赤までの色で表示します。',
                   style: textTheme.bodyMedium,
-                ),
-                _SectionTitle(title: '表示可能なデータ', style: textTheme.titleMedium),
-                const _InfoCard(
-                  items: [
-                    _InfoItem(
-                      title: 'リアルタイム震度',
-                      description: '揺れが収まった後に計算されて発表される「震度」にほぼ一致する特徴があります。',
-                    ),
-                    _InfoItem(
-                      title: '最大加速度(PGA)',
-                      description: '強震計が観測している揺れの加速度の直近1秒間の最大値を示します。',
-                    ),
-                    _InfoItem(
-                      title: '最大速度(PGV)',
-                      description: '揺れの速度の1秒ごとの最大値を示します',
-                    ),
-                    _InfoItem(
-                      title: '最大変位(PGD)',
-                      description: '揺れの変位の1秒ごとの最大値を示します。',
-                    ),
-                    _InfoItem(
-                      title: '速度応答(0.125, 0.25, 0.5, 1, 2, 4Hz)',
-                      description: '各周波数成分についての速度応答波形(減衰5%)の1秒毎の最大値を表示します。',
-                    ),
-                  ],
                 ),
                 _SectionTitle(title: '観測点について', style: textTheme.titleMedium),
                 _InfoCard(
@@ -101,7 +76,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.title, required this.style});
+  const new({required this.title, required this.style});
 
   final String title;
   final TextStyle? style;
@@ -116,7 +91,7 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({
+  const new({
     required this.items,
     this.onTapMore,
     this.isWarning = false,
@@ -180,14 +155,14 @@ class _InfoCard extends StatelessWidget {
 }
 
 class _InfoItem {
-  const _InfoItem({required this.title, required this.description});
+  const new({required this.title, required this.description});
 
   final String title;
   final String description;
 }
 
 class _InfoItemWidget extends StatelessWidget {
-  const _InfoItemWidget({required this.item, this.textColor});
+  const new({required this.item, this.textColor});
 
   final _InfoItem item;
   final Color? textColor;

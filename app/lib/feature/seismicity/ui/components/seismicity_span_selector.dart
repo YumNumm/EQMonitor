@@ -1,8 +1,8 @@
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SeismicitySpanSelector extends StatelessWidget {
-  const SeismicitySpanSelector({
+  const new({
     required this.value,
     required this.onChanged,
     super.key,

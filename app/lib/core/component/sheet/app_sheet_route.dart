@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sheet/route.dart';
 import 'package:sheet/sheet.dart';
 
 class AppSheetRoute<T> extends SheetRoute<T> {
-  AppSheetRoute({required super.builder, super.initialExtent = 0.6})
+  new({required super.builder, super.initialExtent = 0.6})
     : super(
         fit: SheetFit.loose,
         stops: [initialExtent, 1],

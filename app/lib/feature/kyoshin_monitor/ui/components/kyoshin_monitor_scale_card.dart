@@ -2,13 +2,13 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 /// 強震モニタの設定状況を考慮したスケールカード
 class KyoshinMonitorScaleCard extends ConsumerWidget {
-  const KyoshinMonitorScaleCard({this.onTap, super.key});
+  const new({this.onTap, super.key});
 
   final void Function()? onTap;
 

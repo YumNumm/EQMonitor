@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
@@ -26,7 +27,7 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
 /// `notificationSlotsProvider` を固定スロットで差し替えるための fake。
 /// `updateCurrentLocationRegion` は実装をそのまま検証する。
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  _FakeNotificationSlotsNotifier(this._slots);
+  new(this._slots);
 
   final List<NotificationSlot> _slots;
 
@@ -68,7 +69,7 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
 /// `ShakeDetectionSettingsNotifier` が読む `apiClientProvider` を差し替える
 /// HTTP アダプタ。揺れ検知設定の GET / PUT とサブ地域マスター GET を模倣する。
 final class _FakeShakeApiAdapter implements HttpClientAdapter {
-  _FakeShakeApiAdapter({
+  new({
     this.shakeEntries = const [],
     this.availableSubRegions = const [],
   });
@@ -104,7 +105,7 @@ final class _FakeShakeApiAdapter implements HttpClientAdapter {
             _shakeResponseJson(
               id: e.id,
               subRegionId: e.subRegionId,
-              minLevel: e.minLevel,
+              minLevel: e.minLevel.toApiShakeDetectionLevel,
               isCurrentLocation: e.isCurrentLocation,
             ),
         ]),
@@ -259,7 +260,7 @@ void main() {
             id: 'entry-1',
             subRegionId: null,
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: true,
           ),
         ],
@@ -294,7 +295,7 @@ void main() {
             id: 'entry-1',
             subRegionId: null,
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: false, // ← 現在地ではない
           ),
         ],
@@ -322,7 +323,7 @@ void main() {
             id: 'entry-1',
             subRegionId: 'sr-1', // ← 既に sr-1
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: true,
           ),
         ],
@@ -352,7 +353,7 @@ void main() {
               id: 'entry-1',
               subRegionId: 'sr-1',
               subRegionName: null,
-              minLevel: api.ShakeDetectionLevel.medium,
+              minLevel: ShakeDetectionLevel.medium,
               isCurrentLocation: true,
             ),
           ],
@@ -383,7 +384,7 @@ void main() {
             id: 'entry-1',
             subRegionId: 'sr-1',
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: true,
           ),
         ],
@@ -412,7 +413,7 @@ void main() {
             id: 'entry-1',
             subRegionId: 'sr-1',
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: true,
           ),
         ],
@@ -457,7 +458,7 @@ void main() {
             id: 'entry-1',
             subRegionId: null,
             subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
+            minLevel: ShakeDetectionLevel.medium,
             isCurrentLocation: true,
           ),
         ],
@@ -493,10 +494,9 @@ void main() {
   group('NotificationSlotsNotifier.updateCurrentLocationRegion', () {
     test('現在地スロットの regionCode が変化した場合に true を返す', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer(
-        [_currentLocationSlot(regionId: 9011)],
-        adapter: adapter,
-      );
+      final container = _createSlotsContainer([
+        _currentLocationSlot(regionId: 9011),
+      ], adapter: adapter);
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
@@ -512,10 +512,9 @@ void main() {
 
     test('現在地スロットの regionCode が同一なら false を返す', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer(
-        [_currentLocationSlot(regionId: 9011)],
-        adapter: adapter,
-      );
+      final container = _createSlotsContainer([
+        _currentLocationSlot(regionId: 9011),
+      ], adapter: adapter);
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
@@ -531,10 +530,9 @@ void main() {
     test('現在地スロットがない場合は false を返す', () async {
       // 地域スロットのみ存在し、現在地スロットは無い。
       final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer(
-        [_regionSlot(regionId: 9999)],
-        adapter: adapter,
-      );
+      final container = _createSlotsContainer([
+        _regionSlot(regionId: 9999),
+      ], adapter: adapter);
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);

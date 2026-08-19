@@ -69,7 +69,8 @@ void main() {
     runner = WorkflowRunner(persistence: persistence);
   });
 
-  Future<void> run(FakeDeviceRepository repo) => runV3MigrationWorkflow(
+  const workflow = DeviceMigrationWorkflow();
+  Future<void> run(FakeDeviceRepository repo) => workflow.run(
     runner: runner,
     repository: repo,
     deviceId: _deviceId,
@@ -91,7 +92,7 @@ void main() {
       expect(repo.getCalls, 1);
       expect(repo.putCalls, 1);
       expect(repo.migrateCalls, 1);
-      expect(await isV3MigrationComplete(persistence), isTrue);
+      expect(await workflow.isComplete(persistence), isTrue);
     });
 
     test('2回目の実行でAPIが一切呼ばれない (全ステップキャッシュ済み)', () async {
@@ -144,7 +145,7 @@ void main() {
     expect(repo.getCalls, 1);
     expect(repo.putCalls, 1);
     expect(repo.migrateCalls, 1);
-    expect(await isV3MigrationComplete(persistence), isTrue);
+    expect(await workflow.isComplete(persistence), isTrue);
   });
 
   test('GETがunauthenticatedのとき未登録扱いで PUT と migrate を呼ぶ', () async {
@@ -159,7 +160,7 @@ void main() {
     expect(repo.getCalls, 1);
     expect(repo.putCalls, 1);
     expect(repo.migrateCalls, 1);
-    expect(await isV3MigrationComplete(persistence), isTrue);
+    expect(await workflow.isComplete(persistence), isTrue);
   });
 
   // ── resume: registerDevice failure ─────────────────────────────────────
@@ -190,7 +191,7 @@ void main() {
     expect(repo.getCalls, 1, reason: 'GET は2回目でキャッシュ済みなので再実行されない');
     expect(repo.putCalls, 2, reason: 'PUT は2回目で再試行される');
     expect(repo.migrateCalls, 1, reason: 'migrate は2回目で呼ばれる');
-    expect(await isV3MigrationComplete(persistence), isTrue);
+    expect(await workflow.isComplete(persistence), isTrue);
   });
 
   // ── resume: migrateLegacySettings failure ──────────────────────────────
@@ -223,7 +224,7 @@ void main() {
       expect(repo.getCalls, 1, reason: 'ensureDeviceAbsent はキャッシュ済み');
       expect(repo.putCalls, 1, reason: 'registerDevice はキャッシュ済み');
       expect(repo.migrateCalls, 2, reason: 'migrate は再試行される');
-      expect(await isV3MigrationComplete(persistence), isTrue);
+      expect(await workflow.isComplete(persistence), isTrue);
     },
   );
 
@@ -237,14 +238,14 @@ void main() {
     );
 
     await expectLater(run(repo), throwsA(isA<Exception>()));
-    expect(await isV3MigrationComplete(persistence), isFalse);
+    expect(await workflow.isComplete(persistence), isFalse);
   });
 }
 
 // ── fake ───────────────────────────────────────────────────────────────────
 
 class FakeDeviceRepository extends DeviceRepository {
-  FakeDeviceRepository({
+  new({
     required Result<RegisteredDevice, Exception> Function() getResult,
     required Result<RegisteredDevice, Exception> Function() putResult,
     required Result<void, Exception> Function() migrateResult,
@@ -295,7 +296,7 @@ class FakeDeviceRepository extends DeviceRepository {
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
-  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+  new() : super(_MemorySecurePreferencesDataSource());
 
   String? savedToken;
 

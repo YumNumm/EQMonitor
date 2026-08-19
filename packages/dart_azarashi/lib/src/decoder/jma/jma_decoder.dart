@@ -23,7 +23,7 @@ import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 ///
 /// Decodes JMA disaster prevention information messages.
 class JmaDecoder {
-  const JmaDecoder._();
+  const new _();
 
   /// Decodes a JMA DCR message.
   static QzssDcReport decode({
@@ -186,7 +186,7 @@ class JmaDecoder {
 
 /// Common parameters for JMA decoders.
 class JmaCommonParams {
-  const JmaCommonParams({
+  const new({
     required this.sentence,
     required this.message,
     required this.nmea,

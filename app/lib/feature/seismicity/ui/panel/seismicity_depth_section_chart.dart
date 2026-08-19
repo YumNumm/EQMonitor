@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_depth_projection.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// 深さ断面図(緯度方向 / 経度方向の投影切替)。
@@ -11,7 +11,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// 深さを負の値としてプロットし、`maxY` を 0 に固定する。`minY` は
 /// fl_chart のオートスケールに委ねる(明示的には設定しない)。
 class SeismicityDepthSectionChart extends HookWidget {
-  const SeismicityDepthSectionChart({required this.events, super.key});
+  const new({required this.events, super.key});
 
   final List<SeismicityEvent> events;
 

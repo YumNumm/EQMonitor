@@ -482,7 +482,7 @@ void main() {
 }
 
 final class _StubRealtimeEvents extends RealtimeEvents {
-  _StubRealtimeEvents(this.stream);
+  new(this.stream);
 
   final Stream<RealtimeEvent> stream;
 
@@ -511,7 +511,7 @@ EarthquakePartialNormal _partial({
 ).toEarthquakePartial(parameter: _earthquakeParameter);
 
 final class _CompletingListRepository extends EarthquakeHistoryRepository {
-  _CompletingListRepository(this.results)
+  new(this.results)
     : super(
         earthquake: api.ApiClient(Dio()).earthquake,
         earthquakeParameter: _earthquakeParameter,

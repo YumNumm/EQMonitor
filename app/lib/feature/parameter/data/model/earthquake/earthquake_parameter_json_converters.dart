@@ -7,20 +7,21 @@ import 'package:json_annotation/json_annotation.dart';
 class EarthquakeParameterPrefectureItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterPrefectureItem, Map<String, dynamic>> {
-  const EarthquakeParameterPrefectureItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterPrefectureItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStationPrefecture.fromJson(
-        json,
-      ).toEarthquakeParameterPrefectureItem(
-        arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
-      );
+      api.EarthquakeStationPrefecture.fromJson(json)
+          .toEarthquakeParameterPrefectureItem(
+            arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
+          );
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterPrefectureItem object) => {
     'code': object.code,
-    'name': _localizedNameToJson(object.name),
+    'name': EarthquakeParameterJsonFieldConverter.localizedNameToJson(
+      object.name,
+    ),
     'regions': object.regions
         .map(const EarthquakeParameterRegionItemJsonConverter().toJson)
         .toList(),
@@ -30,20 +31,21 @@ class EarthquakeParameterPrefectureItemJsonConverter
 class EarthquakeParameterRegionItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterRegionItem, Map<String, dynamic>> {
-  const EarthquakeParameterRegionItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterRegionItem fromJson(Map<String, dynamic> json) =>
-      api.EarthquakeStationRegion.fromJson(
-        json,
-      ).toEarthquakeParameterRegionItem(
-        arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
-      );
+      api.EarthquakeStationRegion.fromJson(json)
+          .toEarthquakeParameterRegionItem(
+            arv400Index: EarthquakeStationArv400Index.fromSubtree(json),
+          );
 
   @override
   Map<String, dynamic> toJson(EarthquakeParameterRegionItem object) => {
     'code': object.code,
-    'name': _localizedNameToJson(object.name),
+    'name': EarthquakeParameterJsonFieldConverter.localizedNameToJson(
+      object.name,
+    ),
     'kana': object.kana,
     'cities': object.cities
         .map(const EarthquakeParameterCityItemJsonConverter().toJson)
@@ -54,7 +56,7 @@ class EarthquakeParameterRegionItemJsonConverter
 class EarthquakeParameterCityItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterCityItem, Map<String, dynamic>> {
-  const EarthquakeParameterCityItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterCityItem fromJson(Map<String, dynamic> json) =>
@@ -65,7 +67,9 @@ class EarthquakeParameterCityItemJsonConverter
   @override
   Map<String, dynamic> toJson(EarthquakeParameterCityItem object) => {
     'code': object.code,
-    'name': _localizedNameToJson(object.name),
+    'name': EarthquakeParameterJsonFieldConverter.localizedNameToJson(
+      object.name,
+    ),
     'kana': object.kana,
     'stations': object.stations
         .map(const EarthquakeParameterStationItemJsonConverter().toJson)
@@ -76,7 +80,7 @@ class EarthquakeParameterCityItemJsonConverter
 class EarthquakeParameterStationItemJsonConverter
     implements
         JsonConverter<EarthquakeParameterStationItem, Map<String, dynamic>> {
-  const EarthquakeParameterStationItemJsonConverter();
+  const new();
 
   @override
   EarthquakeParameterStationItem fromJson(Map<String, dynamic> json) =>
@@ -88,9 +92,14 @@ class EarthquakeParameterStationItemJsonConverter
   Map<String, dynamic> toJson(EarthquakeParameterStationItem object) => {
     'code': object.code,
     'no_code': object.noCode,
-    'name': _localizedNameToJson(object.name),
+    'name': EarthquakeParameterJsonFieldConverter.localizedNameToJson(
+      object.name,
+    ),
     'kana': object.kana,
-    'status': _earthquakeStationStatusToJson(object.status),
+    'status':
+        EarthquakeParameterJsonFieldConverter.earthquakeStationStatusToJson(
+          object.status,
+        ),
     'source_status': object.sourceStatus,
     'owner': object.owner,
     'location': {
@@ -101,29 +110,34 @@ class EarthquakeParameterStationItemJsonConverter
   };
 }
 
-Map<String, dynamic> _localizedNameToJson(LocalizedName name) => {
-  'ja': name.ja,
-  if (name.en != null) 'en': name.en,
-  if (name.zhHans != null) 'zh_hans': name.zhHans,
-  if (name.zhHant != null) 'zh_hant': name.zhHant,
-  if (name.ko != null) 'ko': name.ko,
-  if (name.es != null) 'es': name.es,
-  if (name.pt != null) 'pt': name.pt,
-  if (name.id != null) 'id': name.id,
-  if (name.vi != null) 'vi': name.vi,
-  if (name.tl != null) 'tl': name.tl,
-  if (name.th != null) 'th': name.th,
-  if (name.ne != null) 'ne': name.ne,
-  if (name.km != null) 'km': name.km,
-  if (name.my != null) 'my': name.my,
-  if (name.mn != null) 'mn': name.mn,
-};
+/// EarthquakeParameter 系モデルの JSON 変換で共通利用する小さな変換ロジックを集約する。
+class EarthquakeParameterJsonFieldConverter {
+  const new _();
 
-String _earthquakeStationStatusToJson(EarthquakeStationStatus status) =>
-    switch (status) {
-      EarthquakeStationStatus.operating => 'OPERATING',
-      EarthquakeStationStatus.changed => 'CHANGED',
-      EarthquakeStationStatus.valueNew => 'NEW',
-      EarthquakeStationStatus.abolished => 'ABOLISHED',
-      EarthquakeStationStatus.unknown => 'UNKNOWN',
-    };
+  static Map<String, dynamic> localizedNameToJson(LocalizedName name) => {
+    'ja': name.ja,
+    if (name.en != null) 'en': name.en,
+    if (name.zhHans != null) 'zh_hans': name.zhHans,
+    if (name.zhHant != null) 'zh_hant': name.zhHant,
+    if (name.ko != null) 'ko': name.ko,
+    if (name.es != null) 'es': name.es,
+    if (name.pt != null) 'pt': name.pt,
+    if (name.id != null) 'id': name.id,
+    if (name.vi != null) 'vi': name.vi,
+    if (name.tl != null) 'tl': name.tl,
+    if (name.th != null) 'th': name.th,
+    if (name.ne != null) 'ne': name.ne,
+    if (name.km != null) 'km': name.km,
+    if (name.my != null) 'my': name.my,
+    if (name.mn != null) 'mn': name.mn,
+  };
+
+  static String earthquakeStationStatusToJson(EarthquakeStationStatus status) =>
+      switch (status) {
+        EarthquakeStationStatus.operating => 'OPERATING',
+        EarthquakeStationStatus.changed => 'CHANGED',
+        EarthquakeStationStatus.valueNew => 'NEW',
+        EarthquakeStationStatus.abolished => 'ABOLISHED',
+        EarthquakeStationStatus.unknown => 'UNKNOWN',
+      };
+}

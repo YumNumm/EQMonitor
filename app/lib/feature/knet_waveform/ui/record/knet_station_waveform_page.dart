@@ -8,14 +8,14 @@ import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.d
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_station_analysis_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_waveform_parser/knet_waveform_parser.dart';
 
 /// 観測点波形・スペクトル解析ページ
 class KnetStationWaveformPage extends HookConsumerWidget {
-  const KnetStationWaveformPage({required this.result, super.key});
+  const new({required this.result, super.key});
 
   final KnetStationResult result;
 
@@ -27,73 +27,81 @@ class KnetStationWaveformPage extends HookConsumerWidget {
     final intensity = JmaIntensityFromRawKnetInt.fromRawKnetInt(result.rawInt);
     final dirs = result.record.channelDirections;
     final tabCount = dirs.length.clamp(1, 3);
-    final tabController = useTabController(initialLength: tabCount);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(result.stationCode),
-        bottom: navIndex.value == 0
-            ? TabBar(
-                controller: tabController,
-                tabs: List.generate(tabCount, (i) => Tab(text: dirs[i].label)),
-              )
-            : null,
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navIndex.value,
-        onDestinationSelected: (i) => navIndex.value = i,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.show_chart), label: '波形'),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'スペクトル'),
-          NavigationDestination(
-            icon: Icon(Icons.waterfall_chart),
-            label: 'フーリエ',
-          ),
-        ],
-      ),
-      body: [
-        // ── 波形ビュー ──
-        Column(
-          children: [
-            _MetricsHeader(
-              result: result,
-              intensity: intensity,
-              analysis: analysisAsync.asData?.value,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: SegmentedButton<int>(
-                segments: const [
-                  ButtonSegment(value: 0, label: Text('加速度 (gal)')),
-                  ButtonSegment(value: 1, label: Text('速度 (cm/s)')),
-                  ButtonSegment(value: 2, label: Text('変位 (cm)')),
-                ],
-                selected: {waveType.value},
-                onSelectionChanged: (s) => waveType.value = s.first,
-                style: const ButtonStyle(visualDensity: VisualDensity.compact),
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: tabController,
-                children: List.generate(
-                  tabCount,
-                  (ch) => _buildWaveformChart(
-                    context,
-                    ch,
-                    waveType.value,
-                    analysisAsync,
+    // flutter_hooks の useTabController は Flutter 本体の TabController を返し、
+    // material_ui の TabBar / TabBarView と型が合わないため
+    // DefaultTabController で material_ui 側の controller を供給する。
+    return DefaultTabController(
+      length: tabCount,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(result.stationCode),
+          bottom: navIndex.value == 0
+              ? TabBar(
+                  tabs: List.generate(
+                    tabCount,
+                    (i) => Tab(text: dirs[i].label),
                   ),
-                ),
-              ),
+                )
+              : null,
+        ),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: navIndex.value,
+          onDestinationSelected: (i) => navIndex.value = i,
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.show_chart), label: '波形'),
+            NavigationDestination(icon: Icon(Icons.bar_chart), label: 'スペクトル'),
+            NavigationDestination(
+              icon: Icon(Icons.waterfall_chart),
+              label: 'フーリエ',
             ),
           ],
         ),
-        // ── 応答スペクトルビュー ──
-        _SpectrumView(analysis: analysisAsync),
-        // ── フーリエスペクトルビュー ──
-        _FourierView(analysis: analysisAsync),
-      ][navIndex.value],
+        body: [
+          // ── 波形ビュー ──
+          Column(
+            children: [
+              _MetricsHeader(
+                result: result,
+                intensity: intensity,
+                analysis: analysisAsync.asData?.value,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: SegmentedButton<int>(
+                  segments: const [
+                    ButtonSegment(value: 0, label: Text('加速度 (gal)')),
+                    ButtonSegment(value: 1, label: Text('速度 (cm/s)')),
+                    ButtonSegment(value: 2, label: Text('変位 (cm)')),
+                  ],
+                  selected: {waveType.value},
+                  onSelectionChanged: (s) => waveType.value = s.first,
+                  style: const ButtonStyle(
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: List.generate(
+                    tabCount,
+                    (ch) => _buildWaveformChart(
+                      context,
+                      ch,
+                      waveType.value,
+                      analysisAsync,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // ── 応答スペクトルビュー ──
+          _SpectrumView(analysis: analysisAsync),
+          // ── フーリエスペクトルビュー ──
+          _FourierView(analysis: analysisAsync),
+        ][navIndex.value],
+      ),
     );
   }
 
@@ -130,7 +138,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
 // ── ヘッダ（震度・PGA/PGV/PGD/SI） ──────────────────────────────────────
 
 class _MetricsHeader extends StatelessWidget {
-  const _MetricsHeader({
+  const new({
     required this.result,
     required this.intensity,
     required this.analysis,
@@ -172,9 +180,8 @@ class _MetricsHeader extends StatelessWidget {
                     ),
                   Text(
                     '計測震度 ${result.rawInt.toStringAsFixed(1)}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorTheme.onSurfaceVariant,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: colorTheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 4),
                   Wrap(
@@ -184,20 +191,20 @@ class _MetricsHeader extends StatelessWidget {
                         label: 'PGA',
                         value: '${result.maxAccelGal.toStringAsFixed(2)} gal',
                       ),
-                      if (analysis != null) ...[
+                      if (analysis case final analysis?) ...[
                         _MetricChip(
                           label: 'PGV',
                           value:
-                              '${_maxOf(analysis!.pgv).toStringAsFixed(2)} cm/s',
+                              '${_maxOf(analysis.pgv).toStringAsFixed(2)} cm/s',
                         ),
                         _MetricChip(
                           label: 'PGD',
                           value:
-                              '${_maxOf(analysis!.pgd).toStringAsFixed(2)} cm',
+                              '${_maxOf(analysis.pgd).toStringAsFixed(2)} cm',
                         ),
                         _MetricChip(
                           label: 'SI',
-                          value: '${analysis!.siValue.toStringAsFixed(2)} cm/s',
+                          value: '${analysis.siValue.toStringAsFixed(2)} cm/s',
                         ),
                       ] else
                         const _MetricChip(label: 'PGV/PGD/SI', value: '計算中…'),
@@ -217,7 +224,7 @@ class _MetricsHeader extends StatelessWidget {
 }
 
 class _MetricChip extends StatelessWidget {
-  const _MetricChip({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -242,7 +249,7 @@ class _MetricChip extends StatelessWidget {
 // ── 加速度波形チャート（バイアス除去済み） ────────────────────────────────
 
 class _WaveformChart extends StatelessWidget {
-  const _WaveformChart({required this.record, required this.channelIndex});
+  const new({required this.record, required this.channelIndex});
 
   final KnetCsvRecord record;
   final int channelIndex;
@@ -291,7 +298,7 @@ class _WaveformChart extends StatelessWidget {
 // ── 汎用 時系列チャート ───────────────────────────────────────────────────
 
 class _TimeSeriesChart extends StatelessWidget {
-  const _TimeSeriesChart({
+  const new({
     required this.data,
     required this.unit,
     required this.dt,
@@ -420,7 +427,7 @@ class _TimeSeriesChart extends StatelessWidget {
 // ── 応答スペクトルビュー ─────────────────────────────────────────────────
 
 class _SpectrumView extends StatelessWidget {
-  const _SpectrumView({required this.analysis});
+  const new({required this.analysis});
 
   final AsyncValue<KnetStationAnalysis> analysis;
 
@@ -435,7 +442,7 @@ class _SpectrumView extends StatelessWidget {
 }
 
 class _SpectrumChart extends HookWidget {
-  const _SpectrumChart({required this.spectrum});
+  const new({required this.spectrum});
 
   final ResponseSpectrumResult spectrum;
 
@@ -562,7 +569,7 @@ class _SpectrumChart extends HookWidget {
 // ── フーリエスペクトルビュー ──────────────────────────────────────────────
 
 class _FourierView extends StatelessWidget {
-  const _FourierView({required this.analysis});
+  const new({required this.analysis});
 
   final AsyncValue<KnetStationAnalysis> analysis;
 
@@ -577,7 +584,7 @@ class _FourierView extends StatelessWidget {
 }
 
 class _FourierChart extends StatelessWidget {
-  const _FourierChart({required this.spectrum});
+  const new({required this.spectrum});
 
   final FourierSpectrumResult spectrum;
 

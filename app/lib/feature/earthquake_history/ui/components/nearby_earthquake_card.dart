@@ -13,12 +13,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NearbyEarthquakeCard extends HookConsumerWidget {
-  const NearbyEarthquakeCard({required this.earthquake, super.key,});
+  const new({required this.earthquake, super.key,});
 
   final Earthquake earthquake;
 
@@ -125,7 +125,7 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
 }
 
 class _NearbyEarthquakeHeader extends StatelessWidget {
-  const _NearbyEarthquakeHeader({required this.onSettingsPressed});
+  const new({required this.onSettingsPressed});
 
   final VoidCallback onSettingsPressed;
 
@@ -156,7 +156,7 @@ class _NearbyEarthquakeHeader extends StatelessWidget {
 }
 
 class _NearbyEarthquakeParameterSummary extends StatelessWidget {
-  const _NearbyEarthquakeParameterSummary({
+  const new({
     required this.parameter,
     required this.hasDepth,
   });
@@ -181,7 +181,7 @@ class _NearbyEarthquakeParameterSummary extends StatelessWidget {
 }
 
 class _NearbyEarthquakeSortChips extends StatelessWidget {
-  const _NearbyEarthquakeSortChips({
+  const new({
     required this.sortBy,
     required this.sortOrder,
     required this.onChanged,
@@ -233,7 +233,7 @@ class _NearbyEarthquakeSortChips extends StatelessWidget {
 }
 
 class _NearbyEarthquakeLoading extends StatelessWidget {
-  const _NearbyEarthquakeLoading();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +250,7 @@ class _NearbyEarthquakeLoading extends StatelessWidget {
 }
 
 class _NearbyEarthquakeError extends StatelessWidget {
-  const _NearbyEarthquakeError({required this.onRetry});
+  const new({required this.onRetry});
 
   final VoidCallback onRetry;
 
@@ -276,7 +276,7 @@ class _NearbyEarthquakeError extends StatelessWidget {
 }
 
 class _NearbyEarthquakeEmpty extends StatelessWidget {
-  const _NearbyEarthquakeEmpty();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +295,7 @@ class _NearbyEarthquakeEmpty extends StatelessWidget {
 }
 
 class _NearbyEarthquakeList extends StatelessWidget {
-  const _NearbyEarthquakeList({
+  const new({
     required this.items,
     required this.searchParameter,
     required this.onShowAll,

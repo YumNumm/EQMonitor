@@ -11,8 +11,8 @@ Future<JmaRegionResolver> jmaRegionResolver(Ref ref) async {
   final jmaMapData = await ref.watch(jmaMapProvider.future);
   final jmaParameter = await ref.watch(jmaParameterProvider.future);
   return JmaRegionResolver(
-    eewMapData: jmaMapData[JmaMapType.areaForecastLocalEew]!,
-    cityMapData: jmaMapData[JmaMapType.areaInformationCity]!,
+    eewMapData: jmaMapData.areaForecastLocalEew,
+    cityMapData: jmaMapData.areaInformationCity,
     earthquakeParameter: jmaParameter.earthquake,
   );
 }
@@ -29,11 +29,11 @@ typedef EarthquakeRegionResolution = ({
 /// 市区町村（area_information_city）コードを解決するクラス。
 /// geobaseのpoint-in-polygonを使用。
 class JmaRegionResolver {
-  JmaRegionResolver({
+  new({
     required this.eewMapData,
     required this.cityMapData,
     required EarthquakeParameter earthquakeParameter,
-  }) : _cityToRegion = buildCityToRegionLookup(earthquakeParameter);
+  }) : _cityToRegion = CityToRegionLookupBuilder.build(earthquakeParameter);
 
   final JmaMap_JmaMapData eewMapData;
   final JmaMap_JmaMapData cityMapData;
@@ -129,7 +129,7 @@ class JmaRegionResolver {
 
 /// 市区町村コード → 親一次細分化地域コード/名のペア。
 class EarthquakeParentRegion {
-  const EarthquakeParentRegion({required this.code, required this.name});
+  const new({required this.code, required this.name});
 
   final int code;
   final String name;
@@ -137,26 +137,24 @@ class EarthquakeParentRegion {
 
 /// `earthquake_param.regions[].cities[]` を走査し、
 /// 市区町村コード → 親一次細分化地域 のルックアップを構築する。
-///
-/// テスト容易性のため公開する。
-Map<String, EarthquakeParentRegion> buildCityToRegionLookup(
-  EarthquakeParameter param,
-) {
-  final lookup = <String, EarthquakeParentRegion>{};
-  for (final prefecture in param.prefectures) {
-    for (final region in prefecture.regions) {
-      final regionCode = int.tryParse(region.code);
-      if (regionCode == null) {
-        continue;
-      }
-      final parent = EarthquakeParentRegion(
-        code: regionCode,
-        name: region.name.ja,
-      );
-      for (final city in region.cities) {
-        lookup[city.code] = parent;
+class CityToRegionLookupBuilder {
+  static Map<String, EarthquakeParentRegion> build(EarthquakeParameter param) {
+    final lookup = <String, EarthquakeParentRegion>{};
+    for (final prefecture in param.prefectures) {
+      for (final region in prefecture.regions) {
+        final regionCode = int.tryParse(region.code);
+        if (regionCode == null) {
+          continue;
+        }
+        final parent = EarthquakeParentRegion(
+          code: regionCode,
+          name: region.name.ja,
+        );
+        for (final city in region.cities) {
+          lookup[city.code] = parent;
+        }
       }
     }
+    return lookup;
   }
-  return lookup;
 }

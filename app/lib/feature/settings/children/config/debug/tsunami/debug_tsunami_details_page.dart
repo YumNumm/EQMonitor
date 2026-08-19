@@ -3,14 +3,14 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/data/tsunami_history_data_source.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DebugTsunamiDetailsPage extends HookConsumerWidget {
-  const DebugTsunamiDetailsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,7 @@ class DebugTsunamiDetailsPage extends HookConsumerWidget {
 }
 
 class _PagingBody extends StatelessWidget {
-  const _PagingBody({required this.dataSource});
+  const new({required this.dataSource});
 
   final TsunamiHistoryDataSource dataSource;
 
@@ -70,7 +70,7 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _TsunamiListTile extends StatelessWidget {
-  const _TsunamiListTile({required this.item});
+  const new({required this.item});
 
   final api.TsunamiState item;
 
@@ -164,7 +164,7 @@ class _TsunamiListTile extends StatelessWidget {
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
+  const new({required this.date});
 
   final String date;
 
@@ -185,7 +185,7 @@ class _DateHeader extends StatelessWidget {
 }
 
 class _TsunamiListSkeleton extends StatelessWidget {
-  const _TsunamiListSkeleton({this.itemCount = 5, this.scrollable = true});
+  const new({this.itemCount = 5, this.scrollable = true});
 
   final int itemCount;
   final bool scrollable;

@@ -1,13 +1,13 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThemeImportExportSection extends HookConsumerWidget {
-  const ThemeImportExportSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,6 +47,9 @@ class ThemeImportExportSection extends HookConsumerWidget {
         context: context,
         builder: (dialogContext) => HookBuilder(
           builder: (context) {
+            // HookBuilder は独立したフックスコープを作るため、この useState は
+            // 条件分岐下のフック呼び出しには当たらない。
+            // ignore: flutter_hooks_lint_plugin/nested_hooks
             final state = useState<Set<ThemeBrightnessMode>>({...theme.modes});
             return AlertDialog.adaptive(
               title: const Text('適用先を選択'),

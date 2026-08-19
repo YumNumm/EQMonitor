@@ -5,12 +5,12 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LpgmStationDetailSheet extends ConsumerWidget {
-  const LpgmStationDetailSheet({required this.station, super.key});
+  const new({required this.station, super.key});
 
   final StationLpgmIntensityNode station;
 
@@ -58,7 +58,7 @@ class LpgmStationDetailSheet extends ConsumerWidget {
 }
 
 class _Header extends ConsumerWidget {
-  const _Header({required this.station});
+  const new({required this.station});
 
   final StationLpgmIntensityNode station;
 
@@ -106,7 +106,7 @@ class _Header extends ConsumerWidget {
 }
 
 class _PrePeriodsTable extends StatelessWidget {
-  const _PrePeriodsTable({
+  const new({
     required this.prePeriods,
     required this.intensityColors,
   });
@@ -239,7 +239,7 @@ class _PrePeriodsTable extends StatelessWidget {
 }
 
 class _RelatedLinksCard extends StatelessWidget {
-  const _RelatedLinksCard();
+  const new();
 
   static const List<({String title, String url})> _links = [
     (

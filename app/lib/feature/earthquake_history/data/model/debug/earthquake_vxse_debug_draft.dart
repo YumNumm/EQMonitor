@@ -13,7 +13,7 @@ part 'earthquake_vxse_debug_draft.g.dart';
 
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.screamingSnake)
 sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
-  const factory EarthquakeVxseDebugDraft.vxse51({
+  const factory vxse51({
     required String eventId,
     required DateTime reportedAt,
     required TelegramStatus status,
@@ -23,7 +23,7 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse51DebugDraft;
 
-  const factory EarthquakeVxseDebugDraft.vxse52({
+  const factory vxse52({
     required String eventId,
     required DateTime reportedAt,
     required TelegramStatus status,
@@ -33,7 +33,7 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse52DebugDraft;
 
-  const factory EarthquakeVxseDebugDraft.vxse53({
+  const factory vxse53({
     required String eventId,
     required DateTime reportedAt,
     required TelegramStatus status,
@@ -47,7 +47,7 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse53DebugDraft;
 
-  const factory EarthquakeVxseDebugDraft.vxse61({
+  const factory vxse61({
     required String eventId,
     required DateTime reportedAt,
     required TelegramStatus status,
@@ -57,7 +57,7 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse61DebugDraft;
 
-  const factory EarthquakeVxseDebugDraft.vxse62({
+  const factory vxse62({
     required String eventId,
     required DateTime reportedAt,
     required TelegramStatus status,
@@ -74,6 +74,6 @@ sealed class EarthquakeVxseDebugDraft with _$EarthquakeVxseDebugDraft {
     required List<EarthquakeTelegramComment> comments,
   }) = EarthquakeVxse62DebugDraft;
 
-  factory EarthquakeVxseDebugDraft.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$EarthquakeVxseDebugDraftFromJson(json);
 }

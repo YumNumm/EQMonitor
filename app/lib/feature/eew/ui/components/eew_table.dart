@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class EewTable extends StatelessWidget {
-  const EewTable({
+  const new({
     required this.eews,
     this.selectedIndex,
     this.onSelect,
@@ -57,17 +57,20 @@ class EewTable extends StatelessWidget {
             rows: List.generate(eews.length, (index) {
               final eew = eews[index];
               final isSelected = selectedIndex == index;
+              final onSelectCallback = onSelect;
               return DataRow(
                 selected: isSelected,
-                onSelectChanged: onSelect != null
-                    ? (_) => onSelect!(index)
+                onSelectChanged: onSelectCallback != null
+                    ? (_) => onSelectCallback(index)
                     : null,
                 color: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
                     return designSystem.colorTheme.primaryContainer;
                   }
                   return eew.isWarning ?? false
-                      ? designSystem.colorTheme.errorContainer.withValues(alpha: 0.7)
+                      ? designSystem.colorTheme.errorContainer.withValues(
+                          alpha: 0.7,
+                        )
                       : designSystem.colorTheme.surfaceContainer;
                 }),
                 cells: _EewTableColumn.values
@@ -75,7 +78,7 @@ class EewTable extends StatelessWidget {
                       (c) => DataCell(
                         Text(
                           c.value(eew).value,
-                          style: theme.textTheme.bodyMedium!.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontFamily: codeFontFamily,
                             fontFamilyFallback: japaneseFontFamilyFallback,
                             letterSpacing: -0.5,
@@ -112,7 +115,7 @@ enum _EewTableColumn {
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
   accuracy(name: '精度', isNumeric: false);
 
-  const _EewTableColumn({
+  new({
     required this.name,
     required this.isNumeric,
     this.tooltip,
@@ -134,9 +137,11 @@ extension _EewTableColumnEx on _EewTableColumn {
       isNumeric: false,
     ),
     .elapsedTime => _EewTableColumnValue(
-      value: eew.arrivalTime != null
-          ? '+${eew.reportTime.difference(eew.arrivalTime!).inSeconds}秒'
-          : '',
+      value: switch (eew.arrivalTime) {
+        final arrivalTime? =>
+          '+${eew.reportTime.difference(arrivalTime).inSeconds}秒',
+        null => '',
+      },
       isNumeric: false,
     ),
     .epicenterName => _EewTableColumnValue(
@@ -144,35 +149,31 @@ extension _EewTableColumnEx on _EewTableColumn {
       isNumeric: false,
     ),
     .epicenterLatitude => _EewTableColumnValue(
-      value: () {
-        final hypo = eew.hypocenter;
-        if (hypo != null && hypo.latitude != null) {
-          return hypo.latitude!.toString();
-        }
-        return '';
-      }(),
+      value: switch (eew.hypocenter?.latitude) {
+        final latitude? => latitude.toString(),
+        null => '',
+      },
       isNumeric: true,
     ),
     .epicenterLongitude => _EewTableColumnValue(
-      value: () {
-        final hypo = eew.hypocenter;
-        if (hypo != null && hypo.longitude != null) {
-          return hypo.longitude!.toString();
-        }
-        return '';
-      }(),
+      value: switch (eew.hypocenter?.longitude) {
+        final longitude? => longitude.toString(),
+        null => '',
+      },
       isNumeric: true,
     ),
     .magnitude => _EewTableColumnValue(
-      value: !eew.isPlum && eew.hypocenter?.magnitude != null
-          ? 'M${eew.hypocenter!.magnitude}'
-          : '',
+      value: switch (eew.isPlum ? null : eew.hypocenter?.magnitude) {
+        final magnitude? => 'M$magnitude',
+        null => '',
+      },
       isNumeric: true,
     ),
     .epicenterDepth => _EewTableColumnValue(
-      value: !eew.isPlum && eew.hypocenter?.depth != null
-          ? '${eew.hypocenter!.depth}km'
-          : '',
+      value: switch (eew.isPlum ? null : eew.hypocenter?.depth) {
+        final depth? => '${depth}km',
+        null => '',
+      },
       isNumeric: true,
     ),
     .maxIntensity => _EewTableColumnValue(
@@ -200,14 +201,13 @@ extension _EewTableColumnEx on _EewTableColumn {
       }(),
       isNumeric: false,
     ),
-    .accuracy when eew.accuracy != null => _EewTableColumnValue(
-      value: '${eew.accuracy!.depth}',
-      isNumeric: true,
-    ),
-    .accuracy => const _EewTableColumnValue(
-      value: '',
-      isNumeric: false,
-    ),
+    .accuracy => switch (eew.accuracy) {
+      final accuracy? => _EewTableColumnValue(
+        value: '${accuracy.depth}',
+        isNumeric: true,
+      ),
+      null => const _EewTableColumnValue(value: '', isNumeric: false),
+    },
     .type => _EewTableColumnValue(
       value: (eew.isWarning ?? false) ? '緊急地震速報 (警報)' : '緊急地震速報 (予報)',
       isNumeric: false,
@@ -216,7 +216,7 @@ extension _EewTableColumnEx on _EewTableColumn {
 }
 
 class _EewTableColumnValue {
-  const _EewTableColumnValue({required this.value, required this.isNumeric});
+  const new({required this.value, required this.isNumeric});
 
   final String value;
   final bool isNumeric;

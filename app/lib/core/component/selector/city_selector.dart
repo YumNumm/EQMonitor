@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,7 +10,7 @@ typedef CitySelection = ({String code, String name, String prefectureName});
 
 /// 市区町村選択（都道府県→市区町村の2段階選択）
 class CitySelector extends HookConsumerWidget {
-  const CitySelector({
+  const new({
     required this.selectedCode,
     required this.selectedName,
     required this.onChanged,
@@ -43,7 +43,7 @@ class CitySelector extends HookConsumerWidget {
 }
 
 class _CitySelectionBody extends HookWidget {
-  const _CitySelectionBody({
+  const new({
     required this.parameterSet,
     required this.selectedCode,
     required this.selectedPrefectureCode,
@@ -119,7 +119,7 @@ class _CitySelectionBody extends HookWidget {
 }
 
 class _CityDropdown extends StatelessWidget {
-  const _CityDropdown({
+  const new({
     required this.prefectureCode,
     required this.selectedCode,
     required this.regions,

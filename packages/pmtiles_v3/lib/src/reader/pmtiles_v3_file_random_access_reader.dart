@@ -24,12 +24,11 @@ final class PmTilesV3ReaderMutex {
 
 final class PmTilesV3FileRandomAccessReader
     implements PmTilesRandomAccessReader {
-  PmTilesV3FileRandomAccessReader({
-    required RandomAccessFile file,
+  new({
+    required this._file,
     required this.sizeBytes,
-    PmTilesV3RangeValidator rangeValidator = const PmTilesV3RangeValidator(),
-  }) : _file = file,
-       _rangeValidator = rangeValidator;
+    this._rangeValidator = const PmTilesV3RangeValidator(),
+  });
 
   static Future<PmTilesV3FileRandomAccessReader> open({
     required String path,

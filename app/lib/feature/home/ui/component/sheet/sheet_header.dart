@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SheetHeader extends StatelessWidget {
-  const SheetHeader({required this.title, super.key, this.action});
+  const new({required this.title, super.key, this.action});
 
   final String title;
   final Widget? action;

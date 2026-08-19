@@ -2,10 +2,10 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_summary_header.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHypocenterInformationCard extends StatelessWidget {
-  const EarthquakeHypocenterInformationCard({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final Earthquake item;
 

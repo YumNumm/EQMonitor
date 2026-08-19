@@ -11,6 +11,23 @@ import 'package:test/test.dart';
 // の最小構成archiveだけを組み立てれば十分。
 
 void main() {
+  test('retains the exact accepted descriptor', () async {
+    final bytes = _buildFixtureBytes(tileId: 5, tileBytes: [1]);
+    final reader = TrackingRandomAccessReader(bytes: bytes);
+    final descriptor = _fixtureDescriptor(
+      sizeBytes: bytes.length,
+      dataZoom: 2,
+    );
+
+    final archive = await SeismicityPmTilesArchive.open(
+      reader: reader,
+      descriptor: descriptor,
+    );
+
+    expect(identical(archive.descriptor, descriptor), isTrue);
+    await archive.close();
+  });
+
   test('rejects descriptor size and data zoom and closes reader', () async {
     final bytes = _buildFixtureBytes(tileId: 5, tileBytes: [1]);
     final sizeReader = TrackingRandomAccessReader(bytes: bytes);
@@ -331,7 +348,7 @@ List<int> _varint(int value) {
 }
 
 final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
-  TrackingRandomAccessReader({required this.bytes});
+  new({required this.bytes});
 
   final Uint8List bytes;
   var _closeCalls = 0;
@@ -366,7 +383,7 @@ final class TrackingRandomAccessReader implements PmTilesRandomAccessReader {
 }
 
 final class FailingOpenReader implements PmTilesRandomAccessReader {
-  FailingOpenReader({
+  new({
     required this.bytes,
     this.readFailure,
     this.readFailureStack,

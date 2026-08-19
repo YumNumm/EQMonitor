@@ -91,4 +91,4 @@ void main() {
   });
 }
 
-class _FakeBackButtonDispatcher extends BackButtonDispatcher {}
+class _FakeBackButtonDispatcher extends BackButtonDispatcher;

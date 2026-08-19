@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_prec
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -63,7 +63,7 @@ void main() {
 }
 
 final class _StubDetailsNotifier extends EarthquakeHistoryDetailsNotifier {
-  _StubDetailsNotifier(this.earthquake);
+  new(this.earthquake);
 
   final Earthquake earthquake;
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'intensity_colors.dart';
@@ -9,6 +9,7 @@ part of 'intensity_colors.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$IntensityColorsCopyWithImpl<$Res>
 /// Create a copy of IntensityColors
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? unknown = null,Object? zero = null,Object? one = null,Object? two = null,Object? three = null,Object? four = null,Object? fiveLower = null,Object? fiveUpper = null,Object? sixLower = null,Object? sixUpper = null,Object? seven = null,}) {
-  return _then(_self.copyWith(
+  return _then(IntensityColors(
 unknown: null == unknown ? _self.unknown : unknown // ignore: cast_nullable_to_non_nullable
 as IntensityColorEntry,zero: null == zero ? _self.zero : zero // ignore: cast_nullable_to_non_nullable
 as IntensityColorEntry,one: null == one ? _self.one : one // ignore: cast_nullable_to_non_nullable

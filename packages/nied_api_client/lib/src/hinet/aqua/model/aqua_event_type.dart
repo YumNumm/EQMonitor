@@ -10,7 +10,7 @@ enum AquaEventType {
   @JsonValue('M')
   mt('M', 'AQUA-MT');
 
-  const AquaEventType(this.code, this.fullName);
+  new(this.code, this.fullName);
 
   /// 解析タイプコード
   final String code;

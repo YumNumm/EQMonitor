@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class LpgmIntensityFilterChip extends StatelessWidget {
-  const LpgmIntensityFilterChip({
+  const new({
     this.min,
     this.max,
     this.onChanged,
@@ -62,7 +62,7 @@ class LpgmIntensityFilterChip extends StatelessWidget {
 }
 
 class _LpgmIntensityFilterModal extends HookWidget {
-  const _LpgmIntensityFilterModal({this.currentMin, this.currentMax});
+  const new({this.currentMin, this.currentMax});
 
   final JmaLpgmIntensity? currentMin;
   final JmaLpgmIntensity? currentMax;
@@ -155,9 +155,8 @@ class _LpgmIntensityFilterModal extends HookWidget {
                   onPressed: () {
                     final isDefault =
                         min.value == _values.first && max.value == _values.last;
-                    Navigator.of(
-                      context,
-                    ).pop(isDefault ? (null, null) : (min.value, max.value));
+                    Navigator.of(context)
+                        .pop(isDefault ? (null, null) : (min.value, max.value));
                   },
                   child: const Text('完了'),
                 ),

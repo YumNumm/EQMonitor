@@ -10,16 +10,28 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+///
+/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
+/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
 
 @ProviderFor(KyoshinMonitorTimerNotifier)
 final kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
 
+/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+///
+/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
+/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
 final class KyoshinMonitorTimerNotifierProvider
     extends
         $StreamNotifierProvider<
           KyoshinMonitorTimerNotifier,
           KyoshinMonitorTimerState
         > {
+  /// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+  ///
+  /// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
+  /// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
   KyoshinMonitorTimerNotifierProvider._()
     : super(
         from: null,
@@ -40,7 +52,12 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'1c7cf81d8a764d535b833edabdd547f9a907a578';
+    r'b813ee35518589098a9cefbeea7f75176dc9bcd7';
+
+/// `latest.json` を定期的に取得し、サーバ時刻と端末時計のずれを測り続ける。
+///
+/// 単発の測定では往復時間のゆらぎがそのまま残るため、往復時間とずれの
+/// どちらもトリム平均 (直近5件から最小・最大を除いた平均) で扱う。
 
 abstract class _$KyoshinMonitorTimerNotifier
     extends $StreamNotifier<KyoshinMonitorTimerState> {
@@ -68,39 +85,3 @@ abstract class _$KyoshinMonitorTimerNotifier
     return element.handleCreate(ref, build);
   }
 }
-
-@ProviderFor(_kyoshinMonitorDelayAdujustTiming)
-final _kyoshinMonitorDelayAdujustTimingProvider =
-    _KyoshinMonitorDelayAdujustTimingProvider._();
-
-final class _KyoshinMonitorDelayAdujustTimingProvider
-    extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
-    with $FutureModifier<void>, $StreamProvider<void> {
-  _KyoshinMonitorDelayAdujustTimingProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'_kyoshinMonitorDelayAdujustTimingProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() =>
-      _$_kyoshinMonitorDelayAdujustTimingHash();
-
-  @$internal
-  @override
-  $StreamProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
-
-  @override
-  Stream<void> create(Ref ref) {
-    return _kyoshinMonitorDelayAdujustTiming(ref);
-  }
-}
-
-String _$_kyoshinMonitorDelayAdujustTimingHash() =>
-    r'30ebe12b8a5774dcdbd29f62ae0357147f91d08c';

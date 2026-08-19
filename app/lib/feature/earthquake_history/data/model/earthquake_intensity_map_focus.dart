@@ -11,7 +11,7 @@ enum EarthquakeIntensityMapFocusKind {
 
 @freezed
 abstract class EarthquakeIntensityMapFocus with _$EarthquakeIntensityMapFocus {
-  const factory EarthquakeIntensityMapFocus({
+  const factory({
     required EarthquakeIntensityMapFocusKind kind,
     required String code,
   }) = _EarthquakeIntensityMapFocus;

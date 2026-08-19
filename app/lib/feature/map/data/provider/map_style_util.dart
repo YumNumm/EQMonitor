@@ -16,7 +16,7 @@ MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil(
 );
 
 class MapStyleUtil {
-  MapStyleUtil({required BaseMapPmtilesRepository baseMapPmtilesRepository})
+  new({required BaseMapPmtilesRepository baseMapPmtilesRepository})
     : _baseMapPmtilesRepository = baseMapPmtilesRepository;
 
   final BaseMapPmtilesRepository _baseMapPmtilesRepository;

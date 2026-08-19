@@ -1,20 +1,18 @@
 # Android Asset Pack 周辺の未対応項目
 
-`--target android-debug`（`tool/asset_pack/stage_from_release.sh`）でローカルの
+`--target android-debug`（`tool/asset_pack/stage_from_r2.sh`）でローカルの
 `flutter run` から Asset Pack を読めるようにした際に見つかった、今回は対応を
 見送った項目。
 
 ## 1. Asset Pack デバッグ画面が Android で必ずエラーになる
 
-`AssetsUtil.diagnosePack` / `AssetsUtil.checkForUpdates` は iOS Managed
-Background Assets 専用で、Android では `UnsupportedError` を投げる。
-`asset_pack_debug_page.dart` はプラットフォームを問わずこれを呼ぶため、Android
-では `providerDidFail: assetPackDebugInfoProvider` と
-`[AssetPack] unexpected update failure` が必ず発生する。
+`AssetsUtil.diagnosePack` は Apple プラットフォーム専用で、Android では
+`UnsupportedError` を投げる。`asset_pack_debug_page.dart` はプラットフォームを
+問わずこれを呼ぶため、Android では `providerDidFail: assetPackDiagnosticsProvider`
+が必ず発生する。
 
-Android には Background Assets 相当の更新チェック概念が無いため、画面側で
-プラットフォーム分岐し、Android では PAD の `getPackLocation` 結果と
-`filesDir` の展開状況を出す別の診断内容にする必要がある。
+画面側でプラットフォーム分岐し、Android では `filesDir` の展開状況を出す別の
+診断内容にする必要がある。
 
 ## 2. `AssetsUtil.kt` の空文字 assets root ブランチ
 

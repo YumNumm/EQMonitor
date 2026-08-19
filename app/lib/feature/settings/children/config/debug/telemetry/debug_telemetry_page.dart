@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:telemetry_store/telemetry_store.dart';
 
 class DebugTelemetryPage extends HookConsumerWidget {
-  const DebugTelemetryPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +33,9 @@ class DebugTelemetryPage extends HookConsumerWidget {
         unawaited(refresh());
         return null;
       },
+      // 初回のみ取得する意図の const []。ローカル関数を keys に入れると
+      // 毎ビルド再取得になる。
+      // ignore_keys: refresh
       const [],
     );
 
@@ -77,21 +80,20 @@ class DebugTelemetryPage extends HookConsumerWidget {
         children: [
           _SummaryCard(
             totalCount: totalCount.value,
-            unsyncedCount:
-                events.value.where((e) => !e.synced).length,
+            unsyncedCount: events.value.where((e) => !e.synced).length,
           ),
           const Divider(height: 1),
           Expanded(
             child: isLoading.value
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : events.value.isEmpty
-                    ? const Center(child: Text('イベントはまだありません'))
-                    : ListView.separated(
-                        itemCount: events.value.length,
-                        separatorBuilder: (_, _) => const Divider(height: 1),
-                        itemBuilder: (context, index) =>
-                            _EventTile(event: events.value[index]),
-                      ),
+                ? const Center(child: Text('イベントはまだありません'))
+                : ListView.separated(
+                    itemCount: events.value.length,
+                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    itemBuilder: (context, index) =>
+                        _EventTile(event: events.value[index]),
+                  ),
           ),
         ],
       ),
@@ -100,7 +102,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
+  const new({
     required this.totalCount,
     required this.unsyncedCount,
   });
@@ -141,7 +143,7 @@ class _SummaryCard extends StatelessWidget {
 }
 
 class _EventTile extends StatelessWidget {
-  const _EventTile({required this.event});
+  const new({required this.event});
 
   final TelemetryEventRow event;
 
@@ -248,7 +250,10 @@ class _EventTile extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: context.designSystem.colorTheme.surfaceContainerHighest,
+                            color: context
+                                .designSystem
+                                .colorTheme
+                                .surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: SelectableText(
@@ -272,7 +277,7 @@ class _EventTile extends StatelessWidget {
 }
 
 class _DetailRow extends StatelessWidget {
-  const _DetailRow(this.label, this.value);
+  const new(this.label, this.value);
 
   final String label;
   final String value;

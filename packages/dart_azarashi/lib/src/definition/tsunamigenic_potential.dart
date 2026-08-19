@@ -21,7 +21,7 @@ enum JmaTsunamigenicPotential {
   ),
   possibilityOfTsunami(7, 'There is Possibility of a Tsunami');
 
-  const JmaTsunamigenicPotential(this.code, this.descriptionEn);
+  new(this.code, this.descriptionEn);
 
   final int code;
   final String descriptionEn;

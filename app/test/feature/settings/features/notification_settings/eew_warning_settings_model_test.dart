@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -9,39 +10,30 @@ void main() {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationOnly,
         currentLocationInterruptionLevel:
-            api.CurrentLocationInterruptionLevel.active,
+            api.CurrentLocationInterruptionLevel.critical,
         nationwideInterruptionLevel: null,
       );
 
       final settings = response.toEewWarningSettings();
 
       expect(settings.target, EewWarningTarget.currentLocationOnly);
-      expect(
-        settings.currentLocationInterruptionLevel,
-        InterruptionLevel.active,
-      );
       expect(settings.nationwideInterruptionLevel, isNull);
     });
 
-    test('maps current critical and nationwide time-sensitive', () {
+    test('converts current_location_and_nationwide target', () {
       const response = api.EewWarningConfigResponse(
         target: api.Target.currentLocationAndNationwide,
         currentLocationInterruptionLevel:
             api.CurrentLocationInterruptionLevel.critical,
-        nationwideInterruptionLevel:
-            api.NationwideInterruptionLevel.timeSensitive,
+        nationwideInterruptionLevel: api.NationwideInterruptionLevel.active,
       );
 
       final settings = response.toEewWarningSettings();
 
       expect(settings.target, EewWarningTarget.currentLocationAndNationwide);
       expect(
-        settings.currentLocationInterruptionLevel,
-        InterruptionLevel.critical,
-      );
-      expect(
         settings.nationwideInterruptionLevel,
-        InterruptionLevel.timeSensitive,
+        InterruptionLevel.active,
       );
     });
   });
@@ -68,6 +60,38 @@ void main() {
       expect(
         api.Target.currentLocationAndNationwide.toAppTarget,
         EewWarningTarget.currentLocationAndNationwide,
+      );
+    });
+  });
+
+  group('interruptionLevelsFor', () {
+    test('現在地は重大な通知を選べる', () {
+      expect(
+        interruptionLevelsFor(NotificationSlotType.currentLocation),
+        contains(InterruptionLevel.critical),
+      );
+    });
+
+    test('全国は重大な通知を選べない', () {
+      expect(
+        interruptionLevelsFor(NotificationSlotType.nationwide),
+        isNot(contains(InterruptionLevel.critical)),
+      );
+      expect(interruptionLevelsFor(NotificationSlotType.nationwide), [
+        InterruptionLevel.passive,
+        InterruptionLevel.active,
+        InterruptionLevel.timeSensitive,
+      ]);
+    });
+
+    test('既定値はそれぞれの選択肢に含まれる', () {
+      expect(
+        interruptionLevelsFor(NotificationSlotType.currentLocation),
+        contains(currentLocationEewWarningDefaultLevel),
+      );
+      expect(
+        interruptionLevelsFor(NotificationSlotType.nationwide),
+        contains(nationwideEewWarningDefaultLevel),
       );
     });
   });

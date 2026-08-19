@@ -1,12 +1,16 @@
-const _emptyEewAreaFilter = <Object>['==', '1', '2'];
+class EewAreaFilterBuilder {
+  const new();
 
-List<Object> buildEewAreaCodeFilter(List<String> codes) {
-  if (codes.isEmpty) {
-    return _emptyEewAreaFilter;
+  static const _emptyFilter = <Object>['==', '1', '2'];
+
+  List<Object> build(List<String> codes) {
+    if (codes.isEmpty) {
+      return _emptyFilter;
+    }
+    return <Object>[
+      'in',
+      ['get', 'code'],
+      ['literal', codes],
+    ];
   }
-  return <Object>[
-    'in',
-    ['get', 'code'],
-    ['literal', codes],
-  ];
 }

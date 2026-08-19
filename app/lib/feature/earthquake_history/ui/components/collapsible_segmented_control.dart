@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class CollapsibleSegmentedControl<T> extends HookWidget {
-  const CollapsibleSegmentedControl({
+  const new({
     required this.segments,
     required this.selected,
     required this.onSelected,
@@ -118,7 +118,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
 }
 
 class SegmentItem<T> {
-  const SegmentItem({required this.value, required this.label});
+  const new({required this.value, required this.label});
   final T value;
   final String label;
 }

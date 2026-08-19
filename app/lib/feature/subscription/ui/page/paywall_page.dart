@@ -1,13 +1,13 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// EQMonitor Pro へアップグレードするための Paywall 画面。
 class PaywallPage extends ConsumerWidget {
-  const PaywallPage({super.key});
+  const new({super.key});
 
   static const _termsUrl = 'https://eqmonitor.app/terms';
   static const _privacyUrl = 'https://eqmonitor.app/privacy';
@@ -82,7 +82,7 @@ class PaywallPage extends ConsumerWidget {
 }
 
 class _PaywallHero extends StatelessWidget {
-  const _PaywallHero();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class _PaywallHero extends StatelessWidget {
 }
 
 class _Benefit {
-  const _Benefit({
+  const new({
     required this.icon,
     required this.title,
     required this.description,
@@ -131,7 +131,7 @@ class _Benefit {
 }
 
 class _BenefitsSection extends StatelessWidget {
-  const _BenefitsSection();
+  const new();
 
   static const _benefits = <_Benefit>[
     _Benefit(
@@ -176,7 +176,7 @@ class _BenefitsSection extends StatelessWidget {
 }
 
 class _BenefitRow extends StatelessWidget {
-  const _BenefitRow({required this.benefit});
+  const new({required this.benefit});
 
   final _Benefit benefit;
 
@@ -208,7 +208,7 @@ class _BenefitRow extends StatelessWidget {
 }
 
 class _PlanCard extends StatelessWidget {
-  const _PlanCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +270,7 @@ class _PlanCard extends StatelessWidget {
 }
 
 class _LegalLinksRow extends StatelessWidget {
-  const _LegalLinksRow({
+  const new({
     required this.onTerms,
     required this.onPrivacy,
     required this.onTokushoho,
@@ -301,7 +301,7 @@ class _LegalLinksRow extends StatelessWidget {
 }
 
 class _AutoRenewNotice extends StatelessWidget {
-  const _AutoRenewNotice();
+  const new();
 
   @override
   Widget build(BuildContext context) {

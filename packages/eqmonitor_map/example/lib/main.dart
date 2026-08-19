@@ -10,7 +10,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 void main() => runApp(const EqmonitorMapExampleApp());
 
 class EqmonitorMapExampleApp extends HookWidget {
-  const EqmonitorMapExampleApp({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

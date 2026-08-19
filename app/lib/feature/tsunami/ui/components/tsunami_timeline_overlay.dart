@@ -1,18 +1,18 @@
-// ignore_for_file: avoid_eqmonitor_api_in_ui
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_playback_selection_state.dart';
+import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_with_state.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_playback_selection_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegrams_provider.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_legend.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class TsunamiTimelineOverlay extends ConsumerWidget {
-  const TsunamiTimelineOverlay({required this.tsunamiId, super.key});
+  const new({required this.tsunamiId, super.key});
 
   final String tsunamiId;
 
@@ -26,10 +26,10 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
       AsyncData(value: final telegrams) when telegrams.isEmpty =>
         const SizedBox.shrink(),
       AsyncData(value: final telegrams) => _buildOverlay(
-          context,
-          ref,
-          telegrams,
-        ),
+        context,
+        ref,
+        telegrams,
+      ),
     };
   }
 
@@ -42,7 +42,9 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.95),
+            color: designSystem.colorTheme.surfaceContainerHigh.withValues(
+              alpha: 0.95,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: designSystem.colorTheme.outlineVariant),
           ),
@@ -99,7 +101,7 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
 }
 
 class _ExpandedOverlay extends StatelessWidget {
-  const _ExpandedOverlay({
+  const new({
     required this.tsunamiId,
     required this.telegrams,
     required this.selection,
@@ -153,9 +155,8 @@ class _ExpandedOverlay extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      DateFormat('MM/dd HH:mm').format(
-                        currentTelegram.pressedAt.toLocal(),
-                      ),
+                      DateFormat('MM/dd HH:mm')
+                          .format(currentTelegram.publishedAt.toLocal()),
                       style: TextStyle(
                         fontSize: 11,
                         color: designSystem.colorTheme.onSurfaceVariant,
@@ -189,10 +190,7 @@ class _ExpandedOverlay extends StatelessWidget {
                       .toggleExpanded();
                 },
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(
-                  minWidth: 32,
-                  minHeight: 32,
-                ),
+                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
               ),
             ],
           ),
@@ -210,10 +208,7 @@ class _ExpandedOverlay extends StatelessWidget {
                             .stepBackward(maxIndex);
                       },
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(
-                  minWidth: 36,
-                  minHeight: 36,
-                ),
+                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
               ),
               Expanded(
                 child: _TimeProportionalSlider(
@@ -224,9 +219,7 @@ class _ExpandedOverlay extends StatelessWidget {
                     unawaited(HapticFeedback.selectionClick());
                     ref
                         .read(tsunamiPlaybackSelectionProvider.notifier)
-                        .selectIndex(
-                          index >= maxIndex ? null : index,
-                        );
+                        .selectIndex(index >= maxIndex ? null : index);
                   },
                 ),
               ),
@@ -241,10 +234,7 @@ class _ExpandedOverlay extends StatelessWidget {
                             .stepForward(maxIndex);
                       },
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(
-                  minWidth: 36,
-                  minHeight: 36,
-                ),
+                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
               ),
             ],
           ),
@@ -256,7 +246,7 @@ class _ExpandedOverlay extends StatelessWidget {
 }
 
 class _CollapsedOverlay extends StatelessWidget {
-  const _CollapsedOverlay({
+  const new({
     required this.telegrams,
     required this.selection,
     required this.ref,
@@ -272,9 +262,10 @@ class _CollapsedOverlay extends StatelessWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
 
-    final label = selection.selectedIndex != null
-        ? '${selection.selectedIndex! + 1} / ${telegrams.length}'
-        : '最新 (${telegrams.length}件)';
+    final label = switch (selection.selectedIndex) {
+      final selectedIndex? => '${selectedIndex + 1} / ${telegrams.length}',
+      null => '最新 (${telegrams.length}件)',
+    };
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -309,10 +300,7 @@ class _CollapsedOverlay extends StatelessWidget {
                   .toggleExpanded();
             },
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(
-              minWidth: 28,
-              minHeight: 28,
-            ),
+            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
           ),
         ],
       ),
@@ -321,7 +309,7 @@ class _CollapsedOverlay extends StatelessWidget {
 }
 
 class _TimeProportionalSlider extends StatelessWidget {
-  const _TimeProportionalSlider({
+  const new({
     required this.telegrams,
     required this.effectiveIndex,
     required this.isLatest,
@@ -337,14 +325,15 @@ class _TimeProportionalSlider extends StatelessWidget {
     if (telegrams.length <= 1) {
       return 0;
     }
-    final first = telegrams.first.telegram.pressedAt;
-    final last = telegrams.last.telegram.pressedAt;
+    final first = telegrams.first.telegram.publishedAt;
+    final last = telegrams.last.telegram.publishedAt;
     final totalMs = last.difference(first).inMilliseconds;
     if (totalMs == 0) {
       return index / (telegrams.length - 1);
     }
-    final currentMs =
-        telegrams[index].telegram.pressedAt.difference(first).inMilliseconds;
+    final currentMs = telegrams[index].telegram.publishedAt
+        .difference(first)
+        .inMilliseconds;
     return currentMs / totalMs;
   }
 
@@ -352,8 +341,8 @@ class _TimeProportionalSlider extends StatelessWidget {
     if (telegrams.length <= 1) {
       return 0;
     }
-    final first = telegrams.first.telegram.pressedAt;
-    final last = telegrams.last.telegram.pressedAt;
+    final first = telegrams.first.telegram.publishedAt;
+    final last = telegrams.last.telegram.publishedAt;
     final totalMs = last.difference(first).inMilliseconds;
     if (totalMs == 0) {
       return (value * (telegrams.length - 1)).round();
@@ -362,14 +351,11 @@ class _TimeProportionalSlider extends StatelessWidget {
     var closestIndex = 0;
     var closestDiff = double.infinity;
     for (var i = 0; i < telegrams.length; i++) {
-      final diff = (telegrams[i]
-                  .telegram
-                  .pressedAt
-                  .difference(first)
-                  .inMilliseconds -
-              targetMs)
-          .abs()
-          .toDouble();
+      final diff =
+          (telegrams[i].telegram.publishedAt.difference(first).inMilliseconds -
+                  targetMs)
+              .abs()
+              .toDouble();
       if (diff < closestDiff) {
         closestDiff = diff;
         closestIndex = i;
@@ -400,7 +386,7 @@ class _TimeProportionalSlider extends StatelessWidget {
 }
 
 class _TimeMarkers extends StatelessWidget {
-  const _TimeMarkers({required this.telegrams});
+  const new({required this.telegrams});
 
   final List<TsunamiTelegramWithState> telegrams;
 
@@ -413,10 +399,12 @@ class _TimeMarkers extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final firstTime =
-        format.format(telegrams.first.telegram.pressedAt.toLocal());
-    final lastTime =
-        format.format(telegrams.last.telegram.pressedAt.toLocal());
+    final firstTime = format.format(
+      telegrams.first.telegram.publishedAt.toLocal(),
+    );
+    final lastTime = format.format(
+      telegrams.last.telegram.publishedAt.toLocal(),
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36),
