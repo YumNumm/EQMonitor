@@ -39,6 +39,24 @@ app/assets/platform/            # stage_from_r2.sh --target bundled の配置先
 Pack にサブディレクトリが増えたら pubspec も更新する。忘れるとそのファイルは
 同梱されず、manifest 検証で `AssetPackNotReadyException` になる。
 
+## ローカル開発では staging が必須
+
+Pack の実体は `.gitignore` されており、clean checkout 直後の
+`app/assets/platform/` には `.gitkeep` しか無い。この状態でアプリを起動すると
+`listBundledAssetKeys()` が `manifest.json` を見つけられず
+`AssetPackNotReadyException: アプリに同梱された Asset Pack が見つかりません。`
+になる。CD は `deploy-app.yaml` で staging してからビルドするため再現しない。
+
+```bash
+# リポジトリルートで実行
+mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled
+# iOS の AppIntent/Widget 用スリム版も更新するなら --target all
+```
+
+staging すると `.gitkeep` が消えて `git status` に `D` として現れるが、これは
+**コミットしない**。コミットすると clean checkout で `flutter build` が
+`assets/platform/map/` 不在で失敗する。
+
 ## 動作確認
 
 ```bash
