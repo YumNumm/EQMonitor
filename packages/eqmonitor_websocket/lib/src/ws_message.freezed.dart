@@ -24,6 +24,10 @@ WsMessage _$WsMessageFromJson(
           return WsPingMessage.fromJson(
             json
           );
+                case 'pong':
+          return WsPongMessage.fromJson(
+            json
+          );
                 case 'ready':
           return WsReadyMessage.fromJson(
             json
@@ -84,12 +88,13 @@ extension WsMessagePatterns on WsMessage {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WsRealtimeMessage value)?  realtime,TResult Function( WsPingMessage value)?  ping,TResult Function( WsReadyMessage value)?  ready,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WsRealtimeMessage value)?  realtime,TResult Function( WsPingMessage value)?  ping,TResult Function( WsPongMessage value)?  pong,TResult Function( WsReadyMessage value)?  ready,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case WsRealtimeMessage() when realtime != null:
 return realtime(_that);case WsPingMessage() when ping != null:
-return ping(_that);case WsReadyMessage() when ready != null:
+return ping(_that);case WsPongMessage() when pong != null:
+return pong(_that);case WsReadyMessage() when ready != null:
 return ready(_that);case _:
   return orElse();
 
@@ -108,12 +113,13 @@ return ready(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WsRealtimeMessage value)  realtime,required TResult Function( WsPingMessage value)  ping,required TResult Function( WsReadyMessage value)  ready,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WsRealtimeMessage value)  realtime,required TResult Function( WsPingMessage value)  ping,required TResult Function( WsPongMessage value)  pong,required TResult Function( WsReadyMessage value)  ready,}){
 final _that = this;
 switch (_that) {
 case WsRealtimeMessage():
 return realtime(_that);case WsPingMessage():
-return ping(_that);case WsReadyMessage():
+return ping(_that);case WsPongMessage():
+return pong(_that);case WsReadyMessage():
 return ready(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -128,12 +134,13 @@ return ready(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WsRealtimeMessage value)?  realtime,TResult? Function( WsPingMessage value)?  ping,TResult? Function( WsReadyMessage value)?  ready,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WsRealtimeMessage value)?  realtime,TResult? Function( WsPingMessage value)?  ping,TResult? Function( WsPongMessage value)?  pong,TResult? Function( WsReadyMessage value)?  ready,}){
 final _that = this;
 switch (_that) {
 case WsRealtimeMessage() when realtime != null:
 return realtime(_that);case WsPingMessage() when ping != null:
-return ping(_that);case WsReadyMessage() when ready != null:
+return ping(_that);case WsPongMessage() when pong != null:
+return pong(_that);case WsReadyMessage() when ready != null:
 return ready(_that);case _:
   return null;
 
@@ -151,11 +158,12 @@ return ready(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RealtimeEventEnvelope data)?  realtime,TResult Function()?  ping,TResult Function()?  ready,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RealtimeEventEnvelope data)?  realtime,TResult Function()?  ping,TResult Function( String? pingId)?  pong,TResult Function()?  ready,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case WsRealtimeMessage() when realtime != null:
 return realtime(_that.data);case WsPingMessage() when ping != null:
-return ping();case WsReadyMessage() when ready != null:
+return ping();case WsPongMessage() when pong != null:
+return pong(_that.pingId);case WsReadyMessage() when ready != null:
 return ready();case _:
   return orElse();
 
@@ -174,11 +182,12 @@ return ready();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RealtimeEventEnvelope data)  realtime,required TResult Function()  ping,required TResult Function()  ready,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RealtimeEventEnvelope data)  realtime,required TResult Function()  ping,required TResult Function( String? pingId)  pong,required TResult Function()  ready,}) {final _that = this;
 switch (_that) {
 case WsRealtimeMessage():
 return realtime(_that.data);case WsPingMessage():
-return ping();case WsReadyMessage():
+return ping();case WsPongMessage():
+return pong(_that.pingId);case WsReadyMessage():
 return ready();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -193,11 +202,12 @@ return ready();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RealtimeEventEnvelope data)?  realtime,TResult? Function()?  ping,TResult? Function()?  ready,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RealtimeEventEnvelope data)?  realtime,TResult? Function()?  ping,TResult? Function( String? pingId)?  pong,TResult? Function()?  ready,}) {final _that = this;
 switch (_that) {
 case WsRealtimeMessage() when realtime != null:
 return realtime(_that.data);case WsPingMessage() when ping != null:
-return ping();case WsReadyMessage() when ready != null:
+return ping();case WsPongMessage() when pong != null:
+return pong(_that.pingId);case WsReadyMessage() when ready != null:
 return ready();case _:
   return null;
 
@@ -311,6 +321,76 @@ String toString() {
 
 
 
+
+/// @nodoc
+@JsonSerializable(createToJson: false)
+
+class WsPongMessage implements WsMessage {
+  const WsPongMessage({this.pingId,  String? $type}): $type = $type ?? 'pong';
+  factory WsPongMessage.fromJson(Map<String, dynamic> json) => _$WsPongMessageFromJson(json);
+
+ final  String? pingId;
+
+@JsonKey(name: 'type')
+final String $type;
+
+
+/// Create a copy of WsMessage
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WsPongMessageCopyWith<WsPongMessage> get copyWith => _$WsPongMessageCopyWithImpl<WsPongMessage>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsPongMessage&&(identical(other.pingId, pingId) || other.pingId == pingId));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,pingId);
+
+@override
+String toString() {
+  return 'WsMessage.pong(pingId: $pingId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $WsPongMessageCopyWith<$Res> implements $WsMessageCopyWith<$Res> {
+  factory $WsPongMessageCopyWith(WsPongMessage value, $Res Function(WsPongMessage) _then) = _$WsPongMessageCopyWithImpl;
+@useResult
+$Res call({
+ String? pingId
+});
+
+
+
+
+}
+/// @nodoc
+class _$WsPongMessageCopyWithImpl<$Res>
+    implements $WsPongMessageCopyWith<$Res> {
+  _$WsPongMessageCopyWithImpl(this._self, this._then);
+
+  final WsPongMessage _self;
+  final $Res Function(WsPongMessage) _then;
+
+/// Create a copy of WsMessage
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? pingId = freezed,}) {
+  return _then(WsPongMessage(
+pingId: freezed == pingId ? _self.pingId : pingId // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
 
 /// @nodoc
 @JsonSerializable(createToJson: false)

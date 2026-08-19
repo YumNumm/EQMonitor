@@ -1,7 +1,12 @@
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart'
-    show WsMessage, WsPingMessage, WsReadyMessage, WsRealtimeMessage;
+    show
+        WsMessage,
+        WsPingMessage,
+        WsPongMessage,
+        WsReadyMessage,
+        WsRealtimeMessage;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eqmonitor_realtime_event_mapper.g.dart';
@@ -62,7 +67,8 @@ class EqMonitorRealtimeEventMapper {
         ),
       ],
     },
-    WsPingMessage() => const <RealtimeEvent>[],
+    // ping/pong は接続層と RTT 計測の関心事で、業務イベントには変換しない。
+    WsPingMessage() || WsPongMessage() => const <RealtimeEvent>[],
     WsReadyMessage() => [
       const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
     ],
