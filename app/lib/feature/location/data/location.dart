@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
+import 'package:eqmonitor/feature/location/data/logic/current_location_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -43,11 +44,17 @@ Stream<Position> locationStream(Ref ref) async* {
   yield* controller.stream;
 }
 
+/// 現在地の市区町村を判定するため、
+/// [currentLocationCityAccuracyThresholdMeters] より細かい精度を要求する。
+/// `low` は iOS で `kCLLocationAccuracyKilometer`(約1km) となり、
+/// 市区町村の判定には粗すぎる。
+const _locationAccuracy = LocationAccuracy.medium;
+
 @riverpod
 Stream<Position> _locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
     locationSettings: const LocationSettings(
-      accuracy: .low,
+      accuracy: _locationAccuracy,
     ),
   );
 
@@ -58,7 +65,7 @@ Stream<Position> _locationStream(Ref ref) async* {
 
   final currentPosition = await Geolocator.getCurrentPosition(
     locationSettings: const LocationSettings(
-      accuracy: .low,
+      accuracy: _locationAccuracy,
       distanceFilter: 100,
     ),
   );
