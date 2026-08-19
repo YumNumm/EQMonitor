@@ -1,20 +1,7 @@
 import 'dart:async';
 
-/// sealed classに準拠したResultクラスを生成
-sealed class Result<S, E extends Exception> {
-  const new();
-
-  static Future<Result<V, Exception>> capture<V>(
-    FutureOr<V> Function() fn,
-  ) async {
-    try {
-      return Success(await fn.call());
-    } on Exception catch (e, stackTrace) {
-      return Failure(e, stackTrace);
-    }
-  }
-
-  static Future<Result<V, E>> captureSelected<V, E extends Exception>(
+sealed class const Result<S, E extends Exception>() {
+  static Future<Result<V, E>> capture<V, E extends Exception>(
     FutureOr<V> Function() fn,
   ) async {
     try {
@@ -23,23 +10,12 @@ sealed class Result<S, E extends Exception> {
       return Failure(e, stackTrace);
     }
   }
-
-  static Result<V, Exception> success<V>(V value) => Success(value);
-  static Result<V, Exception> failure<V>(Exception exception) =>
-      Failure(exception);
 }
 
-/// Resultクラスに準拠したSuccessクラス
-final class Success<S, E extends Exception> extends Result<S, E> {
-  const new(this.value);
+final class const Success<S, E extends Exception>(final S value)
+    extends Result<S, E>;
 
-  final S value;
-}
-
-/// Resultクラスに準拠したFailureクラス
-final class Failure<S, E extends Exception> extends Result<S, E> {
-  const new(this.exception, [this.stackTrace]);
-
-  final E exception;
-  final StackTrace? stackTrace;
-}
+final class const Failure<S, E extends Exception>(
+  final E exception, [
+  final StackTrace? stackTrace,
+]) extends Result<S, E>;

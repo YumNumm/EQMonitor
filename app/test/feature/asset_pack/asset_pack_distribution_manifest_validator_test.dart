@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_distribution_manifest_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, dynamic> entry(String version) => {
@@ -37,9 +38,11 @@ Map<String, dynamic> manifest() => {
 };
 
 void main() {
-  group('AssetPackDistributionManifest', () {
+  const validator = AssetPackDistributionManifestValidator();
+
+  group('AssetPackDistributionManifestValidator', () {
     test('parses newest-first immutable archive metadata', () {
-      final parsed = AssetPackDistributionManifest.fromJson(manifest());
+      final parsed = validator.parse(manifest());
 
       expect(parsed.revision, 2);
       expect(parsed.latestVersion, '1.2.0');
@@ -73,10 +76,7 @@ void main() {
           {...manifest(), 'revision': 0},
           {...manifest(), 'latest_version': '1.1.0'},
         ]) {
-          expect(
-            () => AssetPackDistributionManifest.fromJson(invalid),
-            throwsFormatException,
-          );
+          expect(() => validator.parse(invalid), throwsFormatException);
         }
       },
     );
@@ -87,7 +87,7 @@ void main() {
         [entry('1.1.0'), entry('1.2.0')],
       ]) {
         expect(
-          () => AssetPackDistributionManifest.fromJson({
+          () => validator.parse({
             ...manifest(),
             'latest_version': packs.first['version'],
             'packs': packs,
@@ -106,33 +106,57 @@ void main() {
       final first = packs.first as Map<String, dynamic>;
       first['archive_path'] = '../pack.zip';
 
-      expect(
-        () => AssetPackDistributionManifest.fromJson(invalid),
-        throwsFormatException,
-      );
+      expect(() => validator.parse(invalid), throwsFormatException);
+    });
+
+    test('rejects a malformed structure as a FormatException', () {
+      for (final invalid in [
+        {...manifest(), 'revision': '2'},
+        {...manifest()}..remove('packs'),
+      ]) {
+        expect(() => validator.parse(invalid), throwsFormatException);
+      }
     });
 
     test('requires Japanese and English non-empty changelog sections', () {
-      final invalid = manifest();
-      final packs = invalid['packs'];
-      if (packs is! List || packs.first is! Map<String, dynamic>) {
-        fail('test manifest packs shape is invalid');
-      }
-      final first = packs.first as Map<String, dynamic>;
-      final localizations = first['localizations'];
-      if (localizations is! Map<String, dynamic>) {
-        fail('test manifest localizations shape is invalid');
-      }
-      localizations.remove('en');
+      final validLocalization = <String, dynamic>{
+        'sections': <Map<String, dynamic>>[
+          {
+            'title': '更新',
+            'items': ['地図を更新しました'],
+          },
+        ],
+      };
+      final invalidLocalizations = <Map<String, dynamic>>[
+        {'ja': validLocalization},
+        {
+          'ja': <String, dynamic>{'sections': <Map<String, dynamic>>[]},
+          'en': validLocalization,
+        },
+        {
+          'ja': validLocalization,
+          'en': <String, dynamic>{
+            'sections': <Map<String, dynamic>>[
+              {'title': '', 'items': <String>[]},
+            ],
+          },
+        },
+      ];
 
-      expect(
-        () => AssetPackDistributionManifest.fromJson(invalid),
-        throwsFormatException,
-      );
+      for (final localizations in invalidLocalizations) {
+        final invalid = manifest();
+        final packs = invalid['packs'];
+        if (packs is! List || packs.first is! Map<String, dynamic>) {
+          fail('test manifest packs shape is invalid');
+        }
+        (packs.first as Map<String, dynamic>)['localizations'] = localizations;
+
+        expect(() => validator.parse(invalid), throwsFormatException);
+      }
     });
 
     test('returns all changelog entries newer than the active version', () {
-      final parsed = AssetPackDistributionManifest.fromJson({
+      final parsed = validator.parse({
         ...manifest(),
         'revision': 3,
         'latest_version': '1.3.0',

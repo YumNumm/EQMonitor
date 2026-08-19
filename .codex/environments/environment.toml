@@ -6,5 +6,5 @@ name = "EQMonitor"
 script = '''
 mise trust
 mise install
-mise exec -- flutter pub get
+mise exec flutter -- flutter pub get
 '''

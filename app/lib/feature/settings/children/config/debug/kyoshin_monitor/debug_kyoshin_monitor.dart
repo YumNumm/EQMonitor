@@ -81,7 +81,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('時刻同期 / オフセット', style: titleTextStyle),
               Text(
@@ -103,6 +103,10 @@ class _Body extends ConsumerWidget {
                       .map((key, value) => MapEntry(key.name, '$value')),
                 }),
                 style: bodyTextStyle,
+              ),
+              FilledButton(
+                child: Text("Invalidate NTP"),
+                onPressed: () async => ref.invalidate(ntpProvider),
               ),
             ],
           ),
