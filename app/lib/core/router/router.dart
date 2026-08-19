@@ -32,6 +32,7 @@ import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_data_type_page.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/page/live_monitor_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
@@ -359,6 +360,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
         TypedGoRoute<KyoshinMonitorAboutObservationNetworkRoute>(
           path: 'observation-network',
         ),
+        TypedGoRoute<KyoshinMonitorDataTypeRoute>(path: 'data-type'),
       ],
     ),
     TypedGoRoute<TermOfServiceRoute>(path: 'term-of-service'),
@@ -609,6 +611,16 @@ class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutObservationNetworkPage();
+  }
+}
+
+class KyoshinMonitorDataTypeRoute extends GoRouteData
+    with $KyoshinMonitorDataTypeRoute, MaterialPageMixin {
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const KyoshinMonitorDataTypePage();
   }
 }
 

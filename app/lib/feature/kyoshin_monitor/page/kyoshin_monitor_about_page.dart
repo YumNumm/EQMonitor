@@ -26,31 +26,6 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                   '日本全国の観測点の揺れの状況を青から赤までの色で表示します。',
                   style: textTheme.bodyMedium,
                 ),
-                _SectionTitle(title: '表示可能なデータ', style: textTheme.titleMedium),
-                const _InfoCard(
-                  items: [
-                    _InfoItem(
-                      title: 'リアルタイム震度',
-                      description: '揺れが収まった後に計算されて発表される「震度」にほぼ一致する特徴があります。',
-                    ),
-                    _InfoItem(
-                      title: '最大加速度(PGA)',
-                      description: '強震計が観測している揺れの加速度の直近1秒間の最大値を示します。',
-                    ),
-                    _InfoItem(
-                      title: '最大速度(PGV)',
-                      description: '揺れの速度の1秒ごとの最大値を示します',
-                    ),
-                    _InfoItem(
-                      title: '最大変位(PGD)',
-                      description: '揺れの変位の1秒ごとの最大値を示します。',
-                    ),
-                    _InfoItem(
-                      title: '速度応答(0.125, 0.25, 0.5, 1, 2, 4Hz)',
-                      description: '各周波数成分についての速度応答波形(減衰5%)の1秒毎の最大値を表示します。',
-                    ),
-                  ],
-                ),
                 _SectionTitle(title: '観測点について', style: textTheme.titleMedium),
                 _InfoCard(
                   items: const [

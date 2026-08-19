@@ -537,6 +537,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           hasOverriddenOnExit: false,
           factory: $KyoshinMonitorAboutObservationNetworkRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'data-type',
+          hasOverriddenOnExit: false,
+          factory: $KyoshinMonitorDataTypeRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -903,6 +908,28 @@ mixin $KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/settings/kyoshin-monitor-about/observation-network',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KyoshinMonitorDataTypeRoute on GoRouteData {
+  static KyoshinMonitorDataTypeRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorDataTypeRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/kyoshin-monitor-about/data-type');
 
   @override
   void go(BuildContext context) => context.go(location);

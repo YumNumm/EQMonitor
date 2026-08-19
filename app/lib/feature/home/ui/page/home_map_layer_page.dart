@@ -8,7 +8,6 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_layer_information_dialog.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -816,7 +815,8 @@ class _KyoshinRealtimeDataTypeTile extends ConsumerWidget {
       subtitle: '観測点が示す値を切り替えます。',
       value: setting.realtimeDataType,
       trailing: IconButton(
-        onPressed: () async => RealtimeDataTypeInfoDialog.show(context),
+        onPressed: () async =>
+            const KyoshinMonitorDataTypeRoute().push<void>(context),
         icon: const Icon(Icons.info_outline_rounded),
       ),
       entries: availableTypes
