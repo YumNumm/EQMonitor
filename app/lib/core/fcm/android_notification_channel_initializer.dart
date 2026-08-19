@@ -11,9 +11,9 @@ abstract interface class AndroidNotificationChannelPlatform {
 }
 
 class AndroidNotificationChannelInitializer {
-  const AndroidNotificationChannelInitializer({required this.platform});
+  const new({required this.platform});
 
-  factory AndroidNotificationChannelInitializer.forCurrentPlatform() {
+  factory forCurrentPlatform() {
     if (kIsWeb) {
       return const AndroidNotificationChannelInitializer(
         platform: NoopAndroidNotificationChannelPlatform(),
@@ -33,7 +33,7 @@ class AndroidNotificationChannelInitializer {
     );
   }
 
-  factory AndroidNotificationChannelInitializer.forPlatform({
+  factory forPlatform({
     required TargetPlatform targetPlatform,
     required AndroidFlutterLocalNotificationsPlugin? androidPlugin,
   }) {
@@ -77,7 +77,7 @@ class AndroidNotificationChannelInitializer {
 
 class AndroidFlutterLocalNotificationsChannelPlatform
     implements AndroidNotificationChannelPlatform {
-  const AndroidFlutterLocalNotificationsChannelPlatform({required this.plugin});
+  const new({required this.plugin});
 
   final AndroidFlutterLocalNotificationsPlugin plugin;
 
@@ -96,7 +96,7 @@ class AndroidFlutterLocalNotificationsChannelPlatform
 
 class NoopAndroidNotificationChannelPlatform
     implements AndroidNotificationChannelPlatform {
-  const NoopAndroidNotificationChannelPlatform();
+  const new();
 
   @override
   Future<void> deleteChannel(String id) async {}

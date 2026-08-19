@@ -1,14 +1,18 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_global_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
@@ -18,9 +22,9 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('Android hides sound and per-intensity settings', (tester) async {
@@ -93,6 +97,7 @@ Future<void> pumpNotificationSettings(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        buildConfigProvider.overrideWithValue(_buildConfig),
         firebaseMessagingProvider.overrideWithValue(
           _FakeFirebaseMessaging(_notificationSettings),
         ),
@@ -113,6 +118,9 @@ Future<void> pumpNotificationSettings(
         ),
         eewGlobalSettingsProvider.overrideWith(
           _FakeEewGlobalSettingsNotifier.new,
+        ),
+        earthquakeGlobalSettingsProvider.overrideWith(
+          _FakeEarthquakeGlobalSettingsNotifier.new,
         ),
         eewWarningConfigProvider.overrideWith(
           _FakeEewWarningConfigNotifier.new,
@@ -154,7 +162,7 @@ Future<void> pumpSlotDetail(
 }
 
 class _FakeStartNotifier extends StartNotifier {
-  _FakeStartNotifier({required this.isPro});
+  new({required this.isPro});
 
   final bool isPro;
 
@@ -209,7 +217,7 @@ class _FakeGeneralNotificationSettingsNotifier
 }
 
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  _FakeNotificationSlotsNotifier({this.slots = const [_slot]});
+  new({this.slots = const [_slot]});
 
   final List<NotificationSlot> slots;
 
@@ -229,6 +237,19 @@ class _FakeEewGlobalSettingsNotifier extends EewGlobalSettingsNotifier {
   );
 }
 
+class _FakeEarthquakeGlobalSettingsNotifier
+    extends EarthquakeGlobalSettingsNotifier {
+  @override
+  Future<EarthquakeGlobalSettings> build() async =>
+      const EarthquakeGlobalSettings(
+        enabled: true,
+        defaultSound: 'default',
+        defaultInterruptionLevel: InterruptionLevel.active,
+        estimatedIntensityEnabled: true,
+        collapseNotification: true,
+      );
+}
+
 class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
   @override
   Future<EewWarningSettings> build() async => const EewWarningSettings(
@@ -239,7 +260,7 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
 }
 
 class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
-  _FakeFirebaseMessaging(this.settings);
+  new(this.settings);
 
   final NotificationSettings settings;
 
@@ -248,7 +269,7 @@ class _FakeFirebaseMessaging extends Fake implements FirebaseMessaging {
 }
 
 class _TestApp extends StatelessWidget {
-  const _TestApp({required this.platform, required this.home});
+  const new({required this.platform, required this.home});
 
   final TargetPlatform platform;
   final Widget home;
@@ -262,6 +283,21 @@ class _TestApp extends StatelessWidget {
     home: home,
   );
 }
+
+const _buildConfig = BuildConfig(
+  restApiUrl: '',
+  appIdSuffix: '',
+  appName: 'EQMonitor',
+  commitInformation: 'test',
+  flavor: Flavor.dev,
+  wsApiUrl: '',
+  googleIosClientId: '',
+  googleAndroidClientId: '',
+  buildTimestamp: '',
+  buildCommitMessage: '',
+  revenueCatApiKeyIos: '',
+  revenueCatApiKeyAndroid: '',
+);
 
 const _subscriptionConstraints = api.PlanConstraints(
   isPro: true,
