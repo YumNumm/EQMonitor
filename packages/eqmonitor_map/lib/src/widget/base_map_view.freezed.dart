@@ -33,10 +33,10 @@ mixin _$MapBaseLayerLimits {
  PmTilesV3Limits get pmTilesLimits;/// [BaseMapTileDecoder.decode]へ渡すMVT decode/mesh構築の上限。
  BaseMapTileDecodeLimits get decodeLimits;/// [BaseMapTileCache]が保持するdecode済みgeometryの件数上限。
 ///
-/// [BaseMapView]がGPU側に持つ`scene.Mesh`のcache([_TileSceneMeshCache])
-/// も同じ値で件数を制限する。2つのcacheは同じ「一度にどれだけのtileを
-/// 覚えておくか」という運用値を指しているため、別々の上限値を持たせる
-/// 理由がない。
+/// [BaseMapView]がGPUへ載せるpacked meshのcache
+/// ([BaseMapPackedMeshCache])も同じ値で件数を制限する。2つのcacheは同じ
+/// 「一度にどれだけのtileを覚えておくか」という運用値を指しているため、
+/// 別々の上限値を持たせる理由がない。
  int get maxCachedTileGeometries;/// [BaseMapTileCache.lookupWithFallback]が祖先を遡る最大段数。
 ///
 /// [BaseMapTileCache]のzoom窓(低zoom側)の深さにも同じ値を渡す
@@ -52,7 +52,14 @@ mixin _$MapBaseLayerLimits {
 /// 張ると、cover が大きく変わった瞬間に多数の isolate を同時 spawn して
 /// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
 /// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
- int get maxInFlightDecodes;
+ int get maxInFlightDecodes;/// GPU resource を手放すまでに待つ frame 数
+/// (`MapGpuResourceLedger` へ渡す)。
+///
+/// CPU frame の終了は GPU 完了を意味しない(設計正本「CPU frame終了は
+/// GPU完了を意味しない」)。可視 tile から外れた geometry の参照を即座に
+/// 落とすと、まだ in-flight の frame が参照している最中に GC 対象へ
+/// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
+ int get maxFramesInFlight;
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -63,16 +70,16 @@ $MapBaseLayerLimitsCopyWith<MapBaseLayerLimits> get copyWith => _$MapBaseLayerLi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes)&&(identical(other.maxFramesInFlight, maxFramesInFlight) || other.maxFramesInFlight == maxFramesInFlight));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes);
+int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes,maxFramesInFlight);
 
 @override
 String toString() {
-  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes)';
+  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes, maxFramesInFlight: $maxFramesInFlight)';
 }
 
 
@@ -83,7 +90,7 @@ abstract mixin class $MapBaseLayerLimitsCopyWith<$Res>  {
   factory $MapBaseLayerLimitsCopyWith(MapBaseLayerLimits value, $Res Function(MapBaseLayerLimits) _then) = _$MapBaseLayerLimitsCopyWithImpl;
 @useResult
 $Res call({
- int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes
+ int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes, int maxFramesInFlight
 });
 
 
@@ -100,7 +107,7 @@ class _$MapBaseLayerLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,Object? maxFramesInFlight = null,}) {
   return _then(MapBaseLayerLimits(
 minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as int,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
@@ -109,6 +116,7 @@ as PmTilesV3Limits,decodeLimits: null == decodeLimits ? _self.decodeLimits : dec
 as BaseMapTileDecodeLimits,maxCachedTileGeometries: null == maxCachedTileGeometries ? _self.maxCachedTileGeometries : maxCachedTileGeometries // ignore: cast_nullable_to_non_nullable
 as int,maxParentFallbackSteps: null == maxParentFallbackSteps ? _self.maxParentFallbackSteps : maxParentFallbackSteps // ignore: cast_nullable_to_non_nullable
 as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
+as int,maxFramesInFlight: null == maxFramesInFlight ? _self.maxFramesInFlight : maxFramesInFlight // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -212,10 +220,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes,  int maxFramesInFlight)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits() when $default != null:
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes,_that.maxFramesInFlight);case _:
   return orElse();
 
 }
@@ -233,10 +241,10 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes,  int maxFramesInFlight)  $default,) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits():
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes,_that.maxFramesInFlight);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -253,10 +261,10 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int minZoom,  int maxZoom,  PmTilesV3Limits pmTilesLimits,  BaseMapTileDecodeLimits decodeLimits,  int maxCachedTileGeometries,  int maxParentFallbackSteps,  int maxInFlightDecodes,  int maxFramesInFlight)?  $default,) {final _that = this;
 switch (_that) {
 case _MapBaseLayerLimits() when $default != null:
-return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes);case _:
+return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimits,_that.maxCachedTileGeometries,_that.maxParentFallbackSteps,_that.maxInFlightDecodes,_that.maxFramesInFlight);case _:
   return null;
 
 }
@@ -268,7 +276,7 @@ return $default(_that.minZoom,_that.maxZoom,_that.pmTilesLimits,_that.decodeLimi
 
 
 class _MapBaseLayerLimits implements MapBaseLayerLimits {
-  const _MapBaseLayerLimits({required this.minZoom, required this.maxZoom, required this.pmTilesLimits, required this.decodeLimits, required this.maxCachedTileGeometries, required this.maxParentFallbackSteps, required this.maxInFlightDecodes});
+  const _MapBaseLayerLimits({required this.minZoom, required this.maxZoom, required this.pmTilesLimits, required this.decodeLimits, required this.maxCachedTileGeometries, required this.maxParentFallbackSteps, required this.maxInFlightDecodes, required this.maxFramesInFlight});
   
 
 /// pan/pinch zoom gestureが許すcamera zoomの下限、および
@@ -293,10 +301,10 @@ class _MapBaseLayerLimits implements MapBaseLayerLimits {
 @override final  BaseMapTileDecodeLimits decodeLimits;
 /// [BaseMapTileCache]が保持するdecode済みgeometryの件数上限。
 ///
-/// [BaseMapView]がGPU側に持つ`scene.Mesh`のcache([_TileSceneMeshCache])
-/// も同じ値で件数を制限する。2つのcacheは同じ「一度にどれだけのtileを
-/// 覚えておくか」という運用値を指しているため、別々の上限値を持たせる
-/// 理由がない。
+/// [BaseMapView]がGPUへ載せるpacked meshのcache
+/// ([BaseMapPackedMeshCache])も同じ値で件数を制限する。2つのcacheは同じ
+/// 「一度にどれだけのtileを覚えておくか」という運用値を指しているため、
+/// 別々の上限値を持たせる理由がない。
 @override final  int maxCachedTileGeometries;
 /// [BaseMapTileCache.lookupWithFallback]が祖先を遡る最大段数。
 ///
@@ -315,6 +323,14 @@ class _MapBaseLayerLimits implements MapBaseLayerLimits {
 /// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
 /// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
 @override final  int maxInFlightDecodes;
+/// GPU resource を手放すまでに待つ frame 数
+/// (`MapGpuResourceLedger` へ渡す)。
+///
+/// CPU frame の終了は GPU 完了を意味しない(設計正本「CPU frame終了は
+/// GPU完了を意味しない」)。可視 tile から外れた geometry の参照を即座に
+/// 落とすと、まだ in-flight の frame が参照している最中に GC 対象へ
+/// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
+@override final  int maxFramesInFlight;
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
@@ -326,16 +342,16 @@ _$MapBaseLayerLimitsCopyWith<_MapBaseLayerLimits> get copyWith => __$MapBaseLaye
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBaseLayerLimits&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.pmTilesLimits, pmTilesLimits) || other.pmTilesLimits == pmTilesLimits)&&(identical(other.decodeLimits, decodeLimits) || other.decodeLimits == decodeLimits)&&(identical(other.maxCachedTileGeometries, maxCachedTileGeometries) || other.maxCachedTileGeometries == maxCachedTileGeometries)&&(identical(other.maxParentFallbackSteps, maxParentFallbackSteps) || other.maxParentFallbackSteps == maxParentFallbackSteps)&&(identical(other.maxInFlightDecodes, maxInFlightDecodes) || other.maxInFlightDecodes == maxInFlightDecodes)&&(identical(other.maxFramesInFlight, maxFramesInFlight) || other.maxFramesInFlight == maxFramesInFlight));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes);
+int get hashCode => Object.hash(runtimeType,minZoom,maxZoom,pmTilesLimits,decodeLimits,maxCachedTileGeometries,maxParentFallbackSteps,maxInFlightDecodes,maxFramesInFlight);
 
 @override
 String toString() {
-  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes)';
+  return 'MapBaseLayerLimits(minZoom: $minZoom, maxZoom: $maxZoom, pmTilesLimits: $pmTilesLimits, decodeLimits: $decodeLimits, maxCachedTileGeometries: $maxCachedTileGeometries, maxParentFallbackSteps: $maxParentFallbackSteps, maxInFlightDecodes: $maxInFlightDecodes, maxFramesInFlight: $maxFramesInFlight)';
 }
 
 
@@ -346,7 +362,7 @@ abstract mixin class _$MapBaseLayerLimitsCopyWith<$Res> implements $MapBaseLayer
   factory _$MapBaseLayerLimitsCopyWith(_MapBaseLayerLimits value, $Res Function(_MapBaseLayerLimits) _then) = __$MapBaseLayerLimitsCopyWithImpl;
 @override @useResult
 $Res call({
- int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes
+ int minZoom, int maxZoom, PmTilesV3Limits pmTilesLimits, BaseMapTileDecodeLimits decodeLimits, int maxCachedTileGeometries, int maxParentFallbackSteps, int maxInFlightDecodes, int maxFramesInFlight
 });
 
 
@@ -363,7 +379,7 @@ class __$MapBaseLayerLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MapBaseLayerLimits
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? minZoom = null,Object? maxZoom = null,Object? pmTilesLimits = null,Object? decodeLimits = null,Object? maxCachedTileGeometries = null,Object? maxParentFallbackSteps = null,Object? maxInFlightDecodes = null,Object? maxFramesInFlight = null,}) {
   return _then(_MapBaseLayerLimits(
 minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as int,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
@@ -372,6 +388,7 @@ as PmTilesV3Limits,decodeLimits: null == decodeLimits ? _self.decodeLimits : dec
 as BaseMapTileDecodeLimits,maxCachedTileGeometries: null == maxCachedTileGeometries ? _self.maxCachedTileGeometries : maxCachedTileGeometries // ignore: cast_nullable_to_non_nullable
 as int,maxParentFallbackSteps: null == maxParentFallbackSteps ? _self.maxParentFallbackSteps : maxParentFallbackSteps // ignore: cast_nullable_to_non_nullable
 as int,maxInFlightDecodes: null == maxInFlightDecodes ? _self.maxInFlightDecodes : maxInFlightDecodes // ignore: cast_nullable_to_non_nullable
+as int,maxFramesInFlight: null == maxFramesInFlight ? _self.maxFramesInFlight : maxFramesInFlight // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

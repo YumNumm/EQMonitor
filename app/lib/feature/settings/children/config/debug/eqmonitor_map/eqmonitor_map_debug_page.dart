@@ -48,6 +48,10 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
     maxCachedTileGeometries: 64,
     maxParentFallbackSteps: 4,
     maxInFlightDecodes: 6,
+    // Impellerが同時に処理し得るframe数(現状のFlutterは3 buffer)より
+    // 余裕を持たせた値。GPU resourceの参照を落とすのは、可視tileから外れて
+    // この frame 数ぶん経ってからになる。
+    maxFramesInFlight: 3,
   );
 
   @override
