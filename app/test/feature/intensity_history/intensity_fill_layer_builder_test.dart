@@ -1,24 +1,18 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
-import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:maplibre/maplibre.dart';
 
 CityMaxIntensityEntry _entry(String cityCode, JmaIntensity intensity) =>
     CityMaxIntensityEntry(cityCode: cityCode, intensity: intensity);
 
-const _selected = IntensityHistoryState(
-  selectedCity: IntensityHistorySelectedCity(
-    code: '0110100',
-    name: '札幌市中央区',
-    prefectureName: '北海道',
-  ),
-);
+final _entries = [
+  _entry('0110100', JmaIntensity.fiveLower),
+  _entry('0410000', JmaIntensity.four),
+];
 
 void main() {
   const builder = IntensityFillLayerBuilder();
@@ -28,63 +22,42 @@ void main() {
     colorModel = AppTheme.eqmonitorDefault().light!.intensity;
   });
 
-  List<MapStyleLayerEntry> layersOf(
-    IntensityHistoryState state, {
-    List<CityMaxIntensityEntry> cityMaxIntensities = const [],
-  }) => builder.build(
-    state: state,
-    cityMaxIntensities: cityMaxIntensities,
-    colorModel: colorModel,
-    isDarkMode: false,
-  );
-
-  List<String> idsOf(
-    IntensityHistoryState state, {
-    List<CityMaxIntensityEntry> cityMaxIntensities = const [],
-  }) => layersOf(
-    state,
-    cityMaxIntensities: cityMaxIntensities,
-  ).map((entry) => entry.layer.id).toList();
-
-  group('build', () {
-    test('下→上 の決定的な順序で返す', () {
-      expect(
-        idsOf(
-          _selected,
-          cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
-        ),
-        [
-          IntensityFillLayerBuilder.cityFillLayerId,
-          IntensityFillLayerBuilder.selectedCityLineLayerId,
-        ],
+  group('buildFill', () {
+    test('市区町村の塗り 1 枚だけを返す', () {
+      final layers = builder.buildFill(
+        cityMaxIntensities: _entries,
+        colorModel: colorModel,
       );
-    });
 
-    test('市区町村が未選択なら輪郭線レイヤーを追加しない', () {
       expect(
-        idsOf(
-          const IntensityHistoryState(),
-          cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
-        ),
+        layers.map((entry) => entry.layer.id),
         [IntensityFillLayerBuilder.cityFillLayerId],
       );
     });
 
-    test('最大震度が未取得なら塗りレイヤーを追加しない', () {
-      expect(idsOf(const IntensityHistoryState()), isEmpty);
+    test('最大震度が空なら何も返さない', () {
+      expect(
+        builder.buildFill(cityMaxIntensities: const [], colorModel: colorModel),
+        isEmpty,
+      );
     });
 
-    test('最大震度が未取得でも選択中の輪郭線だけは描く', () {
-      expect(idsOf(_selected), [
-        IntensityFillLayerBuilder.selectedCityLineLayerId,
-      ]);
+    test('regioncode で照合する match 式を組む', () {
+      final cityFill = builder
+          .buildFill(cityMaxIntensities: _entries, colorModel: colorModel)
+          .single;
+
+      final fillColor = cityFill.layer.paint['fill-color']! as List<Object>;
+      expect(fillColor[0], 'match');
+      expect(fillColor[1], ['get', 'regioncode']);
+      expect(fillColor.sublist(2), contains('0110100'));
+      expect(fillColor.sublist(2), contains('0410000'));
     });
 
-    test('市区町村の塗りはズームに依らず一定の不透明度で塗る', () {
-      final cityFill = layersOf(
-        const IntensityHistoryState(),
-        cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
-      ).single;
+    test('ズームに依らず一定の不透明度で塗る', () {
+      final cityFill = builder
+          .buildFill(cityMaxIntensities: _entries, colorModel: colorModel)
+          .single;
 
       expect(
         cityFill.layer.paint['fill-opacity'],
@@ -92,24 +65,26 @@ void main() {
       );
     });
 
-    test('市区町村の塗りは regioncode で照合する', () {
-      final cityFill = layersOf(
-        const IntensityHistoryState(),
-        cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
-      ).single;
+    test('細分区域の境界線より下に挿入する', () {
+      final cityFill = builder
+          .buildFill(cityMaxIntensities: _entries, colorModel: colorModel)
+          .single;
 
-      final fillColor = cityFill.layer.paint['fill-color']! as List<Object>;
-      expect(fillColor[0], 'match');
-      expect(fillColor[1], ['get', 'regioncode']);
-      expect(fillColor[2], '0110100');
+      expect(cityFill.belowLayerId, BaseLayer.areaForecastLocalELine.name);
+      expect(cityFill.aboveLayerId, isNull);
     });
+  });
 
-    test('選択中の輪郭線は選択市区町村コードで絞り込む', () {
-      final line = layersOf(
-        _selected,
-        cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
-      ).where((entry) => entry.layer is LineStyleLayer).single;
+  group('buildSelectedCityLine', () {
+    test('選択中の市区町村コードで絞り込む輪郭線を返す', () {
+      final line = builder
+          .buildSelectedCityLine(
+            selectedCityCode: '0110100',
+            isDarkMode: false,
+          )
+          .single;
 
+      expect(line.layer.id, IntensityFillLayerBuilder.selectedCityLineLayerId);
       expect(line.layer.filter, [
         '==',
         ['get', 'regioncode'],
@@ -117,22 +92,59 @@ void main() {
       ]);
     });
 
-    test('塗りは細分区域の境界線より下、選択輪郭線はその上に挿入する', () {
-      final layers = layersOf(
-        _selected,
-        cityMaxIntensities: [_entry('0110100', JmaIntensity.fiveLower)],
+    test('未選択なら何も返さない', () {
+      expect(
+        builder.buildSelectedCityLine(
+          selectedCityCode: null,
+          isDarkMode: false,
+        ),
+        isEmpty,
       );
+    });
 
-      for (final entry in layers) {
-        if (entry.layer.id ==
-            IntensityFillLayerBuilder.selectedCityLineLayerId) {
-          expect(entry.aboveLayerId, BaseLayer.areaForecastLocalELine.name);
-          expect(entry.belowLayerId, isNull);
-        } else {
-          expect(entry.belowLayerId, BaseLayer.areaForecastLocalELine.name);
-          expect(entry.aboveLayerId, isNull);
-        }
-      }
+    test('細分区域の境界線より上に挿入する', () {
+      final line = builder
+          .buildSelectedCityLine(
+            selectedCityCode: '0110100',
+            isDarkMode: false,
+          )
+          .single;
+
+      expect(line.aboveLayerId, BaseLayer.areaForecastLocalELine.name);
+      expect(line.belowLayerId, isNull);
+    });
+
+    test('ダークモードでは白い輪郭線にする', () {
+      final dark = builder
+          .buildSelectedCityLine(selectedCityCode: '0110100', isDarkMode: true)
+          .single;
+      final light = builder
+          .buildSelectedCityLine(selectedCityCode: '0110100', isDarkMode: false)
+          .single;
+
+      expect(dark.layer.paint['line-color'], '#FFFFFF');
+      expect(light.layer.paint['line-color'], '#000000');
+    });
+  });
+
+  group('レイヤー ID の管理範囲', () {
+    test('塗りと輪郭線は別々の ID 集合を管理する', () {
+      expect(
+        IntensityFillLayerBuilder.fillLayerIds,
+        [IntensityFillLayerBuilder.cityFillLayerId],
+      );
+      expect(
+        IntensityFillLayerBuilder.selectedCityLineLayerIds,
+        [IntensityFillLayerBuilder.selectedCityLineLayerId],
+      );
+      // 片方の入れ替えが他方を巻き込むと、市区町村をタップするたびに
+      // ~1900 分岐の塗りを作り直して消えたように見える。
+      expect(
+        IntensityFillLayerBuilder.fillLayerIds.toSet().intersection(
+          IntensityFillLayerBuilder.selectedCityLineLayerIds.toSet(),
+        ),
+        isEmpty,
+      );
     });
   });
 }
