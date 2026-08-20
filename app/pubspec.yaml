@@ -21,32 +21,32 @@ dependency_overrides:
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre
   maplibre_android:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre_android
   maplibre_ios:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre_ios
   maplibre_platform_interface:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre_platform_interface
   maplibre_web:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre_web
   maplibre_webview:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: 90a785374302fc950964aba536187345bbba742d
       path: packages/maplibre_webview
 
 dependencies:
