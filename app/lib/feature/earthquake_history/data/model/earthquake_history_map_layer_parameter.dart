@@ -8,8 +8,9 @@ abstract class EarthquakeHistoryMapLayerParameter
     with _$EarthquakeHistoryMapLayerParameter {
   const factory({
     // ズーム閾値
-    // 市区町村ポリゴンがタイルに存在する最小ズーム
-    // (BaseMapTileSpec.cityMinZoom) に合わせる。
+    // 市区町村ポリゴンは全ズームのタイルに存在する
+    // (BaseMapTileSpec.cityMinZoom = 0) ので、これは見やすさの既定値。
+    // 下限は EarthquakeHistoryMapLayerModeResolver が切り上げる。
     @Default(6) double regionToCity,
     @Default(6) double stationMinZoom,
     @Default(9) double stationLabelMinZoom,

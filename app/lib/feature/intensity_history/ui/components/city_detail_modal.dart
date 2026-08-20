@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -9,83 +10,47 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
-enum _AreaDetailType {
-  prefecture(label: '都道府県'),
-  city(label: '市区町村');
-
-  new({required this.label});
-  final String label;
-}
-
-class AreaDetailModalAction {
-  Future<void> showPrefecture(
-    BuildContext context, {
-    required String prefectureCode,
-    required String prefectureName,
-    HighestIntensityEntry? summary,
-  }) => showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    clipBehavior: Clip.antiAlias,
-    builder: (context) => _AreaDetailModal(
-      areaType: _AreaDetailType.prefecture,
-      areaName: prefectureName,
-      parentAreaName: null,
-      parameter: EarthquakeHistoryParameter.prefecture(
-        prefectureCode: prefectureCode,
-        sortBy: EarthquakeSortBy.eventId,
-        sortOrder: SortOrder.desc,
-      ),
-      summary: summary,
-    ),
-  );
-
-  Future<void> showCity(
+class CityDetailModalAction {
+  Future<void> show(
     BuildContext context, {
     required String cityCode,
     required String cityName,
-    required String regionName,
-    HighestIntensityEntry? summary,
+    required String prefectureName,
+    JmaIntensity? maxIntensity,
   }) => showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     clipBehavior: Clip.antiAlias,
-    builder: (context) => _AreaDetailModal(
-      areaType: _AreaDetailType.city,
-      areaName: cityName,
-      parentAreaName: regionName,
+    builder: (context) => _CityDetailModal(
+      cityName: cityName,
+      prefectureName: prefectureName,
+      maxIntensity: maxIntensity,
       parameter: EarthquakeHistoryParameter.city(
         cityCode: cityCode,
         sortBy: EarthquakeSortBy.eventId,
         sortOrder: SortOrder.desc,
       ),
-      summary: summary,
     ),
   );
 }
 
-class _AreaDetailModal extends ConsumerWidget {
+class _CityDetailModal extends ConsumerWidget {
   const new({
-    required this.areaType,
-    required this.areaName,
-    required this.parentAreaName,
+    required this.cityName,
+    required this.prefectureName,
+    required this.maxIntensity,
     required this.parameter,
-    required this.summary,
   });
 
-  final _AreaDetailType areaType;
-  final String areaName;
-  final String? parentAreaName;
+  final String cityName;
+  final String prefectureName;
+  final JmaIntensity? maxIntensity;
   final EarthquakeHistoryParameter parameter;
-  final HighestIntensityEntry? summary;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,10 +69,9 @@ class _AreaDetailModal extends ConsumerWidget {
             SliverToBoxAdapter(child: _DragHandle()),
             SliverToBoxAdapter(
               child: _SummarySection(
-                areaType: areaType,
-                parentAreaName: parentAreaName,
-                areaName: areaName,
-                summary: summary,
+                prefectureName: prefectureName,
+                cityName: cityName,
+                maxIntensity: maxIntensity,
               ),
             ),
             SliverToBoxAdapter(
@@ -276,106 +240,58 @@ class _DragHandle extends StatelessWidget {
 
 class _SummarySection extends StatelessWidget {
   const new({
-    required this.areaType,
-    required this.parentAreaName,
-    required this.areaName,
-    required this.summary,
+    required this.prefectureName,
+    required this.cityName,
+    required this.maxIntensity,
   });
 
-  final _AreaDetailType areaType;
-  final String? parentAreaName;
-  final String areaName;
-  final HighestIntensityEntry? summary;
+  final String prefectureName;
+  final String cityName;
+  final JmaIntensity? maxIntensity;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final entry = summary;
-    final earthquakePartial = entry?.earthquake;
-    final originTime = earthquakePartial?.earthquake.originTime;
-    final hypocenter = earthquakePartial?.earthquake.hypocenter;
-    final magnitude = hypocenter?.magnitude;
-    final hypocenterName = switch (hypocenter?.name) {
-      final String name when name.isNotEmpty => name,
-      _ => '震源不明',
-    };
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (entry != null) ...[
-                JmaIntensityIcon(
-                  intensity: entry.intensity,
-                  type: IntensityIconType.filled,
-                  size: 40,
-                ),
-                const SizedBox(width: 12),
-              ],
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (parentAreaName case final parentAreaName?)
-                      Text(
-                        parentAreaName,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color:
-                              context.designSystem.colorTheme.onSurfaceVariant,
-                        ),
-                      ),
-                    Text(
-                      areaName,
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      areaType.label,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: context.designSystem.colorTheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (entry != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              '最高震度を観測した地震: ${entry.count}件',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: context.designSystem.colorTheme.onSurface,
-              ),
+          if (maxIntensity case final maxIntensity?) ...[
+            JmaIntensityIcon(
+              intensity: maxIntensity,
+              type: IntensityIconType.filled,
+              size: 40,
             ),
-            if (earthquakePartial != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (originTime != null)
-                          Text(
-                            '代表: ${DateFormat('yyyy/MM/dd HH:mm').format(originTime.toLocal())}発生',
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        Text(hypocenterName, style: theme.textTheme.bodySmall),
-                      ],
-                    ),
-                  ),
-                  if (magnitude != null) MagnitudeText(magnitude: magnitude),
-                ],
-              ),
-            ],
+            const SizedBox(width: 12),
           ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  prefectureName,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  cityName,
+                  textAlign: TextAlign.left,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  maxIntensity == null ? '市区町村' : '観測史上最大震度',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: context.designSystem.colorTheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -129,10 +129,6 @@ EarthquakePartial _earthquakePartialForList(
     estimatedIntensityTileUrl: null,
   );
   return switch (parameter) {
-    EarthquakeHistoryParameterPrefecture() => EarthquakePartialPrefecture(
-      prefectureIntensity: JmaIntensity.sixLower,
-      earthquake: earthquake,
-    ),
     EarthquakeHistoryParameterCity() => EarthquakePartialRegion(
       regionIntensity: JmaIntensity.fiveUpper,
       earthquake: earthquake,
@@ -178,11 +174,11 @@ void main() {
           ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -196,39 +192,6 @@ void main() {
     expect(find.text('観測した地震'), findsOneWidget);
     expect(find.text('能登半島沖'), findsOneWidget);
     expect(find.textContaining('TODO'), findsNothing);
-  });
-
-  testWidgets('都道府県モーダルで地震一覧が表示される', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(800, 1200));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.prefecture(
-              prefectureCode: '1700',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
-        ],
-        child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showPrefecture(
-            context,
-            prefectureCode: '1700',
-            prefectureName: '石川県',
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pumpAndSettle();
-
-    expect(find.text('石川県'), findsOneWidget);
-    expect(find.text('観測した地震'), findsOneWidget);
-    expect(find.text('能登半島沖'), findsOneWidget);
   });
 
   testWidgets('地震一覧が空の場合は空表示になる', (tester) async {
@@ -247,11 +210,11 @@ void main() {
           ).overrideWith(_EmptyEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -279,11 +242,11 @@ void main() {
           ).overrideWith(_ErrorEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -311,11 +274,11 @@ void main() {
           ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -344,11 +307,11 @@ void main() {
           ).overrideWith(_PagedEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -381,11 +344,11 @@ void main() {
           ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),

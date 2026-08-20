@@ -1,17 +1,16 @@
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 
-// Task 0 調査結論:
-// `prefecture/highest` API の code は都道府県コード（例: `0100` = 北海道）。
+// 調査結論:
 // 地図レイヤ `areaForecastLocalE` のフィーチャは細分区域コード
-// （EarthquakeParameterRegionItem.code）に対応する。
+// （EarthquakeParameterRegionItem.code）に、`areaInformationCityQuake` の
+// フィーチャは市区町村コード（EarthquakeParameterCityItem.code）に対応する。
 //
 // `earthquake_intensity.dart` の `forecastLocalEIntensityPairs` では、
 // `pref.cities.isEmpty` の場合に `pref.prefecture.prefecture.code`（都道府県コード）を
 // そのまま `areaForecastLocalE` の code として使用している前例がある。
 // しかし全フィーチャが都道府県コードに対応しているとは限らないため、
 // `regionCodesOfPrefecture` は EarthquakeParameter の regions コード（細分区域）を
-// 返す実装とし、Lv1 塗り分け時は都道府県配下の全細分区域コードに同じ震度色を適用する
-// 方針（安全側）を採用する。
+// 返す実装とする（安全側）。
 
 /// 都道府県コード・市区町村コード・細分区域コードの相互変換ロジックを集約する。
 class RegionCodeMapping {

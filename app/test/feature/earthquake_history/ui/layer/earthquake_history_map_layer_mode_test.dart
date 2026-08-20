@@ -150,36 +150,30 @@ void main() {
       );
     });
 
-    test('切り替え点はタイルに市区町村が存在する最小ズームで切り上げる', () {
+    test('切り替え点はタイルに市区町村が存在する最小ズームを下回らない', () {
       // 市区町村ポリゴンが無いズームに切り替え点を置くと、
       // 細分区域も市区町村も塗られない帯ができてしまう。
+      // タイル側の下限が 0 になったので今は設定値がそのまま効く。
       expect(
-        resolver.effectiveRegionToCityZoom(3),
+        resolver.effectiveRegionToCityZoom(BaseMapTileSpec.cityMinZoom - 1),
         BaseMapTileSpec.cityMinZoom,
       );
-      expect(
-        resolver.effectiveRegionToCityZoom(0),
-        BaseMapTileSpec.cityMinZoom,
-      );
+      expect(resolver.effectiveRegionToCityZoom(3), 3);
       expect(resolver.effectiveRegionToCityZoom(9), 9);
     });
 
     test('切り上げられた閾値で region / city の opacity が隙間なく入れ替わる', () {
-      const belowMinZoom = 0.0;
-      final regionOpacity =
-          resolver.regionFillOpacity(
-                mode: EarthquakeHistoryMapLayerMode.auto,
-                regionToCity: belowMinZoom,
-                visibleOpacity: 0.6,
-              )
-              as List<Object>;
-      final cityOpacity =
-          resolver.cityFillOpacity(
-                mode: EarthquakeHistoryMapLayerMode.auto,
-                regionToCity: belowMinZoom,
-                visibleOpacity: 0.6,
-              )
-              as List<Object>;
+      const belowMinZoom = BaseMapTileSpec.cityMinZoom - 1;
+      final regionOpacity = resolver.regionFillOpacity(
+        mode: EarthquakeHistoryMapLayerMode.auto,
+        regionToCity: belowMinZoom,
+        visibleOpacity: 0.6,
+      ) as List<Object>;
+      final cityOpacity = resolver.cityFillOpacity(
+        mode: EarthquakeHistoryMapLayerMode.auto,
+        regionToCity: belowMinZoom,
+        visibleOpacity: 0.6,
+      ) as List<Object>;
 
       expect(regionOpacity[3], BaseMapTileSpec.cityMinZoom);
       expect(cityOpacity[3], BaseMapTileSpec.cityMinZoom);
@@ -190,9 +184,12 @@ void main() {
       expect(cityOpacity[4], 0.6);
     });
 
-    test('既定の regionToCity はタイルの市区町村最小ズームと一致する', () {
+    test('既定の regionToCity はタイルの市区町村最小ズーム以上である', () {
       const parameter = EarthquakeHistoryMapLayerParameter();
-      expect(parameter.regionToCity, BaseMapTileSpec.cityMinZoom);
+      expect(
+        parameter.regionToCity,
+        greaterThanOrEqualTo(BaseMapTileSpec.cityMinZoom),
+      );
     });
 
     test('region モードの regionFillOpacity は固定値を返す', () {
