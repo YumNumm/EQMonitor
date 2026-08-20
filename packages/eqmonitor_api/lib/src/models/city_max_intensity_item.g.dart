@@ -2,39 +2,30 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'highest_intensity_item.dart';
+part of 'city_max_intensity_item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_HighestIntensityItem _$HighestIntensityItemFromJson(
+_CityMaxIntensityItem _$CityMaxIntensityItemFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('_HighestIntensityItem', json, ($checkedConvert) {
-  final val = _HighestIntensityItem(
-    code: $checkedConvert('code', (v) => v as String),
-    name: $checkedConvert('name', (v) => v as String),
-    intensity: $checkedConvert(
-      'intensity',
+) => $checkedCreate('_CityMaxIntensityItem', json, ($checkedConvert) {
+  final val = _CityMaxIntensityItem(
+    cityId: $checkedConvert('city_id', (v) => v as String),
+    maxIntensity: $checkedConvert(
+      'max_intensity',
       (v) => $enumDecode(_$JmaIntensityEnumMap, v),
-    ),
-    count: $checkedConvert('count', (v) => (v as num).toInt()),
-    earthquake: $checkedConvert(
-      'earthquake',
-      (v) => EarthquakePartial.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;
-});
+}, fieldKeyMap: const {'cityId': 'city_id', 'maxIntensity': 'max_intensity'});
 
-Map<String, dynamic> _$HighestIntensityItemToJson(
-  _HighestIntensityItem instance,
+Map<String, dynamic> _$CityMaxIntensityItemToJson(
+  _CityMaxIntensityItem instance,
 ) => <String, dynamic>{
-  'code': instance.code,
-  'name': instance.name,
-  'intensity': instance.intensity,
-  'count': instance.count,
-  'earthquake': instance.earthquake,
+  'city_id': instance.cityId,
+  'max_intensity': instance.maxIntensity,
 };
 
 const _$JmaIntensityEnumMap = {
