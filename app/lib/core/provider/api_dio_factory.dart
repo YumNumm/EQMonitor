@@ -35,7 +35,13 @@ final class ApiDioFactory {
     dio.options
       ..headers.addAll(headers)
       ..connectTimeout = const Duration(seconds: 10)
-      ..sendTimeout = const Duration(seconds: 10);
+      ..sendTimeout = const Duration(seconds: 10)
+      // receiveTimeout が無いと、接続だけ成立してレスポンスが返らない状況
+      // (キャプティブポータル、停止したコネクション) でリクエストが永久に
+      // 完了せず、オンボーディングのデバイス登録がスピナーのまま固まる。
+      // 個別に厳しい上限が必要なエンドポイントは自前の Dio を持っているため、
+      // ここはハング防止のバックストップとして余裕のある値にする。
+      ..receiveTimeout = const Duration(seconds: 30);
     dio.interceptors.addAll(baseInterceptors);
     if (httpCacheStore != null) {
       dio.interceptors.add(HttpCacheInterceptor(httpCacheStore));

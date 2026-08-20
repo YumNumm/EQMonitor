@@ -43,6 +43,10 @@ void main() {
       expect(dio.options.headers['x-eqmonitor-version'], 'test');
       expect(dio.options.connectTimeout, const Duration(seconds: 10));
       expect(dio.options.sendTimeout, const Duration(seconds: 10));
+      // receiveTimeout が無いと、接続だけ成立してレスポンスが返らない状況で
+      // リクエストが永久に完了しない。
+      expect(dio.options.receiveTimeout, isNotNull);
+      expect(dio.options.receiveTimeout, const Duration(seconds: 30));
       expect(dio.options.contentType, 'application/json');
       expect(dio.options.listFormat, ListFormat.multiCompatible);
     }
