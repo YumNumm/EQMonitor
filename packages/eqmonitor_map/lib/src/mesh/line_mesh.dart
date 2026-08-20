@@ -33,9 +33,11 @@ final class LineMesh {
   /// 半分に掛けて`position + extrude * halfWidth`のように中心線から押し出す
   /// 想定であり、miter joinの伸長分もこの1本の値で表現される。
   ///
-  /// GPUへは`BaseMapGeometryFactory.lineGeometry`が`MeshGeometry.fromArrays`
-  /// の`texCoords`引数として渡す(custom attributeの不具合回避。詳細は
-  /// `base_map_geometry_factory.dart`のdoc comment参照)。
+  /// この値はtile-local Y-down座標系のままであり、clip/NDC Y-upへの反転は
+  /// `renderer/base_map_packed_mesh.dart`の`packBaseMapLineMesh`が行う。
+  /// GPUへは`MeshGeometry.fromArrays`の組み込み`texCoords`引数として渡る
+  /// (custom attributeは値がshaderへ届かない不具合を実機で確認したため
+  /// 使わない。`flutter_scene/flutter_scene_base_map_adapter.dart`参照)。
   final Float32List extrudes;
 
   /// 3個1組でtriangleを表すindex buffer。[positions]内の頂点index

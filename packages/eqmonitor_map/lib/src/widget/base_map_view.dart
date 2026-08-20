@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:eqmonitor_map/src/flutter_scene/base_map_geometry_factory.dart';
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
-import 'package:eqmonitor_map/src/geo/tile_matrix.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh_cache.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
+import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
@@ -56,10 +62,10 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
 
     /// [BaseMapTileCache]が保持するdecode済みgeometryの件数上限。
     ///
-    /// [BaseMapView]がGPU側に持つ`scene.Mesh`のcache([_TileSceneMeshCache])
-    /// も同じ値で件数を制限する。2つのcacheは同じ「一度にどれだけのtileを
-    /// 覚えておくか」という運用値を指しているため、別々の上限値を持たせる
-    /// 理由がない。
+    /// [BaseMapView]がGPUへ載せるpacked meshのcache
+    /// ([BaseMapPackedMeshCache])も同じ値で件数を制限する。2つのcacheは同じ
+    /// 「一度にどれだけのtileを覚えておくか」という運用値を指しているため、
+    /// 別々の上限値を持たせる理由がない。
     required int maxCachedTileGeometries,
 
     /// [BaseMapTileCache.lookupWithFallback]が祖先を遡る最大段数。
@@ -80,6 +86,15 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// resource を圧迫する。この値で同時 decode を頭打ちにし、decode 完了ごとに
     /// 次の欠損 tile を中心近傍優先で開始する(backpressure)。
     required int maxInFlightDecodes,
+
+    /// GPU resource を手放すまでに待つ frame 数
+    /// (`MapGpuResourceLedger` へ渡す)。
+    ///
+    /// CPU frame の終了は GPU 完了を意味しない(設計正本「CPU frame終了は
+    /// GPU完了を意味しない」)。可視 tile から外れた geometry の参照を即座に
+    /// 落とすと、まだ in-flight の frame が参照している最中に GC 対象へ
+    /// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
+    required int maxFramesInFlight,
   }) = _MapBaseLayerLimits;
 }
 
@@ -131,6 +146,15 @@ class BaseMapView extends HookWidget {
       unawaited(controller.initialize());
       return null;
     }, [controller]);
+
+    // app lifecycleは`MapFrameSnapshot.lifecycle`へ載せるだけでなく、
+    // backgroundでGPU resourceを手放しforegroundで作り直す契約
+    // (#1593要件4)の駆動にも使う。
+    final lifecycleState = useAppLifecycleState();
+    useEffect(() {
+      controller.handleAppLifecycleState(lifecycleState);
+      return null;
+    }, [controller, lifecycleState]);
 
     final logicalSize = MediaQuery.sizeOf(context);
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
@@ -239,6 +263,8 @@ class _BaseMapDebugHud extends StatelessWidget {
             Text('zoom=${camera.zoom.toStringAsFixed(2)}'),
             Text('visibleTiles=${controller.visibleTileCount}'),
             Text('decoding=${controller.pendingDecodeCount}'),
+            Text('gpuMeshes=${controller.liveGeometryCount}'),
+            Text('uploads=${controller.uploadedGeometryCount}'),
           ],
         ),
       ),
@@ -273,22 +299,51 @@ class _BaseMapController extends ChangeNotifier {
     maxEntries: limits.maxCachedTileGeometries,
     maxParentFallbackSteps: limits.maxParentFallbackSteps,
   );
-  late final _sceneMeshCache = _TileSceneMeshCache(
+  late final _packedMeshCache = BaseMapPackedMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
+  );
+  late final _adapter = FlutterSceneBaseMapAdapter(
+    sceneGraph: sceneGraph,
+    materialFor: (materialKey) => _materialsByStyleLayerId?[materialKey],
+    maxFramesInFlight: limits.maxFramesInFlight,
   );
   late final _scheduler = MapTileScheduler(
     maxInFlightDecodes: limits.maxInFlightDecodes,
   );
   static const _decoder = BaseMapTileDecoder();
-  static const _geometryFactory = BaseMapGeometryFactory();
+
+  /// frameごとの時刻を1回だけ固定するclock(設計正本「rendererに`MapClock`を
+  /// 注入し、render開始時の1回のcaptureで`wallNowUtc`と`monotonicNow`を
+  /// 同時に凍結する」)。
+  ///
+  /// #1593のbase mapはまだ時間依存nodeを持たない(P/S波・pulse・freshnessは
+  /// #1595)が、frame snapshotの契約を最初から満たしておく。
+  final MapClock _clock = SystemMapClock.start(
+    domain: createMapClockDomainId(value: 'base-map-view'),
+  );
 
   // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
   // 変化させるが、Task 10のスコープでは固定値のdebug描画とする。
+  // zoom依存へ広げる場合も、値はCPUで確定してuniformへ渡す
+  // (`base_map_material_parameters.dart`参照。shader内でzoom補間しない)。
   static const _debugLineHalfWidthLogicalPixels = 1.0;
 
   MapCamera _camera;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
+
+  var _frameNumber = 0;
+
+  /// Flutter SceneのGPU contextの世代。
+  ///
+  /// backgroundからforegroundへ戻るたびに1つ進める。Androidはbackground中に
+  /// surfaceを破棄し得るため、復帰を毎回「context lostの可能性がある」と
+  /// 保守的に扱い、GPU resourceを作り直す(`FlutterSceneSpikeController`が
+  /// `appResourceGeneration`で採った方針と同じ)。この値が変わったframeでは
+  /// adapterが前世代のresourceを再利用しない。
+  var _contextGeneration = 0;
+
+  MapAppLifecycle _lifecycle = MapAppLifecycle.active;
 
   /// `styleLayerId`ごとに独立した`scene.PreprocessedMaterial`。
   /// `baseMapLayerSpecs`の`color`をlayerごとに反映するため、fill/line
@@ -309,6 +364,8 @@ class _BaseMapController extends ChangeNotifier {
   bool get isReady => _isReady;
   int get visibleTileCount => _visibleTileCount;
   int get pendingDecodeCount => _pendingDecodes.length;
+  int get liveGeometryCount => _adapter.liveGeometryCount;
+  int get uploadedGeometryCount => _adapter.uploadedGeometryCount;
 
   /// HUD表示専用の読み取り。widgetの`camera`(`scene.NodeCamera`)と名前が
   /// 衝突するため`camera_`にしている。
@@ -318,23 +375,17 @@ class _BaseMapController extends ChangeNotifier {
       .firstWhere((spec) => spec.kind == BaseMapLayerKind.background)
       .color;
 
-  /// [_viewport]がまだ設定されていない場合に[initialize]がmaterial生成時
-  /// だけ使う暫定値。`_refresh`は`viewport == null`の間nodeを一切追加しない
-  /// (`_refresh`の早期returnを参照)ため、この値で計算された
-  /// `half_width_ndc`が実際に画面へ出ることはなく、最初の`updateViewport`
-  /// 呼び出しで(`initialize`完了時の再適用、または以後の`updateViewport`
-  /// 自体が持つ再適用ロジックにより)即座に正しい値へ上書きされる。
-  static final _placeholderViewportBeforeFirstUpdate = MapViewport(
-    logicalSize: const Size(1, 1),
-    devicePixelRatio: 1,
-  );
-
   Future<void> initialize() async {
     try {
       await scene.Scene.initializeStaticResources();
+      // materialは`styleLayerId`ごとに1つ読み込むだけで、色や半線幅は
+      // 焼き込まない。uniformはframeごとにsubmissionの
+      // `materialParameters`(CPU確定のbyte列)から
+      // `FlutterSceneBaseMapAdapter`が適用する。これにより、viewport変更時に
+      // controllerがmaterialへ直接触る経路(旧
+      // `_applyLineHalfWidthToAllMaterials`)と、material読み込み中に
+      // viewportが未確定な場合の暫定値が両方とも不要になった。
       final materialsByStyleLayerId = <String, scene.PreprocessedMaterial>{};
-      final viewportForInitialLoad =
-          _viewport ?? _placeholderViewportBeforeFirstUpdate;
       for (final spec in baseMapLayerSpecs) {
         switch (spec.kind) {
           case BaseMapLayerKind.background:
@@ -342,16 +393,10 @@ class _BaseMapController extends ChangeNotifier {
             continue;
           case BaseMapLayerKind.fill:
             materialsByStyleLayerId[spec.styleLayerId] =
-                await BaseMapMaterialLibrary.loadFillMaterial(
-                  color: spec.color,
-                );
+                await BaseMapMaterialLibrary.loadFillMaterial();
           case BaseMapLayerKind.line:
             materialsByStyleLayerId[spec.styleLayerId] =
-                await BaseMapMaterialLibrary.loadLineMaterial(
-                  color: spec.color,
-                  halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
-                  viewport: viewportForInitialLoad,
-                );
+                await BaseMapMaterialLibrary.loadLineMaterial();
         }
       }
       final repository = await BaseMapTileRepository.open(
@@ -365,14 +410,6 @@ class _BaseMapController extends ChangeNotifier {
       _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
       _isReady = true;
-      // `_viewport`がここまでの間(loadLineMaterialの非同期処理中)に
-      // 判明していれば、暫定値で焼き込んだ`half_width_ndc`を正しい値へ
-      // 上書きする。`_refresh`はこの後に呼ぶため、上書き前にnodeが
-      // 構築されることはない。
-      final viewport = _viewport;
-      if (viewport != null) {
-        _applyLineHalfWidthToAllMaterials(viewport);
-      }
       _refresh();
       // 初期化失敗の原因はGPU初期化・material読み込み・archive openなど
       // 多岐にわたり、握り潰さずそのまま`_initError`へ入れてUIへ出すために
@@ -392,37 +429,40 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _viewport = viewport;
-    // NDC単位の半線幅はviewportのlogical sizeに依存するため、resizeや
-    // 画面回転でviewportが変わる度に再計算して既存materialへ反映する
-    // (`base_map_material_library.dart`の`halfLineWidthNdcFor`doc comment
-    // 参照)。
-    _applyLineHalfWidthToAllMaterials(viewport);
+    // NDC単位の半線幅はviewportのlogical sizeに依存するが、resizeや画面回転で
+    // materialへ直接触る必要はない。次のsubmissionが新しいviewportから
+    // uniform byteを組み直し、adapterがそれを適用する
+    // (`base_map_material_parameters.dart`の`baseMapLineHalfWidthNdc`参照)。
     _refresh();
     notifyListeners();
   }
 
-  /// 全line layerのmaterialへ、[viewport]から求め直した`half_width_ndc`を
-  /// 再適用する。materialがまだ`initialize`で構築されていなければ何もしない
-  /// (`initialize`側がその後で改めて呼ぶ)。
-  void _applyLineHalfWidthToAllMaterials(MapViewport viewport) {
-    final materialsByStyleLayerId = _materialsByStyleLayerId;
-    if (materialsByStyleLayerId == null) {
+  /// app lifecycleの変化をGPU resourceの寿命へ反映する。
+  ///
+  /// - background/detachedでは描画も新規uploadも止め、GPU resourceを手放す。
+  ///   保持し続けるのはCPU側のpacked mesh([BaseMapPackedMeshCache])なので、
+  ///   復帰時にPMTilesの再readやMVTの再decodeは要らない(#1593要件4)。
+  /// - foreground復帰では[_contextGeneration]を進め、adapterに前世代の
+  ///   resourceを再利用させない。
+  void handleAppLifecycleState(AppLifecycleState? state) {
+    final previous = _lifecycle;
+    final lifecycle = mapAppLifecycleFor(state);
+    if (lifecycle == previous) {
       return;
     }
-    for (final spec in baseMapLayerSpecs) {
-      if (spec.kind != BaseMapLayerKind.line) {
-        continue;
-      }
-      final material = materialsByStyleLayerId[spec.styleLayerId];
-      if (material == null) {
-        continue;
-      }
-      BaseMapMaterialLibrary.setLineHalfWidth(
-        material: material,
-        halfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
-        viewport: viewport,
-      );
+    _lifecycle = lifecycle;
+
+    if (retiresGpuResourcesOnTransition(from: previous, to: lifecycle)) {
+      _adapter.retireAllGpuResources();
     }
+    if (advancesGpuContextGenerationOnTransition(
+      from: previous,
+      to: lifecycle,
+    )) {
+      _contextGeneration++;
+      _refresh();
+    }
+    notifyListeners();
   }
 
   void beginGesture() {
@@ -461,6 +501,12 @@ class _BaseMapController extends ChangeNotifier {
     if (!_isReady || viewport == null) {
       return;
     }
+    // background/detachedではGPU resourceを手放し済みなので、submitして
+    // 作り直さない。cover計算とdecodeもここで止める(設計正本
+    // 「detach/backgroundではanimation、request、decode、uploadを停止し」)。
+    if (suspendsMapRendering(_lifecycle)) {
+      return;
+    }
     final cover = TileCoverCalculator.cover(
       camera: _camera,
       viewport: viewport,
@@ -475,16 +521,20 @@ class _BaseMapController extends ChangeNotifier {
         maxZoom: limits.maxZoom,
       ),
     );
-    _rebuildSceneNodes(cover: cover, viewport: viewport);
+    _submitFrame(cover: cover, viewport: viewport);
     _requestMissingDecodes(cover);
   }
 
-  void _rebuildSceneNodes({
+  /// 現frameのplanを`MapRenderSubmission`へ変換し、adapterへ渡す。
+  ///
+  /// このcontrollerはもうScene nodeを自分で組まない。描画順・batch結合・GPU
+  /// resourceの寿命はすべてfoundationのrender契約とadapterが持つ
+  /// (#1593完了条件「BaseMapがfoundation契約経由で描画」)。
+  void _submitFrame({
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
   }) {
-    final materialsByStyleLayerId = _materialsByStyleLayerId;
-    if (materialsByStyleLayerId == null) {
+    if (_materialsByStyleLayerId == null) {
       return;
     }
     final plans = buildBaseMapRenderPlans(
@@ -494,53 +544,41 @@ class _BaseMapController extends ChangeNotifier {
       maxParentSteps: limits.maxParentFallbackSteps,
       zoom: _camera.zoom,
     );
-    final transformCache = <(UnwrappedTileId, int), scene_math.Matrix4>{};
-    scene_math.Matrix4 transformFor(BaseMapTileTransformInput input) =>
-        transformCache.putIfAbsent(
-          (input.tileId, input.extent),
-          () => scene_math.Matrix4.fromList(
-            baseMapTileViewProjectionMatrixFor(
-              camera: _camera,
-              viewport: viewport,
-              tileId: input.tileId,
-              zoom: input.zoom,
-              extent: input.extent,
-            ).storage,
-          ),
-        );
-    final nodes = <scene.Node>[
-      for (final plan in plans)
-        ..._nodesFor(
-          plan: plan,
-          materialsByStyleLayerId: materialsByStyleLayerId,
-          transform: transformFor(plan.transformInput),
-        ),
-    ];
-    sceneGraph
-      ..removeAll()
-      ..addAll(nodes);
-  }
-
-  Iterable<scene.Node> _nodesFor({
-    required BaseMapLayerRenderPlan plan,
-    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
-    required scene_math.Matrix4 transform,
-  }) {
-    final meshesByLayer = _sceneMeshCache.getOrBuild(
-      sourceInstanceId: source.cacheIdentity,
-      tileId: plan.transformInput.tileId.canonical,
-      geometry: plan.tileGeometry,
-      geometryFactory: _geometryFactory,
-      materialsByStyleLayerId: materialsByStyleLayerId,
+    final sourceInstanceId = createMapSourceInstanceId(
+      value: source.cacheIdentity,
     );
-    final meshes = meshesByLayer[plan.layerGeometry.styleLayerId];
-    if (meshes == null || meshes.isEmpty) {
-      return const [];
-    }
-    return [
-      for (final mesh in meshes)
-        scene.Node(localTransform: transform, mesh: mesh),
-    ];
+    final frame = captureMapFrameSnapshot(
+      clock: _clock,
+      frameNumber: _frameNumber++,
+      camera: _camera,
+      viewport: viewport,
+      revisions: [
+        // 同梱PMTilesは差し替わらないarchiveなので、revisionは常に0で
+        // digestがidentityそのものになる。source交換(#1592のAsset Pack
+        // rollout)を入れる時点でrevisionを進める。
+        createMapFrameSourceRevisionStamp(
+          sourceInstanceId: sourceInstanceId,
+          revision: 0,
+          contentDigest: createMapContentDigest(value: source.sha256),
+        ),
+      ],
+      lifecycle: _lifecycle,
+      contextGeneration: _contextGeneration,
+    );
+
+    _adapter.submit(
+      submission: buildBaseMapRenderSubmission(
+        frame: frame,
+        plans: plans,
+        sourceInstanceId: sourceInstanceId,
+        packedMeshesFor: (plan) => _packedMeshCache.getOrBuild(
+          sourceInstanceId: source.cacheIdentity,
+          tileId: plan.transformInput.tileId.canonical,
+          geometry: plan.tileGeometry,
+        ),
+        lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+      ),
+    );
   }
 
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
@@ -620,9 +658,9 @@ class _BaseMapController extends ChangeNotifier {
     }
     _isDisposed = true;
     _cache.dispose();
-    _sceneMeshCache.clear();
+    _packedMeshCache.clear();
     unawaited(_repository?.close());
-    sceneGraph.removeAll();
+    _adapter.retireAllGpuResources();
     super.dispose();
   }
 }
@@ -637,66 +675,6 @@ class _IdentityCameraProjection implements scene.CameraProjection {
   @override
   scene_math.Matrix4 getProjectionMatrix(double aspectRatio) =>
       scene_math.Matrix4.identity();
-}
-
-/// decode済み[BaseMapTileGeometry]から作った`scene.Mesh`(GPU geometry +
-/// material)のcache。
-///
-/// [BaseMapTileCache]が保持するのは`FillMesh`/`LineMesh`という生の頂点列
-/// までで、GPUへのアップロード(`scene.MeshGeometry.fromArrays`)はここでは
-/// 行わない([BaseMapTileCache]は`app`はおろか`flutter_scene`にも依存しない
-/// 層のため)。このcacheは同じ(sourceInstanceId, CanonicalTileId)に対して
-/// GPUアップロードを1回しか行わないための、Task 10側の追加cacheであり、
-/// 「meshの再構築は整数zoom境界を跨いだときだけ行う」という制約を、
-/// gestureのたびに呼ばれる`_rebuildSceneNodes`から見て満たす
-/// (`_rebuildSceneNodes`は毎frame呼ばれ得るが、同じtileが要求され続ける限り
-/// ここでhitし続け、GPU再アップロードは起きない)。
-class _TileSceneMeshCache {
-  new({required this.maxEntries})
-    : assert(maxEntries > 0, 'maxEntries must be positive');
-
-  final int maxEntries;
-  final _entries = <(String, CanonicalTileId), Map<String, List<scene.Mesh>>>{};
-
-  Map<String, List<scene.Mesh>> getOrBuild({
-    required String sourceInstanceId,
-    required CanonicalTileId tileId,
-    required BaseMapTileGeometry geometry,
-    required BaseMapGeometryFactory geometryFactory,
-    required Map<String, scene.PreprocessedMaterial> materialsByStyleLayerId,
-  }) {
-    final key = (sourceInstanceId, tileId);
-    final cached = _entries[key];
-    if (cached != null) {
-      return cached;
-    }
-    final built = <String, List<scene.Mesh>>{
-      for (final layer in geometry.layers)
-        layer.styleLayerId: switch (layer) {
-          BaseMapTileFillLayerGeometry(:final meshes) => [
-            for (final mesh in meshes)
-              scene.Mesh(
-                geometryFactory.fillGeometry(mesh),
-                materialsByStyleLayerId[layer.styleLayerId]!,
-              ),
-          ],
-          BaseMapTileLineLayerGeometry(:final meshes) => [
-            for (final mesh in meshes)
-              scene.Mesh(
-                geometryFactory.lineGeometry(mesh),
-                materialsByStyleLayerId[layer.styleLayerId]!,
-              ),
-          ],
-        },
-    };
-    _entries[key] = built;
-    if (_entries.length > maxEntries) {
-      _entries.remove(_entries.keys.first);
-    }
-    return built;
-  }
-
-  void clear() => _entries.clear();
 }
 
 /// pan/pinch zoom gestureの1回の`onScaleUpdate`から次の[MapCamera]を計算する
