@@ -164,12 +164,15 @@ class _HomeActionsCard extends ConsumerWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: '都道府県別 ',
+                            text: '市区町村別 ',
                             style: typography.bodySmall.copyWith(
                               fontWeight: .bold,
                             ),
                           ),
-                          TextSpan(text: '最大震度', style: typography.titleSmall),
+                          TextSpan(
+                            text: '最大観測震度',
+                            style: typography.titleSmall,
+                          ),
                         ],
                       ),
                     ),
