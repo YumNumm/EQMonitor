@@ -81,7 +81,7 @@ class _OnboardingBottomBar extends StatelessWidget {
               ),
               Expanded(
                 child: FilledButton(
-                  onPressed: isNextEnabled || !isProcessing ? onNext : null,
+                  onPressed: isNextEnabled && !isProcessing ? onNext : null,
                   style: FilledButton.styleFrom(
                     backgroundColor: isProcessing
                         ? designSystem.colorTheme.surfaceContainer

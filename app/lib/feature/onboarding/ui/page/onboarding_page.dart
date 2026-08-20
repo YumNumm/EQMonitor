@@ -60,7 +60,10 @@ class OnboardingPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     final currentPage = useState(0);
-    final stepNavigation = useState(_StepNavigationState.initial(_steps.first));
+    // 描画に影響する値だけを useState で持つ。onNext は毎ビルド新しいクロージャに
+    // なるため useRef に置き、識別子の変化で再ビルドを誘発しないようにする。
+    final stepView = useState(_StepNavigationView.initial(_steps.first));
+    final onNextRef = useRef<Future<void> Function()?>(null);
 
     final animateToNext = useCallback<Future<void> Function()>(() async {
       await pageController.nextPage(
@@ -86,11 +89,16 @@ class OnboardingPage extends HookConsumerWidget {
           nextPage: animateToNext,
           previousPage: goToPrevious,
           register: (state) {
+            if (step != _steps[currentPage.value]) {
+              return;
+            }
+            // onNext は常に最新へ差し替える。useRef なのでここでは再ビルドしない。
+            onNextRef.value = state.onNext;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!context.mounted || step != _steps[currentPage.value]) {
                 return;
               }
-              stepNavigation.value = state;
+              stepView.value = state.view;
             });
           },
         ),
@@ -98,18 +106,23 @@ class OnboardingPage extends HookConsumerWidget {
 
     void onPageChanged(int index) {
       currentPage.value = index;
-      stepNavigation.value = _StepNavigationState.initial(_steps[index]);
+      onNextRef.value = null;
+      stepView.value = _StepNavigationView.initial(_steps[index]);
     }
 
-    final navigation = stepNavigation.value;
+    final view = stepView.value;
 
     final showBack =
         currentPage.value > 0 && currentStep != _OnboardingStep.complete;
-    final isBackEnabled = showBack && !navigation.isProcessing;
+    final isBackEnabled = showBack && !view.isProcessing;
 
     Future<void> goToNext() async {
+      final onNext = onNextRef.value;
+      if (onNext == null) {
+        return;
+      }
       unawaited(HapticFeedback.mediumImpact());
-      await stepNavigation.value.onNext?.call();
+      await onNext();
     }
 
     return PopScope(
@@ -137,11 +150,13 @@ class OnboardingPage extends HookConsumerWidget {
               _OnboardingBottomBar(
                 currentPage: currentPage.value,
                 totalPages: _steps.length,
-                buttonLabel: navigation.buttonLabel,
-                processingLabel: navigation.processingLabel,
-                isNextEnabled: navigation.isNextEnabled,
+                buttonLabel: view.buttonLabel,
+                processingLabel: view.processingLabel,
+                // hasNext を含めることで、まだ onNext が登録されていない間に
+                // 「押せるのに何も起きない」ボタンが生まれないようにする。
+                isNextEnabled: view.isNextEnabled && view.hasNext,
                 isBackEnabled: isBackEnabled,
-                isProcessing: navigation.isProcessing,
+                isProcessing: view.isProcessing,
                 onNext: goToNext,
                 onPrevious: showBack ? goToPrevious : null,
               ),
@@ -153,6 +168,7 @@ class OnboardingPage extends HookConsumerWidget {
   }
 }
 
+/// 各ステップが [_OnboardingStepNavigation.register] に渡す状態。
 class _StepNavigationState {
   const new({
     required this.buttonLabel,
@@ -162,25 +178,69 @@ class _StepNavigationState {
     required this.onNext,
   });
 
-  factory initial(_OnboardingStep step) => _StepNavigationState(
+  final String buttonLabel;
+  final String processingLabel;
+  final bool isNextEnabled;
+  final bool isProcessing;
+  final Future<void> Function()? onNext;
+
+  _StepNavigationView get view => _StepNavigationView(
+    buttonLabel: buttonLabel,
+    processingLabel: processingLabel,
+    isNextEnabled: isNextEnabled,
+    isProcessing: isProcessing,
+    hasNext: onNext != null,
+  );
+}
+
+/// ボトムバーの描画に必要な値だけを持つ不変ビュー。
+///
+/// クロージャを含めず値等価を実装しているのが要点。含めてしまうと毎ビルド
+/// 新しいクロージャで不等になり、`register` → post-frame → `useState` 更新 →
+/// 再ビルド → `register` … のループでフレームを永久にスケジュールし続ける。
+class _StepNavigationView {
+  const new({
+    required this.buttonLabel,
+    required this.processingLabel,
+    required this.isNextEnabled,
+    required this.isProcessing,
+    required this.hasNext,
+  });
+
+  factory initial(_OnboardingStep step) => _StepNavigationView(
     buttonLabel: switch (step) {
       _OnboardingStep.complete => 'はじめる',
       _ => '次へ',
     },
     processingLabel: '処理しています...',
-    isNextEnabled: switch (step) {
-      _OnboardingStep.welcome => false,
-      _OnboardingStep.permissions => false,
-      _OnboardingStep.notificationSettings => false,
-      _OnboardingStep.complete => false,
-    },
+    isNextEnabled: false,
     isProcessing: false,
-    onNext: null,
+    hasNext: false,
   );
 
   final String buttonLabel;
   final String processingLabel;
   final bool isNextEnabled;
   final bool isProcessing;
-  final Future<void> Function()? onNext;
+
+  /// 有効な `onNext` が登録済みかどうか。
+  final bool hasNext;
+
+  @override
+  bool operator ==(Object other) =>
+      other is _StepNavigationView &&
+      other.buttonLabel == buttonLabel &&
+      other.processingLabel == processingLabel &&
+      other.isNextEnabled == isNextEnabled &&
+      other.isProcessing == isProcessing &&
+      other.hasNext == hasNext;
+
+  @override
+  int get hashCode => Object.hash(
+    buttonLabel,
+    processingLabel,
+    isNextEnabled,
+    isProcessing,
+    hasNext,
+  );
 }

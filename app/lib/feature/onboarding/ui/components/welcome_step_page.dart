@@ -23,6 +23,15 @@ class _WelcomeStepPage extends HookConsumerWidget {
         : 'デバイスの状態を確認しています...';
     final isMigrated =
         ref.watch(deviceMigratedFromLegacyProvider).value ?? false;
+    // 失敗を画面上にも残す。ダイアログを閉じても再試行できないと、
+    // provisionMutation が MutationError のまま自動再試行の条件
+    // (MutationIdle) を満たさず、無効な「次へ」だけが残って詰む。
+    final failureMessage = switch (deviceProvisioningMutation) {
+      MutationError(:final error) => const DeviceProvisioningErrorMessage().of(
+        error,
+      ),
+      _ => deviceProvisioningStatus is AsyncError ? 'デバイスの状態確認に失敗しました' : null,
+    };
 
     Future<void> startProvisioning() async {
       try {
@@ -68,15 +77,11 @@ class _WelcomeStepPage extends HookConsumerWidget {
 
     ref.listen(DeviceProvisioningNotifier.provisionMutation, (_, next) {
       if (next is MutationError) {
-        final errorMessage = switch (next.error) {
-          DeviceProvisioningException(:final userMessage) => userMessage,
-          _ => next.error.toString(),
-        };
         unawaited(
           DeviceRegistrationErrorDialogAction().show(
             context: context,
             ref: ref,
-            message: errorMessage,
+            message: const DeviceProvisioningErrorMessage().of(next.error),
             error: next.error,
             stackTrace: next.stackTrace,
             onRetry: retryProvisioning,
@@ -155,8 +160,82 @@ class _WelcomeStepPage extends HookConsumerWidget {
             ),
           ),
           const Spacer(),
-          const Center(child: _OnboardingAppIconHero()),
+          // 失敗時は装飾のヒーローより再試行の導線を優先する。差し替えることで
+          // 縦方向の高さが増えず、小さい画面でも溢れない。
+          if (failureMessage != null)
+            _DeviceProvisioningFailureCard(
+              message: failureMessage,
+              onRetry: retryProvisioning,
+            )
+          else
+            const Center(child: _OnboardingAppIconHero()),
           const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+}
+
+/// プロビジョニングの失敗を UI 表示用の文言へ変換する。
+class DeviceProvisioningErrorMessage {
+  const new();
+
+  String of(Object error) => switch (error) {
+    DeviceProvisioningException(:final userMessage) => userMessage,
+    _ => error.toString(),
+  };
+}
+
+/// デバイス登録に失敗したことを画面上に残し、再試行の導線を提供するカード。
+class _DeviceProvisioningFailureCard extends StatelessWidget {
+  const new({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
+    return Container(
+      padding: EdgeInsets.all(designSystem.spacing.md),
+      decoration: BoxDecoration(
+        color: designSystem.colorTheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+        border: Border.all(
+          color: designSystem.colorTheme.error.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: designSystem.colorTheme.error,
+              ),
+              SizedBox(width: designSystem.spacing.sm),
+              Expanded(
+                child: Text(
+                  'デバイスの登録に失敗しました',
+                  style: designSystem.typography.titleSmall,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: designSystem.spacing.sm),
+          Text(
+            message,
+            style: designSystem.typography.bodySmall.copyWith(
+              color: designSystem.colorTheme.onSurfaceVariant,
+            ),
+          ),
+          SizedBox(height: designSystem.spacing.sm),
+          Align(
+            alignment: .centerRight,
+            child: TextButton(onPressed: onRetry, child: const Text('再試行')),
+          ),
         ],
       ),
     );
