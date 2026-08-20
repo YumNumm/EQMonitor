@@ -16,24 +16,34 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _FakePrefectureHighest extends PrefectureHighest {
-  @override
-  Future<List<HighestIntensityEntry>> build() async => [];
-}
+const _responseAt = '2026-08-19T12:00:00Z';
 
-class _FakeCityHighest extends CityHighest {
+class _FakeCityMaxIntensity extends CityMaxIntensityNotifier {
+  new({this.responseAt});
+
+  final DateTime? responseAt;
+
   @override
-  Future<List<HighestIntensityEntry>> build(String prefectureCode) async => [];
+  Future<CityMaxIntensity> build() async => CityMaxIntensity(
+    responseAt: responseAt,
+    items: const [
+      CityMaxIntensityEntry(
+        cityCode: '0410000',
+        intensity: JmaIntensity.sixLower,
+      ),
+    ],
+  );
 }
 
 class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
@@ -68,8 +78,8 @@ class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
 
     return PaginatedResponse(
       items: [
-        EarthquakePartialPrefecture(
-          prefectureIntensity: JmaIntensity.sixLower,
+        EarthquakePartialRegion(
+          regionIntensity: JmaIntensity.sixLower,
           earthquake: earthquake,
         ),
       ],
@@ -78,128 +88,101 @@ class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   }
 }
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+Future<ProviderContainer> _container({
+  DateTime? responseAt,
+  List<Override> overrides = const [],
+}) async {
+  SharedPreferences.setMockInitialValues({});
+  final preferences = await SharedPreferences.getInstance();
+  return ProviderContainer(
+    overrides: [
+      app_prefs.sharedPreferencesProvider.overrideWithValue(
+        app_prefs.SharedPreferencesAsync(preferences),
+      ),
+      cityMaxIntensityProvider.overrideWith(
+        () => _FakeCityMaxIntensity(responseAt: responseAt),
+      ),
+      ...overrides,
+    ],
+  );
+}
 
-  testWidgets('Lv1(全国)状態で「全国」が表示される', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final preferences = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(preferences),
+Widget _panelApp(ProviderContainer container, {bool centered = false}) =>
+    UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp(
+        theme: ThemeData.light().copyWith(
+          extensions: [DesignSystemThemeExtension.light()],
         ),
-        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: [DesignSystemThemeExtension.light()],
-          ),
-          home: const Scaffold(body: RegionFloatingPanel()),
+        home: Scaffold(
+          body: centered
+              ? const Center(child: RegionFloatingPanel())
+              : const RegionFloatingPanel(),
         ),
       ),
     );
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('未選択状態で「全国」が表示される', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_panelApp(container));
     await tester.pump();
 
     expect(find.text('全国'), findsOneWidget);
   });
 
-  testWidgets('Lv2(都道府県フォーカス)状態で都道府県名が表示される', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final preferences = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(preferences),
-        ),
-        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
-      ],
-    );
+  testWidgets('response_at があれば最終更新時刻を表示する', (tester) async {
+    final responseAt = DateTime.parse(_responseAt);
+    final container = await _container(responseAt: responseAt);
     addTearDown(container.dispose);
 
-    // Lv2 状態に遷移
-    container
-        .read(intensityHistoryControllerProvider.notifier)
-        .focusPrefecture(code: '0100', name: '北海道');
-
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: [DesignSystemThemeExtension.light()],
-          ),
-          home: const Scaffold(body: RegionFloatingPanel()),
-        ),
-      ),
-    );
-    // 非同期プロバイダの解決を待つ
+    await tester.pumpWidget(_panelApp(container));
     await tester.pumpAndSettle();
 
-    expect(find.text('北海道'), findsOneWidget);
-    expect(find.text('全国'), findsNothing);
+    expect(
+      find.text(
+        '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(responseAt.toLocal())}',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('response_at が null なら最終更新時刻を表示しない', (tester) async {
+    final container = await _container();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_panelApp(container));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('最終更新'), findsNothing);
   });
 
   testWidgets('市区町村選択状態で市区町村名と都道府県名が表示される', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final preferences = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(preferences),
-        ),
-        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
-        cityHighestProvider('0400').overrideWith(_FakeCityHighest.new),
-      ],
-    );
+    final container = await _container();
     addTearDown(container.dispose);
 
     container
         .read(intensityHistoryControllerProvider.notifier)
-        .focusPrefecture(code: '0400', name: '宮城県');
-    container
-        .read(intensityHistoryControllerProvider.notifier)
-        .selectCity(code: '0410000', name: '仙台市');
+        .selectCity(code: '0410000', name: '仙台市', prefectureName: '宮城県');
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: [DesignSystemThemeExtension.light()],
-          ),
-          home: const Scaffold(body: RegionFloatingPanel()),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_panelApp(container));
     await tester.pumpAndSettle();
 
     expect(find.text('宮城県'), findsOneWidget);
     expect(find.text('仙台市'), findsOneWidget);
+    expect(find.text('全国'), findsNothing);
   });
 
-  testWidgets('都道府県フォーカス状態でタップすると都道府県詳細モーダルが開く', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final preferences = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
+  testWidgets('市区町村選択状態でタップすると市区町村詳細モーダルが開く', (tester) async {
+    final container = await _container(
       overrides: [
-        app_prefs.sharedPreferencesProvider.overrideWithValue(
-          app_prefs.SharedPreferencesAsync(preferences),
-        ),
-        prefectureHighestProvider.overrideWith(_FakePrefectureHighest.new),
         earthquakeHistoryProvider(
-          const EarthquakeHistoryParameter.prefecture(
-            prefectureCode: '0400',
+          const EarthquakeHistoryParameter.city(
+            cityCode: '0410000',
             sortBy: EarthquakeSortBy.eventId,
             sortOrder: SortOrder.desc,
           ),
@@ -210,22 +193,12 @@ void main() {
 
     container
         .read(intensityHistoryControllerProvider.notifier)
-        .focusPrefecture(code: '0400', name: '宮城県');
+        .selectCity(code: '0410000', name: '仙台市', prefectureName: '宮城県');
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: ThemeData.light().copyWith(
-            extensions: [DesignSystemThemeExtension.light()],
-          ),
-          home: const Scaffold(body: Center(child: RegionFloatingPanel())),
-        ),
-      ),
-    );
+    await tester.pumpWidget(_panelApp(container, centered: true));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('宮城県'));
+    await tester.tap(find.text('仙台市'));
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);

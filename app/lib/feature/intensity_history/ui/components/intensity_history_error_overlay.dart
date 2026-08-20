@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,9 +29,9 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prefectureHighestAsync = ref.watch(prefectureHighestProvider);
-    final error = prefectureHighestAsync.error;
-    final stackTrace = prefectureHighestAsync.stackTrace;
+    final cityMaxIntensityAsync = ref.watch(cityMaxIntensityProvider);
+    final error = cityMaxIntensityAsync.error;
+    final stackTrace = cityMaxIntensityAsync.stackTrace;
 
     if (error == null) {
       return const SizedBox.shrink();

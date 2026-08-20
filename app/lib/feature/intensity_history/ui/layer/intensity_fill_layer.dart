@@ -5,27 +5,23 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
-import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-/// 地域別最大震度マップ用の震度 fill レイヤー Widget。
+/// 市区町村別最大震度マップ用の震度 fill レイヤー Widget。
 ///
-/// - Lv1(全国): `areaForecastLocalE` に都道府県最高震度の match 式で塗り分け。
-/// - Lv2(都道府県フォーカス): `areaInformationCityQuake` に市区町村最高震度で
-///   塗り分け + フォーカス外の都道府県を半透明黒でディム。
+/// `areaInformationCityQuake` を市区町村ごとの観測史上最大震度で塗り分ける。
+/// 市区町村ポリゴンは全ズームのタイルに存在するので、低ズーム用の代替レイヤーは
+/// 持たない。
 ///
 /// 全レイヤーを 1 つの `useEffect` でまとめて置き換える。レイヤーごとに
 /// `useEffect` を分けると、依存の異なる effect が別々に再実行された際に
-/// 追加順が入れ替わり、Lv1 の塗りが Lv2 の塗り・ディムを覆ってしまう。
+/// 追加順が入れ替わり、選択中の輪郭線が塗りに潜り込む。
 class IntensityFillLayer extends HookConsumerWidget {
   const new({super.key});
 
@@ -36,39 +32,22 @@ class IntensityFillLayer extends HookConsumerWidget {
     final state = ref.watch(intensityHistoryControllerProvider);
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
-    final prefectures = ref
-        .watch(parameterSetProvider)
-        .valueOrPrevious
-        ?.earthquake
-        .prefectures;
-    final prefectureHighest = ref
-        .watch(prefectureHighestProvider)
+    final cityMaxIntensity = ref
+        .watch(cityMaxIntensityProvider)
         .valueOrPrevious;
-
-    final focusedPrefectureCode = switch (state) {
-      IntensityHistoryStateCity(:final prefectureCode) => prefectureCode,
-      IntensityHistoryStatePrefecture() => null,
-    };
-    final cityHighest = focusedPrefectureCode == null
-        ? null
-        : ref.watch(cityHighestProvider(focusedPrefectureCode)).valueOrPrevious;
 
     final enqueue = useMapOperationQueue();
     const builder = IntensityFillLayerBuilder();
 
     useEffect(
       () {
-        if (styleController == null ||
-            prefectures == null ||
-            prefectureHighest == null) {
+        if (styleController == null || cityMaxIntensity == null) {
           return null;
         }
 
         final layers = builder.build(
           state: state,
-          prefectureHighest: prefectureHighest,
-          cityHighest: cityHighest ?? const <HighestIntensityEntry>[],
-          prefectures: prefectures,
+          cityMaxIntensities: cityMaxIntensity.items,
           colorModel: colorModel,
           isDarkMode: isDarkMode,
         );
@@ -103,9 +82,7 @@ class IntensityFillLayer extends HookConsumerWidget {
       },
       [
         styleController,
-        prefectures,
-        prefectureHighest,
-        cityHighest,
+        cityMaxIntensity,
         state,
         colorModel,
         isDarkMode,

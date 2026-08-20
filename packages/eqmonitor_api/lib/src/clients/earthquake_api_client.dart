@@ -5,12 +5,12 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../models/city_max_intensity_response.dart';
 import '../models/earthquake_datasource.dart';
 import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
 import '../models/earthquake_type.dart';
-import '../models/highest_intensity_response.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
@@ -87,18 +87,9 @@ abstract class EarthquakeApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 都道府県ごとの過去最高震度一覧
-  @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureHighest)
-  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureHighest({
-    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-  });
-
-  /// 指定都道府県内の市区町村ごとの過去最高震度一覧
-  @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCodeCityHighest)
-  Future<HttpResponse<HighestIntensityResponse>> getV2EarthquakeIntensityPrefectureCodeCityHighest({
-    @Path('code') required String code,
-    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-  });
+  /// 市区町村ごとの観測史上最大震度一覧（全国）。事前集計済みのため都道府県での絞り込みや status 指定はありません。response_at は集計を最後に更新した時刻で、取得できなかった場合は null になります（items は返ります）。観測実績のない市区町村は items に含まれません。
+  @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityMax)
+  Future<HttpResponse<CityMaxIntensityResponse>> getV2EarthquakeIntensityCityMax();
 
   /// 震度細分区域コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
   ///
@@ -323,10 +314,8 @@ abstract class EarthquakeApiClientUrls {
 	static const getV2Earthquake = "/v2/earthquake";
 	/// /v2/earthquake/{eventId}
 	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
-	/// /v2/earthquake/intensity/prefecture/highest
-	static const getV2EarthquakeIntensityPrefectureHighest = "/v2/earthquake/intensity/prefecture/highest";
-	/// /v2/earthquake/intensity/prefecture/{code}/city/highest
-	static const getV2EarthquakeIntensityPrefectureCodeCityHighest = "/v2/earthquake/intensity/prefecture/{code}/city/highest";
+	/// /v2/earthquake/intensity/city/max
+	static const getV2EarthquakeIntensityCityMax = "/v2/earthquake/intensity/city/max";
 	/// /v2/earthquake/intensity/region/{code}
 	static const getV2EarthquakeIntensityRegionCode = "/v2/earthquake/intensity/region/{code}";
 	/// /v2/earthquake/intensity/prefecture/{code}
