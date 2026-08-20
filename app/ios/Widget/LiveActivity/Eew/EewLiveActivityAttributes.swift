@@ -140,6 +140,28 @@ extension EewContentState {
         location: nil
     )
 
+    /// 予想最大震度が発表されていない報。JMA は震源が深い場合など予想震度を
+    /// 出さないことがある。震度バッジが消えず「不明」と描かれることの確認用。
+    static let unknownIntensity = EewContentState(
+        eventId: "20240102123456",
+        type: "eew",
+        hypocenterName: "茨城県沖",
+        magnitude: 4.2,
+        depth: 40,
+        time: "2024-01-02T12:34:56+09:00",
+        isOriginTime: true,
+        maxIntensity: nil,
+        serialNo: 1,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: nil
+    )
+
     static let plum = EewContentState(
         eventId: "20240103123456",
         type: "eew",

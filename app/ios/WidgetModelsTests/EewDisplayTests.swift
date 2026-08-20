@@ -78,6 +78,45 @@ struct EewDisplayTests {
         #expect(display(maxIntensity: nil, forecastIntensity: nil).intensity == nil)
     }
 
+    // MARK: - 震度バッジ（不明の明示）
+
+    /// 予想震度が発表されない報でバッジを消すと、震度の欄そのものが無いように
+    /// 見えてしまう。値が無いときは「不明」として欄を残す。
+    @Test func intensityBadgeFallsBackToUnknown() {
+        let subject = display(maxIntensity: nil, forecastIntensity: nil)
+        #expect(subject.intensityBadge == .unknown)
+        #expect(subject.maxIntensityBadge == .unknown)
+        #expect(subject.intensityLabel == "最大震度")
+    }
+
+    @Test func intensityBadgeCarriesValueWhenPublished() {
+        let subject = display(maxIntensity: .sixUpper, forecastIntensity: .fiveLower)
+        #expect(subject.intensityBadge == .value(.fiveLower))
+        #expect(subject.maxIntensityBadge == .value(.sixUpper))
+    }
+
+    /// 現在地の予想震度だけが届いた報でも、Lock Screen の「最大震度」欄は
+    /// 全国の予想最大震度で判断する（現在地の値を最大震度として出さない）。
+    @Test func maxIntensityBadgeIgnoresCurrentLocationForecast() {
+        let subject = display(maxIntensity: nil, forecastIntensity: .fiveLower)
+        #expect(subject.maxIntensityBadge == .unknown)
+        #expect(subject.intensityBadge == .value(.fiveLower))
+    }
+
+    /// 取消報では震度そのものが無効。「不明」ですらなく欄ごと出さない。
+    @Test func canceledReportHidesIntensityBadgeEntirely() {
+        let subject = display(isCanceled: true, maxIntensity: nil, forecastIntensity: nil)
+        #expect(subject.intensityBadge == nil)
+        #expect(subject.maxIntensityBadge == nil)
+    }
+
+    @Test func unknownBadgeDrawsUnknownText() {
+        #expect(EewIntensityBadge.unknown.parts.main == "不明")
+        #expect(EewIntensityBadge.unknown.parts.sub == nil)
+        #expect(EewIntensityBadge.value(.fiveLower).parts.main == "5")
+        #expect(EewIntensityBadge.value(.fiveLower).parts.sub == "弱")
+    }
+
     // MARK: - 文言
 
     @Test func typeLabelDistinguishesWarningFromForecast() {

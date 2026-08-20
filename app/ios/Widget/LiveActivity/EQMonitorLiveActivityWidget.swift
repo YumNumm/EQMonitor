@@ -94,16 +94,11 @@ struct EewCompactLeadingView: View {
     let state: EewContentState
 
     var body: some View {
-        if state.display.isCanceled {
-            EewCanceledSymbol(size: 20)
-        } else if let intensity = state.display.intensity {
+        if let intensity = state.display.intensityBadge {
             DynamicIslandIntensityBadge(intensity: intensity, size: 24)
         } else {
-            Image("AppIconForeground")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 20, height: 20)
-                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+            // 取消報。震度が無効なので取消シンボルに差し替える
+            EewCanceledSymbol(size: 20)
         }
     }
 }
@@ -134,16 +129,11 @@ struct EewMinimalView: View {
     let state: EewContentState
 
     var body: some View {
-        if state.display.isCanceled {
-            EewCanceledSymbol(size: 18)
-        } else if let intensity = state.display.intensity {
+        if let intensity = state.display.intensityBadge {
             DynamicIslandIntensityBadge(intensity: intensity, size: 22)
         } else {
-            Image("AppIconForeground")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 18, height: 18)
-                .clipShape(RoundedRectangle(cornerRadius: 4.5, style: .continuous))
+            // 取消報。震度が無効なので取消シンボルに差し替える
+            EewCanceledSymbol(size: 18)
         }
     }
 }
@@ -159,7 +149,9 @@ struct EewExpandedLeadingView: View {
         case .canceled:
             EewCanceledSymbol(size: DynamicIslandMetrics.expandedBadgeSize * 0.75)
         case .countdown, .summary:
-            if let intensity = state.display.intensity {
+            // 震度が発表されていない報でも「不明」を描く。leading を空にすると
+            // 展開時の左半分がまるごと空白になり、表示が壊れて見える。
+            if let intensity = state.display.intensityBadge {
                 DynamicIslandIntensityBadge(
                     intensity: intensity,
                     size: DynamicIslandMetrics.expandedBadgeSize
@@ -255,7 +247,7 @@ struct EewExpandedCenterView: View {
                     .minimumScaleFactor(0.7)
             }
             .foregroundStyle(Color.eqTextSecondary)
-        } else if state.display.intensity != nil {
+        } else if state.display.intensityBadge != nil {
             captionText(state.display.intensityLabel)
         }
     }
@@ -346,6 +338,7 @@ struct EewHypocenterDetailView: View {
                 .foregroundStyle(Color.eqTextSecondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+                .latinTrailingBleed(fontSize: size * 0.8)
         } else {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
                 if let magnitude = state.magnitude {
@@ -371,6 +364,7 @@ struct EewHypocenterDetailView: View {
                         Text("km")
                             .font(AppFonts.flex(size: size * 0.7, weight: .medium))
                             .foregroundStyle(Color.eqTextSecondary)
+                            .latinTrailingBleed(fontSize: size * 0.7)
                     }
                 }
             }
@@ -558,15 +552,16 @@ enum DynamicIslandMetrics {
 
 @available(iOS 16.1, *)
 struct DynamicIslandIntensityBadge: View {
-    let intensity: IntensityValue
+    let intensity: EewIntensityBadge
     var size: CGFloat = 24
 
     var body: some View {
         IntensityBadge(
-            intensity: intensity.formattedParts,
+            intensity: intensity.parts,
             backgroundColor: intensity.backgroundColor,
             textColor: intensity.textColor,
-            size: size
+            size: size,
+            mainFontScale: intensity.unknownMainFontScale
         )
     }
 }

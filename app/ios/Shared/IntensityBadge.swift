@@ -15,11 +15,14 @@ struct IntensityBadge: View {
     /// 角丸比率。アプリの JmaIntensityIcon に準拠（size / 4 = 25%）
     var cornerRatio: CGFloat = 0.25
     var weight: Font.Weight = .bold
+    /// バッジ寸法に対する主表示の文字サイズ比。
+    /// 「不明」のように数字以外を描くときだけ呼び出し側で下げる。
+    var mainFontScale: CGFloat?
 
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 0) {
             Text(intensity.main)
-                .font(AppFonts.code(size: size * 0.62, weight: .bold))
+                .font(AppFonts.code(size: size * (mainFontScale ?? 0.62), weight: .bold))
             if let sub = intensity.sub {
                 Text(sub)
                     .font(AppFonts.code(size: size * 0.30, weight: .bold))

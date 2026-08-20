@@ -11,6 +11,41 @@
 
 import Foundation
 
+/// バッジに描く震度。
+///
+/// 予想震度は震源が深い場合など JMA が発表しない報がある。値が無いときに
+/// バッジごと消すと「震度の欄が存在しない」ように見え、震度が発表されて
+/// いないのか表示が壊れているのか区別できない。アプリ本体の EEW カードが
+/// `JmaIntensity.unknown`（「不明」）を出しているのと同じく、
+/// 「不明」も震度と同じ形で扱えるようにする。
+enum EewIntensityBadge: Equatable {
+    case value(IntensityValue)
+    /// 予想震度が発表されていない / 届いていない
+    case unknown
+
+    /// 値が無い場合を「不明」として扱う
+    init(_ intensity: IntensityValue?) {
+        guard let intensity else {
+            self = .unknown
+            return
+        }
+        self = .value(intensity)
+    }
+
+    /// 「不明」の文言。アプリ本体の `JmaIntensity.unknown.label` に揃える。
+    static let unknownText = "不明"
+
+    /// バッジに描く文字。「不明」は震度階級ではないため弱/強の suffix を持たない。
+    var parts: (main: String, sub: String?) {
+        switch self {
+        case let .value(intensity):
+            return intensity.formattedParts
+        case .unknown:
+            return (Self.unknownText, nil)
+        }
+    }
+}
+
 /// Dynamic Island 展開時のレイアウト。
 ///
 /// 展開領域は狭く、要素を並べるほど切り取られて読めなくなる。
@@ -30,7 +65,7 @@ struct EewDisplay: Equatable {
     let isWarning: Bool
     let isFinal: Bool
     let serialNo: Int?
-    /// 全国の予想最大震度
+    /// 全国の予想最大震度。震源が深い場合など JMA が予想震度を発表しない報では nil
     let maxIntensity: IntensityValue?
     /// 現在地の予想震度
     let forecastIntensity: IntensityValue?
@@ -51,6 +86,19 @@ struct EewDisplay: Equatable {
     /// [intensity] がどちらの震度かを示すラベル
     var intensityLabel: String {
         forecastIntensity != nil ? "予想震度" : "最大震度"
+    }
+
+    /// 面積が限られる場所（Dynamic Island）に描く震度バッジ。
+    /// 震度が発表されていない報でも欄を空けず「不明」を描く。
+    /// 取消報だけは震度そのものが無効なため、欄ごと出さない。
+    var intensityBadge: EewIntensityBadge? {
+        isCanceled ? nil : EewIntensityBadge(intensity)
+    }
+
+    /// Lock Screen 左の「最大震度」欄に描くバッジ。
+    /// 現在地の予想震度は別枠で出すため、ここは全国の予想最大震度だけを見る。
+    var maxIntensityBadge: EewIntensityBadge? {
+        isCanceled ? nil : EewIntensityBadge(maxIntensity)
     }
 
     /// 主要動到達カウントダウンに使う時刻。取消報では到達予想も無効。

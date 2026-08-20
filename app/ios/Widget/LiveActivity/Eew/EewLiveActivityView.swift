@@ -157,13 +157,16 @@ struct EewLockScreenView: View {
 
     private var earthquakeContentView: some View {
         HStack(alignment: .bottom, spacing: 10) {
-            if let intensity = state.display.maxIntensity {
+            // 予想最大震度が発表されていない報でも欄は残し「不明」を描く。
+            // バッジごと消すと震度の欄が無いように見え、発表されていないのか
+            // 表示が壊れているのか区別できない。
+            if let maxIntensity = state.display.maxIntensityBadge {
                 VStack(spacing: 2) {
                     Text("最大震度")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(eewSecondaryTextColor)
                     SquareIntensityBadge(
-                        intensity: intensity,
+                        intensity: maxIntensity,
                         size: .normal
                     )
                 }
@@ -301,7 +304,7 @@ struct EewLockScreenView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
             }
-            SquareIntensityBadge(intensity: intensity, size: .normal)
+            SquareIntensityBadge(intensity: .value(intensity), size: .normal)
         }
     }
 }
@@ -355,18 +358,18 @@ struct SquareIntensityBadge: View {
         }
     }
 
-    let intensity: IntensityValue
+    let intensity: EewIntensityBadge
     var size: Size = .normal
 
     var body: some View {
-        let parts = intensity.formattedParts
+        let parts = intensity.parts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text(parts.main)
                 .font(
                     .system(
-                        size: size.mainFontSize,
+                        size: mainFontSize,
                         weight: .bold,
-                        design: .monospaced
+                        design: mainFontDesign
                     )
                 )
             if let sub = parts.sub {
@@ -374,6 +377,8 @@ struct SquareIntensityBadge: View {
                     .font(.system(size: size.subFontSize, weight: .heavy))
             }
         }
+        .lineLimit(1)
+        .minimumScaleFactor(0.5)
         .foregroundColor(intensity.textColor)
         .frame(height: size.badgeSize)
         .frame(minWidth: size.badgeSize)
@@ -385,6 +390,19 @@ struct SquareIntensityBadge: View {
                 style: .continuous
             )
         )
+    }
+
+    /// 「不明」は 2 文字あり、震度の数字と同じ大きさではバッジに収まらない
+    private var mainFontSize: CGFloat {
+        guard let scale = intensity.unknownMainFontScale else {
+            return size.mainFontSize
+        }
+        return size.badgeSize * scale
+    }
+
+    /// 等幅は震度の数字を桁揃えするためのもの。「不明」には使わない。
+    private var mainFontDesign: Font.Design {
+        intensity == .unknown ? .default : .monospaced
     }
 }
 
@@ -402,6 +420,10 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.ibarakiForecast, viewKind: .content)
             .previewDisplayName("Lock Screen - 予報")
+
+        attributes
+            .previewContext(.unknownIntensity, viewKind: .content)
+            .previewDisplayName("Lock Screen - 予想最大震度が不明")
 
         attributes
             .previewContext(.notoFinal, viewKind: .content)
@@ -449,6 +471,10 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
             .previewDisplayName("Compact - 予報")
 
         attributes
+            .previewContext(.unknownIntensity, viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 予想最大震度が不明")
+
+        attributes
             .previewContext(.canceled, viewKind: .dynamicIsland(.compact))
             .previewDisplayName("Compact - 取消")
 
@@ -464,6 +490,10 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.expanded))
             .previewDisplayName("Expanded - 予報")
+
+        attributes
+            .previewContext(.unknownIntensity, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 予想最大震度が不明")
 
         attributes
             .previewContext(.notoFinal, viewKind: .dynamicIsland(.expanded))
@@ -485,5 +515,9 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.minimal))
             .previewDisplayName("Minimal - 予報")
+
+        attributes
+            .previewContext(.unknownIntensity, viewKind: .dynamicIsland(.minimal))
+            .previewDisplayName("Minimal - 予想最大震度が不明")
     }
 }

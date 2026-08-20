@@ -42,6 +42,51 @@ extension View {
     }
 }
 
+// MARK: - 震度バッジの配色
+
+extension EewIntensityBadge {
+    var backgroundColor: Color {
+        switch self {
+        case let .value(intensity):
+            return intensity.backgroundColor
+        case .unknown:
+            // アプリ本体の unknown は黒。Dynamic Island の地とも Live Activity の
+            // ダーク背景とも同化してバッジが消えるため、グレーで置き換える
+            // （取消シンボル・揺れ検知の level 不明と同じ扱い）。
+            return .gray
+        }
+    }
+
+    var textColor: Color {
+        switch self {
+        case let .value(intensity):
+            return intensity.textColor
+        case .unknown:
+            return .white
+        }
+    }
+
+    /// バッジ寸法に対する主表示の文字サイズ比。
+    /// 「不明」は 2 文字あり、震度の数字と同じ比率では正方形に収まらない。
+    /// 震度を描くときは各バッジ既定の比率に任せるため nil。
+    var unknownMainFontScale: CGFloat? {
+        self == .unknown ? 0.34 : nil
+    }
+}
+
+// MARK: - カスタムフォントの字形切れ対策
+
+extension View {
+    /// GoogleSans 系は可変フォントを実行時登録し `weight` を付けて使うため、
+    /// 太さの実体を持たないぶん擬似ボールドで描かれ、描画幅が SwiftUI の計測幅を
+    /// わずかに超える。末尾が欧文の Text はその差分だけ字形が切り取られる
+    /// （Dynamic Island の「深さ40km」で m の右端が欠けていた）。
+    /// 欧文で終わるラベルには差分ぶんの逃げを右に確保する。
+    func latinTrailingBleed(fontSize: CGFloat) -> some View {
+        padding(.trailing, (fontSize * 0.2).rounded(.up))
+    }
+}
+
 // MARK: - 主要動到達カウントダウン
 
 /// 主要動到達までの残り時間。桁が変わっても幅が揺れないよう等幅フォントで描く。

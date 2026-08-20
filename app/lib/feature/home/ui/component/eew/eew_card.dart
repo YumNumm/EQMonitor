@@ -257,8 +257,11 @@ class _EewMainCard extends StatelessWidget {
                   if (maxLpgmIntensity != null &&
                       maxLpgmIntensity != JmaLpgmIntensity.zero)
                     _EewLpgmSection(intensity: maxLpgmIntensity),
+                  // JMA は深さ150km以上の地震では震度予想を行わずマグニチュードのみ
+                  // 発表する。予想震度が「不明」になる理由がこれで説明できる場合だけ
+                  // 添える（浅い地震で震度が届かない場合は理由が別なので出さない）。
                   if (eew.hypocenter?.depth case final depth?
-                      when depth < 150 && maxIntensity == .unknown)
+                      when depth >= 150 && maxIntensity == .unknown)
                     Text(
                       '震源の深さが150km以上のため、予想震度は発表されていません',
                       style: designSystem.typography.labelMedium,
