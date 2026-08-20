@@ -95,8 +95,9 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
     if (timerState == null) {
       return;
     }
+    final ntp = ref.read(ntpProvider).value;
     final publishDelay = timerState.publishDelay(
-      ref.read(ntpProvider.notifier).offset,
+      ntp?.offset ?? Duration.zero,
     );
     _update(
       profile,

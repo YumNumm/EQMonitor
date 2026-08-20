@@ -8,20 +8,22 @@ part of 'ntp_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_NtpStateModel _$NtpStateModelFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_NtpStateModel', json, ($checkedConvert) {
-      final val = _NtpStateModel(
-        offset: $checkedConvert('offset', (v) => (v as num?)?.toInt()),
+_NtpState _$NtpStateFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_NtpState', json, ($checkedConvert) {
+      final val = _NtpState(
+        offset: $checkedConvert(
+          'offset',
+          (v) => Duration(microseconds: (v as num).toInt()),
+        ),
         updatedAt: $checkedConvert(
           'updated_at',
-          (v) => v == null ? null : DateTime.parse(v as String),
+          (v) => DateTime.parse(v as String),
         ),
       );
       return val;
     }, fieldKeyMap: const {'updatedAt': 'updated_at'});
 
-Map<String, dynamic> _$NtpStateModelToJson(_NtpStateModel instance) =>
-    <String, dynamic>{
-      'offset': instance.offset,
-      'updated_at': instance.updatedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$NtpStateToJson(_NtpState instance) => <String, dynamic>{
+  'offset': instance.offset.inMicroseconds,
+  'updated_at': instance.updatedAt.toIso8601String(),
+};

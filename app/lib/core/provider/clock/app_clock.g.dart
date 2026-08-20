@@ -60,7 +60,7 @@ final class AppClockProvider extends $NotifierProvider<AppClock, TimeMode> {
   }
 }
 
-String _$appClockHash() => r'fb6978de4293d91a9df3d7afee1a64f5e3dd385d';
+String _$appClockHash() => r'0c305e2c661203d27ef746a2244606ea480b986c';
 
 /// アプリ全体の現在時刻を提供する統一クロック。
 ///

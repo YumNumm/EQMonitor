@@ -9,14 +9,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_offset_provider.g.dart';
 
-/// 強震モニタ画像の取得に使う公開遅延。
-///
-/// `latest.json` の実測値 (`publishDelay`) に、404 フィードバックで学習した
-/// 補正量を足したもの。測定がまだ無い場合は null。
-///
-/// NTP 補正の有無は `AppClock` と必ず揃える必要があるため、ここで
-/// [Ntp] のオフセットを読んで [KyoshinMonitorTimerStateX.publishDelay] に渡す。
-@riverpod
+/// 強震モニタ画像の遅延を保持する
+@Riverpod(keepAlive: true)
 Duration? kyoshinMonitorEffectiveOffset(Ref ref) {
   final timerState = ref.watch(kyoshinMonitorTimerProvider).value;
   if (timerState == null) {
@@ -26,17 +20,16 @@ Duration? kyoshinMonitorEffectiveOffset(Ref ref) {
 
   // NTP が同期したら公開遅延を再計算する必要があるため watch する。
   ref.watch(ntpProvider);
-  final ntpOffset = ref.read(ntpProvider.notifier).offset;
+  final ntpOffset = ref.read(ntpProvider).value?.offset ?? Duration.zero;
   final publishDelay = timerState.publishDelay(ntpOffset);
 
   final api = settings.api;
   switch (api.delayAdjustType) {
-    case KyoshinMonitorDelayAdjustType.latestJson:
-    case KyoshinMonitorDelayAdjustType.latestJsonMultiple:
-      // 実測値をそのまま使う。
+    case .latestJson:
+    case .latestJsonMultiple:
       return publishDelay;
-    case KyoshinMonitorDelayAdjustType.imageFetch404DeviceTime:
-    case KyoshinMonitorDelayAdjustType.imageFetch404Ntp:
+    case .imageFetch404DeviceTime:
+    case .imageFetch404Ntp:
       final adjustments = ref.watch(kyoshinMonitorOffsetAdjustmentProvider);
       return KyoshinMonitorDelayAdjuster.effectiveOffset(
         publishDelay: publishDelay,

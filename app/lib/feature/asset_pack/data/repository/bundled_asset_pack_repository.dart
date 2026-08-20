@@ -9,8 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'bundled_asset_pack_repository.g.dart';
 
-/// `tool/asset_pack/stage_from_r2.sh --target bundled` が `app/assets/platform/`
-/// へ配置し、`pubspec.yaml` の `flutter.assets` で同梱される Pack の key prefix。
 const _bundledAssetKeyPrefix = 'assets/platform/';
 
 final _packVersionPattern = RegExp(r'^\d+\.\d+\.\d+$');
@@ -24,37 +22,13 @@ BundledAssetPackRepository bundledAssetPackRepository(Ref ref) =>
           .resolve,
     );
 
-/// アプリに同梱した Asset Pack を、実ファイルとしてアプリ専用ディレクトリへ
-/// 展開する。
-///
-/// Android の APK 内 asset には file path が無く、iOS でも Flutter asset は
-/// `flutter_assets` 配下に key 名で置かれるため、manifest 記載の相対 path
-/// (`map/all.pmtiles` 等) でそのまま読める形へ一度展開する必要がある。
-///
-/// 展開先は pack version ごとに分ける。完成品は staging ディレクトリからの
-/// rename でしか出現しないので、途中で中断しても半端な Pack が読まれること
-/// はない。同梱 Pack が壊れている場合は [AssetPackNotReadyException] を投げ、
-/// 偽データへフォールバックしない。
-class BundledAssetPackRepository {
-  new({
-    required AssetBundle bundle,
-    required ResolveAssetPackStorageRoot resolveStorageRoot,
-  }) : _bundle = bundle,
-       _resolveStorageRoot = resolveStorageRoot;
-
-  final AssetBundle _bundle;
-  final ResolveAssetPackStorageRoot _resolveStorageRoot;
-
-  /// 起動直後に複数の feature が同時に同梱 Pack を要求しても、展開を一度に
-  /// 束ねるための in-flight future。失敗した場合は次の呼び出しで再試行できる
-  /// ようクリアする。
+class BundledAssetPackRepository({
+  required final AssetBundle _bundle,
+  required final ResolveAssetPackStorageRoot _resolveStorageRoot,
+}) {
   Future<String>? _inFlight;
 
-  /// 展開済みの同梱 Pack ルートの絶対パスを返す。
-  ///
-  /// 同梱 Pack が使えない理由は、ストレージ障害も含めてすべて
-  /// [AssetPackNotReadyException] に寄せる。呼び出し側はこの一種類だけを見て
-  /// 「Pack が読めない」と判断できる。
+  /// 展開済みの同梱 Pack ルートの絶対パスを返す
   Future<String> resolveRoot() {
     if (_inFlight case final inFlight?) {
       return inFlight;
@@ -170,13 +144,10 @@ class BundledAssetPackRepository {
         flush: true,
       );
     } finally {
-      // 基盤地図 PMTiles は数十MB あるため、書き出し後は AssetBundle 側の
-      // キャッシュを都度手放してピークメモリを抑える。
       _bundle.evict(key);
     }
   }
 
-  /// アプリ更新で同梱 version が変わったあと、古い展開結果を残さない。
   Future<void> removeOtherBundledVersions({
     required Directory bundledRoot,
     required String keepVersion,

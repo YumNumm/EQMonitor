@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -8,6 +9,7 @@ import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_signature.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/trusted_asset_pack_keys.dart';
+import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_distribution_manifest_validator.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_signature_verifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:version/version.dart';
@@ -28,85 +30,59 @@ enum AssetPackDistributionErrorCode {
   rollback,
 }
 
-class AssetPackDistributionException implements Exception {
-  const new({
-    required this.code,
-    required this.message,
-  });
-
-  final AssetPackDistributionErrorCode code;
-  final String message;
-
+class const AssetPackDistributionException({
+  required final AssetPackDistributionErrorCode code,
+  required final String message,
+}) implements Exception {
   @override
   String toString() => 'AssetPackDistributionException($code, $message)';
 }
 
-sealed class AssetPackUpdateCheckResult {
-  const new({required this.manifest});
+sealed class const AssetPackUpdateCheckResult({
+  required final AssetPackDistributionManifest manifest,
+});
 
-  final AssetPackDistributionManifest manifest;
-}
+final class const AssetPackNoUpdate({
+  required super.manifest,
+}) extends AssetPackUpdateCheckResult;
 
-final class AssetPackNoUpdate extends AssetPackUpdateCheckResult {
-  const new({required super.manifest});
-}
+final class const AssetPackUpdateAvailable({
+  required super.manifest,
+  required final AssetPackDistributionEntry entry,
+}) extends AssetPackUpdateCheckResult;
 
-final class AssetPackUpdateAvailable extends AssetPackUpdateCheckResult {
-  const new({
-    required super.manifest,
-    required this.entry,
-  });
+final class const AssetPackAppUpdateRequired({
+  required super.manifest,
+  required final AssetPackDistributionEntry entry,
+}) extends AssetPackUpdateCheckResult;
 
-  final AssetPackDistributionEntry entry;
-}
+class const AssetPackDistributionPayload({
+  required final Uint8List manifestBytes,
+  required final Uint8List signatureBytes,
+  final String? etag,
+});
 
-final class AssetPackAppUpdateRequired extends AssetPackUpdateCheckResult {
-  const new({
-    required super.manifest,
-    required this.entry,
-  });
-
-  final AssetPackDistributionEntry entry;
-}
-
-class AssetPackDistributionPayload {
-  const new({
-    required this.manifestBytes,
-    required this.signatureBytes,
-    this.etag,
-  });
-
-  final Uint8List manifestBytes;
-  final Uint8List signatureBytes;
-  final String? etag;
-}
-
-class AssetPackDistributionRepository {
-  new({
-    required this.dio,
-    required this.preferences,
-    required this.verifySignature,
-    this.baseUrl = assetPackDistributionBaseUrl,
-  });
-
-  final Dio dio;
-  final SharedPreferencesDataSource preferences;
-  final VerifyAssetPackSignature verifySignature;
-  final String baseUrl;
-
+class const AssetPackDistributionRepository({
+  required final Dio dio,
+  required final SharedPreferencesDataSource preferences,
+  required final VerifyAssetPackSignature verifySignature,
+  required final String baseUrl,
+  final AssetPackDistributionManifestValidator manifestValidator =
+      const AssetPackDistributionManifestValidator(),
+}) {
   Future<AssetPackUpdateCheckResult> checkForUpdate({
     required String activeVersion,
     required String appVersion,
   }) async {
     final cachedEtag = await preferences.getString(
-      key: SharedPreferencesKey.assetPackDistributionEtag,
+      key: .assetPackDistributionEtag,
     );
     final response = await fetchDistributionFile(
       dio: dio,
       url: '$baseUrl/manifest.json',
       etag: cachedEtag,
     );
-    final payload = response.statusCode == 304
+    final payload = response.statusCode == HttpStatus.notModified
         ? await readCachedDistribution(preferences: preferences)
         : await fetchDistributionPayload(
             dio: dio,
@@ -119,7 +95,7 @@ class AssetPackDistributionRepository {
       sidecar: sidecar,
     )) {
       throw const AssetPackDistributionException(
-        code: AssetPackDistributionErrorCode.signature,
+        code: .signature,
         message: 'Asset Pack 更新情報の署名を確認できませんでした。',
       );
     }
@@ -128,7 +104,7 @@ class AssetPackDistributionRepository {
       preferences: preferences,
       manifest: manifest,
     );
-    if (response.statusCode != 304) {
+    if (response.statusCode != HttpStatus.notModified) {
       await storeVerifiedDistribution(
         preferences: preferences,
         payload: payload,
@@ -253,11 +229,11 @@ class AssetPackDistributionRepository {
     final value = jsonDecode(utf8.decode(bytes));
     if (value is! Map<String, dynamic>) {
       throw const AssetPackDistributionException(
-        code: AssetPackDistributionErrorCode.invalidResponse,
+        code: .invalidResponse,
         message: 'Asset Pack 更新情報の形式が不正です。',
       );
     }
-    return AssetPackDistributionManifest.fromJson(value);
+    return manifestValidator.parse(value);
   }
 
   Future<void> enforceAndStoreAcceptedManifest({
@@ -305,5 +281,6 @@ Future<AssetPackDistributionRepository> assetPackDistributionRepository(
     dio: dio,
     preferences: preferences,
     verifySignature: verifier.verify,
+    baseUrl: assetPackDistributionBaseUrl,
   );
 }

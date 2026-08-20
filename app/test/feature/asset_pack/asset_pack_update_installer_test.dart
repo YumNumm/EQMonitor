@@ -10,6 +10,8 @@ import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_update_i
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../fixtures/asset_pack_distribution.dart';
+
 void main() {
   late Directory temporaryDirectory;
   late Directory bundledDirectory;
@@ -76,8 +78,7 @@ void main() {
         archiveFile,
         version: '1.1.0',
       );
-      final corruptEntry = copyEntry(
-        validEntry,
+      final corruptEntry = validEntry.copyWith(
         archiveSha256: List.filled(64, '0').join(),
       );
       final installer = createInstaller(
@@ -213,18 +214,5 @@ Future<AssetPackDistributionEntry> distributionEntryFor(
   archivePath: 'packs/$version/asset-pack-v$version.zip',
   archiveSizeBytes: await archiveFile.length(),
   archiveSha256: (await sha256.bind(archiveFile.openRead()).first).toString(),
-  localizations: const {},
-);
-
-AssetPackDistributionEntry copyEntry(
-  AssetPackDistributionEntry entry, {
-  required String archiveSha256,
-}) => AssetPackDistributionEntry(
-  version: entry.version,
-  publishedAt: entry.publishedAt,
-  minimumAppVersion: entry.minimumAppVersion,
-  archivePath: entry.archivePath,
-  archiveSizeBytes: entry.archiveSizeBytes,
-  archiveSha256: archiveSha256,
-  localizations: entry.localizations,
+  localizations: assetPackChangelogLocalizationsFixture,
 );

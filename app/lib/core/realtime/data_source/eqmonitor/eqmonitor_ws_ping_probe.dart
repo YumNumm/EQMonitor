@@ -12,19 +12,6 @@ part 'eqmonitor_ws_ping_probe.g.dart';
 /// クライアント起因 ping の計測結果。
 typedef WsRttSample = ({Duration rtt, DateTime measuredAt});
 
-/// クライアント起因 ping を送出し、往復時間 (RTT) を計測する。
-///
-/// サーバー起因 ping (`{"type":"ping"}` を 15 秒ごと) は接続の生存確認であり
-/// pingId を持たないため、クライアント側から RTT を求められない。そこで
-/// `{"type":"ping","pingId":...}` を自分から送り、echo された
-/// `{"type":"pong","pingId":...}` との時間差を測る。
-///
-/// autoDispose。watch されている間だけ ping を送るので、デバッグ画面を閉じれば
-/// 計測トラフィックも止まる。
-///
-/// state は「現在の接続で最後に計測できた RTT」。再接続すると build が
-/// 再実行されて null に戻るため、切断をまたいだ値が表示され続けることはない。
-/// pong を返さないサーバーに繋がっている場合も null のままになる。
 @riverpod
 class EqmonitorWsPingProbe extends _$EqmonitorWsPingProbe {
   /// ping 送出間隔。サーバー起因 ping (15 秒) とずらしている。

@@ -12,18 +12,11 @@ part of 'ntp_state.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
-NtpState _$NtpStateFromJson(
-  Map<String, dynamic> json
-) {
-    return _NtpStateModel.fromJson(
-      json
-    );
-}
 
 /// @nodoc
 mixin _$NtpState {
 
- int? get offset; DateTime? get updatedAt;
+ Duration get offset; DateTime get updatedAt;
 /// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -56,7 +49,7 @@ abstract mixin class $NtpStateCopyWith<$Res>  {
   factory $NtpStateCopyWith(NtpState value, $Res Function(NtpState) _then) = _$NtpStateCopyWithImpl;
 @useResult
 $Res call({
- int? offset, DateTime? updatedAt
+ Duration offset, DateTime updatedAt
 });
 
 
@@ -73,11 +66,11 @@ class _$NtpStateCopyWithImpl<$Res>
 
 /// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? offset = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? offset = null,Object? updatedAt = null,}) {
   return _then(NtpState(
-offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
+as Duration,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -98,10 +91,10 @@ extension NtpStatePatterns on NtpState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NtpStateModel value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NtpState value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _NtpStateModel() when $default != null:
+case _NtpState() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -120,10 +113,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NtpStateModel value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NtpState value)  $default,){
 final _that = this;
 switch (_that) {
-case _NtpStateModel():
+case _NtpState():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -141,10 +134,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NtpStateModel value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NtpState value)?  $default,){
 final _that = this;
 switch (_that) {
-case _NtpStateModel() when $default != null:
+case _NtpState() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -162,9 +155,9 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? offset,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration offset,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _NtpStateModel() when $default != null:
+case _NtpState() when $default != null:
 return $default(_that.offset,_that.updatedAt);case _:
   return orElse();
 
@@ -183,9 +176,9 @@ return $default(_that.offset,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? offset,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration offset,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
-case _NtpStateModel():
+case _NtpState():
 return $default(_that.offset,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
@@ -203,9 +196,9 @@ return $default(_that.offset,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? offset,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration offset,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
-case _NtpStateModel() when $default != null:
+case _NtpState() when $default != null:
 return $default(_that.offset,_that.updatedAt);case _:
   return null;
 
@@ -217,27 +210,27 @@ return $default(_that.offset,_that.updatedAt);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _NtpStateModel implements NtpState {
-  const _NtpStateModel({this.offset, this.updatedAt});
-  factory _NtpStateModel.fromJson(Map<String, dynamic> json) => _$NtpStateModelFromJson(json);
+class _NtpState implements NtpState {
+  const _NtpState({required this.offset, required this.updatedAt});
+  factory _NtpState.fromJson(Map<String, dynamic> json) => _$NtpStateFromJson(json);
 
-@override final  int? offset;
-@override final  DateTime? updatedAt;
+@override final  Duration offset;
+@override final  DateTime updatedAt;
 
 /// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$NtpStateModelCopyWith<_NtpStateModel> get copyWith => __$NtpStateModelCopyWithImpl<_NtpStateModel>(this, _$identity);
+_$NtpStateCopyWith<_NtpState> get copyWith => __$NtpStateCopyWithImpl<_NtpState>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$NtpStateModelToJson(this, );
+  return _$NtpStateToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NtpStateModel&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NtpState&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -253,11 +246,11 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class _$NtpStateModelCopyWith<$Res> implements $NtpStateCopyWith<$Res> {
-  factory _$NtpStateModelCopyWith(_NtpStateModel value, $Res Function(_NtpStateModel) _then) = __$NtpStateModelCopyWithImpl;
+abstract mixin class _$NtpStateCopyWith<$Res> implements $NtpStateCopyWith<$Res> {
+  factory _$NtpStateCopyWith(_NtpState value, $Res Function(_NtpState) _then) = __$NtpStateCopyWithImpl;
 @override @useResult
 $Res call({
- int? offset, DateTime? updatedAt
+ Duration offset, DateTime updatedAt
 });
 
 
@@ -265,20 +258,20 @@ $Res call({
 
 }
 /// @nodoc
-class __$NtpStateModelCopyWithImpl<$Res>
-    implements _$NtpStateModelCopyWith<$Res> {
-  __$NtpStateModelCopyWithImpl(this._self, this._then);
+class __$NtpStateCopyWithImpl<$Res>
+    implements _$NtpStateCopyWith<$Res> {
+  __$NtpStateCopyWithImpl(this._self, this._then);
 
-  final _NtpStateModel _self;
-  final $Res Function(_NtpStateModel) _then;
+  final _NtpState _self;
+  final $Res Function(_NtpState) _then;
 
 /// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? offset = freezed,Object? updatedAt = freezed,}) {
-  return _then(_NtpStateModel(
-offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+@override @pragma('vm:prefer-inline') $Res call({Object? offset = null,Object? updatedAt = null,}) {
+  return _then(_NtpState(
+offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
+as Duration,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

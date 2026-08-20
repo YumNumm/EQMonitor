@@ -10,33 +10,15 @@ part of 'eqmonitor_ws_status_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻と ping 受信間隔を記録する。
-///
-/// ここが持つのはサーバー起因 ping の観測値だけで、ネットワーク RTT ではない。
-/// RTT はクライアント起因 ping を送出する `eqmonitorWsPingProbeProvider` が持つ。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 
 @ProviderFor(EqMonitorWsStatus)
 final eqMonitorWsStatusProvider = EqMonitorWsStatusProvider._();
 
-/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻と ping 受信間隔を記録する。
-///
-/// ここが持つのはサーバー起因 ping の観測値だけで、ネットワーク RTT ではない。
-/// RTT はクライアント起因 ping を送出する `eqmonitorWsPingProbeProvider` が持つ。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 final class EqMonitorWsStatusProvider
     extends $NotifierProvider<EqMonitorWsStatus, EqMonitorWsStatusState> {
-  /// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する keepAlive Notifier。
-  ///
-  /// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-  /// [WsPingMessage] 受信時に最終 ping 時刻と ping 受信間隔を記録する。
-  ///
-  /// ここが持つのはサーバー起因 ping の観測値だけで、ネットワーク RTT ではない。
-  /// RTT はクライアント起因 ping を送出する `eqmonitorWsPingProbeProvider` が持つ。
+  /// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
   EqMonitorWsStatusProvider._()
     : super(
         from: null,
@@ -64,15 +46,9 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'a01bd369d9c482ec697dfbaa0fd27d40310a0e1e';
+String _$eqMonitorWsStatusHash() => r'e3023c38b55cc361dc06534c31fa325d2fbf61a0';
 
-/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻と ping 受信間隔を記録する。
-///
-/// ここが持つのはサーバー起因 ping の観測値だけで、ネットワーク RTT ではない。
-/// RTT はクライアント起因 ping を送出する `eqmonitorWsPingProbeProvider` が持つ。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 
 abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
   EqMonitorWsStatusState build();

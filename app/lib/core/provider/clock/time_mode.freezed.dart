@@ -12,11 +12,41 @@ part of 'time_mode.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+TimeMode _$TimeModeFromJson(
+  Map<String, dynamic> json
+) {
+        switch (json['runtimeType']) {
+                  case 'realtime':
+          return RealtimeTimeMode.fromJson(
+            json
+          );
+                case 'timeShift':
+          return TimeShiftTimeMode.fromJson(
+            json
+          );
+                case 'replay':
+          return ReplayTimeMode.fromJson(
+            json
+          );
+        
+          default:
+            throw CheckedFromJsonException(
+  json,
+  'runtimeType',
+  'TimeMode',
+  'Invalid union type "${json['runtimeType']}"!'
+);
+        }
+      
+}
+
 /// @nodoc
 mixin _$TimeMode {
 
 
 
+  /// Serializes this TimeMode to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -24,7 +54,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeMode);
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => runtimeType.hashCode;
 
@@ -179,23 +209,30 @@ return replay(_that.currentTime);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class RealtimeTimeMode implements TimeMode {
-  const RealtimeTimeMode();
-  
+  const RealtimeTimeMode({ String? $type}): $type = $type ?? 'realtime';
+  factory RealtimeTimeMode.fromJson(Map<String, dynamic> json) => _$RealtimeTimeModeFromJson(json);
 
 
 
+@JsonKey(name: 'runtimeType')
+final String $type;
 
 
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RealtimeTimeModeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeTimeMode);
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => runtimeType.hashCode;
 
@@ -211,13 +248,17 @@ String toString() {
 
 
 /// @nodoc
-
+@JsonSerializable()
 
 class TimeShiftTimeMode implements TimeMode {
-  const TimeShiftTimeMode({required this.offset});
-  
+  const TimeShiftTimeMode({required this.offset,  String? $type}): $type = $type ?? 'timeShift';
+  factory TimeShiftTimeMode.fromJson(Map<String, dynamic> json) => _$TimeShiftTimeModeFromJson(json);
 
  final  Duration offset;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
 
 /// Create a copy of TimeMode
 /// with the given fields replaced by the non-null parameter values.
@@ -225,14 +266,17 @@ class TimeShiftTimeMode implements TimeMode {
 @pragma('vm:prefer-inline')
 $TimeShiftTimeModeCopyWith<TimeShiftTimeMode> get copyWith => _$TimeShiftTimeModeCopyWithImpl<TimeShiftTimeMode>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$TimeShiftTimeModeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeShiftTimeMode&&(identical(other.offset, offset) || other.offset == offset));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,offset);
 
@@ -277,13 +321,17 @@ as Duration,
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class ReplayTimeMode implements TimeMode {
-  const ReplayTimeMode({required this.currentTime});
-  
+  const ReplayTimeMode({required this.currentTime,  String? $type}): $type = $type ?? 'replay';
+  factory ReplayTimeMode.fromJson(Map<String, dynamic> json) => _$ReplayTimeModeFromJson(json);
 
  final  DateTime currentTime;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
 
 /// Create a copy of TimeMode
 /// with the given fields replaced by the non-null parameter values.
@@ -291,14 +339,17 @@ class ReplayTimeMode implements TimeMode {
 @pragma('vm:prefer-inline')
 $ReplayTimeModeCopyWith<ReplayTimeMode> get copyWith => _$ReplayTimeModeCopyWithImpl<ReplayTimeMode>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$ReplayTimeModeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayTimeMode&&(identical(other.currentTime, currentTime) || other.currentTime == currentTime));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,currentTime);
 

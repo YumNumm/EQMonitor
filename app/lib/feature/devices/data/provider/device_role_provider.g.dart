@@ -10,17 +10,17 @@ part of 'device_role_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// このデバイスに紐づくユーザーのロール。
+/// このデバイスのロール。
 ///
-/// デバイス未登録時・取得失敗時・ロール未提供時は null を返す。
+/// デバイス未登録時・取得失敗時は null を返す。
 /// 権限判定に使うため、取得できない場合に権限ありへフォールバックしない。
 
 @ProviderFor(deviceRole)
 final deviceRoleProvider = DeviceRoleProvider._();
 
-/// このデバイスに紐づくユーザーのロール。
+/// このデバイスのロール。
 ///
-/// デバイス未登録時・取得失敗時・ロール未提供時は null を返す。
+/// デバイス未登録時・取得失敗時は null を返す。
 /// 権限判定に使うため、取得できない場合に権限ありへフォールバックしない。
 
 final class DeviceRoleProvider
@@ -31,9 +31,9 @@ final class DeviceRoleProvider
           FutureOr<DeviceRole?>
         >
     with $FutureModifier<DeviceRole?>, $FutureProvider<DeviceRole?> {
-  /// このデバイスに紐づくユーザーのロール。
+  /// このデバイスのロール。
   ///
-  /// デバイス未登録時・取得失敗時・ロール未提供時は null を返す。
+  /// デバイス未登録時・取得失敗時は null を返す。
   /// 権限判定に使うため、取得できない場合に権限ありへフォールバックしない。
   DeviceRoleProvider._()
     : super(

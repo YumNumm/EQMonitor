@@ -18,10 +18,11 @@ class AppClock extends _$AppClock {
 
   /// 現在のモードに応じた「現在時刻」を返す。
   DateTime now() {
-    final base = ref.read(ntpProvider.notifier).now() ?? clock.now();
+    final base = ref.read(ntpProvider).value?.offset ?? Duration.zero;
+    final now = clock.now().add(base);
     return switch (state) {
-      RealtimeTimeMode() => base,
-      TimeShiftTimeMode(:final offset) => base.add(offset),
+      RealtimeTimeMode() => now,
+      TimeShiftTimeMode(:final offset) => now.add(offset),
       ReplayTimeMode(:final currentTime) => currentTime,
     };
   }

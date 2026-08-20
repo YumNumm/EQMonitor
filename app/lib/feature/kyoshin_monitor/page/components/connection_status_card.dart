@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_ping_probe.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ConnectionStatusCard extends ConsumerWidget {
   const new({super.key});
@@ -10,16 +11,15 @@ class ConnectionStatusCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isConnected = ref.watch(isNetworkConnectedProvider);
-    final wsPhase = ref.watch(
-      eqMonitorWsStatusProvider.select((s) => s.phase),
+    final webSocketStatus = ref.watch(
+      eqMonitorWsStatusProvider,
     );
-
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
 
     final (IconData icon, String label, Color color) = switch ((
       isConnected,
-      wsPhase,
+      webSocketStatus.phase,
     )) {
       (false, _) => (
         Icons.wifi_off_rounded,
@@ -39,7 +39,9 @@ class ConnectionStatusCard extends ConsumerWidget {
     };
 
     return Card.outlined(
-      color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
+      color: designSystem.colorTheme.surfaceContainerHigh.withValues(
+        alpha: 0.92,
+      ),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),

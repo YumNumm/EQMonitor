@@ -77,7 +77,7 @@ final class _LocationStreamProvider
   }
 }
 
-String _$_locationStreamHash() => r'e925d8ad4ec47b6993679647dc9e69d1200c1a99';
+String _$_locationStreamHash() => r'52e900295776a4fcf755be862acc2074c23f0651';
 
 /// 近隣の強震観測点
 
