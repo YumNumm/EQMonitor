@@ -157,43 +157,25 @@ class _HomeActionsCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: .stretch,
             children: [
-              Stack(
-                children: [
-                  ListTile(
-                    title: Text.rich(
+              ListTile(
+                title: Text.rich(
+                  TextSpan(
+                    children: [
                       TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '市区町村別 ',
-                            style: typography.bodySmall.copyWith(
-                              fontWeight: .bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '最大観測震度',
-                            style: typography.titleSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: null,
-                    // TODO(YumNumm): 後で戻す
-                    // onTap: () async =>
-                    //     const IntensityHistoryRoute().push<void>(context),
-                  ),
-                  Positioned.fill(
-                    child: ColoredBox(
-                      color: context.designSystem.colorTheme.surface.withValues(
-                        alpha: 0.8,
-                      ),
-                      child: Center(
-                        child: Text(
-                          'このビルドではこの機能は利用できません',
+                        text: '市区町村別 ',
+                        style: typography.bodySmall.copyWith(
+                          fontWeight: .bold,
                         ),
                       ),
-                    ),
+                      TextSpan(
+                        text: '最大観測震度',
+                        style: typography.titleSmall,
+                      ),
+                    ],
                   ),
-                ],
+                ),
+                onTap: () async =>
+                    const IntensityHistoryRoute().push<void>(context),
               ),
               divider,
               ListTile(
