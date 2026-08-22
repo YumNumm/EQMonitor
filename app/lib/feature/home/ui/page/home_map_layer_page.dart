@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -20,6 +21,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isBetaTesting = ref.watch(buildConfigProvider).isBetaTesting;
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -72,25 +74,27 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  _SettingsSection(
-                    title: '揺れ検知',
-                    description: '揺れ検知イベントの表示とアニメーションを調整します。',
-                    isExpanded:
-                        expandedSection.value ==
-                        _MapLayerSection.shakeDetection,
-                    onTap: () {
-                      expandedSection.value =
+                  if (!isBetaTesting) ...[
+                    _SettingsSection(
+                      title: '揺れ検知',
+                      description: '揺れ検知イベントの表示とアニメーションを調整します。',
+                      isExpanded:
                           expandedSection.value ==
-                              _MapLayerSection.shakeDetection
-                          ? null
-                          : _MapLayerSection.shakeDetection;
-                    },
-                    children: const [
-                      _ShakeDetectionShowTile(),
-                      _ShakeDetectionAnimationModeTile(),
-                    ],
-                  ),
-                  SizedBox(height: spacing.lg),
+                          _MapLayerSection.shakeDetection,
+                      onTap: () {
+                        expandedSection.value =
+                            expandedSection.value ==
+                                _MapLayerSection.shakeDetection
+                            ? null
+                            : _MapLayerSection.shakeDetection;
+                      },
+                      children: const [
+                        _ShakeDetectionShowTile(),
+                        _ShakeDetectionAnimationModeTile(),
+                      ],
+                    ),
+                    SizedBox(height: spacing.lg),
+                  ],
                   _SettingsSection(
                     title: '現在地',
                     description: '位置情報の利用許可と、地図上での表示設定です。',
