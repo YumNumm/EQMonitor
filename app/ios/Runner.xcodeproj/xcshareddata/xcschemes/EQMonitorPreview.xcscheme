@@ -17,6 +17,21 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "27145E033039D29C00C3DBAF"
                BuildableName = "EQMonitorPreview.app"
+               BlueprintName = "EQMonitorPreview"
+               ReferencedContainer = "container:Runner.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "27145F053039E00000C3DBAF"
+               BuildableName = "EQMonitorPreviewWidget.appex"
+               BlueprintName = "EQMonitorPreviewWidget"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

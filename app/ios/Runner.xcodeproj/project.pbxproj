@@ -38,7 +38,10 @@
 		27145EB13039D40000C3DBAF /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09B0693317F839417671E186 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf */; };
 		27145EB23039D40000C3DBAF /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		27145EB33039D40000C3DBAF /* jma_code_table.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CBCF4697AA1879785D2E137 /* jma_code_table.json */; };
-		27145EC13039D40000C3DBAF /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 27145EC23039D40000C3DBAF /* EQMonitorAPI */; };
+		27145F103039E00000C3DBAF /* EQMonitorPreviewWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27145F123039E00000C3DBAF /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 27145EC23039D40000C3DBAF /* EQMonitorAPI */; };
+		27145F133039E00000C3DBAF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C54CFA2E96C7E700BFBBAB /* WidgetKit.framework */; };
+		27145F143039E00000C3DBAF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C54CFC2E96C7E800BFBBAB /* SwiftUI.framework */; };
 		27D62BBE2FF6E75000EF6A27 /* AppIntentExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2BD20D9F1CCF6217A42DB419 /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */; };
 		2C755225A37C4C6116012293 /* EarthquakeDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */; };
@@ -111,6 +114,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		27145F0E3039E00000C3DBAF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27145F053039E00000C3DBAF;
+			remoteInfo = EQMonitorPreviewWidget;
+		};
 		27D62BBC2FF6E75000EF6A27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -135,6 +145,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		27145F0F3039E00000C3DBAF /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27145F103039E00000C3DBAF /* EQMonitorPreviewWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27D62BBF2FF6E75000EF6A27 /* Embed ExtensionKit Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -177,6 +198,7 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LiveActivityUtil.xcframework; sourceTree = "<group>"; };
+		27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EQMonitorPreviewWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27145E043039D29C00C3DBAF /* EQMonitorPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EQMonitorPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AppIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntensityValue.swift; sourceTree = "<group>"; };
@@ -246,6 +268,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntent.swift,
+				Assets.xcassets,
 				DesignSystem.swift,
 				LiveActivity/Common/LocationInfo.swift,
 				LiveActivity/Common/SharedComponents.swift,
@@ -257,7 +280,14 @@
 				Views/EarthquakeWidgetView.swift,
 				Widget.swift,
 			);
-			target = 27145E033039D29C00C3DBAF /* EQMonitorPreview */;
+			target = 27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */;
+		};
+		27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */;
 		};
 		27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -285,6 +315,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreviewWidget; sourceTree = "<group>"; };
 		27145E053039D29C00C3DBAF /* EQMonitorPreview */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreview; sourceTree = "<group>"; };
 		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AppIntentExtension; sourceTree = "<group>"; };
 		85C54CFE2E96C7E800BFBBAB /* Widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27145E1B3039D35E00C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widget; sourceTree = "<group>"; };
@@ -295,7 +326,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27145EC13039D40000C3DBAF /* EQMonitorAPI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27145F073039E00000C3DBAF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27145F123039E00000C3DBAF /* EQMonitorAPI in Frameworks */,
+				27145F143039E00000C3DBAF /* SwiftUI.framework in Frameworks */,
+				27145F133039E00000C3DBAF /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +478,7 @@
 				27D62BB62FF6E75000EF6A27 /* AppIntentExtension */,
 				A55E7C010000000000000002 /* platform */,
 				27145E053039D29C00C3DBAF /* EQMonitorPreview */,
+				27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */,
 				97C146EF1CF9000F007C117D /* Products */,
 				780B8182ACE31F9AF11ED5CF /* Frameworks */,
 				AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */,
@@ -457,6 +498,7 @@
 				27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */,
 				3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */,
 				27145E043039D29C00C3DBAF /* EQMonitorPreview.app */,
+				27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -521,21 +563,45 @@
 				27145E003039D29C00C3DBAF /* Sources */,
 				27145E013039D29C00C3DBAF /* Frameworks */,
 				27145E023039D29C00C3DBAF /* Resources */,
+				27145F0F3039E00000C3DBAF /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				27145F0D3039E00000C3DBAF /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				27145E053039D29C00C3DBAF /* EQMonitorPreview */,
 			);
 			name = EQMonitorPreview;
 			packageProductDependencies = (
-				27145EC23039D40000C3DBAF /* EQMonitorAPI */,
 			);
 			productName = EQMonitorPreview;
 			productReference = 27145E043039D29C00C3DBAF /* EQMonitorPreview.app */;
 			productType = "com.apple.product-type.application";
+		};
+		27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27145F093039E00000C3DBAF /* Build configuration list for PBXNativeTarget "EQMonitorPreviewWidget" */;
+			buildPhases = (
+				27145F063039E00000C3DBAF /* Sources */,
+				27145F073039E00000C3DBAF /* Frameworks */,
+				27145F083039E00000C3DBAF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */,
+			);
+			name = EQMonitorPreviewWidget;
+			packageProductDependencies = (
+				27145EC23039D40000C3DBAF /* EQMonitorAPI */,
+			);
+			productName = EQMonitorPreviewWidget;
+			productReference = 27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		27D62BB42FF6E75000EF6A27 /* AppIntentExtension */ = {
 			isa = PBXNativeTarget;
@@ -710,12 +776,20 @@
 				27D62BB42FF6E75000EF6A27 /* AppIntentExtension */,
 				9BC9C1EC695652E993BA1D37 /* WidgetModelsTests */,
 				27145E033039D29C00C3DBAF /* EQMonitorPreview */,
+				27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		27145E023039D29C00C3DBAF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27145F083039E00000C3DBAF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -832,6 +906,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27145F063039E00000C3DBAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 				27145E293039D3F100C3DBAF /* EarthquakeDisplayItem.swift in Sources */,
 				27145EAD3039D40000C3DBAF /* EewDisplay.swift in Sources */,
 				27145EAB3039D40000C3DBAF /* LiveActivityDate.swift in Sources */,
@@ -936,6 +1017,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		27145F0D3039E00000C3DBAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */;
+			targetProxy = 27145F0E3039E00000C3DBAF /* PBXContainerItemProxy */;
+		};
 		27D62BBD2FF6E75000EF6A27 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 27D62BB42FF6E75000EF6A27 /* AppIntentExtension */;
@@ -1218,6 +1304,136 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.EQMonitorPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Profile;
+		};
+		27145F0A3039E00000C3DBAF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EQMonitorPreviewWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitorPreviewWidget;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.EQMonitorPreview.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		27145F0B3039E00000C3DBAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EQMonitorPreviewWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitorPreviewWidget;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.EQMonitorPreview.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		27145F0C3039E00000C3DBAF /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CPL7H8SHVM;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EQMonitorPreviewWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitorPreviewWidget;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.EQMonitorPreview.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1848,6 +2064,16 @@
 				27145E0C3039D29E00C3DBAF /* Debug */,
 				27145E0D3039D29E00C3DBAF /* Release */,
 				27145E0E3039D29E00C3DBAF /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27145F093039E00000C3DBAF /* Build configuration list for PBXNativeTarget "EQMonitorPreviewWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27145F0A3039E00000C3DBAF /* Debug */,
+				27145F0B3039E00000C3DBAF /* Release */,
+				27145F0C3039E00000C3DBAF /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
