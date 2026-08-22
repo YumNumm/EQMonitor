@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_re
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:eqmonitor/feature/devices/data/workflow/device_migration_workflow.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -126,6 +127,7 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     }
 
     await provisioningRepo.clearProvisioned();
+    ref.invalidate(notificationSlotRepositoryProvider);
     _retryController.reset();
     state = const AsyncData(DeviceProvisioningStatus.required);
     ref.invalidate(pushTokenSyncProvider, asReload: true);

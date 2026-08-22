@@ -191,17 +191,24 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     required int regionCode,
     String? regionName,
     String? cityCode,
+    String? tsunamiForecastRegionCode,
   }) async {
     final current = await future;
     final existing = current
         .where((s) => s.slotType == .currentLocation)
         .firstOrNull;
-    if (existing == null ||
-        (existing.regionId == regionCode && existing.cityCode == cityCode)) {
+    if (existing == null) {
       return false;
     }
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.putDeviceLocation(regionId: regionCode, cityCode: cityCode);
+    final didUpdate = await repo.putDeviceLocation(
+      region: regionCode,
+      city: cityCode,
+      tsunamiForecastRegion: tsunamiForecastRegionCode,
+    );
+    if (!didUpdate) {
+      return false;
+    }
     ref.invalidateSelf();
     return true;
   }

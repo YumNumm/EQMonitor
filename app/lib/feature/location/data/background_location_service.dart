@@ -114,35 +114,36 @@ class BackgroundLocationSyncCoordinator {
       final prevCityName = currentLocationSlot?.cityName;
 
       final resolver = await ref.read(jmaRegionResolverProvider.future);
-      // EEW 用の area_forecast_local_eew コード
-      final code = resolver.resolveRegionCode(latitude, longitude);
-      if (code == null) {
-        return;
-      }
-      final name = resolver.resolveRegionName(latitude, longitude);
       const retry = BackgroundLocationUpdateRetry();
-      // 地震 (VXSE53) 用の市区町村 + 親一次細分化地域コード
-      final earthquakeResolution = resolver.resolveEarthquakeRegion(
-        latitude,
-        longitude,
-      );
       // 揺れ検知は市区町村コード (area_information_city) のみ必要。
       // earthquakeResolution は親 region 解決に失敗すると null になるため、
       // 揺れ検知用の cityCode は resolver から直接取得する。
       final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
+      final tsunamiForecastRegionCode = resolver
+          .resolveTsunamiForecastRegionCode(latitude, longitude);
 
       // スロットリージョン更新（EEW と地震情報が統合されたので1回で済む）
+      EarthquakeRegionResolution? earthquakeResolution;
       var didUpdateEew = false;
       String? eewError;
       try {
         didUpdateEew = await retry.run(
           action: () async {
+            final resolution = resolver.resolveEarthquakeRegion(
+              latitude,
+              longitude,
+            );
+            earthquakeResolution = resolution;
+            if (resolution == null) {
+              throw StateError('AreaForecastLocalE could not be resolved');
+            }
             return ref
                 .read(notificationSlotsProvider.notifier)
                 .updateCurrentLocationRegion(
-                  regionCode: code,
-                  regionName: name,
-                  cityCode: earthquakeResolution?.cityCode,
+                  regionCode: resolution.regionCode,
+                  regionName: resolution.regionName,
+                  cityCode: resolution.cityCode,
+                  tsunamiForecastRegionCode: tsunamiForecastRegionCode,
                 );
           },
         );
@@ -150,6 +151,7 @@ class BackgroundLocationSyncCoordinator {
         talker.error('[BackgroundLocation] update slot location failed', e, st);
         eewError = e.toString();
       }
+      final resolution = earthquakeResolution;
 
       // 地震情報は統合スロットで一緒に更新されるため、個別更新不要。
       final didUpdateEarthquake = didUpdateEew;
@@ -157,7 +159,7 @@ class BackgroundLocationSyncCoordinator {
 
       // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の
       // 一次細分化地域を反映する（iOS のみ）。
-      await syncCurrentLocationToAppGroup(ref, earthquakeResolution);
+      await syncCurrentLocationToAppGroup(ref, resolution);
 
       // 揺れ検知 sub_region 更新
       var didUpdateShake = false;
@@ -177,6 +179,10 @@ class BackgroundLocationSyncCoordinator {
         shakeError = e.toString();
       }
 
+      if (resolution == null) {
+        return;
+      }
+
       // デバッグ通知
       await fireDebugNotifications(
         ref,
@@ -184,12 +190,12 @@ class BackgroundLocationSyncCoordinator {
         longitude: longitude,
         prevRegionCode: prevRegionCode,
         prevRegionName: prevRegionName,
-        newRegionCode: code,
-        newRegionName: name,
+        newRegionCode: resolution.regionCode,
+        newRegionName: resolution.regionName,
         prevCityCode: prevCityCode,
         prevCityName: prevCityName,
-        cityCode: earthquakeResolution?.cityCode,
-        cityName: earthquakeResolution?.cityName,
+        cityCode: resolution.cityCode,
+        cityName: resolution.cityName,
         didUpdateEew: didUpdateEew,
         didUpdateEarthquake: didUpdateEarthquake,
         didUpdateShake: didUpdateShake,
