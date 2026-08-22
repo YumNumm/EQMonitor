@@ -2,7 +2,7 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 3.0.0-beta.11 # x-release-please-version
+version: 3.0.0-beta.12 # x-release-please-version
 
 environment:
   sdk: ^3.14.0-29.0.dev
