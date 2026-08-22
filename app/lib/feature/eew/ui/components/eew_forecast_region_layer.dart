@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_forecast_region_intensity_filter_updater.dart';
-import 'package:eqmonitor/feature/eew/data/logic/eew_forecast_region_warning_filter_updater.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_area_selector.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -35,6 +34,8 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   static const _sourceId = 'eqmonitor_map';
   static const _intensitySourceLayerId = 'areaForecastLocalE';
   static const _warningSourceLayerId = 'areaForecastLocalEew';
+  static const _warningLayerId = 'eew-details-warning-fill';
+  static const _warningLineLayerId = 'eew-details-warning-line';
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   @override
@@ -45,9 +46,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
     final intensityFilterUpdater = ref.watch(
       eewForecastRegionIntensityFilterUpdaterProvider,
-    );
-    final warningFilterUpdater = ref.watch(
-      eewForecastRegionWarningFilterUpdaterProvider,
     );
 
     final regionMaxIntensities = useMemoized(() {
@@ -181,7 +179,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         enqueue(() async {
           await styleController.addLayer(
             FillStyleLayer(
-              id: EewForecastRegionWarningFilterUpdater.fillLayerId,
+              id: _warningLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
@@ -191,7 +189,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           );
           await styleController.addLayer(
             LineStyleLayer(
-              id: EewForecastRegionWarningFilterUpdater.lineLayerId,
+              id: _warningLineLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
@@ -201,9 +199,16 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               },
             ),
           );
-          await warningFilterUpdater.update(
-            styleController: styleController,
-            warningCodes: latestWarningCodes.value,
+          final latestFilter = _areaFilterBuilder.build(
+            latestWarningCodes.value,
+          );
+          await styleController.updateFilter(
+            id: _warningLayerId,
+            filter: latestFilter,
+          );
+          await styleController.updateFilter(
+            id: _warningLineLayerId,
+            filter: latestFilter,
           );
         }),
       );
@@ -212,16 +217,12 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() async {
             try {
-              await styleController.removeLayer(
-                EewForecastRegionWarningFilterUpdater.lineLayerId,
-              );
+              await styleController.removeLayer(_warningLineLayerId);
             } on Exception {
               // ignore
             }
             try {
-              await styleController.removeLayer(
-                EewForecastRegionWarningFilterUpdater.fillLayerId,
-              );
+              await styleController.removeLayer(_warningLayerId);
             } on Exception {
               // ignore
             }
@@ -231,7 +232,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       // warningCodes はレイヤー生成時の初期filterにのみ使用し、報切替時は
       // 下の更新用effectでfilterだけを更新する。
       // ignore_keys: warningCodes
-    }, [styleController, displayMode, isDarkMode, warningFilterUpdater]);
+    }, [styleController, displayMode, isDarkMode]);
 
     // 警報モード: 選択報ごとに既存レイヤーのfilterを更新する
     useEffect(
@@ -240,13 +241,18 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           return null;
         }
 
+        final filter = _areaFilterBuilder.build(warningCodes);
         unawaited(
-          enqueue(
-            () => warningFilterUpdater.update(
-              styleController: styleController,
-              warningCodes: warningCodes,
-            ),
-          ),
+          enqueue(() async {
+            await styleController.updateFilter(
+              id: _warningLayerId,
+              filter: filter,
+            );
+            await styleController.updateFilter(
+              id: _warningLineLayerId,
+              filter: filter,
+            );
+          }),
         );
         return null;
       },
@@ -255,7 +261,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         displayMode,
         warningReportKey,
         warningCodes,
-        warningFilterUpdater,
       ],
     );
 
