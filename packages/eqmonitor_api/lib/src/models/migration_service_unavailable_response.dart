@@ -14,6 +14,6 @@ abstract class MigrationServiceUnavailableResponse with _$MigrationServiceUnavai
     required String code,
     required String message,
   }) = _MigrationServiceUnavailableResponse;
-  
+
   factory MigrationServiceUnavailableResponse.fromJson(Map<String, Object?> json) => _$MigrationServiceUnavailableResponseFromJson(json);
 }
