@@ -1,18 +1,33 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/location/data/background_location_service.dart';
+import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jma_map/jma_map.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+
+const EarthquakeRegionResolution _ibarakiSouthResolution = (
+  regionCode: 301,
+  regionName: '茨城県南部',
+  cityCode: '0820100',
+  cityName: '水戸市',
+);
 
 // ---------------------------------------------------------------------------
 // Fakes
@@ -35,8 +50,61 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   Future<List<NotificationSlot>> build() async => _slots;
 }
 
+final class _FakeShakeDetectionSettingsNotifier
+    extends ShakeDetectionSettingsNotifier {
+  @override
+  Future<ShakeDetectionState> build() async => (
+    entries: const <ShakeDetectionEntry>[],
+    availableSubRegions: const <ShakeDetectionSubRegion>[],
+  );
+
+  @override
+  Future<bool> updateCurrentLocationSubRegion(String? cityCode) async => false;
+}
+
+final class _FakeJmaRegionResolver extends JmaRegionResolver {
+  new({required this.earthquakeResolution})
+    : super(
+        cityMapData: JmaMap_JmaMapData(),
+        tsunamiMapData: JmaMap_JmaMapData(),
+        earthquakeParameter: const EarthquakeParameter(
+          metadata: ParameterMetadata(
+            type: ParameterType.earthquakeStations,
+            schemaVersion: 1,
+            sourceVersion: 'test',
+            sourceUpdatedAt: null,
+            sourceUrls: [],
+            sha256: '',
+          ),
+          prefectures: [],
+        ),
+      );
+
+  final EarthquakeRegionResolution? earthquakeResolution;
+  int resolveEarthquakeRegionCalls = 0;
+
+  @override
+  String? resolveCityCode(double latitude, double longitude) => '0820100';
+
+  @override
+  String? resolveTsunamiForecastRegionCode(
+    double latitude,
+    double longitude,
+  ) => '201';
+
+  @override
+  EarthquakeRegionResolution? resolveEarthquakeRegion(
+    double latitude,
+    double longitude,
+  ) {
+    resolveEarthquakeRegionCalls += 1;
+    return earthquakeResolution;
+  }
+}
+
 final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   final putDeviceLocationCalls = <api.DeviceLocationRequest>[];
+  final putDeviceLocationJsonCalls = <Map<String, dynamic>>[];
 
   @override
   void close({bool force = false}) {}
@@ -49,15 +117,17 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   ) async {
     if (options.path.endsWith('/device/me/location') &&
         options.method == 'PUT') {
-      final request = api.DeviceLocationRequest.fromJson(
-        Map<String, Object?>.from(options.data as Map<String, dynamic>),
+      final requestJson = Map<String, dynamic>.from(
+        options.data as Map<String, dynamic>,
       );
+      putDeviceLocationJsonCalls.add(requestJson);
+      final request = api.DeviceLocationRequest.fromJson(requestJson);
       putDeviceLocationCalls.add(request);
       return _jsonResponse(
         jsonEncode({
-          'region_id': request.regionId,
-          'city_code': request.cityCode,
-          'tsunami_forecast_region_code': null,
+          'region': request.region,
+          'city': request.city,
+          'tsunamiForecastRegion': request.tsunamiForecastRegion,
         }),
       );
     }
@@ -206,6 +276,38 @@ ProviderContainer _createSlotsContainer(
   );
 }
 
+ProviderContainer _createLocationSyncContainer({
+  required _FakeDeviceLocationApiAdapter adapter,
+  required _FakeJmaRegionResolver resolver,
+}) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+    ..httpClientAdapter = adapter;
+  return ProviderContainer(
+    overrides: [
+      apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
+      notificationSlotsProvider.overrideWith(
+        () => _FakeNotificationSlotsNotifier([
+          _currentLocationSlot(regionId: 9080),
+        ]),
+      ),
+      jmaRegionResolverProvider.overrideWith(
+        (ref) async => resolver,
+      ),
+      shakeDetectionSettingsProvider.overrideWith(
+        _FakeShakeDetectionSettingsNotifier.new,
+      ),
+    ],
+  );
+}
+
+final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
+  await const BackgroundLocationSyncCoordinator().applyLocation(ref, 36, 140);
+});
+
+final _applyPendingLocationProvider = FutureProvider<void>((ref) async {
+  await const BackgroundLocationSyncCoordinator().applyPendingLocation(ref);
+});
+
 NotificationSlot _currentLocationSlot({required int? regionId}) =>
     NotificationSlot(
       id: 'slot-cl',
@@ -249,6 +351,11 @@ void addTeardownToContainer(ProviderContainer container) {
 // ---------------------------------------------------------------------------
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  talker_lib.talker = Talker(
+    settings: TalkerSettings(useConsoleLogs: false),
+  );
+
   // ==========================================================================
   // ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion
   // ==========================================================================
@@ -492,10 +599,37 @@ void main() {
   // regionId 変化のみを判定する単一メソッドに置き換えられた。
   // ==========================================================================
   group('NotificationSlotsNotifier.updateCurrentLocationRegion', () {
+    test('位置情報APIへ新フィールドだけを送る', () async {
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer([
+        _currentLocationSlot(regionId: 9080),
+      ], adapter: adapter);
+      addTeardownToContainer(container);
+
+      await container.read(notificationSlotsProvider.future);
+
+      await container
+          .read(notificationSlotsProvider.notifier)
+          .updateCurrentLocationRegion(
+            regionCode: 301,
+            regionName: '茨城県南部',
+            cityCode: '0820100',
+            tsunamiForecastRegionCode: '201',
+          );
+
+      expect(adapter.putDeviceLocationJsonCalls, [
+        {
+          'region': '301',
+          'city': '0820100',
+          'tsunamiForecastRegion': '201',
+        },
+      ]);
+    });
+
     test('現在地スロットの regionCode が変化した場合に true を返す', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
       final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9011),
+        _currentLocationSlot(regionId: 300),
       ], adapter: adapter);
       addTeardownToContainer(container);
 
@@ -503,28 +637,83 @@ void main() {
 
       final result = await container
           .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: 9012, regionName: '多摩東部');
+          .updateCurrentLocationRegion(regionCode: 301, regionName: '茨城県南部');
 
       expect(result, isTrue);
       expect(adapter.putDeviceLocationCalls, hasLength(1));
-      expect(adapter.putDeviceLocationCalls.single.regionId, '9012');
+      expect(adapter.putDeviceLocationCalls.single.region, '301');
     });
 
-    test('現在地スロットの regionCode が同一なら false を返す', () async {
+    test('茨城県北部ではregion 300を送る', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
       final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9011),
+        _currentLocationSlot(regionId: 9080),
       ], adapter: adapter);
       addTeardownToContainer(container);
 
       await container.read(notificationSlotsProvider.future);
 
-      final result = await container
+      await container
           .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: 9011, regionName: '東京地方');
+          .updateCurrentLocationRegion(regionCode: 300, regionName: '茨城県北部');
+
+      expect(adapter.putDeviceLocationCalls.single.region, '300');
+    });
+
+    test('同じ位置情報payloadを連続送信しない', () async {
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer([
+        _currentLocationSlot(regionId: 300),
+      ], adapter: adapter);
+      addTeardownToContainer(container);
+
+      await container.read(notificationSlotsProvider.future);
+
+      final notifier = container.read(notificationSlotsProvider.notifier);
+      await notifier.updateCurrentLocationRegion(
+        regionCode: 300,
+        regionName: '茨城県北部',
+        cityCode: '0820100',
+        tsunamiForecastRegionCode: '201',
+      );
+      final result = await notifier.updateCurrentLocationRegion(
+        regionCode: 300,
+        regionName: '茨城県北部',
+        cityCode: '0820100',
+        tsunamiForecastRegionCode: '201',
+      );
 
       expect(result, isFalse);
-      expect(adapter.putDeviceLocationCalls, isEmpty);
+      expect(adapter.putDeviceLocationCalls, hasLength(1));
+    });
+
+    test('津波予報区だけが変わった場合も位置情報を再送する', () async {
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final container = _createSlotsContainer([
+        _currentLocationSlot(regionId: 300),
+      ], adapter: adapter);
+      addTeardownToContainer(container);
+
+      await container.read(notificationSlotsProvider.future);
+
+      final notifier = container.read(notificationSlotsProvider.notifier);
+      await notifier.updateCurrentLocationRegion(
+        regionCode: 300,
+        cityCode: '0820100',
+        tsunamiForecastRegionCode: '201',
+      );
+      final result = await notifier.updateCurrentLocationRegion(
+        regionCode: 300,
+        cityCode: '0820100',
+        tsunamiForecastRegionCode: '202',
+      );
+
+      expect(result, isTrue);
+      expect(adapter.putDeviceLocationCalls, hasLength(2));
+      expect(
+        adapter.putDeviceLocationCalls.last.tsunamiForecastRegion,
+        '202',
+      );
     });
 
     test('現在地スロットがない場合は false を返す', () async {
@@ -543,6 +732,72 @@ void main() {
 
       expect(result, isFalse);
       expect(adapter.putDeviceLocationCalls, isEmpty);
+    });
+  });
+
+  group('BackgroundLocationSyncCoordinator', () {
+    test('live位置更新ではAreaForecastLocalEをregionとして送る', () async {
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final resolver = _FakeJmaRegionResolver(
+        earthquakeResolution: _ibarakiSouthResolution,
+      );
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: resolver,
+      );
+      addTeardownToContainer(container);
+
+      await container.read(_applyLiveLocationProvider.future);
+
+      expect(adapter.putDeviceLocationJsonCalls.single, {
+        'region': '301',
+        'city': '0820100',
+        'tsunamiForecastRegion': '201',
+      });
+    });
+
+    test('pending位置更新ではAreaForecastLocalEをregionとして送る', () async {
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      const channel = MethodChannel('background_location_tracker/persistence');
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        expect(call.method, 'consumePending');
+        return {'latitude': 36.0, 'longitude': 140.0};
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final resolver = _FakeJmaRegionResolver(
+        earthquakeResolution: _ibarakiSouthResolution,
+      );
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: resolver,
+      );
+      addTeardownToContainer(container);
+
+      await container.read(_applyPendingLocationProvider.future);
+
+      expect(adapter.putDeviceLocationJsonCalls.single, {
+        'region': '301',
+        'city': '0820100',
+        'tsunamiForecastRegion': '201',
+      });
+    });
+
+    test('regionを解決できない場合は再試行してAPIを送らない', () async {
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final resolver = _FakeJmaRegionResolver(earthquakeResolution: null);
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: resolver,
+      );
+      addTeardownToContainer(container);
+
+      await container.read(_applyLiveLocationProvider.future);
+
+      expect(resolver.resolveEarthquakeRegionCalls, 3);
+      expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
   });
 }

@@ -4,6 +4,8 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.d
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geobase/geobase.dart';
+import 'package:jma_map/jma_map.dart';
 
 EarthquakeParameter _buildParameter() {
   const fukushimaNakadori = EarthquakeParameterRegionItem(
@@ -78,7 +80,38 @@ EarthquakeParameter _buildParameter() {
   );
 }
 
+JmaMap_JmaMapData _tsunamiMapData() => JmaMap_JmaMapData(
+  mapType: JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI,
+  data: [
+    JmaMap_JmaMapData_JmaMapDataItem(
+      property: JmaMap_JmaMapData_JmaMapDataItem_Property(
+        code: '201',
+        name: '茨城県',
+      ),
+      bytes: LineString.from([
+        Geographic(lon: 140.5, lat: 35.5),
+        Geographic(lon: 140.5, lat: 36.5),
+      ]).toBytes(),
+      dataType: JmaMap_JmaMapData_DataType.LINE_STRING,
+    ),
+  ],
+);
+
 void main() {
+  group('JmaRegionResolver.resolveTsunamiForecastRegionCode', () {
+    test('現在地に最も近いAreaTsunamiの3桁コードを返す', () {
+      final resolver = JmaRegionResolver(
+        cityMapData: JmaMap_JmaMapData(),
+        tsunamiMapData: _tsunamiMapData(),
+        earthquakeParameter: _buildParameter(),
+      );
+
+      final result = resolver.resolveTsunamiForecastRegionCode(36, 140.4);
+
+      expect(result, '201');
+    });
+  });
+
   group('CityToRegionLookupBuilder.build', () {
     test('cityCode を親 region コード・名にマップする', () {
       final lookup = CityToRegionLookupBuilder.build(_buildParameter());

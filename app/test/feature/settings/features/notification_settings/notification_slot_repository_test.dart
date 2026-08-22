@@ -13,13 +13,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late _SlotApiAdapter adapter;
+  late api.ApiClient apiClient;
   late NotificationSlotRepository repository;
 
   setUp(() {
     adapter = _SlotApiAdapter();
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
-    repository = NotificationSlotRepository(api.ApiClient(dio));
+    apiClient = api.ApiClient(dio);
+    repository = NotificationSlotRepository(api: apiClient);
   });
 
   group('getSlots', () {
@@ -74,6 +76,35 @@ void main() {
         adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
         isFalse,
       );
+    });
+  });
+
+  group('putDeviceLocation', () {
+    test('同一セッション内の同じpayloadは再送しない', () async {
+      final first = await repository.putDeviceLocation(
+        region: 301,
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      );
+      final second = await repository.putDeviceLocation(
+        region: 301,
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      );
+
+      expect(first, isTrue);
+      expect(second, isFalse);
+      expect(adapter.deviceLocationPutCount, 1);
+    });
+
+    test('Repository再生成後は同じpayloadでも初回送信する', () async {
+      await repository.putDeviceLocation(region: 301);
+      final recreatedRepository = NotificationSlotRepository(api: apiClient);
+
+      final result = await recreatedRepository.putDeviceLocation(region: 301);
+
+      expect(result, isTrue);
+      expect(adapter.deviceLocationPutCount, 2);
     });
   });
 
@@ -260,6 +291,7 @@ final class _SlotApiAdapter implements HttpClientAdapter {
   Map<String, dynamic>? lastRequestBody;
   List<dynamic>? lastRequestList;
   String? lastDeletedSlotId;
+  int deviceLocationPutCount = 0;
 
   @override
   void close({bool force = false}) {}
@@ -285,6 +317,11 @@ final class _SlotApiAdapter implements HttpClientAdapter {
     }
     if (options.data is List) {
       lastRequestList = List<dynamic>.from(options.data as List);
+    }
+
+    if (path.endsWith('/device/me/location') && method == 'PUT') {
+      deviceLocationPutCount += 1;
+      return _jsonResponse(jsonEncode(lastRequestBody));
     }
 
     if (path.endsWith('/slots') && method == 'PUT') {
