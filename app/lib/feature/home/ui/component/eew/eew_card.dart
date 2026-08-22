@@ -265,7 +265,7 @@ class _EewMainCard extends StatelessWidget {
                     _EewLpgmSection(intensity: maxLpgmIntensity),
                   if (showDeepHypocenterIntensityNotice)
                     Text(
-                      '震源の深さが150km以上のため、予想震度は発表されていません',
+                      '震源の深さが150kmより深いため、予想震度は発表されていません',
                       style: designSystem.typography.labelMedium,
                     ),
                 ],
@@ -348,16 +348,16 @@ class _EewCardHeader extends StatelessWidget {
     );
 
     final Widget? rightColumn;
-    if (countdownText != null) {
+    if (countdownText != null || showArrived) {
       rightColumn = Column(
         crossAxisAlignment: .end,
         children: [
           Text(
-            '主要動到達まで',
+            countdownText != null ? '主要動到達まで' : '主要動',
             style: typography.labelSmall.copyWith(color: _secondaryTextColor),
           ),
           Text(
-            countdownText,
+            countdownText ?? '到達済み',
             style: typography.monoMedium.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -366,14 +366,6 @@ class _EewCardHeader extends StatelessWidget {
             ),
           ),
         ],
-      );
-    } else if (showArrived) {
-      rightColumn = Text(
-        '主要動到達済み',
-        style: typography.titleSmall.copyWith(
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
       );
     } else {
       rightColumn = null;

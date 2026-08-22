@@ -13,7 +13,7 @@ class EewDeepHypocenterIntensityNotice {
       return false;
     }
     final depth = eew.hypocenter?.depth;
-    if (depth == null || depth < 150) {
+    if (depth == null || depth <= 150) {
       return false;
     }
     final maxIntensity = eew.forecastIntensity?.maxIntensity;

@@ -10,29 +10,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _notice = '震源の深さが150km以上のため、予想震度は発表されていません';
+const _notice = '震源の深さが150kmより深いため、予想震度は発表されていません';
 final _now = DateTime.utc(2026, 8, 22, 12);
 
 void main() {
-  testWidgets('深さ150km未満かつ最大震度不明では深発注意文を出さない', (tester) async {
+  testWidgets('最大震度未発表では震度アイコンにハイフンを表示する', (tester) async {
+    await _pump(tester, eew: _eew(depth: 10));
+
+    expect(find.text('-'), findsOneWidget);
+    expect(find.text('不明'), findsNothing);
+  });
+
+  testWidgets('深さ150km以下かつ最大震度不明では深発注意文を出さない', (tester) async {
     await _pump(tester, eew: _eew(depth: 10, maxIntensity: .unknown));
 
     expect(find.text(_notice), findsNothing);
   });
 
-  testWidgets('深さ150km以上かつ最大震度未発表では深発注意文を出す', (tester) async {
+  testWidgets('深さちょうど150kmでは深発注意文を出さない', (tester) async {
     await _pump(tester, eew: _eew(depth: 150));
+
+    expect(find.text(_notice), findsNothing);
+  });
+
+  testWidgets('深さ150kmより深く最大震度未発表では深発注意文を出す', (tester) async {
+    await _pump(tester, eew: _eew(depth: 151));
 
     expect(find.text(_notice), findsOneWidget);
   });
 
-  testWidgets('深さ150km以上でも最大震度が発表されていれば深発注意文を出さない', (tester) async {
+  testWidgets('深さ150kmより深くても最大震度が発表されていれば深発注意文を出さない', (tester) async {
     await _pump(tester, eew: _eew(depth: 200, maxIntensity: .four));
 
     expect(find.text(_notice), findsNothing);
   });
 
-  testWidgets('PLUM法では深さ150km以上でも深発注意文を出さない', (tester) async {
+  testWidgets('PLUM法では深さ150kmより深くても深発注意文を出さない', (tester) async {
     await _pump(tester, eew: _eew(depth: 200, isPlum: true));
 
     expect(find.text(_notice), findsNothing);

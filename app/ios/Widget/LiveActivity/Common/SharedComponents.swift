@@ -44,13 +44,10 @@ extension View {
 
 // MARK: - 主要動到達カウントダウン
 
-/// 主要動到達までの残り時間。桁が変わっても幅が揺れないよう等幅フォントで描く。
-/// Lock Screen のヘッダーと Dynamic Island で同じ見た目にするため共通化している。
 @available(iOS 16.1, *)
 struct ArrivalCountdownText: View {
     let remaining: ClosedRange<Date>
     let size: CGFloat
-    /// ヘッダーのように背景を自前で塗る場所では白を渡す
     var color: Color = .primary
 
     var body: some View {
@@ -84,7 +81,6 @@ struct StripePattern: View {
         self.colors = colors
     }
 
-    /// EEW用の便利イニシャライザ
     init(isWarning: Bool) {
         self.colors = isWarning
             ? [Color.red, Color.black]
