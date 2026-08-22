@@ -20,7 +20,9 @@ struct EewDisplayTests {
         serialNo: Int? = 3,
         maxIntensity: IntensityValue? = .sixUpper,
         forecastIntensity: IntensityValue? = .fiveLower,
-        arrivalDate: Date? = nil
+        arrivalDate: Date? = nil,
+        depth: Double? = 10,
+        isLowAccuracyDetection: Bool = false
     ) -> EewDisplay {
         EewDisplay(
             isCanceled: isCanceled,
@@ -29,7 +31,9 @@ struct EewDisplayTests {
             serialNo: serialNo,
             maxIntensity: maxIntensity,
             forecastIntensity: forecastIntensity,
-            arrivalDate: arrivalDate ?? arrival
+            arrivalDate: arrivalDate ?? arrival,
+            depth: depth,
+            isLowAccuracyDetection: isLowAccuracyDetection
         )
     }
 
@@ -76,6 +80,41 @@ struct EewDisplayTests {
 
     @Test func hasNoIntensityWhenBothAreMissing() {
         #expect(display(maxIntensity: nil, forecastIntensity: nil).intensity == nil)
+    }
+
+    // MARK: - 深発地震の注釈
+
+    /// 深さ 150km より深く予想震度が未発表のときだけ理由を添える
+    @Test func deepHypocenterNoticeRequiresMissingIntensityAndDeepDepth() {
+        #expect(display(maxIntensity: nil, depth: 151).showsDeepHypocenterIntensityNotice)
+        #expect(display(maxIntensity: nil, depth: 420).showsDeepHypocenterIntensityNotice)
+    }
+
+    /// 150km 以下は深発を理由にできない（150km は「より深い」に当たらない）
+    @Test func deepHypocenterNoticeIsAbsentForShallowDepth() {
+        #expect(display(maxIntensity: nil, depth: 150).showsDeepHypocenterIntensityNotice == false)
+        #expect(display(maxIntensity: nil, depth: 10).showsDeepHypocenterIntensityNotice == false)
+        #expect(display(maxIntensity: nil, depth: nil).showsDeepHypocenterIntensityNotice == false)
+    }
+
+    /// 150km より深くても最大震度が発表されていれば理由を添えない
+    @Test func deepHypocenterNoticeIsAbsentWhenIntensityIsPublished() {
+        #expect(display(maxIntensity: .three, depth: 420).showsDeepHypocenterIntensityNotice == false)
+    }
+
+    /// PLUM法・レベル法・1点検知は未発表の理由が深さではない
+    @Test func deepHypocenterNoticeIsAbsentForLowAccuracyDetection() {
+        #expect(
+            display(maxIntensity: nil, depth: 420, isLowAccuracyDetection: true)
+                .showsDeepHypocenterIntensityNotice == false
+        )
+    }
+
+    @Test func deepHypocenterNoticeIsAbsentOnCanceledReport() {
+        #expect(
+            display(isCanceled: true, maxIntensity: nil, depth: 420)
+                .showsDeepHypocenterIntensityNotice == false
+        )
     }
 
     // MARK: - 文言
@@ -131,7 +170,9 @@ struct EewDisplayTests {
             serialNo: 3,
             maxIntensity: .sixUpper,
             forecastIntensity: nil,
-            arrivalDate: nil
+            arrivalDate: nil,
+            depth: 10,
+            isLowAccuracyDetection: false
         )
         #expect(withoutArrival.dynamicIslandLayout == .summary)
     }

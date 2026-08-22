@@ -56,7 +56,10 @@ struct EewContentState: Codable, Hashable {
             serialNo: serialNo,
             maxIntensity: intensityValue,
             forecastIntensity: location?.forecastIntensityValue,
-            arrivalDate: location?.arrivalDate
+            arrivalDate: location?.arrivalDate,
+            depth: depth,
+            isLowAccuracyDetection: isPlum == true || isLevel == true
+                || isOnePoint == true
         )
     }
 }
@@ -78,7 +81,7 @@ extension EewContentState {
         depth: 10,
         time: "2024-01-01T16:10:00+09:00",
         isOriginTime: true,
-        maxIntensity: "6+",
+        maxIntensity: nil,
         serialNo: 32,
         isFinal: false,
         isWarning: true,
@@ -130,6 +133,28 @@ extension EewContentState {
         isWarning: false,
         isCanceled: false,
         headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: nil
+    )
+
+    /// 深さ 150km より深く、予想震度が発表されない報。
+    /// 震度バッジが消えず「-」になること、注釈が出ることを確認する。
+    static let deepHypocenter = EewContentState(
+        eventId: "20240107123456",
+        type: "eew",
+        hypocenterName: "鳥島近海",
+        magnitude: 6.2,
+        depth: 420,
+        time: "2024-01-07T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: nil,
+        serialNo: 3,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "鳥島近海で地震",
         isPlum: false,
         isLevel: false,
         isOnePoint: false,
