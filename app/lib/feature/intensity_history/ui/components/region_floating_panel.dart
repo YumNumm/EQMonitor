@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -15,13 +16,10 @@ import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップの上部フローティングパネル。
 ///
-/// - 未選択: 「全国」と集計の最終更新時刻を表示。
+/// - 未選択: 「市区町村別 最大観測震度」と集計の最終更新時刻を表示。
 /// - 市区町村選択中: 都道府県名・市区町村名・最大震度バッジと最終更新時刻を表示。
 class RegionFloatingPanel extends ConsumerWidget {
   const new({super.key});
-
-  /// 集計の最終更新時刻の表示書式。
-  static final refreshedAtFormat = DateFormat('MM/dd HH:mm');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,9 +42,14 @@ class RegionFloatingPanel extends ConsumerWidget {
 
 /// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
 class _RefreshedAtLabel extends StatelessWidget {
-  const new({required this.aggregatedAt});
+  const new({
+    required this.aggregatedAt,
+  });
 
   final DateTime? aggregatedAt;
+
+  /// 集計の最終更新時刻の表示書式。
+  static final _refreshedAtFormat = DateFormat('MM/dd HH:mm');
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +58,12 @@ class _RefreshedAtLabel extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Text(
-      '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(aggregatedAt.toLocal())}',
+      '${_refreshedAtFormat.format(aggregatedAt.toLocal())} 更新',
       maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      overflow: .ellipsis,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
         color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.7),
+        fontFamily: FontFamily.googleSansCode,
       ),
     );
   }

@@ -21,10 +21,11 @@ import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensit
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _aggregatedAt = '2026-08-19T12:00:00Z';
@@ -125,14 +126,15 @@ Widget _panelApp(ProviderContainer container, {bool centered = false}) =>
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('未選択状態で「全国」が表示される', (tester) async {
+  testWidgets('未選択状態で全国の集計であることを示す見出しが表示される', (tester) async {
     final container = await _container();
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_panelApp(container));
     await tester.pump();
 
-    expect(find.text('全国'), findsOneWidget);
+    expect(find.textContaining('市区町村別'), findsOneWidget);
+    expect(find.textContaining('最大観測震度'), findsOneWidget);
   });
 
   testWidgets('aggregated_at があれば最終更新時刻を表示する', (tester) async {
@@ -145,7 +147,7 @@ void main() {
 
     expect(
       find.text(
-        '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(aggregatedAt.toLocal())}',
+        '${DateFormat('MM/dd HH:mm').format(aggregatedAt.toLocal())} 更新',
       ),
       findsOneWidget,
     );
@@ -174,7 +176,7 @@ void main() {
 
     expect(find.text('宮城県'), findsOneWidget);
     expect(find.text('仙台市'), findsOneWidget);
-    expect(find.text('全国'), findsNothing);
+    expect(find.textContaining('最大観測震度'), findsNothing);
   });
 
   testWidgets('市区町村選択状態でタップすると市区町村詳細モーダルが開く', (tester) async {
