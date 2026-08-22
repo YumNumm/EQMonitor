@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_delay_resolver.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_request_resolver.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample_calculator.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_delay.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/service/kyoshin_monitor_delay_adjust_service.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_offset_adjustment_notifier.g.dart';
@@ -69,39 +70,44 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
     required KyoshinMonitorDelayProfile profile,
     required Duration adjustment,
   }) async {
-    final api = _api;
+    final api = ref.read(kyoshinMonitorSettingsProvider).value?.api;
     if (api == null) {
       return;
     }
-    state = KyoshinMonitorOffsetAdjustments.set(
+    final resolver = ref.read(kyoshinMonitorDelayResolverProvider);
+    final config = ref
+        .read(kyoshinMonitorImageRequestResolverProvider)
+        .delayAdjustConfig(api);
+    state = resolver.setAdjustment(
       adjustments: state,
       profile: profile,
       adjustment: adjustment,
-      config: api.delayAdjustConfig,
+      config: config,
     );
     await persist();
   }
 
   Future<void> resetAdjustment(KyoshinMonitorDelayProfile profile) async {
-    state = KyoshinMonitorOffsetAdjustments.reset(
-      adjustments: state,
-      profile: profile,
-    );
+    state = ref
+        .read(kyoshinMonitorDelayResolverProvider)
+        .resetAdjustment(adjustments: state, profile: profile);
     await persist();
   }
 
   /// 画像が未公開 (404) だった。
   void onFetchFailed(KyoshinMonitorDelayProfile profile) {
-    final api = _api;
+    final api = ref.read(kyoshinMonitorSettingsProvider).value?.api;
     if (api == null || !api.autoOffsetIncrement) {
       return;
     }
-    _update(
+    final config = ref
+        .read(kyoshinMonitorImageRequestResolverProvider)
+        .delayAdjustConfig(api);
+    apply(
       profile,
-      KyoshinMonitorDelayAdjuster.onFetchFailed(
-        adjustment: of(profile),
-        config: api.delayAdjustConfig,
-      ),
+      ref
+          .read(kyoshinMonitorDelayResolverProvider)
+          .onFetchFailed(adjustment: of(profile), config: config),
     );
   }
 
@@ -112,7 +118,7 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
     required KyoshinMonitorDelayProfile profile,
     required DateTime targetTime,
   }) {
-    final api = _api;
+    final api = ref.read(kyoshinMonitorSettingsProvider).value?.api;
     if (api == null || !api.autoOffsetIncrement) {
       return;
     }
@@ -121,24 +127,26 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
       return;
     }
     final ntp = ref.read(ntpProvider).value;
-    final publishDelay = timerState.publishDelay(
-      ntp?.offset ?? Duration.zero,
-    );
-    _update(
+    final publishDelay = ref
+        .read(kyoshinMonitorTimeSampleCalculatorProvider)
+        .publishDelay(shift: timerState.shift, ntpOffset: ntp?.offset);
+    final config = ref
+        .read(kyoshinMonitorImageRequestResolverProvider)
+        .delayAdjustConfig(api);
+    apply(
       profile,
-      KyoshinMonitorDelayAdjuster.onFetchSucceeded(
-        adjustment: of(profile),
-        publishDelay: publishDelay,
-        targetTime: targetTime,
-        config: api.delayAdjustConfig,
-      ),
+      ref
+          .read(kyoshinMonitorDelayResolverProvider)
+          .onFetchSucceeded(
+            adjustment: of(profile),
+            publishDelay: publishDelay,
+            targetTime: targetTime,
+            config: config,
+          ),
     );
   }
 
-  KyoshinMonitorSettingsApiModel? get _api =>
-      ref.read(kyoshinMonitorSettingsProvider).value?.api;
-
-  void _update(KyoshinMonitorDelayProfile profile, Duration adjustment) {
+  void apply(KyoshinMonitorDelayProfile profile, Duration adjustment) {
     if (of(profile) == adjustment) {
       return;
     }
@@ -149,10 +157,10 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
         '${adjustment.inMilliseconds}ms',
       ),
     );
-    _schedulePersist();
+    schedulePersist();
   }
 
-  void _schedulePersist() {
+  void schedulePersist() {
     if (_persistTimer != null) {
       return;
     }
