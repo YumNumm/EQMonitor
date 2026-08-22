@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
@@ -56,13 +57,13 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
     );
 
     useEffect(() {
-      if (simulation != null) {
+      if (simulation?.isPlaying ?? false) {
         unawaited(animationController.repeat());
       } else {
         animationController.stop();
       }
       return null;
-    }, [simulation != null]);
+    }, [simulation?.isPlaying]);
 
     useEffect(() {
       if (styleController == null) {
@@ -119,12 +120,11 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
           return;
         }
 
-        final now = DateTime.now();
         final firstReportTime = sim.reports.first.reportTime;
         final offset =
             firstReportTime.difference(originTime).inMilliseconds / 1000;
         final simulationElapsed =
-            now.difference(sim.startedAt).inMilliseconds / 1000;
+            sim.playbackElapsedAt(clock.now()).inMilliseconds / 1000;
         final elapsed = offset + simulationElapsed;
 
         final travelTimeMap = ref.read(travelTimeDepthMapProvider);
