@@ -42,20 +42,20 @@ class RegionFloatingPanel extends ConsumerWidget {
   }
 }
 
-/// 集計の最終更新時刻。`response_at` が取得できなかった場合は何も出さない。
+/// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
 class _RefreshedAtLabel extends StatelessWidget {
-  const new({required this.responseAt});
+  const new({required this.aggregatedAt});
 
-  final DateTime? responseAt;
+  final DateTime? aggregatedAt;
 
   @override
   Widget build(BuildContext context) {
-    final responseAt = this.responseAt;
-    if (responseAt == null) {
+    final aggregatedAt = this.aggregatedAt;
+    if (aggregatedAt == null) {
       return const SizedBox.shrink();
     }
     return Text(
-      '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(responseAt.toLocal())}',
+      '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(aggregatedAt.toLocal())}',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -99,7 +99,7 @@ class _NationwidePanel extends StatelessWidget {
                 ],
               ),
             ),
-            _RefreshedAtLabel(responseAt: cityMaxIntensity?.responseAt),
+            _RefreshedAtLabel(aggregatedAt: cityMaxIntensity?.aggregatedAt),
           ],
         ),
       ),
@@ -187,7 +187,7 @@ class _CityPanel extends StatelessWidget {
                           ),
                         ),
                         _RefreshedAtLabel(
-                          responseAt: cityMaxIntensity?.responseAt,
+                          aggregatedAt: cityMaxIntensity?.aggregatedAt,
                         ),
                       ],
                     ),

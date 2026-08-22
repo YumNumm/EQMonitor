@@ -51,7 +51,7 @@ class IntensityFillLayer extends HookConsumerWidget {
     // 塗りを作り直す契機を「震度データの実体が変わったとき」だけに絞るための
     // リビジョン。
     //
-    // `CityMaxIntensity` には `response_at` が含まれ、SWR の再検証が走るたびに
+    // `CityMaxIntensity` には `aggregated_at` が含まれ、SWR の再検証が走るたびに
     // 新しいインスタンスになる。モデルや `items` をそのまま依存に置くと、震度が
     // 1 件も変わっていない再検証でも ~1900 分岐の `match` 式を持つ塗りを丸ごと
     // 作り直してしまう（`List` の `==` は同一性判定なので `select` でも防げない）。

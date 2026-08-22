@@ -27,16 +27,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _responseAt = '2026-08-19T12:00:00Z';
+const _aggregatedAt = '2026-08-19T12:00:00Z';
 
 class _FakeCityMaxIntensity extends CityMaxIntensityNotifier {
-  new({this.responseAt});
+  new({this.aggregatedAt});
 
-  final DateTime? responseAt;
+  final DateTime? aggregatedAt;
 
   @override
   Future<CityMaxIntensity> build() async => CityMaxIntensity(
-    responseAt: responseAt,
+    aggregatedAt: aggregatedAt,
     items: const [
       CityMaxIntensityEntry(
         cityCode: '0410000',
@@ -89,7 +89,7 @@ class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
 }
 
 Future<ProviderContainer> _container({
-  DateTime? responseAt,
+  DateTime? aggregatedAt,
   List<Override> overrides = const [],
 }) async {
   SharedPreferences.setMockInitialValues({});
@@ -100,7 +100,7 @@ Future<ProviderContainer> _container({
         app_prefs.SharedPreferencesAsync(preferences),
       ),
       cityMaxIntensityProvider.overrideWith(
-        () => _FakeCityMaxIntensity(responseAt: responseAt),
+        () => _FakeCityMaxIntensity(aggregatedAt: aggregatedAt),
       ),
       ...overrides,
     ],
@@ -135,9 +135,9 @@ void main() {
     expect(find.text('全国'), findsOneWidget);
   });
 
-  testWidgets('response_at があれば最終更新時刻を表示する', (tester) async {
-    final responseAt = DateTime.parse(_responseAt);
-    final container = await _container(responseAt: responseAt);
+  testWidgets('aggregated_at があれば最終更新時刻を表示する', (tester) async {
+    final aggregatedAt = DateTime.parse(_aggregatedAt);
+    final container = await _container(aggregatedAt: aggregatedAt);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_panelApp(container));
@@ -145,13 +145,13 @@ void main() {
 
     expect(
       find.text(
-        '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(responseAt.toLocal())}',
+        '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(aggregatedAt.toLocal())}',
       ),
       findsOneWidget,
     );
   });
 
-  testWidgets('response_at が null なら最終更新時刻を表示しない', (tester) async {
+  testWidgets('aggregated_at が null なら最終更新時刻を表示しない', (tester) async {
     final container = await _container();
     addTearDown(container.dispose);
 

@@ -13,7 +13,7 @@ part 'city_max_intensity.freezed.dart';
 abstract class CityMaxIntensity with _$CityMaxIntensity {
   const factory({
     /// 集計を最後に更新した時刻。取得できなかった場合は `null`([items] は返る)。
-    required DateTime? responseAt,
+    required DateTime? aggregatedAt,
     required List<CityMaxIntensityEntry> items,
   }) = _CityMaxIntensity;
 
@@ -26,7 +26,7 @@ abstract class CityMaxIntensity with _$CityMaxIntensity {
 
 extension CityMaxIntensityResponseApiExtension on api.CityMaxIntensityResponse {
   CityMaxIntensity toAppModel() => CityMaxIntensity(
-    responseAt: responseAt,
+    aggregatedAt: aggregatedAt,
     items: items.map((item) => item.toAppEntry()).toList(),
   );
 }

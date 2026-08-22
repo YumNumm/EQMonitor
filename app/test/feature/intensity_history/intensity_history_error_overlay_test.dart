@@ -115,7 +115,7 @@ void main() {
         overrides: [
           cityMaxIntensityProvider.overrideWith(
             () => _FakeCityMaxIntensity(
-              () async => const CityMaxIntensity(responseAt: null, items: []),
+              () async => const CityMaxIntensity(aggregatedAt: null, items: []),
             ),
           ),
         ],

@@ -20,9 +20,9 @@ void main() {
   });
 
   group('CityMaxIntensityResponse.toAppModel', () {
-    test('response_at と items を変換して返す', () {
+    test('aggregated_at と items を変換して返す', () {
       final apiResponse = api.CityMaxIntensityResponse(
-        responseAt: DateTime.utc(2026, 8, 19, 12),
+        aggregatedAt: DateTime.utc(2026, 8, 19, 12),
         items: const [
           api.CityMaxIntensityItem(
             cityId: '0110000',
@@ -37,7 +37,7 @@ void main() {
 
       final result = apiResponse.toAppModel();
 
-      expect(result.responseAt, DateTime.utc(2026, 8, 19, 12));
+      expect(result.aggregatedAt, DateTime.utc(2026, 8, 19, 12));
       expect(result.items.length, 2);
       expect(result.items[0].cityCode, '0110000');
       expect(result.items[0].intensity, JmaIntensity.fiveLower);
@@ -45,9 +45,9 @@ void main() {
       expect(result.items[1].intensity, JmaIntensity.three);
     });
 
-    test('response_at が null でも items を返す', () {
+    test('aggregated_at が null でも items を返す', () {
       const apiResponse = api.CityMaxIntensityResponse(
-        responseAt: null,
+        aggregatedAt: null,
         items: [
           api.CityMaxIntensityItem(
             cityId: '0110000',
@@ -58,14 +58,14 @@ void main() {
 
       final result = apiResponse.toAppModel();
 
-      expect(result.responseAt, isNull);
+      expect(result.aggregatedAt, isNull);
       expect(result.items.single.intensity, JmaIntensity.four);
     });
   });
 
   group('CityMaxIntensity', () {
     const model = CityMaxIntensity(
-      responseAt: null,
+      aggregatedAt: null,
       items: [
         CityMaxIntensityEntry(
           cityCode: '0110000',

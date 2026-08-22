@@ -16,7 +16,7 @@ late ApiClient _networkClient;
 
 CityMaxIntensityResponse _response(String cityId, JmaIntensity intensity) =>
     CityMaxIntensityResponse(
-      responseAt: DateTime.utc(2026, 8, 19, 12),
+      aggregatedAt: DateTime.utc(2026, 8, 19, 12),
       items: [CityMaxIntensityItem(cityId: cityId, maxIntensity: intensity)],
     );
 
