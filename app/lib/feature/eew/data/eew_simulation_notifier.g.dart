@@ -43,7 +43,7 @@ final class EewSimulationProvider
   }
 }
 
-String _$eewSimulationHash() => r'4605b25bac107f08d347d8926939cb2b21e1a288';
+String _$eewSimulationHash() => r'19bd78ef64f44a186ad714d288d78e1b07803abd';
 
 abstract class _$EewSimulation extends $Notifier<EewSimulationState?> {
   EewSimulationState? build();
