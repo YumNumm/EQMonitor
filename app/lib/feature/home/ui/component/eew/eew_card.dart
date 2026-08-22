@@ -265,7 +265,7 @@ class _EewMainCard extends StatelessWidget {
                     _EewLpgmSection(intensity: maxLpgmIntensity),
                   if (showDeepHypocenterIntensityNotice)
                     Text(
-                      '震源の深さが150km以上のため、予想震度は発表されていません',
+                      '震源の深さが150kmより深いため、予想震度は発表されていません',
                       style: designSystem.typography.labelMedium,
                     ),
                 ],

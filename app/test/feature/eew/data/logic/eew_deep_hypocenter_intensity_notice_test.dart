@@ -15,8 +15,8 @@ void main() {
     numberOfMagnitudeCalculation: 1,
   );
 
-  test('深さ150km以上かつ最大震度未発表のときだけ注意文を出す', () {
-    expect(notice.shouldShow(eew: _eew(depth: 150)), isTrue);
+  test('深さ150kmより深く最大震度未発表のときだけ注意文を出す', () {
+    expect(notice.shouldShow(eew: _eew(depth: 151)), isTrue);
     expect(notice.shouldShow(eew: _eew(depth: 200)), isTrue);
     expect(
       notice.shouldShow(eew: _eew(depth: 200, maxIntensity: .unknown)),
@@ -24,9 +24,9 @@ void main() {
     );
   });
 
-  test('深さ150km以上でも最大震度が発表されていれば注意文を出さない', () {
+  test('深さ150kmより深くても最大震度が発表されていれば注意文を出さない', () {
     expect(
-      notice.shouldShow(eew: _eew(depth: 150, maxIntensity: .three)),
+      notice.shouldShow(eew: _eew(depth: 151, maxIntensity: .three)),
       isFalse,
     );
     expect(
@@ -35,7 +35,8 @@ void main() {
     );
   });
 
-  test('深さ150km未満で最大震度未発表でも注意文を出さない', () {
+  test('深さ150km以下で最大震度未発表でも注意文を出さない', () {
+    expect(notice.shouldShow(eew: _eew(depth: 150)), isFalse);
     expect(notice.shouldShow(eew: _eew(depth: 149)), isFalse);
     expect(
       notice.shouldShow(eew: _eew(depth: 10, maxIntensity: .unknown)),
@@ -47,11 +48,11 @@ void main() {
     expect(notice.shouldShow(eew: _eew()), isFalse);
   });
 
-  test('PLUM法では深さ150km以上でも注意文を出さない', () {
+  test('PLUM法では深さ150kmより深くても注意文を出さない', () {
     expect(notice.shouldShow(eew: _eew(depth: 200, isPlum: true)), isFalse);
   });
 
-  test('レベル法では深さ150km以上でも注意文を出さない', () {
+  test('レベル法では深さ150kmより深くても注意文を出さない', () {
     expect(
       notice.shouldShow(
         eew: _eew(
@@ -64,7 +65,7 @@ void main() {
     );
   });
 
-  test('1点検知では深さ150km以上でも注意文を出さない', () {
+  test('1点検知では深さ150kmより深くても注意文を出さない', () {
     expect(
       notice.shouldShow(eew: _eew(depth: 200, accuracy: epicenterAccuracy1)),
       isFalse,
