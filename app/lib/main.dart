@@ -31,7 +31,7 @@ import 'package:eqmonitor/core/startup/startup_profiler_provider.dart';
 import 'package:eqmonitor/core/util/guarded_unawaited.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
