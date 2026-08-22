@@ -26,7 +26,7 @@ abstract class CityMaxIntensity with _$CityMaxIntensity {
 
 extension CityMaxIntensityResponseApiExtension on api.CityMaxIntensityResponse {
   CityMaxIntensity toAppModel() => CityMaxIntensity(
-    responseAt: responseAt,
+    responseAt: aggregatedAt,
     items: items.map((item) => item.toAppEntry()).toList(),
   );
 }
