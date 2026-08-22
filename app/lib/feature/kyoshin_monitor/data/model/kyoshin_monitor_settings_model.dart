@@ -43,7 +43,7 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
 
 extension KyoshinMonitorSettingsModelX on KyoshinMonitorSettingsModel {
   RealtimeLayer get effectiveRealtimeLayer =>
-      realtimeDataType.isLpgm ? RealtimeLayer.surface : realtimeLayer;
+      realtimeDataType.isLpgm ? .surface : realtimeLayer;
 
   bool get canSelectRealtimeLayer => useKmoni && !realtimeDataType.isLpgm;
 
@@ -77,8 +77,8 @@ abstract class KyoshinMonitorSettingsApiModel
     /// 画像取得頻度
     @Default(Duration(seconds: 1))
     @Assert(
-      'imageFetchInterval.inSeconds > 1',
-      'imageFetchInterval must be greater than 1 second',
+      'imageFetchInterval.inSeconds >= 1',
+      'imageFetchInterval must be at least 1 second',
     )
     Duration imageFetchInterval,
 

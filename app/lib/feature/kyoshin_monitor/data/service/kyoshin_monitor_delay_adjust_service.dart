@@ -17,8 +17,6 @@ enum KyoshinMonitorDelayAdjustType {
 /// `latest.json` はどちらのホストから取っても強震モニタのパイプラインの時刻を
 /// 返す (長周期地震動モニタの `/img_svr/` は強震モニタへのリバースプロキシ) ため、
 /// そこから求まる公開遅延は常に強震モニタ基準になる。
-/// 長周期地震動階級系列 (`abrsp*`) はそれより約 0.66 秒早く公開されるので
-/// (実測: 0.57s と 1.23s)、その差は 404 フィードバックで学習することになる。
 ///
 /// 学習値を分ける単位は「ホスト」ではなく「画像の生成パイプライン」でなければ
 /// ならない。長周期地震動モニタを選んでいても震度などの非 LPGM 系列は
@@ -33,30 +31,39 @@ enum KyoshinMonitorDelayProfile {
 }
 
 /// 404 フィードバックによる遅延調整のパラメータ。
-class KyoshinMonitorDelayAdjustConfig {
-  const new({
-    this.step = const Duration(milliseconds: 100),
-    this.minOffset = const Duration(milliseconds: 600),
-    this.maxOffset = const Duration(milliseconds: 5000),
-    this.maxAdjustment = const Duration(seconds: 5),
-  });
-
+class const KyoshinMonitorDelayAdjustConfig({
   /// 1 回の調整量
-  final Duration step;
+  final Duration step = const Duration(milliseconds: 100),
 
   /// 公開遅延の下限
-  ///
-  /// 長周期地震動モニタの実測値が約 0.57 秒だったため、既定は 600ms。
-  final Duration minOffset;
+  required final Duration minOffset,
 
   /// 公開遅延の上限
-  final Duration maxOffset;
+  required final Duration maxOffset,
 
   /// 補正量の絶対値の上限
-  ///
-  /// 上限・下限でクランプされた状態が続いても補正量が際限なく積み上がって
-  /// 戻れなくならないように制限する。
-  final Duration maxAdjustment;
+  final Duration maxAdjustment = const Duration(seconds: 5),
+});
+
+abstract final class KyoshinMonitorOffsetAdjustments {
+  static Map<KyoshinMonitorDelayProfile, Duration> set({
+    required Map<KyoshinMonitorDelayProfile, Duration> adjustments,
+    required KyoshinMonitorDelayProfile profile,
+    required Duration adjustment,
+    required KyoshinMonitorDelayAdjustConfig config,
+  }) {
+    final clamped = adjustment < -config.maxAdjustment
+        ? -config.maxAdjustment
+        : adjustment > config.maxAdjustment
+        ? config.maxAdjustment
+        : adjustment;
+    return {...adjustments, profile: clamped};
+  }
+
+  static Map<KyoshinMonitorDelayProfile, Duration> reset({
+    required Map<KyoshinMonitorDelayProfile, Duration> adjustments,
+    required KyoshinMonitorDelayProfile profile,
+  }) => Map.of(adjustments)..remove(profile);
 }
 
 /// `latest.json` で測った公開遅延を、画像取得の 404 を手がかりに詰めていくロジック。

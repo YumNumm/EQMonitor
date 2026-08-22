@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/service/kyoshin_monitor_delay_adjust_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -64,6 +64,31 @@ class KyoshinMonitorOffsetAdjustment extends _$KyoshinMonitorOffsetAdjustment {
 
   Duration of(KyoshinMonitorDelayProfile profile) =>
       state[profile] ?? Duration.zero;
+
+  Future<void> setAdjustment({
+    required KyoshinMonitorDelayProfile profile,
+    required Duration adjustment,
+  }) async {
+    final api = _api;
+    if (api == null) {
+      return;
+    }
+    state = KyoshinMonitorOffsetAdjustments.set(
+      adjustments: state,
+      profile: profile,
+      adjustment: adjustment,
+      config: api.delayAdjustConfig,
+    );
+    await persist();
+  }
+
+  Future<void> resetAdjustment(KyoshinMonitorDelayProfile profile) async {
+    state = KyoshinMonitorOffsetAdjustments.reset(
+      adjustments: state,
+      profile: profile,
+    );
+    await persist();
+  }
 
   /// 画像が未公開 (404) だった。
   void onFetchFailed(KyoshinMonitorDelayProfile profile) {
