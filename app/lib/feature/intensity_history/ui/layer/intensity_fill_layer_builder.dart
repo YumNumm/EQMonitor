@@ -9,7 +9,7 @@ import 'package:maplibre/maplibre.dart';
 ///
 /// `areaInformationCityQuake` は全ズームのタイルに存在する
 /// (`BaseMapTileSpec.cityMinZoom` = 0) ため、ズーム帯で塗る対象を切り替える
-/// 必要はなく、市区町村の塗り 1 枚 + 選択中の輪郭線だけで済む。
+/// 必要はなく、市区町村の塗り 1 枚 + 選択中の枠線（ハロー・本線）だけで済む。
 ///
 /// 塗りと輪郭線をメソッドごとに分けているのは、更新契機が全く違うため。
 /// 塗りは全国 ~1900 市区町村分の `match` 式を持つので入れ替えが重く、震度
@@ -17,8 +17,9 @@ import 'package:maplibre/maplibre.dart';
 /// 1 フィーチャだけで軽い。両者を 1 つの `useEffect` にまとめると、タップの
 /// たびに塗りまで破棄・再追加してしまう。
 ///
-/// 相対順序はアンカーで決まる: 塗りは細分区域の境界線の**下**、輪郭線はその
-/// **上**に挿入するため、どちらを先に追加しても順序は入れ替わらない。
+/// 相対順序はアンカーと追加順で決まる: 塗りは細分区域の境界線の**下**、
+/// 選択枠はスタイルの最前面に追加する。どちらを先に追加しても塗りは境界線の
+/// 下に留まり、選択枠は他レイヤーに埋もれない。
 class IntensityFillLayerBuilder {
   const new();
 
@@ -31,13 +32,21 @@ class IntensityFillLayerBuilder {
   /// 選択中の市区町村の輪郭線。
   static const selectedCityLineLayerId = 'intensity-history-selected-city-line';
 
+  /// 選択枠のコントラスト用ハロー。
+  static const selectedCityHaloLayerId = 'intensity-history-selected-city-halo';
+
   /// [buildFill] が管理するレイヤー ID。
   static const fillLayerIds = [cityFillLayerId];
 
   /// [buildSelectedCityLine] が管理するレイヤー ID。
-  static const selectedCityLineLayerIds = [selectedCityLineLayerId];
+  static const selectedCityLineLayerIds = [
+    selectedCityHaloLayerId,
+    selectedCityLineLayerId,
+  ];
 
   static const cityFillOpacity = 0.8;
+  static const selectedCityLineWidth = 3.0;
+  static const selectedCityHaloWidth = 6.0;
 
   /// 市区町村ごとの観測史上最大震度の塗り。
   ///
@@ -81,33 +90,59 @@ class IntensityFillLayerBuilder {
   /// 選択中の市区町村の輪郭線。
   ///
   /// [selectedCityCode] が null なら空リストを返す（未選択）。
+  /// ハローと本線の 2 枚を最前面に置き、塗りや細分区域境界に埋もれないようにする。
   List<MapStyleLayerEntry> buildSelectedCityLine({
     required String? selectedCityCode,
-    required bool isDarkMode,
+    required String lineColor,
+    required String haloColor,
   }) {
     if (selectedCityCode == null) {
       return const [];
     }
 
+    final filter = <Object>[
+      '==',
+      <Object>['get', 'regioncode'],
+      selectedCityCode,
+    ];
+    const layout = <String, Object>{
+      'line-cap': 'round',
+      'line-join': 'round',
+    };
+
     return [
+      (
+        layer: LineStyleLayer(
+          id: selectedCityHaloLayerId,
+          sourceId: sourceId,
+          sourceLayerId: citySourceLayerId,
+          filter: filter,
+          layout: layout,
+          paint: {
+            'line-color': haloColor,
+            'line-width': selectedCityHaloWidth,
+            'line-opacity': 0.9,
+          },
+        ),
+        belowLayerId: null,
+        aboveLayerId: null,
+        atIndex: null,
+      ),
       (
         layer: LineStyleLayer(
           id: selectedCityLineLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
-          filter: <Object>[
-            '==',
-            <Object>['get', 'regioncode'],
-            selectedCityCode,
-          ],
+          filter: filter,
+          layout: layout,
           paint: {
-            'line-color': isDarkMode ? '#FFFFFF' : '#000000',
-            'line-width': 3,
-            'line-opacity': 0.95,
+            'line-color': lineColor,
+            'line-width': selectedCityLineWidth,
+            'line-opacity': 1,
           },
         ),
         belowLayerId: null,
-        aboveLayerId: BaseLayer.areaForecastLocalELine.name,
+        aboveLayerId: null,
         atIndex: null,
       ),
     ];
