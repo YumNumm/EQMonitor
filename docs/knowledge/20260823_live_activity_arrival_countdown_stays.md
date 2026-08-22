@@ -17,7 +17,7 @@ Live Activity では到達予想がある間、到達前後で View を切り替
 - `ArrivalCountdown.remaining` は到達後も終了済み区間 `arrival...arrival` を返し、表示は `主要動到達まで` + `00:00`
 - `now > arrival` の `ClosedRange` はクラッシュするので作らない
 
-`eew_card`（Flutter）は毎秒 rebuild できるため、この制約はない。到達後は
-`主要動到達済み` に切り替える従来どおりの表示を維持する。
+`eew_card`（Flutter）は毎秒 rebuild できるためこの制約はなく、到達後は
+ラベルと値を `主要動` + `到達済み` に切り替える。
 
 `staleDate` は EEW 開始/更新から 30 分後であり、到達時刻とは別用途。到達切替に使わない。

@@ -8,7 +8,7 @@
 | 項目 | 仕様 |
 |------|------|
 | 最終報 | `最終 第N報` |
-| 到達後 | `eew_card` は `主要動到達済み` / Live Activity は `主要動到達まで` + `00:00` |
+| 到達後 | `eew_card` は `主要動` + `到達済み` / Live Activity は `主要動到達まで` + `00:00` |
 | PLUM | M/深さ非表示、`PLUM法による検知`、時刻は「地震検知」 |
 | レベル法 | `accuracy.epicenter==1 && originTime==null`。M/深さ非表示、`レベル法による検知` |
 | IPF 1点 | `epicenter==1 && originTime!=null && !isPlum`。M/深さ非表示、`低精度の緊急地震速報` |
