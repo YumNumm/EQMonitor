@@ -35,6 +35,30 @@ Apple の Developer Forums でもフレームワークエンジニアが
 Live Activity の枠込みで見たいなら `previewContext(_:viewKind:)`、
 素の View として見たいなら別ターゲット、と使い分ける。
 
+## 報の進行を State 切り替えで確認する
+
+`previewContext(_:viewKind:)` は 1 プレビュー 1 状態しか持てない。EEW は同じ Activity を
+報ごとに更新し続けるため、更新時の破綻（震度バッジの桁増え・警報への切り替わり・
+カウントダウンから「到達済み」への変化）を見るには複数の ContentState を 1 プレビューに渡す。
+
+`#Preview(as:using:widget:contentStates:)`（iOS 17+）の `contentStates` は
+`PreviewActivityBuilder` の result builder で、`buildArray` があるので `for` ループを書ける。
+系列は `EewContentState.warningSequence()` / `canceledSequence()` として
+`EewLiveActivityAttributes.swift` に持たせている。
+
+```swift
+#Preview("EEW 報の進行 - Lock Screen", as: .content, using: eewPreviewAttributes) {
+    EewLiveActivityWidget()
+} contentStates: {
+    for state in EewContentState.warningSequence() {
+        state
+    }
+}
+```
+
+主要動到達の予想時刻は `Date()` からの相対で組み立てる。固定日時にすると常に
+「到達済み」になり、残り時間の表示を確認できない。
+
 ## Xcode 16 以降の同期グループ（objectVersion 70）でのファイル所属
 
 `Widget/` は `PBXFileSystemSynchronizedRootGroup` なので、所属は
