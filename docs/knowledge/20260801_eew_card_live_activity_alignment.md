@@ -22,7 +22,7 @@
 - Dynamic Island の Expanded Bottom でも仮定震源フラグを見て M/深さを隠すこと。
 - Dynamic Island の到達表示も Lock Screen と同じく `timerInterval` カウントダウンを使う。到達後は `00:00` のまま。
 - headline 生成のアプリ/backend 差分は今回未対応。
-- 深発注釈・LPGM は `eew_card` のみ（Live Activity には載せない）。
+- 深発注釈は Lock Screen の Live Activity にも載せる（2026-08-23 に追加。`docs/knowledge/20260823_eew_missing_forecast_intensity.md`）。LPGM は `eew_card` のみ。
 
 ## デバッグ
 

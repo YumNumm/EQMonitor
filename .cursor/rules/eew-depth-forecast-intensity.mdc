@@ -1,15 +1,21 @@
 ---
 description: EEW の深さ 150km と予想最大震度は独立に扱う
-globs: app/lib/feature/home/ui/component/eew/**/*.dart,app/lib/feature/eew/**/*.dart
+globs: app/lib/feature/home/ui/component/eew/**/*.dart,app/lib/feature/eew/**/*.dart,app/ios/Shared/EewDisplay.swift,app/ios/Widget/LiveActivity/**/*.swift
 ---
 
 # EEW の深さと予想最大震度
 
-深さ 150km 以上であることと、予想最大震度の有無は同値ではない。
+深さ 150km より深いことと、予想最大震度の有無は同値ではない。
 
-- 150km 以上でも最大震度が発表される報がある → 深さで震度表示を消さない
-- 150km 未満でも未発表の報がある（PLUM 法など） → 未発表だけで「深発のため」と書かない
+- 150km より深くても最大震度が発表される報がある → 深さで震度表示を消さない
+- 150km 以下でも未発表の報がある（PLUM 法など） → 未発表だけで「深発のため」と書かない
 
-深発注意文は、最大震度が未発表 **かつ** 深さ 150km 以上 **かつ** PLUM / レベル法 / 1点検知など別理由ではないときに限る。
+深発注意文は、最大震度が未発表 **かつ** 深さ 150km より深い（`depth > 150`） **かつ** PLUM / レベル法 / 1点検知など別理由ではないときに限る。
+文言は JMA の表記に合わせ「震源の深さが150kmより深いため、予想震度は発表されていません」で統一する（`eew_card.dart` / `EewDisplay.deepHypocenterIntensityNotice`）。
 
-アプリ側の距離減衰推定を `depth >= 150` でスキップすることと、JMA 発表震度の表示は別判断にする。
+アプリ側の距離減衰推定を `depth >= 150` でスキップすることや、`EewAliveTelegram` の生存判定は、JMA 発表震度の表示とは別判断にする。
+
+## 予想最大震度が未発表のときの震度表示
+
+未発表（`null`）でも震度コンポーネントを消さない。消すとレイアウトが崩れ、「震度 0 の発表」と「未発表」の区別が付かなくなる。
+灰色背景に `-` を置いたプレースホルダを同じ寸法で描く（iOS は `IntensityBadgeAppearance.unavailable`）。
