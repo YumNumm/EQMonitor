@@ -87,15 +87,13 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
                 textBaseline: TextBaseline.alphabetic,
                 fontWeight: FontWeight.w700,
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: [
-                  FontFamily.notoSansJP,
-                ],
+                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
             SizedBox(height: designSystem.spacing.sm),
             KyoshinMonitorScale(
               type: type,
-              width: 15,
+              width: 8,
               height: 150,
               gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
               orientation: KyoshinMonitorScaleOrientation.vertical,
@@ -105,9 +103,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
                 textBaseline: TextBaseline.alphabetic,
                 fontSize: 10,
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: [
-                  FontFamily.notoSansJP,
-                ],
+                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
           ],
