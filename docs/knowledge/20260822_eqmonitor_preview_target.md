@@ -1,31 +1,59 @@
-# EQMonitorPreview ターゲットで Widget / Live Activity の Xcode Previews を高速に回す
+# Widget / Live Activity の Xcode Previews を高速に回す（EQMonitorPreview）
 
-`app/ios/Runner.xcodeproj` の `EQMonitorPreview` は、Widget / Live Activity の SwiftUI Previews
-専用のホストアプリターゲット。`WidgetExtension` の Previews は Runner（Flutter アプリ本体）の
-ビルドを伴うため遅い。プレビュー専用の軽量アプリターゲットを別に用意して、そこに Widget の
-ソースを相乗りさせることで、プレビューの再ビルドを数秒に抑える。
+## なぜ WidgetExtension スキームだと遅いのか
+
+`Runner.xcodeproj/xcshareddata/xcschemes/WidgetExtension.xcscheme` の BuildAction には
+`WidgetExtension.appex` と **`Runner.app`** の 2 つが入っており、LaunchAction の runnable も
+`Runner.app` になっている。appex は単体で起動できずホストアプリのインストールが必要なため、
+Widget / Live Activity のプレビューを開くと Flutter アプリ本体（Runner）のビルドが毎回走る。
+
+そこで、ホストを 2 ファイルだけの軽量アプリに差し替えた専用ターゲットを用意している。
+
+| ターゲット | 役割 |
+| --- | --- |
+| `EQMonitorPreview`（app） | プレビュー用のホスト。`EQMonitorPreviewApp` と `ContentView` だけ |
+| `EQMonitorPreviewWidget`（app-extension） | `Widget/` と `Shared/` を相乗りさせた widget extension |
+
+`EQMonitorPreview` スキームを選んで `Widget/LiveActivity/**` のキャンバスを開くと、
+この 2 ターゲットだけがビルドされる。1 ファイル変更時の再ビルドは `SwiftCompile` 2 タスク・
+実測 5 秒程度。
+
+## プレビューをアプリターゲットに相乗りさせてはいけない
+
+`attributes.previewContext(state, viewKind:)` や `#Preview(as: .systemSmall)` は WidgetKit が
+Live Activity / ウィジェットの枠を描画する API で、**widget extension のプロセスでしか動かない**。
+アプリターゲットに Widget のソースを追加してプレビューを開くと、WidgetKit 内部で trap して
+`EXC_BREAKPOINT` でクラッシュする（クラッシュログの最上位フレームが WidgetKit になる）。
+
+Apple の Developer Forums でもフレームワークエンジニアが
+「widget プロセスは制約が多く、widget コンテキストを持たない任意の SwiftUI View のプレビューは
+サポートしていない。共通 View は別フレームワークに切り出してそこでプレビューせよ」と回答している。
+<https://developer.apple.com/forums/thread/758477>
+
+逆向きの制約もある。`ShakeDetectionLiveActivityView` の `#Preview` のように素の View を
+そのまま渡すプレビューは widget extension では「missing previewContext」になりやすい。
+Live Activity の枠込みで見たいなら `previewContext(_:viewKind:)`、
+素の View として見たいなら別ターゲット、と使い分ける。
 
 ## Xcode 16 以降の同期グループ（objectVersion 70）でのファイル所属
 
-`Widget/` は `PBXFileSystemSynchronizedRootGroup` なので、Xcode 上のチェックボックスではなく
-`PBXFileSystemSynchronizedBuildFileExceptionSet` の `membershipExceptions` で所属が決まる。
+`Widget/` は `PBXFileSystemSynchronizedRootGroup` なので、所属は
+`PBXFileSystemSynchronizedBuildFileExceptionSet` の `membershipExceptions` で決まる。
 挙動が所有ターゲットかどうかで反転するので注意する。
 
 - グループを `fileSystemSynchronizedGroups` に持つターゲット（`WidgetExtension`）
-  → `membershipExceptions` に書かれたファイルは**ビルドから除外**される（例: `Info.plist`）
-- グループを持たないターゲット（`EQMonitorPreview`）
-  → `membershipExceptions` に書かれたファイルが**ビルドに追加**される
+  → `membershipExceptions` のファイルは**ビルドから除外**される（例: `Info.plist`）
+- グループを持たないターゲット（`EQMonitorPreviewWidget`）
+  → `membershipExceptions` のファイルが**ビルドに追加**される
 
-つまり `EQMonitorPreview` 用の exception set からファイル名を消すと、そのファイルは
-プレビューターゲットでコンパイルされなくなる。
+`Widget/` に新しいファイルを足したら、`EQMonitorPreviewWidget` 側の exception set にも
+追記しないとプレビュー用ターゲットでは未定義エラーになる。
 
-## 相乗りさせるときの必須作業
+## EQMonitorPreviewWidget に必要なもの
 
-`Shared/` は通常の `PBXGroup`（同期グループではない）なので、ファイルを追加しても自動では
+`Shared/` は通常の `PBXGroup`（同期グループではない）なので、ファイルを置いても自動では
 所属しない。`Sources` ビルドフェーズへ `PBXBuildFile` を明示的に足す必要がある。
-これを忘れると `cannot find type 'EewDisplay' in scope` のような未定義エラーが大量に出る。
-
-`EQMonitorPreview` に必要なもの:
+忘れると `cannot find type 'EewDisplay' in scope` のような未定義エラーが大量に出る。
 
 - `Shared/*.swift` を全て `Sources` に追加（`WidgetExtension` と同じ 14 ファイル）
 - `EQMonitorAPI`（`Packages/EQMonitorAPI` のローカルパッケージ）を `Frameworks` にリンク
@@ -33,27 +61,23 @@
 - フォント 2 つと `jma_code_table.json` を `Resources` に追加
   - `AppFonts` は `Bundle.main` からフォントを実行時登録するため、同梱しないとプレビューの
     書体がシステムフォントにフォールバックして実機と見た目が変わる
-- `Widget/Assets.xcassets` は取り込まず、必要な imageset だけ
-  `EQMonitorPreview/Assets.xcassets` に複製する（`AppIconForeground` など）
-  - 両方の catalog に `AccentColor` があるため、丸ごと追加すると名前衝突でビルドが失敗する
+- `Widget/Assets.xcassets` は exception set に `Assets.xcassets` を書いて取り込む
+  （`Image("AppIconForeground")` の解決に必要）
+- 除外するもの
+  - `Widget/WidgetBundle.swift`: `@main` が `EQMonitorPreviewWidgetBundle` と衝突する
+  - `Widget/Controls/*.swift`: `AppIntentExtension/` の Intent 型を参照しており、
+    ControlWidget は Previews で描画できないので取り込まない
 
-## 除外しなければならないファイル
+## バンドル ID とビルド設定
 
-- `Widget/WidgetBundle.swift`: `@main` が `EQMonitorPreviewApp` と衝突する
-- `Widget/Controls/*.swift`: `AppIntentExtension/` の Intent 型（`EarthquakeSnippetIntent` 等）を
-  参照している。ControlWidget は Xcode Previews で描画できないので、
-  `AppIntentExtension` を丸ごと相乗りさせるより除外する方が速い
-
-## ビルド設定は WidgetExtension に合わせる
-
-Xcode がターゲットを新規作成した時点の既定値のままにすると、実際の Widget と診断結果が
-食い違い「プレビューでは通るが WidgetExtension でコンパイルエラー」になる。
-
-- `IPHONEOS_DEPLOYMENT_TARGET` は `WidgetExtension` と同じ `17.6`
-- `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` は設定しない（`WidgetExtension` は未指定）
-
-また、プレビュー用途では `WidgetExtension` への `PBXTargetDependency` と
-`Embed Foundation Extensions` フェーズを持たせない。appex のビルドと埋め込みが毎回走って遅くなる。
+- appex のバンドル ID はホストアプリの ID を prefix にする必要がある。
+  `net.yumnumm.EQMonitorPreview` / `net.yumnumm.EQMonitorPreview.Widget` にしている。
+  ここを外すとシミュレータへのインストールが失敗し、プレビューが起動できない。
+- ビルド設定は `WidgetExtension` に合わせる。特に
+  `IPHONEOS_DEPLOYMENT_TARGET = 17.6` と `SWIFT_DEFAULT_ACTOR_ISOLATION` 未設定。
+  食い違うと「プレビューでは通るが WidgetExtension でコンパイルエラー」になる。
+- 実機用の entitlements（App Group）は付けていない。静的なプレビューでは App Group を
+  読まないため。`ConfigReader` も Info.plist / ハードコードにフォールバックする。
 
 ## 動作確認
 
@@ -63,12 +87,20 @@ xcodebuild -project Runner.xcodeproj -scheme EQMonitorPreview \
   -destination 'generic/platform=iOS Simulator' -configuration Debug build
 ```
 
-1 ファイル変更時の再ビルドは Swift のコンパイルタスクが 2 個程度で数秒に収まる。
-`-showBuildTimingSummary` を付けて `SwiftCompile` のタスク数を見ると、
-不要なファイルを取り込んでいないか確認できる。
+appex が正しく埋め込まれたかは、生成物の構成とインストール可否で確認する。
+
+```shell
+APP=~/Library/Developer/Xcode/DerivedData/Runner-*/Build/Products/Debug-iphonesimulator/EQMonitorPreview.app
+ls "$APP"/PlugIns/EQMonitorPreviewWidget.appex
+xcrun simctl install <udid> "$APP"
+```
 
 ## 注意
 
-`xcodebuild` を直接叩くとパッケージ解決が走り、`Package.resolved` のリモート依存
-（MapLibre / RevenueCat 等）が最新版に更新されてしまうことがある。
-差分を確認し、意図しないバージョン更新はコミットに含めない。
+`xcodebuild` を直接叩くと副作用が出ることがある。
+
+- パッケージ解決が走り、`Package.resolved` のリモート依存（MapLibre / RevenueCat 等）が
+  最新版に更新される
+- `-project` 指定でビルドすると `Runner.xcworkspace` 側の `Package.resolved` が消えることがある
+
+いずれも意図しない差分なので、コミット前に `git --no-pager status` で確認する。
