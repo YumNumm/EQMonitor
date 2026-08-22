@@ -14,6 +14,13 @@ const _notice = '震源の深さが150kmより深いため、予想震度は発�
 final _now = DateTime.utc(2026, 8, 22, 12);
 
 void main() {
+  testWidgets('最大震度未発表では震度アイコンにハイフンを表示する', (tester) async {
+    await _pump(tester, eew: _eew(depth: 10));
+
+    expect(find.text('-'), findsOneWidget);
+    expect(find.text('不明'), findsNothing);
+  });
+
   testWidgets('深さ150km以下かつ最大震度不明では深発注意文を出さない', (tester) async {
     await _pump(tester, eew: _eew(depth: 10, maxIntensity: .unknown));
 

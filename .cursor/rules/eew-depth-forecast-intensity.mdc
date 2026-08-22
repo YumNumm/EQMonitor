@@ -18,4 +18,6 @@ globs: app/lib/feature/home/ui/component/eew/**/*.dart,app/lib/feature/eew/**/*.
 ## 予想最大震度が未発表のときの震度表示
 
 未発表（`null`）でも震度コンポーネントを消さない。消すとレイアウトが崩れ、「震度 0 の発表」と「未発表」の区別が付かなくなる。
-灰色背景に `-` を置いたプレースホルダを同じ寸法で描く（iOS は `IntensityBadgeAppearance.unavailable`）。
+灰色背景に `-` を置いたプレースホルダを同じ寸法で描く。
+- iOS: `IntensityBadgeAppearance.unavailable`
+- Flutter: `JmaIntensity.unknown` の `mainText` は `-`（文章中の「不明」は `label`）

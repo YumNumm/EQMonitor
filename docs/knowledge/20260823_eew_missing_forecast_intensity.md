@@ -15,6 +15,10 @@ iOS では `IntensityBadgeAppearance`（`app/ios/Shared/IntensityBadge.swift`）
 `SquareIntensityBadge`（Lock Screen）と `DynamicIslandIntensityBadge`（compact / minimal / expanded）が共有する。
 どちらも `IntensityValue?` を受け取り、`nil` を「未発表」として描く。
 
+アプリ本体の `eew_card` は `forecastIntensity?.maxIntensity ?? JmaIntensity.unknown` を
+`JmaIntensityIcon` に渡す。`JmaIntensity.mainText` の unknown は `-` なので、
+未発表でもアイコン枠は残りハイフンが出る。文章中の「不明」は `label` のまま。
+
 取消報だけは例外で、震度バッジではなく `EewCanceledSymbol` を出す（予想震度自体が無効）。
 
 ## 深発注意文
