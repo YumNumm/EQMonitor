@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_forecast_region_intensity_filter_updater.dart';
+import 'package:eqmonitor/feature/eew/data/logic/eew_forecast_region_warning_filter_updater.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_warning_area_selector.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -34,8 +35,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
   static const _sourceId = 'eqmonitor_map';
   static const _intensitySourceLayerId = 'areaForecastLocalE';
   static const _warningSourceLayerId = 'areaForecastLocalEew';
-  static const _warningLayerId = 'eew-details-warning-fill';
-  static const _warningLineLayerId = 'eew-details-warning-line';
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   @override
@@ -46,6 +45,9 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
     final intensityFilterUpdater = ref.watch(
       eewForecastRegionIntensityFilterUpdaterProvider,
+    );
+    final warningFilterUpdater = ref.watch(
+      eewForecastRegionWarningFilterUpdaterProvider,
     );
 
     final regionMaxIntensities = useMemoized(() {
@@ -74,6 +76,12 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ),
       [warningAreaSelector, eew],
     );
+    final warningReportKey = switch (eew) {
+      final event? => (event.eventId, event.serialNo),
+      null => null,
+    };
+    final latestWarningCodes = useRef<List<String>>(warningCodes);
+    latestWarningCodes.value = warningCodes;
 
     final enqueue = useMapOperationQueue();
 
@@ -161,25 +169,19 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ],
     );
 
-    // 警報モード: fill + line の2レイヤー
+    // 警報モード: fill + line の2レイヤーをモード中は維持する
     useEffect(() {
-      if (styleController == null ||
-          displayMode != EewDisplayMode.warning ||
-          warningCodes.isEmpty) {
+      if (styleController == null || displayMode != EewDisplayMode.warning) {
         return null;
       }
 
-      final filter = <Object>[
-        'in',
-        ['get', 'code'],
-        ['literal', warningCodes],
-      ];
+      final filter = _areaFilterBuilder.build(warningCodes);
 
       unawaited(
         enqueue(() async {
           await styleController.addLayer(
             FillStyleLayer(
-              id: _warningLayerId,
+              id: EewForecastRegionWarningFilterUpdater.fillLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
@@ -189,7 +191,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           );
           await styleController.addLayer(
             LineStyleLayer(
-              id: _warningLineLayerId,
+              id: EewForecastRegionWarningFilterUpdater.lineLayerId,
               sourceId: _sourceId,
               sourceLayerId: _warningSourceLayerId,
               filter: filter,
@@ -199,6 +201,10 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               },
             ),
           );
+          await warningFilterUpdater.update(
+            styleController: styleController,
+            warningCodes: latestWarningCodes.value,
+          );
         }),
       );
 
@@ -206,19 +212,52 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         unawaited(
           enqueue(() async {
             try {
-              await styleController.removeLayer(_warningLineLayerId);
+              await styleController.removeLayer(
+                EewForecastRegionWarningFilterUpdater.lineLayerId,
+              );
             } on Exception {
               // ignore
             }
             try {
-              await styleController.removeLayer(_warningLayerId);
+              await styleController.removeLayer(
+                EewForecastRegionWarningFilterUpdater.fillLayerId,
+              );
             } on Exception {
               // ignore
             }
           }),
         );
       };
-    }, [styleController, displayMode, warningCodes, isDarkMode]);
+      // warningCodes はレイヤー生成時の初期filterにのみ使用し、報切替時は
+      // 下の更新用effectでfilterだけを更新する。
+      // ignore_keys: warningCodes
+    }, [styleController, displayMode, isDarkMode, warningFilterUpdater]);
+
+    // 警報モード: 選択報ごとに既存レイヤーのfilterを更新する
+    useEffect(
+      () {
+        if (styleController == null || displayMode != EewDisplayMode.warning) {
+          return null;
+        }
+
+        unawaited(
+          enqueue(
+            () => warningFilterUpdater.update(
+              styleController: styleController,
+              warningCodes: warningCodes,
+            ),
+          ),
+        );
+        return null;
+      },
+      [
+        styleController,
+        displayMode,
+        warningReportKey,
+        warningCodes,
+        warningFilterUpdater,
+      ],
+    );
 
     return const SizedBox.shrink();
   }
