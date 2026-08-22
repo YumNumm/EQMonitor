@@ -78,7 +78,7 @@ extension EewContentState {
         type: "eew",
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
-        depth: 10,
+        depth: 170,
         time: "2024-01-01T16:10:00+09:00",
         isOriginTime: true,
         maxIntensity: nil,

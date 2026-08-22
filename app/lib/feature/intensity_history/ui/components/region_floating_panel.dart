@@ -9,9 +9,9 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_inten
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップの上部フローティングパネル。
 ///
@@ -72,7 +72,7 @@ class _NationwidePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final typography = context.designSystem.typography;
 
     return Card(
       color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
@@ -83,10 +83,20 @@ class _NationwidePanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              '全国',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '市区町村別 ',
+                    style: typography.bodySmall.copyWith(
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '最大観測震度',
+                    style: typography.titleSmall,
+                  ),
+                ],
               ),
             ),
             _RefreshedAtLabel(responseAt: cityMaxIntensity?.responseAt),
