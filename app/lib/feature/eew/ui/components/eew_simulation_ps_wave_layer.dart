@@ -70,8 +70,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
         return null;
       }
 
-      // このリスナー自体の有効期間は `simulation`/`animationController` の
-      // 変化にも連動する（[styleController] のみに連動する [disposed] とは別軸）。
+      // simulationの状態遷移時はリスナーを張り直し、停止・完了位置を即時反映する。
       var listenerDisposed = false;
 
       void listener() {
@@ -201,6 +200,7 @@ class EewSimulationPsWaveLayer extends HookConsumerWidget {
       }
 
       animationController.addListener(listener);
+      listener();
       return () {
         listenerDisposed = true;
         animationController.removeListener(listener);

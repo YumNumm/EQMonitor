@@ -126,7 +126,7 @@ class EewSimulation extends _$EewSimulation {
 
   void resume() {
     final s = state;
-    if (s != null && !s.isComplete) {
+    if (s != null && !s.isPlaying && !s.isComplete) {
       state = s.copyWith(isPlaying: true, startedAt: clock.now());
       _scheduleNext();
     }

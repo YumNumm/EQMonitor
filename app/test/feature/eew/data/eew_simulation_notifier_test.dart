@@ -68,6 +68,30 @@ void main() {
     });
   });
 
+  test('再生中のresumeは再生位置を巻き戻さない', () {
+    fakeAsync((async) {
+      withClock(async.getClock(DateTime.utc(2026)), () {
+        final container = ProviderContainer();
+        addTearDown(container.dispose);
+        final subscription = container.listen(eewSimulationProvider, (_, _) {});
+        addTearDown(subscription.close);
+        final notifier = container.read(eewSimulationProvider.notifier);
+
+        notifier.start(_reports);
+        async.elapse(const Duration(seconds: 1));
+        notifier.resume();
+        async.elapse(const Duration(seconds: 1));
+        final playing = container.read(eewSimulationProvider);
+
+        expect(playing?.currentIndex, 1);
+        expect(
+          playing?.playbackElapsedAt(clock.now()),
+          const Duration(seconds: 2),
+        );
+      });
+    });
+  });
+
   test('最終報到達後は再生位置を固定する', () {
     fakeAsync((async) {
       withClock(async.getClock(DateTime.utc(2026)), () {
