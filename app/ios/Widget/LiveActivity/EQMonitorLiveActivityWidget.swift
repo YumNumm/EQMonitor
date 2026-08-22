@@ -190,12 +190,6 @@ struct EewExpandedTrailingView: View {
                 until: state.display.countdownArrivalDate
             ) {
                 ArrivalCountdownText(remaining: remaining, size: 26)
-            } else {
-                Text("到達済み")
-                    .font(AppFonts.flex(size: 14, weight: .bold))
-                    .foregroundStyle(Color.eqTextPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
             }
         case .summary:
             EewStatusPill(

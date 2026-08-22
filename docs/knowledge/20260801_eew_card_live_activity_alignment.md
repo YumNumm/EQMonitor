@@ -8,7 +8,7 @@
 | 項目 | 仕様 |
 |------|------|
 | 最終報 | `最終 第N報` |
-| 到達後 | `主要動到達済み`（`location.arrivalTime`） |
+| 到達後 | `主要動到達まで` + `0秒` / Live Activity は `00:00`（レイアウトは変えない） |
 | PLUM | M/深さ非表示、`PLUM法による検知`、時刻は「地震検知」 |
 | レベル法 | `accuracy.epicenter==1 && originTime==null`。M/深さ非表示、`レベル法による検知` |
 | IPF 1点 | `epicenter==1 && originTime!=null && !isPlum`。M/深さ非表示、`低精度の緊急地震速報` |
@@ -20,7 +20,7 @@
 
 - Live Activity の ContentState は backend APNs が組み立てる。アプリはトークン登録のみ。
 - Dynamic Island の Expanded Bottom でも仮定震源フラグを見て M/深さを隠すこと。
-- Dynamic Island の到達表示も Lock Screen と同じく `主要動到達済み` / `timerInterval` カウントダウンを使う。
+- Dynamic Island の到達表示も Lock Screen と同じく `timerInterval` カウントダウンを使う。到達後は `00:00` のまま。
 - headline 生成のアプリ/backend 差分は今回未対応。
 - 深発注釈・LPGM は `eew_card` のみ（Live Activity には載せない）。
 

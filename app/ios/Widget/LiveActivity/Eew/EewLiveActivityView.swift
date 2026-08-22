@@ -2,8 +2,6 @@
 //  EewLiveActivityView.swift
 //  Widget
 //
-//  緊急地震速報用のLive Activity表示
-//
 
 import SwiftUI
 import WidgetKit
@@ -62,7 +60,6 @@ struct HeaderContainer: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                // 主要動到達までのカウントダウン / 到達済み
                 if let remaining = ArrivalCountdown.remaining(until: display.countdownArrivalDate) {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("主要動到達まで")
@@ -73,10 +70,6 @@ struct HeaderContainer: View {
                             color: .white
                         )
                     }
-                } else if display.countdownArrivalDate != nil {
-                    Text("主要動到達済み")
-                        .font(.system(size: 14, weight: .heavy))
-                        .foregroundColor(.white)
                 }
             }
             .padding(.horizontal, 12)
@@ -434,6 +427,13 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.countingDown(), viewKind: .content)
             .previewDisplayName("Lock Screen - 到達カウントダウン")
+
+        attributes
+            .previewContext(
+                .countingDown(secondsUntilArrival: -5),
+                viewKind: .content
+            )
+            .previewDisplayName("Lock Screen - 到達済み")
 
         // Dynamic Island - Compact
         attributes

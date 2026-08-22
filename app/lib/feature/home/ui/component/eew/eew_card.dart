@@ -102,11 +102,9 @@ class EewCard extends ConsumerWidget {
             nowValue.isAfter(effectiveArrivalTime));
 
     int? secondsUntilArrival;
-    if (!hasArrived && effectiveArrivalTime != null && nowValue != null) {
+    if (!eew.isCanceled && effectiveArrivalTime != null && nowValue != null) {
       final diff = effectiveArrivalTime.difference(nowValue).inSeconds;
-      if (diff > 0) {
-        secondsUntilArrival = diff;
-      }
+      secondsUntilArrival = diff > 0 ? diff : 0;
     }
 
     final designSystem = context.designSystem;
@@ -220,7 +218,6 @@ class _EewMainCard extends StatelessWidget {
             isWarning: isWarning,
             headerBackgroundColor: headerBackgroundColor,
             secondsUntilArrival: secondsUntilArrival,
-            showArrived: showArrived,
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -283,14 +280,12 @@ class _EewCardHeader extends StatelessWidget {
     required this.eew,
     required this.isWarning,
     required this.headerBackgroundColor,
-    required this.showArrived,
     this.secondsUntilArrival,
   });
 
   final EewTelegramItem eew;
   final bool isWarning;
   final Color headerBackgroundColor;
-  final bool showArrived;
   final int? secondsUntilArrival;
 
   static const _secondaryTextColor = Color.fromRGBO(255, 255, 255, 0.7);
@@ -313,7 +308,7 @@ class _EewCardHeader extends StatelessWidget {
     final headline = eew.headline;
 
     final secs = secondsUntilArrival;
-    final countdownText = (secs != null && secs > 0) ? '$secs秒' : null;
+    final countdownText = secs != null ? '$secs秒' : null;
     final hypocenterName = eew.hypocenter?.name;
     final String? headlineText = eew.isCanceled
         ? null
@@ -366,14 +361,6 @@ class _EewCardHeader extends StatelessWidget {
             ),
           ),
         ],
-      );
-    } else if (showArrived) {
-      rightColumn = Text(
-        '主要動到達済み',
-        style: typography.titleSmall.copyWith(
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
       );
     } else {
       rightColumn = null;

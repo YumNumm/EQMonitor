@@ -102,9 +102,6 @@ struct EewDisplay: Equatable {
 
     // MARK: - 取消報の文言
 
-    /// 取消報の主文。Lock Screen と Dynamic Island で文言を揃える。
     static let canceledTitle = "緊急地震速報は取り消されました"
-
-    /// 取消報の補足。震度や到達予想を出していない理由を伝える。
     static let canceledDescription = "予想震度・主要動到達の予想は無効です"
 }

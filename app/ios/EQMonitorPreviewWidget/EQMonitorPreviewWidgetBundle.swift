@@ -20,10 +20,6 @@ struct EQMonitorPreviewWidgetBundle: WidgetBundle {
 
 // MARK: - Live Activity Previews
 
-// EEW は 1 つの Activity を報ごとに更新し続ける。単発の状態だけでは
-// 更新時のレイアウト崩れに気付けないため、報の進行を系列で渡す。
-// キャンバス下部の State を切り替えると第1報から最終報までを順に確認できる。
-
 private let eewPreviewAttributes = EewLiveActivityAttributes(eventId: "20240101161009")
 
 #Preview(

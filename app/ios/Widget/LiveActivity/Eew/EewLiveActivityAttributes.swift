@@ -237,7 +237,7 @@ extension EewContentState {
     )
 
     /// 主要動到達カウントダウンを主役にするレイアウトのプレビュー。
-    /// 固定日時では常に「到達済み」になってしまうため、実行時刻から到達予想を作る。
+    /// 固定日時では常に 00:00 になってしまうため、実行時刻から到達予想を作る。
     static func countingDown(secondsUntilArrival: TimeInterval = 30) -> EewContentState {
         let formatter = ISO8601DateFormatter()
         return EewContentState(
@@ -298,7 +298,7 @@ extension EewContentState {
 /// ここでは報の進行を系列として持ち、プレビューで State を切り替えて確認する。
 ///
 /// 主要動到達の予想時刻は実行時刻からの相対で作る。固定日時にすると
-/// カウントダウンが常に「到達済み」になり、残り時間の表示を確認できない。
+/// カウントダウンが常に 00:00 になり、残り時間の表示を確認できない。
 extension EewContentState {
     /// 予報の第1報から警報へ切り替わり、最終報まで規模と予想震度が上がっていく流れ。
     static func warningSequence(from now: Date = Date()) -> [EewContentState] {
@@ -348,7 +348,7 @@ extension EewContentState {
                 originTime: originTime,
                 arrivalTime: now.addingTimeInterval(6)
             ),
-            // 主要動が到達し、カウントダウンが「到達済み」へ切り替わった状態
+            // 主要動が到達し、カウントダウンが 00:00 で止まっている状態
             notoReport(
                 serialNo: 32,
                 magnitude: 7.6,
