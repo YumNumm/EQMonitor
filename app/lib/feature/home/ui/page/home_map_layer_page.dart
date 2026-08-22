@@ -16,7 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeMapLayerPage extends StatelessWidget {
+class HomeMapLayerPage extends ConsumerWidget {
   const new({super.key});
 
   @override
