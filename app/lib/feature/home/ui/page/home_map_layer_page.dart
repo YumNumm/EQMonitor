@@ -15,16 +15,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
-class HomeMapLayerPage extends HookConsumerWidget {
+class HomeMapLayerPage extends StatelessWidget {
   const new({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
-    final expandedSection = useState<_MapLayerSection?>(null);
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainerLow,
@@ -53,17 +52,10 @@ class HomeMapLayerPage extends HookConsumerWidget {
               ),
               sliver: SliverList.list(
                 children: [
-                  _SettingsSection(
+                  const _SettingsSection(
                     title: '緊急地震速報',
                     description: 'EEW の塗りつぶし、アニメーション、自動追従を調整します。',
-                    isExpanded: expandedSection.value == _MapLayerSection.eew,
-                    onTap: () {
-                      expandedSection.value =
-                          expandedSection.value == _MapLayerSection.eew
-                          ? null
-                          : _MapLayerSection.eew;
-                    },
-                    children: const [
+                    children: [
                       _EewFillModeTile(),
                       _EewPsWaveTile(),
                       _EewPsWaveTimeBaseTile(),
@@ -72,56 +64,28 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  _SettingsSection(
+                  const _SettingsSection(
                     title: '揺れ検知',
                     description: '揺れ検知イベントの表示とアニメーションを調整します。',
-                    isExpanded:
-                        expandedSection.value ==
-                        _MapLayerSection.shakeDetection,
-                    onTap: () {
-                      expandedSection.value =
-                          expandedSection.value ==
-                              _MapLayerSection.shakeDetection
-                          ? null
-                          : _MapLayerSection.shakeDetection;
-                    },
-                    children: const [
+                    children: [
                       _ShakeDetectionShowTile(),
                       _ShakeDetectionAnimationModeTile(),
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  _SettingsSection(
+                  const _SettingsSection(
                     title: '現在地',
                     description: '位置情報の利用許可と、地図上での表示設定です。',
-                    isExpanded:
-                        expandedSection.value == _MapLayerSection.location,
-                    onTap: () {
-                      expandedSection.value =
-                          expandedSection.value == _MapLayerSection.location
-                          ? null
-                          : _MapLayerSection.location;
-                    },
-                    children: const [
+                    children: [
                       _LocationPermissionTile(),
                       _ShowLocationTile(),
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  _SettingsSection(
+                  const _SettingsSection(
                     title: '強震モニタ',
                     description: 'リアルタイム観測点の表示条件と見た目を変更します。',
-                    isExpanded:
-                        expandedSection.value ==
-                        _MapLayerSection.kyoshinMonitor,
-                    onTap: () {
-                      expandedSection.value =
-                          expandedSection.value ==
-                              _MapLayerSection.kyoshinMonitor
-                          ? null
-                          : _MapLayerSection.kyoshinMonitor;
-                    },
-                    children: const [
+                    children: [
                       _KyoshinMonitorEnabledTile(),
                       _KyoshinMonitorSourceTile(),
                       _KyoshinMonitorAboutTile(),
@@ -134,17 +98,10 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     ],
                   ),
                   SizedBox(height: spacing.lg),
-                  _SettingsSection(
+                  const _SettingsSection(
                     title: 'マップ',
                     description: '地図の回転、ズーム、初期表示範囲を設定します。',
-                    isExpanded: expandedSection.value == _MapLayerSection.map,
-                    onTap: () {
-                      expandedSection.value =
-                          expandedSection.value == _MapLayerSection.map
-                          ? null
-                          : _MapLayerSection.map;
-                    },
-                    children: const [
+                    children: [
                       _MapLockBearingTile(),
                       _MapMaxZoomTile(),
                       _MapDefaultBoundsTile(),
@@ -161,25 +118,20 @@ class HomeMapLayerPage extends HookConsumerWidget {
   }
 }
 
-enum _MapLayerSection { eew, shakeDetection, location, kyoshinMonitor, map }
-
-class _SettingsSection extends StatelessWidget {
+class _SettingsSection extends HookWidget {
   const new({
     required this.title,
     required this.description,
-    required this.isExpanded,
-    required this.onTap,
     required this.children,
   });
 
   final String title;
   final String description;
-  final bool isExpanded;
-  final VoidCallback onTap;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
+    final isExpanded = useState(false);
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
@@ -213,7 +165,9 @@ class _SettingsSection extends StatelessWidget {
       child: Column(
         children: [
           InkWell(
-            onTap: onTap,
+            onTap: () {
+              isExpanded.value = !isExpanded.value;
+            },
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                 spacing.xl,
@@ -222,11 +176,11 @@ class _SettingsSection extends StatelessWidget {
                 spacing.lg,
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           title,
@@ -241,7 +195,7 @@ class _SettingsSection extends StatelessWidget {
                   ),
                   SizedBox(width: spacing.md),
                   AnimatedRotation(
-                    turns: isExpanded ? 0 : -0.25,
+                    turns: isExpanded.value ? 0 : -0.25,
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -255,7 +209,7 @@ class _SettingsSection extends StatelessWidget {
           AnimatedSize(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeOutCubic,
-            child: isExpanded
+            child: isExpanded.value
                 ? Column(
                     children: [
                       Divider(height: 1, color: colorTheme.outlineVariant),
