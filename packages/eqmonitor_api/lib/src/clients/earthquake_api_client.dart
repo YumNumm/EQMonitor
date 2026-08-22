@@ -87,7 +87,7 @@ abstract class EarthquakeApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 市区町村ごとの観測史上最大震度一覧（全国）。事前集計済みのため都道府県での絞り込みや status 指定はありません。response_at は集計を最後に更新した時刻で、取得できなかった場合は null になります（items は返ります）。観測実績のない市区町村は items に含まれません。
+  /// 市区町村ごとの観測史上最大震度一覧（全国）。事前集計済みのため都道府県での絞り込みや status 指定はありません。aggregated_at は集計を最後に更新した時刻で、取得できなかった場合は null になります（items は返ります）。観測実績のない市区町村は items に含まれません。
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityMax)
   Future<HttpResponse<CityMaxIntensityResponse>> getV2EarthquakeIntensityCityMax();
 

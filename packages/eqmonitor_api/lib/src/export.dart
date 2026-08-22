@@ -135,6 +135,7 @@ export 'models/migrate_request.dart';
 export 'models/migration_result_response.dart';
 export 'models/migration_response.dart';
 export 'models/conflict_response.dart';
+export 'models/migration_service_unavailable_response.dart';
 export 'models/jma_lpgm_intensity.dart';
 export 'models/telegram_status.dart';
 export 'models/earthquake_type.dart';
