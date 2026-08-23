@@ -251,6 +251,14 @@ void main() {
           '130',
         );
         expect(geometry.earthquakeAreas.cities.features, isEmpty);
+        expect(
+          geometry.earthquakeAreas.forecastRegions.missingOrInvalidCodeCount,
+          1,
+        );
+        expect(
+          geometry.earthquakeAreas.cities.missingOrInvalidCodeCount,
+          1,
+        );
       },
     );
 

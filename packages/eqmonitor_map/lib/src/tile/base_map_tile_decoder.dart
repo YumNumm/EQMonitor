@@ -301,12 +301,14 @@ EarthquakeAreaTileLayerGeometry _buildEarthquakeAreaLayerGeometry({
   }
 
   final meshesByCode = <String, List<FillMesh>>{};
+  var missingOrInvalidCodeCount = 0;
   for (final feature in layer.features) {
     if (feature.type != MvtGeometryType.polygon) {
       continue;
     }
     final code = feature.properties[codePropertyName];
-    if (code == null) {
+    if (code == null || code.trim().isEmpty) {
+      missingOrInvalidCodeCount++;
       continue;
     }
     meshesByCode.putIfAbsent(code, () => []).addAll(builder.build([feature]));
@@ -314,6 +316,7 @@ EarthquakeAreaTileLayerGeometry _buildEarthquakeAreaLayerGeometry({
 
   return EarthquakeAreaTileLayerGeometry(
     extent: layer.extent,
+    missingOrInvalidCodeCount: missingOrInvalidCodeCount,
     features: List.unmodifiable([
       for (final MapEntry(:key, :value) in meshesByCode.entries)
         CodedFillGeometry(code: key, meshes: List.unmodifiable(value)),
