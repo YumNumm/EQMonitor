@@ -5,11 +5,13 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_map_action.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_history_page_action.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_error_overlay.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_legend.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_loading_overlay.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_navigation_back_button.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
-import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_history_map_layers.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
@@ -37,6 +39,7 @@ class IntensityHistoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final action = ref.watch(intensityHistoryPageActionProvider);
     return switch (ref.watch(mapConfigurationProvider)) {
       AsyncData(value: MapConfiguration(:final styleString?)) => _MapContent(
         styleString: styleString,
@@ -45,10 +48,25 @@ class IntensityHistoryPage extends ConsumerWidget {
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(title: const Text('市区町村別 最大震度')),
-        body: Center(child: ErrorCard(error: error)),
+        body: Center(
+          child: ErrorCard(
+            error: error,
+            onReload: () => action.retryMapConfiguration(ref),
+            showLoadingOverlayOnReload: false,
+          ),
+        ),
       ),
       _ => const Scaffold(
-        body: Center(child: CircularProgressIndicator.adaptive()),
+        body: Stack(
+          children: [
+            Center(child: CircularProgressIndicator.adaptive()),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: IntensityHistoryNavigationBackButton(),
+            ),
+          ],
+        ),
       ),
     };
   }
@@ -133,7 +151,7 @@ class _MapContent extends HookConsumerWidget {
                   point: point,
                 );
               },
-              children: const [IntensityFillLayer()],
+              children: const [IntensityHistoryMapLayers()],
             ),
           ),
 
@@ -167,13 +185,14 @@ class _MapContent extends HookConsumerWidget {
             child: SafeArea(child: IntensityHistoryLegend()),
           ),
 
+          const IntensityHistoryLoadingOverlay(),
+          const IntensityHistoryErrorOverlay(),
+
           const Positioned(
             top: 0,
             left: 0,
             child: IntensityHistoryNavigationBackButton(),
           ),
-
-          const IntensityHistoryErrorOverlay(),
         ],
       ),
     );
