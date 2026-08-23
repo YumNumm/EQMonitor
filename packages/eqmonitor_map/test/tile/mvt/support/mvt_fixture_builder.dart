@@ -28,6 +28,8 @@ final class MvtFixtureBuilder {
   Uint8List buildLayer({
     required String name,
     List<Uint8List> features = const [],
+    List<String> keys = const [],
+    List<Uint8List> values = const [],
     int? version = 2,
     int? extent,
   }) {
@@ -39,6 +41,10 @@ final class MvtFixtureBuilder {
         ..add(encodeTag(fieldNumber: 2, wireType: 2))
         ..add(encodeLengthDelimited(feature));
     }
+    for (final key in keys) {
+      output.add(this.key(key));
+    }
+    values.forEach(output.add);
     if (extent != null) {
       output
         ..add(encodeTag(fieldNumber: 5, wireType: 0))

@@ -58,6 +58,18 @@ Uint8List _buildFeatureTriangle() {
   );
 }
 
+Uint8List _buildTaggedFeatureTriangle({List<int> tags = const []}) {
+  return _builder.feature(
+    geomType: MvtFixtureBuilder.geomTypePolygon,
+    tags: tags,
+    rawCommands: [
+      ..._builder.moveTo([(0, 0)]),
+      ..._builder.lineTo([(10, 0), (-10, 10)]),
+      ..._builder.closePath(),
+    ],
+  );
+}
+
 /// (0,0)→(20,0)の2点LineString(`ClosePath`を使わない、開いたline)。
 Uint8List _buildFeatureOpenLine() {
   return _builder.buildFeature(
@@ -111,6 +123,137 @@ void main() {
   });
 
   group('decodeBaseMapTileSync', () {
+    test('keeps each coded earthquake area mesh with its source code', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.buildLayer(
+            name: 'areaForecastLocalE',
+            keys: ['code'],
+            values: [_builder.stringValue('130')],
+            features: [
+              _buildTaggedFeatureTriangle(tags: [0, 0]),
+            ],
+          ),
+          _builder.buildLayer(
+            name: 'areaInformationCityQuake',
+            keys: ['regioncode'],
+            values: [_builder.stringValue('131016')],
+            features: [
+              _buildTaggedFeatureTriangle(tags: [0, 0]),
+            ],
+          ),
+        ],
+      );
+
+      final geometry = decodeBaseMapTileSync(tile, _limits);
+
+      expect(geometry.earthquakeAreas.forecastRegions.extent, 4096);
+      expect(geometry.earthquakeAreas.cities.extent, 4096);
+      expect(geometry.earthquakeAreas.forecastRegions.features, hasLength(1));
+      expect(
+        geometry.earthquakeAreas.forecastRegions.features.single.code,
+        '130',
+      );
+      expect(
+        geometry
+            .earthquakeAreas
+            .forecastRegions
+            .features
+            .single
+            .meshes
+            .single
+            .vertexCount,
+        3,
+      );
+      expect(geometry.earthquakeAreas.cities.features, hasLength(1));
+      expect(geometry.earthquakeAreas.cities.features.single.code, '131016');
+      expect(
+        geometry
+            .earthquakeAreas
+            .cities
+            .features
+            .single
+            .meshes
+            .single
+            .vertexCount,
+        3,
+      );
+    });
+
+    test(
+      'keeps multiple same-code area meshes after FillMesh segmentation',
+      () {
+        final tile = _builder.buildTile(
+          layers: [
+            _builder.buildLayer(
+              name: 'areaForecastLocalE',
+              keys: ['code'],
+              values: [_builder.stringValue('130')],
+              features: [
+                _buildTaggedFeatureTriangle(tags: [0, 0]),
+                _buildTaggedFeatureTriangle(tags: [0, 0]),
+              ],
+            ),
+          ],
+        );
+        final limits = _limits.copyWith(
+          fillLimits: _limits.fillLimits.copyWith(maxVerticesPerSegment: 3),
+        );
+
+        final geometry = decodeBaseMapTileSync(tile, limits);
+
+        expect(geometry.earthquakeAreas.forecastRegions.features, hasLength(1));
+        expect(
+          geometry.earthquakeAreas.forecastRegions.features.single.code,
+          '130',
+        );
+        expect(
+          geometry.earthquakeAreas.forecastRegions.features.single.meshes,
+          hasLength(2),
+        );
+      },
+    );
+
+    test(
+      'excludes missing and non-string area codes without removing base fills',
+      () {
+        final tile = _builder.buildTile(
+          layers: [
+            _builder.buildLayer(
+              name: 'areaForecastLocalE',
+              keys: ['code'],
+              values: [_builder.stringValue('130')],
+              features: [
+                _buildTaggedFeatureTriangle(tags: [0, 0]),
+                _buildTaggedFeatureTriangle(),
+              ],
+            ),
+            _builder.buildLayer(
+              name: 'areaInformationCityQuake',
+              keys: ['regioncode'],
+              values: [_builder.intValue(131016)],
+              features: [
+                _buildTaggedFeatureTriangle(tags: [0, 0]),
+              ],
+            ),
+          ],
+        );
+
+        final geometry = decodeBaseMapTileSync(tile, _limits);
+        final forecastBaseFill = geometry.layers.singleWhere(
+          (layer) => layer.styleLayerId == 'areaForecastLocalEFill',
+        ) as BaseMapTileFillLayerGeometry;
+
+        expect(forecastBaseFill.meshes.single.vertexCount, 6);
+        expect(geometry.earthquakeAreas.forecastRegions.features, hasLength(1));
+        expect(
+          geometry.earthquakeAreas.forecastRegions.features.single.code,
+          '130',
+        );
+        expect(geometry.earthquakeAreas.cities.features, isEmpty);
+      },
+    );
+
     test('preserves each source layer extent on every derived style layer', () {
       final tile = _builder.buildTile(
         layers: [
