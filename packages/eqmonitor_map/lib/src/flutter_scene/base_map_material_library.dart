@@ -36,4 +36,8 @@ class BaseMapMaterialLibrary {
   /// `assets/base_map_line.fmat`を新しく1つ読み込む。
   static Future<scene.PreprocessedMaterial> loadLineMaterial() =>
       scene.loadFmatMaterial('assets/base_map_line.fmat');
+
+  /// `assets/earthquake_area_fill.fmat`を新しく1つ読み込む。
+  static Future<scene.PreprocessedMaterial> loadEarthquakeAreaFillMaterial() =>
+      scene.loadFmatMaterial('assets/earthquake_area_fill.fmat');
 }
