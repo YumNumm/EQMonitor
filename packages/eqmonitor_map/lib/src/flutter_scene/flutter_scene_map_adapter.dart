@@ -224,8 +224,7 @@ final class FlutterSceneObservationGeometryOwner {
     for (final entry in _entries) {
       if (!entry.retireScheduled &&
           entry.contextGeneration == contextGeneration &&
-          entry.sourceId == batch.sourceId &&
-          entry.snapshotRevision == batch.snapshotRevision) {
+          identical(entry.instanceGeneration, batch.instanceGeneration)) {
         if (entry.geometry.isRetired) {
           throw StateError(
             'A retired observation geometry cannot be reused.',
@@ -240,8 +239,7 @@ final class FlutterSceneObservationGeometryOwner {
     _entries.add(
       _FlutterSceneObservationGeometryEntry(
         contextGeneration: contextGeneration,
-        sourceId: batch.sourceId,
-        snapshotRevision: batch.snapshotRevision,
+        instanceGeneration: batch.instanceGeneration,
         geometry: geometry,
         lastUsedFrame: frameNumber,
       ),
@@ -283,15 +281,13 @@ final class FlutterSceneObservationGeometryOwner {
 final class _FlutterSceneObservationGeometryEntry {
   _FlutterSceneObservationGeometryEntry({
     required this.contextGeneration,
-    required this.sourceId,
-    required this.snapshotRevision,
+    required this.instanceGeneration,
     required this.geometry,
     required this.lastUsedFrame,
   }) : retireScheduled = false;
 
   final int contextGeneration;
-  final String sourceId;
-  final int snapshotRevision;
+  final ObservationPointInstanceGeneration instanceGeneration;
   final scene.StaticInstanceGeometry geometry;
   int lastUsedFrame;
   bool retireScheduled;

@@ -262,24 +262,26 @@ void main() {
     contextGeneration: contextGeneration,
   );
 
-  EarthquakeMapOverlaySnapshot observationSnapshot({required int revision}) =>
-      createEarthquakeMapOverlaySnapshot(
-        sourceId: 'event-1',
-        revision: revision,
-        regionToCityZoom: 6,
-        stationMinZoom: 6,
-        regionStyles: const [],
-        cityStyles: const [],
-        stations: const [
-          EarthquakeObservationPoint(
-            id: 'tokyo',
-            longitude: 139.6917,
-            latitude: 35.6895,
-            color: Color(0xFFFF0000),
-            radiusLogicalPixels: 8,
-          ),
-        ],
-      );
+  EarthquakeMapOverlaySnapshot observationSnapshot({
+    required int revision,
+    Color stationColor = const Color(0xFFFF0000),
+  }) => createEarthquakeMapOverlaySnapshot(
+    sourceId: 'event-1',
+    revision: revision,
+    regionToCityZoom: 6,
+    stationMinZoom: 6,
+    regionStyles: const [],
+    cityStyles: const [],
+    stations: [
+      EarthquakeObservationPoint(
+        id: 'tokyo',
+        longitude: 139.6917,
+        latitude: 35.6895,
+        color: stationColor,
+        radiusLogicalPixels: 8,
+      ),
+    ],
+  );
 
   MapSceneFrameSubmission observationSubmission({
     required MapFrameSnapshot frame,
@@ -483,10 +485,11 @@ void main() {
     'same revision keeps geometry identity and changes only frame uniform',
     () {
       final firstFrame = observationFrameAt(frameNumber: 0);
+      final snapshot = observationSnapshot(revision: 1);
       final firstBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: firstFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: snapshot,
         ),
       );
       final secondFrame = observationFrameAt(
@@ -496,7 +499,7 @@ void main() {
       final secondBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: secondFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: snapshot,
           previous: firstBatch,
         ),
       );
@@ -537,6 +540,52 @@ void main() {
       expect(secondUniform, isNot(same(firstUniform)));
     },
   );
+
+  test('same source and revision with changed color creates new geometry', () {
+    final firstFrame = observationFrameAt(frameNumber: 0);
+    final firstBatch = _requireObservationPointBatch(
+      buildObservationPointBatch(
+        frame: firstFrame,
+        snapshot: observationSnapshot(revision: 1),
+      ),
+    );
+    final secondFrame = observationFrameAt(frameNumber: 1);
+    final secondBatch = _requireObservationPointBatch(
+      buildObservationPointBatch(
+        frame: secondFrame,
+        snapshot: observationSnapshot(
+          revision: 1,
+          stationColor: const Color(0xFF0000FF),
+        ),
+        previous: firstBatch,
+      ),
+    );
+    final sceneGraph = _RecordingSceneGraph();
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) => null,
+      observationMaterial: _TestObservationMaterialBinding(),
+      maxFramesInFlight: 2,
+    );
+
+    adapter.submitFrame(
+      submission: observationSubmission(frame: firstFrame, batch: firstBatch),
+    );
+    final firstGeometry =
+        sceneGraph.children.single.mesh?.primitives.single.geometry;
+    adapter.submitFrame(
+      submission: observationSubmission(
+        frame: secondFrame,
+        batch: secondBatch,
+      ),
+    );
+
+    expect(
+      sceneGraph.children.single.mesh?.primitives.single.geometry,
+      isNot(same(firstGeometry)),
+    );
+    expect(adapter.uploadedObservationGeometryCount, 2);
+  });
 
   test(
     'material preflight failure leaves Scene and geometry state untouched',
@@ -633,10 +682,11 @@ void main() {
     'context generation change creates new geometry before retiring old',
     () {
       final firstFrame = observationFrameAt(frameNumber: 0);
+      final snapshot = observationSnapshot(revision: 1);
       final firstBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: firstFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: snapshot,
         ),
       );
       final nextContextFrame = observationFrameAt(
@@ -646,7 +696,7 @@ void main() {
       final nextContextBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: nextContextFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: snapshot,
           previous: firstBatch,
         ),
       );
@@ -694,10 +744,11 @@ void main() {
 
   test('context generation change forbids reuse if an old id reappears', () {
     final firstFrame = observationFrameAt(frameNumber: 0);
+    final snapshot = observationSnapshot(revision: 1);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: snapshot,
       ),
     );
     final sceneGraph = _RecordingSceneGraph();
@@ -724,7 +775,7 @@ void main() {
           batch: _requireObservationPointBatch(
             buildObservationPointBatch(
               frame: nextFrame,
-              snapshot: observationSnapshot(revision: 1),
+              snapshot: snapshot,
               previous: firstBatch,
             ),
           ),
@@ -800,17 +851,18 @@ void main() {
 
   test('fails closed when a live cached geometry was already retired', () {
     final firstFrame = observationFrameAt(frameNumber: 0);
+    final snapshot = observationSnapshot(revision: 1);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: snapshot,
       ),
     );
     final secondFrame = observationFrameAt(frameNumber: 1);
     final secondBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: secondFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: snapshot,
         previous: firstBatch,
       ),
     );
