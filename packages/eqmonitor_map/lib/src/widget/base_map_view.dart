@@ -9,6 +9,8 @@ import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
+import 'package:eqmonitor_map/src/geo/map_camera_bounds.dart';
+import 'package:eqmonitor_map/src/geo/map_camera_bounds_fitter.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
@@ -31,6 +33,7 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
 import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
+import 'package:eqmonitor_map/src/widget/map_view_camera_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_scene/scene.dart' as scene;
@@ -111,9 +114,10 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
 /// 検証済みPMTiles archiveから、pan/pinch zoom付きでベースレイヤー
 /// (Fill/Line)を描画するwidget。
 ///
-/// 必須入力は[source]・[initialCamera]・[limits]、任意入力は地震overlayと
-/// coverage callbackであり、内部で保持するcamera状態やFlutter Sceneの
-/// controller/[scene.Scene]は外へ公開しない。`initialCamera`は最初のフレームにしか使わず、
+/// 必須入力は[source]・[initialCamera]・[limits]・[clock]、任意入力は
+/// caller-owned [cameraController]、地震overlay、coverage callbackである。
+/// Flutter Sceneのcontroller/[scene.Scene]は外へ公開しない。
+/// `initialCamera`は最初のフレームにしか使わず、
 /// 後から[BaseMapView]が再構築されても(同じ[source]/[limits]である限り)
 /// 現在のcamera状態を保つ。
 class BaseMapView extends HookWidget {
@@ -121,6 +125,8 @@ class BaseMapView extends HookWidget {
     required this.source,
     required this.initialCamera,
     required this.limits,
+    required this.clock,
+    this.cameraController,
     this.earthquakeOverlay,
     this.onEarthquakeOverlayCoverageChanged,
     super.key,
@@ -141,6 +147,14 @@ class BaseMapView extends HookWidget {
   // ignore: diagnostic_describe_all_properties
   final MapBaseLayerLimits limits;
 
+  // frame clockはappのtime modeと同一sourceを使う必須入力。
+  // ignore: diagnostic_describe_all_properties
+  final MapClock clock;
+
+  // callerがownershipとdisposeを担うcamera command controller。
+  // ignore: diagnostic_describe_all_properties
+  final MapViewCameraController? cameraController;
+
   // overlay snapshotはapp側で検証・変換済みの入力値そのもの。
   // ignore: diagnostic_describe_all_properties
   final EarthquakeMapOverlaySnapshot? earthquakeOverlay;
@@ -156,13 +170,18 @@ class BaseMapView extends HookWidget {
       () => _BaseMapController(
         source: source,
         limits: limits,
-        initialCamera: initialCamera,
+        initialCamera: cameraController?.committedCamera ?? initialCamera,
+        mapClock: clock,
+        externalCameraController: cameraController,
         earthquakeOverlay: earthquakeOverlay,
         onEarthquakeOverlayCoverageChanged: onEarthquakeOverlayCoverageChanged,
       ),
-      [source, limits],
+      [source, limits, clock, cameraController],
     );
-    useEffect(() => controller.dispose, [controller]);
+    useEffect(() {
+      controller.attachCameraController();
+      return controller.dispose;
+    }, [controller]);
     useListenable(controller);
 
     useEffect(() {
@@ -309,11 +328,13 @@ class _BaseMapDebugHud extends StatelessWidget {
 
 /// gesture・decode・Scene node管理を持つ内部controller。[BaseMapView]の外へは
 /// 公開しない(brief要求)。
-class _BaseMapController extends ChangeNotifier {
+class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   new({
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
+    required this.mapClock,
+    required this.externalCameraController,
     required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
     required ValueChanged<EarthquakeOverlayCoverageSnapshot>?
     onEarthquakeOverlayCoverageChanged,
@@ -363,9 +384,9 @@ class _BaseMapController extends ChangeNotifier {
   ///
   /// #1593のbase mapはまだ時間依存nodeを持たない(P/S波・pulse・freshnessは
   /// #1595)が、frame snapshotの契約を最初から満たしておく。
-  final MapClock _clock = SystemMapClock.start(
-    domain: createMapClockDomainId(value: 'base-map-view'),
-  );
+  final MapClock mapClock;
+  final MapViewCameraController? externalCameraController;
+  static const _cameraBoundsFitter = MapCameraBoundsFitter();
 
   // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
   // 変化させるが、Task 10のスコープでは固定値のdebug描画とする。
@@ -415,6 +436,7 @@ class _BaseMapController extends ChangeNotifier {
   );
 
   double? _gestureStartZoom;
+  var _latestCameraCommandGeneration = 0;
 
   Object? get initError => _initError;
   bool get isReady => _isReady;
@@ -426,6 +448,77 @@ class _BaseMapController extends ChangeNotifier {
   /// HUD表示専用の読み取り。widgetの`camera`(`scene.NodeCamera`)と名前が
   /// 衝突するため`camera_`にしている。
   MapCamera get camera_ => _camera;
+
+  void attachCameraController() {
+    final cameraController = externalCameraController;
+    if (cameraController == null) {
+      return;
+    }
+    final result = cameraController.attach(
+      host: this,
+      initialCamera: _camera,
+    );
+    switch (result) {
+      case MapViewCameraAttached(:final initialCamera):
+        applyCameraMutation(camera: initialCamera);
+      case MapViewCameraAlreadyAttached():
+        _initError = StateError('camera controller is already attached');
+        notifyListeners();
+      case MapViewCameraAttachmentDisposed():
+        _initError = StateError('camera controller is disposed');
+        notifyListeners();
+    }
+  }
+
+  @override
+  MapCameraBoundsFitResult cameraForBounds({
+    required MapCameraBounds bounds,
+    required EdgeInsets padding,
+  }) {
+    final viewport = _viewport;
+    return _cameraBoundsFitter.fit(
+      bounds: bounds,
+      viewportLogicalSize: viewport?.logicalSize ?? Size.zero,
+      devicePixelRatio: viewport?.devicePixelRatio ?? 1,
+      padding: padding,
+      minZoom: limits.minZoom.toDouble(),
+      maxZoom: limits.maxZoom.toDouble(),
+    );
+  }
+
+  @override
+  Future<MapCameraCommandResult> applyCameraCommand({
+    required int generation,
+    required MapCamera camera,
+  }) async {
+    if (_isDisposed) {
+      return const MapCameraCommandNotAttached();
+    }
+    if (generation <= _latestCameraCommandGeneration) {
+      return MapCameraCommandSuperseded(
+        generation: generation,
+        supersededByGeneration: _latestCameraCommandGeneration,
+      );
+    }
+    _latestCameraCommandGeneration = generation;
+    await Future<void>.value();
+    if (generation != _latestCameraCommandGeneration) {
+      return MapCameraCommandSuperseded(
+        generation: generation,
+        supersededByGeneration: _latestCameraCommandGeneration,
+      );
+    }
+    if (!_isReady || _viewport == null || suspendsMapRendering(_lifecycle)) {
+      return const MapCameraCommandNotReady();
+    }
+    if (!applyCameraMutation(camera: camera)) {
+      return const MapCameraCommandNotReady();
+    }
+    return MapCameraCommandSucceeded(
+      generation: generation,
+      committedCamera: _camera,
+    );
+  }
 
   Color get backgroundColor => baseMapLayerSpecs
       .firstWhere((spec) => spec.kind == BaseMapLayerKind.background)
@@ -659,34 +752,46 @@ class _BaseMapController extends ChangeNotifier {
     if (gestureStartZoom == null) {
       return;
     }
-    _camera = cameraAfterGestureUpdate(
-      camera: _camera,
-      gestureStartZoom: gestureStartZoom,
-      cumulativeScale: cumulativeScale,
-      focalPointDelta: focalPointDelta,
-      focalPoint: focalPoint,
-      viewportLogicalSize: _viewport?.logicalSize,
-      minZoom: limits.minZoom,
-      maxZoom: limits.maxZoom,
+    applyCameraMutation(
+      camera: cameraAfterGestureUpdate(
+        camera: _camera,
+        gestureStartZoom: gestureStartZoom,
+        cumulativeScale: cumulativeScale,
+        focalPointDelta: focalPointDelta,
+        focalPoint: focalPoint,
+        viewportLogicalSize: _viewport?.logicalSize,
+        minZoom: limits.minZoom,
+        maxZoom: limits.maxZoom,
+      ),
     );
-    _refresh();
-    notifyListeners();
   }
 
   void endGesture() {
     _gestureStartZoom = null;
   }
 
-  void _refresh() {
+  bool applyCameraMutation({required MapCamera camera}) {
+    _camera = cameraClampedToMapLimits(
+      camera: camera,
+      minZoom: limits.minZoom,
+      maxZoom: limits.maxZoom,
+    );
+    final scheduled = _refresh();
+    notifyListeners();
+    WidgetsBinding.instance.ensureVisualUpdate();
+    return scheduled;
+  }
+
+  bool _refresh() {
     final viewport = _viewport;
     if (!_isReady || viewport == null) {
-      return;
+      return false;
     }
     // background/detachedではGPU resourceを手放し済みなので、submitして
     // 作り直さない。cover計算とdecodeもここで止める(設計正本
     // 「detach/backgroundではanimation、request、decode、uploadを停止し」)。
     if (suspendsMapRendering(_lifecycle)) {
-      return;
+      return false;
     }
     final cover = TileCoverCalculator.cover(
       camera: _camera,
@@ -702,8 +807,15 @@ class _BaseMapController extends ChangeNotifier {
         maxZoom: limits.maxZoom,
       ),
     );
-    _submitFrame(cover: cover, viewport: viewport);
+    final scheduled = _submitFrame(cover: cover, viewport: viewport);
     _requestMissingDecodes(cover);
+    if (scheduled) {
+      externalCameraController?.commitCameraFromHost(
+        host: this,
+        camera: _camera,
+      );
+    }
+    return scheduled;
   }
 
   /// 現frameのplanを`MapRenderSubmission`へ変換し、adapterへ渡す。
@@ -711,13 +823,13 @@ class _BaseMapController extends ChangeNotifier {
   /// このcontrollerはもうScene nodeを自分で組まない。描画順・batch結合・GPU
   /// resourceの寿命はすべてfoundationのrender契約とadapterが持つ
   /// (#1593完了条件「BaseMapがfoundation契約経由で描画」)。
-  void _submitFrame({
+  bool _submitFrame({
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
   }) {
     final adapter = _adapter;
     if (_materialsByStyleLayerId == null || adapter == null) {
-      return;
+      return false;
     }
     final plans = buildBaseMapRenderPlans(
       requestedCover: cover,
@@ -730,7 +842,7 @@ class _BaseMapController extends ChangeNotifier {
       value: source.cacheIdentity,
     );
     final frame = captureMapFrameSnapshot(
-      clock: _clock,
+      clock: mapClock,
       frameNumber: _frameNumber++,
       camera: _camera,
       viewport: viewport,
@@ -773,11 +885,11 @@ class _BaseMapController extends ChangeNotifier {
     );
     if (result.shouldRetireGpuResources) {
       adapter.retireAllGpuResources();
-      return;
+      return false;
     }
     final submission = result.submission;
     if (submission == null) {
-      return;
+      return false;
     }
     final commit = _overlayFrameOwner.commit(
       candidate: result,
@@ -801,6 +913,11 @@ class _BaseMapController extends ChangeNotifier {
         '${commit.error}',
       );
     }
+    return switch (commit) {
+      BaseMapOverlayFrameCommitSucceeded() => true,
+      BaseMapOverlayFrameCommitFailed(:final fallbackError) =>
+        fallbackError == null,
+    };
   }
 
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
@@ -881,6 +998,7 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _isDisposed = true;
+    externalCameraController?.detach(host: this);
     _cache.dispose();
     _packedMeshCache.clear();
     _earthquakePackedMeshCache.clear();
@@ -978,10 +1096,37 @@ MapCamera cameraAfterGestureUpdate({
     x: zoomedWorldCenter.x / zoomedWorldSize,
     y: zoomedWorldCenter.y / zoomedWorldSize,
   );
+  return cameraClampedToMapLimits(
+    camera: MapCamera(
+      centerLongitude: lngLat.longitude,
+      centerLatitude: lngLat.latitude,
+      zoom: clampedZoom,
+    ),
+    minZoom: minZoom,
+    maxZoom: maxZoom,
+    projection: projection,
+  );
+}
+
+/// Normalizes every camera mutation through the renderer's shared limits.
+MapCamera cameraClampedToMapLimits({
+  required MapCamera camera,
+  required int minZoom,
+  required int maxZoom,
+  MapMercatorProjection projection = const MapMercatorProjection(),
+}) {
+  final normalized = projection.lngLatToNormalized(
+    longitude: camera.centerLongitude,
+    latitude: camera.centerLatitude,
+  );
+  final lngLat = projection.normalizedToLngLat(
+    x: normalized.x,
+    y: normalized.y,
+  );
   return MapCamera(
     centerLongitude: lngLat.longitude,
     centerLatitude: lngLat.latitude,
-    zoom: clampedZoom,
+    zoom: camera.zoom.clamp(minZoom.toDouble(), maxZoom.toDouble()),
   );
 }
 
