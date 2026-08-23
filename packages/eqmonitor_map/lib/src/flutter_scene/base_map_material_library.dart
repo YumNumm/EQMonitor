@@ -20,7 +20,7 @@ import 'package:flutter_scene/scene.dart' as scene;
 /// # uniformはここで焼き込まない(#1593)
 ///
 /// 色と半線幅の設定はこのlibraryの責務から外れ、frameごとのuniform byte列
-/// (`MapMaterialParameterBlock`)を`FlutterSceneBaseMapAdapter`が適用する形に
+/// (`MapMaterialParameterBlock`)を`FlutterSceneMapAdapter`が適用する形に
 /// なった。値の出所を「CPUで確定してuniformへ渡す」1本に絞るためであり、
 /// 以前あった`setLineHalfWidth`とviewport未確定時の暫定値は不要になった。
 /// 換算式とその根拠は

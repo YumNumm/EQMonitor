@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
@@ -13,7 +13,9 @@ import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
+import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
@@ -302,9 +304,10 @@ class _BaseMapController extends ChangeNotifier {
   late final _packedMeshCache = BaseMapPackedMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
   );
-  late final _adapter = FlutterSceneBaseMapAdapter(
+  late final _adapter = FlutterSceneMapAdapter(
     sceneGraph: sceneGraph,
-    materialFor: (materialKey) => _materialsByStyleLayerId?[materialKey],
+    materialFor: (batch) =>
+        _materialsByStyleLayerId?[batch.compatibility.batchKey.materialKey],
     maxFramesInFlight: limits.maxFramesInFlight,
   );
   late final _scheduler = MapTileScheduler(
@@ -381,7 +384,7 @@ class _BaseMapController extends ChangeNotifier {
       // materialは`styleLayerId`ごとに1つ読み込むだけで、色や半線幅は
       // 焼き込まない。uniformはframeごとにsubmissionの
       // `materialParameters`(CPU確定のbyte列)から
-      // `FlutterSceneBaseMapAdapter`が適用する。これにより、viewport変更時に
+      // `FlutterSceneMapAdapter`が適用する。これにより、viewport変更時に
       // controllerがmaterialへ直接触る経路(旧
       // `_applyLineHalfWidthToAllMaterials`)と、material読み込み中に
       // viewportが未確定な場合の暫定値が両方とも不要になった。
@@ -566,17 +569,25 @@ class _BaseMapController extends ChangeNotifier {
       contextGeneration: _contextGeneration,
     );
 
-    _adapter.submit(
-      submission: buildBaseMapRenderSubmission(
-        frame: frame,
-        plans: plans,
-        sourceInstanceId: sourceInstanceId,
-        packedMeshesFor: (plan) => _packedMeshCache.getOrBuild(
-          sourceInstanceId: source.cacheIdentity,
-          tileId: plan.transformInput.tileId.canonical,
-          geometry: plan.tileGeometry,
+    final baseMap = buildBaseMapRenderSubmission(
+      frame: frame,
+      plans: plans,
+      sourceInstanceId: sourceInstanceId,
+      packedMeshesFor: (plan) => _packedMeshCache.getOrBuild(
+        sourceInstanceId: source.cacheIdentity,
+        tileId: plan.transformInput.tileId.canonical,
+        geometry: plan.tileGeometry,
+      ),
+      lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+    );
+    _adapter.submitFrame(
+      submission: MapSceneFrameSubmission(
+        baseMap: baseMap,
+        earthquakeFill: createMapRenderSubmission(
+          frame: frame,
+          batches: const [],
         ),
-        lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+        observationBatch: null,
       ),
     );
   }
