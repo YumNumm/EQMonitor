@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_update_notifier.dart';
@@ -241,14 +242,19 @@ class _AssetPackMessageCard extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) => Card.outlined(
-    margin: EdgeInsets.zero,
-    child: ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(message),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+
+    return BorderedContainer(
+      margin: EdgeInsets.only(bottom: designSystem.spacing.md),
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(message),
+      ),
+    );
+  }
 }
 
 class _AssetPackErrorCard extends ConsumerWidget {

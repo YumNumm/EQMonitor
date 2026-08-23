@@ -48,4 +48,4 @@ final class KyoshinMonitorTimerStreamProvider
 }
 
 String _$kyoshinMonitorTimerStreamHash() =>
-    r'c649a1af314c0e1c6ad5e5f484196d3a46221e5c';
+    r'315629a04c4e53a4772f503d15c6fd9eace8cf33';

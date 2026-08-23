@@ -76,6 +76,10 @@
         <meta-data
             android:name="io.flutter.embedding.android.EnableHCPP"
             android:value="true" />
+
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableFlutterGPU"
+            android:value="true" />
     </application>
 
 </manifest>

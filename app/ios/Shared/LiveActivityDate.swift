@@ -60,14 +60,21 @@ enum LiveActivityDate {
 // MARK: - 到達カウントダウン
 
 enum ArrivalCountdown {
-    /// `Text(timerInterval:)` に渡す残り時間の範囲。到達済み・未設定なら nil。
+    /// `Text(timerInterval:)` に渡す残り時間の範囲。到達予想が無いときだけ nil。
+    ///
+    /// Live Activity の View は ContentState 更新まで再評価されない。
+    /// 到達後に別文言へ分岐すると、次報が来るまで `00:00` のまま張り付く。
+    /// 到達済みでも終了済み区間を返し、見た目を `00:00` に揃える。
     ///
     /// `now > arrivalDate` の範囲を作ると `ClosedRange` の事前条件違反でクラッシュする。
     /// 「到達したか」の判定と範囲生成で別々に `Date()` を取ると、ちょうど到達した
-    /// 瞬間（ユーザが最も画面を見ているタイミング）に踏み抜くため、同じ時刻で判定する。
+    /// 瞬間に踏み抜くため、同じ時刻で判定する。
     static func remaining(until arrivalDate: Date?, now: Date = Date()) -> ClosedRange<Date>? {
-        guard let arrivalDate, arrivalDate > now else { return nil }
-        return now...arrivalDate
+        guard let arrivalDate else { return nil }
+        if arrivalDate > now {
+            return now...arrivalDate
+        }
+        return arrivalDate...arrivalDate
     }
 }
 

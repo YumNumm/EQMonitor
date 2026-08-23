@@ -96,14 +96,11 @@ struct EewCompactLeadingView: View {
     var body: some View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 20)
-        } else if let intensity = state.display.intensity {
-            DynamicIslandIntensityBadge(intensity: intensity, size: 24)
         } else {
-            Image("AppIconForeground")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 20, height: 20)
-                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+            DynamicIslandIntensityBadge(
+                intensity: state.display.intensity,
+                size: 24
+            )
         }
     }
 }
@@ -136,14 +133,11 @@ struct EewMinimalView: View {
     var body: some View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 18)
-        } else if let intensity = state.display.intensity {
-            DynamicIslandIntensityBadge(intensity: intensity, size: 22)
         } else {
-            Image("AppIconForeground")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 18, height: 18)
-                .clipShape(RoundedRectangle(cornerRadius: 4.5, style: .continuous))
+            DynamicIslandIntensityBadge(
+                intensity: state.display.intensity,
+                size: 22
+            )
         }
     }
 }
@@ -159,12 +153,10 @@ struct EewExpandedLeadingView: View {
         case .canceled:
             EewCanceledSymbol(size: DynamicIslandMetrics.expandedBadgeSize * 0.75)
         case .countdown, .summary:
-            if let intensity = state.display.intensity {
-                DynamicIslandIntensityBadge(
-                    intensity: intensity,
-                    size: DynamicIslandMetrics.expandedBadgeSize
-                )
-            }
+            DynamicIslandIntensityBadge(
+                intensity: state.display.intensity,
+                size: DynamicIslandMetrics.expandedBadgeSize
+            )
         }
     }
 }
@@ -190,12 +182,6 @@ struct EewExpandedTrailingView: View {
                 until: state.display.countdownArrivalDate
             ) {
                 ArrivalCountdownText(remaining: remaining, size: 26)
-            } else {
-                Text("到達済み")
-                    .font(AppFonts.flex(size: 14, weight: .bold))
-                    .foregroundStyle(Color.eqTextPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
             }
         case .summary:
             EewStatusPill(
@@ -255,7 +241,7 @@ struct EewExpandedCenterView: View {
                     .minimumScaleFactor(0.7)
             }
             .foregroundStyle(Color.eqTextSecondary)
-        } else if state.display.intensity != nil {
+        } else {
             captionText(state.display.intensityLabel)
         }
     }
@@ -558,14 +544,16 @@ enum DynamicIslandMetrics {
 
 @available(iOS 16.1, *)
 struct DynamicIslandIntensityBadge: View {
-    let intensity: IntensityValue
+    /// nil は予想震度が未発表であることを示し、灰色の「-」で描く
+    let intensity: IntensityValue?
     var size: CGFloat = 24
 
     var body: some View {
+        let appearance = IntensityBadgeAppearance(intensity: intensity)
         IntensityBadge(
-            intensity: intensity.formattedParts,
-            backgroundColor: intensity.backgroundColor,
-            textColor: intensity.textColor,
+            intensity: (appearance.main, appearance.sub),
+            backgroundColor: appearance.backgroundColor,
+            textColor: appearance.textColor,
             size: size
         )
     }

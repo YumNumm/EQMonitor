@@ -79,16 +79,64 @@ class KyoshinMonitorScale extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedTextStyle = textStyle ?? const TextStyle(fontSize: 10);
+    final textScaler = MediaQuery.textScalerOf(context);
+    final labels = colorStops.map((stop) {
+      final value = stop.value;
+      return switch (value) {
+        >= 1 || <= 0 => value.toStringAsFixed(0),
+        >= 0.1 => value.toStringAsFixed(1),
+        >= 0.01 => value.toStringAsFixed(2),
+        >= 0.001 => value.toStringAsFixed(3),
+        _ => value.toStringAsFixed(4),
+      };
+    }).toList();
+    final labelPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+      textScaler: textScaler,
+    );
+    var maxLabelWidth = 0.0;
+    var maxLabelHeight = 0.0;
+    for (final label in labels) {
+      labelPainter
+        ..text = TextSpan(text: label, style: resolvedTextStyle)
+        ..layout();
+      maxLabelWidth = max(maxLabelWidth, labelPainter.width);
+      maxLabelHeight = max(maxLabelHeight, labelPainter.height);
+    }
+
+    const labelOffset = 6.0;
+    final isHorizontal =
+        orientation == KyoshinMonitorScaleOrientation.horizontal;
+    final isTextAtStart = textPosition == KyoshinMonitorScaleTextPosition.start;
+    final size = isHorizontal
+        ? Size(width + maxLabelWidth, height + labelOffset + maxLabelHeight)
+        : Size(width + labelOffset + maxLabelWidth, height + maxLabelHeight);
+    final gradientRect = Rect.fromLTWH(
+      isHorizontal
+          ? maxLabelWidth / 2
+          : (isTextAtStart ? maxLabelWidth + labelOffset : 0),
+      isHorizontal
+          ? (isTextAtStart ? maxLabelHeight + labelOffset : 0)
+          : maxLabelHeight / 2,
+      width,
+      height,
+    );
+
     return CustomPaint(
-      size: Size(width, height),
+      size: size,
       painter: _KyoshinMonitorScalePainter(
         type: type,
         colorStops: colorStops,
+        labels: labels,
+        gradientRect: gradientRect,
         tickInterval: tickInterval,
         orientation: orientation,
         textPosition: textPosition,
         textColor: textColor,
-        textStyle: textStyle ?? const TextStyle(fontSize: 10),
+        textStyle: resolvedTextStyle,
+        textScaler: textScaler,
         gradientDirection: gradientDirection,
       ),
     );
@@ -250,27 +298,32 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
   const new({
     required this.type,
     required this.colorStops,
+    required this.labels,
+    required this.gradientRect,
     required this.tickInterval,
     required this.orientation,
     required this.textPosition,
     required this.textColor,
     required this.textStyle,
+    required this.textScaler,
     required this.gradientDirection,
   });
 
   final KyoshinMonitorScaleType type;
   final List<({double position, double value, Color color})> colorStops;
+  final List<String> labels;
+  final Rect gradientRect;
   final int tickInterval;
   final KyoshinMonitorScaleOrientation orientation;
   final KyoshinMonitorScaleTextPosition textPosition;
   final Color textColor;
   final TextStyle textStyle;
+  final TextScaler textScaler;
   final KyoshinMonitorScaleGradientDirection gradientDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
     // グラデーションの描画
-    final rect = Offset.zero & size;
     final colors = colorStops.map((e) => e.color).toList();
     final stops = colorStops.map((e) => e.position).toList();
 
@@ -329,15 +382,16 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       },
     );
     final paint = Paint()
-      ..shader = gradient.createShader(rect)
+      ..shader = gradient.createShader(gradientRect)
       ..style = PaintingStyle.fill;
 
-    canvas.drawRect(rect, paint);
+    canvas.drawRect(gradientRect, paint);
 
     // 目盛りの描画
     final textPainter = TextPainter(
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
+      textScaler: textScaler,
     );
 
     // 目盛り線の描画用のペイント
@@ -372,58 +426,64 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
           : stop.position;
       final position =
           basePosition *
+              (orientation == KyoshinMonitorScaleOrientation.horizontal
+                  ? gradientRect.width
+                  : gradientRect.height) +
           (orientation == KyoshinMonitorScaleOrientation.horizontal
-              ? size.width
-              : size.height);
+              ? gradientRect.left
+              : gradientRect.top);
 
       // 目盛り線を描画
       switch (orientation) {
         case KyoshinMonitorScaleOrientation.horizontal:
+          final tickStart =
+              textPosition == KyoshinMonitorScaleTextPosition.start
+              ? gradientRect.top
+              : gradientRect.bottom;
+          final tickEnd = textPosition == KyoshinMonitorScaleTextPosition.start
+              ? tickStart - 4
+              : tickStart + 4;
           canvas.drawLine(
-            Offset(position, size.height),
-            Offset(position, size.height + 4),
+            Offset(position, tickStart),
+            Offset(position, tickEnd),
             tickPaint,
           );
         case KyoshinMonitorScaleOrientation.vertical:
+          final tickStart =
+              textPosition == KyoshinMonitorScaleTextPosition.start
+              ? gradientRect.left
+              : gradientRect.right;
+          final tickEnd = textPosition == KyoshinMonitorScaleTextPosition.start
+              ? tickStart - 4
+              : tickStart + 4;
           canvas.drawLine(
-            Offset(
-              textPosition == KyoshinMonitorScaleTextPosition.start
-                  ? 0
-                  : size.width,
-              position,
-            ),
-            Offset(
-              textPosition == KyoshinMonitorScaleTextPosition.start
-                  ? -4
-                  : size.width + 4,
-              position,
-            ),
+            Offset(tickStart, position),
+            Offset(tickEnd, position),
             tickPaint,
           );
       }
 
       // 値のテキストを描画
-      final text = _formatValue(stop.value);
-
       textPainter
         ..text = TextSpan(
-          text: text,
+          text: labels[i],
           style: textStyle.copyWith(color: textColor),
         )
         ..layout();
 
       switch (orientation) {
         case KyoshinMonitorScaleOrientation.horizontal:
-          // 重ならない場合は通常通り表示
+          final y = textPosition == KyoshinMonitorScaleTextPosition.start
+              ? gradientRect.top - textPainter.height - 6
+              : gradientRect.bottom + 6;
           textPainter.paint(
             canvas,
-            Offset(position - textPainter.width / 2, size.height + 6),
+            Offset(position - textPainter.width / 2, y),
           );
         case KyoshinMonitorScaleOrientation.vertical:
-          // 重ならない場合は通常通り表示
           final x = textPosition == KyoshinMonitorScaleTextPosition.start
-              ? -textPainter.width - 6
-              : size.width + 6;
+              ? gradientRect.left - textPainter.width - 6
+              : gradientRect.right + 6;
           textPainter.paint(
             canvas,
             Offset(x, position - textPainter.height / 2),
@@ -432,36 +492,17 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     }
   }
 
-  /// 値のフォーマット
-  ///
-  /// 値の大きさに応じて小数点以下の桁数を調整します
-  /// - 1以上: 整数
-  /// - 0.1以上: 小数点1桁
-  /// - 0.01以上: 小数点2桁
-  /// - 0.001以上: 小数点3桁
-  /// - それ以下: 小数点4桁
-  String _formatValue(double value) {
-    if (value >= 1 || value <= 0) {
-      return value.toStringAsFixed(0);
-    } else if (value >= 0.1) {
-      return value.toStringAsFixed(1);
-    } else if (value >= 0.01) {
-      return value.toStringAsFixed(2);
-    } else if (value >= 0.001) {
-      return value.toStringAsFixed(3);
-    } else {
-      return value.toStringAsFixed(4);
-    }
-  }
-
   @override
   bool shouldRepaint(covariant _KyoshinMonitorScalePainter oldDelegate) =>
       type != oldDelegate.type ||
       colorStops != oldDelegate.colorStops ||
+      labels != oldDelegate.labels ||
+      gradientRect != oldDelegate.gradientRect ||
       tickInterval != oldDelegate.tickInterval ||
       orientation != oldDelegate.orientation ||
       textPosition != oldDelegate.textPosition ||
       textColor != oldDelegate.textColor ||
       textStyle != oldDelegate.textStyle ||
+      textScaler != oldDelegate.textScaler ||
       gradientDirection != oldDelegate.gradientDirection;
 }

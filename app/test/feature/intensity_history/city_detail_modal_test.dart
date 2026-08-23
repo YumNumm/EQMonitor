@@ -92,6 +92,23 @@ class _CountingPagedEarthquakeHistoryNotifier
   }
 }
 
+class _RecordingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+  static final parameters = <EarthquakeHistoryParameter>[];
+
+  static void reset() => parameters.clear();
+
+  @override
+  Future<PaginatedResponse<EarthquakePartial>> build(
+    EarthquakeHistoryParameter parameter,
+  ) async {
+    parameters.add(parameter);
+    return PaginatedResponse(
+      items: [_earthquakePartialForList(parameter)],
+      nextToken: null,
+    );
+  }
+}
+
 class _PendingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
@@ -165,13 +182,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _FakeEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -201,13 +214,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_EmptyEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _EmptyEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -233,13 +242,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_ErrorEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _ErrorEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -265,13 +270,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _PendingEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -298,13 +299,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_PagedEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _PagedEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -335,13 +332,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _CountingPagedEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -365,5 +358,54 @@ void main() {
     await tester.pump();
 
     expect(_CountingPagedEarthquakeHistoryNotifier.fetchNextDataCallCount, 1);
+  });
+
+  testWidgets('ソートチップの選択で検索条件の並び替えが切り替わる', (tester) async {
+    _RecordingEarthquakeHistoryNotifier.reset();
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _RecordingEarthquakeHistoryNotifier(),
+          ),
+        ],
+        child: _modalTestApp(
+          onPressed: (context) => CityDetailModalAction().show(
+            context,
+            cityCode: '1720400',
+            cityName: '輪島市',
+            prefectureName: '石川県',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    for (final label in ['発生時刻', 'M', '最大震度', '深さ']) {
+      expect(find.widgetWithText(FilterChip, label), findsOneWidget);
+    }
+
+    final initial = _RecordingEarthquakeHistoryNotifier.parameters.single;
+    expect(initial.sortBy, EarthquakeSortBy.eventId);
+    expect(initial.sortOrder, SortOrder.desc);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'M'));
+    await tester.pumpAndSettle();
+
+    final byMagnitude = _RecordingEarthquakeHistoryNotifier.parameters.last;
+    expect(byMagnitude.sortBy, EarthquakeSortBy.magnitude);
+    expect(byMagnitude.sortOrder, SortOrder.desc);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'M'));
+    await tester.pumpAndSettle();
+
+    final reversed = _RecordingEarthquakeHistoryNotifier.parameters.last;
+    expect(reversed.sortBy, EarthquakeSortBy.magnitude);
+    expect(reversed.sortOrder, SortOrder.asc);
   });
 }

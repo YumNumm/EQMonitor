@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -170,7 +171,7 @@ class _SimulationView extends HookConsumerWidget {
     DateTime? virtualNow;
     if (simulation != null) {
       final firstReportTime = simulation.reports.first.reportTime;
-      final elapsed = DateTime.now().difference(simulation.startedAt);
+      final elapsed = simulation.playbackElapsedAt(clock.now());
       virtualNow = firstReportTime.add(elapsed);
     }
 

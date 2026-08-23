@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -31,7 +32,8 @@ class IntensityFillLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel = ref.watch(activeColorSetProvider).intensity;
+    final colorSet = ref.watch(activeColorSetProvider);
+    final colorModel = colorSet.intensity;
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
     final items = ref.watch(
@@ -51,7 +53,7 @@ class IntensityFillLayer extends HookConsumerWidget {
     // 塗りを作り直す契機を「震度データの実体が変わったとき」だけに絞るための
     // リビジョン。
     //
-    // `CityMaxIntensity` には `response_at` が含まれ、SWR の再検証が走るたびに
+    // `CityMaxIntensity` には `aggregated_at` が含まれ、SWR の再検証が走るたびに
     // 新しいインスタンスになる。モデルや `items` をそのまま依存に置くと、震度が
     // 1 件も変わっていない再検証でも ~1900 分岐の `match` 式を持つ塗りを丸ごと
     // 作り直してしまう（`List` の `==` は同一性判定なので `select` でも防げない）。
@@ -110,7 +112,8 @@ class IntensityFillLayer extends HookConsumerWidget {
 
         final layers = builder.buildSelectedCityLine(
           selectedCityCode: selectedCityCode,
-          isDarkMode: isDarkMode,
+          lineColor: colorSet.primary.toHexStringRGB(),
+          haloColor: isDarkMode ? '#000000' : '#FFFFFF',
         );
 
         unawaited(
@@ -134,7 +137,13 @@ class IntensityFillLayer extends HookConsumerWidget {
           );
         };
       },
-      [styleController, selectedCityCode, isDarkMode, enqueue],
+      [
+        styleController,
+        selectedCityCode,
+        colorSet.primary,
+        isDarkMode,
+        enqueue,
+      ],
     );
 
     return const SizedBox.shrink();

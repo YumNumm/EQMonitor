@@ -74,6 +74,12 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ),
       [warningAreaSelector, eew],
     );
+    final warningReportKey = switch (eew) {
+      final event? => (event.eventId, event.serialNo),
+      null => null,
+    };
+    final latestWarningCodes = useRef<List<String>>(warningCodes);
+    latestWarningCodes.value = warningCodes;
 
     final enqueue = useMapOperationQueue();
 
@@ -161,19 +167,13 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ],
     );
 
-    // 警報モード: fill + line の2レイヤー
+    // 警報モード: fill + line の2レイヤーをモード中は維持する
     useEffect(() {
-      if (styleController == null ||
-          displayMode != EewDisplayMode.warning ||
-          warningCodes.isEmpty) {
+      if (styleController == null || displayMode != EewDisplayMode.warning) {
         return null;
       }
 
-      final filter = <Object>[
-        'in',
-        ['get', 'code'],
-        ['literal', warningCodes],
-      ];
+      final filter = _areaFilterBuilder.build(warningCodes);
 
       unawaited(
         enqueue(() async {
@@ -199,6 +199,17 @@ class EewForecastRegionLayer extends HookConsumerWidget {
               },
             ),
           );
+          final latestFilter = _areaFilterBuilder.build(
+            latestWarningCodes.value,
+          );
+          await styleController.updateFilter(
+            id: _warningLayerId,
+            filter: latestFilter,
+          );
+          await styleController.updateFilter(
+            id: _warningLineLayerId,
+            filter: latestFilter,
+          );
         }),
       );
 
@@ -218,7 +229,40 @@ class EewForecastRegionLayer extends HookConsumerWidget {
           }),
         );
       };
-    }, [styleController, displayMode, warningCodes, isDarkMode]);
+      // warningCodes はレイヤー生成時の初期filterにのみ使用し、報切替時は
+      // 下の更新用effectでfilterだけを更新する。
+      // ignore_keys: warningCodes
+    }, [styleController, displayMode, isDarkMode]);
+
+    // 警報モード: 選択報ごとに既存レイヤーのfilterを更新する
+    useEffect(
+      () {
+        if (styleController == null || displayMode != EewDisplayMode.warning) {
+          return null;
+        }
+
+        final filter = _areaFilterBuilder.build(warningCodes);
+        unawaited(
+          enqueue(() async {
+            await styleController.updateFilter(
+              id: _warningLayerId,
+              filter: filter,
+            );
+            await styleController.updateFilter(
+              id: _warningLineLayerId,
+              filter: filter,
+            );
+          }),
+        );
+        return null;
+      },
+      [
+        styleController,
+        displayMode,
+        warningReportKey,
+        warningCodes,
+      ],
+    );
 
     return const SizedBox.shrink();
   }
