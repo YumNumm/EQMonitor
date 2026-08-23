@@ -29,12 +29,11 @@ ObservationPointBatch? buildObservationPointBatch({
 
   final canReuse =
       previous != null &&
-      previous.sourceId == snapshot.sourceId &&
-      previous.snapshotRevision == snapshot.revision &&
+      previous.versionStamp == snapshot.versionStamp &&
       previous.hasStationSnapshotIdentity(snapshot.stations);
   if (canReuse && previous.instanceCount != snapshot.stations.length) {
     throw StateError(
-      'Observation station count changed without a snapshot revision change.',
+      'Observation station count changed without a version stamp change.',
     );
   }
   final frameUniform = packObservationFrameUniform(
@@ -54,8 +53,7 @@ ObservationPointBatch? buildObservationPointBatch({
   );
   return createObservationPointBatch(
     frame: frame,
-    sourceId: snapshot.sourceId,
-    snapshotRevision: snapshot.revision,
+    versionStamp: snapshot.versionStamp,
     instanceData: instanceData,
     instanceCount: snapshot.stations.length,
     frameUniform: frameUniform,

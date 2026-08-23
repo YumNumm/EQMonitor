@@ -10,10 +10,12 @@ import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_phase.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
@@ -264,11 +266,17 @@ void main() {
   );
 
   EarthquakeMapOverlaySnapshot observationSnapshot({
-    required int revision,
+    required int dataSequence,
     Color stationColor = const Color(0xFFFF0000),
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: 'event-1',
-    revision: revision,
+    versionStamp: createMapOverlayVersionStamp(
+      sourceIdentity: createMapSourceIdentity(value: 'event-1'),
+      sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-1'),
+      dataSequence: dataSequence,
+      dataDigest: 'data-$dataSequence',
+      renderGeneration: dataSequence,
+      renderDigest: 'render-$dataSequence',
+    ),
     regionToCityZoom: 6,
     stationMinZoom: 6,
     regionStyles: const [],
@@ -452,7 +460,7 @@ void main() {
     final batch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: observationFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: observationSnapshot(dataSequence: 1),
       ),
     );
     final sceneGraph = _RecordingSceneGraph();
@@ -483,10 +491,10 @@ void main() {
   });
 
   test(
-    'same revision keeps geometry identity and changes only frame uniform',
+    'same version stamp keeps geometry identity and changes only frame uniform',
     () {
       final firstFrame = observationFrameAt(frameNumber: 0);
-      final snapshot = observationSnapshot(revision: 1);
+      final snapshot = observationSnapshot(dataSequence: 1);
       final firstBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: firstFrame,
@@ -542,12 +550,12 @@ void main() {
     },
   );
 
-  test('same source and revision with changed color creates new geometry', () {
+  test('same version stamp with changed color creates new geometry', () {
     final firstFrame = observationFrameAt(frameNumber: 0);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: observationSnapshot(dataSequence: 1),
       ),
     );
     final secondFrame = observationFrameAt(frameNumber: 1);
@@ -555,7 +563,7 @@ void main() {
       buildObservationPointBatch(
         frame: secondFrame,
         snapshot: observationSnapshot(
-          revision: 1,
+          dataSequence: 1,
           stationColor: const Color(0xFF0000FF),
         ),
         previous: firstBatch,
@@ -595,7 +603,7 @@ void main() {
       final batch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: observationFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: observationSnapshot(dataSequence: 1),
         ),
       );
       final sceneGraph = _RecordingSceneGraph();
@@ -631,14 +639,14 @@ void main() {
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: observationSnapshot(dataSequence: 1),
       ),
     );
     final secondFrame = observationFrameAt(frameNumber: 1);
     final secondBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: secondFrame,
-        snapshot: observationSnapshot(revision: 2),
+        snapshot: observationSnapshot(dataSequence: 2),
       ),
     );
     final sceneGraph = _RecordingSceneGraph();
@@ -683,7 +691,7 @@ void main() {
     'context generation change creates new geometry before retiring old',
     () {
       final firstFrame = observationFrameAt(frameNumber: 0);
-      final snapshot = observationSnapshot(revision: 1);
+      final snapshot = observationSnapshot(dataSequence: 1);
       final firstBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: firstFrame,
@@ -745,7 +753,7 @@ void main() {
 
   test('context generation change forbids reuse if an old id reappears', () {
     final firstFrame = observationFrameAt(frameNumber: 0);
-    final snapshot = observationSnapshot(revision: 1);
+    final snapshot = observationSnapshot(dataSequence: 1);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
@@ -798,7 +806,7 @@ void main() {
       final firstBatch = _requireObservationPointBatch(
         buildObservationPointBatch(
           frame: firstFrame,
-          snapshot: observationSnapshot(revision: 1),
+          snapshot: observationSnapshot(dataSequence: 1),
         ),
       );
       final sceneGraph = _RecordingSceneGraph();
@@ -842,7 +850,7 @@ void main() {
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: observationSnapshot(dataSequence: 1),
       ),
     );
     final sceneGraph = _RecordingSceneGraph();
@@ -882,7 +890,7 @@ void main() {
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,
-        snapshot: observationSnapshot(revision: 1),
+        snapshot: observationSnapshot(dataSequence: 1),
       ),
     );
     final sceneGraph = _RecordingSceneGraph();
@@ -911,7 +919,7 @@ void main() {
 
   test('fails closed when a live cached geometry was already retired', () {
     final firstFrame = observationFrameAt(frameNumber: 0);
-    final snapshot = observationSnapshot(revision: 1);
+    final snapshot = observationSnapshot(dataSequence: 1);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
         frame: firstFrame,

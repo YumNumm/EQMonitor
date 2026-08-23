@@ -1,4 +1,5 @@
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 
 /// snapshot更新を受理した結果。
 sealed class EarthquakeOverlayCommitResult {
@@ -21,14 +22,16 @@ final class EarthquakeOverlayCommitRejected
   final EarthquakeMapOverlaySnapshot current;
 }
 
-/// source/revision規約に従い、次の完全snapshotを判定する。
+/// data/render version規約に従い、次の完全snapshotを判定する。
 EarthquakeOverlayCommitResult commitEarthquakeOverlaySnapshot({
   required EarthquakeMapOverlaySnapshot? current,
   required EarthquakeMapOverlaySnapshot next,
 }) {
   if (current != null &&
-      current.sourceId == next.sourceId &&
-      next.revision < current.revision) {
+      !canAdvanceMapOverlayVersionStamp(
+        current: current.versionStamp,
+        next: next.versionStamp,
+      )) {
     return EarthquakeOverlayCommitRejected(current: current);
   }
   return EarthquakeOverlayCommitAccepted(next: next);

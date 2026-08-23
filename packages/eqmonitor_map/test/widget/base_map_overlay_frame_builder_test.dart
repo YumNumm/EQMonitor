@@ -6,6 +6,7 @@ import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owne
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
@@ -13,6 +14,7 @@ import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
@@ -151,15 +153,41 @@ void main() {
     contextGeneration: 0,
   );
 
+  MapOverlayVersionStamp versionStamp({
+    String sourceIdentity = 'event-a',
+    String sourceIncarnation = 'incarnation-a',
+    int dataSequence = 8,
+    String dataDigest = 'data-a',
+    int renderGeneration = 8,
+    String renderDigest = 'render-a',
+  }) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+    sourceIncarnation: createMapSourceIncarnation(value: sourceIncarnation),
+    dataSequence: dataSequence,
+    dataDigest: dataDigest,
+    renderGeneration: renderGeneration,
+    renderDigest: renderDigest,
+  );
+
   EarthquakeMapOverlaySnapshot snapshot({
-    String sourceId = 'event-a',
-    int revision = 8,
+    String sourceIdentity = 'event-a',
+    String sourceIncarnation = 'incarnation-a',
+    int dataSequence = 8,
+    String dataDigest = 'data-a',
+    int renderGeneration = 8,
+    String renderDigest = 'render-a',
     String regionCode = '130',
     String cityCode = '13101',
     Color color = const Color(0xFFFF0000),
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: sourceId,
-    revision: revision,
+    versionStamp: versionStamp(
+      sourceIdentity: sourceIdentity,
+      sourceIncarnation: sourceIncarnation,
+      dataSequence: dataSequence,
+      dataDigest: dataDigest,
+      renderGeneration: renderGeneration,
+      renderDigest: renderDigest,
+    ),
     regionToCityZoom: 6,
     stationMinZoom: 6,
     regionStyles: [
@@ -282,9 +310,12 @@ void main() {
     expect(result.coverage, const EarthquakeOverlayCoverage.hidden());
   });
 
-  test('same-source revision regression keeps the current full snapshot', () {
+  test('same-source data sequence regression keeps the current snapshot', () {
     final current = snapshot();
-    final stale = snapshot(revision: 7, color: const Color(0xFF0000FF));
+    final stale = snapshot(
+      dataSequence: 7,
+      color: const Color(0xFF0000FF),
+    );
 
     final result = build(
       frame: frameAt(5),
@@ -306,8 +337,9 @@ void main() {
 
   test('another source atomically replaces Fill and station inputs', () {
     final replacement = snapshot(
-      sourceId: 'event-b',
-      revision: 0,
+      sourceIdentity: 'event-b',
+      dataSequence: 0,
+      renderGeneration: 0,
       regionCode: '999',
       cityCode: '99999',
       color: const Color(0xFF0000FF),
@@ -315,7 +347,7 @@ void main() {
 
     final result = build(
       frame: frameAt(6),
-      current: snapshot(revision: 100),
+      current: snapshot(dataSequence: 100, renderGeneration: 100),
       requested: replacement,
     );
 
@@ -454,25 +486,24 @@ void main() {
     owner.hide(overlay: value);
 
     expect(values, [
-      const EarthquakeOverlayCoverageSnapshot(
-        sourceId: 'event-a',
-        revision: 8,
+      EarthquakeOverlayCoverageSnapshot(
+        versionStamp: value.versionStamp,
         coverage: incomplete,
       ),
-      const EarthquakeOverlayCoverageSnapshot(
-        sourceId: 'event-a',
-        revision: 8,
-        coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+      EarthquakeOverlayCoverageSnapshot(
+        versionStamp: value.versionStamp,
+        coverage: const EarthquakeOverlayCoverage.complete(
+          requestedTileCount: 1,
+        ),
       ),
-      const EarthquakeOverlayCoverageSnapshot(
-        sourceId: 'event-a',
-        revision: 8,
-        coverage: EarthquakeOverlayCoverage.hidden(),
+      EarthquakeOverlayCoverageSnapshot(
+        versionStamp: value.versionStamp,
+        coverage: const EarthquakeOverlayCoverage.hidden(),
       ),
     ]);
   });
 
-  test('same-source revision regression publishes committed provenance', () {
+  test('same-source data regression publishes committed provenance', () {
     final values = <EarthquakeOverlayCoverageSnapshot>[];
     final frames = BaseMapOverlayFrameOwner(onCoverageChanged: values.add);
     final current = snapshot();
@@ -492,7 +523,7 @@ void main() {
     );
     values.clear();
 
-    final stale = snapshot(revision: 7);
+    final stale = snapshot(dataSequence: 7);
     final candidate = build(
       frame: frameAt(6, frameNumber: 1),
       current: frames.overlay,
@@ -509,8 +540,7 @@ void main() {
     );
 
     expect(candidate.overlay, same(current));
-    expect(values.single.sourceId, 'event-a');
-    expect(values.single.revision, 8);
+    expect(values.single.versionStamp, current.versionStamp);
     expect(values.single.coverage, isA<EarthquakeOverlayIncomplete>());
   });
 
@@ -551,8 +581,7 @@ void main() {
       failClosedResources: () {},
     );
 
-    expect(delayedCallbackValues.single.sourceId, 'event-a');
-    expect(delayedCallbackValues.single.revision, 8);
+    expect(delayedCallbackValues.single.versionStamp, eventA.versionStamp);
     expect(
       delayedCallbackValues.single.coverage,
       isA<EarthquakeOverlayIncomplete>(),
@@ -659,8 +688,9 @@ void main() {
 
       rejectsLoad = true;
       final eventB = snapshot(
-        sourceId: 'event-b',
-        revision: 0,
+        sourceIdentity: 'event-b',
+        dataSequence: 0,
+        renderGeneration: 0,
         color: const Color(0xFF0000FF),
       );
       final failedPreparation = await materials.prepare(
@@ -696,10 +726,11 @@ void main() {
       expect(frames.previousObservationBatch, isNull);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
-        const EarthquakeOverlayCoverageSnapshot(
-          sourceId: 'event-a',
-          revision: 8,
-          coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        EarthquakeOverlayCoverageSnapshot(
+          versionStamp: eventA.versionStamp,
+          coverage: const EarthquakeOverlayCoverage.complete(
+            requestedTileCount: 1,
+          ),
         ),
         const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
@@ -752,8 +783,9 @@ void main() {
       );
 
       final eventB = snapshot(
-        sourceId: 'event-b',
-        revision: 0,
+        sourceIdentity: 'event-b',
+        dataSequence: 0,
+        renderGeneration: 0,
         regionCode: '999',
         cityCode: '99999',
         color: const Color(0xFF0000FF),
@@ -824,10 +856,11 @@ void main() {
       expect(frames.previousObservationBatch, isNull);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
-        const EarthquakeOverlayCoverageSnapshot(
-          sourceId: 'event-a',
-          revision: 8,
-          coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        EarthquakeOverlayCoverageSnapshot(
+          versionStamp: eventA.versionStamp,
+          coverage: const EarthquakeOverlayCoverage.complete(
+            requestedTileCount: 1,
+          ),
         ),
         const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
@@ -915,8 +948,9 @@ void main() {
       );
 
       final eventB = snapshot(
-        sourceId: 'event-b',
-        revision: 0,
+        sourceIdentity: 'event-b',
+        dataSequence: 0,
+        renderGeneration: 0,
         color: const Color(0xFF0000FF),
       );
       final eventBStyles = EarthquakeAreaRenderStyleCache();

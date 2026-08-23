@@ -187,8 +187,7 @@ ObservationPointBatch? _reusableObservation({
   if (previous == null || overlay == null) {
     return null;
   }
-  return previous.sourceId == overlay.sourceId &&
-          previous.snapshotRevision == overlay.revision &&
+  return previous.versionStamp == overlay.versionStamp &&
           previous.hasStationSnapshotIdentity(overlay.stations)
       ? previous
       : null;
