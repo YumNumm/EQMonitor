@@ -7,6 +7,7 @@ import 'package:eqmonitor_map/eqmonitor_map.dart';
 
 const earthquakeOverlayRegionToCityZoom = 6.0;
 const earthquakeOverlayStationMinZoom = 6.0;
+const earthquakeOverlayMaxSpritePolicyBatches = 1;
 
 enum EarthquakeMapOverlayUnavailableReason {
   noIntensity,
@@ -73,6 +74,9 @@ final class EarthquakeMapOverlayBuilder {
           intensity: intensity,
           colorModel: colorModel,
         ),
+        spriteAtlas: null,
+        sprites: const [],
+        maxSpritePolicyBatches: earthquakeOverlayMaxSpritePolicyBatches,
       ),
     );
   }

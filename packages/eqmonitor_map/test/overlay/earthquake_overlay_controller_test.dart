@@ -32,6 +32,9 @@ void main() {
     ],
     cityStyles: const [],
     stations: const [],
+    spriteAtlas: null,
+    sprites: const [],
+    maxSpritePolicyBatches: 1,
   );
 
   test('rejects a lower data sequence from the current source', () {

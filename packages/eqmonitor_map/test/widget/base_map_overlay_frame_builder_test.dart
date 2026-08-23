@@ -205,6 +205,9 @@ void main() {
         radiusLogicalPixels: 6.7,
       ),
     ],
+    spriteAtlas: null,
+    sprites: const [],
+    maxSpritePolicyBatches: 1,
   );
 
   FillMesh mesh() => FillMesh(

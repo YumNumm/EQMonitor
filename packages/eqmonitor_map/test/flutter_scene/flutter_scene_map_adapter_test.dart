@@ -290,6 +290,9 @@ void main() {
         radiusLogicalPixels: 8,
       ),
     ],
+    spriteAtlas: null,
+    sprites: const [],
+    maxSpritePolicyBatches: 1,
   );
 
   MapSceneFrameSubmission observationSubmission({

@@ -70,6 +70,9 @@ void main() {
           ),
         ],
         stations: const [],
+        spriteAtlas: null,
+        sprites: const [],
+        maxSpritePolicyBatches: 1,
       );
 
   EarthquakeOverlayExactTileHit hit({required String code}) =>
