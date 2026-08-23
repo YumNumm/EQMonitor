@@ -7,7 +7,7 @@ import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 import 'package:eqmonitor_map/src/geo/tile_matrix.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
-import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/tile/earthquake_overlay_exact_tile_resolver.dart';
@@ -49,8 +49,12 @@ MapRenderSubmission buildEarthquakeAreaRenderSubmission({
   required MapFrameSnapshot frame,
   required EarthquakeMapOverlaySnapshot snapshot,
   required List<EarthquakeOverlayExactTileResult> exactTileResults,
+  required EarthquakeAreaPackedMeshResolver packedMeshFor,
 }) {
   final regionMode = frame.camera.zoom < snapshot.regionToCityZoom;
+  final layerMode = regionMode
+      ? EarthquakeAreaLayerMode.region
+      : EarthquakeAreaLayerMode.city;
   final styles = regionMode ? snapshot.regionStyles : snapshot.cityStyles;
   final phase = mapSceneRenderPhasePolicy.rankOf(
     regionMode
@@ -62,6 +66,9 @@ MapRenderSubmission buildEarthquakeAreaRenderSubmission({
     styles: styles,
     exactTileResults: exactTileResults,
     phase: phase,
+    snapshotRevision: snapshot.revision,
+    layerMode: layerMode,
+    packedMeshFor: packedMeshFor,
   );
   final submission = createMapRenderSubmission(
     frame: frame,
@@ -81,6 +88,9 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
   required List<EarthquakeAreaStyle> styles,
   required List<EarthquakeOverlayExactTileResult> exactTileResults,
   required int phase,
+  required int snapshotRevision,
+  required EarthquakeAreaLayerMode layerMode,
+  required EarthquakeAreaPackedMeshResolver packedMeshFor,
 }) {
   final styleEntriesByCode = {
     for (final (index, style) in styles.indexed)
@@ -104,7 +114,8 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
       extent: extent,
     ).storage;
     var featureOrder = 0;
-    for (final feature in result.areaGeometry.features) {
+    for (final (featureIndex, feature)
+        in result.areaGeometry.features.indexed) {
       final styleEntry = styleEntriesByCode[feature.code];
       if (styleEntry == null) {
         continue;
@@ -120,7 +131,7 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
         phasePolicyVersion: mapSceneRenderPhasePolicy.version,
         phase: phase,
       );
-      for (final mesh in feature.meshes) {
+      for (final (meshIndex, mesh) in feature.meshes.indexed) {
         packets.add(
           createMapRenderPacket(
             contractVersion: earthquakeAreaRenderContractVersion,
@@ -134,7 +145,15 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
             ),
             batchKey: batchKey,
             pipeline: earthquakeAreaFillPipelineKey,
-            mesh: packBaseMapFillMesh(mesh),
+            mesh: packedMeshFor(
+              sourceInstanceId: result.sourceInstanceId,
+              tileId: result.canonicalTileId,
+              snapshotRevision: snapshotRevision,
+              layerMode: layerMode,
+              featureIndex: featureIndex,
+              meshIndex: meshIndex,
+              mesh: mesh,
+            ),
             modelTransform: transform,
             materialParameters: parameters,
           ),

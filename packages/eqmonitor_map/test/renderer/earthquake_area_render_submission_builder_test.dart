@@ -8,6 +8,7 @@ import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/tile/earthquake_area_tile_geometry.dart';
@@ -23,19 +24,20 @@ void main() {
     domain: createMapClockDomainId(value: 'earthquake-fill-test'),
   );
 
-  MapFrameSnapshot frameAt(double zoom) => captureMapFrameSnapshot(
-    clock: clock,
-    frameNumber: 7,
-    camera: MapCamera(
-      centerLongitude: 139.7,
-      centerLatitude: 35.7,
-      zoom: zoom,
-    ),
-    viewport: viewport,
-    revisions: const [],
-    lifecycle: MapAppLifecycle.active,
-    contextGeneration: 0,
-  );
+  MapFrameSnapshot frameAt(double zoom, {int frameNumber = 7}) =>
+      captureMapFrameSnapshot(
+        clock: clock,
+        frameNumber: frameNumber,
+        camera: MapCamera(
+          centerLongitude: 139.7,
+          centerLatitude: 35.7,
+          zoom: zoom,
+        ),
+        viewport: viewport,
+        revisions: const [],
+        lifecycle: MapAppLifecycle.active,
+        contextGeneration: 0,
+      );
 
   EarthquakeMapOverlaySnapshot snapshot() => createEarthquakeMapOverlaySnapshot(
     sourceId: 'event-1',
@@ -92,10 +94,12 @@ void main() {
       );
 
   test('keeps RGB unpremultiplied and multiplies only alpha by opacity', () {
+    final packedMeshCache = EarthquakeAreaPackedMeshCache(maxEntries: 4);
     final submission = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5.999),
       snapshot: snapshot(),
       exactTileResults: [hit(code: '130')],
+      packedMeshFor: packedMeshCache.resolve,
     );
 
     final values = decodeEarthquakeAreaFillMaterialBytes(
@@ -111,6 +115,7 @@ void main() {
   });
 
   test('uses only region below the boundary and only city at the boundary', () {
+    final packedMeshCache = EarthquakeAreaPackedMeshCache(maxEntries: 4);
     final region = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5.999),
       snapshot: snapshot(),
@@ -118,6 +123,7 @@ void main() {
         hit(code: '130'),
         hit(code: '13101'),
       ],
+      packedMeshFor: packedMeshCache.resolve,
     );
     final city = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(6),
@@ -126,6 +132,7 @@ void main() {
         hit(code: '130'),
         hit(code: '13101'),
       ],
+      packedMeshFor: packedMeshCache.resolve,
     );
 
     expect(region.batches, hasLength(1));
@@ -143,10 +150,12 @@ void main() {
   });
 
   test('uses the shared policy version and earthquake material key', () {
+    final packedMeshCache = EarthquakeAreaPackedMeshCache(maxEntries: 4);
     final submission = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5),
       snapshot: snapshot(),
       exactTileResults: [hit(code: '130')],
+      packedMeshFor: packedMeshCache.resolve,
     );
     final batch = submission.batches.single;
 
@@ -159,5 +168,29 @@ void main() {
       earthquakeAreaFillMaterialKey,
     );
     expect(batch.compatibility.pipeline, earthquakeAreaFillPipelineKey);
+  });
+
+  test('reuses one packed mesh instance across repeated frames', () {
+    final packedMeshCache = EarthquakeAreaPackedMeshCache(maxEntries: 4);
+    final exactResult = hit(code: '130');
+    final overlaySnapshot = snapshot();
+
+    final first = buildEarthquakeAreaRenderSubmission(
+      frame: frameAt(5),
+      snapshot: overlaySnapshot,
+      exactTileResults: [exactResult],
+      packedMeshFor: packedMeshCache.resolve,
+    );
+    final second = buildEarthquakeAreaRenderSubmission(
+      frame: frameAt(5, frameNumber: 8),
+      snapshot: overlaySnapshot,
+      exactTileResults: [exactResult],
+      packedMeshFor: packedMeshCache.resolve,
+    );
+
+    expect(
+      second.batches.single.packets.single.mesh,
+      same(first.batches.single.packets.single.mesh),
+    );
   });
 }
