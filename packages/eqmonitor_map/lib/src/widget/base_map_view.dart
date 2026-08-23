@@ -145,8 +145,8 @@ class BaseMapView extends HookWidget {
   // ignore: diagnostic_describe_all_properties
   final EarthquakeMapOverlaySnapshot? earthquakeOverlay;
 
-  final ValueChanged<EarthquakeOverlayCoverage>?
-  // coverageをappのpresentationへ返すcallback。
+  final ValueChanged<EarthquakeOverlayCoverageSnapshot>?
+  // commit済みoverlay identityとcoverageをappへ一体で返すcallback。
   // ignore: diagnostic_describe_all_properties
   onEarthquakeOverlayCoverageChanged;
 
@@ -315,7 +315,7 @@ class _BaseMapController extends ChangeNotifier {
     required this.limits,
     required MapCamera initialCamera,
     required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
-    required ValueChanged<EarthquakeOverlayCoverage>?
+    required ValueChanged<EarthquakeOverlayCoverageSnapshot>?
     onEarthquakeOverlayCoverageChanged,
   }) : _camera = initialCamera,
        _inputOverlay = earthquakeOverlay,
@@ -549,7 +549,7 @@ class _BaseMapController extends ChangeNotifier {
 
   Future<void> updateEarthquakeOverlay({
     required EarthquakeMapOverlaySnapshot? overlay,
-    required ValueChanged<EarthquakeOverlayCoverage>? onCoverageChanged,
+    required ValueChanged<EarthquakeOverlayCoverageSnapshot>? onCoverageChanged,
   }) async {
     if (_isDisposed) {
       return;

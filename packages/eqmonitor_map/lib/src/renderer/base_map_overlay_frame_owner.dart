@@ -44,7 +44,7 @@ final class BaseMapOverlayFrameCommitFailed
 /// Scene成功後にだけoverlay stateとcoverageをまとめて進めるowner。
 final class BaseMapOverlayFrameOwner {
   BaseMapOverlayFrameOwner({
-    ValueChanged<EarthquakeOverlayCoverage>? onCoverageChanged,
+    ValueChanged<EarthquakeOverlayCoverageSnapshot>? onCoverageChanged,
   }) : _coverage = EarthquakeOverlayCoverageOwner(
          onChanged: onCoverageChanged,
        );
@@ -57,12 +57,13 @@ final class BaseMapOverlayFrameOwner {
   ObservationPointBatch? get previousObservationBatch =>
       _previousObservationBatch;
   EarthquakeOverlayCoverage get coverage => _coverage.coverage;
+  EarthquakeOverlayCoverageSnapshot get coverageSnapshot => _coverage.snapshot;
 
   void updateCoverageCallback(
-    ValueChanged<EarthquakeOverlayCoverage>? onCoverageChanged,
+    ValueChanged<EarthquakeOverlayCoverageSnapshot>? onCoverageChanged,
   ) => _coverage.onChanged = onCoverageChanged;
 
-  void hide() => _coverage.hide();
+  void hide() => _coverage.hide(overlay: _overlay);
 
   BaseMapOverlayFrameCommitResult commit({
     required BaseMapOverlayFrameResult candidate,
@@ -97,7 +98,7 @@ final class BaseMapOverlayFrameOwner {
       failClosedResources();
       _overlay = null;
       _previousObservationBatch = null;
-      _coverage.hide();
+      _coverage.hide(overlay: null);
       return BaseMapOverlayFrameCommitFailed(
         error: error,
         stackTrace: stackTrace,
@@ -106,7 +107,7 @@ final class BaseMapOverlayFrameOwner {
     }
     _overlay = candidate.overlay;
     _previousObservationBatch = candidate.observationBatchForReuse;
-    _coverage.publish(candidate.coverage);
+    _coverage.publish(overlay: _overlay, coverage: candidate.coverage);
     return const BaseMapOverlayFrameCommitSucceeded();
   }
 }

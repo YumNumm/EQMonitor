@@ -27,7 +27,7 @@ void main() {
       cityStyles: const [],
       stations: const [],
     );
-    void callback(EarthquakeOverlayCoverage _) {}
+    void callback(EarthquakeOverlayCoverageSnapshot _) {}
     final view = BaseMapView(
       source: const VerifiedPmTilesSource(
         sourceInstanceId: 'archive-a',

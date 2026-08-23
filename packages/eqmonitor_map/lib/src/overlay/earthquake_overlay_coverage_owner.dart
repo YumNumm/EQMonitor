@@ -1,22 +1,37 @@
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
 import 'package:flutter/foundation.dart';
 
-/// coverageの最新値と、値変更時だけの通知を所有する。
+/// commit済みoverlay identityとcoverageの最新値をatomicに所有する。
 final class EarthquakeOverlayCoverageOwner {
   EarthquakeOverlayCoverageOwner({this.onChanged});
 
-  var _coverage = const EarthquakeOverlayCoverage.hidden();
-  ValueChanged<EarthquakeOverlayCoverage>? onChanged;
+  var _snapshot = const EarthquakeOverlayCoverageSnapshot.hidden();
+  ValueChanged<EarthquakeOverlayCoverageSnapshot>? onChanged;
 
-  EarthquakeOverlayCoverage get coverage => _coverage;
+  EarthquakeOverlayCoverage get coverage => _snapshot.coverage;
+  EarthquakeOverlayCoverageSnapshot get snapshot => _snapshot;
 
-  void hide() => publish(const EarthquakeOverlayCoverage.hidden());
+  void hide({required EarthquakeMapOverlaySnapshot? overlay}) => publish(
+    overlay: overlay,
+    coverage: const EarthquakeOverlayCoverage.hidden(),
+  );
 
-  void publish(EarthquakeOverlayCoverage next) {
-    if (next == _coverage) {
+  void publish({
+    required EarthquakeMapOverlaySnapshot? overlay,
+    required EarthquakeOverlayCoverage coverage,
+  }) {
+    final next = overlay == null
+        ? const EarthquakeOverlayCoverageSnapshot.hidden()
+        : EarthquakeOverlayCoverageSnapshot(
+            sourceId: overlay.sourceId,
+            revision: overlay.revision,
+            coverage: coverage,
+          );
+    if (next == _snapshot) {
       return;
     }
-    _coverage = next;
+    _snapshot = next;
     onChanged?.call(next);
   }
 }

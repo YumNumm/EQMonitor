@@ -51,6 +51,39 @@ sealed class EarthquakeOverlayCoverage {
   }
 }
 
+/// Sceneへcommit済みのoverlay identityとcoverageを一体で表す通知値。
+///
+/// [EarthquakeOverlayCoverageSnapshot.hidden]はcommit済みoverlayがない状態、
+/// 通常constructorでcoverageが[EarthquakeOverlayHidden]なら、該当overlayを
+/// backgroundなどで一時的に描画していない状態を表す。
+@immutable
+final class EarthquakeOverlayCoverageSnapshot {
+  const EarthquakeOverlayCoverageSnapshot({
+    required String this.sourceId,
+    required int this.revision,
+    required this.coverage,
+  });
+
+  const EarthquakeOverlayCoverageSnapshot.hidden()
+    : sourceId = null,
+      revision = null,
+      coverage = const EarthquakeOverlayCoverage.hidden();
+
+  final String? sourceId;
+  final int? revision;
+  final EarthquakeOverlayCoverage coverage;
+
+  @override
+  bool operator ==(Object other) =>
+      other is EarthquakeOverlayCoverageSnapshot &&
+      other.sourceId == sourceId &&
+      other.revision == revision &&
+      other.coverage == coverage;
+
+  @override
+  int get hashCode => Object.hash(sourceId, revision, coverage);
+}
+
 /// overlayが非表示で、可視tileを要求していない状態。
 final class EarthquakeOverlayHidden extends EarthquakeOverlayCoverage {
   const EarthquakeOverlayHidden();

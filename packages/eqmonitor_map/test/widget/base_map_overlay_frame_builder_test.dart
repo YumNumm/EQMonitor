@@ -434,26 +434,129 @@ void main() {
   });
 
   test('coverage owner calls back only when the value changes', () {
-    final values = <EarthquakeOverlayCoverage>[];
+    final values = <EarthquakeOverlayCoverageSnapshot>[];
     final owner = EarthquakeOverlayCoverageOwner(onChanged: values.add);
+    final value = snapshot();
     const incomplete = EarthquakeOverlayCoverage.incomplete(
       requestedTileCount: 1,
       readyTileCount: 0,
       missingOrInvalidCodeCount: 0,
     );
 
-    owner.publish(incomplete);
-    owner.publish(incomplete);
+    owner.publish(overlay: value, coverage: incomplete);
+    owner.publish(overlay: value, coverage: incomplete);
     owner.publish(
-      const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+      overlay: value,
+      coverage: const EarthquakeOverlayCoverage.complete(
+        requestedTileCount: 1,
+      ),
     );
-    owner.hide();
+    owner.hide(overlay: value);
 
     expect(values, [
-      incomplete,
-      const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
-      const EarthquakeOverlayCoverage.hidden(),
+      const EarthquakeOverlayCoverageSnapshot(
+        sourceId: 'event-a',
+        revision: 8,
+        coverage: incomplete,
+      ),
+      const EarthquakeOverlayCoverageSnapshot(
+        sourceId: 'event-a',
+        revision: 8,
+        coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+      ),
+      const EarthquakeOverlayCoverageSnapshot(
+        sourceId: 'event-a',
+        revision: 8,
+        coverage: EarthquakeOverlayCoverage.hidden(),
+      ),
     ]);
+  });
+
+  test('same-source revision regression publishes committed provenance', () {
+    final values = <EarthquakeOverlayCoverageSnapshot>[];
+    final frames = BaseMapOverlayFrameOwner(onCoverageChanged: values.add);
+    final current = snapshot();
+    final first = build(frame: frameAt(6), requested: current);
+    final firstFallback = build(
+      frame: frameAt(6),
+      current: current,
+      requested: null,
+    );
+    frames.commit(
+      candidate: first,
+      baseOnlySubmission: firstFallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+    values.clear();
+
+    final stale = snapshot(revision: 7);
+    final candidate = build(
+      frame: frameAt(6, frameNumber: 1),
+      current: frames.overlay,
+      requested: stale,
+      cache: BaseMapTileCache(maxEntries: 8, maxParentFallbackSteps: 4),
+    );
+    frames.commit(
+      candidate: candidate,
+      baseOnlySubmission: firstFallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+
+    expect(candidate.overlay, same(current));
+    expect(values.single.sourceId, 'event-a');
+    expect(values.single.revision, 8);
+    expect(values.single.coverage, isA<EarthquakeOverlayIncomplete>());
+  });
+
+  test('material preparation中の旧coverageは旧snapshot identityで通知する', () {
+    final values = <EarthquakeOverlayCoverageSnapshot>[];
+    final frames = BaseMapOverlayFrameOwner(onCoverageChanged: values.add);
+    final eventA = snapshot();
+    final first = build(frame: frameAt(6), requested: eventA);
+    final fallback = build(
+      frame: frameAt(6),
+      current: eventA,
+      requested: null,
+    );
+    frames.commit(
+      candidate: first,
+      baseOnlySubmission: fallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+    values.clear();
+
+    final delayedCallbackValues = <EarthquakeOverlayCoverageSnapshot>[];
+    frames.updateCoverageCallback(delayedCallbackValues.add);
+    final oldFrameWhileEventBPrepares = build(
+      frame: frameAt(6, frameNumber: 1),
+      current: frames.overlay,
+      requested: frames.overlay,
+      cache: BaseMapTileCache(maxEntries: 8, maxParentFallbackSteps: 4),
+    );
+    frames.commit(
+      candidate: oldFrameWhileEventBPrepares,
+      baseOnlySubmission: fallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+
+    expect(delayedCallbackValues.single.sourceId, 'event-a');
+    expect(delayedCallbackValues.single.revision, 8);
+    expect(
+      delayedCallbackValues.single.coverage,
+      isA<EarthquakeOverlayIncomplete>(),
+    );
   });
 
   test(
@@ -516,7 +619,7 @@ void main() {
           return material;
         },
       );
-      final coverages = <EarthquakeOverlayCoverage>[];
+      final coverages = <EarthquakeOverlayCoverageSnapshot>[];
       final frames = BaseMapOverlayFrameOwner(
         onCoverageChanged: coverages.add,
       );
@@ -593,8 +696,12 @@ void main() {
       expect(frames.previousObservationBatch, isNull);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
-        const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
-        const EarthquakeOverlayCoverage.hidden(),
+        const EarthquakeOverlayCoverageSnapshot(
+          sourceId: 'event-a',
+          revision: 8,
+          coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        ),
+        const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
     },
   );
@@ -610,7 +717,7 @@ void main() {
               : scene.FmatType.vec2,
         ),
       );
-      final coverages = <EarthquakeOverlayCoverage>[];
+      final coverages = <EarthquakeOverlayCoverageSnapshot>[];
       final frames = BaseMapOverlayFrameOwner(
         onCoverageChanged: coverages.add,
       );
@@ -717,8 +824,12 @@ void main() {
       expect(frames.previousObservationBatch, isNull);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
-        const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
-        const EarthquakeOverlayCoverage.hidden(),
+        const EarthquakeOverlayCoverageSnapshot(
+          sourceId: 'event-a',
+          revision: 8,
+          coverage: EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        ),
+        const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
     },
   );
