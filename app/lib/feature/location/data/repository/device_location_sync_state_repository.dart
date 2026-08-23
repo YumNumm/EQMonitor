@@ -5,6 +5,8 @@ import 'package:eqmonitor/feature/location/data/model/device_location_payload.da
 import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum DeviceLocationSyncAvailability { enabled, disabled, uninitialized }
+
 final deviceLocationSyncStateRepositoryProvider =
     Provider<SharedPreferencesDeviceLocationSyncStateRepository>(
       (ref) => SharedPreferencesDeviceLocationSyncStateRepository(
@@ -13,7 +15,9 @@ final deviceLocationSyncStateRepositoryProvider =
     );
 
 abstract interface class DeviceLocationSyncStateRepository {
-  Future<bool> isDeviceLocationSyncEnabled();
+  Future<DeviceLocationSyncAvailability> readAvailability();
+
+  Future<void> writeAvailability(DeviceLocationSyncAvailability availability);
 
   Future<DeviceLocationPayload?> readLastSent();
 
@@ -23,15 +27,23 @@ abstract interface class DeviceLocationSyncStateRepository {
 class InMemoryDeviceLocationSyncStateRepository
     implements DeviceLocationSyncStateRepository {
   new({
-    this.enabled = true,
+    this.availability = DeviceLocationSyncAvailability.enabled,
     DeviceLocationPayload? lastSent,
   }) : _lastSent = lastSent;
 
-  final bool enabled;
+  DeviceLocationSyncAvailability availability;
   DeviceLocationPayload? _lastSent;
 
   @override
-  Future<bool> isDeviceLocationSyncEnabled() async => enabled;
+  Future<DeviceLocationSyncAvailability> readAvailability() async =>
+      availability;
+
+  @override
+  Future<void> writeAvailability(
+    DeviceLocationSyncAvailability availability,
+  ) async {
+    this.availability = availability;
+  }
 
   @override
   Future<DeviceLocationPayload?> readLastSent() async => _lastSent;
@@ -49,11 +61,33 @@ class SharedPreferencesDeviceLocationSyncStateRepository
   final SharedPreferencesAsync _preferences;
 
   @override
-  Future<bool> isDeviceLocationSyncEnabled() async =>
-      await _preferences.getBool(
-        SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
-      ) ??
-      false;
+  Future<DeviceLocationSyncAvailability> readAvailability() async {
+    final enabled = await _preferences.getBool(
+      SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
+    );
+    return switch (enabled) {
+      true => DeviceLocationSyncAvailability.enabled,
+      false => DeviceLocationSyncAvailability.disabled,
+      null => DeviceLocationSyncAvailability.uninitialized,
+    };
+  }
+
+  @override
+  Future<void> writeAvailability(
+    DeviceLocationSyncAvailability availability,
+  ) => switch (availability) {
+    DeviceLocationSyncAvailability.enabled => _preferences.setBool(
+      SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
+      true,
+    ),
+    DeviceLocationSyncAvailability.disabled => _preferences.setBool(
+      SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
+      false,
+    ),
+    DeviceLocationSyncAvailability.uninitialized => _preferences.remove(
+      SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
+    ),
+  };
 
   @override
   Future<DeviceLocationPayload?> readLastSent() async {
@@ -91,11 +125,5 @@ class SharedPreferencesDeviceLocationSyncStateRepository
       _preferences.setString(
         SharedPreferencesKey.backgroundLocationLastSentPayload.key,
         jsonEncode(payload.toJson()),
-      );
-
-  Future<void> writeDeviceLocationSyncEnabled({required bool enabled}) =>
-      _preferences.setBool(
-        SharedPreferencesKey.backgroundLocationCurrentSlotEnabled.key,
-        enabled,
       );
 }

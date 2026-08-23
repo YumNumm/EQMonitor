@@ -61,12 +61,42 @@ void main() {
     final first = SharedPreferencesDeviceLocationSyncStateRepository(
       SharedPreferencesAsync(),
     );
-    await first.writeDeviceLocationSyncEnabled(enabled: true);
+    await first.writeAvailability(DeviceLocationSyncAvailability.enabled);
 
     final recreated = SharedPreferencesDeviceLocationSyncStateRepository(
       SharedPreferencesAsync(),
     );
 
-    expect(await recreated.isDeviceLocationSyncEnabled(), isTrue);
+    expect(
+      await recreated.readAvailability(),
+      DeviceLocationSyncAvailability.enabled,
+    );
+  });
+
+  test('送信可否キーがない場合は未初期化として返す', () async {
+    final repository = SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
+    );
+
+    expect(
+      await repository.readAvailability(),
+      DeviceLocationSyncAvailability.uninitialized,
+    );
+  });
+
+  test('disabledを再生成後も復元する', () async {
+    final first = SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
+    );
+    await first.writeAvailability(DeviceLocationSyncAvailability.disabled);
+
+    final recreated = SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
+    );
+
+    expect(
+      await recreated.readAvailability(),
+      DeviceLocationSyncAvailability.disabled,
+    );
   });
 }

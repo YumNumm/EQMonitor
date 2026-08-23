@@ -55,12 +55,19 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
 
 /// `notificationSlotsProvider` を固定スロットで差し替える fake。
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
-  new(this._slots);
+  new({required List<NotificationSlot> slots, this.error}) : _slots = slots;
 
   final List<NotificationSlot> _slots;
+  final Exception? error;
 
   @override
-  Future<List<NotificationSlot>> build() async => _slots;
+  Future<List<NotificationSlot>> build() async {
+    final error = this.error;
+    if (error != null) {
+      throw error;
+    }
+    return _slots;
+  }
 }
 
 final class _FakeShakeDetectionSettingsNotifier
@@ -86,18 +93,26 @@ final class _RecordingDeviceLocationSyncStateRepository
     extends SharedPreferencesDeviceLocationSyncStateRepository {
   new({
     required this.events,
-    this.enabled = true,
+    this.availability = DeviceLocationSyncAvailability.enabled,
     this.lastSent,
   }) : super(SharedPreferencesAsync());
 
   final List<String> events;
-  final bool enabled;
+  DeviceLocationSyncAvailability availability;
   DeviceLocationPayload? lastSent;
 
   @override
-  Future<bool> isDeviceLocationSyncEnabled() async {
-    events.add('deviceLocation:readEnabled');
-    return enabled;
+  Future<DeviceLocationSyncAvailability> readAvailability() async {
+    events.add('deviceLocation:readAvailability');
+    return availability;
+  }
+
+  @override
+  Future<void> writeAvailability(
+    DeviceLocationSyncAvailability availability,
+  ) async {
+    events.add('deviceLocation:writeAvailability:${availability.name}');
+    this.availability = availability;
   }
 
   @override
@@ -173,7 +188,7 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   new({this.events, this.error});
 
   final List<String>? events;
-  final Object? error;
+  final Exception? error;
   final putDeviceLocationCalls = <api.DeviceLocationRequest>[];
   final putDeviceLocationJsonCalls = <Map<String, dynamic>>[];
 
@@ -400,17 +415,21 @@ ProviderContainer _createLocationSyncContainer({
   required _FakeDeviceLocationApiAdapter adapter,
   required _FakeJmaRegionResolver resolver,
   List<String>? events,
-  _RecordingDeviceLocationSyncStateRepository? stateRepository,
+  SharedPreferencesDeviceLocationSyncStateRepository? stateRepository,
+  List<NotificationSlot>? slots,
+  Exception? notificationSlotsError,
 }) {
   final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
     ..httpClientAdapter = adapter;
   return ProviderContainer(
+    retry: (retryCount, error) => null,
     overrides: [
       apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
       notificationSlotsProvider.overrideWith(
-        () => _FakeNotificationSlotsNotifier([
-          _currentLocationSlot(regionId: 9080),
-        ]),
+        () => _FakeNotificationSlotsNotifier(
+          slots: slots ?? [_currentLocationSlot(regionId: 9080)],
+          error: notificationSlotsError,
+        ),
       ),
       jmaRegionResolverProvider.overrideWith(
         (ref) async => resolver,
@@ -498,6 +517,27 @@ void addTeardownToContainer(ProviderContainer container) {
   addTearDown(container.dispose);
 }
 
+void recordPendingLocationAcknowledgements(List<String> events) {
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  messenger.setMockMessageHandler(_acknowledgePendingLocationChannelName, (
+    message,
+  ) async {
+    final arguments =
+        BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
+            as List<Object?>;
+    final consumer = arguments[1] as PendingLocationConsumer;
+    events.add('ack:${consumer.name}');
+    return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([true]);
+  });
+  addTearDown(
+    () => messenger.setMockMessageHandler(
+      _acknowledgePendingLocationChannelName,
+      null,
+    ),
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -526,14 +566,20 @@ void main() {
       final state = SharedPreferencesDeviceLocationSyncStateRepository(
         SharedPreferencesAsync(),
       );
-      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.enabled,
+      );
 
       final withoutCurrentLocation = _createNotificationSlotsSyncContainer(
         _FakeNotificationSlotsApiAdapter(slots: const []),
       );
       addTeardownToContainer(withoutCurrentLocation);
       await withoutCurrentLocation.read(notificationSlotsProvider.future);
-      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
     });
 
     test('作成・削除成功後に現在地スロット有無を保存する', () async {
@@ -547,10 +593,16 @@ void main() {
       );
 
       await notifier.putCurrentLocation();
-      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.enabled,
+      );
 
       await notifier.deleteCurrentLocation();
-      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
     });
 
     test('一括置換成功後に現在地スロット有無を保存する', () async {
@@ -570,10 +622,16 @@ void main() {
           earthquakeEnabled: true,
         ),
       ]);
-      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.enabled,
+      );
 
       await notifier.replaceSlots(const []);
-      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
     });
 
     test('API失敗時は現在地スロット有無を先行変更しない', () async {
@@ -591,7 +649,10 @@ void main() {
       final state = SharedPreferencesDeviceLocationSyncStateRepository(
         SharedPreferencesAsync(),
       );
-      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
     });
   });
 
@@ -933,7 +994,8 @@ void main() {
         ('pending-id', PendingLocationConsumer.appEffects),
       ]);
       expect(events, [
-        'deviceLocation:readEnabled',
+        'deviceLocation:readAvailability',
+        'deviceLocation:readAvailability',
         'deviceLocation:readLastSent',
         'deviceLocation:send',
         'deviceLocation:writeLastSent',
@@ -1002,10 +1064,130 @@ void main() {
       expect(events, isNot(contains('deviceLocation:writeLastSent')));
     });
 
+    test('キーなしでserverに現在地スロットがあれば初期化後に送信する', () async {
+      final events = <String>[];
+      recordPendingLocationAcknowledgements(events);
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+      final adapter = _FakeDeviceLocationApiAdapter(events: events);
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: _FakeJmaRegionResolver(
+          earthquakeResolution: _ibarakiSouthResolution,
+        ),
+        events: events,
+        stateRepository: state,
+      );
+      addTeardownToContainer(container);
+
+      await container.read(
+        _applyPendingMessageProvider(
+          PendingLocationMessage(
+            updateId: 'initialize-enabled-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ).future,
+      );
+
+      expect(adapter.putDeviceLocationCalls, hasLength(1));
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.enabled,
+      );
+      expect(
+        events,
+        containsAllInOrder(['ack:deviceLocation', 'ack:appEffects']),
+      );
+    });
+
+    test('キーなしでserverに現在地スロットがなければ無効初期化後にacknowledgeする', () async {
+      final events = <String>[];
+      recordPendingLocationAcknowledgements(events);
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+      final adapter = _FakeDeviceLocationApiAdapter(events: events);
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: _FakeJmaRegionResolver(
+          earthquakeResolution: _ibarakiSouthResolution,
+        ),
+        events: events,
+        stateRepository: state,
+        slots: const [],
+      );
+      addTeardownToContainer(container);
+
+      await container.read(
+        _applyPendingMessageProvider(
+          PendingLocationMessage(
+            updateId: 'initialize-disabled-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ).future,
+      );
+
+      expect(adapter.putDeviceLocationCalls, isEmpty);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.disabled,
+      );
+      expect(
+        events,
+        containsAllInOrder(['ack:deviceLocation', 'ack:appEffects']),
+      );
+    });
+
+    test('未初期化でスロット取得に失敗したらappEffectsだけをacknowledgeする', () async {
+      final events = <String>[];
+      recordPendingLocationAcknowledgements(events);
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+      final adapter = _FakeDeviceLocationApiAdapter(events: events);
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: _FakeJmaRegionResolver(
+          earthquakeResolution: _ibarakiSouthResolution,
+        ),
+        events: events,
+        stateRepository: state,
+        notificationSlotsError: Exception('slots failure'),
+      );
+      addTeardownToContainer(container);
+
+      await container.read(
+        _applyPendingMessageProvider(
+          PendingLocationMessage(
+            updateId: 'initialize-failure-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ).future,
+      );
+
+      expect(adapter.putDeviceLocationCalls, isEmpty);
+      expect(
+        await state.readAvailability(),
+        DeviceLocationSyncAvailability.uninitialized,
+      );
+      expect(events, contains('ack:appEffects'));
+      expect(events, isNot(contains('ack:deviceLocation')));
+    });
+
     for (final testCase in [
       (
         name: 'unchanged',
-        enabled: true,
+        availability: DeviceLocationSyncAvailability.enabled,
         lastSent: const DeviceLocationPayload(
           region: '301',
           city: '0820100',
@@ -1014,7 +1196,7 @@ void main() {
       ),
       (
         name: 'disabled',
-        enabled: false,
+        availability: DeviceLocationSyncAvailability.disabled,
         lastSent: null,
       ),
     ]) {
@@ -1052,7 +1234,7 @@ void main() {
           events: events,
           stateRepository: _RecordingDeviceLocationSyncStateRepository(
             events: events,
-            enabled: testCase.enabled,
+            availability: testCase.availability,
             lastSent: testCase.lastSent,
           ),
         );

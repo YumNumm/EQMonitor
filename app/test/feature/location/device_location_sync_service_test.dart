@@ -223,7 +223,9 @@ void main() {
     });
 
     test('同期が無効な場合は地域解決も送信も行わない', () async {
-      final state = InMemoryDeviceLocationSyncStateRepository(enabled: false);
+      final state = InMemoryDeviceLocationSyncStateRepository(
+        availability: DeviceLocationSyncAvailability.disabled,
+      );
       var resolutionCount = 0;
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
@@ -242,6 +244,33 @@ void main() {
       final result = await service.syncPending(location: pendingLocation);
 
       expect(result, DeviceLocationSyncResult.disabled);
+      expect(resolutionCount, 0);
+      expect(sent, isEmpty);
+      expect(await state.readLastSent(), isNull);
+    });
+
+    test('同期可否が未初期化なら送信せず明示的に返す', () async {
+      final state = InMemoryDeviceLocationSyncStateRepository(
+        availability: DeviceLocationSyncAvailability.uninitialized,
+      );
+      var resolutionCount = 0;
+      final sent = <DeviceLocationPayload>[];
+      final service = DeviceLocationSyncService(
+        stateRepository: state,
+        resolvePayload: ({required latitude, required longitude}) async {
+          resolutionCount++;
+          return const DeviceLocationPayload(
+            region: '301',
+            city: '0820100',
+            tsunamiForecastRegion: '201',
+          );
+        },
+        sendPayload: ({required payload}) async => sent.add(payload),
+      );
+
+      final result = await service.syncPending(location: pendingLocation);
+
+      expect(result, DeviceLocationSyncResult.uninitialized);
       expect(resolutionCount, 0);
       expect(sent, isEmpty);
       expect(await state.readLastSent(), isNull);

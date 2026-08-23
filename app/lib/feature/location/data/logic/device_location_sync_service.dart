@@ -2,7 +2,13 @@ import 'package:eqmonitor/feature/location/data/model/device_location_payload.da
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 
-enum DeviceLocationSyncResult { sent, unchanged, disabled, noPending }
+enum DeviceLocationSyncResult {
+  sent,
+  unchanged,
+  disabled,
+  uninitialized,
+  noPending,
+}
 
 typedef ResolveDeviceLocationPayload = Future<DeviceLocationPayload?> Function({
   required double latitude,
@@ -30,8 +36,14 @@ class DeviceLocationSyncService {
     if (location == null) {
       return DeviceLocationSyncResult.noPending;
     }
-    if (!await stateRepository.isDeviceLocationSyncEnabled()) {
-      return DeviceLocationSyncResult.disabled;
+    final availability = await stateRepository.readAvailability();
+    switch (availability) {
+      case DeviceLocationSyncAvailability.disabled:
+        return DeviceLocationSyncResult.disabled;
+      case DeviceLocationSyncAvailability.uninitialized:
+        return DeviceLocationSyncResult.uninitialized;
+      case DeviceLocationSyncAvailability.enabled:
+        break;
     }
 
     final payload = await resolvePayload(

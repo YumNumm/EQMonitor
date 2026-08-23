@@ -136,6 +136,7 @@ class BackgroundLocationSyncCoordinator {
           DeviceLocationSyncResult.sent ||
           DeviceLocationSyncResult.unchanged ||
           DeviceLocationSyncResult.disabled => true,
+          DeviceLocationSyncResult.uninitialized ||
           DeviceLocationSyncResult.noPending => false,
         };
         if (shouldAcknowledge) {
@@ -190,12 +191,26 @@ class BackgroundLocationSyncCoordinator {
     Ref ref, {
     required PendingLocationMessage pending,
   }) async {
+    final stateRepository = ref.read(
+      deviceLocationSyncStateRepositoryProvider,
+    );
+    if (await stateRepository.readAvailability() ==
+        DeviceLocationSyncAvailability.uninitialized) {
+      final slots = await ref.read(notificationSlotsProvider.future);
+      await stateRepository.writeAvailability(
+        slots.any(
+              (slot) => slot.slotType == NotificationSlotType.currentLocation,
+            )
+            ? DeviceLocationSyncAvailability.enabled
+            : DeviceLocationSyncAvailability.disabled,
+      );
+    }
     final resolver = await ref.read(jmaRegionResolverProvider.future);
     final repository = await ref.read(
       notificationSlotRepositoryProvider.future,
     );
     final service = DeviceLocationSyncService(
-      stateRepository: ref.read(deviceLocationSyncStateRepositoryProvider),
+      stateRepository: stateRepository,
       resolvePayload: ({required latitude, required longitude}) async {
         final resolution = resolver.resolveEarthquakeRegion(
           latitude,

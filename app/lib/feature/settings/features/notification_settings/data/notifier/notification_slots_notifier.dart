@@ -26,10 +26,12 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     final slots = await repo.getSlots();
     await ref
         .read(deviceLocationSyncStateRepositoryProvider)
-        .writeDeviceLocationSyncEnabled(
-          enabled: slots.any(
-            (slot) => slot.slotType == NotificationSlotType.currentLocation,
-          ),
+        .writeAvailability(
+          slots.any(
+                (slot) => slot.slotType == NotificationSlotType.currentLocation,
+              )
+              ? DeviceLocationSyncAvailability.enabled
+              : DeviceLocationSyncAvailability.disabled,
         );
     return slots;
   }
@@ -55,7 +57,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     );
     await ref
         .read(deviceLocationSyncStateRepositoryProvider)
-        .writeDeviceLocationSyncEnabled(enabled: true);
+        .writeAvailability(DeviceLocationSyncAvailability.enabled);
     await _startBackgroundLocationMonitoring();
     ref.invalidateSelf();
   }
@@ -70,7 +72,11 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     );
     await ref
         .read(deviceLocationSyncStateRepositoryProvider)
-        .writeDeviceLocationSyncEnabled(enabled: hasCurrentLocation);
+        .writeAvailability(
+          hasCurrentLocation
+              ? DeviceLocationSyncAvailability.enabled
+              : DeviceLocationSyncAvailability.disabled,
+        );
     if (hasCurrentLocation) {
       await _startBackgroundLocationMonitoring();
     }
@@ -97,7 +103,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     await repo.deleteCurrentLocation();
     await ref
         .read(deviceLocationSyncStateRepositoryProvider)
-        .writeDeviceLocationSyncEnabled(enabled: false);
+        .writeAvailability(DeviceLocationSyncAvailability.disabled);
     final slotsWithoutCurrentLocation = currentSlots
         .where((s) => s.slotType != NotificationSlotType.currentLocation)
         .toList();
