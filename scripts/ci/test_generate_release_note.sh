@@ -13,6 +13,7 @@ new_repo() {
 	git -C "$repo" init -q
 	git -C "$repo" config user.email t@example.com
 	git -C "$repo" config user.name t
+	git -C "$repo" config commit.gpgSign false
 	echo "$repo"
 }
 
@@ -37,6 +38,47 @@ run_gen "$REPO" ios "$OUT" BASE_SHA="$BASE"
 grep -F '・#42 feat: hello' "$OUT"
 grep -E 'その他 1 件' "$OUT"
 grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
+
+# beta Release Please tag -> use only the matching CHANGELOG.beta.md section
+REPO=$(new_repo)
+git -C "$REPO" commit --allow-empty -m 'base' -q
+BASE=$(git -C "$REPO" rev-parse HEAD)
+git -C "$REPO" commit --allow-empty -m 'feat: beta change (#43)' -q
+CHANGELOG="$REPO/CHANGELOG.beta.md"
+cat >"$CHANGELOG" <<'EOF'
+# Changelog (Beta)
+
+## [3.0.0-beta.2](https://example.com/beta.2) (2026-08-24)
+
+### Features
+
+* **map:** 新しい地図表示を追加する ([abcdef0](https://example.com/commit/abcdef0))
+
+### Bug Fixes
+
+* 表示崩れを修正する ([1234567](https://example.com/commit/1234567))
+
+## [3.0.0-beta.1](https://example.com/beta.1) (2026-08-23)
+
+### Features
+
+* 前回 beta の変更は含めない ([7654321](https://example.com/commit/7654321))
+EOF
+
+OUT="$REPO/beta-changelog.txt"
+GITHUB_REF_TYPE=tag \
+	GITHUB_REF_NAME=v3.0.0-beta.2 \
+	run_gen "$REPO" ios "$OUT" BASE_SHA="$BASE"
+
+grep -F '新機能' "$OUT"
+grep -F '・map: 新しい地図表示を追加する' "$OUT"
+grep -F '不具合修正' "$OUT"
+grep -F '・表示崩れを修正する' "$OUT"
+grep -E "^rev: $(git -C "$REPO" rev-parse HEAD)$" "$OUT"
+if grep -F '前回 beta の変更は含めない' "$OUT" || grep -F 'https://example.com' "$OUT"; then
+	echo 'beta release note must contain only the current plain-text changelog section' >&2
+	exit 1
+fi
 
 # BASE_SHA == HEAD -> no changes
 REPO=$(new_repo)
