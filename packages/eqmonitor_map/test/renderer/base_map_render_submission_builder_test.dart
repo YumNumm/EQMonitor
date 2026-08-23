@@ -14,6 +14,7 @@ import 'package:eqmonitor_map/src/renderer/base_map_material_parameters.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -127,8 +128,8 @@ void main() {
 
   group('phase policy', () {
     test('base map draws in the first phase and declares labelForeground', () {
-      expect(baseMapRenderPhasePolicy.rankOf(baseMapRenderPhaseId), 0);
-      expect(baseMapRenderPhasePolicy.orderedPhases.length, 2);
+      expect(mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId), 0);
+      expect(mapSceneRenderPhasePolicy.orderedPhases.length, 5);
     });
   });
 
