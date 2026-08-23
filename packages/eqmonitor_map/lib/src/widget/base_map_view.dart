@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
+import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
@@ -11,13 +12,21 @@ import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_controller.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
-import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
-import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
+import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
+import 'package:eqmonitor_map/src/tile/base_map_tile_decode_failure_owner.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
 import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
@@ -103,9 +112,9 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
 /// 検証済みPMTiles archiveから、pan/pinch zoom付きでベースレイヤー
 /// (Fill/Line)を描画するwidget。
 ///
-/// 公開引数は[source]・[initialCamera]・[limits]の3つだけであり、内部で
-/// 保持するcamera状態やFlutter Sceneのcontroller/[scene.Scene]は外へ
-/// 公開しない(brief要求)。`initialCamera`は最初のフレームにしか使わず、
+/// 必須入力は[source]・[initialCamera]・[limits]、任意入力は地震overlayと
+/// coverage callbackであり、内部で保持するcamera状態やFlutter Sceneの
+/// controller/[scene.Scene]は外へ公開しない。`initialCamera`は最初のフレームにしか使わず、
 /// 後から[BaseMapView]が再構築されても(同じ[source]/[limits]である限り)
 /// 現在のcamera状態を保つ。
 class BaseMapView extends HookWidget {
@@ -113,6 +122,8 @@ class BaseMapView extends HookWidget {
     required this.source,
     required this.initialCamera,
     required this.limits,
+    this.earthquakeOverlay,
+    this.onEarthquakeOverlayCoverageChanged,
     super.key,
   });
 
@@ -131,6 +142,15 @@ class BaseMapView extends HookWidget {
   // ignore: diagnostic_describe_all_properties
   final MapBaseLayerLimits limits;
 
+  // overlay snapshotはapp側で検証・変換済みの入力値そのもの。
+  // ignore: diagnostic_describe_all_properties
+  final EarthquakeMapOverlaySnapshot? earthquakeOverlay;
+
+  final ValueChanged<EarthquakeOverlayCoverage>?
+  // coverageをappのpresentationへ返すcallback。
+  // ignore: diagnostic_describe_all_properties
+  onEarthquakeOverlayCoverageChanged;
+
   @override
   Widget build(BuildContext context) {
     final controller = useMemoized(
@@ -138,6 +158,8 @@ class BaseMapView extends HookWidget {
         source: source,
         limits: limits,
         initialCamera: initialCamera,
+        earthquakeOverlay: earthquakeOverlay,
+        onEarthquakeOverlayCoverageChanged: onEarthquakeOverlayCoverageChanged,
       ),
       [source, limits],
     );
@@ -148,6 +170,16 @@ class BaseMapView extends HookWidget {
       unawaited(controller.initialize());
       return null;
     }, [controller]);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.updateEarthquakeOverlay(
+          overlay: earthquakeOverlay,
+          onCoverageChanged: onEarthquakeOverlayCoverageChanged,
+        );
+      });
+      return null;
+    }, [controller, earthquakeOverlay, onEarthquakeOverlayCoverageChanged]);
 
     // app lifecycleは`MapFrameSnapshot.lifecycle`へ載せるだけでなく、
     // backgroundでGPU resourceを手放しforegroundで作り直す契約
@@ -281,7 +313,15 @@ class _BaseMapController extends ChangeNotifier {
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
-  }) : _camera = initialCamera;
+    required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
+    required ValueChanged<EarthquakeOverlayCoverage>?
+    onEarthquakeOverlayCoverageChanged,
+  }) : _camera = initialCamera,
+       _inputOverlay = earthquakeOverlay,
+       _acceptedOverlay = earthquakeOverlay,
+       _coverageOwner = EarthquakeOverlayCoverageOwner(
+         onChanged: onEarthquakeOverlayCoverageChanged,
+       );
 
   final VerifiedPmTilesSource source;
   final MapBaseLayerLimits limits;
@@ -304,16 +344,12 @@ class _BaseMapController extends ChangeNotifier {
   late final _packedMeshCache = BaseMapPackedMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
   );
-  late final _adapter = FlutterSceneMapAdapter(
-    sceneGraph: sceneGraph,
-    materialFor: (batch) {
-      final material =
-          _materialsByStyleLayerId?[batch.compatibility.batchKey.materialKey];
-      return material == null
-          ? null
-          : FlutterScenePreprocessedMaterialBinding(material);
-    },
-    maxFramesInFlight: limits.maxFramesInFlight,
+  late final _earthquakePackedMeshCache = EarthquakeAreaPackedMeshCache(
+    maxEntries: limits.maxCachedTileGeometries,
+  );
+  final _earthquakeStyleCache = EarthquakeAreaRenderStyleCache();
+  final _earthquakeMaterialOwner = EarthquakeOverlayMaterialOwner(
+    loadMaterial: loadEarthquakeAreaMaterialBinding,
   );
   late final _scheduler = MapTileScheduler(
     maxInFlightDecodes: limits.maxInFlightDecodes,
@@ -339,6 +375,15 @@ class _BaseMapController extends ChangeNotifier {
   MapCamera _camera;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
+  FlutterSceneMapAdapter? _adapter;
+
+  EarthquakeMapOverlaySnapshot? _inputOverlay;
+  EarthquakeMapOverlaySnapshot? _acceptedOverlay;
+  EarthquakeMapOverlaySnapshot? _requestedOverlay;
+  EarthquakeMapOverlaySnapshot? _currentOverlay;
+  ObservationPointBatch? _previousObservationBatch;
+  final EarthquakeOverlayCoverageOwner _coverageOwner;
+  var _overlayRequestGeneration = 0;
 
   var _frameNumber = 0;
 
@@ -365,6 +410,9 @@ class _BaseMapController extends ChangeNotifier {
 
   final _pendingDecodes = <CanonicalTileId>{};
   final _knownAbsentTiles = <CanonicalTileId>{};
+  late final _decodeFailures = BaseMapTileDecodeFailureOwner(
+    maxEntries: limits.maxCachedTileGeometries,
+  );
 
   double? _gestureStartZoom;
 
@@ -372,8 +420,8 @@ class _BaseMapController extends ChangeNotifier {
   bool get isReady => _isReady;
   int get visibleTileCount => _visibleTileCount;
   int get pendingDecodeCount => _pendingDecodes.length;
-  int get liveGeometryCount => _adapter.liveGeometryCount;
-  int get uploadedGeometryCount => _adapter.uploadedGeometryCount;
+  int get liveGeometryCount => _adapter?.liveGeometryCount ?? 0;
+  int get uploadedGeometryCount => _adapter?.uploadedGeometryCount ?? 0;
 
   /// HUD表示専用の読み取り。widgetの`camera`(`scene.NodeCamera`)と名前が
   /// 衝突するため`camera_`にしている。
@@ -407,6 +455,26 @@ class _BaseMapController extends ChangeNotifier {
                 await BaseMapMaterialLibrary.loadLineMaterial();
         }
       }
+      final observationMaterial =
+          await loadEarthquakeObservationMaterialBinding();
+      while (true) {
+        final candidate = _inputOverlay;
+        if (candidate == null) {
+          _requestedOverlay = null;
+          break;
+        }
+        final prepared = await _earthquakeMaterialOwner.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: _earthquakeStyleCache,
+            snapshot: candidate,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        );
+        if (prepared && identical(candidate, _inputOverlay)) {
+          _requestedOverlay = candidate;
+          break;
+        }
+      }
       final repository = await BaseMapTileRepository.open(
         source: source,
         limits: limits.pmTilesLimits,
@@ -417,6 +485,24 @@ class _BaseMapController extends ChangeNotifier {
       }
       _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
+      _adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: (batch) {
+          final earthquakeMaterial = _earthquakeMaterialOwner.materialFor(
+            batch,
+          );
+          if (earthquakeMaterial != null) {
+            return earthquakeMaterial;
+          }
+          final material =
+              materialsByStyleLayerId[batch.compatibility.batchKey.materialKey];
+          return material == null
+              ? null
+              : FlutterScenePreprocessedMaterialBinding(material);
+        },
+        observationMaterial: observationMaterial,
+        maxFramesInFlight: limits.maxFramesInFlight,
+      );
       _isReady = true;
       _refresh();
       // 初期化失敗の原因はGPU初期化・material読み込み・archive openなど
@@ -445,6 +531,66 @@ class _BaseMapController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateEarthquakeOverlay({
+    required EarthquakeMapOverlaySnapshot? overlay,
+    required ValueChanged<EarthquakeOverlayCoverage>? onCoverageChanged,
+  }) {
+    if (_isDisposed) {
+      return;
+    }
+    _coverageOwner.onChanged = onCoverageChanged;
+    if (identical(_inputOverlay, overlay)) {
+      return;
+    }
+    if (overlay == null) {
+      _inputOverlay = null;
+      _acceptedOverlay = null;
+      _overlayRequestGeneration++;
+      _requestedOverlay = null;
+      _earthquakeMaterialOwner.clear();
+      _earthquakeStyleCache.clear();
+      _refresh();
+      notifyListeners();
+      return;
+    }
+    final commit = commitEarthquakeOverlaySnapshot(
+      current: _acceptedOverlay,
+      next: overlay,
+    );
+    final selected = switch (commit) {
+      EarthquakeOverlayCommitAccepted(:final next) => next,
+      EarthquakeOverlayCommitRejected(:final current) => current,
+    };
+    if (commit is EarthquakeOverlayCommitRejected) {
+      _inputOverlay = selected;
+      return;
+    }
+    _inputOverlay = selected;
+    _acceptedOverlay = selected;
+    final requestGeneration = ++_overlayRequestGeneration;
+    unawaited(
+      _earthquakeMaterialOwner
+          .prepare(
+            resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+              cache: _earthquakeStyleCache,
+              snapshot: selected,
+              parametersFor: earthquakeAreaMaterialParametersFor,
+            ),
+          )
+          .then((prepared) {
+            if (!prepared ||
+                _isDisposed ||
+                requestGeneration != _overlayRequestGeneration ||
+                !identical(_inputOverlay, selected)) {
+              return;
+            }
+            _requestedOverlay = selected;
+            _refresh();
+            notifyListeners();
+          }),
+    );
+  }
+
   /// app lifecycleの変化をGPU resourceの寿命へ反映する。
   ///
   /// - background/detachedでは描画も新規uploadも止め、GPU resourceを手放す。
@@ -459,9 +605,12 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _lifecycle = lifecycle;
+    if (suspendsMapRendering(lifecycle)) {
+      _coverageOwner.hide();
+    }
 
     if (retiresGpuResourcesOnTransition(from: previous, to: lifecycle)) {
-      _adapter.retireAllGpuResources();
+      _adapter?.retireAllGpuResources();
     }
     if (advancesGpuContextGenerationOnTransition(
       from: previous,
@@ -585,16 +734,29 @@ class _BaseMapController extends ChangeNotifier {
       ),
       lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
     );
-    _adapter.submitFrame(
-      submission: MapSceneFrameSubmission(
-        baseMap: baseMap,
-        earthquakeFill: createMapRenderSubmission(
-          frame: frame,
-          batches: const [],
-        ),
-        observationBatch: null,
-      ),
+    final result = buildBaseMapOverlayFrame(
+      frame: frame,
+      baseMap: baseMap,
+      currentOverlay: _currentOverlay,
+      requestedOverlay: _requestedOverlay,
+      previousObservationBatch: _previousObservationBatch,
+      requestedCover: cover,
+      tileSourceInstanceId: source.cacheIdentity,
+      tileCache: _cache,
+      packedMeshFor: _earthquakePackedMeshCache.resolve,
+      styleCache: _earthquakeStyleCache,
     );
+    _currentOverlay = result.overlay;
+    _previousObservationBatch = result.observationBatchForReuse;
+    _coverageOwner.publish(result.coverage);
+    if (result.shouldRetireGpuResources) {
+      _adapter?.retireAllGpuResources();
+      return;
+    }
+    final submission = result.submission;
+    if (submission != null) {
+      _adapter?.submitFrame(submission: submission);
+    }
   }
 
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
@@ -606,6 +768,7 @@ class _BaseMapController extends ChangeNotifier {
     final completed = <CanonicalTileId>{
       for (final tile in cover)
         if (_knownAbsentTiles.contains(tile.canonical) ||
+            _decodeFailures.contains(tile.canonical) ||
             _cache.get(
                   sourceInstanceId: source.cacheIdentity,
                   tileId: tile.canonical,
@@ -657,6 +820,7 @@ class _BaseMapController extends ChangeNotifier {
       // fallback表示のまま)描かれない。
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
+      _decodeFailures.record(tileId);
       debugPrint('BaseMapView: failed to decode tile $tileId: $error');
     } finally {
       _pendingDecodes.remove(tileId);
@@ -675,8 +839,11 @@ class _BaseMapController extends ChangeNotifier {
     _isDisposed = true;
     _cache.dispose();
     _packedMeshCache.clear();
+    _earthquakePackedMeshCache.clear();
+    _earthquakeStyleCache.clear();
+    _earthquakeMaterialOwner.clear();
     unawaited(_repository?.close());
-    _adapter.retireAllGpuResources();
+    _adapter?.retireAllGpuResources();
     super.dispose();
   }
 }

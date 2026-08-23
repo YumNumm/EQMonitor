@@ -4,11 +4,84 @@
 // `canonicalZoomFor`)だけを検証する。
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
+import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
+import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
+import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:eqmonitor_map/src/widget/base_map_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 void main() {
+  test('exposes nullable earthquake overlay and coverage callback inputs', () {
+    final overlay = createEarthquakeMapOverlaySnapshot(
+      sourceId: 'event-a',
+      revision: 1,
+      regionToCityZoom: 6,
+      stationMinZoom: 6,
+      regionStyles: const [],
+      cityStyles: const [],
+      stations: const [],
+    );
+    void callback(EarthquakeOverlayCoverage _) {}
+    final view = BaseMapView(
+      source: const VerifiedPmTilesSource(
+        sourceInstanceId: 'archive-a',
+        absolutePath: '/tmp/archive.pmtiles',
+        sizeBytes: 1,
+        sha256:
+            '0000000000000000000000000000000000000000000000000000000000000000',
+      ),
+      initialCamera: const MapCamera(
+        centerLongitude: 139.7,
+        centerLatitude: 35.7,
+        zoom: 6,
+      ),
+      limits: const MapBaseLayerLimits(
+        minZoom: 0,
+        maxZoom: 10,
+        pmTilesLimits: PmTilesV3Limits(
+          maxDirectoryDepth: 3,
+          rootDirectoryWindowLength: 16384,
+        ),
+        decodeLimits: BaseMapTileDecodeLimits(
+          mvtLimits: MvtDecodeLimits(
+            maxLayers: 16,
+            maxFeaturesPerLayer: 100,
+            maxRingsPerFeature: 100,
+            maxVerticesPerRing: 100,
+            maxCommandsPerFeature: 1000,
+            maxLayerNameBytes: 64,
+            maxKeysPerLayer: 64,
+            maxValuesPerLayer: 100,
+            maxTagsPerFeature: 64,
+            maxPropertyStringBytes: 256,
+          ),
+          fillLimits: FillMeshBuilderLimits(
+            maxHolesPerPolygon: 10,
+            maxVerticesPerFeature: 100,
+            maxVerticesPerSegment: 100,
+          ),
+          lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 100),
+          lineMiterLimit: 4,
+        ),
+        maxCachedTileGeometries: 8,
+        maxParentFallbackSteps: 4,
+        maxInFlightDecodes: 2,
+        maxFramesInFlight: 3,
+      ),
+      earthquakeOverlay: overlay,
+      onEarthquakeOverlayCoverageChanged: callback,
+    );
+
+    expect(view.earthquakeOverlay, same(overlay));
+    expect(view.onEarthquakeOverlayCoverageChanged, same(callback));
+  });
+
   group('cameraAfterGestureUpdate', () {
     const camera = MapCamera(
       centerLongitude: 139.767,
