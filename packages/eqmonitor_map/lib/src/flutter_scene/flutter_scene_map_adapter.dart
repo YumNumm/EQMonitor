@@ -10,13 +10,35 @@ import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
 
-/// batchごとに独立したFlutter Scene materialを引く関数。
+/// batchごとに独立したFlutter Scene material bindingを引く関数。
 ///
 /// 同じmaterial keyでもparameter blockが異なる震度色は別material instanceを
-/// 返せるよう、keyだけでなくbatch全体を渡す。
-typedef FlutterSceneMapMaterialResolver = scene.PreprocessedMaterial? Function(
-  MapRenderBatch batch,
-);
+/// 返せるよう、keyだけでなくbatch全体を渡す。bindingはmaterialと、そのmaterial
+/// 自身のreflected parameter blockを一体で返す。
+typedef FlutterSceneMapMaterialResolver =
+    FlutterSceneMapMaterialBinding? Function(
+      MapRenderBatch batch,
+    );
+
+/// Scene materialと、そのmaterial自身のtyped parameter blockの組。
+abstract interface class FlutterSceneMapMaterialBinding {
+  scene.Material get material;
+  scene.MaterialParameters get parameters;
+}
+
+/// productionのpreprocessed materialをparameter blockと一体で公開するbinding。
+final class FlutterScenePreprocessedMaterialBinding
+    implements FlutterSceneMapMaterialBinding {
+  const FlutterScenePreprocessedMaterialBinding(this.preprocessedMaterial);
+
+  final scene.PreprocessedMaterial preprocessedMaterial;
+
+  @override
+  scene.Material get material => preprocessedMaterial;
+
+  @override
+  scene.MaterialParameters get parameters => preprocessedMaterial.parameters;
+}
 
 enum FlutterSceneMeshBatchKind { baseMap, earthquakeAreaFill }
 
@@ -108,14 +130,14 @@ final class FlutterSceneMapAdapter {
     for (final entry in resolved) {
       applyFlutterSceneMeshBatchMaterial(
         plan: entry.plan,
-        material: entry.material,
+        parameters: entry.material.parameters,
       );
       for (final (index, packet) in entry.plan.batch.packets.indexed) {
         final node = scene.Node(
           localTransform: scene_math.Matrix4.fromList(
             entry.plan.batch.instanceTransforms[index],
           ),
-          mesh: scene.Mesh(_geometryFor(packet.mesh), entry.material),
+          mesh: scene.Mesh(_geometryFor(packet.mesh), entry.material.material),
         );
         applyFlutterSceneTranslucentSortPriority(
           node: node,
@@ -216,7 +238,7 @@ void applyFlutterSceneTranslucentSortPriority({
 
 typedef FlutterSceneResolvedMeshBatch = ({
   FlutterSceneMeshBatchPlan plan,
-  scene.PreprocessedMaterial material,
+  FlutterSceneMapMaterialBinding material,
 });
 
 List<FlutterSceneResolvedMeshBatch> resolveFlutterSceneMaterials({
@@ -241,42 +263,45 @@ List<FlutterSceneResolvedMeshBatch> resolveFlutterSceneMaterials({
   return List.unmodifiable(resolved);
 }
 
-/// materialがpipelineの必須parameterを全て公開していることを検証する。
+/// materialがpipelineの必須parameterを期待型で公開していることを検証する。
 void validateFlutterSceneMaterialParameterAvailability({
   required FlutterSceneMeshBatchPlan plan,
-  required scene.PreprocessedMaterial material,
+  required FlutterSceneMapMaterialBinding material,
 }) {
-  final requiredNames = switch (plan.batch.compatibility.pipeline) {
+  final requiredParameters = switch (plan.batch.compatibility.pipeline) {
     final pipeline when pipeline == baseMapFillPipelineKey => const {
-      'fill_color',
+      'fill_color': scene.FmatType.vec4,
     },
     final pipeline when pipeline == baseMapLinePipelineKey => const {
-      'line_color',
-      'half_width_ndc',
+      'line_color': scene.FmatType.vec4,
+      'half_width_ndc': scene.FmatType.vec2,
     },
     final pipeline when pipeline == earthquakeAreaFillPipelineKey => const {
-      'fill_color',
+      'fill_color': scene.FmatType.vec4,
     },
-    _ => const <String>{},
+    _ => const <String, scene.FmatType>{},
   };
-  final availableNames = material.parameters.parameterNames.toSet();
-  if (!availableNames.containsAll(requiredNames)) {
-    throw StateError(
-      'Flutter Scene material is missing parameters for '
-      '"${plan.batch.compatibility.pipeline.key}".',
-    );
+  for (final required in requiredParameters.entries) {
+    final actualType = material.parameters.parameterTypeOf(required.key);
+    if (actualType != required.value) {
+      throw StateError(
+        'Flutter Scene material parameter "${required.key}" for '
+        '"${plan.batch.compatibility.pipeline.key}" must be '
+        '${required.value.glslType}, got ${actualType?.glslType ?? 'missing'}.',
+      );
+    }
   }
 }
 
 void applyFlutterSceneMeshBatchMaterial({
   required FlutterSceneMeshBatchPlan plan,
-  required scene.PreprocessedMaterial material,
+  required scene.MaterialParameters parameters,
 }) {
   final compatibility = plan.batch.compatibility;
   switch (plan.kind) {
     case FlutterSceneMeshBatchKind.baseMap:
       applyBaseMapMaterialParameters(
-        material: material,
+        parameters: parameters,
         pipelineKey: compatibility.pipeline.key,
         bytes: compatibility.materialParameters.bytes,
       );
@@ -284,7 +309,7 @@ void applyFlutterSceneMeshBatchMaterial({
       final values = decodeEarthquakeAreaFillMaterialBytes(
         compatibility.materialParameters.bytes,
       );
-      material.parameters.setVec4(
+      parameters.setVec4(
         'fill_color',
         scene_math.Vector4(
           values.red,

@@ -106,7 +106,7 @@ BaseMapSceneGeometryArgs unpackBaseMapSceneGeometryArgs(MapPackedMesh mesh) {
   );
 }
 
-/// uniform blockのbyte列を[material]のparameterへ適用する。
+/// uniform blockのbyte列を[parameters]へ適用する。
 ///
 /// pipeline keyでfill/lineを判別し、それぞれの`.fmat`が宣言している
 /// parameter名へ書く。byte長が合わなければ
@@ -114,18 +114,18 @@ BaseMapSceneGeometryArgs unpackBaseMapSceneGeometryArgs(MapPackedMesh mesh) {
 /// `ArgumentError`を投げるため、pipelineとuniformの対応が崩れたまま
 /// 静かに誤った値をshaderへ渡すことはない。
 void applyBaseMapMaterialParameters({
-  required scene.PreprocessedMaterial material,
+  required scene.MaterialParameters parameters,
   required String pipelineKey,
   required Uint8List bytes,
 }) {
   if (pipelineKey == baseMapFillPipelineKey.key) {
     final values = decodeBaseMapFillMaterialBytes(bytes);
-    material.parameters.setColor('fill_color', values.color);
+    parameters.setColor('fill_color', values.color);
     return;
   }
   if (pipelineKey == baseMapLinePipelineKey.key) {
     final values = decodeBaseMapLineMaterialBytes(bytes);
-    material.parameters
+    parameters
       ..setColor('line_color', values.color)
       ..setVec2(
         'half_width_ndc',

@@ -306,8 +306,13 @@ class _BaseMapController extends ChangeNotifier {
   );
   late final _adapter = FlutterSceneMapAdapter(
     sceneGraph: sceneGraph,
-    materialFor: (batch) =>
-        _materialsByStyleLayerId?[batch.compatibility.batchKey.materialKey],
+    materialFor: (batch) {
+      final material =
+          _materialsByStyleLayerId?[batch.compatibility.batchKey.materialKey];
+      return material == null
+          ? null
+          : FlutterScenePreprocessedMaterialBinding(material);
+    },
     maxFramesInFlight: limits.maxFramesInFlight,
   );
   late final _scheduler = MapTileScheduler(

@@ -20,6 +20,7 @@ import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vector_math/vector_math.dart';
 
 final class _ObservationBatch implements MapSceneObservationBatch {
   const _ObservationBatch({
@@ -59,6 +60,17 @@ final class _RecordingSceneGraph with scene.SceneGraph {
 
   @override
   void removeAll() => children.clear();
+}
+
+final class _TestMaterialBinding implements FlutterSceneMapMaterialBinding {
+  _TestMaterialBinding({required this.parameters})
+    : material = scene.UnlitMaterial();
+
+  @override
+  final scene.Material material;
+
+  @override
+  final scene.MaterialParameters parameters;
 }
 
 void main() {
@@ -363,6 +375,88 @@ void main() {
       );
       expect(materialLookups, 0);
       expect(existingMaterialParameter, const Color(0xFF123456));
+      expect(sceneGraph.children, [same(existingNode)]);
+      expect(adapter.uploadedGeometryCount, 0);
+      expect(adapter.retiredGeometryCount, 0);
+      expect(adapter.liveGeometryCount, 0);
+    },
+  );
+
+  test(
+    'wrong typed later material leaves all material Scene and GPU state intact',
+    () {
+      scene.MaterialParameters fillParameters({required scene.FmatType type}) =>
+          scene.MaterialParameters.withLayout(
+            blockName: 'MaterialParams',
+            blockSizeBytes: 16,
+            parameters: {
+              'fill_color': (
+                type: type,
+                offset: 0,
+                sourceColor: false,
+              ),
+            },
+          );
+
+      final validParameters = fillParameters(type: scene.FmatType.vec4)
+        ..setColor('fill_color', const Color(0xFF123456));
+      final wrongTypedParameters = fillParameters(type: scene.FmatType.vec2)
+        ..setVec2('fill_color', Vector2(0.25, 0.75));
+      final validBinding = _TestMaterialBinding(
+        parameters: validParameters,
+      );
+      final wrongTypedBinding = _TestMaterialBinding(
+        parameters: wrongTypedParameters,
+      );
+      final invalidBase = createMapRenderSubmission(
+        frame: frame,
+        batches: [
+          ...baseSubmission().batches,
+          ...submission(
+            policy: mapSceneRenderPhasePolicy,
+            phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId),
+            materialKey: 'wrongTypedFill',
+            pipelineKey: baseMapFillPipelineKey.key,
+          ).batches,
+        ],
+      );
+      final value = MapSceneFrameSubmission(
+        baseMap: invalidBase,
+        earthquakeFill: emptySubmission(),
+        observationBatch: null,
+      );
+      final sceneGraph = _RecordingSceneGraph();
+      final existingNode = scene.Node();
+      sceneGraph.add(existingNode);
+      final adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: (batch) =>
+            switch (batch.compatibility.batchKey.materialKey) {
+              'countriesFill' => validBinding,
+              'wrongTypedFill' => wrongTypedBinding,
+              _ => null,
+            },
+        maxFramesInFlight: 2,
+      );
+
+      expect(
+        () => adapter.submitFrame(submission: value),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains('fill_color'),
+          ),
+        ),
+      );
+      expect(
+        validParameters.assignedValues['fill_color'],
+        const Color(0xFF123456),
+      );
+      expect(
+        wrongTypedParameters.assignedValues['fill_color'],
+        Vector2(0.25, 0.75),
+      );
       expect(sceneGraph.children, [same(existingNode)]);
       expect(adapter.uploadedGeometryCount, 0);
       expect(adapter.retiredGeometryCount, 0);
