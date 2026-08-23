@@ -11,6 +11,71 @@ import org.junit.Test
 
 class PendingLocationStoreTest {
     @Test
+    fun legacyLocationMigratesToThePendingRecord() {
+        val preferences = InMemorySharedPreferences()
+        preferences.edit()
+            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(35.0))
+            .putLong("pending_lon_bits", java.lang.Double.doubleToRawLongBits(139.0))
+            .putLong("pending_ts", 1_234_567L)
+            .commit()
+        val store = PendingLocationStore(TestContext(preferences)) { "migrated-id" }
+
+        val migrated = requireNotNull(
+            store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)
+        )
+
+        assertEquals("migrated-id", migrated.updateId)
+        assertEquals(35.0, migrated.latitude, 0.0)
+        assertEquals(139.0, migrated.longitude, 0.0)
+        assertEquals(0.0, migrated.accuracy, 0.0)
+        assertEquals(1_234_567L, migrated.timestampMillis)
+        assertEquals(
+            "migrated-id",
+            store.peek(PendingLocationStore.Consumer.APP_EFFECTS)?.updateId
+        )
+        assertFalse(preferences.contains("pending_lat_bits"))
+        assertFalse(preferences.contains("pending_lon_bits"))
+        assertFalse(preferences.contains("pending_ts"))
+    }
+
+    @Test
+    fun failedLegacyMigrationKeepsTheLegacyLocationForRetry() {
+        val preferences = InMemorySharedPreferences()
+        preferences.edit()
+            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(36.0))
+            .putLong("pending_lon_bits", java.lang.Double.doubleToRawLongBits(140.0))
+            .putLong("pending_ts", 2_345_678L)
+            .commit()
+        val store = PendingLocationStore(TestContext(preferences)) { "migrated-id" }
+        preferences.failNextCommit()
+
+        assertNull(store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION))
+        assertTrue(preferences.contains("pending_lat_bits"))
+        assertTrue(preferences.contains("pending_lon_bits"))
+        assertTrue(preferences.contains("pending_ts"))
+
+        assertEquals(
+            "migrated-id",
+            store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)?.updateId
+        )
+    }
+
+    @Test
+    fun incompleteLegacyLocationRemovesRawCoordinateKeys() {
+        val preferences = InMemorySharedPreferences()
+        preferences.edit()
+            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(35.0))
+            .putLong("pending_ts", 1_234_567L)
+            .commit()
+        val store = PendingLocationStore(TestContext(preferences))
+
+        assertNull(store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION))
+        assertFalse(preferences.contains("pending_lat_bits"))
+        assertFalse(preferences.contains("pending_lon_bits"))
+        assertFalse(preferences.contains("pending_ts"))
+    }
+
+    @Test
     fun staleAcknowledgeKeepsTheLatestLocation() {
         val store = PendingLocationStore(TestContext()) { "new-id" }
         val stored = requireNotNull(
@@ -70,9 +135,9 @@ class PendingLocationStoreTest {
 
     @Test
     fun failedSaveIsNotExposedAsPending() {
-        val store = PendingLocationStore(
-            TestContext(InMemorySharedPreferences(commitSucceeds = false))
-        ) { "new-id" }
+        val preferences = InMemorySharedPreferences()
+        val store = PendingLocationStore(TestContext(preferences)) { "new-id" }
+        preferences.failNextCommit()
 
         assertNull(
             store.save(
@@ -85,6 +150,105 @@ class PendingLocationStoreTest {
         assertNull(store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION))
         assertNull(store.peek(PendingLocationStore.Consumer.APP_EFFECTS))
     }
+
+    @Test
+    fun failedSaveRestoresThePreviousCompleteLocation() {
+        val preferences = InMemorySharedPreferences()
+        val updateIds = ArrayDeque(listOf("previous-id", "new-id"))
+        val store = PendingLocationStore(TestContext(preferences)) {
+            updateIds.removeFirst()
+        }
+        requireNotNull(
+            store.save(
+                latitude = 35.0,
+                longitude = 139.0,
+                accuracy = 10.0,
+                timestampMillis = 1_000L
+            )
+        )
+        preferences.failNextCommit()
+
+        assertNull(
+            store.save(
+                latitude = 36.0,
+                longitude = 140.0,
+                accuracy = 20.0,
+                timestampMillis = 2_000L
+            )
+        )
+
+        assertEquals(
+            "previous-id",
+            store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)?.updateId
+        )
+        assertEquals(
+            "previous-id",
+            store.peek(PendingLocationStore.Consumer.APP_EFFECTS)?.updateId
+        )
+    }
+
+    @Test
+    fun failedDeviceLocationAcknowledgeKeepsBothConsumersPending() {
+        val preferences = InMemorySharedPreferences()
+        val store = PendingLocationStore(TestContext(preferences)) { "pending-id" }
+        requireNotNull(
+            store.save(
+                latitude = 35.0,
+                longitude = 139.0,
+                accuracy = 10.0,
+                timestampMillis = 1_000L
+            )
+        )
+        preferences.failNextCommit()
+
+        assertFalse(
+            store.acknowledge(
+                updateId = "pending-id",
+                consumer = PendingLocationStore.Consumer.DEVICE_LOCATION
+            )
+        )
+        assertEquals(
+            "pending-id",
+            store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)?.updateId
+        )
+        assertEquals(
+            "pending-id",
+            store.peek(PendingLocationStore.Consumer.APP_EFFECTS)?.updateId
+        )
+    }
+
+    @Test
+    fun failedFinalAppEffectsAcknowledgeRestoresThePendingLocation() {
+        val preferences = InMemorySharedPreferences()
+        val store = PendingLocationStore(TestContext(preferences)) { "pending-id" }
+        requireNotNull(
+            store.save(
+                latitude = 35.0,
+                longitude = 139.0,
+                accuracy = 10.0,
+                timestampMillis = 1_000L
+            )
+        )
+        assertTrue(
+            store.acknowledge(
+                updateId = "pending-id",
+                consumer = PendingLocationStore.Consumer.DEVICE_LOCATION
+            )
+        )
+        preferences.failNextCommit()
+
+        assertFalse(
+            store.acknowledge(
+                updateId = "pending-id",
+                consumer = PendingLocationStore.Consumer.APP_EFFECTS
+            )
+        )
+        assertNull(store.peek(PendingLocationStore.Consumer.DEVICE_LOCATION))
+        assertEquals(
+            "pending-id",
+            store.peek(PendingLocationStore.Consumer.APP_EFFECTS)?.updateId
+        )
+    }
 }
 
 private class TestContext(
@@ -96,10 +260,13 @@ private class TestContext(
     override fun getSharedPreferences(name: String?, mode: Int): SharedPreferences = preferences
 }
 
-private class InMemorySharedPreferences(
-    private val commitSucceeds: Boolean = true
-) : SharedPreferences {
+private class InMemorySharedPreferences : SharedPreferences {
     private val values = mutableMapOf<String, Any?>()
+    private val commitResults = ArrayDeque<Boolean>()
+
+    fun failNextCommit() {
+        commitResults.addLast(false)
+    }
 
     override fun getAll(): Map<String, *> = values.toMap()
     override fun getString(key: String?, default: String?): String? =
@@ -116,7 +283,7 @@ private class InMemorySharedPreferences(
         values[key] as? Boolean ?: default
 
     override fun contains(key: String?): Boolean = values.containsKey(key)
-    override fun edit(): SharedPreferences.Editor = Editor(values, commitSucceeds)
+    override fun edit(): SharedPreferences.Editor = Editor(values, commitResults)
     override fun registerOnSharedPreferenceChangeListener(
         listener: SharedPreferences.OnSharedPreferenceChangeListener?
     ) = Unit
@@ -127,7 +294,7 @@ private class InMemorySharedPreferences(
 
     private class Editor(
         private val values: MutableMap<String, Any?>,
-        private val commitSucceeds: Boolean
+        private val commitResults: ArrayDeque<Boolean>
     ) : SharedPreferences.Editor {
         private val updates = mutableMapOf<String, Any?>()
         private val removals = mutableSetOf<String>()
@@ -147,7 +314,7 @@ private class InMemorySharedPreferences(
         override fun clear(): SharedPreferences.Editor = apply { clear = true }
         override fun commit(): Boolean {
             applyChanges()
-            return commitSucceeds
+            return commitResults.removeFirstOrNull() ?: true
         }
 
         override fun apply() = applyChanges()
