@@ -240,6 +240,7 @@ final class _MvtFeatureDecoder {
       );
     }
     final properties = <String, String>{};
+    final seenKeys = <String>{};
     for (var index = 0; index < tags.length; index += 2) {
       final keyIndex = tags[index];
       final valueIndex = tags[index + 1];
@@ -249,7 +250,7 @@ final class _MvtFeatureDecoder {
         );
       }
       final key = keys[keyIndex];
-      if (properties.containsKey(key)) {
+      if (!seenKeys.add(key)) {
         throw const MvtDecodeException.malformedProtobuf(
           reason: 'A feature has duplicate property keys.',
         );

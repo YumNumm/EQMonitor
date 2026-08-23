@@ -62,6 +62,7 @@ double _signedArea2(Int32List ring) {
 Uint8List _propertyTile({
   List<int> tags = const [0, 0],
   Uint8List? value,
+  List<Uint8List>? values,
 }) {
   final feature = _builder.feature(
     geomType: MvtFixtureBuilder.geomTypePoint,
@@ -73,7 +74,7 @@ Uint8List _propertyTile({
       _builder.layer(
         fields: [
           _builder.key('code'),
-          value ?? _builder.stringValue('1300'),
+          ...(values ?? [value ?? _builder.stringValue('1300')]),
           _builder.encodeTag(fieldNumber: 2, wireType: 2),
           _builder.encodeLengthDelimited(feature),
           _builder.encodeTag(fieldNumber: 1, wireType: 2),
@@ -409,6 +410,27 @@ void main() {
         throwsA(isA<MvtDecodeException>()),
       );
     });
+
+    test(
+      'rejects duplicate property keys when the first Value is non-string',
+      () {
+        final valueTables = [
+          [_builder.intValue(1), _builder.stringValue('second')],
+          [_builder.intValue(1), _builder.intValue(2)],
+        ];
+        for (final values in valueTables) {
+          final tile = _propertyTile(tags: [0, 0, 0, 1], values: values);
+
+          expect(
+            () => decodeMvtTile(
+              tile,
+              limits: _limits.copyWith(maxTagsPerFeature: 4),
+            ),
+            throwsA(isA<MvtDecodeException>()),
+          );
+        }
+      },
+    );
 
     test('rejects a Value containing multiple fields', () {
       final tile = _propertyTile(
