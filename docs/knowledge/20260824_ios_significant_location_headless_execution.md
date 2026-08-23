@@ -24,6 +24,12 @@
 
 ## 保存・Engine・完了順序
 
+headless Engine用のplugin registrantは、Storyboard / UISceneによるimplicit UI Engineの
+初期化callbackに依存させない。`application(_:didFinishLaunchingWithOptions:)`の先頭で
+同期設定し、その後にBGTask handler登録と`.location`監視復元を行う。background-only
+launchではUI sceneが生成されない場合があるため、`didInitializeImplicitFlutterEngine`は
+UI Engine自身へのplugin登録だけを担う。
+
 位置はEngine起動やcallback handle確認より先に、AfterFirstUnlockで読めるatomic storageへ保存する。
 callback handle未保存、plugin registrant未準備、Engine起動失敗、network失敗ではDevice Location
 consumerをacknowledgeせず、pendingを後続実行へ残す。
@@ -37,6 +43,9 @@ consumerをacknowledgeせず、pendingを後続実行へ残す。
 
 expirationとDart完了が競合しても先着だけがcleanupする。処理中に新しい位置が保存された場合は
 同じEngineへ重複launchせず、active cleanup後に最新update IDだけを再実行する。
+`beginBackgroundTask`が`.invalid`を返した場合はbackground実行時間を確保できていないため、
+Engineを起動しない。active stateを`retry`で1回だけfinalizeし、pendingを保持してretry requestを
+登録する。
 
 ## BGTaskScheduler
 
@@ -45,6 +54,12 @@ expirationとDart完了が競合しても先着だけがcleanupする。処理�
 `BGTaskSchedulerPermittedIdentifiers`へ登録する。launch handlerは
 `application(_:didFinishLaunchingWithOptions:)`が終わる前に各identifierにつき1回だけ登録する。
 同じidentifierのrequestを再submitすると未実行requestを置き換える。
+
+App RefreshとProcessingのsubmitは独立した`do/catch`で行う。一方が失敗しても他方をsubmitし、
+少なくとも一方が成功したかを結果として保持する。失敗診断にはtask identifierとOS error code
+だけを記録し、位置やcallback payloadを含めない。両方が失敗してもpendingを削除せず、次回app
+launchまたはforeground移行時にpendingがあれば再submitする。Background App Refresh無効時などは
+submit自体が失敗し得るため、「retry登録済み」と無条件に扱わない。
 
 各taskは最初にexpiration handlerを設定し、終了時に`setTaskCompleted(success:)`を1回だけ呼ぶ。
 expirationではEngineを破棄してfailure完了とし、pendingを残して次回retryへ渡す。
