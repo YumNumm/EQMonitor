@@ -166,3 +166,72 @@ instance dataはsnapshot revisionごとに一度だけ構築・uploadする。ca
 view-projection/viewport uniformだけを更新し、instance bufferを再生成しない。
 snapshot置換、background、surface generation変更、disposeでは既存geometryをretireし、
 `MapGpuResourceLedger` と同じframes-in-flight方針で参照を落とす。
+
+### 6. app変換とデバッグ画面
+
+app側に `EarthquakeMapOverlayBuilder` を置き、既存
+`EarthquakeHistoryFillLayerBuilder` と `EarthquakeHistoryStationGeoJsonBuilder` が持つ
+分類規則をJSON/MapLibre型へ変換せず再利用可能なpure logicとして整理する。
+
+- 市区町村は全震度階級を横断し、同じcodeを最大震度のbucketにだけ入れる
+- 地域も同じcodeを最大震度のbucketにだけ入れる
+- 観測点は `station.code` を安定IDとし、座標と実測最大震度を使う
+- 色は `activeColorSetProvider.intensity` からapp側で確定してsnapshotへ渡す
+- 最大震度観測点は既存auto表示相当の大きい半径、それ以外は小さい半径にする
+
+デバッグ画面は既定の地震一覧をevent ID降順・震度1以上で取得し、先頭eventの詳細を
+取得する。取得中はbase mapを維持してprogressを重ねる。失敗時はbase mapを維持して
+再試行可能なエラーを重ねる。詳細に震度がなければ「震度データなし」と表示し、空の
+正常snapshotを捏造しない。
+
+## エラーとlifecycle
+
+- MVT/property破損: typed exception。tile cacheへ格納しない
+- 区域code欠損・非string: 該当featureだけoverlay対象外。base map geometryは維持
+- 古いsnapshot revision: rejectし、現在のoverlayを維持
+- 地震取得失敗: base mapを維持し、app overlay UIにerrorを表示
+- background/surface再生成: GPU resourceを捨て、CPU snapshot/packed meshから再構築
+- 観測点0件: Fillは描画し、観測点batchは作らない
+- Fill対象0件: 観測点は描画し、空geometry/nodeは作らない
+
+## テスト
+
+### `packages/eqmonitor_map`
+
+- MVT keys/values/tagsの正常decode
+- tag index、奇数tag、重複key、string byte上限、件数上限のfail closed
+- 区域codeとfeature meshの対応、同code複数segment
+- exact tileのみをoverlayへ使い、親fallbackを使わないこと
+- region/city/pointのcanonical render order
+- snapshot validation、revision低下拒否、source交換
+- station instance buffer byte一致、座標投影、pixel→NDC半径
+- Scene adapterのpure引数組み立てと1 geometry / 1 node契約
+- 既存package全テストと `dart analyze . --fatal-infos`
+
+### `app`
+
+- 同一region/city codeは最大震度だけに属する
+- 観測点ID・座標・色・最大震度半径の変換
+- loading/error/no-intensity/dataの表示分岐
+- 関連テストと対象 `flutter analyze`
+
+### platform smoke
+
+iOS Simulatorでデバッグ画面を開き、次を画面とlogで確認する。
+
+- 日本のベース地図上に実際の地震の地域または市区町村が震度色で塗られる
+- 観測点円が対応位置へ表示される
+- pan/pinchでFillと観測点が同じcameraへ追従する
+- background/foreground復帰後に再表示される
+- exception counterや連続Scene/GPU例外がない
+
+SimulatorでFlutter GPU/Scene固有の表示を確認できない場合は、コード上の成功に
+置き換えず、iOS実機またはAndroid端末へ移して同じchecklistを実行する。
+
+## 完了条件
+
+- 実地震データから生成したJMA区域塗りと観測点円がFlutter Scene/GPUで同時表示される
+- `eqmonitor_map` がapp固有型やMapLibre/GeoJSONへ依存しない
+- event overlayは親tile・異revisionへfallbackしない
+- 既存MapLibre経路は変更・削除されない
+- 自動テストと解析が成功し、platform smokeの環境・結果・残リスクが記録される
