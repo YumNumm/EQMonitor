@@ -1503,8 +1503,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1512,8 +1512,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_android"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1521,8 +1521,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_ios"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1530,8 +1530,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_platform_interface"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1539,8 +1539,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_web"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1548,8 +1548,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_webview"
-      ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
-      resolved-ref: "55dfdac42e142f31c64a00c9615edf61d3ffb615"
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
