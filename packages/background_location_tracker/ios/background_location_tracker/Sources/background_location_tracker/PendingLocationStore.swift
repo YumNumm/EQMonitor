@@ -1,14 +1,20 @@
+import Darwin
 import Foundation
 
 enum BackgroundLocationStorageKey {
     static let callbackHandle = "blt_callback_handle"
-    static let updateId = "blt_pending_update_id"
-    static let latitude = "blt_pending_latitude"
-    static let longitude = "blt_pending_longitude"
-    static let accuracy = "blt_pending_accuracy"
-    static let timestampMillis = "blt_pending_timestamp_millis"
-    static let deviceLocationPending = "blt_pending_device_location"
-    static let appEffectsPending = "blt_pending_app_effects"
+
+    static let legacyLatitude = "blt_pending_lat"
+    static let legacyLongitude = "blt_pending_lon"
+    static let legacyTimestampSeconds = "blt_pending_ts"
+
+    static let roundZeroUpdateId = "blt_pending_update_id"
+    static let roundZeroLatitude = "blt_pending_latitude"
+    static let roundZeroLongitude = "blt_pending_longitude"
+    static let roundZeroAccuracy = "blt_pending_accuracy"
+    static let roundZeroTimestampMillis = "blt_pending_timestamp_millis"
+    static let roundZeroDeviceLocationPending = "blt_pending_device_location"
+    static let roundZeroAppEffectsPending = "blt_pending_app_effects"
 }
 
 struct StoredPendingLocation: Equatable {
@@ -19,6 +25,222 @@ struct StoredPendingLocation: Equatable {
     let timestampMillis: Int64
 }
 
+enum PendingLocationRecordStorageReadResult {
+    case missing
+    case data(Data)
+    case failure
+}
+
+protocol PendingLocationRecordStorage: AnyObject {
+    func read() -> PendingLocationRecordStorageReadResult
+    func write(_ data: Data) -> Bool
+    func remove() -> Bool
+}
+
+final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage {
+    private let fileManager: FileManager
+    private let fileURL: URL?
+
+    init(
+        fileManager: FileManager = .default,
+        fileURL: URL? = AtomicFilePendingLocationRecordStorage.defaultFileURL()
+    ) {
+        self.fileManager = fileManager
+        self.fileURL = fileURL
+    }
+
+    func read() -> PendingLocationRecordStorageReadResult {
+        guard let fileURL else {
+            return .failure
+        }
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            return .missing
+        }
+        do {
+            return .data(try Data(contentsOf: fileURL))
+        } catch {
+            return .failure
+        }
+    }
+
+    func write(_ data: Data) -> Bool {
+        guard let fileURL else {
+            return false
+        }
+        let previousData: Data?
+        if fileManager.fileExists(atPath: fileURL.path) {
+            do {
+                previousData = try Data(contentsOf: fileURL)
+            } catch {
+                return false
+            }
+        } else {
+            previousData = nil
+        }
+
+        do {
+            try fileManager.createDirectory(
+                at: fileURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            try data.write(
+                to: fileURL,
+                options: [.atomic, .completeFileProtectionUnlessOpen]
+            )
+            try synchronizeFile(at: fileURL)
+            try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
+            return true
+        } catch {
+            restore(previousData, at: fileURL)
+            return false
+        }
+    }
+
+    func remove() -> Bool {
+        guard let fileURL else {
+            return false
+        }
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            return true
+        }
+        let previousData: Data
+        do {
+            previousData = try Data(contentsOf: fileURL)
+        } catch {
+            return false
+        }
+
+        do {
+            try fileManager.removeItem(at: fileURL)
+            try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
+            return true
+        } catch {
+            restore(previousData, at: fileURL)
+            return false
+        }
+    }
+
+    private static func defaultFileURL() -> URL? {
+        FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first?
+            .appendingPathComponent(
+                "net.yumnumm.background_location_tracker",
+                isDirectory: true
+            )
+            .appendingPathComponent("pending_location_v2.plist")
+    }
+
+    private func synchronizeFile(at fileURL: URL) throws {
+        let handle = try FileHandle(forWritingTo: fileURL)
+        try handle.synchronize()
+        try handle.close()
+    }
+
+    private func synchronizeDirectory(at directoryURL: URL) throws {
+        let descriptor = Darwin.open(directoryURL.path, O_RDONLY)
+        guard descriptor >= 0 else {
+            throw AtomicFileStorageError.posix(errno)
+        }
+        defer { Darwin.close(descriptor) }
+        guard Darwin.fsync(descriptor) == 0 else {
+            throw AtomicFileStorageError.posix(errno)
+        }
+    }
+
+    private func restore(_ data: Data?, at fileURL: URL) {
+        do {
+            if let data {
+                try data.write(
+                    to: fileURL,
+                    options: [.atomic, .completeFileProtectionUnlessOpen]
+                )
+                try synchronizeFile(at: fileURL)
+            } else if fileManager.fileExists(atPath: fileURL.path) {
+                try fileManager.removeItem(at: fileURL)
+            }
+            try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
+        } catch {
+            // 呼出元へ失敗を返す。次回readでは残存recordを再検証する。
+        }
+    }
+}
+
+private enum AtomicFileStorageError: Error {
+    case posix(Int32)
+}
+
+private struct PendingLocationRecord: Codable, Equatable {
+    let schemaVersion: Int
+    let updateId: String
+    let latitude: Double
+    let longitude: Double
+    let accuracy: Double
+    let timestampMillis: Int64
+    let deviceLocationPending: Bool
+    let appEffectsPending: Bool
+
+    var location: StoredPendingLocation {
+        StoredPendingLocation(
+            updateId: updateId,
+            latitude: latitude,
+            longitude: longitude,
+            accuracy: accuracy,
+            timestampMillis: timestampMillis
+        )
+    }
+
+    var hasPendingConsumer: Bool {
+        deviceLocationPending || appEffectsPending
+    }
+
+    var isValid: Bool {
+        schemaVersion == 1
+            && !updateId.isEmpty
+            && latitude.isFinite
+            && longitude.isFinite
+            && accuracy.isFinite
+            && timestampMillis > 0
+    }
+
+    func isPending(consumer: PendingLocationStore.Consumer) -> Bool {
+        switch consumer {
+        case .deviceLocation:
+            deviceLocationPending
+        case .appEffects:
+            appEffectsPending
+        }
+    }
+
+    func acknowledging(consumer: PendingLocationStore.Consumer) -> Self {
+        switch consumer {
+        case .deviceLocation:
+            Self(
+                schemaVersion: schemaVersion,
+                updateId: updateId,
+                latitude: latitude,
+                longitude: longitude,
+                accuracy: accuracy,
+                timestampMillis: timestampMillis,
+                deviceLocationPending: false,
+                appEffectsPending: appEffectsPending
+            )
+        case .appEffects:
+            Self(
+                schemaVersion: schemaVersion,
+                updateId: updateId,
+                latitude: latitude,
+                longitude: longitude,
+                accuracy: accuracy,
+                timestampMillis: timestampMillis,
+                deviceLocationPending: deviceLocationPending,
+                appEffectsPending: false
+            )
+        }
+    }
+}
+
 final class PendingLocationStore {
     enum Consumer {
         case deviceLocation
@@ -27,15 +249,21 @@ final class PendingLocationStore {
 
     private static let lock = NSLock()
 
-    private let userDefaults: UserDefaults
+    private let storage: PendingLocationRecordStorage
+    private let legacyUserDefaults: UserDefaults
     private let updateIdProvider: () -> String
+    private let encoder = PropertyListEncoder()
+    private let decoder = PropertyListDecoder()
 
     init(
-        userDefaults: UserDefaults = .standard,
+        storage: PendingLocationRecordStorage = AtomicFilePendingLocationRecordStorage(),
+        legacyUserDefaults: UserDefaults = .standard,
         updateIdProvider: @escaping () -> String = { UUID().uuidString }
     ) {
-        self.userDefaults = userDefaults
+        self.storage = storage
+        self.legacyUserDefaults = legacyUserDefaults
         self.updateIdProvider = updateIdProvider
+        encoder.outputFormat = .binary
     }
 
     func save(
@@ -47,111 +275,202 @@ final class PendingLocationStore {
         Self.lock.lock()
         defer { Self.lock.unlock() }
 
-        let location = StoredPendingLocation(
+        let record = PendingLocationRecord(
+            schemaVersion: 1,
             updateId: updateIdProvider(),
             latitude: latitude,
             longitude: longitude,
             accuracy: accuracy,
-            timestampMillis: timestampMillis
+            timestampMillis: timestampMillis,
+            deviceLocationPending: true,
+            appEffectsPending: true
         )
-        userDefaults.set(location.updateId, forKey: BackgroundLocationStorageKey.updateId)
-        userDefaults.set(location.latitude, forKey: BackgroundLocationStorageKey.latitude)
-        userDefaults.set(location.longitude, forKey: BackgroundLocationStorageKey.longitude)
-        userDefaults.set(location.accuracy, forKey: BackgroundLocationStorageKey.accuracy)
-        userDefaults.set(
-            location.timestampMillis,
-            forKey: BackgroundLocationStorageKey.timestampMillis
-        )
-        userDefaults.set(true, forKey: BackgroundLocationStorageKey.deviceLocationPending)
-        userDefaults.set(true, forKey: BackgroundLocationStorageKey.appEffectsPending)
-
-        guard readLocation() == location,
-              userDefaults.bool(forKey: BackgroundLocationStorageKey.deviceLocationPending),
-              userDefaults.bool(forKey: BackgroundLocationStorageKey.appEffectsPending)
-        else {
-            clearLocation()
+        guard record.isValid, write(record) else {
             return nil
         }
-        return location
+        cleanupLegacyRecords()
+        return record.location
     }
 
     func peek(consumer: Consumer) -> StoredPendingLocation? {
         Self.lock.lock()
         defer { Self.lock.unlock() }
 
-        guard userDefaults.bool(forKey: pendingKey(for: consumer)) else {
+        guard let record = readOrMigrateRecord(), record.isPending(consumer: consumer) else {
             return nil
         }
-        return readLocation()
+        return record.location
     }
 
     func acknowledge(updateId: String, consumer: Consumer) -> Bool {
         Self.lock.lock()
         defer { Self.lock.unlock() }
 
-        guard readLocation()?.updateId == updateId,
-              userDefaults.bool(forKey: pendingKey(for: consumer))
+        guard let record = readOrMigrateRecord(),
+              record.updateId == updateId,
+              record.isPending(consumer: consumer)
         else {
             return false
         }
-        userDefaults.set(false, forKey: pendingKey(for: consumer))
-        if allConsumersAcknowledged {
-            clearLocation()
-            return readLocation() == nil
+        let updatedRecord = record.acknowledging(consumer: consumer)
+        if updatedRecord.hasPendingConsumer {
+            return write(updatedRecord)
         }
-        return !userDefaults.bool(forKey: pendingKey(for: consumer))
+        return storage.remove()
     }
 
-    private var allConsumersAcknowledged: Bool {
-        !userDefaults.bool(forKey: BackgroundLocationStorageKey.deviceLocationPending)
-            && !userDefaults.bool(forKey: BackgroundLocationStorageKey.appEffectsPending)
-    }
-
-    private func pendingKey(for consumer: Consumer) -> String {
-        switch consumer {
-        case .deviceLocation:
-            BackgroundLocationStorageKey.deviceLocationPending
-        case .appEffects:
-            BackgroundLocationStorageKey.appEffectsPending
+    private func readOrMigrateRecord() -> PendingLocationRecord? {
+        switch storage.read() {
+        case .data(let data):
+            guard let record = try? decoder.decode(PendingLocationRecord.self, from: data),
+                  record.isValid,
+                  record.hasPendingConsumer
+            else {
+                _ = storage.remove()
+                return nil
+            }
+            cleanupLegacyRecords()
+            return record
+        case .failure:
+            return nil
+        case .missing:
+            return migrateRoundZeroRecord() ?? migrateLegacyRecord()
         }
     }
 
-    private func readLocation() -> StoredPendingLocation? {
-        guard let updateId = userDefaults.string(forKey: BackgroundLocationStorageKey.updateId),
-              let latitude = userDefaults.object(
-                  forKey: BackgroundLocationStorageKey.latitude
-              ) as? Double,
-              let longitude = userDefaults.object(
-                  forKey: BackgroundLocationStorageKey.longitude
-              ) as? Double,
-              let accuracy = userDefaults.object(
-                  forKey: BackgroundLocationStorageKey.accuracy
-              ) as? Double,
-              let timestamp = userDefaults.object(
-                  forKey: BackgroundLocationStorageKey.timestampMillis
-              ) as? NSNumber
-        else {
+    private func migrateRoundZeroRecord() -> PendingLocationRecord? {
+        guard roundZeroKeys.contains(where: {
+            legacyUserDefaults.object(forKey: $0) != nil
+        }) else {
             return nil
         }
-        return StoredPendingLocation(
+        guard roundZeroKeys.allSatisfy({ legacyUserDefaults.object(forKey: $0) != nil }),
+              let updateId = legacyUserDefaults.string(
+                  forKey: BackgroundLocationStorageKey.roundZeroUpdateId
+              ),
+              let latitude = legacyUserDefaults.object(
+                  forKey: BackgroundLocationStorageKey.roundZeroLatitude
+              ) as? Double,
+              let longitude = legacyUserDefaults.object(
+                  forKey: BackgroundLocationStorageKey.roundZeroLongitude
+              ) as? Double,
+              let accuracy = legacyUserDefaults.object(
+                  forKey: BackgroundLocationStorageKey.roundZeroAccuracy
+              ) as? Double,
+              let timestamp = legacyUserDefaults.object(
+                  forKey: BackgroundLocationStorageKey.roundZeroTimestampMillis
+              ) as? NSNumber
+        else {
+            cleanup(keys: roundZeroKeys)
+            return nil
+        }
+        let record = PendingLocationRecord(
+            schemaVersion: 1,
             updateId: updateId,
             latitude: latitude,
             longitude: longitude,
             accuracy: accuracy,
-            timestampMillis: timestamp.int64Value
+            timestampMillis: timestamp.int64Value,
+            deviceLocationPending: legacyUserDefaults.bool(
+                forKey: BackgroundLocationStorageKey.roundZeroDeviceLocationPending
+            ),
+            appEffectsPending: legacyUserDefaults.bool(
+                forKey: BackgroundLocationStorageKey.roundZeroAppEffectsPending
+            )
         )
+        guard record.isValid, record.hasPendingConsumer else {
+            cleanup(keys: roundZeroKeys)
+            return nil
+        }
+        guard write(record) else {
+            return nil
+        }
+        cleanup(keys: roundZeroKeys)
+        return record
     }
 
-    private func clearLocation() {
-        let keys = [
-            BackgroundLocationStorageKey.updateId,
-            BackgroundLocationStorageKey.latitude,
-            BackgroundLocationStorageKey.longitude,
-            BackgroundLocationStorageKey.accuracy,
-            BackgroundLocationStorageKey.timestampMillis,
-            BackgroundLocationStorageKey.deviceLocationPending,
-            BackgroundLocationStorageKey.appEffectsPending,
-        ]
-        keys.forEach(userDefaults.removeObject(forKey:))
+    private func migrateLegacyRecord() -> PendingLocationRecord? {
+        guard legacyKeys.contains(where: {
+            legacyUserDefaults.object(forKey: $0) != nil
+        }) else {
+            return nil
+        }
+        guard let latitude = legacyUserDefaults.object(
+            forKey: BackgroundLocationStorageKey.legacyLatitude
+        ) as? Double,
+            let longitude = legacyUserDefaults.object(
+                forKey: BackgroundLocationStorageKey.legacyLongitude
+            ) as? Double,
+            let timestampSeconds = legacyUserDefaults.object(
+                forKey: BackgroundLocationStorageKey.legacyTimestampSeconds
+            ) as? Double
+        else {
+            cleanup(keys: legacyKeys)
+            return nil
+        }
+        let timestampMillisDouble = (timestampSeconds * 1000).rounded()
+        guard timestampMillisDouble.isFinite,
+              timestampMillisDouble > 0,
+              timestampMillisDouble <= Double(Int64.max)
+        else {
+            cleanup(keys: legacyKeys)
+            return nil
+        }
+        let record = PendingLocationRecord(
+            schemaVersion: 1,
+            updateId: updateIdProvider(),
+            latitude: latitude,
+            longitude: longitude,
+            accuracy: 0,
+            timestampMillis: Int64(timestampMillisDouble),
+            deviceLocationPending: true,
+            appEffectsPending: true
+        )
+        guard record.isValid else {
+            cleanup(keys: legacyKeys)
+            return nil
+        }
+        guard write(record) else {
+            return nil
+        }
+        cleanup(keys: legacyKeys)
+        return record
     }
+
+    private func write(_ record: PendingLocationRecord) -> Bool {
+        guard let data = try? encoder.encode(record) else {
+            return false
+        }
+        return storage.write(data)
+    }
+
+    private func cleanupLegacyRecords() {
+        cleanup(keys: roundZeroKeys + legacyKeys)
+    }
+
+    private func cleanup(keys: [String]) {
+        guard keys.contains(where: {
+            legacyUserDefaults.object(forKey: $0) != nil
+        }) else {
+            return
+        }
+        keys.forEach(legacyUserDefaults.removeObject(forKey:))
+        legacyUserDefaults.synchronize()
+    }
+
+    private let legacyKeys = [
+        BackgroundLocationStorageKey.legacyLatitude,
+        BackgroundLocationStorageKey.legacyLongitude,
+        BackgroundLocationStorageKey.legacyTimestampSeconds,
+    ]
+
+    private let roundZeroKeys = [
+        BackgroundLocationStorageKey.roundZeroUpdateId,
+        BackgroundLocationStorageKey.roundZeroLatitude,
+        BackgroundLocationStorageKey.roundZeroLongitude,
+        BackgroundLocationStorageKey.roundZeroAccuracy,
+        BackgroundLocationStorageKey.roundZeroTimestampMillis,
+        BackgroundLocationStorageKey.roundZeroDeviceLocationPending,
+        BackgroundLocationStorageKey.roundZeroAppEffectsPending,
+    ]
 }
