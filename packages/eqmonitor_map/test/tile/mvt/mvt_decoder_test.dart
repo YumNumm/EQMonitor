@@ -38,6 +38,10 @@ const _limits = MvtDecodeLimits(
   maxVerticesPerRing: 256,
   maxCommandsPerFeature: 1024,
   maxLayerNameBytes: 64,
+  maxKeysPerLayer: 64,
+  maxValuesPerLayer: 20000,
+  maxTagsPerFeature: 64,
+  maxPropertyStringBytes: 256,
 );
 
 /// 符号付き面積の2倍(shoelace公式)。ringの巻き方向を符号で比較するのに使う。
@@ -53,6 +57,33 @@ double _signedArea2(Int32List ring) {
     sum += (x1 * y2 - x2 * y1).toDouble();
   }
   return sum;
+}
+
+Uint8List _propertyTile({
+  List<int> tags = const [0, 0],
+  Uint8List? value,
+}) {
+  final feature = _builder.feature(
+    geomType: MvtFixtureBuilder.geomTypePoint,
+    rawCommands: _builder.moveTo([(1, 2)]),
+    tags: tags,
+  );
+  return _builder.buildTile(
+    layers: [
+      _builder.layer(
+        fields: [
+          _builder.key('code'),
+          value ?? _builder.stringValue('1300'),
+          _builder.encodeTag(fieldNumber: 2, wireType: 2),
+          _builder.encodeLengthDelimited(feature),
+          _builder.encodeTag(fieldNumber: 1, wireType: 2),
+          _builder.encodeLengthDelimited(Uint8List.fromList('areas'.codeUnits)),
+          _builder.encodeTag(fieldNumber: 15, wireType: 0),
+          _builder.encodeVarint(2),
+        ],
+      ),
+    ],
+  );
 }
 
 void main() {
@@ -269,40 +300,214 @@ void main() {
       expect(decoded.layers.single.features.single.rings.single, [1, 2]);
     });
 
-    test(
-      'ignores properties (keys/values) and feature id without storing them',
-      () {
-        final feature = _builder.buildFeature(
-          geomType: MvtFixtureBuilder.geomTypePoint,
-          rawCommands: _builder.moveTo([(1, 2)]),
-          includeId: true,
-        );
-        final layerBody = _builder.buildLayer(
-          name: 'with_properties',
-          features: [feature],
-        );
-        final withKeysAndValues = BytesBuilder(copy: false)
-          ..add(layerBody)
-          ..add(_builder.encodeTag(fieldNumber: 3, wireType: 2))
-          ..add(
-            _builder.encodeLengthDelimited(
-              Uint8List.fromList('name'.codeUnits),
-            ),
-          )
-          ..add(_builder.encodeTag(fieldNumber: 4, wireType: 2))
-          ..add(_builder.encodeLengthDelimited(Uint8List(3)));
-        final tile = _builder.buildTile(
-          layers: [withKeysAndValues.toBytes()],
-        );
+    test('resolves tags when features precede keys and values', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.layer(
+            fields: [
+              _builder.layerFeature(
+                _builder.feature(
+                  geomType: MvtFixtureBuilder.geomTypePoint,
+                  rawCommands: _builder.moveTo([(1, 2)]),
+                  tags: [0, 0],
+                  propertiesBeforeGeometry: true,
+                ),
+              ),
+              _builder.key('code'),
+              _builder.stringValue('1300'),
+              _builder.encodeTag(fieldNumber: 15, wireType: 0),
+              _builder.encodeVarint(2),
+              _builder.encodeTag(fieldNumber: 1, wireType: 2),
+              _builder.encodeLengthDelimited(
+                Uint8List.fromList('areas'.codeUnits),
+              ),
+            ],
+          ),
+        ],
+      );
 
-        final decoded = decodeMvtTile(tile, limits: _limits);
+      final properties = decodeMvtTile(
+        tile,
+        limits: _limits,
+      ).layers.single.features.single.properties;
 
-        final decodedFeature = decoded.layers.single.features.single;
-        expect(decodedFeature.rings.single, [1, 2]);
-        // MvtFeatureにはpropertiesやidを保持するフィールドが無いこと自体が
-        // このテストの検証対象。
-      },
-    );
+      expect(properties, {'code': '1300'});
+      expect(() => properties['code'] = 'changed', throwsUnsupportedError);
+    });
+
+    test('omits non-string values from properties', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.layer(
+            fields: [
+              _builder.key('numeric'),
+              _builder.intValue(1),
+              _builder.encodeTag(fieldNumber: 2, wireType: 2),
+              _builder.encodeLengthDelimited(
+                _builder.feature(
+                  geomType: MvtFixtureBuilder.geomTypePoint,
+                  rawCommands: _builder.moveTo([(1, 2)]),
+                  tags: [0, 0],
+                ),
+              ),
+              _builder.encodeTag(fieldNumber: 1, wireType: 2),
+              _builder.encodeLengthDelimited(
+                Uint8List.fromList('areas'.codeUnits),
+              ),
+              _builder.encodeTag(fieldNumber: 15, wireType: 0),
+              _builder.encodeVarint(2),
+            ],
+          ),
+        ],
+      );
+
+      final properties = decodeMvtTile(
+        tile,
+        limits: _limits,
+      ).layers.single.features.single.properties;
+
+      expect(properties, isEmpty);
+    });
+  });
+
+  group('property rejection', () {
+    test('rejects a feature with an odd number of tags', () {
+      final tile = _propertyTile(tags: [0]);
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects a tag key index outside the layer key table', () {
+      final tile = _propertyTile(tags: [1, 0]);
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects a tag value index outside the layer value table', () {
+      final tile = _propertyTile(tags: [0, 1]);
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects duplicate property keys in a feature', () {
+      final tile = _propertyTile(tags: [0, 0, 0, 0]);
+
+      expect(
+        () => decodeMvtTile(
+          tile,
+          limits: _limits.copyWith(maxTagsPerFeature: 4),
+        ),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects a Value containing multiple fields', () {
+      final tile = _propertyTile(
+        value: _builder.value(
+          fields: [_builder.valueStringField('a'), _builder.valueIntField(1)],
+        ),
+      );
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects an invalid UTF-8 property string', () {
+      final tile = _propertyTile(
+        value: _builder.stringValueBytes(Uint8List.fromList([0xFF])),
+      );
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits),
+        throwsA(isA<MvtDecodeException>()),
+      );
+    });
+
+    test('rejects a property string exceeding maxPropertyStringBytes', () {
+      final tile = _propertyTile(value: _builder.stringValue('12345'));
+
+      expect(
+        () => decodeMvtTile(
+          tile,
+          limits: _limits.copyWith(maxPropertyStringBytes: 4),
+        ),
+        throwsA(isA<MvtLimitExceededException>()),
+      );
+    });
+
+    test('rejects a layer exceeding maxKeysPerLayer', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.layer(
+            fields: [
+              _builder.key('a'),
+              _builder.key('b'),
+              _builder.key('c'),
+              _builder.encodeTag(fieldNumber: 1, wireType: 2),
+              _builder.encodeLengthDelimited(
+                Uint8List.fromList('areas'.codeUnits),
+              ),
+              _builder.encodeTag(fieldNumber: 15, wireType: 0),
+              _builder.encodeVarint(2),
+            ],
+          ),
+        ],
+      );
+
+      expect(
+        () => decodeMvtTile(tile, limits: _limits.copyWith(maxKeysPerLayer: 2)),
+        throwsA(isA<MvtLimitExceededException>()),
+      );
+    });
+
+    test('rejects a layer exceeding maxValuesPerLayer', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.layer(
+            fields: [
+              _builder.stringValue('a'),
+              _builder.stringValue('b'),
+              _builder.stringValue('c'),
+              _builder.encodeTag(fieldNumber: 1, wireType: 2),
+              _builder.encodeLengthDelimited(
+                Uint8List.fromList('areas'.codeUnits),
+              ),
+              _builder.encodeTag(fieldNumber: 15, wireType: 0),
+              _builder.encodeVarint(2),
+            ],
+          ),
+        ],
+      );
+
+      expect(
+        () => decodeMvtTile(
+          tile,
+          limits: _limits.copyWith(maxValuesPerLayer: 2),
+        ),
+        throwsA(isA<MvtLimitExceededException>()),
+      );
+    });
+
+    test('rejects a feature exceeding maxTagsPerFeature', () {
+      final tile = _propertyTile(tags: [0, 0, 0, 0]);
+
+      expect(
+        () =>
+            decodeMvtTile(tile, limits: _limits.copyWith(maxTagsPerFeature: 2)),
+        throwsA(isA<MvtLimitExceededException>()),
+      );
+    });
   });
 
   group('limit enforcement', () {

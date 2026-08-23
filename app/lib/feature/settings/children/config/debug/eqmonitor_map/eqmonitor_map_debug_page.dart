@@ -36,6 +36,10 @@ class EqmonitorMapDebugPage extends ConsumerWidget {
         maxVerticesPerRing: 65536,
         maxCommandsPerFeature: 200000,
         maxLayerNameBytes: 64,
+        maxKeysPerLayer: 64,
+        maxValuesPerLayer: 20000,
+        maxTagsPerFeature: 64,
+        maxPropertyStringBytes: 256,
       ),
       fillLimits: FillMeshBuilderLimits(
         maxHolesPerPolygon: 500,

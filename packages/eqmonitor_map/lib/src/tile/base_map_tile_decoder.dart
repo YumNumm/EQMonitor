@@ -340,7 +340,11 @@ MvtFeature _polygonFeatureAsClosedLines(MvtFeature feature) {
   final closedRings = <Int32List>[
     for (final ring in feature.rings) _closeRing(ring),
   ];
-  return MvtFeature(type: MvtGeometryType.lineString, rings: closedRings);
+  return MvtFeature(
+    type: MvtGeometryType.lineString,
+    rings: closedRings,
+    properties: feature.properties,
+  );
 }
 
 Int32List _closeRing(Int32List ring) {

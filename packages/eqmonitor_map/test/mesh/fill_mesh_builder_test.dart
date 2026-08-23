@@ -47,9 +47,11 @@ Int32List _ring(List<(int, int)> points) {
   return buffer;
 }
 
-MvtFeature _polygonFeature(List<Int32List> rings) {
-  return MvtFeature(type: MvtGeometryType.polygon, rings: rings);
-}
+MvtFeature _polygonFeature(List<Int32List> rings) => MvtFeature(
+  type: MvtGeometryType.polygon,
+  rings: rings,
+  properties: const {},
+);
 
 /// shoelace公式による符号付き面積の2倍。builder本体と同じ規約
 /// (raw (x, y)をそのまま使い、軸の向きを補正しない)で計算する、
@@ -413,6 +415,7 @@ void main() {
         rings: [
           _ring([(0, 0), (10, 0)]),
         ],
+        properties: const {},
       );
 
       expect(

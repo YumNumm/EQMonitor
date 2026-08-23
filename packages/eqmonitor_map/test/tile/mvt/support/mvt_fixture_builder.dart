@@ -52,6 +52,96 @@ final class MvtFixtureBuilder {
     return output.toBytes();
   }
 
+  /// field出現順をそのまま保つlayer bodyを組み立てる。
+  Uint8List layer({required List<Uint8List> fields}) {
+    final output = BytesBuilder(copy: false);
+    fields.forEach(output.add);
+    return output.toBytes();
+  }
+
+  Uint8List layerFeature(Uint8List feature) {
+    final output = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 2, wireType: 2))
+      ..add(encodeLengthDelimited(feature));
+    return output.toBytes();
+  }
+
+  Uint8List feature({
+    required int geomType,
+    required List<int> rawCommands,
+    List<int> tags = const [],
+    bool propertiesBeforeGeometry = false,
+  }) {
+    final output = BytesBuilder(copy: false);
+    final encodedTags = BytesBuilder(copy: false);
+    for (final tag in tags) {
+      encodedTags.add(encodeVarint(tag));
+    }
+    BytesBuilder? tagField;
+    if (tags.isNotEmpty) {
+      tagField = BytesBuilder(copy: false)
+        ..add(encodeTag(fieldNumber: 2, wireType: 2))
+        ..add(encodeLengthDelimited(encodedTags.toBytes()));
+    }
+    final geometry = BytesBuilder(copy: false);
+    for (final value in rawCommands) {
+      geometry.add(encodeVarint(value));
+    }
+    if (propertiesBeforeGeometry && tagField != null) {
+      output.add(tagField.toBytes());
+    }
+    output
+      ..add(encodeTag(fieldNumber: 3, wireType: 0))
+      ..add(encodeVarint(geomType))
+      ..add(encodeTag(fieldNumber: 4, wireType: 2))
+      ..add(encodeLengthDelimited(geometry.toBytes()));
+    if (!propertiesBeforeGeometry && tagField != null) {
+      output.add(tagField.toBytes());
+    }
+    return output.toBytes();
+  }
+
+  Uint8List key(String value) =>
+      _layerStringField(fieldNumber: 3, value: value);
+
+  Uint8List stringValue(String value) =>
+      stringValueBytes(Uint8List.fromList(utf8.encode(value)));
+
+  Uint8List stringValueBytes(Uint8List value) {
+    final message = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 1, wireType: 2))
+      ..add(encodeLengthDelimited(value));
+    return _valueField(message.toBytes());
+  }
+
+  Uint8List intValue(int value) {
+    final message = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 4, wireType: 0))
+      ..add(encodeVarint(value));
+    return _valueField(message.toBytes());
+  }
+
+  Uint8List value({required List<Uint8List> fields}) {
+    final message = BytesBuilder(copy: false);
+    fields.forEach(message.add);
+    return _valueField(message.toBytes());
+  }
+
+  Uint8List valueStringField(String value) {
+    final bytes = Uint8List.fromList(utf8.encode(value));
+    final output = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 1, wireType: 2))
+      ..add(encodeLengthDelimited(bytes));
+    return output.toBytes();
+  }
+
+  Uint8List valueIntField(int value) {
+    final output = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 4, wireType: 0))
+      ..add(encodeVarint(value));
+    return output.toBytes();
+  }
+
   Uint8List buildFeature({
     required int geomType,
     required List<int> rawCommands,
@@ -125,6 +215,24 @@ final class MvtFixtureBuilder {
     final output = BytesBuilder(copy: false)
       ..add(encodeVarint(content.length))
       ..add(content);
+    return output.toBytes();
+  }
+
+  Uint8List _layerStringField({
+    required int fieldNumber,
+    required String value,
+  }) {
+    final bytes = Uint8List.fromList(utf8.encode(value));
+    final output = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: fieldNumber, wireType: 2))
+      ..add(encodeLengthDelimited(bytes));
+    return output.toBytes();
+  }
+
+  Uint8List _valueField(Uint8List message) {
+    final output = BytesBuilder(copy: false)
+      ..add(encodeTag(fieldNumber: 4, wireType: 2))
+      ..add(encodeLengthDelimited(message));
     return output.toBytes();
   }
 }
