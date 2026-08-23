@@ -62,3 +62,31 @@ pmtiles show /tmp/eqmonitor-20260823020050.pmtiles
 - 第一候補は PR #4342 の merge/release 後に MapLibre Native を更新すること。
 - release を待てない場合は、同じ 1-line fix と upstream regression test を含む Native distribution を YumNumm 管理下で検証する。
 - Flutter 側で layer の再追加順序や opacity を変える対応は、根本原因を直さず再現条件をずらすだけなので恒久対策にしない。
+
+## 暫定配布版
+
+2026-08-23 に、upstream への書き込みを行わず YumNumm 管理下で次の版を作成した。
+
+- MapLibre Native fork: `YumNumm/maplibre-native`
+- ベース: upstream `main` の `0c7fbe2b2938b06ad671b7fcf43e967065e05376`
+- 修正版: `yumnumm/ios-metal-clip-mask` の `076b0e8af68b80da5ac389283f1406efea312da6`
+- Release: `ios-v6.29.0-yumnumm.2`
+- Asset: `MapLibre.dynamic.xcframework.zip`
+- SwiftPM checksum: `473ce393b16a54ba787d2d626968ec92614573f1ab00b5af9c65660cc5d18ebc`
+- flutter-maplibre: `YumNumm/flutter-maplibre` の `59b744a1452e797e55806c82e9a443a1263a223a`
+
+PR #4342 のテストは古い `mbgl` namespace のままだったため、最新 `main` に合わせて include と namespace を `mln` に移植した。Metal renderer を指定した `//test:tests` のコンパイル、および device arm64 / Simulator arm64・x86_64 を含む XCFramework の生成に成功している。
+
+Release asset は次の URL から直接取得する。
+
+```text
+https://github.com/YumNumm/maplibre-native/releases/download/ios-v6.29.0-yumnumm.2/MapLibre.dynamic.xcframework.zip
+```
+
+MapLibre Native と同じリポジトリに Swift Package 用ブランチと tag を置き、そのリポジトリを package dependency にすると、SwiftPM が巨大な Native リポジトリ全体を clone する。検証時は約 640 万 object を取得してディスク不足になった。そのため EQMonitor が参照する `flutter-maplibre` では、Package.swift の `binaryTarget` に Release asset URL と checksum を直接記述する。これなら Native リポジトリの source clone は発生しない。
+
+Release asset の同一 URL への上書きは GitHub CDN に古い内容が残り、manifest の checksum と一致しないことがある。配布ZIPを変更する場合は既存assetを上書きせず、新しいtagとURLを発行する。
+
+Xcode の package resolve で Release asset のダウンロードと展開を確認し、展開後の device binary の SHA-256 がビルド元と一致することも確認した。Xcode 27 beta では custom package cache を指定した resolve が PrivacyInfo resource 処理中に内部例外で終了したが、通常の DerivedData を使い Runner scheme と iOS Simulator を明示した build は成功した。生成された Runner.app に arm64 / x86_64 の MapLibre.framework が埋め込まれ、Simulator への install と process launch も成功した。
+
+ローカルに実値入りの `environment/.env.dev` がない場合、アプリは MapLibre 画面へ到達する前に Theme 用 dart-define 不足で停止する。XCFramework の取得・リンク確認と、対象PMTilesを表示した画面確認は区別して記録する。
