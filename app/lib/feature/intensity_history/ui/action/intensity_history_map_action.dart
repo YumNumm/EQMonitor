@@ -1,13 +1,10 @@
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/data/repository/prefecture_bounds_resolver.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:material_ui/material_ui.dart';
@@ -22,47 +19,21 @@ part 'intensity_history_map_action.g.dart';
 IntensityHistoryMapAction intensityHistoryMapAction(Ref ref) =>
     const IntensityHistoryMapAction();
 
-/// 市区町村別最大震度マップのタップ操作・カメラ操作をまとめて担う。
+/// 市区町村別最大震度マップのタップ操作を担う。
 class IntensityHistoryMapAction {
   const new();
 
-  /// 日本全国の表示範囲。
-  static const japanBounds = LngLatBounds(
-    longitudeWest: JapanBounds.minLng,
-    longitudeEast: JapanBounds.maxLng,
-    latitudeSouth: JapanBounds.minLat,
-    latitudeNorth: JapanBounds.maxLat,
-  );
-
-  /// 都道府県へ寄せるときの余白。
+  /// 地図タップを市区町村の選択として解釈する。
   ///
-  /// 上部のフローティングパネル・下部の凡例に地域が隠れないよう、
-  /// 上下に厚めの余白を確保する。
-  static const focusPadding = EdgeInsets.fromLTRB(24, 96, 24, 88);
-
-  /// タップを市区町村の選択として解釈する最小ズーム。
+  /// ズームに依らずポリゴン判定で市区町村を特定する。都道府県・細分区域への
+  /// カメラ寄せは行わない。陸域外・所属都道府県を解決できない場合は選択を
+  /// 解除する。
   ///
-  /// 市区町村ポリゴンは全ズームのタイルに存在し塗りも全国表示で出るが、その
-  /// ズームでは 1 市区町村が数 px しかなく、タップ位置から狙った市区町村を
-  /// 取り出せない。これ未満では選択せず、市区町村を選べるズームまでカメラを
-  /// 寄せる。
-  ///
-  /// タイル側の制約 (`BaseMapTileSpec.cityMinZoom`) とは別の判断なので、
-  /// そちらを参照しない。
-  static const cityTapMinZoom = 6.0;
-
-  /// 地図タップを解釈する。
-  ///
-  /// - [cityTapMinZoom] 以上: 市区町村を選択して詳細モーダルを開く。
-  /// - それ未満のズーム: 市区町村を選べるズームまでカメラを寄せる。
-  ///
-  /// タップ地点を含む地域の判定は Worker Isolate 上のポリゴン判定
-  /// ([jmaMapAreaInformationCityInsideProvider] /
-  /// [jmaMapAreaForecastLocalEInsideProvider]) に委ね、UI スレッドを塞がない。
+  /// タップ地点の判定は Worker Isolate 上の
+  /// [jmaMapAreaInformationCityInsideProvider] に委ね、UI スレッドを塞がない。
   Future<void> handleMapTap({
     required WidgetRef ref,
     required BuildContext context,
-    required MapController controller,
     required Geographic point,
   }) async {
     final prefectures = ref
@@ -74,49 +45,52 @@ class IntensityHistoryMapAction {
       return;
     }
 
-    final latLng = LatLng(point.lat, point.lon);
-    final zoom = controller.camera?.zoom ?? 0;
-
-    // 市区町村を狙って選べないズームでは、市区町村としては解釈しない。
-    if (zoom >= cityTapMinZoom) {
-      final city = await ref.read(
-        jmaMapAreaInformationCityInsideProvider(latLng).future,
-      );
-      final property = city?.property;
-      // 所属都道府県を解決できない市区町村は選択解除に留める。
-      final cityPrefecture = property == null
-          ? null
-          : prefectureOf(cityCode: property.code, prefectures: prefectures);
-      if (property != null && cityPrefecture != null) {
-        if (context.mounted) {
-          await handleCityTap(
-            ref: ref,
-            context: context,
-            cityCode: property.code,
-            cityName: property.name,
-            prefectureName: cityPrefecture.name.ja,
-          );
-        }
-        return;
-      }
-      // 陸域外・解決不能。選択中の市区町村があれば解除するだけに留める。
+    final city = await ref.read(
+      jmaMapAreaInformationCityInsideProvider(
+        LatLng(point.lat, point.lon),
+      ).future,
+    );
+    final target = cityTapTargetOf(
+      cityCode: city?.property?.code,
+      cityName: city?.property?.name,
+      prefectures: prefectures,
+    );
+    if (target == null) {
       ref.read(intensityHistoryControllerProvider.notifier).deselectCity();
       return;
     }
-
-    final region = await ref.read(
-      jmaMapAreaForecastLocalEInsideProvider(latLng).future,
-    );
-    final regionCode = region?.property?.code;
-    if (regionCode == null) {
+    if (!context.mounted) {
       return;
     }
-
-    await handleRegionTap(
+    await handleCityTap(
       ref: ref,
-      controller: controller,
+      context: context,
+      cityCode: target.cityCode,
+      cityName: target.cityName,
+      prefectureName: target.prefectureName,
+    );
+  }
+
+  /// ヒットした市区町村と所属都道府県を組にする。解決できない場合は `null`。
+  ({String cityCode, String cityName, String prefectureName})? cityTapTargetOf({
+    required String? cityCode,
+    required String? cityName,
+    required List<EarthquakeParameterPrefectureItem> prefectures,
+  }) {
+    if (cityCode == null || cityName == null) {
+      return null;
+    }
+    final cityPrefecture = prefectureOf(
+      cityCode: cityCode,
       prefectures: prefectures,
-      regionCode: regionCode,
+    );
+    if (cityPrefecture == null) {
+      return null;
+    }
+    return (
+      cityCode: cityCode,
+      cityName: cityName,
+      prefectureName: cityPrefecture.name.ja,
     );
   }
 
@@ -161,38 +135,19 @@ class IntensityHistoryMapAction {
     );
   }
 
-  /// 低ズームで細分区域をタップしたときに、市区町村を選べるズームまで寄せる。
-  Future<void> handleRegionTap({
-    required WidgetRef ref,
-    required MapController controller,
-    required List<EarthquakeParameterPrefectureItem> prefectures,
-    required String regionCode,
-  }) async {
-    final prefecture = RegionCodeMapping.prefectureOfRegionCode(
-      regionCode,
-      prefectures,
-    );
-    if (prefecture == null) {
-      return;
-    }
-
-    ref.read(intensityHistoryControllerProvider.notifier).deselectCity();
-    await moveCameraToPrefecture(
-      ref: ref,
-      controller: controller,
-      prefectureCode: prefecture.code,
-      seedRegionCode: regionCode,
-    );
-  }
-
-  /// ディープリンク（他画面からの直接遷移）で都道府県・市区町村へ寄せる。
+  /// ディープリンクで市区町村詳細モーダルを開く。
+  ///
+  /// カメラは動かさない。[cityCode] が無い、または都道府県配下に存在しない
+  /// 場合は何もしない。
   Future<void> openFromDeepLink({
     required WidgetRef ref,
     required BuildContext context,
-    required MapController controller,
     required String prefectureCode,
     required String? cityCode,
   }) async {
+    if (cityCode == null) {
+      return;
+    }
     final prefectures = ref
         .read(parameterSetProvider)
         .valueOrPrevious
@@ -208,19 +163,10 @@ class IntensityHistoryMapAction {
       return;
     }
 
-    final city = cityCode == null
-        ? null
-        : prefecture.regions
-              .expand((region) => region.cities)
-              .where((city) => city.code == cityCode)
-              .firstOrNull;
-
-    await moveCameraToPrefecture(
-      ref: ref,
-      controller: controller,
-      prefectureCode: prefecture.code,
-    );
-
+    final city = prefecture.regions
+        .expand((region) => region.cities)
+        .where((city) => city.code == cityCode)
+        .firstOrNull;
     if (city == null || !context.mounted) {
       return;
     }
@@ -231,40 +177,6 @@ class IntensityHistoryMapAction {
       cityName: city.name.ja,
       prefectureName: prefecture.name.ja,
     );
-  }
-
-  /// 指定都道府県が収まる範囲までカメラを移動する。
-  ///
-  /// 状態は持たない（都道府県フォーカスという概念は無い）。市区町村を選べる
-  /// ズームまで寄せるためのカメラ操作のみ。
-  Future<void> moveCameraToPrefecture({
-    required WidgetRef ref,
-    required MapController controller,
-    required String prefectureCode,
-    String? seedRegionCode,
-  }) async {
-    final prefectures = ref
-        .read(parameterSetProvider)
-        .valueOrPrevious
-        ?.earthquake
-        .prefectures;
-    if (prefectures == null) {
-      return;
-    }
-
-    final jmaMap = await ref.read(jmaMapProvider.future);
-    final bounds = ref
-        .read(prefectureBoundsResolverProvider)
-        .resolve(
-          prefectureCode: prefectureCode,
-          prefectures: prefectures,
-          jmaMap: jmaMap,
-          seedRegionCode: seedRegionCode,
-        );
-    if (bounds == null) {
-      return;
-    }
-    await controller.fitBounds(bounds: bounds, padding: focusPadding);
   }
 
   JmaIntensity? cityMaxIntensityOf({

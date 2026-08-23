@@ -23,8 +23,8 @@ import 'package:maplibre/maplibre.dart';
 
 /// 市区町村別最大震度マップのページ。
 ///
-/// - [initialPrefectureCode]: 指定時は起動直後に当該都道府県へカメラを寄せる。
-/// - [initialCityCode]: 指定時はさらに市区町村詳細モーダルを自動表示する。
+/// - [initialCityCode] と [initialPrefectureCode] の両方が指定されたとき、
+///   起動直後に当該市区町村の詳細モーダルを自動表示する。カメラは動かさない。
 class IntensityHistoryPage extends ConsumerWidget {
   const new({
     this.initialPrefectureCode,
@@ -68,7 +68,6 @@ class _MapContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final action = ref.watch(intensityHistoryMapActionProvider);
-    final mapController = useRef<MapController?>(null);
     final isMapCreated = useState(false);
     final didInitializeDeepLink = useRef(false);
     // パラメータ到着を effect の再実行契機にするため watch する。
@@ -80,12 +79,11 @@ class _MapContent extends HookConsumerWidget {
     useEffect(
       () {
         final prefectureCode = initialPrefectureCode;
-        final controller = mapController.value;
         if (didInitializeDeepLink.value ||
             !isMapCreated.value ||
             !hasParameter ||
             prefectureCode == null ||
-            controller == null) {
+            initialCityCode == null) {
           return null;
         }
         didInitializeDeepLink.value = true;
@@ -93,7 +91,6 @@ class _MapContent extends HookConsumerWidget {
           action.openFromDeepLink(
             ref: ref,
             context: context,
-            controller: controller,
             prefectureCode: prefectureCode,
             cityCode: initialCityCode,
           ),
@@ -114,8 +111,7 @@ class _MapContent extends HookConsumerWidget {
         children: [
           MapOperationQueueScope(
             child: MapLibreMap(
-              onMapCreated: (controller) {
-                mapController.value = controller;
+              onMapCreated: (_) {
                 isMapCreated.value = true;
               },
               options: const MapZoomCalculator().japanViewMapOptions(
@@ -128,14 +124,12 @@ class _MapContent extends HookConsumerWidget {
                   MapEventLongClick(:final point) => point,
                   _ => null,
                 };
-                final controller = mapController.value;
-                if (point == null || controller == null) {
+                if (point == null) {
                   return;
                 }
                 await action.handleMapTap(
                   ref: ref,
                   context: context,
-                  controller: controller,
                   point: point,
                 );
               },
