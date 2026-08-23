@@ -9,6 +9,7 @@ Future<void> main(List<String> args) async {
       materials: [
         'assets/base_map_fill.fmat',
         'assets/base_map_line.fmat',
+        'assets/earthquake_area_fill.fmat',
       ],
     );
   });
