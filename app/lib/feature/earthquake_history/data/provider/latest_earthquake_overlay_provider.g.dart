@@ -60,6 +60,58 @@ final class EarthquakeMapOverlayBuilderProvider
 String _$earthquakeMapOverlayBuilderHash() =>
     r'0156dba1aee5af4ffb66390c488d261b26f1ae5a';
 
+@ProviderFor(earthquakeMapOverlayDigestBuilder)
+final earthquakeMapOverlayDigestBuilderProvider =
+    EarthquakeMapOverlayDigestBuilderProvider._();
+
+final class EarthquakeMapOverlayDigestBuilderProvider
+    extends
+        $FunctionalProvider<
+          EarthquakeMapOverlayDigestBuilder,
+          EarthquakeMapOverlayDigestBuilder,
+          EarthquakeMapOverlayDigestBuilder
+        >
+    with $Provider<EarthquakeMapOverlayDigestBuilder> {
+  EarthquakeMapOverlayDigestBuilderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'earthquakeMapOverlayDigestBuilderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$earthquakeMapOverlayDigestBuilderHash();
+
+  @$internal
+  @override
+  $ProviderElement<EarthquakeMapOverlayDigestBuilder> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  EarthquakeMapOverlayDigestBuilder create(Ref ref) {
+    return earthquakeMapOverlayDigestBuilder(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EarthquakeMapOverlayDigestBuilder value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EarthquakeMapOverlayDigestBuilder>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$earthquakeMapOverlayDigestBuilderHash() =>
+    r'acf123b9b4bdceb13ea98e9ca2d8e2f67929722e';
+
 @ProviderFor(LatestEarthquakeOverlay)
 final latestEarthquakeOverlayProvider = LatestEarthquakeOverlayProvider._();
 
@@ -89,7 +141,7 @@ final class LatestEarthquakeOverlayProvider
 }
 
 String _$latestEarthquakeOverlayHash() =>
-    r'19419441db4839464bb424ede192d8e9b99ef964';
+    r'0ded90547bb5f30ad2a844814f62f4d0190f1641';
 
 abstract class _$LatestEarthquakeOverlay
     extends $AsyncNotifier<LatestEarthquakeOverlayData> {
