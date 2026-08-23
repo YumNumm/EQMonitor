@@ -118,12 +118,14 @@ exact canonical tile、source identity、layer extentを保持する。exact hit
 EarthquakeMapOverlaySnapshot(
   sourceId: String,
   revision: int,
+  regionToCityZoom: double,
+  stationMinZoom: double,
   regionStyles: List<EarthquakeAreaStyle>,
   cityStyles: List<EarthquakeAreaStyle>,
   stations: List<EarthquakeObservationPoint>,
 )
 
-EarthquakeAreaStyle(code: String, color: Color)
+EarthquakeAreaStyle(code: String, color: Color, opacity: double)
 
 EarthquakeObservationPoint(
   id: String,
@@ -134,10 +136,11 @@ EarthquakeObservationPoint(
 )
 ```
 
-factoryはtrim後の空ID/code、負revision、非有限座標、緯度経度範囲外、非正半径、
-重複区域code、重複観測点IDを拒否する。collectionは不変にする。同じsourceIdで
-revisionが下がったsnapshotはcontrollerが拒否し、現在の描画を維持する。別sourceIdは
-新しいfull snapshotとしてatomicに置き換える。
+factoryはtrim後の空ID/code、負revision、非有限zoom/座標、緯度経度範囲外、非正半径、
+`[0,1]` 外のopacity、重複区域code、重複観測点IDを拒否する。collectionは不変にする。
+同じsourceIdでrevisionが下がったsnapshotはcontrollerが拒否し、現在の描画を維持する。
+別sourceIdは新しいfull snapshotとしてatomicに置き換える。型はpackage公開APIとして
+`eqmonitor_map.dart` からexportし、生成コードも同じコミットで更新する。
 
 `BaseMapView` の公開引数には nullable な `earthquakeOverlay` を追加する。`null` は
 overlay非表示を意味し、エラーや期限切れを意味しない。app側の取得エラーは別のUI状態で
@@ -149,6 +152,11 @@ overlay非表示を意味し、エラーや期限切れを意味しない。app�
 `CodedFillGeometry` だけを走査し、該当codeを震度色ごとにbucket化する。既存fillの
 packed layoutを再利用するが、pipeline keyとmaterialは
 `earthquake-area-fill` としてbase mapから分離する。
+
+`assets/earthquake_area_fill.fmat` はunlit、culling none、alpha blendingとし、
+`fill_color` のRGBへopacityを乗じたpremultiplied colorを出力する。region/cityのopacityは
+`EarthquakeAreaStyle.opacity` からmaterial parameter blockへ渡し、app側の既定値は既存
+`EarthquakeHistoryMapLayerParameter` と同じ0.6とする。
 
 Sceneの所有者は1つにする。`MapSceneFrameSubmission` がbase mapとearthquake Fillの
 `MapRenderSubmission`、およびnullableな観測点batchを束ね、
@@ -180,17 +188,33 @@ regionへfallbackせずcoverageを不完全とする。region/cityの同一code�
 観測点は全点を1個の `StaticInstanceGeometry` と1個のScene nodeで描画する。
 Flutter Scene forkの既知問題を避けるため、同じgeometryを複数nodeへ共有しない。
 
-- vertex-rate buffer: 円を覆う正規化quad 4頂点
+- vertex-rate buffer: `corner` float32x2、offset 0、stride 8 byteのquad 4頂点
 - index buffer: triangle 2枚
-- instance-rate buffer: world X/Y、RGBA、半径
-- vertex shader: world中心を現frameのview-projectionへ変換し、viewport/DPRから
-  logical pixel半径をNDCへ変換してquadを配置
-- fragment shader: quad内座標の距離から円外をdiscardし、外周に白いstrokeを描く
+- instance-rate buffer: `centerMercator` float32x2 @0、`color` float32x4 @8、
+  `radiusLogicalPixels` float32 @24、stride 28 byte
+- instance座標はX東向き・Y南向きのnormalized Mercator `[0,1)`
+- `ObservationFrame` vertex uniformはstd140のvec4を2本、合計32 byte。前半に
+  camera normalized X/Y・`worldSize = 512 * 2^zoom`、後半にviewport logical
+  width/height・stroke logical pixelsを入れる
+- shaderはcenter Xとcamera Xの差から整数worldを引き、cameraに最も近いdate-line wrapを
+  選ぶ。stationはzoom 6以上だけで描くため、viewport内に複数world copyを要求しない
+- centerのlogical pixel差をviewport幅/高さで割ってNDCへ変換し、Yだけ反転する。
+  corner offsetもlogical pixel半径からNDCへ変換するためDPRは掛けない
+- fragment shaderは補間したcorner長から円外をdiscardし、1 logical pixel相当の白strokeを
+  smoothstepでanti-aliasする。出力はpremultiplied alphaとする
+
+raw shaderは `assets/earthquake_observation.vert` / `.frag` とmanifestへ置き、
+`hook/build.dart` が `buildTargetShaderBundleJson` をData Asset必須で生成する。
+`ShaderMaterial` はcustom vertex/fragment shader、culling none、
+`isOpaqueOverride: false` とし、source-over alpha blendingのtranslucent passへ載せる。
+専用layout以外や後付けcustom attributeはinstance buffer slotをずらすため禁止する。
 
 instance dataはsnapshot revisionごとに一度だけ構築・uploadする。camera移動では
 view-projection/viewport uniformだけを更新し、instance bufferを再生成しない。
-snapshot置換、background、surface generation変更、disposeでは既存geometryをretireし、
-`MapGpuResourceLedger` と同じframes-in-flight方針で参照を落とす。
+snapshot置換、background、surface generation変更、disposeではframes-in-flight後に
+`StaticInstanceGeometry.retire()` を明示的に呼んでから参照を落とす。
+`MapGpuResourceLedger` はretire callbackを自動実行しないため、観測点resource ownerが
+callbackを保持する。retire後のgeometry再利用はfail closedする。
 
 ### 6. app変換とデバッグ画面
 
