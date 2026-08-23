@@ -54,6 +54,12 @@ sealed class EarthquakeOverlayCoverage {
 /// overlayが非表示で、可視tileを要求していない状態。
 final class EarthquakeOverlayHidden extends EarthquakeOverlayCoverage {
   const EarthquakeOverlayHidden();
+
+  @override
+  bool operator ==(Object other) => other is EarthquakeOverlayHidden;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 /// 可視tileまたは区域codeが不足している状態。
@@ -67,6 +73,21 @@ final class EarthquakeOverlayIncomplete extends EarthquakeOverlayCoverage {
   final int requestedTileCount;
   final int readyTileCount;
   final int missingOrInvalidCodeCount;
+
+  @override
+  bool operator ==(Object other) =>
+      other is EarthquakeOverlayIncomplete &&
+      other.requestedTileCount == requestedTileCount &&
+      other.readyTileCount == readyTileCount &&
+      other.missingOrInvalidCodeCount == missingOrInvalidCodeCount;
+
+  @override
+  int get hashCode => Object.hash(
+    EarthquakeOverlayIncomplete,
+    requestedTileCount,
+    readyTileCount,
+    missingOrInvalidCodeCount,
+  );
 }
 
 /// 全ての可視tileと区域codeが揃っている状態。
@@ -74,4 +95,15 @@ final class EarthquakeOverlayComplete extends EarthquakeOverlayCoverage {
   const EarthquakeOverlayComplete({required this.requestedTileCount});
 
   final int requestedTileCount;
+
+  @override
+  bool operator ==(Object other) =>
+      other is EarthquakeOverlayComplete &&
+      other.requestedTileCount == requestedTileCount;
+
+  @override
+  int get hashCode => Object.hash(
+    EarthquakeOverlayComplete,
+    requestedTileCount,
+  );
 }
