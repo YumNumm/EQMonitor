@@ -23,11 +23,19 @@ final class EarthquakeOverlayExactTileHit
     extends EarthquakeOverlayExactTileResult {
   const EarthquakeOverlayExactTileHit({
     required this.tileId,
+    required this.canonicalTileId,
+    required this.sourceInstanceId,
     required this.areaGeometry,
   });
 
   /// world wrapを含む、描画位置としての要求tile。
   final UnwrappedTileId tileId;
+
+  /// cache lookupに使用したcanonical tile。
+  final CanonicalTileId canonicalTileId;
+
+  /// cache lookupに使用したsourceの識別子。
+  final String sourceInstanceId;
 
   /// 表示modeで選んだ区域layer。source layer欠損時はextentが`null`になる。
   final EarthquakeAreaTileLayerGeometry areaGeometry;
@@ -56,6 +64,8 @@ EarthquakeOverlayExactTileResult resolveEarthquakeOverlayExactTile({
   };
   return EarthquakeOverlayExactTileHit(
     tileId: requestedTile,
+    canonicalTileId: requestedTile.canonical,
+    sourceInstanceId: sourceInstanceId,
     areaGeometry: areaGeometry,
   );
 }

@@ -87,6 +87,8 @@ void main() {
     expect(result, isA<EarthquakeOverlayExactTileHit>());
     final hit = result as EarthquakeOverlayExactTileHit;
     expect(hit.tileId, requested);
+    expect(hit.sourceInstanceId, 'source-a');
+    expect(hit.canonicalTileId, requested.canonical);
     expect(hit.areaGeometry.extent, 4096);
   });
 
