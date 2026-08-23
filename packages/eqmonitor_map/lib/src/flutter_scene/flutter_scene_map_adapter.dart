@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
@@ -7,6 +9,8 @@ import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_bui
 import 'package:eqmonitor_map/src/renderer/map_gpu_resource_ledger.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
+import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
+import 'package:flutter_scene/gpu.dart' as scene_gpu;
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
 
@@ -40,6 +44,273 @@ final class FlutterScenePreprocessedMaterialBinding
   scene.MaterialParameters get parameters => preprocessedMaterial.parameters;
 }
 
+/// 観測点shader materialのpreflightとframe uniform更新境界。
+abstract interface class FlutterSceneObservationMaterialBinding {
+  scene.ShaderMaterial get material;
+
+  void preflight({required ObservationPointBatch batch});
+
+  void setFrameUniform(ByteData bytes);
+}
+
+/// shader bundleの必須symbolを解決したproduction observation binding。
+final class FlutterSceneShaderObservationMaterialBinding
+    implements FlutterSceneObservationMaterialBinding {
+  factory FlutterSceneShaderObservationMaterialBinding.fromShaderLibrary({
+    required scene_gpu.ShaderLibrary shaderLibrary,
+  }) {
+    final vertex = shaderLibrary[earthquakeObservationVertexShaderSymbol];
+    final fragment = shaderLibrary[earthquakeObservationFragmentShaderSymbol];
+    if (vertex == null || fragment == null) {
+      throw StateError(
+        'Observation shader bundle must provide '
+        '$earthquakeObservationVertexShaderSymbol and '
+        '$earthquakeObservationFragmentShaderSymbol.',
+      );
+    }
+    return FlutterSceneShaderObservationMaterialBinding._(
+      vertexShader: vertex,
+      fragmentShader: fragment,
+    );
+  }
+
+  FlutterSceneShaderObservationMaterialBinding._({
+    required scene_gpu.Shader vertexShader,
+    required scene_gpu.Shader fragmentShader,
+  }) : _vertexShader = vertexShader,
+       material = scene.ShaderMaterial(
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+         cullingMode: scene_gpu.CullMode.none,
+         isOpaqueOverride: false,
+       );
+
+  final scene_gpu.Shader _vertexShader;
+
+  @override
+  final scene.ShaderMaterial material;
+
+  @override
+  void preflight({required ObservationPointBatch batch}) {
+    validateObservationPointBatchAbi(batch: batch);
+    observationPointVertexLayout.toGpuLayout();
+    final frameSlot = _vertexShader.getUniformSlot(
+      observationFrameUniformBlockName,
+    );
+    if (frameSlot.sizeInBytes != observationFrameUniformByteLength ||
+        frameSlot.getMemberOffsetInBytes('camera_world') != 0 ||
+        frameSlot.getMemberOffsetInBytes('viewport_stroke') != 16) {
+      throw StateError(
+        'ObservationFrame must be a 32-byte block with vec4 members at '
+        'offsets 0 and 16.',
+      );
+    }
+  }
+
+  @override
+  void setFrameUniform(ByteData bytes) {
+    material.setUniformBlock(
+      observationFrameUniformBlockName,
+      bytes,
+      stage: scene.ShaderStage.vertex,
+    );
+  }
+}
+
+/// 観測点quadと28-byte instance streamの固定layout。
+const observationPointVertexLayout = scene.VertexLayoutDescriptor(
+  buffers: [
+    scene.VertexBufferDescriptor(
+      strideInBytes: 8,
+      attributes: [
+        scene.VertexAttributeDescriptor(
+          name: 'corner',
+          format: scene_gpu.VertexFormat.float32x2,
+        ),
+      ],
+    ),
+    scene.VertexBufferDescriptor(
+      strideInBytes: observationPointInstanceStrideInBytes,
+      stepMode: scene_gpu.VertexStepMode.instance,
+      attributes: [
+        scene.VertexAttributeDescriptor(
+          name: 'centerMercator',
+          format: scene_gpu.VertexFormat.float32x2,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'color',
+          format: scene_gpu.VertexFormat.float32x4,
+          offsetInBytes: 8,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'radiusLogicalPixels',
+          format: scene_gpu.VertexFormat.float32,
+          offsetInBytes: 24,
+        ),
+      ],
+    ),
+  ],
+);
+
+/// typed batchのCPU ABIをScene/GPU mutation前に検証する。
+void validateObservationPointBatchAbi({required ObservationPointBatch batch}) {
+  if (batch.instanceCount <= 0 ||
+      batch.instanceStrideInBytes != observationPointInstanceStrideInBytes ||
+      batch.instanceData.lengthInBytes !=
+          batch.instanceCount * observationPointInstanceStrideInBytes ||
+      batch.frameUniform.lengthInBytes != observationFrameUniformByteLength) {
+    throw ArgumentError.value(batch, 'batch', 'has an invalid observation ABI');
+  }
+}
+
+/// 1 context/revisionにつき1個だけ保持するStaticInstanceGeometry owner。
+final class FlutterSceneObservationGeometryOwner {
+  FlutterSceneObservationGeometryOwner({required int maxFramesInFlight})
+    : _maxFramesInFlight = maxFramesInFlight {
+    if (maxFramesInFlight < 1) {
+      throw ArgumentError.value(
+        maxFramesInFlight,
+        'maxFramesInFlight',
+        'must be at least 1',
+      );
+    }
+  }
+
+  final int _maxFramesInFlight;
+  final _entries = <_FlutterSceneObservationGeometryEntry>[];
+  int? _currentFrame;
+  int? _currentContextGeneration;
+
+  int get liveGeometryCount => _entries.length;
+
+  void beginFrame({
+    required int contextGeneration,
+    required int frameNumber,
+  }) {
+    if (contextGeneration.isNegative || frameNumber.isNegative) {
+      throw ArgumentError(
+        'contextGeneration and frameNumber must be non-negative',
+      );
+    }
+    final previousFrame = _currentFrame;
+    if (previousFrame != null && frameNumber < previousFrame) {
+      throw ArgumentError.value(
+        frameNumber,
+        'frameNumber',
+        'must not decrease',
+      );
+    }
+    final previousContextGeneration = _currentContextGeneration;
+    if (previousContextGeneration != null &&
+        contextGeneration != previousContextGeneration) {
+      for (final entry in _entries) {
+        if (entry.contextGeneration == previousContextGeneration) {
+          entry.retireScheduled = true;
+        }
+      }
+    }
+    _currentFrame = frameNumber;
+    _currentContextGeneration = contextGeneration;
+  }
+
+  scene.StaticInstanceGeometry geometryFor({
+    required ObservationPointBatch batch,
+  }) {
+    final frameNumber = _currentFrame;
+    final contextGeneration = _currentContextGeneration;
+    if (frameNumber == null || contextGeneration == null) {
+      throw StateError('beginFrame() must precede geometryFor().');
+    }
+    for (final entry in _entries) {
+      if (!entry.retireScheduled &&
+          entry.contextGeneration == contextGeneration &&
+          entry.sourceId == batch.sourceId &&
+          entry.snapshotRevision == batch.snapshotRevision) {
+        if (entry.geometry.isRetired) {
+          throw StateError(
+            'A retired observation geometry cannot be reused.',
+          );
+        }
+        entry.lastUsedFrame = frameNumber;
+        return entry.geometry;
+      }
+    }
+
+    final geometry = createFlutterSceneObservationGeometry(batch: batch);
+    _entries.add(
+      _FlutterSceneObservationGeometryEntry(
+        contextGeneration: contextGeneration,
+        sourceId: batch.sourceId,
+        snapshotRevision: batch.snapshotRevision,
+        geometry: geometry,
+        lastUsedFrame: frameNumber,
+      ),
+    );
+    return geometry;
+  }
+
+  List<scene.StaticInstanceGeometry> retireIdle() {
+    final frameNumber = _currentFrame;
+    if (frameNumber == null) {
+      throw StateError('beginFrame() must precede retireIdle().');
+    }
+    final deadline = frameNumber - _maxFramesInFlight;
+    final retired = <scene.StaticInstanceGeometry>[];
+    _entries.removeWhere((entry) {
+      if (entry.lastUsedFrame >= deadline) {
+        return false;
+      }
+      entry.geometry.retire();
+      retired.add(entry.geometry);
+      return true;
+    });
+    return retired;
+  }
+
+  void scheduleRetireAll() {
+    final frameNumber = _currentFrame;
+    if (frameNumber == null) {
+      return;
+    }
+    for (final entry in _entries) {
+      entry
+        ..retireScheduled = true
+        ..lastUsedFrame = frameNumber;
+    }
+  }
+}
+
+final class _FlutterSceneObservationGeometryEntry {
+  _FlutterSceneObservationGeometryEntry({
+    required this.contextGeneration,
+    required this.sourceId,
+    required this.snapshotRevision,
+    required this.geometry,
+    required this.lastUsedFrame,
+  }) : retireScheduled = false;
+
+  final int contextGeneration;
+  final String sourceId;
+  final int snapshotRevision;
+  final scene.StaticInstanceGeometry geometry;
+  int lastUsedFrame;
+  bool retireScheduled;
+}
+
+/// GPU uploadを伴わずStaticInstanceGeometryを構築する。
+scene.StaticInstanceGeometry createFlutterSceneObservationGeometry({
+  required ObservationPointBatch batch,
+}) {
+  validateObservationPointBatchAbi(batch: batch);
+  return scene.StaticInstanceGeometry(
+    vertices: Float32List.fromList(const [-1, -1, 1, -1, 1, 1, -1, 1]),
+    indices: Uint16List.fromList(const [0, 1, 2, 0, 2, 3]),
+    instanceData: batch.instanceData,
+    instanceCount: batch.instanceCount,
+    layout: observationPointVertexLayout,
+  );
+}
+
 enum FlutterSceneMeshBatchKind { baseMap, earthquakeAreaFill }
 
 /// GPU呼び出し前に確定するScene mesh nodeのplan。
@@ -60,8 +331,13 @@ List<FlutterSceneMeshBatchPlan> buildFlutterSceneMeshBatchPlans({
   required MapSceneFrameSubmission submission,
 }) {
   validateMapSceneFrameSubmission(submission: submission);
-  if (submission.observationBatch != null) {
-    throw UnsupportedError('Observation batches are implemented by Task 7.');
+  final observation = submission.observationBatch;
+  if (observation != null && observation is! ObservationPointBatch) {
+    throw ArgumentError.value(
+      observation,
+      'observationBatch',
+      'must be an ObservationPointBatch',
+    );
   }
 
   return List.unmodifiable([
@@ -90,26 +366,45 @@ final class FlutterSceneMapAdapter {
     required scene.SceneGraph sceneGraph,
     required FlutterSceneMapMaterialResolver materialFor,
     required int maxFramesInFlight,
+    FlutterSceneObservationMaterialBinding? observationMaterial,
   }) : this._(
          sceneGraph,
          materialFor,
+         observationMaterial,
          MapGpuResourceLedger<scene.MeshGeometry>(
+           maxFramesInFlight: maxFramesInFlight,
+         ),
+         FlutterSceneObservationGeometryOwner(
            maxFramesInFlight: maxFramesInFlight,
          ),
        );
 
-  new _(this._sceneGraph, this._materialFor, this._geometries);
+  new _(
+    this._sceneGraph,
+    this._materialFor,
+    this._observationMaterial,
+    this._geometries,
+    this._observationGeometries,
+  );
 
   final scene.SceneGraph _sceneGraph;
   final FlutterSceneMapMaterialResolver _materialFor;
+  final FlutterSceneObservationMaterialBinding? _observationMaterial;
   final MapGpuResourceLedger<scene.MeshGeometry> _geometries;
+  final FlutterSceneObservationGeometryOwner _observationGeometries;
 
   var _uploadedGeometryCount = 0;
   var _retiredGeometryCount = 0;
+  var _uploadedObservationGeometryCount = 0;
+  var _retiredObservationGeometryCount = 0;
 
   int get uploadedGeometryCount => _uploadedGeometryCount;
   int get retiredGeometryCount => _retiredGeometryCount;
   int get liveGeometryCount => _geometries.liveResourceCount;
+  int get uploadedObservationGeometryCount => _uploadedObservationGeometryCount;
+  int get retiredObservationGeometryCount => _retiredObservationGeometryCount;
+  int get liveObservationGeometryCount =>
+      _observationGeometries.liveGeometryCount;
 
   void submitFrame({required MapSceneFrameSubmission submission}) {
     final plans = buildFlutterSceneMeshBatchPlans(submission: submission);
@@ -118,6 +413,27 @@ final class FlutterSceneMapAdapter {
       plans: plans,
       materialFor: _materialFor,
     );
+    final observation = switch (submission.observationBatch) {
+      final ObservationPointBatch batch => batch,
+      null => null,
+      final other => throw ArgumentError.value(
+        other,
+        'observationBatch',
+        'must be an ObservationPointBatch',
+      ),
+    };
+    final observationMaterial = switch (observation) {
+      null => null,
+      _ =>
+        _observationMaterial ??
+            (throw StateError(
+              'No Flutter Scene observation material is loaded.',
+            )),
+    };
+    if (observation != null) {
+      validateObservationPointBatchAbi(batch: observation);
+      observationMaterial?.preflight(batch: observation);
+    }
     final frame = submission.frame;
     _retiredGeometryCount += _geometries
         .beginFrame(
@@ -125,6 +441,10 @@ final class FlutterSceneMapAdapter {
           frameNumber: frame.frameNumber,
         )
         .length;
+    _observationGeometries.beginFrame(
+      contextGeneration: frame.contextGeneration,
+      frameNumber: frame.frameNumber,
+    );
 
     final nodes = <scene.Node>[];
     for (final entry in resolved) {
@@ -147,15 +467,36 @@ final class FlutterSceneMapAdapter {
         nodes.add(node);
       }
     }
+    if (observation != null && observationMaterial != null) {
+      final before = _observationGeometries.liveGeometryCount;
+      final geometry = _observationGeometries.geometryFor(batch: observation);
+      if (_observationGeometries.liveGeometryCount > before) {
+        _uploadedObservationGeometryCount++;
+      }
+      observationMaterial.setFrameUniform(observation.frameUniform);
+      final node = scene.Node(
+        mesh: scene.Mesh(geometry, observationMaterial.material),
+      );
+      applyFlutterSceneTranslucentSortPriority(
+        node: node,
+        phase: observation.phase,
+        priority: observation.translucentSortPriority,
+      );
+      nodes.add(node);
+    }
 
     _sceneGraph
       ..removeAll()
       ..addAll(nodes);
     _retiredGeometryCount += _geometries.retireIdle().length;
+    _retiredObservationGeometryCount += _observationGeometries
+        .retireIdle()
+        .length;
   }
 
   void retireAllGpuResources() {
     _retiredGeometryCount += _geometries.retireAll().length;
+    _observationGeometries.scheduleRetireAll();
     _sceneGraph.removeAll();
   }
 
