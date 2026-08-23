@@ -154,7 +154,10 @@ packed layoutを再利用するが、pipeline keyとmaterialは
 `earthquake-area-fill` としてbase mapから分離する。
 
 `assets/earthquake_area_fill.fmat` はunlit、culling none、alpha blendingとし、
-`fill_color` のRGBへopacityを乗じたpremultiplied colorを出力する。region/cityのopacityは
+`fill_color` のRGBは非premultipliedのまま、alphaだけを
+`fill_color.alpha * opacity` とした `MaterialInputs.base_color` を出力する。
+Flutter Sceneのunlit fmat runtimeが最終出力を一度だけpremultiplyするため、shader側で
+RGBへopacityを掛けない。region/cityのopacityは
 `EarthquakeAreaStyle.opacity` からmaterial parameter blockへ渡し、app側の既定値は既存
 `EarthquakeHistoryMapLayerParameter` と同じ0.6とする。
 
@@ -166,8 +169,21 @@ Sceneの所有者は1つにする。`MapSceneFrameSubmission` がbase mapとeart
 phase policyは `base`、`earthquakeRegion`、`earthquakeCity`、
 `observationPoint`、`labelForeground` の順とする。Fillは通常の
 `MapRenderPacket`、観測点は `StaticInstanceGeometry` を受け取る専用batchだが、
-compositorがphase rankに従って両者を同じframeで追加する。未知pipeline、phase欠落、
-mesh batchと観測点batchの順序違反はsubmit前にfail closedする。
+compositorがphase rankに従って両者を同じframeで追加する。さらにfork側の
+`Node.translucentSortPriority` を `RenderItem` へ伝播し、Flutter Sceneの透過sortを
+`priority` 昇順、同一priority内は従来どおりcamera depthのback-to-frontにする。
+priorityの既定値は0で既存Sceneの挙動を維持し、base=0、earthquakeRegion=100、
+earthquakeCity=200、observationPoint=300、labelForeground=400を割り当てる。
+source-over blendでは小さいpriorityを先に、大きいpriorityを後にdrawするため、
+観測点は区域Fillより常に前面になる。opaque itemのpipeline/front-to-back sortには
+このpriorityを適用しない。
+
+このfork変更は通常meshと `StaticInstanceGeometry` の双方で同じpriority comparatorを
+通す。`scene_encoder_test.dart` に、異なるdepthでもpriority順が優先されること、同一
+priorityでは従来のdepth順になること、既定値0の後方互換を追加する。package側では
+compositorが各nodeへ上記priorityを設定したことをadapter境界のテストで確認する。
+単なるnode追加順やdepth biasには依存しない。未知pipeline、phase欠落、mesh batchと
+観測点batchのpriority違反はsubmit前にfail closedする。
 
 描画順は次で固定する。
 
@@ -223,22 +239,37 @@ app側に `EarthquakeMapOverlayBuilder` を置き、既存
 分類規則をJSON/MapLibre型へ変換せず再利用可能なpure logicとして整理する。
 
 - 市区町村は全震度階級を横断し、同じcodeを最大震度のbucketにだけ入れる
-- 地域も同じcodeを最大震度のbucketにだけ入れる
+- 地域は `EarthquakeIntensity.regions` だけを使い、全震度階級を横断して同じcodeを
+  最大震度のbucketにだけ入れる。`forecastLocalEIntensityPairs` はcode体系が異なり得るため
+  利用しない
 - 観測点は `station.code` を安定IDとし、座標と実測最大震度を使う
 - 色は `activeColorSetProvider.intensity` からapp側で確定してsnapshotへ渡す
 - 最大震度観測点は既存auto表示相当の大きい半径、それ以外は小さい半径にする
 
-デバッグ画面は既定の地震一覧をevent ID降順・震度1以上で取得し、先頭eventの詳細を
-取得する。取得中はbase mapを維持してprogressを重ねる。失敗時はbase mapを維持して
-再試行可能なエラーを重ねる。詳細に震度がなければ「震度データなし」と表示し、空の
-正常snapshotを捏造しない。
+`latestEarthquakeOverlayProvider` は既存 `earthquakeHistoryProvider` をevent ID降順・
+震度1以上でwatchし、先頭event IDの `earthquakeHistoryDetailsProvider(eventId)` をwatchする。
+選択generationを持ち、一覧更新後に旧eventのdetailが完了しても破棄する。snapshot revisionは
+選択中eventの `telegramMetadata.reportedAt` 最大値のUTC microsecondsとし、metadataが
+空ならtyped unavailableにする。色テーマだけが変わった場合は同revisionのfull snapshotを
+置換できるが、provider generationが最新build以外の公開を防ぐ。
+
+取得中、event切替中、失敗時、震度データなしでは `BaseMapView.earthquakeOverlay` に
+`null` を渡し、旧eventのoverlayを残さない。base mapは維持し、event ID・発生時刻・
+電文statusを常時表示するbannerにloading、error、震度データなしを表示する。
+
+`BaseMapView` は `onEarthquakeOverlayCoverageChanged` で `hidden` / `incomplete` /
+`complete` を返す。coverageは表示モードで要求される可視exact tile数、ready数、
+missing/invalid code数を持つ。exact tile準備中、decode error、要求source layer欠損、
+code欠損・非stringは `incomplete` とし、bannerへ「表示範囲の震度情報は不完全」と明示する。
+全要求tileと全要求propertyが揃ったときだけ `complete` とする。
 
 ## エラーとlifecycle
 
 - MVT/property破損: typed exception。tile cacheへ格納しない
-- 区域code欠損・非string: 該当featureだけoverlay対象外。base map geometryは維持
+- 区域code欠損・非string: 該当featureだけoverlay対象外。base map geometryは維持し、
+  overlay coverageを `incomplete` にする
 - 古いsnapshot revision: rejectし、現在のoverlayを維持
-- 地震取得失敗: base mapを維持し、app overlay UIにerrorを表示
+- event切替・地震取得失敗: 旧overlayを消し、base mapを維持してapp overlay UIに状態表示
 - background/surface再生成: GPU resourceを捨て、CPU snapshot/packed meshから再構築
 - 観測点0件: Fillは描画し、観測点batchは作らない
 - Fill対象0件: 観測点は描画し、空geometry/nodeは作らない
@@ -262,11 +293,17 @@ app側に `EarthquakeMapOverlayBuilder` を置き、既存
 - 同一region/city codeは最大震度だけに属する
 - 観測点ID・座標・色・最大震度半径の変換
 - loading/error/no-intensity/dataの表示分岐
+- event切替中の旧detail破棄、旧overlay消去、coverage incomplete表示
 - 関連テストと対象 `flutter analyze`
 
 ### platform smoke
 
 iOS Simulatorでデバッグ画面を開き、次を画面とlogで確認する。
+
+その前に `mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled` で検証済みAsset Packを
+配置し、使用version/digestを記録する。対象eventのregion codeとcity `regioncode` が、
+実際のarchiveの可視tile（cityはzoom 6以上）に存在することをdiagnostic decodeで確認する。
+過去にcity polygon欠損があったため、この確認なしにcity非表示をrenderer不具合と判定しない。
 
 - 日本のベース地図上に実際の地震の地域または市区町村が震度色で塗られる
 - 観測点円が対応位置へ表示される
@@ -282,5 +319,6 @@ SimulatorでFlutter GPU/Scene固有の表示を確認できない場合は、コ
 - 実地震データから生成したJMA区域塗りと観測点円がFlutter Scene/GPUで同時表示される
 - `eqmonitor_map` がapp固有型やMapLibre/GeoJSONへ依存しない
 - event overlayは親tile・異revisionへfallbackしない
+- incomplete coverageとevent切替中に旧・部分overlayを完全な震度分布として表示しない
 - 既存MapLibre経路は変更・削除されない
 - 自動テストと解析が成功し、platform smokeの環境・結果・残リスクが記録される
