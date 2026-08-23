@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
@@ -22,7 +23,15 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       throw StateError('Device not provisioned');
     }
     final repo = await ref.watch(notificationSlotRepositoryProvider.future);
-    return repo.getSlots();
+    final slots = await repo.getSlots();
+    await ref
+        .read(deviceLocationSyncStateRepositoryProvider)
+        .writeDeviceLocationSyncEnabled(
+          enabled: slots.any(
+            (slot) => slot.slotType == NotificationSlotType.currentLocation,
+          ),
+        );
+    return slots;
   }
 
   static final putCurrentLocationMutation = Mutation<void>();
@@ -44,6 +53,9 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    await ref
+        .read(deviceLocationSyncStateRepositoryProvider)
+        .writeDeviceLocationSyncEnabled(enabled: true);
     await _startBackgroundLocationMonitoring();
     ref.invalidateSelf();
   }
@@ -52,8 +64,14 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
 
   Future<void> replaceSlots(List<NotificationSlotDraft> slots) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.replaceSlots(slots);
-    if (slots.any((s) => s.slotType == NotificationSlotType.currentLocation)) {
+    final replacedSlots = await repo.replaceSlots(slots);
+    final hasCurrentLocation = replacedSlots.any(
+      (slot) => slot.slotType == NotificationSlotType.currentLocation,
+    );
+    await ref
+        .read(deviceLocationSyncStateRepositoryProvider)
+        .writeDeviceLocationSyncEnabled(enabled: hasCurrentLocation);
+    if (hasCurrentLocation) {
       await _startBackgroundLocationMonitoring();
     }
     ref.invalidateSelf();
@@ -74,9 +92,12 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
   static final deleteCurrentLocationMutation = Mutation<void>();
 
   Future<void> deleteCurrentLocation() async {
+    final currentSlots = await future;
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.deleteCurrentLocation();
-    final currentSlots = ref.read(notificationSlotsProvider).value ?? [];
+    await ref
+        .read(deviceLocationSyncStateRepositoryProvider)
+        .writeDeviceLocationSyncEnabled(enabled: false);
     final slotsWithoutCurrentLocation = currentSlots
         .where((s) => s.slotType != NotificationSlotType.currentLocation)
         .toList();

@@ -8,9 +8,11 @@ import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
@@ -20,6 +22,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 const EarthquakeRegionResolution _ibarakiSouthResolution = (
@@ -136,6 +141,48 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   }
 }
 
+final class _FakeNotificationSlotsApiAdapter implements HttpClientAdapter {
+  new({required List<Map<String, Object?>> slots}) : _slots = slots;
+
+  List<Map<String, Object?>> _slots;
+  bool failNextMutation = false;
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final path = options.path;
+    final method = options.method;
+    if (path.endsWith('/slots') && method == 'GET') {
+      return _jsonResponse(jsonEncode(_slots));
+    }
+    if (failNextMutation) {
+      failNextMutation = false;
+      return _jsonResponse('{"error":"failure"}', statusCode: 500);
+    }
+    if (path.endsWith('/current-location') && method == 'PUT') {
+      _slots = [_currentLocationSlotResponse];
+      return _jsonResponse(jsonEncode(_currentLocationSlotResponse));
+    }
+    if (path.endsWith('/current-location') && method == 'DELETE') {
+      _slots = const [];
+      return _jsonResponse('null', statusCode: 204);
+    }
+    if (path.endsWith('/slots') && method == 'PUT') {
+      _slots = (options.data as List).isEmpty
+          ? const []
+          : [_currentLocationSlotResponse];
+      return _jsonResponse(jsonEncode(_slots));
+    }
+    throw UnimplementedError('Unhandled: $method $path');
+  }
+}
+
 /// `ShakeDetectionSettingsNotifier` が読む `apiClientProvider` を差し替える
 /// HTTP アダプタ。揺れ検知設定の GET / PUT とサブ地域マスター GET を模倣する。
 final class _FakeShakeApiAdapter implements HttpClientAdapter {
@@ -243,6 +290,24 @@ Map<String, dynamic> _shakeResponseJson({
   'updated_at': '2026-06-30T00:00:00Z',
 };
 
+const Map<String, Object?> _currentLocationSlotResponse = {
+  'id': 'slot-cl',
+  'slot_type': 'current_location',
+  'region_id': null,
+  'region_name': null,
+  'city_code': null,
+  'city_name': null,
+  'display_order': 0,
+  'eew_enabled': true,
+  'eew_min_intensity': '4',
+  'eew_overrides': null,
+  'earthquake_enabled': true,
+  'earthquake_min_intensity': '3',
+  'earthquake_overrides': null,
+  'created_at': '2026-06-30T00:00:00Z',
+  'updated_at': '2026-06-30T00:00:00Z',
+};
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -296,6 +361,21 @@ ProviderContainer _createLocationSyncContainer({
       shakeDetectionSettingsProvider.overrideWith(
         _FakeShakeDetectionSettingsNotifier.new,
       ),
+    ],
+  );
+}
+
+ProviderContainer _createNotificationSlotsSyncContainer(
+  _FakeNotificationSlotsApiAdapter adapter,
+) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+    ..httpClientAdapter = adapter;
+  return ProviderContainer(
+    overrides: [
+      deviceProvisioningProvider.overrideWith(
+        _FakeDeviceProvisioningNotifier.new,
+      ),
+      apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
     ],
   );
 }
@@ -355,6 +435,93 @@ void main() {
   talker_lib.talker = Talker(
     settings: TalkerSettings(useConsoleLogs: false),
   );
+
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
+  group('NotificationSlotsNotifier device location sync state', () {
+    test('GET成功後に現在地スロット有無を保存する', () async {
+      final adapter = _FakeNotificationSlotsApiAdapter(
+        slots: [_currentLocationSlotResponse],
+      );
+      final container = _createNotificationSlotsSyncContainer(adapter);
+      addTeardownToContainer(container);
+
+      await container.read(notificationSlotsProvider.future);
+
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+
+      final withoutCurrentLocation = _createNotificationSlotsSyncContainer(
+        _FakeNotificationSlotsApiAdapter(slots: const []),
+      );
+      addTeardownToContainer(withoutCurrentLocation);
+      await withoutCurrentLocation.read(notificationSlotsProvider.future);
+      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+    });
+
+    test('作成・削除成功後に現在地スロット有無を保存する', () async {
+      final adapter = _FakeNotificationSlotsApiAdapter(slots: const []);
+      final container = _createNotificationSlotsSyncContainer(adapter);
+      addTeardownToContainer(container);
+      final notifier = container.read(notificationSlotsProvider.notifier);
+      await container.read(notificationSlotsProvider.future);
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+
+      await notifier.putCurrentLocation();
+      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+
+      await notifier.deleteCurrentLocation();
+      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+    });
+
+    test('一括置換成功後に現在地スロット有無を保存する', () async {
+      final adapter = _FakeNotificationSlotsApiAdapter(slots: const []);
+      final container = _createNotificationSlotsSyncContainer(adapter);
+      addTeardownToContainer(container);
+      final notifier = container.read(notificationSlotsProvider.notifier);
+      await container.read(notificationSlotsProvider.future);
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+
+      await notifier.replaceSlots(const [
+        NotificationSlotDraft(
+          slotType: NotificationSlotType.currentLocation,
+          eewEnabled: true,
+          earthquakeEnabled: true,
+        ),
+      ]);
+      expect(await state.isDeviceLocationSyncEnabled(), isTrue);
+
+      await notifier.replaceSlots(const []);
+      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+    });
+
+    test('API失敗時は現在地スロット有無を先行変更しない', () async {
+      final adapter = _FakeNotificationSlotsApiAdapter(slots: const []);
+      final container = _createNotificationSlotsSyncContainer(adapter);
+      addTeardownToContainer(container);
+      await container.read(notificationSlotsProvider.future);
+      adapter.failNextMutation = true;
+
+      await expectLater(
+        container.read(notificationSlotsProvider.notifier).putCurrentLocation(),
+        throwsA(isA<DioException>()),
+      );
+
+      final state = SharedPreferencesDeviceLocationSyncStateRepository(
+        SharedPreferencesAsync(),
+      );
+      expect(await state.isDeviceLocationSyncEnabled(), isFalse);
+    });
+  });
 
   // ==========================================================================
   // ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion
