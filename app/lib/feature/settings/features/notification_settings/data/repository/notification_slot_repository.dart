@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
@@ -17,7 +19,7 @@ const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
 
 @Riverpod(keepAlive: true)
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
-    NotificationSlotRepository(await ref.watch(apiClientProvider.future));
+    NotificationSlotRepository(api: await ref.watch(apiClientProvider.future));
 
 /// 通知スロットの最小震度を決定する。
 ///
@@ -49,9 +51,10 @@ class NotificationSlotMinIntensityResolver {
 }
 
 class NotificationSlotRepository {
-  new(this._api);
+  new({required api.ApiClient api}) : _api = api;
 
   final api.ApiClient _api;
+  String? _lastDeviceLocationPayload;
 
   static const _minIntensityResolver = NotificationSlotMinIntensityResolver();
 
@@ -144,16 +147,25 @@ class NotificationSlotRepository {
     await _api.device.deleteV2DeviceMeSettingsSlotsCurrentLocation();
   }
 
-  Future<void> putDeviceLocation({
-    required int regionId,
-    String? cityCode,
+  Future<bool> putDeviceLocation({
+    required int region,
+    String? city,
+    String? tsunamiForecastRegion,
   }) async {
-    await _api.device.putV2DeviceMeLocation(
-      body: api.DeviceLocationRequest(
-        regionId: regionId.toString(),
-        cityCode: cityCode,
-      ),
+    final body = api.DeviceLocationRequest(
+      region: region.toString(),
+      city: city,
+      tsunamiForecastRegion: tsunamiForecastRegion,
     );
+    final payload = jsonEncode(body.toJson());
+    if (_lastDeviceLocationPayload == payload) {
+      return false;
+    }
+    await _api.device.putV2DeviceMeLocation(
+      body: body,
+    );
+    _lastDeviceLocationPayload = payload;
+    return true;
   }
 
   Future<NotificationSlot> putNationwide({
