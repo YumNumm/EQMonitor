@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_global_settings.dart';
@@ -54,7 +52,6 @@ class NotificationSlotRepository {
   new({required api.ApiClient api}) : _api = api;
 
   final api.ApiClient _api;
-  String? _lastDeviceLocationPayload;
 
   static const _minIntensityResolver = NotificationSlotMinIntensityResolver();
 
@@ -147,7 +144,7 @@ class NotificationSlotRepository {
     await _api.device.deleteV2DeviceMeSettingsSlotsCurrentLocation();
   }
 
-  Future<bool> putDeviceLocation({
+  Future<void> putDeviceLocation({
     required int region,
     String? city,
     String? tsunamiForecastRegion,
@@ -157,15 +154,9 @@ class NotificationSlotRepository {
       city: city,
       tsunamiForecastRegion: tsunamiForecastRegion,
     );
-    final payload = jsonEncode(body.toJson());
-    if (_lastDeviceLocationPayload == payload) {
-      return false;
-    }
     await _api.device.putV2DeviceMeLocation(
       body: body,
     );
-    _lastDeviceLocationPayload = payload;
-    return true;
   }
 
   Future<NotificationSlot> putNationwide({

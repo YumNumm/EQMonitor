@@ -10,6 +10,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart' as talker_lib;
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -52,8 +53,7 @@ class _FakeDeviceProvisioningNotifier extends DeviceProvisioningNotifier {
       DeviceProvisioningStatus.notRequired;
 }
 
-/// `notificationSlotsProvider` を固定スロットで差し替えるための fake。
-/// `updateCurrentLocationRegion` は実装をそのまま検証する。
+/// `notificationSlotsProvider` を固定スロットで差し替える fake。
 class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
   new(this._slots);
 
@@ -65,6 +65,10 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
 
 final class _FakeShakeDetectionSettingsNotifier
     extends ShakeDetectionSettingsNotifier {
+  new([this.events]);
+
+  final List<String>? events;
+
   @override
   Future<ShakeDetectionState> build() async => (
     entries: const <ShakeDetectionEntry>[],
@@ -72,7 +76,57 @@ final class _FakeShakeDetectionSettingsNotifier
   );
 
   @override
-  Future<bool> updateCurrentLocationSubRegion(String? cityCode) async => false;
+  Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
+    events?.add('appEffects:shake');
+    return false;
+  }
+}
+
+final class _RecordingDeviceLocationSyncStateRepository
+    extends SharedPreferencesDeviceLocationSyncStateRepository {
+  new({
+    required this.events,
+    this.enabled = true,
+    this.lastSent,
+  }) : super(SharedPreferencesAsync());
+
+  final List<String> events;
+  final bool enabled;
+  DeviceLocationPayload? lastSent;
+
+  @override
+  Future<bool> isDeviceLocationSyncEnabled() async {
+    events.add('deviceLocation:readEnabled');
+    return enabled;
+  }
+
+  @override
+  Future<DeviceLocationPayload?> readLastSent() async {
+    events.add('deviceLocation:readLastSent');
+    return lastSent;
+  }
+
+  @override
+  Future<void> writeLastSent(DeviceLocationPayload payload) async {
+    events.add('deviceLocation:writeLastSent');
+    lastSent = payload;
+  }
+}
+
+final class _RecordingBackgroundLocationSyncCoordinator
+    extends BackgroundLocationSyncCoordinator {
+  const new(this.events);
+
+  final List<String> events;
+
+  @override
+  Future<bool> syncCurrentLocationToAppGroup(
+    Ref ref, {
+    required EarthquakeRegionResolution? resolution,
+  }) async {
+    events.add('appEffects:appGroup');
+    return true;
+  }
 }
 
 final class _FakeJmaRegionResolver extends JmaRegionResolver {
@@ -116,6 +170,10 @@ final class _FakeJmaRegionResolver extends JmaRegionResolver {
 }
 
 final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
+  new({this.events, this.error});
+
+  final List<String>? events;
+  final Object? error;
   final putDeviceLocationCalls = <api.DeviceLocationRequest>[];
   final putDeviceLocationJsonCalls = <Map<String, dynamic>>[];
 
@@ -130,6 +188,11 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
   ) async {
     if (options.path.endsWith('/device/me/location') &&
         options.method == 'PUT') {
+      events?.add('deviceLocation:send');
+      final error = this.error;
+      if (error != null) {
+        throw error;
+      }
       final requestJson = Map<String, dynamic>.from(
         options.data as Map<String, dynamic>,
       );
@@ -333,25 +396,11 @@ ProviderContainer _createShakeContainer(_FakeShakeApiAdapter adapter) {
   );
 }
 
-ProviderContainer _createSlotsContainer(
-  List<NotificationSlot> slots, {
-  required _FakeDeviceLocationApiAdapter adapter,
-}) {
-  final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
-    ..httpClientAdapter = adapter;
-  return ProviderContainer(
-    overrides: [
-      apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
-      notificationSlotsProvider.overrideWith(
-        () => _FakeNotificationSlotsNotifier(slots),
-      ),
-    ],
-  );
-}
-
 ProviderContainer _createLocationSyncContainer({
   required _FakeDeviceLocationApiAdapter adapter,
   required _FakeJmaRegionResolver resolver,
+  List<String>? events,
+  _RecordingDeviceLocationSyncStateRepository? stateRepository,
 }) {
   final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
     ..httpClientAdapter = adapter;
@@ -366,8 +415,14 @@ ProviderContainer _createLocationSyncContainer({
       jmaRegionResolverProvider.overrideWith(
         (ref) async => resolver,
       ),
+      deviceLocationSyncStateRepositoryProvider.overrideWithValue(
+        stateRepository ??
+            _RecordingDeviceLocationSyncStateRepository(
+              events: events ?? <String>[],
+            ),
+      ),
       shakeDetectionSettingsProvider.overrideWith(
-        _FakeShakeDetectionSettingsNotifier.new,
+        () => _FakeShakeDetectionSettingsNotifier(events),
       ),
     ],
   );
@@ -389,16 +444,37 @@ ProviderContainer _createNotificationSlotsSyncContainer(
 }
 
 final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
-  await const BackgroundLocationSyncCoordinator().applyLocation(
+  await const BackgroundLocationSyncCoordinator().applyPendingMessage(
     ref,
-    latitude: 36,
-    longitude: 140,
+    pending: PendingLocationMessage(
+      updateId: 'live-id',
+      latitude: 36,
+      longitude: 140,
+      accuracy: 10,
+      timestampMillis: 1000,
+    ),
   );
 });
 
 final _applyPendingLocationProvider = FutureProvider<void>((ref) async {
   await const BackgroundLocationSyncCoordinator().applyPendingLocation(ref);
 });
+
+final _applyPendingLocationWithCoordinatorProvider =
+    FutureProvider.family<void, BackgroundLocationSyncCoordinator>((
+      ref,
+      coordinator,
+    ) async {
+      await coordinator.applyPendingLocation(ref);
+    });
+
+final _applyPendingMessageProvider =
+    FutureProvider.family<void, PendingLocationMessage>((ref, pending) async {
+      await const BackgroundLocationSyncCoordinator().applyPendingMessage(
+        ref,
+        pending: pending,
+      );
+    });
 
 NotificationSlot _currentLocationSlot({required int? regionId}) =>
     NotificationSlot(
@@ -416,22 +492,6 @@ NotificationSlot _currentLocationSlot({required int? regionId}) =>
       earthquakeMinIntensity: JmaIntensity.one,
       earthquakeOverrides: null,
     );
-
-NotificationSlot _regionSlot({required int regionId}) => NotificationSlot(
-  id: 'slot-region',
-  slotType: NotificationSlotType.region,
-  regionId: regionId,
-  regionName: '固定地域',
-  cityCode: null,
-  cityName: null,
-  displayOrder: 1,
-  eewEnabled: true,
-  eewMinIntensity: JmaIntensity.four,
-  eewOverrides: null,
-  earthquakeEnabled: true,
-  earthquakeMinIntensity: JmaIntensity.one,
-  earthquakeOverrides: null,
-);
 
 /// Registers container disposal with test teardown.
 void addTeardownToContainer(ProviderContainer container) {
@@ -770,150 +830,6 @@ void main() {
     });
   });
 
-  // ==========================================================================
-  // NotificationSlotsNotifier.updateCurrentLocationRegion
-  //
-  // 旧 EewSettingsNotifier / EarthquakeNotificationSettingsNotifier の
-  // updateCurrentLocationRegion は統合スロットモデルへ移行し、現在地スロットの
-  // regionId 変化のみを判定する単一メソッドに置き換えられた。
-  // ==========================================================================
-  group('NotificationSlotsNotifier.updateCurrentLocationRegion', () {
-    test('位置情報APIへ新フィールドだけを送る', () async {
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9080),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      await container
-          .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(
-            regionCode: 301,
-            regionName: '茨城県南部',
-            cityCode: '0820100',
-            tsunamiForecastRegionCode: '201',
-          );
-
-      expect(adapter.putDeviceLocationJsonCalls, [
-        {
-          'region': '301',
-          'city': '0820100',
-          'tsunamiForecastRegion': '201',
-        },
-      ]);
-    });
-
-    test('現在地スロットの regionCode が変化した場合に true を返す', () async {
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 300),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      final result = await container
-          .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: 301, regionName: '茨城県南部');
-
-      expect(result, isTrue);
-      expect(adapter.putDeviceLocationCalls, hasLength(1));
-      expect(adapter.putDeviceLocationCalls.single.region, '301');
-    });
-
-    test('茨城県北部ではregion 300を送る', () async {
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 9080),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      await container
-          .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: 300, regionName: '茨城県北部');
-
-      expect(adapter.putDeviceLocationCalls.single.region, '300');
-    });
-
-    test('同じ位置情報payloadを連続送信しない', () async {
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 300),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      final notifier = container.read(notificationSlotsProvider.notifier);
-      await notifier.updateCurrentLocationRegion(
-        regionCode: 300,
-        regionName: '茨城県北部',
-        cityCode: '0820100',
-        tsunamiForecastRegionCode: '201',
-      );
-      final result = await notifier.updateCurrentLocationRegion(
-        regionCode: 300,
-        regionName: '茨城県北部',
-        cityCode: '0820100',
-        tsunamiForecastRegionCode: '201',
-      );
-
-      expect(result, isFalse);
-      expect(adapter.putDeviceLocationCalls, hasLength(1));
-    });
-
-    test('津波予報区だけが変わった場合も位置情報を再送する', () async {
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _currentLocationSlot(regionId: 300),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      final notifier = container.read(notificationSlotsProvider.notifier);
-      await notifier.updateCurrentLocationRegion(
-        regionCode: 300,
-        cityCode: '0820100',
-        tsunamiForecastRegionCode: '201',
-      );
-      final result = await notifier.updateCurrentLocationRegion(
-        regionCode: 300,
-        cityCode: '0820100',
-        tsunamiForecastRegionCode: '202',
-      );
-
-      expect(result, isTrue);
-      expect(adapter.putDeviceLocationCalls, hasLength(2));
-      expect(
-        adapter.putDeviceLocationCalls.last.tsunamiForecastRegion,
-        '202',
-      );
-    });
-
-    test('現在地スロットがない場合は false を返す', () async {
-      // 地域スロットのみ存在し、現在地スロットは無い。
-      final adapter = _FakeDeviceLocationApiAdapter();
-      final container = _createSlotsContainer([
-        _regionSlot(regionId: 9999),
-      ], adapter: adapter);
-      addTeardownToContainer(container);
-
-      await container.read(notificationSlotsProvider.future);
-
-      final result = await container
-          .read(notificationSlotsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: 9012, regionName: '多摩東部');
-
-      expect(result, isFalse);
-      expect(adapter.putDeviceLocationCalls, isEmpty);
-    });
-  });
-
   group('BackgroundLocationSyncCoordinator', () {
     test('live位置更新ではAreaForecastLocalEをregionとして送る', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
@@ -935,16 +851,18 @@ void main() {
       });
     });
 
-    test('pending位置更新ではAreaForecastLocalEをregionとして送る', () async {
+    test('pending位置は各処理完了後にconsumer別でacknowledgeする', () async {
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final events = <String>[];
+      final peekedConsumers = <PendingLocationConsumer>[];
       messenger.setMockMessageHandler(_peekPendingLocationChannelName, (
         message,
       ) async {
         final arguments =
             BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
                 as List<Object?>;
-        expect(arguments.single, PendingLocationConsumer.appEffects);
+        peekedConsumers.add(arguments.single as PendingLocationConsumer);
         return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
           PendingLocationMessage(
             updateId: 'pending-id',
@@ -962,10 +880,12 @@ void main() {
         final arguments =
             BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
                 as List<Object?>;
-        acknowledgements.add((
+        final acknowledgement = (
           arguments[0] as String,
           arguments[1] as PendingLocationConsumer,
-        ));
+        );
+        acknowledgements.add(acknowledgement);
+        events.add('ack:${acknowledgement.$2.name}');
         return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
           true,
         ]);
@@ -978,27 +898,184 @@ void main() {
         );
       });
 
-      final adapter = _FakeDeviceLocationApiAdapter();
+      final adapter = _FakeDeviceLocationApiAdapter(events: events);
       final resolver = _FakeJmaRegionResolver(
         earthquakeResolution: _ibarakiSouthResolution,
+      );
+      final stateRepository = _RecordingDeviceLocationSyncStateRepository(
+        events: events,
       );
       final container = _createLocationSyncContainer(
         adapter: adapter,
         resolver: resolver,
+        events: events,
+        stateRepository: stateRepository,
       );
       addTeardownToContainer(container);
 
-      await container.read(_applyPendingLocationProvider.future);
+      await container.read(
+        _applyPendingLocationWithCoordinatorProvider(
+          _RecordingBackgroundLocationSyncCoordinator(events),
+        ).future,
+      );
 
       expect(adapter.putDeviceLocationJsonCalls.single, {
         'region': '301',
         'city': '0820100',
         'tsunamiForecastRegion': '201',
       });
+      expect(peekedConsumers, {
+        PendingLocationConsumer.deviceLocation,
+        PendingLocationConsumer.appEffects,
+      });
       expect(acknowledgements, [
+        ('pending-id', PendingLocationConsumer.deviceLocation),
         ('pending-id', PendingLocationConsumer.appEffects),
       ]);
+      expect(events, [
+        'deviceLocation:readEnabled',
+        'deviceLocation:readLastSent',
+        'deviceLocation:send',
+        'deviceLocation:writeLastSent',
+        'ack:deviceLocation',
+        'appEffects:appGroup',
+        'appEffects:shake',
+        'ack:appEffects',
+      ]);
     });
+
+    test('Device Location API例外時はappEffectsだけをacknowledgeする', () async {
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final events = <String>[];
+      messenger.setMockMessageHandler(_acknowledgePendingLocationChannelName, (
+        message,
+      ) async {
+        final arguments =
+            BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
+                as List<Object?>;
+        final consumer = arguments[1] as PendingLocationConsumer;
+        events.add('ack:${consumer.name}');
+        return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+          true,
+        ]);
+      });
+      addTearDown(
+        () => messenger.setMockMessageHandler(
+          _acknowledgePendingLocationChannelName,
+          null,
+        ),
+      );
+
+      final adapter = _FakeDeviceLocationApiAdapter(
+        events: events,
+        error: Exception('api failure'),
+      );
+      final resolver = _FakeJmaRegionResolver(
+        earthquakeResolution: _ibarakiSouthResolution,
+      );
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: resolver,
+        events: events,
+        stateRepository: _RecordingDeviceLocationSyncStateRepository(
+          events: events,
+        ),
+      );
+      addTeardownToContainer(container);
+
+      await container.read(
+        _applyPendingMessageProvider(
+          PendingLocationMessage(
+            updateId: 'retry-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ).future,
+      );
+
+      expect(events, contains('appEffects:shake'));
+      expect(events, contains('ack:appEffects'));
+      expect(events, isNot(contains('ack:deviceLocation')));
+      expect(events, isNot(contains('deviceLocation:writeLastSent')));
+    });
+
+    for (final testCase in [
+      (
+        name: 'unchanged',
+        enabled: true,
+        lastSent: const DeviceLocationPayload(
+          region: '301',
+          city: '0820100',
+          tsunamiForecastRegion: '201',
+        ),
+      ),
+      (
+        name: 'disabled',
+        enabled: false,
+        lastSent: null,
+      ),
+    ]) {
+      test('${testCase.name}でもDevice Locationをacknowledgeする', () async {
+        final messenger =
+            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+        final events = <String>[];
+        messenger.setMockMessageHandler(
+          _acknowledgePendingLocationChannelName,
+          (message) async {
+            final arguments =
+                BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(
+                  message,
+                ) as List<Object?>;
+            final consumer = arguments[1] as PendingLocationConsumer;
+            events.add('ack:${consumer.name}');
+            return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+              true,
+            ]);
+          },
+        );
+        addTearDown(
+          () => messenger.setMockMessageHandler(
+            _acknowledgePendingLocationChannelName,
+            null,
+          ),
+        );
+
+        final adapter = _FakeDeviceLocationApiAdapter(events: events);
+        final container = _createLocationSyncContainer(
+          adapter: adapter,
+          resolver: _FakeJmaRegionResolver(
+            earthquakeResolution: _ibarakiSouthResolution,
+          ),
+          events: events,
+          stateRepository: _RecordingDeviceLocationSyncStateRepository(
+            events: events,
+            enabled: testCase.enabled,
+            lastSent: testCase.lastSent,
+          ),
+        );
+        addTeardownToContainer(container);
+
+        await container.read(
+          _applyPendingMessageProvider(
+            PendingLocationMessage(
+              updateId: '${testCase.name}-id',
+              latitude: 36,
+              longitude: 140,
+              accuracy: 10,
+              timestampMillis: 1000,
+            ),
+          ).future,
+        );
+
+        expect(adapter.putDeviceLocationCalls, isEmpty);
+        expect(events, contains('ack:deviceLocation'));
+        expect(events, contains('ack:appEffects'));
+        expect(events, isNot(contains('deviceLocation:writeLastSent')));
+      });
+    }
 
     test('pending位置を反映できない場合はacknowledgeしない', () async {
       final messenger =
@@ -1043,7 +1120,8 @@ void main() {
       await container.read(_applyPendingLocationProvider.future);
 
       expect(acknowledgeCalls, 0);
-      expect(resolver.resolveEarthquakeRegionCalls, 3);
+      // Device Location同期の1回と、appEffectsの3回再試行は独立する。
+      expect(resolver.resolveEarthquakeRegionCalls, 4);
       expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
 
@@ -1058,7 +1136,8 @@ void main() {
 
       await container.read(_applyLiveLocationProvider.future);
 
-      expect(resolver.resolveEarthquakeRegionCalls, 3);
+      // Device Location同期の1回と、appEffectsの3回再試行は独立する。
+      expect(resolver.resolveEarthquakeRegionCalls, 4);
       expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
   });
