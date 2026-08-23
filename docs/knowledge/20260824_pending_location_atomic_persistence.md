@@ -21,6 +21,11 @@ mise exec -- /path/to/gradle-9.3.1/bin/gradle \
 binary plistの単一recordをatomic replaceし、fileと親directoryを同期する。
 storeにはDI可能なstorage protocolを置き、write/remove失敗時に旧recordがpeekできることをtestする。
 
+Significant Location Changeによるbackground relaunchは、初回unlock後の端末lock中にも発生し得る。
+`.completeFileProtectionUnlessOpen`はlock前からopen済みのfileしか利用できないため、file descriptorを
+保持しないpending storageには使わない。atomic writeとrollback restoreの双方に
+`.completeFileProtectionUntilFirstUserAuthentication`を指定し、生成fileのprotection attributeをtestする。
+
 ```shell
 cd app/ios
 xcodebuild test -project Runner.xcodeproj -scheme WidgetModelsTests \

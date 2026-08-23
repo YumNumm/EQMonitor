@@ -37,16 +37,37 @@ protocol PendingLocationRecordStorage: AnyObject {
     func remove() -> Bool
 }
 
+protocol PendingLocationDataWriting {
+    func write(
+        _ data: Data,
+        to fileURL: URL,
+        options: Data.WritingOptions
+    ) throws
+}
+
+struct FoundationPendingLocationDataWriter: PendingLocationDataWriting {
+    func write(
+        _ data: Data,
+        to fileURL: URL,
+        options: Data.WritingOptions
+    ) throws {
+        try data.write(to: fileURL, options: options)
+    }
+}
+
 final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage {
     private let fileManager: FileManager
     private let fileURL: URL?
+    private let dataWriter: PendingLocationDataWriting
 
     init(
         fileManager: FileManager = .default,
-        fileURL: URL? = AtomicFilePendingLocationRecordStorage.defaultFileURL()
+        fileURL: URL? = AtomicFilePendingLocationRecordStorage.defaultFileURL(),
+        dataWriter: PendingLocationDataWriting = FoundationPendingLocationDataWriter()
     ) {
         self.fileManager = fileManager
         self.fileURL = fileURL
+        self.dataWriter = dataWriter
     }
 
     func read() -> PendingLocationRecordStorageReadResult {
@@ -83,9 +104,10 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
                 at: fileURL.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
-            try data.write(
+            try dataWriter.write(
+                data,
                 to: fileURL,
-                options: [.atomic, .completeFileProtectionUnlessOpen]
+                options: writingOptions
             )
             try synchronizeFile(at: fileURL)
             try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
@@ -152,9 +174,10 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
     private func restore(_ data: Data?, at fileURL: URL) {
         do {
             if let data {
-                try data.write(
+                try dataWriter.write(
+                    data,
                     to: fileURL,
-                    options: [.atomic, .completeFileProtectionUnlessOpen]
+                    options: writingOptions
                 )
                 try synchronizeFile(at: fileURL)
             } else if fileManager.fileExists(atPath: fileURL.path) {
@@ -164,6 +187,11 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
         } catch {
             // 呼出元へ失敗を返す。次回readでは残存recordを再検証する。
         }
+    }
+
+    private var writingOptions: Data.WritingOptions {
+        // 初回unlock後のbackground relaunchでは、端末lock中でもpendingを更新できる必要がある。
+        [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
     }
 }
 

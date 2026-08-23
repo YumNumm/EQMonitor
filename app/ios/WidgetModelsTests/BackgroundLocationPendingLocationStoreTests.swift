@@ -2,6 +2,52 @@ import Foundation
 import Testing
 
 struct BackgroundLocationPendingLocationStoreTests {
+    @Test func atomicFileStorageUsesAfterFirstUnlockProtectionForCreatedAndReplacedFile() throws {
+        let directoryURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directoryURL) }
+        let fileURL = directoryURL.appendingPathComponent("pending.plist")
+        let storage = AtomicFilePendingLocationRecordStorage(fileURL: fileURL)
+
+        #expect(storage.write(Data([0x01, 0x02])))
+        let createdProtection = try fileProtectionType(at: fileURL)
+        #expect(createdProtection == .completeUntilFirstUserAuthentication)
+
+        #expect(storage.write(Data([0x03, 0x04])))
+        let replacedProtection = try fileProtectionType(at: fileURL)
+        #expect(replacedProtection == .completeUntilFirstUserAuthentication)
+    }
+
+    @Test func failedAtomicWriteRestoresPreviousDataWithAfterFirstUnlockProtection() throws {
+        let directoryURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directoryURL) }
+        try FileManager.default.createDirectory(
+            at: directoryURL,
+            withIntermediateDirectories: true
+        )
+        let fileURL = directoryURL.appendingPathComponent("pending.plist")
+        let previousData = Data([0x01, 0x02])
+        try previousData.write(
+            to: fileURL,
+            options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
+        )
+        let dataWriter = FailingOncePendingLocationDataWriter()
+        let storage = AtomicFilePendingLocationRecordStorage(
+            fileURL: fileURL,
+            dataWriter: dataWriter
+        )
+
+        #expect(storage.write(Data([0x03, 0x04])) == false)
+        #expect(try Data(contentsOf: fileURL) == previousData)
+        #expect(dataWriter.writingOptions == [
+            [.atomic, .completeFileProtectionUntilFirstUserAuthentication],
+            [.atomic, .completeFileProtectionUntilFirstUserAuthentication],
+        ])
+        let restoredProtection = try fileProtectionType(at: fileURL)
+        #expect(restoredProtection == .completeUntilFirstUserAuthentication)
+    }
+
     @Test func atomicFileStorageReplacesAndRemovesOneSerializedRecord() throws {
         let directoryURL = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -196,6 +242,32 @@ struct BackgroundLocationPendingLocationStoreTests {
         #expect(fixture.store.peek(consumer: .deviceLocation) == nil)
         #expect(fixture.storage.data == nil)
     }
+}
+
+private func fileProtectionType(at fileURL: URL) throws -> URLFileProtection? {
+    try fileURL.resourceValues(forKeys: [.fileProtectionKey]).fileProtection
+}
+
+private final class FailingOncePendingLocationDataWriter: PendingLocationDataWriting {
+    private(set) var writingOptions: [Data.WritingOptions] = []
+    private var shouldFail = true
+
+    func write(
+        _ data: Data,
+        to fileURL: URL,
+        options: Data.WritingOptions
+    ) throws {
+        writingOptions.append(options)
+        if shouldFail {
+            shouldFail = false
+            throw TestDataWriterError.injectedFailure
+        }
+        try data.write(to: fileURL, options: options)
+    }
+}
+
+private enum TestDataWriterError: Error {
+    case injectedFailure
 }
 
 private extension PendingLocationRecordStorageReadResult {
