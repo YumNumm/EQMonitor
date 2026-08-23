@@ -5,12 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-typedef EqmonitorMapOverlayCoverageSnapshot = ({
-  String sourceId,
-  int revision,
-  EarthquakeOverlayCoverage coverage,
-});
-
 final class EqmonitorMapOverlayPresentation {
   const new({
     required this.eventIdLabel,
@@ -23,7 +17,7 @@ final class EqmonitorMapOverlayPresentation {
 
   factory from({
     required AsyncValue<LatestEarthquakeOverlayData> overlayState,
-    required EqmonitorMapOverlayCoverageSnapshot? coverageSnapshot,
+    required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
   }) => createEqmonitorMapOverlayPresentation(
     overlayState: overlayState,
     coverageSnapshot: coverageSnapshot,
@@ -39,7 +33,7 @@ final class EqmonitorMapOverlayPresentation {
 
 EqmonitorMapOverlayPresentation createEqmonitorMapOverlayPresentation({
   required AsyncValue<LatestEarthquakeOverlayData> overlayState,
-  required EqmonitorMapOverlayCoverageSnapshot? coverageSnapshot,
+  required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
 }) {
   if (overlayState.isLoading) {
     return const EqmonitorMapOverlayPresentation(
@@ -79,7 +73,7 @@ EqmonitorMapOverlayPresentation createEqmonitorMapOverlayPresentation({
 
 EqmonitorMapOverlayPresentation createEqmonitorMapOverlayDataPresentation({
   required LatestEarthquakeOverlayData data,
-  required EqmonitorMapOverlayCoverageSnapshot? coverageSnapshot,
+  required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
 }) {
   final originTime = data.originTime;
   final overlay = data.overlay;

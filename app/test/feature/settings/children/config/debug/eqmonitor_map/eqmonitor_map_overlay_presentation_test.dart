@@ -78,10 +78,10 @@ void main() {
     final data = _available('A');
     final presentation = EqmonitorMapOverlayPresentation.from(
       overlayState: AsyncData(data),
-      coverageSnapshot: (
+      coverageSnapshot: const EarthquakeOverlayCoverageSnapshot(
         sourceId: 'A',
         revision: 12,
-        coverage: const EarthquakeOverlayCoverage.incomplete(
+        coverage: EarthquakeOverlayCoverage.incomplete(
           requestedTileCount: 4,
           readyTileCount: 3,
           missingOrInvalidCodeCount: 1,
@@ -96,10 +96,10 @@ void main() {
   test('旧sourceのcoverageをcurrent overlayへ適用しない', () {
     final presentation = EqmonitorMapOverlayPresentation.from(
       overlayState: AsyncData(_available('B')),
-      coverageSnapshot: (
+      coverageSnapshot: const EarthquakeOverlayCoverageSnapshot(
         sourceId: 'A',
         revision: 12,
-        coverage: const EarthquakeOverlayCoverage.complete(
+        coverage: EarthquakeOverlayCoverage.complete(
           requestedTileCount: 4,
         ),
       ),

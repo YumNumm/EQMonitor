@@ -75,6 +75,21 @@ EarthquakeIntensity _intensity() {
     intensity: JmaIntensity.three,
     location: const LatLng(34.5, 138.5),
   );
+  final strongerDuplicate = _station(
+    code: 'ST-OTHER',
+    intensity: JmaIntensity.four,
+    location: const LatLng(35, 140),
+  );
+  final firstStation = _station(
+    code: 'ST-A',
+    intensity: JmaIntensity.three,
+    location: const LatLng(33, 137),
+  );
+  final lastStation = _station(
+    code: 'ST-Z',
+    intensity: JmaIntensity.three,
+    location: const LatLng(36, 141),
+  );
   return EarthquakeIntensity(
     maxIntensity: JmaIntensity.four,
     maxLpgmIntensity: null,
@@ -94,7 +109,7 @@ EarthquakeIntensity _intensity() {
             CityIntensityNode(
               city: _city('C-A'),
               maxIntensity: JmaIntensity.three,
-              stations: [otherStation],
+              stations: [lastStation, otherStation],
             ),
           ],
         ),
@@ -106,7 +121,7 @@ EarthquakeIntensity _intensity() {
             CityIntensityNode(
               city: _city('C-A'),
               maxIntensity: JmaIntensity.four,
-              stations: [maxStation],
+              stations: [strongerDuplicate, maxStation, firstStation],
             ),
           ],
         ),
@@ -184,12 +199,18 @@ void main() {
       (point) => point.id == 'ST-OTHER',
     );
 
+    expect(snapshot.stations.map((point) => point.id), [
+      'ST-A',
+      'ST-MAX',
+      'ST-OTHER',
+      'ST-Z',
+    ]);
     expect((max.longitude, max.latitude), (139.75, 35.25));
     expect(max.color, colors.four.background);
     expect(max.radiusLogicalPixels, 6.7);
-    expect((other.longitude, other.latitude), (138.5, 34.5));
-    expect(other.color, colors.three.background);
-    expect(other.radiusLogicalPixels, 4.0);
+    expect((other.longitude, other.latitude), (140.0, 35.0));
+    expect(other.color, colors.four.background);
+    expect(other.radiusLogicalPixels, 6.7);
     expect(snapshot.regionToCityZoom, 6);
     expect(snapshot.stationMinZoom, 6);
     expect(snapshot.regionStyles.single.opacity, 0.6);

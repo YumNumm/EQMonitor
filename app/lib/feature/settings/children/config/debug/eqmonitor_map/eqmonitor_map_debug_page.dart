@@ -19,7 +19,7 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final source = ref.watch(eqmonitorMapDebugSourceProvider);
     final overlayState = ref.watch(latestEarthquakeOverlayProvider);
-    final coverageSnapshot = useState<EqmonitorMapOverlayCoverageSnapshot?>(
+    final coverageSnapshot = useState<EarthquakeOverlayCoverageSnapshot?>(
       null,
     );
     final presentation = EqmonitorMapOverlayPresentation.from(
@@ -28,17 +28,10 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
     );
     final overlay = presentation.overlay;
     final onCoverageChanged =
-        useCallback<ValueChanged<EarthquakeOverlayCoverage>>((coverage) {
-          if (overlay == null) {
-            coverageSnapshot.value = null;
-            return;
-          }
-          coverageSnapshot.value = (
-            sourceId: overlay.sourceId,
-            revision: overlay.revision,
-            coverage: coverage,
-          );
-        }, [overlay?.sourceId, overlay?.revision]);
+        useCallback<ValueChanged<EarthquakeOverlayCoverageSnapshot>>(
+          (snapshot) => coverageSnapshot.value = snapshot,
+          const [],
+        );
     return Scaffold(
       appBar: AppBar(title: const Text('EQMonitor Map (Flutter Scene)')),
       body: source.when(
