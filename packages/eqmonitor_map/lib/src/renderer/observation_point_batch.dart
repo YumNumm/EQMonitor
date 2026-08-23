@@ -10,24 +10,32 @@ const earthquakeObservationVertexShaderSymbol = 'EarthquakeObservationVertex';
 const earthquakeObservationFragmentShaderSymbol =
     'EarthquakeObservationFragment';
 
+/// StaticInstanceGeometryと1対1で対応するinstance内容のidentity。
+final class ObservationPointInstanceGeneration {
+  ObservationPointInstanceGeneration._();
+}
+
 /// 1 snapshot revision分の観測点instanceとframe固有uniform。
 final class ObservationPointBatch implements MapSceneObservationBatch {
   const ObservationPointBatch._({
     required this.frame,
     required this.sourceId,
     required this.snapshotRevision,
+    required this.instanceGeneration,
     required this.instanceData,
     required this.instanceCount,
     required this.frameUniform,
     required this.phasePolicyVersion,
     required this.phase,
     required this.translucentSortPriority,
+    required this._stationSnapshotIdentity,
   });
 
   @override
   final MapFrameSnapshot frame;
   final String sourceId;
   final int snapshotRevision;
+  final ObservationPointInstanceGeneration instanceGeneration;
   final Float32List instanceData;
   final int instanceCount;
   final ByteData frameUniform;
@@ -41,7 +49,39 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
   @override
   final int translucentSortPriority;
 
+  final Object _stationSnapshotIdentity;
+
   int get instanceStrideInBytes => observationPointInstanceStrideInBytes;
+
+  bool hasStationSnapshotIdentity(Object identity) =>
+      identical(_stationSnapshotIdentity, identity);
+
+  ObservationPointBatch withFrame({
+    required MapFrameSnapshot frame,
+    required ByteData frameUniform,
+  }) {
+    final ownedUniformBytes = Uint8List.fromList(
+      frameUniform.buffer.asUint8List(
+        frameUniform.offsetInBytes,
+        frameUniform.lengthInBytes,
+      ),
+    );
+    return ObservationPointBatch._(
+      frame: frame,
+      sourceId: sourceId,
+      snapshotRevision: snapshotRevision,
+      instanceGeneration: instanceGeneration,
+      instanceData: instanceData,
+      instanceCount: instanceCount,
+      frameUniform: ByteData.sublistView(
+        ownedUniformBytes,
+      ).asUnmodifiableView(),
+      phasePolicyVersion: phasePolicyVersion,
+      phase: phase,
+      translucentSortPriority: translucentSortPriority,
+      stationSnapshotIdentity: _stationSnapshotIdentity,
+    );
+  }
 }
 
 /// 検証済みbyte列から観測点batchを作る。
@@ -55,6 +95,7 @@ ObservationPointBatch createObservationPointBatch({
   required int phasePolicyVersion,
   required int phase,
   required int translucentSortPriority,
+  Object? stationSnapshotIdentity,
 }) {
   if (sourceId.trim().isEmpty) {
     throw ArgumentError.value(sourceId, 'sourceId', 'must not be blank');
@@ -83,15 +124,26 @@ ObservationPointBatch createObservationPointBatch({
     );
   }
 
+  final ownedInstances = Float32List.fromList(instanceData);
+  final ownedUniformBytes = Uint8List.fromList(
+    frameUniform.buffer.asUint8List(
+      frameUniform.offsetInBytes,
+      frameUniform.lengthInBytes,
+    ),
+  );
   return ObservationPointBatch._(
     frame: frame,
     sourceId: sourceId,
     snapshotRevision: snapshotRevision,
-    instanceData: instanceData.asUnmodifiableView(),
+    instanceGeneration: ObservationPointInstanceGeneration._(),
+    instanceData: ownedInstances.asUnmodifiableView(),
     instanceCount: instanceCount,
-    frameUniform: frameUniform.asUnmodifiableView(),
+    frameUniform: ByteData.sublistView(
+      ownedUniformBytes,
+    ).asUnmodifiableView(),
     phasePolicyVersion: phasePolicyVersion,
     phase: phase,
     translucentSortPriority: translucentSortPriority,
+    stationSnapshotIdentity: stationSnapshotIdentity ?? Object(),
   );
 }

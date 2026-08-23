@@ -30,18 +30,25 @@ ObservationPointBatch? buildObservationPointBatch({
   final canReuse =
       previous != null &&
       previous.sourceId == snapshot.sourceId &&
-      previous.snapshotRevision == snapshot.revision;
+      previous.snapshotRevision == snapshot.revision &&
+      previous.hasStationSnapshotIdentity(snapshot.stations);
   if (canReuse && previous.instanceCount != snapshot.stations.length) {
     throw StateError(
       'Observation station count changed without a snapshot revision change.',
     );
   }
-  final instanceData = canReuse
-      ? previous.instanceData
-      : packObservationPointInstances(
-          stations: snapshot.stations,
-          projection: projection,
-        );
+  final frameUniform = packObservationFrameUniform(
+    frame: frame,
+    strokeLogicalPixels: strokeLogicalPixels,
+    projection: projection,
+  );
+  if (canReuse) {
+    return previous.withFrame(frame: frame, frameUniform: frameUniform);
+  }
+  final instanceData = packObservationPointInstances(
+    stations: snapshot.stations,
+    projection: projection,
+  );
   final phase = mapSceneRenderPhasePolicy.rankOf(
     mapSceneObservationPointPhaseId,
   );
@@ -51,14 +58,11 @@ ObservationPointBatch? buildObservationPointBatch({
     snapshotRevision: snapshot.revision,
     instanceData: instanceData,
     instanceCount: snapshot.stations.length,
-    frameUniform: packObservationFrameUniform(
-      frame: frame,
-      strokeLogicalPixels: strokeLogicalPixels,
-      projection: projection,
-    ),
+    frameUniform: frameUniform,
     phasePolicyVersion: mapSceneRenderPhasePolicy.version,
     phase: phase,
     translucentSortPriority: mapSceneTranslucentSortPriorityFor(phase: phase),
+    stationSnapshotIdentity: snapshot.stations,
   );
 }
 

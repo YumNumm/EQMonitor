@@ -168,7 +168,35 @@ void main() {
   });
 
   test(
-    'same snapshot revision reuses instance bytes and updates only frame',
+    'same snapshot object reuses instance generation and updates only frame',
+    () {
+      final value = snapshot();
+      final first = _requireObservationPointBatch(
+        buildObservationPointBatch(
+          frame: frame(),
+          snapshot: value,
+        ),
+      );
+      final second = _requireObservationPointBatch(
+        buildObservationPointBatch(
+          frame: frame(frameNumber: 1, centerLongitude: 140),
+          snapshot: value,
+          previous: first,
+        ),
+      );
+
+      expect(second.instanceData, same(first.instanceData));
+      expect(second.instanceGeneration, same(first.instanceGeneration));
+      expect(second.frameUniform, isNot(same(first.frameUniform)));
+      expect(
+        second.frameUniform.getFloat32(0, Endian.little),
+        isNot(first.frameUniform.getFloat32(0, Endian.little)),
+      );
+    },
+  );
+
+  test(
+    'same source and revision with changed station color is new generation',
     () {
       final first = _requireObservationPointBatch(
         buildObservationPointBatch(
@@ -178,18 +206,62 @@ void main() {
       );
       final second = _requireObservationPointBatch(
         buildObservationPointBatch(
-          frame: frame(frameNumber: 1, centerLongitude: 140),
-          snapshot: snapshot(),
+          frame: frame(frameNumber: 1),
+          snapshot: snapshot(
+            stations: const [
+              EarthquakeObservationPoint(
+                id: 'tokyo',
+                longitude: 139.6917,
+                latitude: 35.6895,
+                color: Color(0xFF0000FF),
+                radiusLogicalPixels: 10,
+              ),
+            ],
+          ),
           previous: first,
         ),
       );
 
-      expect(second.instanceData, same(first.instanceData));
-      expect(second.frameUniform, isNot(same(first.frameUniform)));
+      expect(second.instanceGeneration, isNot(same(first.instanceGeneration)));
       expect(
-        second.frameUniform.getFloat32(0, Endian.little),
-        isNot(first.frameUniform.getFloat32(0, Endian.little)),
+        ByteData.sublistView(second.instanceData).getFloat32(8, Endian.little),
+        0,
+      );
+      expect(
+        ByteData.sublistView(second.instanceData).getFloat32(16, Endian.little),
+        1,
       );
     },
   );
+
+  test('public factory defensively owns instance and uniform buffers', () {
+    final template = _requireObservationPointBatch(
+      buildObservationPointBatch(frame: frame(), snapshot: snapshot()),
+    );
+    final callerInstances = Float32List.fromList(template.instanceData);
+    final callerUniform = ByteData(observationFrameUniformByteLength)
+      ..setFloat32(0, 0.25, Endian.little);
+    final batch = createObservationPointBatch(
+      frame: template.frame,
+      sourceId: template.sourceId,
+      snapshotRevision: template.snapshotRevision,
+      instanceData: callerInstances,
+      instanceCount: template.instanceCount,
+      frameUniform: callerUniform,
+      phasePolicyVersion: template.phasePolicyVersion,
+      phase: template.phase,
+      translucentSortPriority: template.translucentSortPriority,
+    );
+
+    callerInstances[0] = 99;
+    callerUniform.setFloat32(0, 0.75, Endian.little);
+
+    expect(batch.instanceData[0], template.instanceData[0]);
+    expect(batch.frameUniform.getFloat32(0, Endian.little), 0.25);
+    expect(() => batch.instanceData[0] = 1, throwsUnsupportedError);
+    expect(
+      () => batch.frameUniform.setFloat32(0, 1, Endian.little),
+      throwsUnsupportedError,
+    );
+  });
 }
