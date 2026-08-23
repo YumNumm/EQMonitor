@@ -15,15 +15,14 @@ import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_controller.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
-import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
-import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decode_failure_owner.dart';
@@ -173,9 +172,11 @@ class BaseMapView extends HookWidget {
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.updateEarthquakeOverlay(
-          overlay: earthquakeOverlay,
-          onCoverageChanged: onEarthquakeOverlayCoverageChanged,
+        unawaited(
+          controller.updateEarthquakeOverlay(
+            overlay: earthquakeOverlay,
+            onCoverageChanged: onEarthquakeOverlayCoverageChanged,
+          ),
         );
       });
       return null;
@@ -319,8 +320,8 @@ class _BaseMapController extends ChangeNotifier {
   }) : _camera = initialCamera,
        _inputOverlay = earthquakeOverlay,
        _acceptedOverlay = earthquakeOverlay,
-       _coverageOwner = EarthquakeOverlayCoverageOwner(
-         onChanged: onEarthquakeOverlayCoverageChanged,
+       _overlayFrameOwner = BaseMapOverlayFrameOwner(
+         onCoverageChanged: onEarthquakeOverlayCoverageChanged,
        );
 
   final VerifiedPmTilesSource source;
@@ -380,9 +381,8 @@ class _BaseMapController extends ChangeNotifier {
   EarthquakeMapOverlaySnapshot? _inputOverlay;
   EarthquakeMapOverlaySnapshot? _acceptedOverlay;
   EarthquakeMapOverlaySnapshot? _requestedOverlay;
-  EarthquakeMapOverlaySnapshot? _currentOverlay;
-  ObservationPointBatch? _previousObservationBatch;
-  final EarthquakeOverlayCoverageOwner _coverageOwner;
+  EarthquakeOverlayMaterialStage? _requestedMaterialStage;
+  final BaseMapOverlayFrameOwner _overlayFrameOwner;
   var _overlayRequestGeneration = 0;
 
   var _frameNumber = 0;
@@ -457,6 +457,7 @@ class _BaseMapController extends ChangeNotifier {
       }
       final observationMaterial =
           await loadEarthquakeObservationMaterialBinding();
+      prepareInitialOverlay:
       while (true) {
         final candidate = _inputOverlay;
         if (candidate == null) {
@@ -470,9 +471,24 @@ class _BaseMapController extends ChangeNotifier {
             parametersFor: earthquakeAreaMaterialParametersFor,
           ),
         );
-        if (prepared && identical(candidate, _inputOverlay)) {
-          _requestedOverlay = candidate;
-          break;
+        if (!identical(candidate, _inputOverlay)) {
+          continue;
+        }
+        switch (prepared) {
+          case EarthquakeOverlayMaterialPreparationReady(:final stage):
+            _requestedOverlay = candidate;
+            _requestedMaterialStage = stage;
+            break prepareInitialOverlay;
+          case EarthquakeOverlayMaterialPreparationFailed(:final error):
+            _requestedOverlay = null;
+            _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+            debugPrint(
+              'BaseMapView: failed to load earthquake overlay material: '
+              '$error',
+            );
+            break prepareInitialOverlay;
+          case EarthquakeOverlayMaterialPreparationSuperseded():
+            continue;
         }
       }
       final repository = await BaseMapTileRepository.open(
@@ -531,14 +547,14 @@ class _BaseMapController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateEarthquakeOverlay({
+  Future<void> updateEarthquakeOverlay({
     required EarthquakeMapOverlaySnapshot? overlay,
     required ValueChanged<EarthquakeOverlayCoverage>? onCoverageChanged,
-  }) {
+  }) async {
     if (_isDisposed) {
       return;
     }
-    _coverageOwner.onChanged = onCoverageChanged;
+    _overlayFrameOwner.updateCoverageCallback(onCoverageChanged);
     if (identical(_inputOverlay, overlay)) {
       return;
     }
@@ -547,7 +563,7 @@ class _BaseMapController extends ChangeNotifier {
       _acceptedOverlay = null;
       _overlayRequestGeneration++;
       _requestedOverlay = null;
-      _earthquakeMaterialOwner.clear();
+      _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
       _earthquakeStyleCache.clear();
       _refresh();
       notifyListeners();
@@ -568,27 +584,35 @@ class _BaseMapController extends ChangeNotifier {
     _inputOverlay = selected;
     _acceptedOverlay = selected;
     final requestGeneration = ++_overlayRequestGeneration;
-    unawaited(
-      _earthquakeMaterialOwner
-          .prepare(
-            resources: earthquakeAreaRenderStyleResourcesForSnapshot(
-              cache: _earthquakeStyleCache,
-              snapshot: selected,
-              parametersFor: earthquakeAreaMaterialParametersFor,
-            ),
-          )
-          .then((prepared) {
-            if (!prepared ||
-                _isDisposed ||
-                requestGeneration != _overlayRequestGeneration ||
-                !identical(_inputOverlay, selected)) {
-              return;
-            }
-            _requestedOverlay = selected;
-            _refresh();
-            notifyListeners();
-          }),
+    _requestedOverlay = _overlayFrameOwner.overlay;
+    _requestedMaterialStage = null;
+    final prepared = await _earthquakeMaterialOwner.prepare(
+      resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+        cache: _earthquakeStyleCache,
+        snapshot: selected,
+        parametersFor: earthquakeAreaMaterialParametersFor,
+      ),
     );
+    if (_isDisposed ||
+        requestGeneration != _overlayRequestGeneration ||
+        !identical(_inputOverlay, selected)) {
+      return;
+    }
+    switch (prepared) {
+      case EarthquakeOverlayMaterialPreparationReady(:final stage):
+        _requestedOverlay = selected;
+        _requestedMaterialStage = stage;
+      case EarthquakeOverlayMaterialPreparationFailed(:final error):
+        _requestedOverlay = null;
+        _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+        debugPrint(
+          'BaseMapView: failed to load earthquake overlay material: $error',
+        );
+      case EarthquakeOverlayMaterialPreparationSuperseded():
+        return;
+    }
+    _refresh();
+    notifyListeners();
   }
 
   /// app lifecycleの変化をGPU resourceの寿命へ反映する。
@@ -606,7 +630,7 @@ class _BaseMapController extends ChangeNotifier {
     }
     _lifecycle = lifecycle;
     if (suspendsMapRendering(lifecycle)) {
-      _coverageOwner.hide();
+      _overlayFrameOwner.hide();
     }
 
     if (retiresGpuResourcesOnTransition(from: previous, to: lifecycle)) {
@@ -691,7 +715,8 @@ class _BaseMapController extends ChangeNotifier {
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
   }) {
-    if (_materialsByStyleLayerId == null) {
+    final adapter = _adapter;
+    if (_materialsByStyleLayerId == null || adapter == null) {
       return;
     }
     final plans = buildBaseMapRenderPlans(
@@ -737,25 +762,44 @@ class _BaseMapController extends ChangeNotifier {
     final result = buildBaseMapOverlayFrame(
       frame: frame,
       baseMap: baseMap,
-      currentOverlay: _currentOverlay,
+      currentOverlay: _overlayFrameOwner.overlay,
       requestedOverlay: _requestedOverlay,
-      previousObservationBatch: _previousObservationBatch,
+      previousObservationBatch: _overlayFrameOwner.previousObservationBatch,
       requestedCover: cover,
       tileSourceInstanceId: source.cacheIdentity,
       tileCache: _cache,
       packedMeshFor: _earthquakePackedMeshCache.resolve,
       styleCache: _earthquakeStyleCache,
     );
-    _currentOverlay = result.overlay;
-    _previousObservationBatch = result.observationBatchForReuse;
-    _coverageOwner.publish(result.coverage);
     if (result.shouldRetireGpuResources) {
-      _adapter?.retireAllGpuResources();
+      adapter.retireAllGpuResources();
       return;
     }
     final submission = result.submission;
-    if (submission != null) {
-      _adapter?.submitFrame(submission: submission);
+    if (submission == null) {
+      return;
+    }
+    final commit = _overlayFrameOwner.commit(
+      candidate: result,
+      baseOnlySubmission: buildBaseMapOnlyFrameSubmission(
+        frame: frame,
+        baseMap: baseMap,
+      ),
+      resources: _requestedMaterialStage,
+      submitFrame: (submission) => adapter.submitFrame(
+        submission: submission,
+      ),
+      retireAllGpuResources: adapter.retireAllGpuResources,
+      failClosedResources: _earthquakeMaterialOwner.clear,
+    );
+    _requestedMaterialStage = null;
+    if (commit is BaseMapOverlayFrameCommitFailed) {
+      _requestedOverlay = null;
+      _earthquakeStyleCache.clear();
+      debugPrint(
+        'BaseMapView: earthquake overlay Scene submit failed: '
+        '${commit.error}',
+      );
     }
   }
 
