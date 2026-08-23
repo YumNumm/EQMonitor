@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_class.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,6 +13,7 @@ abstract class EarthquakeIntensityPartial with _$EarthquakeIntensityPartial {
   const factory({
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
+    ShindoDbIntensityClass? maxIntensityClass,
   }) = _EarthquakeIntensityPartial;
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -25,6 +27,7 @@ extension EarthquakeIntensityPartialApiExtension on api.IntensityPartial {
     return EarthquakeIntensityPartial(
       maxIntensity: maxIntensity.toJmaIntensity,
       maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
+      maxIntensityClass: maxIntensityClass?.toShindoDbIntensityClass,
     );
   }
 }
