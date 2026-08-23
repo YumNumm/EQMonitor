@@ -6,5 +6,4 @@ export 'src/background_location.g.dart'
         PendingLocationConsumer,
         PendingLocationMessage;
 export 'src/background_location_tracker_impl.dart';
-export 'src/callback_dispatcher.dart' show locationUpdateCallbackDispatcher;
 export 'src/location_update_message.dart' show LocationUpdateMessage;

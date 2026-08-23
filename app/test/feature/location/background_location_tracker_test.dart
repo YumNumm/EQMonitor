@@ -70,7 +70,9 @@ void main() {
   });
 
   test('新旧のstreamがリスナー登録前の最新位置を別の型で再送する', () async {
-    await BackgroundLocationTracker.initialize();
+    await BackgroundLocationTracker.initialize(
+      callbackDispatcher: testBackgroundLocationCallbackDispatcher,
+    );
 
     await _sendLocationUpdate(
       PendingLocationMessage(
@@ -236,6 +238,9 @@ void main() {
     );
   });
 }
+
+@pragma('vm:entry-point')
+void testBackgroundLocationCallbackDispatcher() {}
 
 Future<void> _sendLocationUpdate(PendingLocationMessage location) async {
   final messenger =

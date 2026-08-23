@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:background_location_tracker/src/background_location.g.dart';
-import 'package:background_location_tracker/src/callback_dispatcher.dart';
 import 'package:background_location_tracker/src/location_update_message.dart';
 
 class BackgroundLocationTracker {
@@ -21,14 +20,17 @@ class BackgroundLocationTracker {
   static LocationUpdateMessage? _pendingLiveLegacyLocation;
 
   /// アプリ起動時に必ず呼ぶ。killed状態復帰用コールバックハンドルをネイティブへ永続保存する。
-  static Future<void> initialize() async {
+  static Future<void> initialize({
+    required void Function() callbackDispatcher,
+  }) async {
     BackgroundLocationFlutterApi.setUp(_FlutterApiHandler());
     final handle = PluginUtilities.getCallbackHandle(
-      locationUpdateCallbackDispatcher,
+      callbackDispatcher,
     );
-    if (handle != null) {
-      await _hostApi.initialize(handle.toRawHandle());
+    if (handle == null) {
+      throw StateError('Background location callback handle is unavailable');
     }
+    await _hostApi.initialize(handle.toRawHandle());
   }
 
   static Future<void> startMonitoring() => _hostApi.startMonitoring();

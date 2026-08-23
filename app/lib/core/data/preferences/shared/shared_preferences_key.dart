@@ -60,6 +60,9 @@ enum SharedPreferencesKey(final String key) {
   backgroundLocationCurrentSlotEnabled(
     'background_location_current_slot_enabled',
   ),
+  backgroundLocationHeadlessDiagnostic(
+    'background_location_headless_diagnostic',
+  ),
   feedLastReadPublishedAt('feed_last_read_published_at'),
   eewHistoryNoticeShown('eew_history_notice_shown'),
   eewWarningOverlayEnabled('eew_warning_overlay_enabled');
