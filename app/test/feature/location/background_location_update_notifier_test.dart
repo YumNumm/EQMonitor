@@ -35,6 +35,13 @@ const EarthquakeRegionResolution _ibarakiSouthResolution = (
   cityName: '水戸市',
 );
 
+const _peekPendingLocationChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.peekPendingLocation';
+const _acknowledgePendingLocationChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.acknowledgePendingLocation';
+
 // ---------------------------------------------------------------------------
 // Fakes
 // ---------------------------------------------------------------------------
@@ -382,7 +389,11 @@ ProviderContainer _createNotificationSlotsSyncContainer(
 }
 
 final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
-  await const BackgroundLocationSyncCoordinator().applyLocation(ref, 36, 140);
+  await const BackgroundLocationSyncCoordinator().applyLocation(
+    ref,
+    latitude: 36,
+    longitude: 140,
+  );
 });
 
 final _applyPendingLocationProvider = FutureProvider<void>((ref) async {
@@ -927,10 +938,9 @@ void main() {
     test('pending位置更新ではAreaForecastLocalEをregionとして送る', () async {
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-      const channelName =
-          'dev.flutter.pigeon.background_location_tracker.'
-          'BackgroundLocationHostApi.peekPendingLocation';
-      messenger.setMockMessageHandler(channelName, (message) async {
+      messenger.setMockMessageHandler(_peekPendingLocationChannelName, (
+        message,
+      ) async {
         final arguments =
             BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
                 as List<Object?>;
@@ -945,7 +955,28 @@ void main() {
           ),
         ]);
       });
-      addTearDown(() => messenger.setMockMessageHandler(channelName, null));
+      final acknowledgements = <(String, PendingLocationConsumer)>[];
+      messenger.setMockMessageHandler(_acknowledgePendingLocationChannelName, (
+        message,
+      ) async {
+        final arguments =
+            BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
+                as List<Object?>;
+        acknowledgements.add((
+          arguments[0] as String,
+          arguments[1] as PendingLocationConsumer,
+        ));
+        return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+          true,
+        ]);
+      });
+      addTearDown(() {
+        messenger.setMockMessageHandler(_peekPendingLocationChannelName, null);
+        messenger.setMockMessageHandler(
+          _acknowledgePendingLocationChannelName,
+          null,
+        );
+      });
 
       final adapter = _FakeDeviceLocationApiAdapter();
       final resolver = _FakeJmaRegionResolver(
@@ -964,6 +995,56 @@ void main() {
         'city': '0820100',
         'tsunamiForecastRegion': '201',
       });
+      expect(acknowledgements, [
+        ('pending-id', PendingLocationConsumer.appEffects),
+      ]);
+    });
+
+    test('pending位置を反映できない場合はacknowledgeしない', () async {
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMessageHandler(_peekPendingLocationChannelName, (
+        message,
+      ) async {
+        return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+          PendingLocationMessage(
+            updateId: 'retry-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ]);
+      });
+      var acknowledgeCalls = 0;
+      messenger.setMockMessageHandler(_acknowledgePendingLocationChannelName, (
+        message,
+      ) async {
+        acknowledgeCalls += 1;
+        return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+          true,
+        ]);
+      });
+      addTearDown(() {
+        messenger.setMockMessageHandler(_peekPendingLocationChannelName, null);
+        messenger.setMockMessageHandler(
+          _acknowledgePendingLocationChannelName,
+          null,
+        );
+      });
+      final adapter = _FakeDeviceLocationApiAdapter();
+      final resolver = _FakeJmaRegionResolver(earthquakeResolution: null);
+      final container = _createLocationSyncContainer(
+        adapter: adapter,
+        resolver: resolver,
+      );
+      addTeardownToContainer(container);
+
+      await container.read(_applyPendingLocationProvider.future);
+
+      expect(acknowledgeCalls, 0);
+      expect(resolver.resolveEarthquakeRegionCalls, 3);
+      expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
 
     test('regionを解決できない場合は再試行してAPIを送らない', () async {
