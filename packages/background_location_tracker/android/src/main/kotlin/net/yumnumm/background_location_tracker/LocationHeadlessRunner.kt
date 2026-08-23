@@ -9,25 +9,18 @@ import io.flutter.view.FlutterCallbackInformation
 
 /// アプリがkilled状態から位置情報BroadcastReceiverで起動した時に
 /// Headless FlutterEngineを起動してDartコードを実行するクラス。
-class LocationHeadlessRunner(private val context: Context) {
+internal class LocationHeadlessRunner(private val context: Context) {
     companion object {
-        private const val PREFS_NAME = "blt_prefs"
-        private const val KEY_CALLBACK_HANDLE = "callback_handle"
         private const val HEADLESS_CHANNEL = "background_location_tracker/headless"
     }
 
-    fun start(latitude: Double, longitude: Double) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    fun start(location: StoredPendingLocation) {
+        val prefs = context.getSharedPreferences(
+            BackgroundLocationStorageKeys.PREFERENCES_NAME,
+            Context.MODE_PRIVATE
+        )
 
-        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
-        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
-        prefs.edit()
-            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(latitude))
-            .putLong("pending_lon_bits", java.lang.Double.doubleToRawLongBits(longitude))
-            .putLong("pending_ts", System.currentTimeMillis())
-            .apply()
-
-        val handle = prefs.getLong(KEY_CALLBACK_HANDLE, 0L)
+        val handle = prefs.getLong(BackgroundLocationStorageKeys.CALLBACK_HANDLE, 0L)
         if (handle == 0L) return
 
         val loader = FlutterLoader()
@@ -51,7 +44,13 @@ class LocationHeadlessRunner(private val context: Context) {
             if (call.method == "ready") {
                 channel.invokeMethod(
                     "onLocationUpdate",
-                    mapOf("latitude" to latitude, "longitude" to longitude)
+                    mapOf(
+                        "updateId" to location.updateId,
+                        "latitude" to location.latitude,
+                        "longitude" to location.longitude,
+                        "accuracy" to location.accuracy,
+                        "timestampMillis" to location.timestampMillis
+                    )
                 )
                 result.success(null)
             }

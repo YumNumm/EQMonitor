@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 /// 実際の lat/lon 永続化はネイティブ層(headless runner)が engine 起動前に
 /// 行うため、この dispatcher は ready ハンドシェイクのみ担う。
 /// 永続化された位置情報は通常起動時に
-/// `BackgroundLocationTracker.consumePendingLocation()` から取り出される。
+/// `BackgroundLocationTracker.peekPendingLocation()` から取り出される。
 @pragma('vm:entry-point')
 void locationUpdateCallbackDispatcher() {
   WidgetsFlutterBinding.ensureInitialized();

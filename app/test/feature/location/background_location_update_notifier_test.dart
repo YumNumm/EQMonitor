@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -18,7 +20,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:riverpod/riverpod.dart';
@@ -926,12 +927,25 @@ void main() {
     test('pending位置更新ではAreaForecastLocalEをregionとして送る', () async {
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-      const channel = MethodChannel('background_location_tracker/persistence');
-      messenger.setMockMethodCallHandler(channel, (call) async {
-        expect(call.method, 'consumePending');
-        return {'latitude': 36.0, 'longitude': 140.0};
+      const channelName =
+          'dev.flutter.pigeon.background_location_tracker.'
+          'BackgroundLocationHostApi.peekPendingLocation';
+      messenger.setMockMessageHandler(channelName, (message) async {
+        final arguments =
+            BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
+                as List<Object?>;
+        expect(arguments.single, PendingLocationConsumer.appEffects);
+        return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+          PendingLocationMessage(
+            updateId: 'pending-id',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        ]);
       });
-      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      addTearDown(() => messenger.setMockMessageHandler(channelName, null));
 
       final adapter = _FakeDeviceLocationApiAdapter();
       final resolver = _FakeJmaRegionResolver(

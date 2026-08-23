@@ -111,6 +111,8 @@
 		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
 		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
 		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		B17000000000000000000001 /* BackgroundLocationPendingLocationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */; };
+		B17000000000000000000002 /* PendingLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000004 /* PendingLocationStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -260,6 +262,8 @@
 		EQ0000000000000000000005 /* EewDisplay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplay.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
+		B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationPendingLocationStoreTests.swift; sourceTree = "<group>"; };
+		B17000000000000000000004 /* PendingLocationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PendingLocationStore.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/PendingLocationStore.swift; sourceTree = SOURCE_ROOT; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -417,6 +421,8 @@
 				EQ0000000000000000000004 /* WidgetErrorMessageTests.swift */,
 				EQ0000000000000000000006 /* EewDisplayTests.swift */,
 				EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */,
+				B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */,
+				B17000000000000000000004 /* PendingLocationStore.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -952,6 +958,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B17000000000000000000002 /* PendingLocationStore.swift in Sources */,
+				B17000000000000000000001 /* BackgroundLocationPendingLocationStoreTests.swift in Sources */,
 				EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */,
 				EQ000000000000000000006F /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */,

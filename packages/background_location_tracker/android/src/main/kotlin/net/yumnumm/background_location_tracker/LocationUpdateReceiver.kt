@@ -12,19 +12,20 @@ class LocationUpdateReceiver : BroadcastReceiver() {
         if (!LocationResult.hasResult(intent)) return
         val result = LocationResult.extractResult(intent) ?: return
         val location = result.lastLocation ?: return
+        val pendingLocation = PendingLocationStore(context).save(
+            latitude = location.latitude,
+            longitude = location.longitude,
+            accuracy = location.accuracy.toDouble(),
+            timestampMillis = location.time
+        ) ?: return
 
         if (BackgroundLocationPlugin.dispatchLocationUpdate(
-                location.latitude,
-                location.longitude,
-                location.accuracy.toDouble()
+                pendingLocation.toPigeonMessage()
             )
         ) {
             return
         }
 
-        LocationHeadlessRunner(context).start(
-            location.latitude,
-            location.longitude
-        )
+        LocationHeadlessRunner(context).start(pendingLocation)
     }
 }

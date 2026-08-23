@@ -14,18 +14,24 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
 
     private var headlessEngine: FlutterEngine?
     private var channel: FlutterMethodChannel?
-    private var pendingLocations: [(Double, Double)] = []
+    private var pendingLocations: [StoredPendingLocation] = []
     private var isReady = false
     private var locationManager: CLLocationManager?
     private var hasStarted = false
 
-    private override init() {}
+    override private init() {}
 
     private var storedCallbackHandle: Int64? {
-        let value = UserDefaults.standard.object(forKey: "blt_callback_handle")
+        let value = UserDefaults.standard.object(
+            forKey: BackgroundLocationStorageKey.callbackHandle
+        )
         guard let rawValue = value else { return nil }
-        if let intValue = rawValue as? Int64 { return intValue }
-        if let intValue = rawValue as? Int { return Int64(intValue) }
+        if let intValue = rawValue as? Int64 {
+            return intValue
+        }
+        if let intValue = rawValue as? Int {
+            return Int64(intValue)
+        }
         return nil
     }
 
@@ -41,15 +47,21 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         manager.startMonitoringSignificantLocationChanges()
     }
 
-    public func start(latitude: Double, longitude: Double) {
-        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
-        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
-        let defaults = UserDefaults.standard
-        defaults.set(latitude, forKey: "blt_pending_lat")
-        defaults.set(longitude, forKey: "blt_pending_lon")
-        defaults.set(Date().timeIntervalSince1970, forKey: "blt_pending_ts")
-
-        pendingLocations.append((latitude, longitude))
+    public func start(
+        latitude: Double,
+        longitude: Double,
+        accuracy: Double,
+        timestampMillis: Int64
+    ) {
+        guard let stored = PendingLocationStore().save(
+            latitude: latitude,
+            longitude: longitude,
+            accuracy: accuracy,
+            timestampMillis: timestampMillis
+        ) else {
+            return
+        }
+        pendingLocations.append(stored)
         launchEngine()
     }
 
@@ -101,10 +113,16 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         guard isReady else { return }
         let locations = pendingLocations
         pendingLocations.removeAll()
-        for (lat, lon) in locations {
+        for location in locations {
             channel?.invokeMethod(
                 "onLocationUpdate",
-                arguments: ["latitude": lat, "longitude": lon]
+                arguments: [
+                    "updateId": location.updateId,
+                    "latitude": location.latitude,
+                    "longitude": location.longitude,
+                    "accuracy": location.accuracy,
+                    "timestampMillis": location.timestampMillis,
+                ]
             )
         }
     }
@@ -112,16 +130,21 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManagerDelegate (killed状態復帰時のみ使用)
 
     public func locationManager(
-        _ manager: CLLocationManager,
+        _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
         guard let location = locations.last else { return }
-        start(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        start(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude,
+            accuracy: location.horizontalAccuracy,
+            timestampMillis: Int64(location.timestamp.timeIntervalSince1970 * 1000)
+        )
     }
 
     public func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
+        _: CLLocationManager,
+        didFailWithError _: Error
     ) {
         // サイレントに無視する
     }

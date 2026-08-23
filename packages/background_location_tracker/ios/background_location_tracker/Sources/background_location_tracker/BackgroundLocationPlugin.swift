@@ -6,6 +6,7 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
 {
     private var flutterApi: BackgroundLocationFlutterApi?
     private let monitor = SignificantLocationMonitor()
+    private let pendingStore = PendingLocationStore()
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = BackgroundLocationPlugin()
@@ -16,45 +17,26 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
             binaryMessenger: registrar.messenger(),
             api: instance
         )
-        instance.monitor.onLocationUpdate = { lat, lon, acc in
-            instance.flutterApi?.onLocationUpdate(
-                location: LocationUpdateMessage(
-                    latitude: lat,
-                    longitude: lon,
-                    accuracy: acc
-                )
-            ) { _ in }
-        }
-
-        // killed状態のheadless runnerが永続化した位置情報を、
-        // 通常起動時にDart側が読み出すための補助チャネル。
-        let persistenceChannel = FlutterMethodChannel(
-            name: "background_location_tracker/persistence",
-            binaryMessenger: registrar.messenger()
-        )
-        persistenceChannel.setMethodCallHandler { call, result in
-            switch call.method {
-            case "consumePending":
-                let defaults = UserDefaults.standard
-                let latObj = defaults.object(forKey: "blt_pending_lat")
-                let lonObj = defaults.object(forKey: "blt_pending_lon")
-                guard let lat = latObj as? Double, let lon = lonObj as? Double
-                else {
-                    result(nil)
-                    return
-                }
-                defaults.removeObject(forKey: "blt_pending_lat")
-                defaults.removeObject(forKey: "blt_pending_lon")
-                defaults.removeObject(forKey: "blt_pending_ts")
-                result(["latitude": lat, "longitude": lon])
-            default:
-                result(FlutterMethodNotImplemented)
+        instance.monitor.onLocationUpdate = { [weak instance] lat, lon, acc, timestamp in
+            guard let instance,
+                  let stored = instance.pendingStore.save(
+                      latitude: lat,
+                      longitude: lon,
+                      accuracy: acc,
+                      timestampMillis: timestamp
+                  )
+            else {
+                return
             }
+            instance.flutterApi?.onLocationUpdate(location: stored.pigeonMessage) { _ in }
         }
     }
 
     public func initialize(callbackHandle: Int64) throws {
-        UserDefaults.standard.set(callbackHandle, forKey: "blt_callback_handle")
+        UserDefaults.standard.set(
+            callbackHandle,
+            forKey: BackgroundLocationStorageKey.callbackHandle
+        )
     }
 
     public func startMonitoring() throws {
@@ -63,5 +45,53 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
 
     public func stopMonitoring() throws {
         monitor.stop()
+    }
+
+    func peekPendingLocation(
+        consumer: PendingLocationConsumer
+    ) throws -> PendingLocationMessage? {
+        pendingStore.peek(consumer: consumer.storeConsumer)?.pigeonMessage
+    }
+
+    func acknowledgePendingLocation(
+        updateId: String,
+        consumer: PendingLocationConsumer
+    ) throws -> Bool {
+        pendingStore.acknowledge(
+            updateId: updateId,
+            consumer: consumer.storeConsumer
+        )
+    }
+
+    func getActiveHeadlessTaskId() throws -> String? {
+        nil
+    }
+
+    func completeHeadlessTask(
+        updateId _: String,
+        result _: HeadlessTaskResult
+    ) throws {}
+}
+
+private extension PendingLocationConsumer {
+    var storeConsumer: PendingLocationStore.Consumer {
+        switch self {
+        case .deviceLocation:
+            .deviceLocation
+        case .appEffects:
+            .appEffects
+        }
+    }
+}
+
+private extension StoredPendingLocation {
+    var pigeonMessage: PendingLocationMessage {
+        PendingLocationMessage(
+            updateId: updateId,
+            latitude: latitude,
+            longitude: longitude,
+            accuracy: accuracy,
+            timestampMillis: timestampMillis
+        )
     }
 }

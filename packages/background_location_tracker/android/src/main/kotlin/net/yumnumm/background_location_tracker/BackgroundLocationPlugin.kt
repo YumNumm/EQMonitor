@@ -2,22 +2,15 @@ package net.yumnumm.background_location_tracker
 
 import android.content.Context
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodChannel
 
 class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
     companion object {
         @Volatile
         private var activeFlutterApi: BackgroundLocationFlutterApi? = null
 
-        fun dispatchLocationUpdate(latitude: Double, longitude: Double, accuracy: Double): Boolean {
+        fun dispatchLocationUpdate(location: PendingLocationMessage): Boolean {
             val api = activeFlutterApi ?: return false
-            api.onLocationUpdate(
-                LocationUpdateMessage(
-                    latitude = latitude,
-                    longitude = longitude,
-                    accuracy = accuracy
-                )
-            ) {}
+            api.onLocationUpdate(location) {}
             return true
         }
     }
@@ -25,7 +18,7 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
     private var flutterApi: BackgroundLocationFlutterApi? = null
     private var context: Context? = null
     private var monitor: SignificantLocationMonitor? = null
-    private var persistenceChannel: MethodChannel? = null
+    private var pendingStore: PendingLocationStore? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         val ctx = binding.applicationContext
@@ -33,60 +26,29 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         flutterApi = BackgroundLocationFlutterApi(binding.binaryMessenger)
         BackgroundLocationHostApi.setUp(binding.binaryMessenger, this)
         monitor = SignificantLocationMonitor(ctx)
-
-        // killed状態のheadless runnerが永続化した位置情報を、
-        // 通常起動時にDart側が読み出すための補助チャネル。
-        val channel = MethodChannel(
-            binding.binaryMessenger,
-            "background_location_tracker/persistence"
-        )
-        channel.setMethodCallHandler { call, result ->
-            when (call.method) {
-                "consumePending" -> {
-                    val prefs = ctx.getSharedPreferences("blt_prefs", Context.MODE_PRIVATE)
-                    if (!prefs.contains("pending_lat_bits") ||
-                        !prefs.contains("pending_lon_bits")
-                    ) {
-                        result.success(null)
-                        return@setMethodCallHandler
-                    }
-                    val lat = java.lang.Double.longBitsToDouble(
-                        prefs.getLong("pending_lat_bits", 0L)
-                    )
-                    val lon = java.lang.Double.longBitsToDouble(
-                        prefs.getLong("pending_lon_bits", 0L)
-                    )
-                    prefs.edit()
-                        .remove("pending_lat_bits")
-                        .remove("pending_lon_bits")
-                        .remove("pending_ts")
-                        .apply()
-                    result.success(mapOf("latitude" to lat, "longitude" to lon))
-                }
-                else -> result.notImplemented()
-            }
-        }
-        persistenceChannel = channel
+        pendingStore = PendingLocationStore(ctx)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         BackgroundLocationHostApi.setUp(binding.binaryMessenger, null)
-        persistenceChannel?.setMethodCallHandler(null)
-        persistenceChannel = null
         if (activeFlutterApi === flutterApi) {
             activeFlutterApi = null
         }
         flutterApi = null
         monitor = null
+        pendingStore = null
         context = null
     }
 
     override fun initialize(callbackHandle: Long) {
         val ctx = context ?: return
         activeFlutterApi = flutterApi
-        ctx.getSharedPreferences("blt_prefs", Context.MODE_PRIVATE)
+        ctx.getSharedPreferences(
+            BackgroundLocationStorageKeys.PREFERENCES_NAME,
+            Context.MODE_PRIVATE
+        )
             .edit()
-            .putLong("callback_handle", callbackHandle)
+            .putLong(BackgroundLocationStorageKeys.CALLBACK_HANDLE, callbackHandle)
             .apply()
     }
 
@@ -97,4 +59,33 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
     override fun stopMonitoring() {
         monitor?.stop()
     }
+
+    override fun peekPendingLocation(
+        consumer: PendingLocationConsumer
+    ): PendingLocationMessage? = pendingStore
+        ?.peek(consumer.storeConsumer)
+        ?.toPigeonMessage()
+
+    override fun acknowledgePendingLocation(
+        updateId: String,
+        consumer: PendingLocationConsumer
+    ): Boolean = pendingStore?.acknowledge(updateId, consumer.storeConsumer) ?: false
+
+    override fun getActiveHeadlessTaskId(): String? = null
+
+    override fun completeHeadlessTask(updateId: String, result: HeadlessTaskResult) = Unit
 }
+
+private val PendingLocationConsumer.storeConsumer: PendingLocationStore.Consumer
+    get() = when (this) {
+        PendingLocationConsumer.DEVICE_LOCATION -> PendingLocationStore.Consumer.DEVICE_LOCATION
+        PendingLocationConsumer.APP_EFFECTS -> PendingLocationStore.Consumer.APP_EFFECTS
+    }
+
+internal fun StoredPendingLocation.toPigeonMessage() = PendingLocationMessage(
+    updateId = updateId,
+    latitude = latitude,
+    longitude = longitude,
+    accuracy = accuracy,
+    timestampMillis = timestampMillis
+)
