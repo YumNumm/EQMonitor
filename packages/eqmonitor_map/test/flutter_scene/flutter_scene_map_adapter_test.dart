@@ -42,6 +42,25 @@ final class _ObservationBatch implements MapSceneObservationBatch {
   final int translucentSortPriority;
 }
 
+final class _RecordingSceneGraph with scene.SceneGraph {
+  final children = <scene.Node>[];
+
+  @override
+  void add(scene.Node child) => children.add(child);
+
+  @override
+  void addAll(Iterable<scene.Node> children) => this.children.addAll(children);
+
+  @override
+  void addMesh(scene.Mesh mesh) => add(scene.Node(mesh: mesh));
+
+  @override
+  void remove(scene.Node child) => children.remove(child);
+
+  @override
+  void removeAll() => children.clear();
+}
+
 void main() {
   final frame = captureMapFrameSnapshot(
     clock: SystemMapClock.start(
@@ -302,4 +321,52 @@ void main() {
       mapSceneRenderPhasePolicy.version,
     );
   });
+
+  test(
+    'unknown later base pipeline leaves material Scene and GPU state intact',
+    () {
+      final invalidBase = createMapRenderSubmission(
+        frame: frame,
+        batches: [
+          ...baseSubmission().batches,
+          ...submission(
+            policy: mapSceneRenderPhasePolicy,
+            phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId),
+            materialKey: 'unknownPipeline',
+            pipelineKey: 'unknown-base-pipeline',
+          ).batches,
+        ],
+      );
+      final value = MapSceneFrameSubmission(
+        baseMap: invalidBase,
+        earthquakeFill: emptySubmission(),
+        observationBatch: null,
+      );
+      final sceneGraph = _RecordingSceneGraph();
+      final existingNode = scene.Node();
+      sceneGraph.add(existingNode);
+      var materialLookups = 0;
+      var existingMaterialParameter = const Color(0xFF123456);
+      final adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: (_) {
+          materialLookups++;
+          existingMaterialParameter = const Color(0xFFABCDEF);
+          return null;
+        },
+        maxFramesInFlight: 2,
+      );
+
+      expect(
+        () => adapter.submitFrame(submission: value),
+        throwsArgumentError,
+      );
+      expect(materialLookups, 0);
+      expect(existingMaterialParameter, const Color(0xFF123456));
+      expect(sceneGraph.children, [same(existingNode)]);
+      expect(adapter.uploadedGeometryCount, 0);
+      expect(adapter.retiredGeometryCount, 0);
+      expect(adapter.liveGeometryCount, 0);
+    },
+  );
 }

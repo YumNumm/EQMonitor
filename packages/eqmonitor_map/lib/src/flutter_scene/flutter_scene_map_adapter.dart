@@ -1,6 +1,8 @@
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_material_parameters.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_gpu_resource_ledger.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
@@ -63,7 +65,7 @@ List<FlutterSceneMeshBatchPlan> buildFlutterSceneMeshBatchPlans({
 /// base mapとoverlayを1つのFlutter Sceneへ送る唯一のowner。
 final class FlutterSceneMapAdapter {
   new({
-    required scene.Scene sceneGraph,
+    required scene.SceneGraph sceneGraph,
     required FlutterSceneMapMaterialResolver materialFor,
     required int maxFramesInFlight,
   }) : this._(
@@ -76,7 +78,7 @@ final class FlutterSceneMapAdapter {
 
   new _(this._sceneGraph, this._materialFor, this._geometries);
 
-  final scene.Scene _sceneGraph;
+  final scene.SceneGraph _sceneGraph;
   final FlutterSceneMapMaterialResolver _materialFor;
   final MapGpuResourceLedger<scene.MeshGeometry> _geometries;
 
@@ -89,6 +91,7 @@ final class FlutterSceneMapAdapter {
 
   void submitFrame({required MapSceneFrameSubmission submission}) {
     final plans = buildFlutterSceneMeshBatchPlans(submission: submission);
+    preflightFlutterSceneMeshBatchPlans(plans: plans);
     final resolved = resolveFlutterSceneMaterials(
       plans: plans,
       materialFor: _materialFor,
@@ -151,6 +154,53 @@ final class FlutterSceneMapAdapter {
   }
 }
 
+/// 全batchのpipelineとparameter blockをmutation前に検証する。
+///
+/// decodeをmaterial適用ループまで遅らせると、後続batchの不整合が判明する前に
+/// 先行batchと共有するmaterialが部分更新される。byte列は不変なので、ここで
+/// 全件decodeが成功した後の適用では同じ検証エラーは発生しない。
+void preflightFlutterSceneMeshBatchPlans({
+  required List<FlutterSceneMeshBatchPlan> plans,
+}) {
+  for (final plan in plans) {
+    final compatibility = plan.batch.compatibility;
+    final parameters = compatibility.materialParameters;
+    switch (plan.kind) {
+      case FlutterSceneMeshBatchKind.baseMap:
+        if (parameters.version != baseMapMaterialParameterVersion) {
+          throw ArgumentError.value(
+            parameters.version,
+            'materialParameters.version',
+            'is not the supported base map version',
+          );
+        }
+        if (compatibility.pipeline == baseMapFillPipelineKey) {
+          decodeBaseMapFillMaterialBytes(parameters.bytes);
+          continue;
+        }
+        if (compatibility.pipeline == baseMapLinePipelineKey) {
+          decodeBaseMapLineMaterialBytes(parameters.bytes);
+          continue;
+        }
+        throw ArgumentError.value(
+          compatibility.pipeline,
+          'pipeline',
+          'is not a supported base map pipeline',
+        );
+      case FlutterSceneMeshBatchKind.earthquakeAreaFill:
+        if (compatibility.pipeline != earthquakeAreaFillPipelineKey ||
+            parameters.version != earthquakeAreaMaterialParameterVersion) {
+          throw ArgumentError.value(
+            compatibility.pipeline,
+            'earthquakeAreaFill',
+            'has an unsupported pipeline or parameter version',
+          );
+        }
+        decodeEarthquakeAreaFillMaterialBytes(parameters.bytes);
+    }
+  }
+}
+
 /// 共有phase policyとの一致を検証してから実Nodeへpriorityを設定する。
 void applyFlutterSceneTranslucentSortPriority({
   required scene.Node node,
@@ -182,9 +232,40 @@ List<FlutterSceneResolvedMeshBatch> resolveFlutterSceneMaterials({
         '"${plan.batch.compatibility.batchKey.materialKey}".',
       );
     }
+    validateFlutterSceneMaterialParameterAvailability(
+      plan: plan,
+      material: material,
+    );
     resolved.add((plan: plan, material: material));
   }
   return List.unmodifiable(resolved);
+}
+
+/// materialがpipelineの必須parameterを全て公開していることを検証する。
+void validateFlutterSceneMaterialParameterAvailability({
+  required FlutterSceneMeshBatchPlan plan,
+  required scene.PreprocessedMaterial material,
+}) {
+  final requiredNames = switch (plan.batch.compatibility.pipeline) {
+    final pipeline when pipeline == baseMapFillPipelineKey => const {
+      'fill_color',
+    },
+    final pipeline when pipeline == baseMapLinePipelineKey => const {
+      'line_color',
+      'half_width_ndc',
+    },
+    final pipeline when pipeline == earthquakeAreaFillPipelineKey => const {
+      'fill_color',
+    },
+    _ => const <String>{},
+  };
+  final availableNames = material.parameters.parameterNames.toSet();
+  if (!availableNames.containsAll(requiredNames)) {
+    throw StateError(
+      'Flutter Scene material is missing parameters for '
+      '"${plan.batch.compatibility.pipeline.key}".',
+    );
+  }
 }
 
 void applyFlutterSceneMeshBatchMaterial({
