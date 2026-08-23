@@ -24,8 +24,7 @@ final class EarthquakeOverlayCoverageOwner {
     final next = overlay == null
         ? const EarthquakeOverlayCoverageSnapshot.hidden()
         : EarthquakeOverlayCoverageSnapshot(
-            sourceId: overlay.sourceId,
-            revision: overlay.revision,
+            versionStamp: overlay.versionStamp,
             coverage: coverage,
           );
     if (next == _snapshot) {

@@ -1,3 +1,4 @@
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:flutter/foundation.dart';
 
 /// 可視範囲における地震overlayの準備状況。
@@ -6,6 +7,8 @@ sealed class EarthquakeOverlayCoverage {
   const EarthquakeOverlayCoverage();
 
   const factory EarthquakeOverlayCoverage.hidden() = EarthquakeOverlayHidden;
+
+  const factory EarthquakeOverlayCoverage.loading() = EarthquakeOverlayLoading;
 
   const factory EarthquakeOverlayCoverage.incomplete({
     required int requestedTileCount,
@@ -59,29 +62,25 @@ sealed class EarthquakeOverlayCoverage {
 @immutable
 final class EarthquakeOverlayCoverageSnapshot {
   const EarthquakeOverlayCoverageSnapshot({
-    required String this.sourceId,
-    required int this.revision,
+    required MapOverlayVersionStamp this.versionStamp,
     required this.coverage,
   });
 
   const EarthquakeOverlayCoverageSnapshot.hidden()
-    : sourceId = null,
-      revision = null,
+    : versionStamp = null,
       coverage = const EarthquakeOverlayCoverage.hidden();
 
-  final String? sourceId;
-  final int? revision;
+  final MapOverlayVersionStamp? versionStamp;
   final EarthquakeOverlayCoverage coverage;
 
   @override
   bool operator ==(Object other) =>
       other is EarthquakeOverlayCoverageSnapshot &&
-      other.sourceId == sourceId &&
-      other.revision == revision &&
+      other.versionStamp == versionStamp &&
       other.coverage == coverage;
 
   @override
-  int get hashCode => Object.hash(sourceId, revision, coverage);
+  int get hashCode => Object.hash(versionStamp, coverage);
 }
 
 /// overlayが非表示で、可視tileを要求していない状態。
@@ -90,6 +89,17 @@ final class EarthquakeOverlayHidden extends EarthquakeOverlayCoverage {
 
   @override
   bool operator ==(Object other) => other is EarthquakeOverlayHidden;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+/// commit候補のtile/material/textureを準備している状態。
+final class EarthquakeOverlayLoading extends EarthquakeOverlayCoverage {
+  const EarthquakeOverlayLoading();
+
+  @override
+  bool operator ==(Object other) => other is EarthquakeOverlayLoading;
 
   @override
   int get hashCode => runtimeType.hashCode;

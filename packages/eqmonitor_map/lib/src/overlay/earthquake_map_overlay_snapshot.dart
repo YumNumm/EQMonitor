@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
+
 /// 震度区域の描画style。
 final class EarthquakeAreaStyle {
   const EarthquakeAreaStyle({
@@ -33,8 +35,7 @@ final class EarthquakeObservationPoint {
 /// 一つの地震sourceに対応する完全なoverlay描画入力。
 final class EarthquakeMapOverlaySnapshot {
   const EarthquakeMapOverlaySnapshot._({
-    required this.sourceId,
-    required this.revision,
+    required this.versionStamp,
     required this.regionToCityZoom,
     required this.stationMinZoom,
     required this.regionStyles,
@@ -42,8 +43,7 @@ final class EarthquakeMapOverlaySnapshot {
     required this.stations,
   });
 
-  final String sourceId;
-  final int revision;
+  final MapOverlayVersionStamp versionStamp;
   final double regionToCityZoom;
   final double stationMinZoom;
   final List<EarthquakeAreaStyle> regionStyles;
@@ -53,8 +53,7 @@ final class EarthquakeMapOverlaySnapshot {
 
 /// [EarthquakeMapOverlaySnapshot]を検証済みの不変入力から構築する。
 EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
-  required String sourceId,
-  required int revision,
+  required MapOverlayVersionStamp versionStamp,
   required double regionToCityZoom,
   required double stationMinZoom,
   required List<EarthquakeAreaStyle> regionStyles,
@@ -62,8 +61,6 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
   required List<EarthquakeObservationPoint> stations,
 }) {
   _validateSnapshotValues(
-    sourceId: sourceId,
-    revision: revision,
     regionToCityZoom: regionToCityZoom,
     stationMinZoom: stationMinZoom,
   );
@@ -72,8 +69,7 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
   _validateStations(stations: stations);
 
   return EarthquakeMapOverlaySnapshot._(
-    sourceId: sourceId,
-    revision: revision,
+    versionStamp: versionStamp,
     regionToCityZoom: regionToCityZoom,
     stationMinZoom: stationMinZoom,
     regionStyles: List<EarthquakeAreaStyle>.unmodifiable(regionStyles),
@@ -83,17 +79,9 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
 }
 
 void _validateSnapshotValues({
-  required String sourceId,
-  required int revision,
   required double regionToCityZoom,
   required double stationMinZoom,
 }) {
-  if (sourceId.trim().isEmpty) {
-    throw ArgumentError.value(sourceId, 'sourceId', 'must not be blank');
-  }
-  if (revision.isNegative) {
-    throw ArgumentError.value(revision, 'revision', 'must not be negative');
-  }
   if (!regionToCityZoom.isFinite) {
     throw ArgumentError.value(
       regionToCityZoom,
