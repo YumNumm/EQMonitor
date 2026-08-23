@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
@@ -23,6 +24,9 @@ typedef FlutterSceneMapMaterialResolver =
     FlutterSceneMapMaterialBinding? Function(
       MapRenderBatch batch,
     );
+
+/// 呼出時点までのScene GPU submission完了を待つbarrier。
+typedef FlutterSceneGpuCompletionBarrier = Future<void> Function();
 
 /// Scene materialと、そのmaterial自身のtyped parameter blockの組。
 abstract interface class FlutterSceneMapMaterialBinding {
@@ -180,8 +184,10 @@ final class FlutterSceneObservationGeometryOwner {
   final _entries = <_FlutterSceneObservationGeometryEntry>[];
   int? _currentFrame;
   int? _currentContextGeneration;
+  var _retiredGeometryCount = 0;
 
   int get liveGeometryCount => _entries.length;
+  int get retiredGeometryCount => _retiredGeometryCount;
 
   void beginFrame({
     required int contextGeneration,
@@ -262,6 +268,7 @@ final class FlutterSceneObservationGeometryOwner {
       retired.add(entry.geometry);
       return true;
     });
+    _retiredGeometryCount += retired.length;
     return retired;
   }
 
@@ -275,6 +282,33 @@ final class FlutterSceneObservationGeometryOwner {
         ..retireScheduled = true
         ..lastUsedFrame = frameNumber;
     }
+  }
+
+  Future<void> retireScheduledAfter({required Future<void> completion}) {
+    final geometries = <scene.StaticInstanceGeometry>[];
+    _entries.removeWhere((entry) {
+      if (!entry.retireScheduled) {
+        return false;
+      }
+      geometries.add(entry.geometry);
+      return true;
+    });
+    var didRetire = false;
+    void retireOnce() {
+      if (didRetire) {
+        return;
+      }
+      didRetire = true;
+      for (final geometry in geometries) {
+        geometry.retire();
+      }
+      _retiredGeometryCount += geometries.length;
+    }
+
+    return completion.then<void>(
+      (_) => retireOnce(),
+      onError: (Object _, StackTrace _) => retireOnce(),
+    );
   }
 }
 
@@ -363,6 +397,8 @@ final class FlutterSceneMapAdapter {
     required FlutterSceneMapMaterialResolver materialFor,
     required int maxFramesInFlight,
     FlutterSceneObservationMaterialBinding? observationMaterial,
+    FlutterSceneGpuCompletionBarrier waitForGpuCompletion =
+        scene.waitForPendingGpuSubmissions,
   }) : this._(
          sceneGraph,
          materialFor,
@@ -373,6 +409,7 @@ final class FlutterSceneMapAdapter {
          FlutterSceneObservationGeometryOwner(
            maxFramesInFlight: maxFramesInFlight,
          ),
+         waitForGpuCompletion,
        );
 
   new _(
@@ -381,6 +418,7 @@ final class FlutterSceneMapAdapter {
     this._observationMaterial,
     this._geometries,
     this._observationGeometries,
+    this._waitForGpuCompletion,
   );
 
   final scene.SceneGraph _sceneGraph;
@@ -388,17 +426,18 @@ final class FlutterSceneMapAdapter {
   final FlutterSceneObservationMaterialBinding? _observationMaterial;
   final MapGpuResourceLedger<scene.MeshGeometry> _geometries;
   final FlutterSceneObservationGeometryOwner _observationGeometries;
+  final FlutterSceneGpuCompletionBarrier _waitForGpuCompletion;
 
   var _uploadedGeometryCount = 0;
   var _retiredGeometryCount = 0;
   var _uploadedObservationGeometryCount = 0;
-  var _retiredObservationGeometryCount = 0;
 
   int get uploadedGeometryCount => _uploadedGeometryCount;
   int get retiredGeometryCount => _retiredGeometryCount;
   int get liveGeometryCount => _geometries.liveResourceCount;
   int get uploadedObservationGeometryCount => _uploadedObservationGeometryCount;
-  int get retiredObservationGeometryCount => _retiredObservationGeometryCount;
+  int get retiredObservationGeometryCount =>
+      _observationGeometries.retiredGeometryCount;
   int get liveObservationGeometryCount =>
       _observationGeometries.liveGeometryCount;
 
@@ -485,15 +524,22 @@ final class FlutterSceneMapAdapter {
       ..removeAll()
       ..addAll(nodes);
     _retiredGeometryCount += _geometries.retireIdle().length;
-    _retiredObservationGeometryCount += _observationGeometries
-        .retireIdle()
-        .length;
+    _observationGeometries.retireIdle();
   }
 
   void retireAllGpuResources() {
+    _sceneGraph.removeAll();
     _retiredGeometryCount += _geometries.retireAll().length;
     _observationGeometries.scheduleRetireAll();
-    _sceneGraph.removeAll();
+    if (_observationGeometries.liveGeometryCount == 0) {
+      return;
+    }
+    final completion = _waitForGpuCompletion();
+    unawaited(
+      _observationGeometries.retireScheduledAfter(
+        completion: completion,
+      ),
+    );
   }
 
   scene.MeshGeometry _geometryFor(MapPackedMesh mesh) {

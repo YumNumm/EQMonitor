@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -790,7 +791,53 @@ void main() {
     expect(adapter.uploadedObservationGeometryCount, 3);
   });
 
-  test('retire-all request defers observation retire and forbids reuse', () {
+  test(
+    'retire-all waits for captured GPU completion without another submit',
+    () async {
+      final firstFrame = observationFrameAt(frameNumber: 0);
+      final firstBatch = _requireObservationPointBatch(
+        buildObservationPointBatch(
+          frame: firstFrame,
+          snapshot: observationSnapshot(revision: 1),
+        ),
+      );
+      final sceneGraph = _RecordingSceneGraph();
+      final completion = Completer<void>();
+      late scene.StaticInstanceGeometry geometry;
+
+      void submitThenDisposeAdapter() {
+        final adapter = FlutterSceneMapAdapter(
+          sceneGraph: sceneGraph,
+          materialFor: (_) => null,
+          observationMaterial: _TestObservationMaterialBinding(),
+          waitForGpuCompletion: () {
+            expect(sceneGraph.children, isEmpty);
+            return completion.future;
+          },
+          maxFramesInFlight: 2,
+        );
+        adapter.submitFrame(
+          submission: observationSubmission(
+            frame: firstFrame,
+            batch: firstBatch,
+          ),
+        );
+        geometry = _requireStaticInstanceGeometry(
+          sceneGraph.children.single.mesh?.primitives.single.geometry,
+        );
+        adapter.retireAllGpuResources();
+      }
+
+      submitThenDisposeAdapter();
+      expect(geometry.isRetired, isFalse);
+
+      completion.complete();
+      await Future<void>.delayed(Duration.zero);
+      expect(geometry.isRetired, isTrue);
+    },
+  );
+
+  test('repeated retire-all requests retire each geometry once', () async {
     final firstFrame = observationFrameAt(frameNumber: 0);
     final firstBatch = _requireObservationPointBatch(
       buildObservationPointBatch(
@@ -798,19 +845,17 @@ void main() {
         snapshot: observationSnapshot(revision: 1),
       ),
     );
-    final resumedFrame = observationFrameAt(frameNumber: 1);
-    final resumedBatch = _requireObservationPointBatch(
-      buildObservationPointBatch(
-        frame: resumedFrame,
-        snapshot: observationSnapshot(revision: 1),
-        previous: firstBatch,
-      ),
-    );
     final sceneGraph = _RecordingSceneGraph();
+    final completion = Completer<void>();
+    var barrierCount = 0;
     final adapter = FlutterSceneMapAdapter(
       sceneGraph: sceneGraph,
       materialFor: (_) => null,
       observationMaterial: _TestObservationMaterialBinding(),
+      waitForGpuCompletion: () {
+        barrierCount++;
+        return completion.future;
+      },
       maxFramesInFlight: 2,
     );
 
@@ -821,32 +866,47 @@ void main() {
       sceneGraph.children.single.mesh?.primitives.single.geometry,
     );
     adapter.retireAllGpuResources();
+    adapter.retireAllGpuResources();
 
     expect(firstGeometry.isRetired, isFalse);
-    adapter.submitFrame(
-      submission: observationSubmission(
-        frame: resumedFrame,
-        batch: resumedBatch,
-      ),
-    );
-    final resumedGeometry =
-        sceneGraph.children.single.mesh?.primitives.single.geometry;
+    expect(barrierCount, 1);
+    completion.complete();
+    await Future<void>.delayed(Duration.zero);
 
-    expect(resumedGeometry, isNot(same(firstGeometry)));
-    expect(adapter.uploadedObservationGeometryCount, 2);
-    adapter.submitFrame(
-      submission: observationSubmission(
-        frame: observationFrameAt(frameNumber: 2),
-        batch: null,
-      ),
-    );
-    adapter.submitFrame(
-      submission: observationSubmission(
-        frame: observationFrameAt(frameNumber: 3),
-        batch: null,
-      ),
-    );
     expect(firstGeometry.isRetired, isTrue);
+    expect(adapter.retiredObservationGeometryCount, 1);
+  });
+
+  test('GPU completion error still retires after context loss', () async {
+    final firstFrame = observationFrameAt(frameNumber: 0);
+    final firstBatch = _requireObservationPointBatch(
+      buildObservationPointBatch(
+        frame: firstFrame,
+        snapshot: observationSnapshot(revision: 1),
+      ),
+    );
+    final sceneGraph = _RecordingSceneGraph();
+    final completion = Completer<void>();
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) => null,
+      observationMaterial: _TestObservationMaterialBinding(),
+      waitForGpuCompletion: () => completion.future,
+      maxFramesInFlight: 2,
+    );
+
+    adapter.submitFrame(
+      submission: observationSubmission(frame: firstFrame, batch: firstBatch),
+    );
+    final geometry = _requireStaticInstanceGeometry(
+      sceneGraph.children.single.mesh?.primitives.single.geometry,
+    );
+    adapter.retireAllGpuResources();
+    completion.completeError(StateError('GPU context lost'));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(geometry.isRetired, isTrue);
+    expect(adapter.retiredObservationGeometryCount, 1);
   });
 
   test('fails closed when a live cached geometry was already retired', () {
