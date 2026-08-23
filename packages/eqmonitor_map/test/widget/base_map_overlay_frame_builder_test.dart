@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -13,6 +14,7 @@ import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
@@ -27,11 +29,65 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:flutter_test/flutter_test.dart';
 
 final class _TestMaterialBinding implements FlutterSceneMapMaterialBinding {
-  @override
-  scene.Material get material => throw UnimplementedError();
+  _TestMaterialBinding({scene.FmatType fillColorType = scene.FmatType.vec4})
+    : material = scene.UnlitMaterial(),
+      parameters = scene.MaterialParameters.withLayout(
+        blockName: 'MaterialParams',
+        blockSizeBytes: 16,
+        parameters: {
+          'fill_color': (
+            type: fillColorType,
+            offset: 0,
+            sourceColor: false,
+          ),
+        },
+      );
 
   @override
-  scene.MaterialParameters get parameters => throw UnimplementedError();
+  final scene.Material material;
+
+  @override
+  final scene.MaterialParameters parameters;
+}
+
+final class _TestObservationMaterialBinding
+    implements FlutterSceneObservationMaterialBinding {
+  _TestObservationMaterialBinding()
+    : material = scene.ShaderMaterial(isOpaqueOverride: false);
+
+  @override
+  final scene.ShaderMaterial material;
+
+  @override
+  void preflight({required ObservationPointBatch batch}) {}
+
+  @override
+  void setFrameUniform(ByteData bytes) {
+    material.setUniformBlock(
+      observationFrameUniformBlockName,
+      bytes,
+      stage: scene.ShaderStage.vertex,
+    );
+  }
+}
+
+final class _RecordingSceneGraph with scene.SceneGraph {
+  final children = <scene.Node>[];
+
+  @override
+  void add(scene.Node child) => children.add(child);
+
+  @override
+  void addAll(Iterable<scene.Node> children) => this.children.addAll(children);
+
+  @override
+  void addMesh(scene.Mesh mesh) => add(scene.Node(mesh: mesh));
+
+  @override
+  void remove(scene.Node child) => children.remove(child);
+
+  @override
+  void removeAll() => children.clear();
 }
 
 ObservationPointBatch _requireObservationPointBatch(
@@ -41,6 +97,24 @@ ObservationPointBatch _requireObservationPointBatch(
     fail('Expected an ObservationPointBatch.');
   }
   return batch;
+}
+
+scene.StaticInstanceGeometry _requireStaticInstanceGeometry(
+  scene.Geometry? geometry,
+) {
+  if (geometry is! scene.StaticInstanceGeometry) {
+    fail('Expected a StaticInstanceGeometry.');
+  }
+  return geometry;
+}
+
+EarthquakeOverlayMaterialStage _requireMaterialStage(
+  EarthquakeOverlayMaterialPreparation result,
+) {
+  if (result is! EarthquakeOverlayMaterialPreparationReady) {
+    fail('Expected a ready earthquake material stage.');
+  }
+  return result.stage;
 }
 
 void main() {
@@ -408,8 +482,14 @@ void main() {
         parametersFor: earthquakeAreaMaterialParametersFor,
       );
 
-      expect(await owner.prepare(resources: [region, city]), isTrue);
-      expect(await owner.prepare(resources: [region, city]), isTrue);
+      final firstStage = _requireMaterialStage(
+        await owner.prepare(resources: [region, city]),
+      )..beginSubmission();
+      firstStage.commit();
+      final secondStage = _requireMaterialStage(
+        await owner.prepare(resources: [region, city]),
+      )..beginSubmission();
+      secondStage.commit();
       expect(loadCount, 1);
 
       final result = build(
@@ -419,6 +499,374 @@ void main() {
       );
       final batch = result.submission?.earthquakeFill.batches.single;
       expect(owner.materialFor(batch!), same(bindings.single));
+    },
+  );
+
+  test(
+    'material load failure during a source switch resolves and commits '
+    'base-only',
+    () async {
+      var rejectsLoad = false;
+      final material = _TestMaterialBinding();
+      final materials = EarthquakeOverlayMaterialOwner(
+        loadMaterial: () async {
+          if (rejectsLoad) {
+            throw StateError('material load failed');
+          }
+          return material;
+        },
+      );
+      final coverages = <EarthquakeOverlayCoverage>[];
+      final frames = BaseMapOverlayFrameOwner(
+        onCoverageChanged: coverages.add,
+      );
+      final eventA = snapshot();
+      final eventAStyles = EarthquakeAreaRenderStyleCache();
+      final eventAStage = _requireMaterialStage(
+        await materials.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: eventAStyles,
+            snapshot: eventA,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        ),
+      );
+      final first = build(
+        frame: frameAt(6),
+        requested: eventA,
+        styleCache: eventAStyles,
+      );
+      final firstFallback = build(
+        frame: frameAt(6),
+        current: eventA,
+        requested: null,
+      );
+
+      expect(
+        frames.commit(
+          candidate: first,
+          baseOnlySubmission: firstFallback.submission!,
+          resources: eventAStage,
+          submitFrame: (_) {},
+          retireAllGpuResources: () {},
+          failClosedResources: materials.clear,
+        ),
+        isA<BaseMapOverlayFrameCommitSucceeded>(),
+      );
+
+      rejectsLoad = true;
+      final eventB = snapshot(
+        sourceId: 'event-b',
+        revision: 0,
+        color: const Color(0xFF0000FF),
+      );
+      final failedPreparation = await materials.prepare(
+        resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+          cache: EarthquakeAreaRenderStyleCache(),
+          snapshot: eventB,
+          parametersFor: earthquakeAreaMaterialParametersFor,
+        ),
+      );
+
+      expect(
+        failedPreparation,
+        isA<EarthquakeOverlayMaterialPreparationFailed>(),
+      );
+      final hidden = build(
+        frame: frameAt(6, frameNumber: 1),
+        current: frames.overlay,
+        requested: null,
+      );
+      final submitted = <MapSceneFrameSubmission>[];
+      final result = frames.commit(
+        candidate: hidden,
+        baseOnlySubmission: hidden.submission!,
+        resources: materials.stageClear(),
+        submitFrame: submitted.add,
+        retireAllGpuResources: () {},
+        failClosedResources: materials.clear,
+      );
+
+      expect(result, isA<BaseMapOverlayFrameCommitSucceeded>());
+      expect(submitted, hasLength(1));
+      expect(frames.overlay, isNull);
+      expect(frames.previousObservationBatch, isNull);
+      expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
+      expect(coverages, [
+        const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        const EarthquakeOverlayCoverage.hidden(),
+      ]);
+    },
+  );
+
+  test(
+    'reflection failure during a source switch fails closed atomically',
+    () async {
+      var materialLoadCount = 0;
+      final materials = EarthquakeOverlayMaterialOwner(
+        loadMaterial: () async => _TestMaterialBinding(
+          fillColorType: materialLoadCount++ == 0
+              ? scene.FmatType.vec4
+              : scene.FmatType.vec2,
+        ),
+      );
+      final coverages = <EarthquakeOverlayCoverage>[];
+      final frames = BaseMapOverlayFrameOwner(
+        onCoverageChanged: coverages.add,
+      );
+      final eventA = snapshot();
+      final eventAStyles = EarthquakeAreaRenderStyleCache();
+      final eventAStage = _requireMaterialStage(
+        await materials.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: eventAStyles,
+            snapshot: eventA,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        ),
+      );
+      final first = build(
+        frame: frameAt(6),
+        requested: eventA,
+        styleCache: eventAStyles,
+      );
+      final firstFallback = build(
+        frame: frameAt(6),
+        current: eventA,
+        requested: null,
+      );
+      frames.commit(
+        candidate: first,
+        baseOnlySubmission: firstFallback.submission!,
+        resources: eventAStage,
+        submitFrame: (_) {},
+        retireAllGpuResources: () {},
+        failClosedResources: materials.clear,
+      );
+
+      final eventB = snapshot(
+        sourceId: 'event-b',
+        revision: 0,
+        regionCode: '999',
+        cityCode: '99999',
+        color: const Color(0xFF0000FF),
+      );
+      final eventBStyles = EarthquakeAreaRenderStyleCache();
+      final eventBStage = _requireMaterialStage(
+        await materials.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: eventBStyles,
+            snapshot: eventB,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        ),
+      );
+      final nextFrame = frameAt(6, frameNumber: 1);
+      final candidate = build(
+        frame: nextFrame,
+        current: frames.overlay,
+        requested: eventB,
+        previousObservation: frames.previousObservationBatch,
+        styleCache: eventBStyles,
+      );
+      final fallback = build(
+        frame: nextFrame,
+        current: frames.overlay,
+        requested: null,
+      );
+      final submitted = <MapSceneFrameSubmission>[];
+      final sceneGraph = _RecordingSceneGraph();
+      final oldSceneNode = scene.Node();
+      sceneGraph.add(oldSceneNode);
+      final adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: materials.materialFor,
+        maxFramesInFlight: 2,
+      );
+      var retireCount = 0;
+
+      final result = frames.commit(
+        candidate: candidate,
+        baseOnlySubmission: fallback.submission!,
+        resources: eventBStage,
+        submitFrame: (submission) {
+          submitted.add(submission);
+          try {
+            expect(frames.overlay, same(eventA));
+            expect(coverages, hasLength(1));
+            adapter.submitFrame(submission: submission);
+          } on Object catch (error) {
+            expect(error, isA<StateError>());
+            expect(submission, same(candidate.submission));
+            expect(sceneGraph.children, [same(oldSceneNode)]);
+            rethrow;
+          }
+        },
+        retireAllGpuResources: () {
+          retireCount++;
+          adapter.retireAllGpuResources();
+        },
+        failClosedResources: materials.clear,
+      );
+
+      expect(result, isA<BaseMapOverlayFrameCommitFailed>());
+      expect(submitted, [candidate.submission, fallback.submission]);
+      expect(retireCount, 0);
+      expect(sceneGraph.children, isEmpty);
+      expect(frames.overlay, isNull);
+      expect(frames.previousObservationBatch, isNull);
+      expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
+      expect(coverages, [
+        const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
+        const EarthquakeOverlayCoverage.hidden(),
+      ]);
+    },
+  );
+
+  test(
+    'failed base-only fallback schedules observation retirement behind fence',
+    () async {
+      var materialLoadCount = 0;
+      final materials = EarthquakeOverlayMaterialOwner(
+        loadMaterial: () async => _TestMaterialBinding(
+          fillColorType: materialLoadCount++ == 0
+              ? scene.FmatType.vec4
+              : scene.FmatType.vec2,
+        ),
+      );
+      final frames = BaseMapOverlayFrameOwner();
+      final eventA = snapshot();
+      final eventAStyles = EarthquakeAreaRenderStyleCache();
+      final eventAStage = _requireMaterialStage(
+        await materials.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: eventAStyles,
+            snapshot: eventA,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        ),
+      );
+      final sceneGraph = _RecordingSceneGraph();
+      final gpuCompletion = Completer<void>();
+      final adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: materials.materialFor,
+        observationMaterial: _TestObservationMaterialBinding(),
+        waitForGpuCompletion: () => gpuCompletion.future,
+        maxFramesInFlight: 2,
+      );
+      final first = build(
+        frame: frameAt(6),
+        requested: eventA,
+        styleCache: eventAStyles,
+      );
+      final initialSubmission = MapSceneFrameSubmission(
+        baseMap: createMapRenderSubmission(
+          frame: first.submission!.frame,
+          batches: const [],
+        ),
+        earthquakeFill: createMapRenderSubmission(
+          frame: first.submission!.frame,
+          batches: const [],
+        ),
+        observationBatch: first.submission!.observationBatch,
+      );
+      final initialCandidate = BaseMapOverlayFrameResult(
+        overlay: first.overlay,
+        submission: initialSubmission,
+        coverage: first.coverage,
+        observationBatchForReuse: first.observationBatchForReuse,
+        shouldRetireGpuResources: false,
+      );
+      final firstFallback = build(
+        frame: frameAt(6),
+        current: eventA,
+        requested: null,
+      );
+      final initialCommit = frames.commit(
+        candidate: initialCandidate,
+        baseOnlySubmission: firstFallback.submission!,
+        resources: eventAStage,
+        submitFrame: (submission) => adapter.submitFrame(
+          submission: submission,
+        ),
+        retireAllGpuResources: adapter.retireAllGpuResources,
+        failClosedResources: materials.clear,
+      );
+      if (initialCommit case BaseMapOverlayFrameCommitFailed(
+        :final error,
+        :final fallbackError,
+      )) {
+        fail('Initial Scene submit failed: $error; fallback=$fallbackError');
+      }
+      final geometry = _requireStaticInstanceGeometry(
+        sceneGraph.children.last.mesh?.primitives.single.geometry,
+      );
+
+      final eventB = snapshot(
+        sourceId: 'event-b',
+        revision: 0,
+        color: const Color(0xFF0000FF),
+      );
+      final eventBStyles = EarthquakeAreaRenderStyleCache();
+      final eventBStage = _requireMaterialStage(
+        await materials.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: eventBStyles,
+            snapshot: eventB,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        ),
+      );
+      final nextFrame = frameAt(6, frameNumber: 1);
+      final candidate = build(
+        frame: nextFrame,
+        current: frames.overlay,
+        requested: eventB,
+        previousObservation: frames.previousObservationBatch,
+        styleCache: eventBStyles,
+      );
+      final fallback = build(
+        frame: nextFrame,
+        current: frames.overlay,
+        requested: null,
+      );
+      var submitCount = 0;
+      var retireCount = 0;
+
+      final result = frames.commit(
+        candidate: candidate,
+        baseOnlySubmission: fallback.submission!,
+        resources: eventBStage,
+        submitFrame: (submission) {
+          submitCount++;
+          if (identical(submission, fallback.submission)) {
+            throw StateError('base-only fallback failed');
+          }
+          adapter.submitFrame(submission: submission);
+        },
+        retireAllGpuResources: () {
+          retireCount++;
+          adapter.retireAllGpuResources();
+        },
+        failClosedResources: materials.clear,
+      );
+
+      expect(result, isA<BaseMapOverlayFrameCommitFailed>());
+      final failed = result as BaseMapOverlayFrameCommitFailed;
+      expect(failed.fallbackError, isA<StateError>());
+      expect(submitCount, 2);
+      expect(retireCount, 1);
+      expect(sceneGraph.children, isEmpty);
+      expect(geometry.isRetired, isFalse);
+      expect(frames.overlay, isNull);
+      expect(frames.previousObservationBatch, isNull);
+      expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
+
+      gpuCompletion.complete();
+      await Future<void>.delayed(Duration.zero);
+      expect(geometry.isRetired, isTrue);
+      expect(adapter.retiredObservationGeometryCount, 1);
     },
   );
 }
