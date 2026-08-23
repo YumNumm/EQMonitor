@@ -207,7 +207,15 @@ class _MapLibreMapHost extends HookConsumerWidget {
             await controller.enableLocation();
           }
         },
-        onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
+        onEvent: (event) {
+          MapLibreEventProvider.maybeOf(context)?.emit(event);
+          if (event is MapEventStartMoveCamera &&
+              event.reason == CameraChangeReason.apiGesture) {
+            ref
+                .read(homeMapCameraStateProvider.notifier)
+                .handleUserMapGesture();
+          }
+        },
         children: children,
       ),
     );
@@ -248,8 +256,12 @@ class _MapHeader extends ConsumerWidget {
     );
 
     final isDebug = ref.watch(debugProvider).value ?? false;
+    final isEewFocusActive = ref.watch(
+      homeMapCameraStateProvider.select((state) => state.isEewFocusActive),
+    );
 
     final controllerCard = HomeMapControllerCard(
+      isLocationButtonEnabled: !isEewFocusActive,
       onLayerButtonTap: () async =>
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
