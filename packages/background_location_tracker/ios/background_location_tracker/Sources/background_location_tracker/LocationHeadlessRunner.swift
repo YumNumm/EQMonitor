@@ -2,7 +2,7 @@ import BackgroundTasks
 import CoreLocation
 import Flutter
 import Foundation
-import UIKit
+import OSLog
 
 public typealias PluginRegistrantCallback = (FlutterEngine) -> Void
 
@@ -18,14 +18,34 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         "net.yumnumm.eqmonitor.background-location-processing"
 
     private let pendingStore = PendingLocationStore()
-    private let taskState = HeadlessTaskState()
+    private let taskState: HeadlessTaskState
+    private let retryScheduler: HeadlessRetryScheduling
+    private let applicationExecutionCoordinator: HeadlessApplicationExecutionCoordinator
     private var headlessEngine: FlutterEngine?
     private var activeSystemTask: HeadlessSystemTask?
     private var locationManager: CLLocationManager?
     private var hasStartedLocationRelaunch = false
     private var hasRegisteredRetryTasks = false
 
-    override private init() {}
+    override private init() {
+        let taskState = HeadlessTaskState()
+        let retryScheduler = HeadlessRetryScheduler(
+            appRefreshIdentifier: Self.appRefreshTaskIdentifier,
+            processingIdentifier: Self.processingTaskIdentifier,
+            submitter: BackgroundTaskRetryRequestSubmitter(),
+            diagnose: HeadlessRetryDiagnostics.record
+        )
+        self.taskState = taskState
+        self.retryScheduler = retryScheduler
+        applicationExecutionCoordinator = HeadlessApplicationExecutionCoordinator(
+            state: taskState,
+            taskStarter: ApplicationBackgroundTaskStarter(
+                application: UIKitBackgroundTaskApplication()
+            ),
+            retryScheduler: retryScheduler
+        )
+        super.init()
+    }
 
     public var activeUpdateId: String? {
         taskState.activeUpdateId
@@ -58,6 +78,13 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         manager.delegate = self
         locationManager = manager
         manager.startMonitoringSignificantLocationChanges()
+    }
+
+    public func resubmitRetryIfPending() {
+        guard pendingStore.peek(consumer: .deviceLocation) != nil else {
+            return
+        }
+        retryScheduler.scheduleRetry()
     }
 
     public func start(
@@ -144,24 +171,29 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
     }
 
     private func startStored(updateId: String, scheduledTask: BGTask?) {
-        guard taskState.begin(updateId: updateId) == .launch else {
-            scheduledTask?.setTaskCompleted(success: false)
-            scheduleRetry()
-            return
-        }
-
         if let scheduledTask {
+            guard taskState.begin(updateId: updateId) == .launch else {
+                scheduledTask.setTaskCompleted(success: false)
+                retryScheduler.scheduleRetry()
+                return
+            }
             activeSystemTask = ScheduledBackgroundTask(task: scheduledTask)
             scheduledTask.expirationHandler = { [weak self] in
                 self?.expire(updateId: updateId)
             }
         } else {
-            activeSystemTask = ApplicationBackgroundTask(
+            let preparation = applicationExecutionCoordinator.prepare(
                 updateId: updateId,
                 expirationHandler: { [weak self] in
                     self?.expire(updateId: updateId)
                 }
             )
+            switch preparation {
+            case let .launch(systemTask):
+                activeSystemTask = systemTask
+            case .coalesced, .retryFinalized:
+                return
+            }
         }
 
         guard let callbackInformation = storedCallbackInformation,
@@ -225,56 +257,9 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         systemTask?.complete(success: effect.backgroundTaskSucceeded)
 
         if effect.shouldScheduleRetry {
-            scheduleRetry()
+            retryScheduler.scheduleRetry()
         } else if let nextUpdateId = finalization.nextUpdateId {
             startStored(updateId: nextUpdateId, scheduledTask: nil)
-        }
-    }
-
-    private func scheduleRetry() {
-        let refreshRequest = BGAppRefreshTaskRequest(
-            identifier: Self.appRefreshTaskIdentifier
-        )
-        let processingRequest = BGProcessingTaskRequest(
-            identifier: Self.processingTaskIdentifier
-        )
-        processingRequest.requiresNetworkConnectivity = true
-        processingRequest.requiresExternalPower = false
-        try? BGTaskScheduler.shared.submit(refreshRequest)
-        try? BGTaskScheduler.shared.submit(processingRequest)
-    }
-}
-
-private protocol HeadlessSystemTask: AnyObject {
-    func complete(success: Bool)
-}
-
-private final class ApplicationBackgroundTask: HeadlessSystemTask {
-    private let application: UIApplication
-    private let lock = NSLock()
-    private var identifier: UIBackgroundTaskIdentifier = .invalid
-
-    init(
-        updateId: String,
-        application: UIApplication = .shared,
-        expirationHandler: @escaping () -> Void
-    ) {
-        self.application = application
-        identifier = application.beginBackgroundTask(
-            withName: "background-location-\(updateId)",
-            expirationHandler: expirationHandler
-        )
-    }
-
-    func complete(success _: Bool) {
-        let taskIdentifier: UIBackgroundTaskIdentifier? = lock.withLock {
-            guard identifier != .invalid else { return nil }
-            let taskIdentifier = identifier
-            identifier = .invalid
-            return taskIdentifier
-        }
-        if let taskIdentifier {
-            application.endBackgroundTask(taskIdentifier)
         }
     }
 }
@@ -297,5 +282,42 @@ private final class ScheduledBackgroundTask: HeadlessSystemTask {
         if shouldComplete {
             task.setTaskCompleted(success: success)
         }
+    }
+}
+
+private final class BackgroundTaskRetryRequestSubmitter: HeadlessRetryRequestSubmitting {
+    private let scheduler: BGTaskScheduler
+
+    init(scheduler: BGTaskScheduler = .shared) {
+        self.scheduler = scheduler
+    }
+
+    func submit(_ request: HeadlessRetryRequest) throws {
+        switch request.kind {
+        case .appRefresh:
+            try scheduler.submit(
+                BGAppRefreshTaskRequest(identifier: request.identifier)
+            )
+        case .processing:
+            let processingRequest = BGProcessingTaskRequest(
+                identifier: request.identifier
+            )
+            processingRequest.requiresNetworkConnectivity = true
+            processingRequest.requiresExternalPower = false
+            try scheduler.submit(processingRequest)
+        }
+    }
+}
+
+private enum HeadlessRetryDiagnostics {
+    private static let logger = Logger(
+        subsystem: "net.yumnumm.background_location_tracker",
+        category: "HeadlessRetry"
+    )
+
+    static func record(_ failure: HeadlessRetrySubmissionFailure) {
+        logger.error(
+            "BGTask submit failed identifier=\(failure.identifier, privacy: .public) errorCode=\(failure.errorCode, privacy: .public)"
+        )
     }
 }

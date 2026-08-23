@@ -1,8 +1,8 @@
+import background_location_tracker
 import Flutter
+import flutter_local_notifications
 import UIKit
 import WidgetKit
-import flutter_local_notifications
-import background_location_tracker
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -10,32 +10,38 @@ import background_location_tracker
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    LocationHeadlessRunner.shared.registerRetryTaskHandlers()
+    let backgroundLaunchBootstrap = BackgroundLocationLaunchBootstrap(
+      configurePluginRegistrants: {
+        FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { registry in
+          GeneratedPluginRegistrant.register(with: registry)
+        }
+        LocationHeadlessRunner.pluginRegistrantCallback = { engine in
+          GeneratedPluginRegistrant.register(with: engine)
+        }
+      },
+      registerRetryTaskHandlers: {
+        LocationHeadlessRunner.shared.registerRetryTaskHandlers()
+        LocationHeadlessRunner.shared.resubmitRetryIfPending()
+      },
+      restoreLocationMonitoring: {
+        LocationHeadlessRunner.shared.startFromLaunchOptions()
+      }
+    )
+    backgroundLaunchBootstrap.prepare(
+      isLocationLaunch: launchOptions?[.location] != nil
+    )
 
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
     }
 
-    let didFinishLaunching = super.application(
+    return super.application(
       application,
       didFinishLaunchingWithOptions: launchOptions
     )
-
-    // super呼出し中のimplicit engine初期化でregistrantを設定してから監視を復元する。
-    if launchOptions?[.location] != nil {
-      LocationHeadlessRunner.shared.startFromLaunchOptions()
-    }
-
-    return didFinishLaunching
   }
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { registry in
-      GeneratedPluginRegistrant.register(with: registry)
-    }
-    LocationHeadlessRunner.pluginRegistrantCallback = { engine in
-      GeneratedPluginRegistrant.register(with: engine)
-    }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
     if let registrar = engineBridge.pluginRegistry.registrar(
@@ -80,6 +86,11 @@ import background_location_tracker
         }
       }
     }
+  }
+
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+    super.applicationDidBecomeActive(application)
+    LocationHeadlessRunner.shared.resubmitRetryIfPending()
   }
 
   override func application(

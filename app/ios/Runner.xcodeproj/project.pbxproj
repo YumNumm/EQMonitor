@@ -115,6 +115,7 @@
 		B17000000000000000000002 /* PendingLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000004 /* PendingLocationStore.swift */; };
 		B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */; };
 		B18000000000000000000002 /* HeadlessTaskState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000004 /* HeadlessTaskState.swift */; };
+		B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -268,6 +269,7 @@
 		B17000000000000000000004 /* PendingLocationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PendingLocationStore.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/PendingLocationStore.swift; sourceTree = SOURCE_ROOT; };
 		B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationHeadlessTaskStateTests.swift; sourceTree = "<group>"; };
 		B18000000000000000000004 /* HeadlessTaskState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessTaskState.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessTaskState.swift; sourceTree = SOURCE_ROOT; };
+		B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessExecutionLifecycle.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessExecutionLifecycle.swift; sourceTree = SOURCE_ROOT; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -429,6 +431,7 @@
 				B17000000000000000000004 /* PendingLocationStore.swift */,
 				B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */,
 				B18000000000000000000004 /* HeadlessTaskState.swift */,
+				B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */,
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
@@ -964,6 +967,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */,
 				B18000000000000000000002 /* HeadlessTaskState.swift in Sources */,
 				B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */,
 				B17000000000000000000002 /* PendingLocationStore.swift in Sources */,
