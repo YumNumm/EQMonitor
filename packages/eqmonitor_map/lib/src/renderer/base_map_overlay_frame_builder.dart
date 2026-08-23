@@ -66,13 +66,9 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
   if (overlay == null) {
     return BaseMapOverlayFrameResult(
       overlay: null,
-      submission: MapSceneFrameSubmission(
+      submission: buildBaseMapOnlyFrameSubmission(
+        frame: frame,
         baseMap: baseMap,
-        earthquakeFill: createMapRenderSubmission(
-          frame: frame,
-          batches: const [],
-        ),
-        observationBatch: null,
       ),
       coverage: const EarthquakeOverlayCoverage.hidden(),
       observationBatchForReuse: null,
@@ -127,6 +123,23 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
           overlay: overlay,
         ),
     shouldRetireGpuResources: false,
+  );
+}
+
+MapSceneFrameSubmission buildBaseMapOnlyFrameSubmission({
+  required MapFrameSnapshot frame,
+  required MapRenderSubmission baseMap,
+}) {
+  if (!identical(baseMap.frame, frame)) {
+    throw ArgumentError('baseMap must use the captured frame');
+  }
+  return MapSceneFrameSubmission(
+    baseMap: baseMap,
+    earthquakeFill: createMapRenderSubmission(
+      frame: frame,
+      batches: const [],
+    ),
+    observationBatch: null,
   );
 }
 
