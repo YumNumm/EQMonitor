@@ -47,6 +47,7 @@ export 'src/overlay/earthquake_map_overlay_snapshot.dart';
 export 'src/overlay/earthquake_overlay_controller.dart';
 export 'src/overlay/earthquake_overlay_coverage.dart';
 export 'src/overlay/map_overlay_version_stamp.dart';
+export 'src/overlay/map_sprite_atlas.dart';
 export 'src/renderer/eqmonitor_orthographic_projection.dart';
 export 'src/renderer/map_render_batch_adapter.dart';
 export 'src/renderer/map_scene_renderer_adapter.dart';
