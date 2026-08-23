@@ -62,11 +62,16 @@ instance layout、material、shader、Scene adapterも存在しない。
 
 ### 1. MVT property decode
 
-`MvtFeature` は不変な `Map<String, String>` を保持する。MVTのvalueは仕様上
-複数型を持つが、この縦切りで必要なのは文字列の区域コードだけである。string以外の
-valueは正しく読み飛ばし、要求propertyがstring以外ならそのfeatureをoverlay対象から
-除外する。壊れたtag index、奇数個のtag配列、重複keyはtyped
-`MvtDecodeException`としてtile全体をfail closedする。
+`MvtFeature` は不変な `Map<String, String>` を保持する。MVT layerはfield順を仮定せず、
+二段階でdecodeする。第1段階ではfield 2のfeature bytesとpacked `uint32` tags、field 3の
+keys、field 4のValue messageをそれぞれ上限付きで保持する。layerを最後まで読んだ後、
+tagsを `(keyIndex, valueIndex)` の対として解決してgeometry付きfeatureを確定する。
+
+MVTのValueは複数型を持つが、この縦切りで保持するのは文字列だけである。Value messageが
+複数の値fieldを持つ、UTF-8が不正、tag indexがtable外、tagsが奇数個、同一feature内で
+keyが重複する場合はtyped `MvtDecodeException`としてtile全体をfail closedする。
+string以外の正常なValueは検証後に保持せず、要求propertyがstring以外または欠損なら
+feature geometryはbase map用に維持しつつoverlay coverageを不完全として記録する。
 
 `MvtDecodeLimits` へ以下を追加し、すべて呼び出し側が明示する。
 
@@ -84,17 +89,25 @@ property文字列のbyte長はlength-delimited payloadを確保・decodeする�
 
 ```text
 EarthquakeAreaTileGeometry
-  forecastRegions: CodedFillGeometry(code, meshes)
-  cities:          CodedFillGeometry(code, meshes)
+  forecastRegions: EarthquakeAreaTileLayerGeometry(extent, features)
+  cities:          EarthquakeAreaTileLayerGeometry(extent, features)
+
+CodedFillGeometry(code, meshes)
 ```
 
 区域meshは同じMVT featureのgeometryからdecode worker内で生成する。base map用に集約した
 meshからfeature境界を逆算しない。`CodedFillGeometry` は1 featureを単位とし、
 Uint16上限によって複数segmentになった場合も同じcodeの下に保持する。
 
-overlayは要求tileのexact geometryだけを使う。base mapが親tileへfallbackしていても、
-event/hazard表示は親や異revisionへfallbackせず、exact tileが準備できるまでそのtileの
-overlayを描かない。破損propertyやsnapshot不整合を空の正常データへ丸めない。
+`EarthquakeAreaTileLayerGeometry.extent` は対応source layerが存在するとき必須とし、
+tile-local meshの変換に使う。city fillは既存base style specにないが、同じ
+`areaInformationCityQuake` source layerをoverlay decoderがpolygonとしてmesh化する。
+
+overlayは `EarthquakeOverlayExactTileResolver` を通し、要求中の
+`UnwrappedTileId.canonical` を `BaseMapTileCache.get` で直接引く。親・子fallbackを持つ
+`BaseMapRenderTileResolver` は利用しない。resolver結果はrequested unwrapped tile、
+exact canonical tile、source identity、layer extentを保持する。exact hitがないtileは
+描かずcoverageを不完全とする。破損propertyやsnapshot不整合を空の正常データへ丸めない。
 
 ### 3. package公開snapshot
 
@@ -130,12 +143,23 @@ revisionが下がったsnapshotはcontrollerが拒否し、現在の描画を維
 overlay非表示を意味し、エラーや期限切れを意味しない。app側の取得エラーは別のUI状態で
 表示する。
 
-### 4. 震度Fill packet
+### 4. Scene compositorと震度Fill packet
 
 区域codeから色を引くlookupをsnapshot revisionごとに一度構築する。可視exact tileの
 `CodedFillGeometry` だけを走査し、該当codeを震度色ごとにbucket化する。既存fillの
-packed layoutとmaterial parameter blockを再利用するが、pipeline keyとphaseは
-`earthquake-area-fill` / `hazard` としてbase mapから分離する。
+packed layoutを再利用するが、pipeline keyとmaterialは
+`earthquake-area-fill` としてbase mapから分離する。
+
+Sceneの所有者は1つにする。`MapSceneFrameSubmission` がbase mapとearthquake Fillの
+`MapRenderSubmission`、およびnullableな観測点batchを束ね、
+`FlutterSceneMapAdapter.submitFrame` だけが `Scene.removeAll()` とnode追加を行う。
+ベース専用adapterを別にsubmitしてnodeを相互に消す構成は採用しない。
+
+phase policyは `base`、`earthquakeRegion`、`earthquakeCity`、
+`observationPoint`、`labelForeground` の順とする。Fillは通常の
+`MapRenderPacket`、観測点は `StaticInstanceGeometry` を受け取る専用batchだが、
+compositorがphase rankに従って両者を同じframeで追加する。未知pipeline、phase欠落、
+mesh batchと観測点batchの順序違反はsubmit前にfail closedする。
 
 描画順は次で固定する。
 
@@ -147,8 +171,9 @@ base map Fill/Line
   -> labelForeground (将来)
 ```
 
-regionは低zoomでも描画できる。city geometryが存在するzoomではcityをregionより上へ
-描画する。region/cityの同一code重複はapp変換時に最大震度だけへ正規化する。
+zoom 6未満はregionだけ、zoom 6以上はcityだけを描画する。city sourceが欠損しても
+regionへfallbackせずcoverageを不完全とする。region/cityの同一code重複はapp変換時に
+最大震度だけへ正規化する。
 
 ### 5. 観測点GPU batch
 
