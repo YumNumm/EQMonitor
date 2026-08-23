@@ -95,3 +95,74 @@ Uint16上限によって複数segmentになった場合も同じcodeの下に保
 overlayは要求tileのexact geometryだけを使う。base mapが親tileへfallbackしていても、
 event/hazard表示は親や異revisionへfallbackせず、exact tileが準備できるまでそのtileの
 overlayを描かない。破損propertyやsnapshot不整合を空の正常データへ丸めない。
+
+### 3. package公開snapshot
+
+`eqmonitor_map` はappの `Earthquake`、`EarthquakeIntensity`、`JmaIntensity`、テーマ型へ
+依存しない。appが以下の型付きsnapshotへ変換して `BaseMapView` に渡す。
+
+```dart
+EarthquakeMapOverlaySnapshot(
+  sourceId: String,
+  revision: int,
+  regionStyles: List<EarthquakeAreaStyle>,
+  cityStyles: List<EarthquakeAreaStyle>,
+  stations: List<EarthquakeObservationPoint>,
+)
+
+EarthquakeAreaStyle(code: String, color: Color)
+
+EarthquakeObservationPoint(
+  id: String,
+  longitude: double,
+  latitude: double,
+  color: Color,
+  radiusLogicalPixels: double,
+)
+```
+
+factoryはtrim後の空ID/code、負revision、非有限座標、緯度経度範囲外、非正半径、
+重複区域code、重複観測点IDを拒否する。collectionは不変にする。同じsourceIdで
+revisionが下がったsnapshotはcontrollerが拒否し、現在の描画を維持する。別sourceIdは
+新しいfull snapshotとしてatomicに置き換える。
+
+`BaseMapView` の公開引数には nullable な `earthquakeOverlay` を追加する。`null` は
+overlay非表示を意味し、エラーや期限切れを意味しない。app側の取得エラーは別のUI状態で
+表示する。
+
+### 4. 震度Fill packet
+
+区域codeから色を引くlookupをsnapshot revisionごとに一度構築する。可視exact tileの
+`CodedFillGeometry` だけを走査し、該当codeを震度色ごとにbucket化する。既存fillの
+packed layoutとmaterial parameter blockを再利用するが、pipeline keyとphaseは
+`earthquake-area-fill` / `hazard` としてbase mapから分離する。
+
+描画順は次で固定する。
+
+```text
+base map Fill/Line
+  -> earthquake region Fill
+  -> earthquake city Fill
+  -> observation circles
+  -> labelForeground (将来)
+```
+
+regionは低zoomでも描画できる。city geometryが存在するzoomではcityをregionより上へ
+描画する。region/cityの同一code重複はapp変換時に最大震度だけへ正規化する。
+
+### 5. 観測点GPU batch
+
+観測点は全点を1個の `StaticInstanceGeometry` と1個のScene nodeで描画する。
+Flutter Scene forkの既知問題を避けるため、同じgeometryを複数nodeへ共有しない。
+
+- vertex-rate buffer: 円を覆う正規化quad 4頂点
+- index buffer: triangle 2枚
+- instance-rate buffer: world X/Y、RGBA、半径
+- vertex shader: world中心を現frameのview-projectionへ変換し、viewport/DPRから
+  logical pixel半径をNDCへ変換してquadを配置
+- fragment shader: quad内座標の距離から円外をdiscardし、外周に白いstrokeを描く
+
+instance dataはsnapshot revisionごとに一度だけ構築・uploadする。camera移動では
+view-projection/viewport uniformだけを更新し、instance bufferを再生成しない。
+snapshot置換、background、surface generation変更、disposeでは既存geometryをretireし、
+`MapGpuResourceLedger` と同じframes-in-flight方針で参照を落とす。
