@@ -7,10 +7,25 @@ import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-EarthquakeMapOverlaySnapshot _snapshot(String sourceId) =>
+MapOverlayVersionStamp _versionStamp({
+  required String sourceIdentity,
+  String sourceIncarnation = 'incarnation-a',
+  int dataSequence = 0,
+  String dataDigest = 'data-a',
+  int renderGeneration = 0,
+  String renderDigest = 'render-a',
+}) => createMapOverlayVersionStamp(
+  sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+  sourceIncarnation: createMapSourceIncarnation(value: sourceIncarnation),
+  dataSequence: dataSequence,
+  dataDigest: dataDigest,
+  renderGeneration: renderGeneration,
+  renderDigest: renderDigest,
+);
+
+EarthquakeMapOverlaySnapshot _snapshot(MapOverlayVersionStamp versionStamp) =>
     createEarthquakeMapOverlaySnapshot(
-      sourceId: sourceId,
-      revision: 12,
+      versionStamp: versionStamp,
       regionToCityZoom: 6,
       stationMinZoom: 6,
       regionStyles: const [],
@@ -18,14 +33,18 @@ EarthquakeMapOverlaySnapshot _snapshot(String sourceId) =>
       stations: const [],
     );
 
-LatestEarthquakeOverlayData _available(String eventId) =>
-    LatestEarthquakeOverlayData(
-      eventId: eventId,
-      originTime: DateTime.utc(2026, 8, 23, 12, 34),
-      telegramStatus: TelegramStatus.normal,
-      availability: LatestEarthquakeOverlayAvailability.available,
-      overlay: _snapshot(eventId),
-    );
+LatestEarthquakeOverlayData _available(
+  String eventId, {
+  MapOverlayVersionStamp? versionStamp,
+}) => LatestEarthquakeOverlayData(
+  eventId: eventId,
+  originTime: DateTime.utc(2026, 8, 23, 12, 34),
+  telegramStatus: TelegramStatus.normal,
+  availability: LatestEarthquakeOverlayAvailability.available,
+  overlay: _snapshot(
+    versionStamp ?? _versionStamp(sourceIdentity: eventId),
+  ),
+);
 
 void main() {
   test('previous overlayを持つloadingでもoverlayをnullにして切替中を示す', () {
@@ -76,12 +95,12 @@ void main() {
 
   test('current overlayのcoverage不完全をbannerへ明示する', () {
     final data = _available('A');
+    final overlay = data.overlay as EarthquakeMapOverlaySnapshot;
     final presentation = EqmonitorMapOverlayPresentation.from(
       overlayState: AsyncData(data),
-      coverageSnapshot: const EarthquakeOverlayCoverageSnapshot(
-        sourceId: 'A',
-        revision: 12,
-        coverage: EarthquakeOverlayCoverage.incomplete(
+      coverageSnapshot: EarthquakeOverlayCoverageSnapshot(
+        versionStamp: overlay.versionStamp,
+        coverage: const EarthquakeOverlayCoverage.incomplete(
           requestedTileCount: 4,
           readyTileCount: 3,
           missingOrInvalidCodeCount: 1,
@@ -96,12 +115,63 @@ void main() {
   test('旧sourceのcoverageをcurrent overlayへ適用しない', () {
     final presentation = EqmonitorMapOverlayPresentation.from(
       overlayState: AsyncData(_available('B')),
-      coverageSnapshot: const EarthquakeOverlayCoverageSnapshot(
-        sourceId: 'A',
-        revision: 12,
-        coverage: EarthquakeOverlayCoverage.complete(
+      coverageSnapshot: EarthquakeOverlayCoverageSnapshot(
+        versionStamp: _versionStamp(sourceIdentity: 'A'),
+        coverage: const EarthquakeOverlayCoverage.complete(
           requestedTileCount: 4,
         ),
+      ),
+    );
+
+    expect(presentation.message, '表示範囲の震度情報を準備中です');
+  });
+
+  test('同じsourceでもdata stampが異なるcoverageを適用しない', () {
+    final presentation = EqmonitorMapOverlayPresentation.from(
+      overlayState: AsyncData(_available('A')),
+      coverageSnapshot: EarthquakeOverlayCoverageSnapshot(
+        versionStamp: _versionStamp(
+          sourceIdentity: 'A',
+          dataSequence: 1,
+          dataDigest: 'data-b',
+          renderGeneration: 1,
+          renderDigest: 'render-b',
+        ),
+        coverage: const EarthquakeOverlayCoverage.complete(
+          requestedTileCount: 4,
+        ),
+      ),
+    );
+
+    expect(presentation.message, '表示範囲の震度情報を準備中です');
+  });
+
+  test('同じdataでもrender stampが異なるcoverageを適用しない', () {
+    final presentation = EqmonitorMapOverlayPresentation.from(
+      overlayState: AsyncData(_available('A')),
+      coverageSnapshot: EarthquakeOverlayCoverageSnapshot(
+        versionStamp: _versionStamp(
+          sourceIdentity: 'A',
+          renderGeneration: 1,
+          renderDigest: 'render-b',
+        ),
+        coverage: const EarthquakeOverlayCoverage.complete(
+          requestedTileCount: 4,
+        ),
+      ),
+    );
+
+    expect(presentation.message, '表示範囲の震度情報を準備中です');
+  });
+
+  test('current overlayのloading coverageを準備中として扱う', () {
+    final data = _available('A');
+    final overlay = data.overlay as EarthquakeMapOverlaySnapshot;
+    final presentation = EqmonitorMapOverlayPresentation.from(
+      overlayState: AsyncData(data),
+      coverageSnapshot: EarthquakeOverlayCoverageSnapshot(
+        versionStamp: overlay.versionStamp,
+        coverage: const EarthquakeOverlayCoverage.loading(),
       ),
     );
 
