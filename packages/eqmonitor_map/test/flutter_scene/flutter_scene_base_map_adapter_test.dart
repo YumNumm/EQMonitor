@@ -41,6 +41,7 @@ final class LineExtrudeProjectionCase {
     rings: [
       Int32List.fromList([0, 0, dx, dy]),
     ],
+    properties: const {},
   );
 
   Vector2 screenDirection() {

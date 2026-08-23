@@ -6,7 +6,6 @@ import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh_layout.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
-import 'package:eqmonitor_map/src/foundation/render/map_render_phase.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_sort_key.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
@@ -14,27 +13,9 @@ import 'package:eqmonitor_map/src/geo/tile_matrix.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_material_parameters.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
-
-/// base mapのgeometryを置くrender phase。
-///
-/// v1はbase mapとlabelの2 phaseしか持たない。`labelForeground`は
-/// [createMapRenderPhasePolicy]が必須にしているため、labelを実装する前から
-/// policyへ宣言しておく(#1594で実際にpacketが載る)。
-final MapRenderPhaseId baseMapRenderPhaseId = createMapRenderPhaseId(
-  value: 'base',
-);
-
-/// base mapのphase policy。
-///
-/// 描画順とhit test順の唯一の権威は`MapRenderSortKey`であり、その先頭要素が
-/// このpolicy上のphase rankである(設計正本「描画」節)。
-final MapRenderPhasePolicy baseMapRenderPhasePolicy =
-    createMapRenderPhasePolicy(
-  version: 1,
-  orderedPhases: [baseMapRenderPhaseId, MapRenderPhaseId.labelForeground],
-);
 
 /// `MapRenderPacket.contractVersion`。packetの意味づけを変える改訂で上げる。
 const baseMapRenderContractVersion = 1;
@@ -96,7 +77,7 @@ MapRenderSubmission buildBaseMapRenderSubmission({
     frame: frame,
     batches: buildCanonicalRenderBatches(
       version: baseMapRenderBatchVersion,
-      policy: baseMapRenderPhasePolicy,
+      policy: mapSceneRenderPhasePolicy,
       packets: packets,
     ),
   );
@@ -115,7 +96,7 @@ List<MapRenderPacket> buildBaseMapRenderPackets({
   required BaseMapPackedMeshResolver packedMeshesFor,
   required double lineHalfWidthLogicalPixels,
 }) {
-  final phase = baseMapRenderPhasePolicy.rankOf(baseMapRenderPhaseId);
+  final phase = mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId);
   final tileOrders = <UnwrappedTileId, int>{};
   for (final plan in plans) {
     tileOrders.putIfAbsent(
@@ -192,7 +173,7 @@ List<MapRenderPacket> buildBaseMapRenderPackets({
       // 各packetのtile位置は`MapRenderBatch.instanceTransforms`が持つ。
       scopeKey: sourceInstanceId.value,
       materialKey: styleLayerId,
-      phasePolicyVersion: baseMapRenderPhasePolicy.version,
+      phasePolicyVersion: mapSceneRenderPhasePolicy.version,
       phase: phase,
     );
 
@@ -208,7 +189,7 @@ List<MapRenderPacket> buildBaseMapRenderPackets({
         createMapRenderPacket(
           contractVersion: baseMapRenderContractVersion,
           sortKey: MapRenderSortKey(
-            phasePolicyVersion: baseMapRenderPhasePolicy.version,
+            phasePolicyVersion: mapSceneRenderPhasePolicy.version,
             phase: phase,
             declarationOrderWithinPhase: declarationOrder,
             // base mapは単一source。複数sourceを描くのは#1595。

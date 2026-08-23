@@ -1,0 +1,10 @@
+{
+  "EarthquakeObservationVertex": {
+    "type": "vertex",
+    "file": "assets/earthquake_observation.vert"
+  },
+  "EarthquakeObservationFragment": {
+    "type": "fragment",
+    "file": "assets/earthquake_observation.frag"
+  }
+}
