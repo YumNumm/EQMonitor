@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -50,12 +52,16 @@ class _StubHomeConfiguration extends HomeConfigurationNotifier {
 
 class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
   bool? setControllerResult;
+  Completer<bool?>? setControllerCompleter;
   bool? realtimeTransitionResult;
   bool? returnToHomeResult;
   var setControllerCallCount = 0;
   var realtimeTransitionCallCount = 0;
   var clearControllerCallCount = 0;
+  var cancelAutomaticFocusCallCount = 0;
   var returnToHomeCallCount = 0;
+  bool? receivedIgnoreAutoZoom;
+  bool? receivedApplyInitialFocus;
   MapController? receivedController;
   Size? receivedViewportSize;
   List<EewTelegramItem> receivedEews = const [];
@@ -68,6 +74,7 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
     required Future<HomeConfigurationModel> home,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
+    bool applyInitialFocus = true,
   }) async {
     await home;
     setControllerCallCount += 1;
@@ -75,7 +82,9 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
     receivedViewportSize = viewportSize;
     receivedEews = eews;
     receivedShakes = shakes;
-    return setControllerResult;
+    receivedApplyInitialFocus = applyInitialFocus;
+    final completer = setControllerCompleter;
+    return completer == null ? setControllerResult : completer.future;
   }
 
   @override
@@ -89,11 +98,18 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
     required Future<HomeConfigurationModel> home,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
+    bool ignoreAutoZoom = false,
   }) {
     realtimeTransitionCallCount += 1;
     receivedEews = eews;
     receivedShakes = shakes;
+    receivedIgnoreAutoZoom = ignoreAutoZoom;
     return SynchronousFuture(realtimeTransitionResult);
+  }
+
+  @override
+  void cancelAutomaticFocus() {
+    cancelAutomaticFocusCallCount += 1;
   }
 
   @override
@@ -108,22 +124,23 @@ class _RecordingHomeMapCameraCoordinator extends HomeMapCameraCoordinator {
 
 final _now = DateTime.utc(2025, 1, 1, 12);
 
-EewTelegramItem _sampleEew() => EewTelegramItem(
-  eventId: '20250101120000',
-  status: TelegramStatus.normal,
-  infoType: TelegramInfoType.publication,
-  serialNo: 1,
-  isCanceled: false,
-  isLastInfo: false,
-  reportTime: _now,
-  isPlum: false,
-  hypocenter: const EewHypocenterInfo(
-    code: '101',
-    name: '東京都',
-    latitude: 35.5,
-    longitude: 139.5,
-  ),
-);
+EewTelegramItem _sampleEew({String eventId = '20250101120000'}) =>
+    EewTelegramItem(
+      eventId: eventId,
+      status: TelegramStatus.normal,
+      infoType: TelegramInfoType.publication,
+      serialNo: 1,
+      isCanceled: false,
+      isLastInfo: false,
+      reportTime: _now,
+      isPlum: false,
+      hypocenter: const EewHypocenterInfo(
+        code: '101',
+        name: '東京都',
+        latitude: 35.5,
+        longitude: 139.5,
+      ),
+    );
 
 ShakeDetectionEvent _sampleShake() => ShakeDetectionEvent(
   eventId: 'shake',
@@ -245,10 +262,24 @@ void main() {
       expect(coordinator.receivedController, same(controller));
     });
 
-    test('Home復帰をcoordinatorへ委譲し結果を公開する', () async {
+    test('EEWがない場合はHome復帰をcoordinatorへ委譲し結果を公開する', () async {
       final coordinator = _RecordingHomeMapCameraCoordinator()
-        ..setControllerResult = false
         ..returnToHomeResult = true;
+      final container = _container(
+        eews: _MutableEewAliveTelegram(const []),
+        coordinator: coordinator,
+      );
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+
+      await notifier.returnToHome();
+
+      expect(coordinator.returnToHomeCallCount, 1);
+      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
+    });
+
+    test('EEWフォーカス中のユーザー操作はフォーカスを解除する', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false;
       final container = _container(
         eews: _MutableEewAliveTelegram([_sampleEew()]),
         coordinator: coordinator,
@@ -259,12 +290,134 @@ void main() {
         controller: MockMapController(),
         viewportSize: const Size(375, 667),
       );
-      expect(container.read(homeMapCameraStateProvider).isAtHome, isFalse);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isTrue,
+      );
+
+      notifier.handleUserMapGesture();
+
+      expect(coordinator.cancelAutomaticFocusCallCount, 1);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isFalse,
+      );
+    });
+
+    test('EEWフォーカスのカメラ移動中でもユーザー操作で解除できる', () async {
+      final focusCompleter = Completer<bool?>();
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerCompleter = focusCompleter;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew()]),
+        coordinator: coordinator,
+      );
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+
+      final focus = notifier.setController(
+        controller: MockMapController(),
+        viewportSize: const Size(375, 667),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isTrue,
+      );
+
+      notifier.handleUserMapGesture();
+      focusCompleter.complete(false);
+      await focus;
+
+      expect(coordinator.cancelAutomaticFocusCallCount, 1);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isFalse,
+      );
+    });
+
+    test('フォーカス解除後は同じEEW更新を無視し、新規EEWで再開する', () async {
+      final eews = _MutableEewAliveTelegram([_sampleEew()]);
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false
+        ..realtimeTransitionResult = false;
+      final container = _container(eews: eews, coordinator: coordinator);
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+      await notifier.setController(
+        controller: MockMapController(),
+        viewportSize: const Size(375, 667),
+      );
+      notifier.handleUserMapGesture();
+
+      eews.replace([_sampleEew()]);
+      await container.pump();
+      expect(coordinator.realtimeTransitionCallCount, 0);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isFalse,
+      );
+
+      eews.replace([_sampleEew(), _sampleEew(eventId: 'new-event')]);
+      await container.pump();
+      expect(coordinator.realtimeTransitionCallCount, 1);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isTrue,
+      );
+    });
+
+    test('フォーカス解除後のMap remountでは初期カメラ移動を要求しない', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew()]),
+        coordinator: coordinator,
+      );
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+      await notifier.setController(
+        controller: MockMapController(),
+        viewportSize: const Size(375, 667),
+      );
+      notifier.handleUserMapGesture();
+
+      await notifier.setController(
+        controller: MockMapController(),
+        viewportSize: const Size(667, 375),
+      );
+
+      expect(coordinator.receivedApplyInitialFocus, isFalse);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isFalse,
+      );
+    });
+
+    test('フォーカス解除後のHome操作はautoZoomを無視してEEWへ再フォーカスする', () async {
+      final coordinator = _RecordingHomeMapCameraCoordinator()
+        ..setControllerResult = false
+        ..realtimeTransitionResult = false;
+      final container = _container(
+        eews: _MutableEewAliveTelegram([_sampleEew()]),
+        coordinator: coordinator,
+      );
+      final notifier = container.read(homeMapCameraStateProvider.notifier);
+      await notifier.setController(
+        controller: MockMapController(),
+        viewportSize: const Size(375, 667),
+      );
+      container.read(_testShakesProvider.notifier).replace([_sampleShake()]);
+      container.read(shakeDetectionVisibleProvider);
+      await container.pump();
+      notifier.handleUserMapGesture();
 
       await notifier.returnToHome();
 
-      expect(coordinator.returnToHomeCallCount, 1);
-      expect(container.read(homeMapCameraStateProvider).isAtHome, isTrue);
+      expect(coordinator.returnToHomeCallCount, 0);
+      expect(coordinator.receivedIgnoreAutoZoom, isTrue);
+      expect(coordinator.receivedShakes, isEmpty);
+      expect(
+        container.read(homeMapCameraStateProvider).isEewFocusActive,
+        isTrue,
+      );
     });
   });
 }
