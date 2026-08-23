@@ -64,13 +64,18 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
     }
 
     func getActiveHeadlessTaskId() throws -> String? {
-        nil
+        LocationHeadlessRunner.shared.activeUpdateId
     }
 
     func completeHeadlessTask(
-        updateId _: String,
-        result _: HeadlessTaskResult
-    ) throws {}
+        updateId: String,
+        result: HeadlessTaskResult
+    ) throws {
+        LocationHeadlessRunner.shared.complete(
+            updateId: updateId,
+            result: result
+        )
+    }
 }
 
 private extension PendingLocationConsumer {
