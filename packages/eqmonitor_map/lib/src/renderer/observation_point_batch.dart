@@ -28,8 +28,8 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
     required this.phasePolicyVersion,
     required this.phase,
     required this.translucentSortPriority,
-    required this._stationSnapshotIdentity,
-  });
+    required Object stationSnapshotIdentity,
+  }) : _stationSnapshotToken = stationSnapshotIdentity;
 
   @override
   final MapFrameSnapshot frame;
@@ -49,12 +49,12 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
   @override
   final int translucentSortPriority;
 
-  final Object _stationSnapshotIdentity;
+  final Object _stationSnapshotToken;
 
   int get instanceStrideInBytes => observationPointInstanceStrideInBytes;
 
   bool hasStationSnapshotIdentity(Object identity) =>
-      identical(_stationSnapshotIdentity, identity);
+      identical(_stationSnapshotToken, identity);
 
   ObservationPointBatch withFrame({
     required MapFrameSnapshot frame,
@@ -79,7 +79,7 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
       phasePolicyVersion: phasePolicyVersion,
       phase: phase,
       translucentSortPriority: translucentSortPriority,
-      stationSnapshotIdentity: _stationSnapshotIdentity,
+      stationSnapshotIdentity: _stationSnapshotToken,
     );
   }
 }

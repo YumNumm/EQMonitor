@@ -9,9 +9,9 @@
 - `ObservationFrame`をstd140 vec4 2本、32 byteとしてpackした。camera normalized
   X/Yと`512 * 2^zoom`をoffset 0/4/8、viewport logical width/heightとstroke logical
   pixelsをoffset 16/20/24へ格納し、DPRは使わない。
-- 同一source/snapshot revisionのcamera更新では既存instance bytesをidentityごと再利用し、
-  32-byte frame uniformだけを作り直す。0 stationまたは`stationMinZoom`未満ではbatchを
-  作らない。
+- 同一source/snapshot revisionかつ同一station snapshot identityのcamera更新では既存instance
+  bytesとgenerationを再利用し、32-byte frame uniformだけを作り直す。同じrevisionでもstation
+  snapshotが置換された場合は再packする。0 stationまたは`stationMinZoom`未満ではbatchを作らない。
 - raw vertex/fragment shaderとmanifestを追加した。manifest symbolは
   `EarthquakeObservationVertex` / `EarthquakeObservationFragment`。vertex shaderは
   date-line差をnearest worldへwrapしlogical pixelからNDCへ変換する。fragment shaderは
@@ -24,7 +24,7 @@
   `ObservationFrame` 32-byte sizeとmember offset 0/16をScene/GPU mutation前に
   preflightする。
 - `FlutterSceneObservationGeometryOwner`をadapterのmaterial/node構築とは別責務で
-  実装した。context generation + source + snapshot revisionごとに
+  実装した。context generation + `ObservationPointInstanceGeneration`ごとに
   `StaticInstanceGeometry`を1個だけ作り、Scene nodeも1個、priority 300にする。
 - snapshot置換、context generation変更、background/disposeからのretire-all要求では
   `maxFramesInFlight`経過後に`retire()`する。retire予約済み、別generation、外部から
@@ -138,8 +138,8 @@ mise exec -- dart analyze . --fatal-infos
 - material symbol、batch ABI、GPU vertex layout、uniform reflectionの全preflightを、ledger
   begin、material setter、geometry owner、Scene node変更より前に完了する。
 - 0 stationではbatch自体がnullなのでgeometry/nodeとも作られない。
-- 同一revisionのadapter submitではgeometry identityを維持し、uniformだけ差し替わるtestが
-  実際の`ShaderMaterial.getUniformBlock`で通る。
+- 同一station snapshot identityのadapter submitではgeometry identityを維持し、uniformだけ
+  差し替わるtestが実際の`ShaderMaterial.getUniformBlock`で通る。
 - snapshot置換、context変更、retire-all、外部retireを別々にtestし、予約済みgeometryと
   retired geometryを再利用しない。context generation番号が戻る場合もfail closedする。
 - culling noneはforkのpublic APIだけを使い、upstreamへ変更・PRは作っていない。
@@ -157,10 +157,9 @@ mise exec -- dart analyze . --fatal-infos
 
 - shader Data Assetのproduction load、`FlutterSceneShaderObservationMaterialBinding`の生成、
   frameごとのprevious batch保持、`BaseMapView`のoverlay submission接続はTask 8の責務。
-- `retireAllGpuResources()`はgeometryを即時retireせず予約し、その後のframe progressionで
-  `maxFramesInFlight`を越えた時点に実retireする。永久dispose後のように以後submitが
-  無い場合の明示drain/fenceは現行Flutter GPU APIに無く、Task 8のwidget lifecycle接続で
-  ownerを保持する必要がある。予約後の再利用自体は即時に禁止している。
+- `retireAllGpuResources()`は対象nodeをSceneから外してから、その時点までの全renderer GPU
+  submissionをfenceする。resource ownerがcompletionまでgeometryを保持するため、永久dispose後に
+  以後のframe submitがなくても安全にretireする。Task 8はwidget lifecycleからこのAPIを呼ぶ。
 
 ## Review fix round 1
 
@@ -263,4 +262,52 @@ RED: caller側buffer変更後にinstance先頭が`99`へ変化。GREEN: instance
 - EQMonitor: `99fec3142 fix: 観測点instanceの所有権と世代identityを強化`
 - EQMonitor: `d61550bbd fix: snapshot置換時に観測点geometryを更新`
 - EQMonitor: `f7751bc94 fix: dispose後もGPU完了を待ってgeometryをretire`
-- fork branchはYumNumm originへpush済み。main branchもreport commit後にpushする。
+- fork/main branchともYumNumm originへpush済み。
+
+## Review fix round 2
+
+### Finding調査
+
+- base `bf13c6835`を直接確認し、修正前のままbuilder focused 8 testsと
+  `mise exec -- flutter analyze --fatal-infos`を新規実行した。どちらも成功し、指摘された
+  compile failureは再現しなかった。
+- Dart Analyzer 13.3のprivate named parameter仕様では、private initializing formal
+  `this._stationSnapshotIdentity`のcall-site名は先頭underscoreを除いた
+  `stationSnapshotIdentity`になる。Analyzer自身もunderscore付きcallを
+  `useOfPrivateParameterName`として拒否する。このため前回の631 tests/analyze成功とコードは
+  整合しており、前回報告は実行結果どおりだった。
+- 一方で、この新しい言語仕様を知らない読み手にはconstructor宣言とcall siteが不一致に見える。
+  constructorを`required Object stationSnapshotIdentity`という明示named parameterにし、
+  initializerで別名private field `_stationSnapshotToken`へ代入する形へ変更した。runtime behaviorと
+  public factory APIは変えていない。
+
+### Report修正
+
+- 冒頭のcache説明をsource/revision単独から、source/revision + station snapshot identityへ更新した。
+- geometry ownerのcache keyをcontext generation + instance generationとして明記した。
+- 旧「永久dispose後のfenceなし」懸念を、round 1で実装済みのScene detach後completion fenceと
+  resource owner保持へ更新した。
+
+### 検証
+
+```text
+cd packages/eqmonitor_map
+mise exec -- flutter test --no-pub \
+  test/renderer/observation_point_batch_builder_test.dart \
+  test/flutter_scene/flutter_scene_map_adapter_test.dart
+```
+
+結果: 30 tests、`All tests passed!`。
+
+```text
+mise exec -- flutter test --no-pub
+```
+
+結果: 631 tests、`All tests passed!`。
+
+```text
+mise exec -- flutter analyze --fatal-infos
+```
+
+結果: `No issues found!`。findingが現行コードで再現しなかったため新しいbehavior testは追加せず、
+既存のfactory defensive ownershipとcamera-only reuse testでconstructor両call pathを再検証した。
