@@ -22,12 +22,17 @@ _IntensityPartial _$IntensityPartialFromJson(Map<String, dynamic> json) =>
             'max_lpgm_intensity',
             (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
           ),
+          maxIntensityClass: $checkedConvert(
+            'max_intensity_class',
+            (v) => $enumDecodeNullable(_$CatalogIntensityClassEnumMap, v),
+          ),
         );
         return val;
       },
       fieldKeyMap: const {
         'maxIntensity': 'max_intensity',
         'maxLpgmIntensity': 'max_lpgm_intensity',
+        'maxIntensityClass': 'max_intensity_class',
       },
     );
 
@@ -35,6 +40,7 @@ Map<String, dynamic> _$IntensityPartialToJson(_IntensityPartial instance) =>
     <String, dynamic>{
       'max_intensity': instance.maxIntensity,
       'max_lpgm_intensity': ?instance.maxLpgmIntensity,
+      'max_intensity_class': ?instance.maxIntensityClass,
     };
 
 const _$JmaIntensityEnumMap = {
@@ -58,4 +64,25 @@ const _$JmaLpgmIntensityEnumMap = {
   JmaLpgmIntensity.value2: '2',
   JmaLpgmIntensity.value3: '3',
   JmaLpgmIntensity.value4: '4',
+};
+
+const _$CatalogIntensityClassEnumMap = {
+  CatalogIntensityClass.value1: '1',
+  CatalogIntensityClass.value2: '2',
+  CatalogIntensityClass.value3: '3',
+  CatalogIntensityClass.value4: '4',
+  CatalogIntensityClass.value5: '5',
+  CatalogIntensityClass.value6: '6',
+  CatalogIntensityClass.value7: '7',
+  CatalogIntensityClass.value9: '9',
+  CatalogIntensityClass.a: 'A',
+  CatalogIntensityClass.b: 'B',
+  CatalogIntensityClass.c: 'C',
+  CatalogIntensityClass.d: 'D',
+  CatalogIntensityClass.l: 'L',
+  CatalogIntensityClass.s: 'S',
+  CatalogIntensityClass.m: 'M',
+  CatalogIntensityClass.r: 'R',
+  CatalogIntensityClass.f: 'F',
+  CatalogIntensityClass.x: 'X',
 };
