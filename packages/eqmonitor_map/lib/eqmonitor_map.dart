@@ -62,5 +62,6 @@ export 'src/tile/map_tile_pipeline_budget.dart';
 export 'src/tile/mvt/mvt_decode_limits.dart';
 export 'src/tile/verified_pm_tiles_source.dart';
 export 'src/widget/base_map_view.dart';
+export 'src/widget/map_view_camera_controller.dart';
 
 // The physical-device Scene spike stays under src as a manual smoke harness.

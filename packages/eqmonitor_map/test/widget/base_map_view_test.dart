@@ -2,6 +2,7 @@
 // (Global Constraints「widget testとgolden testは追加しない」)。ここでは
 // gesture callbackから分離したpure関数(`cameraAfterGestureUpdate`/
 // `canonicalZoomFor`)だけを検証する。
+import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
@@ -14,6 +15,7 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:eqmonitor_map/src/widget/base_map_view.dart';
+import 'package:eqmonitor_map/src/widget/map_view_camera_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
@@ -39,6 +41,11 @@ void main() {
       maxSpritePolicyBatches: 1,
     );
     void callback(EarthquakeOverlayCoverageSnapshot _) {}
+    final clock = SystemMapClock.start(
+      domain: createMapClockDomainId(value: 'base-map-view-test'),
+    );
+    final cameraController = MapViewCameraController();
+    addTearDown(cameraController.dispose);
     final view = BaseMapView(
       source: const VerifiedPmTilesSource(
         sourceInstanceId: 'archive-a',
@@ -52,6 +59,8 @@ void main() {
         centerLatitude: 35.7,
         zoom: 6,
       ),
+      clock: clock,
+      cameraController: cameraController,
       limits: const MapBaseLayerLimits(
         minZoom: 0,
         maxZoom: 10,
@@ -92,6 +101,8 @@ void main() {
 
     expect(view.earthquakeOverlay, same(overlay));
     expect(view.onEarthquakeOverlayCoverageChanged, same(callback));
+    expect(view.clock, same(clock));
+    expect(view.cameraController, same(cameraController));
   });
 
   group('cameraAfterGestureUpdate', () {
