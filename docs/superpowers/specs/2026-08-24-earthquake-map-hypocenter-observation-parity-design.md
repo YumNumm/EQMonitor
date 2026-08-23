@@ -23,8 +23,8 @@ background / foreground、source switch、coverage を runtime で検証でき�
 ### 2.1 App earthquake model
 
 `Earthquake` は event ID、telegram metadata、intensity、hypocenter を持つ。
-震源を描画できるのは `EarthquakeHypocenter.coordinates` が緯度経度を持つ場合だけ
-である。座標が欠損、description、unknown の場合に既定位置へ置かない。
+震源を描画できるのは `EarthquakeHypocenter.coordinates` が有限かつ範囲内の緯度経度を
+持つ場合だけである。座標が欠損、unknown、非有限、範囲外の場合に既定位置へ置かない。
 
 ### 2.2 Existing overlay
 
@@ -269,8 +269,11 @@ opacityを一度だけ適用し、premultiplied RGBA を出力する。material 
 blending、depth write off、culling none、opaque false とする。texture row origin、
 UV orientation、linear / clamp sampler は 3.1 のABIと一致させる。
 
-shader symbol、uniform block size、instance stride / offset、texture binding type を
-Scene mutation 前に reflection preflight する。
+shader symbol、uniform block size、instance stride / offset、texture bindingをScene
+mutation前にpreflightする。native `flutter_gpu.Shader`とcompiled shader bundleが公開しない
+sampler 2D / cube typeはruntime reflection済みと偽らず、checked-in source declaration test、
+compiled bundleのsampled-image name / set / binding、runtime native uniform reflectionを
+組み合わせて検証する。
 
 ### 4.3 Phase and batching
 
@@ -298,7 +301,7 @@ retire する。
 
 - overlay source / full snapshot replacementで不要になったinstance / node
 - atlas identity changeで不要になったtexture pin
-- context recreation
+- actual context recreationまたはrendererへ通知されたcontext loss
 - background
 - widget dispose
 
@@ -427,32 +430,37 @@ Simulator / emulator を agent が操作する前にユーザーへ通知する�
 ### 8.2 App tests
 
 - hypocenter `CoordinateLatLng` だけを feature 化
-- coordinate missing / description / unknown で固定位置を作らない
+- coordinate missing / unknown / 非有限 / 範囲外で固定位置を作らない
 - event switch / late completion / asset failure
 - existing station maximum / deterministic order regressions
 - banner が committed version stamp だけを表示
-- camera action visibility と一度だけの command
+- camera action visibility、1 tapにつき一command、rebuild時はcommandなし
 
 ### 8.3 Runtime gate
 
 verified Asset Pack と実 API event を使用する。固定の fake event を成功根拠にしない。
 
-iOS Simulator と Android emulator / device で次を確認する。
+iOS Simulator debug、iOS physical device profile、Android emulator / device profileで
+次を確認する。Simulatorはvisual / gesture gateに使い、iOS profile evidenceとして扱わない。
 
 - Impeller / Flutter GPU backend log
 - base + region Fill + station + hypocenter
-- zoom 5.999 は region、station hidden
-- zoom 6 は city、station visible
+- zoom 5.999 は region visible、city hidden、station hidden
+- zoom 6 は region hidden、city visible、station visible
 - pan / pinch 追従
 - 震源へ移動
 - MapLibre基準とのcenter / zoom / projected pixel tolerance
 - antimeridian、viewport resize、state restoration
 - event switch
 - background 30 秒 / foreground
+- platform lifecycleで観測したactual native context recreation
+- debug surface限定probeによるatlas upload / shader interface / submit failureのbase-only fail closed
+- 2x2 orientation / alpha 0.5 / atlas edge fixtureのpixel ABI
 - Scene / GPU exception が連続しない
-- source switch / dispose 後の resource 上限
+- source switch / dispose 後のtexture / topology / instance / node resource上限
 
-市区町村、観測点、震源の画面確認ができない場合、本 subproject は完成扱いにしない。
+市区町村、観測点、震源の画面確認、iOS physical / Android profile gate、failure
+injection、actual native context recreationを確認できない場合、本 subproject は完成扱いにしない。
 
 ## 9. Migration Gate
 
