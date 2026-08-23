@@ -70,11 +70,10 @@ class HeadlessDeviceLocationErrorClassifier {
       return HeadlessTaskResult.retry;
     }
     final statusCode = error.response?.statusCode;
-    const retryableClientStatusCodes = {401, 403, 408, 409, 425, 429};
-    if (statusCode == null || retryableClientStatusCodes.contains(statusCode)) {
-      return HeadlessTaskResult.retry;
-    }
-    if (statusCode >= 400 && statusCode < 500) {
+    // The Device Location OpenAPI contract lists 400 as Bad Request.
+    // Unlisted 4xx responses may be recoverable, so keep them pending.
+    const terminalPayloadValidationStatusCodes = {400};
+    if (terminalPayloadValidationStatusCodes.contains(statusCode)) {
       return HeadlessTaskResult.terminalFailure;
     }
     return HeadlessTaskResult.retry;

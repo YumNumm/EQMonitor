@@ -161,6 +161,46 @@ void main() {
       });
     }
 
+    test('HTTP 404はdevice not foundのため診断・ackせずretryで完了する', () async {
+      final bridge = RecordingBackgroundLocationBridge(
+        pending: pendingLocation(updateId: 'http-404'),
+      );
+      final runner = createRunner(
+        bridge: bridge,
+        service: createSyncService(sendError: dioStatusError(404)),
+        recordTerminalFailure:
+            ({required updateId, required statusCode}) async {
+              bridge.events.add('diagnostic:$updateId:$statusCode');
+            },
+      );
+
+      final result = await runner.run(taskUpdateId: 'active-404');
+
+      expect(result, HeadlessTaskResult.retry);
+      expect(bridge.events, ['complete:active-404:retry']);
+      expect(bridge.completionCount, 1);
+    });
+
+    test('API契約にないHTTP 422は診断・ackせずretryで完了する', () async {
+      final bridge = RecordingBackgroundLocationBridge(
+        pending: pendingLocation(updateId: 'http-422'),
+      );
+      final runner = createRunner(
+        bridge: bridge,
+        service: createSyncService(sendError: dioStatusError(422)),
+        recordTerminalFailure:
+            ({required updateId, required statusCode}) async {
+              bridge.events.add('diagnostic:$updateId:$statusCode');
+            },
+      );
+
+      final result = await runner.run(taskUpdateId: 'active-422');
+
+      expect(result, HeadlessTaskResult.retry);
+      expect(bridge.events, ['complete:active-422:retry']);
+      expect(bridge.completionCount, 1);
+    });
+
     test('ネットワーク失敗時はretryで完了してpendingを保持する', () async {
       final bridge = RecordingBackgroundLocationBridge(
         pending: pendingLocation(updateId: 'network-1'),
@@ -176,13 +216,13 @@ void main() {
       expect(bridge.events, ['complete:active-network:retry']);
     });
 
-    test('不正payloadの4xxは診断保存後にackしてterminalFailureで完了する', () async {
+    test('API契約上Bad Requestの400は診断保存後にackしてterminalFailureで完了する', () async {
       final bridge = RecordingBackgroundLocationBridge(
         pending: pendingLocation(updateId: 'invalid-1'),
       );
       final runner = createRunner(
         bridge: bridge,
-        service: createSyncService(sendError: dioStatusError(422)),
+        service: createSyncService(sendError: dioStatusError(400)),
         recordTerminalFailure:
             ({required updateId, required statusCode}) async {
               bridge.events.add('diagnostic:$updateId:$statusCode');
@@ -193,7 +233,7 @@ void main() {
 
       expect(result, HeadlessTaskResult.terminalFailure);
       expect(bridge.events, [
-        'diagnostic:invalid-1:422',
+        'diagnostic:invalid-1:400',
         'ack:invalid-1:deviceLocation',
         'complete:active-invalid:terminalFailure',
       ]);
