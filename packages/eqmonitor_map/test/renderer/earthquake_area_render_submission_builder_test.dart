@@ -39,27 +39,28 @@ void main() {
         contextGeneration: 0,
       );
 
-  EarthquakeMapOverlaySnapshot snapshot() => createEarthquakeMapOverlaySnapshot(
-    sourceId: 'event-1',
-    revision: 3,
-    regionToCityZoom: 6,
-    stationMinZoom: 6,
-    regionStyles: const [
-      EarthquakeAreaStyle(
-        code: '130',
-        color: Color(0x80FF0000),
-        opacity: 0.6,
-      ),
-    ],
-    cityStyles: const [
-      EarthquakeAreaStyle(
-        code: '13101',
-        color: Color(0xFF0000FF),
-        opacity: 0.4,
-      ),
-    ],
-    stations: const [],
-  );
+  EarthquakeMapOverlaySnapshot snapshot({int revision = 3}) =>
+      createEarthquakeMapOverlaySnapshot(
+        sourceId: 'event-1',
+        revision: revision,
+        regionToCityZoom: 6,
+        stationMinZoom: 6,
+        regionStyles: const [
+          EarthquakeAreaStyle(
+            code: '130',
+            color: Color(0x80FF0000),
+            opacity: 0.6,
+          ),
+        ],
+        cityStyles: const [
+          EarthquakeAreaStyle(
+            code: '13101',
+            color: Color(0xFF0000FF),
+            opacity: 0.4,
+          ),
+        ],
+        stations: const [],
+      );
 
   EarthquakeOverlayExactTileHit hit({required String code}) =>
       EarthquakeOverlayExactTileHit(
@@ -173,17 +174,17 @@ void main() {
   test('reuses one packed mesh instance across repeated frames', () {
     final packedMeshCache = EarthquakeAreaPackedMeshCache(maxEntries: 4);
     final exactResult = hit(code: '130');
-    final overlaySnapshot = snapshot();
+    final firstSnapshot = snapshot();
 
     final first = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5),
-      snapshot: overlaySnapshot,
+      snapshot: firstSnapshot,
       exactTileResults: [exactResult],
       packedMeshFor: packedMeshCache.resolve,
     );
     final second = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5, frameNumber: 8),
-      snapshot: overlaySnapshot,
+      snapshot: snapshot(revision: 4),
       exactTileResults: [exactResult],
       packedMeshFor: packedMeshCache.resolve,
     );

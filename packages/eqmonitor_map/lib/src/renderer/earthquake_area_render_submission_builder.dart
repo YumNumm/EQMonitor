@@ -66,7 +66,6 @@ MapRenderSubmission buildEarthquakeAreaRenderSubmission({
     styles: styles,
     exactTileResults: exactTileResults,
     phase: phase,
-    snapshotRevision: snapshot.revision,
     layerMode: layerMode,
     packedMeshFor: packedMeshFor,
   );
@@ -88,7 +87,6 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
   required List<EarthquakeAreaStyle> styles,
   required List<EarthquakeOverlayExactTileResult> exactTileResults,
   required int phase,
-  required int snapshotRevision,
   required EarthquakeAreaLayerMode layerMode,
   required EarthquakeAreaPackedMeshResolver packedMeshFor,
 }) {
@@ -148,7 +146,6 @@ List<MapRenderPacket> buildEarthquakeAreaRenderPackets({
             mesh: packedMeshFor(
               sourceInstanceId: result.sourceInstanceId,
               tileId: result.canonicalTileId,
-              snapshotRevision: snapshotRevision,
               layerMode: layerMode,
               featureIndex: featureIndex,
               meshIndex: meshIndex,

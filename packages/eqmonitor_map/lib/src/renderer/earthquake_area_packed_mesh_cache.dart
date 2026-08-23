@@ -8,7 +8,6 @@ import 'package:eqmonitor_map/src/tile/earthquake_overlay_exact_tile_resolver.da
 typedef EarthquakeAreaPackedMeshResolver = MapPackedMesh Function({
   required String sourceInstanceId,
   required CanonicalTileId tileId,
-  required int snapshotRevision,
   required EarthquakeAreaLayerMode layerMode,
   required int featureIndex,
   required int meshIndex,
@@ -18,10 +17,11 @@ typedef EarthquakeAreaPackedMeshResolver = MapPackedMesh Function({
 /// 震度区域Fillのpacked meshをtile/layer単位で保持するLRU cache。
 ///
 /// GPU ledgerは[MapPackedMesh]のinstance identityをresource keyにするため、
-/// 同じsource、canonical tile、snapshot revision、region/city layer、
-/// feature/mesh ordinalには同じinstanceを返す。sourceのgeometryは
+/// 同じsource、canonical tile、region/city layer、feature/mesh ordinalには
+/// 同じinstanceを返す。sourceのgeometryは
 /// `sourceInstanceId`の世代内で不変、feature/mesh順はdecoder出力で安定、
-/// snapshot revisionはoverlay入力の世代を表すという上流contractに基づく。
+/// という上流contractに基づく。色や地震更新を表すsnapshot revisionはpacked
+/// geometryの入力ではないためkeyへ含めない。
 final class EarthquakeAreaPackedMeshCache {
   EarthquakeAreaPackedMeshCache({required this.maxEntries}) {
     if (maxEntries <= 0) {
@@ -33,7 +33,7 @@ final class EarthquakeAreaPackedMeshCache {
   final int maxEntries;
 
   final Map<
-    (String, CanonicalTileId, int, EarthquakeAreaLayerMode),
+    (String, CanonicalTileId, EarthquakeAreaLayerMode),
     Map<(int, int), MapPackedMesh>
   >
   _entries = {};
@@ -43,13 +43,12 @@ final class EarthquakeAreaPackedMeshCache {
   MapPackedMesh resolve({
     required String sourceInstanceId,
     required CanonicalTileId tileId,
-    required int snapshotRevision,
     required EarthquakeAreaLayerMode layerMode,
     required int featureIndex,
     required int meshIndex,
     required FillMesh mesh,
   }) {
-    final tileKey = (sourceInstanceId, tileId, snapshotRevision, layerMode);
+    final tileKey = (sourceInstanceId, tileId, layerMode);
     final meshes = _entries.remove(tileKey) ?? <(int, int), MapPackedMesh>{};
     _entries[tileKey] = meshes;
     final packed = meshes.putIfAbsent(
