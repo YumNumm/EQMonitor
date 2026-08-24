@@ -28,6 +28,7 @@ enum SharedPreferencesKey(final String key) {
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
   deviceProvisioned('device_provisioned'),
+  deviceRegistrationGeneration('device_registration_generation'),
   deviceMigratedFromLegacy('device_migrated_from_legacy'),
   adsOptOut('ads_opt_out'),
   autoReturnToRealtime('auto_return_to_realtime'),
