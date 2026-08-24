@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -95,6 +96,28 @@ void main() {
         (result as Failure<void, AuthFailure>).exception.kind,
         AuthFailureKind.storage,
       );
+    });
+
+    test('clearSessionを跨ぐpending setString完了後にtokenを残さない', () async {
+      final preferences = _MemorySecurePreferencesDataSource();
+      final repository = BetterAuthSessionRepository(
+        preferences: preferences,
+      );
+      final setGate = Completer<void>();
+      preferences.setStringGate = setGate;
+
+      final save = repository.saveSessionToken(token: 'stale-session');
+      await preferences.setStringStarted.future;
+      final clear = repository.clearSession();
+      setGate.complete();
+      await save;
+      await clear;
+
+      expect(
+        (await repository.readSessionToken()).unwrap(),
+        isNull,
+      );
+      expect(preferences.mutationOrder, ['set', 'remove']);
     });
   });
 
@@ -298,17 +321,28 @@ final class _RecordingAuthAdapter implements HttpClientAdapter {
 final class _MemorySecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
   final values = <SecureStorageKey, String>{};
+  final mutationOrder = <String>[];
   String? throwingOperation;
+  Completer<void>? setStringGate;
+  final setStringStarted = Completer<void>();
 
   @override
   Future<void> setString({
     required SecureStorageKey key,
     required String value,
   }) async {
+    if (!setStringStarted.isCompleted) {
+      setStringStarted.complete();
+    }
+    final gate = setStringGate;
+    if (gate != null) {
+      await gate.future;
+    }
     if (throwingOperation == 'set') {
       throw Exception('secure storage set failed');
     }
     values[key] = value;
+    mutationOrder.add('set');
   }
 
   @override
@@ -367,6 +401,7 @@ final class _MemorySecurePreferencesDataSource
       throw Exception('secure storage remove failed');
     }
     values.remove(key);
+    mutationOrder.add('remove');
   }
 
   @override

@@ -18,9 +18,12 @@ Future<BetterAuthSessionRepository> betterAuthSessionRepository(Ref ref) async {
 final class BetterAuthSessionRepository {
   new({
     required PreferencesDataSource<SecureStorageKey> preferences,
-  }) : _preferences = preferences;
+    SessionMutationSerializer? mutationSerializer,
+  }) : _preferences = preferences,
+       _mutationSerializer = mutationSerializer ?? SessionMutationSerializer();
 
   final PreferencesDataSource<SecureStorageKey> _preferences;
+  final SessionMutationSerializer _mutationSerializer;
   var _generation = 0;
 
   int get generation => _generation;
@@ -36,24 +39,43 @@ final class BetterAuthSessionRepository {
     required String token,
     int? expectedGeneration,
   }) {
-    if (expectedGeneration != null && expectedGeneration != _generation) {
-      return Future.value(const Success(null));
-    }
-    return captureSecureStorageOperation(
-      () => _preferences.setString(
-        key: SecureStorageKey.betterAuthSessionToken,
-        value: token,
-      ),
+    final operationGeneration = expectedGeneration ?? _generation;
+    return _mutationSerializer.run(
+      operation: () {
+        if (operationGeneration != _generation) {
+          return Future.value(const Success(null));
+        }
+        return captureSecureStorageOperation(
+          () => _preferences.setString(
+            key: SecureStorageKey.betterAuthSessionToken,
+            value: token,
+          ),
+        );
+      },
     );
   }
 
   Future<Result<void, AuthFailure>> clearSession() {
     _generation++;
-    return captureSecureStorageOperation(
-      () => _preferences.remove(
-        key: SecureStorageKey.betterAuthSessionToken,
+    return _mutationSerializer.run(
+      operation: () => captureSecureStorageOperation(
+        () => _preferences.remove(
+          key: SecureStorageKey.betterAuthSessionToken,
+        ),
       ),
     );
+  }
+}
+
+final class SessionMutationSerializer {
+  Future<void> _tail = Future.value();
+
+  Future<Result<T, AuthFailure>> run<T>({
+    required Future<Result<T, AuthFailure>> Function() operation,
+  }) {
+    final result = _tail.then((_) => operation());
+    _tail = result.then<void>((_) {});
+    return result;
   }
 }
 

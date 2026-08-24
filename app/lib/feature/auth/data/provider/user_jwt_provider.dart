@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/provider/auth_session_lifecycle.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,6 +13,7 @@ Future<UserJwtProvider> userJwtService(Ref ref) async {
   final provider = UserJwtProvider(
     apiClient: await ref.watch(betterAuthApiClientProvider.future),
     now: DateTime.now,
+    lifecycle: ref.watch(authSessionLifecycleProvider),
   );
   ref.onDispose(provider.dispose);
   return provider;
@@ -21,11 +23,14 @@ final class UserJwtProvider {
   new({
     required BetterAuthApiClient apiClient,
     required DateTime Function() now,
+    AuthSessionLifecycle? lifecycle,
   }) : _apiClient = apiClient,
-       _now = now;
+       _now = now,
+       _lifecycle = lifecycle ?? AuthSessionLifecycle();
 
   final BetterAuthApiClient _apiClient;
   final DateTime Function() _now;
+  final AuthSessionLifecycle _lifecycle;
   String? _cachedJwt;
   DateTime? _expiresAt;
   Future<Result<String, AuthFailure>>? _refreshInFlight;
@@ -35,7 +40,7 @@ final class UserJwtProvider {
   Future<Result<String, AuthFailure>> getValidJwt({
     bool forceRefresh = false,
   }) {
-    if (_isDisposed) {
+    if (_isDisposed || !_lifecycle.allowsJwtRefresh) {
       return Future.value(
         const Failure(
           AuthFailure(kind: AuthFailureKind.unauthorized),
@@ -56,8 +61,11 @@ final class UserJwtProvider {
       return inFlight;
     }
     final requestGeneration = _generation;
+    final lifecycleGeneration = _lifecycle.generation;
     final request = _apiClient.fetchJwt().then((result) {
-      if (_isDisposed || requestGeneration != _generation) {
+      if (_isDisposed ||
+          requestGeneration != _generation ||
+          !_lifecycle.isCurrent(generation: lifecycleGeneration)) {
         return const Failure<String, AuthFailure>(
           AuthFailure(kind: AuthFailureKind.unauthorized),
         );

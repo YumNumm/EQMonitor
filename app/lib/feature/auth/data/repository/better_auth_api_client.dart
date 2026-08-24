@@ -32,18 +32,25 @@ final class BetterAuthApiClient {
     required Dio dio,
     required BetterAuthSessionRepository sessionRepository,
     required CookieJar cookieJar,
+    CookieJar Function()? createCookieJar,
   }) : _dio = dio,
        _sessionRepository = sessionRepository,
-       _cookieJar = cookieJar {
+       _cookieStore = BetterAuthCookieStore(
+         initialCookieJar: cookieJar,
+         createCookieJar: createCookieJar ?? createInMemoryCookieJar,
+       ) {
     _dio.interceptors.addAll([
-      CookieManager(cookieJar),
+      BetterAuthCookieInterceptor(
+        cookieStore: _cookieStore,
+        sessionRepository: sessionRepository,
+      ),
       BetterAuthSessionInterceptor(sessionRepository: sessionRepository),
     ]);
   }
 
   final Dio _dio;
   final BetterAuthSessionRepository _sessionRepository;
-  final CookieJar _cookieJar;
+  final BetterAuthCookieStore _cookieStore;
 
   Future<Result<void, AuthFailure>> signInSocial({
     required String provider,
@@ -110,9 +117,10 @@ final class BetterAuthApiClient {
     };
   }
 
-  Future<Result<void, AuthFailure>> clearCookies() => captureAuthRequest(
-    _cookieJar.deleteAll,
-  );
+  Future<Result<void, AuthFailure>> clearCookies() {
+    final replacedCookieJar = _cookieStore.replace();
+    return captureAuthRequest(replacedCookieJar.deleteAll);
+  }
 
   Future<Result<bool, AuthFailure>> getSession() {
     final sessionGeneration = _sessionRepository.generation;
@@ -127,6 +135,102 @@ final class BetterAuthApiClient {
       );
       return response.data?['session'] is Map<String, dynamic>;
     });
+  }
+}
+
+final class BetterAuthCookieStore {
+  new({
+    required CookieJar initialCookieJar,
+    required CookieJar Function() createCookieJar,
+  }) : _createCookieJar = createCookieJar,
+       _snapshot = BetterAuthCookieSnapshot(cookieJar: initialCookieJar);
+
+  final CookieJar Function() _createCookieJar;
+  BetterAuthCookieSnapshot _snapshot;
+
+  BetterAuthCookieSnapshot get snapshot => _snapshot;
+
+  bool isCurrent({required BetterAuthCookieSnapshot snapshot}) =>
+      identical(_snapshot, snapshot);
+
+  CookieJar replace() {
+    final replacedCookieJar = _snapshot.cookieJar;
+    _snapshot = BetterAuthCookieSnapshot(cookieJar: _createCookieJar());
+    return replacedCookieJar;
+  }
+}
+
+final class BetterAuthCookieSnapshot {
+  const new({required this.cookieJar});
+
+  final CookieJar cookieJar;
+}
+
+final class BetterAuthCookieRequestContext {
+  const new({
+    required this.cookieManager,
+    required this.cookieSnapshot,
+    required this.sessionGeneration,
+  });
+
+  final CookieManager cookieManager;
+  final BetterAuthCookieSnapshot cookieSnapshot;
+  final int sessionGeneration;
+}
+
+final class BetterAuthCookieInterceptor extends Interceptor {
+  new({
+    required this.cookieStore,
+    required this.sessionRepository,
+  });
+
+  final BetterAuthCookieStore cookieStore;
+  final BetterAuthSessionRepository sessionRepository;
+  final Expando<BetterAuthCookieRequestContext> _requestContexts = Expando();
+
+  @override
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) {
+    final snapshot = cookieStore.snapshot;
+    final cookieManager = CookieManager(snapshot.cookieJar);
+    _requestContexts[options] = BetterAuthCookieRequestContext(
+      cookieManager: cookieManager,
+      cookieSnapshot: snapshot,
+      sessionGeneration: sessionRepository.generation,
+    );
+    return cookieManager.onRequest(options, handler);
+  }
+
+  @override
+  Future<void> onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) {
+    final context = _requestContexts[response.requestOptions];
+    if (context == null ||
+        context.sessionGeneration != sessionRepository.generation ||
+        !cookieStore.isCurrent(snapshot: context.cookieSnapshot)) {
+      handler.next(response);
+      return Future.value();
+    }
+    return context.cookieManager.onResponse(response, handler);
+  }
+
+  @override
+  Future<void> onError(
+    DioException error,
+    ErrorInterceptorHandler handler,
+  ) {
+    final context = _requestContexts[error.requestOptions];
+    if (context == null ||
+        context.sessionGeneration != sessionRepository.generation ||
+        !cookieStore.isCurrent(snapshot: context.cookieSnapshot)) {
+      handler.next(error);
+      return Future.value();
+    }
+    return context.cookieManager.onError(error, handler);
   }
 }
 
@@ -158,6 +262,8 @@ final class BetterAuthSessionInterceptor extends Interceptor {
     }
   }
 }
+
+CookieJar createInMemoryCookieJar() => CookieJar();
 
 Future<void> persistBetterAuthSessionToken<T>({
   required Response<T> response,

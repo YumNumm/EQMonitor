@@ -11,6 +11,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
+import 'package:eqmonitor/feature/auth/data/provider/auth_session_lifecycle.dart';
 import 'package:eqmonitor/feature/auth/data/provider/user_jwt_provider.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
@@ -264,6 +265,7 @@ void main() {
         },
         headers: {
           'set-auth-token': ['late-session-token'],
+          'set-cookie': ['session=late-cookie; Path=/'],
         },
       ),
     );
@@ -284,6 +286,52 @@ void main() {
       '/api/auth/get-session',
       '/api/auth/sign-out',
     ]);
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'session': {'id': 'after-sign-out'},
+      }),
+    );
+
+    await fixture.apiClient.getSession();
+
+    expect(fixture.adapter.cookieHeaders, [null, null, null]);
+  });
+
+  test('invalidation cleanup中の新規JWT refreshを拒否する', () async {
+    final fixture = _NotifierFixture();
+    fixture.preferences.values[SecureStorageKey.betterAuthSessionToken] =
+        'session-token';
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'token': _jwt(exp: 1893459660, marker: 'cached'),
+      }),
+    );
+    final container = fixture.createContainer();
+    addTearDown(container.dispose);
+    await container.read(authSessionProvider.future);
+    await container.read(authSessionProvider.notifier).acceptSignIn();
+    final removeGate = Completer<void>();
+    fixture.preferences.removeGate = removeGate;
+
+    final invalidation = container
+        .read(authSessionProvider.notifier)
+        .invalidate();
+    await fixture.preferences.removeStarted.future;
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'token': _jwt(exp: 1893463260, marker: 'during-invalidation'),
+      }),
+    );
+
+    final refresh = await fixture.jwtProvider.getValidJwt();
+
+    expect(
+      (refresh as Failure<String, AuthFailure>).exception.kind,
+      AuthFailureKind.unauthorized,
+    );
+    expect(fixture.adapter.requestCount, 1);
+    removeGate.complete();
+    await invalidation;
   });
 
   test('Secure Storage remove例外でもstateとJWTとCookieを消去する', () async {
@@ -329,8 +377,10 @@ void main() {
       }),
     );
     expect(
-      (await fixture.jwtProvider.getValidJwt()).unwrap(),
-      _jwt(exp: 1893463260, marker: 'fresh'),
+      (await container.read(authSessionProvider.notifier).acceptSignIn())
+          .unwrap()
+          .status,
+      AuthSessionStatus.authenticated,
     );
     expect(fixture.adapter.requestCount, 2);
   });
@@ -374,12 +424,14 @@ final class _NotifierFixture {
     jwtProvider = UserJwtProvider(
       apiClient: apiClient,
       now: () => DateTime.utc(2030),
+      lifecycle: lifecycle,
     );
   }
 
   final preferences = _MemorySecurePreferencesDataSource();
   final adapter = _QueueAdapter();
   final cookieJar = CookieJar();
+  final lifecycle = AuthSessionLifecycle();
   late final BetterAuthSessionRepository sessionRepository;
   late final BetterAuthApiClient apiClient;
   late final UserJwtProvider jwtProvider;
@@ -391,6 +443,7 @@ final class _NotifierFixture {
       ),
       betterAuthApiClientProvider.overrideWith((ref) async => apiClient),
       userJwtServiceProvider.overrideWith((ref) async => jwtProvider),
+      authSessionLifecycleProvider.overrideWith((ref) => lifecycle),
     ],
   );
 }
@@ -398,6 +451,7 @@ final class _NotifierFixture {
 final class _QueueAdapter implements HttpClientAdapter {
   final responses = <Future<ResponseBody>>[];
   final paths = <String>[];
+  final cookieHeaders = <String?>[];
   Completer<void>? _requestStarted;
   var requestCount = 0;
 
@@ -419,6 +473,7 @@ final class _QueueAdapter implements HttpClientAdapter {
   ) async {
     requestCount++;
     paths.add(options.path);
+    cookieHeaders.add(options.headers['cookie'] as String?);
     _requestStarted?.complete();
     _requestStarted = null;
     if (responses.isEmpty) {
@@ -435,6 +490,8 @@ final class _MemorySecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
   final values = <SecureStorageKey, String>{};
   var throwOnRemove = false;
+  Completer<void>? removeGate;
+  final removeStarted = Completer<void>();
 
   @override
   Future<void> setString({
@@ -492,6 +549,13 @@ final class _MemorySecurePreferencesDataSource
 
   @override
   Future<void> remove({required SecureStorageKey key}) async {
+    if (!removeStarted.isCompleted) {
+      removeStarted.complete();
+    }
+    final gate = removeGate;
+    if (gate != null) {
+      await gate.future;
+    }
     if (throwOnRemove) {
       throw Exception('secure storage remove failed');
     }
