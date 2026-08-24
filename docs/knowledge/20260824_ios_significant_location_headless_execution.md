@@ -34,6 +34,10 @@ UI Engine自身へのplugin登録だけを担う。
 callback handle未保存、plugin registrant未準備、Engine起動失敗、network失敗ではDevice Location
 consumerをacknowledgeせず、pendingを後続実行へ残す。
 
+通常Flutter Engineが生存している場合も、保存後にapp effects用callbackとsingleton headless
+lifecycleをそれぞれ起動する。通常EngineはLocalデバッグ通知・揺れ検知・App Group反映だけを行い、
+Device Location APIを送らない。これによりforeground/headless間の送信競合を作らない。
+
 1. pending位置を保存する。
 2. `UIApplication.beginBackgroundTask`で短い処理時間を要求する。
 3. callback handleからheadless `FlutterEngine`を1個だけ起動し、pluginを登録する。

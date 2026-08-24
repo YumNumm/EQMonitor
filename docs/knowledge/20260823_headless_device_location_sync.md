@@ -2,12 +2,13 @@
 
 ## 適用範囲と保証境界
 
-この同期は、nativeが受けた最新位置をconsumer別acknowledge付きで保存し、通常Flutter Engineまたは
-headless Flutter Engineから地域を解決してDevice Location APIへ送る。位置イベントとbackground
-taskの実行時刻はOSが決めるため、アプリ終了直後の即時同期は保証しない。
+この同期は、nativeが受けた最新位置をconsumer別acknowledge付きで保存し、単一のheadless
+Flutter Engineで地域を解決してDevice Location APIへ送る。位置イベントとbackground taskの
+実行時刻はOSが決めるため、アプリ終了直後の即時同期は保証しない。
 
-- foreground: 通常EngineがDevice Location同期とapp effectsを処理する。
-- background: 生存中Engineへ通知しつつ、iOSはbackground task、AndroidはWorkManagerで処理を保持する。
+- foreground: 通常Engineはapp effectsとLocalデバッグ通知だけを処理し、API送信はheadlessへ委譲する。
+- background: 生存中Engineへapp effectsを通知しつつ、iOSはsingleton headless lifecycle、Androidは
+  unique WorkManagerでDevice Location APIを処理する。
 - process terminated: iOSはSignificant Location ChangeによるOS relaunch、AndroidはPendingIntentからの
   BroadcastReceiverとWorkManagerで新しいprocessを起動する。
 - iOSのapp switcherからのswipe-up、Androidの`force-stop`は通常のOS終了とは別扱いである。
@@ -33,6 +34,22 @@ Background App Refresh、Android端末固有のbackground制限は実機で別�
   `uninitialized`は無効とみなさず、headlessではretry、通常起動ではslotを取得して確定する。
 - API結果はHTTP 400だけをterminalなpayload validation failureとする。404、その他の不明な4xx、
   401/403、network、timeout、5xxはretryし、pendingを残す。
+
+Device Location APIの重複排除recordはAPI endpointと送信済み地域payloadをJSONで保存する。device
+tokenをsaveまたはclearする直前にrecordを削除し、endpoint変更はscope不一致として扱う。token、
+token hash、raw座標はrecordへ保存しない。値ModelはFreezed + JsonSerializable、Riverpod宣言は
+Generatorを使用する。
+
+## pendingの原子的保存とbackup除外
+
+位置とconsumer別ack状態は分割キーではなく単一recordとして保存する。新recordの永続化成功後だけ
+旧形式を削除し、不完全なrecordでは緯度・経度を含む全項目を削除する。
+
+- Androidは`SharedPreferences.Editor.commit()`の失敗時に直前recordへ戻す。`blt_prefs.xml`を
+  cloud backupとdevice transferの両方から除外する。
+- iOSはbinary plistをatomic replaceし、fileと親directoryを同期する。atomic replaceとrollback後も
+  `isExcludedFromBackup`と`completeFileProtectionUntilFirstUserAuthentication`を再設定する。
+- 古いupdate IDのacknowledgeは、新しいrecordを変更しない。
 
 ## privacy境界
 
@@ -92,7 +109,9 @@ mise exec -- dart analyze \
 git --no-pager diff <TASK_BASE> -- <DIAGNOSTIC_FILE>
 ```
 
-Pigeon schema変更時はgenerator versionを固定し、Dart / Swift / Kotlinを再生成する。生成後にDartを
+Pigeon schema変更時はgenerator versionを固定し、Dart / Swift / Kotlinを再生成する。workspaceの
+analyzer overrideと競合する場合は
+[Pigeon生成時のanalyzer依存を隔離する](./20260823_pigeon_analyzer_isolation.md)を使う。生成後にDartを
 workspaceのformatterへ通し、3生成物に未コミット差分がないことを確認する。
 
 ## iOS検証
