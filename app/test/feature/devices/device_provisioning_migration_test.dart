@@ -1,3 +1,4 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
@@ -23,6 +24,10 @@ import 'package:talker_flutter/talker_flutter.dart';
 const _deviceId = 'test-device-id';
 const _legacyId = 'legacy-supabase-id';
 
+String _deviceToken(String deviceId) => JWT({
+  'sub': 'device:$deviceId',
+}).sign(SecretKey('test-secret'));
+
 const _fakeDevice = RegisteredDevice(
   id: _deviceId,
   platform: DevicePlatform.ios,
@@ -44,19 +49,23 @@ void main() {
     required Map<String, Object> initialPrefs,
     required FakeDeviceRepository deviceRepo,
     DeviceLocationMonitoringReconciler? monitoringReconciler,
+    _MemoryDeviceAuthRepository? authRepository,
   }) async {
     SharedPreferences.setMockInitialValues(initialPrefs);
     final prefs = await SharedPreferences.getInstance();
+    final resolvedAuthRepository =
+        authRepository ??
+        (_MemoryDeviceAuthRepository()..savedToken = _deviceToken(_deviceId));
     final container = ProviderContainer(
+      retry: (_, _) => null,
       overrides: [
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(prefs),
         ),
         deviceAuthRepositoryProvider.overrideWith(
-          (ref) async => _MemoryDeviceAuthRepository()..savedToken = 'jwt',
+          (ref) async => resolvedAuthRepository,
         ),
         deviceRepositoryProvider.overrideWith((ref) async => deviceRepo),
-        deviceIdProvider.overrideWith((ref) => _deviceId),
         // _NoopPushTokenSync overrides build() to avoid Firebase init,
         // and sync() to be a no-op. provision() swallows sync errors anyway.
         pushTokenSyncProvider.overrideWith(() => _NoopPushTokenSync()),
@@ -203,6 +212,89 @@ void main() {
 
     expect(events, ['delete', 'reprovision']);
   });
+
+  test('再登録後は DeviceIdProvider が新しい JWT の ID を返す', () async {
+    final authRepository = _MemoryDeviceAuthRepository()
+      ..savedToken = _deviceToken('device-a');
+    final deviceRepo = FakeDeviceRepository(
+      getResult: () => const Success(_fakeDevice),
+      putResult: () {
+        authRepository.savedToken = _deviceToken('device-b');
+        return const Success(_fakeDevice);
+      },
+      migrateResult: () => const Success(null),
+    );
+    final (container, _, _) = await buildContainer(
+      initialPrefs: {},
+      deviceRepo: deviceRepo,
+      authRepository: authRepository,
+    );
+
+    expect(await container.read(deviceIdProvider.future), 'device-a');
+
+    await container.read(deviceProvisioningProvider.notifier).provision();
+
+    expect(await container.read(deviceIdProvider.future), 'device-b');
+  });
+
+  test('削除後は DeviceIdProvider のキャッシュが破棄される', () async {
+    final authRepository = _MemoryDeviceAuthRepository()
+      ..savedToken = _deviceToken('device-a');
+    final deviceRepo = FakeDeviceRepository(
+      getResult: () => const Success(_fakeDevice),
+      putResult: () => const Success(_fakeDevice),
+      migrateResult: () => const Success(null),
+      deleteResult: () {
+        authRepository.savedToken = null;
+        return const Success(null);
+      },
+    );
+    final (container, _, _) = await buildContainer(
+      initialPrefs: {SharedPreferencesKey.deviceProvisioned.key: true},
+      deviceRepo: deviceRepo,
+      authRepository: authRepository,
+    );
+
+    expect(await container.read(deviceIdProvider.future), 'device-a');
+
+    await container
+        .read(deviceProvisioningProvider.notifier)
+        .deleteDeviceAndClearLocal();
+
+    await expectLater(
+      container.read(deviceIdProvider.future),
+      throwsA(isA<StateError>()),
+    );
+  });
+
+  test('登録失敗後も変更されたJWTに合わせてDevice IDキャッシュを破棄する', () async {
+    final authRepository = _MemoryDeviceAuthRepository()
+      ..savedToken = _deviceToken('device-a');
+    final deviceRepo = FakeDeviceRepository(
+      getResult: () => const Success(_fakeDevice),
+      putResult: () {
+        authRepository.savedToken = null;
+        return Failure(Exception('register failed'));
+      },
+      migrateResult: () => const Success(null),
+    );
+    final (container, _, _) = await buildContainer(
+      initialPrefs: {},
+      deviceRepo: deviceRepo,
+      authRepository: authRepository,
+    );
+
+    expect(await container.read(deviceIdProvider.future), 'device-a');
+
+    await expectLater(
+      container.read(deviceProvisioningProvider.notifier).provision(),
+      throwsA(isA<UnexpectedProvisioningException>()),
+    );
+    await expectLater(
+      container.read(deviceIdProvider.future),
+      throwsA(isA<StateError>()),
+    );
+  });
 }
 
 // 400 BadRequest を表す非再試行エラー。
@@ -242,9 +334,11 @@ class FakeDeviceRepository extends DeviceRepository {
     required Result<RegisteredDevice, Exception> Function() getResult,
     required Result<RegisteredDevice, Exception> Function() putResult,
     required Result<void, Exception> Function() migrateResult,
+    Result<void, Exception> Function()? deleteResult,
   }) : _getResult = getResult,
        _putResult = putResult,
        _migrateResult = migrateResult,
+       _deleteResult = deleteResult,
        super(
          api: api.ApiClient(Dio()),
          authRepository: _MemoryDeviceAuthRepository(),
@@ -254,6 +348,7 @@ class FakeDeviceRepository extends DeviceRepository {
   final Result<RegisteredDevice, Exception> Function() _getResult;
   final Result<RegisteredDevice, Exception> Function() _putResult;
   final Result<void, Exception> Function() _migrateResult;
+  final Result<void, Exception> Function()? _deleteResult;
 
   // ignore: type_annotate_public_apis
   var getCalls = 0;
@@ -263,14 +358,13 @@ class FakeDeviceRepository extends DeviceRepository {
   var migrateCalls = 0;
 
   @override
-  Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) async {
+  Future<Result<RegisteredDevice, Exception>> getDevice() async {
     getCalls++;
     return _getResult();
   }
 
   @override
   Future<Result<RegisteredDevice, Exception>> registerDevice({
-    required String deviceId,
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) async {
@@ -279,17 +373,16 @@ class FakeDeviceRepository extends DeviceRepository {
   }
 
   @override
-  Future<Result<void, Exception>> deleteDevice(String deviceId) async =>
-      const Success(null);
-
-  @override
   Future<Result<void, Exception>> migrateFromLegacy({
-    required String deviceId,
     required String oldDeviceId,
   }) async {
     migrateCalls++;
     return _migrateResult();
   }
+
+  @override
+  Future<Result<void, Exception>> deleteDevice() async =>
+      _deleteResult?.call() ?? const Success(null);
 }
 
 final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {

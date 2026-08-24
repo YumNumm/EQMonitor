@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
@@ -657,12 +658,11 @@ final class _StartupDeviceRepository extends DeviceRepository {
 
   @override
   Future<Result<RegisteredDevice, Exception>> registerDevice({
-    required String deviceId,
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) async => Success(
     RegisteredDevice(
-      id: deviceId,
+      id: 'device-id',
       platform: devicePlatform,
       userId: null,
       locale: deviceLocale,
@@ -727,7 +727,9 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   Future<void> saveToken({required String token}) async {}
 
   @override
-  Future<String?> readToken() async => 'auth-token';
+  Future<String?> readToken() async => JWT({
+    'sub': 'device:device-id',
+  }).sign(SecretKey('test-secret'));
 
   @override
   Future<void> clearToken() async {}

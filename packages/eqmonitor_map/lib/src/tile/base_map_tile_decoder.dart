@@ -7,6 +7,7 @@ import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/tile/earthquake_area_tile_geometry.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decoder.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
@@ -159,11 +160,17 @@ final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
 
 @immutable
 class BaseMapTileGeometry {
-  const new({required this.layers});
+  const new({
+    required this.layers,
+    this.earthquakeAreas = const EarthquakeAreaTileGeometry.empty(),
+  });
 
   /// [baseMapLayerSpecs]から[BaseMapLayerKind.background]を除いた行と
   /// 同じ順序・同じ件数。
   final List<BaseMapTileLayerGeometry> layers;
+
+  /// 地震情報のcodeに対応する予報区・市区町村のFill geometry。
+  final EarthquakeAreaTileGeometry earthquakeAreas;
 }
 
 /// [BaseMapTileDecoder.decode]が使う上限値一式。呼び出し側が明示し、
@@ -267,7 +274,54 @@ BaseMapTileGeometry decodeBaseMapTileSync(
         );
     }
   }
-  return BaseMapTileGeometry(layers: List.unmodifiable(layers));
+  return BaseMapTileGeometry(
+    layers: List.unmodifiable(layers),
+    earthquakeAreas: EarthquakeAreaTileGeometry(
+      forecastRegions: _buildEarthquakeAreaLayerGeometry(
+        layer: _findLayer(tile, 'areaForecastLocalE'),
+        codePropertyName: 'code',
+        builder: fillBuilder,
+      ),
+      cities: _buildEarthquakeAreaLayerGeometry(
+        layer: _findLayer(tile, 'areaInformationCityQuake'),
+        codePropertyName: 'regioncode',
+        builder: fillBuilder,
+      ),
+    ),
+  );
+}
+
+EarthquakeAreaTileLayerGeometry _buildEarthquakeAreaLayerGeometry({
+  required MvtLayer? layer,
+  required String codePropertyName,
+  required FillMeshBuilder builder,
+}) {
+  if (layer == null) {
+    return const EarthquakeAreaTileLayerGeometry(extent: null, features: []);
+  }
+
+  final meshesByCode = <String, List<FillMesh>>{};
+  var missingOrInvalidCodeCount = 0;
+  for (final feature in layer.features) {
+    if (feature.type != MvtGeometryType.polygon) {
+      continue;
+    }
+    final code = feature.properties[codePropertyName];
+    if (code == null || code.trim().isEmpty) {
+      missingOrInvalidCodeCount++;
+      continue;
+    }
+    meshesByCode.putIfAbsent(code, () => []).addAll(builder.build([feature]));
+  }
+
+  return EarthquakeAreaTileLayerGeometry(
+    extent: layer.extent,
+    missingOrInvalidCodeCount: missingOrInvalidCodeCount,
+    features: List.unmodifiable([
+      for (final MapEntry(:key, :value) in meshesByCode.entries)
+        CodedFillGeometry(code: key, meshes: List.unmodifiable(value)),
+    ]),
+  );
 }
 
 MvtLayer? _findLayer(MvtTile tile, String name) {
@@ -340,7 +394,11 @@ MvtFeature _polygonFeatureAsClosedLines(MvtFeature feature) {
   final closedRings = <Int32List>[
     for (final ring in feature.rings) _closeRing(ring),
   ];
-  return MvtFeature(type: MvtGeometryType.lineString, rings: closedRings);
+  return MvtFeature(
+    type: MvtGeometryType.lineString,
+    rings: closedRings,
+    properties: feature.properties,
+  );
 }
 
 Int32List _closeRing(Int32List ring) {

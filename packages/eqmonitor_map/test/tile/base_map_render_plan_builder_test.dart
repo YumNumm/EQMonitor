@@ -23,6 +23,10 @@ void main() {
       maxVerticesPerRing: 256,
       maxCommandsPerFeature: 1024,
       maxLayerNameBytes: 64,
+      maxKeysPerLayer: 64,
+      maxValuesPerLayer: 64,
+      maxTagsPerFeature: 64,
+      maxPropertyStringBytes: 64,
     ),
     fillLimits: FillMeshBuilderLimits(
       maxHolesPerPolygon: 16,

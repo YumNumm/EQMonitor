@@ -30,14 +30,19 @@ final class MvtLayer {
   final List<MvtFeature> features;
 }
 
-/// properties(tag/key/value)とfeature IDはwire上ではskipするが、この
-/// 縦切りではlayer名だけでstylingが足りるためモデルへ持たせない。
 final class MvtFeature {
-  const new({required this.type, required this.rings});
+  const new({
+    required this.type,
+    required this.rings,
+    required this.properties,
+  });
 
   final MvtGeometryType type;
 
   /// ringごとにx, yを交互に詰めたtile-local座標。Pointはpartが1つの
   /// ringとして入り、LineString/Polygonはpart(ring)ごとに1要素になる。
   final List<Int32List> rings;
+
+  /// MVTのtag/key/value tableから解決した文字列property。
+  final Map<String, String> properties;
 }

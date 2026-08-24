@@ -1,0 +1,37 @@
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:flutter/foundation.dart';
+
+/// commit済みoverlay identityとcoverageの最新値をatomicに所有する。
+final class EarthquakeOverlayCoverageOwner {
+  EarthquakeOverlayCoverageOwner({this.onChanged});
+
+  var _snapshot = const EarthquakeOverlayCoverageSnapshot.hidden();
+  ValueChanged<EarthquakeOverlayCoverageSnapshot>? onChanged;
+
+  EarthquakeOverlayCoverage get coverage => _snapshot.coverage;
+  EarthquakeOverlayCoverageSnapshot get snapshot => _snapshot;
+
+  void hide({required EarthquakeMapOverlaySnapshot? overlay}) => publish(
+    overlay: overlay,
+    coverage: const EarthquakeOverlayCoverage.hidden(),
+  );
+
+  void publish({
+    required EarthquakeMapOverlaySnapshot? overlay,
+    required EarthquakeOverlayCoverage coverage,
+  }) {
+    final next = overlay == null
+        ? const EarthquakeOverlayCoverageSnapshot.hidden()
+        : EarthquakeOverlayCoverageSnapshot(
+            sourceId: overlay.sourceId,
+            revision: overlay.revision,
+            coverage: coverage,
+          );
+    if (next == _snapshot) {
+      return;
+    }
+    _snapshot = next;
+    onChanged?.call(next);
+  }
+}

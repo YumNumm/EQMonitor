@@ -40,6 +40,10 @@ tokenをsaveまたはclearする直前にrecordを削除し、endpoint変更はs
 token hash、raw座標はrecordへ保存しない。値ModelはFreezed + JsonSerializable、Riverpod宣言は
 Generatorを使用する。
 
+headless APIの`x-eqmonitor-device-id`は通常Engineと同じくdevice JWTの`sub`から復元する。UDIDを
+再取得・hash化してIDを作らない。tokenが未保存または不正な場合はdevice ID headerを付けず、
+Authorizationを含む認証失敗をretryとしてpendingに残す。
+
 ## pendingの原子的保存とbackup除外
 
 位置とconsumer別ack状態は分割キーではなく単一recordとして保存する。新recordの永続化成功後だけ

@@ -17,6 +17,7 @@ import 'package:eqmonitor/core/provider/telegram_url/model/telegram_url_model.da
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_root_resolver.dart';
+import 'package:eqmonitor/feature/devices/data/logic/device_id_decoder.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_device_location_runner.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
@@ -28,7 +29,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/r
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_udid/flutter_udid.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
@@ -102,7 +102,9 @@ class HeadlessDeviceLocationSyncServiceLoader {
     final scope = DeviceLocationSyncScope.fromApiBaseUrl(
       apiBaseUrl: restApiUrl,
     );
-    final identity = await const HeadlessApiIdentityLoader().load();
+    final identity = await const HeadlessApiIdentityLoader().load(
+      deviceToken: deviceToken,
+    );
     final dio = const HeadlessApiDioFactory().build(
       baseUrl: restApiUrl,
       identity: identity,
@@ -306,14 +308,21 @@ class HeadlessRestApiUrlResolver {
 class HeadlessApiIdentityLoader {
   const new();
 
-  Future<HeadlessApiIdentity> load() async {
+  Future<HeadlessApiIdentity> load({required String? deviceToken}) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final deviceInfo = DeviceInfoPlugin();
     final androidInfo = Platform.isAndroid
         ? await deviceInfo.androidInfo
         : null;
     final iosInfo = Platform.isIOS ? await deviceInfo.iosInfo : null;
-    final deviceId = HeadlessDeviceIdBuilder.build(await FlutterUdid.udid);
+    var deviceId = '';
+    if (deviceToken != null && deviceToken.isNotEmpty) {
+      try {
+        deviceId = const DeviceIdDecoder().decode(token: deviceToken);
+      } on FormatException {
+        deviceId = '';
+      }
+    }
     return HeadlessApiIdentity(
       userAgent: const ApiUserAgentBuilder().build(
         packageInfo: packageInfo,
@@ -324,17 +333,6 @@ class HeadlessApiIdentityLoader {
       platform: Platform.isAndroid ? 'android' : 'ios',
       deviceId: deviceId,
     );
-  }
-}
-
-class HeadlessDeviceIdBuilder {
-  const new _();
-
-  static String build(String udid) {
-    final hash = sha512.convert(utf8.encode(udid)).toString();
-    return '${hash.substring(0, 8)}-${hash.substring(8, 12)}-'
-        '${hash.substring(12, 16)}-${hash.substring(16, 20)}-'
-        '${hash.substring(20, 32)}';
   }
 }
 

@@ -11,6 +11,7 @@ resolution: workspace
 
 dependencies:
   dart_earcut: ^1.2.0
+  data_assets: ^0.20.0
   flutter:
     sdk: flutter
   flutter_hooks: ^0.21.3+1

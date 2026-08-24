@@ -74,7 +74,7 @@ final class DeviceProvisioningNotifierProvider
 }
 
 String _$deviceProvisioningNotifierHash() =>
-    r'34874b3dbeb888170c33e3ac1a9c903f22848369';
+    r'aa34afb09027de671292ed725d601108012c4cef';
 
 abstract class _$DeviceProvisioningNotifier
     extends $AsyncNotifier<DeviceProvisioningStatus> {

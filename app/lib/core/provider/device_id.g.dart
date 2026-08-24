@@ -10,20 +10,17 @@ part of 'device_id.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// デバイスIDを提供するProvider
-/// UDIDのSHA512ハッシュをUUID形式に変換して返す
+/// サーバー発行 JWT の sub claim からデバイス ID を提供する。
 
 @ProviderFor(deviceId)
 final deviceIdProvider = DeviceIdProvider._();
 
-/// デバイスIDを提供するProvider
-/// UDIDのSHA512ハッシュをUUID形式に変換して返す
+/// サーバー発行 JWT の sub claim からデバイス ID を提供する。
 
 final class DeviceIdProvider
     extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
     with $FutureModifier<String>, $FutureProvider<String> {
-  /// デバイスIDを提供するProvider
-  /// UDIDのSHA512ハッシュをUUID形式に変換して返す
+  /// サーバー発行 JWT の sub claim からデバイス ID を提供する。
   DeviceIdProvider._()
     : super(
         from: null,
@@ -49,4 +46,4 @@ final class DeviceIdProvider
   }
 }
 
-String _$deviceIdHash() => r'484f9de5df37e8548c3af9c59f980a04fe57123a';
+String _$deviceIdHash() => r'd9c75dc86739f7d76274b7c1ff80abd4e2595091';

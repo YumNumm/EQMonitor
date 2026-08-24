@@ -73,7 +73,6 @@ void main() {
       );
 
       final result = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -124,7 +123,6 @@ void main() {
     );
 
     final registration = await deviceRepository.registerDevice(
-      deviceId: 'local-device-id',
       devicePlatform: DevicePlatform.ios,
       deviceLocale: DeviceLocale.ja,
     );
@@ -174,12 +172,10 @@ void main() {
       );
 
       final first = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
       final second = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -214,7 +210,6 @@ void main() {
       );
 
       final result = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -248,7 +243,6 @@ void main() {
       );
 
       final result = await repository.fetchOrRegister(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -278,7 +272,7 @@ void main() {
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
-      final result = await repository.deleteDevice('local-device-id');
+      final result = await repository.deleteDevice();
 
       expect(result, isA<Success<void, Exception>>());
       expect(authRepository.savedToken, isNull);

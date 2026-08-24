@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:material_ui/material_ui.dart';
@@ -27,7 +25,9 @@ import 'package:maplibre/maplibre.dart';
 /// 作り直すと塗りが消えたように見える。相対順序はアンカー（細分区域の境界線の
 /// 下 / 上）で決まるので、effect を分けても順序は入れ替わらない。
 class IntensityFillLayer extends HookConsumerWidget {
-  const new({super.key});
+  const new({required this.items, super.key});
+
+  final List<CityMaxIntensityEntry> items;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,11 +36,6 @@ class IntensityFillLayer extends HookConsumerWidget {
     final colorModel = colorSet.intensity;
     final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
 
-    final items = ref.watch(
-      cityMaxIntensityProvider.select(
-        (value) => value.valueOrPrevious?.items,
-      ),
-    );
     final selectedCityCode = ref.watch(
       intensityHistoryControllerProvider.select(
         (state) => state.selectedCity?.code,
@@ -75,7 +70,7 @@ class IntensityFillLayer extends HookConsumerWidget {
         }
 
         final layers = builder.buildFill(
-          cityMaxIntensities: latestItems.value ?? const [],
+          cityMaxIntensities: latestItems.value,
           colorModel: colorModel,
         );
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapCameraState {
 
- Geographic get center; double get zoom; double get bearing; double get pitch; bool get isAtHome;
+ Geographic get center; double get zoom; double get bearing; double get pitch; bool get isAtHome; bool get isEewFocusActive;
 /// Create a copy of MapCameraState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $MapCameraStateCopyWith<MapCameraState> get copyWith => _$MapCameraStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapCameraState&&(identical(other.center, center) || other.center == center)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.isAtHome, isAtHome) || other.isAtHome == isAtHome));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapCameraState&&(identical(other.center, center) || other.center == center)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.isAtHome, isAtHome) || other.isAtHome == isAtHome)&&(identical(other.isEewFocusActive, isEewFocusActive) || other.isEewFocusActive == isEewFocusActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,center,zoom,bearing,pitch,isAtHome);
+int get hashCode => Object.hash(runtimeType,center,zoom,bearing,pitch,isAtHome,isEewFocusActive);
 
 @override
 String toString() {
-  return 'MapCameraState(center: $center, zoom: $zoom, bearing: $bearing, pitch: $pitch, isAtHome: $isAtHome)';
+  return 'MapCameraState(center: $center, zoom: $zoom, bearing: $bearing, pitch: $pitch, isAtHome: $isAtHome, isEewFocusActive: $isEewFocusActive)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $MapCameraStateCopyWith<$Res>  {
   factory $MapCameraStateCopyWith(MapCameraState value, $Res Function(MapCameraState) _then) = _$MapCameraStateCopyWithImpl;
 @useResult
 $Res call({
- Geographic center, double zoom, double bearing, double pitch, bool isAtHome
+ Geographic center, double zoom, double bearing, double pitch, bool isAtHome, bool isEewFocusActive
 });
 
 
@@ -63,13 +63,14 @@ class _$MapCameraStateCopyWithImpl<$Res>
 
 /// Create a copy of MapCameraState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? center = null,Object? zoom = null,Object? bearing = null,Object? pitch = null,Object? isAtHome = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? center = null,Object? zoom = null,Object? bearing = null,Object? pitch = null,Object? isAtHome = null,Object? isEewFocusActive = null,}) {
   return _then(MapCameraState(
 center: null == center ? _self.center : center // ignore: cast_nullable_to_non_nullable
 as Geographic,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
 as double,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_nullable_to_non_nullable
 as double,pitch: null == pitch ? _self.pitch : pitch // ignore: cast_nullable_to_non_nullable
 as double,isAtHome: null == isAtHome ? _self.isAtHome : isAtHome // ignore: cast_nullable_to_non_nullable
+as bool,isEewFocusActive: null == isEewFocusActive ? _self.isEewFocusActive : isEewFocusActive // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome,  bool isEewFocusActive)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapCameraState() when $default != null:
-return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome);case _:
+return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome,_that.isEewFocusActive);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome,  bool isEewFocusActive)  $default,) {final _that = this;
 switch (_that) {
 case _MapCameraState():
-return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome);case _:
+return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome,_that.isEewFocusActive);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Geographic center,  double zoom,  double bearing,  double pitch,  bool isAtHome,  bool isEewFocusActive)?  $default,) {final _that = this;
 switch (_that) {
 case _MapCameraState() when $default != null:
-return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome);case _:
+return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome,_that.isEewFocusActive);case _:
   return null;
 
 }
@@ -211,7 +212,7 @@ return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.isAtHome
 
 
 class _MapCameraState implements MapCameraState {
-  const _MapCameraState({required this.center, required this.zoom, this.bearing = 0.0, this.pitch = 0.0, this.isAtHome = true});
+  const _MapCameraState({required this.center, required this.zoom, this.bearing = 0.0, this.pitch = 0.0, this.isAtHome = true, this.isEewFocusActive = false});
   
 
 @override final  Geographic center;
@@ -219,6 +220,7 @@ class _MapCameraState implements MapCameraState {
 @override@JsonKey() final  double bearing;
 @override@JsonKey() final  double pitch;
 @override@JsonKey() final  bool isAtHome;
+@override@JsonKey() final  bool isEewFocusActive;
 
 /// Create a copy of MapCameraState
 /// with the given fields replaced by the non-null parameter values.
@@ -230,16 +232,16 @@ _$MapCameraStateCopyWith<_MapCameraState> get copyWith => __$MapCameraStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapCameraState&&(identical(other.center, center) || other.center == center)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.isAtHome, isAtHome) || other.isAtHome == isAtHome));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapCameraState&&(identical(other.center, center) || other.center == center)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.isAtHome, isAtHome) || other.isAtHome == isAtHome)&&(identical(other.isEewFocusActive, isEewFocusActive) || other.isEewFocusActive == isEewFocusActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,center,zoom,bearing,pitch,isAtHome);
+int get hashCode => Object.hash(runtimeType,center,zoom,bearing,pitch,isAtHome,isEewFocusActive);
 
 @override
 String toString() {
-  return 'MapCameraState(center: $center, zoom: $zoom, bearing: $bearing, pitch: $pitch, isAtHome: $isAtHome)';
+  return 'MapCameraState(center: $center, zoom: $zoom, bearing: $bearing, pitch: $pitch, isAtHome: $isAtHome, isEewFocusActive: $isEewFocusActive)';
 }
 
 
@@ -250,7 +252,7 @@ abstract mixin class _$MapCameraStateCopyWith<$Res> implements $MapCameraStateCo
   factory _$MapCameraStateCopyWith(_MapCameraState value, $Res Function(_MapCameraState) _then) = __$MapCameraStateCopyWithImpl;
 @override @useResult
 $Res call({
- Geographic center, double zoom, double bearing, double pitch, bool isAtHome
+ Geographic center, double zoom, double bearing, double pitch, bool isAtHome, bool isEewFocusActive
 });
 
 
@@ -267,13 +269,14 @@ class __$MapCameraStateCopyWithImpl<$Res>
 
 /// Create a copy of MapCameraState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? center = null,Object? zoom = null,Object? bearing = null,Object? pitch = null,Object? isAtHome = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? center = null,Object? zoom = null,Object? bearing = null,Object? pitch = null,Object? isAtHome = null,Object? isEewFocusActive = null,}) {
   return _then(_MapCameraState(
 center: null == center ? _self.center : center // ignore: cast_nullable_to_non_nullable
 as Geographic,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
 as double,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_nullable_to_non_nullable
 as double,pitch: null == pitch ? _self.pitch : pitch // ignore: cast_nullable_to_non_nullable
 as double,isAtHome: null == isAtHome ? _self.isAtHome : isAtHome // ignore: cast_nullable_to_non_nullable
+as bool,isEewFocusActive: null == isEewFocusActive ? _self.isEewFocusActive : isEewFocusActive // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
