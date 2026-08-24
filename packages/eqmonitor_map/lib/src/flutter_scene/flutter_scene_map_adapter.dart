@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_material_parameters.dart';
@@ -9,6 +11,7 @@ import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.da
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_gpu_resource_ledger.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:flutter_scene/gpu.dart' as scene_gpu;
 import 'package:flutter_scene/scene.dart' as scene;
@@ -54,6 +57,33 @@ abstract interface class FlutterSceneObservationMaterialBinding {
   void preflight({required ObservationPointBatch batch});
 
   void setFrameUniform(ByteData bytes);
+}
+
+final class FlutterSceneSpritePreparedSceneNode {
+  const FlutterSceneSpritePreparedSceneNode({
+    required this.batch,
+    required this.node,
+  });
+
+  final MapPointSpriteInstanceBatch batch;
+  final scene.Node node;
+}
+
+abstract interface class FlutterSceneSpritePreparedSceneFrame {
+  List<FlutterSceneSpritePreparedSceneNode> get nodes;
+
+  void commit();
+
+  void rollback();
+}
+
+abstract interface class FlutterSceneSpriteFrameResources {
+  FlutterSceneSpritePreparedSceneFrame prepareFrame({
+    required MapFrameSnapshot frame,
+    required List<MapPointSpriteInstanceBatch> batches,
+  });
+
+  void retireAll();
 }
 
 /// shader bundleの必須symbolを解決したproduction observation binding。
@@ -394,6 +424,17 @@ final class FlutterSceneObservationNodePlan extends FlutterSceneNodePlan {
   final ObservationPointBatch batch;
 }
 
+final class FlutterSceneSpriteNodePlan extends FlutterSceneNodePlan {
+  const FlutterSceneSpriteNodePlan({
+    required super.drawRank,
+    required this.layer,
+    required this.batch,
+  });
+
+  final MapSceneInstanceLayerSubmission layer;
+  final MapPointSpriteInstanceBatch batch;
+}
+
 List<FlutterSceneNodePlan> buildFlutterSceneNodePlans({
   required MapSceneFrameSubmission submission,
 }) {
@@ -412,19 +453,30 @@ List<FlutterSceneNodePlan> buildFlutterSceneNodePlans({
         }
       case MapSceneInstanceLayerSubmission():
         final batch = preflightFlutterSceneInstanceLayer(layer: layer);
-        plans.add(
-          FlutterSceneObservationNodePlan(
-            drawRank: plans.length,
-            layer: layer,
-            batch: batch,
-          ),
-        );
+        switch (batch) {
+          case ObservationPointBatch():
+            plans.add(
+              FlutterSceneObservationNodePlan(
+                drawRank: plans.length,
+                layer: layer,
+                batch: batch,
+              ),
+            );
+          case MapPointSpriteInstanceBatch():
+            plans.add(
+              FlutterSceneSpriteNodePlan(
+                drawRank: plans.length,
+                layer: layer,
+                batch: batch,
+              ),
+            );
+        }
     }
   }
   return List.unmodifiable(plans);
 }
 
-ObservationPointBatch preflightFlutterSceneInstanceLayer({
+MapSceneInstanceBatch preflightFlutterSceneInstanceLayer({
   required MapSceneInstanceLayerSubmission layer,
 }) => switch (layer) {
   MapSceneInstanceLayerSubmission(
@@ -442,11 +494,15 @@ ObservationPointBatch preflightFlutterSceneInstanceLayer({
     ),
   MapSceneInstanceLayerSubmission(
     kind: MapSceneInstanceLayerKind.pointSprite,
+    :final batch,
   ) =>
-    throw FlutterSceneLayerPreflightFailure(
-      reason: FlutterSceneLayerPreflightFailureReason.unsupportedInstanceKind,
-      layer: layer,
-    ),
+    batch is MapPointSpriteInstanceBatch
+        ? batch
+        : throw FlutterSceneLayerPreflightFailure(
+            reason: FlutterSceneLayerPreflightFailureReason
+                .instanceBatchTypeMismatch,
+            layer: layer,
+          ),
 };
 
 /// frame submissionをcanonicalなmesh batch planへ変換する。
@@ -474,10 +530,29 @@ ObservationPointBatch? observationPointBatchFrom({
       case MapSceneMeshLayerSubmission():
         continue;
       case MapSceneInstanceLayerSubmission():
-        observation = preflightFlutterSceneInstanceLayer(layer: layer);
+        final batch = preflightFlutterSceneInstanceLayer(layer: layer);
+        if (batch is ObservationPointBatch) {
+          observation = batch;
+        }
     }
   }
   return observation;
+}
+
+List<MapPointSpriteInstanceBatch> spriteBatchesFrom({
+  required MapSceneFrameSubmission submission,
+}) {
+  final batches = <MapPointSpriteInstanceBatch>[];
+  for (final layer in submission.layers) {
+    if (layer is! MapSceneInstanceLayerSubmission) {
+      continue;
+    }
+    final batch = preflightFlutterSceneInstanceLayer(layer: layer);
+    if (batch is MapPointSpriteInstanceBatch) {
+      batches.add(batch);
+    }
+  }
+  return List.unmodifiable(batches);
 }
 
 /// base mapとoverlayを1つのFlutter Sceneへ送る唯一のowner。
@@ -487,12 +562,16 @@ final class FlutterSceneMapAdapter {
     required FlutterSceneMapMaterialResolver materialFor,
     required int maxFramesInFlight,
     FlutterSceneObservationMaterialBinding? observationMaterial,
+    FlutterSceneSpriteFrameResources? spriteResources,
+    MapGpuProbeRuntime? gpuProbeRuntime,
     FlutterSceneGpuCompletionBarrier waitForGpuCompletion =
         scene.waitForPendingGpuSubmissions,
   }) : this._(
          sceneGraph,
          materialFor,
          observationMaterial,
+         spriteResources,
+         gpuProbeRuntime,
          MapGpuResourceLedger<scene.MeshGeometry>(
            maxFramesInFlight: maxFramesInFlight,
          ),
@@ -506,6 +585,8 @@ final class FlutterSceneMapAdapter {
     this._sceneGraph,
     this._materialFor,
     this._observationMaterial,
+    this._spriteResources,
+    this._gpuProbeRuntime,
     this._geometries,
     this._observationGeometries,
     this._waitForGpuCompletion,
@@ -514,6 +595,8 @@ final class FlutterSceneMapAdapter {
   final scene.SceneGraph _sceneGraph;
   final FlutterSceneMapMaterialResolver _materialFor;
   final FlutterSceneObservationMaterialBinding? _observationMaterial;
+  final FlutterSceneSpriteFrameResources? _spriteResources;
+  final MapGpuProbeRuntime? _gpuProbeRuntime;
   final MapGpuResourceLedger<scene.MeshGeometry> _geometries;
   final FlutterSceneObservationGeometryOwner _observationGeometries;
   final FlutterSceneGpuCompletionBarrier _waitForGpuCompletion;
@@ -540,6 +623,7 @@ final class FlutterSceneMapAdapter {
       materialFor: _materialFor,
     );
     final observation = observationPointBatchFrom(submission: submission);
+    final spriteBatches = spriteBatchesFrom(submission: submission);
     final observationMaterial = switch (observation) {
       null => null,
       _ =>
@@ -552,83 +636,122 @@ final class FlutterSceneMapAdapter {
       validateObservationPointBatchAbi(batch: observation);
       observationMaterial?.preflight(batch: observation);
     }
-    final frame = submission.frame;
-    _retiredGeometryCount += _geometries
-        .beginFrame(
-          contextGeneration: frame.contextGeneration,
-          frameNumber: frame.frameNumber,
-        )
-        .length;
-    _observationGeometries.beginFrame(
-      contextGeneration: frame.contextGeneration,
-      frameNumber: frame.frameNumber,
-    );
-
-    final nodes = <scene.Node>[];
-    final resolvedByBatch = {
-      for (final entry in resolved) entry.plan.batch: entry,
+    final spriteResources = switch (spriteBatches.isEmpty) {
+      true => _spriteResources,
+      false =>
+        _spriteResources ??
+            (throw StateError('No Flutter Scene sprite resources are loaded.')),
     };
-    for (final nodePlan in nodePlans) {
-      switch (nodePlan) {
-        case FlutterSceneMeshNodePlan(:final layer, :final packetIndex):
-          final entry = resolvedByBatch[layer.batch];
-          if (entry == null) {
-            throw StateError('A preflighted mesh material was not resolved.');
-          }
-          applyFlutterSceneMeshBatchMaterial(
-            plan: entry.plan,
-            parameters: entry.material.parameters,
-          );
-          final packet = layer.batch.packets[packetIndex];
-          final node = scene.Node(
-            localTransform: scene_math.Matrix4.fromList(
-              layer.batch.instanceTransforms[packetIndex],
-            ),
-            mesh: scene.Mesh(
-              _geometryFor(packet.mesh),
-              entry.material.material,
-            ),
-          );
-          applyFlutterSceneDrawRank(
-            node: node,
-            drawRank: nodePlan.drawRank,
-          );
-          nodes.add(node);
-        case FlutterSceneObservationNodePlan(:final batch):
-          final material = observationMaterial;
-          if (material == null) {
-            throw StateError(
-              'A preflighted observation material was not resolved.',
-            );
-          }
-          final before = _observationGeometries.liveGeometryCount;
-          final geometry = _observationGeometries.geometryFor(batch: batch);
-          if (_observationGeometries.liveGeometryCount > before) {
-            _uploadedObservationGeometryCount++;
-          }
-          material.setFrameUniform(batch.frameUniform);
-          final node = scene.Node(
-            mesh: scene.Mesh(geometry, material.material),
-          );
-          applyFlutterSceneDrawRank(
-            node: node,
-            drawRank: nodePlan.drawRank,
-          );
-          nodes.add(node);
-      }
-    }
+    final preparedSprites = spriteResources?.prepareFrame(
+      frame: submission.frame,
+      batches: spriteBatches,
+    );
+    try {
+      final frame = submission.frame;
+      _retiredGeometryCount += _geometries
+          .beginFrame(
+            contextGeneration: frame.contextGeneration,
+            frameNumber: frame.frameNumber,
+          )
+          .length;
+      _observationGeometries.beginFrame(
+        contextGeneration: frame.contextGeneration,
+        frameNumber: frame.frameNumber,
+      );
 
-    _sceneGraph
-      ..removeAll()
-      ..addAll(nodes);
-    _retiredGeometryCount += _geometries.retireIdle().length;
-    _observationGeometries.retireIdle();
+      final nodes = <scene.Node>[];
+      final preparedSpriteNodes =
+          preparedSprites?.nodes ??
+          const <FlutterSceneSpritePreparedSceneNode>[];
+      final spriteNodeByBatch = {
+        for (final prepared in preparedSpriteNodes)
+          prepared.batch: prepared.node,
+      };
+      final resolvedByBatch = {
+        for (final entry in resolved) entry.plan.batch: entry,
+      };
+      for (final nodePlan in nodePlans) {
+        switch (nodePlan) {
+          case FlutterSceneMeshNodePlan(:final layer, :final packetIndex):
+            final entry = resolvedByBatch[layer.batch];
+            if (entry == null) {
+              throw StateError('A preflighted mesh material was not resolved.');
+            }
+            applyFlutterSceneMeshBatchMaterial(
+              plan: entry.plan,
+              parameters: entry.material.parameters,
+            );
+            final packet = layer.batch.packets[packetIndex];
+            final node = scene.Node(
+              localTransform: scene_math.Matrix4.fromList(
+                layer.batch.instanceTransforms[packetIndex],
+              ),
+              mesh: scene.Mesh(
+                _geometryFor(packet.mesh),
+                entry.material.material,
+              ),
+            );
+            applyFlutterSceneDrawRank(
+              node: node,
+              drawRank: nodePlan.drawRank,
+            );
+            nodes.add(node);
+          case FlutterSceneObservationNodePlan(:final batch):
+            final material = observationMaterial;
+            if (material == null) {
+              throw StateError(
+                'A preflighted observation material was not resolved.',
+              );
+            }
+            final before = _observationGeometries.liveGeometryCount;
+            final geometry = _observationGeometries.geometryFor(batch: batch);
+            if (_observationGeometries.liveGeometryCount > before) {
+              _uploadedObservationGeometryCount++;
+            }
+            material.setFrameUniform(batch.frameUniform);
+            final node = scene.Node(
+              mesh: scene.Mesh(geometry, material.material),
+            );
+            applyFlutterSceneDrawRank(
+              node: node,
+              drawRank: nodePlan.drawRank,
+            );
+            nodes.add(node);
+          case FlutterSceneSpriteNodePlan(:final batch):
+            final node = spriteNodeByBatch[batch];
+            if (node == null) {
+              throw StateError('A preflighted sprite node was not prepared.');
+            }
+            applyFlutterSceneDrawRank(
+              node: node,
+              drawRank: nodePlan.drawRank,
+            );
+            nodes.add(node);
+        }
+      }
+      _gpuProbeRuntime?.throwIfRequested(MapGpuFaultPoint.frameSubmit);
+      _sceneGraph
+        ..removeAll()
+        ..addAll(nodes);
+      preparedSprites?.commit();
+      _retiredGeometryCount += _geometries.retireIdle().length;
+      _observationGeometries.retireIdle();
+    } on Exception {
+      preparedSprites?.rollback();
+      rethrow;
+      // Scene and GPU preparation can synchronously report StateError.
+      // ignore: avoid_catching_errors
+    } on Error {
+      preparedSprites?.rollback();
+      rethrow;
+    }
   }
 
   void retireAllGpuResources() {
     _sceneGraph.removeAll();
     _retiredGeometryCount += _geometries.retireAll().length;
     _observationGeometries.scheduleRetireAll();
+    _spriteResources?.retireAll();
     if (_observationGeometries.liveGeometryCount == 0) {
       return;
     }
