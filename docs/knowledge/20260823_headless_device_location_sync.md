@@ -58,10 +58,14 @@ Background App Refresh、Android端末固有のbackground制限は実機で別�
 ## 共通準備と自動検証
 
 fresh worktreeではsubmoduleとAsset Packを準備する。Flutter / Dart / Gradleは`mise exec --`経由で
-実行する。
+実行する。Apple向けpluginのdependency hookはcopy先の親directoryを作らないため、repository rootで
+`SourcePackages`の親をAsset Pack stagingとFlutter testより先に作る。詳細は
+[クリーンなworktreeでFlutter Testを実行する際のSourcePackages作成](./20260822_flutter-test-sourcepackages-directory.md)
+も参照する。
 
 ```bash
 git submodule update --init --recursive
+mkdir -p app/build/ios/SourcePackages app/build/macos/SourcePackages
 mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled
 
 cd app
