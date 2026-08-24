@@ -6,24 +6,17 @@ import 'package:eqmonitor/core/provider/ntp/ntp_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// NTP の補正時刻を固定値で返すスタブ。
-/// `fixedNow` が null の場合は未同期（補正なし）を表す。
-class _StubNtp extends Ntp {
-  new(this._fixedNow);
-
-  final DateTime? _fixedNow;
-
-  @override
-  Future<NtpState> build() async =>
-      NtpState(offset: Duration.zero, updatedAt: DateTime.now());
-
-  @override
-  DateTime? now() => _fixedNow;
-}
-
 ProviderContainer _container({DateTime? ntpNow}) {
   final container = ProviderContainer(
-    overrides: [ntpProvider.overrideWith(() => _StubNtp(ntpNow))],
+    overrides: [
+      ntpProvider.overrideWithBuild((_, _) {
+        final wallClock = clock.now();
+        return NtpState(
+          offset: ntpNow?.difference(wallClock) ?? Duration.zero,
+          updatedAt: wallClock,
+        );
+      }),
+    ],
   );
   addTearDown(container.dispose);
   return container;
