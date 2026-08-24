@@ -25,6 +25,7 @@ import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch_builder.dart';
 import 'package:flutter_scene/scene.dart' as scene;
+import 'package:flutter_scene/src/scene_encoder.dart' as scene_encoder;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 
@@ -713,7 +714,7 @@ void main() {
   });
 
   test(
-    'preplans same-phase layers and packet nodes with strict draw ranks',
+    'preserves same-phase multi-packet ranks through the Scene comparator',
     () {
       final first = submission(
         policy: mapSceneRenderPhasePolicy,
@@ -738,15 +739,26 @@ void main() {
       final plans = buildFlutterSceneNodePlans(submission: value);
       expect(plans.map((plan) => plan.drawRank), [0, 1, 2]);
 
-      final nodes = [for (final _ in plans) scene.Node()];
-      for (final (index, plan) in plans.indexed) {
-        applyFlutterSceneDrawRank(node: nodes[index], drawRank: plan.drawRank);
-      }
-
-      expect(
-        nodes.map((node) => node.translucentSortPriority),
-        [0, 1, 2],
+      final encodedOrder = scene_encoder.sortSceneTranslucentRecordsForTesting(
+        [
+          for (final index in const [2, 0, 1])
+            (
+              priority: plans[index].drawRank,
+              depth: 42.0,
+              id: switch (plans[index]) {
+                FlutterSceneMeshNodePlan(:final layer, :final packetIndex) =>
+                  '${layer.batch.compatibility.batchKey.materialKey}:'
+                      '$packetIndex',
+                FlutterSceneObservationNodePlan() => 'observation',
+              },
+            ),
+        ],
       );
+      expect(encodedOrder.map((record) => record.id), [
+        'a-fill:0',
+        'a-fill:1',
+        'b-fill:0',
+      ]);
     },
   );
 
