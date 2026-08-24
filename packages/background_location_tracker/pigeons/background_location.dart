@@ -31,17 +31,6 @@ class PendingLocationMessage {
   final int timestampMillis;
 }
 
-class DeviceLocationSyncLeaseMessage {
-  // Pigeon 26.3.4のanalyzer上限で解釈できる通常コンストラクタ形式を使う。
-  // ignore: unnecessary_type_name_in_constructor
-  DeviceLocationSyncLeaseMessage({
-    required this.leaseId,
-    required this.updateId,
-  });
-  final String leaseId;
-  final String updateId;
-}
-
 /// Flutter → Native
 @HostApi()
 abstract class BackgroundLocationHostApi {
@@ -53,12 +42,6 @@ abstract class BackgroundLocationHostApi {
     String updateId,
     PendingLocationConsumer consumer,
   );
-  DeviceLocationSyncLeaseMessage? acquireDeviceLocationSyncLease(
-    String updateId,
-    int durationMillis,
-  );
-  bool isDeviceLocationSyncLeaseCurrent(String leaseId, String updateId);
-  void releaseDeviceLocationSyncLease(String leaseId);
   String? getActiveHeadlessTaskId();
   void completeHeadlessTask(String updateId, HeadlessTaskResult result);
 }

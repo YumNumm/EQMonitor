@@ -19,7 +19,6 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
     private var context: Context? = null
     private var monitor: SignificantLocationMonitor? = null
     private var pendingStore: PendingLocationStore? = null
-    private var syncLeaseStore: DeviceLocationSyncLeaseStore? = null
     private var headlessCompletionBridge: HeadlessEngineCompletionBridge? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -29,12 +28,6 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         BackgroundLocationHostApi.setUp(binding.binaryMessenger, this)
         monitor = SignificantLocationMonitor(ctx)
         pendingStore = PendingLocationStore(ctx)
-        syncLeaseStore = DeviceLocationSyncLeaseStore(
-            ctx.getSharedPreferences(
-                BackgroundLocationStorageKeys.PREFERENCES_NAME,
-                Context.MODE_PRIVATE
-            )
-        )
         headlessCompletionBridge = HeadlessEngineCompletionBridge(
             completionRegistry = HeadlessTaskCompletionRegistry.shared,
             engineKey = binding.binaryMessenger
@@ -49,7 +42,6 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         flutterApi = null
         monitor = null
         pendingStore = null
-        syncLeaseStore = null
         headlessCompletionBridge = null
         context = null
     }
@@ -84,32 +76,6 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         updateId: String,
         consumer: PendingLocationConsumer
     ): Boolean = pendingStore?.acknowledge(updateId, consumer.storeConsumer) ?: false
-
-    override fun acquireDeviceLocationSyncLease(
-        updateId: String,
-        durationMillis: Long
-    ): DeviceLocationSyncLeaseMessage? {
-        val latest = pendingStore?.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)
-        if (latest?.updateId != updateId) return null
-        val lease = syncLeaseStore?.acquire(updateId, durationMillis) ?: return null
-        return DeviceLocationSyncLeaseMessage(
-            leaseId = lease.leaseId,
-            updateId = lease.updateId
-        )
-    }
-
-    override fun isDeviceLocationSyncLeaseCurrent(
-        leaseId: String,
-        updateId: String
-    ): Boolean {
-        val latest = pendingStore?.peek(PendingLocationStore.Consumer.DEVICE_LOCATION)
-        return latest?.updateId == updateId &&
-            syncLeaseStore?.isOwned(leaseId, updateId) == true
-    }
-
-    override fun releaseDeviceLocationSyncLease(leaseId: String) {
-        syncLeaseStore?.release(leaseId)
-    }
 
     override fun getActiveHeadlessTaskId(): String? =
         headlessCompletionBridge?.activeUpdateId()

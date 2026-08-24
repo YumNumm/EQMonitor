@@ -240,42 +240,6 @@ struct PendingLocationMessage: Hashable {
   }
 }
 
-/// Generated class from Pigeon that represents data sent in messages.
-struct DeviceLocationSyncLeaseMessage: Hashable {
-  var leaseId: String
-  var updateId: String
-
-
-  // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> DeviceLocationSyncLeaseMessage? {
-    let leaseId = pigeonVar_list[0] as! String
-    let updateId = pigeonVar_list[1] as! String
-
-    return DeviceLocationSyncLeaseMessage(
-      leaseId: leaseId,
-      updateId: updateId
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      leaseId,
-      updateId,
-    ]
-  }
-  static func == (lhs: DeviceLocationSyncLeaseMessage, rhs: DeviceLocationSyncLeaseMessage) -> Bool {
-    if Swift.type(of: lhs) != Swift.type(of: rhs) {
-      return false
-    }
-    return deepEqualsBackgroundLocationApi(lhs.leaseId, rhs.leaseId) && deepEqualsBackgroundLocationApi(lhs.updateId, rhs.updateId)
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine("DeviceLocationSyncLeaseMessage")
-    deepHashBackgroundLocationApi(value: leaseId, hasher: &hasher)
-    deepHashBackgroundLocationApi(value: updateId, hasher: &hasher)
-  }
-}
-
 private class BackgroundLocationApiPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -293,8 +257,6 @@ private class BackgroundLocationApiPigeonCodecReader: FlutterStandardReader {
       return nil
     case 131:
       return PendingLocationMessage.fromList(self.readValue() as! [Any?])
-    case 132:
-      return DeviceLocationSyncLeaseMessage.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -311,9 +273,6 @@ private class BackgroundLocationApiPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.rawValue)
     } else if let value = value as? PendingLocationMessage {
       super.writeByte(131)
-      super.writeValue(value.toList())
-    } else if let value = value as? DeviceLocationSyncLeaseMessage {
-      super.writeByte(132)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -344,9 +303,6 @@ protocol BackgroundLocationHostApi {
   func stopMonitoring() throws
   func peekPendingLocation(consumer: PendingLocationConsumer) throws -> PendingLocationMessage?
   func acknowledgePendingLocation(updateId: String, consumer: PendingLocationConsumer) throws -> Bool
-  func acquireDeviceLocationSyncLease(updateId: String, durationMillis: Int64) throws -> DeviceLocationSyncLeaseMessage?
-  func isDeviceLocationSyncLeaseCurrent(leaseId: String, updateId: String) throws -> Bool
-  func releaseDeviceLocationSyncLease(leaseId: String) throws
   func getActiveHeadlessTaskId() throws -> String?
   func completeHeadlessTask(updateId: String, result: HeadlessTaskResult) throws
 }
@@ -428,53 +384,6 @@ class BackgroundLocationHostApiSetup {
       }
     } else {
       acknowledgePendingLocationChannel.setMessageHandler(nil)
-    }
-    let acquireDeviceLocationSyncLeaseChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.acquireDeviceLocationSyncLease\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      acquireDeviceLocationSyncLeaseChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let updateIdArg = args[0] as! String
-        let durationMillisArg = args[1] as! Int64
-        do {
-          let result = try api.acquireDeviceLocationSyncLease(updateId: updateIdArg, durationMillis: durationMillisArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      acquireDeviceLocationSyncLeaseChannel.setMessageHandler(nil)
-    }
-    let isDeviceLocationSyncLeaseCurrentChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.isDeviceLocationSyncLeaseCurrent\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      isDeviceLocationSyncLeaseCurrentChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let leaseIdArg = args[0] as! String
-        let updateIdArg = args[1] as! String
-        do {
-          let result = try api.isDeviceLocationSyncLeaseCurrent(leaseId: leaseIdArg, updateId: updateIdArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      isDeviceLocationSyncLeaseCurrentChannel.setMessageHandler(nil)
-    }
-    let releaseDeviceLocationSyncLeaseChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.releaseDeviceLocationSyncLease\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      releaseDeviceLocationSyncLeaseChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let leaseIdArg = args[0] as! String
-        do {
-          try api.releaseDeviceLocationSyncLease(leaseId: leaseIdArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      releaseDeviceLocationSyncLeaseChannel.setMessageHandler(nil)
     }
     let getActiveHeadlessTaskIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.getActiveHeadlessTaskId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

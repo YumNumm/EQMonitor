@@ -45,15 +45,6 @@ const _peekPendingLocationChannelName =
 const _acknowledgePendingLocationChannelName =
     'dev.flutter.pigeon.background_location_tracker.'
     'BackgroundLocationHostApi.acknowledgePendingLocation';
-const _acquireSyncLeaseChannelName =
-    'dev.flutter.pigeon.background_location_tracker.'
-    'BackgroundLocationHostApi.acquireDeviceLocationSyncLease';
-const _isSyncLeaseCurrentChannelName =
-    'dev.flutter.pigeon.background_location_tracker.'
-    'BackgroundLocationHostApi.isDeviceLocationSyncLeaseCurrent';
-const _releaseSyncLeaseChannelName =
-    'dev.flutter.pigeon.background_location_tracker.'
-    'BackgroundLocationHostApi.releaseDeviceLocationSyncLease';
 const _startMonitoringChannelName =
     'dev.flutter.pigeon.background_location_tracker.'
     'BackgroundLocationHostApi.startMonitoring';
@@ -617,41 +608,6 @@ void main() {
   setUp(() {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMessageHandler(_acquireSyncLeaseChannelName, (
-      message,
-    ) async {
-      final arguments =
-          BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
-              as List<Object?>;
-      return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
-        DeviceLocationSyncLeaseMessage(
-          leaseId: 'test-lease',
-          updateId: arguments.first as String,
-        ),
-      ]);
-    });
-    messenger.setMockMessageHandler(
-      _isSyncLeaseCurrentChannelName,
-      (_) async => BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
-        true,
-      ]),
-    );
-    messenger.setMockMessageHandler(
-      _releaseSyncLeaseChannelName,
-      (_) async => BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
-        null,
-      ]),
-    );
-  });
-
-  tearDown(() {
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMessageHandler(_acquireSyncLeaseChannelName, null);
-    messenger.setMockMessageHandler(_isSyncLeaseCurrentChannelName, null);
-    messenger.setMockMessageHandler(_releaseSyncLeaseChannelName, null);
   });
 
   group('NotificationSlotsNotifier device location sync state', () {

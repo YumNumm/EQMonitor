@@ -48,24 +48,6 @@ class BackgroundLocationTracker {
     required PendingLocationConsumer consumer,
   }) => _hostApi.acknowledgePendingLocation(updateId, consumer);
 
-  static Future<DeviceLocationSyncLeaseMessage?>
-  acquireDeviceLocationSyncLease({
-    required String updateId,
-    required Duration duration,
-  }) => _hostApi.acquireDeviceLocationSyncLease(
-    updateId,
-    duration.inMilliseconds,
-  );
-
-  static Future<bool> isDeviceLocationSyncLeaseCurrent({
-    required String leaseId,
-    required String updateId,
-  }) => _hostApi.isDeviceLocationSyncLeaseCurrent(leaseId, updateId);
-
-  static Future<void> releaseDeviceLocationSyncLease({
-    required String leaseId,
-  }) => _hostApi.releaseDeviceLocationSyncLease(leaseId);
-
   static Future<String?> getActiveHeadlessTaskId() =>
       _hostApi.getActiveHeadlessTaskId();
 
@@ -73,7 +55,6 @@ class BackgroundLocationTracker {
     required String updateId,
     required HeadlessTaskResult result,
   }) => _hostApi.completeHeadlessTask(updateId, result);
-
 }
 
 class _FlutterApiHandler implements BackgroundLocationFlutterApi {

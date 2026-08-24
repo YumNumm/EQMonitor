@@ -118,6 +118,10 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         startStored(updateId: stored.updateId, scheduledTask: nil)
     }
 
+    func startPending(updateId: String) {
+        startStored(updateId: updateId, scheduledTask: nil)
+    }
+
     func complete(
         updateId: String,
         result: HeadlessTaskResult
