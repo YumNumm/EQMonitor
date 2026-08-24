@@ -351,6 +351,104 @@ final class FlutterSceneMeshBatchPlan {
   final MapSceneMeshLayerKind kind;
 }
 
+enum FlutterSceneLayerPreflightFailureReason {
+  instanceBatchTypeMismatch,
+  unsupportedInstanceKind,
+}
+
+final class FlutterSceneLayerPreflightFailure implements Exception {
+  const FlutterSceneLayerPreflightFailure({
+    required this.reason,
+    required this.layer,
+  });
+
+  final FlutterSceneLayerPreflightFailureReason reason;
+  final MapSceneInstanceLayerSubmission layer;
+}
+
+sealed class FlutterSceneNodePlan {
+  const FlutterSceneNodePlan({required this.drawRank});
+
+  final int drawRank;
+}
+
+final class FlutterSceneMeshNodePlan extends FlutterSceneNodePlan {
+  const FlutterSceneMeshNodePlan({
+    required super.drawRank,
+    required this.layer,
+    required this.packetIndex,
+  });
+
+  final MapSceneMeshLayerSubmission layer;
+  final int packetIndex;
+}
+
+final class FlutterSceneObservationNodePlan extends FlutterSceneNodePlan {
+  const FlutterSceneObservationNodePlan({
+    required super.drawRank,
+    required this.layer,
+    required this.batch,
+  });
+
+  final MapSceneInstanceLayerSubmission layer;
+  final ObservationPointBatch batch;
+}
+
+List<FlutterSceneNodePlan> buildFlutterSceneNodePlans({
+  required MapSceneFrameSubmission submission,
+}) {
+  final plans = <FlutterSceneNodePlan>[];
+  for (final layer in submission.layers) {
+    switch (layer) {
+      case MapSceneMeshLayerSubmission(:final batch):
+        for (final (packetIndex, _) in batch.packets.indexed) {
+          plans.add(
+            FlutterSceneMeshNodePlan(
+              drawRank: plans.length,
+              layer: layer,
+              packetIndex: packetIndex,
+            ),
+          );
+        }
+      case MapSceneInstanceLayerSubmission():
+        final batch = preflightFlutterSceneInstanceLayer(layer: layer);
+        plans.add(
+          FlutterSceneObservationNodePlan(
+            drawRank: plans.length,
+            layer: layer,
+            batch: batch,
+          ),
+        );
+    }
+  }
+  return List.unmodifiable(plans);
+}
+
+ObservationPointBatch preflightFlutterSceneInstanceLayer({
+  required MapSceneInstanceLayerSubmission layer,
+}) => switch (layer) {
+  MapSceneInstanceLayerSubmission(
+    kind: MapSceneInstanceLayerKind.observationPoint,
+    :final batch,
+  )
+      when batch is ObservationPointBatch =>
+    batch,
+  MapSceneInstanceLayerSubmission(
+    kind: MapSceneInstanceLayerKind.observationPoint,
+  ) =>
+    throw FlutterSceneLayerPreflightFailure(
+      reason: FlutterSceneLayerPreflightFailureReason.instanceBatchTypeMismatch,
+      layer: layer,
+    ),
+  MapSceneInstanceLayerSubmission(
+    kind: MapSceneInstanceLayerKind.pointSprite,
+  ) =>
+    throw FlutterSceneLayerPreflightFailure(
+      reason: FlutterSceneLayerPreflightFailureReason.unsupportedInstanceKind,
+      layer: layer,
+    ),
+};
+
 /// frame submissionをcanonicalなmesh batch planへ変換する。
 List<FlutterSceneMeshBatchPlan> buildFlutterSceneMeshBatchPlans({
   required MapSceneFrameSubmission submission,
@@ -360,21 +458,8 @@ List<FlutterSceneMeshBatchPlan> buildFlutterSceneMeshBatchPlans({
     switch (layer) {
       case MapSceneMeshLayerSubmission(:final batch, :final kind):
         plans.add(FlutterSceneMeshBatchPlan(batch: batch, kind: kind));
-      case MapSceneInstanceLayerSubmission(
-        kind: MapSceneInstanceLayerKind.observationPoint,
-        :final batch,
-      ):
-        if (batch is! ObservationPointBatch) {
-          throw ArgumentError.value(
-            batch,
-            'layer',
-            'observationPoint must contain an ObservationPointBatch',
-          );
-        }
-      case MapSceneInstanceLayerSubmission(
-        kind: MapSceneInstanceLayerKind.pointSprite,
-      ):
-        throw UnsupportedError('pointSprite batch is not implemented');
+      case MapSceneInstanceLayerSubmission():
+        preflightFlutterSceneInstanceLayer(layer: layer);
     }
   }
   return List.unmodifiable(plans);
@@ -388,22 +473,8 @@ ObservationPointBatch? observationPointBatchFrom({
     switch (layer) {
       case MapSceneMeshLayerSubmission():
         continue;
-      case MapSceneInstanceLayerSubmission(
-        kind: MapSceneInstanceLayerKind.observationPoint,
-        :final batch,
-      ):
-        if (batch is! ObservationPointBatch) {
-          throw ArgumentError.value(
-            batch,
-            'layer',
-            'observationPoint must contain an ObservationPointBatch',
-          );
-        }
-        observation = batch;
-      case MapSceneInstanceLayerSubmission(
-        kind: MapSceneInstanceLayerKind.pointSprite,
-      ):
-        throw UnsupportedError('pointSprite batch is not implemented');
+      case MapSceneInstanceLayerSubmission():
+        observation = preflightFlutterSceneInstanceLayer(layer: layer);
     }
   }
   return observation;
@@ -461,6 +532,7 @@ final class FlutterSceneMapAdapter {
       _observationGeometries.liveGeometryCount;
 
   void submitFrame({required MapSceneFrameSubmission submission}) {
+    final nodePlans = buildFlutterSceneNodePlans(submission: submission);
     final plans = buildFlutterSceneMeshBatchPlans(submission: submission);
     preflightFlutterSceneMeshBatchPlans(plans: plans);
     final resolved = resolveFlutterSceneMaterials(
@@ -493,41 +565,57 @@ final class FlutterSceneMapAdapter {
     );
 
     final nodes = <scene.Node>[];
-    var drawRank = 0;
-    for (final entry in resolved) {
-      applyFlutterSceneMeshBatchMaterial(
-        plan: entry.plan,
-        parameters: entry.material.parameters,
-      );
-      for (final (index, packet) in entry.plan.batch.packets.indexed) {
-        final node = scene.Node(
-          localTransform: scene_math.Matrix4.fromList(
-            entry.plan.batch.instanceTransforms[index],
-          ),
-          mesh: scene.Mesh(_geometryFor(packet.mesh), entry.material.material),
-        );
-        applyFlutterSceneDrawRank(
-          node: node,
-          drawRank: drawRank++,
-        );
-        nodes.add(node);
+    final resolvedByBatch = {
+      for (final entry in resolved) entry.plan.batch: entry,
+    };
+    for (final nodePlan in nodePlans) {
+      switch (nodePlan) {
+        case FlutterSceneMeshNodePlan(:final layer, :final packetIndex):
+          final entry = resolvedByBatch[layer.batch];
+          if (entry == null) {
+            throw StateError('A preflighted mesh material was not resolved.');
+          }
+          applyFlutterSceneMeshBatchMaterial(
+            plan: entry.plan,
+            parameters: entry.material.parameters,
+          );
+          final packet = layer.batch.packets[packetIndex];
+          final node = scene.Node(
+            localTransform: scene_math.Matrix4.fromList(
+              layer.batch.instanceTransforms[packetIndex],
+            ),
+            mesh: scene.Mesh(
+              _geometryFor(packet.mesh),
+              entry.material.material,
+            ),
+          );
+          applyFlutterSceneDrawRank(
+            node: node,
+            drawRank: nodePlan.drawRank,
+          );
+          nodes.add(node);
+        case FlutterSceneObservationNodePlan(:final batch):
+          final material = observationMaterial;
+          if (material == null) {
+            throw StateError(
+              'A preflighted observation material was not resolved.',
+            );
+          }
+          final before = _observationGeometries.liveGeometryCount;
+          final geometry = _observationGeometries.geometryFor(batch: batch);
+          if (_observationGeometries.liveGeometryCount > before) {
+            _uploadedObservationGeometryCount++;
+          }
+          material.setFrameUniform(batch.frameUniform);
+          final node = scene.Node(
+            mesh: scene.Mesh(geometry, material.material),
+          );
+          applyFlutterSceneDrawRank(
+            node: node,
+            drawRank: nodePlan.drawRank,
+          );
+          nodes.add(node);
       }
-    }
-    if (observation != null && observationMaterial != null) {
-      final before = _observationGeometries.liveGeometryCount;
-      final geometry = _observationGeometries.geometryFor(batch: observation);
-      if (_observationGeometries.liveGeometryCount > before) {
-        _uploadedObservationGeometryCount++;
-      }
-      observationMaterial.setFrameUniform(observation.frameUniform);
-      final node = scene.Node(
-        mesh: scene.Mesh(geometry, observationMaterial.material),
-      );
-      applyFlutterSceneDrawRank(
-        node: node,
-        drawRank: drawRank,
-      );
-      nodes.add(node);
     }
 
     _sceneGraph

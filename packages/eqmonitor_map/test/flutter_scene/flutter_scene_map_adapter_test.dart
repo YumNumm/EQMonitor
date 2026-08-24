@@ -162,54 +162,64 @@ void main() {
     required int phase,
     required String materialKey,
     required String pipelineKey,
+    int packetCount = 1,
   }) {
-    final packet = createMapRenderPacket(
-      contractVersion: 1,
-      sortKey: MapRenderSortKey(
-        phasePolicyVersion: policy.version,
-        phase: phase,
-        declarationOrderWithinPhase: 0,
-        sourceOrder: 0,
-        overscaledTileOrder: 0,
-        featureOrder: 0,
-      ),
-      batchKey: createMapRenderBatchKey(
-        version: 1,
-        nodeKey: createMapNodeKey(value: 'test-node'),
-        scopeKey: 'test-scope',
-        materialKey: materialKey,
-        phasePolicyVersion: policy.version,
-        phase: phase,
-      ),
-      pipeline: createMapRenderPipelineKey(version: 1, key: pipelineKey),
-      mesh: packedMesh,
-      modelTransform: Float64List.fromList([
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-      ]),
-      materialParameters: createMapMaterialParameterBlock(
-        version: 1,
-        bytes: Uint8List(16),
-      ),
-    );
     return createMapRenderSubmission(
       frame: frame,
       batches: [
-        createMapRenderBatch(version: 1, policy: policy, packets: [packet]),
+        createMapRenderBatch(
+          version: 1,
+          policy: policy,
+          packets: [
+            for (var index = 0; index < packetCount; index++)
+              createMapRenderPacket(
+                contractVersion: 1,
+                sortKey: MapRenderSortKey(
+                  phasePolicyVersion: policy.version,
+                  phase: phase,
+                  declarationOrderWithinPhase: 0,
+                  sourceOrder: 0,
+                  overscaledTileOrder: 0,
+                  featureOrder: index,
+                ),
+                batchKey: createMapRenderBatchKey(
+                  version: 1,
+                  nodeKey: createMapNodeKey(value: 'test-node'),
+                  scopeKey: 'test-scope',
+                  materialKey: materialKey,
+                  phasePolicyVersion: policy.version,
+                  phase: phase,
+                ),
+                pipeline: createMapRenderPipelineKey(
+                  version: 1,
+                  key: pipelineKey,
+                ),
+                mesh: packedMesh,
+                modelTransform: Float64List.fromList([
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                ]),
+                materialParameters: createMapMaterialParameterBlock(
+                  version: 1,
+                  bytes: Uint8List(16),
+                ),
+              ),
+          ],
+        ),
       ],
     );
   }
@@ -702,6 +712,44 @@ void main() {
     expect(plans.last.batch.compatibility.phase, 100);
   });
 
+  test(
+    'preplans same-phase layers and packet nodes with strict draw ranks',
+    () {
+      final first = submission(
+        policy: mapSceneRenderPhasePolicy,
+        phase: 0,
+        materialKey: 'a-fill',
+        pipelineKey: baseMapFillPipelineKey.key,
+        packetCount: 2,
+      );
+      final second = submission(
+        policy: mapSceneRenderPhasePolicy,
+        phase: 0,
+        materialKey: 'b-fill',
+        pipelineKey: baseMapFillPipelineKey.key,
+      );
+      final value = sceneSubmission(
+        baseMap: createMapRenderSubmission(
+          frame: frame,
+          batches: [...first.batches, ...second.batches],
+        ),
+      );
+
+      final plans = buildFlutterSceneNodePlans(submission: value);
+      expect(plans.map((plan) => plan.drawRank), [0, 1, 2]);
+
+      final nodes = [for (final _ in plans) scene.Node()];
+      for (final (index, plan) in plans.indexed) {
+        applyFlutterSceneDrawRank(node: nodes[index], drawRank: plan.drawRank);
+      }
+
+      expect(
+        nodes.map((node) => node.translucentSortPriority),
+        [0, 1, 2],
+      );
+    },
+  );
+
   test('rejects a phase not permitted for the base submission', () {
     final foreignPhase = createMapRenderPhaseId(value: 'foreign');
     final foreignPolicy = createMapRenderPhasePolicy(
@@ -749,7 +797,7 @@ void main() {
         baseMap: baseSubmission(),
         earthquakeFill: unknown,
       ),
-      throwsArgumentError,
+      throwsA(isA<MapSceneMeshPipelineMismatch>()),
     );
   });
 
@@ -777,9 +825,66 @@ void main() {
       limits: MapSceneFrameLimits(maxNodeCount: 1),
     );
 
+    final sceneGraph = _RecordingSceneGraph()..add(scene.Node());
+    var materialLookups = 0;
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) {
+        materialLookups++;
+        return null;
+      },
+      maxFramesInFlight: 2,
+    );
+
     expect(
-      () => buildFlutterSceneMeshBatchPlans(submission: value),
-      throwsArgumentError,
+      () => adapter.submitFrame(submission: value),
+      throwsA(
+        isA<FlutterSceneLayerPreflightFailure>().having(
+          (error) => error.reason,
+          'reason',
+          FlutterSceneLayerPreflightFailureReason.instanceBatchTypeMismatch,
+        ),
+      ),
+    );
+    expect(materialLookups, 0);
+    expect(sceneGraph.children, hasLength(1));
+    expect(adapter.uploadedGeometryCount, 0);
+    expect(adapter.liveGeometryCount, 0);
+  });
+
+  test('rejects an unimplemented point sprite kind with a typed failure', () {
+    final spritePhase = mapSceneRenderPhasePolicy.rankOf(
+      mapSceneSpritePhaseId,
+    );
+    final value = MapSceneFrameSubmission(
+      frame: frame,
+      layers: [
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneHypocenterSpriteComponentKey,
+          overlayVersion: stampOf(1),
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          batch: _TestInstanceBatch(
+            frame: frame,
+            batchKey: createMapSceneBatchKey(value: 'future-sprite'),
+            phasePolicyVersion: mapSceneRenderPhasePolicy.version,
+            phase: spritePhase,
+          ),
+        ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 1),
+    );
+
+    expect(
+      () => buildFlutterSceneNodePlans(submission: value),
+      throwsA(
+        isA<FlutterSceneLayerPreflightFailure>().having(
+          (error) => error.reason,
+          'reason',
+          FlutterSceneLayerPreflightFailureReason.unsupportedInstanceKind,
+        ),
+      ),
     );
   });
 
@@ -1334,7 +1439,7 @@ void main() {
 
       expect(
         () => sceneSubmission(baseMap: invalidBase),
-        throwsArgumentError,
+        throwsA(isA<MapSceneMeshPipelineMismatch>()),
       );
       expect(materialLookups, 0);
       expect(existingMaterialParameter, const Color(0xFF123456));

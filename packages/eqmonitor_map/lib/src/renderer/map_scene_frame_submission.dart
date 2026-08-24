@@ -1,5 +1,6 @@
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
 import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
@@ -69,6 +70,16 @@ final MapSceneBatchKey mapSceneObservationBatchKey = createMapSceneBatchKey(
 );
 
 enum MapSceneMeshLayerKind { baseMap, earthquakeAreaFill }
+
+final class MapSceneMeshPipelineMismatch implements Exception {
+  const MapSceneMeshPipelineMismatch({
+    required this.kind,
+    required this.pipeline,
+  });
+
+  final MapSceneMeshLayerKind kind;
+  final MapRenderPipelineKey pipeline;
+}
 
 enum MapSceneInstanceLayerKind { observationPoint, pointSprite }
 
@@ -369,10 +380,9 @@ void validateMapSceneLayerCompatibility(MapSceneLayerSubmission layer) {
         MapSceneMeshLayerKind.earthquakeAreaFill
             when pipeline == earthquakeAreaFillPipelineKey =>
           mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardFillPhaseId),
-        _ => throw ArgumentError.value(
-          pipeline,
-          'layer',
-          'is not supported by the mesh layer kind',
+        _ => throw MapSceneMeshPipelineMismatch(
+          kind: kind,
+          pipeline: pipeline,
         ),
       };
       if (layer.phase != expectedPhase) {
