@@ -19,6 +19,7 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
     private var context: Context? = null
     private var monitor: SignificantLocationMonitor? = null
     private var pendingStore: PendingLocationStore? = null
+    private var headlessRegistration: HeadlessTaskCompletionRegistry.Registration? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         val ctx = binding.applicationContext
@@ -27,6 +28,8 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         BackgroundLocationHostApi.setUp(binding.binaryMessenger, this)
         monitor = SignificantLocationMonitor(ctx)
         pendingStore = PendingLocationStore(ctx)
+        headlessRegistration = HeadlessTaskCompletionRegistry.shared
+            .registrationForEngine(binding.binaryMessenger)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -37,6 +40,7 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         flutterApi = null
         monitor = null
         pendingStore = null
+        headlessRegistration = null
         context = null
     }
 
@@ -71,9 +75,16 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         consumer: PendingLocationConsumer
     ): Boolean = pendingStore?.acknowledge(updateId, consumer.storeConsumer) ?: false
 
-    override fun getActiveHeadlessTaskId(): String? = null
+    override fun getActiveHeadlessTaskId(): String? = headlessRegistration?.updateId
 
-    override fun completeHeadlessTask(updateId: String, result: HeadlessTaskResult) = Unit
+    override fun completeHeadlessTask(updateId: String, result: HeadlessTaskResult) {
+        val registration = headlessRegistration ?: return
+        HeadlessTaskCompletionRegistry.shared.complete(
+            registration = registration,
+            updateId = updateId,
+            result = result
+        )
+    }
 }
 
 private val PendingLocationConsumer.storeConsumer: PendingLocationStore.Consumer
