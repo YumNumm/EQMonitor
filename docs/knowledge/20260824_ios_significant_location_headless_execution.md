@@ -61,6 +61,13 @@ App RefreshとProcessingのsubmitは独立した`do/catch`で行う。一方が�
 launchまたはforeground移行時にpendingがあれば再submitする。Background App Refresh無効時などは
 submit自体が失敗し得るため、「retry登録済み」と無条件に扱わない。
 
+UISceneを採用したappでは、foreground復帰を
+`UIApplicationDelegate.applicationDidBecomeActive(_:)`へ接続しない。launch時に
+`UIApplication.didBecomeActiveNotification`を1回だけ購読し、通知時にDevice Location consumerの
+pendingがある場合だけretry requestを再submitする。observer所有者は多重登録を防ぎ、破棄時に
+observer tokenを解除する。Appleはscene appに`sceneDidBecomeActive(_:)`またはapp-wideの同notificationを
+使うよう案内しているため、scene数に依存しない再submitにはapp notificationを使う。
+
 各taskは最初にexpiration handlerを設定し、終了時に`setTaskCompleted(success:)`を1回だけ呼ぶ。
 expirationではEngineを破棄してfailure完了とし、pendingを残して次回retryへ渡す。
 
@@ -69,6 +76,8 @@ expirationではEngineを破棄してfailure完了とし、pendingを残して�
 - [Using background tasks to update your app](https://developer.apple.com/documentation/uikit/using-background-tasks-to-update-your-app)
 - [BGTask expirationHandler](https://developer.apple.com/documentation/backgroundtasks/bgtask/expirationhandler)
 - [Starting and Terminating Tasks During Development](https://developer.apple.com/documentation/backgroundtasks/starting-and-terminating-tasks-during-development)
+- [UIApplication.didBecomeActiveNotification](https://developer.apple.com/documentation/uikit/uiapplication/didbecomeactivenotification)
+- [UIApplicationDelegate.applicationDidBecomeActive](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/applicationdidbecomeactive%28_%3A%29)
 
 ## 検証
 
