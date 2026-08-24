@@ -21,10 +21,11 @@ class DeviceMigrationWorkflow {
   /// Runs the v2.6 → v3 device migration as a durable workflow.
   ///
   /// Steps:
-  /// 1. `ensureDeviceAbsent`  — GET /v2/device/{id}; records whether device
+  /// 1. `ensureDeviceAbsent`  — GET /v2/device/me; records whether device
   ///    already existed.
-  /// 2. `registerDevice`      — PUT only when absent.
-  /// 3. `migrateLegacySettings` — POST /migrate with [oldDeviceId].
+  /// 2. `registerDevice`      — POST /v2/device only when absent.
+  /// 3. `migrateLegacySettings` — POST /v2/device/me/migrate with
+  ///    [oldDeviceId].
   /// 4. `markLocalComplete`   — writes true to persistence.
   ///
   /// Caller must ensure [oldDeviceId] was successfully retrieved from legacy
@@ -33,7 +34,6 @@ class DeviceMigrationWorkflow {
   Future<void> run({
     required WorkflowRunner runner,
     required DeviceRepository repository,
-    required String deviceId,
     required String oldDeviceId,
   }) async {
     await runner.run(
@@ -43,7 +43,7 @@ class DeviceMigrationWorkflow {
         final alreadyRegistered = await step<bool>(
           'ensureDeviceAbsent',
           () async {
-            final result = await repository.getDevice(deviceId);
+            final result = await repository.getDevice();
             return switch (result) {
               Success() => true,
               Failure(:final exception)
@@ -72,7 +72,6 @@ class DeviceMigrationWorkflow {
         if (!alreadyRegistered) {
           await step<void>('registerDevice', () async {
             final result = await repository.registerDevice(
-              deviceId: deviceId,
               devicePlatform: kIsWeb
                   ? .ios
                   : Platform.isIOS
@@ -95,7 +94,6 @@ class DeviceMigrationWorkflow {
         // Step 3 — migrate legacy settings
         await step<void>('migrateLegacySettings', () async {
           final result = await repository.migrateFromLegacy(
-            deviceId: deviceId,
             oldDeviceId: oldDeviceId,
           );
           switch (result) {
