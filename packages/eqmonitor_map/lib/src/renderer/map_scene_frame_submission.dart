@@ -52,21 +52,21 @@ void validateMapSceneFrameSubmission({
     throw ArgumentError('baseMap and earthquakeFill must share one frame');
   }
 
-  final basePhase = mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId);
   validateMapSceneBatches(
     batches: submission.baseMap.batches,
-    expectedPhases: {basePhase},
+    expectedPhases: {
+      mapSceneRenderPhasePolicy.rankOf(mapSceneBaseLandFillPhaseId),
+      mapSceneRenderPhasePolicy.rankOf(
+        mapSceneBaseAdministrativeLinePhaseId,
+      ),
+    },
     parameterName: 'baseMap',
-  );
-  final regionPhase = mapSceneRenderPhasePolicy.rankOf(
-    mapSceneEarthquakeRegionPhaseId,
-  );
-  final cityPhase = mapSceneRenderPhasePolicy.rankOf(
-    mapSceneEarthquakeCityPhaseId,
   );
   validateMapSceneBatches(
     batches: submission.earthquakeFill.batches,
-    expectedPhases: {regionPhase, cityPhase},
+    expectedPhases: {
+      mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardFillPhaseId),
+    },
     parameterName: 'earthquakeFill',
   );
   validateEarthquakeFillBatches(batches: submission.earthquakeFill.batches);
@@ -80,7 +80,7 @@ void validateMapSceneFrameSubmission({
     throw ArgumentError('observationBatch must share the Scene frame');
   }
   final observationPhase = mapSceneRenderPhasePolicy.rankOf(
-    mapSceneObservationPointPhaseId,
+    mapSceneLivePointPhaseId,
   );
   if (observation.phasePolicyVersion != mapSceneRenderPhasePolicy.version ||
       observation.phase != observationPhase) {

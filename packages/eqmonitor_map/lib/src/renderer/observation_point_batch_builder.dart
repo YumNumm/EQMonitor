@@ -49,7 +49,7 @@ ObservationPointBatch? buildObservationPointBatch({
     projection: projection,
   );
   final phase = mapSceneRenderPhasePolicy.rankOf(
-    mapSceneObservationPointPhaseId,
+    mapSceneLivePointPhaseId,
   );
   return createObservationPointBatch(
     frame: frame,

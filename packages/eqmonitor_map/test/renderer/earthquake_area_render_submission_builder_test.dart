@@ -152,13 +152,13 @@ void main() {
     expect(region.batches, hasLength(1));
     expect(
       region.batches.single.compatibility.phase,
-      mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeRegionPhaseId),
+      100,
     );
     expect(region.batches.single.packets.single.sortKey.featureOrder, 0);
     expect(city.batches, hasLength(1));
     expect(
       city.batches.single.compatibility.phase,
-      mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeCityPhaseId),
+      100,
     );
     expect(city.batches.single.packets.single.sortKey.featureOrder, 0);
   });

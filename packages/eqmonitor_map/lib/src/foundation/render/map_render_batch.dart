@@ -69,7 +69,7 @@ MapRenderBatch createMapRenderBatch({
   final compatibility = mapRenderBatchCompatibilityOf(packet: packets.first);
   for (final (index, packet) in packets.indexed) {
     if (packet.sortKey.phasePolicyVersion != policy.version ||
-        packet.sortKey.phase >= policy.orderedPhases.length) {
+        !policy.containsRank(packet.sortKey.phase)) {
       throw ArgumentError.value(
         packet,
         'packets',

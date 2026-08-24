@@ -1,60 +1,71 @@
 import 'package:eqmonitor_map/src/foundation/render/map_render_phase.dart';
 
-/// base mapを描画するphase。
-final MapRenderPhaseId mapSceneBasePhaseId = createMapRenderPhaseId(
-  value: 'base',
+final MapRenderPhaseId mapSceneBaseLandFillPhaseId = createMapRenderPhaseId(
+  value: 'baseLandFill',
 );
 
-/// 予報区Fillを描画するphase。
-final MapRenderPhaseId mapSceneEarthquakeRegionPhaseId = createMapRenderPhaseId(
-  value: 'earthquakeRegion',
+final MapRenderPhaseId mapSceneUnderlayHazardFillPhaseId =
+    createMapRenderPhaseId(value: 'underlayHazardFill');
+
+final MapRenderPhaseId mapSceneUnderlayHazardLinePhaseId =
+    createMapRenderPhaseId(value: 'underlayHazardLine');
+
+final MapRenderPhaseId mapSceneBaseAdministrativeLinePhaseId =
+    createMapRenderPhaseId(value: 'baseAdministrativeLine');
+
+final MapRenderPhaseId mapSceneOverlayHazardFillPhaseId =
+    createMapRenderPhaseId(
+      value: 'overlayHazardFill',
+    );
+
+final MapRenderPhaseId mapSceneOverlayHazardLinePhaseId =
+    createMapRenderPhaseId(
+      value: 'overlayHazardLine',
+    );
+
+final MapRenderPhaseId mapSceneDynamicWaveFillPhaseId = createMapRenderPhaseId(
+  value: 'dynamicWaveFill',
 );
 
-/// 市区町村Fillを描画するphase。
-final MapRenderPhaseId mapSceneEarthquakeCityPhaseId = createMapRenderPhaseId(
-  value: 'earthquakeCity',
+final MapRenderPhaseId mapSceneDynamicWaveLinePhaseId = createMapRenderPhaseId(
+  value: 'dynamicWaveLine',
 );
 
-/// 観測点を描画するphase。
-final MapRenderPhaseId mapSceneObservationPointPhaseId = createMapRenderPhaseId(
-  value: 'observationPoint',
+final MapRenderPhaseId mapSceneLivePointPhaseId = createMapRenderPhaseId(
+  value: 'livePoint',
 );
 
-/// 1つのSceneへ送る全描画要素が共有するphase policy。
-///
-/// v1のbase/label専用policyへ地震overlay phaseを追加したためversionを2へ上げる。
+final MapRenderPhaseId mapSceneSpritePhaseId = createMapRenderPhaseId(
+  value: 'sprite',
+);
+
+final MapRenderPhaseId mapSceneForegroundLabelPhaseId =
+    MapRenderPhaseId.labelForeground;
+
+/// package-neutralな全描画要素が共有する疎なphase policy。
 final MapRenderPhasePolicy mapSceneRenderPhasePolicy =
     createMapRenderPhasePolicy(
-      version: 2,
+      version: 3,
       orderedPhases: [
-        mapSceneBasePhaseId,
-        mapSceneEarthquakeRegionPhaseId,
-        mapSceneEarthquakeCityPhaseId,
-        mapSceneObservationPointPhaseId,
-        MapRenderPhaseId.labelForeground,
+        mapSceneBaseLandFillPhaseId,
+        mapSceneUnderlayHazardFillPhaseId,
+        mapSceneUnderlayHazardLinePhaseId,
+        mapSceneBaseAdministrativeLinePhaseId,
+        mapSceneOverlayHazardFillPhaseId,
+        mapSceneOverlayHazardLinePhaseId,
+        mapSceneDynamicWaveFillPhaseId,
+        mapSceneDynamicWaveLinePhaseId,
+        mapSceneLivePointPhaseId,
+        mapSceneSpritePhaseId,
+        mapSceneForegroundLabelPhaseId,
       ],
+      phaseRanks: const [0, 20, 30, 40, 100, 110, 200, 210, 300, 350, 400],
     );
 
 /// phaseごとのFlutter Scene translucent sort priority。
 int mapSceneTranslucentSortPriorityFor({required int phase}) {
-  if (phase == mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId)) {
-    return 0;
-  }
-  if (phase ==
-      mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeRegionPhaseId)) {
-    return 100;
-  }
-  if (phase ==
-      mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeCityPhaseId)) {
-    return 200;
-  }
-  if (phase ==
-      mapSceneRenderPhasePolicy.rankOf(mapSceneObservationPointPhaseId)) {
-    return 300;
-  }
-  if (phase ==
-      mapSceneRenderPhasePolicy.rankOf(MapRenderPhaseId.labelForeground)) {
-    return 400;
+  if (mapSceneRenderPhasePolicy.containsRank(phase)) {
+    return phase;
   }
   throw ArgumentError.value(phase, 'phase', 'is not in the Scene policy');
 }

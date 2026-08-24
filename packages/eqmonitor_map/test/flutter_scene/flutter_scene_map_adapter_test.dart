@@ -216,7 +216,7 @@ void main() {
 
   MapRenderSubmission baseSubmission() => submission(
     policy: mapSceneRenderPhasePolicy,
-    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId),
+    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBaseLandFillPhaseId),
     materialKey: 'countriesFill',
     pipelineKey: baseMapFillPipelineKey.key,
   );
@@ -225,14 +225,14 @@ void main() {
     String materialKey = earthquakeAreaFillMaterialKey,
   }) => submission(
     policy: mapSceneRenderPhasePolicy,
-    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeRegionPhaseId),
+    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardFillPhaseId),
     materialKey: materialKey,
     pipelineKey: earthquakeAreaFillPipelineKey.key,
   );
 
   MapRenderSubmission citySubmission() => submission(
     policy: mapSceneRenderPhasePolicy,
-    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneEarthquakeCityPhaseId),
+    phase: mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardFillPhaseId),
     materialKey: earthquakeAreaFillMaterialKey,
     pipelineKey: earthquakeAreaFillPipelineKey.key,
   );
@@ -316,11 +316,11 @@ void main() {
 
     final plans = buildFlutterSceneMeshBatchPlans(submission: value);
 
-    expect(plans.map((plan) => plan.batch.compatibility.phase), [0, 1]);
+    expect(plans.map((plan) => plan.batch.compatibility.phase), [0, 100]);
     expect(plans.map((plan) => plan.translucentSortPriority), [0, 100]);
   });
 
-  test('assigns city Fill priority 200', () {
+  test('assigns city Fill to the overlay hazard phase', () {
     final value = MapSceneFrameSubmission(
       baseMap: baseSubmission(),
       earthquakeFill: citySubmission(),
@@ -329,7 +329,7 @@ void main() {
 
     final plans = buildFlutterSceneMeshBatchPlans(submission: value);
 
-    expect(plans.last.translucentSortPriority, 200);
+    expect(plans.last.translucentSortPriority, 100);
   });
 
   test('writes the phase priority to an actual Flutter Scene node', () {
@@ -338,7 +338,7 @@ void main() {
     applyFlutterSceneTranslucentSortPriority(
       node: node,
       phase: mapSceneRenderPhasePolicy.rankOf(
-        mapSceneEarthquakeRegionPhaseId,
+        mapSceneOverlayHazardFillPhaseId,
       ),
       priority: 100,
     );
@@ -346,37 +346,25 @@ void main() {
     expect(node.translucentSortPriority, 100);
   });
 
-  test('rejects region and city Fill phases in the same frame', () {
-    final bothFillPhases = createMapRenderSubmission(
-      frame: frame,
-      batches: [
-        ...regionSubmission().batches,
-        ...citySubmission().batches,
-      ],
-    );
-
-    expect(
-      () => MapSceneFrameSubmission(
-        baseMap: baseSubmission(),
-        earthquakeFill: bothFillPhases,
-        observationBatch: null,
-      ),
-      throwsArgumentError,
-    );
-  });
-
   test('rejects a phase not permitted for the base submission', () {
     final foreignPhase = createMapRenderPhaseId(value: 'foreign');
     final foreignPolicy = createMapRenderPhasePolicy(
       version: mapSceneRenderPhasePolicy.version,
       orderedPhases: [
-        mapSceneBasePhaseId,
-        mapSceneEarthquakeRegionPhaseId,
-        mapSceneEarthquakeCityPhaseId,
-        mapSceneObservationPointPhaseId,
+        mapSceneBaseLandFillPhaseId,
+        mapSceneUnderlayHazardFillPhaseId,
+        mapSceneUnderlayHazardLinePhaseId,
+        mapSceneBaseAdministrativeLinePhaseId,
+        mapSceneOverlayHazardFillPhaseId,
+        mapSceneOverlayHazardLinePhaseId,
+        mapSceneDynamicWaveFillPhaseId,
+        mapSceneDynamicWaveLinePhaseId,
+        mapSceneLivePointPhaseId,
+        mapSceneSpritePhaseId,
+        mapSceneForegroundLabelPhaseId,
         foreignPhase,
-        MapRenderPhaseId.labelForeground,
       ],
+      phaseRanks: const [0, 20, 30, 40, 100, 110, 200, 210, 300, 350, 400, 500],
     );
     final invalidBase = submission(
       policy: foreignPolicy,
@@ -408,7 +396,7 @@ void main() {
 
   test('rejects an observation batch whose priority disagrees with phase', () {
     final observationPhase = mapSceneRenderPhasePolicy.rankOf(
-      mapSceneObservationPointPhaseId,
+      mapSceneLivePointPhaseId,
     );
 
     expect(
@@ -428,7 +416,7 @@ void main() {
 
   test('rejects a non-typed observation batch before Scene mutation', () {
     final observationPhase = mapSceneRenderPhasePolicy.rankOf(
-      mapSceneObservationPointPhaseId,
+      mapSceneLivePointPhaseId,
     );
     final value = MapSceneFrameSubmission(
       baseMap: baseSubmission(),
@@ -973,7 +961,9 @@ void main() {
           ...baseSubmission().batches,
           ...submission(
             policy: mapSceneRenderPhasePolicy,
-            phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId),
+            phase: mapSceneRenderPhasePolicy.rankOf(
+              mapSceneBaseLandFillPhaseId,
+            ),
             materialKey: 'unknownPipeline',
             pipelineKey: 'unknown-base-pipeline',
           ).batches,
@@ -1044,7 +1034,9 @@ void main() {
           ...baseSubmission().batches,
           ...submission(
             policy: mapSceneRenderPhasePolicy,
-            phase: mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId),
+            phase: mapSceneRenderPhasePolicy.rankOf(
+              mapSceneBaseLandFillPhaseId,
+            ),
             materialKey: 'wrongTypedFill',
             pipelineKey: baseMapFillPipelineKey.key,
           ).batches,
