@@ -242,6 +242,53 @@ struct BackgroundLocationPendingLocationStoreTests {
         #expect(fixture.store.peek(consumer: .deviceLocation) == nil)
         #expect(fixture.storage.data == nil)
     }
+
+    @Test func competingEngineWaitsUntilPersistedSyncLeaseExpires() throws {
+        let suiteName = "DeviceLocationSyncLeaseStoreTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        var nowMillis: Int64 = 1_000
+        var leaseIds = ["lease-a", "lease-b"]
+        let store = DeviceLocationSyncLeaseStore(
+            userDefaults: defaults,
+            nowMillis: { nowMillis },
+            leaseIdProvider: { leaseIds.removeFirst() }
+        )
+
+        let first = try #require(
+            store.acquire(updateId: "update-a", durationMillis: 500)
+        )
+        #expect(first.leaseId == "lease-a")
+        #expect(store.acquire(updateId: "update-b", durationMillis: 500) == nil)
+        #expect(store.isOwned(leaseId: "lease-a", updateId: "update-a"))
+
+        nowMillis = 1_500
+        let recovered = try #require(
+            store.acquire(updateId: "update-b", durationMillis: 500)
+        )
+        #expect(recovered.leaseId == "lease-b")
+        #expect(store.isOwned(leaseId: "lease-a", updateId: "update-a") == false)
+        #expect(store.isOwned(leaseId: "lease-b", updateId: "update-b"))
+    }
+
+    @Test func onlySyncLeaseOwnerCanRelease() throws {
+        let suiteName = "DeviceLocationSyncLeaseStoreTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = DeviceLocationSyncLeaseStore(
+            userDefaults: defaults,
+            nowMillis: { 1_000 },
+            leaseIdProvider: { "lease-a" }
+        )
+        _ = try #require(
+            store.acquire(updateId: "update-a", durationMillis: 500)
+        )
+
+        #expect(store.release(leaseId: "other-lease") == false)
+        #expect(store.isOwned(leaseId: "lease-a", updateId: "update-a"))
+        #expect(store.release(leaseId: "lease-a"))
+        #expect(store.isOwned(leaseId: "lease-a", updateId: "update-a") == false)
+    }
 }
 
 private func fileProtectionType(at fileURL: URL) throws -> URLFileProtection? {

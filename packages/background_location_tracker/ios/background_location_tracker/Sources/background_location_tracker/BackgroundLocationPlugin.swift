@@ -7,6 +7,7 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
     private var flutterApi: BackgroundLocationFlutterApi?
     private let monitor = SignificantLocationMonitor()
     private let pendingStore = PendingLocationStore()
+    private let syncLeaseStore = DeviceLocationSyncLeaseStore()
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = BackgroundLocationPlugin()
@@ -61,6 +62,36 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
             updateId: updateId,
             consumer: consumer.storeConsumer
         )
+    }
+
+    func acquireDeviceLocationSyncLease(
+        updateId: String,
+        durationMillis: Int64
+    ) throws -> DeviceLocationSyncLeaseMessage? {
+        guard pendingStore.peek(consumer: .deviceLocation)?.updateId == updateId,
+              let lease = syncLeaseStore.acquire(
+                  updateId: updateId,
+                  durationMillis: durationMillis
+              )
+        else {
+            return nil
+        }
+        return DeviceLocationSyncLeaseMessage(
+            leaseId: lease.leaseId,
+            updateId: lease.updateId
+        )
+    }
+
+    func isDeviceLocationSyncLeaseCurrent(
+        leaseId: String,
+        updateId: String
+    ) throws -> Bool {
+        pendingStore.peek(consumer: .deviceLocation)?.updateId == updateId
+            && syncLeaseStore.isOwned(leaseId: leaseId, updateId: updateId)
+    }
+
+    func releaseDeviceLocationSyncLease(leaseId: String) throws {
+        _ = syncLeaseStore.release(leaseId: leaseId)
     }
 
     func getActiveHeadlessTaskId() throws -> String? {
