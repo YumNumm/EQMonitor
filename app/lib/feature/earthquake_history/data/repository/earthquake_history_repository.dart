@@ -239,7 +239,7 @@ class EarthquakeHistoryRepository {
     );
   }
 
-  Future<PaginatedResponse<EarthquakePartialRegion>> searchByCity({
+  Future<PaginatedResponse<EarthquakePartialCity>> searchByCity({
     required String code,
     int? limit,
     String? cursor,

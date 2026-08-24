@@ -324,7 +324,7 @@ final class _SpyEarthquakeHistoryRepository
   }
 
   @override
-  Future<PaginatedResponse<EarthquakePartialRegion>> searchByCity({
+  Future<PaginatedResponse<EarthquakePartialCity>> searchByCity({
     required String code,
     int? limit,
     String? cursor,
@@ -348,8 +348,8 @@ final class _SpyEarthquakeHistoryRepository
     searchByCityCalls.add({'statuses': statuses});
     return PaginatedResponse(
       items: [
-        EarthquakePartialRegion(
-          regionIntensity: JmaIntensity.three,
+        EarthquakePartialCity(
+          cityIntensity: JmaIntensity.three,
           earthquake: _makeEarthquake('event-city'),
         ),
       ],
