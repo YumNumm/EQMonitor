@@ -109,6 +109,59 @@ void main() {
     },
   );
 
+  test('detach during host await prevents every host side effect', () async {
+    final controller = MapViewCameraController();
+    final host = _AwaitingSideEffectMapViewCameraHost();
+    addTearDown(controller.dispose);
+    controller.attach(host: host, initialCamera: initialCamera);
+
+    final pending = controller.moveTo(camera: initialCamera);
+    controller.detach(host: host);
+
+    expect(await pending, isA<MapCameraCommandNotAttached>());
+    await pumpEventQueue();
+    expect(host.commands.single._cameraMutationCount, 0);
+    expect(host.commands.single._refreshCount, 0);
+    expect(host.commands.single._decodeOrSubmitCount, 0);
+  });
+
+  test('dispose during host await prevents every host side effect', () async {
+    final controller = MapViewCameraController();
+    final host = _AwaitingSideEffectMapViewCameraHost();
+    controller.attach(host: host, initialCamera: initialCamera);
+
+    final pending = controller.moveTo(camera: initialCamera);
+    controller.dispose();
+
+    expect(await pending, isA<MapCameraCommandDisposed>());
+    await pumpEventQueue();
+    expect(host.commands.single._cameraMutationCount, 0);
+    expect(host.commands.single._refreshCount, 0);
+    expect(host.commands.single._decodeOrSubmitCount, 0);
+  });
+
+  test(
+    'supersede during host await prevents stale host side effects',
+    () async {
+      final controller = MapViewCameraController();
+      final host = _AwaitingSideEffectMapViewCameraHost();
+      addTearDown(controller.dispose);
+      controller.attach(host: host, initialCamera: initialCamera);
+
+      final first = controller.moveTo(camera: initialCamera);
+      final second = controller.moveTo(camera: initialCamera.copyWith(zoom: 8));
+
+      expect(await first, isA<MapCameraCommandSuperseded>());
+      expect(await second, isA<MapCameraCommandSucceeded>());
+      expect(host.commands.first._cameraMutationCount, 0);
+      expect(host.commands.first._refreshCount, 0);
+      expect(host.commands.first._decodeOrSubmitCount, 0);
+      expect(host.commands.last._cameraMutationCount, 1);
+      expect(host.commands.last._refreshCount, 1);
+      expect(host.commands.last._decodeOrSubmitCount, 1);
+    },
+  );
+
   test(
     'move and fitBounds use host mutation and return committed camera',
     () async {
@@ -265,6 +318,7 @@ final class FakeMapViewCameraHost implements MapViewCameraHost {
   Future<MapCameraCommandResult> applyCameraCommand({
     required int generation,
     required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
   }) {
     final command = FakeCameraCommand(
       generation: generation,
@@ -296,4 +350,50 @@ final class FakeCameraCommand {
   final int generation;
   final MapCamera camera;
   final Completer<MapCameraCommandResult> completer;
+}
+
+final class _AwaitingSideEffectMapViewCameraHost implements MapViewCameraHost {
+  final commands = <_AwaitingSideEffectCommand>[];
+  static const _fitter = MapCameraBoundsFitter();
+
+  @override
+  MapCameraBoundsFitResult cameraForBounds({
+    required MapCameraBounds bounds,
+    required EdgeInsets padding,
+  }) => _fitter.fit(
+    bounds: bounds,
+    viewportLogicalSize: const Size(800, 600),
+    devicePixelRatio: 1,
+    padding: padding,
+    minZoom: 0,
+    maxZoom: 20,
+  );
+
+  @override
+  Future<MapCameraCommandResult> applyCameraCommand({
+    required int generation,
+    required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
+  }) async {
+    final command = _AwaitingSideEffectCommand();
+    commands.add(command);
+    await Future<void>.value();
+    final cancellationFailure = cancellation.failure;
+    if (cancellationFailure != null) {
+      return cancellationFailure;
+    }
+    command._cameraMutationCount++;
+    command._refreshCount++;
+    command._decodeOrSubmitCount++;
+    return MapCameraCommandSucceeded(
+      generation: generation,
+      committedCamera: camera,
+    );
+  }
+}
+
+final class _AwaitingSideEffectCommand {
+  var _cameraMutationCount = 0;
+  var _refreshCount = 0;
+  var _decodeOrSubmitCount = 0;
 }

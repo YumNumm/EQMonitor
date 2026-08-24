@@ -9,6 +9,7 @@ final class _ImmediateCameraHost implements MapViewCameraHost {
   Future<MapCameraCommandResult> applyCameraCommand({
     required int generation,
     required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
   }) async => MapCameraCommandSucceeded(
     generation: generation,
     committedCamera: camera,

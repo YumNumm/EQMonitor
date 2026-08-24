@@ -494,6 +494,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   Future<MapCameraCommandResult> applyCameraCommand({
     required int generation,
     required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
   }) async {
     if (_isDisposed) {
       return const MapCameraCommandNotAttached();
@@ -506,6 +507,13 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     }
     _latestCameraCommandGeneration = generation;
     await Future<void>.value();
+    final cancellationFailure = cancellation.failure;
+    if (cancellationFailure != null) {
+      return cancellationFailure;
+    }
+    if (_isDisposed) {
+      return const MapCameraCommandNotAttached();
+    }
     if (generation != _latestCameraCommandGeneration) {
       return MapCameraCommandSuperseded(
         generation: generation,
@@ -787,6 +795,9 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   }
 
   bool _refresh() {
+    if (_isDisposed) {
+      return false;
+    }
     final viewport = _viewport;
     if (!_isReady || viewport == null) {
       return false;
@@ -966,9 +977,15 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     required BaseMapTileRepository repository,
     required CanonicalTileId tileId,
   }) async {
+    if (_isDisposed) {
+      return;
+    }
     final token = _cache.beginDecode();
     try {
       final bytes = await repository.readTile(tileId);
+      if (_isDisposed) {
+        return;
+      }
       if (bytes == null) {
         // sparse archiveの正当な欠損。このarchiveは差し替わらないため、
         // 同じtileを永続的に既知の欠損として扱い、pan中に何度も再読込
@@ -980,6 +997,9 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
         tileBytes: bytes,
         limits: limits.decodeLimits,
       );
+      if (_isDisposed) {
+        return;
+      }
       _cache.put(
         sourceInstanceId: source.cacheIdentity,
         tileId: tileId,

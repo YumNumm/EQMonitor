@@ -52,6 +52,14 @@ final class MapCameraCommandSuperseded extends MapCameraCommandFailure {
   final int supersededByGeneration;
 }
 
+/// The lifecycle of one camera command while its host may be awaiting.
+///
+/// Hosts must re-read [failure] after every asynchronous boundary and return
+/// it before mutating camera or render state.
+abstract interface class MapCameraCommandCancellation {
+  MapCameraCommandFailure? get failure;
+}
+
 sealed class MapViewCameraAttachmentResult {
   const MapViewCameraAttachmentResult();
 }
@@ -84,6 +92,7 @@ abstract interface class MapViewCameraHost {
   Future<MapCameraCommandResult> applyCameraCommand({
     required int generation,
     required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
   });
 }
 
@@ -198,7 +207,7 @@ final class _MapCameraCommandOwner {
   }) async {
     final generation = ++_nextGeneration;
     final previous = _pending;
-    previous?.cancellation.complete(
+    previous?.cancel(
       MapCameraCommandSuperseded(
         generation: previous.generation,
         supersededByGeneration: generation,
@@ -210,7 +219,11 @@ final class _MapCameraCommandOwner {
     );
     _pending = pending;
     final result = await Future.any([
-      host.applyCameraCommand(generation: generation, camera: camera),
+      host.applyCameraCommand(
+        generation: generation,
+        camera: camera,
+        cancellation: pending,
+      ),
       pending.cancellation.future,
     ]);
     if (identical(_pending, pending)) {
@@ -225,16 +238,28 @@ final class _MapCameraCommandOwner {
       return;
     }
     _pending = null;
-    pending.cancellation.complete(failure);
+    pending.cancel(failure);
   }
 }
 
-final class _PendingMapCameraCommand {
-  const _PendingMapCameraCommand({
+final class _PendingMapCameraCommand implements MapCameraCommandCancellation {
+  _PendingMapCameraCommand({
     required this.generation,
     required this.cancellation,
   });
 
   final int generation;
   final Completer<MapCameraCommandResult> cancellation;
+  MapCameraCommandFailure? _failure;
+
+  @override
+  MapCameraCommandFailure? get failure => _failure;
+
+  void cancel(MapCameraCommandFailure failure) {
+    if (_failure != null) {
+      return;
+    }
+    _failure = failure;
+    cancellation.complete(failure);
+  }
 }
