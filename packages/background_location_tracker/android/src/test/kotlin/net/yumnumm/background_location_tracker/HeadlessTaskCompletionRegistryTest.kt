@@ -118,4 +118,86 @@ class HeadlessTaskCompletionRegistryTest {
 
         assertEquals(null, registry.registrationForEngine(engineKey))
     }
+
+    @Test
+    fun supersedingARegistrationInvalidatesItsEngineBinding() {
+        val registry = HeadlessTaskCompletionRegistry()
+        val oldRegistration = registry.begin(updateId = "old")
+        val oldEngineKey = Any()
+        assertTrue(
+            registry.bindEngine(
+                registration = oldRegistration,
+                engineKey = oldEngineKey
+            )
+        )
+
+        val newRegistration = registry.begin(updateId = "new")
+
+        assertEquals(null, registry.registrationForEngine(oldEngineKey))
+        assertFalse(
+            registry.complete(
+                registration = oldRegistration,
+                updateId = "old",
+                result = HeadlessTaskResult.SUCCESS
+            )
+        )
+        assertEquals(
+            HeadlessTaskResult.RETRY,
+            registry.await(registration = oldRegistration, timeoutMillis = 100)
+        )
+
+        val newEngineKey = Any()
+        assertTrue(
+            registry.bindEngine(
+                registration = newRegistration,
+                engineKey = newEngineKey
+            )
+        )
+        registry.end(oldRegistration)
+
+        assertEquals(newRegistration, registry.registrationForEngine(newEngineKey))
+        assertTrue(
+            registry.complete(
+                registration = newRegistration,
+                updateId = "new",
+                result = HeadlessTaskResult.SUCCESS
+            )
+        )
+    }
+
+    @Test
+    fun engineBridgeRechecksActiveRegistrationBeforeExposingTheTaskId() {
+        val registry = HeadlessTaskCompletionRegistry()
+        val oldRegistration = registry.begin(updateId = "old")
+        val oldEngineKey = Any()
+        assertTrue(
+            registry.bindEngine(
+                registration = oldRegistration,
+                engineKey = oldEngineKey
+            )
+        )
+        val bridge = HeadlessEngineCompletionBridge(
+            completionRegistry = registry,
+            engineKey = oldEngineKey
+        )
+        assertEquals("old", bridge.activeUpdateId())
+
+        val newRegistration = registry.begin(updateId = "new")
+        val newEngineKey = Any()
+        assertTrue(
+            registry.bindEngine(
+                registration = newRegistration,
+                engineKey = newEngineKey
+            )
+        )
+
+        assertEquals(null, bridge.activeUpdateId())
+        assertFalse(
+            bridge.complete(
+                updateId = "old",
+                result = HeadlessTaskResult.SUCCESS
+            )
+        )
+        assertEquals(newRegistration, registry.registrationForEngine(newEngineKey))
+    }
 }

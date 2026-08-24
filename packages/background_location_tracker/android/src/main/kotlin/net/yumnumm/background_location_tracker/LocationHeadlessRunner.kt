@@ -85,11 +85,24 @@ internal class LocationHeadlessRunner(
         registration: HeadlessTaskCompletionRegistry.Registration
     ): ManagedHeadlessEngine? {
         val callbackHandle = callbackHandleReader() ?: return null
-        val callbackInformation = callbackInformationReader(callbackHandle) ?: return null
         val appBundlePath = flutterBundleLoader()
         val engine = engineFactory()
         if (!completionRegistry.bindEngine(registration, engine.bindingKey)) {
             engine.destroy()
+            return null
+        }
+
+        val callbackInformation = try {
+            callbackInformationReader(callbackHandle)
+        } catch (error: Exception) {
+            release(registration = registration, engine = engine)
+            throw error
+        } catch (error: LinkageError) {
+            release(registration = registration, engine = engine)
+            throw error
+        }
+        if (callbackInformation == null) {
+            release(registration = registration, engine = engine)
             return null
         }
 
@@ -99,14 +112,23 @@ internal class LocationHeadlessRunner(
                 appBundlePath = appBundlePath
             )
             return engine
-        } catch (error: RuntimeException) {
-            completionRegistry.unbindEngine(registration, engine.bindingKey)
-            engine.destroy()
+        } catch (error: Exception) {
+            release(registration = registration, engine = engine)
             throw error
-        } catch (error: ReflectiveOperationException) {
-            completionRegistry.unbindEngine(registration, engine.bindingKey)
-            engine.destroy()
+        } catch (error: LinkageError) {
+            release(registration = registration, engine = engine)
             throw error
         }
+    }
+
+    private fun release(
+        registration: HeadlessTaskCompletionRegistry.Registration,
+        engine: ManagedHeadlessEngine
+    ) {
+        completionRegistry.unbindEngine(
+            registration = registration,
+            engineKey = engine.bindingKey
+        )
+        engine.destroy()
     }
 }

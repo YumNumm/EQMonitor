@@ -18,7 +18,10 @@ internal class HeadlessTaskCompletionRegistry {
     private val engineRegistrations = IdentityHashMap<Any, Registration>()
 
     fun begin(updateId: String): Registration = synchronized(lock) {
-        activeRegistration?.finish(HeadlessTaskResult.RETRY)
+        activeRegistration?.let { previous ->
+            previous.finish(HeadlessTaskResult.RETRY)
+            engineRegistrations.entries.removeAll { it.value === previous }
+        }
         Registration(updateId = updateId).also { activeRegistration = it }
     }
 
@@ -70,7 +73,7 @@ internal class HeadlessTaskCompletionRegistry {
     }
 
     fun registrationForEngine(engineKey: Any): Registration? = synchronized(lock) {
-        engineRegistrations[engineKey]
+        engineRegistrations[engineKey]?.takeIf { activeRegistration === it }
     }
 
     fun unbindEngine(
@@ -93,4 +96,26 @@ internal class HeadlessTaskCompletionRegistry {
     companion object {
         val shared = HeadlessTaskCompletionRegistry()
     }
+}
+
+internal class HeadlessEngineCompletionBridge(
+    private val completionRegistry: HeadlessTaskCompletionRegistry,
+    private val engineKey: Any
+) {
+    fun activeUpdateId(): String? = activeRegistration()?.updateId
+
+    fun complete(
+        updateId: String,
+        result: HeadlessTaskResult
+    ): Boolean {
+        val registration = activeRegistration() ?: return false
+        return completionRegistry.complete(
+            registration = registration,
+            updateId = updateId,
+            result = result
+        )
+    }
+
+    private fun activeRegistration(): HeadlessTaskCompletionRegistry.Registration? =
+        completionRegistry.registrationForEngine(engineKey)
 }

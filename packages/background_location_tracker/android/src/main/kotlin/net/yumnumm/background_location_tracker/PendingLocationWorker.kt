@@ -92,6 +92,8 @@ internal class HeadlessWorkerExecutor(
             throw error
         } catch (_: InterruptedException) {
             Thread.currentThread().interrupt()
+        } catch (_: LinkageError) {
+            result = HeadlessTaskResult.RETRY
         } catch (_: Exception) {
             result = HeadlessTaskResult.RETRY
         } finally {

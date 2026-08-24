@@ -119,6 +119,21 @@ class PendingLocationWorkerTest {
     }
 
     @Test
+    fun engineStartupLinkageErrorReturnsRetry() = runBlocking {
+        val executor = HeadlessWorkerExecutor(
+            completionRegistry = HeadlessTaskCompletionRegistry(),
+            startEngine = { throw UnsatisfiedLinkError("Flutter JNI") },
+            timeoutMillis = 100,
+            engineDispatcher = Dispatchers.Unconfined
+        )
+
+        assertEquals(
+            HeadlessTaskResult.RETRY,
+            executor.execute(updateId = "engine-linkage-error")
+        )
+    }
+
+    @Test
     fun coroutineCancellationDestroysTheEngineExactlyOnce() = runBlocking {
         val registry = HeadlessTaskCompletionRegistry()
         val engineStarted = CountDownLatch(1)

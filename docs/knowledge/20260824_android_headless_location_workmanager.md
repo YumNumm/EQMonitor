@@ -13,15 +13,21 @@
 
 ## Flutter Engineと完了通知
 
-- Engineの生成、`GeneratedPluginRegistrant.registerWith(engine)`、Dart callback開始、destroyは
-  main dispatcherで行う。完了待ちはinterrupt可能なIO dispatcherへ分離する。
+- cold processではcallback handle読出し後、FlutterLoader初期化、auto-registration無効のEngine生成、
+  messengerとregistrationのbind、callback information lookup、
+  `GeneratedPluginRegistrant.registerWith(engine)`、Dart callback開始の順にする。lookupはEngine生成前に
+  行うとFlutter JNI/cacheが未初期化の可能性がある。
+- このbootstrapとEngine destroyはmain dispatcherで行う。完了待ちはinterrupt可能なIO dispatcherへ
+  分離する。
 - callback handleが未保存、0、不正、Engine起動失敗、timeout、worker cancellationはretryとし、
-  Engineが生成済みなら必ず1回だけdestroyする。
+  callback lookupやplugin/Dart開始の`LinkageError`もretryへ分類する。Engineが生成済みなら失敗箇所に
+  かかわらず必ず1回だけdestroyする。
 - plugin attach前にEngineのbinary messengerとcompletion registrationを紐付ける。これにより
   通常Engineはactive IDを持たず、該当headless EngineだけがTask 5の
   `completeHeadlessTask(updateId, result)` を完了できる。
 - completionはregistrationの同一性とupdate IDの両方を検証する。二重完了、timeout後の遅延完了、
-  `REPLACE` 前の古いEngineからの完了は無視する。
+  `REPLACE` 前の古いEngineからの完了は無視する。新registrationの`begin()`時に旧Engine mappingを
+  削除し、pluginはattach時のIDをcacheせず、ID取得・完了のたびにactive mappingを再確認する。
 - Dartの`success`と`terminalFailure`はWorkManagerの`Result.success()`、`retry`、timeout、
   Engine例外は`Result.retry()`へ変換する。terminalをfailureへ変換すると無限再試行になる。
 
