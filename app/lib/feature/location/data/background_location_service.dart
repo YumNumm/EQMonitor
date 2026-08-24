@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/location/data/logic/background_location_sync_lease.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
@@ -213,6 +214,7 @@ class BackgroundLocationSyncCoordinator {
     );
     final service = DeviceLocationSyncService(
       scope: scope,
+      leaseManager: const BackgroundLocationSyncLeaseManager(),
       stateRepository: stateRepository,
       resolvePayload: ({required latitude, required longitude}) async {
         final resolution = resolver.resolveEarthquakeRegion(

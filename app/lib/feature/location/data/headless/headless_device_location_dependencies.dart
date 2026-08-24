@@ -20,6 +20,7 @@ import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_
 import 'package:eqmonitor/feature/location/data/headless/headless_device_location_runner.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_registration_generation_repository.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/location/data/logic/background_location_sync_lease.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
@@ -392,6 +393,7 @@ class HeadlessDeviceLocationSyncServiceBuilder {
     required NotificationSlotRepository repository,
   }) => DeviceLocationSyncService(
     scope: scope,
+    leaseManager: const BackgroundLocationSyncLeaseManager(),
     stateRepository: stateRepository,
     resolvePayload: ({required latitude, required longitude}) async {
       final resolution = resolver.resolveEarthquakeRegion(latitude, longitude);
