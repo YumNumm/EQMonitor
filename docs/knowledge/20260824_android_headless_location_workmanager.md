@@ -50,15 +50,16 @@
 
 ## 検証コマンド
 
-このworktreeには`app/android/gradlew`がない。mise管理のGradle 9.3.1実体を使う。
+通常はrepositoryの`app/android/gradlew`をmise経由で使う。fresh checkoutなどでwrapperがまだない場合
+だけ、repositoryが指定するmise管理のGradleをfallbackとして使う。
 
 ```bash
 cd app/android
-mise exec -- /Users/ryotaro.onoue/.local/share/mise/installs/gradle/9.3.1/gradle-9.3.1/bin/gradle \
-  :background_location_tracker:testDebugUnitTest --rerun-tasks --console=plain
+mise exec -- ./gradlew :background_location_tracker:testDebugUnitTest \
+  --rerun-tasks --console=plain
 
-mise exec -- /Users/ryotaro.onoue/.local/share/mise/installs/gradle/9.3.1/gradle-9.3.1/bin/gradle \
-  :background_location_tracker:lintDebug --rerun-tasks --console=plain
+mise exec -- ./gradlew :background_location_tracker:lintDebug \
+  --rerun-tasks --console=plain
 
 cd ..
 mise exec -- flutter build apk --debug
@@ -75,9 +76,13 @@ mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled
 cd app && mise exec -- flutter build apk --debug
 ```
 
-実機ではAndroid StudioのWorkManager Inspectorまたは次のdiagnosticで実行状態を確認する。出力を
-共有する場合はBearer tokenと緯度経度を含めない。
+実機ではAndroid StudioのWorkManager Inspectorまたは次のdiagnosticで実行状態を確認する。WorkManagerの
+diagnostic broadcastはjobとwork requestの状態をlogcatへ出す。出力を共有する場合はBearer token、
+緯度経度、端末識別情報を含めない。
 
 ```bash
+adb shell am broadcast \
+  -a androidx.work.diagnostics.REQUEST_DIAGNOSTICS \
+  -p net.yumnumm.eqmonitor
 adb shell dumpsys jobscheduler net.yumnumm.eqmonitor
 ```
