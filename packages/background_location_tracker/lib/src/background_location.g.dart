@@ -187,6 +187,54 @@ class PendingLocationMessage {
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
 
+class DeviceLocationSyncLeaseMessage {
+  DeviceLocationSyncLeaseMessage({
+    required this.leaseId,
+    required this.updateId,
+  });
+
+  String leaseId;
+
+  String updateId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      leaseId,
+      updateId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static DeviceLocationSyncLeaseMessage decode(Object result) {
+    result as List<Object?>;
+    return DeviceLocationSyncLeaseMessage(
+      leaseId: result[0]! as String,
+      updateId: result[1]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! DeviceLocationSyncLeaseMessage ||
+        other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(leaseId, other.leaseId) &&
+        _deepEquals(updateId, other.updateId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -202,6 +250,9 @@ class _PigeonCodec extends StandardMessageCodec {
       writeValue(buffer, value.index);
     } else if (value is PendingLocationMessage) {
       buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is DeviceLocationSyncLeaseMessage) {
+      buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -219,6 +270,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : HeadlessTaskResult.values[value];
       case 131:
         return PendingLocationMessage.decode(readValue(buffer)!);
+      case 132:
+        return DeviceLocationSyncLeaseMessage.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -344,6 +397,74 @@ class BackgroundLocationHostApi {
       isNullValid: false,
     );
     return pigeonVar_replyValue! as bool;
+  }
+
+  Future<DeviceLocationSyncLeaseMessage?> acquireDeviceLocationSyncLease(
+    String updateId,
+    int durationMillis,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.acquireDeviceLocationSyncLease$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[updateId, durationMillis],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as DeviceLocationSyncLeaseMessage?;
+  }
+
+  Future<bool> isDeviceLocationSyncLeaseCurrent(
+    String leaseId,
+    String updateId,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.isDeviceLocationSyncLeaseCurrent$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[leaseId, updateId],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as bool;
+  }
+
+  Future<void> releaseDeviceLocationSyncLease(String leaseId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.releaseDeviceLocationSyncLease$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[leaseId],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<String?> getActiveHeadlessTaskId() async {

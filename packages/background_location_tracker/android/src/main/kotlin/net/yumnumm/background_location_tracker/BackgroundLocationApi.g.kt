@@ -267,6 +267,44 @@ data class PendingLocationMessage (
     return result
   }
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class DeviceLocationSyncLeaseMessage (
+  val leaseId: String,
+  val updateId: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): DeviceLocationSyncLeaseMessage {
+      val leaseId = pigeonVar_list[0] as String
+      val updateId = pigeonVar_list[1] as String
+      return DeviceLocationSyncLeaseMessage(leaseId, updateId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      leaseId,
+      updateId,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as DeviceLocationSyncLeaseMessage
+    return BackgroundLocationApiPigeonUtils.deepEquals(this.leaseId, other.leaseId) && BackgroundLocationApiPigeonUtils.deepEquals(this.updateId, other.updateId)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + BackgroundLocationApiPigeonUtils.deepHash(this.leaseId)
+    result = 31 * result + BackgroundLocationApiPigeonUtils.deepHash(this.updateId)
+    return result
+  }
+}
 private open class BackgroundLocationApiPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -283,6 +321,11 @@ private open class BackgroundLocationApiPigeonCodec : StandardMessageCodec() {
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           PendingLocationMessage.fromList(it)
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          DeviceLocationSyncLeaseMessage.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -302,6 +345,10 @@ private open class BackgroundLocationApiPigeonCodec : StandardMessageCodec() {
         stream.write(131)
         writeValue(stream, value.toList())
       }
+      is DeviceLocationSyncLeaseMessage -> {
+        stream.write(132)
+        writeValue(stream, value.toList())
+      }
       else -> super.writeValue(stream, value)
     }
   }
@@ -318,6 +365,9 @@ interface BackgroundLocationHostApi {
   fun stopMonitoring()
   fun peekPendingLocation(consumer: PendingLocationConsumer): PendingLocationMessage?
   fun acknowledgePendingLocation(updateId: String, consumer: PendingLocationConsumer): Boolean
+  fun acquireDeviceLocationSyncLease(updateId: String, durationMillis: Long): DeviceLocationSyncLeaseMessage?
+  fun isDeviceLocationSyncLeaseCurrent(leaseId: String, updateId: String): Boolean
+  fun releaseDeviceLocationSyncLease(leaseId: String)
   fun getActiveHeadlessTaskId(): String?
   fun completeHeadlessTask(updateId: String, result: HeadlessTaskResult)
 
@@ -406,6 +456,60 @@ interface BackgroundLocationHostApi {
             val consumerArg = args[1] as PendingLocationConsumer
             val wrapped: List<Any?> = try {
               listOf(api.acknowledgePendingLocation(updateIdArg, consumerArg))
+            } catch (exception: Throwable) {
+              BackgroundLocationApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.acquireDeviceLocationSyncLease$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val updateIdArg = args[0] as String
+            val durationMillisArg = args[1] as Long
+            val wrapped: List<Any?> = try {
+              listOf(api.acquireDeviceLocationSyncLease(updateIdArg, durationMillisArg))
+            } catch (exception: Throwable) {
+              BackgroundLocationApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.isDeviceLocationSyncLeaseCurrent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val leaseIdArg = args[0] as String
+            val updateIdArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.isDeviceLocationSyncLeaseCurrent(leaseIdArg, updateIdArg))
+            } catch (exception: Throwable) {
+              BackgroundLocationApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.background_location_tracker.BackgroundLocationHostApi.releaseDeviceLocationSyncLease$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val leaseIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.releaseDeviceLocationSyncLease(leaseIdArg)
+              listOf(null)
             } catch (exception: Throwable) {
               BackgroundLocationApiPigeonUtils.wrapError(exception)
             }

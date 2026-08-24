@@ -31,6 +31,15 @@ class PendingLocationMessage {
   final int timestampMillis;
 }
 
+class DeviceLocationSyncLeaseMessage {
+  DeviceLocationSyncLeaseMessage({
+    required this.leaseId,
+    required this.updateId,
+  });
+  final String leaseId;
+  final String updateId;
+}
+
 /// Flutter → Native
 @HostApi()
 abstract class BackgroundLocationHostApi {
@@ -42,6 +51,12 @@ abstract class BackgroundLocationHostApi {
     String updateId,
     PendingLocationConsumer consumer,
   );
+  DeviceLocationSyncLeaseMessage? acquireDeviceLocationSyncLease(
+    String updateId,
+    int durationMillis,
+  );
+  bool isDeviceLocationSyncLeaseCurrent(String leaseId, String updateId);
+  void releaseDeviceLocationSyncLease(String leaseId);
   String? getActiveHeadlessTaskId();
   void completeHeadlessTask(String updateId, HeadlessTaskResult result);
 }
