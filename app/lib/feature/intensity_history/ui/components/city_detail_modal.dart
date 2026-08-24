@@ -54,7 +54,7 @@ class _CityDetailModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sort = useState(
       const EarthquakeSortSelection(
-        sortBy: EarthquakeSortBy.eventId,
+        sortBy: EarthquakeSortBy.regionalIntensity,
         sortOrder: SortOrder.desc,
       ),
     );

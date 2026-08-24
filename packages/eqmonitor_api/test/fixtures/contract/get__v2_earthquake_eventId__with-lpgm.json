@@ -22,6 +22,30 @@
         "type": "SHALLOW"
       }
     },
+    "hypocenters": [
+      {
+        "datasource": "JMA_DISASTER_INFORMATION_XML",
+        "reported_at": "2024-01-01T07:13:02.000Z",
+        "source_telegram_id": "stub-telegram-vxse53",
+        "hypocenter": {
+          "value": {
+            "code": "531",
+            "name": "石川県能登地方"
+          },
+          "coordinates": {
+            "latitude": 37.5,
+            "longitude": 137.2
+          },
+          "magnitude": {
+            "type": "NORMAL",
+            "value": 7.6
+          },
+          "depth": {
+            "type": "SHALLOW"
+          }
+        }
+      }
+    ],
     "intensity": {
       "max_intensity": "7",
       "max_lpgm_intensity": "3",

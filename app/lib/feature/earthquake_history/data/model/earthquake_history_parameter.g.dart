@@ -164,6 +164,7 @@ const _$EarthquakeSortByEnumMap = {
   EarthquakeSortBy.maxIntensity: 'maxIntensity',
   EarthquakeSortBy.maxLpgmIntensity: 'maxLpgmIntensity',
   EarthquakeSortBy.depth: 'depth',
+  EarthquakeSortBy.regionalIntensity: 'regionalIntensity',
 };
 
 const _$SortOrderEnumMap = {SortOrder.asc: 'asc', SortOrder.desc: 'desc'};

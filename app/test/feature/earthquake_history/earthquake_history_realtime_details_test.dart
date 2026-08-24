@@ -981,6 +981,7 @@ api.Earthquake _earthquake({
   earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  hypocenters: const [],
   estimatedIntensityTile: estimatedIntensityTile,
   telegrams: [
     api.EarthquakeTelegram(

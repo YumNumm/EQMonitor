@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'catalog.dart';
 import 'earthquake_datasource.dart';
+import 'earthquake_hypocenters_union.dart';
 import 'earthquake_telegram.dart';
 import 'earthquake_type.dart';
 import 'hypocenter.dart';
@@ -27,6 +28,7 @@ abstract class Earthquake with _$Earthquake {
     required EarthquakeType earthquakeType,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
+    required List<EarthquakeHypocentersUnion> hypocenters,
 
     /// 地震データのソースの配列
     required List<EarthquakeDatasource> datasources,

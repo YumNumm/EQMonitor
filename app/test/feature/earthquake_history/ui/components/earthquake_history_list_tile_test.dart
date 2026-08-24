@@ -17,6 +17,44 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
+  testWidgets('地域別一覧は地震最大震度4と地域観測震度2を分けて表示する', (tester) async {
+    await tester.pumpWidget(
+      _TestApp(
+        item: EarthquakePartial.region(
+          regionIntensity: JmaIntensity.two,
+          earthquake: _earthquake(maxIntensity: JmaIntensity.four),
+        ),
+        parameter: const EarthquakeHistoryParameter.region(
+          sortBy: EarthquakeSortBy.eventId,
+          sortOrder: SortOrder.desc,
+          regionCode: '010100',
+        ),
+      ),
+    );
+
+    expect(find.text('最大震度4を観測'), findsOneWidget);
+    expect(find.text('地域の観測震度 2'), findsOneWidget);
+    expect(find.text('地域の観測震度 4'), findsNothing);
+  });
+
+  testWidgets('市区町村別一覧は市区町村の観測震度と明示する', (tester) async {
+    await tester.pumpWidget(
+      _TestApp(
+        item: EarthquakePartial.city(
+          cityIntensity: JmaIntensity.three,
+          earthquake: _earthquake(maxIntensity: JmaIntensity.fiveLower),
+        ),
+        parameter: const EarthquakeHistoryParameter.city(
+          sortBy: EarthquakeSortBy.eventId,
+          sortOrder: SortOrder.desc,
+          cityCode: '0110110',
+        ),
+      ),
+    );
+
+    expect(find.text('市区町村の観測震度 3'), findsOneWidget);
+  });
+
   const parameter = EarthquakeHistoryParameter.all(
     sortBy: EarthquakeSortBy.eventId,
     sortOrder: SortOrder.desc,
@@ -77,3 +115,45 @@ void main() {
     expect(find.text('最大震度5-を観測'), findsOneWidget);
   });
 }
+
+class _TestApp extends StatelessWidget {
+  const new({required this.item, required this.parameter});
+
+  final EarthquakePartial item;
+  final EarthquakeHistoryParameter parameter;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData.light().copyWith(
+        extensions: <ThemeExtension<dynamic>>[
+          DesignSystemThemeExtension.light(),
+        ],
+      ),
+      home: Scaffold(
+        body: EarthquakeHistoryListTile(
+          item: item,
+          searchParameter: parameter,
+        ),
+      ),
+    );
+  }
+}
+
+EarthquakePartialNormal _earthquake({required JmaIntensity maxIntensity}) =>
+    EarthquakePartialNormal(
+      eventId: '20260824000000',
+      status: TelegramStatus.normal,
+      originTime: null,
+      originTimePrecision: OriginTimePrecision.second,
+      arrivalTime: null,
+      dataSources: const [EarthquakeDataSource.jmaDisasterInformationXml],
+      hypocenter: null,
+      intensity: EarthquakeIntensityPartial(
+        maxIntensity: maxIntensity,
+        maxLpgmIntensity: null,
+      ),
+      earthquakeType: EarthquakeType.normal,
+      telegramTypes: const [],
+      estimatedIntensityTileUrl: null,
+    );

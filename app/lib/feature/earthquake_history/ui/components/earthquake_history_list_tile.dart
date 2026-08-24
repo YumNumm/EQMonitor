@@ -134,20 +134,30 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4),
               child: Consumer(
                 builder: (context, ref, _) {
+                  final (label, observedIntensity) = switch (item) {
+                    EarthquakePartialPrefecture(:final prefectureIntensity) => (
+                      '都道府県の観測震度',
+                      prefectureIntensity,
+                    ),
+                    EarthquakePartialRegion(:final regionIntensity) => (
+                      '地域の観測震度',
+                      regionIntensity,
+                    ),
+                    EarthquakePartialCity(:final cityIntensity) => (
+                      '市区町村の観測震度',
+                      cityIntensity,
+                    ),
+                    EarthquakePartialStation(:final stationIntensity) => (
+                      '観測点の観測震度',
+                      stationIntensity,
+                    ),
+                    EarthquakePartialNormal() => throw StateError(
+                      'EarthquakePartialNormal is not supported',
+                    ),
+                  };
                   return _AreaIntensityChip(
-                    intensity: switch (item) {
-                      EarthquakePartialPrefecture(:final prefectureIntensity) =>
-                        prefectureIntensity,
-                      EarthquakePartialRegion(:final regionIntensity) =>
-                        regionIntensity,
-                      EarthquakePartialCity(:final cityIntensity) =>
-                        cityIntensity,
-                      EarthquakePartialStation(:final stationIntensity) =>
-                        stationIntensity,
-                      EarthquakePartialNormal() => throw StateError(
-                        'EarthquakePartialNormal is not supported',
-                      ),
-                    },
+                    label: label,
+                    intensity: observedIntensity,
                     intensityColors: intensityColors,
                   );
                 },
@@ -180,10 +190,15 @@ class EarthquakeHistoryListTile extends StatelessWidget {
 }
 
 /// 検索対象地域の震度情報を表示する小さなチップ。
-/// 「(地域名) 震度N」を、その震度の色で塗りつぶして表示する。
+/// 対象範囲の観測震度を、その震度の色で塗りつぶして表示する。
 class _AreaIntensityChip extends StatelessWidget {
-  const new({required this.intensity, required this.intensityColors});
+  const new({
+    required this.label,
+    required this.intensity,
+    required this.intensityColors,
+  });
 
+  final String label;
   final JmaIntensity intensity;
   final IntensityColors intensityColors;
 
@@ -198,7 +213,7 @@ class _AreaIntensityChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        '震度${intensity.label}',
+        label + ' ' + intensity.label,
         style: TextStyle(
           color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,

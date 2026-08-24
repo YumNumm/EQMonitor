@@ -174,7 +174,7 @@ class EarthquakeHistoryRepository {
       originTimeLte: originTimeLte?.toString(),
       maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
       maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
-      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortBy: sortBy?.toApiIntensitySearchSortBy,
       sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
@@ -229,7 +229,7 @@ class EarthquakeHistoryRepository {
       originTimeLte: originTimeLte?.toString(),
       maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
       maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
-      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortBy: sortBy?.toApiIntensitySearchSortBy,
       sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
@@ -239,7 +239,7 @@ class EarthquakeHistoryRepository {
     );
   }
 
-  Future<PaginatedResponse<EarthquakePartialRegion>> searchByCity({
+  Future<PaginatedResponse<EarthquakePartialCity>> searchByCity({
     required String code,
     int? limit,
     String? cursor,
@@ -285,7 +285,7 @@ class EarthquakeHistoryRepository {
       originTimeLte: originTimeLte?.toString(),
       maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
       maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
-      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortBy: sortBy?.toApiIntensitySearchSortBy,
       sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(
@@ -341,7 +341,7 @@ class EarthquakeHistoryRepository {
       originTimeLte: originTimeLte?.toString(),
       maxLpgmIntensityGte: maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
       maxLpgmIntensityLte: maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
-      sortBy: sortBy?.toApiEarthquakeSortBy,
+      sortBy: sortBy?.toApiIntensitySearchSortBy,
       sortOrder: sortOrder?.toApiSortOrder,
     );
     return response.data.toAppResponse(

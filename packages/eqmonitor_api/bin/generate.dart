@@ -165,6 +165,7 @@ void main(List<String> args) async {
     _patchTargetUnionFromJson(libDir);
     _patchParameterDataResponseUnionFromJson(libDir);
     _patchTelegramBodyUnionFromJson(libDir);
+    _patchEarthquakeHypocentersUnionFromJson(libDir);
   });
 
   await _step('TelegramBody 参照を TelegramBodyUnion に修正', () async {
@@ -1089,6 +1090,28 @@ switch (json['type']) {
         ),
       }''';
   _patchUnionFromJson(file, className: 'TelegramBodyUnion', body: body);
+}
+
+/// Earthquake.hypocenters の datasource 値で variant を判別する。
+void _patchEarthquakeHypocentersUnionFromJson(Directory libDir) {
+  final file = File('${libDir.path}/models/earthquake_hypocenters_union.dart');
+  const body = '''
+switch (json['datasource']) {
+        'JMA_DISASTER_INFORMATION_XML' =>
+          EarthquakeHypocentersUnionVariant1.fromJson(json),
+        'JMA_INTENSITY_DATABASE' =>
+          EarthquakeHypocentersUnionVariant2.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'datasource',
+          'Unknown EarthquakeHypocentersUnion datasource',
+        ),
+      }''';
+  _patchUnionFromJson(
+    file,
+    className: 'EarthquakeHypocentersUnion',
+    body: body,
+  );
 }
 
 /// swagger_parser は `TelegramBody` (oneOf ref) を `TelegramBodyUnion`
