@@ -76,4 +76,26 @@ void main() {
     expect(secondReplay.mode, MapClockSourceMode.replay);
     expect(secondReplay.replaySession, isNot(firstReplay.replaySession));
   });
+
+  test('replay中の連続enterReplayは呼出ごとに新sessionを発行する', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      mapClockSourceIdentityProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+    final appClock = container.read(appClockProvider.notifier);
+
+    final replayStart = DateTime.utc(2026, 8, 24);
+    appClock.enterReplay(replayStart);
+    final firstReplay = container.read(mapClockSourceIdentityProvider);
+    appClock.enterReplay(replayStart);
+    final secondReplay = container.read(mapClockSourceIdentityProvider);
+
+    expect(secondReplay.mode, MapClockSourceMode.replay);
+    expect(secondReplay.replaySession, isNot(firstReplay.replaySession));
+    expect(secondReplay, isNot(firstReplay));
+  });
 }

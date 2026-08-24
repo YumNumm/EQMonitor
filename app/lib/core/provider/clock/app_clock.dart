@@ -40,10 +40,12 @@ class AppClock extends _$AppClock {
 
   /// リプレイファイル再生へ切り替える。
   void enterReplay(DateTime currentTime) {
-    if (state is! ReplayTimeMode) {
-      _latestReplaySession += 1;
-    }
+    final previous = state;
+    _latestReplaySession += 1;
     state = TimeMode.replay(currentTime: currentTime);
+    if (state == previous) {
+      ref.notifyListeners();
+    }
   }
 
   /// リプレイ再生中の再生位置を更新する。リプレイ中でない場合は何もしない。

@@ -521,6 +521,71 @@ void main() {
     );
   });
 
+  test('連続enterReplay後に完了した旧detailは新incarnationだけへ公開する', () async {
+    final detail = Completer<Earthquake>();
+    final requested = Completer<void>();
+    final incarnations = [
+      _incarnation('first-replay-incarnation'),
+      _incarnation('second-replay-incarnation'),
+    ].iterator;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = ProviderContainer(
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () {
+            if (!incarnations.moveNext()) {
+              throw StateError('unexpected incarnation request');
+            }
+            return incarnations.current;
+          },
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _PendingDetailsNotifier(
+            completer: detail,
+            requested: requested,
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final appClock = container.read(appClockProvider.notifier);
+    final replayStart = DateTime.utc(2026, 8, 24);
+    appClock.enterReplay(replayStart);
+    final publishedIncarnations = <MapSourceIncarnation>[];
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, next) {
+        if (next case AsyncData(:final value)) {
+          final overlay = value.overlay;
+          if (overlay != null) {
+            publishedIncarnations.add(overlay.versionStamp.sourceIncarnation);
+          }
+        }
+      },
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    await requested.future;
+    appClock.enterReplay(replayStart);
+    await pumpEventQueue();
+    detail.complete(_availableEarthquake());
+    final result = await container.read(latestEarthquakeOverlayProvider.future);
+
+    expect(
+      publishedIncarnations,
+      isNot(contains(_incarnation('first-replay-incarnation'))),
+    );
+    expect(
+      _stamp(result).sourceIncarnation,
+      _incarnation('second-replay-incarnation'),
+    );
+  });
+
   test('通常のreplay tickはoverlay incarnationを再生成しない', () async {
     var incarnationRequestCount = 0;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
