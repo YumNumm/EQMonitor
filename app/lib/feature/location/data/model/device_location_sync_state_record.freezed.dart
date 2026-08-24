@@ -78,7 +78,7 @@ as DeviceLocationPayload,
 @override
 @pragma('vm:prefer-inline')
 $DeviceLocationSyncScopeCopyWith<$Res> get scope {
-  
+
   return $DeviceLocationSyncScopeCopyWith<$Res>(_self.scope, (value) {
     return _then(_self.copyWith(scope: value));
   });
@@ -87,7 +87,7 @@ $DeviceLocationSyncScopeCopyWith<$Res> get scope {
 @override
 @pragma('vm:prefer-inline')
 $DeviceLocationPayloadCopyWith<$Res> get payload {
-  
+
   return $DeviceLocationPayloadCopyWith<$Res>(_self.payload, (value) {
     return _then(_self.copyWith(payload: value));
   });
@@ -298,7 +298,7 @@ as DeviceLocationPayload,
 @override
 @pragma('vm:prefer-inline')
 $DeviceLocationSyncScopeCopyWith<$Res> get scope {
-  
+
   return $DeviceLocationSyncScopeCopyWith<$Res>(_self.scope, (value) {
     return _then(_self.copyWith(scope: value));
   });
@@ -307,7 +307,7 @@ $DeviceLocationSyncScopeCopyWith<$Res> get scope {
 @override
 @pragma('vm:prefer-inline')
 $DeviceLocationPayloadCopyWith<$Res> get payload {
-  
+
   return $DeviceLocationPayloadCopyWith<$Res>(_self.payload, (value) {
     return _then(_self.copyWith(payload: value));
   });
