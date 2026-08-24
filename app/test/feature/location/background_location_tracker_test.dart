@@ -69,7 +69,7 @@ void main() {
     BackgroundLocationFlutterApi.setUp(null);
   });
 
-  test('新旧のstreamがリスナー登録前の最新位置を別の型で再送する', () async {
+  test('streamがリスナー登録前の最新位置を再送する', () async {
     await BackgroundLocationTracker.initialize(
       callbackDispatcher: testBackgroundLocationCallbackDispatcher,
     );
@@ -93,73 +93,15 @@ void main() {
       ),
     );
 
-    final LocationUpdateMessage legacyLocation = await BackgroundLocationTracker
-        .locationStream
-        .first
-        .timeout(
-          const Duration(seconds: 1),
-        );
     final pendingLocation = await BackgroundLocationTracker
         .pendingLocationStream
         .first
         .timeout(const Duration(seconds: 1));
 
-    expect(legacyLocation.latitude, 36);
-    expect(legacyLocation.longitude, 140);
-    expect(legacyLocation.accuracy, 20);
     expect(pendingLocation.updateId, 'latest-live-id');
-  });
-
-  test('旧consume APIはappEffectsのack成功後だけ旧型を返す', () async {
-    pendingStore.save(
-      PendingLocationMessage(
-        updateId: 'legacy-consume-id',
-        latitude: 35,
-        longitude: 139,
-        accuracy: 10,
-        timestampMillis: 1000,
-      ),
-    );
-
-    final LocationUpdateMessage? consumed =
-        await BackgroundLocationTracker.consumePendingLocation();
-
-    expect(consumed?.latitude, 35);
-    expect(
-      await BackgroundLocationTracker.peekPendingLocation(
-        consumer: PendingLocationConsumer.appEffects,
-      ),
-      isNull,
-    );
-    expect(
-      (await BackgroundLocationTracker.peekPendingLocation(
-        consumer: PendingLocationConsumer.deviceLocation,
-      ))?.updateId,
-      'legacy-consume-id',
-    );
-  });
-
-  test('旧consume APIはack失敗時にnullを返しpendingを保持する', () async {
-    pendingStore.save(
-      PendingLocationMessage(
-        updateId: 'retry-id',
-        latitude: 35,
-        longitude: 139,
-        accuracy: 10,
-        timestampMillis: 1000,
-      ),
-    );
-    pendingStore.failAcknowledgements = true;
-
-    final consumed = await BackgroundLocationTracker.consumePendingLocation();
-
-    expect(consumed, isNull);
-    expect(
-      (await BackgroundLocationTracker.peekPendingLocation(
-        consumer: PendingLocationConsumer.appEffects,
-      ))?.updateId,
-      'retry-id',
-    );
+    expect(pendingLocation.latitude, 36);
+    expect(pendingLocation.longitude, 140);
+    expect(pendingLocation.accuracy, 20);
   });
 
   test('古いupdateIdのacknowledgeでは新しいpendingを削除しない', () async {
@@ -257,7 +199,6 @@ Future<void> _sendLocationUpdate(PendingLocationMessage location) async {
 class _FakePendingLocationStore {
   PendingLocationMessage? _location;
   final _pendingConsumers = <PendingLocationConsumer>{};
-  bool failAcknowledgements = false;
 
   void save(PendingLocationMessage location) {
     _location = location;
@@ -273,8 +214,7 @@ class _FakePendingLocationStore {
     required String updateId,
     required PendingLocationConsumer consumer,
   }) {
-    if (failAcknowledgements ||
-        _location?.updateId != updateId ||
+    if (_location?.updateId != updateId ||
         !_pendingConsumers.contains(consumer)) {
       return false;
     }

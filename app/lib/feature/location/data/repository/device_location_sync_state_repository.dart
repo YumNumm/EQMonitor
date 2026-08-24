@@ -2,42 +2,13 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
+import 'package:eqmonitor/feature/location/data/model/device_location_sync_scope.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+export 'package:eqmonitor/feature/location/data/model/device_location_sync_scope.dart';
+
 enum DeviceLocationSyncAvailability { enabled, disabled, uninitialized }
-
-class DeviceLocationSyncScope {
-  const new({
-    required this.apiEndpoint,
-    required this.registrationGeneration,
-  });
-
-  static DeviceLocationSyncScope fromApiBaseUrl({
-    required String apiBaseUrl,
-    required String registrationGeneration,
-  }) {
-    final baseUri = Uri.parse(apiBaseUrl);
-    return DeviceLocationSyncScope(
-      apiEndpoint: Uri.parse(
-        baseUri.origin,
-      ).resolve('/v2/device/me/location').toString(),
-      registrationGeneration: registrationGeneration,
-    );
-  }
-
-  final String apiEndpoint;
-  final String registrationGeneration;
-
-  @override
-  bool operator ==(Object other) =>
-      other is DeviceLocationSyncScope &&
-      other.apiEndpoint == apiEndpoint &&
-      other.registrationGeneration == registrationGeneration;
-
-  @override
-  int get hashCode => Object.hash(apiEndpoint, registrationGeneration);
-}
 
 final deviceLocationSyncStateRepositoryProvider =
     Provider<SharedPreferencesDeviceLocationSyncStateRepository>(

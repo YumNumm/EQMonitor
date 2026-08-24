@@ -23,6 +23,7 @@ import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/logic/background_location_sync_lease.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
+import 'package:eqmonitor/feature/location/data/model/headless_api_identity.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/repository/parameter_json_parser.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
@@ -306,20 +307,6 @@ class HeadlessRestApiUrlResolver {
       return buildConfig.restApiUrl;
     }
   }
-}
-
-class HeadlessApiIdentity {
-  const new({
-    required this.userAgent,
-    required this.version,
-    required this.platform,
-    required this.deviceId,
-  });
-
-  final String userAgent;
-  final String version;
-  final String platform;
-  final String deviceId;
 }
 
 class HeadlessApiIdentityLoader {

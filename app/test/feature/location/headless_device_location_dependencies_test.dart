@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.da
 import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_device_location_dependencies.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
+import 'package:eqmonitor/feature/location/data/model/headless_api_identity.dart';
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';

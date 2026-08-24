@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
+import 'package:eqmonitor/feature/location/data/model/device_location_sync_state_record.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,31 @@ void main() {
   setUp(() {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
+  });
+
+  test('DeviceLocationPayloadは値比較とJSON round-tripに対応する', () {
+    const payload = DeviceLocationPayload(
+      region: '130',
+      city: '13101',
+      tsunamiForecastRegion: '100',
+    );
+
+    expect(DeviceLocationPayload.fromJson(payload.toJson()), payload);
+  });
+
+  test('DeviceLocationSyncStateRecordはscopeとpayloadをJSON復元する', () {
+    const record = DeviceLocationSyncStateRecord(
+      scope: DeviceLocationSyncScope(
+        apiEndpoint: 'https://api.example.com/v2/device/me/location',
+      ),
+      payload: DeviceLocationPayload(
+        region: '130',
+        city: '13101',
+        tsunamiForecastRegion: '100',
+      ),
+    );
+
+    expect(DeviceLocationSyncStateRecord.fromJson(record.toJson()), record);
   });
 
   test('再生成したRepositoryが最後の送信成功payloadを復元する', () async {

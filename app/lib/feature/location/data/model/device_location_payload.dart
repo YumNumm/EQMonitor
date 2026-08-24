@@ -1,17 +1,17 @@
-class DeviceLocationPayload {
-  const new({
-    required this.region,
-    required this.city,
-    required this.tsunamiForecastRegion,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String region;
-  final String? city;
-  final String? tsunamiForecastRegion;
+part 'device_location_payload.freezed.dart';
+part 'device_location_payload.g.dart';
 
-  Map<String, dynamic> toJson() => {
-    'region': region,
-    if (city case final value?) 'city': value,
-    if (tsunamiForecastRegion case final value?) 'tsunamiForecastRegion': value,
-  };
+@freezed
+abstract class DeviceLocationPayload with _$DeviceLocationPayload {
+  const factory({
+    required String region,
+    String? city,
+    @JsonKey(name: 'tsunamiForecastRegion')
+    String? tsunamiForecastRegion,
+  }) = _DeviceLocationPayload;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$DeviceLocationPayloadFromJson(json);
 }
