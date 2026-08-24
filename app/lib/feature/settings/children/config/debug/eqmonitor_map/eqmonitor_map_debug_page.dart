@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
+import 'package:eqmonitor/core/util/map/app_map_clock.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/latest_earthquake_overlay_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_source_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_overlay_banner.dart';
@@ -17,6 +20,19 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appClockNow = ref.watch(appClockProvider.notifier).now;
+    final clockSourceIdentity = ref.watch(mapClockSourceIdentityProvider);
+    final mapSession = useMemoized(
+      () => EqmonitorMapDebugMapSession(now: appClockNow),
+      [appClockNow],
+    );
+    useEffect(() {
+      return mapSession.dispose;
+    }, [mapSession]);
+    final mapClock = useMemoized(
+      () => mapSession.clockFor(sourceIdentity: clockSourceIdentity),
+      [mapSession, clockSourceIdentity],
+    );
     final source = ref.watch(eqmonitorMapDebugSourceProvider);
     final overlayState = ref.watch(latestEarthquakeOverlayProvider);
     final coverageSnapshot = useState<EarthquakeOverlayCoverageSnapshot?>(
@@ -41,6 +57,8 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
             BaseMapView(
               source: result.source,
               initialCamera: EqmonitorMapDebugConfiguration.initialCamera,
+              clock: mapClock,
+              cameraController: mapSession.cameraController,
               limits: EqmonitorMapDebugConfiguration.limitsFor(
                 minZoom: result.minZoom,
                 maxZoom: result.maxZoom,
@@ -65,6 +83,31 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
       ),
     );
   }
+}
+
+final class EqmonitorMapDebugMapSession {
+  new({required DateTime Function() now}) : _now = now;
+
+  final DateTime Function() _now;
+  final cameraController = MapViewCameraController();
+  MapClockSourceIdentity? _sourceIdentity;
+  MapClock? _clock;
+
+  MapClock clockFor({required MapClockSourceIdentity sourceIdentity}) {
+    final currentClock = _clock;
+    if (_sourceIdentity == sourceIdentity && currentClock != null) {
+      return currentClock;
+    }
+    final nextClock = createAppMapClock(
+      now: _now,
+      sourceIdentity: sourceIdentity,
+    );
+    _sourceIdentity = sourceIdentity;
+    _clock = nextClock;
+    return nextClock;
+  }
+
+  void dispose() => cameraController.dispose();
 }
 
 final class EqmonitorMapDebugConfiguration {
