@@ -1,12 +1,22 @@
+import 'dart:typed_data';
+
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_shader_interface_manifest.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_packet.dart';
+import 'package:eqmonitor_map/src/overlay/map_sprite_atlas.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_scene/gpu.dart' as scene_gpu;
+import 'package:flutter_scene/scene.dart' as scene;
 
 typedef LoadEarthquakeAreaMaterial =
     Future<FlutterSceneMapMaterialBinding> Function();
@@ -14,6 +24,10 @@ typedef LoadEarthquakeAreaMaterial =
 const earthquakeObservationShaderBundleAssetKey =
     'packages/eqmonitor_map/flutter_gpu_shaders/shaderbundles/'
     'earthquake_overlay.shaderbundle';
+
+const earthquakeOverlayShaderInterfaceAssetKey =
+    'packages/eqmonitor_map/shaders/'
+    'earthquake_overlay.shaderinterface.json';
 
 sealed class EarthquakeOverlayMaterialPreparation {
   const EarthquakeOverlayMaterialPreparation();
@@ -165,6 +179,325 @@ final class EarthquakeOverlayMaterialOwner {
   }
 }
 
+const mapSpriteVertexLayout = scene.VertexLayoutDescriptor(
+  buffers: [
+    scene.VertexBufferDescriptor(
+      strideInBytes: mapSpriteQuadVertexStrideInBytes,
+      attributes: [
+        scene.VertexAttributeDescriptor(
+          name: 'corner',
+          format: scene_gpu.VertexFormat.float32x2,
+        ),
+      ],
+    ),
+    scene.VertexBufferDescriptor(
+      strideInBytes: mapPointSpriteInstanceStrideInBytes,
+      stepMode: scene_gpu.VertexStepMode.instance,
+      attributes: [
+        scene.VertexAttributeDescriptor(
+          name: 'centerMercator',
+          format: scene_gpu.VertexFormat.float32x2,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'uvRect',
+          format: scene_gpu.VertexFormat.float32x4,
+          offsetInBytes: 8,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'logicalSize',
+          format: scene_gpu.VertexFormat.float32x2,
+          offsetInBytes: 24,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'opacity',
+          format: scene_gpu.VertexFormat.float32,
+          offsetInBytes: 32,
+        ),
+        scene.VertexAttributeDescriptor(
+          name: 'priority',
+          format: scene_gpu.VertexFormat.float32,
+          offsetInBytes: 36,
+        ),
+      ],
+    ),
+  ],
+);
+
+void validateMapPointSpriteBatchAbi({
+  required MapPointSpriteInstanceBatch batch,
+}) {
+  if (batch.instanceCount <= 0 ||
+      batch.instanceStrideInBytes != mapPointSpriteInstanceStrideInBytes ||
+      batch.instanceData.lengthInBytes !=
+          batch.instanceCount * mapPointSpriteInstanceStrideInBytes ||
+      batch.frameUniform.lengthInBytes != mapSpriteFrameUniformByteLength) {
+    throw ArgumentError.value(batch, 'batch', 'has an invalid sprite ABI');
+  }
+}
+
+void validateMapSpriteShaderManifest({
+  required MapShaderInterfaceManifest manifest,
+}) {
+  final vertex = manifest.shaderNamed(mapSpriteVertexShaderSymbol);
+  final fragment = manifest.shaderNamed(mapSpriteFragmentShaderSymbol);
+  final expectedInputs = <String, (int, int)>{
+    'corner': (2, 0),
+    'centerMercator': (2, 8),
+    'uvRect': (4, 16),
+    'logicalSize': (2, 32),
+    'opacity': (1, 40),
+    'priority': (1, 44),
+  };
+  final actualInputs = <String, (int, int)>{
+    for (final input in vertex.inputs)
+      if (input.type == MapShaderScalarType.float &&
+          input.bitWidth == 32 &&
+          input.columns == 1)
+        input.name: (input.vecSize, input.offset),
+  };
+  final block = vertex.uniformBlocks.singleOrNull;
+  final fields = block == null
+      ? const <String, int>{}
+      : {for (final field in block.fields) field.name: field.offsetInBytes};
+  final sampledImage = fragment.sampledImages.singleOrNull;
+  if (vertex.stage != MapShaderInterfaceStage.vertex ||
+      fragment.stage != MapShaderInterfaceStage.fragment ||
+      !mapEquals(actualInputs, expectedInputs) ||
+      block?.name != mapSpriteFrameUniformBlockName ||
+      block?.set != 0 ||
+      block?.binding != 0 ||
+      block?.sizeInBytes != mapSpriteFrameUniformByteLength ||
+      !mapEquals(fields, const {
+        'cameraWorld': 0,
+        'viewportZoom': 16,
+        'sizePolicy': 32,
+        'opacityPolicy': 48,
+      }) ||
+      sampledImage?.name != mapSpriteAtlasUniformName ||
+      sampledImage?.set != 0 ||
+      sampledImage?.binding != 64) {
+    throw const FormatException('Sprite shader interface ABI mismatch.');
+  }
+  mapSpriteVertexLayout.toGpuLayout();
+}
+
+final class FlutterSceneSpriteInstanceResource {
+  const FlutterSceneSpriteInstanceResource({
+    required this.geometry,
+    required this.material,
+  });
+
+  final scene.StaticInstanceGeometry geometry;
+  final scene.ShaderMaterial material;
+}
+
+final class FlutterSceneProductionSpriteResourceBackend
+    implements
+        FlutterSceneSpriteResourceBackend<
+          scene.Texture2D,
+          scene.StaticInstanceTopology,
+          FlutterSceneSpriteInstanceResource
+        > {
+  factory FlutterSceneProductionSpriteResourceBackend({
+    required scene_gpu.Shader vertexShader,
+    required scene_gpu.Shader fragmentShader,
+    required MapShaderInterfaceManifest manifest,
+  }) => FlutterSceneProductionSpriteResourceBackend._(
+    vertexShader,
+    fragmentShader,
+    manifest,
+  );
+
+  FlutterSceneProductionSpriteResourceBackend._(
+    this._vertexShader,
+    this._fragmentShader,
+    this._manifest,
+  );
+
+  final scene_gpu.Shader _vertexShader;
+  final scene_gpu.Shader _fragmentShader;
+  final MapShaderInterfaceManifest _manifest;
+
+  @override
+  void preflightShaderInterface(MapPointSpriteInstanceBatch batch) {
+    validateMapPointSpriteBatchAbi(batch: batch);
+    validateMapSpriteShaderManifest(manifest: _manifest);
+    final frameSlot = _vertexShader.getUniformSlot(
+      mapSpriteFrameUniformBlockName,
+    );
+    if (frameSlot.sizeInBytes != mapSpriteFrameUniformByteLength ||
+        frameSlot.getMemberOffsetInBytes('cameraWorld') != 0 ||
+        frameSlot.getMemberOffsetInBytes('viewportZoom') != 16 ||
+        frameSlot.getMemberOffsetInBytes('sizePolicy') != 32 ||
+        frameSlot.getMemberOffsetInBytes('opacityPolicy') != 48) {
+      throw StateError('Native SpriteFrame reflection does not match ABI v1.');
+    }
+  }
+
+  @override
+  scene.Texture2D uploadTexture(MapSpriteAtlas atlas) =>
+      scene.Texture2D.fromPixels(
+        atlas.rgbaBytes,
+        atlas.width,
+        atlas.height,
+        sampling: const scene.TextureSampling(
+          mipmaps: false,
+          // Keep atlas filtering explicit even though Scene defaults match.
+          // ignore: avoid_redundant_argument_values
+          minFilter: scene_gpu.MinMagFilter.linear,
+          // Preserve the atlas contract if Scene changes its default filter.
+          // ignore: avoid_redundant_argument_values
+          magFilter: scene_gpu.MinMagFilter.linear,
+          maxAnisotropy: 1,
+          addressMode: scene_gpu.SamplerAddressMode.clampToEdge,
+        ),
+      );
+
+  @override
+  scene.StaticInstanceTopology prepareTopology({
+    required int spriteAbiVersion,
+    required int materialVersion,
+  }) {
+    if (spriteAbiVersion != mapSpriteInstanceAbiVersion ||
+        materialVersion != mapSpriteMaterialAbiVersion) {
+      throw StateError('Unsupported sprite topology ABI.');
+    }
+    final topology = scene.StaticInstanceTopology(
+      vertices: Float32List.fromList(const [-1, -1, 1, -1, 1, 1, -1, 1]),
+      indices: Uint16List.fromList(const [0, 1, 2, 0, 2, 3]),
+      layout: mapSpriteVertexLayout,
+    );
+    topology.prepare();
+    return topology;
+  }
+
+  @override
+  FlutterSceneSpriteInstanceResource prepareInstance({
+    required scene.StaticInstanceTopology topology,
+    required MapPointSpriteInstanceBatch batch,
+  }) {
+    final geometry = scene.StaticInstanceGeometry.withTopology(
+      topology: topology,
+      instanceData: batch.instanceData,
+      instanceCount: batch.instanceCount,
+      layout: mapSpriteVertexLayout,
+    );
+    geometry.prepare();
+    return FlutterSceneSpriteInstanceResource(
+      geometry: geometry,
+      material: scene.ShaderMaterial(
+        vertexShader: _vertexShader,
+        fragmentShader: _fragmentShader,
+        cullingMode: scene_gpu.CullMode.none,
+        isOpaqueOverride: false,
+      ),
+    );
+  }
+
+  @override
+  void retireInstance(FlutterSceneSpriteInstanceResource instance) {
+    instance.geometry.retire();
+  }
+
+  @override
+  void retireTexture(scene.Texture2D texture) {
+    // Texture2D has no explicit retire API. Dropping the owner reference lets
+    // flutter_scene release the native texture after its in-flight pins end.
+  }
+
+  @override
+  void retireTopology(scene.StaticInstanceTopology topology) {
+    topology.retire();
+  }
+}
+
+final class FlutterSceneSpriteSceneResources
+    implements FlutterSceneSpriteFrameResources {
+  FlutterSceneSpriteSceneResources({required this.owner});
+
+  final FlutterSceneSpriteResourceOwner<
+    scene.Texture2D,
+    scene.StaticInstanceTopology,
+    FlutterSceneSpriteInstanceResource
+  >
+  owner;
+
+  MapGpuResourceCounterSnapshot get snapshot => owner.snapshot;
+
+  @override
+  FlutterSceneSpritePreparedSceneFrame prepareFrame({
+    required MapFrameSnapshot frame,
+    required List<MapPointSpriteInstanceBatch> batches,
+  }) {
+    final prepared = owner.prepareFrame(frame: frame, batches: batches);
+    try {
+      final nodes = [
+        for (final entry in prepared.nodes)
+          FlutterSceneSpritePreparedSceneNode(
+            batch: entry.batch,
+            node: scene.Node(
+              mesh: scene.Mesh(
+                entry.instance.geometry,
+                entry.instance.material
+                  ..setUniformBlock(
+                    mapSpriteFrameUniformBlockName,
+                    entry.batch.frameUniform,
+                    stage: scene.ShaderStage.vertex,
+                  )
+                  ..setTexture(mapSpriteAtlasUniformName, entry.texture),
+              ),
+            ),
+          ),
+      ];
+      return _FlutterSceneSpritePreparedSceneFrame(
+        prepared: prepared,
+        nodes: List.unmodifiable(nodes),
+      );
+    } on Exception {
+      prepared.rollback();
+      rethrow;
+      // Synchronous GPU allocation can report StateError during candidate prep.
+      // ignore: avoid_catching_errors
+    } on Error {
+      prepared.rollback();
+      rethrow;
+    }
+  }
+
+  @override
+  void retireAll() {
+    owner.retireAll();
+  }
+}
+
+final class _FlutterSceneSpritePreparedSceneFrame
+    implements FlutterSceneSpritePreparedSceneFrame {
+  const _FlutterSceneSpritePreparedSceneFrame({
+    required this.prepared,
+    required this.nodes,
+  });
+
+  final FlutterSceneSpritePreparedFrame<
+    scene.Texture2D,
+    scene.StaticInstanceTopology,
+    FlutterSceneSpriteInstanceResource
+  >
+  prepared;
+
+  @override
+  final List<FlutterSceneSpritePreparedSceneNode> nodes;
+
+  @override
+  void commit() {
+    prepared.commit();
+  }
+
+  @override
+  void rollback() {
+    prepared.rollback();
+  }
+}
+
 @immutable
 final class _EarthquakeAreaMaterialKey {
   _EarthquakeAreaMaterialKey.from(MapMaterialParameterBlock parameters)
@@ -220,5 +553,54 @@ loadEarthquakeObservationMaterialBinding() async {
   }
   return FlutterSceneShaderObservationMaterialBinding.fromShaderLibrary(
     shaderLibrary: shaderLibrary,
+  );
+}
+
+Future<FlutterSceneSpriteSceneResources> loadEarthquakeSpriteSceneResources({
+  required MapSpriteRendererLimits limits,
+  required int maxFramesInFlight,
+  required MapSpriteGpuCompletionBarrier waitForGpuCompletion,
+  MapGpuProbeRuntime? probeRuntime,
+  ValueChanged<MapGpuResourceCounterSnapshot>? onCounterSnapshot,
+}) async {
+  final (shaderLibrary, manifestBytes) = await (
+    scene_gpu.loadShaderLibraryAsync(
+      earthquakeObservationShaderBundleAssetKey,
+    ),
+    rootBundle.load(earthquakeOverlayShaderInterfaceAssetKey),
+  ).wait;
+  if (shaderLibrary == null) {
+    throw StateError(
+      'No DataAssets sprite shader bundle at '
+      '$earthquakeObservationShaderBundleAssetKey.',
+    );
+  }
+  final vertex = shaderLibrary[mapSpriteVertexShaderSymbol];
+  final fragment = shaderLibrary[mapSpriteFragmentShaderSymbol];
+  if (vertex == null || fragment == null) {
+    throw StateError(
+      'Sprite shader bundle must provide $mapSpriteVertexShaderSymbol and '
+      '$mapSpriteFragmentShaderSymbol.',
+    );
+  }
+  final backend = FlutterSceneProductionSpriteResourceBackend(
+    vertexShader: vertex,
+    fragmentShader: fragment,
+    manifest: MapShaderInterfaceManifest.parse(
+      jsonBytes: manifestBytes.buffer.asUint8List(
+        manifestBytes.offsetInBytes,
+        manifestBytes.lengthInBytes,
+      ),
+    ),
+  );
+  return FlutterSceneSpriteSceneResources(
+    owner: FlutterSceneSpriteResourceOwner(
+      limits: limits,
+      maxFramesInFlight: maxFramesInFlight,
+      backend: backend,
+      waitForGpuCompletion: waitForGpuCompletion,
+      probeRuntime: probeRuntime,
+      onCounterSnapshot: onCounterSnapshot,
+    ),
   );
 }

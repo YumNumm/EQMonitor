@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/map_shader_interface_manifest.dart';
 import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -130,5 +131,33 @@ void main() {
     expect(declarations.single.group(1), 'sampler2D');
     expect(source, isNot(contains('samplerCube spriteAtlas')));
     expect(source, isNot(contains('sampler2DArray spriteAtlas')));
+  });
+
+  test('runtime sprite preflight accepts only the checked-in ABI', () {
+    final checkedIn = File(
+      'shaders/earthquake_overlay.shaderinterface.json',
+    ).readAsStringSync();
+    final valid = MapShaderInterfaceManifest.parse(
+      jsonBytes: Uint8List.fromList(utf8.encode(checkedIn)),
+    );
+    final invalid = MapShaderInterfaceManifest.parse(
+      jsonBytes: Uint8List.fromList(
+        utf8.encode(
+          checkedIn.replaceFirst(
+            '"name":"spriteAtlas","set":0,"binding":64',
+            '"name":"spriteAtlas","set":0,"binding":63',
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      () => validateMapSpriteShaderManifest(manifest: valid),
+      returnsNormally,
+    );
+    expect(
+      () => validateMapSpriteShaderManifest(manifest: invalid),
+      throwsFormatException,
+    );
   });
 }
