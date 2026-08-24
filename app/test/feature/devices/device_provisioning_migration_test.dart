@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:eqmonitor/feature/location/data/logic/device_location_monitoring_reconciler.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -42,6 +43,7 @@ void main() {
   buildContainer({
     required Map<String, Object> initialPrefs,
     required FakeDeviceRepository deviceRepo,
+    DeviceLocationMonitoringReconciler? monitoringReconciler,
   }) async {
     SharedPreferences.setMockInitialValues(initialPrefs);
     final prefs = await SharedPreferences.getInstance();
@@ -58,6 +60,13 @@ void main() {
         // _NoopPushTokenSync overrides build() to avoid Firebase init,
         // and sync() to be a no-op. provision() swallows sync errors anyway.
         pushTokenSyncProvider.overrideWith(() => _NoopPushTokenSync()),
+        deviceLocationMonitoringReconcilerProvider.overrideWithValue(
+          monitoringReconciler ??
+              DeviceLocationMonitoringReconciler(
+                afterDeleteAction: () async {},
+                afterReprovisionAction: () async {},
+              ),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -152,6 +161,48 @@ void main() {
       isNot(isTrue),
     );
   });
+
+  test('device削除後に位置監視停止処理を呼ぶ', () async {
+    final events = <String>[];
+    final (container, _, _) = await buildContainer(
+      initialPrefs: {SharedPreferencesKey.deviceProvisioned.key: true},
+      deviceRepo: FakeDeviceRepository(
+        getResult: () => const Success(_fakeDevice),
+        putResult: () => const Success(_fakeDevice),
+        migrateResult: () => const Success(null),
+      ),
+      monitoringReconciler: DeviceLocationMonitoringReconciler(
+        afterDeleteAction: () async => events.add('delete'),
+        afterReprovisionAction: () async => events.add('reprovision'),
+      ),
+    );
+
+    await container
+        .read(deviceProvisioningProvider.notifier)
+        .deleteDeviceAndClearLocal();
+
+    expect(events, ['delete']);
+  });
+
+  test('再登録後に位置consumerを再取得して監視状態を整合する', () async {
+    final events = <String>[];
+    final (container, _, _) = await buildContainer(
+      initialPrefs: {SharedPreferencesKey.deviceProvisioned.key: true},
+      deviceRepo: FakeDeviceRepository(
+        getResult: () => const Success(_fakeDevice),
+        putResult: () => const Success(_fakeDevice),
+        migrateResult: () => const Success(null),
+      ),
+      monitoringReconciler: DeviceLocationMonitoringReconciler(
+        afterDeleteAction: () async => events.add('delete'),
+        afterReprovisionAction: () async => events.add('reprovision'),
+      ),
+    );
+
+    await container.read(deviceProvisioningProvider.notifier).reprovision();
+
+    expect(events, ['delete', 'reprovision']);
+  });
 }
 
 // 400 BadRequest を表す非再試行エラー。
@@ -226,6 +277,10 @@ class FakeDeviceRepository extends DeviceRepository {
     putCalls++;
     return _putResult();
   }
+
+  @override
+  Future<Result<void, Exception>> deleteDevice(String deviceId) async =>
+      const Success(null);
 
   @override
   Future<Result<void, Exception>> migrateFromLegacy({

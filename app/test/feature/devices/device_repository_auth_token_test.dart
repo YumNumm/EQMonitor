@@ -135,7 +135,6 @@ void main() {
     final result =
         await DeviceLocationSyncService(
           scope: newScope,
-          leaseManager: const _AlwaysCurrentDeviceLocationSyncLeaseManager(),
           stateRepository: stateRepository,
           resolvePayload: ({required latitude, required longitude}) async =>
               payload,
@@ -475,23 +474,4 @@ final class _DeleteDeviceAdapter implements HttpClientAdapter {
 
   @override
   void close({bool force = false}) {}
-}
-
-class _AlwaysCurrentDeviceLocationSyncLeaseManager
-    implements DeviceLocationSyncLeaseManager {
-  const new();
-
-  @override
-  Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
-      const _AlwaysCurrentDeviceLocationSyncLease();
-}
-
-class _AlwaysCurrentDeviceLocationSyncLease implements DeviceLocationSyncLease {
-  const new();
-
-  @override
-  Future<bool> isCurrent() async => true;
-
-  @override
-  Future<void> release() async {}
 }

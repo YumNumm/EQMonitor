@@ -62,6 +62,14 @@ final class BackgroundLocationMonitoringLifecycle {
   final BackgroundLocationMonitoringAction startMonitoring;
   final BackgroundLocationMonitoringAction stopMonitoring;
 
+  Future<void> stop() async {
+    try {
+      await stopMonitoring();
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] stop monitoring', e, st);
+    }
+  }
+
   Future<void> reconcile({
     required List<NotificationSlot>? slots,
     required ShakeDetectionState? shakeDetectionState,

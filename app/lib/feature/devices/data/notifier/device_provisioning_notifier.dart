@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
+import 'package:eqmonitor/feature/location/data/logic/device_location_monitoring_reconciler.dart';
 import 'package:eqmonitor/feature/devices/data/workflow/device_migration_workflow.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -131,11 +132,15 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
     _retryController.reset();
     state = const AsyncData(DeviceProvisioningStatus.required);
     ref.invalidate(pushTokenSyncProvider, asReload: true);
+    await ref.read(deviceLocationMonitoringReconcilerProvider).afterDelete();
   }
 
   static final reprovisionMutation = Mutation<void>();
   Future<void> reprovision() async {
     await deleteDeviceAndClearLocal();
     await provision();
+    await ref
+        .read(deviceLocationMonitoringReconcilerProvider)
+        .afterReprovision();
   }
 }
