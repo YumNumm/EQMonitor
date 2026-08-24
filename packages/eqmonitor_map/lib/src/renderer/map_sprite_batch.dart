@@ -8,6 +8,7 @@ import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 
 const mapSpriteQuadVertexStrideInBytes = 8;
 const mapPointSpriteInstanceStrideInBytes = 40;
+const mapSpriteInstanceAbiVersion = 1;
 const mapSpriteFrameUniformByteLength = 64;
 const mapSpriteMaterialAbiVersion = 1;
 const mapSpriteFrameUniformBlockName = 'SpriteFrame';
