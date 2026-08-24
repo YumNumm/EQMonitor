@@ -10,6 +10,7 @@ gcloud = "https://github.com/jthegedus/asdf-gcloud"
 # runner の cgroup v2 構成で JDK-8272124 系の NPE を起こす (lint worker が全滅する)。
 # バグ修正済みの Temurin 17 を使う。
 java = "temurin-17.0.20+8"
+gradle = "9.3.1"
 node = "lts"
 python = "latest"
 "pipx:codemagic-cli-tools" = "latest"

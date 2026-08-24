@@ -50,15 +50,17 @@
 
 ## 検証コマンド
 
-通常はrepositoryの`app/android/gradlew`をmise経由で使う。fresh checkoutなどでwrapperがまだない場合
-だけ、repositoryが指定するmise管理のGradleをfallbackとして使う。
+Gradle 9.3.1はrepositoryの`mise.toml`と`mise.lock`でpinし、mise管理の実体を使う。
+`app/android/gradlew`、`gradlew.bat`、`gradle-wrapper.jar`はignore対象でfresh checkoutには存在しない。
+検証手順やCIをこれらの生成済みwrapperへ依存させない。
 
 ```bash
 cd app/android
-mise exec -- ./gradlew :background_location_tracker:testDebugUnitTest \
+mise exec -- gradle --version
+mise exec -- gradle :background_location_tracker:testDebugUnitTest \
   --rerun-tasks --console=plain
 
-mise exec -- ./gradlew :background_location_tracker:lintDebug \
+mise exec -- gradle :background_location_tracker:lintDebug \
   --rerun-tasks --console=plain
 
 cd ..

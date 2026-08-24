@@ -146,10 +146,15 @@ Receiverは位置を保存してからunique work `eqmonitor-device-location-syn
 `ExistingWorkPolicy.REPLACE`で登録する。workはnetwork接続制約と指数backoffを持ち、実行時に最新pendingを
 読む。native workerはpendingをacknowledgeしない。
 
+Gradle 9.3.1はrepositoryの`mise.toml`と`mise.lock`でpinする。`app/android/gradlew`と
+`gradle-wrapper.jar`はignore対象でfresh checkoutには存在しないため、検証手順から依存させない。
+
 ```bash
 cd app/android
-mise exec -- ./gradlew :background_location_tracker:testDebugUnitTest
-mise exec -- ./gradlew :background_location_tracker:lintDebug \
+mise exec -- gradle --version
+mise exec -- gradle :background_location_tracker:testDebugUnitTest \
+  --rerun-tasks --console=plain
+mise exec -- gradle :background_location_tracker:lintDebug \
   --rerun-tasks --console=plain
 
 cd ..
