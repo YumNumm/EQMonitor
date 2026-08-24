@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
+import 'package:eqmonitor/feature/location/data/provider/device_location_sync_scope_provider.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
@@ -42,6 +43,11 @@ const _peekPendingLocationChannelName =
 const _acknowledgePendingLocationChannelName =
     'dev.flutter.pigeon.background_location_tracker.'
     'BackgroundLocationHostApi.acknowledgePendingLocation';
+
+const _deviceLocationSyncScope = DeviceLocationSyncScope(
+  apiEndpoint: 'https://example.com/v2/device/me/location',
+  registrationGeneration: 'test-registration',
+);
 
 // ---------------------------------------------------------------------------
 // Fakes
@@ -95,11 +101,13 @@ final class _RecordingDeviceLocationSyncStateRepository
     required this.events,
     this.availability = DeviceLocationSyncAvailability.enabled,
     this.lastSent,
-  }) : super(SharedPreferencesAsync());
+  }) : lastSentScope = lastSent == null ? null : _deviceLocationSyncScope,
+       super(SharedPreferencesAsync());
 
   final List<String> events;
   DeviceLocationSyncAvailability availability;
   DeviceLocationPayload? lastSent;
+  DeviceLocationSyncScope? lastSentScope;
 
   @override
   Future<DeviceLocationSyncAvailability> readAvailability() async {
@@ -116,14 +124,20 @@ final class _RecordingDeviceLocationSyncStateRepository
   }
 
   @override
-  Future<DeviceLocationPayload?> readLastSent() async {
+  Future<DeviceLocationPayload?> readLastSent({
+    required DeviceLocationSyncScope scope,
+  }) async {
     events.add('deviceLocation:readLastSent');
-    return lastSent;
+    return lastSentScope == scope ? lastSent : null;
   }
 
   @override
-  Future<void> writeLastSent(DeviceLocationPayload payload) async {
+  Future<void> writeLastSent({
+    required DeviceLocationSyncScope scope,
+    required DeviceLocationPayload payload,
+  }) async {
     events.add('deviceLocation:writeLastSent');
+    lastSentScope = scope;
     lastSent = payload;
   }
 }
@@ -439,6 +453,9 @@ ProviderContainer _createLocationSyncContainer({
             _RecordingDeviceLocationSyncStateRepository(
               events: events ?? <String>[],
             ),
+      ),
+      deviceLocationSyncScopeProvider.overrideWith(
+        (ref) async => _deviceLocationSyncScope,
       ),
       shakeDetectionSettingsProvider.overrideWith(
         () => _FakeShakeDetectionSettingsNotifier(events),

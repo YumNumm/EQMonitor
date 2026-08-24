@@ -181,6 +181,7 @@ void main() {
     final dio = Dio(BaseOptions(baseUrl: 'https://api.example.com'))
       ..httpClientAdapter = adapter;
     final service = HeadlessDeviceLocationSyncServiceBuilder.build(
+      scope: testScope,
       stateRepository: InMemoryDeviceLocationSyncStateRepository(),
       resolver: resolver,
       repository: NotificationSlotRepository(api: api.ApiClient(dio)),
@@ -207,6 +208,11 @@ void main() {
     expect(adapter.requestBody, isNot(contains('longitude')));
   });
 }
+
+const testScope = DeviceLocationSyncScope(
+  apiEndpoint: 'https://api.example.com/v2/device/me/location',
+  registrationGeneration: 'test-registration',
+);
 
 BuildConfig buildConfig({required String restApiUrl}) => BuildConfig(
   restApiUrl: restApiUrl,

@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
+import 'package:eqmonitor/feature/location/data/provider/device_location_sync_scope_provider.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
@@ -194,6 +195,7 @@ class BackgroundLocationSyncCoordinator {
     final stateRepository = ref.read(
       deviceLocationSyncStateRepositoryProvider,
     );
+    final scope = await ref.read(deviceLocationSyncScopeProvider.future);
     if (await stateRepository.readAvailability() ==
         DeviceLocationSyncAvailability.uninitialized) {
       final slots = await ref.read(notificationSlotsProvider.future);
@@ -210,6 +212,7 @@ class BackgroundLocationSyncCoordinator {
       notificationSlotRepositoryProvider.future,
     );
     final service = DeviceLocationSyncService(
+      scope: scope,
       stateRepository: stateRepository,
       resolvePayload: ({required latitude, required longitude}) async {
         final resolution = resolver.resolveEarthquakeRegion(

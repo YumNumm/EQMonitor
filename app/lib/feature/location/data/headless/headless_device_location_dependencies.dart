@@ -18,6 +18,7 @@ import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_repository.dart';
 import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_root_resolver.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_device_location_runner.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_registration_generation_repository.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
@@ -98,6 +99,13 @@ class HeadlessDeviceLocationSyncServiceLoader {
     final deviceToken = await const HeadlessSecureDeviceTokenLoader().load();
     final resolver = await HeadlessJmaRegionResolverLoader(preferences).load();
     final restApiUrl = await HeadlessRestApiUrlLoader(preferences).load();
+    final registrationGeneration = await DeviceRegistrationGenerationRepository(
+      preferences: preferences,
+    ).readOrCreate();
+    final scope = DeviceLocationSyncScope.fromApiBaseUrl(
+      apiBaseUrl: restApiUrl,
+      registrationGeneration: registrationGeneration,
+    );
     final identity = await const HeadlessApiIdentityLoader().load();
     final dio = const HeadlessApiDioFactory().build(
       baseUrl: restApiUrl,
@@ -105,6 +113,7 @@ class HeadlessDeviceLocationSyncServiceLoader {
       deviceToken: deviceToken,
     );
     return HeadlessDeviceLocationSyncServiceBuilder.build(
+      scope: scope,
       stateRepository: stateRepository,
       resolver: resolver,
       repository: NotificationSlotRepository(api: api.ApiClient(dio)),
@@ -377,10 +386,12 @@ class HeadlessDeviceLocationSyncServiceBuilder {
   const new _();
 
   static DeviceLocationSyncService build({
+    required DeviceLocationSyncScope scope,
     required DeviceLocationSyncStateRepository stateRepository,
     required JmaRegionResolver resolver,
     required NotificationSlotRepository repository,
   }) => DeviceLocationSyncService(
+    scope: scope,
     stateRepository: stateRepository,
     resolvePayload: ({required latitude, required longitude}) async {
       final resolution = resolver.resolveEarthquakeRegion(latitude, longitude);

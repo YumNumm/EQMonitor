@@ -304,10 +304,12 @@ DeviceLocationSyncService createSyncService({
   Object? sendError,
   void Function()? onSend,
 }) => DeviceLocationSyncService(
+  scope: testScope,
   stateRepository:
       stateRepository ??
       InMemoryDeviceLocationSyncStateRepository(
         availability: availability,
+        lastSentScope: lastSent == null ? null : testScope,
         lastSent: lastSent,
       ),
   resolvePayload: ({required latitude, required longitude}) async {
@@ -358,7 +360,9 @@ class ThrowingDeviceLocationSyncStateRepository
       Future.error(StateError('state storage unavailable'));
 
   @override
-  Future<DeviceLocationPayload?> readLastSent() => throw UnimplementedError();
+  Future<DeviceLocationPayload?> readLastSent({
+    required DeviceLocationSyncScope scope,
+  }) => throw UnimplementedError();
 
   @override
   Future<void> writeAvailability(
@@ -366,9 +370,16 @@ class ThrowingDeviceLocationSyncStateRepository
   ) => throw UnimplementedError();
 
   @override
-  Future<void> writeLastSent(DeviceLocationPayload payload) =>
-      throw UnimplementedError();
+  Future<void> writeLastSent({
+    required DeviceLocationSyncScope scope,
+    required DeviceLocationPayload payload,
+  }) => throw UnimplementedError();
 }
+
+const testScope = DeviceLocationSyncScope(
+  apiEndpoint: 'https://api.example.com/v2/device/me/location',
+  registrationGeneration: 'test-registration',
+);
 
 class RecordingBackgroundLocationBridge
     implements HeadlessBackgroundLocationBridge {
