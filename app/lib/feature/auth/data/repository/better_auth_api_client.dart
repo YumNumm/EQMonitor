@@ -56,6 +56,7 @@ final class BetterAuthApiClient {
     required String provider,
     required String idToken,
     String? nonce,
+    Map<String, dynamic>? user,
   }) {
     final sessionGeneration = _sessionRepository.generation;
     return captureAuthRequest(() async {
@@ -66,6 +67,7 @@ final class BetterAuthApiClient {
           'idToken': <String, dynamic>{
             'token': idToken,
             if (nonce != null && nonce.isNotEmpty) 'nonce': nonce,
+            if (user != null && user.isNotEmpty) 'user': user,
           },
         },
       );

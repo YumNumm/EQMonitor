@@ -1,4 +1,7 @@
 enum AuthFailureKind {
+  cancelled,
+  configuration,
+  environmentMismatch,
   unauthorized,
   rateLimited,
   server,
