@@ -4,6 +4,7 @@
     "status": "NORMAL",
     "earthquake_type": "NORMAL",
     "origin_time_precision": "SECOND",
+    "hypocenters": [],
     "intensity": {
       "max_intensity": "5+",
       "intensity_tree": [

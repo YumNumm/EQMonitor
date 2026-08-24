@@ -55,9 +55,9 @@ final class _FakeDeviceLocationApiAdapter implements HttpClientAdapter {
       putDeviceLocationCalls.add(request);
       return _jsonResponse(
         jsonEncode({
-          'region_id': request.regionId,
-          'city_code': request.cityCode,
-          'tsunami_forecast_region_code': null,
+          'region': request.region,
+          'city': request.city,
+          'tsunamiForecastRegion': null,
         }),
       );
     }
@@ -507,7 +507,7 @@ void main() {
 
       expect(result, isTrue);
       expect(adapter.putDeviceLocationCalls, hasLength(1));
-      expect(adapter.putDeviceLocationCalls.single.regionId, '9012');
+      expect(adapter.putDeviceLocationCalls.single.region, '9012');
     });
 
     test('現在地スロットの regionCode が同一なら false を返す', () async {

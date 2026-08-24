@@ -20,9 +20,9 @@ void main() {
   });
 
   group('CityMaxIntensityResponse.toAppModel', () {
-    test('response_at と items を変換して返す', () {
+    test('aggregated_at と items を変換して返す', () {
       final apiResponse = api.CityMaxIntensityResponse(
-        responseAt: DateTime.utc(2026, 8, 19, 12),
+        aggregatedAt: DateTime.utc(2026, 8, 19, 12),
         items: const [
           api.CityMaxIntensityItem(
             cityId: '0110000',
@@ -45,9 +45,9 @@ void main() {
       expect(result.items[1].intensity, JmaIntensity.three);
     });
 
-    test('response_at が null でも items を返す', () {
+    test('aggregated_at が null でも items を返す', () {
       const apiResponse = api.CityMaxIntensityResponse(
-        responseAt: null,
+        aggregatedAt: null,
         items: [
           api.CityMaxIntensityItem(
             cityId: '0110000',

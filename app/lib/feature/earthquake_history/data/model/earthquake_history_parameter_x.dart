@@ -9,13 +9,12 @@ extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
   /// 共通フィルタ(magnitude/depth/originTime/lpgm/statuses/earthquakeType/
   /// epicenterCodes/datasource/telegramTypes/latlng)は現パラメータから引き継ぐ。
   /// [intensityGte]/[intensityLte] は [result] の値で上書き。
-  /// [sortBy] は地域系 API が eventId ソートのみ対応するため [EarthquakeSortBy.eventId] に強制。
-  /// [sortOrder] は現値を維持。
+  /// [sortBy]/[sortOrder] は現値を維持。
   EarthquakeHistoryParameter withRegion(RegionIntensityResult result) {
     switch (result.searchType) {
       case RegionSearchType.prefecture:
         return EarthquakeHistoryParameterPrefecture(
-          sortBy: EarthquakeSortBy.eventId,
+          sortBy: sortBy,
           sortOrder: sortOrder,
           prefectureCode: result.code,
           intensityGte: result.intensityGte,
@@ -40,7 +39,7 @@ extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
         );
       case RegionSearchType.region:
         return EarthquakeHistoryParameterRegion(
-          sortBy: EarthquakeSortBy.eventId,
+          sortBy: sortBy,
           sortOrder: sortOrder,
           regionCode: result.code,
           intensityGte: result.intensityGte,
@@ -65,7 +64,7 @@ extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
         );
       case RegionSearchType.city:
         return EarthquakeHistoryParameterCity(
-          sortBy: EarthquakeSortBy.eventId,
+          sortBy: sortBy,
           sortOrder: sortOrder,
           cityCode: result.code,
           intensityGte: result.intensityGte,
@@ -90,7 +89,7 @@ extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
         );
       case RegionSearchType.station:
         return EarthquakeHistoryParameterStation(
-          sortBy: EarthquakeSortBy.eventId,
+          sortBy: sortBy,
           sortOrder: sortOrder,
           stationCode: result.code,
           intensityGte: result.intensityGte,
@@ -119,9 +118,12 @@ extension EarthquakeHistoryParameterX on EarthquakeHistoryParameter {
   /// 地域指定を外して [EarthquakeHistoryParameterAll] に戻す。
   ///
   /// 共通フィルタはすべて引き継ぐ。[intensityGte]/[intensityLte] も引き継ぐ。
+  /// 地域専用の並び替えは全国 API で利用できないため eventId に戻す。
   EarthquakeHistoryParameterAll toAll() {
     return EarthquakeHistoryParameterAll(
-      sortBy: sortBy,
+      sortBy: sortBy == EarthquakeSortBy.regionalIntensity
+          ? EarthquakeSortBy.eventId
+          : sortBy,
       sortOrder: sortOrder,
       magnitudeGte: magnitudeGte,
       magnitudeLte: magnitudeLte,

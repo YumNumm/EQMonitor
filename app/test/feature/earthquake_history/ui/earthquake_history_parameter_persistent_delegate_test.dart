@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/telegram_type_filter_chip.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart';
@@ -6,6 +7,7 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,6 +34,10 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(AsyncData(preferences)),
+          regionNameProvider(
+            RegionSearchType.region,
+            '010100',
+          ).overrideWith((ref) async => '道央'),
         ],
         child: MaterialApp(
           theme: ThemeData.light().copyWith(
@@ -91,5 +97,39 @@ void main() {
 
     expect(find.text('選択地域の観測震度'), findsOneWidget);
     expect(find.text('最大観測震度'), findsNothing);
+  });
+
+  testWidgets('全国一覧の並び替えは地域観測震度を表示しない', (tester) async {
+    await pumpDelegate(tester, isDebugEnabled: false);
+
+    await tester.tap(find.byType(SortFilterChip));
+    await tester.pumpAndSettle();
+
+    expect(find.text('地震の最大震度'), findsOneWidget);
+    expect(find.text('選択地域の観測震度'), findsNothing);
+  });
+
+  testWidgets('地域一覧の並び替えは地震の最大震度と地域観測震度を分ける', (tester) async {
+    await pumpDelegate(
+      tester,
+      isDebugEnabled: false,
+      parameter: const EarthquakeHistoryParameter.region(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+        regionCode: '010100',
+      ),
+    );
+
+    await tester.tap(find.byType(SortFilterChip));
+    await tester.pumpAndSettle();
+
+    expect(find.text('地震の最大震度'), findsOneWidget);
+    expect(
+      find.widgetWithText(
+        RadioListTile<EarthquakeSortBy>,
+        '選択地域の観測震度',
+      ),
+      findsOneWidget,
+    );
   });
 }

@@ -26,6 +26,16 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'origin_time_precision',
         (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
       ),
+      hypocenters: $checkedConvert(
+        'hypocenters',
+        (v) => (v as List<dynamic>)
+            .map(
+              (e) => EarthquakeHypocentersUnion.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
+            .toList(),
+      ),
       datasources: $checkedConvert(
         'datasources',
         (v) => (v as List<dynamic>)
@@ -82,6 +92,7 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'status': instance.status,
       'earthquake_type': instance.earthquakeType,
       'origin_time_precision': instance.originTimePrecision,
+      'hypocenters': instance.hypocenters,
       'datasources': instance.datasources,
       'telegrams': instance.telegrams,
       'origin_time': ?instance.originTime?.toIso8601String(),

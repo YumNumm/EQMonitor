@@ -85,7 +85,7 @@ class _FilterChipBar extends ConsumerWidget {
         chip: SortFilterChip(
           sortBy: parameter.sortBy,
           sortOrder: parameter.sortOrder,
-          sortByLocked: isRegionFiltered,
+          regionalIntensityEnabled: isRegionFiltered,
           onChanged: (sortBy, sortOrder) => onChanged(
             parameter.copyWith(sortBy: sortBy, sortOrder: sortOrder),
           ),

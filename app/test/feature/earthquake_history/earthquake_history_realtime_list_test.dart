@@ -624,6 +624,7 @@ api.Earthquake _earthquake({
   earthquakeType: earthquakeType,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  hypocenters: const [],
   telegrams: const [],
   intensity: intensity,
   hypocenter: epicenterCode == null

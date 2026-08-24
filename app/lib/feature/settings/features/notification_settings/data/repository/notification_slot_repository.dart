@@ -150,8 +150,8 @@ class NotificationSlotRepository {
   }) async {
     await _api.device.putV2DeviceMeLocation(
       body: api.DeviceLocationRequest(
-        regionId: regionId.toString(),
-        cityCode: cityCode,
+        region: regionId.toString(),
+        city: cityCode,
       ),
     );
   }

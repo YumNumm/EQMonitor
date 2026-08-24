@@ -1970,6 +1970,7 @@ api.Earthquake earthquakeRecord({
   originTime: _reportedAt,
   arrivalTime: _reportedAt,
   originTimePrecision: api.OriginTimePrecision.second,
+  hypocenters: const [],
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
   telegrams:
       (metadata ??
