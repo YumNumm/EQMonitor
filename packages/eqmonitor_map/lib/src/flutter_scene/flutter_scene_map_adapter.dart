@@ -9,7 +9,6 @@ import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.da
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_gpu_resource_ledger.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
-import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:flutter_scene/gpu.dart' as scene_gpu;
 import 'package:flutter_scene/scene.dart' as scene;
@@ -341,53 +340,73 @@ scene.StaticInstanceGeometry createFlutterSceneObservationGeometry({
   );
 }
 
-enum FlutterSceneMeshBatchKind { baseMap, earthquakeAreaFill }
-
 /// GPU呼び出し前に確定するScene mesh nodeのplan。
 final class FlutterSceneMeshBatchPlan {
   const new({
     required this.batch,
     required this.kind,
-    required this.translucentSortPriority,
   });
 
   final MapRenderBatch batch;
-  final FlutterSceneMeshBatchKind kind;
-  final int translucentSortPriority;
+  final MapSceneMeshLayerKind kind;
 }
 
 /// frame submissionをcanonicalなmesh batch planへ変換する。
 List<FlutterSceneMeshBatchPlan> buildFlutterSceneMeshBatchPlans({
   required MapSceneFrameSubmission submission,
 }) {
-  validateMapSceneFrameSubmission(submission: submission);
-  final observation = submission.observationBatch;
-  if (observation != null && observation is! ObservationPointBatch) {
-    throw ArgumentError.value(
-      observation,
-      'observationBatch',
-      'must be an ObservationPointBatch',
-    );
+  final plans = <FlutterSceneMeshBatchPlan>[];
+  for (final layer in submission.layers) {
+    switch (layer) {
+      case MapSceneMeshLayerSubmission(:final batch, :final kind):
+        plans.add(FlutterSceneMeshBatchPlan(batch: batch, kind: kind));
+      case MapSceneInstanceLayerSubmission(
+        kind: MapSceneInstanceLayerKind.observationPoint,
+        :final batch,
+      ):
+        if (batch is! ObservationPointBatch) {
+          throw ArgumentError.value(
+            batch,
+            'layer',
+            'observationPoint must contain an ObservationPointBatch',
+          );
+        }
+      case MapSceneInstanceLayerSubmission(
+        kind: MapSceneInstanceLayerKind.pointSprite,
+      ):
+        throw UnsupportedError('pointSprite batch is not implemented');
+    }
   }
+  return List.unmodifiable(plans);
+}
 
-  return List.unmodifiable([
-    for (final batch in submission.baseMap.batches)
-      FlutterSceneMeshBatchPlan(
-        batch: batch,
-        kind: FlutterSceneMeshBatchKind.baseMap,
-        translucentSortPriority: mapSceneTranslucentSortPriorityFor(
-          phase: batch.compatibility.phase,
-        ),
-      ),
-    for (final batch in submission.earthquakeFill.batches)
-      FlutterSceneMeshBatchPlan(
-        batch: batch,
-        kind: FlutterSceneMeshBatchKind.earthquakeAreaFill,
-        translucentSortPriority: mapSceneTranslucentSortPriorityFor(
-          phase: batch.compatibility.phase,
-        ),
-      ),
-  ]);
+ObservationPointBatch? observationPointBatchFrom({
+  required MapSceneFrameSubmission submission,
+}) {
+  ObservationPointBatch? observation;
+  for (final layer in submission.layers) {
+    switch (layer) {
+      case MapSceneMeshLayerSubmission():
+        continue;
+      case MapSceneInstanceLayerSubmission(
+        kind: MapSceneInstanceLayerKind.observationPoint,
+        :final batch,
+      ):
+        if (batch is! ObservationPointBatch) {
+          throw ArgumentError.value(
+            batch,
+            'layer',
+            'observationPoint must contain an ObservationPointBatch',
+          );
+        }
+        observation = batch;
+      case MapSceneInstanceLayerSubmission(
+        kind: MapSceneInstanceLayerKind.pointSprite,
+      ):
+        throw UnsupportedError('pointSprite batch is not implemented');
+    }
+  }
+  return observation;
 }
 
 /// base mapとoverlayを1つのFlutter Sceneへ送る唯一のowner。
@@ -448,15 +467,7 @@ final class FlutterSceneMapAdapter {
       plans: plans,
       materialFor: _materialFor,
     );
-    final observation = switch (submission.observationBatch) {
-      final ObservationPointBatch batch => batch,
-      null => null,
-      final other => throw ArgumentError.value(
-        other,
-        'observationBatch',
-        'must be an ObservationPointBatch',
-      ),
-    };
+    final observation = observationPointBatchFrom(submission: submission);
     final observationMaterial = switch (observation) {
       null => null,
       _ =>
@@ -482,6 +493,7 @@ final class FlutterSceneMapAdapter {
     );
 
     final nodes = <scene.Node>[];
+    var drawRank = 0;
     for (final entry in resolved) {
       applyFlutterSceneMeshBatchMaterial(
         plan: entry.plan,
@@ -494,10 +506,9 @@ final class FlutterSceneMapAdapter {
           ),
           mesh: scene.Mesh(_geometryFor(packet.mesh), entry.material.material),
         );
-        applyFlutterSceneTranslucentSortPriority(
+        applyFlutterSceneDrawRank(
           node: node,
-          phase: entry.plan.batch.compatibility.phase,
-          priority: entry.plan.translucentSortPriority,
+          drawRank: drawRank++,
         );
         nodes.add(node);
       }
@@ -512,10 +523,9 @@ final class FlutterSceneMapAdapter {
       final node = scene.Node(
         mesh: scene.Mesh(geometry, observationMaterial.material),
       );
-      applyFlutterSceneTranslucentSortPriority(
+      applyFlutterSceneDrawRank(
         node: node,
-        phase: observation.phase,
-        priority: observation.translucentSortPriority,
+        drawRank: drawRank,
       );
       nodes.add(node);
     }
@@ -571,7 +581,7 @@ void preflightFlutterSceneMeshBatchPlans({
     final compatibility = plan.batch.compatibility;
     final parameters = compatibility.materialParameters;
     switch (plan.kind) {
-      case FlutterSceneMeshBatchKind.baseMap:
+      case MapSceneMeshLayerKind.baseMap:
         if (parameters.version != baseMapMaterialParameterVersion) {
           throw ArgumentError.value(
             parameters.version,
@@ -592,7 +602,7 @@ void preflightFlutterSceneMeshBatchPlans({
           'pipeline',
           'is not a supported base map pipeline',
         );
-      case FlutterSceneMeshBatchKind.earthquakeAreaFill:
+      case MapSceneMeshLayerKind.earthquakeAreaFill:
         if (compatibility.pipeline != earthquakeAreaFillPipelineKey ||
             parameters.version != earthquakeAreaMaterialParameterVersion) {
           throw ArgumentError.value(
@@ -606,17 +616,15 @@ void preflightFlutterSceneMeshBatchPlans({
   }
 }
 
-/// 共有phase policyとの一致を検証してから実Nodeへpriorityを設定する。
-void applyFlutterSceneTranslucentSortPriority({
+/// canonical node planで確定した0始まりのdraw rankをNodeへ設定する。
+void applyFlutterSceneDrawRank({
   required scene.Node node,
-  required int phase,
-  required int priority,
+  required int drawRank,
 }) {
-  validateMapSceneTranslucentSortPriority(
-    phase: phase,
-    priority: priority,
-  );
-  node.translucentSortPriority = priority;
+  if (drawRank < 0) {
+    throw ArgumentError.value(drawRank, 'drawRank', 'must not be negative');
+  }
+  node.translucentSortPriority = drawRank;
 }
 
 typedef FlutterSceneResolvedMeshBatch = ({
@@ -682,13 +690,13 @@ void applyFlutterSceneMeshBatchMaterial({
 }) {
   final compatibility = plan.batch.compatibility;
   switch (plan.kind) {
-    case FlutterSceneMeshBatchKind.baseMap:
+    case MapSceneMeshLayerKind.baseMap:
       applyBaseMapMaterialParameters(
         parameters: parameters,
         pipelineKey: compatibility.pipeline.key,
         bytes: compatibility.materialParameters.bytes,
       );
-    case FlutterSceneMeshBatchKind.earthquakeAreaFill:
+    case MapSceneMeshLayerKind.earthquakeAreaFill:
       final values = decodeEarthquakeAreaFillMaterialBytes(
         compatibility.materialParameters.bytes,
       );

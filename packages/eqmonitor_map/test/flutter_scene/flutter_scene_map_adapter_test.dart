@@ -28,25 +28,25 @@ import 'package:flutter_scene/scene.dart' as scene;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 
-final class _ObservationBatch implements MapSceneObservationBatch {
-  const _ObservationBatch({
+final class _TestInstanceBatch implements MapSceneInstanceBatch {
+  const _TestInstanceBatch({
     required this.frame,
+    required this.batchKey,
     required this.phasePolicyVersion,
     required this.phase,
-    required this.translucentSortPriority,
   });
 
   @override
   final MapFrameSnapshot frame;
 
   @override
+  final MapSceneBatchKey batchKey;
+
+  @override
   final int phasePolicyVersion;
 
   @override
   final int phase;
-
-  @override
-  final int translucentSortPriority;
 }
 
 final class _RecordingSceneGraph with scene.SceneGraph {
@@ -240,6 +240,56 @@ void main() {
   MapRenderSubmission emptySubmission() =>
       createMapRenderSubmission(frame: frame, batches: const []);
 
+  MapOverlayVersionStamp stampOf(int sequence) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: 'event-1'),
+    sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-1'),
+    dataSequence: sequence,
+    dataDigest: 'data-$sequence',
+    renderGeneration: sequence,
+    renderDigest: 'render-$sequence',
+  );
+
+  MapSceneMeshLayerSubmission meshLayer({
+    required MapSceneComponentKey componentKey,
+    required MapRenderSubmission submission,
+    MapOverlayVersionStamp? overlayVersion,
+    MapSceneLogicalSourceKey? logicalSourceKey,
+    int orderWithinPhase = 0,
+  }) => MapSceneMeshLayerSubmission(
+    frame: submission.frame,
+    logicalSourceKey: logicalSourceKey ?? mapSceneEarthquakeHistorySourceKey,
+    componentKey: componentKey,
+    overlayVersion: overlayVersion,
+    orderWithinPhase: orderWithinPhase,
+    batch: submission.batches.single,
+    kind: componentKey == mapSceneBaseComponentKey
+        ? MapSceneMeshLayerKind.baseMap
+        : MapSceneMeshLayerKind.earthquakeAreaFill,
+  );
+
+  MapSceneInstanceLayerSubmission instanceLayer({
+    required MapFrameSnapshot layerFrame,
+    required MapSceneComponentKey componentKey,
+    required MapSceneBatchKey batchKey,
+    required MapOverlayVersionStamp overlayVersion,
+    required MapSceneInstanceLayerKind kind,
+    required int phase,
+    int phasePolicyVersion = 3,
+    int orderWithinPhase = 0,
+  }) => MapSceneInstanceLayerSubmission(
+    logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+    componentKey: componentKey,
+    overlayVersion: overlayVersion,
+    orderWithinPhase: orderWithinPhase,
+    kind: kind,
+    batch: _TestInstanceBatch(
+      frame: layerFrame,
+      batchKey: batchKey,
+      phasePolicyVersion: phasePolicyVersion,
+      phase: phase,
+    ),
+  );
+
   final observationClock = SystemMapClock.start(
     domain: createMapClockDomainId(value: 'observation-adapter-test'),
   );
@@ -299,51 +349,357 @@ void main() {
     required MapFrameSnapshot frame,
     required ObservationPointBatch? batch,
   }) => MapSceneFrameSubmission(
-    baseMap: createMapRenderSubmission(frame: frame, batches: const []),
-    earthquakeFill: createMapRenderSubmission(
-      frame: frame,
-      batches: const [],
-    ),
-    observationBatch: batch,
+    frame: frame,
+    layers: [
+      if (batch != null)
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneObservationPointComponentKey,
+          overlayVersion: batch.versionStamp,
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.observationPoint,
+          batch: batch,
+        ),
+    ],
+    limits: MapSceneFrameLimits(maxNodeCount: 1),
   );
 
-  test('builds one canonical base then region plan with phase priorities', () {
-    final value = MapSceneFrameSubmission(
+  MapSceneFrameSubmission sceneSubmission({
+    MapRenderSubmission? baseMap,
+    MapRenderSubmission? earthquakeFill,
+    MapSceneComponentKey? earthquakeComponent,
+  }) {
+    final base = baseMap ?? emptySubmission();
+    final earthquake = earthquakeFill ?? emptySubmission();
+    return MapSceneFrameSubmission(
+      frame: frame,
+      layers: [
+        for (final batch in base.batches)
+          MapSceneMeshLayerSubmission(
+            frame: frame,
+            logicalSourceKey: mapSceneBaseSourceKey,
+            componentKey: mapSceneBaseComponentKey,
+            overlayVersion: null,
+            orderWithinPhase:
+                batch.packets.first.sortKey.declarationOrderWithinPhase,
+            batch: batch,
+            kind: MapSceneMeshLayerKind.baseMap,
+          ),
+        for (final batch in earthquake.batches)
+          MapSceneMeshLayerSubmission(
+            frame: frame,
+            logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+            componentKey: earthquakeComponent ?? mapSceneRegionFillComponentKey,
+            overlayVersion: stampOf(1),
+            orderWithinPhase:
+                batch.packets.first.sortKey.declarationOrderWithinPhase,
+            batch: batch,
+            kind: MapSceneMeshLayerKind.earthquakeAreaFill,
+          ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 64),
+    );
+  }
+
+  group('typed Scene layer submission', () {
+    final stamp1 = observationSnapshot(dataSequence: 1).versionStamp;
+    final stamp2 = observationSnapshot(dataSequence: 2).versionStamp;
+
+    test('rejects blank logical source, component, and batch keys', () {
+      expect(
+        () => createMapSceneLogicalSourceKey(value: ' '),
+        throwsArgumentError,
+      );
+      expect(() => createMapSceneComponentKey(value: ''), throwsArgumentError);
+      expect(() => createMapSceneBatchKey(value: '\n'), throwsArgumentError);
+    });
+
+    test('owns an immutable canonical layer list', () {
+      final layers = <MapSceneLayerSubmission>[
+        instanceLayer(
+          layerFrame: frame,
+          componentKey: mapSceneHypocenterSpriteComponentKey,
+          batchKey: createMapSceneBatchKey(value: 'sprite'),
+          overlayVersion: stamp1,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          phase: 350,
+        ),
+        meshLayer(
+          componentKey: mapSceneBaseComponentKey,
+          submission: baseSubmission(),
+          logicalSourceKey: mapSceneBaseSourceKey,
+        ),
+        instanceLayer(
+          layerFrame: frame,
+          componentKey: mapSceneObservationPointComponentKey,
+          batchKey: createMapSceneBatchKey(value: 'observation'),
+          overlayVersion: stamp1,
+          kind: MapSceneInstanceLayerKind.observationPoint,
+          phase: 300,
+        ),
+      ];
+
+      final value = MapSceneFrameSubmission(
+        frame: frame,
+        layers: layers,
+        limits: MapSceneFrameLimits(maxNodeCount: 3),
+      );
+      layers.clear();
+
+      expect(value.layers.map((layer) => layer.phase), [0, 300, 350]);
+      expect(value.layers.clear, throwsUnsupportedError);
+    });
+
+    test('rejects frame mismatch and negative order', () {
+      final otherFrame = observationFrameAt(frameNumber: 99);
+      expect(
+        () => MapSceneFrameSubmission(
+          frame: otherFrame,
+          layers: [
+            meshLayer(
+              componentKey: mapSceneBaseComponentKey,
+              submission: baseSubmission(),
+              logicalSourceKey: mapSceneBaseSourceKey,
+            ),
+          ],
+          limits: MapSceneFrameLimits(maxNodeCount: 1),
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => meshLayer(
+          componentKey: mapSceneBaseComponentKey,
+          submission: baseSubmission(),
+          logicalSourceKey: mapSceneBaseSourceKey,
+          orderWithinPhase: -1,
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    test('rejects mixed overlay stamps and duplicate identity tuples', () {
+      final observation = instanceLayer(
+        layerFrame: frame,
+        componentKey: mapSceneObservationPointComponentKey,
+        batchKey: createMapSceneBatchKey(value: 'observation'),
+        overlayVersion: stamp1,
+        kind: MapSceneInstanceLayerKind.observationPoint,
+        phase: 300,
+      );
+      final sprite = instanceLayer(
+        layerFrame: frame,
+        componentKey: mapSceneHypocenterSpriteComponentKey,
+        batchKey: createMapSceneBatchKey(value: 'sprite'),
+        overlayVersion: stamp2,
+        kind: MapSceneInstanceLayerKind.pointSprite,
+        phase: 350,
+      );
+      expect(
+        () => MapSceneFrameSubmission(
+          frame: frame,
+          layers: [observation, sprite],
+          limits: MapSceneFrameLimits(maxNodeCount: 2),
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => MapSceneFrameSubmission(
+          frame: frame,
+          layers: [observation, observation],
+          limits: MapSceneFrameLimits(maxNodeCount: 2),
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    test('allows distinct batch keys for one component', () {
+      final layers = [
+        for (final key in ['policy-a', 'policy-b'])
+          instanceLayer(
+            layerFrame: frame,
+            componentKey: mapSceneHypocenterSpriteComponentKey,
+            batchKey: createMapSceneBatchKey(value: key),
+            overlayVersion: stamp1,
+            kind: MapSceneInstanceLayerKind.pointSprite,
+            phase: 350,
+          ),
+      ];
+
+      expect(
+        MapSceneFrameSubmission(
+          frame: frame,
+          layers: layers,
+          limits: MapSceneFrameLimits(maxNodeCount: 2),
+        ).layers,
+        hasLength(2),
+      );
+    });
+
+    test(
+      'compares phase, order, logical source, component, then batch key',
+      () {
+        MapSceneInstanceLayerSubmission layer({
+          required String source,
+          required String component,
+          required String batch,
+          required int phase,
+          required int order,
+        }) => MapSceneInstanceLayerSubmission(
+          logicalSourceKey: createMapSceneLogicalSourceKey(value: source),
+          componentKey: createMapSceneComponentKey(value: component),
+          overlayVersion: stamp1,
+          orderWithinPhase: order,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          batch: _TestInstanceBatch(
+            frame: frame,
+            batchKey: createMapSceneBatchKey(value: batch),
+            phasePolicyVersion: 3,
+            phase: phase,
+          ),
+        );
+        final values = [
+          layer(source: 'b', component: 'a', batch: 'a', phase: 350, order: 0),
+          layer(source: 'a', component: 'b', batch: 'a', phase: 350, order: 0),
+          layer(source: 'a', component: 'a', batch: 'b', phase: 350, order: 0),
+          layer(source: 'a', component: 'a', batch: 'a', phase: 350, order: 1),
+          layer(source: 'a', component: 'a', batch: 'a', phase: 300, order: 9),
+          layer(source: 'a', component: 'a', batch: 'a', phase: 350, order: 0),
+        ]..sort(compareMapSceneLayerSubmissions);
+
+        expect(
+          values.map(
+            (value) => (
+              value.phase,
+              value.orderWithinPhase,
+              value.logicalSourceKey.value,
+              value.componentKey.value,
+              value.batchKey.value,
+            ),
+          ),
+          [
+            (300, 9, 'a', 'a', 'a'),
+            (350, 0, 'a', 'a', 'a'),
+            (350, 0, 'a', 'a', 'b'),
+            (350, 0, 'a', 'b', 'a'),
+            (350, 0, 'b', 'a', 'a'),
+            (350, 1, 'a', 'a', 'a'),
+          ],
+        );
+      },
+    );
+
+    test(
+      'rejects region and city together, phase mismatch, and node overflow',
+      () {
+        final region = meshLayer(
+          componentKey: mapSceneRegionFillComponentKey,
+          submission: regionSubmission(),
+          overlayVersion: stamp1,
+        );
+        final city = meshLayer(
+          componentKey: mapSceneCityFillComponentKey,
+          submission: citySubmission(),
+          overlayVersion: stamp1,
+        );
+        expect(
+          () => MapSceneFrameSubmission(
+            frame: frame,
+            layers: [region, city],
+            limits: MapSceneFrameLimits(maxNodeCount: 2),
+          ),
+          throwsArgumentError,
+        );
+        expect(
+          () => MapSceneFrameSubmission(
+            frame: frame,
+            layers: [
+              instanceLayer(
+                layerFrame: frame,
+                componentKey: mapSceneObservationPointComponentKey,
+                batchKey: createMapSceneBatchKey(value: 'wrong-phase'),
+                overlayVersion: stamp1,
+                kind: MapSceneInstanceLayerKind.observationPoint,
+                phase: 350,
+              ),
+            ],
+            limits: MapSceneFrameLimits(maxNodeCount: 1),
+          ),
+          throwsArgumentError,
+        );
+        expect(
+          () => MapSceneFrameSubmission(
+            frame: frame,
+            layers: [
+              instanceLayer(
+                layerFrame: frame,
+                componentKey: mapSceneObservationPointComponentKey,
+                batchKey: createMapSceneBatchKey(value: 'wrong-policy'),
+                overlayVersion: stamp1,
+                kind: MapSceneInstanceLayerKind.observationPoint,
+                phase: 300,
+                phasePolicyVersion: 2,
+              ),
+            ],
+            limits: MapSceneFrameLimits(maxNodeCount: 1),
+          ),
+          throwsArgumentError,
+        );
+        expect(
+          () => MapSceneFrameSubmission(
+            frame: frame,
+            layers: [
+              meshLayer(
+                componentKey: mapSceneBaseComponentKey,
+                submission: baseSubmission(),
+                logicalSourceKey: mapSceneBaseSourceKey,
+              ),
+              region,
+            ],
+            limits: MapSceneFrameLimits(maxNodeCount: 1),
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test('allows a base-only submission', () {
+      final value = MapSceneFrameSubmission(
+        frame: frame,
+        layers: [
+          meshLayer(
+            componentKey: mapSceneBaseComponentKey,
+            submission: baseSubmission(),
+            logicalSourceKey: mapSceneBaseSourceKey,
+          ),
+        ],
+        limits: MapSceneFrameLimits(maxNodeCount: 1),
+      );
+
+      expect(value.layers.single.componentKey, mapSceneBaseComponentKey);
+    });
+  });
+
+  test('builds one canonical base then region mesh plan', () {
+    final value = sceneSubmission(
       baseMap: baseSubmission(),
       earthquakeFill: regionSubmission(),
-      observationBatch: null,
     );
 
     final plans = buildFlutterSceneMeshBatchPlans(submission: value);
 
     expect(plans.map((plan) => plan.batch.compatibility.phase), [0, 100]);
-    expect(plans.map((plan) => plan.translucentSortPriority), [0, 100]);
   });
 
-  test('assigns city Fill to the overlay hazard phase', () {
-    final value = MapSceneFrameSubmission(
+  test('assigns city Fill to the overlay hazard mesh plan', () {
+    final value = sceneSubmission(
       baseMap: baseSubmission(),
       earthquakeFill: citySubmission(),
-      observationBatch: null,
+      earthquakeComponent: mapSceneCityFillComponentKey,
     );
 
     final plans = buildFlutterSceneMeshBatchPlans(submission: value);
 
-    expect(plans.last.translucentSortPriority, 100);
-  });
-
-  test('writes the phase priority to an actual Flutter Scene node', () {
-    final node = scene.Node();
-
-    applyFlutterSceneTranslucentSortPriority(
-      node: node,
-      phase: mapSceneRenderPhasePolicy.rankOf(
-        mapSceneOverlayHazardFillPhaseId,
-      ),
-      priority: 100,
-    );
-
-    expect(node.translucentSortPriority, 100);
+    expect(plans.last.batch.compatibility.phase, 100);
   });
 
   test('rejects a phase not permitted for the base submission', () {
@@ -374,41 +730,24 @@ void main() {
     );
 
     expect(
-      () => MapSceneFrameSubmission(
-        baseMap: invalidBase,
-        earthquakeFill: emptySubmission(),
-        observationBatch: null,
-      ),
+      () => sceneSubmission(baseMap: invalidBase),
       throwsArgumentError,
     );
   });
 
-  test('rejects an unknown earthquake material before node creation', () {
-    expect(
-      () => MapSceneFrameSubmission(
-        baseMap: baseSubmission(),
-        earthquakeFill: regionSubmission(materialKey: 'unknown'),
-        observationBatch: null,
+  test('rejects an unknown earthquake pipeline before node creation', () {
+    final unknown = submission(
+      policy: mapSceneRenderPhasePolicy,
+      phase: mapSceneRenderPhasePolicy.rankOf(
+        mapSceneOverlayHazardFillPhaseId,
       ),
-      throwsArgumentError,
+      materialKey: earthquakeAreaFillMaterialKey,
+      pipelineKey: 'unknown-earthquake-pipeline',
     );
-  });
-
-  test('rejects an observation batch whose priority disagrees with phase', () {
-    final observationPhase = mapSceneRenderPhasePolicy.rankOf(
-      mapSceneLivePointPhaseId,
-    );
-
     expect(
-      () => MapSceneFrameSubmission(
+      () => sceneSubmission(
         baseMap: baseSubmission(),
-        earthquakeFill: emptySubmission(),
-        observationBatch: _ObservationBatch(
-          frame: frame,
-          phasePolicyVersion: mapSceneRenderPhasePolicy.version,
-          phase: observationPhase,
-          translucentSortPriority: 999,
-        ),
+        earthquakeFill: unknown,
       ),
       throwsArgumentError,
     );
@@ -419,14 +758,23 @@ void main() {
       mapSceneLivePointPhaseId,
     );
     final value = MapSceneFrameSubmission(
-      baseMap: baseSubmission(),
-      earthquakeFill: emptySubmission(),
-      observationBatch: _ObservationBatch(
-        frame: frame,
-        phasePolicyVersion: mapSceneRenderPhasePolicy.version,
-        phase: observationPhase,
-        translucentSortPriority: 300,
-      ),
+      frame: frame,
+      layers: [
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneObservationPointComponentKey,
+          overlayVersion: stampOf(1),
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.observationPoint,
+          batch: _TestInstanceBatch(
+            frame: frame,
+            batchKey: createMapSceneBatchKey(value: 'untyped-observation'),
+            phasePolicyVersion: mapSceneRenderPhasePolicy.version,
+            phase: observationPhase,
+          ),
+        ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 1),
     );
 
     expect(
@@ -446,7 +794,7 @@ void main() {
     );
   });
 
-  test('adds exactly one observation geometry and node at priority 300', () {
+  test('adds exactly one observation geometry and node at draw rank zero', () {
     final observationFrame = observationFrameAt(frameNumber: 0);
     final batch = _requireObservationPointBatch(
       buildObservationPointBatch(
@@ -471,7 +819,7 @@ void main() {
     );
 
     expect(sceneGraph.children, hasLength(1));
-    expect(sceneGraph.children.single.translucentSortPriority, 300);
+    expect(sceneGraph.children.single.translucentSortPriority, 0);
     expect(
       sceneGraph.children.single.mesh?.primitives.single.geometry,
       isA<scene.StaticInstanceGeometry>(),
@@ -969,11 +1317,6 @@ void main() {
           ).batches,
         ],
       );
-      final value = MapSceneFrameSubmission(
-        baseMap: invalidBase,
-        earthquakeFill: emptySubmission(),
-        observationBatch: null,
-      );
       final sceneGraph = _RecordingSceneGraph();
       final existingNode = scene.Node();
       sceneGraph.add(existingNode);
@@ -990,7 +1333,7 @@ void main() {
       );
 
       expect(
-        () => adapter.submitFrame(submission: value),
+        () => sceneSubmission(baseMap: invalidBase),
         throwsArgumentError,
       );
       expect(materialLookups, 0);
@@ -1042,11 +1385,7 @@ void main() {
           ).batches,
         ],
       );
-      final value = MapSceneFrameSubmission(
-        baseMap: invalidBase,
-        earthquakeFill: emptySubmission(),
-        observationBatch: null,
-      );
+      final value = sceneSubmission(baseMap: invalidBase);
       final sceneGraph = _RecordingSceneGraph();
       final existingNode = scene.Node();
       sceneGraph.add(existingNode);

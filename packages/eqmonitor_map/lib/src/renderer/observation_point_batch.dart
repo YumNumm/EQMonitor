@@ -17,7 +17,7 @@ final class ObservationPointInstanceGeneration {
 }
 
 /// 1 overlay version分の観測点instanceとframe固有uniform。
-final class ObservationPointBatch implements MapSceneObservationBatch {
+final class ObservationPointBatch implements MapSceneInstanceBatch {
   const ObservationPointBatch._({
     required this.frame,
     required this.versionStamp,
@@ -25,9 +25,9 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
     required this.instanceData,
     required this.instanceCount,
     required this.frameUniform,
+    required this.batchKey,
     required this.phasePolicyVersion,
     required this.phase,
-    required this.translucentSortPriority,
     required Object stationSnapshotIdentity,
   }) : _stationSnapshotToken = stationSnapshotIdentity;
 
@@ -40,13 +40,13 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
   final ByteData frameUniform;
 
   @override
+  final MapSceneBatchKey batchKey;
+
+  @override
   final int phasePolicyVersion;
 
   @override
   final int phase;
-
-  @override
-  final int translucentSortPriority;
 
   final Object _stationSnapshotToken;
 
@@ -74,9 +74,9 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
       frameUniform: ByteData.sublistView(
         ownedUniformBytes,
       ).asUnmodifiableView(),
+      batchKey: batchKey,
       phasePolicyVersion: phasePolicyVersion,
       phase: phase,
-      translucentSortPriority: translucentSortPriority,
       stationSnapshotIdentity: _stationSnapshotToken,
     );
   }
@@ -89,9 +89,9 @@ ObservationPointBatch createObservationPointBatch({
   required Float32List instanceData,
   required int instanceCount,
   required ByteData frameUniform,
+  required MapSceneBatchKey batchKey,
   required int phasePolicyVersion,
   required int phase,
-  required int translucentSortPriority,
   Object? stationSnapshotIdentity,
 }) {
   if (instanceCount <= 0 ||
@@ -127,9 +127,9 @@ ObservationPointBatch createObservationPointBatch({
     frameUniform: ByteData.sublistView(
       ownedUniformBytes,
     ).asUnmodifiableView(),
+    batchKey: batchKey,
     phasePolicyVersion: phasePolicyVersion,
     phase: phase,
-    translucentSortPriority: translucentSortPriority,
     stationSnapshotIdentity: stationSnapshotIdentity ?? Object(),
   );
 }

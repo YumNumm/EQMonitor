@@ -39,7 +39,7 @@ final MapRenderPhaseId mapSceneSpritePhaseId = createMapRenderPhaseId(
   value: 'sprite',
 );
 
-final MapRenderPhaseId mapSceneForegroundLabelPhaseId =
+const MapRenderPhaseId mapSceneForegroundLabelPhaseId =
     MapRenderPhaseId.labelForeground;
 
 /// package-neutralな全描画要素が共有する疎なphase policy。
@@ -61,26 +61,3 @@ final MapRenderPhasePolicy mapSceneRenderPhasePolicy =
       ],
       phaseRanks: const [0, 20, 30, 40, 100, 110, 200, 210, 300, 350, 400],
     );
-
-/// phaseごとのFlutter Scene translucent sort priority。
-int mapSceneTranslucentSortPriorityFor({required int phase}) {
-  if (mapSceneRenderPhasePolicy.containsRank(phase)) {
-    return phase;
-  }
-  throw ArgumentError.value(phase, 'phase', 'is not in the Scene policy');
-}
-
-/// [priority]が[phase]に割り当てられた値と一致することを検証する。
-void validateMapSceneTranslucentSortPriority({
-  required int phase,
-  required int priority,
-}) {
-  final expected = mapSceneTranslucentSortPriorityFor(phase: phase);
-  if (priority != expected) {
-    throw ArgumentError.value(
-      priority,
-      'priority',
-      'must be $expected for phase $phase',
-    );
-  }
-}

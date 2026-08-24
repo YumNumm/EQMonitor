@@ -112,6 +112,7 @@ final class EqmonitorMapDebugConfiguration {
     // 余裕を持たせた値。GPU resourceの参照を落とすのは、可視tileから外れて
     // この frame 数ぶん経ってからになる。
     maxFramesInFlight: 3,
+    maxSceneNodeCount: 512,
   );
 }
 

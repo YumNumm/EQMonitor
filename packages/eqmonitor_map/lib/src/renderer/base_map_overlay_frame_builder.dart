@@ -43,6 +43,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
   required BaseMapTileCache tileCache,
   required EarthquakeAreaPackedMeshResolver packedMeshFor,
   required EarthquakeAreaRenderStyleCache styleCache,
+  required MapSceneFrameLimits sceneFrameLimits,
 }) {
   if (!identical(baseMap.frame, frame)) {
     throw ArgumentError('baseMap must use the captured frame');
@@ -69,6 +70,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
       submission: buildBaseMapOnlyFrameSubmission(
         frame: frame,
         baseMap: baseMap,
+        sceneFrameLimits: sceneFrameLimits,
       ),
       coverage: const EarthquakeOverlayCoverage.hidden(),
       observationBatchForReuse: null,
@@ -111,9 +113,34 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
   return BaseMapOverlayFrameResult(
     overlay: overlay,
     submission: MapSceneFrameSubmission(
-      baseMap: baseMap,
-      earthquakeFill: earthquakeFill,
-      observationBatch: observation,
+      frame: frame,
+      layers: [
+        ...buildBaseMapSceneLayers(frame: frame, baseMap: baseMap),
+        for (final batch in earthquakeFill.batches)
+          MapSceneMeshLayerSubmission(
+            frame: frame,
+            logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+            componentKey: switch (layerMode) {
+              EarthquakeAreaLayerMode.region => mapSceneRegionFillComponentKey,
+              EarthquakeAreaLayerMode.city => mapSceneCityFillComponentKey,
+            },
+            overlayVersion: overlay.versionStamp,
+            orderWithinPhase:
+                batch.packets.first.sortKey.declarationOrderWithinPhase,
+            batch: batch,
+            kind: MapSceneMeshLayerKind.earthquakeAreaFill,
+          ),
+        if (observation != null)
+          MapSceneInstanceLayerSubmission(
+            logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+            componentKey: mapSceneObservationPointComponentKey,
+            overlayVersion: overlay.versionStamp,
+            orderWithinPhase: 0,
+            kind: MapSceneInstanceLayerKind.observationPoint,
+            batch: observation,
+          ),
+      ],
+      limits: sceneFrameLimits,
     ),
     coverage: coverage,
     observationBatchForReuse:
@@ -129,19 +156,33 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
 MapSceneFrameSubmission buildBaseMapOnlyFrameSubmission({
   required MapFrameSnapshot frame,
   required MapRenderSubmission baseMap,
+  required MapSceneFrameLimits sceneFrameLimits,
 }) {
   if (!identical(baseMap.frame, frame)) {
     throw ArgumentError('baseMap must use the captured frame');
   }
   return MapSceneFrameSubmission(
-    baseMap: baseMap,
-    earthquakeFill: createMapRenderSubmission(
-      frame: frame,
-      batches: const [],
-    ),
-    observationBatch: null,
+    frame: frame,
+    layers: buildBaseMapSceneLayers(frame: frame, baseMap: baseMap),
+    limits: sceneFrameLimits,
   );
 }
+
+List<MapSceneMeshLayerSubmission> buildBaseMapSceneLayers({
+  required MapFrameSnapshot frame,
+  required MapRenderSubmission baseMap,
+}) => List.unmodifiable([
+  for (final batch in baseMap.batches)
+    MapSceneMeshLayerSubmission(
+      frame: frame,
+      logicalSourceKey: mapSceneBaseSourceKey,
+      componentKey: mapSceneBaseComponentKey,
+      overlayVersion: null,
+      orderWithinPhase: batch.packets.first.sortKey.declarationOrderWithinPhase,
+      batch: batch,
+      kind: MapSceneMeshLayerKind.baseMap,
+    ),
+]);
 
 EarthquakeMapOverlaySnapshot? selectEarthquakeOverlaySnapshot({
   required EarthquakeMapOverlaySnapshot? current,
