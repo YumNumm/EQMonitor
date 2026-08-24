@@ -43,6 +43,21 @@ const _peekPendingLocationChannelName =
 const _acknowledgePendingLocationChannelName =
     'dev.flutter.pigeon.background_location_tracker.'
     'BackgroundLocationHostApi.acknowledgePendingLocation';
+const _acquireSyncLeaseChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.acquireDeviceLocationSyncLease';
+const _isSyncLeaseCurrentChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.isDeviceLocationSyncLeaseCurrent';
+const _releaseSyncLeaseChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.releaseDeviceLocationSyncLease';
+const _startMonitoringChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.startMonitoring';
+const _stopMonitoringChannelName =
+    'dev.flutter.pigeon.background_location_tracker.'
+    'BackgroundLocationHostApi.stopMonitoring';
 
 const _deviceLocationSyncScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://example.com/v2/device/me/location',
@@ -421,6 +436,9 @@ ProviderContainer _createShakeContainer(_FakeShakeApiAdapter adapter) {
         _FakeDeviceProvisioningNotifier.new,
       ),
       apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
+      notificationSlotsProvider.overrideWith(
+        () => _FakeNotificationSlotsNotifier(slots: const []),
+      ),
     ],
   );
 }
@@ -475,6 +493,9 @@ ProviderContainer _createNotificationSlotsSyncContainer(
         _FakeDeviceProvisioningNotifier.new,
       ),
       apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
+      shakeDetectionSettingsProvider.overrideWith(
+        () => _FakeShakeDetectionSettingsNotifier(),
+      ),
     ],
   );
 }
@@ -494,6 +515,10 @@ final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
 
 final _applyPendingLocationProvider = FutureProvider<void>((ref) async {
   await const BackgroundLocationSyncCoordinator().applyPendingLocation(ref);
+});
+
+final _ensureMonitoringProvider = FutureProvider<void>((ref) async {
+  await const BackgroundLocationSyncCoordinator().ensureMonitoring(ref);
 });
 
 final _applyPendingLocationWithCoordinatorProvider =
@@ -555,6 +580,23 @@ void recordPendingLocationAcknowledgements(List<String> events) {
   );
 }
 
+void recordMonitoringCalls(List<String> events) {
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  messenger.setMockMessageHandler(_startMonitoringChannelName, (_) async {
+    events.add('start');
+    return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([null]);
+  });
+  messenger.setMockMessageHandler(_stopMonitoringChannelName, (_) async {
+    events.add('stop');
+    return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([null]);
+  });
+  addTearDown(() {
+    messenger.setMockMessageHandler(_startMonitoringChannelName, null);
+    messenger.setMockMessageHandler(_stopMonitoringChannelName, null);
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -568,6 +610,41 @@ void main() {
   setUp(() {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMessageHandler(_acquireSyncLeaseChannelName, (
+      message,
+    ) async {
+      final arguments =
+          BackgroundLocationHostApi.pigeonChannelCodec.decodeMessage(message)
+              as List<Object?>;
+      return BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+        DeviceLocationSyncLeaseMessage(
+          leaseId: 'test-lease',
+          updateId: arguments.first as String,
+        ),
+      ]);
+    });
+    messenger.setMockMessageHandler(
+      _isSyncLeaseCurrentChannelName,
+      (_) async => BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+        true,
+      ]),
+    );
+    messenger.setMockMessageHandler(
+      _releaseSyncLeaseChannelName,
+      (_) async => BackgroundLocationHostApi.pigeonChannelCodec.encodeMessage([
+        null,
+      ]),
+    );
+  });
+
+  tearDown(() {
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMessageHandler(_acquireSyncLeaseChannelName, null);
+    messenger.setMockMessageHandler(_isSyncLeaseCurrentChannelName, null);
+    messenger.setMockMessageHandler(_releaseSyncLeaseChannelName, null);
   });
 
   group('NotificationSlotsNotifier device location sync state', () {
@@ -600,6 +677,8 @@ void main() {
     });
 
     test('作成・削除成功後に現在地スロット有無を保存する', () async {
+      final monitoringEvents = <String>[];
+      recordMonitoringCalls(monitoringEvents);
       final adapter = _FakeNotificationSlotsApiAdapter(slots: const []);
       final container = _createNotificationSlotsSyncContainer(adapter);
       addTeardownToContainer(container);
@@ -620,9 +699,12 @@ void main() {
         await state.readAvailability(),
         DeviceLocationSyncAvailability.disabled,
       );
+      expect(monitoringEvents, ['start', 'stop']);
     });
 
     test('一括置換成功後に現在地スロット有無を保存する', () async {
+      final monitoringEvents = <String>[];
+      recordMonitoringCalls(monitoringEvents);
       final adapter = _FakeNotificationSlotsApiAdapter(slots: const []);
       final container = _createNotificationSlotsSyncContainer(adapter);
       addTeardownToContainer(container);
@@ -649,6 +731,7 @@ void main() {
         await state.readAvailability(),
         DeviceLocationSyncAvailability.disabled,
       );
+      expect(monitoringEvents, ['start', 'stop']);
     });
 
     test('API失敗時は現在地スロット有無を先行変更しない', () async {
@@ -671,6 +754,35 @@ void main() {
         DeviceLocationSyncAvailability.disabled,
       );
     });
+  });
+
+  test('揺れ検知の現在地consumer追加・削除で監視をreconcileする', () async {
+    final monitoringEvents = <String>[];
+    recordMonitoringCalls(monitoringEvents);
+    final container = _createShakeContainer(_FakeShakeApiAdapter());
+    addTeardownToContainer(container);
+    await container.read(shakeDetectionSettingsProvider.future);
+    final notifier = container.read(shakeDetectionSettingsProvider.notifier);
+
+    await notifier.addCurrentLocation();
+    await notifier.removeEntry('srv-0');
+
+    expect(monitoringEvents, ['start', 'stop']);
+  });
+
+  test('起動時に両consumerがなければ残存するOS監視を停止する', () async {
+    final monitoringEvents = <String>[];
+    recordMonitoringCalls(monitoringEvents);
+    final container = _createLocationSyncContainer(
+      adapter: _FakeDeviceLocationApiAdapter(),
+      resolver: _FakeJmaRegionResolver(earthquakeResolution: null),
+      slots: const [],
+    );
+    addTeardownToContainer(container);
+
+    await container.read(_ensureMonitoringProvider.future);
+
+    expect(monitoringEvents, ['stop']);
   });
 
   // ==========================================================================

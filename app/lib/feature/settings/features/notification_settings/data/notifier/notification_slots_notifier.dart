@@ -1,4 +1,3 @@
-import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
@@ -47,7 +46,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.putCurrentLocation(
+    final currentLocationSlot = await repo.putCurrentLocation(
       eewEnabled: eewEnabled,
       eewMinIntensity: eewMinIntensity,
       eewOverrides: eewOverrides,
@@ -58,7 +57,18 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     await ref
         .read(deviceLocationSyncStateRepositoryProvider)
         .writeAvailability(DeviceLocationSyncAvailability.enabled);
-    await _startBackgroundLocationMonitoring();
+    final shakeDetectionState = await (() async {
+      try {
+        return await ref.read(shakeDetectionSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[NotificationSlots] read shake settings failed', e, st);
+        return null;
+      }
+    })();
+    await const BackgroundLocationMonitoringLifecycle().reconcile(
+      slots: [currentLocationSlot],
+      shakeDetectionState: shakeDetectionState,
+    );
     ref.invalidateSelf();
   }
 
@@ -77,22 +87,19 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
               ? DeviceLocationSyncAvailability.enabled
               : DeviceLocationSyncAvailability.disabled,
         );
-    if (hasCurrentLocation) {
-      await _startBackgroundLocationMonitoring();
-    }
+    final shakeDetectionState = await (() async {
+      try {
+        return await ref.read(shakeDetectionSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[NotificationSlots] read shake settings failed', e, st);
+        return null;
+      }
+    })();
+    await const BackgroundLocationMonitoringLifecycle().reconcile(
+      slots: replacedSlots,
+      shakeDetectionState: shakeDetectionState,
+    );
     ref.invalidateSelf();
-  }
-
-  Future<void> _startBackgroundLocationMonitoring() async {
-    try {
-      await BackgroundLocationTracker.startMonitoring();
-    } on Object catch (e, st) {
-      talker.error(
-        '[NotificationSlots] BackgroundLocationTracker.startMonitoring',
-        e,
-        st,
-      );
-    }
   }
 
   static final deleteCurrentLocationMutation = Mutation<void>();
@@ -107,9 +114,16 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     final slotsWithoutCurrentLocation = currentSlots
         .where((s) => s.slotType != NotificationSlotType.currentLocation)
         .toList();
-    final shakeDetectionState = ref.read(shakeDetectionSettingsProvider).value;
+    final shakeDetectionState = await (() async {
+      try {
+        return await ref.read(shakeDetectionSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[NotificationSlots] read shake settings failed', e, st);
+        return null;
+      }
+    })();
     const lifecycle = BackgroundLocationMonitoringLifecycle();
-    await lifecycle.stopIfUnused(
+    await lifecycle.reconcile(
       slots: slotsWithoutCurrentLocation,
       shakeDetectionState: shakeDetectionState,
     );
