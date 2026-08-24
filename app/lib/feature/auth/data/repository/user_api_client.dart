@@ -3,9 +3,10 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/user_jwt_provider.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
-import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_api_client.g.dart';
@@ -18,24 +19,27 @@ Future<UserApiClient> userApiClient(Ref ref) async {
       DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl),
     ),
     jwtProvider: await ref.watch(userJwtServiceProvider.future),
-    sessionRepository: await ref.watch(
-      betterAuthSessionRepositoryProvider.future,
-    ),
+    invalidateSession: () => ref
+        .read(authSessionProvider.notifier)
+        .invalidate(),
   );
 }
+
+typedef AuthSessionInvalidator =
+    Future<Result<AuthSession, AuthFailure>> Function();
 
 final class UserApiClient {
   const new({
     required Dio dio,
     required UserJwtProvider jwtProvider,
-    required BetterAuthSessionRepository sessionRepository,
+    required AuthSessionInvalidator invalidateSession,
   }) : _dio = dio,
        _jwtProvider = jwtProvider,
-       _sessionRepository = sessionRepository;
+       _invalidateSession = invalidateSession;
 
   final Dio _dio;
   final UserJwtProvider _jwtProvider;
-  final BetterAuthSessionRepository _sessionRepository;
+  final AuthSessionInvalidator _invalidateSession;
 
   Future<Result<Map<String, dynamic>, AuthFailure>> getJson({
     required String path,
@@ -55,8 +59,7 @@ final class UserApiClient {
     final initialJwt = await _jwtProvider.getValidJwt();
     if (initialJwt case Failure(:final exception, :final stackTrace)) {
       if (exception.kind == AuthFailureKind.unauthorized) {
-        await _sessionRepository.clearSession();
-        _jwtProvider.clearJwt();
+        await _invalidateSession();
       }
       return Failure(exception, stackTrace);
     }
@@ -76,8 +79,7 @@ final class UserApiClient {
         :final stackTrace,
       )) {
         if (exception.kind == AuthFailureKind.unauthorized) {
-          await _sessionRepository.clearSession();
-          _jwtProvider.clearJwt();
+          await _invalidateSession();
         }
         return Failure(exception, stackTrace);
       }
@@ -91,8 +93,7 @@ final class UserApiClient {
       );
       if (retry case Failure(:final exception)
           when exception.kind == AuthFailureKind.unauthorized) {
-        await _sessionRepository.clearSession();
-        _jwtProvider.clearJwt();
+        await _invalidateSession();
       }
       return retry;
     }

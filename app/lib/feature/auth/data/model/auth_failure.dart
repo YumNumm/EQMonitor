@@ -5,6 +5,7 @@ enum AuthFailureKind {
   timeout,
   network,
   invalidResponse,
+  storage,
   unknown,
 }
 

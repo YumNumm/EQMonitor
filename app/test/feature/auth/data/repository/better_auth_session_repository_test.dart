@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
@@ -18,13 +19,19 @@ void main() {
         preferences: preferences,
       );
 
-      await repository.saveSessionToken(token: 'session-token');
+      expect(
+        await repository.saveSessionToken(token: 'session-token'),
+        isA<Success<void, AuthFailure>>(),
+      );
 
       expect(
         preferences.values,
         {SecureStorageKey.betterAuthSessionToken: 'session-token'},
       );
-      expect(await repository.readSessionToken(), 'session-token');
+      expect(
+        (await repository.readSessionToken()).unwrap(),
+        'session-token',
+      );
     });
 
     test('session削除時にDevice JWTなど他のSecure Storage値を消さない', () async {
@@ -35,11 +42,58 @@ void main() {
         preferences: preferences,
       );
 
-      await repository.clearSession();
+      expect(
+        await repository.clearSession(),
+        isA<Success<void, AuthFailure>>(),
+      );
 
       expect(
         preferences.values,
         {SecureStorageKey.deviceToken: 'device-jwt'},
+      );
+    });
+
+    test('Secure Storage read例外をstorage Failureへ閉じる', () async {
+      final repository = BetterAuthSessionRepository(
+        preferences: _MemorySecurePreferencesDataSource()
+          ..throwingOperation = 'read',
+      );
+
+      final result = await repository.readSessionToken();
+
+      expect(
+        (result as Failure<String?, AuthFailure>).exception.kind,
+        AuthFailureKind.storage,
+      );
+    });
+
+    test('Secure Storage set例外をstorage Failureへ閉じる', () async {
+      final repository = BetterAuthSessionRepository(
+        preferences: _MemorySecurePreferencesDataSource()
+          ..throwingOperation = 'set',
+      );
+
+      final result = await repository.saveSessionToken(
+        token: 'session-token',
+      );
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.storage,
+      );
+    });
+
+    test('Secure Storage remove例外をstorage Failureへ閉じる', () async {
+      final repository = BetterAuthSessionRepository(
+        preferences: _MemorySecurePreferencesDataSource()
+          ..throwingOperation = 'remove',
+      );
+
+      final result = await repository.clearSession();
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.storage,
       );
     });
   });
@@ -57,6 +111,7 @@ void main() {
       final client = BetterAuthApiClient(
         dio: dio,
         sessionRepository: repository,
+        cookieJar: CookieJar(),
       );
 
       final result = await client.getSession();
@@ -64,7 +119,7 @@ void main() {
       expect(result, isA<Success<bool, AuthFailure>>());
       expect(result.unwrap(), isTrue);
       expect(adapter.authorizationHeaders, ['Bearer old-session']);
-      expect(await repository.readSessionToken(), 'new-session');
+      expect((await repository.readSessionToken()).unwrap(), 'new-session');
     });
 
     test('social sign-inをBetter Authのnative idToken形式で送る', () async {
@@ -78,6 +133,7 @@ void main() {
       final client = BetterAuthApiClient(
         dio: dio,
         sessionRepository: repository,
+        cookieJar: CookieJar(),
       );
 
       final result = await client.signInSocial(
@@ -95,9 +151,111 @@ void main() {
           'nonce': 'provider-nonce',
         },
       });
-      expect(await repository.readSessionToken(), 'new-session');
+      expect((await repository.readSessionToken()).unwrap(), 'new-session');
+    });
+
+    test('remote sign-out失敗時も専用CookieJarを削除する', () async {
+      final repository = BetterAuthSessionRepository(
+        preferences: _MemorySecurePreferencesDataSource(),
+      );
+      final adapter = _CookieLifecycleAdapter();
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = adapter;
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: repository,
+        cookieJar: CookieJar(),
+      );
+      await client.getSession();
+
+      final signOut = await client.signOut();
+      await client.getSession();
+
+      expect(
+        (signOut as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.network,
+      );
+      expect(adapter.cookieHeaders, [null, 'session=cookie-session', null]);
+    });
+
+    test('Secure Storage read例外はHTTP前にstorage Failureへ閉じる', () async {
+      final preferences = _MemorySecurePreferencesDataSource()
+        ..throwingOperation = 'read';
+      final adapter = _RecordingAuthAdapter();
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = adapter;
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: BetterAuthSessionRepository(
+          preferences: preferences,
+        ),
+        cookieJar: CookieJar(),
+      );
+
+      final result = await client.getSession();
+
+      expect(
+        (result as Failure<bool, AuthFailure>).exception.kind,
+        AuthFailureKind.storage,
+      );
+      expect(adapter.paths, isEmpty);
+    });
+
+    test('set-auth-token保存例外をstorage Failureへ閉じる', () async {
+      final preferences = _MemorySecurePreferencesDataSource()
+        ..throwingOperation = 'set';
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = _RecordingAuthAdapter();
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: BetterAuthSessionRepository(
+          preferences: preferences,
+        ),
+        cookieJar: CookieJar(),
+      );
+
+      final result = await client.getSession();
+
+      expect(
+        (result as Failure<bool, AuthFailure>).exception.kind,
+        AuthFailureKind.storage,
+      );
     });
   });
+}
+
+final class _CookieLifecycleAdapter implements HttpClientAdapter {
+  final cookieHeaders = <String?>[];
+  var requestCount = 0;
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    requestCount++;
+    cookieHeaders.add(options.headers['cookie'] as String?);
+    if (requestCount == 2) {
+      throw DioException.connectionError(
+        requestOptions: options,
+        reason: 'network unavailable',
+      );
+    }
+    return ResponseBody.fromString(
+      jsonEncode({
+        'session': {'id': 'session-id'},
+      }),
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+        if (requestCount == 1) 'set-cookie': ['session=cookie-session; Path=/'],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
 }
 
 final class _RecordingAuthAdapter implements HttpClientAdapter {
@@ -140,18 +298,26 @@ final class _RecordingAuthAdapter implements HttpClientAdapter {
 final class _MemorySecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
   final values = <SecureStorageKey, String>{};
+  String? throwingOperation;
 
   @override
   Future<void> setString({
     required SecureStorageKey key,
     required String value,
   }) async {
+    if (throwingOperation == 'set') {
+      throw Exception('secure storage set failed');
+    }
     values[key] = value;
   }
 
   @override
-  Future<String?> getString({required SecureStorageKey key}) async =>
-      values[key];
+  Future<String?> getString({required SecureStorageKey key}) async {
+    if (throwingOperation == 'read') {
+      throw Exception('secure storage read failed');
+    }
+    return values[key];
+  }
 
   @override
   Future<void> setInt({
@@ -197,6 +363,9 @@ final class _MemorySecurePreferencesDataSource
 
   @override
   Future<void> remove({required SecureStorageKey key}) async {
+    if (throwingOperation == 'remove') {
+      throw Exception('secure storage remove failed');
+    }
     values.remove(key);
   }
 

@@ -48,4 +48,4 @@ final class UserJwtServiceProvider
   }
 }
 
-String _$userJwtServiceHash() => r'04d00daf4cc399f8694c8e147e8d8c9d03d4fc02';
+String _$userJwtServiceHash() => r'5cfd65aed3f4d3bd17eeedb2d6d0d7449b5476cd';

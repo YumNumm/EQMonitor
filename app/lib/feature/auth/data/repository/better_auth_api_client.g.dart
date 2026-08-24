@@ -51,4 +51,4 @@ final class BetterAuthApiClientProvider
 }
 
 String _$betterAuthApiClientHash() =>
-    r'a6bc398239d569c647e94f73d4dba8c13d67a92e';
+    r'da921f1a8bb9aea4c8ab64b3bb652b0c1a573546';

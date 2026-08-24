@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
@@ -51,8 +54,10 @@ void main() {
     final result = await container.read(authSessionProvider.notifier).restore();
 
     expect(result.unwrap().status, AuthSessionStatus.authenticated);
-    expect(result.unwrap().userJwt, jwt);
-    expect(container.read(authSessionProvider).value?.userJwt, jwt);
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.authenticated,
+    );
     expect(fixture.adapter.paths, [
       '/api/auth/get-session',
       '/api/auth/token',
@@ -79,9 +84,12 @@ void main() {
         .read(authSessionProvider.notifier)
         .refreshJwt();
 
-    expect(accepted.unwrap().userJwt, firstJwt);
-    expect(refreshed.unwrap().userJwt, refreshedJwt);
-    expect(container.read(authSessionProvider).value?.userJwt, refreshedJwt);
+    expect(accepted.unwrap().status, AuthSessionStatus.authenticated);
+    expect(refreshed.unwrap().status, AuthSessionStatus.authenticated);
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.authenticated,
+    );
     expect(fixture.preferences.values, {
       SecureStorageKey.betterAuthSessionToken: 'session-token',
     });
@@ -110,7 +118,10 @@ void main() {
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.signedOut,
     );
-    expect(await fixture.sessionRepository.readSessionToken(), isNull);
+    expect(
+      (await fixture.sessionRepository.readSessionToken()).unwrap(),
+      isNull,
+    );
   });
 
   test('restoreの5xxはsessionを保持してFailureを返す', () async {
@@ -129,7 +140,10 @@ void main() {
       (result as Failure<AuthSession, AuthFailure>).exception.kind,
       AuthFailureKind.server,
     );
-    expect(await fixture.sessionRepository.readSessionToken(), 'session-token');
+    expect(
+      (await fixture.sessionRepository.readSessionToken()).unwrap(),
+      'session-token',
+    );
   });
 
   test('acceptSignInの401は無効なsessionを削除する', () async {
@@ -149,30 +163,199 @@ void main() {
       (result as Failure<AuthSession, AuthFailure>).exception.kind,
       AuthFailureKind.unauthorized,
     );
-    expect(await fixture.sessionRepository.readSessionToken(), isNull);
+    expect(
+      (await fixture.sessionRepository.readSessionToken()).unwrap(),
+      isNull,
+    );
     expect(
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.signedOut,
     );
   });
+
+  test('acceptSignIn中のlocal invalidation後に認証状態が復活しない', () async {
+    final fixture = _NotifierFixture();
+    fixture.preferences.values[SecureStorageKey.betterAuthSessionToken] =
+        'session-token';
+    final pending = Completer<ResponseBody>();
+    fixture.adapter.enqueue(pending.future);
+    final container = fixture.createContainer();
+    addTearDown(container.dispose);
+    await container.read(authSessionProvider.future);
+
+    final acceptStarted = fixture.adapter.nextRequestStarted();
+    final accept = container.read(authSessionProvider.notifier).acceptSignIn();
+    await acceptStarted;
+    await container.read(authSessionProvider.notifier).invalidate();
+    pending.complete(
+      _jsonResponse({
+        'token': _jwt(exp: 1893459660, marker: 'stale-accept'),
+      }),
+    );
+
+    expect(
+      (await accept as Failure<AuthSession, AuthFailure>).exception.kind,
+      AuthFailureKind.unauthorized,
+    );
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.signedOut,
+    );
+  });
+
+  test('refreshJwt中のsignOut後に認証状態が復活しない', () async {
+    final fixture = _NotifierFixture();
+    fixture.preferences.values[SecureStorageKey.betterAuthSessionToken] =
+        'session-token';
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'token': _jwt(exp: 1893459660, marker: 'accepted'),
+      }),
+    );
+    final container = fixture.createContainer();
+    addTearDown(container.dispose);
+    await container.read(authSessionProvider.future);
+    await container.read(authSessionProvider.notifier).acceptSignIn();
+    final pending = Completer<ResponseBody>();
+    fixture.adapter
+      ..enqueue(pending.future)
+      ..enqueue(_jsonResponse({}));
+
+    final refreshStarted = fixture.adapter.nextRequestStarted();
+    final refresh = container.read(authSessionProvider.notifier).refreshJwt();
+    await refreshStarted;
+    await container.read(authSessionProvider.notifier).signOut();
+    pending.complete(
+      _jsonResponse({
+        'token': _jwt(exp: 1893463260, marker: 'stale-refresh'),
+      }),
+    );
+
+    expect(
+      (await refresh as Failure<AuthSession, AuthFailure>).exception.kind,
+      AuthFailureKind.unauthorized,
+    );
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.signedOut,
+    );
+  });
+
+  test('restore中のsignOut後にsession tokenと認証状態が復活しない', () async {
+    final fixture = _NotifierFixture();
+    fixture.preferences.values[SecureStorageKey.betterAuthSessionToken] =
+        'session-token';
+    final pending = Completer<ResponseBody>();
+    fixture.adapter
+      ..enqueue(pending.future)
+      ..enqueue(_jsonResponse({}));
+    final container = fixture.createContainer();
+    addTearDown(container.dispose);
+    await container.read(authSessionProvider.future);
+
+    final restoreStarted = fixture.adapter.nextRequestStarted();
+    final restore = container.read(authSessionProvider.notifier).restore();
+    await restoreStarted;
+    await container.read(authSessionProvider.notifier).signOut();
+    pending.complete(
+      _jsonResponse(
+        {
+          'session': {'id': 'late-session'},
+        },
+        headers: {
+          'set-auth-token': ['late-session-token'],
+        },
+      ),
+    );
+
+    expect(
+      (await restore as Failure<AuthSession, AuthFailure>).exception.kind,
+      AuthFailureKind.unauthorized,
+    );
+    expect(
+      (await fixture.sessionRepository.readSessionToken()).unwrap(),
+      isNull,
+    );
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.signedOut,
+    );
+    expect(fixture.adapter.paths, [
+      '/api/auth/get-session',
+      '/api/auth/sign-out',
+    ]);
+  });
+
+  test('Secure Storage remove例外でもstateとJWTとCookieを消去する', () async {
+    final fixture = _NotifierFixture();
+    fixture.preferences.values[SecureStorageKey.betterAuthSessionToken] =
+        'session-token';
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'token': _jwt(exp: 1893459660, marker: 'cached'),
+      }),
+    );
+    final container = fixture.createContainer();
+    addTearDown(container.dispose);
+    await container.read(authSessionProvider.future);
+    await container.read(authSessionProvider.notifier).acceptSignIn();
+    await fixture.cookieJar.saveFromResponse(
+      Uri.parse('https://example.com'),
+      [Cookie('session', 'cookie-session')],
+    );
+    fixture.preferences.throwOnRemove = true;
+
+    final result = await container
+        .read(authSessionProvider.notifier)
+        .invalidate();
+
+    expect(
+      (result as Failure<AuthSession, AuthFailure>).exception.kind,
+      AuthFailureKind.storage,
+    );
+    expect(
+      container.read(authSessionProvider).value?.status,
+      AuthSessionStatus.signedOut,
+    );
+    expect(
+      await fixture.cookieJar.loadForRequest(
+        Uri.parse('https://example.com'),
+      ),
+      isEmpty,
+    );
+    fixture.adapter.enqueue(
+      _jsonResponse({
+        'token': _jwt(exp: 1893463260, marker: 'fresh'),
+      }),
+    );
+    expect(
+      (await fixture.jwtProvider.getValidJwt()).unwrap(),
+      _jwt(exp: 1893463260, marker: 'fresh'),
+    );
+    expect(fixture.adapter.requestCount, 2);
+  });
 }
 
 String _jwt({required int exp, required String marker}) {
-  final header = base64Url.encode(utf8.encode(jsonEncode({'alg': 'RS256'})));
-  final payload = base64Url.encode(
-    utf8.encode(jsonEncode({'exp': exp, 'marker': marker})),
-  );
-  return '$header.$payload.signature';
+  final header = base64Url
+      .encode(utf8.encode(jsonEncode({'alg': 'RS256'})))
+      .replaceAll('=', '');
+  final payload = base64Url
+      .encode(utf8.encode(jsonEncode({'exp': exp, 'marker': marker})))
+      .replaceAll('=', '');
+  return '$header.$payload.c2lnbmF0dXJl';
 }
 
 ResponseBody _jsonResponse(
   Map<String, dynamic> body, {
   int statusCode = 200,
+  Map<String, List<String>>? headers,
 }) => ResponseBody.fromString(
   jsonEncode(body),
   statusCode,
   headers: {
     Headers.contentTypeHeader: [Headers.jsonContentType],
+    ...?headers,
   },
 );
 
@@ -186,6 +369,7 @@ final class _NotifierFixture {
     apiClient = BetterAuthApiClient(
       dio: dio,
       sessionRepository: sessionRepository,
+      cookieJar: cookieJar,
     );
     jwtProvider = UserJwtProvider(
       apiClient: apiClient,
@@ -195,6 +379,7 @@ final class _NotifierFixture {
 
   final preferences = _MemorySecurePreferencesDataSource();
   final adapter = _QueueAdapter();
+  final cookieJar = CookieJar();
   late final BetterAuthSessionRepository sessionRepository;
   late final BetterAuthApiClient apiClient;
   late final UserJwtProvider jwtProvider;
@@ -211,12 +396,19 @@ final class _NotifierFixture {
 }
 
 final class _QueueAdapter implements HttpClientAdapter {
-  final responses = <ResponseBody>[];
+  final responses = <Future<ResponseBody>>[];
   final paths = <String>[];
+  Completer<void>? _requestStarted;
   var requestCount = 0;
 
-  void enqueue(ResponseBody response) {
-    responses.add(response);
+  void enqueue(FutureOr<ResponseBody> response) {
+    responses.add(Future.value(response));
+  }
+
+  Future<void> nextRequestStarted() {
+    final started = Completer<void>();
+    _requestStarted = started;
+    return started.future;
   }
 
   @override
@@ -227,10 +419,12 @@ final class _QueueAdapter implements HttpClientAdapter {
   ) async {
     requestCount++;
     paths.add(options.path);
+    _requestStarted?.complete();
+    _requestStarted = null;
     if (responses.isEmpty) {
       throw StateError('No queued response');
     }
-    return responses.removeAt(0);
+    return await responses.removeAt(0);
   }
 
   @override
@@ -240,6 +434,7 @@ final class _QueueAdapter implements HttpClientAdapter {
 final class _MemorySecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
   final values = <SecureStorageKey, String>{};
+  var throwOnRemove = false;
 
   @override
   Future<void> setString({
@@ -297,6 +492,9 @@ final class _MemorySecurePreferencesDataSource
 
   @override
   Future<void> remove({required SecureStorageKey key}) async {
+    if (throwOnRemove) {
+      throw Exception('secure storage remove failed');
+    }
     values.remove(key);
   }
 

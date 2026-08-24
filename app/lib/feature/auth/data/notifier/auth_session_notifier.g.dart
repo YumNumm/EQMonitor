@@ -36,7 +36,7 @@ final class AuthSessionNotifierProvider
 }
 
 String _$authSessionNotifierHash() =>
-    r'b36ba4f57ba9f35d433d461dfb9823851670b8ce';
+    r'9962bde3feb308c56cd5ee4657f2f404a8a47f88';
 
 abstract class _$AuthSessionNotifier extends $AsyncNotifier<AuthSession> {
   FutureOr<AuthSession> build();
