@@ -423,7 +423,7 @@ class RecordingBackgroundLocationBridge
 
 class AlwaysCurrentDeviceLocationSyncLeaseManager
     implements DeviceLocationSyncLeaseManager {
-  const AlwaysCurrentDeviceLocationSyncLeaseManager();
+  const new();
 
   @override
   Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
@@ -431,7 +431,7 @@ class AlwaysCurrentDeviceLocationSyncLeaseManager
 }
 
 class AlwaysCurrentDeviceLocationSyncLease implements DeviceLocationSyncLease {
-  const AlwaysCurrentDeviceLocationSyncLease();
+  const new();
 
   @override
   Future<bool> isCurrent() async => true;

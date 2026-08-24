@@ -32,6 +32,8 @@ class PendingLocationMessage {
 }
 
 class DeviceLocationSyncLeaseMessage {
+  // Pigeon 26.3.4のanalyzer上限で解釈できる通常コンストラクタ形式を使う。
+  // ignore: unnecessary_type_name_in_constructor
   DeviceLocationSyncLeaseMessage({
     required this.leaseId,
     required this.updateId,

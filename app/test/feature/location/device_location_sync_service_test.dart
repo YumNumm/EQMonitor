@@ -466,7 +466,7 @@ final class RecordingDeviceLocationSyncLeaseManager
 
 final class RecordingDeviceLocationSyncLease
     implements DeviceLocationSyncLease {
-  RecordingDeviceLocationSyncLease({
+  new({
     required this.manager,
     required this.updateId,
   });

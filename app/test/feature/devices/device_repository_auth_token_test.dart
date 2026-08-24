@@ -491,7 +491,7 @@ final class _DeleteDeviceAdapter implements HttpClientAdapter {
 
 class _AlwaysCurrentDeviceLocationSyncLeaseManager
     implements DeviceLocationSyncLeaseManager {
-  const _AlwaysCurrentDeviceLocationSyncLeaseManager();
+  const new();
 
   @override
   Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
@@ -499,7 +499,7 @@ class _AlwaysCurrentDeviceLocationSyncLeaseManager
 }
 
 class _AlwaysCurrentDeviceLocationSyncLease implements DeviceLocationSyncLease {
-  const _AlwaysCurrentDeviceLocationSyncLease();
+  const new();
 
   @override
   Future<bool> isCurrent() async => true;

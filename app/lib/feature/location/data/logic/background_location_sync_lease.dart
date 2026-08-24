@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/location/data/logic/device_location_sync_servi
 
 class BackgroundLocationSyncLeaseManager
     implements DeviceLocationSyncLeaseManager {
-  const BackgroundLocationSyncLeaseManager();
+  const new();
 
   static const leaseDuration = Duration(seconds: 45);
 
@@ -25,7 +25,7 @@ class BackgroundLocationSyncLeaseManager
 }
 
 class BackgroundLocationSyncLease implements DeviceLocationSyncLease {
-  const BackgroundLocationSyncLease({
+  const new({
     required this.leaseId,
     required this.updateId,
   });
