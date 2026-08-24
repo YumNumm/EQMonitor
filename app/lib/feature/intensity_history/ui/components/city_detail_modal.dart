@@ -32,7 +32,7 @@ class CityDetailModalAction {
       maxIntensity: maxIntensity,
       parameter: EarthquakeHistoryParameter.city(
         cityCode: cityCode,
-        sortBy: EarthquakeSortBy.eventId,
+        sortBy: EarthquakeSortBy.regionalIntensity,
         sortOrder: SortOrder.desc,
       ),
     ),

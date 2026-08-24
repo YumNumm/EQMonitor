@@ -23,11 +23,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+class _RegionalIntensityEarthquakeHistoryNotifier
+    extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
     EarthquakeHistoryParameter parameter,
   ) async {
+    if (parameter.sortBy != EarthquakeSortBy.regionalIntensity ||
+        parameter.sortOrder != SortOrder.desc) {
+      throw StateError('市区町村の観測震度降順ではありません');
+    }
     return PaginatedResponse(
       items: [_earthquakePartialForList(parameter)],
       nextToken: null,
@@ -168,10 +173,10 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
-          ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
+          ).overrideWith(_RegionalIntensityEarthquakeHistoryNotifier.new),
         ],
         child: _modalTestApp(
           onPressed: (context) => CityDetailModalAction().show(
@@ -204,7 +209,7 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
           ).overrideWith(_EmptyEarthquakeHistoryNotifier.new),
@@ -236,7 +241,7 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
           ).overrideWith(_ErrorEarthquakeHistoryNotifier.new),
@@ -268,7 +273,7 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
           ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
@@ -301,7 +306,7 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
           ).overrideWith(_PagedEarthquakeHistoryNotifier.new),
@@ -338,7 +343,7 @@ void main() {
           earthquakeHistoryProvider(
             const EarthquakeHistoryParameter.city(
               cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
+              sortBy: EarthquakeSortBy.regionalIntensity,
               sortOrder: SortOrder.desc,
             ),
           ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
