@@ -19,15 +19,30 @@ typedef SendDeviceLocationPayload = Future<void> Function({
   required DeviceLocationPayload payload,
 });
 
+abstract interface class DeviceLocationSyncLease {
+  Future<bool> isCurrent();
+  Future<void> release();
+}
+
+abstract interface class DeviceLocationSyncLeaseManager {
+  Future<DeviceLocationSyncLease?> acquire({required String updateId});
+}
+
+class DeviceLocationSyncLeaseUnavailableException implements Exception {
+  const new();
+}
+
 class DeviceLocationSyncService {
   const new({
     required this.scope,
+    required this.leaseManager,
     required this.stateRepository,
     required this.resolvePayload,
     required this.sendPayload,
   });
 
   final DeviceLocationSyncScope scope;
+  final DeviceLocationSyncLeaseManager leaseManager;
   final DeviceLocationSyncStateRepository stateRepository;
   final ResolveDeviceLocationPayload resolvePayload;
   final SendDeviceLocationPayload sendPayload;
@@ -56,16 +71,26 @@ class DeviceLocationSyncService {
       throw StateError('端末内で地域コードを解決できませんでした');
     }
 
-    final previous = await stateRepository.readLastSent(scope: scope);
-    if (previous != null &&
-        previous.region == payload.region &&
-        previous.city == payload.city &&
-        previous.tsunamiForecastRegion == payload.tsunamiForecastRegion) {
-      return DeviceLocationSyncResult.unchanged;
+    final lease = await leaseManager.acquire(updateId: location.updateId);
+    if (lease == null) {
+      throw const DeviceLocationSyncLeaseUnavailableException();
     }
+    try {
+      final previous = await stateRepository.readLastSent(scope: scope);
+      if (previous != null &&
+          previous.region == payload.region &&
+          previous.city == payload.city &&
+          previous.tsunamiForecastRegion == payload.tsunamiForecastRegion) {
+        return DeviceLocationSyncResult.unchanged;
+      }
 
-    await sendPayload(payload: payload);
-    await stateRepository.writeLastSent(scope: scope, payload: payload);
-    return DeviceLocationSyncResult.sent;
+      await sendPayload(payload: payload);
+      if (await lease.isCurrent()) {
+        await stateRepository.writeLastSent(scope: scope, payload: payload);
+      }
+      return DeviceLocationSyncResult.sent;
+    } finally {
+      await lease.release();
+    }
   }
 }
