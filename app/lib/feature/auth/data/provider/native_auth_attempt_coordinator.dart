@@ -7,49 +7,44 @@ NativeAuthAttemptCoordinator nativeAuthAttemptCoordinator(Ref ref) =>
     NativeAuthAttemptCoordinator();
 
 final class NativeAuthAttemptCoordinator {
-  var _nextAttemptId = 0;
-  int? _activeAttemptId;
+  NativeAuthAttempt? _activeAttempt;
 
   NativeAuthAttempt? tryBegin() {
-    if (_activeAttemptId != null) {
+    if (_activeAttempt != null) {
       return null;
     }
-    _nextAttemptId++;
-    _activeAttemptId = _nextAttemptId;
-    return NativeAuthAttempt(
-      coordinator: this,
-      attemptId: _nextAttemptId,
-    );
+    final attempt = NativeAuthAttempt._(coordinator: this);
+    _activeAttempt = attempt;
+    return attempt;
   }
 
-  bool isCurrent({required int attemptId}) => _activeAttemptId == attemptId;
+  bool _isCurrent({required NativeAuthAttempt attempt}) =>
+      identical(_activeAttempt, attempt);
 
-  void release({required int attemptId}) {
-    if (_activeAttemptId == attemptId) {
-      _activeAttemptId = null;
+  bool release({required NativeAuthAttempt attempt}) {
+    if (!_isCurrent(attempt: attempt)) {
+      return false;
     }
+    _activeAttempt = null;
+    attempt._released = true;
+    return true;
   }
 }
 
 final class NativeAuthAttempt {
-  new({
+  new _({
     required NativeAuthAttemptCoordinator coordinator,
-    required int attemptId,
-  }) : _coordinator = coordinator,
-       _attemptId = attemptId;
+  }) : _coordinator = coordinator;
 
   final NativeAuthAttemptCoordinator _coordinator;
-  final int _attemptId;
   var _released = false;
 
-  bool get isCurrent =>
-      !_released && _coordinator.isCurrent(attemptId: _attemptId);
+  bool get isCurrent => !_released && _coordinator._isCurrent(attempt: this);
 
   void release() {
     if (_released) {
       return;
     }
-    _released = true;
-    _coordinator.release(attemptId: _attemptId);
+    _coordinator.release(attempt: this);
   }
 }

@@ -66,6 +66,123 @@ void main() {
       },
     );
 
+    test('iOSのtransport省略をBetter Auth往復後も空ListとしてNativeへ渡す', () async {
+      final nextRegistration =
+          _registerOptions(
+              challenge: 'cmVnaXN0ZXItcm91bmR0cmlw',
+            )
+            ..['excludeCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'cmVnaXN0ZXItY3JlZGVudGlhbA',
+                'transports': [''],
+              },
+            ];
+      final nextAuthentication =
+          _authenticateOptions(
+              challenge: 'YXV0aGVudGljYXRlLXJvdW5kdHJpcA',
+            )
+            ..['allowCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'cmVnaXN0ZXItY3JlZGVudGlhbA',
+              },
+            ];
+      final fixture = await _PasskeyFixture.create(
+        responses: [
+          _jsonResponse(
+            _registerOptions(challenge: 'cmVnaXN0ZXItaW9z'),
+          ),
+          _jsonResponse(_registrationResponse(transports: '')),
+          _jsonResponse(nextRegistration),
+          _jsonResponse(_registrationResponse(transports: '')),
+          _jsonResponse(nextAuthentication),
+          _jsonResponse(
+            <String, dynamic>{'verified': true},
+            setAuthToken: 'roundtrip-session',
+          ),
+        ],
+        acceptedSession: true,
+        sessionToken: 'existing-session',
+      );
+      fixture.authenticator.registerResponse = const RegisterResponseType(
+        id: 'register-credential',
+        rawId: 'register-credential',
+        clientDataJSON: 'client-data',
+        attestationObject: 'attestation',
+        transports: [],
+      );
+
+      final firstRegistration = await fixture.repository.register();
+      final secondRegistration = await fixture.repository.register();
+      final authentication = await fixture.repository.signIn();
+
+      expect(firstRegistration, isA<Success<void, AuthFailure>>());
+      expect(secondRegistration, isA<Success<void, AuthFailure>>());
+      expect(authentication, isA<Success<AuthSession, AuthFailure>>());
+      expect(fixture.adapter.methods, [
+        'GET',
+        'POST',
+        'GET',
+        'POST',
+        'GET',
+        'POST',
+      ]);
+      expect(fixture.adapter.paths, [
+        '/api/auth/passkey/generate-register-options',
+        '/api/auth/passkey/verify-registration',
+        '/api/auth/passkey/generate-register-options',
+        '/api/auth/passkey/verify-registration',
+        '/api/auth/passkey/generate-authenticate-options',
+        '/api/auth/passkey/verify-authentication',
+      ]);
+      expect(fixture.adapter.requests[1].body, {
+        'response': {
+          'id': 'register-credential',
+          'rawId': 'register-credential',
+          'type': 'public-key',
+          'response': {
+            'clientDataJSON': 'client-data',
+            'attestationObject': 'attestation',
+          },
+          'clientExtensionResults': <String, dynamic>{},
+        },
+      });
+      expect(
+        fixture.authenticator.registerRequests[1].excludeCredentials.single.id,
+        'cmVnaXN0ZXItY3JlZGVudGlhbA',
+      );
+      expect(
+        fixture
+            .authenticator
+            .registerRequests[1]
+            .excludeCredentials
+            .single
+            .transports,
+        isEmpty,
+      );
+      expect(
+        fixture
+            .authenticator
+            .authenticateRequests
+            .single
+            .allowCredentials
+            ?.single
+            .id,
+        'cmVnaXN0ZXItY3JlZGVudGlhbA',
+      );
+      expect(
+        fixture
+            .authenticator
+            .authenticateRequests
+            .single
+            .allowCredentials
+            ?.single
+            .transports,
+        isEmpty,
+      );
+    });
+
     test('accepted sessionがなければHTTPもNative UIも開始しない', () async {
       final fixture = await _PasskeyFixture.create(
         responses: const [],
@@ -168,6 +285,26 @@ void main() {
             name: 'pubKeyCredParamsの非public-key type',
             mutate: (options) => options['pubKeyCredParams'] = [
               {'type': 'password', 'alg': -7},
+            ],
+          ),
+          (
+            name: 'excludeCredentials transportsの非List値',
+            mutate: (options) => options['excludeCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'Y3JlZGVudGlhbC0x',
+                'transports': 'internal',
+              },
+            ],
+          ),
+          (
+            name: 'excludeCredentials transportsの未知値',
+            mutate: (options) => options['excludeCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'Y3JlZGVudGlhbC0x',
+                'transports': ['telepathy'],
+              },
             ],
           ),
         ]) {
@@ -449,6 +586,69 @@ void main() {
       expect(fixture.acceptSignInCalls, 1);
     });
 
+    for (final testCase
+        in <
+          ({
+            String name,
+            void Function(Map<String, dynamic>) setTransports,
+          })
+        >[
+          (
+            name: 'transports欠落',
+            setTransports: (credential) => credential.remove('transports'),
+          ),
+          (
+            name: '空transports',
+            setTransports: (credential) =>
+                credential['transports'] = <String>[],
+          ),
+          (
+            name: 'Better Auth空文字sentinel',
+            setTransports: (credential) => credential['transports'] = [''],
+          ),
+        ]) {
+      test('${testCase.name}を空Listへ正規化してcredential IDをNativeへ渡す', () async {
+        final options = _authenticateOptions(
+          challenge: 'dHJhbnNwb3J0LW5vcm1hbGl6ZQ',
+        );
+        final credentials = options['allowCredentials'];
+        if (credentials case [final Map<String, dynamic> credential]) {
+          testCase.setTransports(credential);
+        } else {
+          fail('allowCredentials fixture must contain one credential');
+        }
+        final fixture = await _PasskeyFixture.create(
+          responses: [
+            _jsonResponse(options),
+            _jsonResponse(
+              <String, dynamic>{'verified': true},
+              setAuthToken: 'normalized-session',
+            ),
+          ],
+        );
+
+        final result = await fixture.repository.signIn();
+
+        expect(result, isA<Success<AuthSession, AuthFailure>>());
+        final credential = fixture
+            .authenticator
+            .authenticateRequests
+            .single
+            .allowCredentials
+            ?.single;
+        expect(credential?.id, 'Y3JlZGVudGlhbC0x');
+        expect(credential?.transports, isEmpty);
+        expect(fixture.adapter.methods, ['GET', 'POST']);
+        expect(fixture.adapter.paths, [
+          '/api/auth/passkey/generate-authenticate-options',
+          '/api/auth/passkey/verify-authentication',
+        ]);
+        expect(fixture.adapter.requests.last.body, {
+          'response': fixture.authenticator.authenticateResponse.toJson(),
+        });
+      });
+    }
+
     test('環境不一致はHTTPもNative UIも開始しない', () async {
       final fixture = await _PasskeyFixture.create(
         responses: const [],
@@ -551,6 +751,36 @@ void main() {
                 'type': 'password',
                 'id': 'Y3JlZGVudGlhbC0x',
                 'transports': ['internal'],
+              },
+            ],
+          ),
+          (
+            name: 'credential transportsの非String要素',
+            mutate: (options) => options['allowCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'Y3JlZGVudGlhbC0x',
+                'transports': ['internal', 42],
+              },
+            ],
+          ),
+          (
+            name: 'credential transportsの未知値',
+            mutate: (options) => options['allowCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'Y3JlZGVudGlhbC0x',
+                'transports': ['telepathy'],
+              },
+            ],
+          ),
+          (
+            name: 'credential transportsの空文字混在',
+            mutate: (options) => options['allowCredentials'] = [
+              {
+                'type': 'public-key',
+                'id': 'Y3JlZGVudGlhbC0x',
+                'transports': ['', 'internal'],
               },
             ],
           ),
@@ -1128,6 +1358,21 @@ void main() {
     second?.release();
     expect(coordinator.tryBegin(), isNotNull);
   });
+
+  test('別coordinatorのopaque attemptではactive attemptを解放できない', () {
+    final coordinator = NativeAuthAttemptCoordinator();
+    final foreignCoordinator = NativeAuthAttemptCoordinator();
+    final activeAttempt = coordinator.tryBegin();
+    final foreignAttempt = foreignCoordinator.tryBegin();
+    if (activeAttempt == null || foreignAttempt == null) {
+      fail('both coordinators must create their first attempt');
+    }
+
+    expect(coordinator.release(attempt: foreignAttempt), isFalse);
+    expect(coordinator.tryBegin(), isNull);
+    expect(coordinator.release(attempt: activeAttempt), isTrue);
+    expect(coordinator.tryBegin(), isNotNull);
+  });
 }
 
 ({
@@ -1326,7 +1571,7 @@ final class _FakePasskeyAuthenticator implements PasskeyAuthenticatorInterface {
   Completer<RegisterResponseType>? pendingRegister;
   final registerStarted = Completer<void>();
 
-  final registerResponse = const RegisterResponseType(
+  RegisterResponseType registerResponse = const RegisterResponseType(
     id: 'register-credential',
     rawId: 'register-credential',
     clientDataJSON: 'client-data',
@@ -1525,18 +1770,19 @@ Map<String, dynamic> _authenticateOptions({
   ],
 };
 
-Map<String, dynamic> _registrationResponse() => {
-  'id': 'passkey-database-id',
-  'credentialID': 'credential-id',
-  'userId': 'user-id',
-  'name': 'EQMonitor Passkey',
-  'publicKey': 'public-key',
-  'counter': 0,
-  'deviceType': 'singleDevice',
-  'backedUp': false,
-  'transports': 'internal',
-  'createdAt': '2026-08-25T00:00:00.000Z',
-};
+Map<String, dynamic> _registrationResponse({String transports = 'internal'}) =>
+    {
+      'id': 'passkey-database-id',
+      'credentialID': 'credential-id',
+      'userId': 'user-id',
+      'name': 'EQMonitor Passkey',
+      'publicKey': 'public-key',
+      'counter': 0,
+      'deviceType': 'singleDevice',
+      'backedUp': false,
+      'transports': transports,
+      'createdAt': '2026-08-25T00:00:00.000Z',
+    };
 
 const _buildConfig = BuildConfig(
   restApiUrl: 'https://dev.v2.api.eqmonitor.app',

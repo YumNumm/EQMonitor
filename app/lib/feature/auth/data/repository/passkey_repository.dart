@@ -249,13 +249,16 @@ final class PasskeyRequestParser {
     required Map<String, dynamic> options,
     required String expectedRpId,
   }) {
-    if (!_schemaValidator.registration(options: options)) {
+    final normalizedOptions = _schemaValidator.normalizeRegistration(
+      options: options,
+    );
+    if (normalizedOptions == null) {
       return const Failure(
         AuthFailure(kind: AuthFailureKind.invalidResponse),
       );
     }
     try {
-      final request = RegisterRequestType.fromJson(options);
+      final request = RegisterRequestType.fromJson(normalizedOptions);
       final parameters = request.pubKeyCredParams;
       if (!isValidChallenge(request.challenge) ||
           request.relyingParty.id != expectedRpId ||
@@ -287,13 +290,16 @@ final class PasskeyRequestParser {
     required Map<String, dynamic> options,
     required String expectedRpId,
   }) {
-    if (!_schemaValidator.authentication(options: options)) {
+    final normalizedOptions = _schemaValidator.normalizeAuthentication(
+      options: options,
+    );
+    if (normalizedOptions == null) {
       return const Failure(
         AuthFailure(kind: AuthFailureKind.invalidResponse),
       );
     }
     try {
-      final request = AuthenticateRequestType.fromJson(options);
+      final request = AuthenticateRequestType.fromJson(normalizedOptions);
       if (!isValidChallenge(request.challenge) ||
           request.relyingPartyId != expectedRpId) {
         return const Failure(
@@ -334,45 +340,77 @@ final class PasskeyOptionsSchemaValidator {
 
   final PasskeyBase64UrlValidator _base64UrlValidator;
 
-  bool registration({required Map<String, dynamic> options}) {
-    final challenge = options['challenge'];
-    final rp = options['rp'];
-    final user = options['user'];
-    final parameters = options['pubKeyCredParams'];
+  static const _knownTransports = <String>{
+    'ble',
+    'bluetooth',
+    'hybrid',
+    'internal',
+    'nfc',
+    'smart-card',
+    'usb',
+  };
+
+  Map<String, dynamic>? normalizeRegistration({
+    required Map<String, dynamic> options,
+  }) {
+    final Object? challenge = options['challenge'];
+    final Object? rp = options['rp'];
+    final Object? user = options['user'];
+    final Object? parameters = options['pubKeyCredParams'];
     if (challenge is! String ||
         !_base64UrlValidator.isValid(challenge) ||
         rp is! Map<String, dynamic> ||
         user is! Map<String, dynamic> ||
-        parameters is! List<dynamic> ||
+        parameters is! List<Object?> ||
         parameters.isEmpty) {
-      return false;
+      return null;
     }
-    return hasRequiredRegistrationIdentity(rp: rp, user: user) &&
-        hasValidPublicKeyParameters(parameters: parameters) &&
-        hasValidCredentialList(value: options['excludeCredentials']);
+    final normalizedCredentials = normalizeCredentialList(
+      value: options['excludeCredentials'],
+    );
+    if (!hasRequiredRegistrationIdentity(rp: rp, user: user) ||
+        !hasValidPublicKeyParameters(parameters: parameters) ||
+        !normalizedCredentials.isValid) {
+      return null;
+    }
+    return {
+      ...options,
+      'excludeCredentials': normalizedCredentials.credentials,
+    };
   }
 
-  bool authentication({required Map<String, dynamic> options}) {
-    final challenge = options['challenge'];
-    final rpId = options['rpId'];
+  Map<String, dynamic>? normalizeAuthentication({
+    required Map<String, dynamic> options,
+  }) {
+    final Object? challenge = options['challenge'];
+    final Object? rpId = options['rpId'];
     if (challenge is! String ||
         !_base64UrlValidator.isValid(challenge) ||
         rpId is! String ||
         rpId.isEmpty) {
-      return false;
+      return null;
     }
-    return hasValidCredentialList(value: options['allowCredentials']);
+    final normalizedCredentials = normalizeCredentialList(
+      value: options['allowCredentials'],
+    );
+    if (!normalizedCredentials.isValid) {
+      return null;
+    }
+    return {
+      ...options,
+      'allowCredentials': normalizedCredentials.credentials,
+    };
   }
 
   bool hasRequiredRegistrationIdentity({
     required Map<String, dynamic> rp,
     required Map<String, dynamic> user,
   }) {
-    final rpId = rp['id'];
-    final rpName = rp['name'];
-    final userId = user['id'];
-    final userName = user['name'];
-    final displayName = user['displayName'];
+    final Object? rpId = rp['id'];
+    final Object? rpName = rp['name'];
+    final Object? userId = user['id'];
+    final Object? userName = user['name'];
+    final Object? displayName = user['displayName'];
     return rpId is String &&
         rpId.isNotEmpty &&
         rpName is String &&
@@ -385,7 +423,7 @@ final class PasskeyOptionsSchemaValidator {
         displayName.isNotEmpty;
   }
 
-  bool hasValidPublicKeyParameters({required List<dynamic> parameters}) =>
+  bool hasValidPublicKeyParameters({required List<Object?> parameters}) =>
       parameters.every(
         (parameter) =>
             parameter is Map<String, dynamic> &&
@@ -393,24 +431,57 @@ final class PasskeyOptionsSchemaValidator {
             parameter['alg'] is int,
       );
 
-  bool hasValidCredentialList({required dynamic value}) {
+  ({bool isValid, List<Map<String, dynamic>> credentials})
+  normalizeCredentialList({required Object? value}) {
     if (value == null) {
-      return true;
+      return (isValid: true, credentials: <Map<String, dynamic>>[]);
     }
-    if (value is! List<dynamic>) {
-      return false;
+    if (value is! List<Object?>) {
+      return (isValid: false, credentials: <Map<String, dynamic>>[]);
     }
-    return value.every(
-      (credential) =>
-          credential is Map<String, dynamic> &&
-          credential['type'] == 'public-key' &&
-          credential['id'] is String &&
-          _base64UrlValidator.isValid(credential['id'] as String) &&
-          credential['transports'] is List<dynamic> &&
-          (credential['transports'] as List<dynamic>).every(
-            (transport) => transport is String && transport.isNotEmpty,
-          ),
-    );
+    final normalizedCredentials = <Map<String, dynamic>>[];
+    for (final credential in value) {
+      if (credential is! Map<String, dynamic>) {
+        return (isValid: false, credentials: <Map<String, dynamic>>[]);
+      }
+      final Object? credentialId = credential['id'];
+      final normalizedTransports = normalizeTransports(
+        value: credential['transports'],
+      );
+      if (credential['type'] != 'public-key' ||
+          credentialId is! String ||
+          !_base64UrlValidator.isValid(credentialId) ||
+          !normalizedTransports.isValid) {
+        return (isValid: false, credentials: <Map<String, dynamic>>[]);
+      }
+      normalizedCredentials.add({
+        ...credential,
+        'transports': normalizedTransports.transports,
+      });
+    }
+    return (isValid: true, credentials: normalizedCredentials);
+  }
+
+  ({bool isValid, List<String> transports}) normalizeTransports({
+    required Object? value,
+  }) {
+    if (value == null) {
+      return (isValid: true, transports: <String>[]);
+    }
+    if (value is! List<Object?>) {
+      return (isValid: false, transports: <String>[]);
+    }
+    if (value.isEmpty || (value.length == 1 && value.single == '')) {
+      return (isValid: true, transports: <String>[]);
+    }
+    final normalized = <String>[];
+    for (final transport in value) {
+      if (transport is! String || !_knownTransports.contains(transport)) {
+        return (isValid: false, transports: <String>[]);
+      }
+      normalized.add(transport);
+    }
+    return (isValid: true, transports: normalized);
   }
 }
 
