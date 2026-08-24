@@ -30,6 +30,52 @@ struct BackgroundLocationHeadlessTaskStateTests {
         #expect(engineLaunchCount == 2)
     }
 
+    @Test func applicationActiveObserverRegistersOnceAndRetriesOnlyWhilePending() {
+        let notificationCenter = NotificationCenter()
+        var hasPendingLocation = false
+        var retryCount = 0
+        let observer = HeadlessApplicationActiveRetryObserver(
+            notificationCenter: notificationCenter,
+            hasPendingLocation: { hasPendingLocation },
+            resubmitRetry: { retryCount += 1 }
+        )
+
+        observer.start()
+        observer.start()
+        notificationCenter.post(
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        #expect(retryCount == 0)
+
+        hasPendingLocation = true
+        notificationCenter.post(
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        #expect(retryCount == 1)
+    }
+
+    @Test func applicationActiveObserverRemovesNotificationOnDeinit() {
+        let notificationCenter = NotificationCenter()
+        var retryCount = 0
+        var observer: HeadlessApplicationActiveRetryObserver? =
+            HeadlessApplicationActiveRetryObserver(
+                notificationCenter: notificationCenter,
+                hasPendingLocation: { true },
+                resubmitRetry: { retryCount += 1 }
+            )
+
+        observer?.start()
+        observer = nil
+        notificationCenter.post(
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+
+        #expect(retryCount == 0)
+    }
+
     @Test func successfulCompletionRequestsCleanupExactlyOnce() throws {
         let state = HeadlessTaskState()
 

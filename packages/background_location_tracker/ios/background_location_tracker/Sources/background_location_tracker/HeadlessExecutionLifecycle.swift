@@ -25,6 +25,51 @@ public struct BackgroundLocationLaunchBootstrap {
     }
 }
 
+final class HeadlessApplicationActiveRetryObserver {
+    private let notificationCenter: NotificationCenter
+    private let hasPendingLocation: () -> Bool
+    private let resubmitRetry: () -> Void
+    private let lock = NSLock()
+    private var observerToken: NSObjectProtocol?
+
+    init(
+        notificationCenter: NotificationCenter,
+        hasPendingLocation: @escaping () -> Bool,
+        resubmitRetry: @escaping () -> Void
+    ) {
+        self.notificationCenter = notificationCenter
+        self.hasPendingLocation = hasPendingLocation
+        self.resubmitRetry = resubmitRetry
+    }
+
+    func start() {
+        lock.withLock {
+            guard observerToken == nil else { return }
+            let hasPendingLocation = self.hasPendingLocation
+            let resubmitRetry = self.resubmitRetry
+            observerToken = notificationCenter.addObserver(
+                forName: UIApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: nil
+            ) { _ in
+                guard hasPendingLocation() else { return }
+                resubmitRetry()
+            }
+        }
+    }
+
+    deinit {
+        let token = lock.withLock {
+            let token = observerToken
+            observerToken = nil
+            return token
+        }
+        if let token {
+            notificationCenter.removeObserver(token)
+        }
+    }
+}
+
 protocol HeadlessSystemTask: AnyObject {
     func complete(success: Bool)
 }

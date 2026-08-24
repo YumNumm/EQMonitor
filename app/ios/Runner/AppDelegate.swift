@@ -21,6 +21,7 @@ import WidgetKit
       },
       registerRetryTaskHandlers: {
         LocationHeadlessRunner.shared.registerRetryTaskHandlers()
+        LocationHeadlessRunner.shared.startApplicationActiveRetryObservation()
         LocationHeadlessRunner.shared.resubmitRetryIfPending()
       },
       restoreLocationMonitoring: {
@@ -86,11 +87,6 @@ import WidgetKit
         }
       }
     }
-  }
-
-  override func applicationDidBecomeActive(_ application: UIApplication) {
-    super.applicationDidBecomeActive(application)
-    LocationHeadlessRunner.shared.resubmitRetryIfPending()
   }
 
   override func application(

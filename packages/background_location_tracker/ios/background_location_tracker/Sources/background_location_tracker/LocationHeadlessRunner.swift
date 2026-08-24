@@ -26,6 +26,16 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager?
     private var hasStartedLocationRelaunch = false
     private var hasRegisteredRetryTasks = false
+    private lazy var applicationActiveRetryObserver =
+        HeadlessApplicationActiveRetryObserver(
+            notificationCenter: .default,
+            hasPendingLocation: { [weak self] in
+                self?.pendingStore.peek(consumer: .deviceLocation) != nil
+            },
+            resubmitRetry: { [weak self] in
+                self?.retryScheduler.scheduleRetry()
+            }
+        )
 
     override private init() {
         let taskState = HeadlessTaskState()
@@ -85,6 +95,10 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
             return
         }
         retryScheduler.scheduleRetry()
+    }
+
+    public func startApplicationActiveRetryObservation() {
+        applicationActiveRetryObserver.start()
     }
 
     public func start(
