@@ -183,6 +183,52 @@ void main() {
       );
     });
 
+    test(
+      'SimpleWebAuthnのcable transportをexcludeCredentialsのままNativeへ渡す',
+      () async {
+        final options =
+            _registerOptions(
+                challenge: 'cmVnaXN0ZXItY2FibGU',
+              )
+              ..['excludeCredentials'] = [
+                {
+                  'type': 'public-key',
+                  'id': 'Y2FibGUtcmVnaXN0cmF0aW9u',
+                  'transports': ['cable'],
+                },
+              ];
+        final fixture = await _PasskeyFixture.create(
+          responses: [
+            _jsonResponse(options),
+            _jsonResponse(_registrationResponse(transports: 'cable')),
+          ],
+          acceptedSession: true,
+          sessionToken: 'existing-session',
+        );
+
+        final result = await fixture.repository.register();
+
+        expect(result, isA<Success<void, AuthFailure>>());
+        final credential = fixture
+            .authenticator
+            .registerRequests
+            .single
+            .excludeCredentials
+            .single;
+        expect(credential.id, 'Y2FibGUtcmVnaXN0cmF0aW9u');
+        expect(credential.transports, ['cable']);
+        expect(fixture.adapter.methods, ['GET', 'POST']);
+        expect(fixture.adapter.paths, [
+          '/api/auth/passkey/generate-register-options',
+          '/api/auth/passkey/verify-registration',
+        ]);
+        expect(fixture.adapter.requests.first.body, isNull);
+        expect(fixture.adapter.requests.last.body, {
+          'response': fixture.authenticator.registerResponse.toJson(),
+        });
+      },
+    );
+
     test('accepted sessionがなければHTTPもNative UIも開始しない', () async {
       final fixture = await _PasskeyFixture.create(
         responses: const [],
@@ -648,6 +694,53 @@ void main() {
         });
       });
     }
+
+    test(
+      'SimpleWebAuthnのcable transportをallowCredentialsのままNativeへ渡す',
+      () async {
+        final options =
+            _authenticateOptions(
+                challenge: 'YXV0aGVudGljYXRlLWNhYmxl',
+              )
+              ..['allowCredentials'] = [
+                {
+                  'type': 'public-key',
+                  'id': 'Y2FibGUtYXV0aGVudGljYXRpb24',
+                  'transports': ['cable'],
+                },
+              ];
+        final fixture = await _PasskeyFixture.create(
+          responses: [
+            _jsonResponse(options),
+            _jsonResponse(
+              <String, dynamic>{'verified': true},
+              setAuthToken: 'cable-session',
+            ),
+          ],
+        );
+
+        final result = await fixture.repository.signIn();
+
+        expect(result, isA<Success<AuthSession, AuthFailure>>());
+        final credential = fixture
+            .authenticator
+            .authenticateRequests
+            .single
+            .allowCredentials
+            ?.single;
+        expect(credential?.id, 'Y2FibGUtYXV0aGVudGljYXRpb24');
+        expect(credential?.transports, ['cable']);
+        expect(fixture.adapter.methods, ['GET', 'POST']);
+        expect(fixture.adapter.paths, [
+          '/api/auth/passkey/generate-authenticate-options',
+          '/api/auth/passkey/verify-authentication',
+        ]);
+        expect(fixture.adapter.requests.first.body, isNull);
+        expect(fixture.adapter.requests.last.body, {
+          'response': fixture.authenticator.authenticateResponse.toJson(),
+        });
+      },
+    );
 
     test('環境不一致はHTTPもNative UIも開始しない', () async {
       final fixture = await _PasskeyFixture.create(

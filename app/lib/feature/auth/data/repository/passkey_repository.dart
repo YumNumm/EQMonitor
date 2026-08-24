@@ -343,6 +343,7 @@ final class PasskeyOptionsSchemaValidator {
   static const _knownTransports = <String>{
     'ble',
     'bluetooth',
+    'cable',
     'hybrid',
     'internal',
     'nfc',
