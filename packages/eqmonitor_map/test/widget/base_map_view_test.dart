@@ -2,6 +2,8 @@
 // (Global Constraints「widget testとgolden testは追加しない」)。ここでは
 // gesture callbackから分離したpure関数(`cameraAfterGestureUpdate`/
 // `canonicalZoomFor`)だけを検証する。
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
@@ -45,6 +47,12 @@ void main() {
       domain: createMapClockDomainId(value: 'base-map-view-test'),
     );
     final cameraController = MapViewCameraController();
+    final gpuProbeController = MapGpuProbeController();
+    const gpuProbeConfiguration = MapGpuProbeConfiguration(
+      faultPoint: null,
+      atlasFixture: MapSpriteAtlasProbeFixture.production,
+    );
+    void gpuCounterCallback(MapGpuResourceCounterSnapshot _) {}
     addTearDown(cameraController.dispose);
     final view = BaseMapView(
       source: const VerifiedPmTilesSource(
@@ -93,16 +101,27 @@ void main() {
         maxParentFallbackSteps: 4,
         maxInFlightDecodes: 2,
         maxFramesInFlight: 3,
+        spriteRendererLimits: MapSpriteRendererLimits(
+          maxActiveAtlases: 1,
+          maxTopologyVariants: 1,
+          maxPolicyBatches: 1,
+        ),
         maxSceneNodeCount: 32,
       ),
       earthquakeOverlay: overlay,
       onEarthquakeOverlayCoverageChanged: callback,
+      gpuProbeConfiguration: gpuProbeConfiguration,
+      onGpuResourceCounterChanged: gpuCounterCallback,
+      gpuProbeController: gpuProbeController,
     );
 
     expect(view.earthquakeOverlay, same(overlay));
     expect(view.onEarthquakeOverlayCoverageChanged, same(callback));
     expect(view.clock, same(clock));
     expect(view.cameraController, same(cameraController));
+    expect(view.gpuProbeConfiguration, same(gpuProbeConfiguration));
+    expect(view.onGpuResourceCounterChanged, same(gpuCounterCallback));
+    expect(view.gpuProbeController, same(gpuProbeController));
   });
 
   group('cameraAfterGestureUpdate', () {

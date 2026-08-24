@@ -1,3 +1,9 @@
+/// Build-time gate for the debug-map-only GPU lifecycle probe.
+// ignore: do_not_use_environment
+const mapGpuProbeCompileTimeEnabled = bool.fromEnvironment(
+  'EQMONITOR_MAP_GPU_PROBE',
+);
+
 enum MapGpuFaultPoint { atlasUpload, shaderInterface, frameSubmit }
 
 enum MapSpriteAtlasProbeFixture {
@@ -84,6 +90,28 @@ final class MapGpuResourceCounterSnapshot {
   final MapGpuResourceKindCounter instance;
   final MapGpuResourceKindCounter node;
   final int rendererContextGeneration;
+}
+
+typedef MapGpuResourceCounterCallback = void Function(
+  MapGpuResourceCounterSnapshot snapshot,
+);
+
+/// Prevents an in-flight retirement fence from notifying a disposed widget.
+final class MapGpuResourceCounterCallbackGate {
+  MapGpuResourceCounterCallbackGate({required this.callback});
+
+  final MapGpuResourceCounterCallback callback;
+  var _isDisposed = false;
+
+  void publish(MapGpuResourceCounterSnapshot snapshot) {
+    if (!_isDisposed) {
+      callback(snapshot);
+    }
+  }
+
+  void dispose() {
+    _isDisposed = true;
+  }
 }
 
 abstract interface class MapGpuProbeHost {

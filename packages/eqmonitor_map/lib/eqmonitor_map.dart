@@ -11,6 +11,9 @@ export 'package:pmtiles_v3/pmtiles_v3.dart'
 
 export 'src/eqmonitor_map_library.dart';
 export 'src/flutter_scene/base_map_material_preflight_view.dart';
+export 'src/flutter_scene/flutter_scene_sprite_resource_owner.dart'
+    show MapSpriteRendererLimits;
+export 'src/flutter_scene/map_gpu_probe.dart';
 export 'src/foundation/async_generation_token.dart';
 export 'src/foundation/frame/map_clock.dart';
 export 'src/foundation/frame/map_frame_revision.dart';

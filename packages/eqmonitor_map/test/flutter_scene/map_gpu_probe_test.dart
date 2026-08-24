@@ -67,6 +67,24 @@ void main() {
     expect(snapshot.texture.live, 4);
     expect(snapshot.rendererContextGeneration, 7);
   });
+
+  test('counter callback gate suppresses in-flight updates after dispose', () {
+    final values = <MapGpuResourceCounterSnapshot>[];
+    final gate = MapGpuResourceCounterCallbackGate(callback: values.add);
+    const snapshot = MapGpuResourceCounterSnapshot(
+      texture: MapGpuResourceKindCounter.zero,
+      topology: MapGpuResourceKindCounter.zero,
+      instance: MapGpuResourceKindCounter.zero,
+      node: MapGpuResourceKindCounter.zero,
+      rendererContextGeneration: 1,
+    );
+
+    gate.publish(snapshot);
+    gate.dispose();
+    gate.publish(snapshot);
+
+    expect(values, [same(snapshot)]);
+  });
 }
 
 final class _FakeProbeHost implements MapGpuProbeHost {
