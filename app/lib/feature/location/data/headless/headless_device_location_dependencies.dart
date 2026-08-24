@@ -391,9 +391,11 @@ class HeadlessDeviceLocationSyncServiceBuilder {
     required DeviceLocationSyncStateRepository stateRepository,
     required JmaRegionResolver resolver,
     required NotificationSlotRepository repository,
+    DeviceLocationSyncLeaseManager leaseManager =
+        const BackgroundLocationSyncLeaseManager(),
   }) => DeviceLocationSyncService(
     scope: scope,
-    leaseManager: const BackgroundLocationSyncLeaseManager(),
+    leaseManager: leaseManager,
     stateRepository: stateRepository,
     resolvePayload: ({required latitude, required longitude}) async {
       final resolution = resolver.resolveEarthquakeRegion(latitude, longitude);
