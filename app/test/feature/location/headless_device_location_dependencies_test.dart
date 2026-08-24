@@ -7,14 +7,19 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/feature/location/data/headless/headless_device_location_dependencies.dart';
+import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/headless_api_identity.dart';
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
+import 'package:jma_map/jma_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
@@ -175,9 +180,8 @@ void main() {
     ]);
   });
 
-  test('ローカルAsset Packで地域解決しAPIへ地域コードだけを送る', () async {
-    final preferences = SharedPreferencesAsync();
-    final resolver = await HeadlessJmaRegionResolverLoader(preferences).load();
+  test('端末内の地域解決結果をAPIへ地域コードだけ送る', () async {
+    final resolver = TestHeadlessJmaRegionResolver();
     final adapter = RecordingDeviceLocationApiAdapter();
     final dio = Dio(BaseOptions(baseUrl: 'https://api.example.com'))
       ..httpClientAdapter = adapter;
@@ -205,9 +209,50 @@ void main() {
       'city',
       'tsunamiForecastRegion',
     });
+    expect(adapter.requestBody, {
+      'region': '350',
+      'city': '1310100',
+      'tsunamiForecastRegion': '100',
+    });
     expect(adapter.requestBody, isNot(contains('latitude')));
     expect(adapter.requestBody, isNot(contains('longitude')));
   });
+}
+
+final class TestHeadlessJmaRegionResolver extends JmaRegionResolver {
+  new()
+    : super(
+        cityMapData: JmaMap_JmaMapData(),
+        tsunamiMapData: JmaMap_JmaMapData(),
+        earthquakeParameter: const EarthquakeParameter(
+          metadata: ParameterMetadata(
+            type: ParameterType.earthquakeStations,
+            schemaVersion: 1,
+            sourceVersion: 'fixture',
+            sourceUpdatedAt: null,
+            sourceUrls: [],
+            sha256: '',
+          ),
+          prefectures: [],
+        ),
+      );
+
+  @override
+  EarthquakeRegionResolution resolveEarthquakeRegion(
+    double latitude,
+    double longitude,
+  ) => const (
+    regionCode: 350,
+    regionName: '東京都２３区',
+    cityCode: '1310100',
+    cityName: '千代田区',
+  );
+
+  @override
+  String resolveTsunamiForecastRegionCode(
+    double latitude,
+    double longitude,
+  ) => '100';
 }
 
 const testScope = DeviceLocationSyncScope(
