@@ -1095,6 +1095,9 @@ void main() {
   });
 
   test('frame-submit probe rolls back once then allows the next frame', () {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
     final batch = spriteBatch(spriteFrame: frame);
     final value = MapSceneFrameSubmission(
       frame: frame,

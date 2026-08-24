@@ -158,17 +158,11 @@ final class FlutterSceneSpriteResourceOwner<TTexture, TTopology, TInstance> {
   final _pending = <_MapSpritePendingFrame<TTexture, TTopology, TInstance>>[];
   _MapSpriteFramePins<TTexture, TTopology, TInstance>? _active;
   _MapSpriteFramePins<TTexture, TTopology, TInstance>? _candidate;
-  var _textureUploads = 0;
-  var _topologyUploads = 0;
-  var _instanceUploads = 0;
-  var _nodeCreates = 0;
-  var _textureRetires = 0;
-  var _topologyRetires = 0;
-  var _instanceRetires = 0;
-  var _nodeRetires = 0;
-  var _contextGeneration = 0;
+  final _MapGpuDebugResourceCounters? _debugCounters =
+      mapGpuProbeCompileTimeEnabled ? _MapGpuDebugResourceCounters() : null;
 
-  bool get hasCounterCallback => onCounterSnapshot != null;
+  bool get hasCounterCallback =>
+      mapGpuProbeCompileTimeEnabled && onCounterSnapshot != null;
 
   MapGpuResourceCounterSnapshot get snapshot =>
       mapGpuResourceCounterSnapshotFor(this);
@@ -204,7 +198,9 @@ prepareFlutterSceneSpriteFrame<TTexture, TTopology, TInstance>({
   );
   var failureReason = FlutterSceneSpriteResourceFailureReason.shaderInterface;
   try {
-    owner.probeRuntime?.throwIfRequested(MapGpuFaultPoint.shaderInterface);
+    if (mapGpuProbeCompileTimeEnabled) {
+      owner.probeRuntime?.throwIfRequested(MapGpuFaultPoint.shaderInterface);
+    }
     batches.forEach(owner.backend.preflightShaderInterface);
     final atlases = <String, MapSpriteAtlas>{
       for (final batch in batches) batch.atlas.identity.value: batch.atlas,
@@ -278,11 +274,14 @@ prepareFlutterSceneSpriteFrame<TTexture, TTopology, TInstance>({
     );
   }
   pins._nodeCount = nodes.length;
-  owner
-    .._candidate = pins
-    .._nodeCreates += nodes.length
-    .._contextGeneration = frame.contextGeneration;
-  _notifySpriteCounters(owner);
+  owner._candidate = pins;
+  if (mapGpuProbeCompileTimeEnabled) {
+    final counters = _debugCountersFor(owner);
+    counters
+      .._nodeCreates += nodes.length
+      .._contextGeneration = frame.contextGeneration;
+    _notifySpriteCounters(owner);
+  }
   return FlutterSceneSpritePreparedFrame._(
     owner,
     pins,
@@ -311,7 +310,9 @@ void commitFlutterSceneSpritePreparedFrame<TTexture, TTopology, TInstance>(
   if (previous != null) {
     _moveSpriteFrameToPending(owner: owner, pins: previous);
   }
-  _notifySpriteCounters(owner);
+  if (mapGpuProbeCompileTimeEnabled) {
+    _notifySpriteCounters(owner);
+  }
 }
 
 void rollbackFlutterSceneSpritePreparedFrame<TTexture, TTopology, TInstance>(
@@ -326,7 +327,9 @@ void rollbackFlutterSceneSpritePreparedFrame<TTexture, TTopology, TInstance>(
   }
   prepared._isFinalized = true;
   _releaseSpriteFrame(owner: owner, pins: prepared._pins);
-  _notifySpriteCounters(owner);
+  if (mapGpuProbeCompileTimeEnabled) {
+    _notifySpriteCounters(owner);
+  }
 }
 
 void retireAllFlutterSceneSpriteResources<TTexture, TTopology, TInstance>(
@@ -342,7 +345,9 @@ void retireAllFlutterSceneSpriteResources<TTexture, TTopology, TInstance>(
     owner._active = null;
     _moveSpriteFrameToPending(owner: owner, pins: active);
   }
-  _notifySpriteCounters(owner);
+  if (mapGpuProbeCompileTimeEnabled) {
+    _notifySpriteCounters(owner);
+  }
 }
 
 MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
@@ -352,6 +357,7 @@ MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
 >(FlutterSceneSpriteResourceOwner<TTexture, TTopology, TInstance> owner) {
   final active = owner._active;
   final candidate = owner._candidate;
+  final counters = owner._debugCounters;
   return MapGpuResourceCounterSnapshot(
     texture: MapGpuResourceKindCounter(
       active: active?.textures.length ?? 0,
@@ -360,8 +366,8 @@ MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
         0,
         (total, pending) => total + pending.pins.textures.length,
       ),
-      uploads: owner._textureUploads,
-      retires: owner._textureRetires,
+      uploads: counters?._textureUploads ?? 0,
+      retires: counters?._textureRetires ?? 0,
     ),
     topology: MapGpuResourceKindCounter(
       active: active?.topologies.length ?? 0,
@@ -370,8 +376,8 @@ MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
         0,
         (total, pending) => total + pending.pins.topologies.length,
       ),
-      uploads: owner._topologyUploads,
-      retires: owner._topologyRetires,
+      uploads: counters?._topologyUploads ?? 0,
+      retires: counters?._topologyRetires ?? 0,
     ),
     instance: MapGpuResourceKindCounter(
       active: active?.instances.length ?? 0,
@@ -380,8 +386,8 @@ MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
         0,
         (total, pending) => total + pending.pins.instances.length,
       ),
-      uploads: owner._instanceUploads,
-      retires: owner._instanceRetires,
+      uploads: counters?._instanceUploads ?? 0,
+      retires: counters?._instanceRetires ?? 0,
     ),
     node: MapGpuResourceKindCounter(
       active: active?._nodeCount ?? 0,
@@ -390,10 +396,10 @@ MapGpuResourceCounterSnapshot mapGpuResourceCounterSnapshotFor<
         0,
         (total, pending) => total + pending.pins._nodeCount,
       ),
-      uploads: owner._nodeCreates,
-      retires: owner._nodeRetires,
+      uploads: counters?._nodeCreates ?? 0,
+      retires: counters?._nodeRetires ?? 0,
     ),
-    rendererContextGeneration: owner._contextGeneration,
+    rendererContextGeneration: counters?._contextGeneration ?? 0,
   );
 }
 
@@ -432,16 +438,45 @@ void _validateSpriteFrame<TTexture, TTopology, TInstance>({
       message: 'Candidate exceeds maxPolicyBatches.',
     );
   }
-  final snapshot = owner.snapshot;
+  final active = owner._active;
+  final candidate = owner._candidate;
+  final textureLive =
+      (active?.textures.length ?? 0) +
+      (candidate?.textures.length ?? 0) +
+      owner._pending.fold(
+        0,
+        (total, pending) => total + pending.pins.textures.length,
+      );
+  final topologyLive =
+      (active?.topologies.length ?? 0) +
+      (candidate?.topologies.length ?? 0) +
+      owner._pending.fold(
+        0,
+        (total, pending) => total + pending.pins.topologies.length,
+      );
+  final instanceLive =
+      (active?.instances.length ?? 0) +
+      (candidate?.instances.length ?? 0) +
+      owner._pending.fold(
+        0,
+        (total, pending) => total + pending.pins.instances.length,
+      );
+  final nodeLive =
+      (active?._nodeCount ?? 0) +
+      (candidate?._nodeCount ?? 0) +
+      owner._pending.fold(
+        0,
+        (total, pending) => total + pending.pins._nodeCount,
+      );
   final frameMultiplier = owner.maxFramesInFlight + 1;
   final exceedsLivePins =
-      snapshot.texture.live + atlasCount >
+      textureLive + atlasCount >
           owner.limits.maxActiveAtlases * frameMultiplier ||
-      snapshot.topology.live + topologyCount >
+      topologyLive + topologyCount >
           owner.limits.maxTopologyVariants * frameMultiplier ||
-      snapshot.instance.live + batches.length >
+      instanceLive + batches.length >
           owner.limits.maxPolicyBatches * frameMultiplier ||
-      snapshot.node.live + batches.length >
+      nodeLive + batches.length >
           owner.limits.maxPolicyBatches * frameMultiplier;
   if (exceedsLivePins) {
     throw const FlutterSceneSpriteResourceFailure(
@@ -461,13 +496,17 @@ _pinTexture<TTexture, TTopology, TInstance>({
   final key = (frame.contextGeneration, atlas.identity.value);
   var entry = owner._textures[key];
   if (entry == null) {
-    owner.probeRuntime?.throwIfRequested(MapGpuFaultPoint.atlasUpload);
+    if (mapGpuProbeCompileTimeEnabled) {
+      owner.probeRuntime?.throwIfRequested(MapGpuFaultPoint.atlasUpload);
+    }
     entry = _MapSpriteResourceEntry(
       key: key,
       resource: owner.backend.uploadTexture(atlas),
     );
     owner._textures[key] = entry;
-    owner._textureUploads++;
+    if (mapGpuProbeCompileTimeEnabled) {
+      _debugCountersFor(owner)._textureUploads++;
+    }
   }
   entry._pinCount++;
   return entry;
@@ -494,7 +533,9 @@ _pinTopology<TTexture, TTopology, TInstance>({
       ),
     );
     owner._topologies[key] = entry;
-    owner._topologyUploads++;
+    if (mapGpuProbeCompileTimeEnabled) {
+      _debugCountersFor(owner)._topologyUploads++;
+    }
   }
   entry._pinCount++;
   return entry;
@@ -519,7 +560,9 @@ _pinInstance<TTexture, TTopology, TInstance>({
       ),
     );
     owner._instances[key] = entry;
-    owner._instanceUploads++;
+    if (mapGpuProbeCompileTimeEnabled) {
+      _debugCountersFor(owner)._instanceUploads++;
+    }
   }
   entry._pinCount++;
   return entry;
@@ -580,7 +623,9 @@ void _completePendingSpriteFrame<TTexture, TTopology, TInstance>({
   pending._didRelease = true;
   owner._pending.remove(pending);
   _releaseSpriteFrame(owner: owner, pins: pending.pins);
-  _notifySpriteCounters(owner);
+  if (mapGpuProbeCompileTimeEnabled) {
+    _notifySpriteCounters(owner);
+  }
 }
 
 void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
@@ -592,7 +637,9 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
     return;
   }
   pins._didRelease = true;
-  owner._nodeRetires += pins._nodeCount;
+  if (mapGpuProbeCompileTimeEnabled) {
+    _debugCountersFor(owner)._nodeRetires += pins._nodeCount;
+  }
   for (final entry in pins.instances) {
     entry._pinCount--;
     if (entry._pinCount == 0) {
@@ -601,7 +648,9 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
         label: 'instance',
         retire: () => owner.backend.retireInstance(entry.resource),
       );
-      owner._instanceRetires++;
+      if (mapGpuProbeCompileTimeEnabled) {
+        _debugCountersFor(owner)._instanceRetires++;
+      }
     }
   }
   for (final entry in pins.topologies) {
@@ -612,7 +661,9 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
         label: 'topology',
         retire: () => owner.backend.retireTopology(entry.resource),
       );
-      owner._topologyRetires++;
+      if (mapGpuProbeCompileTimeEnabled) {
+        _debugCountersFor(owner)._topologyRetires++;
+      }
     }
   }
   for (final entry in pins.textures) {
@@ -623,7 +674,9 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
         label: 'texture',
         retire: () => owner.backend.retireTexture(entry.resource),
       );
-      owner._textureRetires++;
+      if (mapGpuProbeCompileTimeEnabled) {
+        _debugCountersFor(owner)._textureRetires++;
+      }
     }
   }
 }
@@ -650,6 +703,28 @@ void _notifySpriteCounters<TTexture, TTopology, TInstance>(
   if (callback != null) {
     callback(owner.snapshot);
   }
+}
+
+_MapGpuDebugResourceCounters _debugCountersFor<TTexture, TTopology, TInstance>(
+  FlutterSceneSpriteResourceOwner<TTexture, TTopology, TInstance> owner,
+) {
+  final counters = owner._debugCounters;
+  if (counters == null) {
+    throw StateError('GPU probe counters are disabled at compile time.');
+  }
+  return counters;
+}
+
+final class _MapGpuDebugResourceCounters {
+  var _textureUploads = 0;
+  var _topologyUploads = 0;
+  var _instanceUploads = 0;
+  var _nodeCreates = 0;
+  var _textureRetires = 0;
+  var _topologyRetires = 0;
+  var _instanceRetires = 0;
+  var _nodeRetires = 0;
+  var _contextGeneration = 0;
 }
 
 final class _MapSpriteResourceEntry<TKey, TResource> {

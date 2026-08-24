@@ -320,9 +320,11 @@ void main() {
     expect(backend.instanceRetires, 2);
     expect(backend.topologyRetires, 1);
     expect(backend.textureRetires, 1);
-    expect(owner.snapshot.instance.retires, 2);
-    expect(owner.snapshot.topology.retires, 1);
-    expect(owner.snapshot.texture.retires, 1);
+    if (mapGpuProbeCompileTimeEnabled) {
+      expect(owner.snapshot.instance.retires, 2);
+      expect(owner.snapshot.topology.retires, 1);
+      expect(owner.snapshot.texture.retires, 1);
+    }
   });
 
   test('F plus 2 worst case rejects before exceeding resource bounds', () {
@@ -430,9 +432,52 @@ void main() {
     expect(owner.hasCounterCallback, isFalse);
   });
 
+  test('compile-time disabled owner bypasses probe and counter hot paths', () {
+    if (mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final snapshots = <MapGpuResourceCounterSnapshot>[];
+    final backend = _FakeSpriteBackend();
+    final owner = FlutterSceneSpriteResourceOwner(
+      limits: const MapSpriteRendererLimits(
+        maxActiveAtlases: 1,
+        maxTopologyVariants: 1,
+        maxPolicyBatches: 1,
+      ),
+      maxFramesInFlight: 1,
+      backend: backend,
+      waitForGpuCompletion: Future<void>.value,
+      probeRuntime: MapGpuProbeRuntime(
+        configuration: const MapGpuProbeConfiguration(
+          faultPoint: MapGpuFaultPoint.shaderInterface,
+          atlasFixture: MapSpriteAtlasProbeFixture.production,
+        ),
+      ),
+      onCounterSnapshot: snapshots.add,
+    );
+    final candidateFrame = frame(number: 0);
+
+    final prepared = owner.prepareFrame(
+      frame: candidateFrame,
+      batches: batches(
+        frame: candidateFrame,
+        atlas: atlas('sha256:production-no-probe'),
+        generation: 1,
+      ),
+    );
+    prepared.commit();
+
+    expect(snapshots, isEmpty);
+    expect(owner.snapshot.texture.uploads, 0);
+    expect(owner.snapshot.node.active, 1);
+  });
+
   test(
     'counter callback reports candidate commit and fence retirement states',
     () async {
+      if (!mapGpuProbeCompileTimeEnabled) {
+        return;
+      }
       final snapshots = <MapGpuResourceCounterSnapshot>[];
       final backend = _FakeSpriteBackend();
       final owner = FlutterSceneSpriteResourceOwner(

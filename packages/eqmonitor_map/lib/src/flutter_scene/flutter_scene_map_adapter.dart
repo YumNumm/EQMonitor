@@ -729,7 +729,9 @@ final class FlutterSceneMapAdapter {
             nodes.add(node);
         }
       }
-      _gpuProbeRuntime?.throwIfRequested(MapGpuFaultPoint.frameSubmit);
+      if (mapGpuProbeCompileTimeEnabled) {
+        _gpuProbeRuntime?.throwIfRequested(MapGpuFaultPoint.frameSubmit);
+      }
       _sceneGraph
         ..removeAll()
         ..addAll(nodes);
