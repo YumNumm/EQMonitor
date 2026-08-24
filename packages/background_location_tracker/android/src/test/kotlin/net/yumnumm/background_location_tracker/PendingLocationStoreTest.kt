@@ -251,7 +251,7 @@ class PendingLocationStoreTest {
     }
 }
 
-private class TestContext(
+internal class TestContext(
     private val preferences: SharedPreferences = InMemorySharedPreferences()
 ) : ContextWrapper(null) {
 
@@ -260,7 +260,7 @@ private class TestContext(
     override fun getSharedPreferences(name: String?, mode: Int): SharedPreferences = preferences
 }
 
-private class InMemorySharedPreferences : SharedPreferences {
+internal class InMemorySharedPreferences : SharedPreferences {
     private val values = mutableMapOf<String, Any?>()
     private val commitResults = ArrayDeque<Boolean>()
 
