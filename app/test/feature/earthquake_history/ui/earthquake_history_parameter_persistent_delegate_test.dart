@@ -18,6 +18,10 @@ void main() {
   Future<void> pumpDelegate(
     WidgetTester tester, {
     required bool isDebugEnabled,
+    EarthquakeHistoryParameter parameter = const EarthquakeHistoryParameter.all(
+      sortBy: EarthquakeSortBy.eventId,
+      sortOrder: SortOrder.desc,
+    ),
   }) async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesKey.debug.key: isDebugEnabled,
@@ -40,10 +44,7 @@ void main() {
               slivers: [
                 SliverPersistentHeader(
                   delegate: EarthquakeHistoryParameterPersistentDelegate(
-                    parameter: const EarthquakeHistoryParameter.all(
-                      sortBy: EarthquakeSortBy.eventId,
-                      sortOrder: SortOrder.desc,
-                    ),
+                    parameter: parameter,
                     onChanged: (_) {},
                   ),
                 ),
@@ -68,5 +69,27 @@ void main() {
 
     expect(find.byType(StatusFilterChip), findsOneWidget);
     expect(find.byType(TelegramTypeFilterChip), findsOneWidget);
+  });
+
+  testWidgets('全国一覧の震度フィルターは最大観測震度と表示する', (tester) async {
+    await pumpDelegate(tester, isDebugEnabled: false);
+
+    expect(find.text('最大観測震度'), findsOneWidget);
+    expect(find.text('選択地域の観測震度'), findsNothing);
+  });
+
+  testWidgets('地域一覧の震度フィルターは選択地域の観測震度と表示する', (tester) async {
+    await pumpDelegate(
+      tester,
+      isDebugEnabled: false,
+      parameter: const EarthquakeHistoryParameter.region(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+        regionCode: '010100',
+      ),
+    );
+
+    expect(find.text('選択地域の観測震度'), findsOneWidget);
+    expect(find.text('最大観測震度'), findsNothing);
   });
 }
