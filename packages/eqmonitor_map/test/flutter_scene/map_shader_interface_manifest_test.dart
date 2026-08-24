@@ -8,6 +8,19 @@ import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('candidate material factory creates isolated mutable state', () {
+    var generation = 0;
+    final factory = FlutterSceneSpriteCandidateMaterialFactory(
+      createMaterial: () => ++generation,
+    );
+
+    final first = factory.create();
+    final second = factory.create();
+
+    expect(first, 1);
+    expect(second, 2);
+  });
+
   test(
     'defensively parses typed input, uniform, and sampled-image metadata',
     () {

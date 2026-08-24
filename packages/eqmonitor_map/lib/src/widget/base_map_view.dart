@@ -651,12 +651,14 @@ class _BaseMapController extends ChangeNotifier
       final observationMaterial =
           await loadEarthquakeObservationMaterialBinding();
       final counterCallbackGate = _gpuCounterCallbackGate;
-      final spriteResources = await loadEarthquakeSpriteSceneResources(
-        limits: limits.spriteRendererLimits,
-        maxFramesInFlight: limits.maxFramesInFlight,
-        waitForGpuCompletion: scene.waitForPendingGpuSubmissions,
-        probeRuntime: _gpuProbeRuntime,
-        onCounterSnapshot: counterCallbackGate?.publish,
+      final spriteResources = await loadOptionalFlutterSceneSpriteResources(
+        load: () => loadEarthquakeSpriteSceneResources(
+          limits: limits.spriteRendererLimits,
+          maxFramesInFlight: limits.maxFramesInFlight,
+          waitForGpuCompletion: scene.waitForPendingGpuSubmissions,
+          probeRuntime: _gpuProbeRuntime,
+          onCounterSnapshot: counterCallbackGate?.publish,
+        ),
       );
       prepareInitialOverlay:
       while (true) {

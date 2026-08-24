@@ -281,14 +281,25 @@ void validateMapSpriteShaderManifest({
   mapSpriteVertexLayout.toGpuLayout();
 }
 
+final class FlutterSceneSpriteCandidateMaterialFactory<TMaterial> {
+  const FlutterSceneSpriteCandidateMaterialFactory({
+    required this.createMaterial,
+  });
+
+  final TMaterial Function() createMaterial;
+
+  TMaterial create() => createMaterial();
+}
+
 final class FlutterSceneSpriteInstanceResource {
   const FlutterSceneSpriteInstanceResource({
     required this.geometry,
-    required this.material,
+    required this.materialFactory,
   });
 
   final scene.StaticInstanceGeometry geometry;
-  final scene.ShaderMaterial material;
+  final FlutterSceneSpriteCandidateMaterialFactory<scene.ShaderMaterial>
+  materialFactory;
 }
 
 final class FlutterSceneProductionSpriteResourceBackend
@@ -385,11 +396,13 @@ final class FlutterSceneProductionSpriteResourceBackend
     geometry.prepare();
     return FlutterSceneSpriteInstanceResource(
       geometry: geometry,
-      material: scene.ShaderMaterial(
-        vertexShader: _vertexShader,
-        fragmentShader: _fragmentShader,
-        cullingMode: scene_gpu.CullMode.none,
-        isOpaqueOverride: false,
+      materialFactory: FlutterSceneSpriteCandidateMaterialFactory(
+        createMaterial: () => scene.ShaderMaterial(
+          vertexShader: _vertexShader,
+          fragmentShader: _fragmentShader,
+          cullingMode: scene_gpu.CullMode.none,
+          isOpaqueOverride: false,
+        ),
       ),
     );
   }
@@ -438,7 +451,7 @@ final class FlutterSceneSpriteSceneResources
             node: scene.Node(
               mesh: scene.Mesh(
                 entry.instance.geometry,
-                entry.instance.material
+                entry.instance.materialFactory.create()
                   ..setUniformBlock(
                     mapSpriteFrameUniformBlockName,
                     entry.batch.frameUniform,
@@ -556,6 +569,29 @@ loadEarthquakeObservationMaterialBinding() async {
   );
 }
 
+final class FlutterSceneSpriteInitializationFailure implements Exception {
+  const FlutterSceneSpriteInitializationFailure({
+    required this.message,
+    this.stackTrace,
+  });
+
+  final String message;
+  final StackTrace? stackTrace;
+
+  @override
+  String toString() => 'FlutterSceneSpriteInitializationFailure($message)';
+}
+
+Future<T?> loadOptionalFlutterSceneSpriteResources<T>({
+  required Future<T> Function() load,
+}) async {
+  try {
+    return await load();
+  } on FlutterSceneSpriteInitializationFailure {
+    return null;
+  }
+}
+
 Future<FlutterSceneSpriteSceneResources> loadEarthquakeSpriteSceneResources({
   required MapSpriteRendererLimits limits,
   required int maxFramesInFlight,
@@ -563,35 +599,11 @@ Future<FlutterSceneSpriteSceneResources> loadEarthquakeSpriteSceneResources({
   MapGpuProbeRuntime? probeRuntime,
   ValueChanged<MapGpuResourceCounterSnapshot>? onCounterSnapshot,
 }) async {
-  final (shaderLibrary, manifestBytes) = await (
-    scene_gpu.loadShaderLibraryAsync(
-      earthquakeObservationShaderBundleAssetKey,
-    ),
-    rootBundle.load(earthquakeOverlayShaderInterfaceAssetKey),
-  ).wait;
-  if (shaderLibrary == null) {
-    throw StateError(
-      'No DataAssets sprite shader bundle at '
-      '$earthquakeObservationShaderBundleAssetKey.',
-    );
-  }
-  final vertex = shaderLibrary[mapSpriteVertexShaderSymbol];
-  final fragment = shaderLibrary[mapSpriteFragmentShaderSymbol];
-  if (vertex == null || fragment == null) {
-    throw StateError(
-      'Sprite shader bundle must provide $mapSpriteVertexShaderSymbol and '
-      '$mapSpriteFragmentShaderSymbol.',
-    );
-  }
+  final shaderInputs = await _loadEarthquakeSpriteShaderInputs();
   final backend = FlutterSceneProductionSpriteResourceBackend(
-    vertexShader: vertex,
-    fragmentShader: fragment,
-    manifest: MapShaderInterfaceManifest.parse(
-      jsonBytes: manifestBytes.buffer.asUint8List(
-        manifestBytes.offsetInBytes,
-        manifestBytes.lengthInBytes,
-      ),
-    ),
+    vertexShader: shaderInputs.vertex,
+    fragmentShader: shaderInputs.fragment,
+    manifest: shaderInputs.manifest,
   );
   return FlutterSceneSpriteSceneResources(
     owner: FlutterSceneSpriteResourceOwner(
@@ -603,4 +615,58 @@ Future<FlutterSceneSpriteSceneResources> loadEarthquakeSpriteSceneResources({
       onCounterSnapshot: onCounterSnapshot,
     ),
   );
+}
+
+Future<
+  ({
+    scene_gpu.Shader vertex,
+    scene_gpu.Shader fragment,
+    MapShaderInterfaceManifest manifest,
+  })
+>
+_loadEarthquakeSpriteShaderInputs() async {
+  try {
+    final (shaderLibrary, manifestBytes) = await (
+      scene_gpu.loadShaderLibraryAsync(
+        earthquakeObservationShaderBundleAssetKey,
+      ),
+      rootBundle.load(earthquakeOverlayShaderInterfaceAssetKey),
+    ).wait;
+    if (shaderLibrary == null) {
+      throw StateError(
+        'No DataAssets sprite shader bundle at '
+        '$earthquakeObservationShaderBundleAssetKey.',
+      );
+    }
+    final vertex = shaderLibrary[mapSpriteVertexShaderSymbol];
+    final fragment = shaderLibrary[mapSpriteFragmentShaderSymbol];
+    if (vertex == null || fragment == null) {
+      throw StateError(
+        'Sprite shader bundle must provide $mapSpriteVertexShaderSymbol and '
+        '$mapSpriteFragmentShaderSymbol.',
+      );
+    }
+    return (
+      vertex: vertex,
+      fragment: fragment,
+      manifest: MapShaderInterfaceManifest.parse(
+        jsonBytes: manifestBytes.buffer.asUint8List(
+          manifestBytes.offsetInBytes,
+          manifestBytes.lengthInBytes,
+        ),
+      ),
+    );
+  } on Exception catch (error, stackTrace) {
+    throw FlutterSceneSpriteInitializationFailure(
+      message: error.toString(),
+      stackTrace: stackTrace,
+    );
+    // rootBundle reports a missing declared asset as FlutterError.
+    // ignore: avoid_catching_errors
+  } on FlutterError catch (error, stackTrace) {
+    throw FlutterSceneSpriteInitializationFailure(
+      message: error.message,
+      stackTrace: stackTrace,
+    );
+  }
 }

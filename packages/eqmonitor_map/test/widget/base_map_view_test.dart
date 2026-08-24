@@ -2,6 +2,7 @@
 // (Global Constraints「widget testとgolden testは追加しない」)。ここでは
 // gesture callbackから分離したpure関数(`cameraAfterGestureUpdate`/
 // `canonicalZoomFor`)だけを検証する。
+import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
@@ -23,6 +24,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 void main() {
+  test(
+    'typed sprite initialization failure disables only sprite resources',
+    () async {
+      final resources = await loadOptionalFlutterSceneSpriteResources<int>(
+        load: () async => throw const FlutterSceneSpriteInitializationFailure(
+          message: 'invalid manifest',
+        ),
+      );
+
+      expect(resources, isNull);
+    },
+  );
+
+  test('unexpected sprite initialization error still propagates', () async {
+    await expectLater(
+      loadOptionalFlutterSceneSpriteResources<int>(
+        load: () async => throw StateError('unexpected'),
+      ),
+      throwsStateError,
+    );
+  });
+
   test('exposes nullable earthquake overlay and coverage callback inputs', () {
     final overlay = createEarthquakeMapOverlaySnapshot(
       versionStamp: createMapOverlayVersionStamp(
