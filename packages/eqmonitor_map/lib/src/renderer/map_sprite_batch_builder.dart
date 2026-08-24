@@ -38,8 +38,10 @@ List<MapPointSpriteInstanceBatch> buildMapPointSpriteBatches({
     if (!ids.add(feature.id) || !regions.containsKey(feature.spriteRegionId)) {
       throw ArgumentError.value(features, 'features');
     }
+    final sizePolicy = _canonicalSizePolicy(feature.sizeScale);
+    final opacityPolicy = _canonicalOpacityPolicy(feature.opacity);
     groups
-        .putIfAbsent((feature.sizeScale, feature.opacity), () => [])
+        .putIfAbsent((sizePolicy, opacityPolicy), () => [])
         .add(
           feature,
         );
@@ -216,6 +218,22 @@ String _policyDigest({
   opacity.belowValue,
   opacity.atOrAboveValue,
 ].map((value) => value.toString()).join(':');
+
+MapZoomLinearRange _canonicalSizePolicy(MapZoomLinearRange policy) =>
+    createMapZoomLinearRange(
+      startZoom: _canonicalPolicyScalar(policy.startZoom),
+      startValue: _canonicalPolicyScalar(policy.startValue),
+      endZoom: _canonicalPolicyScalar(policy.endZoom),
+      endValue: _canonicalPolicyScalar(policy.endValue),
+    );
+
+MapZoomStep _canonicalOpacityPolicy(MapZoomStep policy) => createMapZoomStep(
+  thresholdZoom: _canonicalPolicyScalar(policy.thresholdZoom),
+  belowValue: _canonicalPolicyScalar(policy.belowValue),
+  atOrAboveValue: _canonicalPolicyScalar(policy.atOrAboveValue),
+);
+
+double _canonicalPolicyScalar(double value) => value == 0 ? 0 : value;
 
 double nearestWrappedMapSpriteWorldDelta({
   required double normalizedX,

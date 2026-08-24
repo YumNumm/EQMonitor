@@ -140,6 +140,86 @@ void main() {
     expect(batches.first.batchKey, isNot(batches.last.batchKey));
   });
 
+  test(
+    'canonicalizes equivalent signed-zero policies independent of order',
+    () {
+      final negativeZero = -0.toDouble();
+      final negativeZeroSize = createMapZoomLinearRange(
+        startZoom: negativeZero,
+        startValue: 0.5,
+        endZoom: 20,
+        endValue: 1.5,
+      );
+      final positiveZeroSize = createMapZoomLinearRange(
+        startZoom: 0,
+        startValue: 0.5,
+        endZoom: 20,
+        endValue: 1.5,
+      );
+      final negativeZeroOpacity = createMapZoomStep(
+        thresholdZoom: negativeZero,
+        belowValue: negativeZero,
+        atOrAboveValue: 1,
+      );
+      final positiveZeroOpacity = createMapZoomStep(
+        thresholdZoom: 0,
+        belowValue: 0,
+        atOrAboveValue: 1,
+      );
+      final negativeFirst = buildMapPointSpriteBatches(
+        frame: frame(),
+        versionStamp: versionStamp(),
+        atlas: atlas,
+        features: [
+          feature(
+            id: 'a',
+            priority: 0,
+            size: negativeZeroSize,
+            opacity: negativeZeroOpacity,
+          ),
+          feature(
+            id: 'b',
+            priority: 1,
+            size: positiveZeroSize,
+            opacity: positiveZeroOpacity,
+          ),
+        ],
+        maxPolicyBatches: 1,
+      ).single;
+      final positiveFirst = buildMapPointSpriteBatches(
+        frame: frame(),
+        versionStamp: versionStamp(),
+        atlas: atlas,
+        features: [
+          feature(
+            id: 'b',
+            priority: 1,
+            size: positiveZeroSize,
+            opacity: positiveZeroOpacity,
+          ),
+          feature(
+            id: 'a',
+            priority: 0,
+            size: negativeZeroSize,
+            opacity: negativeZeroOpacity,
+          ),
+        ],
+        maxPolicyBatches: 1,
+        previous: [negativeFirst],
+      ).single;
+
+      expect(negativeFirst.batchKey, positiveFirst.batchKey);
+      expect(
+        positiveFirst.instanceGeneration,
+        same(negativeFirst.instanceGeneration),
+      );
+      expect(
+        negativeFirst.frameUniform.buffer.asUint8List(),
+        positiveFirst.frameUniform.buffer.asUint8List(),
+      );
+    },
+  );
+
   test('rejects caller policy batch overrun', () {
     expect(
       () => buildMapPointSpriteBatches(
