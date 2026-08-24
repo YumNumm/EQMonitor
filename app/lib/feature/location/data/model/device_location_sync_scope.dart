@@ -8,8 +8,6 @@ abstract class DeviceLocationSyncScope with _$DeviceLocationSyncScope {
   const factory({
     @JsonKey(name: 'apiEndpoint')
     required String apiEndpoint,
-    @JsonKey(name: 'registrationGeneration')
-    String? registrationGeneration,
   }) = _DeviceLocationSyncScope;
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -17,14 +15,12 @@ abstract class DeviceLocationSyncScope with _$DeviceLocationSyncScope {
 
   static DeviceLocationSyncScope fromApiBaseUrl({
     required String apiBaseUrl,
-    required String registrationGeneration,
   }) {
     final baseUri = Uri.parse(apiBaseUrl);
     return DeviceLocationSyncScope(
       apiEndpoint: Uri.parse(
         baseUri.origin,
       ).resolve('/v2/device/me/location').toString(),
-      registrationGeneration: registrationGeneration,
     );
   }
 }

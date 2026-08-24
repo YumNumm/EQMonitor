@@ -209,8 +209,8 @@ return $default(_that.region,_that.city,_that.tsunamiForecastRegion);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(includeIfNull: false)
 class _DeviceLocationPayload implements DeviceLocationPayload {
   const _DeviceLocationPayload({required this.region, this.city, @JsonKey(name: 'tsunamiForecastRegion') this.tsunamiForecastRegion});
   factory _DeviceLocationPayload.fromJson(Map<String, dynamic> json) => _$DeviceLocationPayloadFromJson(json);

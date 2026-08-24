@@ -213,7 +213,6 @@ void main() {
 
 const testScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
-  registrationGeneration: 'test-registration',
 );
 
 BuildConfig buildConfig({required String restApiUrl}) => BuildConfig(

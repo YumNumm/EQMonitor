@@ -3,18 +3,20 @@ import 'dart:convert';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_sync_scope.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:eqmonitor/feature/location/data/model/device_location_sync_state_record.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:eqmonitor/feature/location/data/model/device_location_sync_scope.dart';
 
+part 'device_location_sync_state_repository.g.dart';
+
 enum DeviceLocationSyncAvailability { enabled, disabled, uninitialized }
 
-final deviceLocationSyncStateRepositoryProvider =
-    Provider<SharedPreferencesDeviceLocationSyncStateRepository>(
-      (ref) => SharedPreferencesDeviceLocationSyncStateRepository(
-        SharedPreferencesAsync(),
-      ),
+@Riverpod(keepAlive: true)
+DeviceLocationSyncStateRepository deviceLocationSyncStateRepository(Ref ref) =>
+    SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
     );
 
 abstract interface class DeviceLocationSyncStateRepository {
@@ -30,6 +32,8 @@ abstract interface class DeviceLocationSyncStateRepository {
     required DeviceLocationSyncScope scope,
     required DeviceLocationPayload payload,
   });
+
+  Future<void> clearLastSent();
 }
 
 class InMemoryDeviceLocationSyncStateRepository
@@ -67,6 +71,12 @@ class InMemoryDeviceLocationSyncStateRepository
   }) async {
     lastSentScope = scope;
     _lastSent = payload;
+  }
+
+  @override
+  Future<void> clearLastSent() async {
+    lastSentScope = null;
+    _lastSent = null;
   }
 }
 
@@ -120,29 +130,12 @@ class SharedPreferencesDeviceLocationSyncStateRepository
       if (decoded is! Map<String, dynamic>) {
         return null;
       }
-      final storedScope = decoded['scope'];
-      final storedPayload = decoded['payload'];
-      if (storedScope is! Map<String, dynamic> ||
-          storedPayload is! Map<String, dynamic> ||
-          storedScope['apiEndpoint'] != scope.apiEndpoint ||
-          storedScope['registrationGeneration'] !=
-              scope.registrationGeneration) {
+      final record = DeviceLocationSyncStateRecord.fromJson(decoded);
+      if (record.scope != scope) {
         return null;
       }
-      final region = storedPayload['region'];
-      final city = storedPayload['city'];
-      final tsunamiForecastRegion = storedPayload['tsunamiForecastRegion'];
-      if (region is! String ||
-          city != null && city is! String ||
-          tsunamiForecastRegion != null && tsunamiForecastRegion is! String) {
-        return null;
-      }
-      return DeviceLocationPayload(
-        region: region,
-        city: city as String?,
-        tsunamiForecastRegion: tsunamiForecastRegion as String?,
-      );
-    } on FormatException {
+      return record.payload;
+    } on Object {
       return null;
     }
   }
@@ -153,12 +146,16 @@ class SharedPreferencesDeviceLocationSyncStateRepository
     required DeviceLocationPayload payload,
   }) => _preferences.setString(
     SharedPreferencesKey.backgroundLocationLastSentPayload.key,
-    jsonEncode({
-      'scope': {
-        'apiEndpoint': scope.apiEndpoint,
-        'registrationGeneration': scope.registrationGeneration,
-      },
-      'payload': payload.toJson(),
-    }),
+    jsonEncode(
+      DeviceLocationSyncStateRecord(
+        scope: scope,
+        payload: payload,
+      ).toJson(),
+    ),
+  );
+
+  @override
+  Future<void> clearLastSent() => _preferences.remove(
+    SharedPreferencesKey.backgroundLocationLastSentPayload.key,
   );
 }

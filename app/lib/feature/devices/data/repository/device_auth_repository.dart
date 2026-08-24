@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
-import 'package:eqmonitor/feature/devices/data/repository/device_registration_generation_repository.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_auth_repository.g.dart';
@@ -11,8 +11,8 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async =>
     DeviceAuthRepository(
       await ref.watch(securePreferencesDataSourceProvider.future),
       onCredentialsWillChange: ref
-          .watch(deviceRegistrationGenerationRepositoryProvider)
-          .rotate,
+          .watch(deviceLocationSyncStateRepositoryProvider)
+          .clearLastSent,
     );
 
 class DeviceAuthRepository {

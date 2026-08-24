@@ -24,11 +24,13 @@ import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_lev
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jma_map/jma_map.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+part 'background_location_update_notifier_test.g.dart';
 
 const EarthquakeRegionResolution _ibarakiSouthResolution = (
   regionCode: 301,
@@ -61,7 +63,6 @@ const _stopMonitoringChannelName =
 
 const _deviceLocationSyncScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://example.com/v2/device/me/location',
-  registrationGeneration: 'test-registration',
 );
 
 // ---------------------------------------------------------------------------
@@ -500,7 +501,8 @@ ProviderContainer _createNotificationSlotsSyncContainer(
   );
 }
 
-final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
+@Riverpod(keepAlive: true)
+Future<void> testApplyLiveLocation(Ref ref) async {
   await const BackgroundLocationSyncCoordinator().applyPendingMessage(
     ref,
     pending: PendingLocationMessage(
@@ -511,31 +513,36 @@ final _applyLiveLocationProvider = FutureProvider<void>((ref) async {
       timestampMillis: 1000,
     ),
   );
-});
+}
 
-final _applyPendingLocationProvider = FutureProvider<void>((ref) async {
+@Riverpod(keepAlive: true)
+Future<void> testApplyPendingLocation(Ref ref) async {
   await const BackgroundLocationSyncCoordinator().applyPendingLocation(ref);
-});
+}
 
-final _ensureMonitoringProvider = FutureProvider<void>((ref) async {
+@Riverpod(keepAlive: true)
+Future<void> testEnsureMonitoring(Ref ref) async {
   await const BackgroundLocationSyncCoordinator().ensureMonitoring(ref);
-});
+}
 
-final _applyPendingLocationWithCoordinatorProvider =
-    FutureProvider.family<void, BackgroundLocationSyncCoordinator>((
-      ref,
-      coordinator,
-    ) async {
-      await coordinator.applyPendingLocation(ref);
-    });
+@Riverpod(keepAlive: true)
+Future<void> testApplyPendingLocationWithCoordinator(
+  Ref ref,
+  BackgroundLocationSyncCoordinator coordinator,
+) async {
+  await coordinator.applyPendingLocation(ref);
+}
 
-final _applyPendingMessageProvider =
-    FutureProvider.family<void, PendingLocationMessage>((ref, pending) async {
-      await const BackgroundLocationSyncCoordinator().applyPendingMessage(
-        ref,
-        pending: pending,
-      );
-    });
+@Riverpod(keepAlive: true)
+Future<void> testApplyPendingMessage(
+  Ref ref,
+  PendingLocationMessage pending,
+) async {
+  await const BackgroundLocationSyncCoordinator().applyPendingMessage(
+    ref,
+    pending: pending,
+  );
+}
 
 NotificationSlot _currentLocationSlot({required int? regionId}) =>
     NotificationSlot(
@@ -780,7 +787,7 @@ void main() {
     );
     addTeardownToContainer(container);
 
-    await container.read(_ensureMonitoringProvider.future);
+    await container.read(testEnsureMonitoringProvider.future);
 
     expect(monitoringEvents, ['stop']);
   });
@@ -1032,7 +1039,7 @@ void main() {
       );
       addTeardownToContainer(container);
 
-      await container.read(_applyLiveLocationProvider.future);
+      await container.read(testApplyLiveLocationProvider.future);
 
       expect(adapter.putDeviceLocationJsonCalls.single, {
         'region': '301',
@@ -1104,7 +1111,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(
-        _applyPendingLocationWithCoordinatorProvider(
+        testApplyPendingLocationWithCoordinatorProvider(
           _RecordingBackgroundLocationSyncCoordinator(events),
         ).future,
       );
@@ -1176,7 +1183,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(
-        _applyPendingMessageProvider(
+        testApplyPendingMessageProvider(
           PendingLocationMessage(
             updateId: 'retry-id',
             latitude: 36,
@@ -1211,7 +1218,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(
-        _applyPendingMessageProvider(
+        testApplyPendingMessageProvider(
           PendingLocationMessage(
             updateId: 'initialize-enabled-id',
             latitude: 36,
@@ -1252,7 +1259,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(
-        _applyPendingMessageProvider(
+        testApplyPendingMessageProvider(
           PendingLocationMessage(
             updateId: 'initialize-disabled-id',
             latitude: 36,
@@ -1293,7 +1300,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(
-        _applyPendingMessageProvider(
+        testApplyPendingMessageProvider(
           PendingLocationMessage(
             updateId: 'initialize-failure-id',
             latitude: 36,
@@ -1370,7 +1377,7 @@ void main() {
         addTeardownToContainer(container);
 
         await container.read(
-          _applyPendingMessageProvider(
+          testApplyPendingMessageProvider(
             PendingLocationMessage(
               updateId: '${testCase.name}-id',
               latitude: 36,
@@ -1428,7 +1435,7 @@ void main() {
       );
       addTeardownToContainer(container);
 
-      await container.read(_applyPendingLocationProvider.future);
+      await container.read(testApplyPendingLocationProvider.future);
 
       expect(acknowledgeCalls, 0);
       // Device Location同期の1回と、appEffectsの3回再試行は独立する。
@@ -1445,7 +1452,7 @@ void main() {
       );
       addTeardownToContainer(container);
 
-      await container.read(_applyLiveLocationProvider.future);
+      await container.read(testApplyLiveLocationProvider.future);
 
       // Device Location同期の1回と、appEffectsの3回再試行は独立する。
       expect(resolver.resolveEarthquakeRegionCalls, 4);

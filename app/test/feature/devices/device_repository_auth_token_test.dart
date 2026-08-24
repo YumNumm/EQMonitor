@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/interceptor/device_auth_token_interceptor.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
-import 'package:eqmonitor/feature/devices/data/repository/device_registration_generation_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
@@ -28,32 +27,32 @@ void main() {
         InMemorySharedPreferencesAsync.empty();
   });
 
-  test('secure token保存前に非機密registration generationを更新する', () async {
+  test('secure token保存前にDevice Location送信成功値を削除する', () async {
     final events = <String>[];
     final preferences = _MemorySecurePreferencesDataSource(events: events);
     final repository = DeviceAuthRepository(
       preferences,
-      onCredentialsWillChange: () async => events.add('generation:rotate'),
+      onCredentialsWillChange: () async => events.add('location:clear'),
     );
 
     await repository.saveToken(token: 'secret-device-token');
 
-    expect(events, ['generation:rotate', 'secure:set']);
+    expect(events, ['location:clear', 'secure:set']);
     expect(preferences.values.values, contains('secret-device-token'));
   });
 
-  test('secure token削除前に非機密registration generationを更新する', () async {
+  test('secure token削除前にDevice Location送信成功値を削除する', () async {
     final events = <String>[];
     final preferences = _MemorySecurePreferencesDataSource(events: events)
       ..values[SecureStorageKey.deviceToken] = 'secret-device-token';
     final repository = DeviceAuthRepository(
       preferences,
-      onCredentialsWillChange: () async => events.add('generation:rotate'),
+      onCredentialsWillChange: () async => events.add('location:clear'),
     );
 
     await repository.clearToken();
 
-    expect(events, ['generation:rotate', 'secure:remove']);
+    expect(events, ['location:clear', 'secure:remove']);
     expect(preferences.values, isEmpty);
   });
 
@@ -86,20 +85,10 @@ void main() {
     },
   );
 
-  test('404再登録後は同じ地域でも新device scopeへ送信する', () async {
+  test('404再登録後は送信成功値を削除して同じ地域でも再送する', () async {
     final preferences = SharedPreferencesAsync();
-    final generated = <String>[
-      'registration-1',
-      'registration-2',
-      'registration-3',
-    ];
-    final generationRepository = DeviceRegistrationGenerationRepository(
-      preferences: preferences,
-      generate: () => generated.removeAt(0),
-    );
     final oldScope = DeviceLocationSyncScope.fromApiBaseUrl(
       apiBaseUrl: 'https://example.com',
-      registrationGeneration: await generationRepository.readOrCreate(),
     );
     final stateRepository = SharedPreferencesDeviceLocationSyncStateRepository(
       preferences,
@@ -117,7 +106,7 @@ void main() {
       ..values[SecureStorageKey.deviceToken] = 'stale-jwt';
     final authRepository = DeviceAuthRepository(
       securePreferences,
-      onCredentialsWillChange: generationRepository.rotate,
+      onCredentialsWillChange: stateRepository.clearLastSent,
     );
     final adapter = _DeviceRegisterAdapter(
       rejectStaleAuthorization: true,
@@ -141,7 +130,6 @@ void main() {
     );
     final newScope = DeviceLocationSyncScope.fromApiBaseUrl(
       apiBaseUrl: 'https://example.com',
-      registrationGeneration: await generationRepository.readOrCreate(),
     );
     final sent = <DeviceLocationPayload>[];
     final result =
@@ -163,7 +151,7 @@ void main() {
         );
 
     expect(registration, isA<Success<RegisteredDevice, Exception>>());
-    expect(newScope, isNot(oldScope));
+    expect(newScope, oldScope);
     expect(result, DeviceLocationSyncResult.sent);
     expect(sent, [same(payload)]);
     expect((await preferences.getAll()).values, isNot(contains('stale-jwt')));

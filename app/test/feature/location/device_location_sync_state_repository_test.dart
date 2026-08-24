@@ -64,28 +64,18 @@ void main() {
     });
   });
 
-  test('registration generationが異なる成功値は送信済みとして復元しない', () async {
+  test('credential変更時は最後の送信成功payloadを削除する', () async {
     final repository = SharedPreferencesDeviceLocationSyncStateRepository(
       SharedPreferencesAsync(),
     );
     await repository.writeLastSent(
       scope: productionScope,
-      payload: const DeviceLocationPayload(
-        region: '301',
-        city: '0820100',
-        tsunamiForecastRegion: '201',
-      ),
+      payload: const DeviceLocationPayload(region: '301'),
     );
 
-    expect(
-      await repository.readLastSent(
-        scope: const DeviceLocationSyncScope(
-          apiEndpoint: 'https://api.example.com/v2/device/me/location',
-          registrationGeneration: 'registration-2',
-        ),
-      ),
-      isNull,
-    );
+    await repository.clearLastSent();
+
+    expect(await repository.readLastSent(scope: productionScope), isNull);
   });
 
   test('API endpointが異なる成功値は送信済みとして復元しない', () async {
@@ -105,7 +95,6 @@ void main() {
       await repository.readLastSent(
         scope: const DeviceLocationSyncScope(
           apiEndpoint: 'https://staging.example.com/v2/device/me/location',
-          registrationGeneration: 'registration-1',
         ),
       ),
       isNull,
@@ -182,5 +171,4 @@ void main() {
 
 const productionScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
-  registrationGeneration: 'registration-1',
 );

@@ -432,12 +432,10 @@ PendingDeviceLocation pendingLocationFor({required String updateId}) =>
 
 const currentScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
-  registrationGeneration: 'registration-2',
 );
 
 const oldScope = DeviceLocationSyncScope(
-  apiEndpoint: 'https://api.example.com/v2/device/me/location',
-  registrationGeneration: 'registration-1',
+  apiEndpoint: 'https://old-api.example.com/v2/device/me/location',
 );
 
 final class RecordingDeviceLocationSyncLeaseManager

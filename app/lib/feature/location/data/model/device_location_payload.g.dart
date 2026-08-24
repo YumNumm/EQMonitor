@@ -26,6 +26,6 @@ Map<String, dynamic> _$DeviceLocationPayloadToJson(
   _DeviceLocationPayload instance,
 ) => <String, dynamic>{
   'region': instance.region,
-  'city': instance.city,
-  'tsunamiForecastRegion': instance.tsunamiForecastRegion,
+  'city': ?instance.city,
+  'tsunamiForecastRegion': ?instance.tsunamiForecastRegion,
 };

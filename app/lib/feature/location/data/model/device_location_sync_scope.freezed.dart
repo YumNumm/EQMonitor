@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceLocationSyncScope {
 
-@JsonKey(name: 'apiEndpoint') String get apiEndpoint;@JsonKey(name: 'registrationGeneration') String? get registrationGeneration;
+@JsonKey(name: 'apiEndpoint') String get apiEndpoint;
 /// Create a copy of DeviceLocationSyncScope
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $DeviceLocationSyncScopeCopyWith<DeviceLocationSyncScope> get copyWith => _$Devi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceLocationSyncScope&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.registrationGeneration, registrationGeneration) || other.registrationGeneration == registrationGeneration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceLocationSyncScope&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,apiEndpoint,registrationGeneration);
+int get hashCode => Object.hash(runtimeType,apiEndpoint);
 
 @override
 String toString() {
-  return 'DeviceLocationSyncScope(apiEndpoint: $apiEndpoint, registrationGeneration: $registrationGeneration)';
+  return 'DeviceLocationSyncScope(apiEndpoint: $apiEndpoint)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $DeviceLocationSyncScopeCopyWith<$Res>  {
   factory $DeviceLocationSyncScopeCopyWith(DeviceLocationSyncScope value, $Res Function(DeviceLocationSyncScope) _then) = _$DeviceLocationSyncScopeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'apiEndpoint') String apiEndpoint,@JsonKey(name: 'registrationGeneration') String? registrationGeneration
+@JsonKey(name: 'apiEndpoint') String apiEndpoint
 });
 
 
@@ -66,11 +66,10 @@ class _$DeviceLocationSyncScopeCopyWithImpl<$Res>
 
 /// Create a copy of DeviceLocationSyncScope
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? apiEndpoint = null,Object? registrationGeneration = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? apiEndpoint = null,}) {
   return _then(DeviceLocationSyncScope(
 apiEndpoint: null == apiEndpoint ? _self.apiEndpoint : apiEndpoint // ignore: cast_nullable_to_non_nullable
-as String,registrationGeneration: freezed == registrationGeneration ? _self.registrationGeneration : registrationGeneration // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint, @JsonKey(name: 'registrationGeneration')  String? registrationGeneration)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceLocationSyncScope() when $default != null:
-return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
+return $default(_that.apiEndpoint);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint, @JsonKey(name: 'registrationGeneration')  String? registrationGeneration)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceLocationSyncScope():
-return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
+return $default(_that.apiEndpoint);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint, @JsonKey(name: 'registrationGeneration')  String? registrationGeneration)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'apiEndpoint')  String apiEndpoint)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceLocationSyncScope() when $default != null:
-return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
+return $default(_that.apiEndpoint);case _:
   return null;
 
 }
@@ -211,11 +210,10 @@ return $default(_that.apiEndpoint,_that.registrationGeneration);case _:
 @JsonSerializable()
 
 class _DeviceLocationSyncScope implements DeviceLocationSyncScope {
-  const _DeviceLocationSyncScope({@JsonKey(name: 'apiEndpoint') required this.apiEndpoint, @JsonKey(name: 'registrationGeneration') this.registrationGeneration});
+  const _DeviceLocationSyncScope({@JsonKey(name: 'apiEndpoint') required this.apiEndpoint});
   factory _DeviceLocationSyncScope.fromJson(Map<String, dynamic> json) => _$DeviceLocationSyncScopeFromJson(json);
 
 @override@JsonKey(name: 'apiEndpoint') final  String apiEndpoint;
-@override@JsonKey(name: 'registrationGeneration') final  String? registrationGeneration;
 
 /// Create a copy of DeviceLocationSyncScope
 /// with the given fields replaced by the non-null parameter values.
@@ -230,16 +228,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceLocationSyncScope&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint)&&(identical(other.registrationGeneration, registrationGeneration) || other.registrationGeneration == registrationGeneration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceLocationSyncScope&&(identical(other.apiEndpoint, apiEndpoint) || other.apiEndpoint == apiEndpoint));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,apiEndpoint,registrationGeneration);
+int get hashCode => Object.hash(runtimeType,apiEndpoint);
 
 @override
 String toString() {
-  return 'DeviceLocationSyncScope(apiEndpoint: $apiEndpoint, registrationGeneration: $registrationGeneration)';
+  return 'DeviceLocationSyncScope(apiEndpoint: $apiEndpoint)';
 }
 
 
@@ -250,7 +248,7 @@ abstract mixin class _$DeviceLocationSyncScopeCopyWith<$Res> implements $DeviceL
   factory _$DeviceLocationSyncScopeCopyWith(_DeviceLocationSyncScope value, $Res Function(_DeviceLocationSyncScope) _then) = __$DeviceLocationSyncScopeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'apiEndpoint') String apiEndpoint,@JsonKey(name: 'registrationGeneration') String? registrationGeneration
+@JsonKey(name: 'apiEndpoint') String apiEndpoint
 });
 
 
@@ -267,11 +265,10 @@ class __$DeviceLocationSyncScopeCopyWithImpl<$Res>
 
 /// Create a copy of DeviceLocationSyncScope
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? apiEndpoint = null,Object? registrationGeneration = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? apiEndpoint = null,}) {
   return _then(_DeviceLocationSyncScope(
 apiEndpoint: null == apiEndpoint ? _self.apiEndpoint : apiEndpoint // ignore: cast_nullable_to_non_nullable
-as String,registrationGeneration: freezed == registrationGeneration ? _self.registrationGeneration : registrationGeneration // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 

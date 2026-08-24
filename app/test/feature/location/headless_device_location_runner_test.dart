@@ -357,6 +357,9 @@ DioException dioNetworkError() => DioException(
 class ThrowingDeviceLocationSyncStateRepository
     implements DeviceLocationSyncStateRepository {
   @override
+  Future<void> clearLastSent() => throw UnimplementedError();
+
+  @override
   Future<DeviceLocationSyncAvailability> readAvailability() =>
       Future.error(StateError('state storage unavailable'));
 
@@ -379,7 +382,6 @@ class ThrowingDeviceLocationSyncStateRepository
 
 const testScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
-  registrationGeneration: 'test-registration',
 );
 
 class RecordingBackgroundLocationBridge
