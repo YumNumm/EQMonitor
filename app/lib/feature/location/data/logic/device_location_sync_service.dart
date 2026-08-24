@@ -21,11 +21,13 @@ typedef SendDeviceLocationPayload = Future<void> Function({
 
 class DeviceLocationSyncService {
   const new({
+    required this.scope,
     required this.stateRepository,
     required this.resolvePayload,
     required this.sendPayload,
   });
 
+  final DeviceLocationSyncScope scope;
   final DeviceLocationSyncStateRepository stateRepository;
   final ResolveDeviceLocationPayload resolvePayload;
   final SendDeviceLocationPayload sendPayload;
@@ -54,7 +56,7 @@ class DeviceLocationSyncService {
       throw StateError('端末内で地域コードを解決できませんでした');
     }
 
-    final previous = await stateRepository.readLastSent();
+    final previous = await stateRepository.readLastSent(scope: scope);
     if (previous != null &&
         previous.region == payload.region &&
         previous.city == payload.city &&
@@ -63,7 +65,7 @@ class DeviceLocationSyncService {
     }
 
     await sendPayload(payload: payload);
-    await stateRepository.writeLastSent(payload);
+    await stateRepository.writeLastSent(scope: scope, payload: payload);
     return DeviceLocationSyncResult.sent;
   }
 }

@@ -19,7 +19,8 @@ void main() {
       SharedPreferencesAsync(),
     );
     await first.writeLastSent(
-      const DeviceLocationPayload(
+      scope: productionScope,
+      payload: const DeviceLocationPayload(
         region: '301',
         city: '0820100',
         tsunamiForecastRegion: '201',
@@ -30,11 +31,59 @@ void main() {
       SharedPreferencesAsync(),
     );
 
-    expect((await recreated.readLastSent())?.toJson(), {
+    expect((await recreated.readLastSent(scope: productionScope))?.toJson(), {
       'region': '301',
       'city': '0820100',
       'tsunamiForecastRegion': '201',
     });
+  });
+
+  test('registration generationが異なる成功値は送信済みとして復元しない', () async {
+    final repository = SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
+    );
+    await repository.writeLastSent(
+      scope: productionScope,
+      payload: const DeviceLocationPayload(
+        region: '301',
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      ),
+    );
+
+    expect(
+      await repository.readLastSent(
+        scope: const DeviceLocationSyncScope(
+          apiEndpoint: 'https://api.example.com/v2/device/me/location',
+          registrationGeneration: 'registration-2',
+        ),
+      ),
+      isNull,
+    );
+  });
+
+  test('API endpointが異なる成功値は送信済みとして復元しない', () async {
+    final repository = SharedPreferencesDeviceLocationSyncStateRepository(
+      SharedPreferencesAsync(),
+    );
+    await repository.writeLastSent(
+      scope: productionScope,
+      payload: const DeviceLocationPayload(
+        region: '301',
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      ),
+    );
+
+    expect(
+      await repository.readLastSent(
+        scope: const DeviceLocationSyncScope(
+          apiEndpoint: 'https://staging.example.com/v2/device/me/location',
+          registrationGeneration: 'registration-1',
+        ),
+      ),
+      isNull,
+    );
   });
 
   test('不正な保存payloadは送信済みとして復元しない', () async {
@@ -53,7 +102,11 @@ void main() {
         SharedPreferencesKey.backgroundLocationLastSentPayload.key,
         source,
       );
-      expect(await repository.readLastSent(), isNull, reason: source);
+      expect(
+        await repository.readLastSent(scope: productionScope),
+        isNull,
+        reason: source,
+      );
     }
   });
 
@@ -100,3 +153,8 @@ void main() {
     );
   });
 }
+
+const productionScope = DeviceLocationSyncScope(
+  apiEndpoint: 'https://api.example.com/v2/device/me/location',
+  registrationGeneration: 'registration-1',
+);
