@@ -127,11 +127,14 @@ final class GoogleAuthRepository implements GoogleAuthGateway {
 final class GoogleAuthConfiguration {
   const new();
 
+  static final _clientIdPrefixPattern = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]*$');
+
   static bool isClientId(String value) {
     const suffix = '.apps.googleusercontent.com';
     if (value.trim() != value || !value.endsWith(suffix)) {
       return false;
     }
-    return value.substring(0, value.length - suffix.length).isNotEmpty;
+    final prefix = value.substring(0, value.length - suffix.length);
+    return _clientIdPrefixPattern.hasMatch(prefix);
   }
 }

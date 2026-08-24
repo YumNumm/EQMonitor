@@ -172,6 +172,10 @@ final class NativeSocialAuthRepository {
 final class NativeAuthConfiguration {
   const new();
 
+  static final _appleServiceIdSegmentPattern = RegExp(
+    r'^[A-Za-z0-9][A-Za-z0-9-]*$',
+  );
+
   static NativeAuthPlatform currentPlatform() {
     if (kIsWeb) {
       return NativeAuthPlatform.unsupported;
@@ -189,7 +193,7 @@ final class NativeAuthConfiguration {
     }
     final segments = value.split('.');
     return segments.length >= 2 &&
-        segments.every((segment) => segment.isNotEmpty);
+        segments.every(_appleServiceIdSegmentPattern.hasMatch);
   }
 
   static bool isMatchingGoogleReversedClientId({

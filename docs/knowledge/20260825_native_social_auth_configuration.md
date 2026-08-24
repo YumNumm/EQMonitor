@@ -40,6 +40,9 @@ https://v2.api.eqmonitor.app/api/auth/apple/android/callback
 Android Manifestのcallback scheme/pathはpackage公式契約の
 `signinwithapple://callback`から変更しない。Service IDやGoogle client IDが空、
 URL・flavor・app IDが不一致の場合はNative UIを開く前にfail closedする。
+Google OAuth client IDのprefixはASCII英数字を先頭とする英数字・`.`・`_`・`-`、
+Apple Service IDの各segmentはASCII英数字を先頭とする英数字・`-`だけを許す。
+空白、`/`、`:`、scheme文字列はNative UI前に拒否する。
 
 Console、Info.plist、provisioning profile、Android署名登録の一致を実機確認するまで
 `IS_NATIVE_SOCIAL_AUTH_ENABLED=false`を維持する。tracked設定に存在しない値を

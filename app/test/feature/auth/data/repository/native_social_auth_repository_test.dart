@@ -511,6 +511,38 @@ void main() {
           googleServerClientId: '.apps.googleusercontent.com',
         ),
       ),
+      (
+        name: '空白を含むGoogle iOS client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleIosClientId: 'not a client.apps.googleusercontent.com',
+          googleIosReversedClientId: 'com.googleusercontent.apps.not a client',
+        ),
+      ),
+      (
+        name: 'scheme文字列を含むGoogle iOS client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleIosClientId: 'https://bad.apps.googleusercontent.com',
+          googleIosReversedClientId: 'com.googleusercontent.apps.https://bad',
+        ),
+      ),
+      (
+        name: '空白を含むGoogle server client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleServerClientId: 'not a client.apps.googleusercontent.com',
+        ),
+      ),
+      (
+        name: 'slashを含むGoogle server client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleServerClientId: 'server/id.apps.googleusercontent.com',
+        ),
+      ),
+      (
+        name: 'colonを含むGoogle server client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleServerClientId: 'server:id.apps.googleusercontent.com',
+        ),
+      ),
     ]) {
       test('${testCase.name}をNative UIとHTTP前に拒否する', () async {
         final fixture = NativeSocialFixture(buildConfig: testCase.buildConfig);
@@ -533,9 +565,19 @@ void main() {
       });
     }
 
-    for (final serviceId in ['.', 'a..b', '.service', 'service.']) {
+    for (final serviceId in [
+      '.',
+      'a..b',
+      '.service',
+      'service.',
+      'https://bad.example',
+      'service id.example',
+      'service/id.example',
+      'service:bad.example',
+      'サービス.example',
+    ]) {
       test(
-        '空segmentを含むApple Service ID $serviceIdをNative UIとHTTP前に拒否する',
+        '不正なApple Service ID $serviceIdをNative UIとHTTP前に拒否する',
         () async {
           final fixture = NativeSocialFixture(
             platform: NativeAuthPlatform.android,
@@ -560,6 +602,51 @@ void main() {
         },
       );
     }
+
+    test('安全なASCIIのGoogle client IDを拒否しない', () async {
+      final fixture = NativeSocialFixture(
+        buildConfig: devBuildConfig.copyWith(
+          googleIosClientId: 'client.id_123.apps.googleusercontent.com',
+          googleIosReversedClientId: 'com.googleusercontent.apps.client.id_123',
+          googleServerClientId: 'server.id-456.apps.googleusercontent.com',
+        ),
+      );
+      fixture.google.credentials.add(
+        const NativeAuthCredential(
+          provider: NativeAuthProvider.google,
+          idToken: 'google-token',
+          nonce: 'google-nonce',
+        ),
+      );
+
+      final result = await fixture.repository.signInWithGoogle();
+
+      expect(result, isA<Success<void, AuthFailure>>());
+      expect(fixture.google.signInCount, 1);
+      expect(fixture.adapter.requestBodies, hasLength(1));
+    });
+
+    test('英数字とhyphenからなるApple Service IDを拒否しない', () async {
+      final fixture = NativeSocialFixture(
+        platform: NativeAuthPlatform.android,
+        buildConfig: devBuildConfig.copyWith(
+          appleServiceId: 'com.example.service-123',
+        ),
+      );
+      fixture.apple.credentials.add(
+        const NativeAuthCredential(
+          provider: NativeAuthProvider.apple,
+          idToken: 'apple-token',
+          nonce: 'apple-nonce',
+        ),
+      );
+
+      final result = await fixture.repository.signInWithApple();
+
+      expect(result, isA<Success<void, AuthFailure>>());
+      expect(fixture.apple.webAuthenticationOptions, hasLength(1));
+      expect(fixture.adapter.requestBodies, hasLength(1));
+    });
 
     test('Google double tapは二つ目をbusyで拒否しNativeとHTTPを一回にする', () async {
       final fixture = NativeSocialFixture();

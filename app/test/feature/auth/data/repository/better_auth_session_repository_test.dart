@@ -309,7 +309,44 @@ void main() {
       },
     );
 
-    test('social sign-in応答待ちのinvalidation後にsessionとCookieを復活させない', () async {
+    test('social sign-inのconnection errorで既存sessionとCookieを保持する', () async {
+      final preferences = _MemorySecurePreferencesDataSource()
+        ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session';
+      final repository = BetterAuthSessionRepository(
+        preferences: preferences,
+      );
+      final adapter = _SocialConnectionFailureAdapter();
+      final cookieJar = CookieJar();
+      await cookieJar.saveFromResponse(
+        Uri.parse('https://example.com'),
+        [Cookie('session', 'old-cookie')],
+      );
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = adapter;
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: repository,
+        cookieJar: cookieJar,
+      );
+
+      final result = await client.signInSocial(
+        provider: 'google',
+        idToken: 'provider-id-token',
+      );
+      await client.getSession();
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.network,
+      );
+      expect((await repository.readSessionToken()).unwrap(), 'old-session');
+      expect(adapter.cookieHeaders, [
+        'session=old-cookie',
+        'session=old-cookie',
+      ]);
+    });
+
+    test('production同順序のinvalidation後に遅延sign-in応答を復活させない', () async {
       final preferences = _MemorySecurePreferencesDataSource()
         ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session';
       final repository = BetterAuthSessionRepository(
@@ -338,8 +375,8 @@ void main() {
         idToken: 'provider-id-token',
       );
       await adapter.fetchStarted.future;
-      await repository.clearSession();
       await client.clearCookies();
+      await repository.clearSession();
       responseGate.complete();
       final result = await pendingSignIn;
       await client.getSession();
@@ -534,6 +571,40 @@ final class _SocialSignInResponseAdapter implements HttpClientAdapter {
         if (isSignIn) 'set-cookie': ['session=new-cookie; Path=/'],
         if (isSignIn && currentTokenHeaders != null)
           'set-auth-token': currentTokenHeaders,
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
+}
+
+final class _SocialConnectionFailureAdapter implements HttpClientAdapter {
+  final cookieHeaders = <String?>[];
+  var requestCount = 0;
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    requestCount++;
+    cookieHeaders.add(options.headers['cookie'] as String?);
+    if (requestCount == 1) {
+      throw DioException.connectionError(
+        requestOptions: options,
+        reason: 'network unavailable',
+      );
+    }
+    return ResponseBody.fromString(
+      jsonEncode({
+        'session': {'id': 'session-id'},
+        'user': {'id': 'user-id'},
+      }),
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
       },
     );
   }
