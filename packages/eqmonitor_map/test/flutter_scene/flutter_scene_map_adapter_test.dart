@@ -668,7 +668,13 @@ void main() {
             ],
             limits: MapSceneFrameLimits(maxNodeCount: 1),
           ),
-          throwsArgumentError,
+          throwsA(
+            isA<MapSceneFrameValidationException>().having(
+              (error) => error.reason,
+              'reason',
+              MapSceneFrameValidationFailureReason.nodeCountExceeded,
+            ),
+          ),
         );
       },
     );
