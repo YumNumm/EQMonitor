@@ -91,6 +91,32 @@ void main() {
       });
     });
 
+    test('取得済みJWTのtokenを公開せず有効期限だけを参照できる', () async {
+      final fixture = _AuthFixture();
+      fixture.authAdapter.enqueue(
+        Future.value(
+          _jsonResponse({
+            'token': _jwt(exp: 1893459660, marker: 'metadata'),
+          }),
+        ),
+      );
+      final jwtProvider = UserJwtProvider(
+        apiClient: fixture.authClient,
+        now: () => DateTime.utc(2030),
+      );
+
+      expect(jwtProvider.expiresAt, isNull);
+      await jwtProvider.getValidJwt();
+
+      expect(
+        jwtProvider.expiresAt,
+        DateTime.fromMillisecondsSinceEpoch(
+          1893459660 * Duration.millisecondsPerSecond,
+          isUtc: true,
+        ),
+      );
+    });
+
     test('JWT payloadがJSON objectでなければinvalidResponseを返す', () async {
       final fixture = _AuthFixture();
       final header = base64Url.encode(

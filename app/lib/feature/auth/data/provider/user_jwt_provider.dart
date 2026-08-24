@@ -37,6 +37,8 @@ final class UserJwtProvider {
   var _generation = 0;
   var _isDisposed = false;
 
+  DateTime? get expiresAt => _expiresAt;
+
   Future<Result<String, AuthFailure>> getValidJwt({
     bool forceRefresh = false,
   }) {

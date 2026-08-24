@@ -38,6 +38,11 @@ enum AuthEnvironment {
     AuthEnvironment.production => 'eqmonitor.app',
   };
 
+  static AuthEnvironment forFlavor(Flavor flavor) => switch (flavor) {
+    Flavor.dev => AuthEnvironment.develop,
+    Flavor.prod => AuthEnvironment.production,
+  };
+
   bool isCompatible({
     required BuildConfig buildConfig,
     required TelegramUrlModel telegramUrl,
@@ -57,10 +62,7 @@ enum AuthEnvironment {
     required BuildConfig buildConfig,
     required TelegramUrlModel telegramUrl,
   }) {
-    final environment = switch (buildConfig.flavor) {
-      Flavor.dev => AuthEnvironment.develop,
-      Flavor.prod => AuthEnvironment.production,
-    };
+    final environment = forFlavor(buildConfig.flavor);
     if (!environment.isCompatible(
       buildConfig: buildConfig,
       telegramUrl: telegramUrl,
