@@ -144,6 +144,55 @@ void main() {
       expect(shouldStop, isFalse);
     },
   );
+
+  test('reconcile starts monitoring when either consumer exists', () async {
+    const models = _TestModels();
+    final events = <String>[];
+    final lifecycle = BackgroundLocationMonitoringLifecycle(
+      startMonitoring: () async => events.add('start'),
+      stopMonitoring: () async => events.add('stop'),
+    );
+
+    await lifecycle.reconcile(
+      slots: [models.currentLocationSlot()],
+      shakeDetectionState: null,
+    );
+
+    expect(events, ['start']);
+  });
+
+  test('reconcile stops monitoring when both consumers disappeared', () async {
+    const models = _TestModels();
+    final events = <String>[];
+    final lifecycle = BackgroundLocationMonitoringLifecycle(
+      startMonitoring: () async => events.add('start'),
+      stopMonitoring: () async => events.add('stop'),
+    );
+
+    await lifecycle.reconcile(
+      slots: [models.regionSlot()],
+      shakeDetectionState: models.shakeDetectionState(
+        hasCurrentLocation: false,
+      ),
+    );
+
+    expect(events, ['stop']);
+  });
+
+  test('reconcile keeps OS state when a consumer lookup is unknown', () async {
+    final events = <String>[];
+    final lifecycle = BackgroundLocationMonitoringLifecycle(
+      startMonitoring: () async => events.add('start'),
+      stopMonitoring: () async => events.add('stop'),
+    );
+
+    await lifecycle.reconcile(
+      slots: const [],
+      shakeDetectionState: null,
+    );
+
+    expect(events, isEmpty);
+  });
 }
 
 final class _TestModels {

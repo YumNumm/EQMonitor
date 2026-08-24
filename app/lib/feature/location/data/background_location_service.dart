@@ -54,12 +54,12 @@ class BackgroundLocationSyncCoordinator {
 
   Future<void> ensureMonitoring(Ref ref) async {
     try {
-      final slots = await (() async {
+      final List<NotificationSlot>? slots = await (() async {
         try {
           return await ref.read(notificationSlotsProvider.future);
         } on Object catch (e, st) {
           talker.error('[BackgroundLocation] read slots failed', e, st);
-          return <NotificationSlot>[];
+          return null;
         }
       })();
       final shakeDetectionState = await (() async {
@@ -74,15 +74,10 @@ class BackgroundLocationSyncCoordinator {
           return null;
         }
       })();
-      final hasCurrentLocation = slots.any(
-        (s) => s.slotType == NotificationSlotType.currentLocation,
+      await const BackgroundLocationMonitoringLifecycle().reconcile(
+        slots: slots,
+        shakeDetectionState: shakeDetectionState,
       );
-      final hasShakeCurrentLocation =
-          shakeDetectionState?.entries.any((e) => e.isCurrentLocation) ?? false;
-      if (!hasCurrentLocation && !hasShakeCurrentLocation) {
-        return;
-      }
-      await BackgroundLocationTracker.startMonitoring();
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
     }
