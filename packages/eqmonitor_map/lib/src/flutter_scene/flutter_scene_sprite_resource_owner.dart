@@ -597,7 +597,10 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
     entry._pinCount--;
     if (entry._pinCount == 0) {
       owner._instances.remove(entry.key);
-      owner.backend.retireInstance(entry.resource);
+      _retireSpriteResource(
+        label: 'instance',
+        retire: () => owner.backend.retireInstance(entry.resource),
+      );
       owner._instanceRetires++;
     }
   }
@@ -605,7 +608,10 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
     entry._pinCount--;
     if (entry._pinCount == 0) {
       owner._topologies.remove(entry.key);
-      owner.backend.retireTopology(entry.resource);
+      _retireSpriteResource(
+        label: 'topology',
+        retire: () => owner.backend.retireTopology(entry.resource),
+      );
       owner._topologyRetires++;
     }
   }
@@ -613,9 +619,27 @@ void _releaseSpriteFrame<TTexture, TTopology, TInstance>({
     entry._pinCount--;
     if (entry._pinCount == 0) {
       owner._textures.remove(entry.key);
-      owner.backend.retireTexture(entry.resource);
+      _retireSpriteResource(
+        label: 'texture',
+        retire: () => owner.backend.retireTexture(entry.resource),
+      );
       owner._textureRetires++;
     }
+  }
+}
+
+void _retireSpriteResource({
+  required String label,
+  required VoidCallback retire,
+}) {
+  try {
+    retire();
+  } on Exception catch (error, stackTrace) {
+    debugPrint('Sprite $label retirement failed: $error\n$stackTrace');
+    // A GPU wrapper can report use-after-retire as StateError.
+    // ignore: avoid_catching_errors
+  } on Error catch (error, stackTrace) {
+    debugPrint('Sprite $label retirement failed: $error\n$stackTrace');
   }
 }
 

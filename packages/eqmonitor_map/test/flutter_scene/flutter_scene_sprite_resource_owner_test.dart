@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
@@ -292,6 +293,38 @@ void main() {
     expect(backend.liveResources, 0);
   });
 
+  test('one retirement failure does not block remaining exact releases', () {
+    final backend = _FakeSpriteBackend(failFirstInstanceRetire: true);
+    final owner = _owner(
+      backend: backend,
+      maxFramesInFlight: 1,
+      maxActiveAtlases: 1,
+      maxTopologyVariants: 1,
+      maxPolicyBatches: 2,
+      completions: [],
+    );
+    final candidateFrame = frame(number: 0);
+    final prepared = owner.prepareFrame(
+      frame: candidateFrame,
+      batches: batches(
+        frame: candidateFrame,
+        atlas: atlas('sha256:retire-failure'),
+        generation: 1,
+        twoPolicies: true,
+      ),
+    );
+
+    prepared.rollback();
+    prepared.rollback();
+
+    expect(backend.instanceRetires, 2);
+    expect(backend.topologyRetires, 1);
+    expect(backend.textureRetires, 1);
+    expect(owner.snapshot.instance.retires, 2);
+    expect(owner.snapshot.topology.retires, 1);
+    expect(owner.snapshot.texture.retires, 1);
+  });
+
   test('F plus 2 worst case rejects before exceeding resource bounds', () {
     final backend = _FakeSpriteBackend();
     final completions = <Completer<void>>[];
@@ -397,6 +430,43 @@ void main() {
     expect(owner.hasCounterCallback, isFalse);
   });
 
+  test(
+    'counter callback reports candidate commit and fence retirement states',
+    () async {
+      final snapshots = <MapGpuResourceCounterSnapshot>[];
+      final backend = _FakeSpriteBackend();
+      final owner = FlutterSceneSpriteResourceOwner(
+        limits: const MapSpriteRendererLimits(
+          maxActiveAtlases: 1,
+          maxTopologyVariants: 1,
+          maxPolicyBatches: 1,
+        ),
+        maxFramesInFlight: 1,
+        backend: backend,
+        waitForGpuCompletion: Future<void>.value,
+        onCounterSnapshot: snapshots.add,
+      );
+      final candidateFrame = frame(number: 0);
+      final prepared = owner.prepareFrame(
+        frame: candidateFrame,
+        batches: batches(
+          frame: candidateFrame,
+          atlas: atlas('sha256:counters'),
+          generation: 1,
+        ),
+      );
+      prepared.commit();
+      owner.retireAll();
+      await pumpEventQueue();
+
+      expect(snapshots.first.node.candidate, 1);
+      expect(snapshots[1].node.active, 1);
+      expect(snapshots[2].node.pendingRetire, 1);
+      expect(snapshots.last.node.live, 0);
+      expect(snapshots.last.node.retires, 1);
+    },
+  );
+
   test('caller limits and frames in flight must be positive', () {
     for (final limits in [
       const MapSpriteRendererLimits(
@@ -497,19 +567,23 @@ final class _FakeSpriteBackend
           _FakeTopology,
           _FakeInstance
         > {
-  _FakeSpriteBackend({this.failurePoint})
-    : textureUploads = 0,
-      topologyPrepares = 0,
-      instancePrepares = 0,
-      textureRetires = 0,
-      topologyRetires = 0,
-      instanceRetires = 0;
+  _FakeSpriteBackend({
+    this.failurePoint,
+    this.failFirstInstanceRetire = false,
+  }) : textureUploads = 0,
+       topologyPrepares = 0,
+       instancePrepares = 0,
+       textureRetires = 0,
+       topologyRetires = 0,
+       instanceRetires = 0;
 
   final _FakeFailurePoint? failurePoint;
+  final bool failFirstInstanceRetire;
   final resources = <_FakeResource>[];
   int textureUploads;
   int topologyPrepares;
   final topologyAbiVersions = <int>[];
+  var _didFailInstanceRetire = false;
   int instancePrepares;
   int textureRetires;
   int topologyRetires;
@@ -586,6 +660,10 @@ final class _FakeSpriteBackend
     if (!instance.retired) {
       instanceRetires++;
       instance.retired = true;
+      if (failFirstInstanceRetire && !_didFailInstanceRetire) {
+        _didFailInstanceRetire = true;
+        throw StateError('instance retire');
+      }
     }
   }
 }
