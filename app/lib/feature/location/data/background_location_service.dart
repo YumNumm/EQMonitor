@@ -8,16 +8,9 @@ import 'package:eqmonitor/core/provider/widget_timeline_reloader.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
-import 'package:eqmonitor/feature/location/data/logic/background_location_sync_lease.dart';
-import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
-import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
-import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
-import 'package:eqmonitor/feature/location/data/provider/device_location_sync_scope_provider.dart';
-import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -85,28 +78,11 @@ class BackgroundLocationSyncCoordinator {
 
   Future<void> applyPendingLocation(Ref ref) async {
     try {
-      final pendingByUpdateId = <String, PendingLocationMessage>{};
-      final consumersByUpdateId = <String, Set<PendingLocationConsumer>>{};
-      for (final consumer in PendingLocationConsumer.values) {
-        final pending = await BackgroundLocationTracker.peekPendingLocation(
-          consumer: consumer,
-        );
-        if (pending != null) {
-          pendingByUpdateId[pending.updateId] = pending;
-          consumersByUpdateId
-              .putIfAbsent(
-                pending.updateId,
-                () => <PendingLocationConsumer>{},
-              )
-              .add(consumer);
-        }
-      }
-      for (final entry in pendingByUpdateId.entries) {
-        await applyPendingMessage(
-          ref,
-          pending: entry.value,
-          consumers: consumersByUpdateId[entry.key] ?? const {},
-        );
+      final pending = await BackgroundLocationTracker.peekPendingLocation(
+        consumer: PendingLocationConsumer.appEffects,
+      );
+      if (pending != null) {
+        await applyPendingMessage(ref, pending: pending);
       }
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] applyPendingLocation failed', e, st);
@@ -117,37 +93,9 @@ class BackgroundLocationSyncCoordinator {
     Ref ref, {
     required PendingLocationMessage pending,
     Set<PendingLocationConsumer> consumers = const {
-      PendingLocationConsumer.deviceLocation,
       PendingLocationConsumer.appEffects,
     },
   }) async {
-    DeviceLocationSyncResult? deviceLocationResult;
-    String? deviceLocationError;
-    if (consumers.contains(PendingLocationConsumer.deviceLocation)) {
-      try {
-        deviceLocationResult = await syncDeviceLocation(
-          ref,
-          pending: pending,
-        );
-        final shouldAcknowledge = switch (deviceLocationResult) {
-          DeviceLocationSyncResult.sent ||
-          DeviceLocationSyncResult.unchanged ||
-          DeviceLocationSyncResult.disabled => true,
-          DeviceLocationSyncResult.uninitialized ||
-          DeviceLocationSyncResult.noPending => false,
-        };
-        if (shouldAcknowledge) {
-          await acknowledgePendingLocation(
-            updateId: pending.updateId,
-            consumer: PendingLocationConsumer.deviceLocation,
-          );
-        }
-      } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] device location sync failed', e, st);
-        deviceLocationError = e.toString();
-      }
-    }
-
     if (!consumers.contains(PendingLocationConsumer.appEffects)) {
       return;
     }
@@ -155,8 +103,6 @@ class BackgroundLocationSyncCoordinator {
       ref,
       latitude: pending.latitude,
       longitude: pending.longitude,
-      deviceLocationResult: deviceLocationResult,
-      deviceLocationError: deviceLocationError,
     );
     if (applied) {
       await acknowledgePendingLocation(
@@ -184,83 +130,10 @@ class BackgroundLocationSyncCoordinator {
     }
   }
 
-  Future<DeviceLocationSyncResult> syncDeviceLocation(
-    Ref ref, {
-    required PendingLocationMessage pending,
-  }) async {
-    final stateRepository = ref.read(
-      deviceLocationSyncStateRepositoryProvider,
-    );
-    final scope = await ref.read(deviceLocationSyncScopeProvider.future);
-    if (await stateRepository.readAvailability() ==
-        DeviceLocationSyncAvailability.uninitialized) {
-      final slots = await ref.read(notificationSlotsProvider.future);
-      await stateRepository.writeAvailability(
-        slots.any(
-              (slot) => slot.slotType == NotificationSlotType.currentLocation,
-            )
-            ? DeviceLocationSyncAvailability.enabled
-            : DeviceLocationSyncAvailability.disabled,
-      );
-    }
-    final resolver = await ref.read(jmaRegionResolverProvider.future);
-    final repository = await ref.read(
-      notificationSlotRepositoryProvider.future,
-    );
-    final service = DeviceLocationSyncService(
-      scope: scope,
-      leaseManager: const BackgroundLocationSyncLeaseManager(),
-      stateRepository: stateRepository,
-      resolvePayload: ({required latitude, required longitude}) async {
-        final resolution = resolver.resolveEarthquakeRegion(
-          latitude,
-          longitude,
-        );
-        if (resolution == null) {
-          return null;
-        }
-        return DeviceLocationPayload(
-          region: resolution.regionCode.toString(),
-          city: resolution.cityCode,
-          tsunamiForecastRegion: resolver.resolveTsunamiForecastRegionCode(
-            latitude,
-            longitude,
-          ),
-        );
-      },
-      sendPayload: ({required payload}) async {
-        final region = int.tryParse(payload.region);
-        if (region == null) {
-          throw StateError('Device Location region must be numeric');
-        }
-        await repository.putDeviceLocation(
-          region: region,
-          city: payload.city,
-          tsunamiForecastRegion: payload.tsunamiForecastRegion,
-        );
-      },
-    );
-    final result = await service.syncPending(
-      location: PendingDeviceLocation(
-        updateId: pending.updateId,
-        latitude: pending.latitude,
-        longitude: pending.longitude,
-        accuracy: pending.accuracy,
-        timestampMillis: pending.timestampMillis,
-      ),
-    );
-    if (result == DeviceLocationSyncResult.sent) {
-      ref.invalidate(notificationSlotsProvider);
-    }
-    return result;
-  }
-
   Future<bool> applyLocation(
     Ref ref, {
     required double latitude,
     required double longitude,
-    DeviceLocationSyncResult? deviceLocationResult,
-    String? deviceLocationError,
   }) async {
     try {
       final slots = await (() async {
@@ -306,10 +179,9 @@ class BackgroundLocationSyncCoordinator {
         talker.error('[BackgroundLocation] resolve app effects failed', e, st);
       }
 
-      final didUpdateEew =
-          deviceLocationResult == DeviceLocationSyncResult.sent;
-      final eewError = deviceLocationError;
-      final didUpdateEarthquake = didUpdateEew;
+      const didUpdateEew = false;
+      const String? eewError = null;
+      const didUpdateEarthquake = false;
       const String? earthquakeError = null;
 
       // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の

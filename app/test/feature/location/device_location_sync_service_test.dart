@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
@@ -36,60 +34,6 @@ void main() {
   });
 
   group('DeviceLocationSyncService.syncPending', () {
-    test('2 Engine相当の反転応答をleaseで直列化しstale応答をcommitしない', () async {
-      final state = InMemoryDeviceLocationSyncStateRepository();
-      final leaseManager = RecordingDeviceLocationSyncLeaseManager();
-      final firstResponse = Completer<void>();
-      final sent = <String>[];
-      DeviceLocationSyncService service({required String region}) =>
-          DeviceLocationSyncService(
-            scope: currentScope,
-            leaseManager: leaseManager,
-            stateRepository: state,
-            resolvePayload: ({required latitude, required longitude}) async =>
-                DeviceLocationPayload(
-                  region: region,
-                  city: '0820100',
-                  tsunamiForecastRegion: '201',
-                ),
-            sendPayload: ({required payload}) async {
-              sent.add(payload.region);
-              if (payload.region == '301') {
-                await firstResponse.future;
-              }
-            },
-          );
-      final first = service(region: '301').syncPending(
-        location: pendingLocation,
-      );
-      await leaseManager.firstAcquired.future;
-      leaseManager.latestUpdateId = 'u2';
-
-      await expectLater(
-        service(region: '302').syncPending(
-          location: pendingLocationFor(updateId: 'u2'),
-        ),
-        throwsA(isA<DeviceLocationSyncLeaseUnavailableException>()),
-      );
-      firstResponse.complete();
-      expect(await first, DeviceLocationSyncResult.sent);
-      expect(await state.readLastSent(scope: currentScope), isNull);
-
-      expect(
-        await service(region: '302').syncPending(
-          location: pendingLocationFor(updateId: 'u2'),
-        ),
-        DeviceLocationSyncResult.sent,
-      );
-
-      expect(sent, ['301', '302']);
-      expect(
-        (await state.readLastSent(scope: currentScope))?.region,
-        '302',
-      );
-      expect(leaseManager.releaseCount, 2);
-    });
-
     test('registration generation変更後は同じ地域payloadでも送信する', () async {
       final state = InMemoryDeviceLocationSyncStateRepository(
         lastSentScope: oldScope,
@@ -102,7 +46,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -132,7 +75,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -162,7 +104,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -200,7 +141,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -239,7 +179,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -270,7 +209,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async => null,
         sendPayload: ({required payload}) async => sent.add(payload),
@@ -299,7 +237,6 @@ void main() {
       final error = Exception('api failure');
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async =>
             const DeviceLocationPayload(
@@ -334,7 +271,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async {
           resolutionCount++;
@@ -363,7 +299,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async {
           resolutionCount++;
@@ -390,7 +325,6 @@ void main() {
       final sent = <DeviceLocationPayload>[];
       final service = DeviceLocationSyncService(
         scope: currentScope,
-        leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
         stateRepository: state,
         resolvePayload: ({required latitude, required longitude}) async {
           resolutionCount++;
@@ -421,15 +355,6 @@ const pendingLocation = PendingDeviceLocation(
   timestampMillis: 1000,
 );
 
-PendingDeviceLocation pendingLocationFor({required String updateId}) =>
-    PendingDeviceLocation(
-      updateId: updateId,
-      latitude: 36,
-      longitude: 140,
-      accuracy: 10,
-      timestampMillis: 1000,
-    );
-
 const currentScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://api.example.com/v2/device/me/location',
 );
@@ -437,69 +362,3 @@ const currentScope = DeviceLocationSyncScope(
 const oldScope = DeviceLocationSyncScope(
   apiEndpoint: 'https://old-api.example.com/v2/device/me/location',
 );
-
-final class RecordingDeviceLocationSyncLeaseManager
-    implements DeviceLocationSyncLeaseManager {
-  final firstAcquired = Completer<void>();
-  String? latestUpdateId;
-  String? activeUpdateId;
-  var releaseCount = 0;
-
-  @override
-  Future<DeviceLocationSyncLease?> acquire({required String updateId}) async {
-    if (activeUpdateId != null) {
-      return null;
-    }
-    activeUpdateId = updateId;
-    latestUpdateId ??= updateId;
-    if (!firstAcquired.isCompleted) {
-      firstAcquired.complete();
-    }
-    return RecordingDeviceLocationSyncLease(
-      manager: this,
-      updateId: updateId,
-    );
-  }
-}
-
-final class RecordingDeviceLocationSyncLease
-    implements DeviceLocationSyncLease {
-  new({
-    required this.manager,
-    required this.updateId,
-  });
-
-  final RecordingDeviceLocationSyncLeaseManager manager;
-  final String updateId;
-
-  @override
-  Future<bool> isCurrent() async => manager.latestUpdateId == updateId;
-
-  @override
-  Future<void> release() async {
-    manager.releaseCount += 1;
-    if (manager.activeUpdateId == updateId) {
-      manager.activeUpdateId = null;
-    }
-  }
-}
-
-final class AlwaysCurrentDeviceLocationSyncLeaseManager
-    implements DeviceLocationSyncLeaseManager {
-  const new();
-
-  @override
-  Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
-      const AlwaysCurrentDeviceLocationSyncLease();
-}
-
-final class AlwaysCurrentDeviceLocationSyncLease
-    implements DeviceLocationSyncLease {
-  const new();
-
-  @override
-  Future<bool> isCurrent() async => true;
-
-  @override
-  Future<void> release() async {}
-}

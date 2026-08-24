@@ -183,7 +183,6 @@ void main() {
       ..httpClientAdapter = adapter;
     final service = HeadlessDeviceLocationSyncServiceBuilder.build(
       scope: testScope,
-      leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
       stateRepository: InMemoryDeviceLocationSyncStateRepository(),
       resolver: resolver,
       repository: NotificationSlotRepository(api: api.ApiClient(dio)),
@@ -272,23 +271,4 @@ class RecordingDeviceLocationApiAdapter implements HttpClientAdapter {
       },
     );
   }
-}
-
-class AlwaysCurrentDeviceLocationSyncLeaseManager
-    implements DeviceLocationSyncLeaseManager {
-  const new();
-
-  @override
-  Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
-      const AlwaysCurrentDeviceLocationSyncLease();
-}
-
-class AlwaysCurrentDeviceLocationSyncLease implements DeviceLocationSyncLease {
-  const new();
-
-  @override
-  Future<bool> isCurrent() async => true;
-
-  @override
-  Future<void> release() async {}
 }

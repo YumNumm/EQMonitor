@@ -305,7 +305,6 @@ DeviceLocationSyncService createSyncService({
   void Function()? onSend,
 }) => DeviceLocationSyncService(
   scope: testScope,
-  leaseManager: const AlwaysCurrentDeviceLocationSyncLeaseManager(),
   stateRepository:
       stateRepository ??
       InMemoryDeviceLocationSyncStateRepository(
@@ -421,23 +420,4 @@ class RecordingBackgroundLocationBridge
     expect(consumer, PendingLocationConsumer.deviceLocation);
     return pending;
   }
-}
-
-class AlwaysCurrentDeviceLocationSyncLeaseManager
-    implements DeviceLocationSyncLeaseManager {
-  const new();
-
-  @override
-  Future<DeviceLocationSyncLease?> acquire({required String updateId}) async =>
-      const AlwaysCurrentDeviceLocationSyncLease();
-}
-
-class AlwaysCurrentDeviceLocationSyncLease implements DeviceLocationSyncLease {
-  const new();
-
-  @override
-  Future<bool> isCurrent() async => true;
-
-  @override
-  Future<void> release() async {}
 }

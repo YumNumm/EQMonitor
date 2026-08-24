@@ -1028,7 +1028,7 @@ void main() {
   });
 
   group('BackgroundLocationSyncCoordinator', () {
-    test('live位置更新ではAreaForecastLocalEをregionとして送る', () async {
+    test('通常Engineのlive位置更新ではDevice Location APIを送信しない', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
       final resolver = _FakeJmaRegionResolver(
         earthquakeResolution: _ibarakiSouthResolution,
@@ -1041,14 +1041,10 @@ void main() {
 
       await container.read(testApplyLiveLocationProvider.future);
 
-      expect(adapter.putDeviceLocationJsonCalls.single, {
-        'region': '301',
-        'city': '0820100',
-        'tsunamiForecastRegion': '201',
-      });
+      expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
 
-    test('pending位置は各処理完了後にconsumer別でacknowledgeする', () async {
+    test('pending位置はappEffectsだけを処理してacknowledgeする', () async {
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
       final events = <String>[];
@@ -1116,26 +1112,12 @@ void main() {
         ).future,
       );
 
-      expect(adapter.putDeviceLocationJsonCalls.single, {
-        'region': '301',
-        'city': '0820100',
-        'tsunamiForecastRegion': '201',
-      });
-      expect(peekedConsumers, {
-        PendingLocationConsumer.deviceLocation,
-        PendingLocationConsumer.appEffects,
-      });
+      expect(adapter.putDeviceLocationJsonCalls, isEmpty);
+      expect(peekedConsumers, [PendingLocationConsumer.appEffects]);
       expect(acknowledgements, [
-        ('pending-id', PendingLocationConsumer.deviceLocation),
         ('pending-id', PendingLocationConsumer.appEffects),
       ]);
       expect(events, [
-        'deviceLocation:readAvailability',
-        'deviceLocation:readAvailability',
-        'deviceLocation:readLastSent',
-        'deviceLocation:send',
-        'deviceLocation:writeLastSent',
-        'ack:deviceLocation',
         'appEffects:appGroup',
         'appEffects:shake',
         'ack:appEffects',
@@ -1200,7 +1182,7 @@ void main() {
       expect(events, isNot(contains('deviceLocation:writeLastSent')));
     });
 
-    test('キーなしでserverに現在地スロットがあれば初期化後に送信する', () async {
+    test('通常Engineは未初期化の送信状態を変更しない', () async {
       final events = <String>[];
       recordPendingLocationAcknowledgements(events);
       final state = SharedPreferencesDeviceLocationSyncStateRepository(
@@ -1229,18 +1211,16 @@ void main() {
         ).future,
       );
 
-      expect(adapter.putDeviceLocationCalls, hasLength(1));
+      expect(adapter.putDeviceLocationCalls, isEmpty);
       expect(
         await state.readAvailability(),
-        DeviceLocationSyncAvailability.enabled,
+        DeviceLocationSyncAvailability.uninitialized,
       );
-      expect(
-        events,
-        containsAllInOrder(['ack:deviceLocation', 'ack:appEffects']),
-      );
+      expect(events, contains('ack:appEffects'));
+      expect(events, isNot(contains('ack:deviceLocation')));
     });
 
-    test('キーなしでserverに現在地スロットがなければ無効初期化後にacknowledgeする', () async {
+    test('現在地スロットがなくても通常EngineはappEffectsだけをacknowledgeする', () async {
       final events = <String>[];
       recordPendingLocationAcknowledgements(events);
       final state = SharedPreferencesDeviceLocationSyncStateRepository(
@@ -1273,12 +1253,10 @@ void main() {
       expect(adapter.putDeviceLocationCalls, isEmpty);
       expect(
         await state.readAvailability(),
-        DeviceLocationSyncAvailability.disabled,
+        DeviceLocationSyncAvailability.uninitialized,
       );
-      expect(
-        events,
-        containsAllInOrder(['ack:deviceLocation', 'ack:appEffects']),
-      );
+      expect(events, contains('ack:appEffects'));
+      expect(events, isNot(contains('ack:deviceLocation')));
     });
 
     test('未初期化でスロット取得に失敗したらappEffectsだけをacknowledgeする', () async {
@@ -1336,7 +1314,7 @@ void main() {
         lastSent: null,
       ),
     ]) {
-      test('${testCase.name}でもDevice Locationをacknowledgeする', () async {
+      test('${testCase.name}でも通常EngineはappEffectsだけをacknowledgeする', () async {
         final messenger =
             TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
         final events = <String>[];
@@ -1389,7 +1367,7 @@ void main() {
         );
 
         expect(adapter.putDeviceLocationCalls, isEmpty);
-        expect(events, contains('ack:deviceLocation'));
+        expect(events, isNot(contains('ack:deviceLocation')));
         expect(events, contains('ack:appEffects'));
         expect(events, isNot(contains('deviceLocation:writeLastSent')));
       });
@@ -1438,8 +1416,7 @@ void main() {
       await container.read(testApplyPendingLocationProvider.future);
 
       expect(acknowledgeCalls, 0);
-      // Device Location同期の1回と、appEffectsの3回再試行は独立する。
-      expect(resolver.resolveEarthquakeRegionCalls, 4);
+      expect(resolver.resolveEarthquakeRegionCalls, 3);
       expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
 
@@ -1454,8 +1431,7 @@ void main() {
 
       await container.read(testApplyLiveLocationProvider.future);
 
-      // Device Location同期の1回と、appEffectsの3回再試行は独立する。
-      expect(resolver.resolveEarthquakeRegionCalls, 4);
+      expect(resolver.resolveEarthquakeRegionCalls, 3);
       expect(adapter.putDeviceLocationJsonCalls, isEmpty);
     });
   });
