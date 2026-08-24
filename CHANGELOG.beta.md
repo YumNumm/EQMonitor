@@ -1,5 +1,48 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.13](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.12...v3.0.0-beta.13) (2026-08-23)
+
+
+### Features
+
+* BaseMapViewへ地震overlay lifecycleを接続 ([03093a2](https://github.com/YumNumm/EQMonitor/commit/03093a2a1d8cbe3fe0ba467236a9eef448f3bf32))
+* **home:** EEWフォーカス中のホーム操作を無効化 ([9d6dd86](https://github.com/YumNumm/EQMonitor/commit/9d6dd864fb824a4e9fd52669bbc349f761c6f9a2))
+* **home:** EEWフォーカス状態遷移を追加 ([3e64262](https://github.com/YumNumm/EQMonitor/commit/3e642625c4dbbdee8280fdac469089fdcd9c7ffd))
+* **home:** 地図操作でEEWフォーカスを解除 ([02b9edb](https://github.com/YumNumm/EQMonitor/commit/02b9edb32a615c4353e62b8800c35d21f3020df1))
+* overlay coverageの値変更通知を追加 ([ecf73a0](https://github.com/YumNumm/EQMonitor/commit/ecf73a0d04ada4e2cf113c21506f2865a30a7da0))
+* overlay frameをsubmit後にcommit ([501ea2e](https://github.com/YumNumm/EQMonitor/commit/501ea2e2357a48ff85e51ddc8de518c31a778f94))
+* 最新地震overlayの世代管理を追加 ([e858a1c](https://github.com/YumNumm/EQMonitor/commit/e858a1caa65812886ae68c0d3562dcd4c9fa1525))
+* 最新地震overlayをデバッグ地図へ接続 ([2aae47b](https://github.com/YumNumm/EQMonitor/commit/2aae47b273f02df70f424ce1646670d02a5cbe35))
+* 地図操作でEEWフォーカスを解除する ([d4619d7](https://github.com/YumNumm/EQMonitor/commit/d4619d77888862a677f5a7ff49b87c00c7c49bf2))
+* 地震overlay frame統合境界を追加 ([9a2be11](https://github.com/YumNumm/EQMonitor/commit/9a2be117291e9e1df3dc3a7b2c38b31c842453fd))
+* 地震overlay materialをDataAssetsへ接続 ([be3fc84](https://github.com/YumNumm/EQMonitor/commit/be3fc8492eb2611d3d89c9278a43b62d37998479))
+* 地震情報のoverlay変換を追加 ([daaa151](https://github.com/YumNumm/EQMonitor/commit/daaa1511527c91ffbb8b37080f3cc9834d186cb0))
+* 観測点を単一GPU instance batchで描画 ([a3e772f](https://github.com/YumNumm/EQMonitor/commit/a3e772f5a1597c66d984942e1367212f58ca47bf))
+
+
+### Bug Fixes
+
+* coverage通知を描画commitと一体化 ([b7720df](https://github.com/YumNumm/EQMonitor/commit/b7720dfb84edf22a12a0dec6a96e18539831ec20))
+* dispose後もGPU完了を待ってgeometryをretire ([f7751bc](https://github.com/YumNumm/EQMonitor/commit/f7751bc9488dafe27dfa277dc172370ecf4091df))
+* **home:** EEWフォーカスのカメラ制御を安定化 ([f7a9bc5](https://github.com/YumNumm/EQMonitor/commit/f7a9bc523b6146f0f4c5b883493f9a8a2dc7219c))
+* **map:** iOSカメラ操作判定の修正版を参照 ([c4c2382](https://github.com/YumNumm/EQMonitor/commit/c4c2382aaba1827137209f9a8565461c0c214262))
+* MapLibre Native修正版へ更新 ([4fdaa60](https://github.com/YumNumm/EQMonitor/commit/4fdaa60976b8ef14016b7c3cc7eaa63633fa131a))
+* MapLibre依存のhook修正を反映 ([2c98a49](https://github.com/YumNumm/EQMonitor/commit/2c98a494693a2a17f9ac3dd7d93e9e3a648d2ca7))
+* overlay失敗をbase-onlyへ閉じる ([dc74714](https://github.com/YumNumm/EQMonitor/commit/dc747141bc5600f08a9c07dce7bca28293458ea0))
+* snapshot置換時に観測点geometryを更新 ([d61550b](https://github.com/YumNumm/EQMonitor/commit/d61550bbd4a46bbc364f24ae15cc2cb16693001b))
+* 地震overlayのdecode欠損をterminal管理 ([23b4904](https://github.com/YumNumm/EQMonitor/commit/23b4904217902946b83804c7de017741713817b3))
+* 市区町村震度レイヤーの初回更新を修正 ([5d6d5df](https://github.com/YumNumm/EQMonitor/commit/5d6d5df49f427f877c05416da4f0aae695bfd2ba))
+* 観測点instanceの所有権と世代identityを強化 ([99fec31](https://github.com/YumNumm/EQMonitor/commit/99fec314212a1039661ba376940c73d423d3cf45))
+* 観測点snapshot identity引数を明示化 ([0d4dc5c](https://github.com/YumNumm/EQMonitor/commit/0d4dc5c676dbe8565d87f7bdaeeb8afad351b6a9))
+* 震度履歴の読み込み中も戻れるように修正 ([e4d17df](https://github.com/YumNumm/EQMonitor/commit/e4d17df682e1d919c74bd6f73e3eeb8f0cec3d0b))
+* 震度情報の取得エラー表示を改善 ([98fb596](https://github.com/YumNumm/EQMonitor/commit/98fb5960dea4c38618a52996e701ac31f27ff34b))
+* 震度速報の地図フォーカスを修正 ([97d12cd](https://github.com/YumNumm/EQMonitor/commit/97d12cd14df70aa9baca633ecd2fb2d616b823f8))
+
+
+### Performance Improvements
+
+* 震度style描画資源をsnapshot単位で再利用 ([7b35941](https://github.com/YumNumm/EQMonitor/commit/7b359419e354820c88cec752787582f0a6178c1f))
+
 ## [3.0.0-beta.12](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.11...v3.0.0-beta.12) (2026-08-23)
 
 
