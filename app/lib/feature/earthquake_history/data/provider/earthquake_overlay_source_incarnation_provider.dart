@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -13,5 +14,7 @@ earthquakeOverlaySourceIncarnationFactory(Ref ref) =>
     () => createMapSourceIncarnation(value: const Uuid().v7());
 
 @riverpod
-MapSourceIncarnation earthquakeOverlaySourceIncarnation(Ref ref) =>
-    ref.watch(earthquakeOverlaySourceIncarnationFactoryProvider)();
+MapSourceIncarnation earthquakeOverlaySourceIncarnation(Ref ref) {
+  ref.watch(mapClockSourceIdentityProvider);
+  return ref.watch(earthquakeOverlaySourceIncarnationFactoryProvider)();
+}

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_digest_builder.dart';
@@ -69,6 +70,7 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
     final asyncGenerationOwner = AsyncGenerationOwner();
     ref.onDispose(asyncGenerationOwner.dispose);
     final asyncGeneration = asyncGenerationOwner.begin();
+    ref.watch(mapClockSourceIdentityProvider);
     final sourceIncarnation = ref.watch(
       earthquakeOverlaySourceIncarnationProvider,
     );
