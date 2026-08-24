@@ -9,6 +9,8 @@ import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_bui
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch_builder.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
@@ -21,6 +23,7 @@ final class BaseMapOverlayFrameResult {
     required this.submission,
     required this.coverage,
     required this.observationBatchForReuse,
+    required this.spriteBatchesForReuse,
     required this.shouldRetireGpuResources,
   });
 
@@ -28,6 +31,7 @@ final class BaseMapOverlayFrameResult {
   final MapSceneFrameSubmission? submission;
   final EarthquakeOverlayCoverage coverage;
   final ObservationPointBatch? observationBatchForReuse;
+  final List<MapPointSpriteInstanceBatch> spriteBatchesForReuse;
   final bool shouldRetireGpuResources;
 }
 
@@ -44,6 +48,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
   required EarthquakeAreaPackedMeshResolver packedMeshFor,
   required EarthquakeAreaRenderStyleCache styleCache,
   required MapSceneFrameLimits sceneFrameLimits,
+  List<MapPointSpriteInstanceBatch> previousSpriteBatches = const [],
 }) {
   if (!identical(baseMap.frame, frame)) {
     throw ArgumentError('baseMap must use the captured frame');
@@ -61,6 +66,10 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
         previous: previousObservationBatch,
         overlay: overlay,
       ),
+      spriteBatchesForReuse: _reusableSprites(
+        previous: previousSpriteBatches,
+        overlay: overlay,
+      ),
       shouldRetireGpuResources: true,
     );
   }
@@ -74,6 +83,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
       ),
       coverage: const EarthquakeOverlayCoverage.hidden(),
       observationBatchForReuse: null,
+      spriteBatchesForReuse: const [],
       shouldRetireGpuResources: false,
     );
   }
@@ -110,6 +120,14 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
     snapshot: overlay,
     previous: previousObservationBatch,
   );
+  final sprites = buildMapPointSpriteBatches(
+    frame: frame,
+    versionStamp: overlay.versionStamp,
+    atlas: overlay.spriteAtlas,
+    features: overlay.sprites,
+    maxPolicyBatches: overlay.maxSpritePolicyBatches,
+    previous: previousSpriteBatches,
+  );
   return BaseMapOverlayFrameResult(
     overlay: overlay,
     submission: MapSceneFrameSubmission(
@@ -139,6 +157,15 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
             kind: MapSceneInstanceLayerKind.observationPoint,
             batch: observation,
           ),
+        for (final (index, batch) in sprites.indexed)
+          MapSceneInstanceLayerSubmission(
+            logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+            componentKey: mapSceneHypocenterSpriteComponentKey,
+            overlayVersion: overlay.versionStamp,
+            orderWithinPhase: index,
+            kind: MapSceneInstanceLayerKind.pointSprite,
+            batch: batch,
+          ),
       ],
       limits: sceneFrameLimits,
     ),
@@ -149,6 +176,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
           previous: previousObservationBatch,
           overlay: overlay,
         ),
+    spriteBatchesForReuse: sprites,
     shouldRetireGpuResources: false,
   );
 }
@@ -233,3 +261,12 @@ ObservationPointBatch? _reusableObservation({
       ? previous
       : null;
 }
+
+List<MapPointSpriteInstanceBatch> _reusableSprites({
+  required List<MapPointSpriteInstanceBatch> previous,
+  required EarthquakeMapOverlaySnapshot? overlay,
+}) => overlay == null
+    ? const []
+    : List.unmodifiable(
+        previous.where((batch) => batch.versionStamp == overlay.versionStamp),
+      );
