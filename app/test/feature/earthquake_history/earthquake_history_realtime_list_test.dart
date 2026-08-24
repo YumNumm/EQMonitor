@@ -129,6 +129,19 @@ void main() {
     expect(dataSource.notifier.values, isEmpty);
   });
 
+  test('新規地震はProvider再取得を要求し既存地震の更新は要求しない', () {
+    final repository = _CompletingListRepository([]);
+    final dataSource = _dataSource(repository: repository);
+    addTearDown(dataSource.dispose);
+    final record = _earthquake(
+      eventId: '20260724010000',
+      earthquakeType: api.EarthquakeType.normal,
+    );
+
+    expect(dataSource.applyRealtimeRecord(record), isTrue);
+    expect(dataSource.applyRealtimeRecord(record), isFalse);
+  });
+
   test('region filterのcodeとintensityでmembershipを更新する', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(
@@ -164,7 +177,7 @@ void main() {
         eventId: '20260724010000',
         earthquakeType: api.EarthquakeType.normal,
         intensity: const api.Intensity(
-          maxIntensity: api.JmaIntensity.value2,
+          maxIntensity: api.JmaIntensity.value4,
           intensityTree: [
             api.IntensityTree(
               intensity: api.JmaIntensity.value2,
@@ -276,7 +289,7 @@ void main() {
     expect(dataSource.notifier.values, isEmpty);
   });
 
-  test('prefecture filterは既存membershipだけを更新し新規を推測しない', () {
+  test('prefecture震度filterは推測せずProvider再取得を要求する', () {
     final repository = _CompletingListRepository([]);
     final dataSource = _dataSource(
       repository: repository,
@@ -284,6 +297,7 @@ void main() {
         sortBy: EarthquakeSortBy.eventId,
         sortOrder: SortOrder.desc,
         prefectureCode: '01',
+        intensityGte: JmaIntensity.three,
       ),
     );
     addTearDown(dataSource.dispose);
@@ -297,26 +311,57 @@ void main() {
       ),
     ]);
 
-    dataSource.applyRealtimeRecord(
+    final shouldInvalidate = dataSource.applyRealtimeRecord(
       _earthquake(
         eventId: '20260724010000',
         earthquakeType: api.EarthquakeType.normal,
       ),
     );
-    dataSource.applyRealtimeRecord(
+
+    final item = dataSource.notifier.values.single;
+    expect(shouldInvalidate, isTrue);
+    expect(item, isA<EarthquakePartialPrefecture>());
+    expect(item.earthquake.earthquakeType, EarthquakeType.distant);
+    expect(
+      (item as EarthquakePartialPrefecture).prefectureIntensity,
+      JmaIntensity.four,
+    );
+  });
+
+  test('city震度filterは推測せずProvider再取得を要求する', () {
+    final repository = _CompletingListRepository([]);
+    final dataSource = _dataSource(
+      repository: repository,
+      parameter: const EarthquakeHistoryParameter.city(
+        sortBy: EarthquakeSortBy.eventId,
+        sortOrder: SortOrder.desc,
+        cityCode: '0110110',
+        intensityGte: JmaIntensity.three,
+      ),
+    );
+    addTearDown(dataSource.dispose);
+    dataSource.upsertItems([
+      EarthquakePartial.city(
+        cityIntensity: JmaIntensity.four,
+        earthquake: _partial(
+          eventId: '20260724010000',
+          earthquakeType: api.EarthquakeType.distant,
+        ),
+      ),
+    ]);
+
+    final shouldInvalidate = dataSource.applyRealtimeRecord(
       _earthquake(
-        eventId: '20260724020000',
+        eventId: '20260724010000',
         earthquakeType: api.EarthquakeType.normal,
       ),
     );
 
     final item = dataSource.notifier.values.single;
-    expect(item, isA<EarthquakePartialPrefecture>());
-    expect(item.earthquake.earthquakeType, EarthquakeType.normal);
-    expect(
-      (item as EarthquakePartialPrefecture).prefectureIntensity,
-      JmaIntensity.four,
-    );
+    expect(shouldInvalidate, isTrue);
+    expect(item, isA<EarthquakePartialCity>());
+    expect(item.earthquake.earthquakeType, EarthquakeType.distant);
+    expect((item as EarthquakePartialCity).cityIntensity, JmaIntensity.four);
   });
 
   test('初回REST中のdelete tombstoneが古いREST itemを復活させない', () async {
@@ -423,11 +468,28 @@ void main() {
     expect(item.earthquake.earthquakeType, EarthquakeType.distant);
   });
 
-  test('legacy notifierも初回REST中の新規upsertを保持する', () async {
+  test('legacy notifierは新規地震でinvalidateしてREST再取得する', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
     final initialResult = Completer<PaginatedResponse<EarthquakePartial>>();
-    final repository = _CompletingListRepository([initialResult.future]);
+    final repository = _CompletingListRepository([
+      initialResult.future,
+      Future.value(
+        PaginatedResponse(
+          items: [
+            _partial(
+              eventId: '20260724020000',
+              earthquakeType: api.EarthquakeType.normal,
+            ),
+            _partial(
+              eventId: '20260724010000',
+              earthquakeType: api.EarthquakeType.normal,
+            ),
+          ],
+          nextToken: null,
+        ),
+      ),
+    ]);
     const parameter = EarthquakeHistoryParameter.all(
       sortBy: EarthquakeSortBy.eventId,
       sortOrder: SortOrder.desc,
@@ -474,6 +536,7 @@ void main() {
       earthquakeHistoryProvider(parameter).future,
     );
 
+    expect(repository.fetchCount, 2);
     expect(result.items.map((item) => item.earthquake.eventId), [
       '20260724020000',
       '20260724010000',
