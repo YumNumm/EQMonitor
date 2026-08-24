@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/passkey_operation.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
+import 'package:eqmonitor/feature/auth/data/provider/native_auth_attempt_coordinator.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
 import 'package:passkeys/authenticator.dart';
@@ -43,6 +44,7 @@ Future<PasskeyRepository> passkeyRepository(Ref ref) async {
     acceptSignIn: () => ref.read(authSessionProvider.notifier).acceptSignIn(),
     invalidateSession: () =>
         ref.read(authSessionProvider.notifier).invalidate(),
+    attemptCoordinator: ref.watch(nativeAuthAttemptCoordinatorProvider),
   );
 }
 
@@ -56,6 +58,7 @@ final class PasskeyRepository {
     required ReadAcceptedSession hasAcceptedSession,
     required AcceptPasskeySignIn acceptSignIn,
     required InvalidatePasskeySession invalidateSession,
+    required NativeAuthAttemptCoordinator attemptCoordinator,
     PasskeyOperationGate? operationGate,
     PasskeyRequestParser? requestParser,
     PasskeyFailureMapper? failureMapper,
@@ -67,6 +70,7 @@ final class PasskeyRepository {
        _hasAcceptedSession = hasAcceptedSession,
        _acceptSignIn = acceptSignIn,
        _invalidateSession = invalidateSession,
+       _attemptCoordinator = attemptCoordinator,
        _operationGate = operationGate ?? PasskeyOperationGate(),
        _requestParser = requestParser ?? const PasskeyRequestParser(),
        _failureMapper = failureMapper ?? const PasskeyFailureMapper();
@@ -79,6 +83,7 @@ final class PasskeyRepository {
   final ReadAcceptedSession _hasAcceptedSession;
   final AcceptPasskeySignIn _acceptSignIn;
   final InvalidatePasskeySession _invalidateSession;
+  final NativeAuthAttemptCoordinator _attemptCoordinator;
   final PasskeyOperationGate _operationGate;
   final PasskeyRequestParser _requestParser;
   final PasskeyFailureMapper _failureMapper;
@@ -109,6 +114,11 @@ final class PasskeyRepository {
     if (!_operationGate.tryBegin(operation: PasskeyOperation.register)) {
       return const Failure(AuthFailure(kind: AuthFailureKind.busy));
     }
+    final nativeAttempt = _attemptCoordinator.tryBegin();
+    if (nativeAttempt == null) {
+      _operationGate.complete(operation: PasskeyOperation.register);
+      return const Failure(AuthFailure(kind: AuthFailureKind.busy));
+    }
     try {
       final operationResult = await _apiClient
           .generatePasskeyRegistrationOptions();
@@ -116,6 +126,9 @@ final class PasskeyRepository {
         :final exception,
         :final stackTrace,
       )) {
+        if (exception.kind == AuthFailureKind.unauthorized) {
+          await _invalidateSession();
+        }
         return Failure(exception, stackTrace);
       }
       final operation = operationResult.unwrap();
@@ -124,7 +137,7 @@ final class PasskeyRepository {
         expectedRpId: environmentResult.unwrap().passkeyRpId,
       );
       if (requestResult case Failure(:final exception, :final stackTrace)) {
-        return await operation.establishment.abandonWithFailure(
+        return await operation.abandonWithFailure(
           failure: Failure(exception, stackTrace),
         );
       }
@@ -132,7 +145,7 @@ final class PasskeyRepository {
         () => _authenticator.register(requestResult.unwrap()),
       );
       if (nativeResult case Failure(:final exception, :final stackTrace)) {
-        return await operation.establishment.abandonWithFailure(
+        return await operation.abandonWithFailure(
           failure: Failure(exception, stackTrace),
         );
       }
@@ -146,6 +159,7 @@ final class PasskeyRepository {
       }
       return verifyResult;
     } finally {
+      nativeAttempt.release();
       _operationGate.complete(operation: PasskeyOperation.register);
     }
   }
@@ -159,6 +173,11 @@ final class PasskeyRepository {
       return Failure(exception, stackTrace);
     }
     if (!_operationGate.tryBegin(operation: PasskeyOperation.signIn)) {
+      return const Failure(AuthFailure(kind: AuthFailureKind.busy));
+    }
+    final nativeAttempt = _attemptCoordinator.tryBegin();
+    if (nativeAttempt == null) {
+      _operationGate.complete(operation: PasskeyOperation.signIn);
       return const Failure(AuthFailure(kind: AuthFailureKind.busy));
     }
     try {
@@ -176,7 +195,7 @@ final class PasskeyRepository {
         expectedRpId: environmentResult.unwrap().passkeyRpId,
       );
       if (requestResult case Failure(:final exception, :final stackTrace)) {
-        return await operation.establishment.abandonWithFailure(
+        return await operation.abandonWithFailure(
           failure: Failure(exception, stackTrace),
         );
       }
@@ -184,7 +203,7 @@ final class PasskeyRepository {
         () => _authenticator.authenticate(requestResult.unwrap()),
       );
       if (nativeResult case Failure(:final exception, :final stackTrace)) {
-        return await operation.establishment.abandonWithFailure(
+        return await operation.abandonWithFailure(
           failure: Failure(exception, stackTrace),
         );
       }
@@ -195,30 +214,46 @@ final class PasskeyRepository {
       if (verifyResult case Failure(:final exception, :final stackTrace)) {
         return Failure(exception, stackTrace);
       }
-      final acceptanceResult = await _acceptSignIn();
-      return switch (acceptanceResult) {
-        Success(:final value) when value.isAuthenticated => Success(value),
-        Success() => const Failure(
-          AuthFailure(kind: AuthFailureKind.invalidResponse),
-        ),
-        Failure(:final exception, :final stackTrace) => Failure(
-          exception,
-          stackTrace,
-        ),
-      };
+      final sessionAcceptance = verifyResult.unwrap();
+      try {
+        final acceptanceResult = await _acceptSignIn();
+        return switch (acceptanceResult) {
+          Success(:final value) when value.isAuthenticated => Success(value),
+          Success() => const Failure(
+            AuthFailure(kind: AuthFailureKind.invalidResponse),
+          ),
+          Failure(:final exception, :final stackTrace) => Failure(
+            exception,
+            stackTrace,
+          ),
+        };
+      } finally {
+        sessionAcceptance.release();
+      }
     } finally {
+      nativeAttempt.release();
       _operationGate.complete(operation: PasskeyOperation.signIn);
     }
   }
 }
 
 final class PasskeyRequestParser {
-  const new();
+  const new({
+    PasskeyOptionsSchemaValidator schemaValidator =
+        const PasskeyOptionsSchemaValidator(),
+  }) : _schemaValidator = schemaValidator;
+
+  final PasskeyOptionsSchemaValidator _schemaValidator;
 
   Result<RegisterRequestType, AuthFailure> registration({
     required Map<String, dynamic> options,
     required String expectedRpId,
   }) {
+    if (!_schemaValidator.registration(options: options)) {
+      return const Failure(
+        AuthFailure(kind: AuthFailureKind.invalidResponse),
+      );
+    }
     try {
       final request = RegisterRequestType.fromJson(options);
       final parameters = request.pubKeyCredParams;
@@ -252,6 +287,11 @@ final class PasskeyRequestParser {
     required Map<String, dynamic> options,
     required String expectedRpId,
   }) {
+    if (!_schemaValidator.authentication(options: options)) {
+      return const Failure(
+        AuthFailure(kind: AuthFailureKind.invalidResponse),
+      );
+    }
     try {
       final request = AuthenticateRequestType.fromJson(options);
       if (!isValidChallenge(request.challenge) ||
@@ -275,6 +315,109 @@ final class PasskeyRequestParser {
   }
 
   bool isValidChallenge(String value) {
+    if (value.isEmpty || !_passkeyBase64UrlPattern.hasMatch(value)) {
+      return false;
+    }
+    try {
+      return base64Url.decode(base64Url.normalize(value)).isNotEmpty;
+    } on FormatException {
+      return false;
+    }
+  }
+}
+
+final class PasskeyOptionsSchemaValidator {
+  const new({
+    PasskeyBase64UrlValidator base64UrlValidator =
+        const PasskeyBase64UrlValidator(),
+  }) : _base64UrlValidator = base64UrlValidator;
+
+  final PasskeyBase64UrlValidator _base64UrlValidator;
+
+  bool registration({required Map<String, dynamic> options}) {
+    final challenge = options['challenge'];
+    final rp = options['rp'];
+    final user = options['user'];
+    final parameters = options['pubKeyCredParams'];
+    if (challenge is! String ||
+        !_base64UrlValidator.isValid(challenge) ||
+        rp is! Map<String, dynamic> ||
+        user is! Map<String, dynamic> ||
+        parameters is! List<dynamic> ||
+        parameters.isEmpty) {
+      return false;
+    }
+    return hasRequiredRegistrationIdentity(rp: rp, user: user) &&
+        hasValidPublicKeyParameters(parameters: parameters) &&
+        hasValidCredentialList(value: options['excludeCredentials']);
+  }
+
+  bool authentication({required Map<String, dynamic> options}) {
+    final challenge = options['challenge'];
+    final rpId = options['rpId'];
+    if (challenge is! String ||
+        !_base64UrlValidator.isValid(challenge) ||
+        rpId is! String ||
+        rpId.isEmpty) {
+      return false;
+    }
+    return hasValidCredentialList(value: options['allowCredentials']);
+  }
+
+  bool hasRequiredRegistrationIdentity({
+    required Map<String, dynamic> rp,
+    required Map<String, dynamic> user,
+  }) {
+    final rpId = rp['id'];
+    final rpName = rp['name'];
+    final userId = user['id'];
+    final userName = user['name'];
+    final displayName = user['displayName'];
+    return rpId is String &&
+        rpId.isNotEmpty &&
+        rpName is String &&
+        rpName.isNotEmpty &&
+        userId is String &&
+        _base64UrlValidator.isValid(userId) &&
+        userName is String &&
+        userName.isNotEmpty &&
+        displayName is String &&
+        displayName.isNotEmpty;
+  }
+
+  bool hasValidPublicKeyParameters({required List<dynamic> parameters}) =>
+      parameters.every(
+        (parameter) =>
+            parameter is Map<String, dynamic> &&
+            parameter['type'] == 'public-key' &&
+            parameter['alg'] is int,
+      );
+
+  bool hasValidCredentialList({required dynamic value}) {
+    if (value == null) {
+      return true;
+    }
+    if (value is! List<dynamic>) {
+      return false;
+    }
+    return value.every(
+      (credential) =>
+          credential is Map<String, dynamic> &&
+          credential['type'] == 'public-key' &&
+          credential['id'] is String &&
+          _base64UrlValidator.isValid(credential['id'] as String) &&
+          credential['transports'] is List<dynamic> &&
+          (credential['transports'] as List<dynamic>).every(
+            (transport) => transport is String && transport.isNotEmpty,
+          ),
+    );
+  }
+}
+
+final class PasskeyBase64UrlValidator {
+  const new();
+
+  bool isValid(String value) {
     if (value.isEmpty || !_passkeyBase64UrlPattern.hasMatch(value)) {
       return false;
     }

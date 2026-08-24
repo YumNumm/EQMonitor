@@ -52,4 +52,4 @@ final class NativeSocialAuthRepositoryProvider
 }
 
 String _$nativeSocialAuthRepositoryHash() =>
-    r'3c6819255348470d2b9678ee5e31e291016c390a';
+    r'8562d8b71056695be3417d23ef2b33f26959a64d';

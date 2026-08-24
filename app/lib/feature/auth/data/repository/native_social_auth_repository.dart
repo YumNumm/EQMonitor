@@ -4,7 +4,10 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/model/telegram_url_model.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
+import 'package:eqmonitor/feature/auth/data/provider/native_auth_attempt_coordinator.dart';
 import 'package:eqmonitor/feature/auth/data/repository/apple_auth_repository.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:eqmonitor/feature/auth/data/repository/google_auth_repository.dart';
@@ -25,10 +28,15 @@ Future<NativeSocialAuthRepository> nativeSocialAuthRepository(Ref ref) async {
     buildConfig: ref.watch(buildConfigProvider),
     telegramUrl: telegramUrl,
     platform: NativeAuthConfiguration.currentPlatform(),
+    attemptCoordinator: ref.watch(nativeAuthAttemptCoordinatorProvider),
+    acceptSignIn: () => ref.read(authSessionProvider.notifier).acceptSignIn(),
   );
 }
 
 enum NativeAuthPlatform { ios, android, unsupported }
+
+typedef AcceptNativeSocialSignIn =
+    Future<Result<AuthSession, AuthFailure>> Function();
 
 final class NativeSocialAuthRepository {
   new({
@@ -38,12 +46,16 @@ final class NativeSocialAuthRepository {
     required BuildConfig buildConfig,
     required TelegramUrlModel telegramUrl,
     required NativeAuthPlatform platform,
+    required NativeAuthAttemptCoordinator attemptCoordinator,
+    required AcceptNativeSocialSignIn acceptSignIn,
   }) : _apiClient = apiClient,
        _googleAuthRepository = googleAuthRepository,
        _appleAuthRepository = appleAuthRepository,
        _buildConfig = buildConfig,
        _telegramUrl = telegramUrl,
-       _platform = platform;
+       _platform = platform,
+       _attemptCoordinator = attemptCoordinator,
+       _acceptSignIn = acceptSignIn;
 
   final BetterAuthApiClient _apiClient;
   final GoogleAuthGateway _googleAuthRepository;
@@ -51,7 +63,8 @@ final class NativeSocialAuthRepository {
   final BuildConfig _buildConfig;
   final TelegramUrlModel _telegramUrl;
   final NativeAuthPlatform _platform;
-  var _isSignInInProgress = false;
+  final NativeAuthAttemptCoordinator _attemptCoordinator;
+  final AcceptNativeSocialSignIn _acceptSignIn;
 
   Future<Result<void, AuthFailure>> signInWithGoogle() async {
     final environmentResult = AuthEnvironment.resolve(
@@ -84,10 +97,10 @@ final class NativeSocialAuthRepository {
         AuthFailure(kind: AuthFailureKind.configuration),
       );
     }
-    if (_isSignInInProgress) {
+    final nativeAttempt = _attemptCoordinator.tryBegin();
+    if (nativeAttempt == null) {
       return const Failure(AuthFailure(kind: AuthFailureKind.busy));
     }
-    _isSignInInProgress = true;
     try {
       final credentialResult = await _googleAuthRepository.signIn(
         clientId: clientId,
@@ -97,15 +110,39 @@ final class NativeSocialAuthRepository {
         case Failure(:final exception, :final stackTrace):
           return Failure(exception, stackTrace);
         case Success(:final value):
-          return await _apiClient.signInSocial(
+          final sessionResult = await _apiClient.signInSocial(
             provider: value.provider.name,
             idToken: value.idToken,
             nonce: value.nonce,
             user: value.appleUser?.toBetterAuthUser(),
           );
+          if (sessionResult case Failure(
+            :final exception,
+            :final stackTrace,
+          )) {
+            return Failure(exception, stackTrace);
+          }
+          final sessionAcceptance = sessionResult.unwrap();
+          try {
+            final acceptanceResult = await _acceptSignIn();
+            return switch (acceptanceResult) {
+              Success(:final value) when value.isAuthenticated => const Success(
+                null,
+              ),
+              Success() => const Failure(
+                AuthFailure(kind: AuthFailureKind.invalidResponse),
+              ),
+              Failure(:final exception, :final stackTrace) => Failure(
+                exception,
+                stackTrace,
+              ),
+            };
+          } finally {
+            sessionAcceptance.release();
+          }
       }
     } finally {
-      _isSignInInProgress = false;
+      nativeAttempt.release();
     }
   }
 
@@ -144,10 +181,10 @@ final class NativeSocialAuthRepository {
           AuthFailure(kind: AuthFailureKind.configuration),
         );
     }
-    if (_isSignInInProgress) {
+    final nativeAttempt = _attemptCoordinator.tryBegin();
+    if (nativeAttempt == null) {
       return const Failure(AuthFailure(kind: AuthFailureKind.busy));
     }
-    _isSignInInProgress = true;
     try {
       final credentialResult = await _appleAuthRepository.signIn(
         webAuthenticationOptions: webAuthenticationOptions,
@@ -156,15 +193,39 @@ final class NativeSocialAuthRepository {
         case Failure(:final exception, :final stackTrace):
           return Failure(exception, stackTrace);
         case Success(:final value):
-          return await _apiClient.signInSocial(
+          final sessionResult = await _apiClient.signInSocial(
             provider: value.provider.name,
             idToken: value.idToken,
             nonce: value.nonce,
             user: value.appleUser?.toBetterAuthUser(),
           );
+          if (sessionResult case Failure(
+            :final exception,
+            :final stackTrace,
+          )) {
+            return Failure(exception, stackTrace);
+          }
+          final sessionAcceptance = sessionResult.unwrap();
+          try {
+            final acceptanceResult = await _acceptSignIn();
+            return switch (acceptanceResult) {
+              Success(:final value) when value.isAuthenticated => const Success(
+                null,
+              ),
+              Success() => const Failure(
+                AuthFailure(kind: AuthFailureKind.invalidResponse),
+              ),
+              Failure(:final exception, :final stackTrace) => Failure(
+                exception,
+                stackTrace,
+              ),
+            };
+          } finally {
+            sessionAcceptance.release();
+          }
       }
     } finally {
-      _isSignInInProgress = false;
+      nativeAttempt.release();
     }
   }
 }

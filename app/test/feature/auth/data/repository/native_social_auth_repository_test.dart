@@ -12,6 +12,8 @@ import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/model/telegram_url_model.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/model/native_auth_credential.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
+import 'package:eqmonitor/feature/auth/data/provider/native_auth_attempt_coordinator.dart';
 import 'package:eqmonitor/feature/auth/data/repository/apple_auth_repository.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
@@ -307,6 +309,35 @@ void main() {
         fixture.preferences.values[SecureStorageKey.betterAuthSessionToken],
         'social-session',
       );
+    });
+
+    test('Google API successだけでは完了せずJWT acceptanceまでattemptを保持する', () async {
+      final acceptance = Completer<Result<AuthSession, AuthFailure>>();
+      final fixture = NativeSocialFixture(acceptance: acceptance);
+      fixture.google.credentials.add(
+        const NativeAuthCredential(
+          provider: NativeAuthProvider.google,
+          idToken: 'google-token',
+          nonce: 'google-nonce',
+        ),
+      );
+      var completed = false;
+
+      final pending = fixture.repository.signInWithGoogle()
+        ..then((_) => completed = true);
+      await fixture.acceptSignInStarted.future;
+      final second = await fixture.repository.signInWithApple();
+
+      expect(completed, isFalse);
+      expect(fixture.acceptSignInCalls, 1);
+      expect(
+        (second as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.busy,
+      );
+      expect(fixture.apple.webAuthenticationOptions, isEmpty);
+      expect(fixture.adapter.requestBodies, hasLength(1));
+      acceptance.complete(const Success(AuthSession.authenticated()));
+      expect(await pending, isA<Success<void, AuthFailure>>());
     });
 
     test('Better Auth session header欠落はinvalidResponseでsessionを残さない', () async {
@@ -743,6 +774,7 @@ final class NativeSocialFixture {
       restApiUrl: 'https://dev.v2.api.eqmonitor.app',
       wsApiUrl: 'wss://example.com',
     ),
+    this.acceptance,
   }) {
     final dio = Dio(BaseOptions(baseUrl: telegramUrl.restApiUrl))
       ..httpClientAdapter = adapter;
@@ -760,16 +792,31 @@ final class NativeSocialFixture {
       buildConfig: buildConfig,
       telegramUrl: telegramUrl,
       platform: platform,
+      attemptCoordinator: attemptCoordinator,
+      acceptSignIn: () async {
+        acceptSignInCalls++;
+        if (!acceptSignInStarted.isCompleted) {
+          acceptSignInStarted.complete();
+        }
+        return acceptance?.future ??
+            const Success<AuthSession, AuthFailure>(
+              AuthSession.authenticated(),
+            );
+      },
     );
   }
 
   final NativeAuthPlatform platform;
   final BuildConfig buildConfig;
   final TelegramUrlModel telegramUrl;
+  final Completer<Result<AuthSession, AuthFailure>>? acceptance;
   final google = QueueGoogleAuthGateway();
   final apple = QueueAppleAuthGateway();
   final adapter = RecordingSocialAuthAdapter();
   final preferences = MemoryPreferencesDataSource();
+  final attemptCoordinator = NativeAuthAttemptCoordinator();
+  final acceptSignInStarted = Completer<void>();
+  var acceptSignInCalls = 0;
   late final BetterAuthApiClient apiClient;
   late final NativeSocialAuthRepository repository;
 }

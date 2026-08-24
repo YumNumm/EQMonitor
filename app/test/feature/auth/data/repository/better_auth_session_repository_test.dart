@@ -166,7 +166,11 @@ void main() {
         nonce: 'provider-nonce',
       );
 
-      expect(result, isA<Success<void, AuthFailure>>());
+      expect(
+        result,
+        isA<Success<BetterAuthSessionAcceptance, AuthFailure>>(),
+      );
+      result.unwrap().release();
       expect(adapter.paths, ['/api/auth/sign-in/social']);
       expect(adapter.requestBodies.single, {
         'provider': 'google',
@@ -204,9 +208,13 @@ void main() {
         provider: 'google',
         idToken: 'provider-id-token',
       );
+      result.unwrap().release();
       await client.getSession();
 
-      expect(result, isA<Success<void, AuthFailure>>());
+      expect(
+        result,
+        isA<Success<BetterAuthSessionAcceptance, AuthFailure>>(),
+      );
       expect((await repository.readSessionToken()).unwrap(), 'new-session');
       expect(adapter.cookieHeaders, [
         'session=old-cookie',
@@ -250,7 +258,9 @@ void main() {
           await client.getSession();
 
           expect(
-            (result as Failure<void, AuthFailure>).exception.kind,
+            (result as Failure<BetterAuthSessionAcceptance, AuthFailure>)
+                .exception
+                .kind,
             AuthFailureKind.invalidResponse,
           );
           expect(
@@ -298,7 +308,9 @@ void main() {
         await client.getSession();
 
         expect(
-          (result as Failure<void, AuthFailure>).exception.kind,
+          (result as Failure<BetterAuthSessionAcceptance, AuthFailure>)
+              .exception
+              .kind,
           AuthFailureKind.storage,
         );
         expect((await repository.readSessionToken()).unwrap(), 'old-session');
@@ -336,7 +348,9 @@ void main() {
       await client.getSession();
 
       expect(
-        (result as Failure<void, AuthFailure>).exception.kind,
+        (result as Failure<BetterAuthSessionAcceptance, AuthFailure>)
+            .exception
+            .kind,
         AuthFailureKind.network,
       );
       expect((await repository.readSessionToken()).unwrap(), 'old-session');
@@ -382,7 +396,9 @@ void main() {
       await client.getSession();
 
       expect(
-        (result as Failure<void, AuthFailure>).exception.kind,
+        (result as Failure<BetterAuthSessionAcceptance, AuthFailure>)
+            .exception
+            .kind,
         AuthFailureKind.invalidResponse,
       );
       expect((await repository.readSessionToken()).unwrap(), isNull);
