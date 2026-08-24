@@ -72,7 +72,6 @@ notification slotまたはshake detectionがcurrent locationを使う場合だ�
 - `DeviceLocationSyncScope`
 - `DeviceLocationSyncStateRecord`
 - `HeadlessApiIdentity`
-- `LocationUpdateMessage`
 
 enumはDart enumのまま使用し、JSON ModelのfieldとしてJsonSerializableに変換させる。
 
@@ -91,6 +90,7 @@ Pigeonのmessage classはPigeon schemaから生成されるplatform channel DTO�
 - generationを含むkeep-alive scope cache
 - foregroundからDevice Location APIを直接送る経路
 - headless依存を手作業で組み立てるfactory/loader classのうち、generated providerで置き換えられるもの
+- Pigeonの`PendingLocationMessage`と重複するlegacy `LocationUpdateMessage` API
 - 同じ契約を重複して説明するknowledge文書
 
 ## 維持対象
