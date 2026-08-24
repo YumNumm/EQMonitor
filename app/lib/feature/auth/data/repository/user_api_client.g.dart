@@ -1,0 +1,51 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'user_api_client.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(userApiClient)
+final userApiClientProvider = UserApiClientProvider._();
+
+final class UserApiClientProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<UserApiClient>,
+          UserApiClient,
+          FutureOr<UserApiClient>
+        >
+    with $FutureModifier<UserApiClient>, $FutureProvider<UserApiClient> {
+  UserApiClientProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userApiClientProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userApiClientHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<UserApiClient> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<UserApiClient> create(Ref ref) {
+    return userApiClient(ref);
+  }
+}
+
+String _$userApiClientHash() => r'2d36e8c6a9805e50e697b06672547dc93c31cb0f';
