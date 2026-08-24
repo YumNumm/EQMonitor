@@ -32,8 +32,8 @@ Stream<void> backgroundLocationService(Ref ref) async* {
   // 端末再起動などで監視が落ちていても復帰させる。
   await coordinator.ensureMonitoring(ref);
 
-  await for (final update in BackgroundLocationTracker.locationStream) {
-    await coordinator.applyLocation(ref, update.latitude, update.longitude);
+  await for (final update in BackgroundLocationTracker.pendingLocationStream) {
+    await coordinator.applyPendingMessage(ref, pending: update);
     yield null;
   }
 }
@@ -47,12 +47,12 @@ class BackgroundLocationSyncCoordinator {
 
   Future<void> ensureMonitoring(Ref ref) async {
     try {
-      final slots = await (() async {
+      final List<NotificationSlot>? slots = await (() async {
         try {
           return await ref.read(notificationSlotsProvider.future);
         } on Object catch (e, st) {
           talker.error('[BackgroundLocation] read slots failed', e, st);
-          return <NotificationSlot>[];
+          return null;
         }
       })();
       final shakeDetectionState = await (() async {
@@ -67,15 +67,10 @@ class BackgroundLocationSyncCoordinator {
           return null;
         }
       })();
-      final hasCurrentLocation = slots.any(
-        (s) => s.slotType == NotificationSlotType.currentLocation,
+      await const BackgroundLocationMonitoringLifecycle().reconcile(
+        slots: slots,
+        shakeDetectionState: shakeDetectionState,
       );
-      final hasShakeCurrentLocation =
-          shakeDetectionState?.entries.any((e) => e.isCurrentLocation) ?? false;
-      if (!hasCurrentLocation && !hasShakeCurrentLocation) {
-        return;
-      }
-      await BackgroundLocationTracker.startMonitoring();
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
     }
@@ -83,17 +78,63 @@ class BackgroundLocationSyncCoordinator {
 
   Future<void> applyPendingLocation(Ref ref) async {
     try {
-      final pending = await BackgroundLocationTracker.consumePendingLocation();
-      if (pending == null) {
-        return;
+      final pending = await BackgroundLocationTracker.peekPendingLocation(
+        consumer: PendingLocationConsumer.appEffects,
+      );
+      if (pending != null) {
+        await applyPendingMessage(ref, pending: pending);
       }
-      await applyLocation(ref, pending.latitude, pending.longitude);
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] applyPendingLocation failed', e, st);
     }
   }
 
-  Future<void> applyLocation(Ref ref, double latitude, double longitude) async {
+  Future<void> applyPendingMessage(
+    Ref ref, {
+    required PendingLocationMessage pending,
+    Set<PendingLocationConsumer> consumers = const {
+      PendingLocationConsumer.appEffects,
+    },
+  }) async {
+    if (!consumers.contains(PendingLocationConsumer.appEffects)) {
+      return;
+    }
+    final applied = await applyLocation(
+      ref,
+      latitude: pending.latitude,
+      longitude: pending.longitude,
+    );
+    if (applied) {
+      await acknowledgePendingLocation(
+        updateId: pending.updateId,
+        consumer: PendingLocationConsumer.appEffects,
+      );
+    }
+  }
+
+  Future<void> acknowledgePendingLocation({
+    required String updateId,
+    required PendingLocationConsumer consumer,
+  }) async {
+    try {
+      await BackgroundLocationTracker.acknowledgePendingLocation(
+        updateId: updateId,
+        consumer: consumer,
+      );
+    } on Object catch (e, st) {
+      talker.error(
+        '[BackgroundLocation] ${consumer.name} acknowledge failed',
+        e,
+        st,
+      );
+    }
+  }
+
+  Future<bool> applyLocation(
+    Ref ref, {
+    required double latitude,
+    required double longitude,
+  }) async {
     try {
       final slots = await (() async {
         try {
@@ -119,47 +160,36 @@ class BackgroundLocationSyncCoordinator {
       // earthquakeResolution は親 region 解決に失敗すると null になるため、
       // 揺れ検知用の cityCode は resolver から直接取得する。
       final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
-      final tsunamiForecastRegionCode = resolver
-          .resolveTsunamiForecastRegionCode(latitude, longitude);
 
-      // スロットリージョン更新（EEW と地震情報が統合されたので1回で済む）
-      EarthquakeRegionResolution? earthquakeResolution;
-      var didUpdateEew = false;
-      String? eewError;
+      EarthquakeRegionResolution? resolution;
       try {
-        didUpdateEew = await retry.run(
+        resolution = await retry.run(
           action: () async {
-            final resolution = resolver.resolveEarthquakeRegion(
+            final resolved = resolver.resolveEarthquakeRegion(
               latitude,
               longitude,
             );
-            earthquakeResolution = resolution;
-            if (resolution == null) {
+            if (resolved == null) {
               throw StateError('AreaForecastLocalE could not be resolved');
             }
-            return ref
-                .read(notificationSlotsProvider.notifier)
-                .updateCurrentLocationRegion(
-                  regionCode: resolution.regionCode,
-                  regionName: resolution.regionName,
-                  cityCode: resolution.cityCode,
-                  tsunamiForecastRegionCode: tsunamiForecastRegionCode,
-                );
+            return resolved;
           },
         );
       } on Object catch (e, st) {
-        talker.error('[BackgroundLocation] update slot location failed', e, st);
-        eewError = e.toString();
+        talker.error('[BackgroundLocation] resolve app effects failed', e, st);
       }
-      final resolution = earthquakeResolution;
 
-      // 地震情報は統合スロットで一緒に更新されるため、個別更新不要。
-      final didUpdateEarthquake = didUpdateEew;
+      const didUpdateEew = false;
+      const String? eewError = null;
+      const didUpdateEarthquake = false;
       const String? earthquakeError = null;
 
       // ホーム画面ウィジェット「現在地」表示用に App Group へ現在地の
       // 一次細分化地域を反映する（iOS のみ）。
-      await syncCurrentLocationToAppGroup(ref, resolution);
+      final didSyncAppGroup = await syncCurrentLocationToAppGroup(
+        ref,
+        resolution: resolution,
+      );
 
       // 揺れ検知 sub_region 更新
       var didUpdateShake = false;
@@ -180,7 +210,7 @@ class BackgroundLocationSyncCoordinator {
       }
 
       if (resolution == null) {
-        return;
+        return false;
       }
 
       // デバッグ通知
@@ -203,17 +233,19 @@ class BackgroundLocationSyncCoordinator {
         earthquakeError: earthquakeError,
         shakeError: shakeError,
       );
+      return shakeError == null && didSyncAppGroup;
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] applyLocation failed', e, st);
+      return false;
     }
   }
 
-  Future<void> syncCurrentLocationToAppGroup(
-    Ref ref,
-    EarthquakeRegionResolution? resolution,
-  ) async {
+  Future<bool> syncCurrentLocationToAppGroup(
+    Ref ref, {
+    required EarthquakeRegionResolution? resolution,
+  }) async {
     if (!Platform.isIOS) {
-      return;
+      return true;
     }
     try {
       final prefs = await ref.read(appGroupPreferencesProvider.future);
@@ -225,8 +257,10 @@ class BackgroundLocationSyncCoordinator {
       if (changed) {
         await WidgetTimelineReloader.reload();
       }
+      return true;
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] sync app group failed', e, st);
+      return false;
     }
   }
 

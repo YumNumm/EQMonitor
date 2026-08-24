@@ -34,6 +34,7 @@ import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.d
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
+import 'package:eqmonitor/feature/location/data/headless/headless_location_callback.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/app_launch_watcher_provider.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
@@ -104,7 +105,9 @@ class AppBootstrap {
     final profiler = StartupProfiler();
 
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-      await BackgroundLocationTracker.initialize();
+      await BackgroundLocationTracker.initialize(
+        callbackDispatcher: backgroundLocationCallbackDispatcher,
+      );
     }
 
     await SystemChrome.setEnabledSystemUIMode(

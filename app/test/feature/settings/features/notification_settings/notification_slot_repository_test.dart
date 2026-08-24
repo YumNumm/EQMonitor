@@ -80,30 +80,18 @@ void main() {
   });
 
   group('putDeviceLocation', () {
-    test('同一セッション内の同じpayloadは再送しない', () async {
-      final first = await repository.putDeviceLocation(
+    test('Repositoryは重複判定せず同じpayloadもAPIへ送る', () async {
+      await repository.putDeviceLocation(
         region: 301,
         city: '0820100',
         tsunamiForecastRegion: '201',
       );
-      final second = await repository.putDeviceLocation(
+      await repository.putDeviceLocation(
         region: 301,
         city: '0820100',
         tsunamiForecastRegion: '201',
       );
 
-      expect(first, isTrue);
-      expect(second, isFalse);
-      expect(adapter.deviceLocationPutCount, 1);
-    });
-
-    test('Repository再生成後は同じpayloadでも初回送信する', () async {
-      await repository.putDeviceLocation(region: 301);
-      final recreatedRepository = NotificationSlotRepository(api: apiClient);
-
-      final result = await recreatedRepository.putDeviceLocation(region: 301);
-
-      expect(result, isTrue);
       expect(adapter.deviceLocationPutCount, 2);
     });
   });
