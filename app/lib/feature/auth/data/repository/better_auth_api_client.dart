@@ -33,12 +33,15 @@ final class BetterAuthApiClient {
     required BetterAuthSessionRepository sessionRepository,
     required CookieJar cookieJar,
     CookieJar Function()? createCookieJar,
+    BetterAuthSessionEstablishmentGate? establishmentGate,
   }) : _dio = dio,
        _sessionRepository = sessionRepository,
        _cookieStore = BetterAuthCookieStore(
          initialCookieJar: cookieJar,
          createCookieJar: createCookieJar ?? createInMemoryCookieJar,
-       ) {
+       ),
+       _establishmentGate =
+           establishmentGate ?? BetterAuthSessionEstablishmentGate() {
     _dio.interceptors.addAll([
       BetterAuthCookieInterceptor(
         cookieStore: _cookieStore,
@@ -51,6 +54,7 @@ final class BetterAuthApiClient {
   final Dio _dio;
   final BetterAuthSessionRepository _sessionRepository;
   final BetterAuthCookieStore _cookieStore;
+  final BetterAuthSessionEstablishmentGate _establishmentGate;
 
   Future<Result<void, AuthFailure>> signInSocial({
     required String provider,
@@ -58,96 +62,139 @@ final class BetterAuthApiClient {
     String? nonce,
     Map<String, dynamic>? user,
   }) async {
+    final establishmentResult = await beginSessionEstablishment(
+      path: '/api/auth/sign-in/social',
+    );
+    if (establishmentResult case Failure(
+      :final exception,
+      :final stackTrace,
+    )) {
+      return Failure(exception, stackTrace);
+    }
+    return establishmentResult.unwrap().verify(
+      tokenPolicy: BetterAuthSessionTokenPolicy.required,
+      request: (options) => _dio.post<void>(
+        '/api/auth/sign-in/social',
+        data: {
+          'provider': provider,
+          'idToken': {
+            'token': idToken,
+            if (nonce != null && nonce.isNotEmpty) 'nonce': nonce,
+            if (user != null && user.isNotEmpty) 'user': user,
+          },
+        },
+        options: options,
+      ),
+    );
+  }
+
+  Future<Result<BetterAuthPasskeyOperation, AuthFailure>>
+  generatePasskeyRegistrationOptions() => generatePasskeyOptions(
+    path: '/api/auth/passkey/generate-register-options',
+  );
+
+  Future<Result<void, AuthFailure>> verifyPasskeyRegistration({
+    required BetterAuthPasskeyOperation operation,
+    required Map<String, dynamic> response,
+  }) => operation.establishment.verify(
+    tokenPolicy: BetterAuthSessionTokenPolicy.optional,
+    request: (options) => _dio.post<Map<String, dynamic>>(
+      '/api/auth/passkey/verify-registration',
+      data: {'response': response},
+      options: options,
+    ),
+  );
+
+  Future<Result<BetterAuthPasskeyOperation, AuthFailure>>
+  generatePasskeyAuthenticationOptions() => generatePasskeyOptions(
+    path: '/api/auth/passkey/generate-authenticate-options',
+  );
+
+  Future<Result<void, AuthFailure>> verifyPasskeyAuthentication({
+    required BetterAuthPasskeyOperation operation,
+    required Map<String, dynamic> response,
+  }) => operation.establishment.verify(
+    tokenPolicy: BetterAuthSessionTokenPolicy.required,
+    request: (options) => _dio.post<Map<String, dynamic>>(
+      '/api/auth/passkey/verify-authentication',
+      data: {'response': response},
+      options: options,
+    ),
+  );
+
+  Future<Result<BetterAuthPasskeyOperation, AuthFailure>>
+  generatePasskeyOptions({required String path}) async {
+    final establishmentResult = await beginSessionEstablishment(path: path);
+    if (establishmentResult case Failure(
+      :final exception,
+      :final stackTrace,
+    )) {
+      return Failure(exception, stackTrace);
+    }
+    final establishment = establishmentResult.unwrap();
+    final responseResult = await captureAuthRequest(
+      () => _dio.get<Map<String, dynamic>>(
+        path,
+        options: establishment.requestOptions,
+      ),
+    );
+    if (responseResult case Failure(:final exception, :final stackTrace)) {
+      return establishment.abandonWithFailure(
+        failure: Failure(exception, stackTrace),
+      );
+    }
+    final response = responseResult.unwrap();
+    final options = response.data;
+    if (options == null || options.isEmpty || !establishment.isCurrent) {
+      return establishment.abandonWithFailure(
+        failure: const Failure(
+          AuthFailure(kind: AuthFailureKind.invalidResponse),
+        ),
+      );
+    }
+    return Success(
+      BetterAuthPasskeyOperation(
+        options: options,
+        establishment: establishment,
+      ),
+    );
+  }
+
+  Future<Result<BetterAuthSessionEstablishment, AuthFailure>>
+  beginSessionEstablishment({required String path}) async {
+    final establishmentId = _establishmentGate.tryBegin();
+    if (establishmentId == null) {
+      return const Failure(AuthFailure(kind: AuthFailureKind.busy));
+    }
     final sessionGeneration = _sessionRepository.generation;
     final existingSessionResult = await _sessionRepository.readSessionToken();
     if (existingSessionResult case Failure(
       :final exception,
       :final stackTrace,
     )) {
+      _establishmentGate.complete(establishmentId: establishmentId);
       return Failure(exception, stackTrace);
     }
-    final existingSessionToken = existingSessionResult.unwrap();
     final transactionResult = await captureAuthRequest(
       () => _cookieStore.beginTransaction(
-        uri: Uri.parse(
-          _dio.options.baseUrl,
-        ).resolve('/api/auth/sign-in/social'),
+        uri: Uri.parse(_dio.options.baseUrl).resolve(path),
       ),
     );
     if (transactionResult case Failure(:final exception, :final stackTrace)) {
+      _establishmentGate.complete(establishmentId: establishmentId);
       return Failure(exception, stackTrace);
     }
-    final cookieTransaction = transactionResult.unwrap();
-    var didAttemptSessionSave = false;
-    final requestResult = await captureAuthRequest(() async {
-      final response = await _dio.post<void>(
-        '/api/auth/sign-in/social',
-        data: <String, dynamic>{
-          'provider': provider,
-          'idToken': <String, dynamic>{
-            'token': idToken,
-            if (nonce != null && nonce.isNotEmpty) 'nonce': nonce,
-            if (user != null && user.isNotEmpty) 'user': user,
-          },
-        },
-        options: Options(
-          extra: {
-            BetterAuthCookieStore.transactionExtraKey: cookieTransaction,
-          },
-        ),
-      );
-      final tokenHeaders = response.headers.map['set-auth-token'];
-      if (tokenHeaders == null || tokenHeaders.length != 1) {
-        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
-      }
-      final token = tokenHeaders.single;
-      if (!isSafeBetterAuthSessionToken(token)) {
-        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
-      }
-      didAttemptSessionSave = true;
-      final saveResult = await _sessionRepository.saveSessionToken(
-        token: token,
-        expectedGeneration: sessionGeneration,
-      );
-      if (saveResult case Failure(:final exception)) {
-        throw exception;
-      }
-      if (_sessionRepository.generation != sessionGeneration) {
-        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
-      }
-      if (!_cookieStore.commit(transaction: cookieTransaction)) {
-        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
-      }
-    });
-    if (requestResult is Success<void, AuthFailure>) {
-      return requestResult;
-    }
-
-    final cookieRollbackResult = await captureAuthRequest(
-      cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
+    return Success(
+      BetterAuthSessionEstablishment(
+        sessionRepository: _sessionRepository,
+        cookieStore: _cookieStore,
+        cookieTransaction: transactionResult.unwrap(),
+        sessionGeneration: sessionGeneration,
+        existingSessionToken: existingSessionResult.unwrap(),
+        establishmentGate: _establishmentGate,
+        establishmentId: establishmentId,
+      ),
     );
-    Result<void, AuthFailure> sessionRollbackResult =
-        const Success<void, AuthFailure>(null);
-    if (didAttemptSessionSave &&
-        _sessionRepository.generation == sessionGeneration) {
-      sessionRollbackResult = existingSessionToken == null
-          ? await _sessionRepository.clearSession()
-          : await _sessionRepository.saveSessionToken(
-              token: existingSessionToken,
-              expectedGeneration: sessionGeneration,
-            );
-    }
-    return switch ((sessionRollbackResult, cookieRollbackResult)) {
-      (Failure(:final exception, :final stackTrace), _) => Failure(
-        exception,
-        stackTrace,
-      ),
-      (_, Failure(:final exception, :final stackTrace)) => Failure(
-        exception,
-        stackTrace,
-      ),
-      _ => requestResult,
-    };
   }
 
   Future<Result<String, AuthFailure>> fetchJwt() {
@@ -208,6 +255,188 @@ final class BetterAuthApiClient {
       );
       return response.data?['session'] is Map<String, dynamic>;
     });
+  }
+}
+
+enum BetterAuthSessionTokenPolicy { required, optional }
+
+final class BetterAuthPasskeyOperation {
+  const new({
+    required this.options,
+    required this.establishment,
+  });
+
+  final Map<String, dynamic> options;
+  final BetterAuthSessionEstablishment establishment;
+}
+
+final class BetterAuthSessionEstablishment {
+  const new({
+    required this.sessionRepository,
+    required this.cookieStore,
+    required this.cookieTransaction,
+    required this.sessionGeneration,
+    required this.existingSessionToken,
+    required this.establishmentGate,
+    required this.establishmentId,
+  });
+
+  final BetterAuthSessionRepository sessionRepository;
+  final BetterAuthCookieStore cookieStore;
+  final BetterAuthCookieTransaction cookieTransaction;
+  final int sessionGeneration;
+  final String? existingSessionToken;
+  final BetterAuthSessionEstablishmentGate establishmentGate;
+  final int establishmentId;
+
+  bool get isCurrent =>
+      sessionRepository.generation == sessionGeneration &&
+      cookieStore.canCommit(transaction: cookieTransaction) &&
+      establishmentGate.isCurrent(establishmentId: establishmentId);
+
+  Options get requestOptions => Options(
+    extra: {
+      BetterAuthCookieStore.transactionExtraKey: cookieTransaction,
+    },
+  );
+
+  Future<Result<void, AuthFailure>> verify<T>({
+    required BetterAuthSessionTokenPolicy tokenPolicy,
+    required Future<Response<T>> Function(Options options) request,
+  }) async {
+    if (!establishmentGate.isCurrent(establishmentId: establishmentId)) {
+      return const Failure(
+        AuthFailure(kind: AuthFailureKind.invalidResponse),
+      );
+    }
+    if (!isCurrent) {
+      return await rollback(
+        failure: const Failure(
+          AuthFailure(kind: AuthFailureKind.invalidResponse),
+        ),
+        didAttemptSessionSave: false,
+      );
+    }
+    var didAttemptSessionSave = false;
+    final requestResult = await captureAuthRequest(() async {
+      final response = await request(requestOptions);
+      final tokenHeaders = response.headers.map['set-auth-token'];
+      final token = switch ((tokenPolicy, tokenHeaders)) {
+        (BetterAuthSessionTokenPolicy.required, [final String value]) => value,
+        (BetterAuthSessionTokenPolicy.optional, null) => null,
+        (BetterAuthSessionTokenPolicy.optional, [final String value]) => value,
+        _ => throw const AuthFailure(
+          kind: AuthFailureKind.invalidResponse,
+        ),
+      };
+      if (token != null) {
+        if (!isSafeBetterAuthSessionToken(token)) {
+          throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+        }
+        didAttemptSessionSave = true;
+        final saveResult = await sessionRepository.saveSessionToken(
+          token: token,
+          expectedGeneration: sessionGeneration,
+        );
+        if (saveResult case Failure(:final exception)) {
+          throw exception;
+        }
+      }
+      if (!isCurrent || !cookieStore.commit(transaction: cookieTransaction)) {
+        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+      }
+    });
+    if (requestResult is Success<void, AuthFailure>) {
+      establishmentGate.complete(establishmentId: establishmentId);
+      return requestResult;
+    }
+    return rollback(
+      failure: requestResult,
+      didAttemptSessionSave: didAttemptSessionSave,
+    );
+  }
+
+  Future<Result<void, AuthFailure>> abandon() async {
+    if (!establishmentGate.isCurrent(establishmentId: establishmentId)) {
+      return const Success(null);
+    }
+    final result = await captureAuthRequest(
+      cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
+    );
+    establishmentGate.complete(establishmentId: establishmentId);
+    return result;
+  }
+
+  Future<Result<T, AuthFailure>> abandonWithFailure<T>({
+    required Failure<T, AuthFailure> failure,
+  }) async {
+    final abandonmentResult = await abandon();
+    return switch (abandonmentResult) {
+      Failure(:final exception, :final stackTrace) => Failure(
+        exception,
+        stackTrace,
+      ),
+      Success() => failure,
+    };
+  }
+
+  Future<Result<void, AuthFailure>> rollback({
+    required Result<void, AuthFailure> failure,
+    required bool didAttemptSessionSave,
+  }) async {
+    if (!establishmentGate.isCurrent(establishmentId: establishmentId)) {
+      return failure;
+    }
+    final cookieRollbackResult = await captureAuthRequest(
+      cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
+    );
+    Result<void, AuthFailure> sessionRollbackResult =
+        const Success<void, AuthFailure>(null);
+    if (didAttemptSessionSave &&
+        sessionRepository.generation == sessionGeneration) {
+      final tokenToRestore = existingSessionToken;
+      sessionRollbackResult = tokenToRestore == null
+          ? await sessionRepository.clearSession()
+          : await sessionRepository.saveSessionToken(
+              token: tokenToRestore,
+              expectedGeneration: sessionGeneration,
+            );
+    }
+    establishmentGate.complete(establishmentId: establishmentId);
+    return switch ((sessionRollbackResult, cookieRollbackResult)) {
+      (Failure(:final exception, :final stackTrace), _) => Failure(
+        exception,
+        stackTrace,
+      ),
+      (_, Failure(:final exception, :final stackTrace)) => Failure(
+        exception,
+        stackTrace,
+      ),
+      _ => failure,
+    };
+  }
+}
+
+final class BetterAuthSessionEstablishmentGate {
+  var _nextEstablishmentId = 0;
+  int? _activeEstablishmentId;
+
+  int? tryBegin() {
+    if (_activeEstablishmentId != null) {
+      return null;
+    }
+    _nextEstablishmentId++;
+    _activeEstablishmentId = _nextEstablishmentId;
+    return _activeEstablishmentId;
+  }
+
+  bool isCurrent({required int establishmentId}) =>
+      _activeEstablishmentId == establishmentId;
+
+  void complete({required int establishmentId}) {
+    if (_activeEstablishmentId == establishmentId) {
+      _activeEstablishmentId = null;
+    }
   }
 }
 
@@ -461,6 +690,12 @@ AuthFailure authFailureFromDio(DioException exception) {
     return const AuthFailure(
       kind: AuthFailureKind.rateLimited,
       statusCode: 429,
+    );
+  }
+  if (statusCode != null && statusCode >= 400 && statusCode < 500) {
+    return AuthFailure(
+      kind: AuthFailureKind.invalidResponse,
+      statusCode: statusCode,
     );
   }
   if (statusCode != null && statusCode >= 500) {

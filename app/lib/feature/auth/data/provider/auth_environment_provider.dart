@@ -33,6 +33,11 @@ enum AuthEnvironment {
   Uri get appleAndroidCallbackUri =>
       Uri.parse('$baseUrl/api/auth/apple/android/callback');
 
+  String get passkeyRpId => switch (this) {
+    AuthEnvironment.develop => 'dev.v2.api.eqmonitor.app',
+    AuthEnvironment.production => 'eqmonitor.app',
+  };
+
   bool isCompatible({
     required BuildConfig buildConfig,
     required TelegramUrlModel telegramUrl,
