@@ -104,11 +104,13 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
                 at: fileURL.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
+            try excludeFromBackup(at: fileURL.deletingLastPathComponent())
             try dataWriter.write(
                 data,
                 to: fileURL,
                 options: writingOptions
             )
+            try excludeFromBackup(at: fileURL)
             try synchronizeFile(at: fileURL)
             try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
             return true
@@ -179,11 +181,14 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
                     to: fileURL,
                     options: writingOptions
                 )
+                try excludeFromBackup(at: fileURL)
                 try synchronizeFile(at: fileURL)
             } else if fileManager.fileExists(atPath: fileURL.path) {
                 try fileManager.removeItem(at: fileURL)
             }
-            try synchronizeDirectory(at: fileURL.deletingLastPathComponent())
+            let directoryURL = fileURL.deletingLastPathComponent()
+            try excludeFromBackup(at: directoryURL)
+            try synchronizeDirectory(at: directoryURL)
         } catch {
             // 呼出元へ失敗を返す。次回readでは残存recordを再検証する。
         }
@@ -192,6 +197,13 @@ final class AtomicFilePendingLocationRecordStorage: PendingLocationRecordStorage
     private var writingOptions: Data.WritingOptions {
         // 初回unlock後のbackground relaunchでは、端末lock中でもpendingを更新できる必要がある。
         [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
+    }
+
+    private func excludeFromBackup(at url: URL) throws {
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var mutableURL = url
+        try mutableURL.setResourceValues(values)
     }
 }
 

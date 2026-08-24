@@ -12,10 +12,14 @@ struct BackgroundLocationPendingLocationStoreTests {
         #expect(storage.write(Data([0x01, 0x02])))
         let createdProtection = try fileProtectionType(at: fileURL)
         #expect(createdProtection == .completeUntilFirstUserAuthentication)
+        #expect(try isExcludedFromBackup(at: directoryURL))
+        #expect(try isExcludedFromBackup(at: fileURL))
 
         #expect(storage.write(Data([0x03, 0x04])))
         let replacedProtection = try fileProtectionType(at: fileURL)
         #expect(replacedProtection == .completeUntilFirstUserAuthentication)
+        #expect(try isExcludedFromBackup(at: directoryURL))
+        #expect(try isExcludedFromBackup(at: fileURL))
     }
 
     @Test func failedAtomicWriteRestoresPreviousDataWithAfterFirstUnlockProtection() throws {
@@ -46,6 +50,8 @@ struct BackgroundLocationPendingLocationStoreTests {
         ])
         let restoredProtection = try fileProtectionType(at: fileURL)
         #expect(restoredProtection == .completeUntilFirstUserAuthentication)
+        #expect(try isExcludedFromBackup(at: directoryURL))
+        #expect(try isExcludedFromBackup(at: fileURL))
     }
 
     @Test func atomicFileStorageReplacesAndRemovesOneSerializedRecord() throws {
@@ -293,6 +299,10 @@ struct BackgroundLocationPendingLocationStoreTests {
 
 private func fileProtectionType(at fileURL: URL) throws -> URLFileProtection? {
     try fileURL.resourceValues(forKeys: [.fileProtectionKey]).fileProtection
+}
+
+private func isExcludedFromBackup(at url: URL) throws -> Bool {
+    try url.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup ?? false
 }
 
 private final class FailingOncePendingLocationDataWriter: PendingLocationDataWriting {
