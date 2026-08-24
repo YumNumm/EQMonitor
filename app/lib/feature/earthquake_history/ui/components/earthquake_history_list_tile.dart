@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:extensions/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -54,15 +55,17 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final hypocenter = earthquake.hypocenter;
     final intensity = earthquake.intensity;
     final maxIntensity = intensity?.maxIntensity;
+    final maxIntensityClass = intensity?.maxIntensityClass;
+    final maxIntensityLabel = maxIntensityClass?.label ?? maxIntensity?.label;
 
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
 
-    final title = switch ((hypoName, hypoDetailName, maxIntensity)) {
+    final title = switch ((hypoName, hypoDetailName, maxIntensityLabel)) {
       (final String hypoName, final String hypoDetailName, _) =>
         '$hypoName($hypoDetailName)'.replaceAll('、', ' '),
       (final String hypoName, _, _) => hypoName,
-      (_, _, final JmaIntensity maxInt) => '最大震度${maxInt.label}を観測',
+      (_, _, final String label) => '最大震度${label}を観測',
       _ => '',
     };
 
@@ -84,8 +87,9 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           null => '',
         };
 
-    final maxIntensityColor = maxIntensity != null
-        ? intensityColors.fromJmaIntensity(maxIntensity).background
+    final colorIntensity = maxIntensityClass?.colorJmaIntensity ?? maxIntensity;
+    final maxIntensityColor = colorIntensity != null
+        ? intensityColors.fromJmaIntensity(colorIntensity).background
         : null;
 
     final tileBaseColor =
@@ -166,6 +170,11 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           type: earthquake.earthquakeType,
           size: intensityIconSize,
         ),
+        EarthquakeType.normal when maxIntensityClass != null =>
+          ShindoDbIntensityClassIcon(
+            intensityClass: maxIntensityClass,
+            size: intensityIconSize,
+          ),
         EarthquakeType.normal when maxIntensity != null => JmaIntensityIcon(
           intensity: maxIntensity,
           type: .filled,

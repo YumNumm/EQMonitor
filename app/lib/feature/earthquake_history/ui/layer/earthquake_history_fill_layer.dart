@@ -87,7 +87,8 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
     );
 
     final isInitialized = useRef(false);
-    final addedLayerIds = useRef(<String>[]);
+    final generationSequence = useRef(0);
+    final activeGeneration = useRef<({int id, List<String> layerIds})?>(null);
     final latestParameter = useRef(parameter);
     latestParameter.value = parameter;
     final latestIntensity = useRef(intensity);
@@ -105,9 +106,36 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
           return null;
         }
 
+        generationSequence.value++;
+        final generation = (
+          id: generationSequence.value,
+          layerIds: <String>[],
+        );
+        var disposed = false;
+
         unawaited(
           enqueue(() async {
             try {
+              if (disposed) {
+                return;
+              }
+
+              final previousGeneration = activeGeneration.value;
+              if (previousGeneration != null &&
+                  previousGeneration.id != generation.id) {
+                for (final id in previousGeneration.layerIds.reversed) {
+                  try {
+                    await styleController.removeLayer(id);
+                  } on Exception catch (e) {
+                    talker.log(e);
+                  }
+                }
+                previousGeneration.layerIds.clear();
+              }
+              if (disposed) {
+                return;
+              }
+
               final layers = fillLayerBuilder.build(
                 intensity: intensity,
                 colorModel: colorModel,
@@ -115,16 +143,18 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
                 showingLpgmIntensity: showingLpgmIntensity,
                 parameter: latestParameter.value,
               );
-              final newIds = <String>[];
+              activeGeneration.value = generation;
+              isInitialized.value = true;
               for (final layer in layers) {
+                if (disposed) {
+                  return;
+                }
                 await styleController.addLayer(
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
-                newIds.add(layer.id);
+                generation.layerIds.add(layer.id);
               }
-              addedLayerIds.value = newIds;
-              isInitialized.value = true;
             } on Exception catch (e) {
               talker.log(e);
             }
@@ -132,17 +162,22 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
         );
 
         return () {
-          isInitialized.value = false;
+          disposed = true;
           unawaited(
             enqueue(() async {
-              for (final id in addedLayerIds.value.reversed) {
+              if (activeGeneration.value?.id != generation.id) {
+                return;
+              }
+              for (final id in generation.layerIds.reversed) {
                 try {
                   await styleController.removeLayer(id);
                 } on Exception catch (e) {
                   talker.log(e);
                 }
               }
-              addedLayerIds.value = [];
+              generation.layerIds.clear();
+              activeGeneration.value = null;
+              isInitialized.value = false;
             }),
           );
         };
@@ -169,15 +204,20 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
 
         unawaited(
           enqueue(() async {
-            for (final id in addedLayerIds.value.reversed) {
+            final generation = activeGeneration.value;
+            if (generation == null) {
+              return;
+            }
+
+            for (final id in generation.layerIds.reversed) {
               try {
                 await styleController.removeLayer(id);
               } on Exception catch (e) {
                 talker.log(e);
               }
             }
+            generation.layerIds.clear();
 
-            final newIds = <String>[];
             try {
               final layers = fillLayerBuilder.build(
                 intensity: currentIntensity,
@@ -191,12 +231,11 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
                   layer,
                   belowLayerId: BaseLayer.areaForecastLocalELine.name,
                 );
-                newIds.add(layer.id);
+                generation.layerIds.add(layer.id);
               }
             } on Exception catch (e) {
               talker.log(e);
             }
-            addedLayerIds.value = newIds;
           }),
         );
 

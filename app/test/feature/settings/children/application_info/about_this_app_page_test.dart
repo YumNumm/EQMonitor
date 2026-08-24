@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app_page.dart';
 import 'package:cupertino_ui/cupertino_ui.dart'
     show GlobalCupertinoLocalizations;
@@ -11,6 +12,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   testWidgets('マークダウン本文はテーマのonSurface色を使う', (tester) async {
@@ -24,22 +26,29 @@ void main() {
       }
 
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: _MarkdownAssetBundle(),
-          child: MaterialApp(
-            theme: AppThemeDataBuilder.build(
-              colorSet: colorSet,
-              brightness: brightness,
+        ProviderScope(
+          overrides: [
+            deviceIdProvider.overrideWith(
+              (ref) => '01976d8e-7d12-7000-8000-1234567890ab',
             ),
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              flutter_localizations.GlobalMaterialLocalizations.delegate,
-              flutter_localizations.GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [Locale('ja', 'JP')],
-            themeAnimationDuration: Duration.zero,
-            home: const AboutThisAppPage(),
+          ],
+          child: DefaultAssetBundle(
+            bundle: _MarkdownAssetBundle(),
+            child: MaterialApp(
+              theme: AppThemeDataBuilder.build(
+                colorSet: colorSet,
+                brightness: brightness,
+              ),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                flutter_localizations.GlobalMaterialLocalizations.delegate,
+                flutter_localizations.GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [Locale('ja', 'JP')],
+              themeAnimationDuration: Duration.zero,
+              home: const AboutThisAppPage(),
+            ),
           ),
         ),
       );
@@ -49,6 +58,10 @@ void main() {
       expect(markdown.styleSheet?.p?.color, colorSet.onSurface);
       expect(markdown.styleSheet?.a?.color, colorSet.primary);
       expect(find.byType(ListView), findsOneWidget);
+      expect(
+        find.text('01976d8e-7d12-7000-8000-1234567890ab'),
+        findsOneWidget,
+      );
     }
   });
 }

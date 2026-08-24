@@ -43,9 +43,11 @@ Int32List _ring(List<(int, int)> points) {
   return buffer;
 }
 
-MvtFeature _lineFeature(List<Int32List> rings) {
-  return MvtFeature(type: MvtGeometryType.lineString, rings: rings);
-}
+MvtFeature _lineFeature(List<Int32List> rings) => MvtFeature(
+  type: MvtGeometryType.lineString,
+  rings: rings,
+  properties: const {},
+);
 
 double _dot(double ax, double ay, double bx, double by) => ax * bx + ay * by;
 
@@ -602,6 +604,7 @@ void main() {
         rings: [
           _ring([(0, 0), (10, 0), (10, 10)]),
         ],
+        properties: const {},
       );
 
       expect(

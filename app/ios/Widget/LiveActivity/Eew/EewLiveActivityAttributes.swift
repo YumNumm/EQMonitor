@@ -15,9 +15,6 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct EewContentState: Codable, Hashable {
     let eventId: String
-    /// イベント種別（backend は "eew" を送る）。
-    /// UI では使わないため optional。必須にすると backend が欠落させた瞬間に
-    /// content-state 全体のデコードが失敗し Live Activity が表示されなくなる。
     let type: String?
     let hypocenterName: String?
     let magnitude: Double?
@@ -51,7 +48,6 @@ struct EewContentState: Codable, Hashable {
         return (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
 
-    /// 表示判定と文言生成。取消報での抑止ルールは [EewDisplay] に集約している。
     var display: EewDisplay {
         EewDisplay(
             isCanceled: isCanceled == true,
@@ -60,7 +56,10 @@ struct EewContentState: Codable, Hashable {
             serialNo: serialNo,
             maxIntensity: intensityValue,
             forecastIntensity: location?.forecastIntensityValue,
-            arrivalDate: location?.arrivalDate
+            arrivalDate: location?.arrivalDate,
+            depth: depth,
+            isLowAccuracyDetection: isPlum == true || isLevel == true
+                || isOnePoint == true
         )
     }
 }
@@ -79,10 +78,10 @@ extension EewContentState {
         type: "eew",
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
-        depth: 10,
+        depth: 170,
         time: "2024-01-01T16:10:00+09:00",
         isOriginTime: true,
-        maxIntensity: "6+",
+        maxIntensity: nil,
         serialNo: 32,
         isFinal: false,
         isWarning: true,
@@ -134,6 +133,28 @@ extension EewContentState {
         isWarning: false,
         isCanceled: false,
         headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
+        location: nil
+    )
+
+    /// 深さ 150km より深く、予想震度が発表されない報。
+    /// 震度バッジが消えず「-」になること、注釈が出ることを確認する。
+    static let deepHypocenter = EewContentState(
+        eventId: "20240107123456",
+        type: "eew",
+        hypocenterName: "鳥島近海",
+        magnitude: 6.2,
+        depth: 420,
+        time: "2024-01-07T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: nil,
+        serialNo: 3,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "鳥島近海で地震",
         isPlum: false,
         isLevel: false,
         isOnePoint: false,
@@ -241,7 +262,7 @@ extension EewContentState {
     )
 
     /// 主要動到達カウントダウンを主役にするレイアウトのプレビュー。
-    /// 固定日時では常に「到達済み」になってしまうため、実行時刻から到達予想を作る。
+    /// 固定日時では常に 00:00 になってしまうため、実行時刻から到達予想を作る。
     static func countingDown(secondsUntilArrival: TimeInterval = 30) -> EewContentState {
         let formatter = ISO8601DateFormatter()
         return EewContentState(
@@ -292,4 +313,206 @@ extension EewContentState {
         isOnePoint: true,
         location: nil
     )
+}
+
+// MARK: - Preview Sequences
+
+/// 実際の EEW は 1 つのイベントに対して報を重ね、規模・予想震度・警報/予報の別が
+/// 更新されていく。Live Activity は同じ Activity を更新し続けるため、
+/// 単発の状態だけでなく「報が進んだときに破綻しないか」を見る必要がある。
+/// ここでは報の進行を系列として持ち、プレビューで State を切り替えて確認する。
+///
+/// 主要動到達の予想時刻は実行時刻からの相対で作る。固定日時にすると
+/// カウントダウンが常に 00:00 になり、残り時間の表示を確認できない。
+extension EewContentState {
+    /// 予報の第1報から警報へ切り替わり、最終報まで規模と予想震度が上がっていく流れ。
+    static func warningSequence(from now: Date = Date()) -> [EewContentState] {
+        let originTime = now.addingTimeInterval(-8)
+        return [
+            notoReport(
+                serialNo: 1,
+                magnitude: 4.9,
+                depth: 10,
+                maxIntensity: "4",
+                isWarning: false,
+                headline: "石川県で地震",
+                forecastIntensity: "3",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(32)
+            ),
+            notoReport(
+                serialNo: 2,
+                magnitude: 6.1,
+                depth: 10,
+                maxIntensity: "5+",
+                isWarning: true,
+                headline: "石川県で地震 北陸で強い揺れ",
+                forecastIntensity: "5-",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(26)
+            ),
+            notoReport(
+                serialNo: 4,
+                magnitude: 6.9,
+                depth: 10,
+                maxIntensity: "6-",
+                isWarning: true,
+                headline: "石川県で地震 北陸で強い揺れ",
+                forecastIntensity: "5+",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(16)
+            ),
+            notoReport(
+                serialNo: 8,
+                magnitude: 7.4,
+                depth: 10,
+                maxIntensity: "6+",
+                isWarning: true,
+                headline: "石川県で地震 北陸で強い揺れ",
+                forecastIntensity: "6-",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(6)
+            ),
+            // 主要動が到達し、カウントダウンが 00:00 で止まっている状態
+            notoReport(
+                serialNo: 32,
+                magnitude: 7.6,
+                depth: 16,
+                maxIntensity: "7",
+                isWarning: true,
+                headline: "石川県で地震 北陸で強い揺れ",
+                forecastIntensity: "6-",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(-12)
+            ),
+            notoReport(
+                serialNo: 47,
+                magnitude: 7.6,
+                depth: 16,
+                maxIntensity: "7",
+                isWarning: true,
+                headline: "石川県で地震 北陸で強い揺れ",
+                forecastIntensity: "6-",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(-12),
+                isFinal: true
+            ),
+        ]
+    }
+
+    /// 予報のまま推移し、最後に取消となる流れ。
+    /// 取消報で震源・予想震度・到達予想が消えることを確認する。
+    static func canceledSequence(from now: Date = Date()) -> [EewContentState] {
+        let originTime = now.addingTimeInterval(-6)
+        return [
+            ibarakiForecastReport(
+                serialNo: 1,
+                magnitude: 4.2,
+                maxIntensity: "3",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(18)
+            ),
+            ibarakiForecastReport(
+                serialNo: 2,
+                magnitude: 4.8,
+                maxIntensity: "4",
+                originTime: originTime,
+                arrivalTime: now.addingTimeInterval(10)
+            ),
+            EewContentState(
+                eventId: "20240102123456",
+                type: "eew",
+                hypocenterName: nil,
+                magnitude: nil,
+                depth: nil,
+                time: nil,
+                isOriginTime: false,
+                maxIntensity: nil,
+                serialNo: 3,
+                isFinal: true,
+                isWarning: false,
+                isCanceled: true,
+                headline: "茨城県沖で地震",
+                isPlum: false,
+                isLevel: false,
+                isOnePoint: false,
+                location: nil
+            ),
+        ]
+    }
+
+    private static func notoReport(
+        serialNo: Int,
+        magnitude: Double,
+        depth: Double,
+        maxIntensity: String,
+        isWarning: Bool,
+        headline: String,
+        forecastIntensity: String,
+        originTime: Date,
+        arrivalTime: Date,
+        isFinal: Bool = false
+    ) -> EewContentState {
+        let formatter = ISO8601DateFormatter()
+        return EewContentState(
+            eventId: "20240101161009",
+            type: "eew",
+            hypocenterName: "石川県能登地方",
+            magnitude: magnitude,
+            depth: depth,
+            time: formatter.string(from: originTime),
+            isOriginTime: true,
+            maxIntensity: maxIntensity,
+            serialNo: serialNo,
+            isFinal: isFinal,
+            isWarning: isWarning,
+            isCanceled: false,
+            headline: headline,
+            isPlum: false,
+            isLevel: false,
+            isOnePoint: false,
+            location: LocationInfo(
+                regionName: "富山県東部",
+                forecastIntensity: forecastIntensity,
+                forecastLpgmIntensity: nil,
+                arrivalTime: formatter.string(from: arrivalTime),
+                intensity: nil
+            )
+        )
+    }
+
+    private static func ibarakiForecastReport(
+        serialNo: Int,
+        magnitude: Double,
+        maxIntensity: String,
+        originTime: Date,
+        arrivalTime: Date
+    ) -> EewContentState {
+        let formatter = ISO8601DateFormatter()
+        return EewContentState(
+            eventId: "20240102123456",
+            type: "eew",
+            hypocenterName: "茨城県沖",
+            magnitude: magnitude,
+            depth: 40,
+            time: formatter.string(from: originTime),
+            isOriginTime: true,
+            maxIntensity: maxIntensity,
+            serialNo: serialNo,
+            isFinal: false,
+            isWarning: false,
+            isCanceled: false,
+            headline: "茨城県沖で地震",
+            isPlum: false,
+            isLevel: false,
+            isOnePoint: false,
+            location: LocationInfo(
+                regionName: "東京都23区",
+                forecastIntensity: "2",
+                forecastLpgmIntensity: nil,
+                arrivalTime: formatter.string(from: arrivalTime),
+                intensity: nil
+            )
+        )
+    }
 }

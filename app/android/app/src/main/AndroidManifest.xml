@@ -24,6 +24,9 @@
     </queries>
 
     <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
@@ -75,6 +78,10 @@
 
         <meta-data
             android:name="io.flutter.embedding.android.EnableHCPP"
+            android:value="true" />
+
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableFlutterGPU"
             android:value="true" />
     </application>
 

@@ -16,6 +16,7 @@ class ErrorCard extends ConsumerWidget {
     this.stackTrace,
     this.showDetails = true,
     this.showContact = true,
+    this.showLoadingOverlayOnReload = true,
     this.onDioExceptionStatusOverride,
   });
 
@@ -26,6 +27,7 @@ class ErrorCard extends ConsumerWidget {
   final StackTrace? stackTrace;
   final bool showDetails;
   final bool showContact;
+  final bool showLoadingOverlayOnReload;
 
   /// DioExceptionで、StatusCodeがある時にエラーメッセージを上書きする
   final String? Function(int statusCode)? onDioExceptionStatusOverride;
@@ -76,11 +78,14 @@ class ErrorCard extends ConsumerWidget {
               children: [
                 if (onReload case final reload?)
                   FilledButton.tonalIcon(
-                    onPressed: () =>
-                        FullScreenCircularProgressIndicator.showUntil(
-                          context,
-                          reload,
-                        ),
+                    onPressed: showLoadingOverlayOnReload
+                        ? () => FullScreenCircularProgressIndicator.showUntil(
+                            context,
+                            reload,
+                          )
+                        : () async {
+                            await reload();
+                          },
                     icon: const Icon(Icons.refresh_rounded, size: 18),
                     label: const Text('再試行'),
                   ),

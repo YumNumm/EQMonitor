@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/feature/eew/data/logic/eew_deep_hypocenter_intensity_notice.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
@@ -127,6 +128,9 @@ class EewCard extends ConsumerWidget {
               (hasArrived ||
                   (effectiveArrivalTime != null &&
                       secondsUntilArrival == null)),
+          showDeepHypocenterIntensityNotice: ref
+              .watch(eewDeepHypocenterIntensityNoticeProvider)
+              .shouldShow(eew: eew),
         ),
         if (eew.status != TelegramStatus.normal)
           Center(
@@ -156,6 +160,7 @@ class _EewMainCard extends StatelessWidget {
     required this.localForecastIntensity,
     required this.regionDisplayName,
     required this.showArrived,
+    required this.showDeepHypocenterIntensityNotice,
     this.secondsUntilArrival,
   });
 
@@ -165,6 +170,7 @@ class _EewMainCard extends StatelessWidget {
   final JmaIntensity? localForecastIntensity;
   final String? regionDisplayName;
   final bool showArrived;
+  final bool showDeepHypocenterIntensityNotice;
   final int? secondsUntilArrival;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
@@ -257,10 +263,9 @@ class _EewMainCard extends StatelessWidget {
                   if (maxLpgmIntensity != null &&
                       maxLpgmIntensity != JmaLpgmIntensity.zero)
                     _EewLpgmSection(intensity: maxLpgmIntensity),
-                  if (eew.hypocenter?.depth case final depth?
-                      when depth < 150 && maxIntensity == .unknown)
+                  if (showDeepHypocenterIntensityNotice)
                     Text(
-                      '震源の深さが150km以上のため、予想震度は発表されていません',
+                      '震源の深さが150kmより深いため、予想震度は発表されていません',
                       style: designSystem.typography.labelMedium,
                     ),
                 ],
@@ -343,16 +348,16 @@ class _EewCardHeader extends StatelessWidget {
     );
 
     final Widget? rightColumn;
-    if (countdownText != null) {
+    if (countdownText != null || showArrived) {
       rightColumn = Column(
         crossAxisAlignment: .end,
         children: [
           Text(
-            '主要動到達まで',
+            countdownText != null ? '主要動到達まで' : '主要動',
             style: typography.labelSmall.copyWith(color: _secondaryTextColor),
           ),
           Text(
-            countdownText,
+            countdownText ?? '到達済み',
             style: typography.monoMedium.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -361,14 +366,6 @@ class _EewCardHeader extends StatelessWidget {
             ),
           ),
         ],
-      );
-    } else if (showArrived) {
-      rightColumn = Text(
-        '主要動到達済み',
-        style: typography.titleSmall.copyWith(
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
       );
     } else {
       rightColumn = null;

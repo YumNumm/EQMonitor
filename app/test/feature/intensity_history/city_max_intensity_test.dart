@@ -37,7 +37,7 @@ void main() {
 
       final result = apiResponse.toAppModel();
 
-      expect(result.responseAt, DateTime.utc(2026, 8, 19, 12));
+      expect(result.aggregatedAt, DateTime.utc(2026, 8, 19, 12));
       expect(result.items.length, 2);
       expect(result.items[0].cityCode, '0110000');
       expect(result.items[0].intensity, JmaIntensity.fiveLower);
@@ -58,14 +58,14 @@ void main() {
 
       final result = apiResponse.toAppModel();
 
-      expect(result.responseAt, isNull);
+      expect(result.aggregatedAt, isNull);
       expect(result.items.single.intensity, JmaIntensity.four);
     });
   });
 
   group('CityMaxIntensity', () {
     const model = CityMaxIntensity(
-      responseAt: null,
+      aggregatedAt: null,
       items: [
         CityMaxIntensityEntry(
           cityCode: '0110000',

@@ -12,6 +12,7 @@ abstract class MapCameraState with _$MapCameraState {
     @Default(0.0) double bearing,
     @Default(0.0) double pitch,
     @Default(true) bool isAtHome,
+    @Default(false) bool isEewFocusActive,
   }) = _MapCameraState;
 
   factory home() => const MapCameraState(

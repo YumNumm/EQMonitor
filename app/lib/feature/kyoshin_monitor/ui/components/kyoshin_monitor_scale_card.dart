@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
@@ -87,15 +87,13 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
                 textBaseline: TextBaseline.alphabetic,
                 fontWeight: FontWeight.w700,
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: [
-                  FontFamily.notoSansJP,
-                ],
+                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
             SizedBox(height: designSystem.spacing.sm),
             KyoshinMonitorScale(
               type: type,
-              width: 15,
+              width: 8,
               height: 150,
               gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
               orientation: KyoshinMonitorScaleOrientation.vertical,
@@ -105,9 +103,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
                 textBaseline: TextBaseline.alphabetic,
                 fontSize: 10,
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: [
-                  FontFamily.notoSansJP,
-                ],
+                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
           ],

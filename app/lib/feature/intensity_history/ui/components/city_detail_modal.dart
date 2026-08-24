@@ -7,9 +7,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_selection.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -27,33 +29,40 @@ class CityDetailModalAction {
     isScrollControlled: true,
     clipBehavior: Clip.antiAlias,
     builder: (context) => _CityDetailModal(
+      cityCode: cityCode,
       cityName: cityName,
       prefectureName: prefectureName,
       maxIntensity: maxIntensity,
-      parameter: EarthquakeHistoryParameter.city(
-        cityCode: cityCode,
-        sortBy: EarthquakeSortBy.regionalIntensity,
-        sortOrder: SortOrder.desc,
-      ),
     ),
   );
 }
 
-class _CityDetailModal extends ConsumerWidget {
+class _CityDetailModal extends HookConsumerWidget {
   const new({
+    required this.cityCode,
     required this.cityName,
     required this.prefectureName,
     required this.maxIntensity,
-    required this.parameter,
   });
 
+  final String cityCode;
   final String cityName;
   final String prefectureName;
   final JmaIntensity? maxIntensity;
-  final EarthquakeHistoryParameter parameter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sort = useState(
+      const EarthquakeSortSelection(
+        sortBy: EarthquakeSortBy.regionalIntensity,
+        sortOrder: SortOrder.desc,
+      ),
+    );
+    final parameter = EarthquakeHistoryParameter.city(
+      cityCode: cityCode,
+      sortBy: sort.value.sortBy,
+      sortOrder: sort.value.sortOrder,
+    );
     final asyncPage = ref.watch(earthquakeHistoryProvider(parameter));
     final visiblePage = asyncPage.hasValue ? asyncPage.requireValue : null;
 
@@ -88,6 +97,15 @@ class _CityDetailModal extends ConsumerWidget {
                   style: Theme.of(context).textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: EarthquakeSortChips(
+                sortBy: sort.value.sortBy,
+                sortOrder: sort.value.sortOrder,
+                onChanged: (value) {
+                  sort.value = sort.value.selecting(value);
+                },
               ),
             ),
             ...switch ((visiblePage, asyncPage)) {

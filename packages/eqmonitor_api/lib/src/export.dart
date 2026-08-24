@@ -174,6 +174,15 @@ export 'models/lpgm_pre_period.dart';
 export 'models/intensity_station_item.dart';
 export 'models/lpgm_intensity_tree.dart';
 export 'models/intensity.dart';
+export 'models/catalog_hypocenter_record_type.dart';
+export 'models/catalog_hypocenter_depth.dart';
+export 'models/catalog_magnitude_type.dart';
+export 'models/catalog_hypocenter_magnitude.dart';
+export 'models/catalog_determination_flag.dart';
+export 'models/catalog_hypocenter_evaluation.dart';
+export 'models/catalog_hypocenter_auxiliary_info.dart';
+export 'models/catalog_travel_time_table.dart';
+export 'models/catalog_hypocenter.dart';
 export 'models/catalog_station_intensity.dart';
 export 'models/catalog_station_max_acceleration.dart';
 export 'models/catalog_period_kind.dart';
@@ -403,4 +412,3 @@ export 'models/schema_version.dart';
 export 'models/partition.dart';
 // Root client
 export 'api_client.dart';
-

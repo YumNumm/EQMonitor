@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -11,6 +12,15 @@ final intensityHistoryErrorOverlayActionProvider =
 
 class IntensityHistoryErrorOverlayAction {
   const new();
+
+  Future<void> retry(WidgetRef ref) async {
+    try {
+      ref.invalidate(cityMaxIntensityProvider, asReload: true);
+      await ref.read(cityMaxIntensityProvider.future);
+    } on Object {
+      // provider のエラー状態を画面に反映するため、Future の例外は伝播させない。
+    }
+  }
 
   Future<void> showDetails({
     required WidgetRef ref,
@@ -41,6 +51,23 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
     final designSystem = context.designSystem;
     final action = ref.read(intensityHistoryErrorOverlayActionProvider);
 
+    if (!cityMaxIntensityAsync.hasValue) {
+      return Positioned.fill(
+        child: SafeArea(
+          child: Center(
+            child: ErrorCard(
+              error: error,
+              stackTrace: stackTrace,
+              title: '震度情報を取得できません',
+              onReload: () => action.retry(ref),
+              showContact: false,
+              showLoadingOverlayOnReload: false,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Positioned(
       left: 12,
       right: 12,
@@ -53,40 +80,50 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.error_outline, color: designSystem.colorTheme.error),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '震度情報を取得できません',
+                Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: designSystem.colorTheme.error,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        '震度情報を更新できません',
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: designSystem.colorTheme.onErrorContainer,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Wrap(
+                    spacing: 4,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          await action.retry(ref);
+                        },
+                        child: const Text('再試行'),
+                      ),
+                      TextButton(
+                        onPressed: () => action.showDetails(
+                          ref: ref,
+                          context: context,
+                          error: error,
+                          stackTrace: stackTrace,
+                        ),
+                        child: const Text('詳細を見る'),
+                      ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size(0, 36),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  onPressed: () => action.showDetails(
-                    ref: ref,
-                    context: context,
-                    error: error,
-                    stackTrace: stackTrace,
-                  ),
-                  child: const Text('詳細を見る'),
                 ),
               ],
             ),

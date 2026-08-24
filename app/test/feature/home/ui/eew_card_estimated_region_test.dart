@@ -124,6 +124,21 @@ void main() {
     expect(find.text('30秒'), findsNothing);
   });
 
+  testWidgets('到達後はカウントダウンと同じ組で主要動 到達済みを表示する', (tester) async {
+    await _pump(
+      tester,
+      estimatedRegions: [
+        _estimatedRegion.copyWith(
+          sWaveArrivalTime: _now.subtract(const Duration(seconds: 5)),
+        ),
+      ],
+    );
+
+    expect(find.text('主要動'), findsOneWidget);
+    expect(find.text('到達済み'), findsOneWidget);
+    expect(find.text('主要動到達まで'), findsNothing);
+  });
+
   testWidgets('現在地の予報区と一致しない推計震度は使わない', (tester) async {
     await _pump(
       tester,

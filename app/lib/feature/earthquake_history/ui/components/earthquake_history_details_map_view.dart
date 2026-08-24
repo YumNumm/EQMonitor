@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
@@ -15,6 +14,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intens
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/shindo_db_intensity_tree_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_history_map_fit_bounds_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
@@ -266,7 +266,14 @@ class _MapContent extends HookConsumerWidget {
                 if (controller == null) {
                   return;
                 }
-                await _fitBounds(controller, dbTree: dbTree);
+                await ref
+                    .read(earthquakeHistoryMapFitBoundsActionProvider)
+                    .handle(
+                      ref: ref,
+                      controller: controller,
+                      earthquake: earthquake,
+                      dbTree: dbTree,
+                    );
               },
               onDebugTap: isDebugger
                   ? () async {
@@ -512,67 +519,6 @@ class _MapContent extends HookConsumerWidget {
       }
     }
     return null;
-  }
-
-  Future<void> _fitBounds(
-    MapController controller, {
-    ShindoDbIntensityTree? dbTree,
-  }) async {
-    final points = <Geographic>[];
-
-    if (dbTree != null) {
-      for (final entry in dbTree.tree.entries) {
-        for (final pref in entry.value) {
-          for (final cityNode in pref.cities) {
-            for (final station in cityNode.stations) {
-              final loc = station.location;
-              if (loc != null) {
-                points.add(Geographic(lon: loc.lon, lat: loc.lat));
-              }
-            }
-          }
-        }
-      }
-      for (final entry in dbTree.unresolvedStations.entries) {
-        for (final station in entry.value) {
-          final loc = station.location;
-          if (loc != null) {
-            points.add(Geographic(lon: loc.lon, lat: loc.lat));
-          }
-        }
-      }
-    } else {
-      final intensity = earthquake.intensity;
-      if (intensity != null) {
-        for (final entry in intensity.intensityTree.entries) {
-          for (final region in entry.value) {
-            for (final city in region.cities) {
-              for (final stationNode in city.stations) {
-                final s = stationNode.station;
-                points.add(
-                  Geographic(lon: s.location.lon, lat: s.location.lat),
-                );
-              }
-            }
-          }
-        }
-      }
-    }
-
-    final coords = earthquake.hypocenter?.coordinates;
-    if (coords is CoordinateLatLng) {
-      points.add(Geographic(lon: coords.longitude, lat: coords.latitude));
-    }
-
-    if (points.isEmpty) {
-      return;
-    }
-
-    await controller.fitBounds(
-      bounds: LngLatBounds.fromPoints(points),
-      padding: const EdgeInsets.all(48),
-      webMaxZoom: 10,
-    );
   }
 }
 

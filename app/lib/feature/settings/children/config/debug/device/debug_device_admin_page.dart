@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -7,10 +5,10 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -47,7 +45,7 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
     Future<({RegisteredDevice? device, GeneralNotificationSettings? settings})>
     fetch() async {
       final deviceRepository = await ref.read(deviceRepositoryProvider.future);
-      final getResult = await deviceRepository.getDevice(deviceId);
+      final getResult = await deviceRepository.getDevice();
       switch (getResult) {
         case Success(:final value):
           final notificationRepository = await ref.read(
@@ -172,32 +170,28 @@ class _Body extends HookConsumerWidget {
     Future<void> registerOrRefresh() async {
       await runWithBusy(() async {
         final messenger = ScaffoldMessenger.of(context);
-        final repo = await ref.read(deviceRepositoryProvider.future);
-        final result = await repo.registerDevice(
-          deviceId: deviceId,
-          devicePlatform: kIsWeb
-              ? .ios
-              : Platform.isIOS
-              ? .ios
-              : .android,
-          deviceLocale: .ja,
-        );
-        if (!context.mounted) {
-          return;
-        }
-        switch (result) {
-          case Success():
-            messenger.showSnackBar(
-              const SnackBar(content: Text('サーバーにデバイスを登録しました')),
-            );
-            await onReload();
-          case Failure(:final exception):
+        try {
+          await DeviceProvisioningNotifier.provisionMutation.run(
+            ref,
+            (tsx) async =>
+                tsx.get(deviceProvisioningProvider.notifier).provision(),
+          );
+          if (!context.mounted) {
+            return;
+          }
+          messenger.showSnackBar(
+            const SnackBar(content: Text('サーバーにデバイスを登録しました')),
+          );
+          await onReload();
+        } on Object catch (exception) {
+          if (context.mounted) {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('登録に失敗しました: $exception'),
                 backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
+          }
         }
       });
     }
@@ -232,24 +226,29 @@ class _Body extends HookConsumerWidget {
       }
       await runWithBusy(() async {
         final messenger = ScaffoldMessenger.of(context);
-        final repo = await ref.read(deviceRepositoryProvider.future);
-        final result = await repo.deleteDevice(deviceId);
-        if (!context.mounted) {
-          return;
-        }
-        switch (result) {
-          case Success():
-            messenger.showSnackBar(
-              const SnackBar(content: Text('サーバーからデバイスを削除しました')),
-            );
-            await onReload();
-          case Failure(:final exception):
+        try {
+          await DeviceProvisioningNotifier.deleteMutation.run(
+            ref,
+            (tsx) async => tsx
+                .get(deviceProvisioningProvider.notifier)
+                .deleteDeviceAndClearLocal(),
+          );
+          if (!context.mounted) {
+            return;
+          }
+          messenger.showSnackBar(
+            const SnackBar(content: Text('サーバーからデバイスを削除しました')),
+          );
+          await onReload();
+        } on Object catch (exception) {
+          if (context.mounted) {
             messenger.showSnackBar(
               SnackBar(
                 content: Text('削除に失敗しました: $exception'),
                 backgroundColor: context.designSystem.colorTheme.error,
               ),
             );
+          }
         }
       });
     }

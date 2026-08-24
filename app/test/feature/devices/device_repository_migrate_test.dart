@@ -34,7 +34,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -48,7 +47,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -60,7 +58,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -72,7 +69,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -84,7 +80,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -97,7 +92,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
@@ -115,7 +109,6 @@ void main() {
     final repository = buildRepository(adapter);
 
     final result = await repository.migrateFromLegacy(
-      deviceId: 'device-id',
       oldDeviceId: _oldDeviceId,
     );
 
