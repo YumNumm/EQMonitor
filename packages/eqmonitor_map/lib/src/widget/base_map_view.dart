@@ -34,6 +34,7 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
 import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
+import 'package:eqmonitor_map/src/widget/map_camera_candidate_owner.dart';
 import 'package:eqmonitor_map/src/widget/map_view_camera_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -342,7 +343,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
     required ValueChanged<EarthquakeOverlayCoverageSnapshot>?
     onEarthquakeOverlayCoverageChanged,
-  }) : _camera = initialCamera,
+  }) : _cameraOwner = MapCameraCandidateOwner(initialCamera: initialCamera),
        _inputOverlay = earthquakeOverlay,
        _acceptedOverlay = earthquakeOverlay,
        _overlayFrameOwner = BaseMapOverlayFrameOwner(
@@ -398,7 +399,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   // (`base_map_material_parameters.dart`参照。shader内でzoom補間しない)。
   static const _debugLineHalfWidthLogicalPixels = 1.0;
 
-  MapCamera _camera;
+  final MapCameraCandidateOwner _cameraOwner;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
   FlutterSceneMapAdapter? _adapter;
@@ -452,6 +453,8 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   /// HUD表示専用の読み取り。widgetの`camera`(`scene.NodeCamera`)と名前が
   /// 衝突するため`camera_`にしている。
   MapCamera get camera_ => _camera;
+
+  MapCamera get _camera => _cameraOwner.committedCamera;
 
   void attachCameraController() {
     final cameraController = externalCameraController;
@@ -523,8 +526,17 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     if (!_isReady || _viewport == null || suspendsMapRendering(_lifecycle)) {
       return const MapCameraCommandNotReady();
     }
-    if (!applyCameraMutation(camera: camera)) {
-      return const MapCameraCommandNotReady();
+    try {
+      if (!applyCameraMutation(camera: camera)) {
+        return const MapCameraCommandNotReady();
+      }
+    } on MapSceneFrameValidationException catch (error, stackTrace) {
+      debugPrint(
+        'BaseMapView: camera Scene submission rejected: $error\n$stackTrace',
+      );
+      return const MapCameraCommandRenderFailed(
+        reason: MapCameraCommandRenderFailureReason.sceneSubmissionRejected,
+      );
     }
     return MapCameraCommandSucceeded(
       generation: generation,
@@ -783,18 +795,30 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   }
 
   bool applyCameraMutation({required MapCamera camera}) {
-    _camera = cameraClampedToMapLimits(
+    final candidate = cameraClampedToMapLimits(
       camera: camera,
       minZoom: limits.minZoom,
       maxZoom: limits.maxZoom,
     );
-    final scheduled = _refresh();
+    final scheduled = _cameraOwner.commitCandidate(
+      candidate: candidate,
+      submitCandidate: (camera) => _refresh(
+        camera: camera,
+        publishCamera: false,
+      ),
+    );
+    if (scheduled) {
+      externalCameraController?.commitCameraFromHost(
+        host: this,
+        camera: _camera,
+      );
+    }
     notifyListeners();
     WidgetsBinding.instance.ensureVisualUpdate();
     return scheduled;
   }
 
-  bool _refresh() {
+  bool _refresh({MapCamera? camera, bool publishCamera = true}) {
     if (_isDisposed) {
       return false;
     }
@@ -808,8 +832,9 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     if (suspendsMapRendering(_lifecycle)) {
       return false;
     }
+    final renderCamera = camera ?? _camera;
     final cover = TileCoverCalculator.cover(
-      camera: _camera,
+      camera: renderCamera,
       viewport: viewport,
       minZoom: limits.minZoom,
       maxZoom: limits.maxZoom,
@@ -817,17 +842,21 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     _visibleTileCount = cover.length;
     _cache.noteActiveZoom(
       canonicalZoomFor(
-        zoom: _camera.zoom,
+        zoom: renderCamera.zoom,
         minZoom: limits.minZoom,
         maxZoom: limits.maxZoom,
       ),
     );
-    final scheduled = _submitFrame(cover: cover, viewport: viewport);
+    final scheduled = _submitFrame(
+      cover: cover,
+      viewport: viewport,
+      renderCamera: renderCamera,
+    );
     _requestMissingDecodes(cover);
-    if (scheduled) {
+    if (scheduled && publishCamera) {
       externalCameraController?.commitCameraFromHost(
         host: this,
-        camera: _camera,
+        camera: renderCamera,
       );
     }
     return scheduled;
@@ -841,6 +870,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   bool _submitFrame({
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
+    required MapCamera renderCamera,
   }) {
     final adapter = _adapter;
     if (_materialsByStyleLayerId == null || adapter == null) {
@@ -851,7 +881,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
       sourceInstanceId: source.cacheIdentity,
       cache: _cache,
       maxParentSteps: limits.maxParentFallbackSteps,
-      zoom: _camera.zoom,
+      zoom: renderCamera.zoom,
     );
     final sourceInstanceId = createMapSourceInstanceId(
       value: source.cacheIdentity,
@@ -859,7 +889,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     final frame = captureMapFrameSnapshot(
       clock: mapClock,
       frameNumber: _frameNumber++,
-      camera: _camera,
+      camera: renderCamera,
       viewport: viewport,
       revisions: [
         // 同梱PMTilesは差し替わらないarchiveなので、revisionは常に0で

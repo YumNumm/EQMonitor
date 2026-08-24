@@ -38,6 +38,14 @@ final class MapCameraCommandNotReady extends MapCameraCommandFailure {
   const MapCameraCommandNotReady();
 }
 
+enum MapCameraCommandRenderFailureReason { sceneSubmissionRejected }
+
+final class MapCameraCommandRenderFailed extends MapCameraCommandFailure {
+  const MapCameraCommandRenderFailed({required this.reason});
+
+  final MapCameraCommandRenderFailureReason reason;
+}
+
 final class MapCameraCommandDisposed extends MapCameraCommandFailure {
   const MapCameraCommandDisposed();
 }
