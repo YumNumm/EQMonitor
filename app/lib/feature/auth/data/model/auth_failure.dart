@@ -1,5 +1,6 @@
 enum AuthFailureKind {
   cancelled,
+  busy,
   configuration,
   environmentMismatch,
   unauthorized,

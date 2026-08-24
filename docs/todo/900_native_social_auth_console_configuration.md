@@ -7,9 +7,9 @@ Task 9として各Consoleと署名済み実機で次を完了する。
   各署名証明書を登録する。
 - `GOOGLE_IOS_CLIENT_ID`、`GOOGLE_IOS_REVERSED_CLIENT_ID`、
   `GOOGLE_ANDROID_CLIENT_ID`、`GOOGLE_SERVER_CLIENT_ID`を環境別にCIへ設定する。
-- iOS buildでDart defineからInfo.plistへ値を渡す実行済みのbuild phase / xcconfigを
-  用意し、生成済みInfo.plistの`GIDClientID`、URL scheme、`GIDServerClientID`を
-  archiveごとに検証する。
+- `Runner.xcscheme` Build PreActionと`Environment.xcconfig` includeによる既存の
+  Dart define供給経路がCI / archiveでも実行されることを確認し、生成済みInfo.plistの
+  `GIDClientID`、URL scheme、`GIDServerClientID`を環境ごとに検証する。
 - Google server client IDをBetter Authの許可audienceと一致させる。
 - Apple Service IDへdevelop・productionの固定callback URLを登録し、
   `APPLE_SERVICE_ID`を環境別にCIへ設定する。

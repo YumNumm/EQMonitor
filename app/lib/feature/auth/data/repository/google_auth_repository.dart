@@ -127,8 +127,11 @@ final class GoogleAuthRepository implements GoogleAuthGateway {
 final class GoogleAuthConfiguration {
   const new();
 
-  static bool isClientId(String value) =>
-      value.isNotEmpty &&
-      value.trim() == value &&
-      value.endsWith('.apps.googleusercontent.com');
+  static bool isClientId(String value) {
+    const suffix = '.apps.googleusercontent.com';
+    if (value.trim() != value || !value.endsWith(suffix)) {
+      return false;
+    }
+    return value.substring(0, value.length - suffix.length).isNotEmpty;
+  }
 }

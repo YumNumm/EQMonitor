@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/model/telegram_url_model.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
-import 'package:eqmonitor/feature/auth/data/model/native_auth_credential.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
 import 'package:eqmonitor/feature/auth/data/repository/apple_auth_repository.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
@@ -32,7 +31,7 @@ Future<NativeSocialAuthRepository> nativeSocialAuthRepository(Ref ref) async {
 enum NativeAuthPlatform { ios, android, unsupported }
 
 final class NativeSocialAuthRepository {
-  const new({
+  new({
     required BetterAuthApiClient apiClient,
     required GoogleAuthGateway googleAuthRepository,
     required AppleAuthGateway appleAuthRepository,
@@ -52,6 +51,7 @@ final class NativeSocialAuthRepository {
   final BuildConfig _buildConfig;
   final TelegramUrlModel _telegramUrl;
   final NativeAuthPlatform _platform;
+  var _isSignInInProgress = false;
 
   Future<Result<void, AuthFailure>> signInWithGoogle() async {
     final environmentResult = AuthEnvironment.resolve(
@@ -84,11 +84,29 @@ final class NativeSocialAuthRepository {
         AuthFailure(kind: AuthFailureKind.configuration),
       );
     }
-    final credentialResult = await _googleAuthRepository.signIn(
-      clientId: clientId,
-      serverClientId: _buildConfig.googleServerClientId,
-    );
-    return sendCredential(credentialResult);
+    if (_isSignInInProgress) {
+      return const Failure(AuthFailure(kind: AuthFailureKind.busy));
+    }
+    _isSignInInProgress = true;
+    try {
+      final credentialResult = await _googleAuthRepository.signIn(
+        clientId: clientId,
+        serverClientId: _buildConfig.googleServerClientId,
+      );
+      switch (credentialResult) {
+        case Failure(:final exception, :final stackTrace):
+          return Failure(exception, stackTrace);
+        case Success(:final value):
+          return await _apiClient.signInSocial(
+            provider: value.provider.name,
+            idToken: value.idToken,
+            nonce: value.nonce,
+            user: value.appleUser?.toBetterAuthUser(),
+          );
+      }
+    } finally {
+      _isSignInInProgress = false;
+    }
   }
 
   Future<Result<void, AuthFailure>> signInWithApple() async {
@@ -126,25 +144,29 @@ final class NativeSocialAuthRepository {
           AuthFailure(kind: AuthFailureKind.configuration),
         );
     }
-    final credentialResult = await _appleAuthRepository.signIn(
-      webAuthenticationOptions: webAuthenticationOptions,
-    );
-    return sendCredential(credentialResult);
+    if (_isSignInInProgress) {
+      return const Failure(AuthFailure(kind: AuthFailureKind.busy));
+    }
+    _isSignInInProgress = true;
+    try {
+      final credentialResult = await _appleAuthRepository.signIn(
+        webAuthenticationOptions: webAuthenticationOptions,
+      );
+      switch (credentialResult) {
+        case Failure(:final exception, :final stackTrace):
+          return Failure(exception, stackTrace);
+        case Success(:final value):
+          return await _apiClient.signInSocial(
+            provider: value.provider.name,
+            idToken: value.idToken,
+            nonce: value.nonce,
+            user: value.appleUser?.toBetterAuthUser(),
+          );
+      }
+    } finally {
+      _isSignInInProgress = false;
+    }
   }
-
-  Future<Result<void, AuthFailure>> sendCredential(
-    Result<NativeAuthCredential, AuthFailure> credentialResult,
-  ) => switch (credentialResult) {
-    Failure(:final exception, :final stackTrace) => Future.value(
-      Failure(exception, stackTrace),
-    ),
-    Success(:final value) => _apiClient.signInSocial(
-      provider: value.provider.name,
-      idToken: value.idToken,
-      nonce: value.nonce,
-      user: value.appleUser?.toBetterAuthUser(),
-    ),
-  };
 }
 
 final class NativeAuthConfiguration {
@@ -161,8 +183,14 @@ final class NativeAuthConfiguration {
     };
   }
 
-  static bool isAppleServiceId(String value) =>
-      value.isNotEmpty && value.trim() == value && value.contains('.');
+  static bool isAppleServiceId(String value) {
+    if (value.trim() != value) {
+      return false;
+    }
+    final segments = value.split('.');
+    return segments.length >= 2 &&
+        segments.every((segment) => segment.isNotEmpty);
+  }
 
   static bool isMatchingGoogleReversedClientId({
     required String clientId,

@@ -303,6 +303,35 @@ void main() {
           },
         },
       ]);
+      expect(
+        fixture.preferences.values[SecureStorageKey.betterAuthSessionToken],
+        'social-session',
+      );
+    });
+
+    test('Better Auth session header欠落はinvalidResponseでsessionを残さない', () async {
+      final fixture = NativeSocialFixture();
+      fixture.adapter.sessionTokenHeaders = null;
+      fixture.google.credentials.add(
+        const NativeAuthCredential(
+          provider: NativeAuthProvider.google,
+          idToken: 'google-token',
+          nonce: 'google-nonce',
+        ),
+      );
+
+      final result = await fixture.repository.signInWithGoogle();
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.invalidResponse,
+      );
+      expect(
+        fixture.preferences.values[SecureStorageKey.betterAuthSessionToken],
+        isNull,
+      );
+      expect(fixture.google.signInCount, 1);
+      expect(fixture.adapter.requestBodies, hasLength(1));
     });
 
     test('Apple AndroidへService IDと固定develop callbackだけを渡す', () async {
@@ -346,6 +375,10 @@ void main() {
           },
         },
       ]);
+      expect(
+        fixture.preferences.values[SecureStorageKey.betterAuthSessionToken],
+        'social-session',
+      );
     });
 
     test('環境不一致はNative UIとHTTPを開く前に拒否する', () async {
@@ -379,6 +412,23 @@ void main() {
       expect(
         (result as Failure<void, AuthFailure>).exception.kind,
         AuthFailureKind.environmentMismatch,
+      );
+      expect(fixture.apple.webAuthenticationOptions, isEmpty);
+      expect(fixture.adapter.requestBodies, isEmpty);
+    });
+
+    test('AppleもNative Social Auth未有効ならNative UIとHTTP前に拒否する', () async {
+      final fixture = NativeSocialFixture(
+        buildConfig: devBuildConfig.copyWith(
+          isNativeSocialAuthEnabled: false,
+        ),
+      );
+
+      final result = await fixture.repository.signInWithApple();
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.configuration,
       );
       expect(fixture.apple.webAuthenticationOptions, isEmpty);
       expect(fixture.adapter.requestBodies, isEmpty);
@@ -446,6 +496,136 @@ void main() {
       expect(fixture.google.signInCount, 0);
       expect(fixture.adapter.requestBodies, isEmpty);
     });
+
+    for (final testCase in [
+      (
+        name: 'OAuth ID本体が空のGoogle iOS client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleIosClientId: '.apps.googleusercontent.com',
+          googleIosReversedClientId: 'com.googleusercontent.apps.',
+        ),
+      ),
+      (
+        name: 'OAuth ID本体が空のGoogle server client ID',
+        buildConfig: devBuildConfig.copyWith(
+          googleServerClientId: '.apps.googleusercontent.com',
+        ),
+      ),
+    ]) {
+      test('${testCase.name}をNative UIとHTTP前に拒否する', () async {
+        final fixture = NativeSocialFixture(buildConfig: testCase.buildConfig);
+        fixture.google.credentials.add(
+          const NativeAuthCredential(
+            provider: NativeAuthProvider.google,
+            idToken: 'google-token',
+            nonce: 'google-nonce',
+          ),
+        );
+
+        final result = await fixture.repository.signInWithGoogle();
+
+        expect(
+          (result as Failure<void, AuthFailure>).exception.kind,
+          AuthFailureKind.configuration,
+        );
+        expect(fixture.google.signInCount, 0);
+        expect(fixture.adapter.requestBodies, isEmpty);
+      });
+    }
+
+    for (final serviceId in ['.', 'a..b', '.service', 'service.']) {
+      test(
+        '空segmentを含むApple Service ID $serviceIdをNative UIとHTTP前に拒否する',
+        () async {
+          final fixture = NativeSocialFixture(
+            platform: NativeAuthPlatform.android,
+            buildConfig: devBuildConfig.copyWith(appleServiceId: serviceId),
+          );
+          fixture.apple.credentials.add(
+            const NativeAuthCredential(
+              provider: NativeAuthProvider.apple,
+              idToken: 'apple-token',
+              nonce: 'apple-nonce',
+            ),
+          );
+
+          final result = await fixture.repository.signInWithApple();
+
+          expect(
+            (result as Failure<void, AuthFailure>).exception.kind,
+            AuthFailureKind.configuration,
+          );
+          expect(fixture.apple.webAuthenticationOptions, isEmpty);
+          expect(fixture.adapter.requestBodies, isEmpty);
+        },
+      );
+    }
+
+    test('Google double tapは二つ目をbusyで拒否しNativeとHTTPを一回にする', () async {
+      final fixture = NativeSocialFixture();
+      final nativeResult =
+          Completer<Result<NativeAuthCredential, AuthFailure>>();
+      fixture.google.pendingResult = nativeResult;
+
+      final first = fixture.repository.signInWithGoogle();
+      final second = fixture.repository.signInWithGoogle();
+      nativeResult.complete(
+        const Success(
+          NativeAuthCredential(
+            provider: NativeAuthProvider.google,
+            idToken: 'google-token',
+            nonce: 'google-nonce',
+          ),
+        ),
+      );
+
+      final results = await Future.wait([first, second]);
+
+      expect(results.first, isA<Success<void, AuthFailure>>());
+      expect(
+        (results.last as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.busy,
+      );
+      expect(fixture.google.signInCount, 1);
+      expect(fixture.adapter.requestBodies, hasLength(1));
+    });
+
+    test('Apple中のGoogle sign-inをbusyで拒否しNativeとHTTPを一回にする', () async {
+      final fixture = NativeSocialFixture();
+      final nativeResult =
+          Completer<Result<NativeAuthCredential, AuthFailure>>();
+      fixture.apple.pendingResult = nativeResult;
+      fixture.google.credentials.add(
+        const NativeAuthCredential(
+          provider: NativeAuthProvider.google,
+          idToken: 'google-token',
+          nonce: 'google-nonce',
+        ),
+      );
+
+      final first = fixture.repository.signInWithApple();
+      final second = fixture.repository.signInWithGoogle();
+      nativeResult.complete(
+        const Success(
+          NativeAuthCredential(
+            provider: NativeAuthProvider.apple,
+            idToken: 'apple-token',
+            nonce: 'apple-nonce',
+          ),
+        ),
+      );
+
+      final results = await Future.wait([first, second]);
+
+      expect(results.first, isA<Success<void, AuthFailure>>());
+      expect(
+        (results.last as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.busy,
+      );
+      expect(fixture.apple.webAuthenticationOptions, hasLength(1));
+      expect(fixture.google.signInCount, 0);
+      expect(fixture.adapter.requestBodies, hasLength(1));
+    });
   });
 }
 
@@ -479,14 +659,15 @@ final class NativeSocialFixture {
   }) {
     final dio = Dio(BaseOptions(baseUrl: telegramUrl.restApiUrl))
       ..httpClientAdapter = adapter;
-    repository = NativeSocialAuthRepository(
-      apiClient: BetterAuthApiClient(
-        dio: dio,
-        sessionRepository: BetterAuthSessionRepository(
-          preferences: MemoryPreferencesDataSource(),
-        ),
-        cookieJar: CookieJar(),
+    apiClient = BetterAuthApiClient(
+      dio: dio,
+      sessionRepository: BetterAuthSessionRepository(
+        preferences: preferences,
       ),
+      cookieJar: CookieJar(),
+    );
+    repository = NativeSocialAuthRepository(
+      apiClient: apiClient,
       googleAuthRepository: google,
       appleAuthRepository: apple,
       buildConfig: buildConfig,
@@ -501,33 +682,39 @@ final class NativeSocialFixture {
   final google = QueueGoogleAuthGateway();
   final apple = QueueAppleAuthGateway();
   final adapter = RecordingSocialAuthAdapter();
+  final preferences = MemoryPreferencesDataSource();
+  late final BetterAuthApiClient apiClient;
   late final NativeSocialAuthRepository repository;
 }
 
 final class QueueGoogleAuthGateway implements GoogleAuthGateway {
   final credentials = <NativeAuthCredential>[];
+  Completer<Result<NativeAuthCredential, AuthFailure>>? pendingResult;
   var signInCount = 0;
 
   @override
   Future<Result<NativeAuthCredential, AuthFailure>> signIn({
     required String clientId,
     required String serverClientId,
-  }) async {
+  }) {
     signInCount++;
-    return Success(credentials.removeAt(0));
+    return pendingResult?.future ??
+        Future.value(Success(credentials.removeAt(0)));
   }
 }
 
 final class QueueAppleAuthGateway implements AppleAuthGateway {
   final credentials = <NativeAuthCredential>[];
   final webAuthenticationOptions = <WebAuthenticationOptions?>[];
+  Completer<Result<NativeAuthCredential, AuthFailure>>? pendingResult;
 
   @override
   Future<Result<NativeAuthCredential, AuthFailure>> signIn({
     required WebAuthenticationOptions? webAuthenticationOptions,
-  }) async {
+  }) {
     this.webAuthenticationOptions.add(webAuthenticationOptions);
-    return Success(credentials.removeAt(0));
+    return pendingResult?.future ??
+        Future.value(Success(credentials.removeAt(0)));
   }
 }
 
@@ -596,6 +783,7 @@ final class QueueNonceGenerator implements NativeAuthNonceGenerator {
 
 final class RecordingSocialAuthAdapter implements HttpClientAdapter {
   final requestBodies = <Map<String, dynamic>>[];
+  List<String>? sessionTokenHeaders = const ['social-session'];
 
   @override
   Future<ResponseBody> fetch(
@@ -606,11 +794,14 @@ final class RecordingSocialAuthAdapter implements HttpClientAdapter {
     if (options.data case final Map<String, dynamic> data) {
       requestBodies.add(data);
     }
+    final currentSessionTokenHeaders = sessionTokenHeaders;
     return ResponseBody.fromString(
       '{}',
       200,
       headers: {
         Headers.contentTypeHeader: [Headers.jsonContentType],
+        if (currentSessionTokenHeaders != null)
+          'set-auth-token': currentSessionTokenHeaders,
       },
     );
   }

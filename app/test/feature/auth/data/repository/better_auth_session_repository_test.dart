@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -177,6 +178,180 @@ void main() {
       expect((await repository.readSessionToken()).unwrap(), 'new-session');
     });
 
+    test('social sign-in成功時だけ新session tokenとCookieをcommitする', () async {
+      final preferences = _MemorySecurePreferencesDataSource()
+        ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session';
+      final repository = BetterAuthSessionRepository(
+        preferences: preferences,
+      );
+      final adapter = _SocialSignInResponseAdapter(
+        tokenHeaders: const ['new-session'],
+      );
+      final cookieJar = CookieJar();
+      await cookieJar.saveFromResponse(
+        Uri.parse('https://example.com'),
+        [Cookie('session', 'old-cookie')],
+      );
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = adapter;
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: repository,
+        cookieJar: cookieJar,
+      );
+
+      final result = await client.signInSocial(
+        provider: 'google',
+        idToken: 'provider-id-token',
+      );
+      await client.getSession();
+
+      expect(result, isA<Success<void, AuthFailure>>());
+      expect((await repository.readSessionToken()).unwrap(), 'new-session');
+      expect(adapter.cookieHeaders, [
+        'session=old-cookie',
+        'session=new-cookie',
+      ]);
+    });
+
+    for (final testCase in <({String name, List<String>? tokenHeaders})>[
+      (name: '欠落', tokenHeaders: null),
+      (name: '複数', tokenHeaders: ['session-a', 'session-b']),
+      (name: '不正値', tokenHeaders: [' unsafe-session']),
+    ]) {
+      test(
+        'social sign-inのset-auth-token ${testCase.name}をinvalidResponseにして既存sessionを保持する',
+        () async {
+          final preferences = _MemorySecurePreferencesDataSource()
+            ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session';
+          final repository = BetterAuthSessionRepository(
+            preferences: preferences,
+          );
+          final adapter = _SocialSignInResponseAdapter(
+            tokenHeaders: testCase.tokenHeaders,
+          );
+          final cookieJar = CookieJar();
+          await cookieJar.saveFromResponse(
+            Uri.parse('https://example.com'),
+            [Cookie('session', 'old-cookie')],
+          );
+          final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+            ..httpClientAdapter = adapter;
+          final client = BetterAuthApiClient(
+            dio: dio,
+            sessionRepository: repository,
+            cookieJar: cookieJar,
+          );
+
+          final result = await client.signInSocial(
+            provider: 'google',
+            idToken: 'provider-id-token',
+          );
+          await client.getSession();
+
+          expect(
+            (result as Failure<void, AuthFailure>).exception.kind,
+            AuthFailureKind.invalidResponse,
+          );
+          expect(
+            (await repository.readSessionToken()).unwrap(),
+            'old-session',
+          );
+          expect(adapter.cookieHeaders, [
+            'session=old-cookie',
+            'session=old-cookie',
+          ]);
+        },
+      );
+    }
+
+    test(
+      'social sign-inのsession token保存例外をstorageにして既存sessionを保持する',
+      () async {
+        final preferences = _MemorySecurePreferencesDataSource()
+          ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session'
+          ..throwingOperation = 'set';
+        final repository = BetterAuthSessionRepository(
+          preferences: preferences,
+        );
+        final adapter = _SocialSignInResponseAdapter(
+          tokenHeaders: const ['new-session'],
+        );
+        final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+          ..httpClientAdapter = adapter;
+        final cookieJar = CookieJar();
+        await cookieJar.saveFromResponse(
+          Uri.parse('https://example.com'),
+          [Cookie('session', 'old-cookie')],
+        );
+        final client = BetterAuthApiClient(
+          dio: dio,
+          sessionRepository: repository,
+          cookieJar: cookieJar,
+        );
+
+        final result = await client.signInSocial(
+          provider: 'google',
+          idToken: 'provider-id-token',
+        );
+        preferences.throwingOperation = null;
+        await client.getSession();
+
+        expect(
+          (result as Failure<void, AuthFailure>).exception.kind,
+          AuthFailureKind.storage,
+        );
+        expect((await repository.readSessionToken()).unwrap(), 'old-session');
+        expect(adapter.cookieHeaders, [
+          'session=old-cookie',
+          'session=old-cookie',
+        ]);
+      },
+    );
+
+    test('social sign-in応答待ちのinvalidation後にsessionとCookieを復活させない', () async {
+      final preferences = _MemorySecurePreferencesDataSource()
+        ..values[SecureStorageKey.betterAuthSessionToken] = 'old-session';
+      final repository = BetterAuthSessionRepository(
+        preferences: preferences,
+      );
+      final responseGate = Completer<void>();
+      final adapter = _SocialSignInResponseAdapter(
+        tokenHeaders: const ['new-session'],
+        responseGate: responseGate,
+      );
+      final cookieJar = CookieJar();
+      await cookieJar.saveFromResponse(
+        Uri.parse('https://example.com'),
+        [Cookie('session', 'old-cookie')],
+      );
+      final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+        ..httpClientAdapter = adapter;
+      final client = BetterAuthApiClient(
+        dio: dio,
+        sessionRepository: repository,
+        cookieJar: cookieJar,
+      );
+
+      final pendingSignIn = client.signInSocial(
+        provider: 'google',
+        idToken: 'provider-id-token',
+      );
+      await adapter.fetchStarted.future;
+      await repository.clearSession();
+      await client.clearCookies();
+      responseGate.complete();
+      final result = await pendingSignIn;
+      await client.getSession();
+
+      expect(
+        (result as Failure<void, AuthFailure>).exception.kind,
+        AuthFailureKind.invalidResponse,
+      );
+      expect((await repository.readSessionToken()).unwrap(), isNull);
+      expect(adapter.cookieHeaders, ['session=old-cookie', null]);
+    });
+
     test('remote sign-out失敗時も専用CookieJarを削除する', () async {
       final repository = BetterAuthSessionRepository(
         preferences: _MemorySecurePreferencesDataSource(),
@@ -310,6 +485,55 @@ final class _RecordingAuthAdapter implements HttpClientAdapter {
       headers: {
         Headers.contentTypeHeader: [Headers.jsonContentType],
         'set-auth-token': ['new-session'],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
+}
+
+final class _SocialSignInResponseAdapter implements HttpClientAdapter {
+  _SocialSignInResponseAdapter({
+    required this.tokenHeaders,
+    this.responseGate,
+  });
+
+  final List<String>? tokenHeaders;
+  final Completer<void>? responseGate;
+  final cookieHeaders = <String?>[];
+  final fetchStarted = Completer<void>();
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    cookieHeaders.add(options.headers['cookie'] as String?);
+    final isSignIn = options.path == '/api/auth/sign-in/social';
+    final currentTokenHeaders = tokenHeaders;
+    if (!fetchStarted.isCompleted) {
+      fetchStarted.complete();
+    }
+    if (isSignIn) {
+      await responseGate?.future;
+    }
+    return ResponseBody.fromString(
+      jsonEncode(
+        isSignIn
+            ? <String, dynamic>{}
+            : {
+                'session': {'id': 'session-id'},
+                'user': {'id': 'user-id'},
+              },
+      ),
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+        if (isSignIn) 'set-cookie': ['session=new-cookie; Path=/'],
+        if (isSignIn && currentTokenHeaders != null)
+          'set-auth-token': currentTokenHeaders,
       },
     );
   }

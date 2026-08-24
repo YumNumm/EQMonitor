@@ -57,9 +57,29 @@ final class BetterAuthApiClient {
     required String idToken,
     String? nonce,
     Map<String, dynamic>? user,
-  }) {
+  }) async {
     final sessionGeneration = _sessionRepository.generation;
-    return captureAuthRequest(() async {
+    final existingSessionResult = await _sessionRepository.readSessionToken();
+    if (existingSessionResult case Failure(
+      :final exception,
+      :final stackTrace,
+    )) {
+      return Failure(exception, stackTrace);
+    }
+    final existingSessionToken = existingSessionResult.unwrap();
+    final transactionResult = await captureAuthRequest(
+      () => _cookieStore.beginTransaction(
+        uri: Uri.parse(
+          _dio.options.baseUrl,
+        ).resolve('/api/auth/sign-in/social'),
+      ),
+    );
+    if (transactionResult case Failure(:final exception, :final stackTrace)) {
+      return Failure(exception, stackTrace);
+    }
+    final cookieTransaction = transactionResult.unwrap();
+    var didAttemptSessionSave = false;
+    final requestResult = await captureAuthRequest(() async {
       final response = await _dio.post<void>(
         '/api/auth/sign-in/social',
         data: <String, dynamic>{
@@ -70,13 +90,64 @@ final class BetterAuthApiClient {
             if (user != null && user.isNotEmpty) 'user': user,
           },
         },
+        options: Options(
+          extra: {
+            BetterAuthCookieStore.transactionExtraKey: cookieTransaction,
+          },
+        ),
       );
-      await persistBetterAuthSessionToken(
-        response: response,
-        sessionRepository: _sessionRepository,
+      final tokenHeaders = response.headers.map['set-auth-token'];
+      if (tokenHeaders == null || tokenHeaders.length != 1) {
+        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+      }
+      final token = tokenHeaders.single;
+      if (!isSafeBetterAuthSessionToken(token)) {
+        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+      }
+      didAttemptSessionSave = true;
+      final saveResult = await _sessionRepository.saveSessionToken(
+        token: token,
         expectedGeneration: sessionGeneration,
       );
+      if (saveResult case Failure(:final exception)) {
+        throw exception;
+      }
+      if (_sessionRepository.generation != sessionGeneration) {
+        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+      }
+      if (!_cookieStore.commit(transaction: cookieTransaction)) {
+        throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
+      }
     });
+    if (requestResult is Success<void, AuthFailure>) {
+      return requestResult;
+    }
+
+    final cookieRollbackResult = await captureAuthRequest(
+      cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
+    );
+    Result<void, AuthFailure> sessionRollbackResult =
+        const Success<void, AuthFailure>(null);
+    if (didAttemptSessionSave &&
+        _sessionRepository.generation == sessionGeneration) {
+      sessionRollbackResult = existingSessionToken == null
+          ? await _sessionRepository.clearSession()
+          : await _sessionRepository.saveSessionToken(
+              token: existingSessionToken,
+              expectedGeneration: sessionGeneration,
+            );
+    }
+    return switch ((sessionRollbackResult, cookieRollbackResult)) {
+      (Failure(:final exception, :final stackTrace), _) => Failure(
+        exception,
+        stackTrace,
+      ),
+      (_, Failure(:final exception, :final stackTrace)) => Failure(
+        exception,
+        stackTrace,
+      ),
+      _ => requestResult,
+    };
   }
 
   Future<Result<String, AuthFailure>> fetchJwt() {
@@ -141,6 +212,8 @@ final class BetterAuthApiClient {
 }
 
 final class BetterAuthCookieStore {
+  static const transactionExtraKey = 'better_auth_cookie_transaction';
+
   new({
     required CookieJar initialCookieJar,
     required CookieJar Function() createCookieJar,
@@ -155,11 +228,47 @@ final class BetterAuthCookieStore {
   bool isCurrent({required BetterAuthCookieSnapshot snapshot}) =>
       identical(_snapshot, snapshot);
 
+  Future<BetterAuthCookieTransaction> beginTransaction({
+    required Uri uri,
+  }) async {
+    final baseSnapshot = _snapshot;
+    final transactionSnapshot = BetterAuthCookieSnapshot(
+      cookieJar: _createCookieJar(),
+    );
+    final cookies = await baseSnapshot.cookieJar.loadForRequest(uri);
+    await transactionSnapshot.cookieJar.saveFromResponse(uri, cookies);
+    return BetterAuthCookieTransaction(
+      baseSnapshot: baseSnapshot,
+      transactionSnapshot: transactionSnapshot,
+    );
+  }
+
+  bool canCommit({required BetterAuthCookieTransaction transaction}) =>
+      identical(_snapshot, transaction.baseSnapshot);
+
+  bool commit({required BetterAuthCookieTransaction transaction}) {
+    if (!canCommit(transaction: transaction)) {
+      return false;
+    }
+    _snapshot = transaction.transactionSnapshot;
+    return true;
+  }
+
   CookieJar replace() {
     final replacedCookieJar = _snapshot.cookieJar;
     _snapshot = BetterAuthCookieSnapshot(cookieJar: _createCookieJar());
     return replacedCookieJar;
   }
+}
+
+final class BetterAuthCookieTransaction {
+  const new({
+    required this.baseSnapshot,
+    required this.transactionSnapshot,
+  });
+
+  final BetterAuthCookieSnapshot baseSnapshot;
+  final BetterAuthCookieSnapshot transactionSnapshot;
 }
 
 final class BetterAuthCookieSnapshot {
@@ -172,11 +281,13 @@ final class BetterAuthCookieRequestContext {
   const new({
     required this.cookieManager,
     required this.cookieSnapshot,
+    required this.cookieTransaction,
     required this.sessionGeneration,
   });
 
   final CookieManager cookieManager;
   final BetterAuthCookieSnapshot cookieSnapshot;
+  final BetterAuthCookieTransaction? cookieTransaction;
   final int sessionGeneration;
 }
 
@@ -195,11 +306,17 @@ final class BetterAuthCookieInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) {
-    final snapshot = cookieStore.snapshot;
+    final transaction =
+        switch (options.extra[BetterAuthCookieStore.transactionExtraKey]) {
+          final BetterAuthCookieTransaction value => value,
+          _ => null,
+        };
+    final snapshot = transaction?.transactionSnapshot ?? cookieStore.snapshot;
     final cookieManager = CookieManager(snapshot.cookieJar);
     _requestContexts[options] = BetterAuthCookieRequestContext(
       cookieManager: cookieManager,
       cookieSnapshot: snapshot,
+      cookieTransaction: transaction,
       sessionGeneration: sessionRepository.generation,
     );
     return cookieManager.onRequest(options, handler);
@@ -211,9 +328,15 @@ final class BetterAuthCookieInterceptor extends Interceptor {
     ResponseInterceptorHandler handler,
   ) {
     final context = _requestContexts[response.requestOptions];
+    final transaction = context?.cookieTransaction;
+    final isCurrent =
+        context != null &&
+        (transaction == null
+            ? cookieStore.isCurrent(snapshot: context.cookieSnapshot)
+            : cookieStore.canCommit(transaction: transaction));
     if (context == null ||
         context.sessionGeneration != sessionRepository.generation ||
-        !cookieStore.isCurrent(snapshot: context.cookieSnapshot)) {
+        !isCurrent) {
       handler.next(response);
       return Future.value();
     }
@@ -226,9 +349,15 @@ final class BetterAuthCookieInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) {
     final context = _requestContexts[error.requestOptions];
+    final transaction = context?.cookieTransaction;
+    final isCurrent =
+        context != null &&
+        (transaction == null
+            ? cookieStore.isCurrent(snapshot: context.cookieSnapshot)
+            : cookieStore.canCommit(transaction: transaction));
     if (context == null ||
         context.sessionGeneration != sessionRepository.generation ||
-        !cookieStore.isCurrent(snapshot: context.cookieSnapshot)) {
+        !isCurrent) {
       handler.next(error);
       return Future.value();
     }
