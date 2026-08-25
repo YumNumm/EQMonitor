@@ -83,6 +83,53 @@ void main() {
     );
   });
 
+  test('archive読み取り失敗をstorage failureへ分類する', () async {
+    const secretPath = '/private/archive/source.pmtiles';
+    const secretUrl = 'https://private.example/';
+    const secretSha = 'secret-sha';
+    const secretReason = '$secretPath $secretUrl $secretSha';
+    final result = await EstimatedIntensityArchiveHeaderVerifier(
+      opener: ControlledEstimatedIntensityArchiveOpener(
+        failure: const PmTilesV3Exception.sourceReadFailed(
+          reason: secretReason,
+        ),
+      ),
+    ).verify(download: download, limits: estimatedIntensityHeaderTestLimits);
+
+    expect(
+      result,
+      isA<EstimatedIntensityArchiveHeaderRejected>().having(
+        (value) => value.failure,
+        'failure',
+        EstimatedIntensityArchiveHeaderFailure.storageFailure,
+      ),
+    );
+    for (final secret in [secretPath, secretUrl, secretSha]) {
+      expect(result.toString(), isNot(contains(secret)));
+    }
+  });
+
+  test('archiveの資源上限超過を専用failureへ分類する', () async {
+    final result = await EstimatedIntensityArchiveHeaderVerifier(
+      opener: ControlledEstimatedIntensityArchiveOpener(
+        failure: const PmTilesV3Exception.resourceLimitExceeded(
+          resource: PmTilesV3Resource.directoryDecoded,
+          limit: 1024,
+          actual: 1025,
+        ),
+      ),
+    ).verify(download: download, limits: estimatedIntensityHeaderTestLimits);
+
+    expect(
+      result,
+      isA<EstimatedIntensityArchiveHeaderRejected>().having(
+        (value) => value.failure,
+        'failure',
+        EstimatedIntensityArchiveHeaderFailure.resourceLimitExceeded,
+      ),
+    );
+  });
+
   test('archive close失敗を型付きにしcloseを繰り返さない', () async {
     const secretPath = '/private/archive/source.pmtiles';
     const secretMessage = 'private failure';

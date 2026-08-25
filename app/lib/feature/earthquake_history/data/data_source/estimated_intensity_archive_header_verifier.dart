@@ -30,6 +30,14 @@ final class EstimatedIntensityArchiveHeaderVerifier {
       result = failure == null
           ? EstimatedIntensityArchiveHeaderAccepted(header)
           : EstimatedIntensityArchiveHeaderRejected(failure);
+    } on PmTilesV3SourceReadFailedException {
+      result = const EstimatedIntensityArchiveHeaderRejected(
+        EstimatedIntensityArchiveHeaderFailure.storageFailure,
+      );
+    } on PmTilesV3ResourceLimitExceededException {
+      result = const EstimatedIntensityArchiveHeaderRejected(
+        EstimatedIntensityArchiveHeaderFailure.resourceLimitExceeded,
+      );
     } on FileSystemException {
       result = const EstimatedIntensityArchiveHeaderRejected(
         EstimatedIntensityArchiveHeaderFailure.storageFailure,

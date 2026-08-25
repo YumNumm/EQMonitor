@@ -7,6 +7,7 @@ enum EstimatedIntensityArchiveHeaderFailure {
   invalidZoomRange,
   invalidBounds,
   storageFailure,
+  resourceLimitExceeded,
   closeFailure,
 }
 
