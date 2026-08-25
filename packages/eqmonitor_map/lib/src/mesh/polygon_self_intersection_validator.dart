@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_orientation.dart';
 
 /// Polygon境界をX方向に走査し、非隣接辺の接触・交差・重複を拒否する。
 final class PolygonSelfIntersectionValidator {
@@ -137,10 +138,39 @@ bool _rangesOverlap(int aMin, int aMax, int bMin, int bMax) =>
     aMin <= bMax && bMin <= aMax;
 
 bool _polygonSegmentsIntersect(_PolygonSegment a, _PolygonSegment b) {
-  final abA = _polygonOrientation(a.ax, a.ay, a.bx, a.by, b.ax, b.ay);
-  final abB = _polygonOrientation(a.ax, a.ay, a.bx, a.by, b.bx, b.by);
-  final cdA = _polygonOrientation(b.ax, b.ay, b.bx, b.by, a.ax, a.ay);
-  final cdB = _polygonOrientation(b.ax, b.ay, b.bx, b.by, a.bx, a.by);
+  const orientation = PolygonOrientation();
+  final abA = orientation.sign(
+    ax: a.ax,
+    ay: a.ay,
+    bx: a.bx,
+    by: a.by,
+    cx: b.ax,
+    cy: b.ay,
+  );
+  final abB = orientation.sign(
+    ax: a.ax,
+    ay: a.ay,
+    bx: a.bx,
+    by: a.by,
+    cx: b.bx,
+    cy: b.by,
+  );
+  final cdA = orientation.sign(
+    ax: b.ax,
+    ay: b.ay,
+    bx: b.bx,
+    by: b.by,
+    cx: a.ax,
+    cy: a.ay,
+  );
+  final cdB = orientation.sign(
+    ax: b.ax,
+    ay: b.ay,
+    bx: b.bx,
+    by: b.by,
+    cx: a.bx,
+    cy: a.by,
+  );
   if (abA == 0 && _pointIsOnPolygonSegment(b.ax, b.ay, a)) {
     return true;
   }
@@ -155,9 +185,6 @@ bool _polygonSegmentsIntersect(_PolygonSegment a, _PolygonSegment b) {
   }
   return (abA < 0) != (abB < 0) && (cdA < 0) != (cdB < 0);
 }
-
-int _polygonOrientation(int ax, int ay, int bx, int by, int cx, int cy) =>
-    (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
 
 bool _pointIsOnPolygonSegment(int x, int y, _PolygonSegment segment) =>
     x >= segment.minX &&

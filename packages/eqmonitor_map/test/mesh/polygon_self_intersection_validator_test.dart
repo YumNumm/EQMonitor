@@ -17,6 +17,27 @@ void main() {
     );
   });
 
+  test('int64の積差範囲を超える交差を拒否する', () {
+    final ring = Int32List.fromList([
+      -2147483648,
+      -2147483647,
+      2000000000,
+      2000000000,
+      -2147483647,
+      1000000000,
+      1000000000,
+      1000000000,
+    ]);
+
+    expect(
+      () => const PolygonSelfIntersectionValidator().validate(
+        rings: [ring],
+        maxIntersectionChecks: 16,
+      ),
+      throwsA(isA<FillMeshSelfIntersectionException>()),
+    );
+  });
+
   test('65536頂点の単純境界を有限の比較数で受理する', () {
     const half = 32768;
     final ring = Int32List(half * 4);
