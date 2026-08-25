@@ -8,8 +8,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_inten
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 
-const earthquakeOverlayRegionToCityZoom = 6.0;
-const earthquakeOverlayStationMinZoom = 6.0;
 const earthquakeOverlayMaxSpritePolicyBatches = 1;
 
 enum EarthquakeMapOverlayUnavailableReason {

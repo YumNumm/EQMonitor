@@ -101,6 +101,8 @@ final class EarthquakeMapOverlayDigestBuilder {
     required List<EarthquakeAreaStyle> regionStyles,
     required List<EarthquakeAreaStyle> cityStyles,
     required List<EarthquakeObservationPoint> stations,
+    required MapSpriteAtlas spriteAtlas,
+    required List<MapPointSpriteFeature> sprites,
   }) {
     final records = <CanonicalOverlayRecord>[
       CanonicalOverlayRecord(
@@ -109,6 +111,15 @@ final class EarthquakeMapOverlayDigestBuilder {
         fields: {
           'regionToCityZoom': canonicalDouble(regionToCityZoom),
           'stationMinZoom': canonicalDouble(stationMinZoom),
+        },
+      ),
+      CanonicalOverlayRecord(
+        recordType: 'spriteAtlas',
+        stableId: spriteAtlas.identity.value,
+        fields: {
+          'height': spriteAtlas.height.toString(),
+          'regionCount': spriteAtlas.regions.length.toString(),
+          'width': spriteAtlas.width.toString(),
         },
       ),
       for (final style in regionStyles)
@@ -128,9 +139,31 @@ final class EarthquakeMapOverlayDigestBuilder {
             ),
           },
         ),
+      for (final sprite in sprites)
+        CanonicalOverlayRecord(
+          recordType: 'sprite',
+          stableId: sprite.id,
+          fields: {
+            'latitude': canonicalDouble(sprite.latitude),
+            'longitude': canonicalDouble(sprite.longitude),
+            'opacityAtOrAboveValue': canonicalDouble(
+              sprite.opacity.atOrAboveValue,
+            ),
+            'opacityBelowValue': canonicalDouble(sprite.opacity.belowValue),
+            'opacityThresholdZoom': canonicalDouble(
+              sprite.opacity.thresholdZoom,
+            ),
+            'priority': sprite.priority.toString(),
+            'sizeEndValue': canonicalDouble(sprite.sizeScale.endValue),
+            'sizeEndZoom': canonicalDouble(sprite.sizeScale.endZoom),
+            'sizeStartValue': canonicalDouble(sprite.sizeScale.startValue),
+            'sizeStartZoom': canonicalDouble(sprite.sizeScale.startZoom),
+            'spriteRegionId': sprite.spriteRegionId,
+          },
+        ),
     ];
     return canonicalDigest(
-      format: 'earthquake-overlay-render-v1',
+      format: 'earthquake-overlay-render-v2',
       headerFields: {
         'dataDigest': dataDigest,
         'dataSequence': dataSequence.toString(),

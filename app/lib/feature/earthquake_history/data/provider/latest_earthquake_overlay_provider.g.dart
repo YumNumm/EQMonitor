@@ -112,6 +112,92 @@ final class EarthquakeMapOverlayDigestBuilderProvider
 String _$earthquakeMapOverlayDigestBuilderHash() =>
     r'acf123b9b4bdceb13ea98e9ca2d8e2f67929722e';
 
+@ProviderFor(latestEarthquakeOverlaySpriteAtlas)
+final latestEarthquakeOverlaySpriteAtlasProvider =
+    LatestEarthquakeOverlaySpriteAtlasProvider._();
+
+final class LatestEarthquakeOverlaySpriteAtlasProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<MapSpriteAtlas>,
+          MapSpriteAtlas,
+          FutureOr<MapSpriteAtlas>
+        >
+    with $FutureModifier<MapSpriteAtlas>, $FutureProvider<MapSpriteAtlas> {
+  LatestEarthquakeOverlaySpriteAtlasProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: EarthquakeMapSpriteAtlasRetryPolicy.noRetry,
+        name: r'latestEarthquakeOverlaySpriteAtlasProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$latestEarthquakeOverlaySpriteAtlasHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<MapSpriteAtlas> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<MapSpriteAtlas> create(Ref ref) {
+    return latestEarthquakeOverlaySpriteAtlas(ref);
+  }
+}
+
+String _$latestEarthquakeOverlaySpriteAtlasHash() =>
+    r'c6501371a2c8cad517d3a3ced47e877e60e7a4be';
+
+@ProviderFor(latestEarthquakeOverlayMapLayerParameter)
+final latestEarthquakeOverlayMapLayerParameterProvider =
+    LatestEarthquakeOverlayMapLayerParameterProvider._();
+
+final class LatestEarthquakeOverlayMapLayerParameterProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<EarthquakeHistoryMapLayerParameter>,
+          EarthquakeHistoryMapLayerParameter,
+          FutureOr<EarthquakeHistoryMapLayerParameter>
+        >
+    with
+        $FutureModifier<EarthquakeHistoryMapLayerParameter>,
+        $FutureProvider<EarthquakeHistoryMapLayerParameter> {
+  LatestEarthquakeOverlayMapLayerParameterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'latestEarthquakeOverlayMapLayerParameterProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$latestEarthquakeOverlayMapLayerParameterHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<EarthquakeHistoryMapLayerParameter> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<EarthquakeHistoryMapLayerParameter> create(Ref ref) {
+    return latestEarthquakeOverlayMapLayerParameter(ref);
+  }
+}
+
+String _$latestEarthquakeOverlayMapLayerParameterHash() =>
+    r'1461072ac6cf2de4c1eb5357aa45f6c7c613b4a5';
+
 @ProviderFor(LatestEarthquakeOverlay)
 final latestEarthquakeOverlayProvider = LatestEarthquakeOverlayProvider._();
 
@@ -141,7 +227,7 @@ final class LatestEarthquakeOverlayProvider
 }
 
 String _$latestEarthquakeOverlayHash() =>
-    r'f6b8f793c524f68d8ddeb4e302436c83442b5be2';
+    r'f634a7b2a4557affac13c7d8d928c933f72e314d';
 
 abstract class _$LatestEarthquakeOverlay
     extends $AsyncNotifier<LatestEarthquakeOverlayData> {
