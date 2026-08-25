@@ -16,12 +16,16 @@ import 'package:eqmonitor_map/src/renderer/observation_point_batch_builder.dart'
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/earthquake_overlay_exact_tile_resolver.dart';
 
+typedef EarthquakeOverlayExactTileMissReasonFor =
+    EarthquakeOverlayExactTileMissReason Function(CanonicalTileId tileId);
+
 /// BaseMapViewが1 frameでsubmitする内容と次frameへ持ち越すoverlay state。
 final class BaseMapOverlayFrameResult {
   const new({
     required this.overlay,
     required this.submission,
     required this.coverage,
+    required this.diagnostic,
     required this.observationBatchForReuse,
     required this.spriteBatchesForReuse,
     required this.shouldRetireGpuResources,
@@ -30,6 +34,7 @@ final class BaseMapOverlayFrameResult {
   final EarthquakeMapOverlaySnapshot? overlay;
   final MapSceneFrameSubmission? submission;
   final EarthquakeOverlayCoverage coverage;
+  final EarthquakeOverlayCoverageDiagnostic diagnostic;
   final ObservationPointBatch? observationBatchForReuse;
   final List<MapPointSpriteInstanceBatch> spriteBatchesForReuse;
   final bool shouldRetireGpuResources;
@@ -48,6 +53,8 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
   required EarthquakeAreaPackedMeshResolver packedMeshFor,
   required EarthquakeAreaRenderStyleCache styleCache,
   required MapSceneFrameLimits sceneFrameLimits,
+  required EarthquakeOverlayExactTileMissReasonFor missingExactTileReasonFor,
+  required int requiredCodeUnresolvedCount,
   List<MapPointSpriteInstanceBatch> previousSpriteBatches = const [],
 }) {
   if (!identical(baseMap.frame, frame)) {
@@ -62,6 +69,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
       overlay: overlay,
       submission: null,
       coverage: const EarthquakeOverlayCoverage.hidden(),
+      diagnostic: const EarthquakeOverlayCoverageDiagnostic.empty(),
       observationBatchForReuse: _reusableObservation(
         previous: previousObservationBatch,
         overlay: overlay,
@@ -82,6 +90,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
         sceneFrameLimits: sceneFrameLimits,
       ),
       coverage: const EarthquakeOverlayCoverage.hidden(),
+      diagnostic: const EarthquakeOverlayCoverageDiagnostic.empty(),
       observationBatchForReuse: null,
       spriteBatchesForReuse: const [],
       shouldRetireGpuResources: false,
@@ -98,11 +107,16 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
         sourceInstanceId: tileSourceInstanceId,
         cache: tileCache,
         mode: layerMode,
+        missReason: missingExactTileReasonFor(tile.canonical),
       ),
   ];
-  final coverage = earthquakeOverlayCoverageFor(
+  final diagnostic = earthquakeOverlayCoverageDiagnosticFor(
     exactTileResults: exactTileResults,
+    requiredCodeUnresolvedCount: requiredCodeUnresolvedCount,
+    stationCount: overlay.stations.length,
+    spriteCount: overlay.sprites.length,
   );
+  final coverage = EarthquakeOverlayCoverage.fromDiagnostic(diagnostic);
   final styles = styleCache.resolve(
     snapshot: overlay,
     layerMode: layerMode,
@@ -170,6 +184,7 @@ BaseMapOverlayFrameResult buildBaseMapOverlayFrame({
       limits: sceneFrameLimits,
     ),
     coverage: coverage,
+    diagnostic: diagnostic,
     observationBatchForReuse:
         observation ??
         _reusableObservation(
@@ -229,23 +244,52 @@ EarthquakeMapOverlaySnapshot? selectEarthquakeOverlaySnapshot({
 }
 
 /// exact tile結果からsource layer/code欠損を含むcoverageを数える。
-EarthquakeOverlayCoverage earthquakeOverlayCoverageFor({
+EarthquakeOverlayCoverageDiagnostic earthquakeOverlayCoverageDiagnosticFor({
   required List<EarthquakeOverlayExactTileResult> exactTileResults,
+  required int requiredCodeUnresolvedCount,
+  required int stationCount,
+  required int spriteCount,
 }) {
-  var readyTileCount = 0;
-  var missingOrInvalidCodeCount = 0;
+  final visited = <CanonicalTileId>{};
+  var pendingTileCount = 0;
+  var authoritativeEmptyTileCount = 0;
+  var sourceLayerAbsentTileCount = 0;
+  var missingOrInvalidPropertyFeatureCount = 0;
+  var decodeOrSchemaFailureTileCount = 0;
   for (final result in exactTileResults) {
-    if (result is! EarthquakeOverlayExactTileHit ||
-        result.areaGeometry.extent == null) {
+    if (!visited.add(result.canonicalTileId)) {
       continue;
     }
-    readyTileCount++;
-    missingOrInvalidCodeCount += result.areaGeometry.missingOrInvalidCodeCount;
+    switch (result) {
+      case EarthquakeOverlayExactTilePending():
+        pendingTileCount++;
+      case EarthquakeOverlayExactTileAuthoritativeEmpty():
+        authoritativeEmptyTileCount++;
+      case EarthquakeOverlayExactTileDecodeFailure():
+        decodeOrSchemaFailureTileCount++;
+      case EarthquakeOverlayExactTileHit(:final areaGeometry):
+        if (areaGeometry.extent == null) {
+          sourceLayerAbsentTileCount++;
+          continue;
+        }
+        missingOrInvalidPropertyFeatureCount +=
+            areaGeometry.missingOrInvalidCodeCount;
+        if (areaGeometry.features.isEmpty &&
+            areaGeometry.missingOrInvalidCodeCount == 0) {
+          authoritativeEmptyTileCount++;
+        }
+    }
   }
-  return EarthquakeOverlayCoverage.fromCounts(
-    requestedTileCount: exactTileResults.length,
-    readyTileCount: readyTileCount,
-    missingOrInvalidCodeCount: missingOrInvalidCodeCount,
+  return EarthquakeOverlayCoverageDiagnostic(
+    visibleCanonicalTileCount: visited.length,
+    pendingTileCount: pendingTileCount,
+    authoritativeEmptyTileCount: authoritativeEmptyTileCount,
+    sourceLayerAbsentTileCount: sourceLayerAbsentTileCount,
+    missingOrInvalidPropertyFeatureCount: missingOrInvalidPropertyFeatureCount,
+    decodeOrSchemaFailureTileCount: decodeOrSchemaFailureTileCount,
+    requiredCodeUnresolvedCount: requiredCodeUnresolvedCount,
+    stationCount: stationCount,
+    spriteCount: spriteCount,
   );
 }
 

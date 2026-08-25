@@ -15,17 +15,20 @@ final class EarthquakeOverlayCoverageOwner {
   void hide({required EarthquakeMapOverlaySnapshot? overlay}) => publish(
     overlay: overlay,
     coverage: const EarthquakeOverlayCoverage.hidden(),
+    diagnostic: const EarthquakeOverlayCoverageDiagnostic.empty(),
   );
 
   void publish({
     required EarthquakeMapOverlaySnapshot? overlay,
     required EarthquakeOverlayCoverage coverage,
+    required EarthquakeOverlayCoverageDiagnostic diagnostic,
   }) {
     final next = overlay == null
         ? const EarthquakeOverlayCoverageSnapshot.hidden()
         : EarthquakeOverlayCoverageSnapshot(
             versionStamp: overlay.versionStamp,
             coverage: coverage,
+            diagnostic: diagnostic,
           );
     if (next == _snapshot) {
       return;
