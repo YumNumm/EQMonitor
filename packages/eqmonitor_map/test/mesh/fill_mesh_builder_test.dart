@@ -162,6 +162,18 @@ void main() {
       );
     });
 
+    test('rejects a self-intersecting ring with non-zero signed area', () {
+      final crossing = _ring([(3, 0), (2, 5), (1, 0), (4, 3), (0, 3)]);
+      expect(_signedAreaTwice(crossing), greaterThan(0));
+
+      expect(
+        () => _builder().build([
+          _polygonFeature([crossing]),
+        ]),
+        throwsA(isA<FillMeshSelfIntersectionException>()),
+      );
+    });
+
     test(
       'rejects a lone ring wound as a hole (negative signed area) '
       'with no preceding exterior',
@@ -270,6 +282,18 @@ void main() {
       expect(
         () => _builder(maxHolesPerPolygon: 1).build([feature]),
         throwsA(isA<FillMeshLimitExceededException>()),
+      );
+    });
+
+    test('rejects a hole boundary crossing its exterior boundary', () {
+      final exterior = _ring([(0, 0), (10, 0), (10, 10), (0, 10)]);
+      final crossingHole = _ring([(5, 5), (5, 15), (15, 15), (15, 5)]);
+
+      expect(
+        () => _builder().build([
+          _polygonFeature([exterior, crossingHole]),
+        ]),
+        throwsA(isA<FillMeshSelfIntersectionException>()),
       );
     });
   });

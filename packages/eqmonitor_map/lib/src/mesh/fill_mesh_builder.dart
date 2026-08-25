@@ -4,6 +4,7 @@ import 'package:dart_earcut/dart_earcut.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_self_intersection_validator.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
 
 /// index bufferがUint16のため、1つの[FillMesh] segmentが持てる頂点数の
@@ -27,6 +28,13 @@ final class FillMeshBuilder {
             'are stored as Uint16.',
       );
     }
+    if (limits.maxIntersectionChecks < 0) {
+      throw ArgumentError.value(
+        limits.maxIntersectionChecks,
+        'limits.maxIntersectionChecks',
+        'must not be negative.',
+      );
+    }
   }
 
   final FillMeshBuilderLimits limits;
@@ -44,6 +52,7 @@ final class FillMeshBuilder {
     final segments = <FillMesh>[];
     var positions = <double>[];
     var indices = <int>[];
+    var remainingIntersectionChecks = limits.maxIntersectionChecks;
 
     void flush() {
       if (positions.isEmpty) {
@@ -70,6 +79,12 @@ final class FillMeshBuilder {
       }
 
       final polygons = _classifyRings(feature.rings, limits: limits);
+      final intersectionChecks = const PolygonSelfIntersectionValidator()
+          .validate(
+            rings: feature.rings,
+            maxIntersectionChecks: remainingIntersectionChecks,
+          );
+      remainingIntersectionChecks -= intersectionChecks;
       final featurePositions = <double>[];
       final featureTriangleIndices = <int>[];
       var localOffset = 0;
