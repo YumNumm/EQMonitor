@@ -17,13 +17,13 @@ void main() {
     addTearDown(() => temporaryDirectory.delete(recursive: true));
     final firstWriteStarted = Completer<void>();
     final releaseFirstWrite = Completer<void>();
-    GatedEstimatedIntensityArchivePartWriter? writer;
+    PausedEstimatedIntensityArchivePartWriter? writer;
     final verifier = EstimatedIntensityArchiveStreamVerifier(
       partWriterFactory: (file) async {
         final delegate = await DartIoEstimatedIntensityArchivePartWriter.open(
           file,
         );
-        final created = GatedEstimatedIntensityArchivePartWriter(
+        final created = PausedEstimatedIntensityArchivePartWriter(
           delegate: delegate,
           firstWriteStarted: firstWriteStarted,
           releaseFirstWrite: releaseFirstWrite,
@@ -60,9 +60,66 @@ void main() {
     expect(writer?.writeCount, 2);
     expect(writer?.maxConcurrentWrites, 1);
   });
+
+  test('total timeoutは待機中のwriteをcloseしてpartをcleanupする', () async {
+    final temporaryDirectory = await Directory.systemTemp.createTemp(
+      'estimated_intensity_write_timeout_test_',
+    );
+    addTearDown(() => temporaryDirectory.delete(recursive: true));
+    final writeStarted = Completer<void>();
+    final releaseWrite = Completer<void>();
+    addTearDown(() {
+      if (!releaseWrite.isCompleted) {
+        releaseWrite.complete();
+      }
+    });
+    PausedEstimatedIntensityArchivePartWriter? writer;
+    final verifier = EstimatedIntensityArchiveStreamVerifier(
+      partWriterFactory: (file) async {
+        final created = PausedEstimatedIntensityArchivePartWriter(
+          delegate: await DartIoEstimatedIntensityArchivePartWriter.open(file),
+          firstWriteStarted: writeStarted,
+          releaseFirstWrite: releaseWrite,
+        );
+        writer = created;
+        return created;
+      },
+    );
+    final operation = TestEstimatedIntensityArchiveHttpOperation(
+      openResponse: Future.value(estimatedIntensityTestResponse()),
+    );
+    final limits = EstimatedIntensityArchiveDownloadLimits(
+      maxArchiveBytes: 1024,
+      connectTimeout: const Duration(seconds: 1),
+      headerTimeout: const Duration(seconds: 1),
+      idleTimeout: const Duration(seconds: 1),
+      totalTimeout: const Duration(milliseconds: 10),
+    );
+
+    final resultFuture =
+        EstimatedIntensityArchiveHttpDataSource(
+          operationFactory: () => operation,
+          streamVerifier: verifier,
+        ).download(
+          descriptor: estimatedIntensityTestDescriptor(),
+          temporaryDirectory: temporaryDirectory,
+          limits: limits,
+        );
+    await writeStarted.future;
+    final result = await resultFuture.timeout(
+      const Duration(milliseconds: 200),
+    );
+
+    expectEstimatedIntensityDownloadFailure(
+      result: result,
+      failure: EstimatedIntensityArchiveDownloadFailure.timeout,
+    );
+    expect(writer?.closeCount, 1);
+    expect(temporaryDirectory.listSync(recursive: true), isEmpty);
+  });
 }
 
-final class GatedEstimatedIntensityArchivePartWriter
+final class PausedEstimatedIntensityArchivePartWriter
     implements EstimatedIntensityArchivePartWriter {
   new({
     required this.delegate,
@@ -76,6 +133,8 @@ final class GatedEstimatedIntensityArchivePartWriter
   var writeCount = 0;
   var concurrentWrites = 0;
   var maxConcurrentWrites = 0;
+  var closeCount = 0;
+  var closed = false;
 
   @override
   Future<void> write(List<int> bytes) async {
@@ -96,5 +155,15 @@ final class GatedEstimatedIntensityArchivePartWriter
   Future<void> flushAndClose() => delegate.flushAndClose();
 
   @override
-  Future<void> close() => delegate.close();
+  Future<void> close() async {
+    if (closed) {
+      return;
+    }
+    closed = true;
+    closeCount += 1;
+    if (!releaseFirstWrite.isCompleted) {
+      releaseFirstWrite.completeError(StateError('writer closed'));
+    }
+    await delegate.close();
+  }
 }
