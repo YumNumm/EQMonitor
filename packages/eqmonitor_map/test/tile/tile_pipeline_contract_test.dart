@@ -36,6 +36,7 @@ const _archiveLimits = PmTilesV3Limits(
   rootDirectoryWindowLength: 16384,
   maxDirectoryEncodedBytes: 1 << 20,
   maxDirectoryDecodedBytes: 8 << 20,
+  maxDirectoryEntries: 65536,
   maxCachedLeafDirectories: 4,
   maxTileEncodedBytes: 4 << 20,
   maxTileDecodedBytes: 16 << 20,

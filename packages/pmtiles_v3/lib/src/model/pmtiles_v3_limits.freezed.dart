@@ -19,7 +19,8 @@ mixin _$PmTilesV3Limits {
  int get maxDirectoryDepth;/// root directoryが収まっているべき先頭からのwindow長（byte）。
  int get rootDirectoryWindowLength;/// root/leaf directoryの圧縮済みbyte列1件あたりの上限。
  int get maxDirectoryEncodedBytes;/// root/leaf directoryの展開済みbyte列1件あたりの上限。
- int get maxDirectoryDecodedBytes;/// 同時に保持するleaf directory cacheの最大件数。
+ int get maxDirectoryDecodedBytes;/// root/leaf directory 1件から生成するentry数の上限。
+ int get maxDirectoryEntries;/// 同時に保持するleaf directory cacheの最大件数。
 ///
 /// 1件あたりの展開上限と組み合わせ、archiveを長時間読む場合や先行
 /// validationで多数のleafを辿る場合もcacheの保持量を有限化する。
@@ -54,16 +55,16 @@ $PmTilesV3LimitsCopyWith<PmTilesV3Limits> get copyWith => _$PmTilesV3LimitsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PmTilesV3Limits&&(identical(other.maxDirectoryDepth, maxDirectoryDepth) || other.maxDirectoryDepth == maxDirectoryDepth)&&(identical(other.rootDirectoryWindowLength, rootDirectoryWindowLength) || other.rootDirectoryWindowLength == rootDirectoryWindowLength)&&(identical(other.maxDirectoryEncodedBytes, maxDirectoryEncodedBytes) || other.maxDirectoryEncodedBytes == maxDirectoryEncodedBytes)&&(identical(other.maxDirectoryDecodedBytes, maxDirectoryDecodedBytes) || other.maxDirectoryDecodedBytes == maxDirectoryDecodedBytes)&&(identical(other.maxCachedLeafDirectories, maxCachedLeafDirectories) || other.maxCachedLeafDirectories == maxCachedLeafDirectories)&&(identical(other.maxTileEncodedBytes, maxTileEncodedBytes) || other.maxTileEncodedBytes == maxTileEncodedBytes)&&(identical(other.maxTileDecodedBytes, maxTileDecodedBytes) || other.maxTileDecodedBytes == maxTileDecodedBytes)&&(identical(other.validateFullArchiveOnOpen, validateFullArchiveOnOpen) || other.validateFullArchiveOnOpen == validateFullArchiveOnOpen));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PmTilesV3Limits&&(identical(other.maxDirectoryDepth, maxDirectoryDepth) || other.maxDirectoryDepth == maxDirectoryDepth)&&(identical(other.rootDirectoryWindowLength, rootDirectoryWindowLength) || other.rootDirectoryWindowLength == rootDirectoryWindowLength)&&(identical(other.maxDirectoryEncodedBytes, maxDirectoryEncodedBytes) || other.maxDirectoryEncodedBytes == maxDirectoryEncodedBytes)&&(identical(other.maxDirectoryDecodedBytes, maxDirectoryDecodedBytes) || other.maxDirectoryDecodedBytes == maxDirectoryDecodedBytes)&&(identical(other.maxDirectoryEntries, maxDirectoryEntries) || other.maxDirectoryEntries == maxDirectoryEntries)&&(identical(other.maxCachedLeafDirectories, maxCachedLeafDirectories) || other.maxCachedLeafDirectories == maxCachedLeafDirectories)&&(identical(other.maxTileEncodedBytes, maxTileEncodedBytes) || other.maxTileEncodedBytes == maxTileEncodedBytes)&&(identical(other.maxTileDecodedBytes, maxTileDecodedBytes) || other.maxTileDecodedBytes == maxTileDecodedBytes)&&(identical(other.validateFullArchiveOnOpen, validateFullArchiveOnOpen) || other.validateFullArchiveOnOpen == validateFullArchiveOnOpen));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxDirectoryDepth,rootDirectoryWindowLength,maxDirectoryEncodedBytes,maxDirectoryDecodedBytes,maxCachedLeafDirectories,maxTileEncodedBytes,maxTileDecodedBytes,validateFullArchiveOnOpen);
+int get hashCode => Object.hash(runtimeType,maxDirectoryDepth,rootDirectoryWindowLength,maxDirectoryEncodedBytes,maxDirectoryDecodedBytes,maxDirectoryEntries,maxCachedLeafDirectories,maxTileEncodedBytes,maxTileDecodedBytes,validateFullArchiveOnOpen);
 
 @override
 String toString() {
-  return 'PmTilesV3Limits(maxDirectoryDepth: $maxDirectoryDepth, rootDirectoryWindowLength: $rootDirectoryWindowLength, maxDirectoryEncodedBytes: $maxDirectoryEncodedBytes, maxDirectoryDecodedBytes: $maxDirectoryDecodedBytes, maxCachedLeafDirectories: $maxCachedLeafDirectories, maxTileEncodedBytes: $maxTileEncodedBytes, maxTileDecodedBytes: $maxTileDecodedBytes, validateFullArchiveOnOpen: $validateFullArchiveOnOpen)';
+  return 'PmTilesV3Limits(maxDirectoryDepth: $maxDirectoryDepth, rootDirectoryWindowLength: $rootDirectoryWindowLength, maxDirectoryEncodedBytes: $maxDirectoryEncodedBytes, maxDirectoryDecodedBytes: $maxDirectoryDecodedBytes, maxDirectoryEntries: $maxDirectoryEntries, maxCachedLeafDirectories: $maxCachedLeafDirectories, maxTileEncodedBytes: $maxTileEncodedBytes, maxTileDecodedBytes: $maxTileDecodedBytes, validateFullArchiveOnOpen: $validateFullArchiveOnOpen)';
 }
 
 
@@ -74,7 +75,7 @@ abstract mixin class $PmTilesV3LimitsCopyWith<$Res>  {
   factory $PmTilesV3LimitsCopyWith(PmTilesV3Limits value, $Res Function(PmTilesV3Limits) _then) = _$PmTilesV3LimitsCopyWithImpl;
 @useResult
 $Res call({
- int maxDirectoryDepth, int rootDirectoryWindowLength, int maxDirectoryEncodedBytes, int maxDirectoryDecodedBytes, int maxCachedLeafDirectories, int maxTileEncodedBytes, int maxTileDecodedBytes, bool validateFullArchiveOnOpen
+ int maxDirectoryDepth, int rootDirectoryWindowLength, int maxDirectoryEncodedBytes, int maxDirectoryDecodedBytes, int maxDirectoryEntries, int maxCachedLeafDirectories, int maxTileEncodedBytes, int maxTileDecodedBytes, bool validateFullArchiveOnOpen
 });
 
 
@@ -91,12 +92,13 @@ class _$PmTilesV3LimitsCopyWithImpl<$Res>
 
 /// Create a copy of PmTilesV3Limits
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxDirectoryDepth = null,Object? rootDirectoryWindowLength = null,Object? maxDirectoryEncodedBytes = null,Object? maxDirectoryDecodedBytes = null,Object? maxCachedLeafDirectories = null,Object? maxTileEncodedBytes = null,Object? maxTileDecodedBytes = null,Object? validateFullArchiveOnOpen = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxDirectoryDepth = null,Object? rootDirectoryWindowLength = null,Object? maxDirectoryEncodedBytes = null,Object? maxDirectoryDecodedBytes = null,Object? maxDirectoryEntries = null,Object? maxCachedLeafDirectories = null,Object? maxTileEncodedBytes = null,Object? maxTileDecodedBytes = null,Object? validateFullArchiveOnOpen = null,}) {
   return _then(PmTilesV3Limits(
 maxDirectoryDepth: null == maxDirectoryDepth ? _self.maxDirectoryDepth : maxDirectoryDepth // ignore: cast_nullable_to_non_nullable
 as int,rootDirectoryWindowLength: null == rootDirectoryWindowLength ? _self.rootDirectoryWindowLength : rootDirectoryWindowLength // ignore: cast_nullable_to_non_nullable
 as int,maxDirectoryEncodedBytes: null == maxDirectoryEncodedBytes ? _self.maxDirectoryEncodedBytes : maxDirectoryEncodedBytes // ignore: cast_nullable_to_non_nullable
 as int,maxDirectoryDecodedBytes: null == maxDirectoryDecodedBytes ? _self.maxDirectoryDecodedBytes : maxDirectoryDecodedBytes // ignore: cast_nullable_to_non_nullable
+as int,maxDirectoryEntries: null == maxDirectoryEntries ? _self.maxDirectoryEntries : maxDirectoryEntries // ignore: cast_nullable_to_non_nullable
 as int,maxCachedLeafDirectories: null == maxCachedLeafDirectories ? _self.maxCachedLeafDirectories : maxCachedLeafDirectories // ignore: cast_nullable_to_non_nullable
 as int,maxTileEncodedBytes: null == maxTileEncodedBytes ? _self.maxTileEncodedBytes : maxTileEncodedBytes // ignore: cast_nullable_to_non_nullable
 as int,maxTileDecodedBytes: null == maxTileDecodedBytes ? _self.maxTileDecodedBytes : maxTileDecodedBytes // ignore: cast_nullable_to_non_nullable
@@ -186,10 +188,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxDirectoryEntries,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PmTilesV3Limits() when $default != null:
-return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
+return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxDirectoryEntries,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
   return orElse();
 
 }
@@ -207,10 +209,10 @@ return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxDirectoryEntries,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)  $default,) {final _that = this;
 switch (_that) {
 case _PmTilesV3Limits():
-return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
+return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxDirectoryEntries,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -227,10 +229,10 @@ return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxDirectoryDepth,  int rootDirectoryWindowLength,  int maxDirectoryEncodedBytes,  int maxDirectoryDecodedBytes,  int maxDirectoryEntries,  int maxCachedLeafDirectories,  int maxTileEncodedBytes,  int maxTileDecodedBytes,  bool validateFullArchiveOnOpen)?  $default,) {final _that = this;
 switch (_that) {
 case _PmTilesV3Limits() when $default != null:
-return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
+return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.maxDirectoryEncodedBytes,_that.maxDirectoryDecodedBytes,_that.maxDirectoryEntries,_that.maxCachedLeafDirectories,_that.maxTileEncodedBytes,_that.maxTileDecodedBytes,_that.validateFullArchiveOnOpen);case _:
   return null;
 
 }
@@ -242,7 +244,7 @@ return $default(_that.maxDirectoryDepth,_that.rootDirectoryWindowLength,_that.ma
 
 
 class _PmTilesV3Limits implements PmTilesV3Limits {
-  const _PmTilesV3Limits({required this.maxDirectoryDepth, required this.rootDirectoryWindowLength, required this.maxDirectoryEncodedBytes, required this.maxDirectoryDecodedBytes, required this.maxCachedLeafDirectories, required this.maxTileEncodedBytes, required this.maxTileDecodedBytes, this.validateFullArchiveOnOpen = false});
+  const _PmTilesV3Limits({required this.maxDirectoryDepth, required this.rootDirectoryWindowLength, required this.maxDirectoryEncodedBytes, required this.maxDirectoryDecodedBytes, required this.maxDirectoryEntries, required this.maxCachedLeafDirectories, required this.maxTileEncodedBytes, required this.maxTileDecodedBytes, this.validateFullArchiveOnOpen = false});
   
 
 /// directory treeを辿る最大深さ。3を超えるarchiveは corrupt として拒否する。
@@ -253,6 +255,8 @@ class _PmTilesV3Limits implements PmTilesV3Limits {
 @override final  int maxDirectoryEncodedBytes;
 /// root/leaf directoryの展開済みbyte列1件あたりの上限。
 @override final  int maxDirectoryDecodedBytes;
+/// root/leaf directory 1件から生成するentry数の上限。
+@override final  int maxDirectoryEntries;
 /// 同時に保持するleaf directory cacheの最大件数。
 ///
 /// 1件あたりの展開上限と組み合わせ、archiveを長時間読む場合や先行
@@ -292,16 +296,16 @@ _$PmTilesV3LimitsCopyWith<_PmTilesV3Limits> get copyWith => __$PmTilesV3LimitsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PmTilesV3Limits&&(identical(other.maxDirectoryDepth, maxDirectoryDepth) || other.maxDirectoryDepth == maxDirectoryDepth)&&(identical(other.rootDirectoryWindowLength, rootDirectoryWindowLength) || other.rootDirectoryWindowLength == rootDirectoryWindowLength)&&(identical(other.maxDirectoryEncodedBytes, maxDirectoryEncodedBytes) || other.maxDirectoryEncodedBytes == maxDirectoryEncodedBytes)&&(identical(other.maxDirectoryDecodedBytes, maxDirectoryDecodedBytes) || other.maxDirectoryDecodedBytes == maxDirectoryDecodedBytes)&&(identical(other.maxCachedLeafDirectories, maxCachedLeafDirectories) || other.maxCachedLeafDirectories == maxCachedLeafDirectories)&&(identical(other.maxTileEncodedBytes, maxTileEncodedBytes) || other.maxTileEncodedBytes == maxTileEncodedBytes)&&(identical(other.maxTileDecodedBytes, maxTileDecodedBytes) || other.maxTileDecodedBytes == maxTileDecodedBytes)&&(identical(other.validateFullArchiveOnOpen, validateFullArchiveOnOpen) || other.validateFullArchiveOnOpen == validateFullArchiveOnOpen));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PmTilesV3Limits&&(identical(other.maxDirectoryDepth, maxDirectoryDepth) || other.maxDirectoryDepth == maxDirectoryDepth)&&(identical(other.rootDirectoryWindowLength, rootDirectoryWindowLength) || other.rootDirectoryWindowLength == rootDirectoryWindowLength)&&(identical(other.maxDirectoryEncodedBytes, maxDirectoryEncodedBytes) || other.maxDirectoryEncodedBytes == maxDirectoryEncodedBytes)&&(identical(other.maxDirectoryDecodedBytes, maxDirectoryDecodedBytes) || other.maxDirectoryDecodedBytes == maxDirectoryDecodedBytes)&&(identical(other.maxDirectoryEntries, maxDirectoryEntries) || other.maxDirectoryEntries == maxDirectoryEntries)&&(identical(other.maxCachedLeafDirectories, maxCachedLeafDirectories) || other.maxCachedLeafDirectories == maxCachedLeafDirectories)&&(identical(other.maxTileEncodedBytes, maxTileEncodedBytes) || other.maxTileEncodedBytes == maxTileEncodedBytes)&&(identical(other.maxTileDecodedBytes, maxTileDecodedBytes) || other.maxTileDecodedBytes == maxTileDecodedBytes)&&(identical(other.validateFullArchiveOnOpen, validateFullArchiveOnOpen) || other.validateFullArchiveOnOpen == validateFullArchiveOnOpen));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxDirectoryDepth,rootDirectoryWindowLength,maxDirectoryEncodedBytes,maxDirectoryDecodedBytes,maxCachedLeafDirectories,maxTileEncodedBytes,maxTileDecodedBytes,validateFullArchiveOnOpen);
+int get hashCode => Object.hash(runtimeType,maxDirectoryDepth,rootDirectoryWindowLength,maxDirectoryEncodedBytes,maxDirectoryDecodedBytes,maxDirectoryEntries,maxCachedLeafDirectories,maxTileEncodedBytes,maxTileDecodedBytes,validateFullArchiveOnOpen);
 
 @override
 String toString() {
-  return 'PmTilesV3Limits(maxDirectoryDepth: $maxDirectoryDepth, rootDirectoryWindowLength: $rootDirectoryWindowLength, maxDirectoryEncodedBytes: $maxDirectoryEncodedBytes, maxDirectoryDecodedBytes: $maxDirectoryDecodedBytes, maxCachedLeafDirectories: $maxCachedLeafDirectories, maxTileEncodedBytes: $maxTileEncodedBytes, maxTileDecodedBytes: $maxTileDecodedBytes, validateFullArchiveOnOpen: $validateFullArchiveOnOpen)';
+  return 'PmTilesV3Limits(maxDirectoryDepth: $maxDirectoryDepth, rootDirectoryWindowLength: $rootDirectoryWindowLength, maxDirectoryEncodedBytes: $maxDirectoryEncodedBytes, maxDirectoryDecodedBytes: $maxDirectoryDecodedBytes, maxDirectoryEntries: $maxDirectoryEntries, maxCachedLeafDirectories: $maxCachedLeafDirectories, maxTileEncodedBytes: $maxTileEncodedBytes, maxTileDecodedBytes: $maxTileDecodedBytes, validateFullArchiveOnOpen: $validateFullArchiveOnOpen)';
 }
 
 
@@ -312,7 +316,7 @@ abstract mixin class _$PmTilesV3LimitsCopyWith<$Res> implements $PmTilesV3Limits
   factory _$PmTilesV3LimitsCopyWith(_PmTilesV3Limits value, $Res Function(_PmTilesV3Limits) _then) = __$PmTilesV3LimitsCopyWithImpl;
 @override @useResult
 $Res call({
- int maxDirectoryDepth, int rootDirectoryWindowLength, int maxDirectoryEncodedBytes, int maxDirectoryDecodedBytes, int maxCachedLeafDirectories, int maxTileEncodedBytes, int maxTileDecodedBytes, bool validateFullArchiveOnOpen
+ int maxDirectoryDepth, int rootDirectoryWindowLength, int maxDirectoryEncodedBytes, int maxDirectoryDecodedBytes, int maxDirectoryEntries, int maxCachedLeafDirectories, int maxTileEncodedBytes, int maxTileDecodedBytes, bool validateFullArchiveOnOpen
 });
 
 
@@ -329,12 +333,13 @@ class __$PmTilesV3LimitsCopyWithImpl<$Res>
 
 /// Create a copy of PmTilesV3Limits
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxDirectoryDepth = null,Object? rootDirectoryWindowLength = null,Object? maxDirectoryEncodedBytes = null,Object? maxDirectoryDecodedBytes = null,Object? maxCachedLeafDirectories = null,Object? maxTileEncodedBytes = null,Object? maxTileDecodedBytes = null,Object? validateFullArchiveOnOpen = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxDirectoryDepth = null,Object? rootDirectoryWindowLength = null,Object? maxDirectoryEncodedBytes = null,Object? maxDirectoryDecodedBytes = null,Object? maxDirectoryEntries = null,Object? maxCachedLeafDirectories = null,Object? maxTileEncodedBytes = null,Object? maxTileDecodedBytes = null,Object? validateFullArchiveOnOpen = null,}) {
   return _then(_PmTilesV3Limits(
 maxDirectoryDepth: null == maxDirectoryDepth ? _self.maxDirectoryDepth : maxDirectoryDepth // ignore: cast_nullable_to_non_nullable
 as int,rootDirectoryWindowLength: null == rootDirectoryWindowLength ? _self.rootDirectoryWindowLength : rootDirectoryWindowLength // ignore: cast_nullable_to_non_nullable
 as int,maxDirectoryEncodedBytes: null == maxDirectoryEncodedBytes ? _self.maxDirectoryEncodedBytes : maxDirectoryEncodedBytes // ignore: cast_nullable_to_non_nullable
 as int,maxDirectoryDecodedBytes: null == maxDirectoryDecodedBytes ? _self.maxDirectoryDecodedBytes : maxDirectoryDecodedBytes // ignore: cast_nullable_to_non_nullable
+as int,maxDirectoryEntries: null == maxDirectoryEntries ? _self.maxDirectoryEntries : maxDirectoryEntries // ignore: cast_nullable_to_non_nullable
 as int,maxCachedLeafDirectories: null == maxCachedLeafDirectories ? _self.maxCachedLeafDirectories : maxCachedLeafDirectories // ignore: cast_nullable_to_non_nullable
 as int,maxTileEncodedBytes: null == maxTileEncodedBytes ? _self.maxTileEncodedBytes : maxTileEncodedBytes // ignore: cast_nullable_to_non_nullable
 as int,maxTileDecodedBytes: null == maxTileDecodedBytes ? _self.maxTileDecodedBytes : maxTileDecodedBytes // ignore: cast_nullable_to_non_nullable

@@ -21,6 +21,9 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// root/leaf directoryの展開済みbyte列1件あたりの上限。
     required int maxDirectoryDecodedBytes,
 
+    /// root/leaf directory 1件から生成するentry数の上限。
+    required int maxDirectoryEntries,
+
     /// 同時に保持するleaf directory cacheの最大件数。
     ///
     /// 1件あたりの展開上限と組み合わせ、archiveを長時間読む場合や先行
@@ -78,6 +81,10 @@ final class PmTilesV3LimitsValidator {
       (
         name: 'maxDirectoryDecodedBytes',
         value: limits.maxDirectoryDecodedBytes,
+      ),
+      (
+        name: 'maxDirectoryEntries',
+        value: limits.maxDirectoryEntries,
       ),
       (
         name: 'maxCachedLeafDirectories',

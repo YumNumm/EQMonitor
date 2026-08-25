@@ -14,6 +14,7 @@ const _limits = PmTilesV3Limits(
   // を有限化する暫定運用値。観測済み分布から導いた値ではない。
   maxDirectoryEncodedBytes: 1 << 20,
   maxDirectoryDecodedBytes: 8 << 20,
+  maxDirectoryEntries: 65536,
   maxCachedLeafDirectories: 4,
   maxTileEncodedBytes: 4 << 20,
   maxTileDecodedBytes: 16 << 20,
