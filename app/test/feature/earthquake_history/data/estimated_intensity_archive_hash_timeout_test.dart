@@ -90,10 +90,10 @@ void main() {
     final releaseLength = Completer<int>();
     final stopRequested = Completer<EstimatedIntensityArchiveStopReason>();
     final verifier = DartIoEstimatedIntensityArchiveFileVerifier(
-      fileLengthReader: (_) {
-        lengthStarted.complete();
-        return releaseLength.future;
-      },
+      fileLengthReader: PausedEstimatedIntensityArchiveFileLengthReader(
+        started: lengthStarted,
+        release: releaseLength,
+      ),
     );
 
     final resultFuture = verifier.verify(
@@ -117,6 +117,20 @@ void main() {
       failure: EstimatedIntensityArchiveDownloadFailure.timeout,
     );
   });
+}
+
+final class PausedEstimatedIntensityArchiveFileLengthReader
+    implements EstimatedIntensityArchiveFileLengthReader {
+  const new({required this.started, required this.release});
+
+  final Completer<void> started;
+  final Completer<int> release;
+
+  @override
+  Future<int> read({required File file}) {
+    started.complete();
+    return release.future;
+  }
 }
 
 final class PausedEstimatedIntensityArchiveFileVerifier

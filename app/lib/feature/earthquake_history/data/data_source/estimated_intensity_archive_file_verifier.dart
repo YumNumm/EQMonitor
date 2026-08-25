@@ -10,9 +10,26 @@ abstract interface class EstimatedIntensityArchiveFileVerifier {
   });
 }
 
+abstract interface class EstimatedIntensityArchiveFileLengthReader {
+  Future<int> read({required File file});
+}
+
+final class DartIoEstimatedIntensityArchiveFileLengthReader
+    implements EstimatedIntensityArchiveFileLengthReader {
+  const new();
+
+  @override
+  Future<int> read({required File file}) => file.length();
+}
+
 final class DartIoEstimatedIntensityArchiveFileVerifier
     implements EstimatedIntensityArchiveFileVerifier {
-  const new();
+  const new({
+    this.fileLengthReader =
+        const DartIoEstimatedIntensityArchiveFileLengthReader(),
+  });
+
+  final EstimatedIntensityArchiveFileLengthReader fileLengthReader;
 
   @override
   Future<EstimatedIntensityArchiveDownloadResult> verify({
@@ -21,7 +38,26 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
     required Future<EstimatedIntensityArchiveStopReason> stopRequested,
     required EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter,
   }) async {
-    final actualLength = await file.length();
+    final pendingLength = fileLengthReader.read(file: file);
+    final lengthOutcome =
+        await Future.any<
+          ({int? length, EstimatedIntensityArchiveStopReason? stopped})
+        >([
+          pendingLength.then((length) => (length: length, stopped: null)),
+          stopRequested.then((stopped) => (length: null, stopped: stopped)),
+        ]);
+    if (lengthOutcome.stopped case final stopped?) {
+      try {
+        await pendingLength;
+      } catch (_) {}
+      return const EstimatedIntensityArchiveStopResultMapper().map(stopped);
+    }
+    final actualLength = lengthOutcome.length;
+    if (actualLength == null) {
+      return const EstimatedIntensityArchiveDownloadRejected(
+        EstimatedIntensityArchiveDownloadFailure.requestFailed,
+      );
+    }
     if (actualLength != descriptor.sizeBytes) {
       return const EstimatedIntensityArchiveDownloadRejected(
         EstimatedIntensityArchiveDownloadFailure.sizeMismatch,
