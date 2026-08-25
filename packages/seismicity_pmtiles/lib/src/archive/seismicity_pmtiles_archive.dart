@@ -17,8 +17,8 @@ const _limits = PmTilesV3Limits(
   maxTileEncodedBytes: 4 << 20,
   maxTileDecodedBytes: 16 << 20,
   // seismicityデータのproducer契約はclustered orderingとtile件数の一致を
-  // 保証しているため、archive全体のeager検証を明示的に有効化し続ける。
-  validateEntireArchiveEagerly: true,
+  // 保証しているため、archive全体の先行検証を明示的に有効化し続ける。
+  validateFullArchiveOnOpen: true,
 );
 
 abstract interface class SeismicityPmTilesArchive {

@@ -99,10 +99,10 @@ final class PmTilesV3ArchiveOpener {
       );
       // 設計正本(docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md
       // :210)は、runtimeがarchive全体をscanしてglobal coverageや件数を
-      // 再検証するとはしないと定めている。archive全体のeagerな検証は
+      // 再検証するとはしないと定めている。archive全体の先行検証は
       // producer契約がclustered orderingと件数一致を保証する呼び出し側
-      // (`limits.validateEntireArchiveEagerly`)だけが明示的に有効化する。
-      if (limits.validateEntireArchiveEagerly) {
+      // (`limits.validateFullArchiveOnOpen`)だけが明示的に有効化する。
+      if (limits.validateFullArchiveOnOpen) {
         await traversal.validateArchive(
           entries: rootEntries,
           upperTileIdExclusive: archiveUpperTileIdExclusive,

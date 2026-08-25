@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 
 import '../support/pmtiles_v3_fixture_builder.dart';
 
-// このファイルの大半のテストは、archive全体をeagerに走査したときの
+// このファイルの大半のテストは、archive全体を先行走査したときの
 // directory木・clustered orderingの検証を確かめるものなので、
-// `openFixture`はeager検証を明示的に有効化する。既定(無効)側の挙動は
+// `openFixture`は全体走査を明示的に有効化する。既定(無効)側の挙動は
 // 別途「既定ではarchive全体を検証しない」テストで固定する。
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
@@ -18,7 +18,7 @@ const _limits = PmTilesV3Limits(
   maxDirectoryDecodedBytes: 8 << 20,
   maxTileEncodedBytes: 4 << 20,
   maxTileDecodedBytes: 16 << 20,
-  validateEntireArchiveEagerly: true,
+  validateFullArchiveOnOpen: true,
 );
 
 void main() {
@@ -268,8 +268,7 @@ void main() {
   });
 
   test(
-    'honors a caller-supplied directory depth limit when eagerly '
-    'validated',
+    'honors a caller-supplied directory depth limit during full validation',
     () async {
       final fixture = builder.build(
         rootEntries: const [
@@ -294,7 +293,7 @@ void main() {
             maxDirectoryDecodedBytes: 8 << 20,
             maxTileEncodedBytes: 4 << 20,
             maxTileDecodedBytes: 16 << 20,
-            validateEntireArchiveEagerly: true,
+            validateFullArchiveOnOpen: true,
           ),
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
@@ -304,10 +303,10 @@ void main() {
 
   test(
     'honors a caller-supplied directory depth limit when a leaf is '
-    'actually read, even without eager validation',
+    'actually read, even without full validation',
     () async {
-      // 既定(validateEntireArchiveEagerly: false)ではarchive全体を
-      // eagerに走査しないため、depth超過はopen時ではなく、実際にその
+      // 既定(validateFullArchiveOnOpen: false)ではarchive全体を
+      // 先行走査しないため、depth超過はopen時ではなく、実際にその
       // leafへ到達するtile読み取り時に検出される(per-tile bounded検証)。
       final fixture = builder.build(
         rootEntries: const [
@@ -650,11 +649,11 @@ void main() {
 
   test(
     'does not scan the archive for clustered ordering violations by '
-    'default (validateEntireArchiveEagerly: false)',
+    'default (validateFullArchiveOnOpen: false)',
     () async {
       // 本番相当のbase mapアーカイブのように、直前と同一offsetへの重複排除
       // 参照や前方ジャンプを含むclustered archiveでも、既定の限定
-      // (eager検証なし)ではopenが成功し、実際に読んだtileも正しく
+      // (先行検証なし)ではopenが成功し、実際に読んだtileも正しく
       // 復号できることを固定する。
       final forwardGap = builder.build(
         rootEntries: const [
