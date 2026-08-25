@@ -35,3 +35,7 @@ dev_dependencies:
 dependency_overrides:
   scene:
     path: ../../third_party/flutter_scene/packages/scene
+
+flutter:
+  assets:
+    - shaders/earthquake_overlay.shaderinterface.json

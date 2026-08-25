@@ -16,6 +16,9 @@ import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
 import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
+import 'package:eqmonitor_map/src/overlay/map_point_sprite_feature.dart';
+import 'package:eqmonitor_map/src/overlay/map_sprite_atlas.dart';
+import 'package:eqmonitor_map/src/overlay/map_zoom_scalar_policy.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
@@ -23,6 +26,7 @@ import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
@@ -109,6 +113,21 @@ ObservationPointBatch _requireObservationPointBatch(
   return batch;
 }
 
+List<MapPointSpriteInstanceBatch> _requireSpriteBatches(
+  MapSceneFrameSubmission? submission,
+) {
+  final batches = submission?.layers
+      .whereType<MapSceneInstanceLayerSubmission>()
+      .where((layer) => layer.kind == MapSceneInstanceLayerKind.pointSprite)
+      .map((layer) => layer.batch)
+      .whereType<MapPointSpriteInstanceBatch>()
+      .toList();
+  if (batches == null || batches.isEmpty) {
+    fail('Expected point sprite batches.');
+  }
+  return batches;
+}
+
 MapRenderBatch _requireEarthquakeFillBatch(
   MapSceneFrameSubmission? submission,
 ) {
@@ -190,6 +209,46 @@ void main() {
     renderDigest: renderDigest,
   );
 
+  MapSpriteAtlas spriteAtlas() => createMapSpriteAtlas(
+    identity: createMapSourceIdentity(value: 'sha256:sprite-atlas'),
+    width: 1,
+    height: 1,
+    rgbaBytes: Uint8List.fromList([255, 0, 0, 128]),
+    regions: const [
+      MapSpriteRegion(
+        id: 'normal',
+        normalizedUv: Rect.fromLTRB(0.5, 0.5, 0.5, 0.5),
+        logicalSize: Size(24, 24),
+      ),
+    ],
+    limits: const MapSpriteAtlasLimits(
+      maxWidth: 1,
+      maxHeight: 1,
+      maxPixelBytes: 4,
+      maxRegions: 1,
+    ),
+  );
+
+  MapPointSpriteFeature sprite({String id = 'hypocenter:event-a'}) =>
+      createMapPointSpriteFeature(
+        id: id,
+        longitude: 139.6917,
+        latitude: 35.6895,
+        spriteRegionId: 'normal',
+        sizeScale: createMapZoomLinearRange(
+          startZoom: 3,
+          startValue: 0.5,
+          endZoom: 20,
+          endValue: 1.5,
+        ),
+        opacity: createMapZoomStep(
+          thresholdZoom: 5,
+          belowValue: 0,
+          atOrAboveValue: 1,
+        ),
+        priority: 10,
+      );
+
   EarthquakeMapOverlaySnapshot snapshot({
     String sourceIdentity = 'event-a',
     String sourceIncarnation = 'incarnation-a',
@@ -200,6 +259,8 @@ void main() {
     String regionCode = '130',
     String cityCode = '13101',
     Color color = const Color(0xFFFF0000),
+    MapSpriteAtlas? atlas,
+    List<MapPointSpriteFeature> sprites = const [],
   }) => createEarthquakeMapOverlaySnapshot(
     versionStamp: versionStamp(
       sourceIdentity: sourceIdentity,
@@ -226,8 +287,8 @@ void main() {
         radiusLogicalPixels: 6.7,
       ),
     ],
-    spriteAtlas: null,
-    sprites: const [],
+    spriteAtlas: atlas,
+    sprites: sprites,
     maxSpritePolicyBatches: 1,
   );
 
@@ -283,6 +344,7 @@ void main() {
     required EarthquakeMapOverlaySnapshot? requested,
     EarthquakeMapOverlaySnapshot? current,
     ObservationPointBatch? previousObservation,
+    List<MapPointSpriteInstanceBatch> previousSprites = const [],
     BaseMapTileCache? cache,
     EarthquakeAreaRenderStyleCache? styleCache,
   }) {
@@ -294,6 +356,7 @@ void main() {
       currentOverlay: current,
       requestedOverlay: requested,
       previousObservationBatch: previousObservation,
+      previousSpriteBatches: previousSprites,
       requestedCover: cover,
       tileSourceInstanceId: 'archive-a',
       tileCache: cache ?? cacheWith(geometry()),
@@ -325,6 +388,36 @@ void main() {
       [mapSceneCityFillComponentKey, mapSceneObservationPointComponentKey],
     );
   });
+
+  test(
+    'submits sprites after observations and reuses camera-only instances',
+    () {
+      final value = snapshot(atlas: spriteAtlas(), sprites: [sprite()]);
+      final first = build(frame: frameAt(6), requested: value);
+      final firstSprite = _requireSpriteBatches(first.submission).single;
+      final second = build(
+        frame: frameAt(6, frameNumber: 1),
+        current: first.overlay,
+        requested: value,
+        previousSprites: first.spriteBatchesForReuse,
+      );
+      final secondSprite = _requireSpriteBatches(second.submission).single;
+
+      expect(
+        first.submission?.layers.map((layer) => layer.componentKey),
+        [
+          mapSceneCityFillComponentKey,
+          mapSceneObservationPointComponentKey,
+          mapSceneHypocenterSpriteComponentKey,
+        ],
+      );
+      expect(
+        secondSprite.instanceGeneration,
+        same(firstSprite.instanceGeneration),
+      );
+      expect(secondSprite.frameUniform, isNot(same(firstSprite.frameUniform)));
+    },
+  );
 
   test('null snapshot atomically hides the previous overlay', () {
     final result = build(
@@ -925,6 +1018,7 @@ void main() {
         submission: initialSubmission,
         coverage: first.coverage,
         observationBatchForReuse: first.observationBatchForReuse,
+        spriteBatchesForReuse: first.spriteBatchesForReuse,
         shouldRetireGpuResources: false,
       );
       final firstFallback = build(
