@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/map_node_identity.dart';
@@ -16,12 +17,17 @@ import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
+import 'package:eqmonitor_map/src/overlay/map_point_sprite_feature.dart';
+import 'package:eqmonitor_map/src/overlay/map_sprite_atlas.dart';
+import 'package:eqmonitor_map/src/overlay/map_zoom_scalar_policy.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch_builder.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch_builder.dart';
 import 'package:flutter_scene/scene.dart' as scene;
@@ -110,6 +116,70 @@ final class _TestObservationMaterialBinding
       bytes,
       stage: scene.ShaderStage.vertex,
     );
+  }
+}
+
+final class _TestSpritePreparedFrame
+    implements FlutterSceneSpritePreparedSceneFrame {
+  _TestSpritePreparedFrame({required this.nodes});
+
+  @override
+  final List<FlutterSceneSpritePreparedSceneNode> nodes;
+
+  var _commitCount = 0;
+  var _rollbackCount = 0;
+
+  int get commitCount => _commitCount;
+  int get rollbackCount => _rollbackCount;
+
+  @override
+  void commit() {
+    _commitCount++;
+  }
+
+  @override
+  void rollback() {
+    _rollbackCount++;
+  }
+}
+
+final class _TestSpriteFrameResources
+    implements FlutterSceneSpriteFrameResources {
+  _TestSpriteFrameResources({this.prepareError});
+
+  final Error? prepareError;
+  _TestSpritePreparedFrame? prepared;
+  final preparedFrames = <_TestSpritePreparedFrame>[];
+  var _retireAllCount = 0;
+
+  int get retireAllCount => _retireAllCount;
+
+  @override
+  FlutterSceneSpritePreparedSceneFrame prepareFrame({
+    required MapFrameSnapshot frame,
+    required List<MapPointSpriteInstanceBatch> batches,
+  }) {
+    final error = prepareError;
+    if (error != null) {
+      throw error;
+    }
+    final value = _TestSpritePreparedFrame(
+      nodes: [
+        for (final batch in batches)
+          FlutterSceneSpritePreparedSceneNode(
+            batch: batch,
+            node: scene.Node(),
+          ),
+      ],
+    );
+    prepared = value;
+    preparedFrames.add(value);
+    return value;
+  }
+
+  @override
+  void retireAll() {
+    _retireAllCount++;
   }
 }
 
@@ -259,6 +329,56 @@ void main() {
     renderGeneration: sequence,
     renderDigest: 'render-$sequence',
   );
+
+  MapPointSpriteInstanceBatch spriteBatch({
+    required MapFrameSnapshot spriteFrame,
+  }) {
+    final atlas = createMapSpriteAtlas(
+      identity: createMapSourceIdentity(value: 'sprite-atlas'),
+      width: 4,
+      height: 4,
+      rgbaBytes: Uint8List(64),
+      regions: const [
+        MapSpriteRegion(
+          id: 'hypocenter',
+          normalizedUv: Rect.fromLTRB(0.125, 0.125, 0.375, 0.375),
+          logicalSize: Size(24, 24),
+        ),
+      ],
+      limits: const MapSpriteAtlasLimits(
+        maxWidth: 4,
+        maxHeight: 4,
+        maxPixelBytes: 64,
+        maxRegions: 1,
+      ),
+    );
+    return buildMapPointSpriteBatches(
+      frame: spriteFrame,
+      versionStamp: stampOf(1),
+      atlas: atlas,
+      features: [
+        createMapPointSpriteFeature(
+          id: 'hypocenter:event-1',
+          longitude: 139.7,
+          latitude: 35.7,
+          spriteRegionId: 'hypocenter',
+          sizeScale: createMapZoomLinearRange(
+            startZoom: 3,
+            startValue: 0.5,
+            endZoom: 20,
+            endValue: 1.5,
+          ),
+          opacity: createMapZoomStep(
+            thresholdZoom: 5,
+            belowValue: 0,
+            atOrAboveValue: 1,
+          ),
+          priority: 1,
+        ),
+      ],
+      maxPolicyBatches: 1,
+    ).single;
+  }
 
   MapSceneMeshLayerSubmission meshLayer({
     required MapSceneComponentKey componentKey,
@@ -756,6 +876,7 @@ void main() {
                   '${layer.batch.compatibility.batchKey.materialKey}:'
                       '$packetIndex',
                 FlutterSceneObservationNodePlan() => 'observation',
+                FlutterSceneSpriteNodePlan() => 'sprite',
               },
             ),
         ],
@@ -870,7 +991,7 @@ void main() {
     expect(adapter.liveGeometryCount, 0);
   });
 
-  test('rejects an unimplemented point sprite kind with a typed failure', () {
+  test('rejects a wrong point sprite batch type with a typed failure', () {
     final spritePhase = mapSceneRenderPhasePolicy.rankOf(
       mapSceneSpritePhaseId,
     );
@@ -900,10 +1021,129 @@ void main() {
         isA<FlutterSceneLayerPreflightFailure>().having(
           (error) => error.reason,
           'reason',
-          FlutterSceneLayerPreflightFailureReason.unsupportedInstanceKind,
+          FlutterSceneLayerPreflightFailureReason.instanceBatchTypeMismatch,
         ),
       ),
     );
+  });
+
+  test('prepares and commits sprite nodes only after Scene replacement', () {
+    final batch = spriteBatch(spriteFrame: frame);
+    final value = MapSceneFrameSubmission(
+      frame: frame,
+      layers: [
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneHypocenterSpriteComponentKey,
+          overlayVersion: batch.versionStamp,
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          batch: batch,
+        ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 1),
+    );
+    final sceneGraph = _RecordingSceneGraph()..add(scene.Node());
+    final sprites = _TestSpriteFrameResources();
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) => null,
+      maxFramesInFlight: 2,
+      spriteResources: sprites,
+    );
+
+    adapter.submitFrame(submission: value);
+
+    expect(sceneGraph.children, hasLength(1));
+    expect(sceneGraph.children.single.translucentSortPriority, 0);
+    expect(sprites.prepared?.commitCount, 1);
+    expect(sprites.prepared?.rollbackCount, 0);
+  });
+
+  test('sprite prepare failure leaves the current Scene untouched', () {
+    final batch = spriteBatch(spriteFrame: frame);
+    final value = MapSceneFrameSubmission(
+      frame: frame,
+      layers: [
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneHypocenterSpriteComponentKey,
+          overlayVersion: batch.versionStamp,
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          batch: batch,
+        ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 1),
+    );
+    final existing = scene.Node();
+    final sceneGraph = _RecordingSceneGraph()..add(existing);
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) => null,
+      maxFramesInFlight: 2,
+      spriteResources: _TestSpriteFrameResources(
+        prepareError: StateError('sprite prepare'),
+      ),
+    );
+
+    expect(
+      () => adapter.submitFrame(submission: value),
+      throwsA(isA<StateError>()),
+    );
+    expect(sceneGraph.children, [same(existing)]);
+  });
+
+  test('frame-submit probe rolls back once then allows the next frame', () {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final batch = spriteBatch(spriteFrame: frame);
+    final value = MapSceneFrameSubmission(
+      frame: frame,
+      layers: [
+        MapSceneInstanceLayerSubmission(
+          logicalSourceKey: mapSceneEarthquakeHistorySourceKey,
+          componentKey: mapSceneHypocenterSpriteComponentKey,
+          overlayVersion: batch.versionStamp,
+          orderWithinPhase: 0,
+          kind: MapSceneInstanceLayerKind.pointSprite,
+          batch: batch,
+        ),
+      ],
+      limits: MapSceneFrameLimits(maxNodeCount: 1),
+    );
+    final existing = scene.Node();
+    final sceneGraph = _RecordingSceneGraph()..add(existing);
+    final sprites = _TestSpriteFrameResources();
+    final adapter = FlutterSceneMapAdapter(
+      sceneGraph: sceneGraph,
+      materialFor: (_) => null,
+      maxFramesInFlight: 2,
+      spriteResources: sprites,
+      gpuProbeRuntime: MapGpuProbeRuntime(
+        configuration: const MapGpuProbeConfiguration(
+          faultPoint: MapGpuFaultPoint.frameSubmit,
+          atlasFixture: MapSpriteAtlasProbeFixture.production,
+        ),
+      ),
+    );
+
+    expect(
+      () => adapter.submitFrame(submission: value),
+      throwsA(
+        isA<MapGpuProbeFault>().having(
+          (fault) => fault.point,
+          'point',
+          MapGpuFaultPoint.frameSubmit,
+        ),
+      ),
+    );
+    expect(sceneGraph.children, [same(existing)]);
+    expect(sprites.preparedFrames.first.rollbackCount, 1);
+    adapter.submitFrame(submission: value);
+    expect(sprites.preparedFrames.last.commitCount, 1);
+    expect(sceneGraph.children, hasLength(1));
   });
 
   test('base builder uses the same phase policy as earthquake fill', () {

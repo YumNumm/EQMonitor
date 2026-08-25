@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor/core/util/map/app_map_clock.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/latest_earthquake_overlay_provider.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_gpu_probe_panel.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_source_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_overlay_banner.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -15,8 +16,67 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// が実際のarchiveの`PmTilesV3Header`から読んだ値をそのまま使う。固定値を
 /// 転記しない理由は`eqmonitor_map_debug_source_provider.dart`の
 /// `_readHeader`のdoc comment参照。
-class EqmonitorMapDebugPage extends HookConsumerWidget {
+class EqmonitorMapDebugPage extends StatelessWidget {
   const new({super.key});
+
+  @override
+  Widget build(BuildContext context) => switch (mapGpuProbeCompileTimeEnabled) {
+    true => const _EqmonitorMapGpuProbeDebugPage(),
+    false => const _EqmonitorMapDebugContent(probeBindings: null),
+  };
+}
+
+class _EqmonitorMapGpuProbeDebugPage extends HookWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final atlasFixture = useState(MapSpriteAtlasProbeFixture.production);
+    final faultPoint = useState<MapGpuFaultPoint?>(null);
+    final counterSnapshot = useState<MapGpuResourceCounterSnapshot?>(null);
+    final probeController = useMemoized(MapGpuProbeController.new, const []);
+    final configuration = useMemoized(
+      () => MapGpuProbeConfiguration(
+        faultPoint: faultPoint.value,
+        atlasFixture: atlasFixture.value,
+      ),
+      [faultPoint.value, atlasFixture.value],
+    );
+    final counterCallbackGuard = useMemoized(
+      () => EqmonitorMapDebugGpuCounterCallbackGuard(
+        isMounted: () => context.mounted,
+        onSnapshot: (snapshot) => counterSnapshot.value = snapshot,
+      ),
+      const [],
+    );
+    return _EqmonitorMapDebugContent(
+      probeBindings: _EqmonitorMapGpuProbeBindings(
+        configuration: configuration,
+        controller: probeController,
+        counterSnapshot: counterSnapshot.value,
+        onCounterChanged: counterCallbackGuard.publish,
+        onAtlasFixtureChanged: (value) => atlasFixture.value = value,
+        onFaultPointChanged: (value) => faultPoint.value = value,
+        onInvalidateRendererContextGeneration: () {
+          final didInvalidate = probeController
+              .invalidateRendererContextGeneration();
+          final message = switch (didInvalidate) {
+            true => 'Renderer generation を更新しました',
+            false => '地図の初期化完了後に再試行してください',
+          };
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(message)));
+        },
+      ),
+    );
+  }
+}
+
+class _EqmonitorMapDebugContent extends HookConsumerWidget {
+  const new({required this.probeBindings});
+
+  final _EqmonitorMapGpuProbeBindings? probeBindings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,38 +110,91 @@ class EqmonitorMapDebugPage extends HookConsumerWidget {
         );
     return Scaffold(
       appBar: AppBar(title: const Text('EQMonitor Map (Flutter Scene)')),
-      body: source.when(
-        data: (result) => Stack(
-          fit: StackFit.expand,
-          children: [
-            BaseMapView(
-              source: result.source,
-              initialCamera: EqmonitorMapDebugConfiguration.initialCamera,
-              clock: mapClock,
-              cameraController: mapSession.cameraController,
-              limits: EqmonitorMapDebugConfiguration.limitsFor(
-                minZoom: result.minZoom,
-                maxZoom: result.maxZoom,
-              ),
-              earthquakeOverlay: overlay,
-              onEarthquakeOverlayCoverageChanged: onCoverageChanged,
-            ),
-            Positioned(
-              top: 12,
-              left: 12,
-              right: 12,
-              child: SafeArea(
-                child: EqmonitorMapOverlayBanner(
-                  presentation: presentation,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          source.when(
+            data: (result) => Stack(
+              fit: StackFit.expand,
+              children: [
+                BaseMapView(
+                  source: result.source,
+                  initialCamera: EqmonitorMapDebugConfiguration.initialCamera,
+                  clock: mapClock,
+                  cameraController: mapSession.cameraController,
+                  limits: EqmonitorMapDebugConfiguration.limitsFor(
+                    minZoom: result.minZoom,
+                    maxZoom: result.maxZoom,
+                  ),
+                  earthquakeOverlay: overlay,
+                  onEarthquakeOverlayCoverageChanged: onCoverageChanged,
+                  gpuProbeConfiguration: probeBindings?.configuration,
+                  onGpuResourceCounterChanged: probeBindings?.onCounterChanged,
+                  gpuProbeController: probeBindings?.controller,
                 ),
-              ),
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                  child: SafeArea(
+                    child: EqmonitorMapOverlayBanner(
+                      presentation: presentation,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const _EqmonitorMapDebugSourceError(),
+            loading: () => const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+            error: (error, stackTrace) => const _EqmonitorMapDebugSourceError(),
+          ),
+          if (probeBindings case final bindings?)
+            EqmonitorMapGpuProbePanel(
+              atlasFixture: bindings.configuration.atlasFixture,
+              faultPoint: bindings.configuration.faultPoint,
+              counterSnapshot: bindings.counterSnapshot,
+              onAtlasFixtureChanged: bindings.onAtlasFixtureChanged,
+              onFaultPointChanged: bindings.onFaultPointChanged,
+              onInvalidateRendererContextGeneration:
+                  bindings.onInvalidateRendererContextGeneration,
+            ),
+        ],
       ),
     );
+  }
+}
+
+final class _EqmonitorMapGpuProbeBindings {
+  const new({
+    required this.configuration,
+    required this.controller,
+    required this.counterSnapshot,
+    required this.onCounterChanged,
+    required this.onAtlasFixtureChanged,
+    required this.onFaultPointChanged,
+    required this.onInvalidateRendererContextGeneration,
+  });
+
+  final MapGpuProbeConfiguration configuration;
+  final MapGpuProbeController controller;
+  final MapGpuResourceCounterSnapshot? counterSnapshot;
+  final ValueChanged<MapGpuResourceCounterSnapshot> onCounterChanged;
+  final ValueChanged<MapSpriteAtlasProbeFixture> onAtlasFixtureChanged;
+  final ValueChanged<MapGpuFaultPoint?> onFaultPointChanged;
+  final VoidCallback onInvalidateRendererContextGeneration;
+}
+
+final class EqmonitorMapDebugGpuCounterCallbackGuard {
+  const new({required this.isMounted, required this.onSnapshot});
+
+  final bool Function() isMounted;
+  final ValueChanged<MapGpuResourceCounterSnapshot> onSnapshot;
+
+  void publish(MapGpuResourceCounterSnapshot snapshot) {
+    if (isMounted()) {
+      onSnapshot(snapshot);
+    }
   }
 }
 
@@ -155,6 +268,11 @@ final class EqmonitorMapDebugConfiguration {
     // 余裕を持たせた値。GPU resourceの参照を落とすのは、可視tileから外れて
     // この frame 数ぶん経ってからになる。
     maxFramesInFlight: 3,
+    spriteRendererLimits: const MapSpriteRendererLimits(
+      maxActiveAtlases: 1,
+      maxTopologyVariants: 1,
+      maxPolicyBatches: 1,
+    ),
     maxSceneNodeCount: 512,
   );
 }

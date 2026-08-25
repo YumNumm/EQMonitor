@@ -419,6 +419,33 @@ void main() {
     },
   );
 
+  test('frame owner publishes sprite reuse only after commit', () {
+    final frames = BaseMapOverlayFrameOwner();
+    final value = snapshot(atlas: spriteAtlas(), sprites: [sprite()]);
+    final candidate = build(frame: frameAt(6), requested: value);
+    final fallback = build(
+      frame: frameAt(6),
+      current: value,
+      requested: null,
+    );
+
+    expect(frames.previousSpriteBatches, isEmpty);
+    final fallbackSubmission = fallback.submission;
+    if (fallbackSubmission == null) {
+      fail('Expected a base-only fallback submission.');
+    }
+    frames.commit(
+      candidate: candidate,
+      baseOnlySubmission: fallbackSubmission,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+
+    expect(frames.previousSpriteBatches, candidate.spriteBatchesForReuse);
+  });
+
   test('null snapshot atomically hides the previous overlay', () {
     final result = build(
       frame: frameAt(6),
@@ -826,6 +853,7 @@ void main() {
       expect(submitted, hasLength(1));
       expect(frames.overlay, isNull);
       expect(frames.previousObservationBatch, isNull);
+      expect(frames.previousSpriteBatches, isEmpty);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
         EarthquakeOverlayCoverageSnapshot(
@@ -956,6 +984,7 @@ void main() {
       expect(sceneGraph.children, isEmpty);
       expect(frames.overlay, isNull);
       expect(frames.previousObservationBatch, isNull);
+      expect(frames.previousSpriteBatches, isEmpty);
       expect(frames.coverage, const EarthquakeOverlayCoverage.hidden());
       expect(coverages, [
         EarthquakeOverlayCoverageSnapshot(

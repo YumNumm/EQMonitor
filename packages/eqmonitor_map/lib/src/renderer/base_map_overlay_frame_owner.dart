@@ -3,6 +3,7 @@ import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage_owner.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
+import 'package:eqmonitor_map/src/renderer/map_sprite_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:flutter/foundation.dart';
 
@@ -52,10 +53,13 @@ final class BaseMapOverlayFrameOwner {
   final EarthquakeOverlayCoverageOwner _coverage;
   EarthquakeMapOverlaySnapshot? _overlay;
   ObservationPointBatch? _previousObservationBatch;
+  List<MapPointSpriteInstanceBatch> _previousSpriteBatches = const [];
 
   EarthquakeMapOverlaySnapshot? get overlay => _overlay;
   ObservationPointBatch? get previousObservationBatch =>
       _previousObservationBatch;
+  List<MapPointSpriteInstanceBatch> get previousSpriteBatches =>
+      _previousSpriteBatches;
   EarthquakeOverlayCoverage get coverage => _coverage.coverage;
   EarthquakeOverlayCoverageSnapshot get coverageSnapshot => _coverage.snapshot;
 
@@ -98,6 +102,7 @@ final class BaseMapOverlayFrameOwner {
       failClosedResources();
       _overlay = null;
       _previousObservationBatch = null;
+      _previousSpriteBatches = const [];
       _coverage.hide(overlay: null);
       return BaseMapOverlayFrameCommitFailed(
         error: error,
@@ -107,6 +112,7 @@ final class BaseMapOverlayFrameOwner {
     }
     _overlay = candidate.overlay;
     _previousObservationBatch = candidate.observationBatchForReuse;
+    _previousSpriteBatches = candidate.spriteBatchesForReuse;
     _coverage.publish(overlay: _overlay, coverage: candidate.coverage);
     return const BaseMapOverlayFrameCommitSucceeded();
   }

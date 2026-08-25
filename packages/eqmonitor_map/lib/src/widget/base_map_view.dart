@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
 import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
@@ -111,6 +113,9 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
     required int maxFramesInFlight,
 
+    /// Sprite atlas/topology/policy batchesのcaller-owned上限。
+    required MapSpriteRendererLimits spriteRendererLimits,
+
     /// 一つのScene frameへ送るmesh packet / instance batch node総数の上限。
     required int maxSceneNodeCount,
   }) = _MapBaseLayerLimits;
@@ -134,6 +139,9 @@ class BaseMapView extends HookWidget {
     this.cameraController,
     this.earthquakeOverlay,
     this.onEarthquakeOverlayCoverageChanged,
+    this.gpuProbeConfiguration,
+    this.onGpuResourceCounterChanged,
+    this.gpuProbeController,
     super.key,
   });
 
@@ -169,6 +177,17 @@ class BaseMapView extends HookWidget {
   // ignore: diagnostic_describe_all_properties
   onEarthquakeOverlayCoverageChanged;
 
+  // Debug map probe configuration is not useful in Flutter Inspector output.
+  // ignore: diagnostic_describe_all_properties
+  final MapGpuProbeConfiguration? gpuProbeConfiguration;
+  final ValueChanged<MapGpuResourceCounterSnapshot>?
+  // Resource counter callback is caller-owned debug instrumentation.
+  // ignore: diagnostic_describe_all_properties
+  onGpuResourceCounterChanged;
+  // Debug map owns and disposes the controller lifecycle.
+  // ignore: diagnostic_describe_all_properties
+  final MapGpuProbeController? gpuProbeController;
+
   @override
   Widget build(BuildContext context) {
     final controller = useMemoized(
@@ -180,11 +199,23 @@ class BaseMapView extends HookWidget {
         externalCameraController: cameraController,
         earthquakeOverlay: earthquakeOverlay,
         onEarthquakeOverlayCoverageChanged: onEarthquakeOverlayCoverageChanged,
+        gpuProbeConfiguration: gpuProbeConfiguration,
+        onGpuResourceCounterChanged: onGpuResourceCounterChanged,
+        gpuProbeController: gpuProbeController,
       ),
-      [source, limits, clock, cameraController],
+      [
+        source,
+        limits,
+        clock,
+        cameraController,
+        gpuProbeConfiguration,
+        onGpuResourceCounterChanged,
+        gpuProbeController,
+      ],
     );
     useEffect(() {
       controller.attachCameraController();
+      controller.attachGpuProbeController();
       return controller.dispose;
     }, [controller]);
     useListenable(controller);
@@ -333,7 +364,8 @@ class _BaseMapDebugHud extends StatelessWidget {
 
 /// gesture・decode・Scene node管理を持つ内部controller。[BaseMapView]の外へは
 /// 公開しない(brief要求)。
-class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
+class _BaseMapController extends ChangeNotifier
+    implements MapViewCameraHost, MapGpuProbeHost {
   new({
     required this.source,
     required this.limits,
@@ -343,6 +375,9 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
     required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
     required ValueChanged<EarthquakeOverlayCoverageSnapshot>?
     onEarthquakeOverlayCoverageChanged,
+    required this.gpuProbeConfiguration,
+    required this.onGpuResourceCounterChanged,
+    required this.gpuProbeController,
   }) : _cameraOwner = MapCameraCandidateOwner(initialCamera: initialCamera),
        _inputOverlay = earthquakeOverlay,
        _acceptedOverlay = earthquakeOverlay,
@@ -391,6 +426,22 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
   /// #1595)が、frame snapshotの契約を最初から満たしておく。
   final MapClock mapClock;
   final MapViewCameraController? externalCameraController;
+  final MapGpuProbeConfiguration? gpuProbeConfiguration;
+  final ValueChanged<MapGpuResourceCounterSnapshot>?
+  onGpuResourceCounterChanged;
+  final MapGpuProbeController? gpuProbeController;
+  late final MapGpuProbeRuntime? _gpuProbeRuntime =
+      switch (gpuProbeConfiguration) {
+        final configuration? when mapGpuProbeCompileTimeEnabled =>
+          MapGpuProbeRuntime(configuration: configuration),
+        _ => null,
+      };
+  late final MapGpuResourceCounterCallbackGate? _gpuCounterCallbackGate =
+      switch (onGpuResourceCounterChanged) {
+        final callback? when mapGpuProbeCompileTimeEnabled =>
+          MapGpuResourceCounterCallbackGate(callback: callback),
+        _ => null,
+      };
   static const _cameraBoundsFitter = MapCameraBoundsFitter();
 
   // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
@@ -475,6 +526,31 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
         _initError = StateError('camera controller is disposed');
         notifyListeners();
     }
+  }
+
+  void attachGpuProbeController() {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final controller = gpuProbeController;
+    if (controller == null) {
+      return;
+    }
+    if (!controller.attach(host: this)) {
+      _initError = StateError('GPU probe controller is already attached');
+      notifyListeners();
+    }
+  }
+
+  @override
+  void invalidateRendererContextGeneration() {
+    if (_isDisposed) {
+      return;
+    }
+    _adapter?.retireAllGpuResources();
+    _contextGeneration++;
+    _refresh();
+    notifyListeners();
   }
 
   @override
@@ -574,6 +650,16 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
       }
       final observationMaterial =
           await loadEarthquakeObservationMaterialBinding();
+      final counterCallbackGate = _gpuCounterCallbackGate;
+      final spriteResources = await loadOptionalFlutterSceneSpriteResources(
+        load: () => loadEarthquakeSpriteSceneResources(
+          limits: limits.spriteRendererLimits,
+          maxFramesInFlight: limits.maxFramesInFlight,
+          waitForGpuCompletion: scene.waitForPendingGpuSubmissions,
+          probeRuntime: _gpuProbeRuntime,
+          onCounterSnapshot: counterCallbackGate?.publish,
+        ),
+      );
       prepareInitialOverlay:
       while (true) {
         final candidate = _inputOverlay;
@@ -634,6 +720,8 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
               : FlutterScenePreprocessedMaterialBinding(material);
         },
         observationMaterial: observationMaterial,
+        spriteResources: spriteResources,
+        gpuProbeRuntime: _gpuProbeRuntime,
         maxFramesInFlight: limits.maxFramesInFlight,
       );
       _isReady = true;
@@ -922,6 +1010,7 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
       currentOverlay: _overlayFrameOwner.overlay,
       requestedOverlay: _requestedOverlay,
       previousObservationBatch: _overlayFrameOwner.previousObservationBatch,
+      previousSpriteBatches: _overlayFrameOwner.previousSpriteBatches,
       requestedCover: cover,
       tileSourceInstanceId: source.cacheIdentity,
       tileCache: _cache,
@@ -1058,7 +1147,9 @@ class _BaseMapController extends ChangeNotifier implements MapViewCameraHost {
       return;
     }
     _isDisposed = true;
+    _gpuCounterCallbackGate?.dispose();
     externalCameraController?.detach(host: this);
+    gpuProbeController?.detach(host: this);
     _cache.dispose();
     _packedMeshCache.clear();
     _earthquakePackedMeshCache.clear();
