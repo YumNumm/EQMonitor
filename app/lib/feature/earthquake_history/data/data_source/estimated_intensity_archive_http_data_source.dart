@@ -89,16 +89,42 @@ final class EstimatedIntensityArchiveHttpDataSource {
             : EstimatedIntensityArchiveDownloadFailure.requestFailed,
       );
     } finally {
-      await guard.close();
+      try {
+        await guard.close();
+      } catch (_) {
+        reportEstimatedIntensityArchiveDiagnostic(
+          reporter: diagnosticReporter,
+          diagnostic: .guardCloseFailed,
+        );
+      }
       if (!succeeded) {
-        operation.abort();
+        try {
+          operation.abort();
+        } catch (_) {
+          reportEstimatedIntensityArchiveDiagnostic(
+            reporter: diagnosticReporter,
+            diagnostic: .httpAbortFailed,
+          );
+        }
         if (stagingDirectory case final directory?) {
           try {
             await directory.delete(recursive: true);
-          } catch (_) {}
+          } catch (_) {
+            reportEstimatedIntensityArchiveDiagnostic(
+              reporter: diagnosticReporter,
+              diagnostic: .stagingDirectoryDeleteFailed,
+            );
+          }
         }
       }
-      operation.close();
+      try {
+        operation.close();
+      } catch (_) {
+        reportEstimatedIntensityArchiveDiagnostic(
+          reporter: diagnosticReporter,
+          diagnostic: .httpCloseFailed,
+        );
+      }
     }
   }
 }

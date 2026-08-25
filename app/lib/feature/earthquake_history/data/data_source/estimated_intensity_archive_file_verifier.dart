@@ -6,6 +6,7 @@ abstract interface class EstimatedIntensityArchiveFileVerifier {
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
     required Future<EstimatedIntensityArchiveStopReason> stopRequested,
+    required EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter,
   });
 }
 
@@ -18,6 +19,7 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
     required Future<EstimatedIntensityArchiveStopReason> stopRequested,
+    required EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter,
   }) async {
     final actualLength = await file.length();
     if (actualLength != descriptor.sizeBytes) {
@@ -34,7 +36,12 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
     if (outcome.stopped case final stopped?) {
       try {
         await digestIterator.cancel();
-      } catch (_) {}
+      } catch (_) {
+        reportEstimatedIntensityArchiveDiagnostic(
+          reporter: diagnosticReporter,
+          diagnostic: .hashStreamCancellationFailed,
+        );
+      }
       try {
         await moveNext;
       } catch (_) {}
@@ -46,7 +53,14 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
       );
     }
     final actualSha256 = digestIterator.current.toString();
-    await digestIterator.cancel();
+    try {
+      await digestIterator.cancel();
+    } catch (_) {
+      reportEstimatedIntensityArchiveDiagnostic(
+        reporter: diagnosticReporter,
+        diagnostic: .hashStreamCancellationFailed,
+      );
+    }
     if (actualSha256 != descriptor.sha256) {
       return const EstimatedIntensityArchiveDownloadRejected(
         EstimatedIntensityArchiveDownloadFailure.sha256Mismatch,
