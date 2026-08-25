@@ -82,4 +82,28 @@ void main() {
       ),
     );
   });
+
+  test('archive close失敗を型付きにしcloseを繰り返さない', () async {
+    const secretPath = '/private/archive/source.pmtiles';
+    const secretMessage = 'private failure';
+    final archive = RecordingEstimatedIntensityArchive(
+      header: validEstimatedIntensityArchiveHeader,
+      closeFailure: const FileSystemException(secretMessage, secretPath),
+    );
+    final result = await EstimatedIntensityArchiveHeaderVerifier(
+      opener: ControlledEstimatedIntensityArchiveOpener(archive: archive),
+    ).verify(download: download, limits: estimatedIntensityHeaderTestLimits);
+
+    expect(
+      result,
+      isA<EstimatedIntensityArchiveHeaderRejected>().having(
+        (value) => value.failure,
+        'failure',
+        EstimatedIntensityArchiveHeaderFailure.closeFailure,
+      ),
+    );
+    expect(result.toString(), isNot(contains(secretPath)));
+    expect(result.toString(), isNot(contains(secretMessage)));
+    expect(archive.closeCount, 1);
+  });
 }

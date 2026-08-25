@@ -39,14 +39,18 @@ final class ControlledEstimatedIntensityArchiveOpener
 
 final class RecordingEstimatedIntensityArchive extends Fake
     implements PmTilesV3Archive {
-  RecordingEstimatedIntensityArchive({required this.header});
+  new({required this.header, this.closeFailure});
 
   @override
   final PmTilesV3Header header;
+  final FileSystemException? closeFailure;
   var closeCount = 0;
 
   @override
   Future<void> close() async {
     closeCount += 1;
+    if (closeFailure case final failure?) {
+      throw failure;
+    }
   }
 }
