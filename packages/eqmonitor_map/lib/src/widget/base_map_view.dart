@@ -33,6 +33,7 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decode_failure_owner.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
+import 'package:eqmonitor_map/src/tile/earthquake_overlay_exact_tile_resolver.dart';
 import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
@@ -458,6 +459,7 @@ class _BaseMapController extends ChangeNotifier
   EarthquakeMapOverlaySnapshot? _inputOverlay;
   EarthquakeMapOverlaySnapshot? _acceptedOverlay;
   EarthquakeMapOverlaySnapshot? _requestedOverlay;
+  EarthquakeMapOverlaySnapshot? _preparingOverlay;
   EarthquakeOverlayMaterialStage? _requestedMaterialStage;
   final BaseMapOverlayFrameOwner _overlayFrameOwner;
   var _overlayRequestGeneration = 0;
@@ -625,6 +627,17 @@ class _BaseMapController extends ChangeNotifier
       .color;
 
   Future<void> initialize() async {
+    final initialOverlay = _inputOverlay;
+    if (initialOverlay != null) {
+      _preparingOverlay = initialOverlay;
+      _overlayFrameOwner.beginLoading(
+        overlay: initialOverlay,
+        diagnostic: EarthquakeOverlayCoverageDiagnostic.preparing(
+          stationCount: initialOverlay.stations.length,
+          spriteCount: initialOverlay.sprites.length,
+        ),
+      );
+    }
     try {
       await scene.Scene.initializeStaticResources();
       // materialは`styleLayerId`ごとに1つ読み込むだけで、色や半線幅は
@@ -681,10 +694,13 @@ class _BaseMapController extends ChangeNotifier
           case EarthquakeOverlayMaterialPreparationReady(:final stage):
             _requestedOverlay = candidate;
             _requestedMaterialStage = stage;
+            _preparingOverlay = null;
             break prepareInitialOverlay;
           case EarthquakeOverlayMaterialPreparationFailed(:final error):
             _requestedOverlay = null;
+            _preparingOverlay = null;
             _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+            _overlayFrameOwner.hideCandidate();
             debugPrint(
               'BaseMapView: failed to load earthquake overlay material: '
               '$error',
@@ -731,6 +747,8 @@ class _BaseMapController extends ChangeNotifier
       // 型を問わず受け止める。
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
+      _preparingOverlay = null;
+      _overlayFrameOwner.hideCandidate();
       _initError = error;
     } finally {
       if (!_isDisposed) {
@@ -768,6 +786,7 @@ class _BaseMapController extends ChangeNotifier
       _acceptedOverlay = null;
       _overlayRequestGeneration++;
       _requestedOverlay = null;
+      _preparingOverlay = null;
       _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
       _earthquakeStyleCache.clear();
       _refresh();
@@ -789,8 +808,19 @@ class _BaseMapController extends ChangeNotifier
     _inputOverlay = selected;
     _acceptedOverlay = selected;
     final requestGeneration = ++_overlayRequestGeneration;
-    _requestedOverlay = _overlayFrameOwner.overlay;
-    _requestedMaterialStage = null;
+    _requestedOverlay = null;
+    _preparingOverlay = selected;
+    _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+    _earthquakeStyleCache.clear();
+    _overlayFrameOwner.hideCandidate();
+    _overlayFrameOwner.beginLoading(
+      overlay: selected,
+      diagnostic: EarthquakeOverlayCoverageDiagnostic.preparing(
+        stationCount: selected.stations.length,
+        spriteCount: selected.sprites.length,
+      ),
+    );
+    _refresh();
     final prepared = await _earthquakeMaterialOwner.prepare(
       resources: earthquakeAreaRenderStyleResourcesForSnapshot(
         cache: _earthquakeStyleCache,
@@ -805,11 +835,14 @@ class _BaseMapController extends ChangeNotifier
     }
     switch (prepared) {
       case EarthquakeOverlayMaterialPreparationReady(:final stage):
+        _preparingOverlay = null;
         _requestedOverlay = selected;
         _requestedMaterialStage = stage;
       case EarthquakeOverlayMaterialPreparationFailed(:final error):
+        _preparingOverlay = null;
         _requestedOverlay = null;
         _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+        _overlayFrameOwner.hideCandidate();
         debugPrint(
           'BaseMapView: failed to load earthquake overlay material: $error',
         );
@@ -1016,6 +1049,18 @@ class _BaseMapController extends ChangeNotifier
       tileCache: _cache,
       packedMeshFor: _earthquakePackedMeshCache.resolve,
       styleCache: _earthquakeStyleCache,
+      missingExactTileReasonFor: (tileId) {
+        if (_decodeFailures.contains(tileId)) {
+          return EarthquakeOverlayExactTileMissReason.decodeFailure;
+        }
+        if (_knownAbsentTiles.contains(tileId)) {
+          return EarthquakeOverlayExactTileMissReason.authoritativeEmpty;
+        }
+        return EarthquakeOverlayExactTileMissReason.pending;
+      },
+      // Required codeの可視性はtile featureとの照合だけでは証明できない。
+      // 画面外style codeを未解決と推測せず、検証済み入力が追加されるまで0とする。
+      requiredCodeUnresolvedCount: 0,
       sceneFrameLimits: MapSceneFrameLimits(
         maxNodeCount: limits.maxSceneNodeCount,
       ),
@@ -1043,6 +1088,7 @@ class _BaseMapController extends ChangeNotifier
       ),
       retireAllGpuResources: adapter.retireAllGpuResources,
       failClosedResources: _earthquakeMaterialOwner.clear,
+      preparingOverlay: _preparingOverlay,
     );
     _requestedMaterialStage = null;
     if (commit is BaseMapOverlayFrameCommitFailed) {

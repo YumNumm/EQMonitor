@@ -69,6 +69,17 @@ final class BaseMapOverlayFrameOwner {
 
   void hide() => _coverage.hide(overlay: _overlay);
 
+  void hideCandidate() => _coverage.hide(overlay: null);
+
+  void beginLoading({
+    required EarthquakeMapOverlaySnapshot overlay,
+    required EarthquakeOverlayCoverageDiagnostic diagnostic,
+  }) => _coverage.publish(
+    overlay: overlay,
+    coverage: const EarthquakeOverlayCoverage.loading(),
+    diagnostic: diagnostic,
+  );
+
   BaseMapOverlayFrameCommitResult commit({
     required BaseMapOverlayFrameResult candidate,
     required MapSceneFrameSubmission baseOnlySubmission,
@@ -76,6 +87,7 @@ final class BaseMapOverlayFrameOwner {
     required SubmitBaseMapOverlayFrame submitFrame,
     required VoidCallback retireAllGpuResources,
     required VoidCallback failClosedResources,
+    EarthquakeMapOverlaySnapshot? preparingOverlay,
   }) {
     final submission = candidate.submission;
     if (submission == null) {
@@ -113,7 +125,22 @@ final class BaseMapOverlayFrameOwner {
     _overlay = candidate.overlay;
     _previousObservationBatch = candidate.observationBatchForReuse;
     _previousSpriteBatches = candidate.spriteBatchesForReuse;
-    _coverage.publish(overlay: _overlay, coverage: candidate.coverage);
+    if (preparingOverlay != null) {
+      _coverage.publish(
+        overlay: preparingOverlay,
+        coverage: const EarthquakeOverlayCoverage.loading(),
+        diagnostic: EarthquakeOverlayCoverageDiagnostic.preparing(
+          stationCount: preparingOverlay.stations.length,
+          spriteCount: preparingOverlay.sprites.length,
+        ),
+      );
+      return const BaseMapOverlayFrameCommitSucceeded();
+    }
+    _coverage.publish(
+      overlay: _overlay,
+      coverage: candidate.coverage,
+      diagnostic: candidate.diagnostic,
+    );
     return const BaseMapOverlayFrameCommitSucceeded();
   }
 }

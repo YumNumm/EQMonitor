@@ -303,6 +303,7 @@ void main() {
     int? cityExtent = 4096,
     int regionInvalidCodes = 0,
     int cityInvalidCodes = 0,
+    bool emptyCityLayer = false,
   }) => BaseMapTileGeometry(
     layers: const [],
     earthquakeAreas: EarthquakeAreaTileGeometry(
@@ -317,10 +318,12 @@ void main() {
       cities: EarthquakeAreaTileLayerGeometry(
         extent: cityExtent,
         missingOrInvalidCodeCount: cityInvalidCodes,
-        features: [
-          CodedFillGeometry(code: '13101', meshes: [mesh()]),
-          CodedFillGeometry(code: '99999', meshes: [mesh()]),
-        ],
+        features: emptyCityLayer
+            ? const []
+            : [
+                CodedFillGeometry(code: '13101', meshes: [mesh()]),
+                CodedFillGeometry(code: '99999', meshes: [mesh()]),
+              ],
       ),
     ),
   );
@@ -347,6 +350,9 @@ void main() {
     List<MapPointSpriteInstanceBatch> previousSprites = const [],
     BaseMapTileCache? cache,
     EarthquakeAreaRenderStyleCache? styleCache,
+    EarthquakeOverlayExactTileMissReason missReason =
+        EarthquakeOverlayExactTileMissReason.pending,
+    int requiredCodeUnresolvedCount = 0,
   }) {
     final baseMap = createMapRenderSubmission(frame: frame, batches: const []);
     final packed = EarthquakeAreaPackedMeshCache(maxEntries: 8);
@@ -362,6 +368,8 @@ void main() {
       tileCache: cache ?? cacheWith(geometry()),
       packedMeshFor: packed.resolve,
       styleCache: styleCache ?? EarthquakeAreaRenderStyleCache(),
+      missingExactTileReasonFor: (_) => missReason,
+      requiredCodeUnresolvedCount: requiredCodeUnresolvedCount,
       sceneFrameLimits: MapSceneFrameLimits(maxNodeCount: 64),
     );
   }
@@ -415,6 +423,8 @@ void main() {
         secondSprite.instanceGeneration,
         same(firstSprite.instanceGeneration),
       );
+      expect(first.diagnostic.stationCount, 1);
+      expect(first.diagnostic.spriteCount, 1);
       expect(secondSprite.frameUniform, isNot(same(firstSprite.frameUniform)));
     },
   );
@@ -513,16 +523,52 @@ void main() {
     expect(result.coverage, const EarthquakeOverlayCoverage.hidden());
   });
 
-  test('exact miss, source layer absence, and invalid code are incomplete', () {
+  test('pending exact tile is loading with the candidate diagnostic', () {
     final missing = build(
       frame: frameAt(6),
       requested: snapshot(),
       cache: BaseMapTileCache(maxEntries: 8, maxParentFallbackSteps: 4),
     );
+
+    expect(missing.coverage, isA<EarthquakeOverlayLoading>());
+    expect(
+      missing.diagnostic,
+      EarthquakeOverlayCoverageDiagnostic(
+        visibleCanonicalTileCount: 1,
+        pendingTileCount: 1,
+        authoritativeEmptyTileCount: 0,
+        sourceLayerAbsentTileCount: 0,
+        missingOrInvalidPropertyFeatureCount: 0,
+        decodeOrSchemaFailureTileCount: 0,
+        requiredCodeUnresolvedCount: 0,
+        stationCount: 1,
+        spriteCount: 0,
+      ),
+    );
+  });
+
+  test('distinguishes authoritative empty from invalid tile evidence', () {
+    final directoryEmpty = build(
+      frame: frameAt(6),
+      requested: snapshot(),
+      cache: BaseMapTileCache(maxEntries: 8, maxParentFallbackSteps: 4),
+      missReason: EarthquakeOverlayExactTileMissReason.authoritativeEmpty,
+    );
+    final explicitEmpty = build(
+      frame: frameAt(6),
+      requested: snapshot(),
+      cache: cacheWith(geometry(emptyCityLayer: true)),
+    );
     final noLayer = build(
       frame: frameAt(6),
       requested: snapshot(),
       cache: cacheWith(geometry(cityExtent: null)),
+    );
+    final decodeFailure = build(
+      frame: frameAt(6),
+      requested: snapshot(),
+      cache: BaseMapTileCache(maxEntries: 8, maxParentFallbackSteps: 4),
+      missReason: EarthquakeOverlayExactTileMissReason.decodeFailure,
     );
     final invalidCode = build(
       frame: frameAt(6),
@@ -530,30 +576,52 @@ void main() {
       cache: cacheWith(geometry(cityInvalidCodes: 2)),
     );
 
-    expect(
-      missing.coverage,
-      const EarthquakeOverlayCoverage.incomplete(
-        requestedTileCount: 1,
-        readyTileCount: 0,
-        missingOrInvalidCodeCount: 0,
-      ),
+    expect(directoryEmpty.coverage, isA<EarthquakeOverlayComplete>());
+    expect(directoryEmpty.diagnostic.authoritativeEmptyTileCount, 1);
+    expect(explicitEmpty.coverage, isA<EarthquakeOverlayComplete>());
+    expect(explicitEmpty.diagnostic.authoritativeEmptyTileCount, 1);
+    expect(noLayer.coverage, isA<EarthquakeOverlayIncomplete>());
+    expect(noLayer.diagnostic.sourceLayerAbsentTileCount, 1);
+    expect(decodeFailure.coverage, isA<EarthquakeOverlayIncomplete>());
+    expect(decodeFailure.diagnostic.decodeOrSchemaFailureTileCount, 1);
+    expect(invalidCode.coverage, isA<EarthquakeOverlayIncomplete>());
+    expect(invalidCode.diagnostic.missingOrInvalidPropertyFeatureCount, 2);
+  });
+
+  test('uses only explicitly supplied unresolved required code evidence', () {
+    final result = build(
+      frame: frameAt(6),
+      requested: snapshot(),
+      requiredCodeUnresolvedCount: 2,
     );
-    expect(
-      noLayer.coverage,
-      const EarthquakeOverlayCoverage.incomplete(
-        requestedTileCount: 1,
-        readyTileCount: 0,
-        missingOrInvalidCodeCount: 0,
-      ),
+
+    expect(result.coverage, isA<EarthquakeOverlayIncomplete>());
+    expect(result.diagnostic.requiredCodeUnresolvedCount, 2);
+  });
+
+  test('counts world wraps once as one visible canonical tile', () {
+    final cache = cacheWith(geometry(cityInvalidCodes: 1));
+    final canonical = cover.single.canonical;
+    final exactTiles = [
+      for (final wrap in [0, 1])
+        resolveEarthquakeOverlayExactTile(
+          requestedTile: UnwrappedTileId(wrap: wrap, canonical: canonical),
+          sourceInstanceId: 'archive-a',
+          cache: cache,
+          mode: EarthquakeAreaLayerMode.city,
+          missReason: EarthquakeOverlayExactTileMissReason.pending,
+        ),
+    ];
+
+    final diagnostic = earthquakeOverlayCoverageDiagnosticFor(
+      exactTileResults: exactTiles,
+      requiredCodeUnresolvedCount: 0,
+      stationCount: 1,
+      spriteCount: 0,
     );
-    expect(
-      invalidCode.coverage,
-      const EarthquakeOverlayCoverage.incomplete(
-        requestedTileCount: 1,
-        readyTileCount: 1,
-        missingOrInvalidCodeCount: 2,
-      ),
-    );
+
+    expect(diagnostic.visibleCanonicalTileCount, 1);
+    expect(diagnostic.missingOrInvalidPropertyFeatureCount, 1);
   });
 
   test('camera-only frames reuse station geometry and style parameters', () {
@@ -604,13 +672,33 @@ void main() {
       missingOrInvalidCodeCount: 0,
     );
 
-    owner.publish(overlay: value, coverage: incomplete);
-    owner.publish(overlay: value, coverage: incomplete);
+    final diagnostic = EarthquakeOverlayCoverageDiagnostic(
+      visibleCanonicalTileCount: 1,
+      pendingTileCount: 0,
+      authoritativeEmptyTileCount: 0,
+      sourceLayerAbsentTileCount: 1,
+      missingOrInvalidPropertyFeatureCount: 0,
+      decodeOrSchemaFailureTileCount: 0,
+      requiredCodeUnresolvedCount: 0,
+      stationCount: 1,
+      spriteCount: 0,
+    );
+    owner.publish(
+      overlay: value,
+      coverage: incomplete,
+      diagnostic: diagnostic,
+    );
+    owner.publish(
+      overlay: value,
+      coverage: incomplete,
+      diagnostic: diagnostic,
+    );
     owner.publish(
       overlay: value,
       coverage: const EarthquakeOverlayCoverage.complete(
         requestedTileCount: 1,
       ),
+      diagnostic: diagnostic,
     );
     owner.hide(overlay: value);
 
@@ -618,18 +706,70 @@ void main() {
       EarthquakeOverlayCoverageSnapshot(
         versionStamp: value.versionStamp,
         coverage: incomplete,
+        diagnostic: diagnostic,
       ),
       EarthquakeOverlayCoverageSnapshot(
         versionStamp: value.versionStamp,
         coverage: const EarthquakeOverlayCoverage.complete(
           requestedTileCount: 1,
         ),
+        diagnostic: diagnostic,
       ),
       EarthquakeOverlayCoverageSnapshot(
         versionStamp: value.versionStamp,
         coverage: const EarthquakeOverlayCoverage.hidden(),
       ),
     ]);
+  });
+
+  test('material preparation publishes candidate then failure hides it', () {
+    final values = <EarthquakeOverlayCoverageSnapshot>[];
+    final frames = BaseMapOverlayFrameOwner(onCoverageChanged: values.add);
+    final candidate = snapshot(sourceIdentity: 'event-b');
+    final diagnostic = EarthquakeOverlayCoverageDiagnostic.preparing(
+      stationCount: 1,
+      spriteCount: 0,
+    );
+
+    frames.beginLoading(overlay: candidate, diagnostic: diagnostic);
+    frames.hideCandidate();
+
+    expect(values, [
+      EarthquakeOverlayCoverageSnapshot(
+        versionStamp: candidate.versionStamp,
+        coverage: const EarthquakeOverlayCoverage.loading(),
+        diagnostic: diagnostic,
+      ),
+      const EarthquakeOverlayCoverageSnapshot.hidden(),
+    ]);
+  });
+
+  test('base-only refresh cannot overwrite candidate loading with hidden', () {
+    final values = <EarthquakeOverlayCoverageSnapshot>[];
+    final frames = BaseMapOverlayFrameOwner(onCoverageChanged: values.add);
+    final preparing = snapshot(sourceIdentity: 'event-b');
+    final baseOnly = build(frame: frameAt(6), requested: null);
+    final diagnostic = EarthquakeOverlayCoverageDiagnostic.preparing(
+      stationCount: 1,
+      spriteCount: 0,
+    );
+    frames.beginLoading(overlay: preparing, diagnostic: diagnostic);
+    values.clear();
+
+    frames.commit(
+      candidate: baseOnly,
+      baseOnlySubmission: baseOnly.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+      preparingOverlay: preparing,
+    );
+
+    expect(frames.overlay, isNull);
+    expect(frames.coverageSnapshot.versionStamp, preparing.versionStamp);
+    expect(frames.coverage, isA<EarthquakeOverlayLoading>());
+    expect(values, isEmpty);
   });
 
   test('same-source data regression publishes committed provenance', () {
@@ -670,7 +810,7 @@ void main() {
 
     expect(candidate.overlay, same(current));
     expect(values.single.versionStamp, current.versionStamp);
-    expect(values.single.coverage, isA<EarthquakeOverlayIncomplete>());
+    expect(values.single.coverage, isA<EarthquakeOverlayLoading>());
   });
 
   test('material preparation中の旧coverageは旧snapshot identityで通知する', () {
@@ -713,7 +853,7 @@ void main() {
     expect(delayedCallbackValues.single.versionStamp, eventA.versionStamp);
     expect(
       delayedCallbackValues.single.coverage,
-      isA<EarthquakeOverlayIncomplete>(),
+      isA<EarthquakeOverlayLoading>(),
     );
   });
 
@@ -861,6 +1001,7 @@ void main() {
           coverage: const EarthquakeOverlayCoverage.complete(
             requestedTileCount: 1,
           ),
+          diagnostic: first.diagnostic,
         ),
         const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
@@ -992,6 +1133,7 @@ void main() {
           coverage: const EarthquakeOverlayCoverage.complete(
             requestedTileCount: 1,
           ),
+          diagnostic: first.diagnostic,
         ),
         const EarthquakeOverlayCoverageSnapshot.hidden(),
       ]);
@@ -1046,6 +1188,7 @@ void main() {
         overlay: first.overlay,
         submission: initialSubmission,
         coverage: first.coverage,
+        diagnostic: first.diagnostic,
         observationBatchForReuse: first.observationBatchForReuse,
         spriteBatchesForReuse: first.spriteBatchesForReuse,
         shouldRetireGpuResources: false,

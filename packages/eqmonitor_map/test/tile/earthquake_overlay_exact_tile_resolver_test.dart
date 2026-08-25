@@ -58,9 +58,11 @@ void main() {
       sourceInstanceId: 'source-a',
       cache: cache,
       mode: EarthquakeAreaLayerMode.region,
+      missReason: EarthquakeOverlayExactTileMissReason.pending,
     );
 
-    expect(result, isA<EarthquakeOverlayExactTileMiss>());
+    expect(result, isA<EarthquakeOverlayExactTilePending>());
+    expect(result.canonicalTileId, requested.canonical);
   });
 
   test('uses only the exact source identity', () {
@@ -82,6 +84,7 @@ void main() {
       sourceInstanceId: 'source-a',
       cache: cache,
       mode: EarthquakeAreaLayerMode.region,
+      missReason: EarthquakeOverlayExactTileMissReason.decodeFailure,
     );
 
     expect(result, isA<EarthquakeOverlayExactTileHit>());
@@ -106,12 +109,14 @@ void main() {
       sourceInstanceId: 'source-a',
       cache: cache,
       mode: EarthquakeAreaLayerMode.region,
+      missReason: EarthquakeOverlayExactTileMissReason.pending,
     );
     final city = resolveEarthquakeOverlayExactTile(
       requestedTile: requested,
       sourceInstanceId: 'source-a',
       cache: cache,
       mode: EarthquakeAreaLayerMode.city,
+      missReason: EarthquakeOverlayExactTileMissReason.pending,
     );
 
     expect(region, isA<EarthquakeOverlayExactTileHit>());
@@ -136,6 +141,7 @@ void main() {
       sourceInstanceId: 'source-a',
       cache: cache,
       mode: EarthquakeAreaLayerMode.city,
+      missReason: EarthquakeOverlayExactTileMissReason.pending,
     );
 
     expect(result, isA<EarthquakeOverlayExactTileHit>());
@@ -143,5 +149,30 @@ void main() {
       (result as EarthquakeOverlayExactTileHit).areaGeometry.extent,
       isNull,
     );
+  });
+
+  test('distinguishes directory absence and decode failure', () {
+    const requested = UnwrappedTileId(
+      wrap: 0,
+      canonical: CanonicalTileId(z: 7, x: 24, y: 46),
+    );
+
+    final absent = resolveEarthquakeOverlayExactTile(
+      requestedTile: requested,
+      sourceInstanceId: 'source-a',
+      cache: cache,
+      mode: EarthquakeAreaLayerMode.city,
+      missReason: EarthquakeOverlayExactTileMissReason.authoritativeEmpty,
+    );
+    final failure = resolveEarthquakeOverlayExactTile(
+      requestedTile: requested,
+      sourceInstanceId: 'source-a',
+      cache: cache,
+      mode: EarthquakeAreaLayerMode.city,
+      missReason: EarthquakeOverlayExactTileMissReason.decodeFailure,
+    );
+
+    expect(absent, isA<EarthquakeOverlayExactTileAuthoritativeEmpty>());
+    expect(failure, isA<EarthquakeOverlayExactTileDecodeFailure>());
   });
 }
