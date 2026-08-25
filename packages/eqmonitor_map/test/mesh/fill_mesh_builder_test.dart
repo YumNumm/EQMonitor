@@ -398,6 +398,18 @@ void main() {
       );
     });
 
+    test('allows an exterior fully contained by another polygon hole', () {
+      final outer = _ring([(0, 0), (30, 0), (30, 30), (0, 30)]);
+      final hole = _ring([(5, 5), (5, 25), (25, 25), (25, 5)]);
+      final island = _ring([(10, 10), (20, 10), (20, 20), (10, 20)]);
+
+      final mesh = _builder().build([
+        _polygonFeature([outer, hole, island]),
+      ]).single;
+
+      expect(mesh.vertexCount, 12);
+      expect(_totalTriangleArea(mesh), closeTo(600, 1e-9));
+    });
   });
 
   group('segment splitting at the Uint16 index boundary', () {

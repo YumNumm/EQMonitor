@@ -14,8 +14,11 @@
 - Y範囲が重なる場合だけ整数orientationで接触・交差・重複を判定する。
   Int64の積差が安全な範囲は通常の整数演算を使い、それを外れる座標だけ
   `BigInt`で符号を正確に求める。
+- winding分類の符号付き面積は64bit整数で積算し、累積が範囲を外れる場合
+  だけ`BigInt`へ切り替える。
 - 境界交差がなくても、外形外の穴、穴同士の包含、外形同士の包含は
-  `FillMeshInvalidTopologyException`として拒否する。
+  `FillMeshInvalidTopologyException`として拒否する。ただし、別polygonの
+  外形がhole内へ完全に収まる島は有効とする。
 - `maxIntersectionChecks`は、境界交差候補と包含判定を合計し、tileごとに
   生成する1つの`FillMeshBuilder`の全`build`呼び出しで共有する。
 - 上限超過は`FillMeshLimitExceededException`、交差は

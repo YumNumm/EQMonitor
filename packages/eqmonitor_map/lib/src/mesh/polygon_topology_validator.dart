@@ -6,6 +6,8 @@ import 'package:eqmonitor_map/src/mesh/polygon_orientation.dart';
 typedef PolygonRings = ({Int32List exterior, List<Int32List> holes});
 
 /// 交差しないring間の包含関係がPolygon topologyとして正しいか検証する。
+/// 全ring境界の交差・接触を先に拒否しているため、代表点がring内なら対象ring
+/// 全体がそのring内にある。この前提により辺同士の再比較をせず包含を判定する。
 final class PolygonTopologyValidator {
   const new();
 
@@ -30,8 +32,8 @@ final class PolygonTopologyValidator {
       }
       _rejectNestedRings(rings: polygon.holes, counter: counter);
     }
-    _rejectNestedRings(
-      rings: [for (final polygon in polygons) polygon.exterior],
+    _rejectInvalidExteriorNesting(
+      polygons: polygons,
       counter: counter,
     );
     return counter.used;
@@ -57,6 +59,56 @@ final class _TopologyCheckCounter {
       );
     }
   }
+}
+
+void _rejectInvalidExteriorNesting({
+  required List<PolygonRings> polygons,
+  required _TopologyCheckCounter counter,
+}) {
+  for (var left = 0; left < polygons.length; left++) {
+    for (var right = left + 1; right < polygons.length; right++) {
+      _rejectExteriorInsideFill(
+        container: polygons[left],
+        nested: polygons[right].exterior,
+        counter: counter,
+      );
+      _rejectExteriorInsideFill(
+        container: polygons[right],
+        nested: polygons[left].exterior,
+        counter: counter,
+      );
+    }
+  }
+}
+
+void _rejectExteriorInsideFill({
+  required PolygonRings container,
+  required Int32List nested,
+  required _TopologyCheckCounter counter,
+}) {
+  final location = _locatePoint(
+    ring: container.exterior,
+    x: nested.first,
+    y: nested[1],
+    counter: counter,
+  );
+  if (location == _PointRingLocation.outside) {
+    return;
+  }
+  for (final hole in container.holes) {
+    if (_locatePoint(
+          ring: hole,
+          x: nested.first,
+          y: nested[1],
+          counter: counter,
+        ) ==
+        _PointRingLocation.inside) {
+      return;
+    }
+  }
+  throw const FillMeshBuildException.invalidTopology(
+    reason: 'An exterior must not be nested directly inside filled area.',
+  );
 }
 
 void _rejectNestedRings({
