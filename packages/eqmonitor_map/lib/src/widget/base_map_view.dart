@@ -23,6 +23,7 @@ import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dar
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decode_failure_owner.dart';
@@ -105,6 +106,9 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// 落とすと、まだ in-flight の frame が参照している最中に GC 対象へ
     /// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
     required int maxFramesInFlight,
+
+    /// 一つのScene frameへ送るmesh packet / instance batch node総数の上限。
+    required int maxSceneNodeCount,
   }) = _MapBaseLayerLimits;
 }
 
@@ -770,6 +774,9 @@ class _BaseMapController extends ChangeNotifier {
       tileCache: _cache,
       packedMeshFor: _earthquakePackedMeshCache.resolve,
       styleCache: _earthquakeStyleCache,
+      sceneFrameLimits: MapSceneFrameLimits(
+        maxNodeCount: limits.maxSceneNodeCount,
+      ),
     );
     if (result.shouldRetireGpuResources) {
       adapter.retireAllGpuResources();
@@ -784,6 +791,9 @@ class _BaseMapController extends ChangeNotifier {
       baseOnlySubmission: buildBaseMapOnlyFrameSubmission(
         frame: frame,
         baseMap: baseMap,
+        sceneFrameLimits: MapSceneFrameLimits(
+          maxNodeCount: limits.maxSceneNodeCount,
+        ),
       ),
       resources: _requestedMaterialStage,
       submitFrame: (submission) => adapter.submitFrame(

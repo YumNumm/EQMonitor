@@ -263,9 +263,9 @@ void main() {
       instanceData: callerInstances,
       instanceCount: template.instanceCount,
       frameUniform: callerUniform,
+      batchKey: template.batchKey,
       phasePolicyVersion: template.phasePolicyVersion,
       phase: template.phase,
-      translucentSortPriority: template.translucentSortPriority,
     );
 
     callerInstances[0] = 99;

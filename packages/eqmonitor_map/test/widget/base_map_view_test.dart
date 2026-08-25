@@ -84,6 +84,7 @@ void main() {
         maxParentFallbackSteps: 4,
         maxInFlightDecodes: 2,
         maxFramesInFlight: 3,
+        maxSceneNodeCount: 32,
       ),
       earthquakeOverlay: overlay,
       onEarthquakeOverlayCoverageChanged: callback,

@@ -4,6 +4,7 @@ import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 
@@ -49,7 +50,7 @@ ObservationPointBatch? buildObservationPointBatch({
     projection: projection,
   );
   final phase = mapSceneRenderPhasePolicy.rankOf(
-    mapSceneObservationPointPhaseId,
+    mapSceneLivePointPhaseId,
   );
   return createObservationPointBatch(
     frame: frame,
@@ -57,9 +58,9 @@ ObservationPointBatch? buildObservationPointBatch({
     instanceData: instanceData,
     instanceCount: snapshot.stations.length,
     frameUniform: frameUniform,
+    batchKey: mapSceneObservationBatchKey,
     phasePolicyVersion: mapSceneRenderPhasePolicy.version,
     phase: phase,
-    translucentSortPriority: mapSceneTranslucentSortPriorityFor(phase: phase),
     stationSnapshotIdentity: snapshot.stations,
   );
 }

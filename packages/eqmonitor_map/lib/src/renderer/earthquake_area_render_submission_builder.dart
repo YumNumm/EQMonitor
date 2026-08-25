@@ -59,9 +59,7 @@ MapRenderSubmission buildEarthquakeAreaRenderSubmission({
       : EarthquakeAreaLayerMode.city;
   final styles = regionMode ? snapshot.regionStyles : snapshot.cityStyles;
   final phase = mapSceneRenderPhasePolicy.rankOf(
-    regionMode
-        ? mapSceneEarthquakeRegionPhaseId
-        : mapSceneEarthquakeCityPhaseId,
+    mapSceneOverlayHazardFillPhaseId,
   );
   final packets = buildEarthquakeAreaRenderPackets(
     frame: frame,

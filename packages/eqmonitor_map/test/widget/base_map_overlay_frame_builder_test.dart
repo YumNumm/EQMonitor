@@ -6,6 +6,7 @@ import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owne
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
@@ -93,12 +94,32 @@ final class _RecordingSceneGraph with scene.SceneGraph {
 }
 
 ObservationPointBatch _requireObservationPointBatch(
-  MapSceneObservationBatch? batch,
+  MapSceneFrameSubmission? submission,
 ) {
+  final batch = submission?.layers
+      .whereType<MapSceneInstanceLayerSubmission>()
+      .where(
+        (layer) => layer.kind == MapSceneInstanceLayerKind.observationPoint,
+      )
+      .map((layer) => layer.batch)
+      .firstOrNull;
   if (batch is! ObservationPointBatch) {
     fail('Expected an ObservationPointBatch.');
   }
   return batch;
+}
+
+MapRenderBatch _requireEarthquakeFillBatch(
+  MapSceneFrameSubmission? submission,
+) {
+  final layer = submission?.layers
+      .whereType<MapSceneMeshLayerSubmission>()
+      .where((layer) => layer.kind == MapSceneMeshLayerKind.earthquakeAreaFill)
+      .firstOrNull;
+  if (layer == null) {
+    fail('Expected an earthquake Fill batch.');
+  }
+  return layer.batch;
 }
 
 scene.StaticInstanceGeometry _requireStaticInstanceGeometry(
@@ -278,6 +299,7 @@ void main() {
       tileCache: cache ?? cacheWith(geometry()),
       packedMeshFor: packed.resolve,
       styleCache: styleCache ?? EarthquakeAreaRenderStyleCache(),
+      sceneFrameLimits: MapSceneFrameLimits(maxNodeCount: 64),
     );
   }
 
@@ -285,8 +307,10 @@ void main() {
     final result = build(frame: frameAt(5.999), requested: snapshot());
 
     expect(result.submission, isNotNull);
-    expect(result.submission?.earthquakeFill.batches, hasLength(1));
-    expect(result.submission?.observationBatch, isNull);
+    expect(
+      result.submission?.layers.map((layer) => layer.componentKey),
+      [mapSceneRegionFillComponentKey],
+    );
     expect(
       result.coverage,
       const EarthquakeOverlayCoverage.complete(requestedTileCount: 1),
@@ -296,8 +320,10 @@ void main() {
   test('zoom 6 submits city Fill and one station batch', () {
     final result = build(frame: frameAt(6), requested: snapshot());
 
-    expect(result.submission?.earthquakeFill.batches, hasLength(1));
-    expect(result.submission?.observationBatch, isA<ObservationPointBatch>());
+    expect(
+      result.submission?.layers.map((layer) => layer.componentKey),
+      [mapSceneCityFillComponentKey, mapSceneObservationPointComponentKey],
+    );
   });
 
   test('null snapshot atomically hides the previous overlay', () {
@@ -308,8 +334,7 @@ void main() {
     );
 
     expect(result.overlay, isNull);
-    expect(result.submission?.earthquakeFill.batches, isEmpty);
-    expect(result.submission?.observationBatch, isNull);
+    expect(result.submission?.layers, isEmpty);
     expect(result.coverage, const EarthquakeOverlayCoverage.hidden());
   });
 
@@ -327,15 +352,10 @@ void main() {
     );
 
     expect(result.overlay, same(current));
-    final bytes = result
-        .submission
-        ?.earthquakeFill
-        .batches
-        .single
-        .compatibility
-        .materialParameters
-        .bytes;
-    expect(ByteData.sublistView(bytes!).getFloat32(0, Endian.little), 1);
+    final bytes = _requireEarthquakeFillBatch(
+      result.submission,
+    ).compatibility.materialParameters.bytes;
+    expect(ByteData.sublistView(bytes).getFloat32(0, Endian.little), 1);
   });
 
   test('another source atomically replaces Fill and station inputs', () {
@@ -355,17 +375,11 @@ void main() {
     );
 
     expect(result.overlay, same(replacement));
-    expect(result.submission?.earthquakeFill.batches, hasLength(1));
-    expect(result.submission?.observationBatch, isA<ObservationPointBatch>());
-    final bytes = result
-        .submission
-        ?.earthquakeFill
-        .batches
-        .single
-        .compatibility
-        .materialParameters
-        .bytes;
-    expect(ByteData.sublistView(bytes!).getFloat32(8, Endian.little), 1);
+    expect(_requireObservationPointBatch(result.submission), isNotNull);
+    final bytes = _requireEarthquakeFillBatch(
+      result.submission,
+    ).compatibility.materialParameters.bytes;
+    expect(ByteData.sublistView(bytes).getFloat32(8, Endian.little), 1);
   });
 
   test('background schedules retirement without a Scene submission', () {
@@ -439,31 +453,23 @@ void main() {
     );
 
     final firstObservation = _requireObservationPointBatch(
-      first.submission?.observationBatch,
+      first.submission,
     );
     final secondObservation = _requireObservationPointBatch(
-      second.submission?.observationBatch,
+      second.submission,
     );
     expect(
       secondObservation.instanceGeneration,
       same(firstObservation.instanceGeneration),
     );
     expect(
-      second
-          .submission
-          ?.earthquakeFill
-          .batches
-          .single
-          .compatibility
-          .materialParameters,
+      _requireEarthquakeFillBatch(
+        second.submission,
+      ).compatibility.materialParameters,
       same(
-        first
-            .submission
-            ?.earthquakeFill
-            .batches
-            .single
-            .compatibility
-            .materialParameters,
+        _requireEarthquakeFillBatch(
+          first.submission,
+        ).compatibility.materialParameters,
       ),
     );
   });
@@ -632,8 +638,8 @@ void main() {
         requested: value,
         styleCache: styles,
       );
-      final batch = result.submission?.earthquakeFill.batches.single;
-      expect(owner.materialFor(batch!), same(bindings.single));
+      final batch = _requireEarthquakeFillBatch(result.submission);
+      expect(owner.materialFor(batch), same(bindings.single));
     },
   );
 
@@ -908,15 +914,11 @@ void main() {
         styleCache: eventAStyles,
       );
       final initialSubmission = MapSceneFrameSubmission(
-        baseMap: createMapRenderSubmission(
-          frame: first.submission!.frame,
-          batches: const [],
-        ),
-        earthquakeFill: createMapRenderSubmission(
-          frame: first.submission!.frame,
-          batches: const [],
-        ),
-        observationBatch: first.submission!.observationBatch,
+        frame: first.submission!.frame,
+        layers: first.submission!.layers
+            .whereType<MapSceneInstanceLayerSubmission>()
+            .toList(),
+        limits: MapSceneFrameLimits(maxNodeCount: 1),
       );
       final initialCandidate = BaseMapOverlayFrameResult(
         overlay: first.overlay,
