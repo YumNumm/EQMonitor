@@ -9,6 +9,7 @@ import 'earthquake_datasource.dart';
 import 'earthquake_hypocenters_union.dart';
 import 'earthquake_telegram.dart';
 import 'earthquake_type.dart';
+import 'estimated_intensity_tile_archive.dart';
 import 'hypocenter.dart';
 import 'intensity.dart';
 import 'origin_time_precision.dart';
@@ -45,6 +46,8 @@ abstract class Earthquake with _$Earthquake {
     /// 推計震度PMTilesのフルURL
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
+    @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile_archive')
+    EstimatedIntensityTileArchive? estimatedIntensityTileArchive,
     @JsonKey(includeIfNull: false)
     Catalog? catalog,
   }) = _Earthquake;
