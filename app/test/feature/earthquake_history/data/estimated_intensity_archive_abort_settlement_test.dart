@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_download_guard.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_http_operation.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'estimated_intensity_archive_abort_test_support.dart';
@@ -55,4 +58,43 @@ void main() {
     expect(temporaryDirectory.listSync(recursive: true), isEmpty);
   });
 
+  test('停止済みguardは開始済み処理の完了後に例外を返す', () async {
+    final cancellation = EstimatedIntensityArchiveDownloadCancellation();
+    final operation = TestEstimatedIntensityArchiveHttpOperation(
+      openResponse: Completer<EstimatedIntensityArchiveHttpResponse>().future,
+    );
+    final guard = EstimatedIntensityArchiveDownloadGuard(
+      operation: operation,
+      totalTimeout: const Duration(seconds: 1),
+      cancellation: cancellation,
+    );
+    final pending = Completer<void>();
+    await cancellation.cancel();
+
+    final settlement = guard.settle(
+      pending: pending.future,
+      abort: () async {},
+    );
+    final earlyResult = await Future.any([
+      settlement.then(
+        (_) => 'completed',
+        onError: (_) => 'failed',
+      ),
+      Future<void>.delayed(Duration.zero).then((_) => 'waiting'),
+    ]);
+    expect(earlyResult, 'waiting');
+
+    pending.complete();
+    await expectLater(
+      settlement,
+      throwsA(
+        isA<EstimatedIntensityArchiveStoppedException>().having(
+          (error) => error.reason,
+          'reason',
+          EstimatedIntensityArchiveStopReason.cancelled,
+        ),
+      ),
+    );
+    await guard.close();
+  });
 }
