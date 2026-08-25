@@ -18,7 +18,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'native_social_auth_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<NativeSocialAuthRepository> nativeSocialAuthRepository(Ref ref) async {
+Future<NativeSocialAuthGateway> nativeSocialAuthRepository(Ref ref) async {
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
   final apiClient = await ref.watch(betterAuthApiClientProvider.future);
   return NativeSocialAuthRepository(
@@ -38,7 +38,13 @@ enum NativeAuthPlatform { ios, android, unsupported }
 typedef AcceptNativeSocialSignIn =
     Future<Result<AuthSession, AuthFailure>> Function();
 
-final class NativeSocialAuthRepository {
+abstract interface class NativeSocialAuthGateway {
+  Future<Result<void, AuthFailure>> signInWithGoogle();
+
+  Future<Result<void, AuthFailure>> signInWithApple();
+}
+
+final class NativeSocialAuthRepository implements NativeSocialAuthGateway {
   new({
     required BetterAuthApiClient apiClient,
     required GoogleAuthGateway googleAuthRepository,
@@ -66,6 +72,7 @@ final class NativeSocialAuthRepository {
   final NativeAuthAttemptCoordinator _attemptCoordinator;
   final AcceptNativeSocialSignIn _acceptSignIn;
 
+  @override
   Future<Result<void, AuthFailure>> signInWithGoogle() async {
     final environmentResult = AuthEnvironment.resolve(
       buildConfig: _buildConfig,
@@ -146,6 +153,7 @@ final class NativeSocialAuthRepository {
     }
   }
 
+  @override
   Future<Result<void, AuthFailure>> signInWithApple() async {
     final environmentResult = AuthEnvironment.resolve(
       buildConfig: _buildConfig,

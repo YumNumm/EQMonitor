@@ -1,51 +1,127 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/debug_auth_action.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/debug_auth_operation_coordinator.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
-import 'package:eqmonitor/feature/auth/data/provider/user_jwt_provider.dart';
-import 'package:eqmonitor/feature/auth/data/repository/native_social_auth_repository.dart';
-import 'package:eqmonitor/feature/auth/data/repository/passkey_repository.dart';
-import 'package:eqmonitor/feature/auth/data/repository/user_api_client.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_auth_notifier.g.dart';
 
 @riverpod
 class DebugAuthNotifier extends _$DebugAuthNotifier {
+  final _operations = DebugAuthPresentationOperationCoordinator();
+
   @override
   Future<DebugAuthState> build() async {
+    final operation = _operations.begin(
+      operation: DebugAuthOperation.restoring,
+    );
+    ref.onDispose(_operations.invalidate);
+    ref.listen(authSessionProvider, (_, next) {
+      if (!ref.mounted) {
+        return;
+      }
+      if (next is AsyncData<AuthSession>) {
+        return;
+      }
+      _operations.invalidate();
+      final current = currentValue;
+      if (current == null || !ref.mounted) {
+        return;
+      }
+      state = AsyncData(
+        current.clearedForSessionChange(preserveOperation: false),
+      );
+    });
+    ref.listen(authSessionRevisionProvider, (_, _) {
+      if (!ref.mounted) {
+        return;
+      }
+      final session = ref.read(authSessionProvider);
+      final preserveOperation = switch (session) {
+        AsyncData(:final value) => _operations.observeSessionMutation(
+          status: value.status,
+        ),
+        _ => false,
+      };
+      if (!preserveOperation) {
+        _operations.invalidate();
+      }
+      final current = currentValue;
+      if (current == null || !ref.mounted) {
+        return;
+      }
+      state = AsyncData(
+        current.clearedForSessionChange(
+          preserveOperation: preserveOperation,
+        ),
+      );
+    });
+
+    var resultState = const DebugAuthState.idle();
     try {
       final environmentResult = await ref.watch(
         authEnvironmentProvider.future,
       );
-      if (environmentResult case Failure(:final exception)) {
-        return const DebugAuthState.signedOut().withFailure(
-          kind: exception.kind,
-        );
+      if (!ref.mounted || !operation.isCurrent) {
+        return resultState;
       }
-      final result = await ref.read(authSessionProvider.notifier).restore();
-      switch (result) {
-        case Success(:final value) when value.isAuthenticated:
-          final jwt = await ref.read(userJwtServiceProvider.future);
-          return const DebugAuthState.signedOut().authenticated(
-            authenticatedProvider: null,
-            expiresAt: jwt.expiresAt,
-            success: DebugAuthSuccessKind.restored,
-          );
-        case Success():
-          return const DebugAuthState.signedOut();
-        case Failure(:final exception):
-          return const DebugAuthState.signedOut().withFailure(
-            kind: exception.kind,
-          );
+      if (environmentResult case Failure(:final exception)) {
+        resultState = resultState.withFailure(kind: exception.kind);
+      } else {
+        if (!ref.mounted || !operation.isCurrent) {
+          return resultState;
+        }
+        final restoreResult = await ref
+            .read(authSessionProvider.notifier)
+            .restore();
+        if (!ref.mounted || !operation.isCurrent) {
+          return resultState;
+        }
+        switch (restoreResult) {
+          case Failure(:final exception):
+            if (!operation.hasObservedSessionMutation) {
+              resultState = resultState.withFailure(kind: exception.kind);
+            }
+          case Success():
+            final session = ref.read(authSessionProvider);
+            if (session case AsyncData(:final value)
+                when value.isAuthenticated) {
+              if (!ref.mounted || !operation.isCurrent) {
+                return resultState;
+              }
+              final readExpiry = await ref.read(
+                debugAuthJwtExpiryProvider.future,
+              );
+              if (!ref.mounted || !operation.isCurrent) {
+                return resultState;
+              }
+              final expiry = await readExpiry();
+              if (!ref.mounted || !operation.isCurrent) {
+                return resultState;
+              }
+              resultState = resultState.signedIn(
+                authenticatedProvider: null,
+                expiresAt: expiry,
+                success: DebugAuthSuccessKind.restored,
+              );
+            }
+        }
       }
     } on Exception {
-      return const DebugAuthState.signedOut().withFailure(
-        kind: AuthFailureKind.unknown,
-      );
+      if (ref.mounted && operation.isCurrent) {
+        resultState = operation.hasObservedSessionMutation
+            ? const DebugAuthState.idle()
+            : resultState.withFailure(kind: AuthFailureKind.unknown);
+      }
     }
+    if (ref.mounted && operation.isCurrent) {
+      operation.release();
+    }
+    return resultState;
   }
 
   DebugAuthState? get currentValue => switch (state) {
@@ -53,98 +129,91 @@ class DebugAuthNotifier extends _$DebugAuthNotifier {
     _ => null,
   };
 
-  Future<void> signInWithGoogle() async {
-    final current = currentValue;
-    if (current == null || current.isBusy) {
-      return;
-    }
-    state = AsyncData(
-      current.working(nextOperation: DebugAuthOperation.googleSignIn),
-    );
-    try {
-      final repository = await ref.read(
-        nativeSocialAuthRepositoryProvider.future,
-      );
-      final result = await repository.signInWithGoogle();
-      switch (result) {
-        case Success():
-          final jwt = await ref.read(userJwtServiceProvider.future);
-          state = AsyncData(
-            current.authenticated(
-              authenticatedProvider: DebugAuthProviderKind.google,
-              expiresAt: jwt.expiresAt,
-              success: DebugAuthSuccessKind.signedIn,
-            ),
-          );
-        case Failure(:final exception):
-          state = AsyncData(current.failed(kind: exception.kind));
-      }
-    } on Exception {
-      state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
-    }
-  }
+  Future<void> signInWithGoogle() => runSignIn(
+    provider: DebugAuthProviderKind.google,
+    operationKind: DebugAuthOperation.googleSignIn,
+  );
 
-  Future<void> signInWithApple() async {
-    final current = currentValue;
-    if (current == null || current.isBusy) {
-      return;
-    }
-    state = AsyncData(
-      current.working(nextOperation: DebugAuthOperation.appleSignIn),
-    );
-    try {
-      final repository = await ref.read(
-        nativeSocialAuthRepositoryProvider.future,
-      );
-      final result = await repository.signInWithApple();
-      switch (result) {
-        case Success():
-          final jwt = await ref.read(userJwtServiceProvider.future);
-          state = AsyncData(
-            current.authenticated(
-              authenticatedProvider: DebugAuthProviderKind.apple,
-              expiresAt: jwt.expiresAt,
-              success: DebugAuthSuccessKind.signedIn,
-            ),
-          );
-        case Failure(:final exception):
-          state = AsyncData(current.failed(kind: exception.kind));
-      }
-    } on Exception {
-      state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
-    }
-  }
+  Future<void> signInWithApple() => runSignIn(
+    provider: DebugAuthProviderKind.apple,
+    operationKind: DebugAuthOperation.appleSignIn,
+  );
 
-  Future<void> signInWithPasskey() async {
+  Future<void> signInWithPasskey() => runSignIn(
+    provider: DebugAuthProviderKind.passkey,
+    operationKind: DebugAuthOperation.passkeySignIn,
+  );
+
+  Future<void> runSignIn({
+    required DebugAuthProviderKind provider,
+    required DebugAuthOperation operationKind,
+  }) async {
     final current = currentValue;
     if (current == null || current.isBusy) {
       return;
     }
-    state = AsyncData(
-      current.working(nextOperation: DebugAuthOperation.passkeySignIn),
-    );
+    final operation = _operations.begin(operation: operationKind);
+    if (!ref.mounted || !operation.isCurrent) {
+      return;
+    }
+    state = AsyncData(current.working(nextOperation: operationKind));
     try {
-      final repository = await ref.read(passkeyRepositoryProvider.future);
-      final result = await repository.signIn();
-      switch (result) {
-        case Success(:final value) when value.isAuthenticated:
-          final jwt = await ref.read(userJwtServiceProvider.future);
-          state = AsyncData(
-            current.authenticated(
-              authenticatedProvider: DebugAuthProviderKind.passkey,
-              expiresAt: jwt.expiresAt,
-              success: DebugAuthSuccessKind.signedIn,
-            ),
-          );
-        case Success():
-          state = AsyncData(
-            current.failed(kind: AuthFailureKind.invalidResponse),
-          );
-        case Failure(:final exception):
-          state = AsyncData(current.failed(kind: exception.kind));
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
       }
+      final action = ref.read(debugAuthSignInActionProvider);
+      final outcome = await action.execute(
+        ref: ref,
+        capability: operation,
+        provider: provider,
+      );
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      if (outcome.kind != DebugAuthActionOutcomeKind.succeeded &&
+          operation.hasObservedSessionMutation) {
+        final latest = currentValue;
+        if (latest == null || !ref.mounted || !operation.isCurrent) {
+          return;
+        }
+        state = AsyncData(
+          latest.clearedForSessionChange(preserveOperation: false),
+        );
+        operation.release();
+        return;
+      }
+      state = AsyncData(
+        switch (outcome.kind) {
+          DebugAuthActionOutcomeKind.succeeded => current.signedIn(
+            authenticatedProvider: provider,
+            expiresAt: outcome.expiresAt,
+            success: DebugAuthSuccessKind.signedIn,
+          ),
+          DebugAuthActionOutcomeKind.cancelled => current,
+          DebugAuthActionOutcomeKind.failed => current.failed(
+            kind: outcome.failureKind ?? AuthFailureKind.unknown,
+          ),
+          DebugAuthActionOutcomeKind.stale => current,
+        },
+      );
+      operation.release();
     } on Exception {
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      if (operation.hasObservedSessionMutation) {
+        final latest = currentValue;
+        if (latest == null || !ref.mounted || !operation.isCurrent) {
+          return;
+        }
+        state = AsyncData(
+          latest.clearedForSessionChange(preserveOperation: false),
+        );
+        operation.release();
+        return;
+      }
       state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
+      operation.release();
     }
   }
 
@@ -153,22 +222,57 @@ class DebugAuthNotifier extends _$DebugAuthNotifier {
     if (current == null || current.isBusy) {
       return;
     }
+    final operation = _operations.begin(
+      operation: DebugAuthOperation.passkeyRegistration,
+    );
+    if (!ref.mounted || !operation.isCurrent) {
+      return;
+    }
     state = AsyncData(
       current.working(nextOperation: DebugAuthOperation.passkeyRegistration),
     );
     try {
-      final repository = await ref.read(passkeyRepositoryProvider.future);
-      final result = await repository.register();
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      final action = ref.read(debugAuthPasskeyRegistrationActionProvider);
+      final outcome = await action.execute(
+        ref: ref,
+        capability: operation,
+      );
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
       state = AsyncData(
-        switch (result) {
-          Success() => current.succeeded(
+        switch (outcome.kind) {
+          DebugAuthActionOutcomeKind.succeeded => current.succeeded(
             success: DebugAuthSuccessKind.passkeyRegistered,
           ),
-          Failure(:final exception) => current.failed(kind: exception.kind),
+          DebugAuthActionOutcomeKind.cancelled => current,
+          DebugAuthActionOutcomeKind.failed => current.failed(
+            kind: outcome.failureKind ?? AuthFailureKind.unknown,
+          ),
+          DebugAuthActionOutcomeKind.stale => current,
         },
       );
+      operation.release();
     } on Exception {
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      if (operation.hasObservedSessionMutation) {
+        final latest = currentValue;
+        if (latest == null || !ref.mounted || !operation.isCurrent) {
+          return;
+        }
+        state = AsyncData(
+          latest.clearedForSessionChange(preserveOperation: false),
+        );
+        operation.release();
+        return;
+      }
       state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
+      operation.release();
     }
   }
 
@@ -177,29 +281,70 @@ class DebugAuthNotifier extends _$DebugAuthNotifier {
     if (current == null || current.isBusy) {
       return;
     }
+    final operation = _operations.begin(
+      operation: DebugAuthOperation.jwtRefresh,
+    );
+    if (!ref.mounted || !operation.isCurrent) {
+      return;
+    }
     state = AsyncData(
       current.working(nextOperation: DebugAuthOperation.jwtRefresh),
     );
     try {
-      final result = await ref.read(authSessionProvider.notifier).refreshJwt();
-      switch (result) {
-        case Success(:final value) when value.isAuthenticated:
-          final jwt = await ref.read(userJwtServiceProvider.future);
-          state = AsyncData(
-            current.succeeded(
-              success: DebugAuthSuccessKind.jwtRefreshed,
-              expiresAt: jwt.expiresAt,
-            ),
-          );
-        case Success():
-          state = AsyncData(
-            current.failed(kind: AuthFailureKind.invalidResponse),
-          );
-        case Failure(:final exception):
-          state = AsyncData(current.failed(kind: exception.kind));
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
       }
+      final action = ref.read(debugAuthJwtRefreshActionProvider);
+      final outcome = await action.execute(
+        ref: ref,
+        capability: operation,
+      );
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      if (outcome.kind != DebugAuthActionOutcomeKind.succeeded &&
+          operation.hasObservedSessionMutation) {
+        final latest = currentValue;
+        if (latest == null || !ref.mounted || !operation.isCurrent) {
+          return;
+        }
+        state = AsyncData(
+          latest.clearedForSessionChange(preserveOperation: false),
+        );
+        operation.release();
+        return;
+      }
+      state = AsyncData(
+        switch (outcome.kind) {
+          DebugAuthActionOutcomeKind.succeeded => current.succeeded(
+            success: DebugAuthSuccessKind.jwtRefreshed,
+            expiresAt: outcome.expiresAt,
+          ),
+          DebugAuthActionOutcomeKind.cancelled => current,
+          DebugAuthActionOutcomeKind.failed => current.failed(
+            kind: outcome.failureKind ?? AuthFailureKind.unknown,
+          ),
+          DebugAuthActionOutcomeKind.stale => current,
+        },
+      );
+      operation.release();
     } on Exception {
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      if (operation.hasObservedSessionMutation) {
+        final latest = currentValue;
+        if (latest == null || !ref.mounted || !operation.isCurrent) {
+          return;
+        }
+        state = AsyncData(
+          latest.clearedForSessionChange(preserveOperation: false),
+        );
+        operation.release();
+        return;
+      }
       state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
+      operation.release();
     }
   }
 
@@ -208,35 +353,48 @@ class DebugAuthNotifier extends _$DebugAuthNotifier {
     if (current == null || current.isBusy) {
       return;
     }
+    final operation = _operations.begin(
+      operation: DebugAuthOperation.userMeVerification,
+    );
+    if (!ref.mounted || !operation.isCurrent) {
+      return;
+    }
     state = AsyncData(
       current.working(nextOperation: DebugAuthOperation.userMeVerification),
     );
     try {
-      final client = await ref.read(userApiClientProvider.future);
-      final result = await client.getJson(
-        path: api.UserApiClientUrls.getV2UserMe,
-      );
-      if (result case Failure(:final exception)) {
-        state = AsyncData(current.failed(kind: exception.kind));
+      if (!ref.mounted || !operation.isCurrent) {
         return;
       }
-      final summaryResult = const DebugAuthUserSummaryParser().parse(
-        result.unwrap(),
+      final action = ref.read(debugAuthUserMeActionProvider);
+      final outcome = await action.execute(
+        ref: ref,
+        capability: operation,
       );
-      if (summaryResult case Failure(:final exception)) {
-        state = AsyncData(current.failed(kind: exception.kind));
+      if (!ref.mounted || !operation.isCurrent) {
         return;
       }
-      final jwt = await ref.read(userJwtServiceProvider.future);
       state = AsyncData(
-        current.succeeded(
-          success: DebugAuthSuccessKind.userMeVerified,
-          expiresAt: jwt.expiresAt,
-          summary: summaryResult.unwrap(),
-        ),
+        switch (outcome.kind) {
+          DebugAuthActionOutcomeKind.succeeded => current.succeeded(
+            success: DebugAuthSuccessKind.userMeVerified,
+            expiresAt: outcome.expiresAt,
+            summary: outcome.userSummary,
+          ),
+          DebugAuthActionOutcomeKind.cancelled => current,
+          DebugAuthActionOutcomeKind.failed => current.failed(
+            kind: outcome.failureKind ?? AuthFailureKind.unknown,
+          ),
+          DebugAuthActionOutcomeKind.stale => current,
+        },
       );
+      operation.release();
     } on Exception {
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
       state = AsyncData(current.failed(kind: AuthFailureKind.unknown));
+      operation.release();
     }
   }
 
@@ -245,23 +403,41 @@ class DebugAuthNotifier extends _$DebugAuthNotifier {
     if (current == null || current.isBusy) {
       return;
     }
+    final operation = _operations.begin(operation: DebugAuthOperation.signOut);
+    if (!ref.mounted || !operation.isCurrent) {
+      return;
+    }
     state = AsyncData(
       current.working(nextOperation: DebugAuthOperation.signOut),
     );
     try {
-      final result = await ref.read(authSessionProvider.notifier).signOut();
-      state = AsyncData(
-        switch (result) {
-          Success() => current.signedOut(),
-          Failure(:final exception) => current.signedOut(
-            failure: exception.kind,
-          ),
-        },
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      final action = ref.read(debugAuthSignOutActionProvider);
+      final outcome = await action.execute(
+        ref: ref,
+        capability: operation,
       );
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
+      state = AsyncData(
+        outcome.kind == DebugAuthActionOutcomeKind.succeeded
+            ? current.signedOut()
+            : current.signedOut(
+                failure: outcome.failureKind ?? AuthFailureKind.unknown,
+              ),
+      );
+      operation.release();
     } on Exception {
+      if (!ref.mounted || !operation.isCurrent) {
+        return;
+      }
       state = AsyncData(
         current.signedOut(failure: AuthFailureKind.unknown),
       );
+      operation.release();
     }
   }
 }

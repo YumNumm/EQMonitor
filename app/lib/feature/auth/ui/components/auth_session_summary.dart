@@ -4,24 +4,24 @@ import 'package:eqmonitor/feature/auth/ui/model/debug_auth_presentation.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AuthSessionSummary extends StatelessWidget {
-  const new({required this.state, super.key});
+  const new({
+    required this.state,
+    required this.sessionStatus,
+    required this.sessionFailed,
+    super.key,
+  });
 
   final DebugAuthState state;
+  final AuthSessionStatus? sessionStatus;
+  final bool sessionFailed;
 
   @override
   Widget build(BuildContext context) {
-    final statusLabel = switch ((
-      state.operation,
-      state.failureKind,
-      state.sessionStatus,
-    )) {
-      (final DebugAuthOperation operation, _, _) =>
-        '更新中: ${DebugAuthPresentation.operationLabel(operation)}',
-      (_, final failure?, _) =>
-        '失敗: ${DebugAuthFailurePresentation.message(failure)}',
-      (_, _, AuthSessionStatus.authenticated) => '認証済み',
-      _ => '未認証',
-    };
+    final statusLabel = DebugAuthPresentation.sessionStatusLabel(
+      state: state,
+      sessionStatus: sessionStatus,
+      sessionFailed: sessionFailed,
+    );
     final expiryLabel =
         state.jwtExpiresAt?.toLocal().toIso8601String() ?? '未取得';
     final success = state.successKind;
@@ -36,14 +36,14 @@ class AuthSessionSummary extends StatelessWidget {
             title: const Text('認証状態'),
             subtitle: Text(statusLabel),
           ),
-          if (state.isAuthenticated)
+          if (sessionStatus == AuthSessionStatus.authenticated)
             ListTile(
               title: const Text('認証方式'),
               subtitle: Text(
                 DebugAuthPresentation.providerLabel(state.provider),
               ),
             ),
-          if (state.isAuthenticated)
+          if (sessionStatus == AuthSessionStatus.authenticated)
             ListTile(
               title: const Text('JWT有効期限'),
               subtitle: Text(expiryLabel),
@@ -60,6 +60,11 @@ class AuthSessionSummary extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(DebugAuthPresentation.successLabel(success)),
+            ),
+          if (state.failureKind case final failure?)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Text(DebugAuthFailurePresentation.code(failure)),
             ),
         ],
       ),

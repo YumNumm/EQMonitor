@@ -53,5 +53,46 @@ void main() {
       DebugAuthFailurePresentation.message(AuthFailureKind.unknown),
       '認証処理に失敗しました。',
     );
+    expect(
+      DebugAuthFailurePresentation.code(AuthFailureKind.network),
+      'AuthFailureKind.network',
+    );
+  });
+
+  test('failureはsession statusを推測せずsafe outcomeだけを更新する', () {
+    final expiresAt = DateTime.utc(2030);
+    final before = const DebugAuthState.idle().signedIn(
+      authenticatedProvider: DebugAuthProviderKind.google,
+      expiresAt: expiresAt,
+      success: DebugAuthSuccessKind.signedIn,
+    );
+
+    final after = before.failed(kind: AuthFailureKind.unauthorized);
+
+    expect(after.provider, DebugAuthProviderKind.google);
+    expect(after.jwtExpiresAt, expiresAt);
+    expect(after.failureKind, AuthFailureKind.unauthorized);
+  });
+
+  test('session loadingはsigned outへ畳まず確認中表示にする', () {
+    expect(
+      DebugAuthPresentation.sessionStatusLabel(
+        state: const DebugAuthState.idle(),
+        sessionStatus: null,
+        sessionFailed: false,
+      ),
+      'セッション確認中',
+    );
+  });
+
+  test('session errorは例外本文を使わない安全な失敗表示にする', () {
+    expect(
+      DebugAuthPresentation.sessionStatusLabel(
+        state: const DebugAuthState.idle(),
+        sessionStatus: null,
+        sessionFailed: true,
+      ),
+      '失敗: セッション状態を確認できませんでした。',
+    );
   });
 }

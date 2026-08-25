@@ -32,6 +32,7 @@ void main() {
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.signedOut,
     );
+    expect(container.read(authSessionRevisionProvider), 1);
     expect(fixture.adapter.requestCount, 0);
   });
 
@@ -91,6 +92,7 @@ void main() {
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.authenticated,
     );
+    expect(container.read(authSessionRevisionProvider), 2);
     expect(fixture.preferences.values, {
       SecureStorageKey.betterAuthSessionToken: 'session-token',
     });
@@ -119,6 +121,7 @@ void main() {
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.signedOut,
     );
+    expect(container.read(authSessionRevisionProvider), 2);
     expect(
       (await fixture.sessionRepository.readSessionToken()).unwrap(),
       isNull,
@@ -172,6 +175,7 @@ void main() {
       container.read(authSessionProvider).value?.status,
       AuthSessionStatus.signedOut,
     );
+    expect(container.read(authSessionRevisionProvider), 1);
   });
 
   test('acceptSignIn中のlocal invalidation後に認証状態が復活しない', () async {
@@ -371,6 +375,7 @@ void main() {
       ),
       isEmpty,
     );
+    expect(container.read(authSessionRevisionProvider), 2);
     fixture.adapter.enqueue(
       _jsonResponse({
         'token': _jwt(exp: 1893463260, marker: 'fresh'),

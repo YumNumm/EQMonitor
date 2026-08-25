@@ -2,7 +2,9 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/debug_auth_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
 import 'package:eqmonitor/feature/auth/data/provider/native_auth_availability_provider.dart';
@@ -21,11 +23,12 @@ class DebugAuthPage extends HookConsumerWidget {
     final selectedApi = ref.watch(telegramUrlProvider);
     final environment = ref.watch(authEnvironmentProvider);
     final availability = ref.watch(nativeAuthAvailabilityProvider);
+    final session = ref.watch(authSessionProvider);
     final authState = ref.watch(debugAuthProvider);
     final displayedState = switch (authState) {
       AsyncData(:final value) => value,
       AsyncLoading() => const DebugAuthState.restoring(),
-      AsyncError() => const DebugAuthState.signedOut().withFailure(
+      AsyncError() => const DebugAuthState.idle().withFailure(
         kind: AuthFailureKind.unknown,
       ),
     };
@@ -53,11 +56,16 @@ class DebugAuthPage extends HookConsumerWidget {
       buildConfig.flavor,
     );
     final platform = NativeAuthConfiguration.currentPlatform();
-    final actionsIdle = !displayedState.isBusy;
-    final sessionActionsEnabled =
-        resolvedAvailability.environmentCompatible &&
-        displayedState.isAuthenticated &&
-        actionsIdle;
+    final sessionStatus = switch (session) {
+      AsyncData(:final value) => value.status,
+      _ => null,
+    };
+    final isAuthenticated = sessionStatus == AuthSessionStatus.authenticated;
+    final actions = resolvedAvailability.actions(
+      isSessionReady: sessionStatus != null,
+      isAuthenticated: isAuthenticated,
+      isBusy: displayedState.isBusy,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Native認証デバッグ')),
@@ -68,6 +76,7 @@ class DebugAuthPage extends HookConsumerWidget {
             flavor: buildConfig.flavor.name,
             selectedApi: selectedApiLabel,
             expectedApi: expectedEnvironment.baseUrl,
+            expectedPasskeyRpId: expectedEnvironment.passkeyRpId,
             environmentStatus: environmentStatus,
             socialFeatureEnabled: buildConfig.isNativeSocialAuthEnabled,
             googleAvailable: resolvedAvailability.googleAvailable,
@@ -75,17 +84,17 @@ class DebugAuthPage extends HookConsumerWidget {
             passkeyAvailable: resolvedAvailability.passkeyAvailable,
           ),
           const SizedBox(height: 12),
-          AuthSessionSummary(state: displayedState),
+          AuthSessionSummary(
+            state: displayedState,
+            sessionStatus: sessionStatus,
+            sessionFailed: session is AsyncError,
+          ),
           const SizedBox(height: 12),
           AuthProviderButtons(
-            googleEnabled: resolvedAvailability.googleAvailable && actionsIdle,
-            appleEnabled: resolvedAvailability.appleAvailable && actionsIdle,
-            passkeySignInEnabled:
-                resolvedAvailability.passkeyAvailable && actionsIdle,
-            passkeyRegistrationEnabled:
-                resolvedAvailability.passkeyAvailable &&
-                displayedState.isAuthenticated &&
-                actionsIdle,
+            googleEnabled: actions.googleSignIn,
+            appleEnabled: actions.appleSignIn,
+            passkeySignInEnabled: actions.passkeySignIn,
+            passkeyRegistrationEnabled: actions.passkeyRegistration,
             isAppleAndroid: platform == NativeAuthPlatform.android,
             onGooglePressed: () async =>
                 ref.read(debugAuthProvider.notifier).signInWithGoogle(),
@@ -105,7 +114,7 @@ class DebugAuthPage extends HookConsumerWidget {
                 runSpacing: 8,
                 children: [
                   OutlinedButton.icon(
-                    onPressed: sessionActionsEnabled
+                    onPressed: actions.jwtRefresh
                         ? () async =>
                               ref.read(debugAuthProvider.notifier).refreshJwt()
                         : null,
@@ -113,7 +122,7 @@ class DebugAuthPage extends HookConsumerWidget {
                     label: const Text('JWTを更新'),
                   ),
                   FilledButton.tonalIcon(
-                    onPressed: sessionActionsEnabled
+                    onPressed: actions.userMeVerification
                         ? () async => ref
                               .read(debugAuthProvider.notifier)
                               .verifyUserMe()
@@ -122,7 +131,7 @@ class DebugAuthPage extends HookConsumerWidget {
                     label: const Text('GET /v2/user/me'),
                   ),
                   TextButton.icon(
-                    onPressed: sessionActionsEnabled
+                    onPressed: actions.signOut
                         ? () async =>
                               ref.read(debugAuthProvider.notifier).signOut()
                         : null,
@@ -149,6 +158,7 @@ class _AuthEnvironmentSummary extends StatelessWidget {
     required this.flavor,
     required this.selectedApi,
     required this.expectedApi,
+    required this.expectedPasskeyRpId,
     required this.environmentStatus,
     required this.socialFeatureEnabled,
     required this.googleAvailable,
@@ -159,6 +169,7 @@ class _AuthEnvironmentSummary extends StatelessWidget {
   final String flavor;
   final String selectedApi;
   final String expectedApi;
+  final String expectedPasskeyRpId;
   final String environmentStatus;
   final bool socialFeatureEnabled;
   final bool googleAvailable;
@@ -177,6 +188,10 @@ class _AuthEnvironmentSummary extends StatelessWidget {
         ListTile(
           title: const Text('期待API'),
           subtitle: Text(expectedApi),
+        ),
+        ListTile(
+          title: const Text('期待Passkey RP ID'),
+          subtitle: Text(expectedPasskeyRpId),
         ),
         ListTile(
           title: const Text('環境整合性'),

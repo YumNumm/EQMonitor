@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
-import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 
 enum DebugAuthProviderKind { google, apple, passkey }
 
@@ -75,7 +74,6 @@ final class DebugAuthUserSummaryParser {
 
 final class DebugAuthState {
   const new({
-    required this.sessionStatus,
     this.operation,
     this.provider,
     this.failureKind,
@@ -85,17 +83,14 @@ final class DebugAuthState {
   });
 
   // ignore: unnecessary_type_name_in_constructor
-  const DebugAuthState.signedOut()
-    : this(sessionStatus: AuthSessionStatus.signedOut);
+  const DebugAuthState.idle() : this();
 
   // ignore: unnecessary_type_name_in_constructor
   const DebugAuthState.restoring()
     : this(
-        sessionStatus: AuthSessionStatus.signedOut,
         operation: DebugAuthOperation.restoring,
       );
 
-  final AuthSessionStatus sessionStatus;
   final DebugAuthOperation? operation;
   final DebugAuthProviderKind? provider;
   final AuthFailureKind? failureKind;
@@ -103,25 +98,21 @@ final class DebugAuthState {
   final DateTime? jwtExpiresAt;
   final DebugAuthUserSummary? userSummary;
 
-  bool get isAuthenticated => sessionStatus == AuthSessionStatus.authenticated;
-
   bool get isBusy => operation != null;
 
   DebugAuthState working({required DebugAuthOperation nextOperation}) =>
       DebugAuthState(
-        sessionStatus: sessionStatus,
         operation: nextOperation,
         provider: provider,
         jwtExpiresAt: jwtExpiresAt,
         userSummary: userSummary,
       );
 
-  DebugAuthState authenticated({
+  DebugAuthState signedIn({
     required DebugAuthProviderKind? authenticatedProvider,
     required DateTime? expiresAt,
     required DebugAuthSuccessKind success,
   }) => DebugAuthState(
-    sessionStatus: AuthSessionStatus.authenticated,
     provider: authenticatedProvider,
     successKind: success,
     jwtExpiresAt: expiresAt,
@@ -132,36 +123,32 @@ final class DebugAuthState {
     DateTime? expiresAt,
     DebugAuthUserSummary? summary,
   }) => DebugAuthState(
-    sessionStatus: sessionStatus,
     provider: provider,
     successKind: success,
     jwtExpiresAt: expiresAt ?? jwtExpiresAt,
     userSummary: summary ?? userSummary,
   );
 
-  DebugAuthState failed({required AuthFailureKind kind}) {
-    if (kind == AuthFailureKind.unauthorized) {
-      return const DebugAuthState.signedOut().withFailure(kind: kind);
-    }
-    return DebugAuthState(
-      sessionStatus: sessionStatus,
-      provider: provider,
-      failureKind: kind,
-      jwtExpiresAt: jwtExpiresAt,
-      userSummary: userSummary,
-    );
-  }
-
-  DebugAuthState withFailure({required AuthFailureKind kind}) => DebugAuthState(
-    sessionStatus: sessionStatus,
+  DebugAuthState failed({required AuthFailureKind kind}) => DebugAuthState(
     provider: provider,
     failureKind: kind,
     jwtExpiresAt: jwtExpiresAt,
     userSummary: userSummary,
   );
 
+  DebugAuthState withFailure({required AuthFailureKind kind}) => DebugAuthState(
+    provider: provider,
+    failureKind: kind,
+    jwtExpiresAt: jwtExpiresAt,
+    userSummary: userSummary,
+  );
+
+  DebugAuthState clearedForSessionChange({required bool preserveOperation}) =>
+      DebugAuthState(
+        operation: preserveOperation ? operation : null,
+      );
+
   DebugAuthState signedOut({AuthFailureKind? failure}) => DebugAuthState(
-    sessionStatus: AuthSessionStatus.signedOut,
     failureKind: failure,
     successKind: failure == null ? DebugAuthSuccessKind.signedOut : null,
   );

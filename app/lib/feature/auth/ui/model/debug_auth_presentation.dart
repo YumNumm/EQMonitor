@@ -1,8 +1,11 @@
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 
 final class DebugAuthFailurePresentation {
   const new();
+
+  static String code(AuthFailureKind kind) => 'AuthFailureKind.${kind.name}';
 
   static String message(AuthFailureKind kind) => switch (kind) {
     AuthFailureKind.cancelled => '認証操作をキャンセルしました。',
@@ -26,6 +29,21 @@ final class DebugAuthFailurePresentation {
 
 final class DebugAuthPresentation {
   const new();
+
+  static String sessionStatusLabel({
+    required DebugAuthState state,
+    required AuthSessionStatus? sessionStatus,
+    required bool sessionFailed,
+  }) => switch ((state.operation, state.failureKind, sessionStatus)) {
+    (final DebugAuthOperation operation, _, _) =>
+      '更新中: ${operationLabel(operation)}',
+    (_, final failure?, _) =>
+      '失敗: ${DebugAuthFailurePresentation.message(failure)}',
+    (_, _, _) when sessionFailed => '失敗: セッション状態を確認できませんでした。',
+    (_, _, null) => 'セッション確認中',
+    (_, _, AuthSessionStatus.authenticated) => '認証済み',
+    _ => '未認証',
+  };
 
   static String providerLabel(DebugAuthProviderKind? provider) =>
       switch (provider) {

@@ -17,13 +17,13 @@ final passkeyRepositoryProvider = PasskeyRepositoryProvider._();
 final class PasskeyRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<PasskeyRepository>,
-          PasskeyRepository,
-          FutureOr<PasskeyRepository>
+          AsyncValue<PasskeyAuthGateway>,
+          PasskeyAuthGateway,
+          FutureOr<PasskeyAuthGateway>
         >
     with
-        $FutureModifier<PasskeyRepository>,
-        $FutureProvider<PasskeyRepository> {
+        $FutureModifier<PasskeyAuthGateway>,
+        $FutureProvider<PasskeyAuthGateway> {
   PasskeyRepositoryProvider._()
     : super(
         from: null,
@@ -40,14 +40,14 @@ final class PasskeyRepositoryProvider
 
   @$internal
   @override
-  $FutureProviderElement<PasskeyRepository> $createElement(
+  $FutureProviderElement<PasskeyAuthGateway> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<PasskeyRepository> create(Ref ref) {
+  FutureOr<PasskeyAuthGateway> create(Ref ref) {
     return passkeyRepository(ref);
   }
 }
 
-String _$passkeyRepositoryHash() => r'8fa03b027940809ee929995abe86e6214deac0f5';
+String _$passkeyRepositoryHash() => r'97f46b003596f1ccd6ba5b7517d15c38ed4405a3';

@@ -18,13 +18,13 @@ final nativeSocialAuthRepositoryProvider =
 final class NativeSocialAuthRepositoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<NativeSocialAuthRepository>,
-          NativeSocialAuthRepository,
-          FutureOr<NativeSocialAuthRepository>
+          AsyncValue<NativeSocialAuthGateway>,
+          NativeSocialAuthGateway,
+          FutureOr<NativeSocialAuthGateway>
         >
     with
-        $FutureModifier<NativeSocialAuthRepository>,
-        $FutureProvider<NativeSocialAuthRepository> {
+        $FutureModifier<NativeSocialAuthGateway>,
+        $FutureProvider<NativeSocialAuthGateway> {
   NativeSocialAuthRepositoryProvider._()
     : super(
         from: null,
@@ -41,15 +41,15 @@ final class NativeSocialAuthRepositoryProvider
 
   @$internal
   @override
-  $FutureProviderElement<NativeSocialAuthRepository> $createElement(
+  $FutureProviderElement<NativeSocialAuthGateway> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<NativeSocialAuthRepository> create(Ref ref) {
+  FutureOr<NativeSocialAuthGateway> create(Ref ref) {
     return nativeSocialAuthRepository(ref);
   }
 }
 
 String _$nativeSocialAuthRepositoryHash() =>
-    r'8562d8b71056695be3417d23ef2b33f26959a64d';
+    r'fda28167b386f7133f7ed26ac1ceb32aadcc55d0';

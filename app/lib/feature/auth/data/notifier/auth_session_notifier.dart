@@ -10,6 +10,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth_session_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
+class AuthSessionRevision extends _$AuthSessionRevision {
+  @override
+  int build() => 0;
+
+  void advance() {
+    state++;
+  }
+}
+
+@Riverpod(keepAlive: true)
 class AuthSessionNotifier extends _$AuthSessionNotifier {
   var _invalidationEpoch = 0;
 
@@ -44,6 +54,7 @@ class AuthSessionNotifier extends _$AuthSessionNotifier {
     if (savedToken == null || savedToken.isEmpty) {
       const session = AuthSession.signedOut();
       state = const AsyncData(session);
+      ref.read(authSessionRevisionProvider.notifier).advance();
       return const Success(session);
     }
     final apiClient = await ref.read(betterAuthApiClientProvider.future);
@@ -102,6 +113,7 @@ class AuthSessionNotifier extends _$AuthSessionNotifier {
       case Success():
         const session = AuthSession.authenticated();
         state = const AsyncData(session);
+        ref.read(authSessionRevisionProvider.notifier).advance();
         return const Success(session);
       case Failure(:final exception, :final stackTrace):
         if (exception.kind == AuthFailureKind.unauthorized) {
@@ -124,6 +136,7 @@ class AuthSessionNotifier extends _$AuthSessionNotifier {
       case Success():
         const session = AuthSession.authenticated();
         state = const AsyncData(session);
+        ref.read(authSessionRevisionProvider.notifier).advance();
         return const Success(session);
       case Failure(:final exception, :final stackTrace):
         if (exception.kind == AuthFailureKind.unauthorized) {
@@ -138,6 +151,7 @@ class AuthSessionNotifier extends _$AuthSessionNotifier {
     final lifecycleGeneration = lifecycle.beginInvalidation();
     _invalidationEpoch++;
     state = const AsyncData(AuthSession.signedOut());
+    ref.read(authSessionRevisionProvider.notifier).advance();
     final apiClient = await ref.read(betterAuthApiClientProvider.future);
     (await ref.read(userJwtServiceProvider.future)).clearJwt();
     final result = await apiClient.signOut();
@@ -169,6 +183,7 @@ class AuthSessionNotifier extends _$AuthSessionNotifier {
     _invalidationEpoch++;
     const session = AuthSession.signedOut();
     state = const AsyncData(session);
+    ref.read(authSessionRevisionProvider.notifier).advance();
     (await ref.read(userJwtServiceProvider.future)).clearJwt();
     final apiClient = await ref.read(betterAuthApiClientProvider.future);
     final cookieResult = await apiClient.clearCookies();

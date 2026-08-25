@@ -26,8 +26,14 @@ typedef AcceptPasskeySignIn =
 typedef InvalidatePasskeySession =
     Future<Result<AuthSession, AuthFailure>> Function();
 
+abstract interface class PasskeyAuthGateway {
+  Future<Result<void, AuthFailure>> register();
+
+  Future<Result<AuthSession, AuthFailure>> signIn();
+}
+
 @Riverpod(keepAlive: true)
-Future<PasskeyRepository> passkeyRepository(Ref ref) async {
+Future<PasskeyAuthGateway> passkeyRepository(Ref ref) async {
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
   return PasskeyRepository(
     apiClient: await ref.watch(betterAuthApiClientProvider.future),
@@ -48,7 +54,7 @@ Future<PasskeyRepository> passkeyRepository(Ref ref) async {
   );
 }
 
-final class PasskeyRepository {
+final class PasskeyRepository implements PasskeyAuthGateway {
   new({
     required BetterAuthApiClient apiClient,
     required BetterAuthSessionRepository sessionRepository,
@@ -88,6 +94,7 @@ final class PasskeyRepository {
   final PasskeyRequestParser _requestParser;
   final PasskeyFailureMapper _failureMapper;
 
+  @override
   Future<Result<void, AuthFailure>> register() async {
     final environmentResult = AuthEnvironment.resolve(
       buildConfig: _buildConfig,
@@ -164,6 +171,7 @@ final class PasskeyRepository {
     }
   }
 
+  @override
   Future<Result<AuthSession, AuthFailure>> signIn() async {
     final environmentResult = AuthEnvironment.resolve(
       buildConfig: _buildConfig,

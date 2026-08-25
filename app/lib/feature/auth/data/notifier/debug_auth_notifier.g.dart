@@ -35,7 +35,7 @@ final class DebugAuthNotifierProvider
   DebugAuthNotifier create() => DebugAuthNotifier();
 }
 
-String _$debugAuthNotifierHash() => r'386605ca8c346ecbc13a44d070d143264bac018c';
+String _$debugAuthNotifierHash() => r'5ac498caa1b081e0b3999bc5406725b25d5874a8';
 
 abstract class _$DebugAuthNotifier extends $AsyncNotifier<DebugAuthState> {
   FutureOr<DebugAuthState> build();

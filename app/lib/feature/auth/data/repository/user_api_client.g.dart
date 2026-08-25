@@ -17,11 +17,11 @@ final userApiClientProvider = UserApiClientProvider._();
 final class UserApiClientProvider
     extends
         $FunctionalProvider<
-          AsyncValue<UserApiClient>,
-          UserApiClient,
-          FutureOr<UserApiClient>
+          AsyncValue<UserApiGateway>,
+          UserApiGateway,
+          FutureOr<UserApiGateway>
         >
-    with $FutureModifier<UserApiClient>, $FutureProvider<UserApiClient> {
+    with $FutureModifier<UserApiGateway>, $FutureProvider<UserApiGateway> {
   UserApiClientProvider._()
     : super(
         from: null,
@@ -38,14 +38,14 @@ final class UserApiClientProvider
 
   @$internal
   @override
-  $FutureProviderElement<UserApiClient> $createElement(
+  $FutureProviderElement<UserApiGateway> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<UserApiClient> create(Ref ref) {
+  FutureOr<UserApiGateway> create(Ref ref) {
     return userApiClient(ref);
   }
 }
 
-String _$userApiClientHash() => r'3ee9c2e635b516e1a32ada0ec4bd34eb4ed5bcc6';
+String _$userApiClientHash() => r'428b997dc47908b1ccbec133345dc60c776e039b';

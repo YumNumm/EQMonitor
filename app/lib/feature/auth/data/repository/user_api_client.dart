@@ -12,23 +12,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api_client.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserApiClient> userApiClient(Ref ref) async {
+Future<UserApiGateway> userApiClient(Ref ref) async {
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
   return UserApiClient(
     dio: Dio(
       DioBaseOptionsFactory.build(baseUrl: telegramUrl.restApiUrl),
     ),
     jwtProvider: await ref.watch(userJwtServiceProvider.future),
-    invalidateSession: () => ref
-        .read(authSessionProvider.notifier)
-        .invalidate(),
+    invalidateSession: () =>
+        ref.read(authSessionProvider.notifier).invalidate(),
   );
 }
 
 typedef AuthSessionInvalidator =
     Future<Result<AuthSession, AuthFailure>> Function();
 
-final class UserApiClient {
+abstract interface class UserApiGateway {
+  Future<Result<Map<String, dynamic>, AuthFailure>> getJson({
+    required String path,
+    Map<String, dynamic>? queryParameters,
+  });
+}
+
+final class UserApiClient implements UserApiGateway {
   const new({
     required Dio dio,
     required UserJwtProvider jwtProvider,
@@ -41,6 +47,7 @@ final class UserApiClient {
   final UserJwtProvider _jwtProvider;
   final AuthSessionInvalidator _invalidateSession;
 
+  @override
   Future<Result<Map<String, dynamic>, AuthFailure>> getJson({
     required String path,
     Map<String, dynamic>? queryParameters,
