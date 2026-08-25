@@ -26,7 +26,9 @@ abstract class FillMeshBuilderLimits with _$FillMeshBuilderLimits {
     /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
     required int maxVerticesPerSegment,
 
-    /// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+    /// 1 tile用に生成した`FillMeshBuilder`の全`build`呼び出しを通じて、
+    /// 境界交差候補の辺ペア比較と包含判定の辺比較に使える回数の合計上限。
+    /// decoderはtileごとにbuilderを1つ生成して全fill layerで共有する。
     required int maxIntersectionChecks,
   }) = _FillMeshBuilderLimits;
 }

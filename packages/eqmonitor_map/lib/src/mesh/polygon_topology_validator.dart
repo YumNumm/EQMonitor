@@ -44,11 +44,12 @@ final class _TopologyCheckCounter {
   _TopologyCheckCounter({required this.maxChecks});
 
   final int maxChecks;
-  int used = 0;
+  var _used = 0;
+  int get used => _used;
 
   void consume() {
-    used++;
-    if (used > maxChecks) {
+    _used++;
+    if (_used > maxChecks) {
       throw FillMeshBuildException.limitExceeded(
         reason:
             'Polygon topology checks exceed the configured limit '

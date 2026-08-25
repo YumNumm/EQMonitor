@@ -12,6 +12,7 @@
 // layer名の取り違えを避ける。
 import 'dart:typed_data';
 
+import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
@@ -58,6 +59,15 @@ Uint8List _buildFeatureTriangle() {
     ],
   );
 }
+
+Uint8List _buildFeatureSquare() => _builder.buildFeature(
+  geomType: MvtFixtureBuilder.geomTypePolygon,
+  rawCommands: [
+    ..._builder.moveTo([(0, 0)]),
+    ..._builder.lineTo([(10, 0), (0, 10), (-10, 0)]),
+    ..._builder.closePath(),
+  ],
+);
 
 Uint8List _buildTaggedFeatureTriangle({List<int> tags = const []}) {
   return _builder.feature(
@@ -124,6 +134,31 @@ void main() {
   });
 
   group('decodeBaseMapTileSync', () {
+    test('shares the Fill comparison limit across source layers', () {
+      final tile = _builder.buildTile(
+        layers: [
+          _builder.buildLayer(
+            name: 'countries',
+            features: [_buildFeatureSquare()],
+          ),
+          _builder.buildLayer(
+            name: 'areaForecastLocalE',
+            features: [_buildFeatureSquare()],
+          ),
+        ],
+      );
+
+      expect(
+        () => decodeBaseMapTileSync(
+          tile,
+          _limits.copyWith(
+            fillLimits: _limits.fillLimits.copyWith(maxIntersectionChecks: 1),
+          ),
+        ),
+        throwsA(isA<FillMeshLimitExceededException>()),
+      );
+    });
+
     test('keeps each coded earthquake area mesh with its source code', () {
       final tile = _builder.buildTile(
         layers: [

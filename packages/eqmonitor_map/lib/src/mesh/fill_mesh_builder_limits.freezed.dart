@@ -24,7 +24,9 @@ mixin _$FillMeshBuilderLimits {
 /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
- int get maxVerticesPerSegment;/// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+ int get maxVerticesPerSegment;/// 1 tile用に生成した`FillMeshBuilder`の全`build`呼び出しを通じて、
+/// 境界交差候補の辺ペア比較と包含判定の辺比較に使える回数の合計上限。
+/// decoderはtileごとにbuilderを1つ生成して全fill layerで共有する。
  int get maxIntersectionChecks;
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
@@ -235,7 +237,9 @@ class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
 @override final  int maxVerticesPerSegment;
-/// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+/// 1 tile用に生成した`FillMeshBuilder`の全`build`呼び出しを通じて、
+/// 境界交差候補の辺ペア比較と包含判定の辺比較に使える回数の合計上限。
+/// decoderはtileごとにbuilderを1つ生成して全fill layerで共有する。
 @override final  int maxIntersectionChecks;
 
 /// Create a copy of FillMeshBuilderLimits

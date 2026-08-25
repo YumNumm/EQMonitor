@@ -162,6 +162,17 @@ void main() {
           ),
           failure: EstimatedIntensityTileDecodeFailure.invalidGeometry,
         ),
+        (
+          name: 'hole outside its exterior',
+          bytes: _tile(
+            features: [
+              _polygonWithOutsideHole(tags: const [0, 0]),
+            ],
+            keys: const ['name'],
+            values: [_builder.stringValue(_classes.first)],
+          ),
+          failure: EstimatedIntensityTileDecodeFailure.invalidGeometry,
+        ),
       ]) {
     test('${testCase.name}はtile全体をfail closedにする', () {
       expect(
@@ -236,6 +247,36 @@ void main() {
       ),
     );
   });
+
+  test('比較上限を震度class間で共有する', () {
+    final bytes = _tile(
+      features: [
+        _square(tags: const [0, 0]),
+        _square(tags: const [0, 1]),
+      ],
+      keys: const ['name'],
+      values: [
+        _builder.stringValue(_classes[0]),
+        _builder.stringValue(_classes[1]),
+      ],
+    );
+
+    expect(
+      () => decodeEstimatedIntensityTileSync(
+        bytes,
+        _limits.copyWith(
+          fillLimits: _limits.fillLimits.copyWith(maxIntersectionChecks: 1),
+        ),
+      ),
+      throwsA(
+        isA<EstimatedIntensityTileDecodeException>().having(
+          (error) => error.failure,
+          'failure',
+          EstimatedIntensityTileDecodeFailure.resourceLimitExceeded,
+        ),
+      ),
+    );
+  });
 }
 
 Uint8List _tile({
@@ -299,6 +340,20 @@ Uint8List _selfIntersectingPolygon({required List<int> tags}) =>
       rawCommands: [
         ..._builder.moveTo([(3, 0)]),
         ..._builder.lineTo([(-1, 5), (-1, -5), (3, 3), (-4, 0)]),
+        ..._builder.closePath(),
+      ],
+    );
+
+Uint8List _polygonWithOutsideHole({required List<int> tags}) =>
+    _builder.feature(
+      geomType: MvtFixtureBuilder.geomTypePolygon,
+      tags: tags,
+      rawCommands: [
+        ..._builder.moveTo([(0, 0)]),
+        ..._builder.lineTo([(10, 0), (0, 10), (-10, 0)]),
+        ..._builder.closePath(),
+        ..._builder.moveTo([(20, 10)]),
+        ..._builder.lineTo([(0, 10), (10, 0), (0, -10)]),
         ..._builder.closePath(),
       ],
     );
