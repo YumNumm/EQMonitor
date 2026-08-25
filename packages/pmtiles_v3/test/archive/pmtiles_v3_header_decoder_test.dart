@@ -12,6 +12,7 @@ const _limits = PmTilesV3Limits(
   rootDirectoryWindowLength: 16384,
   maxDirectoryEncodedBytes: 1 << 20,
   maxDirectoryDecodedBytes: 8 << 20,
+  maxCachedLeafDirectories: 4,
   maxTileEncodedBytes: 4 << 20,
   maxTileDecodedBytes: 16 << 20,
 );
@@ -192,6 +193,7 @@ void main() {
           rootDirectoryWindowLength: PmTilesV3HeaderDecoder.headerLength,
           maxDirectoryEncodedBytes: 1 << 20,
           maxDirectoryDecodedBytes: 8 << 20,
+          maxCachedLeafDirectories: 4,
           maxTileEncodedBytes: 4 << 20,
           maxTileDecodedBytes: 16 << 20,
         ),

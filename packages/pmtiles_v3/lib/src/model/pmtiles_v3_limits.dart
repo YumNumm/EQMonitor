@@ -21,6 +21,13 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// root/leaf directoryの展開済みbyte列1件あたりの上限。
     required int maxDirectoryDecodedBytes,
 
+    /// 同時に保持するleaf directory cacheの最大件数。
+    ///
+    /// 1件あたりの展開上限と組み合わせ、archiveを長時間読む場合や先行
+    /// validationで多数のleafを辿る場合もcacheの保持量を有限化する。
+    /// 0はcacheを無効化する。
+    required int maxCachedLeafDirectories,
+
     /// tile payloadの圧縮済みbyte列1件あたりの上限。
     required int maxTileEncodedBytes,
 

@@ -278,6 +278,7 @@ final class EqmonitorMapDebugConfiguration {
       // event sourceは実archive契約に合わせた独立の厳格値を使う。
       maxDirectoryEncodedBytes: 1 << 20,
       maxDirectoryDecodedBytes: 8 << 20,
+      maxCachedLeafDirectories: 4,
       maxTileEncodedBytes: 4 << 20,
       maxTileDecodedBytes: 16 << 20,
     ),
