@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_attestation_binder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_http_operation.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_part_writer.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
@@ -12,11 +13,13 @@ final class EstimatedIntensityArchiveStreamVerifier {
     this.stopResultMapper = const EstimatedIntensityArchiveStopResultMapper(),
     this.fileVerifier = const DartIoEstimatedIntensityArchiveFileVerifier(),
     this.partWriterFactory = EstimatedIntensityArchivePartWriterFactory.create,
+    this.attestationBinder = const EstimatedIntensityArchiveAttestationBinder(),
   });
 
   final EstimatedIntensityArchiveStopResultMapper stopResultMapper;
   final EstimatedIntensityArchiveFileVerifier fileVerifier;
   final EstimatedIntensityArchivePartWriterCreator partWriterFactory;
+  final EstimatedIntensityArchiveAttestationBinder attestationBinder;
 
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveHttpResponse response,
@@ -68,7 +71,11 @@ final class EstimatedIntensityArchiveStreamVerifier {
       if (finalStop != EstimatedIntensityArchiveStopReason.none) {
         return stopResultMapper.map(finalStop);
       }
-      return verified;
+      return attestationBinder.bind(
+        result: verified,
+        descriptor: descriptor,
+        partFile: partFile,
+      );
     } on TimeoutException {
       final stopped = stopReason();
       if (stopped != EstimatedIntensityArchiveStopReason.none) {
