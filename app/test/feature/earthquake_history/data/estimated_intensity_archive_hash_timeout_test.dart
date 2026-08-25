@@ -5,22 +5,20 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_stream_verifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'estimated_intensity_archive_transport_test_support.dart';
 
 void main() {
-  test('hash中のtotal timeoutはhash終了後にrejectしてからpartを消す', () async {
+  test('hash中のtotal timeoutはhashをcancelしてpartを消す', () async {
     final temporaryDirectory = await Directory.systemTemp.createTemp(
       'estimated_intensity_hash_timeout_test_',
     );
     addTearDown(() => temporaryDirectory.delete(recursive: true));
     final hashStarted = Completer<void>();
-    final releaseHash = Completer<void>();
-    final fileVerifier = GatedEstimatedIntensityArchiveFileVerifier(
-      delegate: const DartIoEstimatedIntensityArchiveFileVerifier(),
+    final fileVerifier = PausedEstimatedIntensityArchiveFileVerifier(
       hashStarted: hashStarted,
-      releaseHash: releaseHash,
     );
     final operation = TestEstimatedIntensityArchiveHttpOperation(
       openResponse: Future.value(estimatedIntensityTestResponse()),
@@ -45,15 +43,9 @@ void main() {
         );
     await hashStarted.future;
 
-    final firstCompletion = await Future.any<String>([
-      resultFuture.then((_) => 'completed'),
-      Future.delayed(const Duration(milliseconds: 30), () => 'pending'),
-    ]);
-    expect(firstCompletion, 'pending');
-    expect(temporaryDirectory.listSync(recursive: true), isNotEmpty);
-
-    releaseHash.complete();
-    final result = await resultFuture;
+    final result = await resultFuture.timeout(
+      const Duration(milliseconds: 200),
+    );
 
     expectEstimatedIntensityDownloadFailure(
       result: result,
@@ -61,27 +53,45 @@ void main() {
     );
     expect(temporaryDirectory.listSync(recursive: true), isEmpty);
   });
+
+  test('停止済みfile verifierはhashをpublishしない', () async {
+    final temporaryDirectory = await Directory.systemTemp.createTemp(
+      'estimated_intensity_stopped_hash_test_',
+    );
+    addTearDown(() => temporaryDirectory.delete(recursive: true));
+    final file = File('${temporaryDirectory.path}/archive.part');
+    await file.writeAsBytes('hello world'.codeUnits);
+
+    final result = await const DartIoEstimatedIntensityArchiveFileVerifier()
+        .verify(
+          descriptor: estimatedIntensityTestDescriptor(),
+          file: file,
+          stopRequested: Future.value(
+            EstimatedIntensityArchiveStopReason.cancelled,
+          ),
+        );
+
+    expectEstimatedIntensityDownloadFailure(
+      result: result,
+      failure: EstimatedIntensityArchiveDownloadFailure.cancelled,
+    );
+  });
 }
 
-final class GatedEstimatedIntensityArchiveFileVerifier
+final class PausedEstimatedIntensityArchiveFileVerifier
     implements EstimatedIntensityArchiveFileVerifier {
-  new({
-    required this.delegate,
-    required this.hashStarted,
-    required this.releaseHash,
-  });
+  new({required this.hashStarted});
 
-  final EstimatedIntensityArchiveFileVerifier delegate;
   final Completer<void> hashStarted;
-  final Completer<void> releaseHash;
 
   @override
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
+    required Future<EstimatedIntensityArchiveStopReason> stopRequested,
   }) async {
     hashStarted.complete();
-    await releaseHash.future;
-    return delegate.verify(descriptor: descriptor, file: file);
+    final stopped = await stopRequested;
+    return const EstimatedIntensityArchiveStopResultMapper().map(stopped);
   }
 }
