@@ -36,8 +36,8 @@ sealed class SeismicityPmTilesException
 
   const factory resourceLimitExceeded({
     required SeismicityPmTilesResource resource,
-    required int limitBytes,
-    required int actualBytes,
+    required int limit,
+    required int actual,
   }) = SeismicityPmTilesResourceLimitExceededException;
 
   const factory unsupportedSource({
@@ -163,8 +163,8 @@ extension PmTilesV3ExceptionToSeismicityException on PmTilesV3Exception {
             PmTilesV3Resource.tileDecoded =>
               SeismicityPmTilesResource.tileDecoded,
           },
-          limitBytes: limit,
-          actualBytes: actual,
+          limit: limit,
+          actual: actual,
         ),
       PmTilesV3InvalidTileIdException(
         :final tileId,

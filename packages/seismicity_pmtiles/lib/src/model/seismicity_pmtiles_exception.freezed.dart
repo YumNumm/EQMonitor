@@ -174,14 +174,14 @@ return invalidTileId(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesResource resource,  int limitBytes,  int actualBytes)?  resourceLimitExceeded,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult Function( SeismicityPmTilesSource source)?  cancelled,TResult Function( SeismicityPmTilesSource source)?  closed,TResult Function( int expected,  int actual)?  unsupportedSchema,TResult Function( int tileId,  String reason)?  invalidVectorTile,TResult Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult Function( String hypocenterId)?  duplicateConflict,TResult Function( int expected,  int actual)?  featureCountMismatch,TResult Function( String reason)?  decoderWorkerFailed,TResult Function( int tileId)?  tileNotFound,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  invalidDescriptor,TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( SeismicityPmTilesResource resource,  int limit,  int actual)?  resourceLimitExceeded,TResult Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult Function( SeismicityPmTilesSource source)?  cancelled,TResult Function( SeismicityPmTilesSource source)?  closed,TResult Function( int expected,  int actual)?  unsupportedSchema,TResult Function( int tileId,  String reason)?  invalidVectorTile,TResult Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult Function( String hypocenterId)?  duplicateConflict,TResult Function( int expected,  int actual)?  featureCountMismatch,TResult Function( String reason)?  decoderWorkerFailed,TResult Function( int tileId)?  tileNotFound,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case SeismicityPmTilesCorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that.compression);case SeismicityPmTilesResourceLimitExceededException() when resourceLimitExceeded != null:
-return resourceLimitExceeded(_that.resource,_that.limitBytes,_that.actualBytes);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesNetworkRequestFailedException() when networkRequestFailed != null:
 return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTilesInvalidNetworkResponseException() when invalidNetworkResponse != null:
@@ -214,14 +214,14 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesResource resource,  int limitBytes,  int actualBytes)  resourceLimitExceeded,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( SeismicityPmTilesSource source,  int? statusCode)  networkRequestFailed,required TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)  archiveChanged,required TResult Function( SeismicityPmTilesSource source)  cancelled,required TResult Function( SeismicityPmTilesSource source)  closed,required TResult Function( int expected,  int actual)  unsupportedSchema,required TResult Function( int tileId,  String reason)  invalidVectorTile,required TResult Function( int tileId,  int featureIndex,  String field,  String reason)  invalidHypocenterFeature,required TResult Function( String hypocenterId)  duplicateConflict,required TResult Function( int expected,  int actual)  featureCountMismatch,required TResult Function( String reason)  decoderWorkerFailed,required TResult Function( int tileId)  tileNotFound,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  invalidDescriptor,required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( SeismicityPmTilesResource resource,  int limit,  int actual)  resourceLimitExceeded,required TResult Function( SeismicityPmTilesSource source)  unsupportedSource,required TResult Function( SeismicityPmTilesSource source,  String reason)  sourceReadFailed,required TResult Function( SeismicityPmTilesSource source,  int? statusCode)  networkRequestFailed,required TResult Function( SeismicityPmTilesSource source,  int statusCode,  String reason)  invalidNetworkResponse,required TResult Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)  archiveChanged,required TResult Function( SeismicityPmTilesSource source)  cancelled,required TResult Function( SeismicityPmTilesSource source)  closed,required TResult Function( int expected,  int actual)  unsupportedSchema,required TResult Function( int tileId,  String reason)  invalidVectorTile,required TResult Function( int tileId,  int featureIndex,  String field,  String reason)  invalidHypocenterFeature,required TResult Function( String hypocenterId)  duplicateConflict,required TResult Function( int expected,  int actual)  featureCountMismatch,required TResult Function( String reason)  decoderWorkerFailed,required TResult Function( int tileId)  tileNotFound,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException():
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException():
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case SeismicityPmTilesCorruptArchiveException():
 return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompressionException():
 return unsupportedCompression(_that.compression);case SeismicityPmTilesResourceLimitExceededException():
-return resourceLimitExceeded(_that.resource,_that.limitBytes,_that.actualBytes);case SeismicityPmTilesUnsupportedSourceException():
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case SeismicityPmTilesUnsupportedSourceException():
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException():
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesNetworkRequestFailedException():
 return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTilesInvalidNetworkResponseException():
@@ -250,14 +250,14 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesResource resource,  int limitBytes,  int actualBytes)?  resourceLimitExceeded,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult? Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult? Function( SeismicityPmTilesSource source)?  cancelled,TResult? Function( SeismicityPmTilesSource source)?  closed,TResult? Function( int expected,  int actual)?  unsupportedSchema,TResult? Function( int tileId,  String reason)?  invalidVectorTile,TResult? Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult? Function( String hypocenterId)?  duplicateConflict,TResult? Function( int expected,  int actual)?  featureCountMismatch,TResult? Function( String reason)?  decoderWorkerFailed,TResult? Function( int tileId)?  tileNotFound,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  invalidDescriptor,TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( SeismicityPmTilesResource resource,  int limit,  int actual)?  resourceLimitExceeded,TResult? Function( SeismicityPmTilesSource source)?  unsupportedSource,TResult? Function( SeismicityPmTilesSource source,  String reason)?  sourceReadFailed,TResult? Function( SeismicityPmTilesSource source,  int? statusCode)?  networkRequestFailed,TResult? Function( SeismicityPmTilesSource source,  int statusCode,  String reason)?  invalidNetworkResponse,TResult? Function( SeismicityPmTilesSource source,  String? expectedEtag,  String? receivedEtag,  int statusCode)?  archiveChanged,TResult? Function( SeismicityPmTilesSource source)?  cancelled,TResult? Function( SeismicityPmTilesSource source)?  closed,TResult? Function( int expected,  int actual)?  unsupportedSchema,TResult? Function( int tileId,  String reason)?  invalidVectorTile,TResult? Function( int tileId,  int featureIndex,  String field,  String reason)?  invalidHypocenterFeature,TResult? Function( String hypocenterId)?  duplicateConflict,TResult? Function( int expected,  int actual)?  featureCountMismatch,TResult? Function( String reason)?  decoderWorkerFailed,TResult? Function( int tileId)?  tileNotFound,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,}) {final _that = this;
 switch (_that) {
 case SeismicityPmTilesInvalidDescriptorException() when invalidDescriptor != null:
 return invalidDescriptor(_that.reason);case SeismicityPmTilesInvalidRangeException() when invalidRange != null:
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case SeismicityPmTilesCorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that.reason);case SeismicityPmTilesUnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that.compression);case SeismicityPmTilesResourceLimitExceededException() when resourceLimitExceeded != null:
-return resourceLimitExceeded(_that.resource,_that.limitBytes,_that.actualBytes);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case SeismicityPmTilesUnsupportedSourceException() when unsupportedSource != null:
 return unsupportedSource(_that.source);case SeismicityPmTilesSourceReadFailedException() when sourceReadFailed != null:
 return sourceReadFailed(_that.source,_that.reason);case SeismicityPmTilesNetworkRequestFailedException() when networkRequestFailed != null:
 return networkRequestFailed(_that.source,_that.statusCode);case SeismicityPmTilesInvalidNetworkResponseException() when invalidNetworkResponse != null:
@@ -552,12 +552,12 @@ as int,
 
 
 class SeismicityPmTilesResourceLimitExceededException implements SeismicityPmTilesException {
-  const SeismicityPmTilesResourceLimitExceededException({required this.resource, required this.limitBytes, required this.actualBytes});
+  const SeismicityPmTilesResourceLimitExceededException({required this.resource, required this.limit, required this.actual});
 
 
  final  SeismicityPmTilesResource resource;
- final  int limitBytes;
- final  int actualBytes;
+ final  int limit;
+ final  int actual;
 
 /// Create a copy of SeismicityPmTilesException
 /// with the given fields replaced by the non-null parameter values.
@@ -569,16 +569,16 @@ $SeismicityPmTilesResourceLimitExceededExceptionCopyWith<SeismicityPmTilesResour
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesResourceLimitExceededException&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.limitBytes, limitBytes) || other.limitBytes == limitBytes)&&(identical(other.actualBytes, actualBytes) || other.actualBytes == actualBytes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeismicityPmTilesResourceLimitExceededException&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.actual, actual) || other.actual == actual));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,resource,limitBytes,actualBytes);
+int get hashCode => Object.hash(runtimeType,resource,limit,actual);
 
 @override
 String toString() {
-  return 'SeismicityPmTilesException.resourceLimitExceeded(resource: $resource, limitBytes: $limitBytes, actualBytes: $actualBytes)';
+  return 'SeismicityPmTilesException.resourceLimitExceeded(resource: $resource, limit: $limit, actual: $actual)';
 }
 
 
@@ -589,7 +589,7 @@ abstract mixin class $SeismicityPmTilesResourceLimitExceededExceptionCopyWith<$R
   factory $SeismicityPmTilesResourceLimitExceededExceptionCopyWith(SeismicityPmTilesResourceLimitExceededException value, $Res Function(SeismicityPmTilesResourceLimitExceededException) _then) = _$SeismicityPmTilesResourceLimitExceededExceptionCopyWithImpl;
 @useResult
 $Res call({
- SeismicityPmTilesResource resource, int limitBytes, int actualBytes
+ SeismicityPmTilesResource resource, int limit, int actual
 });
 
 
@@ -606,11 +606,11 @@ class _$SeismicityPmTilesResourceLimitExceededExceptionCopyWithImpl<$Res>
 
 /// Create a copy of SeismicityPmTilesException
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? resource = null,Object? limitBytes = null,Object? actualBytes = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? resource = null,Object? limit = null,Object? actual = null,}) {
   return _then(SeismicityPmTilesResourceLimitExceededException(
 resource: null == resource ? _self.resource : resource // ignore: cast_nullable_to_non_nullable
-as SeismicityPmTilesResource,limitBytes: null == limitBytes ? _self.limitBytes : limitBytes // ignore: cast_nullable_to_non_nullable
-as int,actualBytes: null == actualBytes ? _self.actualBytes : actualBytes // ignore: cast_nullable_to_non_nullable
+as SeismicityPmTilesResource,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,actual: null == actual ? _self.actual : actual // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
