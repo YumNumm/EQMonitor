@@ -767,7 +767,7 @@ const devBuildConfig = BuildConfig(
 );
 
 final class NativeSocialFixture {
-  NativeSocialFixture({
+  new({
     this.platform = NativeAuthPlatform.ios,
     this.buildConfig = devBuildConfig,
     this.telegramUrl = const TelegramUrlModel(
@@ -907,7 +907,7 @@ final class RecordingAppleSignInPlugin implements AppleSignInPlugin {
 }
 
 final class QueueNonceGenerator implements NativeAuthNonceGenerator {
-  QueueNonceGenerator(this.nonces);
+  new(this.nonces);
 
   final List<NativeAuthNonce> nonces;
 
@@ -994,7 +994,7 @@ final class MemoryPreferencesDataSource
 }
 
 final class GoogleSignInInitialization {
-  const GoogleSignInInitialization({
+  const new({
     required this.clientId,
     required this.serverClientId,
     required this.nonce,
@@ -1016,7 +1016,7 @@ final class GoogleSignInInitialization {
 }
 
 final class AppleSignInRequest {
-  const AppleSignInRequest({
+  const new({
     required this.nonce,
     required this.webAuthenticationOptions,
   });

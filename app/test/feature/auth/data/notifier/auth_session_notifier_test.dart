@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -415,7 +414,7 @@ ResponseBody _jsonResponse(
 );
 
 final class _NotifierFixture {
-  _NotifierFixture() {
+  new() {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
     sessionRepository = BetterAuthSessionRepository(

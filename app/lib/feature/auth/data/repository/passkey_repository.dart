@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.d
 import 'package:eqmonitor/feature/auth/data/provider/native_auth_attempt_coordinator.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
+import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_token_manager.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/exceptions.dart' as passkey;
 import 'package:passkeys/types.dart' hide Result;
@@ -113,7 +114,7 @@ final class PasskeyRepository implements PasskeyAuthGateway {
       return Failure(exception, stackTrace);
     }
     final token = tokenResult.unwrap();
-    if (token == null || !isSafeBetterAuthSessionToken(token)) {
+    if (token == null || !const BetterAuthSessionTokenManager().isSafe(token)) {
       return const Failure(
         AuthFailure(kind: AuthFailureKind.sessionRequired),
       );

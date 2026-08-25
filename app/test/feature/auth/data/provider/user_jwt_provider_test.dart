@@ -615,7 +615,7 @@ ResponseBody _jsonResponse(
 );
 
 final class _AuthFixture {
-  _AuthFixture() {
+  new() {
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = authAdapter;
     sessionRepository = BetterAuthSessionRepository(
@@ -684,7 +684,7 @@ enum _UserReply {
 }
 
 final class _UserApiAdapter implements HttpClientAdapter {
-  _UserApiAdapter(this.replies);
+  new(this.replies);
 
   final List<_UserReply> replies;
   final authorizationHeaders = <String?>[];

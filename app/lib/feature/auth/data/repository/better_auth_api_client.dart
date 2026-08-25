@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -8,7 +7,10 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/dio_base_options.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/repository/auth_request_executor.dart';
+import 'package:eqmonitor/feature/auth/data/repository/better_auth_cookie_jar_factory.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
+import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_token_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'better_auth_api_client.g.dart';
@@ -39,7 +41,8 @@ final class BetterAuthApiClient {
        _sessionRepository = sessionRepository,
        _cookieStore = BetterAuthCookieStore(
          initialCookieJar: cookieJar,
-         createCookieJar: createCookieJar ?? createInMemoryCookieJar,
+         createCookieJar:
+             createCookieJar ?? const BetterAuthCookieJarFactory().create,
        ),
        _establishmentGate =
            establishmentGate ?? BetterAuthSessionEstablishmentGate() {
@@ -85,7 +88,7 @@ final class BetterAuthApiClient {
       return Failure(exception, stackTrace);
     }
     final establishment = establishmentResult.unwrap();
-    final responseResult = await captureAuthRequest(
+    final responseResult = await const AuthRequestExecutor().capture(
       () => _dio.post<void>(
         '/api/auth/sign-in/social',
         data: {
@@ -131,11 +134,11 @@ final class BetterAuthApiClient {
 
   Future<Result<String, AuthFailure>> fetchJwt() {
     final sessionGeneration = _sessionRepository.generation;
-    return captureAuthRequest(() async {
+    return const AuthRequestExecutor().capture(() async {
       final response = await _dio.get<Map<String, dynamic>>(
         '/api/auth/token',
       );
-      await persistBetterAuthSessionToken(
+      await const BetterAuthSessionTokenManager().persist(
         response: response,
         sessionRepository: _sessionRepository,
         expectedGeneration: sessionGeneration,
@@ -149,10 +152,10 @@ final class BetterAuthApiClient {
 
   Future<Result<void, AuthFailure>> signOut() async {
     final sessionGeneration = _sessionRepository.generation;
-    final remoteResult = await captureAuthRequest(
+    final remoteResult = await const AuthRequestExecutor().capture(
       () async {
         final response = await _dio.post<void>('/api/auth/sign-out');
-        await persistBetterAuthSessionToken(
+        await const BetterAuthSessionTokenManager().persist(
           response: response,
           sessionRepository: _sessionRepository,
           expectedGeneration: sessionGeneration,
@@ -171,16 +174,16 @@ final class BetterAuthApiClient {
 
   Future<Result<void, AuthFailure>> clearCookies() {
     final replacedCookieJar = _cookieStore.replace();
-    return captureAuthRequest(replacedCookieJar.deleteAll);
+    return const AuthRequestExecutor().capture(replacedCookieJar.deleteAll);
   }
 
   Future<Result<bool, AuthFailure>> getSession() {
     final sessionGeneration = _sessionRepository.generation;
-    return captureAuthRequest(() async {
+    return const AuthRequestExecutor().capture(() async {
       final response = await _dio.get<Map<String, dynamic>>(
         '/api/auth/get-session',
       );
-      await persistBetterAuthSessionToken(
+      await const BetterAuthSessionTokenManager().persist(
         response: response,
         sessionRepository: _sessionRepository,
         expectedGeneration: sessionGeneration,
@@ -259,7 +262,7 @@ final class _BetterAuthPasskeyClient {
       return Failure(exception, stackTrace);
     }
     final establishment = establishmentResult.unwrap();
-    final responseResult = await captureAuthRequest(
+    final responseResult = await const AuthRequestExecutor().capture(
       () => _dio.get<Map<String, dynamic>>(
         '/api/auth/passkey/generate-register-options',
         options: establishment.jsonRequestOptions,
@@ -299,7 +302,7 @@ final class _BetterAuthPasskeyClient {
       return Failure(exception, stackTrace);
     }
     final establishment = establishmentResult.unwrap();
-    final responseResult = await captureAuthRequest(
+    final responseResult = await const AuthRequestExecutor().capture(
       () => _dio.get<Map<String, dynamic>>(
         '/api/auth/passkey/generate-authenticate-options',
         options: establishment.jsonRequestOptions,
@@ -354,7 +357,7 @@ final class BetterAuthPasskeyRegistrationOperation {
         AuthFailure(kind: AuthFailureKind.invalidResponse),
       );
     }
-    final responseResult = await captureAuthRequest(
+    final responseResult = await const AuthRequestExecutor().capture(
       () => _dio.post<String>(
         '/api/auth/passkey/verify-registration',
         data: {'response': response},
@@ -423,7 +426,7 @@ final class BetterAuthPasskeyAuthenticationOperation {
         AuthFailure(kind: AuthFailureKind.invalidResponse),
       );
     }
-    final responseResult = await captureAuthRequest(
+    final responseResult = await const AuthRequestExecutor().capture(
       () => _dio.post<Map<String, dynamic>>(
         '/api/auth/passkey/verify-authentication',
         data: {'response': response},
@@ -516,7 +519,7 @@ final class _BetterAuthSessionEstablishmentFactory {
       _establishmentGate.complete(establishmentId: establishmentId);
       return Failure(exception, stackTrace);
     }
-    final transactionResult = await captureAuthRequest(
+    final transactionResult = await const AuthRequestExecutor().capture(
       () => _cookieStore.beginTransaction(
         uri: Uri.parse(_dio.options.baseUrl).resolve(endpoint.path),
       ),
@@ -588,7 +591,7 @@ final class _BetterAuthSessionEstablishment {
       );
     }
     var didAttemptSessionSave = false;
-    final commitResult = await captureAuthRequest(() async {
+    final commitResult = await const AuthRequestExecutor().capture(() async {
       final tokenHeaders = response.headers.map['set-auth-token'];
       final token = switch (tokenHeaders) {
         null => null,
@@ -598,7 +601,7 @@ final class _BetterAuthSessionEstablishment {
         ),
       };
       if (token != null) {
-        if (!isSafeBetterAuthSessionToken(token)) {
+        if (!const BetterAuthSessionTokenManager().isSafe(token)) {
           throw const AuthFailure(kind: AuthFailureKind.invalidResponse);
         }
         didAttemptSessionSave = true;
@@ -635,9 +638,11 @@ final class _BetterAuthSessionEstablishment {
       );
     }
     var didAttemptSessionSave = false;
-    final commitResult = await captureAuthRequest(() async {
+    final commitResult = await const AuthRequestExecutor().capture(() async {
       final token = switch (response.headers.map['set-auth-token']) {
-        [final String value] when isSafeBetterAuthSessionToken(value) => value,
+        [final String value]
+            when const BetterAuthSessionTokenManager().isSafe(value) =>
+          value,
         _ => throw const AuthFailure(
           kind: AuthFailureKind.invalidResponse,
         ),
@@ -671,7 +676,7 @@ final class _BetterAuthSessionEstablishment {
     if (!establishmentGate.isCurrent(establishmentId: establishmentId)) {
       return const Success(null);
     }
-    final result = await captureAuthRequest(
+    final result = await const AuthRequestExecutor().capture(
       cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
     );
     establishmentGate.complete(establishmentId: establishmentId);
@@ -715,7 +720,7 @@ final class _BetterAuthSessionEstablishment {
     if (!establishmentGate.isCurrent(establishmentId: establishmentId)) {
       return failure;
     }
-    final cookieRollbackResult = await captureAuthRequest(
+    final cookieRollbackResult = await const AuthRequestExecutor().capture(
       cookieTransaction.transactionSnapshot.cookieJar.deleteAll,
     );
     Result<void, AuthFailure> sessionRollbackResult =
@@ -955,7 +960,8 @@ final class BetterAuthSessionInterceptor extends Interceptor {
     final tokenResult = await sessionRepository.readSessionToken();
     switch (tokenResult) {
       case Success(:final value):
-        if (value != null && isSafeBetterAuthSessionToken(value)) {
+        if (value != null &&
+            const BetterAuthSessionTokenManager().isSafe(value)) {
           options.headers['Authorization'] = 'Bearer $value';
         }
         handler.next(options);
@@ -969,94 +975,4 @@ final class BetterAuthSessionInterceptor extends Interceptor {
         );
     }
   }
-}
-
-CookieJar createInMemoryCookieJar() => CookieJar();
-
-Future<void> persistBetterAuthSessionToken<T>({
-  required Response<T> response,
-  required BetterAuthSessionRepository sessionRepository,
-  required int expectedGeneration,
-}) async {
-  final tokenHeaders = response.headers.map['set-auth-token'];
-  if (tokenHeaders == null || tokenHeaders.length != 1) {
-    return;
-  }
-  final token = tokenHeaders.single;
-  if (isSafeBetterAuthSessionToken(token)) {
-    final saveResult = await sessionRepository.saveSessionToken(
-      token: token,
-      expectedGeneration: expectedGeneration,
-    );
-    if (saveResult case Failure(:final exception)) {
-      throw exception;
-    }
-  }
-}
-
-bool isSafeBetterAuthSessionToken(String token) {
-  if (token.isEmpty || token.trim() != token) {
-    return false;
-  }
-  return !token.codeUnits.any((unit) => unit < 0x21 || unit == 0x7f);
-}
-
-Future<Result<T, AuthFailure>> captureAuthRequest<T>(
-  FutureOr<T> Function() request,
-) async {
-  try {
-    return Success(await request());
-  } on AuthFailure catch (failure, stackTrace) {
-    return Failure(failure, stackTrace);
-  } on DioException catch (exception, stackTrace) {
-    return Failure(authFailureFromDio(exception), stackTrace);
-  } on FormatException catch (_, stackTrace) {
-    return Failure(
-      const AuthFailure(kind: AuthFailureKind.invalidResponse),
-      stackTrace,
-    );
-  } on Exception catch (_, stackTrace) {
-    return Failure(
-      const AuthFailure(kind: AuthFailureKind.unknown),
-      stackTrace,
-    );
-  }
-}
-
-AuthFailure authFailureFromDio(DioException exception) {
-  if (exception.error case final AuthFailure failure) {
-    return failure;
-  }
-  final statusCode = exception.response?.statusCode;
-  if (statusCode == 401) {
-    return const AuthFailure(
-      kind: AuthFailureKind.unauthorized,
-      statusCode: 401,
-    );
-  }
-  if (statusCode == 429) {
-    return const AuthFailure(
-      kind: AuthFailureKind.rateLimited,
-      statusCode: 429,
-    );
-  }
-  if (statusCode != null && statusCode >= 400 && statusCode < 500) {
-    return AuthFailure(
-      kind: AuthFailureKind.invalidResponse,
-      statusCode: statusCode,
-    );
-  }
-  if (statusCode != null && statusCode >= 500) {
-    return AuthFailure(kind: AuthFailureKind.server, statusCode: statusCode);
-  }
-  if (exception.type
-      case DioExceptionType.connectionTimeout ||
-          DioExceptionType.sendTimeout ||
-          DioExceptionType.receiveTimeout) {
-    return AuthFailure(kind: AuthFailureKind.timeout, statusCode: statusCode);
-  }
-  if (exception.type case DioExceptionType.connectionError) {
-    return AuthFailure(kind: AuthFailureKind.network, statusCode: statusCode);
-  }
-  return AuthFailure(kind: AuthFailureKind.unknown, statusCode: statusCode);
 }

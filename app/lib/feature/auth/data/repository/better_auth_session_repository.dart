@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_s
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/repository/secure_storage_operation_executor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'better_auth_session_repository.g.dart';
@@ -29,7 +30,7 @@ final class BetterAuthSessionRepository {
   int get generation => _generation;
 
   Future<Result<String?, AuthFailure>> readSessionToken() =>
-      captureSecureStorageOperation(
+      const SecureStorageOperationExecutor().capture(
         () => _preferences.getString(
           key: SecureStorageKey.betterAuthSessionToken,
         ),
@@ -45,7 +46,7 @@ final class BetterAuthSessionRepository {
         if (operationGeneration != _generation) {
           return Future.value(const Success(null));
         }
-        return captureSecureStorageOperation(
+        return const SecureStorageOperationExecutor().capture(
           () => _preferences.setString(
             key: SecureStorageKey.betterAuthSessionToken,
             value: token,
@@ -58,7 +59,7 @@ final class BetterAuthSessionRepository {
   Future<Result<void, AuthFailure>> clearSession() {
     _generation++;
     return _mutationSerializer.run(
-      operation: () => captureSecureStorageOperation(
+      operation: () => const SecureStorageOperationExecutor().capture(
         () => _preferences.remove(
           key: SecureStorageKey.betterAuthSessionToken,
         ),
@@ -76,18 +77,5 @@ final class SessionMutationSerializer {
     final result = _tail.then((_) => operation());
     _tail = result.then<void>((_) {});
     return result;
-  }
-}
-
-Future<Result<T, AuthFailure>> captureSecureStorageOperation<T>(
-  Future<T> Function() operation,
-) async {
-  try {
-    return Success(await operation());
-  } on Exception catch (_, stackTrace) {
-    return Failure(
-      const AuthFailure(kind: AuthFailureKind.storage),
-      stackTrace,
-    );
   }
 }

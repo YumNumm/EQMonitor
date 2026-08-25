@@ -6,7 +6,7 @@ import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_session_notifier.dart';
 import 'package:eqmonitor/feature/auth/data/provider/user_jwt_provider.dart';
-import 'package:eqmonitor/feature/auth/data/repository/better_auth_api_client.dart';
+import 'package:eqmonitor/feature/auth/data/repository/user_json_request_executor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_api_client.g.dart';
@@ -70,7 +70,7 @@ final class UserApiClient implements UserApiGateway {
       }
       return Failure(exception, stackTrace);
     }
-    final first = await performUserJsonRequest(
+    final first = await const UserJsonRequestExecutor().perform(
       dio: _dio,
       method: method,
       path: path,
@@ -90,7 +90,7 @@ final class UserApiClient implements UserApiGateway {
         }
         return Failure(exception, stackTrace);
       }
-      final retry = await performUserJsonRequest(
+      final retry = await const UserJsonRequestExecutor().perform(
         dio: _dio,
         method: method,
         path: path,
@@ -107,26 +107,3 @@ final class UserApiClient implements UserApiGateway {
     return first;
   }
 }
-
-Future<Result<Map<String, dynamic>, AuthFailure>> performUserJsonRequest({
-  required Dio dio,
-  required String method,
-  required String path,
-  required String jwt,
-  Map<String, dynamic>? queryParameters,
-  Map<String, dynamic>? data,
-}) => captureAuthRequest(() async {
-  final response = await dio.request<Map<String, dynamic>>(
-    path,
-    data: data,
-    queryParameters: queryParameters,
-    options: Options(
-      method: method,
-      headers: {'Authorization': 'Bearer $jwt'},
-    ),
-  );
-  return switch (response.data) {
-    final Map<String, dynamic> value => value,
-    _ => throw const AuthFailure(kind: AuthFailureKind.invalidResponse),
-  };
-});

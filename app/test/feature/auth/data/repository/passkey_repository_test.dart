@@ -21,7 +21,6 @@ import 'package:eqmonitor/feature/auth/data/repository/google_auth_repository.da
 import 'package:eqmonitor/feature/auth/data/repository/native_social_auth_repository.dart';
 import 'package:eqmonitor/feature/auth/data/repository/passkey_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/exceptions.dart' as passkey;
 import 'package:passkeys/types.dart' hide Result;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -1540,7 +1539,7 @@ final class _CrossAppleAuthGateway implements AppleAuthGateway {
 }
 
 final class _PasskeyFixture {
-  const _PasskeyFixture({
+  const new({
     required this.repository,
     required this.apiClient,
     required this.sessionRepository,
@@ -1715,7 +1714,7 @@ final class _FakePasskeyAuthenticator implements PasskeyAuthenticatorInterface {
 }
 
 final class _PasskeyHttpAdapter implements HttpClientAdapter {
-  _PasskeyHttpAdapter({required List<ResponseBody> responses})
+  new({required List<ResponseBody> responses})
     : _responses = responses.map(Future<ResponseBody>.value).toList();
 
   final List<Future<ResponseBody>> _responses;
