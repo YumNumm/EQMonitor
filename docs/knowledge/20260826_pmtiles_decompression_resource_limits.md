@@ -2,10 +2,16 @@
 
 - PMTilesのroot/leaf directoryとtile payloadは、`gzip.decode`で一括展開しない。
 - encoded長はrange readと展開の前、decoded長はchunkを蓄積する前に検証する。
+- directoryはbyte上限だけでなくentry数も配列確保前に検証する。圧縮率の高い
+  varint列から大量のListとobjectを生成できるため、byte数だけではheapを
+  十分に制限できない。
+- leaf directory cacheは件数上限付きLRUとし、1件あたりのentry上限と
+  組み合わせてarchive寿命中の保持量を有限化する。
 - 上限値は汎用decoderへhidden defaultとして置かず、source ownerが
   `PmTilesV3Limits`へ明示する。
-- 上限超過は`corruptArchive`へ丸めず`resourceLimitExceeded`として扱い、URL、
-  payload、codec例外文をlogや`toString`へ含めない。
+- 上限超過は`corruptArchive`へ丸めず`resourceLimitExceeded`として扱う。
+  `resource`でbyteとentryの単位を判別し、URL、payload、codec例外文をlogや
+  `toString`へ含めない。
 - per-tile上限だけでは並列展開の合計memoryを制限できない。callerの
   `maxInFlightDecodes`と掛け合わせ、aggregate budgetも別途設計する。
 

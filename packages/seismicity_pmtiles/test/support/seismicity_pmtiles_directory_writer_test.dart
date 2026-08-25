@@ -50,6 +50,7 @@ void main() {
       compression: PmTilesV3CompressionDecoder.none,
       maxEncodedBytes: 1 << 20,
       maxDecodedBytes: 8 << 20,
+      maxEntries: 65536,
     );
     expect(decoded.map((entry) => entry.tileId), [1, 4]);
     expect(decoded.map((entry) => entry.runLength), [1, 1]);

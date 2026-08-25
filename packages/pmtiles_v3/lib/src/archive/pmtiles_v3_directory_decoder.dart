@@ -21,7 +21,15 @@ final class PmTilesV3DirectoryDecoder {
     required int compression,
     required int maxEncodedBytes,
     required int maxDecodedBytes,
+    required int maxEntries,
   }) {
+    if (maxEntries < 0) {
+      throw ArgumentError.value(
+        maxEntries,
+        'maxEntries',
+        'must not be negative',
+      );
+    }
     final decoded = compressionDecoder.decodeBounded(
       bytes: bytes,
       compression: compression,
@@ -35,6 +43,13 @@ final class PmTilesV3DirectoryDecoder {
     if (count <= 0) {
       throw const PmTilesV3Exception.corruptArchive(
         reason: 'A PMTiles directory must contain at least one entry.',
+      );
+    }
+    if (count > maxEntries) {
+      throw PmTilesV3Exception.resourceLimitExceeded(
+        resource: PmTilesV3Resource.directoryEntries,
+        limit: maxEntries,
+        actual: count,
       );
     }
     if (count > (decoded.length - countResult.nextOffset) ~/ 4) {

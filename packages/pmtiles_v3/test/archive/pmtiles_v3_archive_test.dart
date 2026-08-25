@@ -130,10 +130,11 @@ void main() {
     await archive.close();
   });
 
-  test('classifies root directory encoded and decoded limits', () async {
+  test('classifies root directory resource limits', () async {
     for (final limits in [
       _limits.copyWith(maxDirectoryEncodedBytes: 0),
       _limits.copyWith(maxDirectoryDecodedBytes: 4),
+      _limits.copyWith(maxDirectoryEntries: 0),
     ]) {
       final fixture = builder.build(
         rootEntries: const [

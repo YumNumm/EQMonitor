@@ -5,6 +5,7 @@
 既存のbase mapとseismicity archiveは分布値が保存されていないため、互換性を
 壊さずgzip bombを有限化する暫定値として、directory encoded 1 MiB / decoded
 8 MiB、tile encoded 4 MiB / decoded 16 MiBをcallerから明示している。
+directoryは1件65536 entries、leaf cacheは4件を暫定上限として明示している。
 
 debug base mapは最大6 tileを並列処理するため、敵対archiveでは展開結果96 MiB、
 圧縮入力24 MiBに加え、MVT decode isolateへのcopyとmesh allocationが重なり得る。
@@ -12,7 +13,8 @@ debug base mapは最大6 tileを並列処理するため、敵対archiveでは�
 ## 実施事項
 
 - release対象のbase map / seismicity / estimated-intensity archiveについて、root、
-  leaf、tileそれぞれのencoded/decoded byteのp50 / p95 / p99 / maxを記録する。
+  leaf、tileそれぞれのencoded/decoded byteとdirectory entry数の
+  p50 / p95 / p99 / maxを記録する。
 - iOS実機の6並列decodeでpeak RSSとmemory pressureを計測する。
 - source別の上限を実測maxへ安全率を加えた値までtightenする。estimated sourceは
   generic暫定値を継承せず、descriptor/header契約に対応する独立値を持たせる。

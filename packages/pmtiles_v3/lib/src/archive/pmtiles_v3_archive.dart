@@ -77,6 +77,7 @@ final class PmTilesV3ArchiveOpener {
         compression: header.internalCompression,
         maxEncodedBytes: limits.maxDirectoryEncodedBytes,
         maxDecodedBytes: limits.maxDirectoryDecodedBytes,
+        maxEntries: limits.maxDirectoryEntries,
       );
       const tileId = PmTilesV3TileId();
       final lowerRange = tileId.rangeForZoom(zoom: header.minZoom);
@@ -512,6 +513,7 @@ final class PmTilesV3DirectoryTraversal {
       compression: header.internalCompression,
       maxEncodedBytes: limits.maxDirectoryEncodedBytes,
       maxDecodedBytes: limits.maxDirectoryDecodedBytes,
+      maxEntries: limits.maxDirectoryEntries,
     );
   }
 

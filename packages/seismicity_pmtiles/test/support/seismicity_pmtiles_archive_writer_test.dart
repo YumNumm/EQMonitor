@@ -108,6 +108,7 @@ void main() {
       compression: PmTilesV3CompressionDecoder.none,
       maxEncodedBytes: limits.maxDirectoryEncodedBytes,
       maxDecodedBytes: limits.maxDirectoryDecodedBytes,
+      maxEntries: limits.maxDirectoryEntries,
     );
     expect(entries.map((entry) => entry.tileId), [1, 4]);
     expect(
