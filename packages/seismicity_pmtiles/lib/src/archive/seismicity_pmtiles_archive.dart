@@ -10,6 +10,12 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  // 未知の既存archiveとの互換を維持しつつ、1 requestのworst-case allocation
+  // を有限化する暫定運用値。観測済み分布から導いた値ではない。
+  maxDirectoryEncodedBytes: 1 << 20,
+  maxDirectoryDecodedBytes: 8 << 20,
+  maxTileEncodedBytes: 4 << 20,
+  maxTileDecodedBytes: 16 << 20,
   // seismicityデータのproducer契約はclustered orderingとtile件数の一致を
   // 保証しているため、archive全体のeager検証を明示的に有効化し続ける。
   validateEntireArchiveEagerly: true,
