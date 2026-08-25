@@ -2,6 +2,9 @@ import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor/core/util/map/app_map_clock.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/latest_earthquake_overlay_provider.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_camera_action.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_overlay_layout.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_gpu_probe_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_gpu_probe_panel.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_source_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_overlay_banner.dart';
@@ -26,11 +29,11 @@ class EqmonitorMapDebugPage extends StatelessWidget {
   };
 }
 
-class _EqmonitorMapGpuProbeDebugPage extends HookWidget {
+class _EqmonitorMapGpuProbeDebugPage extends HookConsumerWidget {
   const new();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final atlasFixture = useState(MapSpriteAtlasProbeFixture.production);
     final faultPoint = useState<MapGpuFaultPoint?>(null);
     final counterSnapshot = useState<MapGpuResourceCounterSnapshot?>(null);
@@ -55,14 +58,32 @@ class _EqmonitorMapGpuProbeDebugPage extends HookWidget {
         controller: probeController,
         counterSnapshot: counterSnapshot.value,
         onCounterChanged: counterCallbackGuard.publish,
-        onAtlasFixtureChanged: (value) => atlasFixture.value = value,
-        onFaultPointChanged: (value) => faultPoint.value = value,
+        onAtlasFixtureChanged: (value) {
+          final next = ref
+              .read(eqmonitorMapGpuProbeActionProvider)
+              .withAtlasFixture(
+                currentConfiguration: configuration,
+                atlasFixture: value,
+              );
+          atlasFixture.value = next.atlasFixture;
+        },
+        onFaultPointChanged: (value) {
+          final next = ref
+              .read(eqmonitorMapGpuProbeActionProvider)
+              .withFaultPoint(
+                currentConfiguration: configuration,
+                faultPoint: value,
+              );
+          faultPoint.value = next.faultPoint;
+        },
         onInvalidateRendererContextGeneration: () {
-          final didInvalidate = probeController
-              .invalidateRendererContextGeneration();
-          final message = switch (didInvalidate) {
-            true => 'Renderer generation を更新しました',
-            false => '地図の初期化完了後に再試行してください',
+          final result = ref
+              .read(eqmonitorMapGpuProbeActionProvider)
+              .invalidateRendererContextGeneration(controller: probeController);
+          final message = switch (result) {
+            EqmonitorMapGpuProbeInvalidationSucceeded() =>
+              'Renderer generation を更新しました',
+            EqmonitorMapGpuProbeInvalidationNotReady() => '地図の初期化完了後に再試行してください',
           };
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -89,6 +110,9 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
     useEffect(() {
       return mapSession.dispose;
     }, [mapSession]);
+    final committedCamera = useValueListenable(
+      mapSession.cameraController.committedCameraListenable,
+    );
     final mapClock = useMemoized(
       () => mapSession.clockFor(sourceIdentity: clockSourceIdentity),
       [mapSession, clockSourceIdentity],
@@ -101,8 +125,32 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
     final presentation = EqmonitorMapOverlayPresentation.from(
       overlayState: overlayState,
       coverageSnapshot: coverageSnapshot.value,
+      committedCamera: committedCamera,
     );
     final overlay = presentation.overlay;
+    final hypocenter = presentation.hypocenter;
+    final onMoveToHypocenter =
+        presentation.canMoveToHypocenter && hypocenter != null
+        ? () async {
+            final result = await ref
+                .read(eqmonitorMapCameraActionProvider)
+                .moveToHypocenter(
+                  controller: mapSession.cameraController,
+                  longitude: hypocenter.longitude,
+                  latitude: hypocenter.latitude,
+                );
+            if (!context.mounted) {
+              return;
+            }
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(eqmonitorMapCameraActionMessage(result)),
+                ),
+              );
+          }
+        : null;
     final onCoverageChanged =
         useCallback<ValueChanged<EarthquakeOverlayCoverageSnapshot>>(
           (snapshot) => coverageSnapshot.value = snapshot,
@@ -110,47 +158,29 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
         );
     return Scaffold(
       appBar: AppBar(title: const Text('EQMonitor Map (Flutter Scene)')),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          source.when(
-            data: (result) => Stack(
-              fit: StackFit.expand,
-              children: [
-                BaseMapView(
-                  source: result.source,
-                  initialCamera: EqmonitorMapDebugConfiguration.initialCamera,
-                  clock: mapClock,
-                  cameraController: mapSession.cameraController,
-                  limits: EqmonitorMapDebugConfiguration.limitsFor(
-                    minZoom: result.minZoom,
-                    maxZoom: result.maxZoom,
-                  ),
-                  earthquakeOverlay: overlay,
-                  onEarthquakeOverlayCoverageChanged: onCoverageChanged,
-                  gpuProbeConfiguration: probeBindings?.configuration,
-                  onGpuResourceCounterChanged: probeBindings?.onCounterChanged,
-                  gpuProbeController: probeBindings?.controller,
-                ),
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  right: 12,
-                  child: SafeArea(
-                    child: EqmonitorMapOverlayBanner(
-                      presentation: presentation,
-                    ),
-                  ),
-                ),
-              ],
+      body: source.when(
+        data: (result) => EqmonitorMapDebugOverlayLayout(
+          map: BaseMapView(
+            source: result.source,
+            initialCamera: EqmonitorMapDebugConfiguration.initialCamera,
+            clock: mapClock,
+            cameraController: mapSession.cameraController,
+            limits: EqmonitorMapDebugConfiguration.limitsFor(
+              minZoom: result.minZoom,
+              maxZoom: result.maxZoom,
             ),
-            loading: () => const Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-            error: (error, stackTrace) => const _EqmonitorMapDebugSourceError(),
+            earthquakeOverlay: overlay,
+            onEarthquakeOverlayCoverageChanged: onCoverageChanged,
+            gpuProbeConfiguration: probeBindings?.configuration,
+            onGpuResourceCounterChanged: probeBindings?.onCounterChanged,
+            gpuProbeController: probeBindings?.controller,
           ),
-          if (probeBindings case final bindings?)
-            EqmonitorMapGpuProbePanel(
+          banner: EqmonitorMapOverlayBanner(
+            presentation: presentation,
+            onMoveToHypocenter: onMoveToHypocenter,
+          ),
+          probePanel: switch (probeBindings) {
+            final bindings? => EqmonitorMapGpuProbePanel(
               atlasFixture: bindings.configuration.atlasFixture,
               faultPoint: bindings.configuration.faultPoint,
               counterSnapshot: bindings.counterSnapshot,
@@ -159,7 +189,12 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
               onInvalidateRendererContextGeneration:
                   bindings.onInvalidateRendererContextGeneration,
             ),
-        ],
+            null => null,
+          },
+        ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
+        error: (error, stackTrace) => const _EqmonitorMapDebugSourceError(),
       ),
     );
   }

@@ -356,6 +356,35 @@ void main() {
     expect(second.frameUniform, isNot(same(first.frameUniform)));
   });
 
+  test('atlas texture replacement preserves instance geometry identity', () {
+    final first = buildMapPointSpriteBatches(
+      frame: frame(),
+      versionStamp: versionStamp(),
+      atlas: atlas,
+      features: [feature(id: 'a', priority: 0)],
+      maxPolicyBatches: 1,
+    ).single;
+    final replacementAtlas = replaceMapSpriteAtlasTexture(
+      atlas: atlas,
+      identity: createMapSourceIdentity(value: 'sha256:atlas-probe'),
+      rgbaBytes: Uint8List.fromList(List.filled(64, 255)),
+    );
+
+    final second = buildMapPointSpriteBatches(
+      frame: frame(frameNumber: 1),
+      versionStamp: versionStamp(),
+      atlas: replacementAtlas,
+      features: [feature(id: 'a', priority: 0)],
+      maxPolicyBatches: 1,
+      previous: [first],
+    ).single;
+
+    expect(second.atlas, same(replacementAtlas));
+    expect(second.batchKey, isNot(first.batchKey));
+    expect(second.instanceGeneration, same(first.instanceGeneration));
+    expect(second.instanceData, same(first.instanceData));
+  });
+
   test('different digest replaces instances', () {
     final first = buildMapPointSpriteBatches(
       frame: frame(),

@@ -40,6 +40,23 @@ final class EqmonitorMapCameraActionCommandFailed
   final MapCameraCommandFailure failure;
 }
 
+String eqmonitorMapCameraActionMessage(EqmonitorMapCameraActionResult result) =>
+    switch (result) {
+      EqmonitorMapCameraActionSucceeded() => '震源へ移動しました',
+      EqmonitorMapCameraActionNotReady() => '地図の準備が完了していません',
+      EqmonitorMapCameraActionHypocenterUnavailable() => '震源座標がありません',
+      EqmonitorMapCameraActionInvalidHypocenter() => '震源座標が不正です',
+      EqmonitorMapCameraActionCommandFailed(:final failure) =>
+        switch (failure) {
+          MapCameraCommandInvalidInput() => 'Camera入力が不正です',
+          MapCameraCommandNotAttached() => 'Camera controllerが未接続です',
+          MapCameraCommandNotReady() => 'Camera描画の準備が完了していません',
+          MapCameraCommandRenderFailed() => 'Camera描画に失敗しました',
+          MapCameraCommandDisposed() => 'Camera controllerは破棄済みです',
+          MapCameraCommandSuperseded() => 'Camera commandが更新されました',
+        },
+    };
+
 final class EqmonitorMapCameraAction {
   const new();
 

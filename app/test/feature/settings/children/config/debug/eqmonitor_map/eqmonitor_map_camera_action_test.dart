@@ -139,4 +139,33 @@ void main() {
     );
     expect(host.commands, hasLength(1));
   });
+
+  test('Action resultをraw detailなしの短い分類messageへ変換する', () {
+    final cases = <(EqmonitorMapCameraActionResult, String)>[
+      (
+        const EqmonitorMapCameraActionNotReady(),
+        '地図の準備が完了していません',
+      ),
+      (
+        const EqmonitorMapCameraActionHypocenterUnavailable(),
+        '震源座標がありません',
+      ),
+      (
+        const EqmonitorMapCameraActionInvalidHypocenter(),
+        '震源座標が不正です',
+      ),
+      (
+        const EqmonitorMapCameraActionCommandFailed(
+          failure: MapCameraCommandRenderFailed(
+            reason: MapCameraCommandRenderFailureReason.sceneSubmissionRejected,
+          ),
+        ),
+        'Camera描画に失敗しました',
+      ),
+    ];
+
+    for (final entry in cases) {
+      expect(eqmonitorMapCameraActionMessage(entry.$1), entry.$2);
+    }
+  });
 }

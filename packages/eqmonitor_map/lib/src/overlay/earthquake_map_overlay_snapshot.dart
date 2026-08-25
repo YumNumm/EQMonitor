@@ -98,6 +98,29 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
   );
 }
 
+/// Replaces only the atlas while retaining every non-texture overlay input.
+EarthquakeMapOverlaySnapshot replaceEarthquakeMapOverlaySpriteAtlas({
+  required EarthquakeMapOverlaySnapshot snapshot,
+  required MapSpriteAtlas spriteAtlas,
+}) {
+  _validateSprites(
+    spriteAtlas: spriteAtlas,
+    sprites: snapshot.sprites,
+    maxSpritePolicyBatches: snapshot.maxSpritePolicyBatches,
+  );
+  return EarthquakeMapOverlaySnapshot._(
+    versionStamp: snapshot.versionStamp,
+    regionToCityZoom: snapshot.regionToCityZoom,
+    stationMinZoom: snapshot.stationMinZoom,
+    regionStyles: snapshot.regionStyles,
+    cityStyles: snapshot.cityStyles,
+    stations: snapshot.stations,
+    spriteAtlas: spriteAtlas,
+    sprites: snapshot.sprites,
+    maxSpritePolicyBatches: snapshot.maxSpritePolicyBatches,
+  );
+}
+
 void _validateSnapshotValues({
   required double regionToCityZoom,
   required double stationMinZoom,

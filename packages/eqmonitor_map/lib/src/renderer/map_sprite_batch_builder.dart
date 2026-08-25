@@ -127,6 +127,25 @@ MapPointSpriteInstanceBatch _buildPolicyBatch({
       frameUniform: frameUniform,
     );
   }
+  MapPointSpriteInstanceBatch? textureReplacementReusable;
+  for (final batch in previousByDigest.values) {
+    if (identical(batch.atlas.regions, atlas.regions) &&
+        batch.sizePolicy == sizePolicy &&
+        batch.opacityPolicy == opacityPolicy &&
+        batch.instanceDigest == instanceDigest) {
+      textureReplacementReusable = batch;
+      break;
+    }
+  }
+  if (textureReplacementReusable != null) {
+    return textureReplacementReusable.withAtlasAndFrame(
+      frame: frame,
+      versionStamp: versionStamp,
+      atlas: atlas,
+      frameUniform: frameUniform,
+      batchKey: batchKey,
+    );
+  }
   return createMapPointSpriteInstanceBatch(
     frame: frame,
     versionStamp: versionStamp,
