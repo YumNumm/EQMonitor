@@ -70,7 +70,7 @@ void main() {
           stopRequested: Future.value(
             EstimatedIntensityArchiveStopReason.cancelled,
           ),
-          diagnosticReporter: ignoreEstimatedIntensityArchiveDiagnostic,
+          diagnosticReporter: EstimatedIntensityArchiveDiagnostics.ignore,
         );
 
     expectEstimatedIntensityDownloadFailure(
@@ -100,7 +100,7 @@ void main() {
       descriptor: estimatedIntensityTestDescriptor(),
       file: file,
       stopRequested: stopRequested.future,
-      diagnosticReporter: ignoreEstimatedIntensityArchiveDiagnostic,
+      diagnosticReporter: EstimatedIntensityArchiveDiagnostics.ignore,
     );
     await lengthStarted.future;
     stopRequested.complete(EstimatedIntensityArchiveStopReason.timeout);

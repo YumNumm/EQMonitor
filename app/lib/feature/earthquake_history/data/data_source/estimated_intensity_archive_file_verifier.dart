@@ -73,7 +73,7 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
       try {
         await digestIterator.cancel();
       } catch (_) {
-        reportEstimatedIntensityArchiveDiagnostic(
+        EstimatedIntensityArchiveDiagnostics.report(
           reporter: diagnosticReporter,
           diagnostic: .hashStreamCancellationFailed,
         );
@@ -92,7 +92,7 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
     try {
       await digestIterator.cancel();
     } catch (_) {
-      reportEstimatedIntensityArchiveDiagnostic(
+      EstimatedIntensityArchiveDiagnostics.report(
         reporter: diagnosticReporter,
         diagnostic: .hashStreamCancellationFailed,
       );

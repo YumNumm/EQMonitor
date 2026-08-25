@@ -43,7 +43,7 @@ final class EstimatedIntensityArchiveStreamVerifier {
           try {
             await bodyIterator?.cancel();
           } catch (_) {
-            reportEstimatedIntensityArchiveDiagnostic(
+            EstimatedIntensityArchiveDiagnostics.report(
               reporter: diagnosticReporter,
               diagnostic: .bodyCancellationFailed,
             );
@@ -123,7 +123,7 @@ final class EstimatedIntensityArchiveStreamVerifier {
       try {
         await bodyIterator?.cancel();
       } catch (_) {
-        reportEstimatedIntensityArchiveDiagnostic(
+        EstimatedIntensityArchiveDiagnostics.report(
           reporter: diagnosticReporter,
           diagnostic: .bodyCancellationFailed,
         );
@@ -131,7 +131,7 @@ final class EstimatedIntensityArchiveStreamVerifier {
       try {
         await output?.close();
       } catch (_) {
-        reportEstimatedIntensityArchiveDiagnostic(
+        EstimatedIntensityArchiveDiagnostics.report(
           reporter: diagnosticReporter,
           diagnostic: .partWriterCloseFailed,
         );

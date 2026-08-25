@@ -15,7 +15,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
         EstimatedIntensityArchiveHttpOperationFactory.create,
     this.responseValidator = const EstimatedIntensityArchiveResponseValidator(),
     this.streamVerifier = const EstimatedIntensityArchiveStreamVerifier(),
-    this.diagnosticReporter = ignoreEstimatedIntensityArchiveDiagnostic,
+    this.diagnosticReporter = EstimatedIntensityArchiveDiagnostics.ignore,
   });
   final EstimatedIntensityArchiveHttpOperationCreator operationFactory;
   final EstimatedIntensityArchiveResponseValidator responseValidator;
@@ -92,7 +92,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
       try {
         await guard.close();
       } catch (_) {
-        reportEstimatedIntensityArchiveDiagnostic(
+        EstimatedIntensityArchiveDiagnostics.report(
           reporter: diagnosticReporter,
           diagnostic: .guardCloseFailed,
         );
@@ -101,7 +101,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
         try {
           operation.abort();
         } catch (_) {
-          reportEstimatedIntensityArchiveDiagnostic(
+          EstimatedIntensityArchiveDiagnostics.report(
             reporter: diagnosticReporter,
             diagnostic: .httpAbortFailed,
           );
@@ -110,7 +110,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
           try {
             await directory.delete(recursive: true);
           } catch (_) {
-            reportEstimatedIntensityArchiveDiagnostic(
+            EstimatedIntensityArchiveDiagnostics.report(
               reporter: diagnosticReporter,
               diagnostic: .stagingDirectoryDeleteFailed,
             );
@@ -120,7 +120,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
       try {
         operation.close();
       } catch (_) {
-        reportEstimatedIntensityArchiveDiagnostic(
+        EstimatedIntensityArchiveDiagnostics.report(
           reporter: diagnosticReporter,
           diagnostic: .httpCloseFailed,
         );
