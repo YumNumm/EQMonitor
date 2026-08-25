@@ -36,3 +36,17 @@ EarthquakeOverlayCommitResult commitEarthquakeOverlaySnapshot({
   }
   return EarthquakeOverlayCommitAccepted(next: next);
 }
+
+/// Rejects a separately-built input that reuses the current full version.
+///
+/// Exact same-version replacement is reserved for a typed GPU probe token;
+/// ordinary app input must advance its version or retain the same instance.
+EarthquakeOverlayCommitResult commitEarthquakeOverlayInputSnapshot({
+  required EarthquakeMapOverlaySnapshot? current,
+  required EarthquakeMapOverlaySnapshot next,
+}) {
+  if (current != null && current.versionStamp == next.versionStamp) {
+    return EarthquakeOverlayCommitRejected(current: current);
+  }
+  return commitEarthquakeOverlaySnapshot(current: current, next: next);
+}

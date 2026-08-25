@@ -31,6 +31,78 @@ void main() {
     expect(runtime.atlasFixture, MapSpriteAtlasProbeFixture.alphaHalf);
   });
 
+  test(
+    'atlas-only update preserves fired fault state and yields one token',
+    () {
+      final runtime = MapGpuProbeRuntime(
+        configuration: const MapGpuProbeConfiguration(
+          faultPoint: MapGpuFaultPoint.atlasUpload,
+          atlasFixture: MapSpriteAtlasProbeFixture.production,
+        ),
+      );
+      expect(
+        () => runtime.throwIfRequested(MapGpuFaultPoint.atlasUpload),
+        throwsA(isA<MapGpuProbeFault>()),
+      );
+
+      final update = runtime.updateConfiguration(
+        const MapGpuProbeConfiguration(
+          faultPoint: MapGpuFaultPoint.atlasUpload,
+          atlasFixture: MapSpriteAtlasProbeFixture.alphaHalf,
+        ),
+      );
+
+      expect(update.faultPointChanged, isFalse);
+      expect(
+        update.atlasTransitionToken,
+        mapGpuProbeCompileTimeEnabled ? isNotNull : isNull,
+      );
+      expect(
+        () => runtime.throwIfRequested(MapGpuFaultPoint.atlasUpload),
+        returnsNormally,
+      );
+      final token = update.atlasTransitionToken;
+      if (token != null) {
+        final first = runtime.consumeAtlasTransition(token);
+        final second = runtime.consumeAtlasTransition(token);
+        expect(first?.previous, MapSpriteAtlasProbeFixture.production);
+        expect(first?.next, MapSpriteAtlasProbeFixture.alphaHalf);
+        expect(second, isNull);
+      }
+    },
+  );
+
+  test('fault change rearms one-shot without producing atlas token', () {
+    final runtime = MapGpuProbeRuntime(
+      configuration: const MapGpuProbeConfiguration(
+        faultPoint: MapGpuFaultPoint.atlasUpload,
+        atlasFixture: MapSpriteAtlasProbeFixture.production,
+      ),
+    );
+    expect(
+      () => runtime.throwIfRequested(MapGpuFaultPoint.atlasUpload),
+      throwsA(isA<MapGpuProbeFault>()),
+    );
+
+    final update = runtime.updateConfiguration(
+      const MapGpuProbeConfiguration(
+        faultPoint: MapGpuFaultPoint.shaderInterface,
+        atlasFixture: MapSpriteAtlasProbeFixture.production,
+      ),
+    );
+
+    expect(update.faultPointChanged, isTrue);
+    expect(update.atlasTransitionToken, isNull);
+    expect(
+      () => runtime.throwIfRequested(MapGpuFaultPoint.shaderInterface),
+      throwsA(isA<MapGpuProbeFault>()),
+    );
+    expect(
+      () => runtime.throwIfRequested(MapGpuFaultPoint.shaderInterface),
+      returnsNormally,
+    );
+  });
+
   test('controller invalidates only its currently attached renderer host', () {
     final controller = MapGpuProbeController();
     final first = _FakeProbeHost();

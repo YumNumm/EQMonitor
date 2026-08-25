@@ -24,6 +24,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 void main() {
+  testWidgets('initialization error view never renders raw error details', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: BaseMapViewInitializationError(),
+      ),
+    );
+
+    expect(find.text('ベースレイヤーの初期化に失敗しました。'), findsOneWidget);
+    expect(find.textContaining('/private/secret.pmtiles'), findsNothing);
+    expect(find.textContaining('https://tiles.example.invalid'), findsNothing);
+    expect(find.textContaining('sha256:'), findsNothing);
+    expect(find.textContaining('Exception'), findsNothing);
+  });
+
   test(
     'typed sprite initialization failure disables only sprite resources',
     () async {
@@ -145,6 +162,28 @@ void main() {
     expect(view.gpuProbeConfiguration, same(gpuProbeConfiguration));
     expect(view.onGpuResourceCounterChanged, same(gpuCounterCallback));
     expect(view.gpuProbeController, same(gpuProbeController));
+
+    final changedProbe = BaseMapView(
+      source: view.source,
+      initialCamera: view.initialCamera,
+      limits: view.limits,
+      clock: view.clock,
+      cameraController: view.cameraController,
+      earthquakeOverlay: view.earthquakeOverlay,
+      onEarthquakeOverlayCoverageChanged:
+          view.onEarthquakeOverlayCoverageChanged,
+      gpuProbeConfiguration: const MapGpuProbeConfiguration(
+        faultPoint: MapGpuFaultPoint.frameSubmit,
+        atlasFixture: MapSpriteAtlasProbeFixture.edgeBleed,
+      ),
+      onGpuResourceCounterChanged: view.onGpuResourceCounterChanged,
+      gpuProbeController: view.gpuProbeController,
+    );
+    expect(
+      baseMapViewControllerLifecycleIdentity(view),
+      baseMapViewControllerLifecycleIdentity(changedProbe),
+      reason: 'probe configuration is an in-place runtime update',
+    );
   });
 
   group('cameraAfterGestureUpdate', () {

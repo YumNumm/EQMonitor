@@ -23,6 +23,42 @@ final class MapGpuProbeConfiguration {
   final MapSpriteAtlasProbeFixture atlasFixture;
 }
 
+final class MapGpuProbeAtlasFixtureTransition {
+  const MapGpuProbeAtlasFixtureTransition._({
+    required this.previous,
+    required this.next,
+  });
+
+  final MapSpriteAtlasProbeFixture previous;
+  final MapSpriteAtlasProbeFixture next;
+}
+
+final class MapGpuProbeConfigurationUpdate {
+  const new({
+    required this.faultPointChanged,
+    required this.atlasTransitionToken,
+  });
+
+  final bool faultPointChanged;
+  final MapGpuProbeAtlasTransitionToken? atlasTransitionToken;
+}
+
+final class _MapGpuProbeRuntimeIdentity {
+  const new();
+}
+
+final class MapGpuProbeAtlasTransitionToken {
+  const MapGpuProbeAtlasTransitionToken._({
+    required this._owner,
+    required this._previous,
+    required this._next,
+  });
+
+  final _MapGpuProbeRuntimeIdentity _owner;
+  final MapSpriteAtlasProbeFixture _previous;
+  final MapSpriteAtlasProbeFixture _next;
+}
+
 final class MapGpuProbeFault implements Exception {
   const MapGpuProbeFault({required this.point});
 
@@ -34,15 +70,62 @@ final class MapGpuProbeFault implements Exception {
 
 /// Debug-only fault state. Production callers do not construct this object.
 final class MapGpuProbeRuntime {
-  MapGpuProbeRuntime({required this.configuration});
+  factory MapGpuProbeRuntime({
+    required MapGpuProbeConfiguration configuration,
+  }) => MapGpuProbeRuntime._(configuration);
 
-  final MapGpuProbeConfiguration configuration;
+  MapGpuProbeRuntime._(this._configuration);
+
+  MapGpuProbeConfiguration _configuration;
+  final _identity = const _MapGpuProbeRuntimeIdentity();
+  final _issuedAtlasTransitionTokens = <MapGpuProbeAtlasTransitionToken>{};
   var _didFire = false;
 
-  MapSpriteAtlasProbeFixture get atlasFixture => configuration.atlasFixture;
+  MapSpriteAtlasProbeFixture get atlasFixture => _configuration.atlasFixture;
+
+  MapGpuProbeConfigurationUpdate updateConfiguration(
+    MapGpuProbeConfiguration configuration,
+  ) {
+    final previous = _configuration;
+    final faultPointChanged = previous.faultPoint != configuration.faultPoint;
+    final atlasFixtureChanged =
+        previous.atlasFixture != configuration.atlasFixture;
+    _configuration = configuration;
+    if (faultPointChanged) {
+      _didFire = false;
+    }
+    final token = atlasFixtureChanged && mapGpuProbeCompileTimeEnabled
+        ? MapGpuProbeAtlasTransitionToken._(
+            owner: _identity,
+            previous: previous.atlasFixture,
+            next: configuration.atlasFixture,
+          )
+        : null;
+    if (token != null) {
+      _issuedAtlasTransitionTokens.add(token);
+    }
+    return MapGpuProbeConfigurationUpdate(
+      faultPointChanged: faultPointChanged,
+      atlasTransitionToken: token,
+    );
+  }
+
+  MapGpuProbeAtlasFixtureTransition? consumeAtlasTransition(
+    MapGpuProbeAtlasTransitionToken token,
+  ) {
+    if (!mapGpuProbeCompileTimeEnabled ||
+        !identical(token._owner, _identity) ||
+        !_issuedAtlasTransitionTokens.remove(token)) {
+      return null;
+    }
+    return MapGpuProbeAtlasFixtureTransition._(
+      previous: token._previous,
+      next: token._next,
+    );
+  }
 
   void throwIfRequested(MapGpuFaultPoint point) {
-    if (_didFire || configuration.faultPoint != point) {
+    if (_didFire || _configuration.faultPoint != point) {
       return;
     }
     _didFire = true;

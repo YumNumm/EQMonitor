@@ -181,6 +181,30 @@ void main() {
     );
   });
 
+  test('input gate rejects a distinct snapshot with the same stamp', () {
+    final stamp = versionStamp(
+      sourceIdentity: 'event-a',
+      dataSequence: 8,
+      renderGeneration: 8,
+    );
+    final current = snapshot(
+      versionStamp: stamp,
+      color: const Color(0xfff44336),
+    );
+    final conflictingInput = snapshot(
+      versionStamp: stamp,
+      color: const Color(0xff2196f3),
+    );
+
+    final result = commitEarthquakeOverlayInputSnapshot(
+      current: current,
+      next: conflictingInput,
+    );
+
+    expect(result, isA<EarthquakeOverlayCommitRejected>());
+    expect((result as EarthquakeOverlayCommitRejected).current, same(current));
+  });
+
   test('atomically replaces the current snapshot from another source', () {
     final current = snapshot(
       versionStamp: versionStamp(

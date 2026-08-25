@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe_overlay.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/render/map_render_batch.dart';
@@ -454,6 +456,85 @@ void main() {
     );
 
     expect(frames.previousSpriteBatches, candidate.spriteBatchesForReuse);
+  });
+
+  test('atlas-only probe commit preserves complete coverage continuity', () {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final coverages = <EarthquakeOverlayCoverageSnapshot>[];
+    final frames = BaseMapOverlayFrameOwner(
+      onCoverageChanged: coverages.add,
+    );
+    final runtime = MapGpuProbeRuntime(
+      configuration: const MapGpuProbeConfiguration(
+        faultPoint: null,
+        atlasFixture: MapSpriteAtlasProbeFixture.production,
+      ),
+    );
+    final resolver = MapGpuProbeOverlayFrameResolver();
+    final source = snapshot(atlas: spriteAtlas(), sprites: [sprite()]);
+    final initial = resolver.resolve(
+      sourceOverlay: source,
+      currentOverlay: null,
+      probeRuntime: runtime,
+    );
+    final first = build(frame: frameAt(6), requested: initial);
+    final fallback = build(
+      frame: frameAt(6),
+      current: initial,
+      requested: null,
+    );
+    frames.commit(
+      candidate: first,
+      baseOnlySubmission: fallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+    expect(frames.coverage, isA<EarthquakeOverlayComplete>());
+    coverages.clear();
+
+    final update = runtime.updateConfiguration(
+      const MapGpuProbeConfiguration(
+        faultPoint: null,
+        atlasFixture: MapSpriteAtlasProbeFixture.orientation2x2,
+      ),
+    );
+    final token = update.atlasTransitionToken;
+    if (token == null) {
+      fail('probe-enabled update must issue an atlas transition token');
+    }
+    resolver.enqueue(token);
+    final transitioned = resolver.resolve(
+      sourceOverlay: source,
+      currentOverlay: frames.overlay,
+      probeRuntime: runtime,
+    );
+    final candidate = build(
+      frame: frameAt(6, frameNumber: 1),
+      current: frames.overlay,
+      requested: transitioned,
+      previousObservation: frames.previousObservationBatch,
+      previousSprites: frames.previousSpriteBatches,
+    );
+    frames.commit(
+      candidate: candidate,
+      baseOnlySubmission: fallback.submission!,
+      resources: null,
+      submitFrame: (_) {},
+      retireAllGpuResources: () {},
+      failClosedResources: () {},
+    );
+
+    expect(frames.overlay, same(transitioned));
+    expect(frames.coverage, isA<EarthquakeOverlayComplete>());
+    expect(
+      coverages,
+      isEmpty,
+      reason: 'same coverage must not publish loading or hidden transitions',
+    );
   });
 
   test('null snapshot atomically hides the previous overlay', () {

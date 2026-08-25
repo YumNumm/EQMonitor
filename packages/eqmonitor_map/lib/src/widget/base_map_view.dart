@@ -6,6 +6,7 @@ import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owne
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
 import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
 import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe_overlay.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
@@ -47,6 +48,26 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:vector_math/vector_math.dart' as scene_math;
 
 part 'base_map_view.freezed.dart';
+
+typedef BaseMapViewControllerLifecycleIdentity = ({
+  VerifiedPmTilesSource source,
+  MapBaseLayerLimits limits,
+  MapClock clock,
+  MapViewCameraController? cameraController,
+  ValueChanged<MapGpuResourceCounterSnapshot>? gpuCounterCallback,
+  MapGpuProbeController? gpuProbeController,
+});
+
+BaseMapViewControllerLifecycleIdentity baseMapViewControllerLifecycleIdentity(
+  BaseMapView view,
+) => (
+  source: view.source,
+  limits: view.limits,
+  clock: view.clock,
+  cameraController: view.cameraController,
+  gpuCounterCallback: view.onGpuResourceCounterChanged,
+  gpuProbeController: view.gpuProbeController,
+);
 
 /// [BaseMapView]がgestureとtile取得の両方を制限するために使う上限値一式。
 /// 呼び出し側(app)が明示し、widget内部に固定fallbackは置かない
@@ -191,6 +212,7 @@ class BaseMapView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lifecycleIdentity = baseMapViewControllerLifecycleIdentity(this);
     final controller = useMemoized(
       () => _BaseMapController(
         source: source,
@@ -204,21 +226,17 @@ class BaseMapView extends HookWidget {
         onGpuResourceCounterChanged: onGpuResourceCounterChanged,
         gpuProbeController: gpuProbeController,
       ),
-      [
-        source,
-        limits,
-        clock,
-        cameraController,
-        gpuProbeConfiguration,
-        onGpuResourceCounterChanged,
-        gpuProbeController,
-      ],
+      [lifecycleIdentity],
     );
     useEffect(() {
       controller.attachCameraController();
       controller.attachGpuProbeController();
       return controller.dispose;
     }, [controller]);
+    useEffect(() {
+      controller.updateGpuProbeConfiguration(gpuProbeConfiguration);
+      return null;
+    }, [controller, gpuProbeConfiguration]);
     useListenable(controller);
 
     useEffect(() {
@@ -264,7 +282,7 @@ class BaseMapView extends HookWidget {
 
     final initError = controller.initError;
     if (initError != null) {
-      return _BaseMapViewError(error: initError);
+      return const BaseMapViewInitializationError();
     }
     if (!controller.isReady) {
       return const Center(child: CircularProgressIndicator());
@@ -302,13 +320,9 @@ class BaseMapView extends HookWidget {
   }
 }
 
-class _BaseMapViewError extends StatelessWidget {
-  const new({required this.error});
-
-  // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
-  // ではない。
-  // ignore: diagnostic_describe_all_properties
-  final Object error;
+/// 初期化例外の詳細をUIへ漏らさず、利用者向けの分類済み文言だけを表示する。
+class BaseMapViewInitializationError extends StatelessWidget {
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +331,7 @@ class _BaseMapViewError extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'ベースレイヤーの初期化に失敗しました: $error',
+          'ベースレイヤーの初期化に失敗しました。',
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.error,
           ),
@@ -380,11 +394,12 @@ class _BaseMapController extends ChangeNotifier
     required this.onGpuResourceCounterChanged,
     required this.gpuProbeController,
   }) : _cameraOwner = MapCameraCandidateOwner(initialCamera: initialCamera),
-       _inputOverlay = earthquakeOverlay,
-       _acceptedOverlay = earthquakeOverlay,
        _overlayFrameOwner = BaseMapOverlayFrameOwner(
          onCoverageChanged: onEarthquakeOverlayCoverageChanged,
-       );
+       ) {
+    _inputOverlay = earthquakeOverlay;
+    _acceptedOverlay = earthquakeOverlay;
+  }
 
   final VerifiedPmTilesSource source;
   final MapBaseLayerLimits limits;
@@ -462,6 +477,7 @@ class _BaseMapController extends ChangeNotifier
   EarthquakeMapOverlaySnapshot? _preparingOverlay;
   EarthquakeOverlayMaterialStage? _requestedMaterialStage;
   final BaseMapOverlayFrameOwner _overlayFrameOwner;
+  final _gpuProbeOverlayResolver = MapGpuProbeOverlayFrameResolver();
   var _overlayRequestGeneration = 0;
 
   var _frameNumber = 0;
@@ -541,6 +557,28 @@ class _BaseMapController extends ChangeNotifier
     if (!controller.attach(host: this)) {
       _initError = StateError('GPU probe controller is already attached');
       notifyListeners();
+    }
+  }
+
+  void updateGpuProbeConfiguration(
+    MapGpuProbeConfiguration? configuration,
+  ) {
+    if (_isDisposed || configuration == null) {
+      return;
+    }
+    final runtime = _gpuProbeRuntime;
+    if (runtime == null) {
+      return;
+    }
+    final update = runtime.updateConfiguration(configuration);
+    final token = update.atlasTransitionToken;
+    if (token != null) {
+      _gpuProbeOverlayResolver.enqueue(token);
+    }
+    if (token != null || update.faultPointChanged) {
+      _refresh();
+      notifyListeners();
+      WidgetsBinding.instance.ensureVisualUpdate();
     }
   }
 
@@ -784,6 +822,7 @@ class _BaseMapController extends ChangeNotifier
     if (overlay == null) {
       _inputOverlay = null;
       _acceptedOverlay = null;
+      _gpuProbeOverlayResolver.invalidateSource();
       _overlayRequestGeneration++;
       _requestedOverlay = null;
       _preparingOverlay = null;
@@ -793,7 +832,7 @@ class _BaseMapController extends ChangeNotifier
       notifyListeners();
       return;
     }
-    final commit = commitEarthquakeOverlaySnapshot(
+    final commit = commitEarthquakeOverlayInputSnapshot(
       current: _acceptedOverlay,
       next: overlay,
     );
@@ -802,11 +841,11 @@ class _BaseMapController extends ChangeNotifier
       EarthquakeOverlayCommitRejected(:final current) => current,
     };
     if (commit is EarthquakeOverlayCommitRejected) {
-      _inputOverlay = selected;
       return;
     }
     _inputOverlay = selected;
     _acceptedOverlay = selected;
+    _gpuProbeOverlayResolver.invalidateSource();
     final requestGeneration = ++_overlayRequestGeneration;
     _requestedOverlay = null;
     _preparingOverlay = selected;
@@ -1037,11 +1076,19 @@ class _BaseMapController extends ChangeNotifier
       ),
       lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
     );
+    final requestedOverlay = switch (_requestedOverlay) {
+      final overlay? => _gpuProbeOverlayResolver.resolve(
+        sourceOverlay: overlay,
+        currentOverlay: _overlayFrameOwner.overlay,
+        probeRuntime: _gpuProbeRuntime,
+      ),
+      null => null,
+    };
     final result = buildBaseMapOverlayFrame(
       frame: frame,
       baseMap: baseMap,
       currentOverlay: _overlayFrameOwner.overlay,
-      requestedOverlay: _requestedOverlay,
+      requestedOverlay: requestedOverlay,
       previousObservationBatch: _overlayFrameOwner.previousObservationBatch,
       previousSpriteBatches: _overlayFrameOwner.previousSpriteBatches,
       requestedCover: cover,
