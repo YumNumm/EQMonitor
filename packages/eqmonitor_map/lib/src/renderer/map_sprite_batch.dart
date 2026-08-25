@@ -68,6 +68,20 @@ final class MapPointSpriteInstanceBatch implements MapSceneInstanceBatch {
     required MapFrameSnapshot frame,
     required MapOverlayVersionStamp versionStamp,
     required ByteData frameUniform,
+  }) => withAtlasAndFrame(
+    frame: frame,
+    versionStamp: versionStamp,
+    atlas: atlas,
+    frameUniform: frameUniform,
+    batchKey: batchKey,
+  );
+
+  MapPointSpriteInstanceBatch withAtlasAndFrame({
+    required MapFrameSnapshot frame,
+    required MapOverlayVersionStamp versionStamp,
+    required MapSpriteAtlas atlas,
+    required ByteData frameUniform,
+    required MapSceneBatchKey batchKey,
   }) {
     final ownedUniform = Uint8List.fromList(
       frameUniform.buffer.asUint8List(

@@ -512,6 +512,50 @@ void main() {
     },
   );
 
+  test('atlas fixture uploads only texture and preserves GPU geometry', () {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final backend = _FakeSpriteBackend();
+    final owner = _owner(
+      backend: backend,
+      maxFramesInFlight: 2,
+      maxActiveAtlases: 1,
+      maxTopologyVariants: 1,
+      maxPolicyBatches: 1,
+      completions: [],
+    );
+    final productionAtlas = atlas('sha256:production');
+    final firstFrame = frame(number: 0);
+    final firstBatches = batches(
+      frame: firstFrame,
+      atlas: productionAtlas,
+      generation: 1,
+    );
+    owner.prepareFrame(frame: firstFrame, batches: firstBatches).commit();
+    final probeAtlas = replaceMapSpriteAtlasTexture(
+      atlas: productionAtlas,
+      identity: createMapSourceIdentity(value: 'sha256:probe'),
+      rgbaBytes: Uint8List.fromList(List.filled(64, 255)),
+    );
+    final secondFrame = frame(number: 1);
+    final secondBatches = batches(
+      frame: secondFrame,
+      atlas: probeAtlas,
+      generation: 1,
+      previous: firstBatches,
+    );
+
+    owner.prepareFrame(frame: secondFrame, batches: secondBatches).commit();
+
+    expect(backend.textureUploads, 2);
+    expect(backend.topologyPrepares, 1);
+    expect(backend.instancePrepares, 1);
+    expect(owner.snapshot.texture.uploads, 2);
+    expect(owner.snapshot.topology.uploads, 1);
+    expect(owner.snapshot.instance.uploads, 1);
+  });
+
   test('caller limits and frames in flight must be positive', () {
     for (final limits in [
       const MapSpriteRendererLimits(

@@ -87,6 +87,24 @@ MapSpriteAtlas createMapSpriteAtlas({
   );
 }
 
+/// Replaces only immutable texture content while preserving atlas placement.
+MapSpriteAtlas replaceMapSpriteAtlasTexture({
+  required MapSpriteAtlas atlas,
+  required MapSourceIdentity identity,
+  required Uint8List rgbaBytes,
+}) {
+  if (rgbaBytes.length != atlas.rgbaBytes.length) {
+    throw ArgumentError.value(rgbaBytes.length, 'rgbaBytes');
+  }
+  return MapSpriteAtlas._(
+    identity: identity,
+    width: atlas.width,
+    height: atlas.height,
+    rgbaBytes: Uint8List.fromList(rgbaBytes).asUnmodifiableView(),
+    regions: atlas.regions,
+  );
+}
+
 void _validateLimits(MapSpriteAtlasLimits limits) {
   if (limits.maxWidth <= 0) {
     throw ArgumentError.value(limits.maxWidth, 'limits.maxWidth');
