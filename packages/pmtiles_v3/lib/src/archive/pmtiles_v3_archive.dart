@@ -478,9 +478,14 @@ final class PmTilesV3DirectoryTraversal {
     required int upperTileIdExclusive,
   }) async {
     final key = (offset: entry.offset, length: entry.length);
-    final cached = _leafCache[key];
+    final cached = _leafCache.remove(key);
     final entries = cached ?? await decodeLeaf(entry: entry);
-    _leafCache[key] = entries;
+    if (limits.maxCachedLeafDirectories > 0) {
+      while (_leafCache.length >= limits.maxCachedLeafDirectories) {
+        _leafCache.remove(_leafCache.keys.first);
+      }
+      _leafCache[key] = entries;
+    }
     validator.validate(
       entries: entries,
       lowerTileId: lowerTileId,

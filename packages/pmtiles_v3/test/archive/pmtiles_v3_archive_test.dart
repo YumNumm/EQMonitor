@@ -176,6 +176,44 @@ void main() {
     expect(reader._closeCalls, 1);
   });
 
+  test(
+    'evicts least recently used leaf directories at the caller limit',
+    () async {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureLeaf(
+            tileId: 5,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 5, bytes: [5]),
+            ],
+          ),
+          PmTilesV3FixtureLeaf(
+            tileId: 6,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+            ],
+          ),
+        ],
+        minZoom: 2,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+      final archive = await PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(
+          maxCachedLeafDirectories: 1,
+          validateFullArchiveOnOpen: false,
+        ),
+      );
+
+      expect(await archive.readTileById(tileId: 5), orderedEquals([5]));
+      expect(await archive.readTileById(tileId: 6), orderedEquals([6]));
+      expect(await archive.readTileById(tileId: 5), orderedEquals([5]));
+      expect(reader.reads, hasLength(8));
+
+      await archive.close();
+    },
+  );
+
   test('applies the decoded directory limit when reading a leaf', () async {
     final fixture = builder.build(
       rootEntries: const [
