@@ -78,6 +78,45 @@ void main() {
       failure: EstimatedIntensityArchiveDownloadFailure.cancelled,
     );
   });
+
+  test('file length待機中の停止は取得の収束後に戻る', () async {
+    final temporaryDirectory = await Directory.systemTemp.createTemp(
+      'estimated_intensity_length_timeout_test_',
+    );
+    addTearDown(() => temporaryDirectory.delete(recursive: true));
+    final file = File('${temporaryDirectory.path}/archive.part');
+    await file.writeAsBytes('hello world'.codeUnits);
+    final lengthStarted = Completer<void>();
+    final releaseLength = Completer<int>();
+    final stopRequested = Completer<EstimatedIntensityArchiveStopReason>();
+    final verifier = DartIoEstimatedIntensityArchiveFileVerifier(
+      fileLengthReader: (_) {
+        lengthStarted.complete();
+        return releaseLength.future;
+      },
+    );
+
+    final resultFuture = verifier.verify(
+      descriptor: estimatedIntensityTestDescriptor(),
+      file: file,
+      stopRequested: stopRequested.future,
+      diagnosticReporter: ignoreEstimatedIntensityArchiveDiagnostic,
+    );
+    await lengthStarted.future;
+    stopRequested.complete(EstimatedIntensityArchiveStopReason.timeout);
+    final earlyResult = await Future.any([
+      resultFuture.then((_) => 'completed'),
+      Future<void>.delayed(Duration.zero).then((_) => 'waiting'),
+    ]);
+    expect(earlyResult, 'waiting');
+
+    releaseLength.complete(11);
+    final result = await resultFuture;
+    expectEstimatedIntensityDownloadFailure(
+      result: result,
+      failure: EstimatedIntensityArchiveDownloadFailure.timeout,
+    );
+  });
 }
 
 final class PausedEstimatedIntensityArchiveFileVerifier
