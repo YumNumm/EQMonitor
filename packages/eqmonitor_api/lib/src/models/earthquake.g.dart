@@ -69,6 +69,12 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'estimated_intensity_tile',
         (v) => v as String?,
       ),
+      estimatedIntensityTileArchive: $checkedConvert(
+        'estimated_intensity_tile_archive',
+        (v) => v == null
+            ? null
+            : EstimatedIntensityTileArchive.fromJson(v as Map<String, dynamic>),
+      ),
       catalog: $checkedConvert(
         'catalog',
         (v) => v == null ? null : Catalog.fromJson(v as Map<String, dynamic>),
@@ -83,25 +89,28 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'originTime': 'origin_time',
     'arrivalTime': 'arrival_time',
     'estimatedIntensityTile': 'estimated_intensity_tile',
+    'estimatedIntensityTileArchive': 'estimated_intensity_tile_archive',
   },
 );
 
-Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
-    <String, dynamic>{
-      'event_id': instance.eventId,
-      'status': instance.status,
-      'earthquake_type': instance.earthquakeType,
-      'origin_time_precision': instance.originTimePrecision,
-      'hypocenters': instance.hypocenters,
-      'datasources': instance.datasources,
-      'telegrams': instance.telegrams,
-      'origin_time': ?instance.originTime?.toIso8601String(),
-      'arrival_time': ?instance.arrivalTime?.toIso8601String(),
-      'hypocenter': ?instance.hypocenter,
-      'intensity': ?instance.intensity,
-      'estimated_intensity_tile': ?instance.estimatedIntensityTile,
-      'catalog': ?instance.catalog,
-    };
+Map<String, dynamic> _$EarthquakeToJson(
+  _Earthquake instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'status': instance.status,
+  'earthquake_type': instance.earthquakeType,
+  'origin_time_precision': instance.originTimePrecision,
+  'hypocenters': instance.hypocenters,
+  'datasources': instance.datasources,
+  'telegrams': instance.telegrams,
+  'origin_time': ?instance.originTime?.toIso8601String(),
+  'arrival_time': ?instance.arrivalTime?.toIso8601String(),
+  'hypocenter': ?instance.hypocenter,
+  'intensity': ?instance.intensity,
+  'estimated_intensity_tile': ?instance.estimatedIntensityTile,
+  'estimated_intensity_tile_archive': ?instance.estimatedIntensityTileArchive,
+  'catalog': ?instance.catalog,
+};
 
 const _$TelegramStatusEnumMap = {
   TelegramStatus.normal: 'NORMAL',

@@ -38,6 +38,11 @@
   },
   {
     "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__estimated-intensity-archive.json",
+    "fixture": "estimated-intensity-archive"
+  },
+  {
+    "key": "GET /v2/earthquake",
     "file": "get__v2_earthquake__full-info.json",
     "fixture": "full-info"
   },
@@ -75,6 +80,11 @@
     "key": "GET /v2/earthquake/:eventId",
     "file": "get__v2_earthquake_eventId__distant-earthquake.json",
     "fixture": "distant-earthquake"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__estimated-intensity-archive.json",
+    "fixture": "estimated-intensity-archive"
   },
   {
     "key": "GET /v2/earthquake/:eventId",
