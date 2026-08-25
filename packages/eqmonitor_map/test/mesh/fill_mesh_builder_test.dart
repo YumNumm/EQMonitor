@@ -27,12 +27,14 @@ FillMeshBuilder _builder({
   int maxHolesPerPolygon = 8,
   int maxVerticesPerFeature = 1 << 20,
   int maxVerticesPerSegment = 65536,
+  int maxIntersectionChecks = 1 << 20,
 }) {
   return FillMeshBuilder(
     limits: FillMeshBuilderLimits(
       maxHolesPerPolygon: maxHolesPerPolygon,
       maxVerticesPerFeature: maxVerticesPerFeature,
       maxVerticesPerSegment: maxVerticesPerSegment,
+      maxIntersectionChecks: maxIntersectionChecks,
     ),
   );
 }

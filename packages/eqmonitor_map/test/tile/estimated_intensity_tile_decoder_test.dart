@@ -36,6 +36,7 @@ const _limits = EstimatedIntensityTileDecodeLimits(
     maxHolesPerPolygon: 4,
     maxVerticesPerFeature: 32,
     maxVerticesPerSegment: 128,
+    maxIntersectionChecks: 4096,
   ),
   lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 128),
   lineMiterLimit: 4,

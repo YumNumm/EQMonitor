@@ -25,5 +25,8 @@ abstract class FillMeshBuilderLimits with _$FillMeshBuilderLimits {
     /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
     /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
     required int maxVerticesPerSegment,
+
+    /// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+    required int maxIntersectionChecks,
   }) = _FillMeshBuilderLimits;
 }

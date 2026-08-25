@@ -300,6 +300,9 @@ final class EqmonitorMapDebugConfiguration {
         maxHolesPerPolygon: 500,
         maxVerticesPerFeature: 65536,
         maxVerticesPerSegment: 65536,
+        // X範囲が重なる辺ペアを約100万件まで検査し、通常の複雑な境界を
+        // 受理しつつ、悪意ある形状の比較処理を有限化する。
+        maxIntersectionChecks: 1 << 20,
       ),
       lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 65536),
       lineMiterLimit: 4,

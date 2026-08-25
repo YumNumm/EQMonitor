@@ -59,6 +59,7 @@ const _decodeLimits = BaseMapTileDecodeLimits(
     maxHolesPerPolygon: 16,
     maxVerticesPerFeature: 4096,
     maxVerticesPerSegment: 65536,
+    maxIntersectionChecks: 1 << 16,
   ),
   lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 65536),
   lineMiterLimit: 4,

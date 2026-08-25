@@ -24,7 +24,8 @@ mixin _$FillMeshBuilderLimits {
 /// `Uint16List`であるため、呼び出し側がこの値を65536以下に設定しない
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
- int get maxVerticesPerSegment;
+ int get maxVerticesPerSegment;/// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+ int get maxIntersectionChecks;
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -35,16 +36,16 @@ $FillMeshBuilderLimitsCopyWith<FillMeshBuilderLimits> get copyWith => _$FillMesh
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FillMeshBuilderLimits&&(identical(other.maxHolesPerPolygon, maxHolesPerPolygon) || other.maxHolesPerPolygon == maxHolesPerPolygon)&&(identical(other.maxVerticesPerFeature, maxVerticesPerFeature) || other.maxVerticesPerFeature == maxVerticesPerFeature)&&(identical(other.maxVerticesPerSegment, maxVerticesPerSegment) || other.maxVerticesPerSegment == maxVerticesPerSegment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FillMeshBuilderLimits&&(identical(other.maxHolesPerPolygon, maxHolesPerPolygon) || other.maxHolesPerPolygon == maxHolesPerPolygon)&&(identical(other.maxVerticesPerFeature, maxVerticesPerFeature) || other.maxVerticesPerFeature == maxVerticesPerFeature)&&(identical(other.maxVerticesPerSegment, maxVerticesPerSegment) || other.maxVerticesPerSegment == maxVerticesPerSegment)&&(identical(other.maxIntersectionChecks, maxIntersectionChecks) || other.maxIntersectionChecks == maxIntersectionChecks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxHolesPerPolygon,maxVerticesPerFeature,maxVerticesPerSegment);
+int get hashCode => Object.hash(runtimeType,maxHolesPerPolygon,maxVerticesPerFeature,maxVerticesPerSegment,maxIntersectionChecks);
 
 @override
 String toString() {
-  return 'FillMeshBuilderLimits(maxHolesPerPolygon: $maxHolesPerPolygon, maxVerticesPerFeature: $maxVerticesPerFeature, maxVerticesPerSegment: $maxVerticesPerSegment)';
+  return 'FillMeshBuilderLimits(maxHolesPerPolygon: $maxHolesPerPolygon, maxVerticesPerFeature: $maxVerticesPerFeature, maxVerticesPerSegment: $maxVerticesPerSegment, maxIntersectionChecks: $maxIntersectionChecks)';
 }
 
 
@@ -55,7 +56,7 @@ abstract mixin class $FillMeshBuilderLimitsCopyWith<$Res>  {
   factory $FillMeshBuilderLimitsCopyWith(FillMeshBuilderLimits value, $Res Function(FillMeshBuilderLimits) _then) = _$FillMeshBuilderLimitsCopyWithImpl;
 @useResult
 $Res call({
- int maxHolesPerPolygon, int maxVerticesPerFeature, int maxVerticesPerSegment
+ int maxHolesPerPolygon, int maxVerticesPerFeature, int maxVerticesPerSegment, int maxIntersectionChecks
 });
 
 
@@ -72,11 +73,12 @@ class _$FillMeshBuilderLimitsCopyWithImpl<$Res>
 
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxHolesPerPolygon = null,Object? maxVerticesPerFeature = null,Object? maxVerticesPerSegment = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxHolesPerPolygon = null,Object? maxVerticesPerFeature = null,Object? maxVerticesPerSegment = null,Object? maxIntersectionChecks = null,}) {
   return _then(FillMeshBuilderLimits(
 maxHolesPerPolygon: null == maxHolesPerPolygon ? _self.maxHolesPerPolygon : maxHolesPerPolygon // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerFeature: null == maxVerticesPerFeature ? _self.maxVerticesPerFeature : maxVerticesPerFeature // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerSegment: null == maxVerticesPerSegment ? _self.maxVerticesPerSegment : maxVerticesPerSegment // ignore: cast_nullable_to_non_nullable
+as int,maxIntersectionChecks: null == maxIntersectionChecks ? _self.maxIntersectionChecks : maxIntersectionChecks // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -162,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment,  int maxIntersectionChecks)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FillMeshBuilderLimits() when $default != null:
-return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment);case _:
+return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment,_that.maxIntersectionChecks);case _:
   return orElse();
 
 }
@@ -183,10 +185,10 @@ return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVe
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment,  int maxIntersectionChecks)  $default,) {final _that = this;
 switch (_that) {
 case _FillMeshBuilderLimits():
-return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment);case _:
+return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment,_that.maxIntersectionChecks);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +205,10 @@ return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVe
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxHolesPerPolygon,  int maxVerticesPerFeature,  int maxVerticesPerSegment,  int maxIntersectionChecks)?  $default,) {final _that = this;
 switch (_that) {
 case _FillMeshBuilderLimits() when $default != null:
-return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment);case _:
+return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVerticesPerSegment,_that.maxIntersectionChecks);case _:
   return null;
 
 }
@@ -218,7 +220,7 @@ return $default(_that.maxHolesPerPolygon,_that.maxVerticesPerFeature,_that.maxVe
 
 
 class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
-  const _FillMeshBuilderLimits({required this.maxHolesPerPolygon, required this.maxVerticesPerFeature, required this.maxVerticesPerSegment});
+  const _FillMeshBuilderLimits({required this.maxHolesPerPolygon, required this.maxVerticesPerFeature, required this.maxVerticesPerSegment, required this.maxIntersectionChecks});
   
 
 /// 1つのpolygon(1つの外形とその穴の組)に含められる穴数の上限。
@@ -233,6 +235,8 @@ class _FillMeshBuilderLimits implements FillMeshBuilderLimits {
 /// 場合`FillMeshBuilder`はArgumentErrorを投げる(index値がuint16の範囲を
 /// 静かに超えて壊れたmeshを生成することを避けるための防御)。
 @override final  int maxVerticesPerSegment;
+/// 自己交差検査で調べる、X範囲が重なる非隣接辺ペア数の上限。
+@override final  int maxIntersectionChecks;
 
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
@@ -244,16 +248,16 @@ _$FillMeshBuilderLimitsCopyWith<_FillMeshBuilderLimits> get copyWith => __$FillM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FillMeshBuilderLimits&&(identical(other.maxHolesPerPolygon, maxHolesPerPolygon) || other.maxHolesPerPolygon == maxHolesPerPolygon)&&(identical(other.maxVerticesPerFeature, maxVerticesPerFeature) || other.maxVerticesPerFeature == maxVerticesPerFeature)&&(identical(other.maxVerticesPerSegment, maxVerticesPerSegment) || other.maxVerticesPerSegment == maxVerticesPerSegment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FillMeshBuilderLimits&&(identical(other.maxHolesPerPolygon, maxHolesPerPolygon) || other.maxHolesPerPolygon == maxHolesPerPolygon)&&(identical(other.maxVerticesPerFeature, maxVerticesPerFeature) || other.maxVerticesPerFeature == maxVerticesPerFeature)&&(identical(other.maxVerticesPerSegment, maxVerticesPerSegment) || other.maxVerticesPerSegment == maxVerticesPerSegment)&&(identical(other.maxIntersectionChecks, maxIntersectionChecks) || other.maxIntersectionChecks == maxIntersectionChecks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxHolesPerPolygon,maxVerticesPerFeature,maxVerticesPerSegment);
+int get hashCode => Object.hash(runtimeType,maxHolesPerPolygon,maxVerticesPerFeature,maxVerticesPerSegment,maxIntersectionChecks);
 
 @override
 String toString() {
-  return 'FillMeshBuilderLimits(maxHolesPerPolygon: $maxHolesPerPolygon, maxVerticesPerFeature: $maxVerticesPerFeature, maxVerticesPerSegment: $maxVerticesPerSegment)';
+  return 'FillMeshBuilderLimits(maxHolesPerPolygon: $maxHolesPerPolygon, maxVerticesPerFeature: $maxVerticesPerFeature, maxVerticesPerSegment: $maxVerticesPerSegment, maxIntersectionChecks: $maxIntersectionChecks)';
 }
 
 
@@ -264,7 +268,7 @@ abstract mixin class _$FillMeshBuilderLimitsCopyWith<$Res> implements $FillMeshB
   factory _$FillMeshBuilderLimitsCopyWith(_FillMeshBuilderLimits value, $Res Function(_FillMeshBuilderLimits) _then) = __$FillMeshBuilderLimitsCopyWithImpl;
 @override @useResult
 $Res call({
- int maxHolesPerPolygon, int maxVerticesPerFeature, int maxVerticesPerSegment
+ int maxHolesPerPolygon, int maxVerticesPerFeature, int maxVerticesPerSegment, int maxIntersectionChecks
 });
 
 
@@ -281,11 +285,12 @@ class __$FillMeshBuilderLimitsCopyWithImpl<$Res>
 
 /// Create a copy of FillMeshBuilderLimits
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxHolesPerPolygon = null,Object? maxVerticesPerFeature = null,Object? maxVerticesPerSegment = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxHolesPerPolygon = null,Object? maxVerticesPerFeature = null,Object? maxVerticesPerSegment = null,Object? maxIntersectionChecks = null,}) {
   return _then(_FillMeshBuilderLimits(
 maxHolesPerPolygon: null == maxHolesPerPolygon ? _self.maxHolesPerPolygon : maxHolesPerPolygon // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerFeature: null == maxVerticesPerFeature ? _self.maxVerticesPerFeature : maxVerticesPerFeature // ignore: cast_nullable_to_non_nullable
 as int,maxVerticesPerSegment: null == maxVerticesPerSegment ? _self.maxVerticesPerSegment : maxVerticesPerSegment // ignore: cast_nullable_to_non_nullable
+as int,maxIntersectionChecks: null == maxIntersectionChecks ? _self.maxIntersectionChecks : maxIntersectionChecks // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
