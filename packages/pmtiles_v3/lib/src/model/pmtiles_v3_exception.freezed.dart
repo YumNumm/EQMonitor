@@ -475,7 +475,7 @@ as String,
 
 class PmTilesV3ResourceLimitExceededException implements PmTilesV3Exception {
   const PmTilesV3ResourceLimitExceededException({required this.resource, required this.limitBytes, required this.actualBytes});
-  
+
 
  final  PmTilesV3Resource resource;
  final  int limitBytes;

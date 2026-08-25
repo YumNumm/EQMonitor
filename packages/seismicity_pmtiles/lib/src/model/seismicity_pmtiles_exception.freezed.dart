@@ -553,7 +553,7 @@ as int,
 
 class SeismicityPmTilesResourceLimitExceededException implements SeismicityPmTilesException {
   const SeismicityPmTilesResourceLimitExceededException({required this.resource, required this.limitBytes, required this.actualBytes});
-  
+
 
  final  SeismicityPmTilesResource resource;
  final  int limitBytes;
