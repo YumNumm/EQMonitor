@@ -8,12 +8,14 @@ class AuthSessionSummary extends StatelessWidget {
     required this.state,
     required this.sessionStatus,
     required this.sessionFailed,
+    required this.debugAuthReadiness,
     super.key,
   });
 
   final DebugAuthState state;
   final AuthSessionStatus? sessionStatus;
   final bool sessionFailed;
+  final DebugAuthNotifierReadiness debugAuthReadiness;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class AuthSessionSummary extends StatelessWidget {
       state: state,
       sessionStatus: sessionStatus,
       sessionFailed: sessionFailed,
+      debugAuthReadiness: debugAuthReadiness,
     );
     final expiryLabel =
         state.jwtExpiresAt?.toLocal().toIso8601String() ?? '未取得';

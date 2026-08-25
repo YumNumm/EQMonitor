@@ -34,14 +34,22 @@ final class DebugAuthPresentation {
     required DebugAuthState state,
     required AuthSessionStatus? sessionStatus,
     required bool sessionFailed,
-  }) => switch ((state.operation, state.failureKind, sessionStatus)) {
-    (final DebugAuthOperation operation, _, _) =>
+    required DebugAuthNotifierReadiness debugAuthReadiness,
+  }) => switch ((
+    debugAuthReadiness,
+    state.operation,
+    state.failureKind,
+    sessionStatus,
+  )) {
+    (DebugAuthNotifierReadiness.loading, _, _, _) => '認証デバッグを初期化中',
+    (DebugAuthNotifierReadiness.failed, _, _, _) => '失敗: 認証デバッグを初期化できませんでした。',
+    (_, final DebugAuthOperation operation, _, _) =>
       '更新中: ${operationLabel(operation)}',
-    (_, final failure?, _) =>
+    (_, _, final failure?, _) =>
       '失敗: ${DebugAuthFailurePresentation.message(failure)}',
-    (_, _, _) when sessionFailed => '失敗: セッション状態を確認できませんでした。',
-    (_, _, null) => 'セッション確認中',
-    (_, _, AuthSessionStatus.authenticated) => '認証済み',
+    (_, _, _, _) when sessionFailed => '失敗: セッション状態を確認できませんでした。',
+    (_, _, _, null) => 'セッション確認中',
+    (_, _, _, AuthSessionStatus.authenticated) => '認証済み',
     _ => '未認証',
   };
 

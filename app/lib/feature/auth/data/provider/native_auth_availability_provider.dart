@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 import 'package:eqmonitor/feature/auth/data/provider/auth_environment_provider.dart';
 import 'package:eqmonitor/feature/auth/data/repository/google_auth_repository.dart';
 import 'package:eqmonitor/feature/auth/data/repository/native_social_auth_repository.dart';
@@ -25,8 +26,13 @@ final class NativeAuthAvailability {
     required bool isSessionReady,
     required bool isAuthenticated,
     required bool isBusy,
+    required DebugAuthNotifierReadiness debugAuthReadiness,
   }) {
-    final baseEnabled = environmentCompatible && isSessionReady && !isBusy;
+    final baseEnabled =
+        environmentCompatible &&
+        isSessionReady &&
+        debugAuthReadiness == DebugAuthNotifierReadiness.ready &&
+        !isBusy;
     return NativeAuthActionAvailability(
       googleSignIn: baseEnabled && googleAvailable,
       appleSignIn: baseEnabled && appleAvailable,

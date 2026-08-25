@@ -25,6 +25,11 @@ class DebugAuthPage extends HookConsumerWidget {
     final availability = ref.watch(nativeAuthAvailabilityProvider);
     final session = ref.watch(authSessionProvider);
     final authState = ref.watch(debugAuthProvider);
+    final debugAuthReadiness = switch (authState) {
+      AsyncData() => DebugAuthNotifierReadiness.ready,
+      AsyncLoading() => DebugAuthNotifierReadiness.loading,
+      AsyncError() => DebugAuthNotifierReadiness.failed,
+    };
     final displayedState = switch (authState) {
       AsyncData(:final value) => value,
       AsyncLoading() => const DebugAuthState.restoring(),
@@ -65,6 +70,7 @@ class DebugAuthPage extends HookConsumerWidget {
       isSessionReady: sessionStatus != null,
       isAuthenticated: isAuthenticated,
       isBusy: displayedState.isBusy,
+      debugAuthReadiness: debugAuthReadiness,
     );
 
     return Scaffold(
@@ -88,6 +94,7 @@ class DebugAuthPage extends HookConsumerWidget {
             state: displayedState,
             sessionStatus: sessionStatus,
             sessionFailed: session is AsyncError,
+            debugAuthReadiness: debugAuthReadiness,
           ),
           const SizedBox(height: 12),
           AuthProviderButtons(

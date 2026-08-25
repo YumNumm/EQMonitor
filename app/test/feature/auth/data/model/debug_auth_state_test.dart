@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
+import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 import 'package:eqmonitor/feature/auth/ui/model/debug_auth_presentation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -80,6 +81,7 @@ void main() {
         state: const DebugAuthState.idle(),
         sessionStatus: null,
         sessionFailed: false,
+        debugAuthReadiness: DebugAuthNotifierReadiness.ready,
       ),
       'セッション確認中',
     );
@@ -91,8 +93,40 @@ void main() {
         state: const DebugAuthState.idle(),
         sessionStatus: null,
         sessionFailed: true,
+        debugAuthReadiness: DebugAuthNotifierReadiness.ready,
       ),
       '失敗: セッション状態を確認できませんでした。',
     );
   });
+
+  for (final testCase in [
+    (
+      readiness: DebugAuthNotifierReadiness.loading,
+      expected: '認証デバッグを初期化中',
+    ),
+    (
+      readiness: DebugAuthNotifierReadiness.failed,
+      expected: '失敗: 認証デバッグを初期化できませんでした。',
+    ),
+  ]) {
+    test('debug auth ${testCase.readiness.name}は安全な固定文言を表示する', () {
+      expect(
+        DebugAuthPresentation.sessionStatusLabel(
+          state: const DebugAuthState.idle().withFailure(
+            kind: AuthFailureKind.unknown,
+          ),
+          sessionStatus: AuthSessionStatus.authenticated,
+          sessionFailed: false,
+          debugAuthReadiness: testCase.readiness,
+        ),
+        testCase.expected,
+      );
+      if (testCase.readiness == DebugAuthNotifierReadiness.failed) {
+        expect(
+          DebugAuthFailurePresentation.code(AuthFailureKind.unknown),
+          'AuthFailureKind.unknown',
+        );
+      }
+    });
+  }
 }

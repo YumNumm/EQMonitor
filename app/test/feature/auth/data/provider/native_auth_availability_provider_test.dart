@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/model/environment.dart';
+import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 import 'package:eqmonitor/feature/auth/data/provider/native_auth_availability_provider.dart';
 import 'package:eqmonitor/feature/auth/data/repository/native_social_auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -107,6 +108,7 @@ void main() {
       isSessionReady: true,
       isAuthenticated: true,
       isBusy: false,
+      debugAuthReadiness: DebugAuthNotifierReadiness.ready,
     );
 
     expect(actions.googleSignIn, isFalse);
@@ -130,6 +132,7 @@ void main() {
       isSessionReady: true,
       isAuthenticated: true,
       isBusy: true,
+      debugAuthReadiness: DebugAuthNotifierReadiness.ready,
     );
 
     expect(actions.allDisabled, isTrue);
@@ -148,6 +151,30 @@ void main() {
         isSessionReady: false,
         isAuthenticated: false,
         isBusy: false,
+        debugAuthReadiness: DebugAuthNotifierReadiness.ready,
+      );
+
+      expect(actions.allDisabled, isTrue);
+    });
+  }
+
+  for (final readiness in [
+    DebugAuthNotifierReadiness.loading,
+    DebugAuthNotifierReadiness.failed,
+  ]) {
+    test('debug auth ${readiness.name}中はsessionと環境がreadyでも全actionを無効化する', () {
+      const availability = NativeAuthAvailability(
+        environmentCompatible: true,
+        googleAvailable: true,
+        appleAvailable: true,
+        passkeyAvailable: true,
+      );
+
+      final actions = availability.actions(
+        isSessionReady: true,
+        isAuthenticated: true,
+        isBusy: false,
+        debugAuthReadiness: readiness,
       );
 
       expect(actions.allDisabled, isTrue);

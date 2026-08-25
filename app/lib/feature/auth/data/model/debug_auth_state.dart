@@ -3,6 +3,8 @@ import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 
 enum DebugAuthProviderKind { google, apple, passkey }
 
+enum DebugAuthNotifierReadiness { ready, loading, failed }
+
 enum DebugAuthOperation {
   restoring,
   googleSignIn,
