@@ -24,7 +24,115 @@ void main() {
     expect(hidden.coverage, isA<EarthquakeOverlayHidden>());
     expect(loading.versionStamp, versionStamp);
     expect(loading.coverage, isA<EarthquakeOverlayLoading>());
+    expect(
+      loading.diagnostic,
+      const EarthquakeOverlayCoverageDiagnostic.empty(),
+    );
   });
+
+  test(
+    'derives loading, incomplete, and complete only from explicit evidence',
+    () {
+      final pending = EarthquakeOverlayCoverageDiagnostic(
+        visibleCanonicalTileCount: 2,
+        pendingTileCount: 1,
+        authoritativeEmptyTileCount: 1,
+        sourceLayerAbsentTileCount: 0,
+        missingOrInvalidPropertyFeatureCount: 0,
+        decodeOrSchemaFailureTileCount: 0,
+        requiredCodeUnresolvedCount: 0,
+        stationCount: 3,
+        spriteCount: 1,
+      );
+      final invalid = EarthquakeOverlayCoverageDiagnostic(
+        visibleCanonicalTileCount: 3,
+        pendingTileCount: 0,
+        authoritativeEmptyTileCount: 1,
+        sourceLayerAbsentTileCount: 1,
+        missingOrInvalidPropertyFeatureCount: 2,
+        decodeOrSchemaFailureTileCount: 1,
+        requiredCodeUnresolvedCount: 1,
+        stationCount: 3,
+        spriteCount: 1,
+      );
+      final complete = EarthquakeOverlayCoverageDiagnostic(
+        visibleCanonicalTileCount: 2,
+        pendingTileCount: 0,
+        authoritativeEmptyTileCount: 2,
+        sourceLayerAbsentTileCount: 0,
+        missingOrInvalidPropertyFeatureCount: 0,
+        decodeOrSchemaFailureTileCount: 0,
+        requiredCodeUnresolvedCount: 0,
+        stationCount: 0,
+        spriteCount: 0,
+      );
+
+      expect(
+        EarthquakeOverlayCoverage.fromDiagnostic(pending),
+        isA<EarthquakeOverlayLoading>(),
+      );
+      expect(
+        EarthquakeOverlayCoverage.fromDiagnostic(invalid),
+        isA<EarthquakeOverlayIncomplete>(),
+      );
+      expect(
+        EarthquakeOverlayCoverage.fromDiagnostic(complete),
+        isA<EarthquakeOverlayComplete>(),
+      );
+    },
+  );
+
+  test('snapshot equality includes the diagnostic in the same stamp', () {
+    final diagnostic = EarthquakeOverlayCoverageDiagnostic(
+      visibleCanonicalTileCount: 1,
+      pendingTileCount: 0,
+      authoritativeEmptyTileCount: 1,
+      sourceLayerAbsentTileCount: 0,
+      missingOrInvalidPropertyFeatureCount: 0,
+      decodeOrSchemaFailureTileCount: 0,
+      requiredCodeUnresolvedCount: 0,
+      stationCount: 2,
+      spriteCount: 1,
+    );
+    final snapshot = EarthquakeOverlayCoverageSnapshot(
+      versionStamp: versionStamp,
+      coverage: const EarthquakeOverlayCoverage.complete(
+        requestedTileCount: 1,
+      ),
+      diagnostic: diagnostic,
+    );
+
+    expect(snapshot.diagnostic, diagnostic);
+    expect(
+      snapshot,
+      isNot(
+        EarthquakeOverlayCoverageSnapshot(
+          versionStamp: versionStamp,
+          coverage: snapshot.coverage,
+        ),
+      ),
+    );
+  });
+
+  test(
+    'rejects overlapping tile categories before ready count can go negative',
+    () {
+      expect(
+        () => EarthquakeOverlayCoverageDiagnostic(
+          visibleCanonicalTileCount: 1,
+          pendingTileCount: 0,
+          authoritativeEmptyTileCount: 0,
+          sourceLayerAbsentTileCount: 1,
+          missingOrInvalidPropertyFeatureCount: 0,
+          decodeOrSchemaFailureTileCount: 1,
+          requiredCodeUnresolvedCount: 0,
+          stationCount: 0,
+          spriteCount: 0,
+        ),
+        throwsArgumentError,
+      );
+    },
+  );
 
   test('is hidden when no tiles are requested', () {
     final coverage = EarthquakeOverlayCoverage.fromCounts(
