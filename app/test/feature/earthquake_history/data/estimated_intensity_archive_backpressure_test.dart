@@ -61,13 +61,14 @@ void main() {
     expect(writer?.maxConcurrentWrites, 1);
   });
 
-  test('total timeoutは待機中のwriteをcloseしてpartをcleanupする', () async {
+  test('total timeoutは待機中のwrite収束後にpartをcleanupする', () async {
     final temporaryDirectory = await Directory.systemTemp.createTemp(
       'estimated_intensity_write_timeout_test_',
     );
     addTearDown(() => temporaryDirectory.delete(recursive: true));
     final writeStarted = Completer<void>();
     final releaseWrite = Completer<void>();
+    final stopNotified = Completer<void>();
     addTearDown(() {
       if (!releaseWrite.isCompleted) {
         releaseWrite.complete();
@@ -85,9 +86,15 @@ void main() {
         return created;
       },
     );
-    final operation = TestEstimatedIntensityArchiveHttpOperation(
-      openResponse: Future.value(estimatedIntensityTestResponse()),
-    );
+    final operation =
+        TestEstimatedIntensityArchiveHttpOperation(
+            openResponse: Future.value(estimatedIntensityTestResponse()),
+          )
+          ..onAbort = () {
+            if (!stopNotified.isCompleted) {
+              stopNotified.complete();
+            }
+          };
     final limits = EstimatedIntensityArchiveDownloadLimits(
       maxArchiveBytes: 1024,
       connectTimeout: const Duration(seconds: 1),
@@ -106,6 +113,10 @@ void main() {
           limits: limits,
         );
     await writeStarted.future;
+    await stopNotified.future;
+    await Future<void>.delayed(Duration.zero);
+    final closeOverlappedWrite = writer?.closeOverlappedWrite;
+    releaseWrite.complete();
     final result = await resultFuture.timeout(
       const Duration(milliseconds: 200),
     );
@@ -114,6 +125,9 @@ void main() {
       result: result,
       failure: EstimatedIntensityArchiveDownloadFailure.timeout,
     );
+    expect(closeOverlappedWrite, isFalse);
+    expect(writer?.writeCount, 1);
+    expect(writer?.maxConcurrentWrites, 1);
     expect(writer?.closeCount, 1);
     expect(temporaryDirectory.listSync(recursive: true), isEmpty);
   });
@@ -134,6 +148,7 @@ final class PausedEstimatedIntensityArchivePartWriter
   var concurrentWrites = 0;
   var maxConcurrentWrites = 0;
   var closeCount = 0;
+  var closeOverlappedWrite = false;
   var closed = false;
 
   @override
@@ -159,11 +174,12 @@ final class PausedEstimatedIntensityArchivePartWriter
     if (closed) {
       return;
     }
-    closed = true;
     closeCount += 1;
-    if (!releaseFirstWrite.isCompleted) {
-      releaseFirstWrite.completeError(StateError('writer closed'));
+    if (concurrentWrites > 0) {
+      closeOverlappedWrite = true;
+      return;
     }
+    closed = true;
     await delegate.close();
   }
 }
