@@ -268,6 +268,11 @@ HTTP contract:
 - timeout、cancel、socket failure を source failure として typed に保持
 - response body、例外、URL に auth token や local path を user-facing message へ出さない
 
+total timeout と cancel は request open、body read、part write、flush、exact size、SHA-256
+確認までを一つの停止signalで制御する。停止時はHTTP request、body subscription、part writer、
+hash subscriptionを中断し、各adapterのpending I/Oがsettleしてから `.part` cleanupへ進む。
+cleanup失敗の診断は固定enumだけを渡し、URL、local path、hash、元例外を渡さない。
+
 ### 7.2 Full-content verification
 
 response は unique `.part` file へ stream する。write と同時に SHA-256 を更新してよいが、

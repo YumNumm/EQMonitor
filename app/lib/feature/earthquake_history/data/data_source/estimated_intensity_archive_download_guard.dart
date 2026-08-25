@@ -13,20 +13,29 @@ final class EstimatedIntensityArchiveDownloadGuard {
   }) : cancelled = cancellation?.isCancelled ?? false {
     cancellationSubscription = cancellation?.onCancel.listen((_) {
       cancelled = true;
+      if (!_stopRequested.isCompleted) {
+        _stopRequested.complete(.cancelled);
+      }
       operation.abort();
     });
     if (cancellation?.isCancelled ?? false) {
       cancelled = true;
+      _stopRequested.complete(.cancelled);
       operation.abort();
     }
     totalTimer = Timer(totalTimeout, () {
       timedOut = true;
+      if (!_stopRequested.isCompleted) {
+        _stopRequested.complete(.timeout);
+      }
       operation.abort();
     });
   }
 
   final EstimatedIntensityArchiveHttpOperation operation;
   late final Timer totalTimer;
+  final Completer<EstimatedIntensityArchiveStopReason> _stopRequested =
+      Completer<EstimatedIntensityArchiveStopReason>();
   StreamSubscription<void>? cancellationSubscription;
   bool cancelled;
   var timedOut = false;
@@ -37,8 +46,46 @@ final class EstimatedIntensityArchiveDownloadGuard {
       ? EstimatedIntensityArchiveStopReason.timeout
       : EstimatedIntensityArchiveStopReason.none;
 
+  Future<EstimatedIntensityArchiveStopReason> get stopRequested =>
+      _stopRequested.future;
+
+  /// 停止時はadapterを中断し、pending I/Oのsettle後にだけ呼出元へ戻す。
+  Future<T> settle<T>({
+    required Future<T> pending,
+    required Future<void> Function() abort,
+  }) async {
+    if (stopReason != EstimatedIntensityArchiveStopReason.none) {
+      try {
+        await abort();
+      } catch (_) {}
+      throw EstimatedIntensityArchiveStoppedException(stopReason);
+    }
+    try {
+      return await Future.any([
+        pending,
+        stopRequested.then<T>(
+          (reason) => throw EstimatedIntensityArchiveStoppedException(reason),
+        ),
+      ]);
+    } on EstimatedIntensityArchiveStoppedException {
+      try {
+        await abort();
+      } catch (_) {}
+      try {
+        await pending;
+      } catch (_) {}
+      rethrow;
+    }
+  }
+
   Future<void> close() async {
     totalTimer.cancel();
     await cancellationSubscription?.cancel();
   }
+}
+
+final class EstimatedIntensityArchiveStoppedException implements Exception {
+  const new(this.reason);
+
+  final EstimatedIntensityArchiveStopReason reason;
 }

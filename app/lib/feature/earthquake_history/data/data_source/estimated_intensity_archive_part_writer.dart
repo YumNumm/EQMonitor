@@ -5,6 +5,9 @@ abstract interface class EstimatedIntensityArchivePartWriter {
 
   Future<void> flushAndClose();
 
+  /// Pending write/flushをsettleさせてから完了する。
+  ///
+  /// 停止後の一時file削除は、このFutureの完了後にだけ実行される。
   Future<void> close();
 }
 

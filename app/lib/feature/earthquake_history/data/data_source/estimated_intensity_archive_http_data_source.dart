@@ -64,7 +64,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
         descriptor: descriptor,
         limits: limits,
         partFile: File('${stagingDirectory.path}/archive.part'),
-        stopReason: () => guard.stopReason,
+        guard: guard,
       );
       succeeded = result is EstimatedIntensityArchiveDownloadSuccess;
       return result;
