@@ -115,6 +115,7 @@ export 'models/eew_warning_config_response.dart';
 export 'models/eew_warning_config_request.dart';
 export 'models/device_location_request.dart';
 export 'models/device_location_response.dart';
+export 'models/create_device_notification_webhook_request.dart';
 export 'models/device_notification_webhook_response.dart';
 export 'models/notification_log_item.dart';
 export 'models/notification_history_response.dart';

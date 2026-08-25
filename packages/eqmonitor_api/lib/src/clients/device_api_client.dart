@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/challenge_response.dart';
+import '../models/create_device_notification_webhook_request.dart';
 import '../models/create_region_slot_request.dart';
 import '../models/device_location_request.dart';
 import '../models/device_location_response.dart';
@@ -238,7 +239,9 @@ abstract class DeviceApiClient {
 
   /// 通知 Webhook を作成
   @POST(DeviceApiClientUrls.postV2DeviceMeNotificationWebhooks)
-  Future<HttpResponse<DeviceNotificationWebhookResponse>> postV2DeviceMeNotificationWebhooks();
+  Future<HttpResponse<DeviceNotificationWebhookResponse>> postV2DeviceMeNotificationWebhooks({
+    @Body() required CreateDeviceNotificationWebhookRequest body,
+  });
 
   /// 通知 Webhook の一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeNotificationWebhooks)
