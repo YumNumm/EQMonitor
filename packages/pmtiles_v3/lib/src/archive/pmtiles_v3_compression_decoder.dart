@@ -70,8 +70,8 @@ final class PmTilesV3CompressionDecoder {
     if (length > maxBytes) {
       throw PmTilesV3Exception.resourceLimitExceeded(
         resource: resource,
-        limitBytes: maxBytes,
-        actualBytes: length,
+        limit: maxBytes,
+        actual: length,
       );
     }
   }

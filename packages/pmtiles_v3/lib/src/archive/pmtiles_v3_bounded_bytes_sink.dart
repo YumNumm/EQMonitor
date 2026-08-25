@@ -27,8 +27,8 @@ final class PmTilesV3BoundedBytesSink implements Sink<List<int>> {
     if (chunk.length > maxBytes - _byteLength) {
       throw PmTilesV3Exception.resourceLimitExceeded(
         resource: resource,
-        limitBytes: maxBytes,
-        actualBytes: _byteLength + chunk.length,
+        limit: maxBytes,
+        actual: _byteLength + chunk.length,
       );
     }
     _bytes.add(chunk);

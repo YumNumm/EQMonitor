@@ -7,6 +7,7 @@ part 'seismicity_pmtiles_exception.freezed.dart';
 enum SeismicityPmTilesResource {
   directoryEncoded,
   directoryDecoded,
+  directoryEntries,
   tileEncoded,
   tileDecoded,
 }
@@ -146,8 +147,8 @@ extension PmTilesV3ExceptionToSeismicityException on PmTilesV3Exception {
         ),
       PmTilesV3ResourceLimitExceededException(
         :final resource,
-        :final limitBytes,
-        :final actualBytes,
+        :final limit,
+        :final actual,
       ) =>
         SeismicityPmTilesException.resourceLimitExceeded(
           resource: switch (resource) {
@@ -155,13 +156,15 @@ extension PmTilesV3ExceptionToSeismicityException on PmTilesV3Exception {
               SeismicityPmTilesResource.directoryEncoded,
             PmTilesV3Resource.directoryDecoded =>
               SeismicityPmTilesResource.directoryDecoded,
+            PmTilesV3Resource.directoryEntries =>
+              SeismicityPmTilesResource.directoryEntries,
             PmTilesV3Resource.tileEncoded =>
               SeismicityPmTilesResource.tileEncoded,
             PmTilesV3Resource.tileDecoded =>
               SeismicityPmTilesResource.tileDecoded,
           },
-          limitBytes: limitBytes,
-          actualBytes: actualBytes,
+          limitBytes: limit,
+          actualBytes: actual,
         ),
       PmTilesV3InvalidTileIdException(
         :final tileId,

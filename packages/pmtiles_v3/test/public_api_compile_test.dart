@@ -5,15 +5,15 @@ void main() {
   test('resource limit failures expose only bounded diagnostics', () {
     const exception = PmTilesV3Exception.resourceLimitExceeded(
       resource: PmTilesV3Resource.tileDecoded,
-      limitBytes: 1024,
-      actualBytes: 1025,
+      limit: 1024,
+      actual: 1025,
     );
 
     expect(exception, isA<PmTilesV3ResourceLimitExceededException>());
     const typed = exception as PmTilesV3ResourceLimitExceededException;
     expect(typed.resource, PmTilesV3Resource.tileDecoded);
-    expect(typed.limitBytes, 1024);
-    expect(typed.actualBytes, 1025);
+    expect(typed.limit, 1024);
+    expect(typed.actual, 1025);
     expect(exception.toString(), isNot(contains('raw-payload')));
   });
 

@@ -166,8 +166,8 @@ void main() {
     const source = SeismicityPmTilesSource.asset(assetKey: 'archive.pmtiles');
     const failure = PmTilesV3Exception.resourceLimitExceeded(
       resource: PmTilesV3Resource.directoryDecoded,
-      limitBytes: 8,
-      actualBytes: 9,
+      limit: 8,
+      actual: 9,
     );
 
     final mapped = failure.toSeismicityException(source: source);

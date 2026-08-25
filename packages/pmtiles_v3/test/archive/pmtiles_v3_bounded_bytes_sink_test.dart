@@ -14,13 +14,13 @@ void main() {
       throwsA(
         isA<PmTilesV3ResourceLimitExceededException>()
             .having(
-              (exception) => exception.limitBytes,
-              'limitBytes',
+              (exception) => exception.limit,
+              'limit',
               3,
             )
             .having(
-              (exception) => exception.actualBytes,
-              'actualBytes',
+              (exception) => exception.actual,
+              'actual',
               4,
             ),
       ),

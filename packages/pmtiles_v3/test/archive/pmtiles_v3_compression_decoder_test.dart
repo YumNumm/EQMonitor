@@ -46,8 +46,8 @@ void main() {
         ),
         throwsA(
           isA<PmTilesV3ResourceLimitExceededException>().having(
-            (exception) => (exception.resource, exception.actualBytes),
-            'resource and actualBytes',
+            (exception) => (exception.resource, exception.actual),
+            'resource and actual',
             (PmTilesV3Resource.tileDecoded, payload.length),
           ),
         ),
@@ -63,8 +63,8 @@ void main() {
         ),
         throwsA(
           isA<PmTilesV3ResourceLimitExceededException>().having(
-            (exception) => (exception.resource, exception.actualBytes),
-            'resource and actualBytes',
+            (exception) => (exception.resource, exception.actual),
+            'resource and actual',
             (PmTilesV3Resource.tileEncoded, encoded.length),
           ),
         ),
