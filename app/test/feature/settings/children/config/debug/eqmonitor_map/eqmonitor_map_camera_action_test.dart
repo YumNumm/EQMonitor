@@ -94,4 +94,49 @@ void main() {
     }
   });
 
+  test('centerだけを置換しzoomを維持してexactly one commandを送る', () async {
+    final controller = MapViewCameraController();
+    final host = RecordingCameraHost();
+    addTearDown(controller.dispose);
+    controller.attach(host: host, initialCamera: current);
+    controller.commitCameraFromHost(host: host, camera: current);
+
+    final result = await action.moveToHypocenter(
+      controller: controller,
+      longitude: 140.1,
+      latitude: 36.2,
+    );
+
+    expect(result, isA<EqmonitorMapCameraActionSucceeded>());
+    expect(host.commands, const [
+      MapCamera(centerLongitude: 140.1, centerLatitude: 36.2, zoom: 7.25),
+    ]);
+  });
+
+  test('controller failureをtyped resultで返し再試行しない', () async {
+    const failure = MapCameraCommandRenderFailed(
+      reason: MapCameraCommandRenderFailureReason.sceneSubmissionRejected,
+    );
+    final controller = MapViewCameraController();
+    final host = RecordingCameraHost(failure: failure);
+    addTearDown(controller.dispose);
+    controller.attach(host: host, initialCamera: current);
+    controller.commitCameraFromHost(host: host, camera: current);
+
+    final result = await action.moveToHypocenter(
+      controller: controller,
+      longitude: 140.1,
+      latitude: 36.2,
+    );
+
+    expect(
+      result,
+      isA<EqmonitorMapCameraActionCommandFailed>().having(
+        (value) => value.failure,
+        'failure',
+        same(failure),
+      ),
+    );
+    expect(host.commands, hasLength(1));
+  });
 }
