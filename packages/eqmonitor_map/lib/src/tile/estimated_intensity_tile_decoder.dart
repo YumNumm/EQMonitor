@@ -126,6 +126,10 @@ EstimatedIntensityTileGeometry decodeEstimatedIntensityTileSync(
     throw const EstimatedIntensityTileDecodeException(
       EstimatedIntensityTileDecodeFailure.invalidGeometry,
     );
+  } on FillMeshSelfIntersectionException {
+    throw const EstimatedIntensityTileDecodeException(
+      EstimatedIntensityTileDecodeFailure.invalidGeometry,
+    );
   } on MvtDecodeException {
     throw const EstimatedIntensityTileDecodeException(
       EstimatedIntensityTileDecodeFailure.invalidMvt,
