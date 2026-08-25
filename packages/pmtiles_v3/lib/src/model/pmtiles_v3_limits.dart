@@ -15,6 +15,18 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// root directoryが収まっているべき先頭からのwindow長（byte）。
     required int rootDirectoryWindowLength,
 
+    /// root/leaf directoryの圧縮済みbyte列1件あたりの上限。
+    required int maxDirectoryEncodedBytes,
+
+    /// root/leaf directoryの展開済みbyte列1件あたりの上限。
+    required int maxDirectoryDecodedBytes,
+
+    /// tile payloadの圧縮済みbyte列1件あたりの上限。
+    required int maxTileEncodedBytes,
+
+    /// tile payloadの展開済みbyte列1件あたりの上限。
+    required int maxTileDecodedBytes,
+
     /// `open`時にarchive全体のleaf directoryをeagerに走査し、clustered
     /// ordering・件数などをarchive全体について再検証するかどうか。
     ///

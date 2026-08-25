@@ -19,10 +19,16 @@ final class PmTilesV3DirectoryDecoder {
   List<PmTilesV3DirectoryEntry> decode({
     required Uint8List bytes,
     required int compression,
+    required int maxEncodedBytes,
+    required int maxDecodedBytes,
   }) {
-    final decoded = compressionDecoder.decode(
+    final decoded = compressionDecoder.decodeBounded(
       bytes: bytes,
       compression: compression,
+      maxEncodedBytes: maxEncodedBytes,
+      maxDecodedBytes: maxDecodedBytes,
+      encodedResource: PmTilesV3Resource.directoryEncoded,
+      decodedResource: PmTilesV3Resource.directoryDecoded,
     );
     final countResult = decodeVarintAt(bytes: decoded, offset: 0);
     final count = countResult.value;

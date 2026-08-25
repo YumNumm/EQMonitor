@@ -62,6 +62,11 @@ final class PmTilesV3ArchiveOpener {
       compressionDecoder
         ..validateSupported(compression: header.internalCompression)
         ..validateSupported(compression: header.tileCompression);
+      compressionDecoder.validateLength(
+        length: header.rootDirectoryLength,
+        maxBytes: limits.maxDirectoryEncodedBytes,
+        resource: PmTilesV3Resource.directoryEncoded,
+      );
       final rootBytes = await reader.readAt(
         offset: header.rootDirectoryOffset,
         length: header.rootDirectoryLength,
@@ -69,6 +74,8 @@ final class PmTilesV3ArchiveOpener {
       final rootEntries = directoryDecoder.decode(
         bytes: rootBytes,
         compression: header.internalCompression,
+        maxEncodedBytes: limits.maxDirectoryEncodedBytes,
+        maxDecodedBytes: limits.maxDirectoryDecodedBytes,
       );
       const tileId = PmTilesV3TileId();
       final lowerRange = tileId.rangeForZoom(zoom: header.minZoom);
@@ -86,8 +93,9 @@ final class PmTilesV3ArchiveOpener {
         reader: reader,
         header: header,
         directoryDecoder: directoryDecoder,
+        compressionDecoder: compressionDecoder,
         validator: validator,
-        maxDirectoryDepth: limits.maxDirectoryDepth,
+        limits: limits,
       );
       // 設計正本(docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md
       // :210)は、runtimeがarchive全体をscanしてglobal coverageや件数を
@@ -109,6 +117,7 @@ final class PmTilesV3ArchiveOpener {
         archiveUpperTileIdExclusive: archiveUpperTileIdExclusive,
         traversal: traversal,
         compressionDecoder: compressionDecoder,
+        limits: limits,
       );
     } catch (error, stackTrace) {
       await closeAfterOpenFailure(reader: reader);
@@ -139,6 +148,7 @@ final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
     required this.archiveUpperTileIdExclusive,
     required this.traversal,
     required this.compressionDecoder,
+    required this.limits,
   });
 
   final PmTilesRandomAccessReader reader;
@@ -149,6 +159,7 @@ final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
   final int archiveUpperTileIdExclusive;
   final PmTilesV3DirectoryTraversal traversal;
   final PmTilesV3CompressionDecoder compressionDecoder;
+  final PmTilesV3Limits limits;
   var _isClosed = false;
   Future<void>? _closeFuture;
 
@@ -198,13 +209,22 @@ final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
     if (entry == null) {
       return null;
     }
+    compressionDecoder.validateLength(
+      length: entry.length,
+      maxBytes: limits.maxTileEncodedBytes,
+      resource: PmTilesV3Resource.tileEncoded,
+    );
     final bytes = await reader.readAt(
       offset: header.tileDataOffset + entry.offset,
       length: entry.length,
     );
-    return compressionDecoder.decode(
+    return compressionDecoder.decodeBounded(
       bytes: bytes,
       compression: header.tileCompression,
+      maxEncodedBytes: limits.maxTileEncodedBytes,
+      maxDecodedBytes: limits.maxTileDecodedBytes,
+      encodedResource: PmTilesV3Resource.tileEncoded,
+      decodedResource: PmTilesV3Resource.tileDecoded,
     );
   }
 
@@ -310,15 +330,17 @@ final class PmTilesV3DirectoryTraversal {
     required this.reader,
     required this.header,
     required this.directoryDecoder,
+    required this.compressionDecoder,
     required this.validator,
-    required this.maxDirectoryDepth,
+    required this.limits,
   });
 
   final PmTilesRandomAccessReader reader;
   final PmTilesV3Header header;
   final PmTilesV3DirectoryDecoder directoryDecoder;
+  final PmTilesV3CompressionDecoder compressionDecoder;
   final PmTilesV3DirectoryValidator validator;
-  final int maxDirectoryDepth;
+  final PmTilesV3Limits limits;
   final Map<({int offset, int length}), List<PmTilesV3DirectoryEntry>>
   _leafCache = {};
 
@@ -470,6 +492,11 @@ final class PmTilesV3DirectoryTraversal {
   Future<List<PmTilesV3DirectoryEntry>> decodeLeaf({
     required PmTilesV3DirectoryEntry entry,
   }) async {
+    compressionDecoder.validateLength(
+      length: entry.length,
+      maxBytes: limits.maxDirectoryEncodedBytes,
+      resource: PmTilesV3Resource.directoryEncoded,
+    );
     final bytes = await reader.readAt(
       offset: header.leafDirectoriesOffset + entry.offset,
       length: entry.length,
@@ -477,6 +504,8 @@ final class PmTilesV3DirectoryTraversal {
     return directoryDecoder.decode(
       bytes: bytes,
       compression: header.internalCompression,
+      maxEncodedBytes: limits.maxDirectoryEncodedBytes,
+      maxDecodedBytes: limits.maxDirectoryDecodedBytes,
     );
   }
 
@@ -500,7 +529,7 @@ final class PmTilesV3DirectoryTraversal {
   }
 
   void validateLeafDepth({required int depth}) {
-    if (depth >= maxDirectoryDepth) {
+    if (depth >= limits.maxDirectoryDepth) {
       throw const PmTilesV3Exception.corruptArchive(
         reason:
             'PMTiles archives deeper than the configured directory depth '

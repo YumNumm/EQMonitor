@@ -18,20 +18,6 @@ final class PmTilesV3CompressionDecoder {
     }
   }
 
-  Uint8List decode({required Uint8List bytes, required int compression}) {
-    validateSupported(compression: compression);
-    if (compression == none) {
-      return Uint8List.fromList(bytes);
-    }
-    try {
-      return Uint8List.fromList(gzip.decode(bytes));
-    } on FormatException {
-      throw const PmTilesV3Exception.corruptArchive(
-        reason: 'Invalid gzip-compressed PMTiles content.',
-      );
-    }
-  }
-
   Uint8List decodeBounded({
     required Uint8List bytes,
     required int compression,
