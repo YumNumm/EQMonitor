@@ -42,6 +42,8 @@ void main() {
     final entries = decoder.decode(
       bytes: bytes,
       compression: PmTilesV3CompressionDecoder.none,
+      maxEncodedBytes: 1 << 20,
+      maxDecodedBytes: 8 << 20,
     );
 
     expect(entries.map((entry) => entry.tileId), [5, 42, 69]);
@@ -56,6 +58,8 @@ void main() {
     final entries = decoder.decode(
       bytes: compressed,
       compression: PmTilesV3CompressionDecoder.gzipCompression,
+      maxEncodedBytes: 1 << 20,
+      maxDecodedBytes: 8 << 20,
     );
 
     expect(entries.single.tileId, 5);
@@ -87,6 +91,8 @@ void main() {
         () => decoder.decode(
           bytes: Uint8List.fromList(bytes),
           compression: PmTilesV3CompressionDecoder.none,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );
@@ -108,6 +114,8 @@ void main() {
           () => decoder.decode(
             bytes: Uint8List.fromList(bytes),
             compression: PmTilesV3CompressionDecoder.none,
+            maxEncodedBytes: 1 << 20,
+            maxDecodedBytes: 8 << 20,
           ),
           throwsA(isA<PmTilesV3CorruptArchiveException>()),
         );
@@ -133,6 +141,8 @@ void main() {
       () => decoder.decode(
         bytes: overlapping,
         compression: PmTilesV3CompressionDecoder.none,
+        maxEncodedBytes: 1 << 20,
+        maxDecodedBytes: 8 << 20,
       ),
       throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
@@ -141,6 +151,8 @@ void main() {
         () => decoder.decode(
           bytes: Uint8List(1),
           compression: compression,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
         ),
         throwsA(isA<PmTilesV3UnsupportedCompressionException>()),
       );
@@ -152,6 +164,8 @@ void main() {
       () => decoder.decode(
         bytes: Uint8List.fromList([1, 2, 3]),
         compression: PmTilesV3CompressionDecoder.gzipCompression,
+        maxEncodedBytes: 1 << 20,
+        maxDecodedBytes: 8 << 20,
       ),
       throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
@@ -197,6 +211,8 @@ void main() {
         () => decoder.decode(
           bytes: bytes,
           compression: PmTilesV3CompressionDecoder.none,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );
