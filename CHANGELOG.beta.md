@@ -1,5 +1,55 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.14](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.13...v3.0.0-beta.14) (2026-08-25)
+
+
+### Features
+
+* Android位置同期leaseを永続化 ([170a42e](https://github.com/YumNumm/EQMonitor/commit/170a42e9298f14d766e7549824ff979e75ab09da))
+* Android終了中の位置同期を永続実行 ([db4fc72](https://github.com/YumNumm/EQMonitor/commit/db4fc722cc754e3fded505f05bd1256df34fcdcd))
+* Better Authのセッション基盤を追加する ([35307ae](https://github.com/YumNumm/EQMonitor/commit/35307aec21115a3a24c86800abeee2bc97397b80))
+* GoogleとAppleのNative認証を追加する ([6813cd6](https://github.com/YumNumm/EQMonitor/commit/6813cd6103413c03a5aa92d07799d23a67b55910))
+* iOS位置同期leaseを永続化 ([6a0e611](https://github.com/YumNumm/EQMonitor/commit/6a0e611d2064602989360a4db69f4c22b1d9e05b))
+* JWTからDevice IDを取得 ([6f0a5c6](https://github.com/YumNumm/EQMonitor/commit/6f0a5c69b186f9313b776a5ad1a6e70aab4b579f))
+* Native Better Authログインを追加する ([a0e5399](https://github.com/YumNumm/EQMonitor/commit/a0e5399fb847d04935701d218ef76f215348bcab))
+* Native認証のデバッグ画面を追加する ([b039043](https://github.com/YumNumm/EQMonitor/commit/b0390436b67989dc14d2cc6bdcf9f376031afe07))
+* Passkey登録とサインインを追加する ([53636ba](https://github.com/YumNumm/EQMonitor/commit/53636bae120b4c7cd737b0bcea88dd7e7512aba9))
+* 位置同期leaseのnative契約を生成 ([d620bf6](https://github.com/YumNumm/EQMonitor/commit/d620bf6aef329f4e419910951e399c7c4c79d7f0))
+* 通常とheadlessでnative leaseを共有 ([e28d6cc](https://github.com/YumNumm/EQMonitor/commit/e28d6cc67a488108df552b4f4de4d2272c60d661))
+
+
+### Bug Fixes
+
+* AGP9のprofile設定を修正 ([e280f60](https://github.com/YumNumm/EQMonitor/commit/e280f6010a4f987e8d83f88cdc863aa85dae11ae))
+* Android headless起動の競合を解消 ([fede96d](https://github.com/YumNumm/EQMonitor/commit/fede96d165c5d46e0f1421f0d89fa5a117b3c564))
+* Android raw位置情報をbackup対象外に設定 ([91d65d8](https://github.com/YumNumm/EQMonitor/commit/91d65d86b1e40d1a66650bd29ecc025f4a8c9177))
+* Better Authの認証無効化を強化する ([fe81156](https://github.com/YumNumm/EQMonitor/commit/fe811562833fa57359cb7ff0cf2187506093032a))
+* consumer変更後に位置監視をreconcile ([0f969e1](https://github.com/YumNumm/EQMonitor/commit/0f969e15876ebb66d781b2abc77e91f621a6c599))
+* Device IDヘッダーをJWTへ追従 ([587db7b](https://github.com/YumNumm/EQMonitor/commit/587db7b5d7d828e0b78a6f17b0d1ed224566b79b))
+* device再登録で位置同期世代を更新 ([1d30fe4](https://github.com/YumNumm/EQMonitor/commit/1d30fe44b2fa161e86d5979c6168f4d2541e7bab))
+* device再登録後の位置監視を整合 ([088c06f](https://github.com/YumNumm/EQMonitor/commit/088c06fc408ccc0485f73511ff7f5d6a91c1fb5e))
+* **earthquake-history:** 地域観測震度と最大震度を分離する ([a670156](https://github.com/YumNumm/EQMonitor/commit/a6701566ad7a0206c49cc309214847e091b2ade1))
+* iOS raw位置情報のbackup除外属性を維持 ([cd6d9d6](https://github.com/YumNumm/EQMonitor/commit/cd6d9d6b80443cea60157a153eb37e005132b03d))
+* Native認証デバッグの操作可否を修正する ([2a658b8](https://github.com/YumNumm/EQMonitor/commit/2a658b83ef248c2e02acdf729551b20d48fe4f83))
+* Native認証デバッグ画面の状態同期を修正する ([7bff60c](https://github.com/YumNumm/EQMonitor/commit/7bff60c5d3f0e3cf08837932dec525f37dd0a38e))
+* Native認証の同時実行とsession確立を堅牢化する ([571e9db](https://github.com/YumNumm/EQMonitor/commit/571e9dbc897d00234776792c0dd1c47a81fe63ae))
+* Native認証の解析警告を解消する ([b10bb06](https://github.com/YumNumm/EQMonitor/commit/b10bb06786009e0bb498464d47f220db9f9fdfeb))
+* Native認証設定とrollback回帰を強化する ([9f25fb8](https://github.com/YumNumm/EQMonitor/commit/9f25fb8efdc3af183fb21fb04743337c3b70227d))
+* Passkey cable transportを許可する ([b9412b7](https://github.com/YumNumm/EQMonitor/commit/b9412b78e2c67ba6c0c0338a64554eda94d742d2))
+* Passkey transport互換性を修正する ([333864c](https://github.com/YumNumm/EQMonitor/commit/333864cbfd6f19e1a60ae71471d069a703b137db))
+* Passkey認証の競合と検証境界を修正する ([c28a75c](https://github.com/YumNumm/EQMonitor/commit/c28a75ca5fe43b24a8ccf6584066921fe404bce8))
+* UIScene復帰時の位置同期retryを再登録 ([ab32201](https://github.com/YumNumm/EQMonitor/commit/ab32201fa8cefa7b17693e006abcc18c35fc05c5))
+* 不要なKeychainAccess解決を削除 ([a516ae4](https://github.com/YumNumm/EQMonitor/commit/a516ae4630fffbbceaade6829e97865f609590ca))
+* 位置同期の反転応答をleaseで抑止 ([06d18a8](https://github.com/YumNumm/EQMonitor/commit/06d18a85fc4b52990a87063507684958f421bdf2))
+* 位置同期成功値をbackend scopeへ紐付け ([b9828e7](https://github.com/YumNumm/EQMonitor/commit/b9828e73ae8e2e630e1fe9e059c799e85889783f))
+* 地域観測震度Chipを明確化 ([1729be9](https://github.com/YumNumm/EQMonitor/commit/1729be97356d208fd2eab5ba3dbe8af58931cd23))
+* 地域観測震度の型と絞り込みを修正 ([4ad9bfd](https://github.com/YumNumm/EQMonitor/commit/4ad9bfd37b91328709ec1b980225d1776a010160))
+* 地域震度フィルター表示を明確化 ([a010beb](https://github.com/YumNumm/EQMonitor/commit/a010beb77f36c913b6f70243caee305ce1f51beb))
+* 市区町村履歴を地域震度順で表示 ([0a1702e](https://github.com/YumNumm/EQMonitor/commit/0a1702e9fb4c28e09db11cf20f109daf7b30b933))
+* 新規地震で履歴Providerを再取得 ([6037a07](https://github.com/YumNumm/EQMonitor/commit/6037a079d5971fdbaf7d6e16761da85ccd666177))
+* 認証無効化中の資格情報復活を防ぐ ([41c406b](https://github.com/YumNumm/EQMonitor/commit/41c406b406c48f25f4fbc18e23d240eb7b8e1c78))
+* 起動時に位置監視状態をreconcile ([e1c7ba1](https://github.com/YumNumm/EQMonitor/commit/e1c7ba1c9449e274a298cdf4513676a0c201c7c2))
+
 ## [3.0.0-beta.13](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.12...v3.0.0-beta.13) (2026-08-23)
 
 
