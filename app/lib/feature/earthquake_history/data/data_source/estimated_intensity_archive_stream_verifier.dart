@@ -68,16 +68,6 @@ final class EstimatedIntensityArchiveStreamVerifier {
         }
         await guard.settle(
           pending: output.write(chunk),
-          abort: () async {
-            try {
-              await output?.close();
-            } catch (_) {
-              reportEstimatedIntensityArchiveDiagnostic(
-                reporter: diagnosticReporter,
-                diagnostic: .partWriterCloseFailed,
-              );
-            }
-          },
         );
         receivedBytes = nextBytes;
       }
@@ -88,16 +78,6 @@ final class EstimatedIntensityArchiveStreamVerifier {
       }
       await guard.settle(
         pending: output.flushAndClose(),
-        abort: () async {
-          try {
-            await output?.close();
-          } catch (_) {
-            reportEstimatedIntensityArchiveDiagnostic(
-              reporter: diagnosticReporter,
-              diagnostic: .partWriterCloseFailed,
-            );
-          }
-        },
       );
       if (receivedBytes != descriptor.sizeBytes) {
         return const EstimatedIntensityArchiveDownloadRejected(

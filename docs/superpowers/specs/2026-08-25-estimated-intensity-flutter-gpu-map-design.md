@@ -271,8 +271,9 @@ HTTP contract:
 - response body、例外、URL に auth token や local path を user-facing message へ出さない
 
 total timeout と cancel は request open、body read、part write、flush、exact size、SHA-256
-確認までを一つの停止signalで制御する。停止時はHTTP request、body subscription、part writer、
-hash subscriptionを中断し、各adapterのpending I/Oがsettleしてから `.part` cleanupへ進む。
+確認までを一つの停止signalで制御する。停止時はHTTP request、body subscription、
+hash subscriptionを中断する。part write、flush、file lengthは同一handleを並行closeせず、
+開始済みI/Oの収束後に `.part` cleanupへ進む。
 cleanup失敗の診断は固定enumだけを渡し、URL、local path、hash、元例外を渡さない。
 
 ### 7.2 Full-content verification

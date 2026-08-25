@@ -49,14 +49,19 @@ final class EstimatedIntensityArchiveDownloadGuard {
   Future<EstimatedIntensityArchiveStopReason> get stopRequested =>
       _stopRequested.future;
 
-  /// 停止時はadapterを中断し、pending I/Oのsettle後にだけ呼出元へ戻す。
+  /// 停止時はpending I/Oの収束後にだけ呼出元へ戻す。
+  ///
+  /// [abort]はHTTPなど安全に中断できるI/Oにのみ指定する。
   Future<T> settle<T>({
     required Future<T> pending,
-    required Future<void> Function() abort,
+    Future<void> Function()? abort,
   }) async {
     if (stopReason != EstimatedIntensityArchiveStopReason.none) {
       try {
-        await abort();
+        await abort?.call();
+      } catch (_) {}
+      try {
+        await pending;
       } catch (_) {}
       throw EstimatedIntensityArchiveStoppedException(stopReason);
     }
@@ -69,7 +74,7 @@ final class EstimatedIntensityArchiveDownloadGuard {
       ]);
     } on EstimatedIntensityArchiveStoppedException {
       try {
-        await abort();
+        await abort?.call();
       } catch (_) {}
       try {
         await pending;
