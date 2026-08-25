@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -400,5 +402,236 @@ void main() {
     );
     expect(_stamp(result).sourceIncarnation, _incarnation('incarnation-b'));
     expect(_stamp(result).dataSequence, 0);
+  });
+
+  test('clock mode変更は同じeventのoverlay incarnationを切り替える', () async {
+    final incarnations = [
+      _incarnation('realtime-incarnation'),
+      _incarnation('time-shift-incarnation'),
+    ].iterator;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = ProviderContainer(
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () {
+            if (!incarnations.moveNext()) {
+              throw StateError('unexpected incarnation request');
+            }
+            return incarnations.current;
+          },
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider(
+          'A',
+        ).overrideWith(() => _MutableDetailsNotifier(_availableEarthquake())),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    final realtime = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+    container
+        .read(appClockProvider.notifier)
+        .enterTimeShift(const Duration(minutes: -5));
+    await pumpEventQueue();
+    final timeShift = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(realtime.sourceIdentity, timeShift.sourceIdentity);
+    expect(realtime.sourceIncarnation, _incarnation('realtime-incarnation'));
+    expect(
+      timeShift.sourceIncarnation,
+      _incarnation('time-shift-incarnation'),
+    );
+    expect(timeShift.dataSequence, 0);
+  });
+
+  test('clock mode変更後に完了した旧detailは新incarnationだけへ公開する', () async {
+    final detail = Completer<Earthquake>();
+    final requested = Completer<void>();
+    final incarnations = [
+      _incarnation('realtime-incarnation'),
+      _incarnation('replay-incarnation'),
+    ].iterator;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = ProviderContainer(
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () {
+            if (!incarnations.moveNext()) {
+              throw StateError('unexpected incarnation request');
+            }
+            return incarnations.current;
+          },
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _PendingDetailsNotifier(
+            completer: detail,
+            requested: requested,
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final publishedIncarnations = <MapSourceIncarnation>[];
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, next) {
+        if (next case AsyncData(:final value)) {
+          final overlay = value.overlay;
+          if (overlay != null) {
+            publishedIncarnations.add(overlay.versionStamp.sourceIncarnation);
+          }
+        }
+      },
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    await requested.future;
+    container
+        .read(appClockProvider.notifier)
+        .enterReplay(DateTime.utc(2026, 8, 24));
+    await pumpEventQueue();
+    detail.complete(_availableEarthquake());
+    final result = await container.read(latestEarthquakeOverlayProvider.future);
+
+    expect(
+      publishedIncarnations,
+      isNot(contains(_incarnation('realtime-incarnation'))),
+    );
+    expect(
+      _stamp(result).sourceIncarnation,
+      _incarnation('replay-incarnation'),
+    );
+  });
+
+  test('連続enterReplay後に完了した旧detailは新incarnationだけへ公開する', () async {
+    final detail = Completer<Earthquake>();
+    final requested = Completer<void>();
+    final incarnations = [
+      _incarnation('first-replay-incarnation'),
+      _incarnation('second-replay-incarnation'),
+    ].iterator;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = ProviderContainer(
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () {
+            if (!incarnations.moveNext()) {
+              throw StateError('unexpected incarnation request');
+            }
+            return incarnations.current;
+          },
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _PendingDetailsNotifier(
+            completer: detail,
+            requested: requested,
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final appClock = container.read(appClockProvider.notifier);
+    final replayStart = DateTime.utc(2026, 8, 24);
+    appClock.enterReplay(replayStart);
+    final publishedIncarnations = <MapSourceIncarnation>[];
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, next) {
+        if (next case AsyncData(:final value)) {
+          final overlay = value.overlay;
+          if (overlay != null) {
+            publishedIncarnations.add(overlay.versionStamp.sourceIncarnation);
+          }
+        }
+      },
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    await requested.future;
+    appClock.enterReplay(replayStart);
+    await pumpEventQueue();
+    detail.complete(_availableEarthquake());
+    final result = await container.read(latestEarthquakeOverlayProvider.future);
+
+    expect(
+      publishedIncarnations,
+      isNot(contains(_incarnation('first-replay-incarnation'))),
+    );
+    expect(
+      _stamp(result).sourceIncarnation,
+      _incarnation('second-replay-incarnation'),
+    );
+  });
+
+  test('通常のreplay tickはoverlay incarnationを再生成しない', () async {
+    var incarnationRequestCount = 0;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = ProviderContainer(
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () => _incarnation(
+            'incarnation-${++incarnationRequestCount}',
+          ),
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider(
+          'A',
+        ).overrideWith(() => _MutableDetailsNotifier(_availableEarthquake())),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+    final appClock = container.read(appClockProvider.notifier);
+
+    await container.read(latestEarthquakeOverlayProvider.future);
+    appClock.enterReplay(DateTime.utc(2026, 8, 24));
+    await pumpEventQueue();
+    final replay = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+    appClock.updateReplayTime(DateTime.utc(2026, 8, 24, 0, 0, 1));
+    await pumpEventQueue();
+    final replayTick = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(replayTick.sourceIncarnation, replay.sourceIncarnation);
+    expect(replayTick, replay);
+    expect(incarnationRequestCount, 2);
+    expect(
+      container.read(mapClockSourceIdentityProvider).mode,
+      MapClockSourceMode.replay,
+    );
   });
 }

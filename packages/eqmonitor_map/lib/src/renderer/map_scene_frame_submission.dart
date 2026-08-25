@@ -225,6 +225,20 @@ final class MapSceneFrameLimits {
   final int maxNodeCount;
 }
 
+enum MapSceneFrameValidationFailureReason { nodeCountExceeded }
+
+final class MapSceneFrameValidationException implements Exception {
+  const MapSceneFrameValidationException({
+    required this.reason,
+    required this.actualNodeCount,
+    required this.maxNodeCount,
+  });
+
+  final MapSceneFrameValidationFailureReason reason;
+  final int actualNodeCount;
+  final int maxNodeCount;
+}
+
 final class MapSceneFrameSubmission {
   factory MapSceneFrameSubmission({
     required MapFrameSnapshot frame,
@@ -362,7 +376,11 @@ void validateMapSceneFrameLayers({
     );
   }
   if (nodeCount > limits.maxNodeCount) {
-    throw ArgumentError.value(nodeCount, 'layers', 'exceeds maxNodeCount');
+    throw MapSceneFrameValidationException(
+      reason: MapSceneFrameValidationFailureReason.nodeCountExceeded,
+      actualNodeCount: nodeCount,
+      maxNodeCount: limits.maxNodeCount,
+    );
   }
 }
 

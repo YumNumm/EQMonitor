@@ -40,6 +40,8 @@ export 'src/foundation/revision/map_revision_commit_store.dart';
 export 'src/foundation/revision/map_revision_state_owner.dart';
 export 'src/foundation/revision/map_source_identity.dart';
 export 'src/geo/map_camera.dart';
+export 'src/geo/map_camera_bounds.dart';
+export 'src/geo/map_camera_bounds_fitter.dart';
 export 'src/geo/map_viewport.dart';
 export 'src/mesh/fill_mesh_builder_limits.dart';
 export 'src/mesh/line_mesh_builder_limits.dart';
@@ -60,5 +62,6 @@ export 'src/tile/map_tile_pipeline_budget.dart';
 export 'src/tile/mvt/mvt_decode_limits.dart';
 export 'src/tile/verified_pm_tiles_source.dart';
 export 'src/widget/base_map_view.dart';
+export 'src/widget/map_view_camera_controller.dart';
 
 // The physical-device Scene spike stays under src as a manual smoke harness.
