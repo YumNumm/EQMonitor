@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
+import 'package:eqmonitor_map/src/overlay/map_point_sprite_feature.dart';
+import 'package:eqmonitor_map/src/overlay/map_sprite_atlas.dart';
+import 'package:eqmonitor_map/src/overlay/map_zoom_scalar_policy.dart';
 
 /// 震度区域の描画style。
 final class EarthquakeAreaStyle {
@@ -41,6 +44,9 @@ final class EarthquakeMapOverlaySnapshot {
     required this.regionStyles,
     required this.cityStyles,
     required this.stations,
+    required this.spriteAtlas,
+    required this.sprites,
+    required this.maxSpritePolicyBatches,
   });
 
   final MapOverlayVersionStamp versionStamp;
@@ -49,6 +55,9 @@ final class EarthquakeMapOverlaySnapshot {
   final List<EarthquakeAreaStyle> regionStyles;
   final List<EarthquakeAreaStyle> cityStyles;
   final List<EarthquakeObservationPoint> stations;
+  final MapSpriteAtlas? spriteAtlas;
+  final List<MapPointSpriteFeature> sprites;
+  final int maxSpritePolicyBatches;
 }
 
 /// [EarthquakeMapOverlaySnapshot]を検証済みの不変入力から構築する。
@@ -59,6 +68,9 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
   required List<EarthquakeAreaStyle> regionStyles,
   required List<EarthquakeAreaStyle> cityStyles,
   required List<EarthquakeObservationPoint> stations,
+  required MapSpriteAtlas? spriteAtlas,
+  required List<MapPointSpriteFeature> sprites,
+  required int maxSpritePolicyBatches,
 }) {
   _validateSnapshotValues(
     regionToCityZoom: regionToCityZoom,
@@ -67,6 +79,11 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
   _validateAreaStyles(styles: regionStyles, parameterName: 'regionStyles');
   _validateAreaStyles(styles: cityStyles, parameterName: 'cityStyles');
   _validateStations(stations: stations);
+  _validateSprites(
+    spriteAtlas: spriteAtlas,
+    sprites: sprites,
+    maxSpritePolicyBatches: maxSpritePolicyBatches,
+  );
 
   return EarthquakeMapOverlaySnapshot._(
     versionStamp: versionStamp,
@@ -75,6 +92,9 @@ EarthquakeMapOverlaySnapshot createEarthquakeMapOverlaySnapshot({
     regionStyles: List<EarthquakeAreaStyle>.unmodifiable(regionStyles),
     cityStyles: List<EarthquakeAreaStyle>.unmodifiable(cityStyles),
     stations: List<EarthquakeObservationPoint>.unmodifiable(stations),
+    spriteAtlas: spriteAtlas,
+    sprites: List<MapPointSpriteFeature>.unmodifiable(sprites),
+    maxSpritePolicyBatches: maxSpritePolicyBatches,
   );
 }
 
@@ -146,5 +166,45 @@ void _validateStations({required List<EarthquakeObservationPoint> stations}) {
     if (!ids.add(station.id)) {
       throw ArgumentError.value(station.id, 'stations', 'contains duplicates');
     }
+  }
+}
+
+void _validateSprites({
+  required MapSpriteAtlas? spriteAtlas,
+  required List<MapPointSpriteFeature> sprites,
+  required int maxSpritePolicyBatches,
+}) {
+  if (maxSpritePolicyBatches <= 0) {
+    throw ArgumentError.value(
+      maxSpritePolicyBatches,
+      'maxSpritePolicyBatches',
+      'must be positive',
+    );
+  }
+  if (spriteAtlas == null && sprites.isNotEmpty) {
+    throw ArgumentError.value(sprites, 'sprites', 'requires spriteAtlas');
+  }
+  final regionIds = spriteAtlas?.regions.map((region) => region.id).toSet();
+  final featureIds = <String>{};
+  final policyPairs = <(MapZoomLinearRange, MapZoomStep)>{};
+  for (final sprite in sprites) {
+    if (regionIds?.contains(sprite.spriteRegionId) != true) {
+      throw ArgumentError.value(
+        sprite.spriteRegionId,
+        'sprites.spriteRegionId',
+        'does not exist in spriteAtlas',
+      );
+    }
+    if (!featureIds.add(sprite.id)) {
+      throw ArgumentError.value(sprite.id, 'sprites', 'contains duplicates');
+    }
+    policyPairs.add((sprite.sizeScale, sprite.opacity));
+  }
+  if (policyPairs.length > maxSpritePolicyBatches) {
+    throw ArgumentError.value(
+      policyPairs.length,
+      'sprites',
+      'exceeds maxSpritePolicyBatches',
+    );
   }
 }

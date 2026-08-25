@@ -79,6 +79,9 @@ void main() {
     regionStyles: const [],
     cityStyles: const [],
     stations: stations,
+    spriteAtlas: null,
+    sprites: const [],
+    maxSpritePolicyBatches: 1,
   );
 
   test('packs Tokyo Mercator, RGBA, and radius at the 28-byte ABI offsets', () {

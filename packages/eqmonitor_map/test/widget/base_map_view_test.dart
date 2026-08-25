@@ -34,6 +34,9 @@ void main() {
       regionStyles: const [],
       cityStyles: const [],
       stations: const [],
+      spriteAtlas: null,
+      sprites: const [],
+      maxSpritePolicyBatches: 1,
     );
     void callback(EarthquakeOverlayCoverageSnapshot _) {}
     final view = BaseMapView(

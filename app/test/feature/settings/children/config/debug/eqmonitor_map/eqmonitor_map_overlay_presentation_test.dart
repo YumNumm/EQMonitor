@@ -31,6 +31,9 @@ EarthquakeMapOverlaySnapshot _snapshot(MapOverlayVersionStamp versionStamp) =>
       regionStyles: const [],
       cityStyles: const [],
       stations: const [],
+      spriteAtlas: null,
+      sprites: const [],
+      maxSpritePolicyBatches: 1,
     );
 
 LatestEarthquakeOverlayData _available(
