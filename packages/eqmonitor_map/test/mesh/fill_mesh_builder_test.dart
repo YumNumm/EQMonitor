@@ -141,6 +141,39 @@ void main() {
       expect(_totalTriangleArea(mesh), closeTo(expectedArea, 1e-9));
     });
 
+    test('Int32四隅の正逆ringを外形とholeに分類する', () {
+      const min = -2147483648;
+      const max = 2147483647;
+      final exterior = _ring([
+        (min, min),
+        (max, min),
+        (max, max),
+        (min, max),
+      ]);
+      final reversed = _ring([
+        (min, min),
+        (min, max),
+        (max, max),
+        (max, min),
+      ]);
+
+      expect(
+        _builder()
+            .build([
+              _polygonFeature([exterior]),
+            ])
+            .single
+            .vertexCount,
+        4,
+      );
+      expect(
+        () => _builder().build([
+          _polygonFeature([reversed]),
+        ]),
+        throwsA(isA<FillMeshHoleBeforeExteriorException>()),
+      );
+    });
+
     test('rejects a ring with fewer than 3 vertices', () {
       final degenerate = _ring([(0, 0), (10, 0)]);
       final feature = _polygonFeature([degenerate]);
@@ -364,6 +397,7 @@ void main() {
         throwsA(isA<FillMeshInvalidTopologyException>()),
       );
     });
+
   });
 
   group('segment splitting at the Uint16 index boundary', () {

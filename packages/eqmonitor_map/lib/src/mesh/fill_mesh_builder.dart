@@ -5,6 +5,7 @@ import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/mesh/polygon_self_intersection_validator.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_signed_area.dart';
 import 'package:eqmonitor_map/src/mesh/polygon_topology_validator.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
 
@@ -187,14 +188,14 @@ List<_RawPolygon> _classifyRings(
       );
     }
 
-    final signedAreaTwice = _signedAreaTwice(ring);
-    if (signedAreaTwice == 0) {
+    final signedAreaSign = const PolygonSignedArea().sign(ring);
+    if (signedAreaSign == 0) {
       throw const FillMeshBuildException.degenerateRing(
         reason: 'A ring has zero signed area and encloses no surface.',
       );
     }
 
-    if (signedAreaTwice > 0) {
+    if (signedAreaSign > 0) {
       polygons.add(_RawPolygon(exterior: ring));
       continue;
     }
@@ -217,23 +218,6 @@ List<_RawPolygon> _classifyRings(
     current.holes.add(ring);
   }
   return polygons;
-}
-
-/// ringの符号付き面積の2倍を整数のまま計算する。tile-local座標はint32の
-/// 範囲を持ち得るため、doubleではなくint(64bit)で積算し、ゼロ判定の丸め
-/// 誤差を避ける。
-int _signedAreaTwice(Int32List ring) {
-  final vertexCount = ring.length ~/ 2;
-  var sum = 0;
-  for (var i = 0; i < vertexCount; i++) {
-    final x0 = ring[i * 2];
-    final y0 = ring[i * 2 + 1];
-    final nextIndex = (i + 1) % vertexCount;
-    final x1 = ring[nextIndex * 2];
-    final y1 = ring[nextIndex * 2 + 1];
-    sum += x0 * y1 - x1 * y0;
-  }
-  return sum;
 }
 
 /// 1つのpolygon(外形+穴)を`dart_earcut`で三角形化する。
