@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pmtiles_v3/pmtiles_v3.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
 import 'package:test/test.dart';
 
@@ -13,6 +14,10 @@ import '../support/pmtiles_v3_fixture_builder.dart';
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  maxDirectoryEncodedBytes: 1 << 20,
+  maxDirectoryDecodedBytes: 8 << 20,
+  maxTileEncodedBytes: 4 << 20,
+  maxTileDecodedBytes: 16 << 20,
   validateEntireArchiveEagerly: true,
 );
 
@@ -123,6 +128,91 @@ void main() {
     await archive.close();
   });
 
+  test('classifies root directory encoded and decoded limits', () async {
+    for (final limits in [
+      _limits.copyWith(maxDirectoryEncodedBytes: 0),
+      _limits.copyWith(maxDirectoryDecodedBytes: 4),
+    ]) {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
+        ],
+        internalCompression: PmTilesV3CompressionDecoder.gzipCompression,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+      await expectLater(
+        PmTilesV3Archive.open(reader: reader, limits: limits),
+        throwsA(isA<PmTilesV3ResourceLimitExceededException>()),
+      );
+      expect(reader._closeCalls, 1);
+    }
+  });
+
+  test('applies the decoded directory limit when reading a leaf', () async {
+    final fixture = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [5]),
+            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+    await expectLater(
+      PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(maxDirectoryDecodedBytes: 5),
+      ),
+      throwsA(
+        isA<PmTilesV3ResourceLimitExceededException>().having(
+          (exception) => exception.resource,
+          'resource',
+          PmTilesV3Resource.directoryDecoded,
+        ),
+      ),
+    );
+    expect(reader._closeCalls, 1);
+  });
+
+  test(
+    'applies encoded and decoded limits to none/gzip tile payloads',
+    () async {
+      for (final compression in [
+        PmTilesV3CompressionDecoder.none,
+        PmTilesV3CompressionDecoder.gzipCompression,
+      ]) {
+        final payload = List<int>.filled(32, 7);
+        final fixture = builder.build(
+          rootEntries: [PmTilesV3FixtureTile(tileId: 0, bytes: payload)],
+          tileCompression: compression,
+        );
+        final archive = await PmTilesV3Archive.open(
+          reader: TrackingRandomAccessReader(bytes: fixture.bytes),
+          limits: _limits.copyWith(
+            maxTileEncodedBytes: compression == PmTilesV3CompressionDecoder.none
+                ? payload.length - 1
+                : 4 << 20,
+            maxTileDecodedBytes: compression == PmTilesV3CompressionDecoder.none
+                ? 16 << 20
+                : payload.length - 1,
+          ),
+        );
+
+        await expectLater(
+          archive.readTileById(tileId: 0),
+          throwsA(isA<PmTilesV3ResourceLimitExceededException>()),
+        );
+        await archive.close();
+      }
+    },
+  );
+
   test('supports three directory levels and rejects a fourth', () async {
     final validFixture = builder.build(
       rootEntries: const [
@@ -200,6 +290,10 @@ void main() {
           limits: const PmTilesV3Limits(
             maxDirectoryDepth: 1,
             rootDirectoryWindowLength: 16384,
+            maxDirectoryEncodedBytes: 1 << 20,
+            maxDirectoryDecodedBytes: 8 << 20,
+            maxTileEncodedBytes: 4 << 20,
+            maxTileDecodedBytes: 16 << 20,
             validateEntireArchiveEagerly: true,
           ),
         ),
@@ -232,6 +326,10 @@ void main() {
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 1,
           rootDirectoryWindowLength: 16384,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
         ),
       );
 
@@ -571,6 +669,10 @@ void main() {
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 3,
           rootDirectoryWindowLength: 16384,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
         ),
       );
 
