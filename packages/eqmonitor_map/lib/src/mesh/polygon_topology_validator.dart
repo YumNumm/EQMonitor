@@ -44,7 +44,7 @@ final class _TopologyCheckCounter {
   _TopologyCheckCounter({required this.maxChecks});
 
   final int maxChecks;
-  var used = 0;
+  int used = 0;
 
   void consume() {
     used++;

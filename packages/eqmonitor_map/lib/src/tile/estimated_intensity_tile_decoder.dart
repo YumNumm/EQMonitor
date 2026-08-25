@@ -130,6 +130,10 @@ EstimatedIntensityTileGeometry decodeEstimatedIntensityTileSync(
     throw const EstimatedIntensityTileDecodeException(
       EstimatedIntensityTileDecodeFailure.invalidGeometry,
     );
+  } on FillMeshInvalidTopologyException {
+    throw const EstimatedIntensityTileDecodeException(
+      EstimatedIntensityTileDecodeFailure.invalidGeometry,
+    );
   } on MvtDecodeException {
     throw const EstimatedIntensityTileDecodeException(
       EstimatedIntensityTileDecodeFailure.invalidMvt,

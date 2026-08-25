@@ -174,6 +174,22 @@ void main() {
       );
     });
 
+    test('shares the comparison limit across build calls', () {
+      final square = _ring([(0, 0), (10, 0), (10, 10), (0, 10)]);
+      final builder = _builder(maxIntersectionChecks: 1);
+
+      builder.build([
+        _polygonFeature([square]),
+      ]);
+
+      expect(
+        () => builder.build([
+          _polygonFeature([square]),
+        ]),
+        throwsA(isA<FillMeshLimitExceededException>()),
+      );
+    });
+
     test(
       'rejects a lone ring wound as a hole (negative signed area) '
       'with no preceding exterior',
@@ -296,57 +312,58 @@ void main() {
         throwsA(isA<FillMeshSelfIntersectionException>()),
       );
     });
+
+    for (final testCase in [
+      (
+        name: 'hole outside its exterior',
+        rings: [
+          _ring([(0, 0), (10, 0), (10, 10), (0, 10)]),
+          _ring([(20, 20), (20, 30), (30, 30), (30, 20)]),
+        ],
+      ),
+      (
+        name: 'nested holes',
+        rings: [
+          _ring([(0, 0), (30, 0), (30, 30), (0, 30)]),
+          _ring([(5, 5), (5, 25), (25, 25), (25, 5)]),
+          _ring([(10, 10), (10, 20), (20, 20), (20, 10)]),
+        ],
+      ),
+    ]) {
+      test('rejects ${testCase.name}', () {
+        expect(
+          () => _builder().build([_polygonFeature(testCase.rings)]),
+          throwsA(isA<FillMeshInvalidTopologyException>()),
+        );
+      });
+    }
   });
 
   group('multiple exterior rings in one feature', () {
-    test(
-      'a feature with two same-winding rings is classified as two '
-      'polygons, not exterior+hole (classification is sign-only, '
-      'independent of geometric nesting)',
-      () {
-        // squareBはsquareAの内部に幾何学的にネストしているが、同じ向き
-        // (どちらもshoelace > 0)で巻かれているため、MVT仕様に従い2つ目の
-        // 独立したexteriorとして扱われる(穴としては扱わない)。
-        final squareA = _ring([(0, 0), (20, 0), (20, 20), (0, 20)]);
-        final squareB = _ring([(5, 5), (10, 5), (10, 10), (5, 10)]);
-        expect(_signedAreaTwice(squareA), greaterThan(0));
-        expect(_signedAreaTwice(squareB), greaterThan(0));
-        final feature = _polygonFeature([squareA, squareB]);
+    test('triangulates two disjoint exteriors', () {
+      final squareA = _ring([(0, 0), (20, 0), (20, 20), (0, 20)]);
+      final squareB = _ring([(30, 30), (40, 30), (40, 40), (30, 40)]);
 
-        final meshes = _builder().build([feature]);
+      final mesh = _builder().build([
+        _polygonFeature([squareA, squareB]),
+      ]).single;
 
-        expect(meshes, hasLength(1));
-        final mesh = meshes.single;
-        expect(mesh.vertexCount, 8);
-        // 穴を持たない2つの独立したpolygon: (4-2) + (4-2) == 4。
-        expect(mesh.indices.length ~/ 3, 4);
+      expect(mesh.vertexCount, 8);
+      expect(mesh.indices.length ~/ 3, 4);
+      expect(_totalTriangleArea(mesh), closeTo(500, 1e-9));
+    });
 
-        // 面積は「差し引き」ではなく「足し算」になる(独立した2 polygonの
-        // 総和であり、穴なら引き算になるはずの符号がここでは両方正)。
-        final expectedArea = (400 + 25).toDouble();
-        expect(_totalTriangleArea(mesh), closeTo(expectedArea, 1e-9));
+    test('rejects nested exteriors', () {
+      final outer = _ring([(0, 0), (20, 0), (20, 20), (0, 20)]);
+      final nested = _ring([(5, 5), (10, 5), (10, 10), (5, 10)]);
 
-        // 各三角形のindexは、squareA由来の頂点範囲[0,4)かsquareB由来の
-        // 頂点範囲[4,8)のどちらか一方に完全に収まる
-        // (別polygonのearcut結果が混ざらないことの確認。
-        // earcutの内部実装ではなく、builderの頂点割り当てロジックを
-        // 検証する不変条件)。
-        for (var i = 0; i < mesh.indices.length; i += 3) {
-          final indicesOfTriangle = [
-            mesh.indices[i],
-            mesh.indices[i + 1],
-            mesh.indices[i + 2],
-          ];
-          final allInA = indicesOfTriangle.every((index) => index < 4);
-          final allInB = indicesOfTriangle.every((index) => index >= 4);
-          expect(
-            allInA || allInB,
-            isTrue,
-            reason: '三角形が複数polygonの頂点を混ぜて参照している',
-          );
-        }
-      },
-    );
+      expect(
+        () => _builder().build([
+          _polygonFeature([outer, nested]),
+        ]),
+        throwsA(isA<FillMeshInvalidTopologyException>()),
+      );
+    });
   });
 
   group('segment splitting at the Uint16 index boundary', () {
