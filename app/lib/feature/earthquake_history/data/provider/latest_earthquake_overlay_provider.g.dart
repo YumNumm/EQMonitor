@@ -227,7 +227,7 @@ final class LatestEarthquakeOverlayProvider
 }
 
 String _$latestEarthquakeOverlayHash() =>
-    r'f634a7b2a4557affac13c7d8d928c933f72e314d';
+    r'1c585b2577dc3b9c45a7abec1d786fe090c4e1e5';
 
 abstract class _$LatestEarthquakeOverlay
     extends $AsyncNotifier<LatestEarthquakeOverlayData> {

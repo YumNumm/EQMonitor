@@ -159,7 +159,9 @@ ProviderContainer _providerContainer({
   required List<Override> overrides,
   Future<MapSpriteAtlas> Function(Ref ref)? spriteAtlas,
   Future<EarthquakeHistoryMapLayerParameter> Function(Ref ref)? parameter,
+  bool disableRetry = false,
 }) => ProviderContainer(
+  retry: disableRetry ? (retryCount, error) => null : null,
   overrides: [
     latestEarthquakeOverlaySpriteAtlasProvider.overrideWith(
       spriteAtlas ?? (ref) async => _spriteAtlas('atlas-a'),
@@ -480,6 +482,50 @@ void main() {
       parameterChanged.renderGeneration,
       atlasChanged.renderGeneration + 1,
     );
+  });
+
+  test('invalid parameterで失敗したcandidateはversion ownerを進めない', () async {
+    var parameter = const EarthquakeHistoryMapLayerParameter(
+      regionToCity: double.nan,
+    );
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = _providerContainer(
+      parameter: (ref) async => parameter,
+      disableRetry: true,
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () => _incarnation('incarnation-a'),
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _MutableDetailsNotifier(_availableEarthquake()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    await expectLater(
+      container.read(latestEarthquakeOverlayProvider.future),
+      throwsA(isA<ArgumentError>()),
+    );
+    parameter = const EarthquakeHistoryMapLayerParameter();
+    container.invalidate(latestEarthquakeOverlayMapLayerParameterProvider);
+    await pumpEventQueue();
+    final firstSuccessful = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(firstSuccessful.dataSequence, 0);
+    expect(firstSuccessful.renderGeneration, 0);
   });
 
   test('provider再生成時は同じeventを新incarnationのsequence 0にする', () async {

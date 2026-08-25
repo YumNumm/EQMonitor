@@ -206,7 +206,7 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
       hypocenterLongitude: hypocenterInput.longitude,
       hypocenterLatitude: hypocenterInput.latitude,
     );
-    final versionStamp = _versionOwner.next(
+    final versionCandidate = _versionOwner.preview(
       sourceIdentity: createMapSourceIdentity(value: eventId),
       sourceIncarnation: sourceIncarnation,
       dataDigest: dataDigest,
@@ -225,21 +225,31 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
     final result = overlayBuilder.build(
       earthquake: earthquake,
       colorModel: colorModel,
-      versionStamp: versionStamp,
+      versionStamp: versionCandidate.versionStamp,
       parameter: parameter,
       spriteAtlas: spriteAtlas,
     );
-    return switch (result) {
-      EarthquakeMapOverlayAvailable(:final snapshot) =>
-        LatestEarthquakeOverlayData(
+    switch (result) {
+      case EarthquakeMapOverlayAvailable(:final snapshot):
+        if (!asyncGeneration.isCurrent) {
+          return LatestEarthquakeOverlayData(
+            eventId: eventId,
+            originTime: null,
+            telegramStatus: null,
+            availability: .superseded,
+            overlay: null,
+          );
+        }
+        _versionOwner.commit(versionCandidate);
+        return LatestEarthquakeOverlayData(
           eventId: earthquake.eventId,
           originTime: earthquake.originTime,
           telegramStatus: earthquake.status,
           availability: .available,
           overlay: snapshot,
-        ),
-      EarthquakeMapOverlayUnavailable(:final reason) =>
-        LatestEarthquakeOverlayData(
+        );
+      case EarthquakeMapOverlayUnavailable(:final reason):
+        return LatestEarthquakeOverlayData(
           eventId: earthquake.eventId,
           originTime: earthquake.originTime,
           telegramStatus: earthquake.status,
@@ -249,15 +259,29 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
               .missingTelegramMetadata,
           },
           overlay: null,
-        ),
-    };
+        );
+    }
   }
+}
+
+final class EarthquakeOverlayVersionCandidate {
+  new _({
+    required EarthquakeOverlayVersionOwner owner,
+    required MapOverlayVersionStamp? previous,
+    required this.versionStamp,
+  }) : _owner = owner,
+       _previous = previous;
+
+  final EarthquakeOverlayVersionOwner _owner;
+  final MapOverlayVersionStamp? _previous;
+  final MapOverlayVersionStamp versionStamp;
+  bool _committed = false;
 }
 
 final class EarthquakeOverlayVersionOwner {
   MapOverlayVersionStamp? _current;
 
-  MapOverlayVersionStamp next({
+  EarthquakeOverlayVersionCandidate preview({
     required MapSourceIdentity sourceIdentity,
     required MapSourceIncarnation sourceIncarnation,
     required String dataDigest,
@@ -291,7 +315,21 @@ final class EarthquakeOverlayVersionOwner {
         !canAdvanceMapOverlayVersionStamp(current: current, next: next)) {
       throw StateError('Invalid earthquake overlay version transition.');
     }
-    _current = next;
-    return next;
+    return EarthquakeOverlayVersionCandidate._(
+      owner: this,
+      previous: current,
+      versionStamp: next,
+    );
+  }
+
+  void commit(EarthquakeOverlayVersionCandidate candidate) {
+    if (!identical(candidate._owner, this)) {
+      throw ArgumentError.value(candidate, 'candidate', 'belongs to owner');
+    }
+    if (candidate._committed || !identical(_current, candidate._previous)) {
+      throw StateError('Stale earthquake overlay version candidate.');
+    }
+    _current = candidate.versionStamp;
+    candidate._committed = true;
   }
 }
