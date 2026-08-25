@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 
 const observationPointInstanceStrideInBytes = 28;
@@ -15,12 +16,11 @@ final class ObservationPointInstanceGeneration {
   ObservationPointInstanceGeneration._();
 }
 
-/// 1 snapshot revision分の観測点instanceとframe固有uniform。
+/// 1 overlay version分の観測点instanceとframe固有uniform。
 final class ObservationPointBatch implements MapSceneObservationBatch {
   const ObservationPointBatch._({
     required this.frame,
-    required this.sourceId,
-    required this.snapshotRevision,
+    required this.versionStamp,
     required this.instanceGeneration,
     required this.instanceData,
     required this.instanceCount,
@@ -33,8 +33,7 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
 
   @override
   final MapFrameSnapshot frame;
-  final String sourceId;
-  final int snapshotRevision;
+  final MapOverlayVersionStamp versionStamp;
   final ObservationPointInstanceGeneration instanceGeneration;
   final Float32List instanceData;
   final int instanceCount;
@@ -68,8 +67,7 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
     );
     return ObservationPointBatch._(
       frame: frame,
-      sourceId: sourceId,
-      snapshotRevision: snapshotRevision,
+      versionStamp: versionStamp,
       instanceGeneration: instanceGeneration,
       instanceData: instanceData,
       instanceCount: instanceCount,
@@ -87,8 +85,7 @@ final class ObservationPointBatch implements MapSceneObservationBatch {
 /// 検証済みbyte列から観測点batchを作る。
 ObservationPointBatch createObservationPointBatch({
   required MapFrameSnapshot frame,
-  required String sourceId,
-  required int snapshotRevision,
+  required MapOverlayVersionStamp versionStamp,
   required Float32List instanceData,
   required int instanceCount,
   required ByteData frameUniform,
@@ -97,16 +94,6 @@ ObservationPointBatch createObservationPointBatch({
   required int translucentSortPriority,
   Object? stationSnapshotIdentity,
 }) {
-  if (sourceId.trim().isEmpty) {
-    throw ArgumentError.value(sourceId, 'sourceId', 'must not be blank');
-  }
-  if (snapshotRevision.isNegative) {
-    throw ArgumentError.value(
-      snapshotRevision,
-      'snapshotRevision',
-      'must not be negative',
-    );
-  }
   if (instanceCount <= 0 ||
       instanceData.lengthInBytes !=
           instanceCount * observationPointInstanceStrideInBytes) {
@@ -133,8 +120,7 @@ ObservationPointBatch createObservationPointBatch({
   );
   return ObservationPointBatch._(
     frame: frame,
-    sourceId: sourceId,
-    snapshotRevision: snapshotRevision,
+    versionStamp: versionStamp,
     instanceGeneration: ObservationPointInstanceGeneration._(),
     instanceData: ownedInstances.asUnmodifiableView(),
     instanceCount: instanceCount,

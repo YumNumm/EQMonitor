@@ -2,12 +2,14 @@
 // (Global Constraints「widget testとgolden testは追加しない」)。ここでは
 // gesture callbackから分離したpure関数(`cameraAfterGestureUpdate`/
 // `canonicalZoomFor`)だけを検証する。
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
@@ -19,8 +21,14 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 void main() {
   test('exposes nullable earthquake overlay and coverage callback inputs', () {
     final overlay = createEarthquakeMapOverlaySnapshot(
-      sourceId: 'event-a',
-      revision: 1,
+      versionStamp: createMapOverlayVersionStamp(
+        sourceIdentity: createMapSourceIdentity(value: 'event-a'),
+        sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-a'),
+        dataSequence: 1,
+        dataDigest: 'data-a',
+        renderGeneration: 1,
+        renderDigest: 'render-a',
+      ),
       regionToCityZoom: 6,
       stationMinZoom: 6,
       regionStyles: const [],

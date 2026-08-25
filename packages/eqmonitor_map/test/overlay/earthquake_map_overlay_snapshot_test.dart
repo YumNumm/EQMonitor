@@ -22,17 +22,31 @@ void main() {
     radiusLogicalPixels: 6.7,
   );
 
+  MapOverlayVersionStamp versionStamp({
+    String sourceIdentity = 'earthquake-20260823',
+    String sourceIncarnation = '019c8f5e-1f00-7000-8000-000000000001',
+    int dataSequence = 42,
+    String dataDigest = 'data-sha256',
+    int renderGeneration = 7,
+    String renderDigest = 'render-sha256',
+  }) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+    sourceIncarnation: createMapSourceIncarnation(value: sourceIncarnation),
+    dataSequence: dataSequence,
+    dataDigest: dataDigest,
+    renderGeneration: renderGeneration,
+    renderDigest: renderDigest,
+  );
+
   EarthquakeMapOverlaySnapshot snapshot({
-    String sourceId = 'earthquake-20260823',
-    int revision = 42,
+    MapOverlayVersionStamp? version,
     double regionToCityZoom = 6,
     double stationMinZoom = 6,
     List<EarthquakeAreaStyle> regionStyles = const [regionStyle],
     List<EarthquakeAreaStyle> cityStyles = const [cityStyle],
     List<EarthquakeObservationPoint> stations = const [station],
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: sourceId,
-    revision: revision,
+    versionStamp: version ?? versionStamp(),
     regionToCityZoom: regionToCityZoom,
     stationMinZoom: stationMinZoom,
     regionStyles: regionStyles,
@@ -40,12 +54,35 @@ void main() {
     stations: stations,
   );
 
-  test('rejects blank source ID after trimming', () {
-    expect(() => snapshot(sourceId: '  '), throwsArgumentError);
+  test('version stamp rejects blank typed identities and digests', () {
+    expect(() => versionStamp(sourceIdentity: '  '), throwsArgumentError);
+    expect(() => versionStamp(sourceIncarnation: '\n'), throwsArgumentError);
+    expect(() => versionStamp(dataDigest: '\t'), throwsArgumentError);
+    expect(() => versionStamp(renderDigest: ' '), throwsArgumentError);
   });
 
-  test('rejects negative revision', () {
-    expect(() => snapshot(revision: -1), throwsArgumentError);
+  test('version stamp rejects negative sequence and generation', () {
+    expect(() => versionStamp(dataSequence: -1), throwsArgumentError);
+    expect(() => versionStamp(renderGeneration: -1), throwsArgumentError);
+  });
+
+  test('version stamp normalizes values and supports value equality', () {
+    final first = versionStamp(
+      sourceIdentity: ' event-a ',
+      sourceIncarnation: ' incarnation-a ',
+      dataDigest: ' data-a ',
+      renderDigest: ' render-a ',
+    );
+    final second = versionStamp(
+      sourceIdentity: 'event-a',
+      sourceIncarnation: 'incarnation-a',
+      dataDigest: 'data-a',
+      renderDigest: 'render-a',
+    );
+
+    expect(first, second);
+    expect(first.hashCode, second.hashCode);
+    expect(snapshot(version: first).versionStamp, first);
   });
 
   test('rejects non-finite zoom values', () {

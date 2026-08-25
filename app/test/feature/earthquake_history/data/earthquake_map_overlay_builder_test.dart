@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_statio
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lat_lng/lat_lng.dart';
@@ -154,6 +155,17 @@ void main() {
       .intensity;
   const builder = EarthquakeMapOverlayBuilder();
 
+  MapOverlayVersionStamp versionStamp({
+    String sourceIdentity = '20260823123456',
+  }) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+    sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-a'),
+    dataSequence: 0,
+    dataDigest: 'data-a',
+    renderGeneration: 0,
+    renderDigest: 'render-a',
+  );
+
   test('同一region/city codeを最大震度styleだけへ正規化する', () {
     final result = builder.build(
       earthquake: _earthquake(
@@ -166,6 +178,7 @@ void main() {
         ],
       ),
       colorModel: colors,
+      versionStamp: versionStamp(),
     );
 
     expect(result, isA<EarthquakeMapOverlayAvailable>());
@@ -192,6 +205,7 @@ void main() {
         ],
       ),
       colorModel: colors,
+      versionStamp: versionStamp(),
     ) as EarthquakeMapOverlayAvailable;
     final snapshot = result.snapshot;
     final max = snapshot.stations.singleWhere((point) => point.id == 'ST-MAX');
@@ -217,8 +231,9 @@ void main() {
     expect(snapshot.cityStyles.single.opacity, 0.6);
   });
 
-  test('sourceIdはeventId、revisionは最大reportedAtのUTC microsecondsにする', () {
+  test('providerが発行したversion stampをsnapshotへ保持する', () {
     final latest = DateTime.parse('2026-08-23T21:00:00.123456+09:00');
+    final stamp = versionStamp();
     final result = builder.build(
       earthquake: _earthquake(
         intensity: _intensity(),
@@ -234,12 +249,28 @@ void main() {
         ],
       ),
       colorModel: colors,
+      versionStamp: stamp,
     ) as EarthquakeMapOverlayAvailable;
 
-    expect(result.snapshot.sourceId, '20260823123456');
+    expect(result.snapshot.versionStamp, same(stamp));
+  });
+
+  test('event IDと異なるsource identityを拒否する', () {
     expect(
-      result.snapshot.revision,
-      latest.toUtc().microsecondsSinceEpoch,
+      () => builder.build(
+        earthquake: _earthquake(
+          intensity: _intensity(),
+          metadata: [
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: DateTime.utc(2026, 8, 23, 12, 35),
+            ),
+          ],
+        ),
+        colorModel: colors,
+        versionStamp: versionStamp(sourceIdentity: 'another-event'),
+      ),
+      throwsArgumentError,
     );
   });
 
@@ -247,6 +278,7 @@ void main() {
     final result = builder.build(
       earthquake: _earthquake(intensity: _intensity(), metadata: const []),
       colorModel: colors,
+      versionStamp: versionStamp(),
     );
 
     expect(result, isA<EarthquakeMapOverlayUnavailable>());
@@ -260,6 +292,7 @@ void main() {
     final result = builder.build(
       earthquake: _earthquake(intensity: null, metadata: const []),
       colorModel: colors,
+      versionStamp: versionStamp(),
     );
 
     expect(result, isA<EarthquakeMapOverlayUnavailable>());

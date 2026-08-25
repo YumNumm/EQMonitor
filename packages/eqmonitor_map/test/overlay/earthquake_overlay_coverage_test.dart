@@ -1,7 +1,31 @@
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  final versionStamp = createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: 'event-a'),
+    sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-a'),
+    dataSequence: 3,
+    dataDigest: 'data-a',
+    renderGeneration: 5,
+    renderDigest: 'render-a',
+  );
+
+  test('only the hidden snapshot omits a committed version stamp', () {
+    const hidden = EarthquakeOverlayCoverageSnapshot.hidden();
+    final loading = EarthquakeOverlayCoverageSnapshot(
+      versionStamp: versionStamp,
+      coverage: const EarthquakeOverlayCoverage.loading(),
+    );
+
+    expect(hidden.versionStamp, isNull);
+    expect(hidden.coverage, isA<EarthquakeOverlayHidden>());
+    expect(loading.versionStamp, versionStamp);
+    expect(loading.coverage, isA<EarthquakeOverlayLoading>());
+  });
+
   test('is hidden when no tiles are requested', () {
     final coverage = EarthquakeOverlayCoverage.fromCounts(
       requestedTileCount: 0,

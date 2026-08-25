@@ -4,13 +4,27 @@ import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  MapOverlayVersionStamp versionStamp({
+    required String sourceIdentity,
+    required int dataSequence,
+    required int renderGeneration,
+    String sourceIncarnation = 'incarnation-a',
+    String dataDigest = 'data-a',
+    String renderDigest = 'render-a',
+  }) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+    sourceIncarnation: createMapSourceIncarnation(value: sourceIncarnation),
+    dataSequence: dataSequence,
+    dataDigest: dataDigest,
+    renderGeneration: renderGeneration,
+    renderDigest: renderDigest,
+  );
+
   EarthquakeMapOverlaySnapshot snapshot({
-    required String sourceId,
-    required int revision,
+    required MapOverlayVersionStamp versionStamp,
     required Color color,
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: sourceId,
-    revision: revision,
+    versionStamp: versionStamp,
     regionToCityZoom: 6,
     stationMinZoom: 6,
     regionStyles: [
@@ -20,15 +34,21 @@ void main() {
     stations: const [],
   );
 
-  test('rejects a lower revision from the current source', () {
+  test('rejects a lower data sequence from the current source', () {
     final current = snapshot(
-      sourceId: 'event-a',
-      revision: 8,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 8,
+      ),
       color: const Color(0xfff44336),
     );
     final stale = snapshot(
-      sourceId: 'event-a',
-      revision: 7,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 7,
+        renderGeneration: 8,
+      ),
       color: const Color(0xffff9800),
     );
 
@@ -41,15 +61,87 @@ void main() {
     expect((result as EarthquakeOverlayCommitRejected).current, same(current));
   });
 
-  test('accepts the same revision to replace the theme', () {
+  test('rejects equal data sequence with a conflicting digest', () {
     final current = snapshot(
-      sourceId: 'event-a',
-      revision: 8,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 8,
+      ),
+      color: const Color(0xfff44336),
+    );
+    final conflicting = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        dataDigest: 'data-b',
+        renderGeneration: 9,
+        renderDigest: 'render-b',
+      ),
+      color: const Color(0xff2196f3),
+    );
+
+    final result = commitEarthquakeOverlaySnapshot(
+      current: current,
+      next: conflicting,
+    );
+
+    expect(result, isA<EarthquakeOverlayCommitRejected>());
+  });
+
+  test('rejects lower or conflicting render generation', () {
+    final current = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 8,
+      ),
+      color: const Color(0xfff44336),
+    );
+    final lower = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 7,
+      ),
+      color: const Color(0xffff9800),
+    );
+    final conflicting = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 8,
+        renderDigest: 'render-b',
+      ),
+      color: const Color(0xff2196f3),
+    );
+
+    expect(
+      commitEarthquakeOverlaySnapshot(current: current, next: lower),
+      isA<EarthquakeOverlayCommitRejected>(),
+    );
+    expect(
+      commitEarthquakeOverlaySnapshot(current: current, next: conflicting),
+      isA<EarthquakeOverlayCommitRejected>(),
+    );
+  });
+
+  test('accepts a higher render generation without changing data version', () {
+    final current = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 8,
+      ),
       color: const Color(0xfff44336),
     );
     final themed = snapshot(
-      sourceId: 'event-a',
-      revision: 8,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 8,
+        renderGeneration: 9,
+        renderDigest: 'render-b',
+      ),
       color: const Color(0xff2196f3),
     );
 
@@ -62,15 +154,45 @@ void main() {
     expect((result as EarthquakeOverlayCommitAccepted).next, same(themed));
   });
 
+  test('accepts an exactly identical stamp idempotently', () {
+    final stamp = versionStamp(
+      sourceIdentity: 'event-a',
+      dataSequence: 8,
+      renderGeneration: 8,
+    );
+    final current = snapshot(
+      versionStamp: stamp,
+      color: const Color(0xfff44336),
+    );
+    final identicalVersion = snapshot(
+      versionStamp: stamp,
+      color: const Color(0xfff44336),
+    );
+
+    expect(
+      commitEarthquakeOverlaySnapshot(
+        current: current,
+        next: identicalVersion,
+      ),
+      isA<EarthquakeOverlayCommitAccepted>(),
+    );
+  });
+
   test('atomically replaces the current snapshot from another source', () {
     final current = snapshot(
-      sourceId: 'event-a',
-      revision: 100,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 100,
+        renderGeneration: 100,
+      ),
       color: const Color(0xfff44336),
     );
     final replacement = snapshot(
-      sourceId: 'event-b',
-      revision: 0,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-b',
+        dataSequence: 0,
+        renderGeneration: 0,
+      ),
       color: const Color(0xff2196f3),
     );
 
@@ -86,10 +208,38 @@ void main() {
     );
   });
 
+  test('accepts a fresh incarnation of the same source from sequence zero', () {
+    final current = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 100,
+        renderGeneration: 100,
+      ),
+      color: const Color(0xfff44336),
+    );
+    final replacement = snapshot(
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        sourceIncarnation: 'incarnation-b',
+        dataSequence: 0,
+        renderGeneration: 0,
+      ),
+      color: const Color(0xff2196f3),
+    );
+
+    expect(
+      commitEarthquakeOverlaySnapshot(current: current, next: replacement),
+      isA<EarthquakeOverlayCommitAccepted>(),
+    );
+  });
+
   test('accepts an initial snapshot', () {
     final initial = snapshot(
-      sourceId: 'event-a',
-      revision: 0,
+      versionStamp: versionStamp(
+        sourceIdentity: 'event-a',
+        dataSequence: 0,
+        renderGeneration: 0,
+      ),
       color: const Color(0xfff44336),
     );
 

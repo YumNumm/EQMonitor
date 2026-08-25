@@ -3,11 +3,13 @@ import 'dart:ui';
 
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
@@ -39,10 +41,18 @@ void main() {
         contextGeneration: 0,
       );
 
-  EarthquakeMapOverlaySnapshot snapshot({int revision = 3}) =>
+  EarthquakeMapOverlaySnapshot snapshot({int dataSequence = 3}) =>
       createEarthquakeMapOverlaySnapshot(
-        sourceId: 'event-1',
-        revision: revision,
+        versionStamp: createMapOverlayVersionStamp(
+          sourceIdentity: createMapSourceIdentity(value: 'event-1'),
+          sourceIncarnation: createMapSourceIncarnation(
+            value: 'incarnation-1',
+          ),
+          dataSequence: dataSequence,
+          dataDigest: 'data-$dataSequence',
+          renderGeneration: dataSequence,
+          renderDigest: 'render-$dataSequence',
+        ),
         regionToCityZoom: 6,
         stationMinZoom: 6,
         regionStyles: const [
@@ -184,7 +194,7 @@ void main() {
     );
     final second = buildEarthquakeAreaRenderSubmission(
       frame: frameAt(5, frameNumber: 8),
-      snapshot: snapshot(revision: 4),
+      snapshot: snapshot(dataSequence: 4),
       exactTileResults: [exactResult],
       packedMeshFor: packedMeshCache.resolve,
     );

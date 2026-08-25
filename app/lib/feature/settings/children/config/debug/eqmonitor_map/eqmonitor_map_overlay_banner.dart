@@ -18,7 +18,7 @@ final class EqmonitorMapOverlayPresentation {
   factory from({
     required AsyncValue<LatestEarthquakeOverlayData> overlayState,
     required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
-  }) => createEqmonitorMapOverlayPresentation(
+  }) => const EqmonitorMapOverlayPresentationBuilder().build(
     overlayState: overlayState,
     coverageSnapshot: coverageSnapshot,
   );
@@ -31,96 +31,100 @@ final class EqmonitorMapOverlayPresentation {
   final bool isError;
 }
 
-EqmonitorMapOverlayPresentation createEqmonitorMapOverlayPresentation({
-  required AsyncValue<LatestEarthquakeOverlayData> overlayState,
-  required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
-}) {
-  if (overlayState.isLoading) {
-    return const EqmonitorMapOverlayPresentation(
-      eventIdLabel: '取得中',
-      originTimeLabel: '取得中',
-      statusLabel: '取得中',
-      message: '最新の地震情報を取得中です',
-      overlay: null,
+final class EqmonitorMapOverlayPresentationBuilder {
+  const new();
+
+  EqmonitorMapOverlayPresentation build({
+    required AsyncValue<LatestEarthquakeOverlayData> overlayState,
+    required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
+  }) {
+    if (overlayState.isLoading) {
+      return const EqmonitorMapOverlayPresentation(
+        eventIdLabel: '取得中',
+        originTimeLabel: '取得中',
+        statusLabel: '取得中',
+        message: '最新の地震情報を取得中です',
+        overlay: null,
+        isError: false,
+      );
+    }
+    if (overlayState.hasError) {
+      return const EqmonitorMapOverlayPresentation(
+        eventIdLabel: '取得失敗',
+        originTimeLabel: '取得失敗',
+        statusLabel: '取得失敗',
+        message: '最新の地震情報を取得できませんでした',
+        overlay: null,
+        isError: true,
+      );
+    }
+    return switch (overlayState) {
+      AsyncData(:final value) => buildData(
+        data: value,
+        coverageSnapshot: coverageSnapshot,
+      ),
+      _ => const EqmonitorMapOverlayPresentation(
+        eventIdLabel: '取得中',
+        originTimeLabel: '取得中',
+        statusLabel: '取得中',
+        message: '最新の地震情報を取得中です',
+        overlay: null,
+        isError: false,
+      ),
+    };
+  }
+
+  EqmonitorMapOverlayPresentation buildData({
+    required LatestEarthquakeOverlayData data,
+    required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
+  }) {
+    final originTime = data.originTime;
+    final overlay = data.overlay;
+    final coverage =
+        overlay == null ||
+            coverageSnapshot == null ||
+            coverageSnapshot.versionStamp != overlay.versionStamp
+        ? const EarthquakeOverlayCoverage.hidden()
+        : coverageSnapshot.coverage;
+    return EqmonitorMapOverlayPresentation(
+      eventIdLabel: data.eventId ?? '対象なし',
+      originTimeLabel: originTime == null
+          ? '不明'
+          : DateFormat('yyyy/MM/dd HH:mm:ss').format(originTime.toLocal()),
+      statusLabel: statusLabel(data.telegramStatus),
+      message: message(
+        availability: data.availability,
+        coverage: coverage,
+      ),
+      overlay: overlay,
       isError: false,
     );
   }
-  if (overlayState.hasError) {
-    return const EqmonitorMapOverlayPresentation(
-      eventIdLabel: '取得失敗',
-      originTimeLabel: '取得失敗',
-      statusLabel: '取得失敗',
-      message: '最新の地震情報を取得できませんでした',
-      overlay: null,
-      isError: true,
-    );
-  }
-  return switch (overlayState) {
-    AsyncData(:final value) => createEqmonitorMapOverlayDataPresentation(
-      data: value,
-      coverageSnapshot: coverageSnapshot,
-    ),
-    _ => const EqmonitorMapOverlayPresentation(
-      eventIdLabel: '取得中',
-      originTimeLabel: '取得中',
-      statusLabel: '取得中',
-      message: '最新の地震情報を取得中です',
-      overlay: null,
-      isError: false,
-    ),
+
+  String statusLabel(TelegramStatus? status) => switch (status) {
+    TelegramStatus.normal => '通常',
+    TelegramStatus.training => '訓練',
+    TelegramStatus.test => '試験',
+    null => '不明',
+  };
+
+  String message({
+    required LatestEarthquakeOverlayAvailability availability,
+    required EarthquakeOverlayCoverage coverage,
+  }) => switch (availability) {
+    LatestEarthquakeOverlayAvailability.available => switch (coverage) {
+      EarthquakeOverlayIncomplete() => '表示範囲の震度情報は不完全です',
+      EarthquakeOverlayComplete() => '表示範囲の震度情報を表示中です',
+      EarthquakeOverlayHidden() ||
+      EarthquakeOverlayLoading() => '表示範囲の震度情報を準備中です',
+    },
+    LatestEarthquakeOverlayAvailability.noEarthquake => '震度1以上の地震はありません',
+    LatestEarthquakeOverlayAvailability.noIntensity => '震度データがありません',
+    LatestEarthquakeOverlayAvailability.missingTelegramMetadata =>
+      '電文の更新時刻を確認できないため表示できません',
+    LatestEarthquakeOverlayAvailability.superseded => '地震情報を切り替え中です',
   };
 }
-
-EqmonitorMapOverlayPresentation createEqmonitorMapOverlayDataPresentation({
-  required LatestEarthquakeOverlayData data,
-  required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
-}) {
-  final originTime = data.originTime;
-  final overlay = data.overlay;
-  final coverage =
-      overlay == null ||
-          coverageSnapshot == null ||
-          coverageSnapshot.sourceId != overlay.sourceId ||
-          coverageSnapshot.revision != overlay.revision
-      ? const EarthquakeOverlayCoverage.hidden()
-      : coverageSnapshot.coverage;
-  return EqmonitorMapOverlayPresentation(
-    eventIdLabel: data.eventId ?? '対象なし',
-    originTimeLabel: originTime == null
-        ? '不明'
-        : DateFormat('yyyy/MM/dd HH:mm:ss').format(originTime.toLocal()),
-    statusLabel: telegramStatusLabel(data.telegramStatus),
-    message: latestEarthquakeOverlayMessage(
-      availability: data.availability,
-      coverage: coverage,
-    ),
-    overlay: overlay,
-    isError: false,
-  );
-}
-
-String telegramStatusLabel(TelegramStatus? status) => switch (status) {
-  TelegramStatus.normal => '通常',
-  TelegramStatus.training => '訓練',
-  TelegramStatus.test => '試験',
-  null => '不明',
-};
-
-String latestEarthquakeOverlayMessage({
-  required LatestEarthquakeOverlayAvailability availability,
-  required EarthquakeOverlayCoverage coverage,
-}) => switch (availability) {
-  LatestEarthquakeOverlayAvailability.available => switch (coverage) {
-    EarthquakeOverlayIncomplete() => '表示範囲の震度情報は不完全です',
-    EarthquakeOverlayComplete() => '表示範囲の震度情報を表示中です',
-    EarthquakeOverlayHidden() => '表示範囲の震度情報を準備中です',
-  },
-  LatestEarthquakeOverlayAvailability.noEarthquake => '震度1以上の地震はありません',
-  LatestEarthquakeOverlayAvailability.noIntensity => '震度データがありません',
-  LatestEarthquakeOverlayAvailability.missingTelegramMetadata =>
-    '電文の更新時刻を確認できないため表示できません',
-  LatestEarthquakeOverlayAvailability.superseded => '地震情報を切り替え中です',
-};
 
 class EqmonitorMapOverlayBanner extends StatelessWidget {
   const new({
