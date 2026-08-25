@@ -45,5 +45,6 @@ void main() {
       resource: PmTilesV3Resource.directoryDecoded,
     );
     expect(sink.takeBytes, throwsStateError);
+    sink.close();
   });
 }

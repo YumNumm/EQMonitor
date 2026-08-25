@@ -48,6 +48,8 @@ void main() {
     final decoded = decoder.decode(
       bytes: two,
       compression: PmTilesV3CompressionDecoder.none,
+      maxEncodedBytes: 1 << 20,
+      maxDecodedBytes: 8 << 20,
     );
     expect(decoded.map((entry) => entry.tileId), [1, 4]);
     expect(decoded.map((entry) => entry.runLength), [1, 1]);

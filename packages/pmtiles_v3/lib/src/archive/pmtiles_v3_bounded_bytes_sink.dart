@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
@@ -16,7 +15,7 @@ final class PmTilesV3BoundedBytesSink implements Sink<List<int>> {
 
   final int maxBytes;
   final PmTilesV3Resource resource;
-  final BytesBuilder _bytes = BytesBuilder(copy: false);
+  final _bytes = BytesBuilder(copy: false);
   var _byteLength = 0;
   var _isClosed = false;
 

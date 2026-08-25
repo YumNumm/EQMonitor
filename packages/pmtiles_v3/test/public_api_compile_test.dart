@@ -10,7 +10,7 @@ void main() {
     );
 
     expect(exception, isA<PmTilesV3ResourceLimitExceededException>());
-    final typed = exception as PmTilesV3ResourceLimitExceededException;
+    const typed = exception as PmTilesV3ResourceLimitExceededException;
     expect(typed.resource, PmTilesV3Resource.tileDecoded);
     expect(typed.limitBytes, 1024);
     expect(typed.actualBytes, 1025);
