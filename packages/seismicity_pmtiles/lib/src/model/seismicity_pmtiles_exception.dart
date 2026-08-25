@@ -4,6 +4,13 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 
 part 'seismicity_pmtiles_exception.freezed.dart';
 
+enum SeismicityPmTilesResource {
+  directoryEncoded,
+  directoryDecoded,
+  tileEncoded,
+  tileDecoded,
+}
+
 @freezed
 sealed class SeismicityPmTilesException
     with _$SeismicityPmTilesException
@@ -25,6 +32,12 @@ sealed class SeismicityPmTilesException
   const factory unsupportedCompression({
     required int compression,
   }) = SeismicityPmTilesUnsupportedCompressionException;
+
+  const factory resourceLimitExceeded({
+    required SeismicityPmTilesResource resource,
+    required int limitBytes,
+    required int actualBytes,
+  }) = SeismicityPmTilesResourceLimitExceededException;
 
   const factory unsupportedSource({
     required SeismicityPmTilesSource source,
@@ -130,6 +143,25 @@ extension PmTilesV3ExceptionToSeismicityException on PmTilesV3Exception {
         SeismicityPmTilesException.sourceReadFailed(
           source: source,
           reason: reason,
+        ),
+      PmTilesV3ResourceLimitExceededException(
+        :final resource,
+        :final limitBytes,
+        :final actualBytes,
+      ) =>
+        SeismicityPmTilesException.resourceLimitExceeded(
+          resource: switch (resource) {
+            PmTilesV3Resource.directoryEncoded =>
+              SeismicityPmTilesResource.directoryEncoded,
+            PmTilesV3Resource.directoryDecoded =>
+              SeismicityPmTilesResource.directoryDecoded,
+            PmTilesV3Resource.tileEncoded =>
+              SeismicityPmTilesResource.tileEncoded,
+            PmTilesV3Resource.tileDecoded =>
+              SeismicityPmTilesResource.tileDecoded,
+          },
+          limitBytes: limitBytes,
+          actualBytes: actualBytes,
         ),
       PmTilesV3InvalidTileIdException(
         :final tileId,
