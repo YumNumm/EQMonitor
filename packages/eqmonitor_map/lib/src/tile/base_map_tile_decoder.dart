@@ -11,6 +11,7 @@ import 'package:eqmonitor_map/src/tile/earthquake_area_tile_geometry.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decoder.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
+import 'package:eqmonitor_map/src/tile/mvt/polygon_boundary_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -372,7 +373,9 @@ List<LineMesh> _buildLineMeshes({
         // polygonの外形・穴ringそのものを線として描く(MapLibre GLの
         // line rendererがPolygon地物をline layerでも描画できるのと同じ
         // 挙動)。
-        MvtGeometryType.polygon => _polygonFeatureAsClosedLines(feature),
+        MvtGeometryType.polygon => const PolygonBoundaryBuilder().build(
+          feature: feature,
+        ),
         // Pointは線として描けないため読み飛ばす。
         MvtGeometryType.point => null,
       },
@@ -381,29 +384,4 @@ List<LineMesh> _buildLineMeshes({
     return const [];
   }
   return builder.build(lineFeatures);
-}
-
-/// Polygon地物の各ringを、始点を末尾へ複製した閉じたLineStringへ変換する。
-///
-/// `decodeMvtTile`が返すpolygon ringはMVTの`ClosePath`規則どおり終端の
-/// 重複頂点を持たない(始点=終点の座標は1回しか現れない)。`LineMeshBuilder`
-/// はring先頭・末尾の座標が一致するかどうかで閉路(`isClosed`)を判定する
-/// ([LineMeshBuilder]のdoc comment、`_dedupeRing`参照)ため、始点を末尾へ
-/// 複製しないと最後の1辺(終点→始点)が生成されず境界が閉じない。
-MvtFeature _polygonFeatureAsClosedLines(MvtFeature feature) {
-  final closedRings = <Int32List>[
-    for (final ring in feature.rings) _closeRing(ring),
-  ];
-  return MvtFeature(
-    type: MvtGeometryType.lineString,
-    rings: closedRings,
-    properties: feature.properties,
-  );
-}
-
-Int32List _closeRing(Int32List ring) {
-  final closed = Int32List(ring.length + 2)..setRange(0, ring.length, ring);
-  closed[ring.length] = ring[0];
-  closed[ring.length + 1] = ring[1];
-  return closed;
 }
