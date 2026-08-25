@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
@@ -7,6 +8,7 @@ import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
@@ -22,6 +24,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/latest_earthq
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -138,6 +141,38 @@ Earthquake _availableEarthquake({
 MapSourceIncarnation _incarnation(String value) =>
     createMapSourceIncarnation(value: value);
 
+MapSpriteAtlas _spriteAtlas(String identity) => createMapSpriteAtlas(
+  identity: createMapSourceIdentity(value: identity),
+  width: 1,
+  height: 1,
+  rgbaBytes: Uint8List.fromList(const [255, 255, 255, 255]),
+  regions: const [],
+  limits: const MapSpriteAtlasLimits(
+    maxWidth: 1,
+    maxHeight: 1,
+    maxPixelBytes: 4,
+    maxRegions: 1,
+  ),
+);
+
+ProviderContainer _providerContainer({
+  required List<Override> overrides,
+  Future<MapSpriteAtlas> Function(Ref ref)? spriteAtlas,
+  Future<EarthquakeHistoryMapLayerParameter> Function(Ref ref)? parameter,
+  bool disableRetry = false,
+}) => ProviderContainer(
+  retry: disableRetry ? (retryCount, error) => null : null,
+  overrides: [
+    latestEarthquakeOverlaySpriteAtlasProvider.overrideWith(
+      spriteAtlas ?? (ref) async => _spriteAtlas('atlas-a'),
+    ),
+    latestEarthquakeOverlayMapLayerParameterProvider.overrideWith(
+      parameter ?? (ref) async => const EarthquakeHistoryMapLayerParameter(),
+    ),
+    ...overrides,
+  ],
+);
+
 MapOverlayVersionStamp _stamp(LatestEarthquakeOverlayData data) {
   final overlay = data.overlay;
   expect(overlay, isNotNull);
@@ -158,7 +193,7 @@ void main() {
     final requestedA = Completer<void>();
     final requestedB = Completer<void>();
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWith((ref) => colorSet),
         earthquakeHistoryProvider(
@@ -210,11 +245,95 @@ void main() {
     );
   });
 
+  test('event Aのlate atlasはBを公開せずversion ownerも進めない', () async {
+    final history = _MutableHistoryNotifier(_page('B'));
+    final detailsB = _MutableDetailsNotifier(
+      _availableEarthquake(eventId: 'B'),
+    );
+    final detailA = Completer<Earthquake>();
+    final requestedA = Completer<void>();
+    final pendingAtlas = Completer<MapSpriteAtlas>();
+    final pendingAtlasRequested = Completer<void>();
+    var atlasFuture = Future.value(_spriteAtlas('atlas-a'));
+    var atlasRequestCount = 0;
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = _providerContainer(
+      spriteAtlas: (ref) {
+        atlasRequestCount++;
+        if (atlasRequestCount > 1 && !pendingAtlasRequested.isCompleted) {
+          pendingAtlasRequested.complete();
+        }
+        return atlasFuture;
+      },
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () => _incarnation('incarnation-a'),
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => history),
+        earthquakeHistoryDetailsProvider(
+          'B',
+        ).overrideWith(() => detailsB),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _PendingDetailsNotifier(
+            completer: detailA,
+            requested: requestedA,
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final publishedEventIds = <String>[];
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, next) {
+        if (next case AsyncData(:final value)) {
+          final eventId = value.eventId;
+          if (eventId != null) {
+            publishedEventIds.add(eventId);
+          }
+        }
+      },
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    final firstB = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+    history.publish(_page('A'));
+    await requestedA.future;
+    atlasFuture = pendingAtlas.future;
+    container.invalidate(latestEarthquakeOverlaySpriteAtlasProvider);
+    detailA.complete(_availableEarthquake(eventId: 'A'));
+    await pendingAtlasRequested.future;
+
+    detailsB.publish(
+      _availableEarthquake(
+        eventId: 'B',
+        intensity: JmaIntensity.four,
+      ),
+    );
+    history.publish(_page('B'));
+    await pumpEventQueue();
+    pendingAtlas.complete(_spriteAtlas('atlas-b'));
+    final secondB = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(publishedEventIds, isNot(contains('A')));
+    expect(firstB.dataSequence, 0);
+    expect(secondB.dataSequence, 1);
+    expect(secondB.dataDigest, isNot(firstB.dataDigest));
+  });
+
   test('reportedAtが同一でもcanonical data変更でdata sequenceが進む', () async {
     final earthquake = _availableEarthquake();
     final details = _MutableDetailsNotifier(earthquake);
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -261,7 +380,7 @@ void main() {
   test('theme色だけの変更はdata versionを維持してrender generationを進める', () async {
     var colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
     final details = _MutableDetailsNotifier(_availableEarthquake());
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWith((ref) => colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -310,12 +429,111 @@ void main() {
     expect(second.renderDigest, isNot(first.renderDigest));
   });
 
+  test('atlasと表示parameterだけの変更はdata versionを維持する', () async {
+    var atlas = _spriteAtlas('atlas-a');
+    var parameter = const EarthquakeHistoryMapLayerParameter();
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = _providerContainer(
+      spriteAtlas: (ref) async => atlas,
+      parameter: (ref) async => parameter,
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () => _incarnation('incarnation-a'),
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _MutableDetailsNotifier(_availableEarthquake()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    final first = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+    atlas = _spriteAtlas('atlas-b');
+    container.invalidate(latestEarthquakeOverlaySpriteAtlasProvider);
+    await pumpEventQueue();
+    final atlasChanged = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+    parameter = parameter.copyWith(regionFillOpacity: 0.5);
+    container.invalidate(latestEarthquakeOverlayMapLayerParameterProvider);
+    await pumpEventQueue();
+    final parameterChanged = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(atlasChanged.dataSequence, first.dataSequence);
+    expect(atlasChanged.dataDigest, first.dataDigest);
+    expect(atlasChanged.renderGeneration, first.renderGeneration + 1);
+    expect(parameterChanged.dataSequence, first.dataSequence);
+    expect(parameterChanged.dataDigest, first.dataDigest);
+    expect(
+      parameterChanged.renderGeneration,
+      atlasChanged.renderGeneration + 1,
+    );
+  });
+
+  test('invalid parameterで失敗したcandidateはversion ownerを進めない', () async {
+    var parameter = const EarthquakeHistoryMapLayerParameter(
+      regionToCity: double.nan,
+    );
+    final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
+    final container = _providerContainer(
+      parameter: (ref) async => parameter,
+      disableRetry: true,
+      overrides: [
+        activeColorSetProvider.overrideWithValue(colorSet),
+        earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
+          () => _incarnation('incarnation-a'),
+        ),
+        earthquakeHistoryProvider(
+          latestEarthquakeOverlayParameter,
+        ).overrideWith(() => _MutableHistoryNotifier(_page('A'))),
+        earthquakeHistoryDetailsProvider('A').overrideWith(
+          () => _MutableDetailsNotifier(_availableEarthquake()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      latestEarthquakeOverlayProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    await expectLater(
+      container.read(latestEarthquakeOverlayProvider.future),
+      throwsA(isA<ArgumentError>()),
+    );
+    parameter = const EarthquakeHistoryMapLayerParameter();
+    container.invalidate(latestEarthquakeOverlayMapLayerParameterProvider);
+    await pumpEventQueue();
+    final firstSuccessful = _stamp(
+      await container.read(latestEarthquakeOverlayProvider.future),
+    );
+
+    expect(firstSuccessful.dataSequence, 0);
+    expect(firstSuccessful.renderGeneration, 0);
+  });
+
   test('provider再生成時は同じeventを新incarnationのsequence 0にする', () async {
     Future<MapOverlayVersionStamp> readStamp(String incarnation) async {
       final colorSet = AppTheme.eqmonitorDefault().colorSetFor(
         Brightness.light,
       );
-      final container = ProviderContainer(
+      final container = _providerContainer(
         overrides: [
           activeColorSetProvider.overrideWithValue(colorSet),
           earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -352,7 +570,7 @@ void main() {
       _incarnation('incarnation-b'),
     ].iterator;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -410,7 +628,7 @@ void main() {
       _incarnation('time-shift-incarnation'),
     ].iterator;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -465,7 +683,7 @@ void main() {
       _incarnation('replay-incarnation'),
     ].iterator;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -529,7 +747,7 @@ void main() {
       _incarnation('second-replay-incarnation'),
     ].iterator;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(
@@ -589,7 +807,7 @@ void main() {
   test('通常のreplay tickはoverlay incarnationを再生成しない', () async {
     var incarnationRequestCount = 0;
     final colorSet = AppTheme.eqmonitorDefault().colorSetFor(Brightness.light);
-    final container = ProviderContainer(
+    final container = _providerContainer(
       overrides: [
         activeColorSetProvider.overrideWithValue(colorSet),
         earthquakeOverlaySourceIncarnationFactoryProvider.overrideWithValue(

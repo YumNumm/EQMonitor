@@ -5,11 +5,14 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_digest_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_map_sprite_atlas_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_overlay_source_incarnation_provider.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_latest_earthquake_selector.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -24,6 +27,13 @@ const latestEarthquakeOverlayParameter = EarthquakeHistoryParameter.all(
   intensityGte: JmaIntensity.one,
 );
 
+const latestEarthquakeOverlaySpriteAtlasLimits = MapSpriteAtlasLimits(
+  maxWidth: 1024,
+  maxHeight: 512,
+  maxPixelBytes: 1024 * 512 * MapSpriteAtlas.bytesPerPixel,
+  maxRegions: 2,
+);
+
 @riverpod
 EarthquakeMapOverlayBuilder earthquakeMapOverlayBuilder(Ref ref) =>
     const EarthquakeMapOverlayBuilder();
@@ -31,6 +41,19 @@ EarthquakeMapOverlayBuilder earthquakeMapOverlayBuilder(Ref ref) =>
 @riverpod
 EarthquakeMapOverlayDigestBuilder earthquakeMapOverlayDigestBuilder(Ref ref) =>
     const EarthquakeMapOverlayDigestBuilder();
+
+@Riverpod(retry: EarthquakeMapSpriteAtlasRetryPolicy.noRetry)
+Future<MapSpriteAtlas> latestEarthquakeOverlaySpriteAtlas(Ref ref) => ref.watch(
+  earthquakeMapSpriteAtlasProvider(
+    latestEarthquakeOverlaySpriteAtlasLimits.earthquakeMapSpriteAtlasLimitsKey,
+  ).future,
+);
+
+@riverpod
+Future<EarthquakeHistoryMapLayerParameter>
+latestEarthquakeOverlayMapLayerParameter(Ref ref) => ref.watch(
+  earthquakeHistoryMapLayerParameterProvider.future,
+);
 
 enum LatestEarthquakeOverlayAvailability {
   available,
@@ -117,6 +140,21 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
         overlay: null,
       );
     }
+    final parameter = await ref.watch(
+      latestEarthquakeOverlayMapLayerParameterProvider.future,
+    );
+    final spriteAtlas = await ref.watch(
+      latestEarthquakeOverlaySpriteAtlasProvider.future,
+    );
+    if (!asyncGeneration.isCurrent) {
+      return LatestEarthquakeOverlayData(
+        eventId: eventId,
+        originTime: null,
+        telegramStatus: null,
+        availability: .superseded,
+        overlay: null,
+      );
+    }
     final intensity = earthquake.intensity as EarthquakeIntensity;
     final regionLevels = overlayBuilder.regionIntensityLevels(
       intensity: intensity,
@@ -128,14 +166,20 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
     final regionStyles = overlayBuilder.areaStyles(
       levels: regionLevels,
       colorModel: colorModel,
+      opacity: parameter.regionFillOpacity,
     );
     final cityStyles = overlayBuilder.areaStyles(
       levels: cityLevels,
       colorModel: colorModel,
+      opacity: parameter.cityFillOpacity,
     );
     final stations = overlayBuilder.observationPoints(
       intensity: intensity,
       colorModel: colorModel,
+    );
+    final sprites = overlayBuilder.hypocenterSprites(
+      earthquake: earthquake,
+      parameter: parameter,
     );
     final digestBuilder = ref.watch(earthquakeMapOverlayDigestBuilderProvider);
     final hypocenterInput = digestBuilder.hypocenterInput(earthquake);
@@ -162,45 +206,50 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
       hypocenterLongitude: hypocenterInput.longitude,
       hypocenterLatitude: hypocenterInput.latitude,
     );
-    final versionStamp = _versionOwner.next(
+    final versionCandidate = _versionOwner.preview(
       sourceIdentity: createMapSourceIdentity(value: eventId),
       sourceIncarnation: sourceIncarnation,
       dataDigest: dataDigest,
       renderDigestFor: (dataSequence) => digestBuilder.buildRenderDigest(
         dataSequence: dataSequence,
         dataDigest: dataDigest,
-        regionToCityZoom: earthquakeOverlayRegionToCityZoom,
-        stationMinZoom: earthquakeOverlayStationMinZoom,
+        regionToCityZoom: parameter.regionToCity,
+        stationMinZoom: parameter.stationMinZoom,
         regionStyles: regionStyles,
         cityStyles: cityStyles,
         stations: stations,
+        spriteAtlas: spriteAtlas,
+        sprites: sprites,
       ),
     );
-    if (!asyncGeneration.isCurrent) {
-      return LatestEarthquakeOverlayData(
-        eventId: eventId,
-        originTime: null,
-        telegramStatus: null,
-        availability: .superseded,
-        overlay: null,
-      );
-    }
     final result = overlayBuilder.build(
       earthquake: earthquake,
       colorModel: colorModel,
-      versionStamp: versionStamp,
+      versionStamp: versionCandidate.versionStamp,
+      parameter: parameter,
+      spriteAtlas: spriteAtlas,
     );
-    return switch (result) {
-      EarthquakeMapOverlayAvailable(:final snapshot) =>
-        LatestEarthquakeOverlayData(
+    switch (result) {
+      case EarthquakeMapOverlayAvailable(:final snapshot):
+        if (!asyncGeneration.isCurrent) {
+          return LatestEarthquakeOverlayData(
+            eventId: eventId,
+            originTime: null,
+            telegramStatus: null,
+            availability: .superseded,
+            overlay: null,
+          );
+        }
+        _versionOwner.commit(versionCandidate);
+        return LatestEarthquakeOverlayData(
           eventId: earthquake.eventId,
           originTime: earthquake.originTime,
           telegramStatus: earthquake.status,
           availability: .available,
           overlay: snapshot,
-        ),
-      EarthquakeMapOverlayUnavailable(:final reason) =>
-        LatestEarthquakeOverlayData(
+        );
+      case EarthquakeMapOverlayUnavailable(:final reason):
+        return LatestEarthquakeOverlayData(
           eventId: earthquake.eventId,
           originTime: earthquake.originTime,
           telegramStatus: earthquake.status,
@@ -210,15 +259,29 @@ class LatestEarthquakeOverlay extends _$LatestEarthquakeOverlay {
               .missingTelegramMetadata,
           },
           overlay: null,
-        ),
-    };
+        );
+    }
   }
+}
+
+final class EarthquakeOverlayVersionCandidate {
+  new _({
+    required EarthquakeOverlayVersionOwner owner,
+    required MapOverlayVersionStamp? previous,
+    required this.versionStamp,
+  }) : _owner = owner,
+       _previous = previous;
+
+  final EarthquakeOverlayVersionOwner _owner;
+  final MapOverlayVersionStamp? _previous;
+  final MapOverlayVersionStamp versionStamp;
+  bool _committed = false;
 }
 
 final class EarthquakeOverlayVersionOwner {
   MapOverlayVersionStamp? _current;
 
-  MapOverlayVersionStamp next({
+  EarthquakeOverlayVersionCandidate preview({
     required MapSourceIdentity sourceIdentity,
     required MapSourceIncarnation sourceIncarnation,
     required String dataDigest,
@@ -252,7 +315,21 @@ final class EarthquakeOverlayVersionOwner {
         !canAdvanceMapOverlayVersionStamp(current: current, next: next)) {
       throw StateError('Invalid earthquake overlay version transition.');
     }
-    _current = next;
-    return next;
+    return EarthquakeOverlayVersionCandidate._(
+      owner: this,
+      previous: current,
+      versionStamp: next,
+    );
+  }
+
+  void commit(EarthquakeOverlayVersionCandidate candidate) {
+    if (!identical(candidate._owner, this)) {
+      throw ArgumentError.value(candidate, 'candidate', 'belongs to owner');
+    }
+    if (candidate._committed || !identical(_current, candidate._previous)) {
+      throw StateError('Stale earthquake overlay version candidate.');
+    }
+    _current = candidate.versionStamp;
+    candidate._committed = true;
   }
 }

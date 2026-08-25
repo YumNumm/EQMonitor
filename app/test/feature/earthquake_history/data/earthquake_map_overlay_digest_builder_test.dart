@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_digest_builder.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -41,6 +42,42 @@ void main() {
     hypocenterState: .latLng,
     hypocenterLongitude: 140,
     hypocenterLatitude: 36,
+  );
+
+  MapSpriteAtlas atlas(String identity) => createMapSpriteAtlas(
+    identity: createMapSourceIdentity(value: identity),
+    width: 1,
+    height: 1,
+    rgbaBytes: Uint8List.fromList(const [255, 255, 255, 255]),
+    regions: const [],
+    limits: const MapSpriteAtlasLimits(
+      maxWidth: 1,
+      maxHeight: 1,
+      maxPixelBytes: 4,
+      maxRegions: 1,
+    ),
+  );
+
+  MapPointSpriteFeature sprite({
+    double sizeAtZoom3 = 0.15,
+    double fadeOpacity = 0.6,
+  }) => createMapPointSpriteFeature(
+    id: 'hypocenter:A',
+    longitude: 140,
+    latitude: 36,
+    spriteRegionId: 'normal-hypocenter',
+    sizeScale: createMapZoomLinearRange(
+      startZoom: 3,
+      startValue: sizeAtZoom3,
+      endZoom: 20,
+      endValue: 0.4,
+    ),
+    opacity: createMapZoomStep(
+      thresholdZoom: 8,
+      belowValue: 1,
+      atOrAboveValue: fadeOpacity,
+    ),
+    priority: 0,
   );
 
   test('canonical UTF-8 records produce the known SHA-256 digest', () {
@@ -103,6 +140,8 @@ void main() {
       ],
       cityStyles: const [],
       stations: const [],
+      spriteAtlas: atlas('atlas-a'),
+      sprites: [sprite()],
     );
     final blue = builder.buildRenderDigest(
       dataSequence: 0,
@@ -118,9 +157,43 @@ void main() {
       ],
       cityStyles: const [],
       stations: const [],
+      spriteAtlas: atlas('atlas-a'),
+      sprites: [sprite()],
     );
 
     expect(blue, isNot(red));
+    expect(dataDigest(), data);
+  });
+
+  test('atlas identityとsprite policy変更はdata digestを維持しrender digestを変える', () {
+    final data = dataDigest();
+
+    String render({
+      String atlasIdentity = 'atlas-a',
+      double sizeAtZoom3 = 0.15,
+      double fadeOpacity = 0.6,
+    }) => builder.buildRenderDigest(
+      dataSequence: 0,
+      dataDigest: data,
+      regionToCityZoom: 6,
+      stationMinZoom: 6,
+      regionStyles: const [],
+      cityStyles: const [],
+      stations: const [],
+      spriteAtlas: atlas(atlasIdentity),
+      sprites: [
+        sprite(
+          sizeAtZoom3: sizeAtZoom3,
+          fadeOpacity: fadeOpacity,
+        ),
+      ],
+    );
+
+    final baseline = render();
+
+    expect(render(atlasIdentity: 'atlas-b'), isNot(baseline));
+    expect(render(sizeAtZoom3: 0.2), isNot(baseline));
+    expect(render(fadeOpacity: 0.5), isNot(baseline));
     expect(dataDigest(), data);
   });
 }

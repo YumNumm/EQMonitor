@@ -1,9 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_overlay_builder.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
@@ -135,6 +142,7 @@ EarthquakeIntensity _intensity() {
 Earthquake _earthquake({
   required EarthquakeIntensity? intensity,
   required List<EarthquakeTelegramMetadata> metadata,
+  EarthquakeHypocenter? hypocenter,
 }) => Earthquake(
   eventId: '20260823123456',
   status: TelegramStatus.normal,
@@ -144,9 +152,45 @@ Earthquake _earthquake({
   dataSources: const [],
   telegramTypes: const [EarthquakeTelegramType.vxse53],
   telegramMetadata: metadata,
-  hypocenter: null,
+  hypocenter: hypocenter,
   intensity: intensity,
   estimatedIntensityTileUrl: null,
+);
+
+EarthquakeHypocenter _hypocenter(Coordinate? coordinates) =>
+    EarthquakeHypocenter(
+      code: '477',
+      name: '東京湾',
+      coordinates: coordinates,
+      magnitude: const EarthquakeMagnitude.value(value: 5.2),
+      depth: const EarthquakeDepth.value(value: 40),
+      detailedCode: null,
+      detailedName: null,
+    );
+
+MapSpriteAtlas _spriteAtlas() => createMapSpriteAtlas(
+  identity: createMapSourceIdentity(value: 'sha256:atlas-a'),
+  width: 2,
+  height: 1,
+  rgbaBytes: Uint8List.fromList(const [255, 0, 0, 255, 0, 0, 255, 255]),
+  regions: const [
+    MapSpriteRegion(
+      id: 'normal',
+      normalizedUv: Rect.fromLTRB(0.25, 0.5, 0.25, 0.5),
+      logicalSize: Size(1, 1),
+    ),
+    MapSpriteRegion(
+      id: 'low-precision',
+      normalizedUv: Rect.fromLTRB(0.75, 0.5, 0.75, 0.5),
+      logicalSize: Size(1, 1),
+    ),
+  ],
+  limits: const MapSpriteAtlasLimits(
+    maxWidth: 2,
+    maxHeight: 1,
+    maxPixelBytes: 8,
+    maxRegions: 2,
+  ),
 );
 
 void main() {
@@ -154,6 +198,7 @@ void main() {
       .colorSetFor(Brightness.light)
       .intensity;
   const builder = EarthquakeMapOverlayBuilder();
+  const parameter = EarthquakeHistoryMapLayerParameter();
 
   MapOverlayVersionStamp versionStamp({
     String sourceIdentity = '20260823123456',
@@ -179,6 +224,8 @@ void main() {
       ),
       colorModel: colors,
       versionStamp: versionStamp(),
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
     );
 
     expect(result, isA<EarthquakeMapOverlayAvailable>());
@@ -206,6 +253,8 @@ void main() {
       ),
       colorModel: colors,
       versionStamp: versionStamp(),
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
     ) as EarthquakeMapOverlayAvailable;
     final snapshot = result.snapshot;
     final max = snapshot.stations.singleWhere((point) => point.id == 'ST-MAX');
@@ -250,6 +299,8 @@ void main() {
       ),
       colorModel: colors,
       versionStamp: stamp,
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
     ) as EarthquakeMapOverlayAvailable;
 
     expect(result.snapshot.versionStamp, same(stamp));
@@ -269,6 +320,8 @@ void main() {
         ),
         colorModel: colors,
         versionStamp: versionStamp(sourceIdentity: 'another-event'),
+        parameter: parameter,
+        spriteAtlas: _spriteAtlas(),
       ),
       throwsArgumentError,
     );
@@ -279,6 +332,8 @@ void main() {
       earthquake: _earthquake(intensity: _intensity(), metadata: const []),
       colorModel: colors,
       versionStamp: versionStamp(),
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
     );
 
     expect(result, isA<EarthquakeMapOverlayUnavailable>());
@@ -293,6 +348,8 @@ void main() {
       earthquake: _earthquake(intensity: null, metadata: const []),
       colorModel: colors,
       versionStamp: versionStamp(),
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
     );
 
     expect(result, isA<EarthquakeMapOverlayUnavailable>());
@@ -300,5 +357,109 @@ void main() {
       (result as EarthquakeMapOverlayUnavailable).reason,
       EarthquakeMapOverlayUnavailableReason.noIntensity,
     );
+  });
+
+  test('有限かつ範囲内のCoordinateLatLngだけをnormal震源spriteへ変換する', () {
+    final result = builder.build(
+      earthquake: _earthquake(
+        intensity: _intensity(),
+        metadata: [
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse53,
+            reportedAt: DateTime.utc(2026, 8, 23, 12, 35),
+          ),
+        ],
+        hypocenter: _hypocenter(
+          const Coordinate.latLng(latitude: 35.5, longitude: 139.8),
+        ),
+      ),
+      colorModel: colors,
+      versionStamp: versionStamp(),
+      parameter: parameter,
+      spriteAtlas: _spriteAtlas(),
+    ) as EarthquakeMapOverlayAvailable;
+
+    final sprite = result.snapshot.sprites.single;
+    expect(sprite.id, 'hypocenter:20260823123456');
+    expect((sprite.longitude, sprite.latitude), (139.8, 35.5));
+    expect(sprite.spriteRegionId, 'normal');
+    expect(sprite.priority, 0);
+    expect(sprite.sizeScale.valueAt(zoom: 3), 0.15);
+    expect(sprite.sizeScale.valueAt(zoom: 20), 0.4);
+    expect(sprite.opacity.valueAt(zoom: 7.999), 1);
+    expect(sprite.opacity.valueAt(zoom: 8), 0.6);
+  });
+
+  test('missing・unknown・非有限・範囲外の震源座標へ固定位置を作らない', () {
+    final invalidHypocenters = <EarthquakeHypocenter?>[
+      null,
+      _hypocenter(null),
+      _hypocenter(const Coordinate.unknown()),
+      _hypocenter(
+        const Coordinate.latLng(latitude: double.nan, longitude: 139),
+      ),
+      _hypocenter(
+        const Coordinate.latLng(latitude: 35, longitude: double.infinity),
+      ),
+      _hypocenter(const Coordinate.latLng(latitude: 91, longitude: 139)),
+      _hypocenter(const Coordinate.latLng(latitude: 35, longitude: 181)),
+    ];
+    for (final hypocenter in invalidHypocenters) {
+      final result = builder.build(
+        earthquake: _earthquake(
+          intensity: _intensity(),
+          metadata: [
+            EarthquakeTelegramMetadata(
+              type: EarthquakeTelegramType.vxse53,
+              reportedAt: DateTime.utc(2026, 8, 23, 12, 35),
+            ),
+          ],
+          hypocenter: hypocenter,
+        ),
+        colorModel: colors,
+        versionStamp: versionStamp(),
+        parameter: parameter,
+        spriteAtlas: _spriteAtlas(),
+      ) as EarthquakeMapOverlayAvailable;
+
+      expect(result.snapshot.sprites, isEmpty);
+    }
+  });
+
+  test('parameterのzoom・size・fade policyをsnapshotへ変換する', () {
+    const customParameter = EarthquakeHistoryMapLayerParameter(
+      regionToCity: 7,
+      stationMinZoom: 8,
+      hypocenterFadeZoom: 9,
+      hypocenterIconSizeMin: 0.2,
+      hypocenterIconSizeMax: 0.5,
+      hypocenterFadeOpacity: 0.4,
+    );
+    final result = builder.build(
+      earthquake: _earthquake(
+        intensity: _intensity(),
+        metadata: [
+          EarthquakeTelegramMetadata(
+            type: EarthquakeTelegramType.vxse53,
+            reportedAt: DateTime.utc(2026, 8, 23, 12, 35),
+          ),
+        ],
+        hypocenter: _hypocenter(
+          const Coordinate.latLng(latitude: 35.5, longitude: 139.8),
+        ),
+      ),
+      colorModel: colors,
+      versionStamp: versionStamp(),
+      parameter: customParameter,
+      spriteAtlas: _spriteAtlas(),
+    ) as EarthquakeMapOverlayAvailable;
+
+    final sprite = result.snapshot.sprites.single;
+    expect(result.snapshot.regionToCityZoom, 7);
+    expect(result.snapshot.stationMinZoom, 8);
+    expect(sprite.sizeScale.valueAt(zoom: 3), 0.2);
+    expect(sprite.sizeScale.valueAt(zoom: 20), 0.5);
+    expect(sprite.opacity.valueAt(zoom: 8.999), 1);
+    expect(sprite.opacity.valueAt(zoom: 9), 0.4);
   });
 }

@@ -1,12 +1,13 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_map_sprite_atlas_builder.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 
-const earthquakeOverlayRegionToCityZoom = 6.0;
-const earthquakeOverlayStationMinZoom = 6.0;
 const earthquakeOverlayMaxSpritePolicyBatches = 1;
 
 enum EarthquakeMapOverlayUnavailableReason {
@@ -44,6 +45,8 @@ final class EarthquakeMapOverlayBuilder {
     required Earthquake earthquake,
     required IntensityColors colorModel,
     required MapOverlayVersionStamp versionStamp,
+    required EarthquakeHistoryMapLayerParameter parameter,
+    required MapSpriteAtlas spriteAtlas,
   }) {
     final reason = unavailableReason(earthquake);
     if (reason != null) {
@@ -60,22 +63,27 @@ final class EarthquakeMapOverlayBuilder {
     return EarthquakeMapOverlayAvailable(
       snapshot: createEarthquakeMapOverlaySnapshot(
         versionStamp: versionStamp,
-        regionToCityZoom: earthquakeOverlayRegionToCityZoom,
-        stationMinZoom: earthquakeOverlayStationMinZoom,
+        regionToCityZoom: parameter.regionToCity,
+        stationMinZoom: parameter.stationMinZoom,
         regionStyles: regionStyles(
           intensity: intensity,
           colorModel: colorModel,
+          opacity: parameter.regionFillOpacity,
         ),
         cityStyles: cityStyles(
           intensity: intensity,
           colorModel: colorModel,
+          opacity: parameter.cityFillOpacity,
         ),
         stations: observationPoints(
           intensity: intensity,
           colorModel: colorModel,
         ),
-        spriteAtlas: null,
-        sprites: const [],
+        spriteAtlas: spriteAtlas,
+        sprites: hypocenterSprites(
+          earthquake: earthquake,
+          parameter: parameter,
+        ),
         maxSpritePolicyBatches: earthquakeOverlayMaxSpritePolicyBatches,
       ),
     );
@@ -96,9 +104,11 @@ final class EarthquakeMapOverlayBuilder {
   List<EarthquakeAreaStyle> regionStyles({
     required EarthquakeIntensity intensity,
     required IntensityColors colorModel,
+    required double opacity,
   }) => areaStyles(
     levels: regionIntensityLevels(intensity: intensity),
     colorModel: colorModel,
+    opacity: opacity,
   );
 
   Map<String, JmaIntensity> regionIntensityLevels({
@@ -123,9 +133,11 @@ final class EarthquakeMapOverlayBuilder {
   List<EarthquakeAreaStyle> cityStyles({
     required EarthquakeIntensity intensity,
     required IntensityColors colorModel,
+    required double opacity,
   }) => areaStyles(
     levels: cityIntensityLevels(intensity: intensity),
     colorModel: colorModel,
+    opacity: opacity,
   );
 
   Map<String, JmaIntensity> cityIntensityLevels({
@@ -163,6 +175,7 @@ final class EarthquakeMapOverlayBuilder {
   List<EarthquakeAreaStyle> areaStyles({
     required Map<String, JmaIntensity> levels,
     required IntensityColors colorModel,
+    required double opacity,
   }) {
     final entries = levels.entries.toList()
       ..sort((first, second) => first.key.compareTo(second.key));
@@ -171,7 +184,7 @@ final class EarthquakeMapOverlayBuilder {
         EarthquakeAreaStyle(
           code: entry.key,
           color: colorModel.fromJmaIntensity(entry.value).background,
-          opacity: 0.6,
+          opacity: opacity,
         ),
     ];
   }
@@ -220,5 +233,41 @@ final class EarthquakeMapOverlayBuilder {
       }
     }
     return observations;
+  }
+
+  List<MapPointSpriteFeature> hypocenterSprites({
+    required Earthquake earthquake,
+    required EarthquakeHistoryMapLayerParameter parameter,
+  }) {
+    final coordinates = earthquake.hypocenter?.coordinates;
+    if (coordinates case CoordinateLatLng(:final longitude, :final latitude)
+        when longitude.isFinite &&
+            longitude >= -180 &&
+            longitude <= 180 &&
+            latitude.isFinite &&
+            latitude >= -90 &&
+            latitude <= 90) {
+      return [
+        createMapPointSpriteFeature(
+          id: 'hypocenter:${earthquake.eventId}',
+          longitude: longitude,
+          latitude: latitude,
+          spriteRegionId: earthquakeMapNormalSpriteRegionId,
+          sizeScale: createMapZoomLinearRange(
+            startZoom: 3,
+            startValue: parameter.hypocenterIconSizeMin,
+            endZoom: 20,
+            endValue: parameter.hypocenterIconSizeMax,
+          ),
+          opacity: createMapZoomStep(
+            thresholdZoom: parameter.hypocenterFadeZoom,
+            belowValue: 1,
+            atOrAboveValue: parameter.hypocenterFadeOpacity,
+          ),
+          priority: 0,
+        ),
+      ];
+    }
+    return const [];
   }
 }
