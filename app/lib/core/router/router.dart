@@ -24,6 +24,7 @@ import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_item_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
@@ -106,9 +107,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
 
     final buildConfig = ref.read(buildConfigProvider);
-    if (!ref.read(isDebugMenuAvailableProvider) &&
-        state.matchedLocation.startsWith(const DebugRoute().location)) {
-      return const HomeRoute().location;
+    final debugRouteRedirect = DebugMenuRouteGuard.redirect(
+      isAvailable: ref.read(isDebugMenuAvailableProvider),
+      matchedLocation: state.matchedLocation,
+    );
+    if (debugRouteRedirect != null) {
+      return debugRouteRedirect;
     }
     if (!buildConfig.isProFeaturesEnabled &&
         state.matchedLocation.startsWith('/subscription')) {
@@ -384,6 +388,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
+        TypedGoRoute<DebugAuthRoute>(path: 'auth'),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
         TypedGoRoute<DebugEarthquakeHistoryCardRoute>(
@@ -532,6 +537,30 @@ class DebugRoute extends GoRouteData with $DebugRoute, MaterialPageMixin {
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();
+}
+
+final class DebugMenuRouteGuard {
+  const new();
+
+  static String? redirect({
+    required bool isAvailable,
+    required String matchedLocation,
+  }) {
+    if (!isAvailable &&
+        matchedLocation.startsWith(const DebugRoute().location)) {
+      return const HomeRoute().location;
+    }
+    return null;
+  }
+}
+
+class DebugAuthRoute extends GoRouteData
+    with $DebugAuthRoute, MaterialPageMixin {
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugAuthPage();
 }
 
 class HttpApiEndpointSelectorRoute extends GoRouteData

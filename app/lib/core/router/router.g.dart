@@ -607,6 +607,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'auth',
+          hasOverriddenOnExit: false,
+          factory: $DebugAuthRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'kyoshin-monitor',
           hasOverriddenOnExit: false,
           factory: $DebugKyoshinMonitorRoute._fromState,
@@ -1182,6 +1187,27 @@ mixin $HttpApiEndpointSelectorRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/api-endpoint-selector');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugAuthRoute on GoRouteData {
+  static DebugAuthRoute _fromState(GoRouterState state) =>
+      const DebugAuthRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/auth');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2163,4 +2189,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'09d918cfa4700a752c7f2fba1b7ed126c626e32b';
+String _$goRouterHash() => r'12a8e497d20d8c53f271343ac80d4f3f6380607d';

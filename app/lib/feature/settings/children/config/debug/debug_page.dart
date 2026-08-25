@@ -132,6 +132,12 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
+            ListTile(
+              title: const Text('Native認証'),
+              subtitle: const Text('Google・Apple・Passkey・JWT疎通を確認'),
+              leading: const Icon(Icons.verified_user_outlined),
+              onTap: () async => const DebugAuthRoute().push<void>(context),
+            ),
             if (Platform.isIOS)
               ListTile(
                 title: const Text('App Groups UserDefaults'),
@@ -142,7 +148,9 @@ class _DebugWidget extends ConsumerWidget {
             if (Platform.isIOS)
               ListTile(
                 title: const Text('Live Activity テスト'),
-                subtitle: const Text('アプリ内から EEW / 揺れ検知の Live Activity を開始・更新・終了'),
+                subtitle: const Text(
+                  'アプリ内から EEW / 揺れ検知の Live Activity を開始・更新・終了',
+                ),
                 leading: const Icon(Icons.bolt_outlined),
                 onTap: () => Navigator.of(context).push<void>(
                   MaterialPageRoute(
