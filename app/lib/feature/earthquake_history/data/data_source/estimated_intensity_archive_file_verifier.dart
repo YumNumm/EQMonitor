@@ -5,6 +5,7 @@ abstract interface class EstimatedIntensityArchiveFileVerifier {
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
+    required Future<EstimatedIntensityArchiveStopReason> stopRequested,
   });
 }
 
@@ -16,6 +17,7 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
+    required Future<EstimatedIntensityArchiveStopReason> stopRequested,
   }) async {
     final actualLength = await file.length();
     if (actualLength != descriptor.sizeBytes) {
@@ -23,7 +25,28 @@ final class DartIoEstimatedIntensityArchiveFileVerifier
         EstimatedIntensityArchiveDownloadFailure.sizeMismatch,
       );
     }
-    final actualSha256 = (await sha256.bind(file.openRead()).first).toString();
+    final digestIterator = StreamIterator(sha256.bind(file.openRead()));
+    final moveNext = digestIterator.moveNext();
+    final outcome = await Future.any([
+      moveNext.then((moved) => (moved: moved, stopped: null)),
+      stopRequested.then((stopped) => (moved: false, stopped: stopped)),
+    ]);
+    if (outcome.stopped case final stopped?) {
+      try {
+        await digestIterator.cancel();
+      } catch (_) {}
+      try {
+        await moveNext;
+      } catch (_) {}
+      return const EstimatedIntensityArchiveStopResultMapper().map(stopped);
+    }
+    if (!outcome.moved) {
+      return const EstimatedIntensityArchiveDownloadRejected(
+        EstimatedIntensityArchiveDownloadFailure.requestFailed,
+      );
+    }
+    final actualSha256 = digestIterator.current.toString();
+    await digestIterator.cancel();
     if (actualSha256 != descriptor.sha256) {
       return const EstimatedIntensityArchiveDownloadRejected(
         EstimatedIntensityArchiveDownloadFailure.sha256Mismatch,

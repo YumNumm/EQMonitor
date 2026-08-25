@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_stream_verifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'estimated_intensity_archive_transport_test_support.dart';
@@ -80,5 +81,6 @@ final class ReplayEstimatedIntensityArchiveFileVerifier
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required File file,
+    required Future<EstimatedIntensityArchiveStopReason> stopRequested,
   }) async => result;
 }

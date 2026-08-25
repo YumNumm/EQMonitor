@@ -78,6 +78,7 @@ final class EstimatedIntensityArchiveStreamVerifier {
       final verified = await fileVerifier.verify(
         descriptor: descriptor,
         file: partFile,
+        stopRequested: guard.stopRequested.future,
       );
       final finalStop = guard.stopReason;
       if (finalStop != EstimatedIntensityArchiveStopReason.none) {
