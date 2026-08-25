@@ -150,6 +150,32 @@ void main() {
     }
   });
 
+  test('rejects negative caller limits before reading the archive', () async {
+    final fixture = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
+      ],
+    );
+    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+    await expectLater(
+      PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(maxTileDecodedBytes: -1),
+      ),
+      throwsA(
+        isA<ArgumentError>().having(
+          (error) => error.name,
+          'name',
+          'maxTileDecodedBytes',
+        ),
+      ),
+    );
+
+    expect(reader.reads, isEmpty);
+    expect(reader._closeCalls, 1);
+  });
+
   test('applies the decoded directory limit when reading a leaf', () async {
     final fixture = builder.build(
       rootEntries: const [

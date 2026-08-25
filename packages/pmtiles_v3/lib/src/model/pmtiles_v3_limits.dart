@@ -54,3 +54,46 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     @Default(false) bool validateFullArchiveOnOpen,
   }) = _PmTilesV3Limits;
 }
+
+final class PmTilesV3LimitsValidator {
+  const new();
+
+  void validate(PmTilesV3Limits limits) {
+    if (limits.maxDirectoryDepth <= 0) {
+      throw ArgumentError.value(
+        limits.maxDirectoryDepth,
+        'maxDirectoryDepth',
+        'must be greater than zero',
+      );
+    }
+    final nonNegativeValues = <({String name, int value})>[
+      (
+        name: 'rootDirectoryWindowLength',
+        value: limits.rootDirectoryWindowLength,
+      ),
+      (
+        name: 'maxDirectoryEncodedBytes',
+        value: limits.maxDirectoryEncodedBytes,
+      ),
+      (
+        name: 'maxDirectoryDecodedBytes',
+        value: limits.maxDirectoryDecodedBytes,
+      ),
+      (
+        name: 'maxCachedLeafDirectories',
+        value: limits.maxCachedLeafDirectories,
+      ),
+      (name: 'maxTileEncodedBytes', value: limits.maxTileEncodedBytes),
+      (name: 'maxTileDecodedBytes', value: limits.maxTileDecodedBytes),
+    ];
+    for (final field in nonNegativeValues) {
+      if (field.value < 0) {
+        throw ArgumentError.value(
+          field.value,
+          field.name,
+          'must not be negative',
+        );
+      }
+    }
+  }
+}

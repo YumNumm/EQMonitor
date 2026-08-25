@@ -50,6 +50,7 @@ final class PmTilesV3ArchiveOpener {
     required PmTilesV3Limits limits,
   }) async {
     try {
+      const PmTilesV3LimitsValidator().validate(limits);
       final headerBytes = await reader.readAt(
         offset: 0,
         length: PmTilesV3HeaderDecoder.headerLength,
