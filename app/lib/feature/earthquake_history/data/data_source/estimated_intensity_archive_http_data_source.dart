@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_response_validator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_stream_verifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_cleanup_diagnostic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 
 final class EstimatedIntensityArchiveHttpDataSource {
@@ -14,10 +15,12 @@ final class EstimatedIntensityArchiveHttpDataSource {
         EstimatedIntensityArchiveHttpOperationFactory.create,
     this.responseValidator = const EstimatedIntensityArchiveResponseValidator(),
     this.streamVerifier = const EstimatedIntensityArchiveStreamVerifier(),
+    this.diagnosticReporter = ignoreEstimatedIntensityArchiveDiagnostic,
   });
   final EstimatedIntensityArchiveHttpOperationCreator operationFactory;
   final EstimatedIntensityArchiveResponseValidator responseValidator;
   final EstimatedIntensityArchiveStreamVerifier streamVerifier;
+  final EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter;
   Future<EstimatedIntensityArchiveDownloadResult> download({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required Directory temporaryDirectory,
@@ -65,6 +68,7 @@ final class EstimatedIntensityArchiveHttpDataSource {
         limits: limits,
         partFile: File('${stagingDirectory.path}/archive.part'),
         guard: guard,
+        diagnosticReporter: diagnosticReporter,
       );
       succeeded = result is EstimatedIntensityArchiveDownloadSuccess;
       return result;

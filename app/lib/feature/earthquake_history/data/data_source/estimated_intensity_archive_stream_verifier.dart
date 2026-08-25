@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_download_guard.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_http_operation.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_part_writer.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_cleanup_diagnostic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
@@ -28,6 +29,7 @@ final class EstimatedIntensityArchiveStreamVerifier {
     required EstimatedIntensityArchiveDownloadLimits limits,
     required File partFile,
     required EstimatedIntensityArchiveDownloadGuard guard,
+    required EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter,
   }) async {
     EstimatedIntensityArchivePartWriter? output;
     StreamIterator<List<int>>? bodyIterator;
@@ -37,7 +39,16 @@ final class EstimatedIntensityArchiveStreamVerifier {
       bodyIterator = StreamIterator(response.body.timeout(limits.idleTimeout));
       while (await guard.settle(
         pending: bodyIterator.moveNext(),
-        abort: bodyIterator.cancel,
+        abort: () async {
+          try {
+            await bodyIterator?.cancel();
+          } catch (_) {
+            reportEstimatedIntensityArchiveDiagnostic(
+              reporter: diagnosticReporter,
+              diagnostic: .bodyCancellationFailed,
+            );
+          }
+        },
       )) {
         final stopped = guard.stopReason;
         if (stopped != EstimatedIntensityArchiveStopReason.none) {
@@ -57,7 +68,16 @@ final class EstimatedIntensityArchiveStreamVerifier {
         }
         await guard.settle(
           pending: output.write(chunk),
-          abort: output.close,
+          abort: () async {
+            try {
+              await output?.close();
+            } catch (_) {
+              reportEstimatedIntensityArchiveDiagnostic(
+                reporter: diagnosticReporter,
+                diagnostic: .partWriterCloseFailed,
+              );
+            }
+          },
         );
         receivedBytes = nextBytes;
       }
@@ -68,7 +88,16 @@ final class EstimatedIntensityArchiveStreamVerifier {
       }
       await guard.settle(
         pending: output.flushAndClose(),
-        abort: output.close,
+        abort: () async {
+          try {
+            await output?.close();
+          } catch (_) {
+            reportEstimatedIntensityArchiveDiagnostic(
+              reporter: diagnosticReporter,
+              diagnostic: .partWriterCloseFailed,
+            );
+          }
+        },
       );
       if (receivedBytes != descriptor.sizeBytes) {
         return const EstimatedIntensityArchiveDownloadRejected(
@@ -110,10 +139,22 @@ final class EstimatedIntensityArchiveStreamVerifier {
         EstimatedIntensityArchiveDownloadFailure.requestFailed,
       );
     } finally {
-      await bodyIterator?.cancel();
+      try {
+        await bodyIterator?.cancel();
+      } catch (_) {
+        reportEstimatedIntensityArchiveDiagnostic(
+          reporter: diagnosticReporter,
+          diagnostic: .bodyCancellationFailed,
+        );
+      }
       try {
         await output?.close();
-      } catch (_) {}
+      } catch (_) {
+        reportEstimatedIntensityArchiveDiagnostic(
+          reporter: diagnosticReporter,
+          diagnostic: .partWriterCloseFailed,
+        );
+      }
     }
   }
 }
