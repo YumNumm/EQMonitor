@@ -667,6 +667,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugNotificationDeliveryLogRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'notification-webhooks',
+          hasOverriddenOnExit: false,
+          factory: $DebugNotificationWebhookRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'device-admin',
           hasOverriddenOnExit: false,
           factory: $DebugDeviceAdminRoute._fromState,
@@ -1445,6 +1450,28 @@ mixin $DebugNotificationDeliveryLogRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/notification-delivery-log');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugNotificationWebhookRoute on GoRouteData {
+  static DebugNotificationWebhookRoute _fromState(GoRouterState state) =>
+      const DebugNotificationWebhookRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/notification-webhooks');
 
   @override
   void go(BuildContext context) => context.go(location);
