@@ -4,6 +4,7 @@ name = "EQMonitor"
 
 [setup]
 script = '''
+git submodule update --init --depth 1 third_party/flutter_scene
 mise trust
 mise install
 mise exec flutter -- flutter pub get

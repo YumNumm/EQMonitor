@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
+import 'package:eqmonitor/feature/devices/data/model/device_notification_webhook.dart';
 import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -51,6 +52,20 @@ class DeviceRepository {
         final response = await _api.device.getV2DeviceMe();
         return response.data.role.toDeviceRole;
       });
+
+  Future<Result<List<DeviceNotificationWebhook>, Exception>>
+  getNotificationWebhooks() => Result.capture(() async {
+    final response = await _api.device.getV2DeviceMeNotificationWebhooks();
+    return response.data.map((webhook) => webhook.toModel()).toList();
+  });
+
+  Future<Result<DeviceNotificationWebhook, Exception>>
+  createNotificationWebhook() => Result.capture(() async {
+    final response = await _api.device.postV2DeviceMeNotificationWebhooks(
+      body: const api.CreateDeviceNotificationWebhookRequest(),
+    );
+    return response.data.toModel();
+  });
 
   Future<Result<RegisteredDevice, Exception>> registerDevice({
     required DevicePlatform devicePlatform,
