@@ -1,10 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShindoDbStationDetailSheet extends StatelessWidget {
@@ -130,14 +130,14 @@ class _InfoRows extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     return Column(
       children: [
         if (observedAt != null)
           _InfoRow(
             label: '観測時刻',
-            value: dateFormat.format(observedAt.toLocal()),
+            value: observedAt.formatWithTz(
+              DateTimeFormat.yearMonthDayHourMinuteSecond,
+            ),
           ),
         if (observationCount != null)
           _InfoRow(label: '観測回数', value: '$observationCount 回'),
@@ -238,7 +238,7 @@ class _MaxAccelTable extends StatelessWidget {
         if (maxAccelTime case final accelTime?) ...[
           const SizedBox(height: 4),
           Text(
-            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(accelTime.toLocal())}',
+            '最大加速度時刻: ${accelTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecond)}',
             style: theme.textTheme.labelSmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,

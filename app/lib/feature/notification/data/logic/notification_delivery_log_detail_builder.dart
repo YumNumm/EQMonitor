@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
-import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_delivery_log_detail_builder.g.dart';
@@ -35,7 +35,7 @@ final class NotificationDeliveryLogDetailBuilder {
     final parsedCreatedAt = DateTime.tryParse(entry.createdAtIso);
     final formattedCreatedAt = parsedCreatedAt == null
         ? entry.createdAtIso
-        : DateFormat('yyyy/MM/dd HH:mm:ss').format(parsedCreatedAt.toLocal());
+        : parsedCreatedAt.formatWithTz(.yearMonthDayHourMinuteSecond);
     final title = entry.title;
     final body = entry.body;
     final errorMessage = entry.errorMessage;

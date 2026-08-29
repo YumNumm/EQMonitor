@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/data/tsunami_history_data_source.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -119,7 +119,7 @@ class _TsunamiListTile extends StatelessWidget {
             children: [
               if (originTime != null)
                 Text(
-                  '発生: ${DateFormat('MM/dd HH:mm').format(originTime.toLocal())}',
+                  '発生: ${originTime.formatWithTz(.monthDayHourMinute)}',
                   style: theme.textTheme.bodySmall,
                 ),
               if (magnitude != null)
@@ -130,14 +130,18 @@ class _TsunamiListTile extends StatelessWidget {
               Text(
                 'EventID: ${item.eventIds.join(", ")}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
               Text(
                 '$statusLabel | 地域: ${item.regions.length} | '
                 '電文: ${item.latestTelegrams.length}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
             ],

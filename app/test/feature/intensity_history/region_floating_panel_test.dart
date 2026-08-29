@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -24,7 +25,6 @@ import 'package:eqmonitor/feature/intensity_history/ui/components/region_floatin
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -147,7 +147,7 @@ void main() {
 
     expect(
       find.text(
-        '${DateFormat('MM/dd HH:mm').format(aggregatedAt.toLocal())} 更新',
+        '${aggregatedAt.formatWithTz(.monthDayHourMinute)} 更新',
       ),
       findsOneWidget,
     );

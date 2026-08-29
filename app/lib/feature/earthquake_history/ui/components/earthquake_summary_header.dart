@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
@@ -13,7 +14,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_in
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class EarthquakeSummaryHeader extends StatelessWidget {
   const new({
@@ -138,12 +138,11 @@ class _EarthquakeInformationBody extends StatelessWidget {
     final isOverseasEvent =
         earthquakeType == EarthquakeType.distant ||
         earthquakeType == EarthquakeType.volcano;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
     final timeText = switch ((item.originTime, item.arrivalTime)) {
       (final DateTime originTime, _) =>
-        '発生時刻: ${dateFormat.format(originTime.toLocal())}',
+        '発生時刻: ${originTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃',
       (_, final DateTime arrivalTime) =>
-        '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
+        '検知時刻: ${arrivalTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃',
       _ => null,
     };
     final hypocenterWidget = _HypocenterWidget(

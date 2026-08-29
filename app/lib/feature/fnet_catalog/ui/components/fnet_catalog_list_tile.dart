@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 
 /// F-netカタログのリストタイル
@@ -12,8 +12,6 @@ class FnetCatalogListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: InkWell(
@@ -41,7 +39,9 @@ class FnetCatalogListTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          dateFormat.format(event.originTime.toLocal()),
+                          event.originTime.formatWithTz(
+                            .yearMonthDayHourMinuteSecond,
+                          ),
                           style: theme.textTheme.bodySmall,
                         ),
                       ],
@@ -182,8 +182,6 @@ class _DetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS');
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
@@ -214,7 +212,7 @@ class _DetailSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '発生時刻: ${dateFormat.format(event.originTime.toLocal())} (UTC)',
+                  '発生時刻: ${event.originTime.formatWithTz(.yearMonthDayHourMinuteSecondMillisecond)} (JST)',
                   style: theme.textTheme.bodyMedium,
                 ),
                 const Divider(height: 32),

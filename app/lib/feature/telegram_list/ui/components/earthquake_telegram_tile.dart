@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_model.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_comments_model.dart';
@@ -10,7 +11,6 @@ import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_l
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 /// 電文タイプ別地震情報リッチタイル
 ///
@@ -45,7 +45,6 @@ class EarthquakeTelegramTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final designSystem = context.designSystem;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final diffCalculator = ref.watch(earthquakeBodyDiffCalculatorProvider);
 
     final currentRegions = switch (telegram.type) {
@@ -124,7 +123,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
             ),
             Text(telegram.headline?.toHalfWidth ?? ''),
             Text(
-              '発表: ${dateFormat.format(telegram.pressAt.toLocal())}',
+              '発表: ${telegram.pressAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecond)}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: designSystem.colorTheme.onSurfaceVariant,
               ),

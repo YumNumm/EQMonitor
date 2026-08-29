@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 extension FeedItemUrgencyColor on FeedItem {
   Color? get urgencyColor {
@@ -28,8 +28,8 @@ class FeedItemListTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorTheme = context.designSystem.colorTheme;
     final urgencyColor = item.urgencyColor;
-    final dateStr = DateFormat('yyyy/MM/dd HH:mm頃発表')
-        .format(item.publishedAt.toLocal());
+    final dateStr =
+        '${item.publishedAt.formatWithTz(.yearMonthDayHourMinute)}頃発表';
 
     final isEarthquakeNotice = item.feedType == .earthquakeNotice;
     final preferredTitle = isEarthquakeNotice ? item.summary : item.title;

@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/logic/eew_deep_hypocenter_intensity_notice.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -14,7 +15,6 @@ import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 class EewCard extends ConsumerWidget {
@@ -454,7 +454,6 @@ class _EewHypocenterSection extends StatelessWidget {
         (eew.originTime == null || eew.isPlum || eew.isLevelMethod)
         ? '地震検知'
         : '地震発生';
-    final localHappened = happenedTime.toLocal();
     final detectionMethodLabel = switch ((
       eew.isPlum,
       eew.isLevelMethod,
@@ -492,7 +491,7 @@ class _EewHypocenterSection extends StatelessWidget {
             _SecondaryLabel(text: timeLabel),
             const SizedBox(width: 4),
             Text(
-              DateFormat('MM/dd').format(localHappened),
+              happenedTime.formatWithTz(.monthDay),
               style: typography.labelLarge.copyWith(
                 fontFamily: codeFontFamily,
                 letterSpacing: -0.5,
@@ -501,7 +500,7 @@ class _EewHypocenterSection extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              DateFormat('HH:mm:ss').format(localHappened),
+              happenedTime.formatWithTz(.hourMinuteSecond),
               style: typography.titleMedium.copyWith(
                 fontFamily: codeFontFamily,
                 letterSpacing: -0.5,

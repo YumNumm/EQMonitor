@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class TelegramListTile extends StatelessWidget {
   const new({required this.telegram, this.onTap, super.key});
@@ -14,8 +14,6 @@ class TelegramListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final designSystem = context.designSystem;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     final isEew = switch (telegram.type) {
       TelegramType.vxse43 || TelegramType.vxse44 || TelegramType.vxse45 => true,
       _ => false,
@@ -41,7 +39,9 @@ class TelegramListTile extends StatelessWidget {
             _InfoRow(label: '報数', value: '第$serialNo報'),
           _InfoRow(
             label: '発表時刻',
-            value: dateFormat.format(telegram.pressAt.toLocal()),
+            value: telegram.pressAt.formatWithTz(
+              DateTimeFormat.yearMonthDayHourMinuteSecond,
+            ),
           ),
           _InfoRow(label: '発表元', value: telegram.publishingOffice.join(', ')),
           if (telegram.headline case final headline?) ...[

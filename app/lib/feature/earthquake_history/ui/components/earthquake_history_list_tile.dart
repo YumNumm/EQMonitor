@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
@@ -12,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_tex
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:extensions/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryListTile extends StatelessWidget {
@@ -69,14 +69,13 @@ class EarthquakeHistoryListTile extends StatelessWidget {
       _ => '',
     };
 
-    final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final depth = hypocenter?.depth;
     final subTitle =
         switch ((earthquake.originTime, earthquake.arrivalTime)) {
           (final DateTime originTime, _) =>
-            '${dateFormatter.format(originTime.toLocal())}頃発生 ',
+            '${originTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃発生 ',
           (_, final DateTime arrivalTime) =>
-            '${dateFormatter.format(arrivalTime.toLocal())}頃検知 ',
+            '${arrivalTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃検知 ',
           _ => '震源要素 調査中',
         } +
         switch (depth) {

@@ -1,11 +1,11 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class ShindoDbHypocenterInformationCard extends StatelessWidget {
   const new({
@@ -247,13 +247,15 @@ class _OriginTimeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS頃');
     final stderr = stderrSeconds;
 
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: '発生時刻: ${dateFormat.format(originTime.toLocal())}'),
+          TextSpan(
+            text:
+                '発生時刻: ${originTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecondMillisecond)}頃',
+          ),
           if (stderr != null) TextSpan(text: '±${stderr.toStringAsFixed(1)}秒'),
         ],
         style: theme.textTheme.bodySmall?.copyWith(

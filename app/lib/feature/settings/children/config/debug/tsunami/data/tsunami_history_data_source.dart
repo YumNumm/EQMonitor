@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,11 +20,9 @@ class TsunamiHistoryDataSource
 
   final api.ApiClient _client;
 
-  static final _dateFormatter = DateFormat('yyyy/MM/dd');
-
   @override
   String groupBy(api.TsunamiState value) {
-    return _dateFormatter.format(value.updatedAt.toLocal());
+    return value.updatedAt.formatWithTz(.yearMonthDay);
   }
 
   @override
