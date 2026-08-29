@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 const _responseAt = '2026-08-19T12:00:00Z';
 
@@ -124,6 +126,7 @@ Widget _panelApp(ProviderContainer container, {bool centered = false}) =>
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(tz.initializeTimeZones);
 
   testWidgets('未選択状態で「全国」が表示される', (tester) async {
     final container = await _container();
@@ -145,7 +148,7 @@ void main() {
 
     expect(
       find.text(
-        '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(responseAt.toLocal())}',
+        '最終更新 ${responseAt.formatWithTz(.monthDayHourMinute)}',
       ),
       findsOneWidget,
     );
