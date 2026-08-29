@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -86,7 +87,7 @@ class AboutThisAppPage extends HookConsumerWidget {
             ListTile(
               title: Text('ライセンス情報', style: designSystem.typography.bodyLarge),
               subtitle: Text(
-                'MIT License ${DateTime.now().year} Ryotaro Onoue',
+                'MIT License ${DateTime.now().tokyoDateTime.year} Ryotaro Onoue',
                 style: designSystem.typography.bodyMedium,
               ),
               leading: Icon(

@@ -1,13 +1,13 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedDetailsPage extends ConsumerWidget {
@@ -52,7 +52,9 @@ class FeedDetailsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
+    final dateStr = item.publishedAt.formatWithTz(
+      .yearMonthDayHourMinuteJapanese,
+    );
     final rawUrl = item.data.url;
     final url = (rawUrl != null && rawUrl.isNotEmpty)
         ? Uri.tryParse(rawUrl)

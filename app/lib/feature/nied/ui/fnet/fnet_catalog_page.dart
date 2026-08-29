@@ -3,14 +3,13 @@ import 'package:core/core.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class FnetCatalogPage extends HookConsumerWidget {
   const new({super.key});
@@ -90,9 +89,8 @@ class _FnetCatalogList extends HookConsumerWidget {
       );
     }
 
-    final jst = tz.getLocation('Asia/Tokyo');
     final groupedByDate = events.groupListsBy(
-      (e) => Date.fromDateTime(tz.TZDateTime.from(e.originTime, jst)),
+      (e) => Date.fromDateTime(e.originTime.tokyoDateTime),
     );
 
     return CustomScrollView(
@@ -288,11 +286,6 @@ class _EventCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
-    final jst = tz.getLocation('Asia/Tokyo');
-    final originTime = tz.TZDateTime.from(event.originTime, jst);
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Padding(
@@ -315,7 +308,9 @@ class _EventCard extends HookWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('発生日時: ${dateFormat.format(originTime)} JST'),
+                  Text(
+                    '発生日時: ${event.originTime.formatWithTz(.yearMonthDayHourMinuteSecondHyphen)} JST',
+                  ),
                   Text(
                     'Mj ${event.jmaMagnitude.toStringAsFixed(1)} / Mw ${event.momentMagnitude.toStringAsFixed(1)}',
                   ),

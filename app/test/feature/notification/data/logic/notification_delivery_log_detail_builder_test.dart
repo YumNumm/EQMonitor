@@ -1,8 +1,11 @@
 import 'package:eqmonitor/feature/notification/data/logic/notification_delivery_log_detail_builder.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
+  setUpAll(tz.initializeTimeZones);
+
   group('NotificationDeliveryLogDetailBuilder', () {
     test('成功ログは一般ユーザー向け項目だけを生成する', () {
       final detail = NotificationDeliveryLogDetailBuilder().build(
@@ -12,7 +15,7 @@ void main() {
       expect(
         detail.rows.map((row) => (label: row.label, value: row.value)).toList(),
         [
-          (label: '配信日時', value: '2026/08/16 12:34:56'),
+          (label: '配信日時', value: '2026/08/16 21:34:56'),
           (label: '配信結果', value: '成功'),
           (label: 'タイトル', value: '地震情報'),
           (label: '本文', value: '最大震度3を観測しました'),
@@ -76,7 +79,7 @@ void main() {
 
 PushNotificationLogEntry createLogEntry({
   PushNotificationDeliveryResult result = PushNotificationDeliveryResult.ok,
-  String createdAtIso = '2026-08-16T12:34:56',
+  String createdAtIso = '2026-08-16T12:34:56Z',
   String? title = '地震情報',
   String? body = '最大震度3を観測しました',
   String? errorMessage,

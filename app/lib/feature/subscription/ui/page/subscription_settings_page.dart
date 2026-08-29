@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -52,11 +53,7 @@ class _ActiveSection extends ConsumerWidget {
     final isRestoring = restoreState is MutationPending;
 
     final expiresAt = status.expiresAt;
-    final expiresLabel = expiresAt == null
-        ? null
-        : '${expiresAt.year.toString().padLeft(4, '0')}/'
-              '${expiresAt.month.toString().padLeft(2, '0')}/'
-              '${expiresAt.day.toString().padLeft(2, '0')}';
+    final expiresLabel = expiresAt?.formatWithTz(.yearMonthDay);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
