@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_response_validator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_intensity_archive_stream_verifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_cleanup_diagnostic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 
 final class EstimatedIntensityArchiveHttpDataSource {
@@ -14,10 +15,12 @@ final class EstimatedIntensityArchiveHttpDataSource {
         EstimatedIntensityArchiveHttpOperationFactory.create,
     this.responseValidator = const EstimatedIntensityArchiveResponseValidator(),
     this.streamVerifier = const EstimatedIntensityArchiveStreamVerifier(),
+    this.diagnosticReporter = EstimatedIntensityArchiveDiagnostics.ignore,
   });
   final EstimatedIntensityArchiveHttpOperationCreator operationFactory;
   final EstimatedIntensityArchiveResponseValidator responseValidator;
   final EstimatedIntensityArchiveStreamVerifier streamVerifier;
+  final EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter;
   Future<EstimatedIntensityArchiveDownloadResult> download({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required Directory temporaryDirectory,
@@ -64,7 +67,8 @@ final class EstimatedIntensityArchiveHttpDataSource {
         descriptor: descriptor,
         limits: limits,
         partFile: File('${stagingDirectory.path}/archive.part'),
-        stopReason: () => guard.stopReason,
+        guard: guard,
+        diagnosticReporter: diagnosticReporter,
       );
       succeeded = result is EstimatedIntensityArchiveDownloadSuccess;
       return result;
@@ -85,16 +89,42 @@ final class EstimatedIntensityArchiveHttpDataSource {
             : EstimatedIntensityArchiveDownloadFailure.requestFailed,
       );
     } finally {
-      await guard.close();
+      try {
+        await guard.close();
+      } catch (_) {
+        EstimatedIntensityArchiveDiagnostics.report(
+          reporter: diagnosticReporter,
+          diagnostic: .guardCloseFailed,
+        );
+      }
       if (!succeeded) {
-        operation.abort();
+        try {
+          operation.abort();
+        } catch (_) {
+          EstimatedIntensityArchiveDiagnostics.report(
+            reporter: diagnosticReporter,
+            diagnostic: .httpAbortFailed,
+          );
+        }
         if (stagingDirectory case final directory?) {
           try {
             await directory.delete(recursive: true);
-          } catch (_) {}
+          } catch (_) {
+            EstimatedIntensityArchiveDiagnostics.report(
+              reporter: diagnosticReporter,
+              diagnostic: .stagingDirectoryDeleteFailed,
+            );
+          }
         }
       }
-      operation.close();
+      try {
+        operation.close();
+      } catch (_) {
+        EstimatedIntensityArchiveDiagnostics.report(
+          reporter: diagnosticReporter,
+          diagnostic: .httpCloseFailed,
+        );
+      }
     }
   }
 }

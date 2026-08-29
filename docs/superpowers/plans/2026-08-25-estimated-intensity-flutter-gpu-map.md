@@ -5,7 +5,8 @@
 > superpowers:executing-plans to implement this plan task-by-task. Steps use
 > checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** event `20260823020050` を最初の production data gate として、API が返す
+**Goal:** event `20260823020050` を最初のproduction data検証対象として、
+API が返す
 immutable descriptor から検証済み PMTiles を取得し、Flutter Scene / Flutter GPU の
 デバッグ地図へ推計震度 Fill / Line と同一 event の震源を原子的に表示する。
 
@@ -59,7 +60,7 @@ EQMonitor の `backend` submodule がその contract commit を参照できる�
 | P6 | `codex/gpu-map-19-estimated-renderer` | P5 branch | typed Fill / Line renderer |
 | P7 | `codex/gpu-map-20-estimated-pipeline` | P6 branch | coverage / generation / publication barrier |
 | P8 | `codex/gpu-map-21-estimated-app` | P7 branch | atomic app/debug-map integration |
-| P9 | `codex/gpu-map-22-estimated-runtime` | P8 branch | event fixture、lifecycle、iOS / Android gate |
+| P9 | `codex/gpu-map-22-estimated-runtime` | P8 branch | event fixture、lifecycle、iOS / Android実機検証 |
 
 S0はdocsだけを持ち、branch 12へのrebaseとreview完了後に既存Stack #1756へlinkする。P1〜P9は
 その上へ順にreview / mergeする。上位branchのsyncは直前baseのmerge後に行い、
@@ -722,7 +723,8 @@ script名をこの計画へ固定しない。
 
 Runtime checklist:
 
-- actual descriptor download、exact size、SHA-256、PMTiles header gate
+- actual descriptor download、exact size、SHA-256、
+  PMTiles header確認
 - class 4 / 5- / 5+ のtheme色とFill/Line pair
 - administrative lineより下の描画順
 - observed Fill/station非表示、archive未検証中のbase+hypocenter-only表示、verified後のsame-event

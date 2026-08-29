@@ -5,7 +5,8 @@
 地震履歴の推計震度分布図を、既存 MapLibre 表示を正本として残したまま、
 Flutter Scene / Flutter GPU のデバッグ地図へ production-grade に実装する。
 
-最初の実データ gate は event `20260823020050` とする。この event ID は contract
+最初の実データ検証対象は event `20260823020050` とする。
+この event ID は contract
 fixture、integration test、runtime verification の入力であり、production code が
 参照する固定 URL、固定 SHA-256、fallback source にはしない。
 
@@ -38,7 +39,8 @@ backend immutable archive descriptor
 - observed / estimated mode の full candidate 排他
 - estimated mode で同一 event の震源 sprite を維持すること
 - event、hash、viewport、theme、lifecycle、renderer context の世代管理
-- event `20260823020050` の deterministic contract fixture と iOS / Android gate
+- event `20260823020050` の deterministic contract fixture と
+  iOS / Android 実機検証
 
 ### 2.2 Out of scope
 
@@ -267,6 +269,12 @@ HTTP contract:
 - EOF 時の実 byte 数が descriptor size と完全一致
 - timeout、cancel、socket failure を source failure として typed に保持
 - response body、例外、URL に auth token や local path を user-facing message へ出さない
+
+total timeout と cancel は request open、body read、part write、flush、exact size、SHA-256
+確認までを一つの停止signalで制御する。停止時はHTTP request、body subscription、
+hash subscriptionを中断する。part write、flush、file lengthは同一handleを並行closeせず、
+開始済みI/Oの収束後に `.part` cleanupへ進む。
+cleanup失敗の診断は固定enumだけを渡し、URL、local path、hash、元例外を渡さない。
 
 ### 7.2 Full-content verification
 
@@ -591,7 +599,8 @@ fixture の URL / hash / size は test input であり production code から im
 
 unit test は repository に巨大な production archive を無条件に複製せず、既存
 `MinimalPmTilesArchiveBuilder` と MVT fixture builder で deterministic minimal archive を作る。
-実 archive manifest の drift test と iOS / Android runtime gate は API descriptor が指す bytes
+実 archive manifest の drift test と iOS / Android runtime検証は、
+API descriptor が指す bytes
 を full verificationした後に実行する。
 
 ## 14. Limits and Performance
@@ -667,10 +676,11 @@ event `20260823020050` は target ごとに次の mode で検証する。
 - Android emulator debug: visual、gesture、mode switch、background / foreground
 - profile を support する Android target: performance、memory、renderer context、lifecycle
 
-iOS Simulator を profile gate として扱わない。各実行では `flutter devices` が返した実在 device ID
+iOS Simulator をprofile判定基準として扱わない。各実行では
+`flutter devices` が返した実在 device ID
 を使い、generic `-d ios` / `-d android` を使わない。
 
-- actual descriptor download / size / SHA / header gate
+- actual descriptor download / size / SHA / header確認
 - class 4 / 5- / 5+ の theme 色
 - Fill / Line と administrative line の順序
 - observed Fill / station 非表示、same-event hypocenter 表示
@@ -683,11 +693,13 @@ iOS Simulator を profile gate として扱わない。各実行では `flutter 
 
 Simulator / emulator を agent が操作する場合、開始前にユーザーへ通知し、終了時に入力を解放する。
 
-## 17. Rollout and Removal Gate
+## 17. Rollout and Removal Criteria
 
 実装は backend P0、client P1、app/package P2-P9 の Stacked PR とする。各 PR は前段の public
-contractだけに依存し、独立した RED/GREEN、focused analyze、review gate を持つ。
+contractだけに依存し、独立したRED/GREEN、focused analyze、
+review checkpointを持つ。
 
-debug map gate が green でも MapLibre layer は削除しない。地震履歴詳細とライブモニタの
+debug map検証が完了してもMapLibre layerは削除しない。
+地震履歴詳細とライブモニタの
 各 surface へ接続し、同じ data / mode / lifecycle gateを通した後、別 PR で MapLibre source / layer
 を除去する。
