@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -11,7 +12,6 @@ import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_mo
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 /// 市区町村別最大震度マップの上部フローティングパネル。
 ///
@@ -19,9 +19,6 @@ import 'package:intl/intl.dart';
 /// - 市区町村選択中: 都道府県名・市区町村名・最大震度バッジと最終更新時刻を表示。
 class RegionFloatingPanel extends ConsumerWidget {
   const new({super.key});
-
-  /// 集計の最終更新時刻の表示書式。
-  static final refreshedAtFormat = DateFormat('MM/dd HH:mm');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,7 +52,7 @@ class _RefreshedAtLabel extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Text(
-      '最終更新 ${RegionFloatingPanel.refreshedAtFormat.format(responseAt.toLocal())}',
+      '最終更新 ${responseAt.formatWithTz(DateTimeFormat.monthDayHourMinute)}',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(

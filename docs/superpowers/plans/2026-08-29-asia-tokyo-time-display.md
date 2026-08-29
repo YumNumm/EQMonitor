@@ -131,7 +131,7 @@ git push
 - Modify: `app/lib/feature/earthquake_history/ui/components/shindo_db_hypocenter_information_card.dart`
 - Modify: `app/lib/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart`
 - Modify: `app/lib/feature/earthquake_history/ui/earthquake_activity_page.dart`
-- Modify: `app/lib/feature/intensity_history/ui/components/city_detail_modal.dart`
+- Modify: `app/lib/feature/intensity_history/ui/components/region_floating_panel.dart`
 
 **Interfaces:**
 - Consumes: Task 1 の `formatWithTz` と `DateTimeFormat`
@@ -152,22 +152,22 @@ final millisecondText = originTime.formatWithTz(
 
 - [ ] **Step 2: 対象ファイルから表示用 DateFormat/toLocal が消えたことを確認する**
 
-Run: `rg -n 'DateFormat|toLocal\(' app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/city_detail_modal.dart`
+Run: `rg -n 'DateFormat|toLocal\(' app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/region_floating_panel.dart`
 
 Expected: API リクエストや比較以外の表示用一致なし
 
 - [ ] **Step 3: format と analyze を実行する**
 
-Run: `mise exec -- dart format app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/city_detail_modal.dart`
+Run: `mise exec -- dart format app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/region_floating_panel.dart`
 
-Run: `mise exec -- dart analyze app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/city_detail_modal.dart --fatal-infos`
+Run: `mise exec -- dart analyze app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/region_floating_panel.dart --fatal-infos`
 
 Expected: 両方成功
 
 - [ ] **Step 4: コミット・pushする**
 
 ```bash
-git add app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/city_detail_modal.dart
+git add app/lib/feature/earthquake_history app/lib/feature/intensity_history/ui/components/region_floating_panel.dart
 git commit -m "fix: 地震履歴をTokyo時刻表示に統一する"
 git push
 ```

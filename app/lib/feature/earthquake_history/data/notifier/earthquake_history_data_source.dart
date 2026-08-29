@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
@@ -12,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_re
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -93,13 +93,11 @@ class EarthquakeHistoryDataSource
     super.dispose();
   }
 
-  static final _dateFormatter = DateFormat('yyyy/MM/dd');
-
   @override
   String groupBy(EarthquakePartial value) {
     final dateTime =
         value.earthquake.originTime ?? value.earthquake.arrivalTime;
-    return dateTime != null ? _dateFormatter.format(dateTime.toLocal()) : '不明';
+    return dateTime?.formatWithTz(DateTimeFormat.yearMonthDay) ?? '不明';
   }
 
   @override
