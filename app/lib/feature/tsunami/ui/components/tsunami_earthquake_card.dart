@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state_earthquake.da
 import 'package:eqmonitor/feature/tsunami/data/model/value/depth_type.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/magnitude_type.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiEarthquakeCard extends StatelessWidget {
   const new({
@@ -28,8 +28,9 @@ class TsunamiEarthquakeCard extends StatelessWidget {
     final depthStr = hypo.depthType == DepthType.normal
         ? '深さ${hypo.depthValue}km'
         : '深さ不明';
-    final timeStr = DateFormat('yyyy/MM/dd HH:mm')
-        .format(earthquake.originTime.toLocal());
+    final timeStr = earthquake.originTime.formatWithTz(
+      DateTimeFormat.yearMonthDayHourMinute,
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

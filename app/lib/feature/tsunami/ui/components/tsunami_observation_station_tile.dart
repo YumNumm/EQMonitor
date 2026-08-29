@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_region_station.dart
 import 'package:eqmonitor/feature/tsunami/data/model/value/observation_max_height_condition.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/wave_initial.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiObservationStationTile extends StatelessWidget {
   const new({required this.station, super.key});
@@ -65,7 +65,9 @@ class TsunamiObservationStationTile extends StatelessWidget {
       return '第一波: 識別不能';
     }
     final timePart = switch (fh.arrivalTime) {
-      final arrivalTime? => DateFormat('HH:mm').format(arrivalTime.toLocal()),
+      final arrivalTime? => arrivalTime.formatWithTz(
+        DateTimeFormat.hourMinute,
+      ),
       null => '--:--',
     };
     final initialPart = switch (fh.initial) {
@@ -91,7 +93,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
     }
     final dateTime = mh.dateTime;
     if (dateTime != null) {
-      parts.add('(${DateFormat('HH:mm').format(dateTime.toLocal())})');
+      parts.add('(${dateTime.formatWithTz(DateTimeFormat.hourMinute)})');
     }
     if (mh.isRising == true) {
       parts.add('上昇中');

@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiWarningHistoryButton extends HookWidget {
   const new({required this.tsunami, super.key});
@@ -173,7 +173,9 @@ class _TimelineEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = context.designSystem.colorTheme;
-    final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(entry.time.toLocal());
+    final timeStr = entry.time.formatWithTz(
+      DateTimeFormat.yearMonthDayHourMinute,
+    );
 
     return IntrinsicHeight(
       child: Row(

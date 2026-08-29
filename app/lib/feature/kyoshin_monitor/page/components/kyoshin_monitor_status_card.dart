@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_sta
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:material_ui/material_ui.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
   const new({this.onTap, super.key});
@@ -12,13 +12,11 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latestTime = ref
-        .watch(
-          kyoshinMonitorProvider.select(
-            (v) => v.value?.lastUpdatedAt,
-          ),
-        )
-        ?.toLocal();
+    final latestTime = ref.watch(
+      kyoshinMonitorProvider.select(
+        (v) => v.value?.lastUpdatedAt,
+      ),
+    );
     final status =
         ref.watch(
           kyoshinMonitorProvider.select((v) => v.value?.status),
@@ -26,13 +24,14 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
         KyoshinMonitorStatus.stopped;
 
     final designSystem = context.designSystem;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final dateTextStyle = designSystem.typography.monoMedium.copyWith(
       letterSpacing: -0.5,
     );
 
     return Card.outlined(
-      color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
+      color: designSystem.colorTheme.surfaceContainerHigh.withValues(
+        alpha: 0.92,
+      ),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
@@ -66,9 +65,9 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                       [
                         Flexible(
                           child: Text(
-                            DateFormat(
-                              'yyyy/MM/dd HH:mm:ss',
-                            ).format(latestTime),
+                            latestTime.formatWithTz(
+                              DateTimeFormat.yearMonthDayHourMinuteSecond,
+                            ),
                             style: dateTextStyle.copyWith(
                               color: Colors.redAccent,
                             ),
@@ -78,8 +77,8 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                     _ when latestTime != null => [
                       Flexible(
                         child: Text(
-                          dateFormat.format(
-                            latestTime,
+                          latestTime.formatWithTz(
+                            DateTimeFormat.yearMonthDayHourMinuteSecond,
                           ),
                           style: dateTextStyle,
                         ),
