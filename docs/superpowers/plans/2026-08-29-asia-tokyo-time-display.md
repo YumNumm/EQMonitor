@@ -187,7 +187,7 @@ git push
 - Modify: `app/lib/feature/home/ui/component/eew/eew_card.dart`
 - Modify: `app/lib/feature/home/ui/component/shake_detection/shake_detection_card.dart`
 - Modify: `app/lib/feature/live_monitor/data/logic/live_monitor_publication_time_formatter.dart`
-- Test: `app/test/feature/live_monitor/data/logic/live_monitor_publication_time_formatter_test.dart`
+- Test: `app/test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart`
 
 **Interfaces:**
 - Consumes: Task 1 の共通 API
@@ -213,7 +213,7 @@ expect(
 
 - [ ] **Step 3: 関連テストと analyze を実行する**
 
-Run: `mise exec -- flutter test app/test/feature/live_monitor/data/logic/live_monitor_publication_time_formatter_test.dart`
+Run: `mise exec -- flutter test app/test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart`
 
 Run: `mise exec -- dart analyze app/lib/feature/eew app/lib/feature/eew_history app/lib/feature/telegram_list app/lib/feature/home/ui/component app/lib/feature/live_monitor --fatal-infos`
 
@@ -428,7 +428,7 @@ Expected: 成功
 
 - [ ] **Step 4: 対象単体テストを実行する**
 
-Run: `mise exec -- flutter test app/test/core/util/date_time_format_test.dart app/test/core/component/error/error_diagnostics_test.dart app/test/feature/live_monitor/data/logic/live_monitor_publication_time_formatter_test.dart app/test/feature/notification/data/logic/notification_delivery_log_detail_builder_test.dart`
+Run: `mise exec -- flutter test app/test/core/util/date_time_format_test.dart app/test/core/component/error/error_diagnostics_test.dart app/test/feature/live_monitor/data/live_monitor_publication_time_formatter_test.dart app/test/feature/notification/data/logic/notification_delivery_log_detail_builder_test.dart`
 
 Expected: PASS
 
