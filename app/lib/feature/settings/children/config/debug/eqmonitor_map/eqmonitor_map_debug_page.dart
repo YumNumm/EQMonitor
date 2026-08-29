@@ -274,6 +274,14 @@ final class EqmonitorMapDebugConfiguration {
     pmTilesLimits: const PmTilesV3Limits(
       maxDirectoryDepth: 3,
       rootDirectoryWindowLength: 16384,
+      // 最大6並列でも展開済みtileを96MiB以内に抑える暫定allocation policy。
+      // event sourceは実archive契約に合わせた独立の厳格値を使う。
+      maxDirectoryEncodedBytes: 1 << 20,
+      maxDirectoryDecodedBytes: 8 << 20,
+      maxDirectoryEntries: 65536,
+      maxCachedLeafDirectories: 4,
+      maxTileEncodedBytes: 4 << 20,
+      maxTileDecodedBytes: 16 << 20,
     ),
     decodeLimits: const BaseMapTileDecodeLimits(
       mvtLimits: MvtDecodeLimits(

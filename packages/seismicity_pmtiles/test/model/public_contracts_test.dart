@@ -1,3 +1,4 @@
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:seismicity_pmtiles/seismicity_pmtiles.dart';
 import 'package:test/test.dart';
 
@@ -158,6 +159,23 @@ void main() {
         'failed',
         'cancelled',
       ],
+    );
+  });
+
+  test('maps PMTiles resource failures without payload diagnostics', () {
+    const source = SeismicityPmTilesSource.asset(assetKey: 'archive.pmtiles');
+    const failure = PmTilesV3Exception.resourceLimitExceeded(
+      resource: PmTilesV3Resource.directoryDecoded,
+      limit: 8,
+      actual: 9,
+    );
+
+    final mapped = failure.toSeismicityException(source: source);
+
+    expect(mapped, isA<SeismicityPmTilesResourceLimitExceededException>());
+    expect(
+      mapped.toString(),
+      allOf(contains('directoryDecoded'), isNot(contains('payload'))),
     );
   });
 

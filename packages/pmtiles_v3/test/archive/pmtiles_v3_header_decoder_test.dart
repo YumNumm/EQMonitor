@@ -10,6 +10,12 @@ import '../support/pmtiles_v3_fixture_builder.dart';
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  maxDirectoryEncodedBytes: 1 << 20,
+  maxDirectoryDecodedBytes: 8 << 20,
+  maxDirectoryEntries: 65536,
+  maxCachedLeafDirectories: 4,
+  maxTileEncodedBytes: 4 << 20,
+  maxTileDecodedBytes: 16 << 20,
 );
 
 void main() {
@@ -186,6 +192,12 @@ void main() {
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 3,
           rootDirectoryWindowLength: PmTilesV3HeaderDecoder.headerLength,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxDirectoryEntries: 65536,
+          maxCachedLeafDirectories: 4,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
         ),
       ),
       throwsA(isA<PmTilesV3CorruptArchiveException>()),
