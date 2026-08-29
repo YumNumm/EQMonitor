@@ -62,6 +62,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_j
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_webhook_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
@@ -409,6 +410,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
           path: 'notification-delivery-log',
+        ),
+        TypedGoRoute<DebugNotificationWebhookRoute>(
+          path: 'notification-webhooks',
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
@@ -761,6 +765,16 @@ class DebugNotificationDeliveryLogRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugNotificationDeliveryLogPage();
+  }
+}
+
+class DebugNotificationWebhookRoute extends GoRouteData
+    with $DebugNotificationWebhookRoute, MaterialPageMixin {
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugNotificationWebhookPage();
   }
 }
 

@@ -400,6 +400,13 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugNotificationDeliveryLogRoute().push<void>(context),
             ),
             ListTile(
+              title: const Text('通知Webhook'),
+              subtitle: const Text('Webhookの発行・一覧表示'),
+              leading: const Icon(Icons.webhook),
+              onTap: () async =>
+                  const DebugNotificationWebhookRoute().push<void>(context),
+            ),
+            ListTile(
               title: const Text('デバイス管理'),
               subtitle: const Text('登録・再登録・削除・通知条件の設定'),
               leading: const Icon(Icons.manage_accounts_outlined),
