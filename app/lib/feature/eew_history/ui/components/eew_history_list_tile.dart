@@ -2,10 +2,10 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class EewHistoryListTile extends StatelessWidget {
   const new({
@@ -27,12 +27,11 @@ class EewHistoryListTile extends StatelessWidget {
     final isWarning = item.isWarning ?? false;
 
     final title = hypocenter?.name ?? '震源不明';
-    final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
     final time = item.originTime ?? item.reportTime;
     final depth = hypocenter?.depth;
     final magnitude = hypocenter?.magnitude;
     final subtitleParts = [
-      '${dateFormatter.format(time.toLocal())}発生',
+      '${time.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}発生',
       if (depth != null) '深さ ${depth}km',
       if (magnitude != null) 'M${magnitude.toStringAsFixed(1)}',
     ];
