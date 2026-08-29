@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/flow/debug_device_lifecycle_flow.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
@@ -1218,9 +1219,7 @@ class _NotificationHistoryTile extends StatelessWidget {
     if (parsed == null) {
       return raw;
     }
-    final local = parsed.toLocal();
-    return '${local.year}/${local.month.toString().padLeft(2, '0')}/${local.day.toString().padLeft(2, '0')} '
-        '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+    return parsed.formatWithTz(.yearMonthDayHourMinute);
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/estimation_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/first_height_timeline_entry.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/kind_timeline_entry.dart';
@@ -526,11 +527,7 @@ class _TimelineBody extends StatelessWidget {
   // ── helpers ──────────────────────────────────────────────────────────────
 
   String _fmtDt(DateTime dt) {
-    final local = dt.toLocal();
-    return '${local.month.toString().padLeft(2, '0')}/'
-        '${local.day.toString().padLeft(2, '0')} '
-        '${local.hour.toString().padLeft(2, '0')}:'
-        '${local.minute.toString().padLeft(2, '0')}';
+    return dt.formatWithTz(.monthDayHourMinute);
   }
 }
 

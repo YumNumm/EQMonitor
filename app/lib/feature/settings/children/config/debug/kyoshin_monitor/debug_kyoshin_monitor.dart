@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
@@ -85,6 +86,7 @@ class _Body extends ConsumerWidget {
                       .watch(ntpProvider)
                       .value
                       ?.updatedAt
+                      .tokyoDateTime
                       .toIso8601String(),
                   'effective_offset': ref
                       .watch(kyoshinMonitorEffectiveOffsetProvider)

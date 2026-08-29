@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
@@ -323,7 +324,10 @@ class DebugEewCardPage extends HookConsumerWidget {
                       );
                     },
                     child: Text(
-                      originTime.value?.toLocal().toString() ?? '未設定',
+                      originTime.value?.formatWithTz(
+                            .yearMonthDayHourMinuteSecondMillisecond,
+                          ) ??
+                          '未設定',
                       style: _paramValueStyle,
                     ),
                   ),
