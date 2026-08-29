@@ -15,11 +15,33 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// root directoryが収まっているべき先頭からのwindow長（byte）。
     required int rootDirectoryWindowLength,
 
-    /// `open`時にarchive全体のleaf directoryをeagerに走査し、clustered
+    /// root/leaf directoryの圧縮済みbyte列1件あたりの上限。
+    required int maxDirectoryEncodedBytes,
+
+    /// root/leaf directoryの展開済みbyte列1件あたりの上限。
+    required int maxDirectoryDecodedBytes,
+
+    /// root/leaf directory 1件から生成するentry数の上限。
+    required int maxDirectoryEntries,
+
+    /// 同時に保持するleaf directory cacheの最大件数。
+    ///
+    /// 1件あたりの展開上限と組み合わせ、archiveを長時間読む場合や先行
+    /// validationで多数のleafを辿る場合もcacheの保持量を有限化する。
+    /// 0はcacheを無効化する。
+    required int maxCachedLeafDirectories,
+
+    /// tile payloadの圧縮済みbyte列1件あたりの上限。
+    required int maxTileEncodedBytes,
+
+    /// tile payloadの展開済みbyte列1件あたりの上限。
+    required int maxTileDecodedBytes,
+
+    /// `open`時にarchive全体のleaf directoryを先行走査し、clustered
     /// ordering・件数などをarchive全体について再検証するかどうか。
     ///
     /// 既定は`false`（何もscanしない）。安全な既定値である理由は、
-    /// 「eager検証を省いても安全だから」ではなく、設計正本
+    /// 「先行検証を省いても安全だから」ではなく、設計正本
     /// (`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`)
     /// が「runtimeはheader/metadataの整合と各tile読み取り時のbounded検証を
     /// 正とし、archive全体をscanしてglobal coverageや件数を再検証すること
@@ -32,6 +54,53 @@ abstract class PmTilesV3Limits with _$PmTilesV3Limits {
     /// content配置の整合まで検証する。producer契約がclustered orderingと
     /// tile件数の一致を保証しているarchive（例: `seismicity_pmtiles`が
     /// 生成するarchive）でのみ有効化すること。
-    @Default(false) bool validateEntireArchiveEagerly,
+    @Default(false) bool validateFullArchiveOnOpen,
   }) = _PmTilesV3Limits;
+}
+
+final class PmTilesV3LimitsValidator {
+  const new();
+
+  void validate(PmTilesV3Limits limits) {
+    if (limits.maxDirectoryDepth <= 0) {
+      throw ArgumentError.value(
+        limits.maxDirectoryDepth,
+        'maxDirectoryDepth',
+        'must be greater than zero',
+      );
+    }
+    final nonNegativeValues = <({String name, int value})>[
+      (
+        name: 'rootDirectoryWindowLength',
+        value: limits.rootDirectoryWindowLength,
+      ),
+      (
+        name: 'maxDirectoryEncodedBytes',
+        value: limits.maxDirectoryEncodedBytes,
+      ),
+      (
+        name: 'maxDirectoryDecodedBytes',
+        value: limits.maxDirectoryDecodedBytes,
+      ),
+      (
+        name: 'maxDirectoryEntries',
+        value: limits.maxDirectoryEntries,
+      ),
+      (
+        name: 'maxCachedLeafDirectories',
+        value: limits.maxCachedLeafDirectories,
+      ),
+      (name: 'maxTileEncodedBytes', value: limits.maxTileEncodedBytes),
+      (name: 'maxTileDecodedBytes', value: limits.maxTileDecodedBytes),
+    ];
+    for (final field in nonNegativeValues) {
+      if (field.value < 0) {
+        throw ArgumentError.value(
+          field.value,
+          field.name,
+          'must not be negative',
+        );
+      }
+    }
+  }
 }

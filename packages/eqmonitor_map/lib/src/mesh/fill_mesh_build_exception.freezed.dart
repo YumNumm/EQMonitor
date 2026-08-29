@@ -87,12 +87,14 @@ extension FillMeshBuildExceptionPatterns on FillMeshBuildException {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FillMeshDegenerateRingException value)?  degenerateRing,TResult Function( FillMeshHoleBeforeExteriorException value)?  holeBeforeExterior,TResult Function( FillMeshLimitExceededException value)?  limitExceeded,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FillMeshDegenerateRingException value)?  degenerateRing,TResult Function( FillMeshHoleBeforeExteriorException value)?  holeBeforeExterior,TResult Function( FillMeshSelfIntersectionException value)?  selfIntersection,TResult Function( FillMeshInvalidTopologyException value)?  invalidTopology,TResult Function( FillMeshLimitExceededException value)?  limitExceeded,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException() when degenerateRing != null:
 return degenerateRing(_that);case FillMeshHoleBeforeExteriorException() when holeBeforeExterior != null:
-return holeBeforeExterior(_that);case FillMeshLimitExceededException() when limitExceeded != null:
+return holeBeforeExterior(_that);case FillMeshSelfIntersectionException() when selfIntersection != null:
+return selfIntersection(_that);case FillMeshInvalidTopologyException() when invalidTopology != null:
+return invalidTopology(_that);case FillMeshLimitExceededException() when limitExceeded != null:
 return limitExceeded(_that);case _:
   return orElse();
 
@@ -111,12 +113,14 @@ return limitExceeded(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FillMeshDegenerateRingException value)  degenerateRing,required TResult Function( FillMeshHoleBeforeExteriorException value)  holeBeforeExterior,required TResult Function( FillMeshLimitExceededException value)  limitExceeded,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FillMeshDegenerateRingException value)  degenerateRing,required TResult Function( FillMeshHoleBeforeExteriorException value)  holeBeforeExterior,required TResult Function( FillMeshSelfIntersectionException value)  selfIntersection,required TResult Function( FillMeshInvalidTopologyException value)  invalidTopology,required TResult Function( FillMeshLimitExceededException value)  limitExceeded,}){
 final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException():
 return degenerateRing(_that);case FillMeshHoleBeforeExteriorException():
-return holeBeforeExterior(_that);case FillMeshLimitExceededException():
+return holeBeforeExterior(_that);case FillMeshSelfIntersectionException():
+return selfIntersection(_that);case FillMeshInvalidTopologyException():
+return invalidTopology(_that);case FillMeshLimitExceededException():
 return limitExceeded(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -131,12 +135,14 @@ return limitExceeded(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FillMeshDegenerateRingException value)?  degenerateRing,TResult? Function( FillMeshHoleBeforeExteriorException value)?  holeBeforeExterior,TResult? Function( FillMeshLimitExceededException value)?  limitExceeded,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FillMeshDegenerateRingException value)?  degenerateRing,TResult? Function( FillMeshHoleBeforeExteriorException value)?  holeBeforeExterior,TResult? Function( FillMeshSelfIntersectionException value)?  selfIntersection,TResult? Function( FillMeshInvalidTopologyException value)?  invalidTopology,TResult? Function( FillMeshLimitExceededException value)?  limitExceeded,}){
 final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException() when degenerateRing != null:
 return degenerateRing(_that);case FillMeshHoleBeforeExteriorException() when holeBeforeExterior != null:
-return holeBeforeExterior(_that);case FillMeshLimitExceededException() when limitExceeded != null:
+return holeBeforeExterior(_that);case FillMeshSelfIntersectionException() when selfIntersection != null:
+return selfIntersection(_that);case FillMeshInvalidTopologyException() when invalidTopology != null:
+return invalidTopology(_that);case FillMeshLimitExceededException() when limitExceeded != null:
 return limitExceeded(_that);case _:
   return null;
 
@@ -154,11 +160,13 @@ return limitExceeded(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  degenerateRing,TResult Function( String reason)?  holeBeforeExterior,TResult Function( String reason)?  limitExceeded,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String reason)?  degenerateRing,TResult Function( String reason)?  holeBeforeExterior,TResult Function( String reason)?  selfIntersection,TResult Function( String reason)?  invalidTopology,TResult Function( String reason)?  limitExceeded,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException() when degenerateRing != null:
 return degenerateRing(_that.reason);case FillMeshHoleBeforeExteriorException() when holeBeforeExterior != null:
-return holeBeforeExterior(_that.reason);case FillMeshLimitExceededException() when limitExceeded != null:
+return holeBeforeExterior(_that.reason);case FillMeshSelfIntersectionException() when selfIntersection != null:
+return selfIntersection(_that.reason);case FillMeshInvalidTopologyException() when invalidTopology != null:
+return invalidTopology(_that.reason);case FillMeshLimitExceededException() when limitExceeded != null:
 return limitExceeded(_that.reason);case _:
   return orElse();
 
@@ -177,11 +185,13 @@ return limitExceeded(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  degenerateRing,required TResult Function( String reason)  holeBeforeExterior,required TResult Function( String reason)  limitExceeded,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String reason)  degenerateRing,required TResult Function( String reason)  holeBeforeExterior,required TResult Function( String reason)  selfIntersection,required TResult Function( String reason)  invalidTopology,required TResult Function( String reason)  limitExceeded,}) {final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException():
 return degenerateRing(_that.reason);case FillMeshHoleBeforeExteriorException():
-return holeBeforeExterior(_that.reason);case FillMeshLimitExceededException():
+return holeBeforeExterior(_that.reason);case FillMeshSelfIntersectionException():
+return selfIntersection(_that.reason);case FillMeshInvalidTopologyException():
+return invalidTopology(_that.reason);case FillMeshLimitExceededException():
 return limitExceeded(_that.reason);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -196,11 +206,13 @@ return limitExceeded(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  degenerateRing,TResult? Function( String reason)?  holeBeforeExterior,TResult? Function( String reason)?  limitExceeded,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String reason)?  degenerateRing,TResult? Function( String reason)?  holeBeforeExterior,TResult? Function( String reason)?  selfIntersection,TResult? Function( String reason)?  invalidTopology,TResult? Function( String reason)?  limitExceeded,}) {final _that = this;
 switch (_that) {
 case FillMeshDegenerateRingException() when degenerateRing != null:
 return degenerateRing(_that.reason);case FillMeshHoleBeforeExteriorException() when holeBeforeExterior != null:
-return holeBeforeExterior(_that.reason);case FillMeshLimitExceededException() when limitExceeded != null:
+return holeBeforeExterior(_that.reason);case FillMeshSelfIntersectionException() when selfIntersection != null:
+return selfIntersection(_that.reason);case FillMeshInvalidTopologyException() when invalidTopology != null:
+return invalidTopology(_that.reason);case FillMeshLimitExceededException() when limitExceeded != null:
 return limitExceeded(_that.reason);case _:
   return null;
 
@@ -333,6 +345,138 @@ class _$FillMeshHoleBeforeExteriorExceptionCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
   return _then(FillMeshHoleBeforeExteriorException(
+reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class FillMeshSelfIntersectionException implements FillMeshBuildException {
+  const FillMeshSelfIntersectionException({required this.reason});
+
+
+@override final  String reason;
+
+/// Create a copy of FillMeshBuildException
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FillMeshSelfIntersectionExceptionCopyWith<FillMeshSelfIntersectionException> get copyWith => _$FillMeshSelfIntersectionExceptionCopyWithImpl<FillMeshSelfIntersectionException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FillMeshSelfIntersectionException&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,reason);
+
+@override
+String toString() {
+  return 'FillMeshBuildException.selfIntersection(reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FillMeshSelfIntersectionExceptionCopyWith<$Res> implements $FillMeshBuildExceptionCopyWith<$Res> {
+  factory $FillMeshSelfIntersectionExceptionCopyWith(FillMeshSelfIntersectionException value, $Res Function(FillMeshSelfIntersectionException) _then) = _$FillMeshSelfIntersectionExceptionCopyWithImpl;
+@override @useResult
+$Res call({
+ String reason
+});
+
+
+
+
+}
+/// @nodoc
+class _$FillMeshSelfIntersectionExceptionCopyWithImpl<$Res>
+    implements $FillMeshSelfIntersectionExceptionCopyWith<$Res> {
+  _$FillMeshSelfIntersectionExceptionCopyWithImpl(this._self, this._then);
+
+  final FillMeshSelfIntersectionException _self;
+  final $Res Function(FillMeshSelfIntersectionException) _then;
+
+/// Create a copy of FillMeshBuildException
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
+  return _then(FillMeshSelfIntersectionException(
+reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class FillMeshInvalidTopologyException implements FillMeshBuildException {
+  const FillMeshInvalidTopologyException({required this.reason});
+
+
+@override final  String reason;
+
+/// Create a copy of FillMeshBuildException
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FillMeshInvalidTopologyExceptionCopyWith<FillMeshInvalidTopologyException> get copyWith => _$FillMeshInvalidTopologyExceptionCopyWithImpl<FillMeshInvalidTopologyException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FillMeshInvalidTopologyException&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,reason);
+
+@override
+String toString() {
+  return 'FillMeshBuildException.invalidTopology(reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FillMeshInvalidTopologyExceptionCopyWith<$Res> implements $FillMeshBuildExceptionCopyWith<$Res> {
+  factory $FillMeshInvalidTopologyExceptionCopyWith(FillMeshInvalidTopologyException value, $Res Function(FillMeshInvalidTopologyException) _then) = _$FillMeshInvalidTopologyExceptionCopyWithImpl;
+@override @useResult
+$Res call({
+ String reason
+});
+
+
+
+
+}
+/// @nodoc
+class _$FillMeshInvalidTopologyExceptionCopyWithImpl<$Res>
+    implements $FillMeshInvalidTopologyExceptionCopyWith<$Res> {
+  _$FillMeshInvalidTopologyExceptionCopyWithImpl(this._self, this._then);
+
+  final FillMeshInvalidTopologyException _self;
+  final $Res Function(FillMeshInvalidTopologyException) _then;
+
+/// Create a copy of FillMeshBuildException
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
+  return _then(FillMeshInvalidTopologyException(
 reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String,
   ));

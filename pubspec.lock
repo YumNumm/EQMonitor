@@ -433,6 +433,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  dart_jsonwebtoken:
+    dependency: transitive
+    description:
+      name: dart_jsonwebtoken
+      sha256: ad84e60181696513d04d5f2078e0bbc20365b911f46f647797317414bdc88fbe
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.1"
   dart_style:
     dependency: "direct overridden"
     description:
@@ -1061,15 +1069,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  flutter_udid:
-    dependency: transitive
-    description:
-      path: "."
-      ref: d8f72a1e9e09a9f76f4e5051f167b31c5e2af52e
-      resolved-ref: d8f72a1e9e09a9f76f4e5051f167b31c5e2af52e
-      url: "https://github.com/YumNumm/flutter_udid.git"
-    source: git
-    version: "4.1.2"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1227,6 +1226,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  google_identity_services_web:
+    dependency: transitive
+    description:
+      name: google_identity_services_web
+      sha256: "5d187c46dc59e02646e10fe82665fc3884a9b71bc1c90c2b8b749316d33ee454"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+1"
   google_mobile_ads:
     dependency: transitive
     description:
@@ -1235,6 +1242,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.1.0"
+  google_sign_in:
+    dependency: transitive
+    description:
+      name: google_sign_in
+      sha256: "521031b65853b4409b8213c0387d57edaad7e2a949ce6dea0d8b2afc9cb29763"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.0"
+  google_sign_in_android:
+    dependency: transitive
+    description:
+      name: google_sign_in_android
+      sha256: "57782125965ca87b03d42a147d40b046f1fd6a09141a58913e1b86671a5ef22e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.16"
+  google_sign_in_ios:
+    dependency: transitive
+    description:
+      name: google_sign_in_ios
+      sha256: ac1e4c1205267cb7999d1d81333fccffdfda29e853f434bbaf71525498bb6950
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.0"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      sha256: "7f59208c42b415a3cca203571128d6f84f885fead2d5b53eb65a9e27f2965bb5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      sha256: d473003eeca892f96a01a64fc803378be765071cb0c265ee872c7f8683245d14
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   graphs:
     dependency: transitive
     description:
@@ -1503,8 +1550,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1512,8 +1559,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_android"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1521,8 +1568,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_ios"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1530,8 +1577,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_platform_interface"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1539,8 +1586,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_web"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1548,8 +1595,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_webview"
-      ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
-      resolved-ref: e3ba6c34aa0b375fa8868c0c420db1fdf64a4f25
+      ref: "7080ae5"
+      resolved-ref: "7080ae5676cae4fd6a722ee67a55f64488e20940"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1729,6 +1776,62 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  passkeys:
+    dependency: transitive
+    description:
+      name: passkeys
+      sha256: "1596fa3940c458fcd0062ce222d7fec69d9b70187a4b9e67d585e0386f73e18c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.22.3"
+  passkeys_android:
+    dependency: transitive
+    description:
+      name: passkeys_android
+      sha256: eac3af9fea5d56c7091c07bde29fe5a11269de33d9cb856e03975773aab485c4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.13.1"
+  passkeys_darwin:
+    dependency: transitive
+    description:
+      name: passkeys_darwin
+      sha256: "51f6c1ec0a0631002a3f306f74e1d029f3ac8c37279b8cce798b9a4f5c9fae50"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3+3"
+  passkeys_doctor:
+    dependency: transitive
+    description:
+      name: passkeys_doctor
+      sha256: e8c9285f36ef0161c865e268f4f2873b9d5826fcf8fb6b418bcf28243483463e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
+  passkeys_platform_interface:
+    dependency: transitive
+    description:
+      name: passkeys_platform_interface
+      sha256: e810520c7b79dca629fdc266958564eedd77dc85a955f5e94430dfccb92eef68
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.9.0"
+  passkeys_web:
+    dependency: transitive
+    description:
+      name: passkeys_web
+      sha256: f6d6818d141a3f07f8d7542730a572f22a1586d05ec62e33c33086202ffdb9d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.0"
+  passkeys_windows:
+    dependency: transitive
+    description:
+      name: passkeys_windows
+      sha256: c2f8551d9ae773ab7f6c0a9d4632ea7d63dd8832ed0873e90d2d6987e650247a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3+2"
   path:
     dependency: transitive
     description:
@@ -1905,6 +2008,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.10.3"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "92aa3841d083cc4b0f4709b5c74fd6409a3e6ba833ffc7dc6a8fee096366acf5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   pool:
     dependency: transitive
     description:
@@ -2214,6 +2325,30 @@ packages:
     description:
       name: shelf_web_socket
       sha256: "3632775c8e90d6c9712f883e633716432a27758216dfb61bd86a8321c0580925"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  sign_in_with_apple:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple
+      sha256: d284f8e235ab0c5be09a1e9146466912bae8f15f0bd5eb3c4cb999b57cd5c3f9
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.0"
+  sign_in_with_apple_platform_interface:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_platform_interface
+      sha256: "981bca52cf3bb9c3ad7ef44aace2d543e5c468bb713fd8dda4275ff76dfa6659"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  sign_in_with_apple_web:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_web
+      sha256: f316400827f52cafcf50d00e1a2e8a0abc534ca1264e856a81c5f06bd5b10fed
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"

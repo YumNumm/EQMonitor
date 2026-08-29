@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:extensions/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -54,15 +55,17 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final hypocenter = earthquake.hypocenter;
     final intensity = earthquake.intensity;
     final maxIntensity = intensity?.maxIntensity;
+    final maxIntensityClass = intensity?.maxIntensityClass;
+    final maxIntensityLabel = maxIntensityClass?.label ?? maxIntensity?.label;
 
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
 
-    final title = switch ((hypoName, hypoDetailName, maxIntensity)) {
+    final title = switch ((hypoName, hypoDetailName, maxIntensityLabel)) {
       (final String hypoName, final String hypoDetailName, _) =>
         '$hypoName($hypoDetailName)'.replaceAll('、', ' '),
       (final String hypoName, _, _) => hypoName,
-      (_, _, final JmaIntensity maxInt) => '最大震度${maxInt.label}を観測',
+      (_, _, final String label) => '最大震度${label}を観測',
       _ => '',
     };
 
@@ -83,8 +86,9 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           null => '',
         };
 
-    final maxIntensityColor = maxIntensity != null
-        ? intensityColors.fromJmaIntensity(maxIntensity).background
+    final colorIntensity = maxIntensityClass?.colorJmaIntensity ?? maxIntensity;
+    final maxIntensityColor = colorIntensity != null
+        ? intensityColors.fromJmaIntensity(colorIntensity).background
         : null;
 
     final tileBaseColor =
@@ -129,20 +133,30 @@ class EarthquakeHistoryListTile extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4),
               child: Consumer(
                 builder: (context, ref, _) {
+                  final (label, observedIntensity) = switch (item) {
+                    EarthquakePartialPrefecture(:final prefectureIntensity) => (
+                      '都道府県の観測震度',
+                      prefectureIntensity,
+                    ),
+                    EarthquakePartialRegion(:final regionIntensity) => (
+                      '地域の観測震度',
+                      regionIntensity,
+                    ),
+                    EarthquakePartialCity(:final cityIntensity) => (
+                      '市区町村の観測震度',
+                      cityIntensity,
+                    ),
+                    EarthquakePartialStation(:final stationIntensity) => (
+                      '観測点の観測震度',
+                      stationIntensity,
+                    ),
+                    EarthquakePartialNormal() => throw StateError(
+                      'EarthquakePartialNormal is not supported',
+                    ),
+                  };
                   return _AreaIntensityChip(
-                    intensity: switch (item) {
-                      EarthquakePartialPrefecture(:final prefectureIntensity) =>
-                        prefectureIntensity,
-                      EarthquakePartialRegion(:final regionIntensity) =>
-                        regionIntensity,
-                      EarthquakePartialCity(:final cityIntensity) =>
-                        cityIntensity,
-                      EarthquakePartialStation(:final stationIntensity) =>
-                        stationIntensity,
-                      EarthquakePartialNormal() => throw StateError(
-                        'EarthquakePartialNormal is not supported',
-                      ),
-                    },
+                    label: label,
+                    intensity: observedIntensity,
                     intensityColors: intensityColors,
                   );
                 },
@@ -155,6 +169,11 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           type: earthquake.earthquakeType,
           size: intensityIconSize,
         ),
+        EarthquakeType.normal when maxIntensityClass != null =>
+          ShindoDbIntensityClassIcon(
+            intensityClass: maxIntensityClass,
+            size: intensityIconSize,
+          ),
         EarthquakeType.normal when maxIntensity != null => JmaIntensityIcon(
           intensity: maxIntensity,
           type: .filled,
@@ -170,10 +189,15 @@ class EarthquakeHistoryListTile extends StatelessWidget {
 }
 
 /// 検索対象地域の震度情報を表示する小さなチップ。
-/// 「(地域名) 震度N」を、その震度の色で塗りつぶして表示する。
+/// 対象範囲の観測震度を、その震度の色で塗りつぶして表示する。
 class _AreaIntensityChip extends StatelessWidget {
-  const new({required this.intensity, required this.intensityColors});
+  const new({
+    required this.label,
+    required this.intensity,
+    required this.intensityColors,
+  });
 
+  final String label;
   final JmaIntensity intensity;
   final IntensityColors intensityColors;
 
@@ -188,7 +212,7 @@ class _AreaIntensityChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        '震度${intensity.label}',
+        label + ' ' + intensity.label,
         style: TextStyle(
           color: entry.resolvedForeground,
           fontWeight: FontWeight.bold,

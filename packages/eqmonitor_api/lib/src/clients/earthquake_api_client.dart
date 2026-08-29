@@ -11,9 +11,11 @@ import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
 import '../models/earthquake_type.dart';
+import '../models/include_incomplete.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
+import '../models/intensity_search_sort_by.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
 import '../models/jma_lpgm_intensity.dart';
@@ -54,9 +56,12 @@ abstract class EarthquakeApiClient {
   /// [longitudeGte] - -180~180 の実数(string).
   ///
   /// [longitudeLte] - -180~180 の実数(string).
+  ///
+  /// [includeIncomplete] - VXSE53未発表のまま10分以上経過したVXSE51/VXSE52を含める.
   @GET(EarthquakeApiClientUrls.getV2Earthquake)
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
+    @Query('includeIncomplete') IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -87,11 +92,11 @@ abstract class EarthquakeApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 市区町村ごとの観測史上最大震度一覧（全国）。事前集計済みのため都道府県での絞り込みや status 指定はありません。response_at は集計を最後に更新した時刻で、取得できなかった場合は null になります（items は返ります）。観測実績のない市区町村は items に含まれません。
+  /// 市区町村ごとの観測史上最大震度一覧（全国）。事前集計済みのため都道府県での絞り込みや status 指定はありません。aggregated_at は集計を最後に更新した時刻で、取得できなかった場合は null になります（items は返ります）。観測実績のない市区町村は items に含まれません。
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityMax)
   Future<HttpResponse<CityMaxIntensityResponse>> getV2EarthquakeIntensityCityMax();
 
-  /// 震度細分区域コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  /// 震度細分区域コードから地震を検索。sortBy=intensityは指定地域の震度、sortBy=max_intensityは地震全体の最大観測震度でソートします。intensityGte/Lteは指定地域の震度、maxIntensityGte/Lteは地震全体の最大観測震度を絞り込みます。cursorを渡すときはsortBy/sortOrderを1ページ目と同じ値にしてください（異なる場合は400）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///
@@ -116,11 +121,14 @@ abstract class EarthquakeApiClient {
   /// [longitudeGte] - -180~180 の実数(string).
   ///
   /// [longitudeLte] - -180~180 の実数(string).
+  ///
+  /// [includeIncomplete] - VXSE53未発表のまま10分以上経過したVXSE51/VXSE52を含める.
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityRegionCode)
   Future<HttpResponse<IntensityRegionSearchResponse>> getV2EarthquakeIntensityRegionCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('includeIncomplete') IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    @Query('sortBy') IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
@@ -143,9 +151,11 @@ abstract class EarthquakeApiClient {
     @Query('latitudeLte') String? latitudeLte,
     @Query('longitudeGte') String? longitudeGte,
     @Query('longitudeLte') String? longitudeLte,
+    @Query('maxIntensityLte') JmaIntensity? maxIntensityLte,
+    @Query('maxIntensityGte') JmaIntensity? maxIntensityGte,
   });
 
-  /// 都道府県コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  /// 都道府県コードから地震を検索。sortBy=intensityは指定都道府県の震度、sortBy=max_intensityは地震全体の最大観測震度でソートします。intensityGte/Lteは指定都道府県の震度、maxIntensityGte/Lteは地震全体の最大観測震度を絞り込みます。cursorを渡すときはsortBy/sortOrderを1ページ目と同じ値にしてください（異なる場合は400）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///
@@ -170,11 +180,14 @@ abstract class EarthquakeApiClient {
   /// [longitudeGte] - -180~180 の実数(string).
   ///
   /// [longitudeLte] - -180~180 の実数(string).
+  ///
+  /// [includeIncomplete] - VXSE53未発表のまま10分以上経過したVXSE51/VXSE52を含める.
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCode)
   Future<HttpResponse<IntensityPrefectureSearchResponse>> getV2EarthquakeIntensityPrefectureCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('includeIncomplete') IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    @Query('sortBy') IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
@@ -197,9 +210,11 @@ abstract class EarthquakeApiClient {
     @Query('latitudeLte') String? latitudeLte,
     @Query('longitudeGte') String? longitudeGte,
     @Query('longitudeLte') String? longitudeLte,
+    @Query('maxIntensityLte') JmaIntensity? maxIntensityLte,
+    @Query('maxIntensityGte') JmaIntensity? maxIntensityGte,
   });
 
-  /// 市区町村コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  /// 市区町村コードから地震を検索。sortBy=intensityは指定市区町村の震度、sortBy=max_intensityは地震全体の最大観測震度でソートします。intensityGte/Lteは指定市区町村の震度、maxIntensityGte/Lteは地震全体の最大観測震度を絞り込みます。cursorを渡すときはsortBy/sortOrderを1ページ目と同じ値にしてください（異なる場合は400）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///
@@ -224,11 +239,14 @@ abstract class EarthquakeApiClient {
   /// [longitudeGte] - -180~180 の実数(string).
   ///
   /// [longitudeLte] - -180~180 の実数(string).
+  ///
+  /// [includeIncomplete] - VXSE53未発表のまま10分以上経過したVXSE51/VXSE52を含める.
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityCode)
   Future<HttpResponse<IntensityCitySearchResponse>> getV2EarthquakeIntensityCityCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('includeIncomplete') IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    @Query('sortBy') IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
@@ -251,9 +269,11 @@ abstract class EarthquakeApiClient {
     @Query('latitudeLte') String? latitudeLte,
     @Query('longitudeGte') String? longitudeGte,
     @Query('longitudeLte') String? longitudeLte,
+    @Query('maxIntensityLte') JmaIntensity? maxIntensityLte,
+    @Query('maxIntensityGte') JmaIntensity? maxIntensityGte,
   });
 
-  /// 観測点コードから地震を検索。ソートはevent_idのみ対応。sortByパラメータは無視されます。.
+  /// 観測点コードから地震を検索。sortBy=intensityは指定観測点の震度、sortBy=max_intensityは地震全体の最大観測震度でソートします。intensityGte/Lteは指定観測点の震度、maxIntensityGte/Lteは地震全体の最大観測震度を絞り込みます。cursorを渡すときはsortBy/sortOrderを1ページ目と同じ値にしてください（異なる場合は400）。.
   ///
   /// [limit] - 1~100 の整数(string).
   ///
@@ -278,11 +298,14 @@ abstract class EarthquakeApiClient {
   /// [longitudeGte] - -180~180 の実数(string).
   ///
   /// [longitudeLte] - -180~180 の実数(string).
+  ///
+  /// [includeIncomplete] - VXSE53未発表のまま10分以上経過したVXSE51/VXSE52を含める.
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityStationCode)
   Future<HttpResponse<IntensityStationSearchResponse>> getV2EarthquakeIntensityStationCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
-    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('includeIncomplete') IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    @Query('sortBy') IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
@@ -305,6 +328,8 @@ abstract class EarthquakeApiClient {
     @Query('latitudeLte') String? latitudeLte,
     @Query('longitudeGte') String? longitudeGte,
     @Query('longitudeLte') String? longitudeLte,
+    @Query('maxIntensityLte') JmaIntensity? maxIntensityLte,
+    @Query('maxIntensityGte') JmaIntensity? maxIntensityGte,
   });
 }
 

@@ -121,6 +121,14 @@ class EqmonitorMapDebugSourceResolver {
       limits: const PmTilesV3Limits(
         maxDirectoryDepth: 3,
         rootDirectoryWindowLength: 16384,
+        // 実archiveの分布値ではなく、未知の既存base mapとの互換性を保つ
+        // 暫定worst-case allocation policy。event sourceは別の厳格値を持つ。
+        maxDirectoryEncodedBytes: 1 << 20,
+        maxDirectoryDecodedBytes: 8 << 20,
+        maxDirectoryEntries: 65536,
+        maxCachedLeafDirectories: 4,
+        maxTileEncodedBytes: 4 << 20,
+        maxTileDecodedBytes: 16 << 20,
       ),
     );
     try {

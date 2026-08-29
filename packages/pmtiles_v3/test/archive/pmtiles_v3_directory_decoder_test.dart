@@ -42,6 +42,9 @@ void main() {
     final entries = decoder.decode(
       bytes: bytes,
       compression: PmTilesV3CompressionDecoder.none,
+      maxEncodedBytes: 1 << 20,
+      maxDecodedBytes: 8 << 20,
+      maxEntries: 65536,
     );
 
     expect(entries.map((entry) => entry.tileId), [5, 42, 69]);
@@ -56,12 +59,35 @@ void main() {
     final entries = decoder.decode(
       bytes: compressed,
       compression: PmTilesV3CompressionDecoder.gzipCompression,
+      maxEncodedBytes: 1 << 20,
+      maxDecodedBytes: 8 << 20,
+      maxEntries: 65536,
     );
 
     expect(entries.single.tileId, 5);
     expect(entries.single.runLength, 3);
     expect(entries.single.length, 4);
     expect(entries.single.offset, 7);
+  });
+
+  test('rejects an entry count over the caller limit before allocation', () {
+    expect(
+      () => decoder.decode(
+        bytes: Uint8List.fromList([2]),
+        compression: PmTilesV3CompressionDecoder.none,
+        maxEncodedBytes: 1 << 20,
+        maxDecodedBytes: 8 << 20,
+        maxEntries: 1,
+      ),
+      throwsA(
+        isA<PmTilesV3ResourceLimitExceededException>().having(
+          (exception) =>
+              (exception.resource, exception.limit, exception.actual),
+          'resource limit and actual',
+          (PmTilesV3Resource.directoryEntries, 1, 2),
+        ),
+      ),
+    );
   });
 
   test('rejects empty, truncated, overflowing, and non-canonical varints', () {
@@ -87,6 +113,9 @@ void main() {
         () => decoder.decode(
           bytes: Uint8List.fromList(bytes),
           compression: PmTilesV3CompressionDecoder.none,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
+          maxEntries: 65536,
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );
@@ -108,6 +137,9 @@ void main() {
           () => decoder.decode(
             bytes: Uint8List.fromList(bytes),
             compression: PmTilesV3CompressionDecoder.none,
+            maxEncodedBytes: 1 << 20,
+            maxDecodedBytes: 8 << 20,
+            maxEntries: 65536,
           ),
           throwsA(isA<PmTilesV3CorruptArchiveException>()),
         );
@@ -133,6 +165,9 @@ void main() {
       () => decoder.decode(
         bytes: overlapping,
         compression: PmTilesV3CompressionDecoder.none,
+        maxEncodedBytes: 1 << 20,
+        maxDecodedBytes: 8 << 20,
+        maxEntries: 65536,
       ),
       throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
@@ -141,6 +176,9 @@ void main() {
         () => decoder.decode(
           bytes: Uint8List(1),
           compression: compression,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
+          maxEntries: 65536,
         ),
         throwsA(isA<PmTilesV3UnsupportedCompressionException>()),
       );
@@ -152,6 +190,9 @@ void main() {
       () => decoder.decode(
         bytes: Uint8List.fromList([1, 2, 3]),
         compression: PmTilesV3CompressionDecoder.gzipCompression,
+        maxEncodedBytes: 1 << 20,
+        maxDecodedBytes: 8 << 20,
+        maxEntries: 65536,
       ),
       throwsA(isA<PmTilesV3CorruptArchiveException>()),
     );
@@ -197,6 +238,9 @@ void main() {
         () => decoder.decode(
           bytes: bytes,
           compression: PmTilesV3CompressionDecoder.none,
+          maxEncodedBytes: 1 << 20,
+          maxDecodedBytes: 8 << 20,
+          maxEntries: 65536,
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
       );

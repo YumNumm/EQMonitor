@@ -25,6 +25,16 @@ sealed class FillMeshBuildException
     required String reason,
   }) = FillMeshHoleBeforeExteriorException;
 
+  /// 同一ringの非隣接辺、または異なるringの辺が接触・交差・重複する場合。
+  const factory selfIntersection({
+    required String reason,
+  }) = FillMeshSelfIntersectionException;
+
+  /// ringの包含関係がPolygon topologyとして不正な場合。
+  const factory invalidTopology({
+    required String reason,
+  }) = FillMeshInvalidTopologyException;
+
   /// 呼び出し側が渡した`FillMeshBuilderLimits`を超過した場合
   /// (穴数超過、feature内頂点数超過、1つのfeatureがsegment容量に収まらない
   /// など)。

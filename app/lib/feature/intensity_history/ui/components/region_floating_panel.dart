@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
@@ -10,12 +11,12 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_inten
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップの上部フローティングパネル。
 ///
-/// - 未選択: 「全国」と集計の最終更新時刻を表示。
+/// - 未選択: 「市区町村別 最大観測震度」と集計の最終更新時刻を表示。
 /// - 市区町村選択中: 都道府県名・市区町村名・最大震度バッジと最終更新時刻を表示。
 class RegionFloatingPanel extends ConsumerWidget {
   const new({super.key});
@@ -39,24 +40,27 @@ class RegionFloatingPanel extends ConsumerWidget {
   }
 }
 
-/// 集計の最終更新時刻。`response_at` が取得できなかった場合は何も出さない。
+/// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
 class _RefreshedAtLabel extends StatelessWidget {
-  const new({required this.responseAt});
+  const new({
+    required this.aggregatedAt,
+  });
 
-  final DateTime? responseAt;
+  final DateTime? aggregatedAt;
 
   @override
   Widget build(BuildContext context) {
-    final responseAt = this.responseAt;
-    if (responseAt == null) {
+    final aggregatedAt = this.aggregatedAt;
+    if (aggregatedAt == null) {
       return const SizedBox.shrink();
     }
     return Text(
-      '最終更新 ${responseAt.formatWithTz(DateTimeFormat.monthDayHourMinute)}',
+      '${aggregatedAt.formatWithTz(.monthDayHourMinute)} 更新',
       maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      overflow: .ellipsis,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
         color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.7),
+        fontFamily: FontFamily.googleSansCode,
       ),
     );
   }
@@ -69,7 +73,7 @@ class _NationwidePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final typography = context.designSystem.typography;
 
     return Card(
       color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
@@ -80,13 +84,23 @@ class _NationwidePanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              '全国',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '市区町村別 ',
+                    style: typography.bodySmall.copyWith(
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '最大観測震度',
+                    style: typography.titleSmall,
+                  ),
+                ],
               ),
             ),
-            _RefreshedAtLabel(responseAt: cityMaxIntensity?.responseAt),
+            _RefreshedAtLabel(aggregatedAt: cityMaxIntensity?.aggregatedAt),
           ],
         ),
       ),
@@ -174,7 +188,7 @@ class _CityPanel extends StatelessWidget {
                           ),
                         ),
                         _RefreshedAtLabel(
-                          responseAt: cityMaxIntensity?.responseAt,
+                          aggregatedAt: cityMaxIntensity?.aggregatedAt,
                         ),
                       ],
                     ),

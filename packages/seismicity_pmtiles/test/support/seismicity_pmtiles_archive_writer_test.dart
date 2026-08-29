@@ -19,6 +19,12 @@ void main() {
   const limits = PmTilesV3Limits(
     maxDirectoryDepth: 3,
     rootDirectoryWindowLength: 16384,
+    maxDirectoryEncodedBytes: 1 << 20,
+    maxDirectoryDecodedBytes: 8 << 20,
+    maxDirectoryEntries: 65536,
+    maxCachedLeafDirectories: 4,
+    maxTileEncodedBytes: 4 << 20,
+    maxTileDecodedBytes: 16 << 20,
   );
 
   final payloads = [
@@ -100,6 +106,9 @@ void main() {
     final entries = directoryDecoder.decode(
       bytes: Uint8List.fromList(root),
       compression: PmTilesV3CompressionDecoder.none,
+      maxEncodedBytes: limits.maxDirectoryEncodedBytes,
+      maxDecodedBytes: limits.maxDirectoryDecodedBytes,
+      maxEntries: limits.maxDirectoryEntries,
     );
     expect(entries.map((entry) => entry.tileId), [1, 4]);
     expect(

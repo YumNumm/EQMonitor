@@ -34,6 +34,12 @@ const _mvt = MvtFixtureBuilder();
 const _archiveLimits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
+  maxDirectoryEncodedBytes: 1 << 20,
+  maxDirectoryDecodedBytes: 8 << 20,
+  maxDirectoryEntries: 65536,
+  maxCachedLeafDirectories: 4,
+  maxTileEncodedBytes: 4 << 20,
+  maxTileDecodedBytes: 16 << 20,
 );
 
 const _decodeLimits = BaseMapTileDecodeLimits(
@@ -44,11 +50,16 @@ const _decodeLimits = BaseMapTileDecodeLimits(
     maxVerticesPerRing: 256,
     maxCommandsPerFeature: 1024,
     maxLayerNameBytes: 64,
+    maxKeysPerLayer: 64,
+    maxValuesPerLayer: 64,
+    maxTagsPerFeature: 64,
+    maxPropertyStringBytes: 64,
   ),
   fillLimits: FillMeshBuilderLimits(
     maxHolesPerPolygon: 16,
     maxVerticesPerFeature: 4096,
     maxVerticesPerSegment: 65536,
+    maxIntersectionChecks: 1 << 16,
   ),
   lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 65536),
   lineMiterLimit: 4,

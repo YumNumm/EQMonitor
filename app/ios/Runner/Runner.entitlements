@@ -7,6 +7,12 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:deeplink.eqmonitor.app</string>
+		<string>webcredentials:dev.v2.api.eqmonitor.app</string>
+		<string>webcredentials:eqmonitor.app</string>
+	</array>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
 	</array>
 	<key>com.apple.developer.devicecheck.app-attest-opt-in</key>
 	<array>

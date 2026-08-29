@@ -4,12 +4,19 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class IntensityFilterChip extends StatelessWidget {
-  const new({this.min, this.max, this.onChanged, super.key});
+  const new({
+    this.min,
+    this.max,
+    this.onChanged,
+    this.filterLabel = '最大観測震度',
+    super.key,
+  });
 
   final void Function(JmaIntensity?, JmaIntensity?)? onChanged;
 
   final JmaIntensity? min;
   final JmaIntensity? max;
+  final String filterLabel;
 
   static const JmaIntensity initialMin = JmaIntensity.one;
   static const JmaIntensity initialMax = JmaIntensity.seven;
@@ -24,17 +31,20 @@ class IntensityFilterChip extends StatelessWidget {
             await showModalBottomSheet<(JmaIntensity?, JmaIntensity?)?>(
               clipBehavior: Clip.antiAlias,
               context: context,
-              builder: (context) =>
-                  _IntensityFilterModal(currentMin: min, currentMax: max),
+              builder: (context) => _IntensityFilterModal(
+                currentMin: min,
+                currentMax: max,
+                filterLabel: filterLabel,
+              ),
             );
         if (result != null) {
           onChanged?.call(result.min, result.max);
         }
       },
-      label: (range.isAllSelected)
-          ? const Text('最大観測震度')
+      label: range.isAllSelected
+          ? Text(filterLabel)
           : Text(
-              range.toRangeString,
+              filterLabel + ': ' + range.toRangeString,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
       onDeleted: range.isAllSelected
@@ -48,12 +58,14 @@ class IntensityFilterChip extends StatelessWidget {
 
 class _IntensityFilterModal extends HookWidget {
   const new({
+    required this.filterLabel,
     this.currentMin = initialMin,
     this.currentMax = initialMax,
   });
 
   final JmaIntensity? currentMin;
   final JmaIntensity? currentMax;
+  final String filterLabel;
 
   static const JmaIntensity initialMin = IntensityFilterChip.initialMin;
   static const JmaIntensity initialMax = IntensityFilterChip.initialMax;
@@ -106,7 +118,7 @@ class _IntensityFilterModal extends HookWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Text(
-                '最大観測震度',
+                filterLabel,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

@@ -76,54 +76,55 @@ void main() {
   });
 
   group('buildSelectedCityLine', () {
-    test('選択中の市区町村コードで絞り込む輪郭線を返す', () {
-      final line = builder
-          .buildSelectedCityLine(
-            selectedCityCode: '0110100',
-            isDarkMode: false,
-          )
-          .single;
+    test('選択中の市区町村コードで絞り込むハローと本線を返す', () {
+      final layers = builder.buildSelectedCityLine(
+        selectedCityCode: '0110100',
+        lineColor: '#123456',
+        haloColor: '#FFFFFF',
+      );
 
-      expect(line.layer.id, IntensityFillLayerBuilder.selectedCityLineLayerId);
-      expect(line.layer.filter, [
+      expect(
+        layers.map((entry) => entry.layer.id),
+        [
+          IntensityFillLayerBuilder.selectedCityHaloLayerId,
+          IntensityFillLayerBuilder.selectedCityLineLayerId,
+        ],
+      );
+      expect(layers.first.layer.filter, [
         '==',
         ['get', 'regioncode'],
         '0110100',
       ]);
+      expect(layers.last.layer.paint['line-color'], '#123456');
+      expect(layers.first.layer.paint['line-color'], '#FFFFFF');
+      expect(
+        layers.last.layer.paint['line-width'],
+        IntensityFillLayerBuilder.selectedCityLineWidth,
+      );
     });
 
     test('未選択なら何も返さない', () {
       expect(
         builder.buildSelectedCityLine(
           selectedCityCode: null,
-          isDarkMode: false,
+          lineColor: '#123456',
+          haloColor: '#FFFFFF',
         ),
         isEmpty,
       );
     });
 
-    test('細分区域の境界線より上に挿入する', () {
-      final line = builder
-          .buildSelectedCityLine(
-            selectedCityCode: '0110100',
-            isDarkMode: false,
-          )
-          .single;
+    test('選択枠は最前面に追加する', () {
+      final layers = builder.buildSelectedCityLine(
+        selectedCityCode: '0110100',
+        lineColor: '#123456',
+        haloColor: '#FFFFFF',
+      );
 
-      expect(line.aboveLayerId, BaseLayer.areaForecastLocalELine.name);
-      expect(line.belowLayerId, isNull);
-    });
-
-    test('ダークモードでは白い輪郭線にする', () {
-      final dark = builder
-          .buildSelectedCityLine(selectedCityCode: '0110100', isDarkMode: true)
-          .single;
-      final light = builder
-          .buildSelectedCityLine(selectedCityCode: '0110100', isDarkMode: false)
-          .single;
-
-      expect(dark.layer.paint['line-color'], '#FFFFFF');
-      expect(light.layer.paint['line-color'], '#000000');
+      for (final entry in layers) {
+        expect(entry.aboveLayerId, isNull);
+        expect(entry.belowLayerId, isNull);
+      }
     });
   });
 
@@ -135,7 +136,10 @@ void main() {
       );
       expect(
         IntensityFillLayerBuilder.selectedCityLineLayerIds,
-        [IntensityFillLayerBuilder.selectedCityLineLayerId],
+        [
+          IntensityFillLayerBuilder.selectedCityHaloLayerId,
+          IntensityFillLayerBuilder.selectedCityLineLayerId,
+        ],
       );
       // 片方の入れ替えが他方を巻き込むと、市区町村をタップするたびに
       // ~1900 分岐の塗りを作り直して消えたように見える。

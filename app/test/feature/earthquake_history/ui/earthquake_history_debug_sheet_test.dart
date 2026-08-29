@@ -690,6 +690,7 @@ final _realtimeEarthquake = api.Earthquake(
   earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  hypocenters: const [],
   telegrams: [
     api.EarthquakeTelegram(
       telegram: api.Telegram(

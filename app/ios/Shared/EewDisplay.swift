@@ -35,6 +35,10 @@ struct EewDisplay: Equatable {
     /// 現在地の予想震度
     let forecastIntensity: IntensityValue?
     let arrivalDate: Date?
+    /// 震源の深さ(km)
+    let depth: Double?
+    /// PLUM法・レベル法・1点検知など、仮定震源要素による低精度の検知か
+    let isLowAccuracyDetection: Bool
 
     // MARK: - 表示可否
 
@@ -56,6 +60,20 @@ struct EewDisplay: Equatable {
     /// 主要動到達カウントダウンに使う時刻。取消報では到達予想も無効。
     var countdownArrivalDate: Date? {
         isCanceled ? nil : arrivalDate
+    }
+
+    /// 深発地震のため予想震度が発表されない旨の注釈を出すか。
+    ///
+    /// JMA は震源が深さ 150km より深い場合、予想震度・主要動到達時刻を発表しない。
+    /// ただし「150km より深い」ことと「予想震度が無い」ことは同値ではないため、
+    /// 未発表かつ深発で、PLUM 法など別の理由がないときに限って理由を添える。
+    var showsDeepHypocenterIntensityNotice: Bool {
+        guard !isCanceled, !isLowAccuracyDetection, maxIntensity == nil,
+              let depth
+        else {
+            return false
+        }
+        return depth > Self.deepHypocenterDepthThreshold
     }
 
     /// Dynamic Island 展開時に何を主役にするか
@@ -102,9 +120,13 @@ struct EewDisplay: Equatable {
 
     // MARK: - 取消報の文言
 
-    /// 取消報の主文。Lock Screen と Dynamic Island で文言を揃える。
     static let canceledTitle = "緊急地震速報は取り消されました"
-
-    /// 取消報の補足。震度や到達予想を出していない理由を伝える。
     static let canceledDescription = "予想震度・主要動到達の予想は無効です"
+
+    // MARK: - 深発地震の文言
+
+    /// JMA が予想震度を発表しなくなる深さ(km)。アプリ本体の
+    /// `EewDeepHypocenterIntensityNotice` と同じ基準にする。
+    static let deepHypocenterDepthThreshold: Double = 150
+    static let deepHypocenterIntensityNotice = "震源の深さが150kmより深いため、予想震度は発表されていません"
 }

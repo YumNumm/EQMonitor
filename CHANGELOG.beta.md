@@ -1,5 +1,160 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.14](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.13...v3.0.0-beta.14) (2026-08-25)
+
+
+### Features
+
+* Android位置同期leaseを永続化 ([170a42e](https://github.com/YumNumm/EQMonitor/commit/170a42e9298f14d766e7549824ff979e75ab09da))
+* Android終了中の位置同期を永続実行 ([db4fc72](https://github.com/YumNumm/EQMonitor/commit/db4fc722cc754e3fded505f05bd1256df34fcdcd))
+* Better Authのセッション基盤を追加する ([35307ae](https://github.com/YumNumm/EQMonitor/commit/35307aec21115a3a24c86800abeee2bc97397b80))
+* GoogleとAppleのNative認証を追加する ([6813cd6](https://github.com/YumNumm/EQMonitor/commit/6813cd6103413c03a5aa92d07799d23a67b55910))
+* iOS位置同期leaseを永続化 ([6a0e611](https://github.com/YumNumm/EQMonitor/commit/6a0e611d2064602989360a4db69f4c22b1d9e05b))
+* JWTからDevice IDを取得 ([6f0a5c6](https://github.com/YumNumm/EQMonitor/commit/6f0a5c69b186f9313b776a5ad1a6e70aab4b579f))
+* Native Better Authログインを追加する ([a0e5399](https://github.com/YumNumm/EQMonitor/commit/a0e5399fb847d04935701d218ef76f215348bcab))
+* Native認証のデバッグ画面を追加する ([b039043](https://github.com/YumNumm/EQMonitor/commit/b0390436b67989dc14d2cc6bdcf9f376031afe07))
+* Passkey登録とサインインを追加する ([53636ba](https://github.com/YumNumm/EQMonitor/commit/53636bae120b4c7cd737b0bcea88dd7e7512aba9))
+* 位置同期leaseのnative契約を生成 ([d620bf6](https://github.com/YumNumm/EQMonitor/commit/d620bf6aef329f4e419910951e399c7c4c79d7f0))
+* 通常とheadlessでnative leaseを共有 ([e28d6cc](https://github.com/YumNumm/EQMonitor/commit/e28d6cc67a488108df552b4f4de4d2272c60d661))
+
+
+### Bug Fixes
+
+* AGP9のprofile設定を修正 ([e280f60](https://github.com/YumNumm/EQMonitor/commit/e280f6010a4f987e8d83f88cdc863aa85dae11ae))
+* Android headless起動の競合を解消 ([fede96d](https://github.com/YumNumm/EQMonitor/commit/fede96d165c5d46e0f1421f0d89fa5a117b3c564))
+* Android raw位置情報をbackup対象外に設定 ([91d65d8](https://github.com/YumNumm/EQMonitor/commit/91d65d86b1e40d1a66650bd29ecc025f4a8c9177))
+* Better Authの認証無効化を強化する ([fe81156](https://github.com/YumNumm/EQMonitor/commit/fe811562833fa57359cb7ff0cf2187506093032a))
+* consumer変更後に位置監視をreconcile ([0f969e1](https://github.com/YumNumm/EQMonitor/commit/0f969e15876ebb66d781b2abc77e91f621a6c599))
+* Device IDヘッダーをJWTへ追従 ([587db7b](https://github.com/YumNumm/EQMonitor/commit/587db7b5d7d828e0b78a6f17b0d1ed224566b79b))
+* device再登録で位置同期世代を更新 ([1d30fe4](https://github.com/YumNumm/EQMonitor/commit/1d30fe44b2fa161e86d5979c6168f4d2541e7bab))
+* device再登録後の位置監視を整合 ([088c06f](https://github.com/YumNumm/EQMonitor/commit/088c06fc408ccc0485f73511ff7f5d6a91c1fb5e))
+* **earthquake-history:** 地域観測震度と最大震度を分離する ([a670156](https://github.com/YumNumm/EQMonitor/commit/a6701566ad7a0206c49cc309214847e091b2ade1))
+* iOS raw位置情報のbackup除外属性を維持 ([cd6d9d6](https://github.com/YumNumm/EQMonitor/commit/cd6d9d6b80443cea60157a153eb37e005132b03d))
+* Native認証デバッグの操作可否を修正する ([2a658b8](https://github.com/YumNumm/EQMonitor/commit/2a658b83ef248c2e02acdf729551b20d48fe4f83))
+* Native認証デバッグ画面の状態同期を修正する ([7bff60c](https://github.com/YumNumm/EQMonitor/commit/7bff60c5d3f0e3cf08837932dec525f37dd0a38e))
+* Native認証の同時実行とsession確立を堅牢化する ([571e9db](https://github.com/YumNumm/EQMonitor/commit/571e9dbc897d00234776792c0dd1c47a81fe63ae))
+* Native認証の解析警告を解消する ([b10bb06](https://github.com/YumNumm/EQMonitor/commit/b10bb06786009e0bb498464d47f220db9f9fdfeb))
+* Native認証設定とrollback回帰を強化する ([9f25fb8](https://github.com/YumNumm/EQMonitor/commit/9f25fb8efdc3af183fb21fb04743337c3b70227d))
+* Passkey cable transportを許可する ([b9412b7](https://github.com/YumNumm/EQMonitor/commit/b9412b78e2c67ba6c0c0338a64554eda94d742d2))
+* Passkey transport互換性を修正する ([333864c](https://github.com/YumNumm/EQMonitor/commit/333864cbfd6f19e1a60ae71471d069a703b137db))
+* Passkey認証の競合と検証境界を修正する ([c28a75c](https://github.com/YumNumm/EQMonitor/commit/c28a75ca5fe43b24a8ccf6584066921fe404bce8))
+* UIScene復帰時の位置同期retryを再登録 ([ab32201](https://github.com/YumNumm/EQMonitor/commit/ab32201fa8cefa7b17693e006abcc18c35fc05c5))
+* 不要なKeychainAccess解決を削除 ([a516ae4](https://github.com/YumNumm/EQMonitor/commit/a516ae4630fffbbceaade6829e97865f609590ca))
+* 位置同期の反転応答をleaseで抑止 ([06d18a8](https://github.com/YumNumm/EQMonitor/commit/06d18a85fc4b52990a87063507684958f421bdf2))
+* 位置同期成功値をbackend scopeへ紐付け ([b9828e7](https://github.com/YumNumm/EQMonitor/commit/b9828e73ae8e2e630e1fe9e059c799e85889783f))
+* 地域観測震度Chipを明確化 ([1729be9](https://github.com/YumNumm/EQMonitor/commit/1729be97356d208fd2eab5ba3dbe8af58931cd23))
+* 地域観測震度の型と絞り込みを修正 ([4ad9bfd](https://github.com/YumNumm/EQMonitor/commit/4ad9bfd37b91328709ec1b980225d1776a010160))
+* 地域震度フィルター表示を明確化 ([a010beb](https://github.com/YumNumm/EQMonitor/commit/a010beb77f36c913b6f70243caee305ce1f51beb))
+* 市区町村履歴を地域震度順で表示 ([0a1702e](https://github.com/YumNumm/EQMonitor/commit/0a1702e9fb4c28e09db11cf20f109daf7b30b933))
+* 新規地震で履歴Providerを再取得 ([6037a07](https://github.com/YumNumm/EQMonitor/commit/6037a079d5971fdbaf7d6e16761da85ccd666177))
+* 認証無効化中の資格情報復活を防ぐ ([41c406b](https://github.com/YumNumm/EQMonitor/commit/41c406b406c48f25f4fbc18e23d240eb7b8e1c78))
+* 起動時に位置監視状態をreconcile ([e1c7ba1](https://github.com/YumNumm/EQMonitor/commit/e1c7ba1c9449e274a298cdf4513676a0c201c7c2))
+
+## [3.0.0-beta.13](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.12...v3.0.0-beta.13) (2026-08-23)
+
+
+### Features
+
+* BaseMapViewへ地震overlay lifecycleを接続 ([03093a2](https://github.com/YumNumm/EQMonitor/commit/03093a2a1d8cbe3fe0ba467236a9eef448f3bf32))
+* **home:** EEWフォーカス中のホーム操作を無効化 ([9d6dd86](https://github.com/YumNumm/EQMonitor/commit/9d6dd864fb824a4e9fd52669bbc349f761c6f9a2))
+* **home:** EEWフォーカス状態遷移を追加 ([3e64262](https://github.com/YumNumm/EQMonitor/commit/3e642625c4dbbdee8280fdac469089fdcd9c7ffd))
+* **home:** 地図操作でEEWフォーカスを解除 ([02b9edb](https://github.com/YumNumm/EQMonitor/commit/02b9edb32a615c4353e62b8800c35d21f3020df1))
+* overlay coverageの値変更通知を追加 ([ecf73a0](https://github.com/YumNumm/EQMonitor/commit/ecf73a0d04ada4e2cf113c21506f2865a30a7da0))
+* overlay frameをsubmit後にcommit ([501ea2e](https://github.com/YumNumm/EQMonitor/commit/501ea2e2357a48ff85e51ddc8de518c31a778f94))
+* 最新地震overlayの世代管理を追加 ([e858a1c](https://github.com/YumNumm/EQMonitor/commit/e858a1caa65812886ae68c0d3562dcd4c9fa1525))
+* 最新地震overlayをデバッグ地図へ接続 ([2aae47b](https://github.com/YumNumm/EQMonitor/commit/2aae47b273f02df70f424ce1646670d02a5cbe35))
+* 地図操作でEEWフォーカスを解除する ([d4619d7](https://github.com/YumNumm/EQMonitor/commit/d4619d77888862a677f5a7ff49b87c00c7c49bf2))
+* 地震overlay frame統合境界を追加 ([9a2be11](https://github.com/YumNumm/EQMonitor/commit/9a2be117291e9e1df3dc3a7b2c38b31c842453fd))
+* 地震overlay materialをDataAssetsへ接続 ([be3fc84](https://github.com/YumNumm/EQMonitor/commit/be3fc8492eb2611d3d89c9278a43b62d37998479))
+* 地震情報のoverlay変換を追加 ([daaa151](https://github.com/YumNumm/EQMonitor/commit/daaa1511527c91ffbb8b37080f3cc9834d186cb0))
+* 観測点を単一GPU instance batchで描画 ([a3e772f](https://github.com/YumNumm/EQMonitor/commit/a3e772f5a1597c66d984942e1367212f58ca47bf))
+
+
+### Bug Fixes
+
+* coverage通知を描画commitと一体化 ([b7720df](https://github.com/YumNumm/EQMonitor/commit/b7720dfb84edf22a12a0dec6a96e18539831ec20))
+* dispose後もGPU完了を待ってgeometryをretire ([f7751bc](https://github.com/YumNumm/EQMonitor/commit/f7751bc9488dafe27dfa277dc172370ecf4091df))
+* **home:** EEWフォーカスのカメラ制御を安定化 ([f7a9bc5](https://github.com/YumNumm/EQMonitor/commit/f7a9bc523b6146f0f4c5b883493f9a8a2dc7219c))
+* **map:** iOSカメラ操作判定の修正版を参照 ([c4c2382](https://github.com/YumNumm/EQMonitor/commit/c4c2382aaba1827137209f9a8565461c0c214262))
+* MapLibre Native修正版へ更新 ([4fdaa60](https://github.com/YumNumm/EQMonitor/commit/4fdaa60976b8ef14016b7c3cc7eaa63633fa131a))
+* MapLibre依存のhook修正を反映 ([2c98a49](https://github.com/YumNumm/EQMonitor/commit/2c98a494693a2a17f9ac3dd7d93e9e3a648d2ca7))
+* overlay失敗をbase-onlyへ閉じる ([dc74714](https://github.com/YumNumm/EQMonitor/commit/dc747141bc5600f08a9c07dce7bca28293458ea0))
+* snapshot置換時に観測点geometryを更新 ([d61550b](https://github.com/YumNumm/EQMonitor/commit/d61550bbd4a46bbc364f24ae15cc2cb16693001b))
+* 地震overlayのdecode欠損をterminal管理 ([23b4904](https://github.com/YumNumm/EQMonitor/commit/23b4904217902946b83804c7de017741713817b3))
+* 市区町村震度レイヤーの初回更新を修正 ([5d6d5df](https://github.com/YumNumm/EQMonitor/commit/5d6d5df49f427f877c05416da4f0aae695bfd2ba))
+* 観測点instanceの所有権と世代identityを強化 ([99fec31](https://github.com/YumNumm/EQMonitor/commit/99fec314212a1039661ba376940c73d423d3cf45))
+* 観測点snapshot identity引数を明示化 ([0d4dc5c](https://github.com/YumNumm/EQMonitor/commit/0d4dc5c676dbe8565d87f7bdaeeb8afad351b6a9))
+* 震度履歴の読み込み中も戻れるように修正 ([e4d17df](https://github.com/YumNumm/EQMonitor/commit/e4d17df682e1d919c74bd6f73e3eeb8f0cec3d0b))
+* 震度情報の取得エラー表示を改善 ([98fb596](https://github.com/YumNumm/EQMonitor/commit/98fb5960dea4c38618a52996e701ac31f27ff34b))
+* 震度速報の地図フォーカスを修正 ([97d12cd](https://github.com/YumNumm/EQMonitor/commit/97d12cd14df70aa9baca633ecd2fb2d616b823f8))
+
+
+### Performance Improvements
+
+* 震度style描画資源をsnapshot単位で再利用 ([7b35941](https://github.com/YumNumm/EQMonitor/commit/7b359419e354820c88cec752787582f0a6178c1f))
+
+## [3.0.0-beta.12](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.11...v3.0.0-beta.12) (2026-08-23)
+
+
+### Features
+
+* **debug:** Device APIのロールがADMINならデバッグメニューを開けるようにする ([83a203f](https://github.com/YumNumm/EQMonitor/commit/83a203f37f61b08b3fd8f9991f18ea4f58f996e4))
+* **debug:** Device APIのロールがADMINならデバッグメニューを開けるようにする ([57c5f92](https://github.com/YumNumm/EQMonitor/commit/57c5f922243ba706ea06b7808afebaf0f189f06c))
+* EEWのLive Activityプレビューに報の進行を再現したStateを追加する ([be12006](https://github.com/YumNumm/EQMonitor/commit/be12006fddef1ea2a58efd3ea0371cfdd97fed60))
+* **intensity-history:** 都道府県別最大震度を市区町村別最大震度に変更する ([9491cea](https://github.com/YumNumm/EQMonitor/commit/9491cea8e38173799b40e0bb89b6f85a8ce9393c))
+* Live Activityのロック画面に深発地震の予想震度未発表注釈を追加する ([665ad65](https://github.com/YumNumm/EQMonitor/commit/665ad65cabdb4d30d7b63ed83b84b6db76010838))
+* Widget/Live Activity のプレビュー専用ターゲットを追加する ([836367e](https://github.com/YumNumm/EQMonitor/commit/836367ea96412b43ddbd13424cd0a585f8e53e6d))
+* 地図描画をfoundationのrender契約経由へ移す ([bbe6032](https://github.com/YumNumm/EQMonitor/commit/bbe603240c199402da805b37b39fcea31206f3eb))
+* 市区町村詳細モーダルで地震履歴を並び替えられるようにする ([15e78d4](https://github.com/YumNumm/EQMonitor/commit/15e78d4c5a0412d7e1ee2e07489f58c461c8dbc7))
+* 旧震度階級を履歴モデルへ保持する ([9f7b79d](https://github.com/YumNumm/EQMonitor/commit/9f7b79d0a18c59c1201b2f33c8cc94ee25bab9a5))
+* 選択中の市区町村を最前面の枠線で強調する ([65b4088](https://github.com/YumNumm/EQMonitor/commit/65b4088beb23e5608a653a5447719b2647ffe425))
+
+
+### Bug Fixes
+
+* Android MapLibreのPlatformView保持修正を取り込む ([839a437](https://github.com/YumNumm/EQMonitor/commit/839a437836caed3e2e53388556f835a55c45455f))
+* Conflict Error ([a87a2bb](https://github.com/YumNumm/EQMonitor/commit/a87a2bb0b064335e6fb8ad090c20501357010a79))
+* eew_card の到達後表示をカウントダウンと同じ2行組に揃える ([bd874d6](https://github.com/YumNumm/EQMonitor/commit/bd874d6554f3c4737152f7b859b15be43efce2d9))
+* EEWカードの深発注意文を判定クラスの結果で表示する ([c23ff94](https://github.com/YumNumm/EQMonitor/commit/c23ff943936eee4c25b530a67c9604d23d6dfca3))
+* EEWシミュレーション停止中の時刻進行を修正 ([b37cd18](https://github.com/YumNumm/EQMonitor/commit/b37cd18c38151e32ddffe6e38b2d989facebe510))
+* EEW停止完了位置の描画を確定 ([e9cda76](https://github.com/YumNumm/EQMonitor/commit/e9cda762539a04c51af6b263534c6f9720328aee))
+* EEW履歴の報切替で警報範囲を再描画する ([9adcb93](https://github.com/YumNumm/EQMonitor/commit/9adcb931a6f180c6a898bd6dae603a636b5f596a))
+* EEW警報レイヤーを報切替時も維持 ([af69ca6](https://github.com/YumNumm/EQMonitor/commit/af69ca64862a73486c1fc9ce2cf9e75767bf8330))
+* **home:** 導線ラベルを「市区町村別 最大観測震度」にリネームする ([98dd038](https://github.com/YumNumm/EQMonitor/commit/98dd0383708dd919601b04a7d3183850fb6c0d08))
+* **home:** 市区町村別最大観測震度の導線を有効化する ([6d57901](https://github.com/YumNumm/EQMonitor/commit/6d57901555ec7e7c2b2ca82e80ef44cf4bb6464c))
+* **home:** 市区町村別最大観測震度の導線を有効化する ([141427b](https://github.com/YumNumm/EQMonitor/commit/141427bc97a552378fef1479ff8a95a5f0dc0a21))
+* **intensity-history:** 市区町村の塗りが不要に作り直されて消えるのを修正 ([56145b0](https://github.com/YumNumm/EQMonitor/commit/56145b027bcbf3e356e3849fa604b42b56b89745))
+* **intensity-history:** 市区町村の塗りが不要に作り直されて消えるのを修正 ([7b7e6fa](https://github.com/YumNumm/EQMonitor/commit/7b7e6fa3952430138401b78a25bc8c89a29870b8))
+* iOSのMapLibre色式修正を取り込む ([3a762b2](https://github.com/YumNumm/EQMonitor/commit/3a762b2dd0fc314a016082b0c82833cfa551c549))
+* **map:** iOS の quick zoom 中にマップのタップが誤発火するのを修正 ([85718bc](https://github.com/YumNumm/EQMonitor/commit/85718bcb7ee7237c190014f78523a1bdbbae5e91))
+* **map:** iOS の quick zoom 中にマップのタップが誤発火するのを修正 ([b32751c](https://github.com/YumNumm/EQMonitor/commit/b32751c864eda8ef85e1d114c09a5605f7c02198))
+* NTP, Kmoni時刻動機 ([6e73a52](https://github.com/YumNumm/EQMonitor/commit/6e73a522c00c0d6f755bd41b315aed1108721aac))
+* **NTP:** NTP周りのバグ修正 ([d7af602](https://github.com/YumNumm/EQMonitor/commit/d7af6027142c15e4c7c77ea4343119361afa8a78))
+* **onboarding:** デバイス登録の失敗後もインラインで再試行できるようにする ([a3c71b4](https://github.com/YumNumm/EQMonitor/commit/a3c71b4712da95926a0c27f60a0afec7d73d5a15))
+* **theme:** JMA Standard の震度色を気象庁配色に修正し、ライトの地図背景を白ベースにする ([ff76dd5](https://github.com/YumNumm/EQMonitor/commit/ff76dd5d14606676ecbdcd49e456f7b82f0e95be))
+* プレビュー用の widget extension を分けてクラッシュを解消する ([b36fbe7](https://github.com/YumNumm/EQMonitor/commit/b36fbe7375adf1eea1c536ec8df6db549c4f8ef2))
+* マップレイヤー設定のセクションを同時に展開できるようにする ([7964064](https://github.com/YumNumm/EQMonitor/commit/7964064ebd95230f543fb60944f131a2019bb2fc))
+* マップレイヤー設定のセクションを同時に展開できるようにする ([070be33](https://github.com/YumNumm/EQMonitor/commit/070be33abebc0c93d62c990e652b2574f09b709f))
+* レイヤー切り替え時の世代管理を修正 ([c4fa095](https://github.com/YumNumm/EQMonitor/commit/c4fa095abd9fc722fdb71c0fe336df6fbaf36576))
+* 予想震度が未発表でも震度バッジを灰色の「-」で表示する ([66e39ea](https://github.com/YumNumm/EQMonitor/commit/66e39eae9c2f8b9a21b572c47e6048995473f1d5))
+* 予想震度不明のアイコンをハイフン表示にする ([fd4ed4d](https://github.com/YumNumm/EQMonitor/commit/fd4ed4dd68004d05219dd0a9e4bb631a9df0b328))
+* 位置情報APIを3桁地域コードへ移行 ([f7d2a39](https://github.com/YumNumm/EQMonitor/commit/f7d2a39f683efb1fff5c8dd75feecb218d6a14d8))
+* 到達後もカウントダウン表示を00:00のまま維持する ([dea6290](https://github.com/YumNumm/EQMonitor/commit/dea6290875db12c3128cdf8a8f368e20a7703691))
+* 市区町村別最大震度のタップを常に市区町村選択にする ([d93342a](https://github.com/YumNumm/EQMonitor/commit/d93342af046752de8458d9ae203ee4c876fd5acf))
+* 旧震度5を履歴一覧に表示する ([46088fb](https://github.com/YumNumm/EQMonitor/commit/46088fbfd70a5f6944818046e9311e4767fa23d5))
+* 深発注意文の条件をJMA表記に合わせ深さ150kmより深い場合に限定する ([b000926](https://github.com/YumNumm/EQMonitor/commit/b00092606650b8a3b84a6906d3cd2f9da714a29d))
+* 深発注意文の表示条件を専用クラスに切り出してテストする ([3a8a0d0](https://github.com/YumNumm/EQMonitor/commit/3a8a0d05d123260c4c1efa324290aa3c8493fc3c))
+* 現在地の震度カードを測位精度に応じた粒度で表示する ([a90f242](https://github.com/YumNumm/EQMonitor/commit/a90f242e5175ad890af4d2f1b45acb6e007ad03f))
+* 震度スケールの目盛り見切れを修正 ([5986689](https://github.com/YumNumm/EQMonitor/commit/598668925864edd2912982160fbe72f30c919ff2))
+* 震度スケールの目盛り見切れを修正する ([3e99b8e](https://github.com/YumNumm/EQMonitor/commit/3e99b8eda515c0df50ae7a1651a15561160b3b00))
+* 震度履歴の最終更新時刻を aggregatedAt に追従する ([59df276](https://github.com/YumNumm/EQMonitor/commit/59df2761097a440d0291b8277566968f3d2a1da0))
+* 震度履歴パネルの更新時刻表示にテストと説明を揃える ([3c2d90e](https://github.com/YumNumm/EQMonitor/commit/3c2d90e10576c57786f934570bd6af0d47c83437))
+
+
+### Reverts
+
+* eew_card の到達後表示を元の主要動到達済みに戻す ([79d1919](https://github.com/YumNumm/EQMonitor/commit/79d19198fc0c7f69fa88a00bad2647f4b9cf0e09))
+
 ## [3.0.0-beta.11](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.10...v3.0.0-beta.11) (2026-08-19)
 
 

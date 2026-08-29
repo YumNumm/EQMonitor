@@ -14,6 +14,7 @@ import 'package:eqmonitor_map/src/renderer/base_map_material_parameters.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_batch_adapter.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_render_phase_policy.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -126,9 +127,40 @@ void main() {
   );
 
   group('phase policy', () {
-    test('base map draws in the first phase and declares labelForeground', () {
-      expect(baseMapRenderPhasePolicy.rankOf(baseMapRenderPhaseId), 0);
-      expect(baseMapRenderPhasePolicy.orderedPhases.length, 2);
+    test('uses the generic sparse phase taxonomy v3', () {
+      expect(mapSceneRenderPhasePolicy.version, 3);
+      expect(
+        [
+          mapSceneRenderPhasePolicy.rankOf(mapSceneBaseLandFillPhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneUnderlayHazardFillPhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneUnderlayHazardLinePhaseId),
+          mapSceneRenderPhasePolicy.rankOf(
+            mapSceneBaseAdministrativeLinePhaseId,
+          ),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardFillPhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneOverlayHazardLinePhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneDynamicWaveFillPhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneDynamicWaveLinePhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneLivePointPhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneSpritePhaseId),
+          mapSceneRenderPhasePolicy.rankOf(mapSceneForegroundLabelPhaseId),
+        ],
+        [0, 20, 30, 40, 100, 110, 200, 210, 300, 350, 400],
+      );
+    });
+
+    test('places base Fill before the administrative Line phase', () {
+      final submission = submissionOf(
+        plans: [
+          planOf(styleLayerId: 'countriesLine', tileId: tile(28, 12)),
+          planOf(styleLayerId: 'countriesFill', tileId: tile(28, 12)),
+        ],
+      );
+
+      expect(
+        submission.batches.map((batch) => batch.compatibility.phase),
+        [0, 40],
+      );
     });
   });
 

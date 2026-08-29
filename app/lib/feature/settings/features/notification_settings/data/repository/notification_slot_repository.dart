@@ -17,7 +17,7 @@ const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
 
 @Riverpod(keepAlive: true)
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
-    NotificationSlotRepository(await ref.watch(apiClientProvider.future));
+    NotificationSlotRepository(api: await ref.watch(apiClientProvider.future));
 
 /// 通知スロットの最小震度を決定する。
 ///
@@ -49,7 +49,7 @@ class NotificationSlotMinIntensityResolver {
 }
 
 class NotificationSlotRepository {
-  new(this._api);
+  new({required api.ApiClient api}) : _api = api;
 
   final api.ApiClient _api;
 
@@ -145,14 +145,17 @@ class NotificationSlotRepository {
   }
 
   Future<void> putDeviceLocation({
-    required int regionId,
-    String? cityCode,
+    required int region,
+    String? city,
+    String? tsunamiForecastRegion,
   }) async {
+    final body = api.DeviceLocationRequest(
+      region: region.toString(),
+      city: city,
+      tsunamiForecastRegion: tsunamiForecastRegion,
+    );
     await _api.device.putV2DeviceMeLocation(
-      body: api.DeviceLocationRequest(
-        regionId: regionId.toString(),
-        cityCode: cityCode,
-      ),
+      body: body,
     );
   }
 

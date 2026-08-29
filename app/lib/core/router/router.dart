@@ -24,6 +24,7 @@ import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_item_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
@@ -31,9 +32,9 @@ import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_record_list_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_data_type_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_observation_network_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/page/kyoshin_monitor_data_type_page.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/page/live_monitor_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
@@ -61,6 +62,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_j
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_webhook_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
@@ -106,9 +108,12 @@ GoRouter goRouter(Ref ref) => GoRouter(
     }
 
     final buildConfig = ref.read(buildConfigProvider);
-    if (!ref.read(isDebugMenuAvailableProvider) &&
-        state.matchedLocation.startsWith(const DebugRoute().location)) {
-      return const HomeRoute().location;
+    final debugRouteRedirect = DebugMenuRouteGuard.redirect(
+      isAvailable: ref.read(isDebugMenuAvailableProvider),
+      matchedLocation: state.matchedLocation,
+    );
+    if (debugRouteRedirect != null) {
+      return debugRouteRedirect;
     }
     if (!buildConfig.isProFeaturesEnabled &&
         state.matchedLocation.startsWith('/subscription')) {
@@ -384,6 +389,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
+        TypedGoRoute<DebugAuthRoute>(path: 'auth'),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
         TypedGoRoute<DebugEarthquakeHistoryCardRoute>(
@@ -404,6 +410,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
           path: 'notification-delivery-log',
+        ),
+        TypedGoRoute<DebugNotificationWebhookRoute>(
+          path: 'notification-webhooks',
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
@@ -532,6 +541,30 @@ class DebugRoute extends GoRouteData with $DebugRoute, MaterialPageMixin {
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();
+}
+
+final class DebugMenuRouteGuard {
+  const new();
+
+  static String? redirect({
+    required bool isAvailable,
+    required String matchedLocation,
+  }) {
+    if (!isAvailable &&
+        matchedLocation.startsWith(const DebugRoute().location)) {
+      return const HomeRoute().location;
+    }
+    return null;
+  }
+}
+
+class DebugAuthRoute extends GoRouteData
+    with $DebugAuthRoute, MaterialPageMixin {
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugAuthPage();
 }
 
 class HttpApiEndpointSelectorRoute extends GoRouteData
@@ -732,6 +765,16 @@ class DebugNotificationDeliveryLogRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugNotificationDeliveryLogPage();
+  }
+}
+
+class DebugNotificationWebhookRoute extends GoRouteData
+    with $DebugNotificationWebhookRoute, MaterialPageMixin {
+  const new();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugNotificationWebhookPage();
   }
 }
 

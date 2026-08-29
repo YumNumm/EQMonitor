@@ -11,8 +11,8 @@ Future<JmaRegionResolver> jmaRegionResolver(Ref ref) async {
   final jmaMapData = await ref.watch(jmaMapProvider.future);
   final jmaParameter = await ref.watch(jmaParameterProvider.future);
   return JmaRegionResolver(
-    eewMapData: jmaMapData.areaForecastLocalEew,
     cityMapData: jmaMapData.areaInformationCity,
+    tsunamiMapData: jmaMapData.areaTsunami,
     earthquakeParameter: jmaParameter.earthquake,
   );
 }
@@ -25,51 +25,33 @@ typedef EarthquakeRegionResolution = ({
   String cityName,
 });
 
-/// GPS座標からJMA細分区域（area_forecast_local_eew）および
-/// 市区町村（area_information_city）コードを解決するクラス。
+/// GPS座標から地震情報の細分区域、市区町村、津波予報区を解決するクラス。
 /// geobaseのpoint-in-polygonを使用。
 class JmaRegionResolver {
   new({
-    required this.eewMapData,
     required this.cityMapData,
+    required this.tsunamiMapData,
     required EarthquakeParameter earthquakeParameter,
   }) : _cityToRegion = CityToRegionLookupBuilder.build(earthquakeParameter);
 
-  final JmaMap_JmaMapData eewMapData;
   final JmaMap_JmaMapData cityMapData;
+  final JmaMap_JmaMapData tsunamiMapData;
   final _utility = JmaMapUtility();
 
   /// 市区町村コード → 親一次細分化地域 のルックアップ。
   /// `earthquake_param.regions[].cities[]` から構築される。
   final Map<String, EarthquakeParentRegion> _cityToRegion;
 
-  /// [latitude], [longitude] が含まれるJMA細分区域コードを返す。
-  /// 見つからない場合はnullを返す。
-  /// 緊急地震速報の予報区 (`area_forecast_local_eew`) コード。
-  int? resolveRegionCode(double latitude, double longitude) {
+  /// [latitude], [longitude] に最も近い津波予報区コードを返す。
+  String? resolveTsunamiForecastRegionCode(
+    double latitude,
+    double longitude,
+  ) {
     final result = _utility.findNearestItem(
       JmaMap_LatLng(lat: latitude, lng: longitude),
-      eewMapData,
+      tsunamiMapData,
     );
-    final item = result.item;
-    if (item == null) {
-      return null;
-    }
-    final codeStr = item.property.code;
-    return int.tryParse(codeStr);
-  }
-
-  /// [latitude], [longitude] が含まれるJMA細分区域名を返す。
-  String? resolveRegionName(double latitude, double longitude) {
-    final result = _utility.findNearestItem(
-      JmaMap_LatLng(lat: latitude, lng: longitude),
-      eewMapData,
-    );
-    final item = result.item;
-    if (item == null) {
-      return null;
-    }
-    return item.property.name;
+    return result.item?.property.code;
   }
 
   /// [latitude], [longitude] が含まれる市区町村コードを返す。
@@ -98,8 +80,6 @@ class JmaRegionResolver {
   /// `earthquake_param.regions[].cities[]` から親 region を逆引きする。
   /// 市区町村が解決できない、もしくは親 region が見つからない場合は null。
   ///
-  /// EEW 用の `resolveRegionCode` とは別系統のコード (`area_information_city`,
-  /// 一次細分化地域コード) を返すので注意。
   EarthquakeRegionResolution? resolveEarthquakeRegion(
     double latitude,
     double longitude,

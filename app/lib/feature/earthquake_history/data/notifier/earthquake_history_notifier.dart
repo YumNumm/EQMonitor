@@ -32,7 +32,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       if (next case AsyncData(:final value)) {
         switch (value) {
           case RealtimeEarthquakeUpsertEvent(:final record):
-            applyRealtimeRecord(record);
+            if (applyRealtimeRecord(record)) {
+              ref.invalidateSelf();
+            }
           case RealtimeEarthquakeDeleteEvent(:final eventId):
             applyRealtimeDelete(eventId);
           case _:
@@ -258,14 +260,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
   }
 
-  void applyRealtimeRecord(api.Earthquake record) {
+  bool applyRealtimeRecord(api.Earthquake record) {
     _mutations.add(
       _NotifierRealtimeUpsert(sequence: ++_mutationSequence, record: record),
     );
     final repository = _repository;
     final value = state.value;
     if (value == null || repository == null) {
-      return;
+      return true;
     }
     final previous = value.items
         .where((item) => item.earthquake.eventId == record.eventId)
@@ -280,8 +282,11 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       case EarthquakeRealtimeListRemove():
         _removeItem(record.eventId);
       case EarthquakeRealtimeListPreserve():
-        return;
+        break;
+      case EarthquakeRealtimeListRefetch():
+        break;
     }
+    return previous == null || decision is EarthquakeRealtimeListRefetch;
   }
 
   void applyRealtimeDelete(String eventId) {
@@ -351,6 +356,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
                 items.removeAt(index);
               }
             case EarthquakeRealtimeListPreserve():
+              break;
+            case EarthquakeRealtimeListRefetch():
               break;
           }
       }

@@ -33,6 +33,11 @@ final class EarthquakeRealtimeListPreserve
   const new();
 }
 
+final class EarthquakeRealtimeListRefetch
+    extends EarthquakeRealtimeListDecision {
+  const new();
+}
+
 final class EarthquakeRealtimeListReconciler {
   const new({
     required this.parameter,
@@ -78,6 +83,10 @@ final class EarthquakeRealtimeListReconciler {
       // Prefecture/city search membership therefore cannot be inferred without
       // changing the backend contract. Preserve known membership and update its
       // shared earthquake fields; do not invent membership for an absent item.
+      EarthquakeHistoryParameterPrefecture()
+          when parameter.intensityGte != null ||
+              parameter.intensityLte != null =>
+        const EarthquakeRealtimeListRefetch(),
       EarthquakeHistoryParameterPrefecture() => switch (previous) {
         EarthquakePartialPrefecture(:final prefectureIntensity) =>
           EarthquakeRealtimeListUpsert(
@@ -88,6 +97,10 @@ final class EarthquakeRealtimeListReconciler {
           ),
         _ => const EarthquakeRealtimeListPreserve(),
       },
+      EarthquakeHistoryParameterCity()
+          when parameter.intensityGte != null ||
+              parameter.intensityLte != null =>
+        const EarthquakeRealtimeListRefetch(),
       EarthquakeHistoryParameterCity() => switch (previous) {
         EarthquakePartialCity(:final cityIntensity) =>
           EarthquakeRealtimeListUpsert(

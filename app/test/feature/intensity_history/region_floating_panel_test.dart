@@ -22,23 +22,22 @@ import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensit
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/region_floating_panel.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/data/latest.dart' as tz;
 
-const _responseAt = '2026-08-19T12:00:00Z';
+const _aggregatedAt = '2026-08-19T12:00:00Z';
 
 class _FakeCityMaxIntensity extends CityMaxIntensityNotifier {
-  new({this.responseAt});
+  new({this.aggregatedAt});
 
-  final DateTime? responseAt;
+  final DateTime? aggregatedAt;
 
   @override
   Future<CityMaxIntensity> build() async => CityMaxIntensity(
-    responseAt: responseAt,
+    aggregatedAt: aggregatedAt,
     items: const [
       CityMaxIntensityEntry(
         cityCode: '0410000',
@@ -91,7 +90,7 @@ class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
 }
 
 Future<ProviderContainer> _container({
-  DateTime? responseAt,
+  DateTime? aggregatedAt,
   List<Override> overrides = const [],
 }) async {
   SharedPreferences.setMockInitialValues({});
@@ -102,7 +101,7 @@ Future<ProviderContainer> _container({
         app_prefs.SharedPreferencesAsync(preferences),
       ),
       cityMaxIntensityProvider.overrideWith(
-        () => _FakeCityMaxIntensity(responseAt: responseAt),
+        () => _FakeCityMaxIntensity(aggregatedAt: aggregatedAt),
       ),
       ...overrides,
     ],
@@ -126,21 +125,21 @@ Widget _panelApp(ProviderContainer container, {bool centered = false}) =>
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  setUpAll(tz.initializeTimeZones);
 
-  testWidgets('未選択状態で「全国」が表示される', (tester) async {
+  testWidgets('未選択状態で全国の集計であることを示す見出しが表示される', (tester) async {
     final container = await _container();
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_panelApp(container));
     await tester.pump();
 
-    expect(find.text('全国'), findsOneWidget);
+    expect(find.textContaining('市区町村別'), findsOneWidget);
+    expect(find.textContaining('最大観測震度'), findsOneWidget);
   });
 
-  testWidgets('response_at があれば最終更新時刻を表示する', (tester) async {
-    final responseAt = DateTime.parse(_responseAt);
-    final container = await _container(responseAt: responseAt);
+  testWidgets('aggregated_at があれば最終更新時刻を表示する', (tester) async {
+    final aggregatedAt = DateTime.parse(_aggregatedAt);
+    final container = await _container(aggregatedAt: aggregatedAt);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_panelApp(container));
@@ -148,13 +147,13 @@ void main() {
 
     expect(
       find.text(
-        '最終更新 ${responseAt.formatWithTz(.monthDayHourMinute)}',
+        '${aggregatedAt.formatWithTz(.monthDayHourMinute)} 更新',
       ),
       findsOneWidget,
     );
   });
 
-  testWidgets('response_at が null なら最終更新時刻を表示しない', (tester) async {
+  testWidgets('aggregated_at が null なら最終更新時刻を表示しない', (tester) async {
     final container = await _container();
     addTearDown(container.dispose);
 
@@ -177,7 +176,7 @@ void main() {
 
     expect(find.text('宮城県'), findsOneWidget);
     expect(find.text('仙台市'), findsOneWidget);
-    expect(find.text('全国'), findsNothing);
+    expect(find.textContaining('最大観測震度'), findsNothing);
   });
 
   testWidgets('市区町村選択状態でタップすると市区町村詳細モーダルが開く', (tester) async {

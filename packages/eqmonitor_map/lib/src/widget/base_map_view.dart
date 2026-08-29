@@ -2,25 +2,44 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqmonitor_map/src/flutter_scene/base_map_material_library.dart';
-import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_base_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_map_adapter.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe_overlay.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_revision.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
 import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
+import 'package:eqmonitor_map/src/geo/map_camera_bounds.dart';
+import 'package:eqmonitor_map/src/geo/map_camera_bounds_fitter.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_controller.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_builder.dart';
+import 'package:eqmonitor_map/src/renderer/base_map_overlay_frame_owner.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_packed_mesh_cache.dart';
 import 'package:eqmonitor_map/src/renderer/base_map_render_submission_builder.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_packed_mesh_cache.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_render_resources.dart';
+import 'package:eqmonitor_map/src/renderer/earthquake_area_render_submission_builder.dart';
 import 'package:eqmonitor_map/src/renderer/map_render_lifecycle_policy.dart';
+import 'package:eqmonitor_map/src/renderer/map_scene_frame_submission.dart';
 import 'package:eqmonitor_map/src/tile/base_map_render_plan_builder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_cache.dart';
+import 'package:eqmonitor_map/src/tile/base_map_tile_decode_failure_owner.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:eqmonitor_map/src/tile/base_map_tile_repository.dart';
+import 'package:eqmonitor_map/src/tile/earthquake_overlay_exact_tile_resolver.dart';
 import 'package:eqmonitor_map/src/tile/scheduler/map_tile_scheduler.dart';
 import 'package:eqmonitor_map/src/tile/tile_cover_calculator.dart';
 import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
+import 'package:eqmonitor_map/src/widget/map_camera_candidate_owner.dart';
+import 'package:eqmonitor_map/src/widget/map_view_camera_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_scene/scene.dart' as scene;
@@ -29,6 +48,26 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 import 'package:vector_math/vector_math.dart' as scene_math;
 
 part 'base_map_view.freezed.dart';
+
+typedef BaseMapViewControllerLifecycleIdentity = ({
+  VerifiedPmTilesSource source,
+  MapBaseLayerLimits limits,
+  MapClock clock,
+  MapViewCameraController? cameraController,
+  ValueChanged<MapGpuResourceCounterSnapshot>? gpuCounterCallback,
+  MapGpuProbeController? gpuProbeController,
+});
+
+BaseMapViewControllerLifecycleIdentity baseMapViewControllerLifecycleIdentity(
+  BaseMapView view,
+) => (
+  source: view.source,
+  limits: view.limits,
+  clock: view.clock,
+  cameraController: view.cameraController,
+  gpuCounterCallback: view.onGpuResourceCounterChanged,
+  gpuProbeController: view.gpuProbeController,
+);
 
 /// [BaseMapView]がgestureとtile取得の両方を制限するために使う上限値一式。
 /// 呼び出し側(app)が明示し、widget内部に固定fallbackは置かない
@@ -95,15 +134,22 @@ abstract class MapBaseLayerLimits with _$MapBaseLayerLimits {
     /// 落とすと、まだ in-flight の frame が参照している最中に GC 対象へ
     /// してしまう。この frame 数ぶん未使用が続いた resource だけを手放す。
     required int maxFramesInFlight,
+
+    /// Sprite atlas/topology/policy batchesのcaller-owned上限。
+    required MapSpriteRendererLimits spriteRendererLimits,
+
+    /// 一つのScene frameへ送るmesh packet / instance batch node総数の上限。
+    required int maxSceneNodeCount,
   }) = _MapBaseLayerLimits;
 }
 
 /// 検証済みPMTiles archiveから、pan/pinch zoom付きでベースレイヤー
 /// (Fill/Line)を描画するwidget。
 ///
-/// 公開引数は[source]・[initialCamera]・[limits]の3つだけであり、内部で
-/// 保持するcamera状態やFlutter Sceneのcontroller/[scene.Scene]は外へ
-/// 公開しない(brief要求)。`initialCamera`は最初のフレームにしか使わず、
+/// 必須入力は[source]・[initialCamera]・[limits]・[clock]、任意入力は
+/// caller-owned [cameraController]、地震overlay、coverage callbackである。
+/// Flutter Sceneのcontroller/[scene.Scene]は外へ公開しない。
+/// `initialCamera`は最初のフレームにしか使わず、
 /// 後から[BaseMapView]が再構築されても(同じ[source]/[limits]である限り)
 /// 現在のcamera状態を保つ。
 class BaseMapView extends HookWidget {
@@ -111,6 +157,13 @@ class BaseMapView extends HookWidget {
     required this.source,
     required this.initialCamera,
     required this.limits,
+    required this.clock,
+    this.cameraController,
+    this.earthquakeOverlay,
+    this.onEarthquakeOverlayCoverageChanged,
+    this.gpuProbeConfiguration,
+    this.onGpuResourceCounterChanged,
+    this.gpuProbeController,
     super.key,
   });
 
@@ -129,23 +182,79 @@ class BaseMapView extends HookWidget {
   // ignore: diagnostic_describe_all_properties
   final MapBaseLayerLimits limits;
 
+  // frame clockはappのtime modeと同一sourceを使う必須入力。
+  // ignore: diagnostic_describe_all_properties
+  final MapClock clock;
+
+  // callerがownershipとdisposeを担うcamera command controller。
+  // ignore: diagnostic_describe_all_properties
+  final MapViewCameraController? cameraController;
+
+  // overlay snapshotはapp側で検証・変換済みの入力値そのもの。
+  // ignore: diagnostic_describe_all_properties
+  final EarthquakeMapOverlaySnapshot? earthquakeOverlay;
+
+  final ValueChanged<EarthquakeOverlayCoverageSnapshot>?
+  // commit済みoverlay identityとcoverageをappへ一体で返すcallback。
+  // ignore: diagnostic_describe_all_properties
+  onEarthquakeOverlayCoverageChanged;
+
+  // Debug map probe configuration is not useful in Flutter Inspector output.
+  // ignore: diagnostic_describe_all_properties
+  final MapGpuProbeConfiguration? gpuProbeConfiguration;
+  final ValueChanged<MapGpuResourceCounterSnapshot>?
+  // Resource counter callback is caller-owned debug instrumentation.
+  // ignore: diagnostic_describe_all_properties
+  onGpuResourceCounterChanged;
+  // Debug map owns and disposes the controller lifecycle.
+  // ignore: diagnostic_describe_all_properties
+  final MapGpuProbeController? gpuProbeController;
+
   @override
   Widget build(BuildContext context) {
+    final lifecycleIdentity = baseMapViewControllerLifecycleIdentity(this);
     final controller = useMemoized(
       () => _BaseMapController(
         source: source,
         limits: limits,
-        initialCamera: initialCamera,
+        initialCamera: cameraController?.committedCamera ?? initialCamera,
+        mapClock: clock,
+        externalCameraController: cameraController,
+        earthquakeOverlay: earthquakeOverlay,
+        onEarthquakeOverlayCoverageChanged: onEarthquakeOverlayCoverageChanged,
+        gpuProbeConfiguration: gpuProbeConfiguration,
+        onGpuResourceCounterChanged: onGpuResourceCounterChanged,
+        gpuProbeController: gpuProbeController,
       ),
-      [source, limits],
+      [lifecycleIdentity],
     );
-    useEffect(() => controller.dispose, [controller]);
+    useEffect(() {
+      controller.attachCameraController();
+      controller.attachGpuProbeController();
+      return controller.dispose;
+    }, [controller]);
+    useEffect(() {
+      controller.updateGpuProbeConfiguration(gpuProbeConfiguration);
+      return null;
+    }, [controller, gpuProbeConfiguration]);
     useListenable(controller);
 
     useEffect(() {
       unawaited(controller.initialize());
       return null;
     }, [controller]);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        unawaited(
+          controller.updateEarthquakeOverlay(
+            overlay: earthquakeOverlay,
+            onCoverageChanged: onEarthquakeOverlayCoverageChanged,
+          ),
+        );
+      });
+      return null;
+    }, [controller, earthquakeOverlay, onEarthquakeOverlayCoverageChanged]);
 
     // app lifecycleは`MapFrameSnapshot.lifecycle`へ載せるだけでなく、
     // backgroundでGPU resourceを手放しforegroundで作り直す契約
@@ -173,7 +282,7 @@ class BaseMapView extends HookWidget {
 
     final initError = controller.initError;
     if (initError != null) {
-      return _BaseMapViewError(error: initError);
+      return const BaseMapViewInitializationError();
     }
     if (!controller.isReady) {
       return const Center(child: CircularProgressIndicator());
@@ -211,13 +320,9 @@ class BaseMapView extends HookWidget {
   }
 }
 
-class _BaseMapViewError extends StatelessWidget {
-  const new({required this.error});
-
-  // privateなdebug表示専用のwidgetであり、Flutter Inspector越しの検査対象
-  // ではない。
-  // ignore: diagnostic_describe_all_properties
-  final Object error;
+/// 初期化例外の詳細をUIへ漏らさず、利用者向けの分類済み文言だけを表示する。
+class BaseMapViewInitializationError extends StatelessWidget {
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +331,7 @@ class _BaseMapViewError extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'ベースレイヤーの初期化に失敗しました: $error',
+          'ベースレイヤーの初期化に失敗しました。',
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.error,
           ),
@@ -274,12 +379,27 @@ class _BaseMapDebugHud extends StatelessWidget {
 
 /// gesture・decode・Scene node管理を持つ内部controller。[BaseMapView]の外へは
 /// 公開しない(brief要求)。
-class _BaseMapController extends ChangeNotifier {
+class _BaseMapController extends ChangeNotifier
+    implements MapViewCameraHost, MapGpuProbeHost {
   new({
     required this.source,
     required this.limits,
     required MapCamera initialCamera,
-  }) : _camera = initialCamera;
+    required this.mapClock,
+    required this.externalCameraController,
+    required EarthquakeMapOverlaySnapshot? earthquakeOverlay,
+    required ValueChanged<EarthquakeOverlayCoverageSnapshot>?
+    onEarthquakeOverlayCoverageChanged,
+    required this.gpuProbeConfiguration,
+    required this.onGpuResourceCounterChanged,
+    required this.gpuProbeController,
+  }) : _cameraOwner = MapCameraCandidateOwner(initialCamera: initialCamera),
+       _overlayFrameOwner = BaseMapOverlayFrameOwner(
+         onCoverageChanged: onEarthquakeOverlayCoverageChanged,
+       ) {
+    _inputOverlay = earthquakeOverlay;
+    _acceptedOverlay = earthquakeOverlay;
+  }
 
   final VerifiedPmTilesSource source;
   final MapBaseLayerLimits limits;
@@ -302,10 +422,12 @@ class _BaseMapController extends ChangeNotifier {
   late final _packedMeshCache = BaseMapPackedMeshCache(
     maxEntries: limits.maxCachedTileGeometries,
   );
-  late final _adapter = FlutterSceneBaseMapAdapter(
-    sceneGraph: sceneGraph,
-    materialFor: (materialKey) => _materialsByStyleLayerId?[materialKey],
-    maxFramesInFlight: limits.maxFramesInFlight,
+  late final _earthquakePackedMeshCache = EarthquakeAreaPackedMeshCache(
+    maxEntries: limits.maxCachedTileGeometries,
+  );
+  final _earthquakeStyleCache = EarthquakeAreaRenderStyleCache();
+  final _earthquakeMaterialOwner = EarthquakeOverlayMaterialOwner(
+    loadMaterial: loadEarthquakeAreaMaterialBinding,
   );
   late final _scheduler = MapTileScheduler(
     maxInFlightDecodes: limits.maxInFlightDecodes,
@@ -318,9 +440,25 @@ class _BaseMapController extends ChangeNotifier {
   ///
   /// #1593のbase mapはまだ時間依存nodeを持たない(P/S波・pulse・freshnessは
   /// #1595)が、frame snapshotの契約を最初から満たしておく。
-  final MapClock _clock = SystemMapClock.start(
-    domain: createMapClockDomainId(value: 'base-map-view'),
-  );
+  final MapClock mapClock;
+  final MapViewCameraController? externalCameraController;
+  final MapGpuProbeConfiguration? gpuProbeConfiguration;
+  final ValueChanged<MapGpuResourceCounterSnapshot>?
+  onGpuResourceCounterChanged;
+  final MapGpuProbeController? gpuProbeController;
+  late final MapGpuProbeRuntime? _gpuProbeRuntime =
+      switch (gpuProbeConfiguration) {
+        final configuration? when mapGpuProbeCompileTimeEnabled =>
+          MapGpuProbeRuntime(configuration: configuration),
+        _ => null,
+      };
+  late final MapGpuResourceCounterCallbackGate? _gpuCounterCallbackGate =
+      switch (onGpuResourceCounterChanged) {
+        final callback? when mapGpuProbeCompileTimeEnabled =>
+          MapGpuResourceCounterCallbackGate(callback: callback),
+        _ => null,
+      };
+  static const _cameraBoundsFitter = MapCameraBoundsFitter();
 
   // Line layerの半線幅(全layer共通)。`docs/map_spec_v3.md`は線幅もzoomで
   // 変化させるが、Task 10のスコープでは固定値のdebug描画とする。
@@ -328,9 +466,19 @@ class _BaseMapController extends ChangeNotifier {
   // (`base_map_material_parameters.dart`参照。shader内でzoom補間しない)。
   static const _debugLineHalfWidthLogicalPixels = 1.0;
 
-  MapCamera _camera;
+  final MapCameraCandidateOwner _cameraOwner;
   MapViewport? _viewport;
   BaseMapTileRepository? _repository;
+  FlutterSceneMapAdapter? _adapter;
+
+  EarthquakeMapOverlaySnapshot? _inputOverlay;
+  EarthquakeMapOverlaySnapshot? _acceptedOverlay;
+  EarthquakeMapOverlaySnapshot? _requestedOverlay;
+  EarthquakeMapOverlaySnapshot? _preparingOverlay;
+  EarthquakeOverlayMaterialStage? _requestedMaterialStage;
+  final BaseMapOverlayFrameOwner _overlayFrameOwner;
+  final _gpuProbeOverlayResolver = MapGpuProbeOverlayFrameResolver();
+  var _overlayRequestGeneration = 0;
 
   var _frameNumber = 0;
 
@@ -357,31 +505,183 @@ class _BaseMapController extends ChangeNotifier {
 
   final _pendingDecodes = <CanonicalTileId>{};
   final _knownAbsentTiles = <CanonicalTileId>{};
+  late final _decodeFailures = BaseMapTileDecodeFailureOwner(
+    maxEntries: limits.maxCachedTileGeometries,
+  );
 
   double? _gestureStartZoom;
+  var _latestCameraCommandGeneration = 0;
 
   Object? get initError => _initError;
   bool get isReady => _isReady;
   int get visibleTileCount => _visibleTileCount;
   int get pendingDecodeCount => _pendingDecodes.length;
-  int get liveGeometryCount => _adapter.liveGeometryCount;
-  int get uploadedGeometryCount => _adapter.uploadedGeometryCount;
+  int get liveGeometryCount => _adapter?.liveGeometryCount ?? 0;
+  int get uploadedGeometryCount => _adapter?.uploadedGeometryCount ?? 0;
 
   /// HUD表示専用の読み取り。widgetの`camera`(`scene.NodeCamera`)と名前が
   /// 衝突するため`camera_`にしている。
   MapCamera get camera_ => _camera;
+
+  MapCamera get _camera => _cameraOwner.committedCamera;
+
+  void attachCameraController() {
+    final cameraController = externalCameraController;
+    if (cameraController == null) {
+      return;
+    }
+    final result = cameraController.attach(
+      host: this,
+      initialCamera: _camera,
+    );
+    switch (result) {
+      case MapViewCameraAttached(:final initialCamera):
+        applyCameraMutation(camera: initialCamera);
+      case MapViewCameraAlreadyAttached():
+        _initError = StateError('camera controller is already attached');
+        notifyListeners();
+      case MapViewCameraAttachmentDisposed():
+        _initError = StateError('camera controller is disposed');
+        notifyListeners();
+    }
+  }
+
+  void attachGpuProbeController() {
+    if (!mapGpuProbeCompileTimeEnabled) {
+      return;
+    }
+    final controller = gpuProbeController;
+    if (controller == null) {
+      return;
+    }
+    if (!controller.attach(host: this)) {
+      _initError = StateError('GPU probe controller is already attached');
+      notifyListeners();
+    }
+  }
+
+  void updateGpuProbeConfiguration(
+    MapGpuProbeConfiguration? configuration,
+  ) {
+    if (_isDisposed || configuration == null) {
+      return;
+    }
+    final runtime = _gpuProbeRuntime;
+    if (runtime == null) {
+      return;
+    }
+    final update = runtime.updateConfiguration(configuration);
+    final token = update.atlasTransitionToken;
+    if (token != null) {
+      _gpuProbeOverlayResolver.enqueue(token);
+    }
+    if (token != null || update.faultPointChanged) {
+      _refresh();
+      notifyListeners();
+      WidgetsBinding.instance.ensureVisualUpdate();
+    }
+  }
+
+  @override
+  void invalidateRendererContextGeneration() {
+    if (_isDisposed) {
+      return;
+    }
+    _adapter?.retireAllGpuResources();
+    _contextGeneration++;
+    _refresh();
+    notifyListeners();
+  }
+
+  @override
+  MapCameraBoundsFitResult cameraForBounds({
+    required MapCameraBounds bounds,
+    required EdgeInsets padding,
+  }) {
+    final viewport = _viewport;
+    return _cameraBoundsFitter.fit(
+      bounds: bounds,
+      viewportLogicalSize: viewport?.logicalSize ?? Size.zero,
+      devicePixelRatio: viewport?.devicePixelRatio ?? 1,
+      padding: padding,
+      minZoom: limits.minZoom.toDouble(),
+      maxZoom: limits.maxZoom.toDouble(),
+    );
+  }
+
+  @override
+  Future<MapCameraCommandResult> applyCameraCommand({
+    required int generation,
+    required MapCamera camera,
+    required MapCameraCommandCancellation cancellation,
+  }) async {
+    if (_isDisposed) {
+      return const MapCameraCommandNotAttached();
+    }
+    if (generation <= _latestCameraCommandGeneration) {
+      return MapCameraCommandSuperseded(
+        generation: generation,
+        supersededByGeneration: _latestCameraCommandGeneration,
+      );
+    }
+    _latestCameraCommandGeneration = generation;
+    await Future<void>.value();
+    final cancellationFailure = cancellation.failure;
+    if (cancellationFailure != null) {
+      return cancellationFailure;
+    }
+    if (_isDisposed) {
+      return const MapCameraCommandNotAttached();
+    }
+    if (generation != _latestCameraCommandGeneration) {
+      return MapCameraCommandSuperseded(
+        generation: generation,
+        supersededByGeneration: _latestCameraCommandGeneration,
+      );
+    }
+    if (!_isReady || _viewport == null || suspendsMapRendering(_lifecycle)) {
+      return const MapCameraCommandNotReady();
+    }
+    try {
+      if (!applyCameraMutation(camera: camera)) {
+        return const MapCameraCommandNotReady();
+      }
+    } on MapSceneFrameValidationException catch (error, stackTrace) {
+      debugPrint(
+        'BaseMapView: camera Scene submission rejected: $error\n$stackTrace',
+      );
+      return const MapCameraCommandRenderFailed(
+        reason: MapCameraCommandRenderFailureReason.sceneSubmissionRejected,
+      );
+    }
+    return MapCameraCommandSucceeded(
+      generation: generation,
+      committedCamera: _camera,
+    );
+  }
 
   Color get backgroundColor => baseMapLayerSpecs
       .firstWhere((spec) => spec.kind == BaseMapLayerKind.background)
       .color;
 
   Future<void> initialize() async {
+    final initialOverlay = _inputOverlay;
+    if (initialOverlay != null) {
+      _preparingOverlay = initialOverlay;
+      _overlayFrameOwner.beginLoading(
+        overlay: initialOverlay,
+        diagnostic: EarthquakeOverlayCoverageDiagnostic.preparing(
+          stationCount: initialOverlay.stations.length,
+          spriteCount: initialOverlay.sprites.length,
+        ),
+      );
+    }
     try {
       await scene.Scene.initializeStaticResources();
       // materialは`styleLayerId`ごとに1つ読み込むだけで、色や半線幅は
       // 焼き込まない。uniformはframeごとにsubmissionの
       // `materialParameters`(CPU確定のbyte列)から
-      // `FlutterSceneBaseMapAdapter`が適用する。これにより、viewport変更時に
+      // `FlutterSceneMapAdapter`が適用する。これにより、viewport変更時に
       // controllerがmaterialへ直接触る経路(旧
       // `_applyLineHalfWidthToAllMaterials`)と、material読み込み中に
       // viewportが未確定な場合の暫定値が両方とも不要になった。
@@ -399,6 +699,55 @@ class _BaseMapController extends ChangeNotifier {
                 await BaseMapMaterialLibrary.loadLineMaterial();
         }
       }
+      final observationMaterial =
+          await loadEarthquakeObservationMaterialBinding();
+      final counterCallbackGate = _gpuCounterCallbackGate;
+      final spriteResources = await loadOptionalFlutterSceneSpriteResources(
+        load: () => loadEarthquakeSpriteSceneResources(
+          limits: limits.spriteRendererLimits,
+          maxFramesInFlight: limits.maxFramesInFlight,
+          waitForGpuCompletion: scene.waitForPendingGpuSubmissions,
+          probeRuntime: _gpuProbeRuntime,
+          onCounterSnapshot: counterCallbackGate?.publish,
+        ),
+      );
+      prepareInitialOverlay:
+      while (true) {
+        final candidate = _inputOverlay;
+        if (candidate == null) {
+          _requestedOverlay = null;
+          break;
+        }
+        final prepared = await _earthquakeMaterialOwner.prepare(
+          resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+            cache: _earthquakeStyleCache,
+            snapshot: candidate,
+            parametersFor: earthquakeAreaMaterialParametersFor,
+          ),
+        );
+        if (!identical(candidate, _inputOverlay)) {
+          continue;
+        }
+        switch (prepared) {
+          case EarthquakeOverlayMaterialPreparationReady(:final stage):
+            _requestedOverlay = candidate;
+            _requestedMaterialStage = stage;
+            _preparingOverlay = null;
+            break prepareInitialOverlay;
+          case EarthquakeOverlayMaterialPreparationFailed(:final error):
+            _requestedOverlay = null;
+            _preparingOverlay = null;
+            _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+            _overlayFrameOwner.hideCandidate();
+            debugPrint(
+              'BaseMapView: failed to load earthquake overlay material: '
+              '$error',
+            );
+            break prepareInitialOverlay;
+          case EarthquakeOverlayMaterialPreparationSuperseded():
+            continue;
+        }
+      }
       final repository = await BaseMapTileRepository.open(
         source: source,
         limits: limits.pmTilesLimits,
@@ -409,6 +758,26 @@ class _BaseMapController extends ChangeNotifier {
       }
       _materialsByStyleLayerId = materialsByStyleLayerId;
       _repository = repository;
+      _adapter = FlutterSceneMapAdapter(
+        sceneGraph: sceneGraph,
+        materialFor: (batch) {
+          final earthquakeMaterial = _earthquakeMaterialOwner.materialFor(
+            batch,
+          );
+          if (earthquakeMaterial != null) {
+            return earthquakeMaterial;
+          }
+          final material =
+              materialsByStyleLayerId[batch.compatibility.batchKey.materialKey];
+          return material == null
+              ? null
+              : FlutterScenePreprocessedMaterialBinding(material);
+        },
+        observationMaterial: observationMaterial,
+        spriteResources: spriteResources,
+        gpuProbeRuntime: _gpuProbeRuntime,
+        maxFramesInFlight: limits.maxFramesInFlight,
+      );
       _isReady = true;
       _refresh();
       // 初期化失敗の原因はGPU初期化・material読み込み・archive openなど
@@ -416,6 +785,8 @@ class _BaseMapController extends ChangeNotifier {
       // 型を問わず受け止める。
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
+      _preparingOverlay = null;
+      _overlayFrameOwner.hideCandidate();
       _initError = error;
     } finally {
       if (!_isDisposed) {
@@ -437,6 +808,90 @@ class _BaseMapController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateEarthquakeOverlay({
+    required EarthquakeMapOverlaySnapshot? overlay,
+    required ValueChanged<EarthquakeOverlayCoverageSnapshot>? onCoverageChanged,
+  }) async {
+    if (_isDisposed) {
+      return;
+    }
+    _overlayFrameOwner.updateCoverageCallback(onCoverageChanged);
+    if (identical(_inputOverlay, overlay)) {
+      return;
+    }
+    if (overlay == null) {
+      _inputOverlay = null;
+      _acceptedOverlay = null;
+      _gpuProbeOverlayResolver.invalidateSource();
+      _overlayRequestGeneration++;
+      _requestedOverlay = null;
+      _preparingOverlay = null;
+      _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+      _earthquakeStyleCache.clear();
+      _refresh();
+      notifyListeners();
+      return;
+    }
+    final commit = commitEarthquakeOverlayInputSnapshot(
+      current: _acceptedOverlay,
+      next: overlay,
+    );
+    final selected = switch (commit) {
+      EarthquakeOverlayCommitAccepted(:final next) => next,
+      EarthquakeOverlayCommitRejected(:final current) => current,
+    };
+    if (commit is EarthquakeOverlayCommitRejected) {
+      return;
+    }
+    _inputOverlay = selected;
+    _acceptedOverlay = selected;
+    _gpuProbeOverlayResolver.invalidateSource();
+    final requestGeneration = ++_overlayRequestGeneration;
+    _requestedOverlay = null;
+    _preparingOverlay = selected;
+    _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+    _earthquakeStyleCache.clear();
+    _overlayFrameOwner.hideCandidate();
+    _overlayFrameOwner.beginLoading(
+      overlay: selected,
+      diagnostic: EarthquakeOverlayCoverageDiagnostic.preparing(
+        stationCount: selected.stations.length,
+        spriteCount: selected.sprites.length,
+      ),
+    );
+    _refresh();
+    final prepared = await _earthquakeMaterialOwner.prepare(
+      resources: earthquakeAreaRenderStyleResourcesForSnapshot(
+        cache: _earthquakeStyleCache,
+        snapshot: selected,
+        parametersFor: earthquakeAreaMaterialParametersFor,
+      ),
+    );
+    if (_isDisposed ||
+        requestGeneration != _overlayRequestGeneration ||
+        !identical(_inputOverlay, selected)) {
+      return;
+    }
+    switch (prepared) {
+      case EarthquakeOverlayMaterialPreparationReady(:final stage):
+        _preparingOverlay = null;
+        _requestedOverlay = selected;
+        _requestedMaterialStage = stage;
+      case EarthquakeOverlayMaterialPreparationFailed(:final error):
+        _preparingOverlay = null;
+        _requestedOverlay = null;
+        _requestedMaterialStage = _earthquakeMaterialOwner.stageClear();
+        _overlayFrameOwner.hideCandidate();
+        debugPrint(
+          'BaseMapView: failed to load earthquake overlay material: $error',
+        );
+      case EarthquakeOverlayMaterialPreparationSuperseded():
+        return;
+    }
+    _refresh();
+    notifyListeners();
+  }
+
   /// app lifecycleの変化をGPU resourceの寿命へ反映する。
   ///
   /// - background/detachedでは描画も新規uploadも止め、GPU resourceを手放す。
@@ -451,9 +906,12 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _lifecycle = lifecycle;
+    if (suspendsMapRendering(lifecycle)) {
+      _overlayFrameOwner.hide();
+    }
 
     if (retiresGpuResourcesOnTransition(from: previous, to: lifecycle)) {
-      _adapter.retireAllGpuResources();
+      _adapter?.retireAllGpuResources();
     }
     if (advancesGpuContextGenerationOnTransition(
       from: previous,
@@ -478,37 +936,65 @@ class _BaseMapController extends ChangeNotifier {
     if (gestureStartZoom == null) {
       return;
     }
-    _camera = cameraAfterGestureUpdate(
-      camera: _camera,
-      gestureStartZoom: gestureStartZoom,
-      cumulativeScale: cumulativeScale,
-      focalPointDelta: focalPointDelta,
-      focalPoint: focalPoint,
-      viewportLogicalSize: _viewport?.logicalSize,
-      minZoom: limits.minZoom,
-      maxZoom: limits.maxZoom,
+    applyCameraMutation(
+      camera: cameraAfterGestureUpdate(
+        camera: _camera,
+        gestureStartZoom: gestureStartZoom,
+        cumulativeScale: cumulativeScale,
+        focalPointDelta: focalPointDelta,
+        focalPoint: focalPoint,
+        viewportLogicalSize: _viewport?.logicalSize,
+        minZoom: limits.minZoom,
+        maxZoom: limits.maxZoom,
+      ),
     );
-    _refresh();
-    notifyListeners();
   }
 
   void endGesture() {
     _gestureStartZoom = null;
   }
 
-  void _refresh() {
+  bool applyCameraMutation({required MapCamera camera}) {
+    final candidate = cameraClampedToMapLimits(
+      camera: camera,
+      minZoom: limits.minZoom,
+      maxZoom: limits.maxZoom,
+    );
+    final scheduled = _cameraOwner.commitCandidate(
+      candidate: candidate,
+      submitCandidate: (camera) => _refresh(
+        camera: camera,
+        publishCamera: false,
+      ),
+    );
+    if (scheduled) {
+      externalCameraController?.commitCameraFromHost(
+        host: this,
+        camera: _camera,
+      );
+    }
+    notifyListeners();
+    WidgetsBinding.instance.ensureVisualUpdate();
+    return scheduled;
+  }
+
+  bool _refresh({MapCamera? camera, bool publishCamera = true}) {
+    if (_isDisposed) {
+      return false;
+    }
     final viewport = _viewport;
     if (!_isReady || viewport == null) {
-      return;
+      return false;
     }
     // background/detachedではGPU resourceを手放し済みなので、submitして
     // 作り直さない。cover計算とdecodeもここで止める(設計正本
     // 「detach/backgroundではanimation、request、decode、uploadを停止し」)。
     if (suspendsMapRendering(_lifecycle)) {
-      return;
+      return false;
     }
+    final renderCamera = camera ?? _camera;
     final cover = TileCoverCalculator.cover(
-      camera: _camera,
+      camera: renderCamera,
       viewport: viewport,
       minZoom: limits.minZoom,
       maxZoom: limits.maxZoom,
@@ -516,13 +1002,24 @@ class _BaseMapController extends ChangeNotifier {
     _visibleTileCount = cover.length;
     _cache.noteActiveZoom(
       canonicalZoomFor(
-        zoom: _camera.zoom,
+        zoom: renderCamera.zoom,
         minZoom: limits.minZoom,
         maxZoom: limits.maxZoom,
       ),
     );
-    _submitFrame(cover: cover, viewport: viewport);
+    final scheduled = _submitFrame(
+      cover: cover,
+      viewport: viewport,
+      renderCamera: renderCamera,
+    );
     _requestMissingDecodes(cover);
+    if (scheduled && publishCamera) {
+      externalCameraController?.commitCameraFromHost(
+        host: this,
+        camera: renderCamera,
+      );
+    }
+    return scheduled;
   }
 
   /// 現frameのplanを`MapRenderSubmission`へ変換し、adapterへ渡す。
@@ -530,27 +1027,29 @@ class _BaseMapController extends ChangeNotifier {
   /// このcontrollerはもうScene nodeを自分で組まない。描画順・batch結合・GPU
   /// resourceの寿命はすべてfoundationのrender契約とadapterが持つ
   /// (#1593完了条件「BaseMapがfoundation契約経由で描画」)。
-  void _submitFrame({
+  bool _submitFrame({
     required List<OverscaledTileId> cover,
     required MapViewport viewport,
+    required MapCamera renderCamera,
   }) {
-    if (_materialsByStyleLayerId == null) {
-      return;
+    final adapter = _adapter;
+    if (_materialsByStyleLayerId == null || adapter == null) {
+      return false;
     }
     final plans = buildBaseMapRenderPlans(
       requestedCover: cover,
       sourceInstanceId: source.cacheIdentity,
       cache: _cache,
       maxParentSteps: limits.maxParentFallbackSteps,
-      zoom: _camera.zoom,
+      zoom: renderCamera.zoom,
     );
     final sourceInstanceId = createMapSourceInstanceId(
       value: source.cacheIdentity,
     );
     final frame = captureMapFrameSnapshot(
-      clock: _clock,
+      clock: mapClock,
       frameNumber: _frameNumber++,
-      camera: _camera,
+      camera: renderCamera,
       viewport: viewport,
       revisions: [
         // 同梱PMTilesは差し替わらないarchiveなので、revisionは常に0で
@@ -566,19 +1065,92 @@ class _BaseMapController extends ChangeNotifier {
       contextGeneration: _contextGeneration,
     );
 
-    _adapter.submit(
-      submission: buildBaseMapRenderSubmission(
-        frame: frame,
-        plans: plans,
-        sourceInstanceId: sourceInstanceId,
-        packedMeshesFor: (plan) => _packedMeshCache.getOrBuild(
-          sourceInstanceId: source.cacheIdentity,
-          tileId: plan.transformInput.tileId.canonical,
-          geometry: plan.tileGeometry,
-        ),
-        lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+    final baseMap = buildBaseMapRenderSubmission(
+      frame: frame,
+      plans: plans,
+      sourceInstanceId: sourceInstanceId,
+      packedMeshesFor: (plan) => _packedMeshCache.getOrBuild(
+        sourceInstanceId: source.cacheIdentity,
+        tileId: plan.transformInput.tileId.canonical,
+        geometry: plan.tileGeometry,
+      ),
+      lineHalfWidthLogicalPixels: _debugLineHalfWidthLogicalPixels,
+    );
+    final requestedOverlay = switch (_requestedOverlay) {
+      final overlay? => _gpuProbeOverlayResolver.resolve(
+        sourceOverlay: overlay,
+        currentOverlay: _overlayFrameOwner.overlay,
+        probeRuntime: _gpuProbeRuntime,
+      ),
+      null => null,
+    };
+    final result = buildBaseMapOverlayFrame(
+      frame: frame,
+      baseMap: baseMap,
+      currentOverlay: _overlayFrameOwner.overlay,
+      requestedOverlay: requestedOverlay,
+      previousObservationBatch: _overlayFrameOwner.previousObservationBatch,
+      previousSpriteBatches: _overlayFrameOwner.previousSpriteBatches,
+      requestedCover: cover,
+      tileSourceInstanceId: source.cacheIdentity,
+      tileCache: _cache,
+      packedMeshFor: _earthquakePackedMeshCache.resolve,
+      styleCache: _earthquakeStyleCache,
+      missingExactTileReasonFor: (tileId) {
+        if (_decodeFailures.contains(tileId)) {
+          return EarthquakeOverlayExactTileMissReason.decodeFailure;
+        }
+        if (_knownAbsentTiles.contains(tileId)) {
+          return EarthquakeOverlayExactTileMissReason.authoritativeEmpty;
+        }
+        return EarthquakeOverlayExactTileMissReason.pending;
+      },
+      // Required codeの可視性はtile featureとの照合だけでは証明できない。
+      // 画面外style codeを未解決と推測せず、検証済み入力が追加されるまで0とする。
+      requiredCodeUnresolvedCount: 0,
+      sceneFrameLimits: MapSceneFrameLimits(
+        maxNodeCount: limits.maxSceneNodeCount,
       ),
     );
+    if (result.shouldRetireGpuResources) {
+      adapter.retireAllGpuResources();
+      return false;
+    }
+    final submission = result.submission;
+    if (submission == null) {
+      return false;
+    }
+    final commit = _overlayFrameOwner.commit(
+      candidate: result,
+      baseOnlySubmission: buildBaseMapOnlyFrameSubmission(
+        frame: frame,
+        baseMap: baseMap,
+        sceneFrameLimits: MapSceneFrameLimits(
+          maxNodeCount: limits.maxSceneNodeCount,
+        ),
+      ),
+      resources: _requestedMaterialStage,
+      submitFrame: (submission) => adapter.submitFrame(
+        submission: submission,
+      ),
+      retireAllGpuResources: adapter.retireAllGpuResources,
+      failClosedResources: _earthquakeMaterialOwner.clear,
+      preparingOverlay: _preparingOverlay,
+    );
+    _requestedMaterialStage = null;
+    if (commit is BaseMapOverlayFrameCommitFailed) {
+      _requestedOverlay = null;
+      _earthquakeStyleCache.clear();
+      debugPrint(
+        'BaseMapView: earthquake overlay Scene submit failed: '
+        '${commit.error}',
+      );
+    }
+    return switch (commit) {
+      BaseMapOverlayFrameCommitSucceeded() => true,
+      BaseMapOverlayFrameCommitFailed(:final fallbackError) =>
+        fallbackError == null,
+    };
   }
 
   void _requestMissingDecodes(List<OverscaledTileId> cover) {
@@ -590,6 +1162,7 @@ class _BaseMapController extends ChangeNotifier {
     final completed = <CanonicalTileId>{
       for (final tile in cover)
         if (_knownAbsentTiles.contains(tile.canonical) ||
+            _decodeFailures.contains(tile.canonical) ||
             _cache.get(
                   sourceInstanceId: source.cacheIdentity,
                   tileId: tile.canonical,
@@ -616,9 +1189,15 @@ class _BaseMapController extends ChangeNotifier {
     required BaseMapTileRepository repository,
     required CanonicalTileId tileId,
   }) async {
+    if (_isDisposed) {
+      return;
+    }
     final token = _cache.beginDecode();
     try {
       final bytes = await repository.readTile(tileId);
+      if (_isDisposed) {
+        return;
+      }
       if (bytes == null) {
         // sparse archiveの正当な欠損。このarchiveは差し替わらないため、
         // 同じtileを永続的に既知の欠損として扱い、pan中に何度も再読込
@@ -630,6 +1209,9 @@ class _BaseMapController extends ChangeNotifier {
         tileBytes: bytes,
         limits: limits.decodeLimits,
       );
+      if (_isDisposed) {
+        return;
+      }
       _cache.put(
         sourceInstanceId: source.cacheIdentity,
         tileId: tileId,
@@ -641,6 +1223,7 @@ class _BaseMapController extends ChangeNotifier {
       // fallback表示のまま)描かれない。
       // ignore: avoid_catches_without_on_clauses
     } catch (error) {
+      _decodeFailures.record(tileId);
       debugPrint('BaseMapView: failed to decode tile $tileId: $error');
     } finally {
       _pendingDecodes.remove(tileId);
@@ -657,10 +1240,16 @@ class _BaseMapController extends ChangeNotifier {
       return;
     }
     _isDisposed = true;
+    _gpuCounterCallbackGate?.dispose();
+    externalCameraController?.detach(host: this);
+    gpuProbeController?.detach(host: this);
     _cache.dispose();
     _packedMeshCache.clear();
+    _earthquakePackedMeshCache.clear();
+    _earthquakeStyleCache.clear();
+    _earthquakeMaterialOwner.clear();
     unawaited(_repository?.close());
-    _adapter.retireAllGpuResources();
+    _adapter?.retireAllGpuResources();
     super.dispose();
   }
 }
@@ -751,10 +1340,37 @@ MapCamera cameraAfterGestureUpdate({
     x: zoomedWorldCenter.x / zoomedWorldSize,
     y: zoomedWorldCenter.y / zoomedWorldSize,
   );
+  return cameraClampedToMapLimits(
+    camera: MapCamera(
+      centerLongitude: lngLat.longitude,
+      centerLatitude: lngLat.latitude,
+      zoom: clampedZoom,
+    ),
+    minZoom: minZoom,
+    maxZoom: maxZoom,
+    projection: projection,
+  );
+}
+
+/// Normalizes every camera mutation through the renderer's shared limits.
+MapCamera cameraClampedToMapLimits({
+  required MapCamera camera,
+  required int minZoom,
+  required int maxZoom,
+  MapMercatorProjection projection = const MapMercatorProjection(),
+}) {
+  final normalized = projection.lngLatToNormalized(
+    longitude: camera.centerLongitude,
+    latitude: camera.centerLatitude,
+  );
+  final lngLat = projection.normalizedToLngLat(
+    x: normalized.x,
+    y: normalized.y,
+  );
   return MapCamera(
     centerLongitude: lngLat.longitude,
     centerLatitude: lngLat.latitude,
-    zoom: clampedZoom,
+    zoom: camera.zoom.clamp(minZoom.toDouble(), maxZoom.toDouble()),
   );
 }
 

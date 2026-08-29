@@ -17,7 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$CityMaxIntensityResponse {
 
 /// 集計を最後に更新した時刻。更新時刻を取得できなかった場合は null（items は返る）
-@JsonKey(includeIfNull: true, name: 'response_at') DateTime? get responseAt; List<CityMaxIntensityItem> get items;
+@JsonKey(includeIfNull: true, name: 'aggregated_at') DateTime? get aggregatedAt; List<CityMaxIntensityItem> get items;
 /// Create a copy of CityMaxIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +30,16 @@ $CityMaxIntensityResponseCopyWith<CityMaxIntensityResponse> get copyWith => _$Ci
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CityMaxIntensityResponse&&(identical(other.responseAt, responseAt) || other.responseAt == responseAt)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CityMaxIntensityResponse&&(identical(other.aggregatedAt, aggregatedAt) || other.aggregatedAt == aggregatedAt)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,responseAt,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,aggregatedAt,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'CityMaxIntensityResponse(responseAt: $responseAt, items: $items)';
+  return 'CityMaxIntensityResponse(aggregatedAt: $aggregatedAt, items: $items)';
 }
 
 
@@ -50,7 +50,7 @@ abstract mixin class $CityMaxIntensityResponseCopyWith<$Res>  {
   factory $CityMaxIntensityResponseCopyWith(CityMaxIntensityResponse value, $Res Function(CityMaxIntensityResponse) _then) = _$CityMaxIntensityResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: true, name: 'response_at') DateTime? responseAt, List<CityMaxIntensityItem> items
+@JsonKey(includeIfNull: true, name: 'aggregated_at') DateTime? aggregatedAt, List<CityMaxIntensityItem> items
 });
 
 
@@ -67,9 +67,9 @@ class _$CityMaxIntensityResponseCopyWithImpl<$Res>
 
 /// Create a copy of CityMaxIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? responseAt = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? aggregatedAt = freezed,Object? items = null,}) {
   return _then(CityMaxIntensityResponse(
-responseAt: freezed == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
+aggregatedAt: freezed == aggregatedAt ? _self.aggregatedAt : aggregatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<CityMaxIntensityItem>,
   ));
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: true, name: 'response_at')  DateTime? responseAt,  List<CityMaxIntensityItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: true, name: 'aggregated_at')  DateTime? aggregatedAt,  List<CityMaxIntensityItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CityMaxIntensityResponse() when $default != null:
-return $default(_that.responseAt,_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.responseAt,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: true, name: 'response_at')  DateTime? responseAt,  List<CityMaxIntensityItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: true, name: 'aggregated_at')  DateTime? aggregatedAt,  List<CityMaxIntensityItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _CityMaxIntensityResponse():
-return $default(_that.responseAt,_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.responseAt,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: true, name: 'response_at')  DateTime? responseAt,  List<CityMaxIntensityItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: true, name: 'aggregated_at')  DateTime? aggregatedAt,  List<CityMaxIntensityItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _CityMaxIntensityResponse() when $default != null:
-return $default(_that.responseAt,_that.items);case _:
+return $default(_that.aggregatedAt,_that.items);case _:
   return null;
 
 }
@@ -212,11 +212,11 @@ return $default(_that.responseAt,_that.items);case _:
 @JsonSerializable()
 
 class _CityMaxIntensityResponse implements CityMaxIntensityResponse {
-  const _CityMaxIntensityResponse({@JsonKey(includeIfNull: true, name: 'response_at') required this.responseAt, required  List<CityMaxIntensityItem> items}): _items = items;
+  const _CityMaxIntensityResponse({@JsonKey(includeIfNull: true, name: 'aggregated_at') required this.aggregatedAt, required  List<CityMaxIntensityItem> items}): _items = items;
   factory _CityMaxIntensityResponse.fromJson(Map<String, dynamic> json) => _$CityMaxIntensityResponseFromJson(json);
 
 /// 集計を最後に更新した時刻。更新時刻を取得できなかった場合は null（items は返る）
-@override@JsonKey(includeIfNull: true, name: 'response_at') final  DateTime? responseAt;
+@override@JsonKey(includeIfNull: true, name: 'aggregated_at') final  DateTime? aggregatedAt;
  final  List<CityMaxIntensityItem> _items;
 @override List<CityMaxIntensityItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
@@ -238,16 +238,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CityMaxIntensityResponse&&(identical(other.responseAt, responseAt) || other.responseAt == responseAt)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CityMaxIntensityResponse&&(identical(other.aggregatedAt, aggregatedAt) || other.aggregatedAt == aggregatedAt)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,responseAt,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,aggregatedAt,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'CityMaxIntensityResponse(responseAt: $responseAt, items: $items)';
+  return 'CityMaxIntensityResponse(aggregatedAt: $aggregatedAt, items: $items)';
 }
 
 
@@ -258,7 +258,7 @@ abstract mixin class _$CityMaxIntensityResponseCopyWith<$Res> implements $CityMa
   factory _$CityMaxIntensityResponseCopyWith(_CityMaxIntensityResponse value, $Res Function(_CityMaxIntensityResponse) _then) = __$CityMaxIntensityResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: true, name: 'response_at') DateTime? responseAt, List<CityMaxIntensityItem> items
+@JsonKey(includeIfNull: true, name: 'aggregated_at') DateTime? aggregatedAt, List<CityMaxIntensityItem> items
 });
 
 
@@ -275,9 +275,9 @@ class __$CityMaxIntensityResponseCopyWithImpl<$Res>
 
 /// Create a copy of CityMaxIntensityResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? responseAt = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? aggregatedAt = freezed,Object? items = null,}) {
   return _then(_CityMaxIntensityResponse(
-responseAt: freezed == responseAt ? _self.responseAt : responseAt // ignore: cast_nullable_to_non_nullable
+aggregatedAt: freezed == aggregatedAt ? _self.aggregatedAt : aggregatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<CityMaxIntensityItem>,
   ));

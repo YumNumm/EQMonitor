@@ -17,9 +17,9 @@ T _$identity<T>(T value) => value;
 mixin _$Earthquake {
 
 /// yyyyMMddHHmmss形式のイベントID
-@JsonKey(name: 'event_id') String get eventId; TelegramStatus get status;@JsonKey(name: 'earthquake_type') EarthquakeType get earthquakeType;@JsonKey(name: 'origin_time_precision') OriginTimePrecision get originTimePrecision;/// 地震データのソースの配列
+@JsonKey(name: 'event_id') String get eventId; TelegramStatus get status;@JsonKey(name: 'earthquake_type') EarthquakeType get earthquakeType;@JsonKey(name: 'origin_time_precision') OriginTimePrecision get originTimePrecision; List<EarthquakeHypocentersUnion> get hypocenters;/// 地震データのソースの配列
  List<EarthquakeDatasource> get datasources; List<EarthquakeTelegram> get telegrams;@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? get originTime;@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) Hypocenter? get hypocenter;@JsonKey(includeIfNull: false) Intensity? get intensity;/// 推計震度PMTilesのフルURL
-@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? get estimatedIntensityTile;@JsonKey(includeIfNull: false) Catalog? get catalog;
+@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? get estimatedIntensityTile;@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive') EstimatedIntensityTileArchive? get estimatedIntensityTileArchive;@JsonKey(includeIfNull: false) Catalog? get catalog;
 /// Create a copy of Earthquake
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -32,16 +32,16 @@ $EarthquakeCopyWith<Earthquake> get copyWith => _$EarthquakeCopyWithImpl<Earthqu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Earthquake&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimePrecision, originTimePrecision) || other.originTimePrecision == originTimePrecision)&&const DeepCollectionEquality().equals(other.datasources, datasources)&&const DeepCollectionEquality().equals(other.telegrams, telegrams)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.estimatedIntensityTile, estimatedIntensityTile) || other.estimatedIntensityTile == estimatedIntensityTile)&&(identical(other.catalog, catalog) || other.catalog == catalog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Earthquake&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimePrecision, originTimePrecision) || other.originTimePrecision == originTimePrecision)&&const DeepCollectionEquality().equals(other.hypocenters, hypocenters)&&const DeepCollectionEquality().equals(other.datasources, datasources)&&const DeepCollectionEquality().equals(other.telegrams, telegrams)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.estimatedIntensityTile, estimatedIntensityTile) || other.estimatedIntensityTile == estimatedIntensityTile)&&(identical(other.estimatedIntensityTileArchive, estimatedIntensityTileArchive) || other.estimatedIntensityTileArchive == estimatedIntensityTileArchive)&&(identical(other.catalog, catalog) || other.catalog == catalog));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,status,earthquakeType,originTimePrecision,const DeepCollectionEquality().hash(datasources),const DeepCollectionEquality().hash(telegrams),originTime,arrivalTime,hypocenter,intensity,estimatedIntensityTile,catalog);
+int get hashCode => Object.hash(runtimeType,eventId,status,earthquakeType,originTimePrecision,const DeepCollectionEquality().hash(hypocenters),const DeepCollectionEquality().hash(datasources),const DeepCollectionEquality().hash(telegrams),originTime,arrivalTime,hypocenter,intensity,estimatedIntensityTile,estimatedIntensityTileArchive,catalog);
 
 @override
 String toString() {
-  return 'Earthquake(eventId: $eventId, status: $status, earthquakeType: $earthquakeType, originTimePrecision: $originTimePrecision, datasources: $datasources, telegrams: $telegrams, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, intensity: $intensity, estimatedIntensityTile: $estimatedIntensityTile, catalog: $catalog)';
+  return 'Earthquake(eventId: $eventId, status: $status, earthquakeType: $earthquakeType, originTimePrecision: $originTimePrecision, hypocenters: $hypocenters, datasources: $datasources, telegrams: $telegrams, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, intensity: $intensity, estimatedIntensityTile: $estimatedIntensityTile, estimatedIntensityTileArchive: $estimatedIntensityTileArchive, catalog: $catalog)';
 }
 
 
@@ -52,11 +52,11 @@ abstract mixin class $EarthquakeCopyWith<$Res>  {
   factory $EarthquakeCopyWith(Earthquake value, $Res Function(Earthquake) _then) = _$EarthquakeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'earthquake_type') EarthquakeType earthquakeType,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, List<EarthquakeDatasource> datasources, List<EarthquakeTelegram> telegrams,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false) Intensity? intensity,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false) Catalog? catalog
+@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'earthquake_type') EarthquakeType earthquakeType,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, List<EarthquakeHypocentersUnion> hypocenters, List<EarthquakeDatasource> datasources, List<EarthquakeTelegram> telegrams,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false) Intensity? intensity,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive') EstimatedIntensityTileArchive? estimatedIntensityTileArchive,@JsonKey(includeIfNull: false) Catalog? catalog
 });
 
 
-$HypocenterCopyWith<$Res>? get hypocenter;$IntensityCopyWith<$Res>? get intensity;$CatalogCopyWith<$Res>? get catalog;
+$HypocenterCopyWith<$Res>? get hypocenter;$IntensityCopyWith<$Res>? get intensity;$EstimatedIntensityTileArchiveCopyWith<$Res>? get estimatedIntensityTileArchive;$CatalogCopyWith<$Res>? get catalog;
 
 }
 /// @nodoc
@@ -69,20 +69,22 @@ class _$EarthquakeCopyWithImpl<$Res>
 
 /// Create a copy of Earthquake
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? earthquakeType = null,Object? originTimePrecision = null,Object? datasources = null,Object? telegrams = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? intensity = freezed,Object? estimatedIntensityTile = freezed,Object? catalog = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? earthquakeType = null,Object? originTimePrecision = null,Object? hypocenters = null,Object? datasources = null,Object? telegrams = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? intensity = freezed,Object? estimatedIntensityTile = freezed,Object? estimatedIntensityTileArchive = freezed,Object? catalog = freezed,}) {
   return _then(Earthquake(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,earthquakeType: null == earthquakeType ? _self.earthquakeType : earthquakeType // ignore: cast_nullable_to_non_nullable
 as EarthquakeType,originTimePrecision: null == originTimePrecision ? _self.originTimePrecision : originTimePrecision // ignore: cast_nullable_to_non_nullable
-as OriginTimePrecision,datasources: null == datasources ? _self.datasources : datasources // ignore: cast_nullable_to_non_nullable
+as OriginTimePrecision,hypocenters: null == hypocenters ? _self.hypocenters : hypocenters // ignore: cast_nullable_to_non_nullable
+as List<EarthquakeHypocentersUnion>,datasources: null == datasources ? _self.datasources : datasources // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeDatasource>,telegrams: null == telegrams ? _self.telegrams : telegrams // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegram>,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as Hypocenter?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as Intensity?,estimatedIntensityTile: freezed == estimatedIntensityTile ? _self.estimatedIntensityTile : estimatedIntensityTile // ignore: cast_nullable_to_non_nullable
-as String?,catalog: freezed == catalog ? _self.catalog : catalog // ignore: cast_nullable_to_non_nullable
+as String?,estimatedIntensityTileArchive: freezed == estimatedIntensityTileArchive ? _self.estimatedIntensityTileArchive : estimatedIntensityTileArchive // ignore: cast_nullable_to_non_nullable
+as EstimatedIntensityTileArchive?,catalog: freezed == catalog ? _self.catalog : catalog // ignore: cast_nullable_to_non_nullable
 as Catalog?,
   ));
 }
@@ -109,6 +111,18 @@ $IntensityCopyWith<$Res>? get intensity {
 
   return $IntensityCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of Earthquake
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EstimatedIntensityTileArchiveCopyWith<$Res>? get estimatedIntensityTileArchive {
+    if (_self.estimatedIntensityTileArchive == null) {
+    return null;
+  }
+
+  return $EstimatedIntensityTileArchiveCopyWith<$Res>(_self.estimatedIntensityTileArchive!, (value) {
+    return _then(_self.copyWith(estimatedIntensityTileArchive: value));
   });
 }/// Create a copy of Earthquake
 /// with the given fields replaced by the non-null parameter values.
@@ -204,10 +218,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false)  Catalog? catalog)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeHypocentersUnion> hypocenters,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive')  EstimatedIntensityTileArchive? estimatedIntensityTileArchive, @JsonKey(includeIfNull: false)  Catalog? catalog)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Earthquake() when $default != null:
-return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.catalog);case _:
+return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.hypocenters,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.estimatedIntensityTileArchive,_that.catalog);case _:
   return orElse();
 
 }
@@ -225,10 +239,10 @@ return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTime
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false)  Catalog? catalog)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeHypocentersUnion> hypocenters,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive')  EstimatedIntensityTileArchive? estimatedIntensityTileArchive, @JsonKey(includeIfNull: false)  Catalog? catalog)  $default,) {final _that = this;
 switch (_that) {
 case _Earthquake():
-return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.catalog);case _:
+return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.hypocenters,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.estimatedIntensityTileArchive,_that.catalog);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -245,10 +259,10 @@ return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTime
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false)  Catalog? catalog)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'earthquake_type')  EarthquakeType earthquakeType, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  List<EarthquakeHypocentersUnion> hypocenters,  List<EarthquakeDatasource> datasources,  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false)  Intensity? intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive')  EstimatedIntensityTileArchive? estimatedIntensityTileArchive, @JsonKey(includeIfNull: false)  Catalog? catalog)?  $default,) {final _that = this;
 switch (_that) {
 case _Earthquake() when $default != null:
-return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.catalog);case _:
+return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTimePrecision,_that.hypocenters,_that.datasources,_that.telegrams,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.intensity,_that.estimatedIntensityTile,_that.estimatedIntensityTileArchive,_that.catalog);case _:
   return null;
 
 }
@@ -260,7 +274,7 @@ return $default(_that.eventId,_that.status,_that.earthquakeType,_that.originTime
 @JsonSerializable()
 
 class _Earthquake implements Earthquake {
-  const _Earthquake({@JsonKey(name: 'event_id') required this.eventId, required this.status, @JsonKey(name: 'earthquake_type') required this.earthquakeType, @JsonKey(name: 'origin_time_precision') required this.originTimePrecision, required  List<EarthquakeDatasource> datasources, required  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.hypocenter, @JsonKey(includeIfNull: false) this.intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') this.estimatedIntensityTile, @JsonKey(includeIfNull: false) this.catalog}): _datasources = datasources,_telegrams = telegrams;
+  const _Earthquake({@JsonKey(name: 'event_id') required this.eventId, required this.status, @JsonKey(name: 'earthquake_type') required this.earthquakeType, @JsonKey(name: 'origin_time_precision') required this.originTimePrecision, required  List<EarthquakeHypocentersUnion> hypocenters, required  List<EarthquakeDatasource> datasources, required  List<EarthquakeTelegram> telegrams, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.hypocenter, @JsonKey(includeIfNull: false) this.intensity, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') this.estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive') this.estimatedIntensityTileArchive, @JsonKey(includeIfNull: false) this.catalog}): _hypocenters = hypocenters,_datasources = datasources,_telegrams = telegrams;
   factory _Earthquake.fromJson(Map<String, dynamic> json) => _$EarthquakeFromJson(json);
 
 /// yyyyMMddHHmmss形式のイベントID
@@ -268,6 +282,13 @@ class _Earthquake implements Earthquake {
 @override final  TelegramStatus status;
 @override@JsonKey(name: 'earthquake_type') final  EarthquakeType earthquakeType;
 @override@JsonKey(name: 'origin_time_precision') final  OriginTimePrecision originTimePrecision;
+ final  List<EarthquakeHypocentersUnion> _hypocenters;
+@override List<EarthquakeHypocentersUnion> get hypocenters {
+  if (_hypocenters is EqualUnmodifiableListView) return _hypocenters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_hypocenters);
+}
+
 /// 地震データのソースの配列
  final  List<EarthquakeDatasource> _datasources;
 /// 地震データのソースの配列
@@ -290,6 +311,7 @@ class _Earthquake implements Earthquake {
 @override@JsonKey(includeIfNull: false) final  Intensity? intensity;
 /// 推計震度PMTilesのフルURL
 @override@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') final  String? estimatedIntensityTile;
+@override@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive') final  EstimatedIntensityTileArchive? estimatedIntensityTileArchive;
 @override@JsonKey(includeIfNull: false) final  Catalog? catalog;
 
 /// Create a copy of Earthquake
@@ -305,16 +327,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Earthquake&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimePrecision, originTimePrecision) || other.originTimePrecision == originTimePrecision)&&const DeepCollectionEquality().equals(other._datasources, _datasources)&&const DeepCollectionEquality().equals(other._telegrams, _telegrams)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.estimatedIntensityTile, estimatedIntensityTile) || other.estimatedIntensityTile == estimatedIntensityTile)&&(identical(other.catalog, catalog) || other.catalog == catalog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Earthquake&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.earthquakeType, earthquakeType) || other.earthquakeType == earthquakeType)&&(identical(other.originTimePrecision, originTimePrecision) || other.originTimePrecision == originTimePrecision)&&const DeepCollectionEquality().equals(other._hypocenters, _hypocenters)&&const DeepCollectionEquality().equals(other._datasources, _datasources)&&const DeepCollectionEquality().equals(other._telegrams, _telegrams)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.estimatedIntensityTile, estimatedIntensityTile) || other.estimatedIntensityTile == estimatedIntensityTile)&&(identical(other.estimatedIntensityTileArchive, estimatedIntensityTileArchive) || other.estimatedIntensityTileArchive == estimatedIntensityTileArchive)&&(identical(other.catalog, catalog) || other.catalog == catalog));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,status,earthquakeType,originTimePrecision,const DeepCollectionEquality().hash(_datasources),const DeepCollectionEquality().hash(_telegrams),originTime,arrivalTime,hypocenter,intensity,estimatedIntensityTile,catalog);
+int get hashCode => Object.hash(runtimeType,eventId,status,earthquakeType,originTimePrecision,const DeepCollectionEquality().hash(_hypocenters),const DeepCollectionEquality().hash(_datasources),const DeepCollectionEquality().hash(_telegrams),originTime,arrivalTime,hypocenter,intensity,estimatedIntensityTile,estimatedIntensityTileArchive,catalog);
 
 @override
 String toString() {
-  return 'Earthquake(eventId: $eventId, status: $status, earthquakeType: $earthquakeType, originTimePrecision: $originTimePrecision, datasources: $datasources, telegrams: $telegrams, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, intensity: $intensity, estimatedIntensityTile: $estimatedIntensityTile, catalog: $catalog)';
+  return 'Earthquake(eventId: $eventId, status: $status, earthquakeType: $earthquakeType, originTimePrecision: $originTimePrecision, hypocenters: $hypocenters, datasources: $datasources, telegrams: $telegrams, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, intensity: $intensity, estimatedIntensityTile: $estimatedIntensityTile, estimatedIntensityTileArchive: $estimatedIntensityTileArchive, catalog: $catalog)';
 }
 
 
@@ -325,11 +347,11 @@ abstract mixin class _$EarthquakeCopyWith<$Res> implements $EarthquakeCopyWith<$
   factory _$EarthquakeCopyWith(_Earthquake value, $Res Function(_Earthquake) _then) = __$EarthquakeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'earthquake_type') EarthquakeType earthquakeType,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, List<EarthquakeDatasource> datasources, List<EarthquakeTelegram> telegrams,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false) Intensity? intensity,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false) Catalog? catalog
+@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'earthquake_type') EarthquakeType earthquakeType,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, List<EarthquakeHypocentersUnion> hypocenters, List<EarthquakeDatasource> datasources, List<EarthquakeTelegram> telegrams,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false) Intensity? intensity,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile_archive') EstimatedIntensityTileArchive? estimatedIntensityTileArchive,@JsonKey(includeIfNull: false) Catalog? catalog
 });
 
 
-@override $HypocenterCopyWith<$Res>? get hypocenter;@override $IntensityCopyWith<$Res>? get intensity;@override $CatalogCopyWith<$Res>? get catalog;
+@override $HypocenterCopyWith<$Res>? get hypocenter;@override $IntensityCopyWith<$Res>? get intensity;@override $EstimatedIntensityTileArchiveCopyWith<$Res>? get estimatedIntensityTileArchive;@override $CatalogCopyWith<$Res>? get catalog;
 
 }
 /// @nodoc
@@ -342,20 +364,22 @@ class __$EarthquakeCopyWithImpl<$Res>
 
 /// Create a copy of Earthquake
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? status = null,Object? earthquakeType = null,Object? originTimePrecision = null,Object? datasources = null,Object? telegrams = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? intensity = freezed,Object? estimatedIntensityTile = freezed,Object? catalog = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? status = null,Object? earthquakeType = null,Object? originTimePrecision = null,Object? hypocenters = null,Object? datasources = null,Object? telegrams = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? intensity = freezed,Object? estimatedIntensityTile = freezed,Object? estimatedIntensityTileArchive = freezed,Object? catalog = freezed,}) {
   return _then(_Earthquake(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,earthquakeType: null == earthquakeType ? _self.earthquakeType : earthquakeType // ignore: cast_nullable_to_non_nullable
 as EarthquakeType,originTimePrecision: null == originTimePrecision ? _self.originTimePrecision : originTimePrecision // ignore: cast_nullable_to_non_nullable
-as OriginTimePrecision,datasources: null == datasources ? _self._datasources : datasources // ignore: cast_nullable_to_non_nullable
+as OriginTimePrecision,hypocenters: null == hypocenters ? _self._hypocenters : hypocenters // ignore: cast_nullable_to_non_nullable
+as List<EarthquakeHypocentersUnion>,datasources: null == datasources ? _self._datasources : datasources // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeDatasource>,telegrams: null == telegrams ? _self._telegrams : telegrams // ignore: cast_nullable_to_non_nullable
 as List<EarthquakeTelegram>,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as Hypocenter?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as Intensity?,estimatedIntensityTile: freezed == estimatedIntensityTile ? _self.estimatedIntensityTile : estimatedIntensityTile // ignore: cast_nullable_to_non_nullable
-as String?,catalog: freezed == catalog ? _self.catalog : catalog // ignore: cast_nullable_to_non_nullable
+as String?,estimatedIntensityTileArchive: freezed == estimatedIntensityTileArchive ? _self.estimatedIntensityTileArchive : estimatedIntensityTileArchive // ignore: cast_nullable_to_non_nullable
+as EstimatedIntensityTileArchive?,catalog: freezed == catalog ? _self.catalog : catalog // ignore: cast_nullable_to_non_nullable
 as Catalog?,
   ));
 }
@@ -383,6 +407,18 @@ $IntensityCopyWith<$Res>? get intensity {
 
   return $IntensityCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of Earthquake
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EstimatedIntensityTileArchiveCopyWith<$Res>? get estimatedIntensityTileArchive {
+    if (_self.estimatedIntensityTileArchive == null) {
+    return null;
+  }
+
+  return $EstimatedIntensityTileArchiveCopyWith<$Res>(_self.estimatedIntensityTileArchive!, (value) {
+    return _then(_self.copyWith(estimatedIntensityTileArchive: value));
   });
 }/// Create a copy of Earthquake
 /// with the given fields replaced by the non-null parameter values.

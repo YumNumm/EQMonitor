@@ -24,6 +24,9 @@
     </queries>
 
     <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
@@ -59,6 +62,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="signinwithapple" />
+                <data android:path="callback" />
+            </intent-filter>
+        </activity>
+
         <receiver android:exported="false"
             android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <receiver
@@ -75,6 +91,10 @@
 
         <meta-data
             android:name="io.flutter.embedding.android.EnableHCPP"
+            android:value="true" />
+
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableFlutterGPU"
             android:value="true" />
     </application>
 

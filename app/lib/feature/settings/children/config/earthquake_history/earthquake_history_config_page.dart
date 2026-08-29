@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_list_config_view.dart';
@@ -34,13 +35,24 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
     final parameter = homeAsync.value?.common.parameter;
-    final regionName = switch (parameter) {
+    final regionSelection = switch (parameter) {
       EarthquakeHistoryParameterAll() => null,
-      EarthquakeHistoryParameterRegion(:final regionCode) => regionCode,
-      EarthquakeHistoryParameterPrefecture(:final prefectureCode) =>
+      EarthquakeHistoryParameterRegion(:final regionCode) => (
+        RegionSearchType.region,
+        regionCode,
+      ),
+      EarthquakeHistoryParameterPrefecture(:final prefectureCode) => (
+        RegionSearchType.prefecture,
         prefectureCode,
-      EarthquakeHistoryParameterCity(:final cityCode) => cityCode,
-      EarthquakeHistoryParameterStation(:final stationCode) => stationCode,
+      ),
+      EarthquakeHistoryParameterCity(:final cityCode) => (
+        RegionSearchType.city,
+        cityCode,
+      ),
+      EarthquakeHistoryParameterStation(:final stationCode) => (
+        RegionSearchType.station,
+        stationCode,
+      ),
       null => null,
     };
     final searchTypeLabel = switch (parameter) {
@@ -51,12 +63,23 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
       EarthquakeHistoryParameterStation() => '観測点',
       null => null,
     };
+    final regionName = switch (regionSelection) {
+      (final searchType, final code) => ref.watch(
+        regionNameProvider(searchType, code),
+      ),
+      null => null,
+    };
 
     return ListTile(
       title: const Text('指定地域'),
-      subtitle: regionName != null
-          ? Text('$searchTypeLabel: $regionName')
-          : const Text('未設定（タップして設定）'),
+      subtitle: switch (regionName) {
+        AsyncData(:final value) when value != null && value.isNotEmpty => Text(
+          '$searchTypeLabel: $value',
+        ),
+        AsyncData() || AsyncError() => Text('$searchTypeLabel: 地域名を取得できません'),
+        AsyncLoading() => Text('$searchTypeLabel: 地域名を読み込み中'),
+        null => const Text('未設定（タップして設定）'),
+      },
       trailing: const Icon(Icons.chevron_right),
       onTap: () async {
         final result = await HomeDesignatedRegionPickerPage.show(

@@ -2,8 +2,6 @@
 //  EewLiveActivityView.swift
 //  Widget
 //
-//  緊急地震速報用のLive Activity表示
-//
 
 import SwiftUI
 import WidgetKit
@@ -62,7 +60,6 @@ struct HeaderContainer: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                // 主要動到達までのカウントダウン / 到達済み
                 if let remaining = ArrivalCountdown.remaining(until: display.countdownArrivalDate) {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("主要動到達まで")
@@ -73,10 +70,6 @@ struct HeaderContainer: View {
                             color: .white
                         )
                     }
-                } else if display.countdownArrivalDate != nil {
-                    Text("主要動到達済み")
-                        .font(.system(size: 14, weight: .heavy))
-                        .foregroundColor(.white)
                 }
             }
             .padding(.horizontal, 12)
@@ -156,29 +149,39 @@ struct EewLockScreenView: View {
     // MARK: - 通常報
 
     private var earthquakeContentView: some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            if let intensity = state.display.maxIntensity {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .bottom, spacing: 10) {
+                // 未発表（nil）でも枠を残す。消すと震度 0 の発表と区別できない
                 VStack(spacing: 2) {
                     Text("最大震度")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(eewSecondaryTextColor)
                     SquareIntensityBadge(
-                        intensity: intensity,
+                        intensity: state.display.maxIntensity,
                         size: .normal
+                    )
+                }
+
+                uncanceledDetailsView
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let intensity = state.display.forecastIntensity,
+                   let regionName = state.location?.regionName,
+                   !regionName.isEmpty {
+                    forecastIntensityView(
+                        regionName: regionName,
+                        intensity: intensity
                     )
                 }
             }
 
-            uncanceledDetailsView
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            if let intensity = state.display.forecastIntensity,
-               let regionName = state.location?.regionName,
-               !regionName.isEmpty {
-                forecastIntensityView(
-                    regionName: regionName,
-                    intensity: intensity
-                )
+            if state.display.showsDeepHypocenterIntensityNotice {
+                Text(EewDisplay.deepHypocenterIntensityNotice)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(eewSecondaryTextColor)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -355,13 +358,14 @@ struct SquareIntensityBadge: View {
         }
     }
 
-    let intensity: IntensityValue
+    /// nil は予想最大震度が未発表であることを示し、灰色の「-」で描く
+    let intensity: IntensityValue?
     var size: Size = .normal
 
     var body: some View {
-        let parts = intensity.formattedParts
+        let appearance = IntensityBadgeAppearance(intensity: intensity)
         HStack(alignment: .firstTextBaseline, spacing: 0) {
-            Text(parts.main)
+            Text(appearance.main)
                 .font(
                     .system(
                         size: size.mainFontSize,
@@ -369,16 +373,16 @@ struct SquareIntensityBadge: View {
                         design: .monospaced
                     )
                 )
-            if let sub = parts.sub {
+            if let sub = appearance.sub {
                 Text(sub)
                     .font(.system(size: size.subFontSize, weight: .heavy))
             }
         }
-        .foregroundColor(intensity.textColor)
+        .foregroundColor(appearance.textColor)
         .frame(height: size.badgeSize)
         .frame(minWidth: size.badgeSize)
         .padding(.horizontal, size.horizontalPadding)
-        .background(intensity.backgroundColor)
+        .background(appearance.backgroundColor)
         .clipShape(
             RoundedRectangle(
                 cornerRadius: size.cornerRadius,
@@ -408,6 +412,18 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
             .previewDisplayName("Lock Screen - 最終報")
 
         attributes
+            .previewContext(.deepHypocenter, viewKind: .content)
+            .previewDisplayName("Lock Screen - 深発(予想震度なし)")
+
+        attributes
+            .previewContext(.deepHypocenter, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 深発(予想震度なし)")
+
+        attributes
+            .previewContext(.deepHypocenter, viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 深発(予想震度なし)")
+
+        attributes
             .previewContext(.plum, viewKind: .content)
             .previewDisplayName("Lock Screen - PLUM法")
 
@@ -434,6 +450,13 @@ struct EewLiveActivityWidget_Previews: PreviewProvider {
         attributes
             .previewContext(.countingDown(), viewKind: .content)
             .previewDisplayName("Lock Screen - 到達カウントダウン")
+
+        attributes
+            .previewContext(
+                .countingDown(secondsUntilArrival: -5),
+                viewKind: .content
+            )
+            .previewDisplayName("Lock Screen - 到達済み")
 
         // Dynamic Island - Compact
         attributes

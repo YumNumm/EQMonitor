@@ -514,7 +514,7 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
     throw ArgumentError('deviceId is empty');
   }
   final repo = await ref.watch(deviceRepositoryProvider.future);
-  final result = await repo.getDevice(deviceId);
+  final result = await repo.getDevice();
   return switch (result) {
     Success(:final value) => value,
     Failure(:final exception) => throw exception,

@@ -12,8 +12,8 @@ _CityMaxIntensityResponse _$CityMaxIntensityResponseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_CityMaxIntensityResponse', json, ($checkedConvert) {
   final val = _CityMaxIntensityResponse(
-    responseAt: $checkedConvert(
-      'response_at',
+    aggregatedAt: $checkedConvert(
+      'aggregated_at',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
     items: $checkedConvert(
@@ -24,11 +24,11 @@ _CityMaxIntensityResponse _$CityMaxIntensityResponseFromJson(
     ),
   );
   return val;
-}, fieldKeyMap: const {'responseAt': 'response_at'});
+}, fieldKeyMap: const {'aggregatedAt': 'aggregated_at'});
 
 Map<String, dynamic> _$CityMaxIntensityResponseToJson(
   _CityMaxIntensityResponse instance,
 ) => <String, dynamic>{
-  'response_at': instance.responseAt?.toIso8601String(),
+  'aggregated_at': instance.aggregatedAt?.toIso8601String(),
   'items': instance.items,
 };

@@ -100,30 +100,12 @@
       }
     },
     {
-      "identity" : "keychainaccess",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
-      "state" : {
-        "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
-        "version" : "4.2.2"
-      }
-    },
-    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
       "state" : {
         "revision" : "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
         "version" : "1.22.5"
-      }
-    },
-    {
-      "identity" : "maplibre-gl-native-distribution",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
-      "state" : {
-        "revision" : "40e1a0db6d055abf8a1b6e2f6127a8bb6e895cf8",
-        "version" : "6.25.1"
       }
     },
     {
@@ -149,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "6d458ed016e885b8ce9e5f2a1fb43fe634601c8c",
-        "version" : "18.30.0"
+        "revision" : "2b880c2bc583af88f95963840664eda33d34fe78",
+        "version" : "18.31.0"
       }
     },
     {
@@ -158,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm",
       "state" : {
-        "revision" : "3d036d836a93872895f84065fabe580c3f2e2a23",
-        "version" : "5.83.1"
+        "revision" : "48601a7f742b05abcd9d9c7d3d768b97e800aa2c",
+        "version" : "5.84.0"
       }
     },
     {

@@ -73,14 +73,13 @@ void main() {
   Future<void> run(FakeDeviceRepository repo) => workflow.run(
     runner: runner,
     repository: repo,
-    deviceId: _deviceId,
     oldDeviceId: _oldDeviceId,
   );
 
   // ── happy path: device absent ───────────────────────────────────────────
 
   group('デバイス未登録のフルハッピーパス', () {
-    test('GET→PUT→POSTの順に呼ばれ、完了フラグが立つ', () async {
+    test('GET→デバイス登録→migrateの順に呼ばれ、完了フラグが立つ', () async {
       final repo = FakeDeviceRepository(
         getResult: _notFound,
         putResult: () => const Success(_fakeDevice),
@@ -119,10 +118,10 @@ void main() {
 
   // ── happy path: device already registered ──────────────────────────────
 
-  test('GETが200のとき PUT をスキップして POST migrate を呼ぶ', () async {
+  test('GETが200のときデバイス登録をスキップしてmigrateを呼ぶ', () async {
     final repo = FakeDeviceRepository(
       getResult: () => const Success(_fakeDevice),
-      putResult: () => throw StateError('PUT should not be called'),
+      putResult: () => throw StateError('register should not be called'),
       migrateResult: () => const Success(null),
     );
 
@@ -133,7 +132,7 @@ void main() {
     expect(repo.migrateCalls, 1);
   });
 
-  test('GETが401のとき未登録扱いで PUT と migrate を呼ぶ', () async {
+  test('GETが401のとき未登録扱いでデバイス登録とmigrateを呼ぶ', () async {
     final repo = FakeDeviceRepository(
       getResult: _unauthorized,
       putResult: () => const Success(_fakeDevice),
@@ -148,7 +147,7 @@ void main() {
     expect(await workflow.isComplete(persistence), isTrue);
   });
 
-  test('GETがunauthenticatedのとき未登録扱いで PUT と migrate を呼ぶ', () async {
+  test('GETがunauthenticatedのとき未登録扱いでデバイス登録とmigrateを呼ぶ', () async {
     final repo = FakeDeviceRepository(
       getResult: _unauthenticated,
       putResult: () => const Success(_fakeDevice),
@@ -165,31 +164,31 @@ void main() {
 
   // ── resume: registerDevice failure ─────────────────────────────────────
 
-  test('PUT失敗後の再実行: ensureDeviceAbsent はスキップされ PUT が再試行される', () async {
+  test('登録失敗後の再実行: 存在確認をスキップして登録が再試行される', () async {
     var putShouldFail = true;
     final repo = FakeDeviceRepository(
       getResult: _notFound,
       putResult: () {
         if (putShouldFail) {
-          return Failure(Exception('PUT network error'));
+          return Failure(Exception('register network error'));
         }
         return const Success(_fakeDevice);
       },
       migrateResult: () => const Success(null),
     );
 
-    // 1回目: GET成功 (キャッシュ), PUT失敗
+    // 1回目: GET成功 (キャッシュ), 登録失敗
     await expectLater(run(repo), throwsA(isA<Exception>()));
     expect(repo.getCalls, 1, reason: 'GET は1回だけ呼ばれるはず');
-    expect(repo.putCalls, 1, reason: 'PUT は1回試行されるはず');
+    expect(repo.putCalls, 1, reason: '登録は1回試行されるはず');
     expect(repo.migrateCalls, 0, reason: 'migrate はまだ呼ばれないはず');
 
-    // 2回目: PUT を成功させる
+    // 2回目: 登録を成功させる
     putShouldFail = false;
     await run(repo);
 
     expect(repo.getCalls, 1, reason: 'GET は2回目でキャッシュ済みなので再実行されない');
-    expect(repo.putCalls, 2, reason: 'PUT は2回目で再試行される');
+    expect(repo.putCalls, 2, reason: '登録は2回目で再試行される');
     expect(repo.migrateCalls, 1, reason: 'migrate は2回目で呼ばれる');
     expect(await workflow.isComplete(persistence), isTrue);
   });
@@ -211,7 +210,7 @@ void main() {
         },
       );
 
-      // 1回目: GET・PUT成功, migrate失敗
+      // 1回目: GET・登録成功, migrate失敗
       await expectLater(run(repo), throwsA(isA<Exception>()));
       expect(repo.getCalls, 1);
       expect(repo.putCalls, 1);
@@ -270,14 +269,13 @@ class FakeDeviceRepository extends DeviceRepository {
   var migrateCalls = 0;
 
   @override
-  Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) async {
+  Future<Result<RegisteredDevice, Exception>> getDevice() async {
     getCalls++;
     return _getResult();
   }
 
   @override
   Future<Result<RegisteredDevice, Exception>> registerDevice({
-    required String deviceId,
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) async {
@@ -287,7 +285,6 @@ class FakeDeviceRepository extends DeviceRepository {
 
   @override
   Future<Result<void, Exception>> migrateFromLegacy({
-    required String deviceId,
     required String oldDeviceId,
   }) async {
     migrateCalls++;

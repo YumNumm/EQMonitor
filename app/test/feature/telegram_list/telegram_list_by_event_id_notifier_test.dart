@@ -339,6 +339,7 @@ final class _TelegramListFixtures {
     earthquakeType: .normal,
     originTimePrecision: .second,
     datasources: const [],
+    hypocenters: const [],
     telegrams: const [],
   );
 }

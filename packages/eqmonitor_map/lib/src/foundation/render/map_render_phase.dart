@@ -13,6 +13,8 @@ final class MapRenderPhasePolicy {
   final List<MapRenderPhaseId> orderedPhases;
   final Map<MapRenderPhaseId, int> _rankByPhase;
 
+  bool containsRank(int rank) => _rankByPhase.containsValue(rank);
+
   int rankOf(MapRenderPhaseId phase) {
     final rank = _rankByPhase[phase];
     if (rank == null) {
@@ -34,6 +36,7 @@ MapRenderPhaseId createMapRenderPhaseId({required String value}) {
 MapRenderPhasePolicy createMapRenderPhasePolicy({
   required int version,
   required List<MapRenderPhaseId> orderedPhases,
+  List<int>? phaseRanks,
 }) {
   if (version <= 0) {
     throw ArgumentError.value(version, 'version', 'must be positive');
@@ -42,12 +45,30 @@ MapRenderPhasePolicy createMapRenderPhasePolicy({
     throw ArgumentError.value(orderedPhases, 'orderedPhases');
   }
 
+  if (phaseRanks != null && phaseRanks.length != orderedPhases.length) {
+    throw ArgumentError.value(
+      phaseRanks,
+      'phaseRanks',
+      'must have one rank for each ordered phase',
+    );
+  }
+
   final ranks = <MapRenderPhaseId, int>{};
-  for (final (rank, phase) in orderedPhases.indexed) {
+  var previousRank = -1;
+  for (final (index, phase) in orderedPhases.indexed) {
+    final rank = phaseRanks?[index] ?? index;
+    if (rank <= previousRank) {
+      throw ArgumentError.value(
+        phaseRanks,
+        'phaseRanks',
+        'must be non-negative and strictly increasing',
+      );
+    }
     if (ranks.containsKey(phase)) {
       throw ArgumentError.value(phase.value, 'orderedPhases');
     }
     ranks[phase] = rank;
+    previousRank = rank;
   }
   if (!ranks.containsKey(MapRenderPhaseId.labelForeground)) {
     throw ArgumentError.value(orderedPhases, 'orderedPhases');
