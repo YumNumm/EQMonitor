@@ -139,6 +139,7 @@ void main() {
             maxHolesPerPolygon: 10,
             maxVerticesPerFeature: 100,
             maxVerticesPerSegment: 100,
+            maxIntersectionChecks: 4096,
           ),
           lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 100),
           lineMiterLimit: 4,
