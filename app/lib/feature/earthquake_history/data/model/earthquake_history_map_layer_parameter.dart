@@ -23,10 +23,6 @@ abstract class EarthquakeHistoryMapLayerParameter
     @Default(0.8) double regionLineOpacity,
     @Default(0.6) double cityFillOpacity,
 
-    // 観測点サイズ (circle-radius interpolation)
-    @Default(0.8) double stationCircleRadiusMin,
-    @Default(6.7) double stationCircleRadiusMax,
-
     // 観測点アイコンサイズ (icon-size interpolation)
     @Default(0.03) double stationIconSizeMin,
     @Default(0.13) double stationIconSizeMid,

@@ -11,4 +11,21 @@ void main() {
     );
     expect(restored.stationTextZoom, 9);
   });
+
+  test('Circle 専用の旧設定を読み飛ばし、再保存しない', () {
+    final restored = EarthquakeHistoryMapLayerParameter.fromJson({
+      'station_circle_radius_min': 1.2,
+      'station_circle_radius_max': 8.4,
+    });
+
+    expect(
+      restored.toJson(),
+      isNot(
+        anyOf(
+          contains('station_circle_radius_min'),
+          contains('station_circle_radius_max'),
+        ),
+      ),
+    );
+  });
 }

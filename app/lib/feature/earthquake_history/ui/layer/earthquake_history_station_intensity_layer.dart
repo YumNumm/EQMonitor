@@ -100,23 +100,14 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         if (lifecycleToken.value != token) {
           return;
         }
-        await styleController.addLayer(
-          layerBuilder.buildCircleLayer(
-            parameter: latestParameter.value,
-            stationDisplayMode: latestStationDisplayMode.value,
-          ),
-        );
-        if (latestIconData.value != null) {
+        for (final layer in layerBuilder.buildStyleLayers(
+          parameter: latestParameter.value,
+          stationDisplayMode: latestStationDisplayMode.value,
+          showStationLabel: latestShowStationLabel.value,
+          hasIcon: latestIconData.value != null,
+        )) {
           await styleController.addLayer(
-            layerBuilder.buildIconLayer(
-              parameter: latestParameter.value,
-              stationDisplayMode: latestStationDisplayMode.value,
-            ),
-          );
-        }
-        if (latestShowStationLabel.value) {
-          await styleController.addLayer(
-            layerBuilder.buildLabelLayer(parameter: latestParameter.value),
+            layer,
           );
         }
         latestLayerConfiguration.value = (
@@ -139,7 +130,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
                 EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
-                EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
               ],
               sourceIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.sourceId,
@@ -197,29 +187,19 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               layerIds: const [
                 EarthquakeHistoryStationIntensityLayerBuilder.labelLayerId,
                 EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
-                EarthquakeHistoryStationIntensityLayerBuilder.circleLayerId,
               ],
             );
             if (lifecycleToken.value != token) {
               return;
             }
-            await styleController.addLayer(
-              layerBuilder.buildCircleLayer(
-                parameter: parameter,
-                stationDisplayMode: stationDisplayMode,
-              ),
-            );
-            if (iconData != null) {
+            for (final layer in layerBuilder.buildStyleLayers(
+              parameter: parameter,
+              stationDisplayMode: stationDisplayMode,
+              showStationLabel: showStationLabel,
+              hasIcon: iconData != null,
+            )) {
               await styleController.addLayer(
-                layerBuilder.buildIconLayer(
-                  parameter: parameter,
-                  stationDisplayMode: stationDisplayMode,
-                ),
-              );
-            }
-            if (showStationLabel) {
-              await styleController.addLayer(
-                layerBuilder.buildLabelLayer(parameter: parameter),
+                layer,
               );
             }
             latestLayerConfiguration.value = configuration;
@@ -373,75 +353,22 @@ class EarthquakeHistoryStationIntensityLayerBuilder {
   const new();
 
   static const sourceId = 'eq-history-station-intensity';
-  static const circleLayerId = 'eq-history-station-intensity-circle';
   static const iconLayerId = 'eq-history-station-intensity-icon';
   static const labelLayerId = 'eq-history-station-intensity-label';
 
-  CircleStyleLayer buildCircleLayer({
+  List<StyleLayer> buildStyleLayers({
     required EarthquakeHistoryMapLayerParameter parameter,
     required StationDisplayMode stationDisplayMode,
-  }) {
-    return CircleStyleLayer(
-      id: circleLayerId,
-      sourceId: sourceId,
-      minZoom: parameter.stationMinZoom,
-      layout: const {
-        'circle-sort-key': ['get', 'sortKey'],
-      },
-      paint: {
-        'circle-radius': switch (stationDisplayMode) {
-          StationDisplayMode.allMinimized => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            parameter.stationCircleRadiusMin * 2,
-            10,
-            parameter.stationCircleRadiusMax * 1.25,
-          ],
-          StationDisplayMode.normal => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            parameter.stationCircleRadiusMin,
-            10,
-            parameter.stationCircleRadiusMax,
-          ],
-          StationDisplayMode.auto || StationDisplayMode.maxFocused => [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            4,
-            [
-              'case',
-              ['get', 'isMax'],
-              parameter.stationCircleRadiusMin * 1.5,
-              parameter.stationCircleRadiusMin * 0.5,
-            ],
-            10,
-            [
-              'case',
-              ['get', 'isMax'],
-              parameter.stationCircleRadiusMax * 1.25,
-              parameter.stationCircleRadiusMax * 0.875,
-            ],
-          ],
-        },
-        'circle-color': ['get', 'color'],
-        'circle-stroke-color': '#ffffff',
-        'circle-stroke-width': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          4,
-          0.3,
-          10,
-          1.5,
-        ],
-      },
-    );
-  }
+    required bool showStationLabel,
+    required bool hasIcon,
+  }) => [
+    if (hasIcon)
+      buildIconLayer(
+        parameter: parameter,
+        stationDisplayMode: stationDisplayMode,
+      ),
+    if (showStationLabel) buildLabelLayer(parameter: parameter),
+  ];
 
   SymbolStyleLayer buildIconLayer({
     required EarthquakeHistoryMapLayerParameter parameter,
