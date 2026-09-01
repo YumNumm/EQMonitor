@@ -296,32 +296,38 @@ class _CustomSettingsSection extends StatelessWidget {
             value: estimatedIntensityEnabled,
             onChanged: onEstimatedIntensityChanged,
           ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '通知音・割り込みレベル',
-            subtitle: isPro ? '種類ごとに変更できます' : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const SoundInterruptionSettingsPage(),
-                    ),
-                  )
-                : () async => const ProUpgradeDialogAction().show(context),
-          ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '震度別の音設定',
-            subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const PerIntensitySoundSettingsPage(),
-                    ),
-                  )
-                : () async => const ProUpgradeDialogAction().show(context),
-          ),
+          // 通知音・割り込みレベルは iOS の通知契約に依存する設定のため、
+          // Android では OS の通知チャンネル設定へ委ねて非表示にする。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '通知音・割り込みレベル',
+              subtitle: isPro
+                  ? '種類ごとに変更できます'
+                  : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SoundInterruptionSettingsPage(),
+                      ),
+                    )
+                  : () async => const ProUpgradeDialogAction().show(context),
+            ),
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '震度別の音設定',
+              subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PerIntensitySoundSettingsPage(),
+                      ),
+                    )
+                  : () async => const ProUpgradeDialogAction().show(context),
+            ),
+          ],
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
