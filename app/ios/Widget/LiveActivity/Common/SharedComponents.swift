@@ -12,6 +12,8 @@ import WidgetKit
 
 /// 薄い文字色（ラベル、補助テキスト用）
 let liveActivitySecondaryTextColor: Color = .primary.opacity(0.55)
+/// ヘッダー内の主要な文字色。ヘッダー背景は常に濃色のため、外観に依らず白で固定する
+let liveActivityHeaderPrimaryTextColor: Color = .white
 /// ヘッダー内の薄い文字色（白ベース）
 let liveActivityHeaderSecondaryTextColor: Color = .white.opacity(0.7)
 
