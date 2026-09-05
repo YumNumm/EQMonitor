@@ -1,5 +1,12 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.16](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.15...v3.0.0-beta.16) (2026-09-05)
+
+
+### Bug Fixes
+
+* EEW Live Activityのheadlineをライトモードでも白文字にする ([136f742](https://github.com/YumNumm/EQMonitor/commit/136f74218971c38cda9ff9a9164f20775930557f))
+
 ## [3.0.0-beta.15](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.14...v3.0.0-beta.15) (2026-08-30)
 
 
