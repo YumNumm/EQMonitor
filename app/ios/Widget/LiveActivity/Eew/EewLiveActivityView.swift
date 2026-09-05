@@ -9,6 +9,7 @@ import WidgetKit
 // MARK: - EEW用カラー定義
 
 private let eewSecondaryTextColor: Color = liveActivitySecondaryTextColor
+private let eewHeaderPrimaryTextColor: Color = liveActivityHeaderPrimaryTextColor
 private let eewHeaderSecondaryTextColor: Color = liveActivityHeaderSecondaryTextColor
 
 // MARK: - EEW用スタイル
@@ -53,7 +54,7 @@ struct HeaderContainer: View {
                     if let headline = display.headerHeadline(from: headline) {
                         Text(headline)
                             .font(.system(size: 15, weight: .heavy))
-                            .foregroundColor(.primary)
+                            .foregroundColor(eewHeaderPrimaryTextColor)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                     }
@@ -67,7 +68,7 @@ struct HeaderContainer: View {
                         ArrivalCountdownText(
                             remaining: remaining,
                             size: 20,
-                            color: .white
+                            color: eewHeaderPrimaryTextColor
                         )
                     }
                 }
