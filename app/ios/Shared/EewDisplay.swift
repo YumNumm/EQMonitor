@@ -138,7 +138,7 @@ struct EewDisplay: Equatable {
 
     // MARK: - 取消報の文言
 
-    static let canceledTitle = "緊急地震速報は取り消されました"
+    static let canceledTitle = "先ほどの緊急地震速報は取り消されました"
 
     // MARK: - 深発地震の文言
 
