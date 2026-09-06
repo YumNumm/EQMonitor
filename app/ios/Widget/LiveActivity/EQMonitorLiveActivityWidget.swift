@@ -28,7 +28,14 @@ struct EewLiveActivityWidget: Widget {
                         .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    EewExpandedBottomView(state: context.state)
+                    ViewThatFits(in: .vertical) {
+                        EewExpandedBottomView(state: context.state)
+                            .fixedSize(horizontal: false, vertical: true)
+                        EewExpandedBottomView(state: context.state, compact: true)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 8)
                 }
             } compactLeading: {
                 EewCompactLeadingView(state: context.state)
@@ -168,6 +175,7 @@ struct EewExpandedTrailingView: View {
 @available(iOS 16.1, *)
 struct EewExpandedBottomView: View {
     let state: EewContentState
+    var compact = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
@@ -179,19 +187,19 @@ struct EewExpandedBottomView: View {
                     .foregroundStyle(.white.opacity(0.75))
             } else {
                 Text(state.display.typeLabel)
-                    .font(AppFonts.flex(size: 11, weight: .medium))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.8))
-                    .fixedSize(horizontal: false, vertical: true)
+                    .fixedSize(horizontal: true, vertical: true)
                 if let headline = state.display.headline(from: state.headline) {
                     Text(headline)
                         .font(AppFonts.flex(size: 16, weight: .heavy))
-                        .lineLimit(2)
+                        .lineLimit(compact ? 1 : 2)
                 } else {
                     EewHypocenterSummaryView(state: state, size: 16)
                 }
 
                 if state.display.usesLocalIntensity || state.display.locationNotice != nil {
-                    EewExpandedLocationView(state: state)
+                    EewExpandedLocationView(state: state, intensitySize: compact ? 44 : 56)
                 }
             }
         }
@@ -202,6 +210,7 @@ struct EewExpandedBottomView: View {
 @available(iOS 16.1, *)
 private struct EewExpandedLocationView: View {
     let state: EewContentState
+    let intensitySize: CGFloat
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
@@ -225,7 +234,7 @@ private struct EewExpandedLocationView: View {
                     .fixedSize()
             }
             if let intensity = state.display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: 56)
+                EewLocalIntensityView(intensity: intensity, size: intensitySize)
                     .fixedSize()
             }
         }
