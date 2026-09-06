@@ -14,6 +14,8 @@ struct EewLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: EewLiveActivityAttributes.self) { context in
             EewLockScreenView(state: context.state)
+                .activityBackgroundTint(.black)
+                .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
                 // leading / trailing は TrueDepth カメラ脇の細い L 字領域で、
@@ -28,9 +30,6 @@ struct EewLiveActivityWidget: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     EewExpandedBottomView(state: context.state)
-                }
-                DynamicIslandExpandedRegion(.center) {
-                    EewExpandedCenterView(state: context.state)
                 }
             } compactLeading: {
                 EewCompactLeadingView(state: context.state)
@@ -96,26 +95,21 @@ struct EewCompactLeadingView: View {
     var body: some View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 20)
+        } else if let intensity = state.display.localIntensity {
+            EewLocalIntensityView(intensity: intensity, size: 26)
         } else {
-            DynamicIslandIntensityBadge(
-                intensity: state.display.intensity,
-                size: 24
-            )
+            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 20)
         }
     }
 }
 
-/// compact では主要動到達までの残り時間を最優先で出す。
-/// Apple のタイマーと同じく、畳んだ状態で知りたいのは「あと何秒か」だけ。
 @available(iOS 16.1, *)
 struct EewCompactTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        if let remaining = ArrivalCountdown.remaining(
-            until: state.display.countdownArrivalDate
-        ) {
-            ArrivalCountdownText(remaining: remaining, size: 14)
+        if let remaining = ArrivalCountdown.remaining(until: state.display.countdownArrivalDate) {
+            ArrivalCountdownText(remaining: remaining, size: 14, color: .white)
         } else {
             EewStatusPill(
                 isWarning: state.display.isWarning,
@@ -133,30 +127,23 @@ struct EewMinimalView: View {
     var body: some View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 18)
+        } else if let intensity = state.display.localIntensity {
+            EewLocalIntensityView(intensity: intensity, size: 24)
         } else {
-            DynamicIslandIntensityBadge(
-                intensity: state.display.intensity,
-                size: 22
-            )
+            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 19)
         }
     }
 }
 
-/// 展開時の leading。細い L 字領域では要素を積むと角で切り取られるため、
-/// ラベルは center 行へ回して常に 1 要素だけ置く。
 @available(iOS 16.1, *)
 struct EewExpandedLeadingView: View {
     let state: EewContentState
 
     var body: some View {
-        switch state.display.dynamicIslandLayout {
-        case .canceled:
-            EewCanceledSymbol(size: DynamicIslandMetrics.expandedBadgeSize * 0.75)
-        case .countdown, .summary:
-            DynamicIslandIntensityBadge(
-                intensity: state.display.intensity,
-                size: DynamicIslandMetrics.expandedBadgeSize
-            )
+        if state.display.isCanceled {
+            EewCanceledSymbol(size: 30)
+        } else {
+            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 32)
         }
     }
 }
@@ -166,92 +153,16 @@ struct EewExpandedTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        switch state.display.dynamicIslandLayout {
-        case .canceled:
-            // center の主文と重ならないよう、取消バッジではなく報番号だけを添える
+        if state.display.isCanceled {
             if let serialLabel = state.display.serialLabel {
                 Text(serialLabel)
                     .font(AppFonts.code(size: 11, weight: .bold))
-                    .monospacedDigit()
-                    .foregroundStyle(Color.eqTextTertiary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .foregroundStyle(.white.opacity(0.75))
             }
-        case .countdown:
-            if let remaining = ArrivalCountdown.remaining(
-                until: state.display.countdownArrivalDate
-            ) {
-                ArrivalCountdownText(remaining: remaining, size: 26)
-            }
-        case .summary:
-            EewStatusPill(
-                isWarning: state.display.isWarning,
-                isCanceled: state.display.isCanceled
-            )
-        }
-    }
-}
-
-/// leading / trailing の値に対する説明ラベル行。
-/// カメラ下の全幅領域なので、左右端に寄せれば上の値の真下に並ぶ。
-@available(iOS 16.1, *)
-struct EewExpandedCenterView: View {
-    let state: EewContentState
-
-    var body: some View {
-        switch state.display.dynamicIslandLayout {
-        case .canceled:
-            Text(EewDisplay.canceledTitle)
-                .font(AppFonts.flex(size: 14, weight: .bold))
-                .foregroundStyle(Color.eqTextPrimary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        case .countdown:
-            HStack(spacing: 6) {
-                intensityCaption
-                Spacer(minLength: 4)
-                captionText("主要動到達まで")
-            }
-        case .summary:
-            HStack(spacing: 6) {
-                intensityCaption
-                Spacer(minLength: 4)
-                if let serialLabel = state.display.serialLabel {
-                    captionText(serialLabel)
-                }
-            }
-        }
-    }
-
-    /// leading のバッジがどの震度かを示すラベル。
-    /// 現在地の予想震度を出しているときだけ地名を添える。全国の最大震度に
-    /// フォールバックしている場合に地名を出すと誤読を招く。
-    @ViewBuilder
-    private var intensityCaption: some View {
-        if state.display.forecastIntensity != nil,
-           let regionName = state.location?.regionName,
-           !regionName.isEmpty {
-            HStack(spacing: 2) {
-                // SF Symbol はカスタムフォントのメトリクスに引っ張られるためシステムフォントで描く
-                Image(systemName: "location.fill")
-                    .font(.system(size: 9, weight: .semibold))
-                Text(regionName)
-                    .font(AppFonts.flex(size: 11, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-            }
-            .foregroundStyle(Color.eqTextSecondary)
         } else {
-            captionText(state.display.intensityLabel)
+            EewSourceMetricsView(state: state, vertical: true, size: 54.196 / 3)
+                .foregroundStyle(.white)
         }
-    }
-
-    private func captionText(_ text: String) -> some View {
-        Text(text)
-            .font(AppFonts.flex(size: 11, weight: .medium))
-            .foregroundStyle(Color.eqTextSecondary)
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
     }
 }
 
@@ -260,30 +171,62 @@ struct EewExpandedBottomView: View {
     let state: EewContentState
 
     var body: some View {
-        switch state.display.dynamicIslandLayout {
-        case .canceled:
-            Text(EewDisplay.canceledDescription)
-                .font(AppFonts.flex(size: 12, weight: .medium))
-                .foregroundStyle(Color.eqTextSecondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        case .countdown:
-            // カウントダウンを主役にするため、震源要素は 1 行に抑える
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                EewStatusPill(
-                    isWarning: state.display.isWarning,
-                    isCanceled: state.display.isCanceled,
-                    compact: true
-                )
-                EewHypocenterSummaryView(state: state, size: 13)
-                Spacer(minLength: 4)
-                EewHypocenterDetailView(state: state, size: 14)
+        VStack(alignment: .leading, spacing: 5) {
+            if state.display.isCanceled {
+                Text(EewDisplay.canceledTitle)
+                    .font(AppFonts.flex(size: 15, weight: .bold))
+                Text(EewDisplay.canceledDescription)
+                    .font(AppFonts.flex(size: 12))
+                    .foregroundStyle(.white.opacity(0.75))
+            } else {
+                Text(state.display.typeLabel)
+                    .font(AppFonts.flex(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.8))
+                if let headline = state.display.headline(from: state.headline) {
+                    Text(headline)
+                        .font(AppFonts.flex(size: 16, weight: .heavy))
+                        .lineLimit(2)
+                } else {
+                    EewHypocenterSummaryView(state: state, size: 16)
+                }
+
+                if state.display.usesLocalIntensity || state.display.locationNotice != nil {
+                    EewExpandedLocationView(state: state)
+                }
             }
-        case .summary:
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                EewHypocenterSummaryView(state: state, size: 15)
-                Spacer(minLength: 4)
-                EewHypocenterDetailView(state: state, size: 16)
+        }
+        .foregroundStyle(.white)
+    }
+}
+
+@available(iOS 16.1, *)
+private struct EewExpandedLocationView: View {
+    let state: EewContentState
+
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            if let notice = state.display.locationNotice {
+                EewLocationNoticeView(notice: notice, intensity: state.display.localIntensity)
+            } else {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("現在地")
+                        .font(AppFonts.flex(size: 10, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.75))
+                    if let regionName = state.location?.regionName, !regionName.isEmpty {
+                        Text(regionName)
+                            .font(AppFonts.flex(size: 12, weight: .bold))
+                            .lineLimit(2)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            if let arrivalDate = state.display.countdownArrivalDate {
+                EewArrivalView(arrivalDate: arrivalDate)
+                    .fixedSize()
+            }
+            if let intensity = state.display.localIntensity {
+                EewLocalIntensityView(intensity: intensity, size: 56)
+                    .fixedSize()
             }
         }
     }
@@ -318,64 +261,6 @@ struct EewHypocenterSummaryView: View {
     }
 }
 
-/// M・深さ。精度の低い検知（PLUM法・レベル法・1点検知）では
-/// 数値を出さず検知方法を示す（Lock Screen と同じ判断）。
-@available(iOS 16.1, *)
-struct EewHypocenterDetailView: View {
-    let state: EewContentState
-    let size: CGFloat
-
-    var body: some View {
-        if let detectionMethod = detectionMethod {
-            Text(detectionMethod)
-                .font(AppFonts.flex(size: size * 0.8, weight: .semibold))
-                .foregroundStyle(Color.eqTextSecondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        } else {
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
-                if let magnitude = state.magnitude {
-                    HStack(alignment: .firstTextBaseline, spacing: 1) {
-                        Text("M")
-                            .font(AppFonts.flex(size: size * 0.7, weight: .semibold))
-                            .foregroundStyle(Color.eqTextSecondary)
-                        Text(String(format: "%.1f", magnitude))
-                            .font(AppFonts.code(size: size, weight: .bold))
-                            .monospacedDigit()
-                            .foregroundStyle(Color.eqTextPrimary)
-                    }
-                }
-                if let depth = state.depth {
-                    HStack(alignment: .firstTextBaseline, spacing: 1) {
-                        Text("深さ")
-                            .font(AppFonts.flex(size: size * 0.7, weight: .medium))
-                            .foregroundStyle(Color.eqTextSecondary)
-                        Text("\(Int(depth))")
-                            .font(AppFonts.code(size: size, weight: .bold))
-                            .monospacedDigit()
-                            .foregroundStyle(Color.eqTextPrimary)
-                        Text("km")
-                            .font(AppFonts.flex(size: size * 0.7, weight: .medium))
-                            .foregroundStyle(Color.eqTextSecondary)
-                    }
-                }
-            }
-        }
-    }
-
-    private var detectionMethod: String? {
-        if state.isPlum == true {
-            return "PLUM法"
-        }
-        if state.isLevel == true {
-            return "レベル法"
-        }
-        if state.isOnePoint == true {
-            return "1点検知(低精度)"
-        }
-        return nil
-    }
-}
 
 // MARK: - Shake Detection Dynamic Island Views
 
@@ -542,22 +427,6 @@ enum DynamicIslandMetrics {
     static let expandedBadgeSize: CGFloat = 32
 }
 
-@available(iOS 16.1, *)
-struct DynamicIslandIntensityBadge: View {
-    /// nil は予想震度が未発表であることを示し、灰色の「-」で描く
-    let intensity: IntensityValue?
-    var size: CGFloat = 24
-
-    var body: some View {
-        let appearance = IntensityBadgeAppearance(intensity: intensity)
-        IntensityBadge(
-            intensity: (appearance.main, appearance.sub),
-            backgroundColor: appearance.backgroundColor,
-            textColor: appearance.textColor,
-            size: size
-        )
-    }
-}
 
 @available(iOS 16.1, *)
 struct EewStatusPill: View {
