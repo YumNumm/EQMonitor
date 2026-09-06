@@ -10,10 +10,12 @@ struct EewSourceMetricsView: View {
     var body: some View {
         if state.display.isLowAccuracyDetection {
             Text(state.isPlum == true ? "PLUM法" : state.isLevel == true ? "レベル法" : "低精度")
-                .font(AppFonts.flex(size: 12, weight: .bold))
+                .font(.system(size: 12, weight: .bold))
+                .fixedSize()
                 .padding(.horizontal, 7)
                 .padding(.vertical, 3)
-                .overlay(Capsule().strokeBorder(.white.opacity(0.5)))
+                .overlay(ContainerRelativeShape().strokeBorder(.white.opacity(0.5)))
+                .padding(4)
         } else {
             let layout = vertical
                 // Figmaはcap heightでトリム済み。Google Sans Codeの行ボックスには

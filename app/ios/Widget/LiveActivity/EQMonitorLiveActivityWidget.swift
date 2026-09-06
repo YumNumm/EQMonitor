@@ -146,11 +146,10 @@ struct EewExpandedLeadingView: View {
     let state: EewContentState
 
     var body: some View {
-        if state.display.isCanceled {
-            EewCanceledSymbol(size: 30)
-        } else {
-            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 38)
-        }
+        EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 38, inlineMaximumLabel: true)
+            .padding(.horizontal, 4)
+            .opacity(state.display.isCanceled ? 0 : 1)
+            .accessibilityHidden(state.display.isCanceled)
     }
 }
 
@@ -162,8 +161,10 @@ struct EewExpandedTrailingView: View {
         if state.display.isCanceled {
             if let serialLabel = state.display.serialLabel {
                 Text(serialLabel)
-                    .font(AppFonts.code(size: 11, weight: .bold))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white.opacity(0.75))
+                    .fixedSize()
+                    .padding(4)
             }
         } else {
             EewSourceMetricsView(state: state, vertical: true, size: 21)
@@ -179,30 +180,23 @@ struct EewExpandedBottomView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
-            if state.display.isCanceled {
-                Text(EewDisplay.canceledTitle)
-                    .font(AppFonts.flex(size: 15, weight: .bold))
-                Text(EewDisplay.canceledDescription)
-                    .font(AppFonts.flex(size: 12))
-                    .foregroundStyle(.white.opacity(0.75))
+            Text(state.display.typeLabel)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.white.opacity(0.8))
+                .fixedSize(horizontal: true, vertical: true)
+            if let headline = state.display.headerHeadline(from: state.headline) {
+                Text(headline)
+                    .font(AppFonts.flex(size: 16, weight: .heavy))
+                    .lineLimit(compact ? 1 : 2)
             } else {
-                Text(state.display.typeLabel)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.8))
-                    .fixedSize(horizontal: true, vertical: true)
-                if let headline = state.display.headline(from: state.headline) {
-                    Text(headline)
-                        .font(AppFonts.flex(size: 16, weight: .heavy))
-                        .lineLimit(compact ? 1 : 2)
-                } else {
-                    EewHypocenterSummaryView(state: state, size: 16)
-                }
+                EewHypocenterSummaryView(state: state, size: 16)
+            }
 
-                if state.display.usesLocalIntensity || state.display.locationNotice != nil {
-                    EewExpandedLocationView(state: state, intensitySize: compact ? 44 : 56)
-                }
+            if state.display.usesLocalIntensity || state.display.locationNotice != nil {
+                EewExpandedLocationView(state: state, intensitySize: compact ? 44 : 56)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
     }
 }
@@ -234,7 +228,7 @@ private struct EewExpandedLocationView: View {
                     .fixedSize()
             }
             if let intensity = state.display.localIntensity {
-                EewLocalIntensityView(intensity: intensity, size: intensitySize)
+                EewLocalIntensityView(intensity: intensity, size: intensitySize, containerRelative: true)
                     .fixedSize()
             }
         }

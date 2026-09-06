@@ -26,7 +26,7 @@ struct EewLocationNoticeView: View {
             .padding(.vertical, 8)
             .background(
                 background,
-                in: RoundedRectangle(cornerRadius: 10)
+                in: ContainerRelativeShape()
             )
             .accessibilityLabel(notice == .warning ? "現在地は緊急地震速報の警報対象地域です" : notice.title)
     }

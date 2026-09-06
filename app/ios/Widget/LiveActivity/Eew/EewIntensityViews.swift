@@ -5,6 +5,7 @@ import SwiftUI
 struct EewMaximumIntensityView: View {
     let intensity: IntensityValue?
     let size: CGFloat
+    var inlineMaximumLabel = false
 
     var body: some View {
         let appearance = IntensityBadgeAppearance(intensity: intensity)
@@ -20,6 +21,14 @@ struct EewMaximumIntensityView: View {
                             .font(AppFonts.flex(size: size * 0.45, weight: .heavy))
                     }
                     .padding(.bottom, size * 0.12)
+                }
+            } else if inlineMaximumLabel {
+                HStack(alignment: .top, spacing: 0) {
+                    Text(appearance.main)
+                        .font(AppFonts.code(size: size, weight: .heavy))
+                    Text("MAX")
+                        .font(AppFonts.code(size: max(7, size * 0.28), weight: .heavy))
+                        .padding(.top, size * 0.18)
                 }
             } else {
                 VStack(alignment: .leading, spacing: -size * 0.12) {
@@ -42,6 +51,7 @@ struct EewMaximumIntensityView: View {
 struct EewLocalIntensityView: View {
     let intensity: IntensityValue
     let size: CGFloat
+    var containerRelative = false
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
@@ -57,7 +67,13 @@ struct EewLocalIntensityView: View {
         .minimumScaleFactor(0.7)
         .padding(.horizontal, size * 0.08)
         .frame(minWidth: size, minHeight: size)
-        .background(intensity.backgroundColor, in: RoundedRectangle(cornerRadius: size * 0.2))
+        .background {
+            if containerRelative {
+                ContainerRelativeShape().fill(intensity.backgroundColor)
+            } else {
+                RoundedRectangle(cornerRadius: size * 0.2).fill(intensity.backgroundColor)
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("現在地の予想震度 \(intensity.displayString)")
     }
