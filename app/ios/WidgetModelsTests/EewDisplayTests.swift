@@ -109,7 +109,26 @@ struct EewDisplayTests {
         let subject = display(forecastIntensity: .three)
         #expect(subject.localIntensity == .three)
         #expect(subject.countdownArrivalDate == arrival)
-        #expect(subject.locationNotice == nil)
+        #expect(subject.locationNotice == .forecast)
+    }
+
+    @Test(arguments: [IntensityValue.zero, .one])
+    func weakShakingRequiresIntensityBelowTwo(intensity: IntensityValue) {
+        let subject = display(forecastIntensity: intensity)
+        #expect(subject.locationNotice == .weak)
+        #expect(subject.locationNotice?.title == "現在地で弱い揺れ")
+        #expect(subject.localIntensity == intensity)
+    }
+
+    @Test(arguments: [IntensityValue.two, .three, .four, .seven])
+    func shakingAtTwoAndAbove(intensity: IntensityValue) {
+        #expect(display(forecastIntensity: intensity).locationNotice == .forecast)
+    }
+
+    @Test func warningAndCancellationTakePriorityOverWeakShaking() {
+        #expect(display(forecastIntensity: .one, isLocationWarning: true).locationNotice == .warning)
+        #expect(display(isCanceled: true, forecastIntensity: .one).locationNotice == nil)
+        #expect(display(forecastIntensity: nil).locationNotice == nil)
     }
 
     @Test func warningNoticeRequiresCurrentLocationTarget() {

@@ -88,6 +88,8 @@ extension EewContentState {
             .deepHypocenter,
             .plum,
             designReview(now: now, warning: false, localIntensity: "3"),
+            designReview(now: now, localIntensity: "1"),
+            designReview(now: now, localIntensity: "2"),
         ]
     }
 

@@ -6,16 +6,26 @@ struct EewLocationNoticeView: View {
     let intensity: IntensityValue?
 
     var body: some View {
+        let background: Color = switch notice {
+        case .warning: Color(rgb: 0xBE0100)
+        case .forecast: intensity?.backgroundColor ?? .clear
+        case .weak: Color(rgb: 0xCDEEFF)
+        }
+        let foreground: Color = switch notice {
+        case .warning: .white
+        case .forecast: intensity?.textColor ?? .white
+        case .weak: .black
+        }
         Text(notice.title)
             .font(AppFonts.flex(size: 14, weight: .heavy))
-            .foregroundStyle(notice == .warning ? .white : intensity?.textColor ?? .white)
+            .foregroundStyle(foreground)
             .lineLimit(1)
             .minimumScaleFactor(0.8)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 8)
             .padding(.vertical, 8)
             .background(
-                notice == .warning ? Color(rgb: 0xBE0100) : intensity?.backgroundColor ?? .clear,
+                background,
                 in: RoundedRectangle(cornerRadius: 10)
             )
             .accessibilityLabel(notice == .warning ? "現在地は緊急地震速報の警報対象地域です" : notice.title)

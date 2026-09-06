@@ -66,7 +66,7 @@ struct EewDisplay: Equatable {
     var locationNotice: EewLocationNotice? {
         guard !isCanceled else { return nil }
         if isWarning && isLocationWarning { return .warning }
-        if let localIntensity, localIntensity >= .four { return .forecast }
+        if let localIntensity { return localIntensity < .two ? .weak : .forecast }
         return nil
     }
 
@@ -152,11 +152,13 @@ struct EewDisplay: Equatable {
 enum EewLocationNotice: Equatable {
     case warning
     case forecast
+    case weak
 
     var title: String {
         switch self {
         case .warning: return "現在地で強い揺れ"
         case .forecast: return "現在地で揺れ"
+        case .weak: return "現在地で弱い揺れ"
         }
     }
 }
