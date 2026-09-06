@@ -22,7 +22,9 @@ struct EewDisplayTests {
         forecastIntensity: IntensityValue? = .fiveLower,
         arrivalDate: Date? = nil,
         depth: Double? = 10,
-        isLowAccuracyDetection: Bool = false
+        isLowAccuracyDetection: Bool = false,
+        isLocationWarning: Bool = false,
+        isLocationPlum: Bool = false
     ) -> EewDisplay {
         EewDisplay(
             isCanceled: isCanceled,
@@ -33,7 +35,9 @@ struct EewDisplayTests {
             forecastIntensity: forecastIntensity,
             arrivalDate: arrivalDate ?? arrival,
             depth: depth,
-            isLowAccuracyDetection: isLowAccuracyDetection
+            isLowAccuracyDetection: isLowAccuracyDetection,
+            isLocationWarning: isLocationWarning,
+            isLocationPlum: isLocationPlum
         )
     }
 
@@ -83,6 +87,72 @@ struct EewDisplayTests {
     }
 
     // MARK: - 深発地震の注釈
+
+    @Test func forecastBelowFourUsesMaximumAndHidesCountdown() {
+        let subject = display(isWarning: false, forecastIntensity: .three)
+        #expect(subject.localIntensity == nil)
+        #expect(subject.intensity == .sixUpper)
+        #expect(subject.intensityLabel == "最大震度")
+        #expect(subject.countdownArrivalDate == nil)
+        #expect(subject.locationNotice == nil)
+    }
+
+    @Test func forecastAtFourShowsLocalIntensityAndCountdown() {
+        let subject = display(isWarning: false, forecastIntensity: .four)
+        #expect(subject.localIntensity == .four)
+        #expect(subject.usesLocalIntensity)
+        #expect(subject.countdownArrivalDate == arrival)
+        #expect(subject.locationNotice == .forecast)
+    }
+
+    @Test func warningCanShowLocalIntensityBelowFour() {
+        let subject = display(forecastIntensity: .three)
+        #expect(subject.localIntensity == .three)
+        #expect(subject.countdownArrivalDate == arrival)
+        #expect(subject.locationNotice == nil)
+    }
+
+    @Test func warningNoticeRequiresCurrentLocationTarget() {
+        #expect(display().locationNotice == .forecast)
+        #expect(display(isLocationWarning: true).locationNotice == .warning)
+        #expect(display(isWarning: false, isLocationWarning: true).locationNotice == .forecast)
+        #expect(display(forecastIntensity: nil, isLocationWarning: true).locationNotice == .warning)
+    }
+
+    @Test func missingLocalIntensityNeverPairsMaximumWithCountdown() {
+        let subject = display(forecastIntensity: nil)
+        #expect(subject.usesLocalIntensity == false)
+        #expect(subject.countdownArrivalDate == nil)
+        #expect(subject.dynamicIslandLayout == .summary)
+    }
+
+    @Test func localPlumSuppressesArrivalButKeepsIntensity() {
+        let subject = display(isLocationPlum: true)
+        #expect(subject.localIntensity == .fiveLower)
+        #expect(subject.countdownArrivalDate == nil)
+    }
+
+    @Test func canceledReportSuppressesLocalWarningAndForecast() {
+        let subject = display(isCanceled: true, isLocationWarning: true)
+        #expect(subject.localIntensity == nil)
+        #expect(subject.locationNotice == nil)
+        #expect(subject.countdownArrivalDate == nil)
+    }
+
+    @Test func decodesCurrentLocationWarningAndPlumFromPayload() throws {
+        let data = Data(#"{"regionName":"神奈川県東部","forecastIntensity":"6+","isWarning":true,"isPlum":true}"#.utf8)
+        let location = try JSONDecoder().decode(LocationInfo.self, from: data)
+        #expect(location.isWarning == true)
+        #expect(location.isPlum == true)
+        #expect(location.forecastIntensityValue == .sixUpper)
+    }
+
+    @Test func oldPayloadDoesNotImplyCurrentLocationWarning() throws {
+        let data = Data(#"{"regionName":"神奈川県東部","forecastIntensity":"3"}"#.utf8)
+        let location = try JSONDecoder().decode(LocationInfo.self, from: data)
+        #expect(location.isWarning == nil)
+        #expect(location.isPlum == nil)
+    }
 
     /// 深さ 150km より深く予想震度が未発表のときだけ理由を添える
     @Test func deepHypocenterNoticeRequiresMissingIntensityAndDeepDepth() {

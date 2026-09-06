@@ -59,7 +59,9 @@ struct EewContentState: Codable, Hashable {
             arrivalDate: location?.arrivalDate,
             depth: depth,
             isLowAccuracyDetection: isPlum == true || isLevel == true
-                || isOnePoint == true
+                || isOnePoint == true,
+            isLocationWarning: location?.isWarning == true,
+            isLocationPlum: location?.isPlum == true
         )
     }
 }
