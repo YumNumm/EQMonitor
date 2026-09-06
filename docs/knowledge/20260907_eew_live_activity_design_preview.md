@@ -70,3 +70,19 @@ Previewターゲット向け`membershipExceptions`への追加が必要。
 - 予報時の現在地震度4以上という表示条件は変更していない。
 - Canvasの確認は`Editor > Canvas > Refresh Canvas`で再生成してから行う。
   200%で警報名の末尾、注意帯・震度バッジの四隅、到達予想の下端を確認する。
+
+## 取消・低精度ラベル・角丸
+
+- 取消も通常と同じ左揃えの種別ラベル・見出しを使う。「予想は無効です」の
+  説明は出さない。震度・到達予想の抑止は変更しない。
+- 取消時の種別は「緊急地震速報」とし、`(取消)`は付けない。Expanded左上の
+  取消記号は出さず、不可視かつアクセシビリティ対象外の最大震度枠で配置を維持する。
+- ExpandedのMAX表示には左右4ptを確保する。単数字でもMAXを数字の右上に置き、
+  6強などと行高を揃える。MAXを数字の上に縦積みするとState 3だけ上段が高くなり、
+  下段のコンパクト候補でも高さを超える。Compact/Minimalの配置は変更しない。
+- 取消時の報数とPLUM法などの混在文はシステムフォント＋`fixedSize()`を使う。
+  カメラ脇の外周で切られないよう、枠の外側にも4ptの余白を確保する。
+- Expandedの注意帯・現在地震度背景・低精度ラベルの枠は
+  `ContainerRelativeShape()`でシステムのコンテナ形状に追従させる。
+  独自の`containerShape`でDynamic Island側の形状を上書きしない。
+- 参考: https://developer.apple.com/documentation/swiftui/containerrelativeshape
