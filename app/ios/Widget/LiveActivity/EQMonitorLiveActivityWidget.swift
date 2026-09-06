@@ -18,8 +18,7 @@ struct EewLiveActivityWidget: Widget {
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
-                // leading / trailing は TrueDepth カメラ脇の細い L 字領域で、
-                // 収まらないと切り取られる。belowIfTooWide でカメラ下へ回り込ませる。
+                // カメラ脇と下部で高さの割り当てが異なるため本文はbottomに置く。
                 DynamicIslandExpandedRegion(.leading) {
                     EewExpandedLeadingView(state: context.state)
                         .dynamicIsland(verticalPlacement: .belowIfTooWide)
@@ -143,7 +142,7 @@ struct EewExpandedLeadingView: View {
         if state.display.isCanceled {
             EewCanceledSymbol(size: 30)
         } else {
-            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 32)
+            EewMaximumIntensityView(intensity: state.display.maxIntensity, size: 38)
         }
     }
 }
@@ -160,7 +159,7 @@ struct EewExpandedTrailingView: View {
                     .foregroundStyle(.white.opacity(0.75))
             }
         } else {
-            EewSourceMetricsView(state: state, vertical: true, size: 54.196 / 3)
+            EewSourceMetricsView(state: state, vertical: true, size: 21)
                 .foregroundStyle(.white)
         }
     }
@@ -171,7 +170,7 @@ struct EewExpandedBottomView: View {
     let state: EewContentState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 1) {
             if state.display.isCanceled {
                 Text(EewDisplay.canceledTitle)
                     .font(AppFonts.flex(size: 15, weight: .bold))
@@ -182,6 +181,7 @@ struct EewExpandedBottomView: View {
                 Text(state.display.typeLabel)
                     .font(AppFonts.flex(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.8))
+                    .fixedSize(horizontal: false, vertical: true)
                 if let headline = state.display.headline(from: state.headline) {
                     Text(headline)
                         .font(AppFonts.flex(size: 16, weight: .heavy))
@@ -243,7 +243,7 @@ struct EewHypocenterSummaryView: View {
         if let text = text {
             Text(text)
                 .font(AppFonts.flex(size: size, weight: .bold))
-                .foregroundStyle(Color.eqTextPrimary)
+                .foregroundStyle(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
