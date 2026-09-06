@@ -25,6 +25,7 @@ Xcodeで`app/ios/Runner.xcodeproj`を開き、スキーム`EQMonitorPreview`とi
 
 状態順は、警報対象、警報対象外（現在地3）、予報（現在地4）、現在地情報なし、
 到達予想なし、警報対象だが震度なし、取消、深発、PLUM、予報（現在地3・非表示）。
+続くState 11は警報対象外・震度1、State 12は警報対象外・震度2。
 カウントダウンはPreview生成時点から31秒。再開するときはPreviewを再生成する。
 
 ```sh
@@ -45,8 +46,13 @@ Previewターゲット向け`membershipExceptions`への追加が必要。
 
 - 黒背景のEEWは文字色を白で明示する。PreviewのLight Appearanceでは
   `activityBackgroundTint(.black)`だけに頼らず、ロック画面Viewにも黒背景を指定する。
-- Expandedの本文全体に縦方向の`fixedSize`を付けると、割り当て高さを超えて
-  下端が切れる場合がある。警報名など必要なTextだけに指定する。
+- Expandedの本文を単に`fixedSize`にすると、割り当て高さを超えて下端が切れる。
+  `ViewThatFits(in: .vertical)`内の候補の測定にだけ使い、高さ不足時には
+  震度バッジ44pt・見出し1行のコンパクト配置を選ぶ。通常候補は56pt・2行。
+  下部の左右・下には8ptを追加し、塗りつぶしをIslandの丸い外周から離す。
+- Google Sans Flexを使った「緊急地震速報(警報)」は、幅の`fixedSize`だけでは
+  末尾の省略が直らなかった。同サイズのシステムフォントに替えると全体を表示できた。
+  この混在文のフォントはシステムを使う。数値のGoogle Sans Codeは維持する。
 - 単一leading領域＋`belowIfTooWide`も試したが、現在地情報の下端がCanvasで切れた。
   本実装はleading/trailing/bottomを分離し、OS標準の外周余白を維持する。
   カメラ高さの固定値や負のpaddingで補正しない。
@@ -54,3 +60,13 @@ Previewターゲット向け`membershipExceptions`への追加が必要。
   VStackのspacingにそのまま足すと二重になるため、M・深さの縦積みはspacing 0。
 - Expandedの最大震度は38pt、震源要素の数値は21pt。表示サイズだけの調整では
   テストを追加せず、既存モデルテスト・静的解析・Canvasで確認する。
+
+## 現在地の注意帯
+
+- 現在地が警報対象なら「現在地で強い揺れ」を優先する。
+- 警報対象外で表示可能な予想震度が2未満なら「現在地で弱い揺れ」、
+  背景は薄い蒼`#CDEEFF`・文字は黒。震度2以上なら「現在地で揺れ」。
+- 震度なしを弱い揺れに補完しない。取消時は注意帯を抑止する。
+- 予報時の現在地震度4以上という表示条件は変更していない。
+- Canvasの確認は`Editor > Canvas > Refresh Canvas`で再生成してから行う。
+  200%で警報名の末尾、注意帯・震度バッジの四隅、到達予想の下端を確認する。
