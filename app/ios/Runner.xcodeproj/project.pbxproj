@@ -88,6 +88,11 @@
 		A55E7C010000000000000001 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = A55E7C010000000000000002 /* platform */; };
 		A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */; };
 		AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AABB00022F30A00100000002 /* EQMonitorAPI */; };
+		B17000000000000000000001 /* BackgroundLocationPendingLocationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */; };
+		B17000000000000000000002 /* PendingLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000004 /* PendingLocationStore.swift */; };
+		B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */; };
+		B18000000000000000000002 /* HeadlessTaskState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000004 /* HeadlessTaskState.swift */; };
+		B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */; };
 		B4B358134720AB041967E6FF /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
@@ -99,6 +104,7 @@
 		D11444444444444444444444 /* EarthquakeDetailURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11222222222222222222222 /* EarthquakeDetailURL.swift */; };
 		D11555555555555555555555 /* WidgetBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11333333333333333333333 /* WidgetBehaviorTests.swift */; };
 		E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687B9A2C44EF493FAA2AA83C /* ColorRGB.swift */; };
+		EE0700000000000000000001 /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0700000000000000000002 /* LocationInfo.swift */; };
 		EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
 		EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
 		EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000002 /* WidgetErrorMessage.swift */; };
@@ -111,11 +117,6 @@
 		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
 		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
 		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
-		B17000000000000000000001 /* BackgroundLocationPendingLocationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */; };
-		B17000000000000000000002 /* PendingLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000004 /* PendingLocationStore.swift */; };
-		B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */; };
-		B18000000000000000000002 /* HeadlessTaskState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000004 /* HeadlessTaskState.swift */; };
-		B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,8 +204,8 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2709A8752F1FFFF400FBE962 /* LiveActivityUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LiveActivityUtil.xcframework; sourceTree = "<group>"; };
-		27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EQMonitorPreviewWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27145E043039D29C00C3DBAF /* EQMonitorPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EQMonitorPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27145F013039E00000C3DBAF /* EQMonitorPreviewWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EQMonitorPreviewWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27D62BB52FF6E75000EF6A27 /* AppIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AppIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntensityValue.swift; sourceTree = "<group>"; };
 		3993800175F9E9F9140BCEE0 /* WidgetModelsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WidgetModelsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,6 +252,11 @@
 		A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApnsTokenEventChannel.swift; sourceTree = "<group>"; };
 		AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeAPIClient.swift; sourceTree = "<group>"; };
 		AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationPendingLocationStoreTests.swift; sourceTree = "<group>"; };
+		B17000000000000000000004 /* PendingLocationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PendingLocationStore.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/PendingLocationStore.swift; sourceTree = SOURCE_ROOT; };
+		B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationHeadlessTaskStateTests.swift; sourceTree = "<group>"; };
+		B18000000000000000000004 /* HeadlessTaskState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessTaskState.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessTaskState.swift; sourceTree = SOURCE_ROOT; };
+		B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessExecutionLifecycle.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessExecutionLifecycle.swift; sourceTree = SOURCE_ROOT; };
 		B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolver.swift; sourceTree = "<group>"; };
 		C90F30E033EFA7F3A113F856 /* RegionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegionType.swift; sourceTree = "<group>"; };
 		C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItemTests.swift; sourceTree = "<group>"; };
@@ -258,6 +264,7 @@
 		E11111111111111111111111 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
 		E11222222222222222222222 /* EarthquakeDetailURL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDetailURL.swift; sourceTree = "<group>"; };
 		E11333333333333333333333 /* WidgetBehaviorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBehaviorTests.swift; sourceTree = "<group>"; };
+		EE0700000000000000000002 /* LocationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationInfo.swift; path = Widget/LiveActivity/Common/LocationInfo.swift; sourceTree = SOURCE_ROOT; };
 		EQ0000000000000000000001 /* LiveActivityDate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDate.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000002 /* WidgetErrorMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetErrorMessage.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000003 /* LiveActivityDateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityDateTests.swift; sourceTree = "<group>"; };
@@ -265,11 +272,6 @@
 		EQ0000000000000000000005 /* EewDisplay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplay.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
-		B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationPendingLocationStoreTests.swift; sourceTree = "<group>"; };
-		B17000000000000000000004 /* PendingLocationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PendingLocationStore.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/PendingLocationStore.swift; sourceTree = SOURCE_ROOT; };
-		B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationHeadlessTaskStateTests.swift; sourceTree = "<group>"; };
-		B18000000000000000000004 /* HeadlessTaskState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessTaskState.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessTaskState.swift; sourceTree = SOURCE_ROOT; };
-		B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessExecutionLifecycle.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessExecutionLifecycle.swift; sourceTree = SOURCE_ROOT; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -282,8 +284,11 @@
 				DesignSystem.swift,
 				LiveActivity/Common/LocationInfo.swift,
 				LiveActivity/Common/SharedComponents.swift,
+				LiveActivity/Eew/EewIntensityViews.swift,
 				LiveActivity/Eew/EewLiveActivityAttributes.swift,
 				LiveActivity/Eew/EewLiveActivityView.swift,
+				LiveActivity/Eew/EewLocationViews.swift,
+				LiveActivity/Eew/EewSourceMetricsView.swift,
 				LiveActivity/EQMonitorLiveActivityWidget.swift,
 				LiveActivity/ShakeDetection/ShakeDetectionLiveActivityAttributes.swift,
 				LiveActivity/ShakeDetection/ShakeDetectionLiveActivityView.swift,
@@ -325,8 +330,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreviewWidget; sourceTree = "<group>"; };
 		27145E053039D29C00C3DBAF /* EQMonitorPreview */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreview; sourceTree = "<group>"; };
+		27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreviewWidget; sourceTree = "<group>"; };
 		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AppIntentExtension; sourceTree = "<group>"; };
 		85C54CFE2E96C7E800BFBBAB /* Widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27145E1B3039D35E00C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -407,6 +412,14 @@
 				A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */,
 			);
 			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		27724A23304DC4E300666426 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				EE0700000000000000000002 /* LocationInfo.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		350740DFB98F1F20FD8318FB /* Fonts */ = {
@@ -501,6 +514,7 @@
 				3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */,
 				350740DFB98F1F20FD8318FB /* Fonts */,
 				F8BCF7FBC6A9336C62FA711E /* Parameters */,
+				27724A23304DC4E300666426 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -975,6 +989,7 @@
 				EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */,
 				EQ000000000000000000006F /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */,
+				EE0700000000000000000001 /* LocationInfo.swift in Sources */,
 				EQ0000000000000000000066 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000068 /* WidgetErrorMessage.swift in Sources */,
 				EQ000000000000000000006A /* LiveActivityDateTests.swift in Sources */,
@@ -1345,6 +1360,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1362,20 +1378,19 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.yumnumm.EQMonitorPreview.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};

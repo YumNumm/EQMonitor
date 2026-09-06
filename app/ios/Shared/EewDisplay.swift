@@ -39,6 +39,8 @@ struct EewDisplay: Equatable {
     let depth: Double?
     /// PLUM法・レベル法・1点検知など、仮定震源要素による低精度の検知か
     let isLowAccuracyDetection: Bool
+    var isLocationWarning: Bool = false
+    var isLocationPlum: Bool = false
 
     // MARK: - 表示可否
 
@@ -49,17 +51,35 @@ struct EewDisplay: Equatable {
     /// 無ければ全国の最大震度にフォールバックする。取消報では出さない。
     var intensity: IntensityValue? {
         guard !isCanceled else { return nil }
-        return forecastIntensity ?? maxIntensity
+        return localIntensity ?? maxIntensity
+    }
+
+    /// 予報では現在地の予想震度4以上のみ表示する。警報でも未提供の値は補わない。
+    var localIntensity: IntensityValue? {
+        guard !isCanceled, let forecastIntensity,
+              isWarning || forecastIntensity >= .four else { return nil }
+        return forecastIntensity
+    }
+
+    var usesLocalIntensity: Bool { localIntensity != nil }
+
+    var showsEventTime: Bool { !isCanceled && !usesLocalIntensity }
+
+    var locationNotice: EewLocationNotice? {
+        guard !isCanceled else { return nil }
+        if isWarning && isLocationWarning { return .warning }
+        if let localIntensity { return localIntensity < .two ? .weak : .forecast }
+        return nil
     }
 
     /// [intensity] がどちらの震度かを示すラベル
     var intensityLabel: String {
-        forecastIntensity != nil ? "予想震度" : "最大震度"
+        usesLocalIntensity ? "予想震度" : "最大震度"
     }
 
     /// 主要動到達カウントダウンに使う時刻。取消報では到達予想も無効。
     var countdownArrivalDate: Date? {
-        isCanceled ? nil : arrivalDate
+        usesLocalIntensity && !isLocationPlum ? arrivalDate : nil
     }
 
     /// 深発地震のため予想震度が発表されない旨の注釈を出すか。
@@ -86,10 +106,10 @@ struct EewDisplay: Equatable {
 
     // MARK: - 文言
 
-    /// 「緊急地震速報(警報)」「緊急地震速報(予報)」「緊急地震速報(取消)」
+    /// 取消時は種別を付けず、見出しで取り消された事実を伝える。
     var typeLabel: String {
         if isCanceled {
-            return "緊急地震速報(取消)"
+            return "緊急地震速報"
         }
         return isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
     }
@@ -120,8 +140,7 @@ struct EewDisplay: Equatable {
 
     // MARK: - 取消報の文言
 
-    static let canceledTitle = "緊急地震速報は取り消されました"
-    static let canceledDescription = "予想震度・主要動到達の予想は無効です"
+    static let canceledTitle = "先ほどの緊急地震速報は取り消されました"
 
     // MARK: - 深発地震の文言
 
@@ -129,4 +148,18 @@ struct EewDisplay: Equatable {
     /// `EewDeepHypocenterIntensityNotice` と同じ基準にする。
     static let deepHypocenterDepthThreshold: Double = 150
     static let deepHypocenterIntensityNotice = "震源の深さが150kmより深いため、予想震度は発表されていません"
+}
+
+enum EewLocationNotice: Equatable {
+    case warning
+    case forecast
+    case weak
+
+    var title: String {
+        switch self {
+        case .warning: return "現在地で強い揺れ"
+        case .forecast: return "現在地で揺れ"
+        case .weak: return "現在地で弱い揺れ"
+        }
+    }
 }
