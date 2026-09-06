@@ -63,6 +63,8 @@ struct EewDisplay: Equatable {
 
     var usesLocalIntensity: Bool { localIntensity != nil }
 
+    var showsEventTime: Bool { !isCanceled && !usesLocalIntensity }
+
     var locationNotice: EewLocationNotice? {
         guard !isCanceled else { return nil }
         if isWarning && isLocationWarning { return .warning }

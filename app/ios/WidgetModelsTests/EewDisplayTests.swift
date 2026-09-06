@@ -145,6 +145,14 @@ struct EewDisplayTests {
         #expect(subject.dynamicIslandLayout == .summary)
     }
 
+    @Test func eventTimeIsShownOnlyWithoutDisplayedLocalIntensity() {
+        #expect(display(forecastIntensity: nil).showsEventTime)
+        #expect(display(isWarning: false, forecastIntensity: .three).showsEventTime)
+        #expect(display(forecastIntensity: nil, isLocationWarning: true).showsEventTime)
+        #expect(display(forecastIntensity: .four).showsEventTime == false)
+        #expect(display(isCanceled: true, forecastIntensity: nil).showsEventTime == false)
+    }
+
     @Test func localPlumSuppressesArrivalButKeepsIntensity() {
         let subject = display(isLocationPlum: true)
         #expect(subject.localIntensity == .fiveLower)

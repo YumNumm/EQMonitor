@@ -192,6 +192,14 @@ struct EewExpandedBottomView: View {
                 EewHypocenterSummaryView(state: state, size: 16)
             }
 
+            if state.display.showsEventTime, let date = state.timeDate {
+                Text("\(state.timeLabel)  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.75))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+
             if state.display.usesLocalIntensity || state.display.locationNotice != nil {
                 EewExpandedLocationView(state: state, intensitySize: compact ? 44 : 56)
             }

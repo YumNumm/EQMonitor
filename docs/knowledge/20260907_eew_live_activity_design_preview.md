@@ -86,3 +86,9 @@ Previewターゲット向け`membershipExceptions`への追加が必要。
   `ContainerRelativeShape()`でシステムのコンテナ形状に追従させる。
   独自の`containerShape`でDynamic Island側の形状を上書きしない。
 - 参考: https://developer.apple.com/documentation/swiftui/containerrelativeshape
+
+## 現在地震度がない場合の時刻
+
+- Expandedで現在地の予想震度を表示しない場合、見出しの下に発生／検知時刻を表示する。
+- `EewDisplay.showsEventTime`で取消を除外し、`state.timeDate`が解析できる場合だけ出す。
+  区分は既存の`state.timeLabel`、日時は`JSTDateFormat`を使い、受信時刻などで補完しない。
