@@ -104,10 +104,10 @@ struct EewDisplay: Equatable {
 
     // MARK: - 文言
 
-    /// 「緊急地震速報(警報)」「緊急地震速報(予報)」「緊急地震速報(取消)」
+    /// 取消時は種別を付けず、見出しで取り消された事実を伝える。
     var typeLabel: String {
         if isCanceled {
-            return "緊急地震速報(取消)"
+            return "緊急地震速報"
         }
         return isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
     }
@@ -139,7 +139,6 @@ struct EewDisplay: Equatable {
     // MARK: - 取消報の文言
 
     static let canceledTitle = "緊急地震速報は取り消されました"
-    static let canceledDescription = "予想震度・主要動到達の予想は無効です"
 
     // MARK: - 深発地震の文言
 

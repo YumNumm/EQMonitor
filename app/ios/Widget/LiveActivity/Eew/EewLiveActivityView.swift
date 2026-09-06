@@ -90,15 +90,7 @@ struct EewLockScreenView: View {
                 headline: state.display.headline(from: state.headline) ?? state.hypocenterName
             )
 
-            if state.display.isCanceled {
-                HStack(spacing: 8) {
-                    EewCanceledSymbol(size: 24)
-                    Text(EewDisplay.canceledDescription)
-                        .font(AppFonts.flex(size: 12, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.8))
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            } else {
+            if !state.display.isCanceled {
                 HStack(alignment: .bottom, spacing: 8) {
                     VStack(alignment: .leading, spacing: 8) {
                         if let date = state.timeDate {

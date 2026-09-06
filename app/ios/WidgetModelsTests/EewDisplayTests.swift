@@ -65,7 +65,7 @@ struct EewDisplayTests {
     }
 
     @Test func canceledReportOverridesWarningInTypeLabel() {
-        #expect(display(isCanceled: true, isWarning: true).typeLabel == "緊急地震速報(取消)")
+        #expect(display(isCanceled: true, isWarning: true).typeLabel == "緊急地震速報")
     }
 
     // MARK: - 震度の優先順位
