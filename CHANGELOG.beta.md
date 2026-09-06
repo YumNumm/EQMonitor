@@ -1,5 +1,29 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.16](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.15...v3.0.0-beta.16) (2026-09-06)
+
+
+### Features
+
+* Dynamic Islandに現在地優先の表示を反映する ([2baf012](https://github.com/YumNumm/EQMonitor/commit/2baf01213492f58217d904eda5561e846590b1ac))
+* ロック画面を現在地震度中心の配置へ変更する ([919fa3d](https://github.com/YumNumm/EQMonitor/commit/919fa3dfb7e535fc456c9a63887501c3fdf55451))
+* 現在地の警報対象と震度の表示条件を統一する ([85130b3](https://github.com/YumNumm/EQMonitor/commit/85130b3b77294bdcd10e47d7ff18148245501367))
+* 現在地の警報帯と到達予想の表示部品を追加する ([8539eea](https://github.com/YumNumm/EQMonitor/commit/8539eeadb63cf160d0b0ef0145db94d74562ad7e))
+* 現在地震度がない場合に地震発生検知時刻を表示する ([9057958](https://github.com/YumNumm/EQMonitor/commit/9057958f8a3409e4fb30ad01b49e33712029bd4d))
+* 現在地震度と最大震度の表示部品を分離する ([2065e73](https://github.com/YumNumm/EQMonitor/commit/2065e73a801b51080933cd160d32910ee9ad715e))
+* 震源要素をGoogle Sans Codeで統一する ([22b317c](https://github.com/YumNumm/EQMonitor/commit/22b317cdc3931f2824c1819a262245a60d79df5d))
+
+
+### Bug Fixes
+
+* EEW Live Activityのheadlineをライトモードでも白文字にする ([136f742](https://github.com/YumNumm/EQMonitor/commit/136f74218971c38cda9ff9a9164f20775930557f))
+* Expandedの上段高と外周に沿う角丸を調整する ([adfc62b](https://github.com/YumNumm/EQMonitor/commit/adfc62b17e22e813e79f44d6ce3f7fb57ab21003))
+* Expandedの高さ不足と警報名の省略を解消する ([3c07045](https://github.com/YumNumm/EQMonitor/commit/3c070457097a62b31af3c0c1d43907ce3d85f6e2))
+* Expanded上部を拡大し警報名の行高を確保する ([0ca1ff1](https://github.com/YumNumm/EQMonitor/commit/0ca1ff1638b8189c9b2a30bbd94f0c8102cb7920))
+* 取消メッセージに先ほどの地震であることを明記する ([651f1b2](https://github.com/YumNumm/EQMonitor/commit/651f1b271f4e947441b66fa570bc4e0888e67a70))
+* 取消時の種別と不要な説明文を整理する ([c88ba77](https://github.com/YumNumm/EQMonitor/commit/c88ba77788c51a9b8498bf6c11592c112577e282))
+* 現在地の弱い揺れを薄い蒼の注意帯で表示する ([591d53d](https://github.com/YumNumm/EQMonitor/commit/591d53d647d50ffad917b3b30ea29753e97225ee))
+
 ## [3.0.0-beta.15](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.14...v3.0.0-beta.15) (2026-08-30)
 
 
