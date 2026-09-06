@@ -23,49 +23,49 @@ struct EQMonitorPreviewWidgetBundle: WidgetBundle {
 private let eewPreviewAttributes = EewLiveActivityAttributes(eventId: "20240101161009")
 
 #Preview(
-    "EEW 報の進行 - Lock Screen",
+    "EEW デザイン確認 - Lock Screen",
     as: .content,
     using: eewPreviewAttributes
 ) {
     EewLiveActivityWidget()
 } contentStates: {
-    for state in EewContentState.warningSequence() {
+    for state in EewContentState.designReviewStates() {
         state
     }
 }
 
 #Preview(
-    "EEW 報の進行 - Expanded",
+    "EEW デザイン確認 - Expanded",
     as: .dynamicIsland(.expanded),
     using: eewPreviewAttributes
 ) {
     EewLiveActivityWidget()
 } contentStates: {
-    for state in EewContentState.warningSequence() {
+    for state in EewContentState.designReviewStates() {
         state
     }
 }
 
 #Preview(
-    "EEW 報の進行 - Compact",
+    "EEW デザイン確認 - Compact",
     as: .dynamicIsland(.compact),
     using: eewPreviewAttributes
 ) {
     EewLiveActivityWidget()
 } contentStates: {
-    for state in EewContentState.warningSequence() {
+    for state in EewContentState.designReviewStates() {
         state
     }
 }
 
 #Preview(
-    "EEW 報の進行 - Minimal",
+    "EEW デザイン確認 - Minimal",
     as: .dynamicIsland(.minimal),
     using: eewPreviewAttributes
 ) {
     EewLiveActivityWidget()
 } contentStates: {
-    for state in EewContentState.warningSequence() {
+    for state in EewContentState.designReviewStates() {
         state
     }
 }
