@@ -27,7 +27,7 @@ struct GetLatestEarthquakesIntent: AppIntent {
     var limit: Int
 
     func perform() async throws
-        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ShowsSnippetIntent {
+        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
         if region != nil, !ProStatus.isPro {
             throw EQIntentError.proRequired
         }
@@ -36,8 +36,12 @@ struct GetLatestEarthquakesIntent: AppIntent {
             limit: limit,
             minIntensity: minIntensity?.apiValue
         )
+        let summary = EarthquakeIntentDialog.summary(
+            items: items, area: region?.name ?? "全国", isRegional: region != nil
+        )
         return .result(
             value: items.map(EarthquakeEntity.init),
+            dialog: IntentDialog(full: "\(summary)", supporting: "\(items.count)件の地震情報を取得しました。"),
             snippetIntent: EarthquakeSnippetIntent(
                 regionID: region?.id,
                 minIntensity: minIntensity,

@@ -22,7 +22,7 @@ struct GetEarthquakesNearMeIntent: AppIntent {
     var limit: Int
 
     func perform() async throws
-        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ShowsSnippetIntent {
+        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
         // 現在地未設定時の全国フォールバックは「現在地の情報」としては誤りに
         // なるため、明示エラーで案内する
         let resolved = WidgetRegionResolver.resolve(regionType: .currentLocation)
@@ -34,8 +34,12 @@ struct GetEarthquakesNearMeIntent: AppIntent {
             limit: limit,
             minIntensity: minIntensity?.apiValue
         )
+        let summary = EarthquakeIntentDialog.summary(
+            items: items, area: "アプリに保存された現在地の地域", isRegional: true
+        )
         return .result(
             value: items.map(EarthquakeEntity.init),
+            dialog: IntentDialog(full: "\(summary)", supporting: "保存された地域の地震情報を\(items.count)件取得しました。"),
             snippetIntent: EarthquakeSnippetIntent(
                 regionID: "region:\(code)",
                 minIntensity: minIntensity,
