@@ -5208,30 +5208,54 @@ public enum Components {
                 public init(value1: Components.Schemas.JmaLpgmIntensity) {
                     self.value1 = value1
                 }
-                public init(from decoder: any Swift.Decoder) throws {
+                public init(from decoder: any Decoder) throws {
                     self.value1 = try decoder.decodeFromSingleValueContainer()
                 }
-                public func encode(to encoder: any Swift.Encoder) throws {
+                public func encode(to encoder: any Encoder) throws {
                     try encoder.encodeToSingleValueContainer(self.value1)
                 }
             }
             /// - Remark: Generated from `#/components/schemas/IntensityPartial/max_lpgm_intensity`.
             public var max_lpgm_intensity: Components.Schemas.IntensityPartial.max_lpgm_intensityPayload?
+            /// - Remark: Generated from `#/components/schemas/IntensityPartial/max_intensity_class`.
+            public struct max_intensity_classPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/IntensityPartial/max_intensity_class/value1`.
+                public var value1: Components.Schemas.CatalogIntensityClass
+                /// Creates a new `max_intensity_classPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogIntensityClass) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/IntensityPartial/max_intensity_class`.
+            public var max_intensity_class: Components.Schemas.IntensityPartial.max_intensity_classPayload?
             /// Creates a new `IntensityPartial`.
             ///
             /// - Parameters:
             ///   - max_intensity:
             ///   - max_lpgm_intensity:
+            ///   - max_intensity_class:
             public init(
                 max_intensity: Components.Schemas.JmaIntensity,
-                max_lpgm_intensity: Components.Schemas.IntensityPartial.max_lpgm_intensityPayload? = nil
+                max_lpgm_intensity: Components.Schemas.IntensityPartial.max_lpgm_intensityPayload? = nil,
+                max_intensity_class: Components.Schemas.IntensityPartial.max_intensity_classPayload? = nil
             ) {
                 self.max_intensity = max_intensity
                 self.max_lpgm_intensity = max_lpgm_intensity
+                self.max_intensity_class = max_intensity_class
             }
             public enum CodingKeys: String, CodingKey {
                 case max_intensity
                 case max_lpgm_intensity
+                case max_intensity_class
             }
         }
         /// - Remark: Generated from `#/components/schemas/EarthquakePartial`.

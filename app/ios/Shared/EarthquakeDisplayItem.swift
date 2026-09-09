@@ -14,9 +14,18 @@ import EQMonitorAPI
 struct EarthquakeDisplayItem: Identifiable, Equatable {
     let id: String
     let hypocenterName: String
+    /// 見出しの震度フォールバックを含まない、APIの震源名。
+    let sourceHypocenterName: String?
     let magnitude: String
     let magnitudeValue: Double?
     let maxIntensity: IntensityValue?
+    /// 地域検索でも地震全体の最大震度を保持する。
+    let earthquakeMaxIntensity: IntensityValue?
+    let earthquakeMaxIntensityClass: Components.Schemas.CatalogIntensityClass?
+    let earthquakeType: Components.Schemas.EarthquakeType
+    let sourceOriginTime: Date?
+    let sourceArrivalTime: Date?
+    let originTimePrecision: Components.Schemas.OriginTimePrecision
     let depth: String
     let originTime: Date
     let formattedTime: String
@@ -64,6 +73,15 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     /// Components.Schemas.EarthquakePartial からの変換初期化
     init(from partial: Components.Schemas.EarthquakePartial) {
         let maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
+        self.earthquakeMaxIntensity = maxIntensity
+        self.sourceHypocenterName = [partial.hypocenter?.value1.name,
+                                    partial.hypocenter?.value1.detailed?.value1.name]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "、")
+        self.earthquakeType = partial.earthquake_type
+        self.earthquakeMaxIntensityClass = partial.intensity?.value1.max_intensity_class?.value1
+        self.sourceOriginTime = partial.origin_time
+        self.sourceArrivalTime = partial.arrival_time
+        self.originTimePrecision = partial.origin_time_precision
         self.id = partial.event_id
         self.hypocenterName = Self.resolveTitle(
             name: partial.hypocenter?.value1.name,
@@ -110,6 +128,15 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         earthquake partial: Components.Schemas.EarthquakePartial
     ) {
         // 地域の震度情報を優先（検索結果の場合）
+        self.earthquakeMaxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
+        self.sourceHypocenterName = [partial.hypocenter?.value1.name,
+                                    partial.hypocenter?.value1.detailed?.value1.name]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "、")
+        self.earthquakeType = partial.earthquake_type
+        self.earthquakeMaxIntensityClass = partial.intensity?.value1.max_intensity_class?.value1
+        self.sourceOriginTime = partial.origin_time
+        self.sourceArrivalTime = partial.arrival_time
+        self.originTimePrecision = partial.origin_time_precision
         let maxIntensity = IntensityValue(from: regionIntensity)
             ?? IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.id = partial.event_id
@@ -154,9 +181,16 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     ) {
         self.id = id
         self.hypocenterName = hypocenterName
+        self.sourceHypocenterName = hypocenterName.isEmpty ? nil : hypocenterName
         self.magnitude = magnitude
         self.magnitudeValue = magnitudeValue
         self.maxIntensity = maxIntensity
+        self.earthquakeMaxIntensity = maxIntensity
+        self.earthquakeMaxIntensityClass = nil
+        self.earthquakeType = .NORMAL
+        self.sourceOriginTime = originTime
+        self.sourceArrivalTime = nil
+        self.originTimePrecision = .MINUTE
         self.depth = depth
         self.originTime = originTime
         self.formattedTime = Self.formatTime(originTime, isArrival: false)

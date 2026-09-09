@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
   $onboardingWebViewRoute,
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
+  $earthquakeHistorySearchRoute,
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
@@ -178,6 +179,41 @@ mixin $EarthquakeHistoryRoute on GoRouteData {
   @override
   void replace(BuildContext context) =>
       context.replace(location, extra: _self.$extra);
+}
+
+RouteBase get $earthquakeHistorySearchRoute => GoRouteData.$route(
+  path: '/earthquake-history/search',
+  hasOverriddenOnExit: false,
+  factory: $EarthquakeHistorySearchRoute._fromState,
+);
+
+mixin $EarthquakeHistorySearchRoute on GoRouteData {
+  static EarthquakeHistorySearchRoute _fromState(GoRouterState state) =>
+      EarthquakeHistorySearchRoute(
+        query: state.uri.queryParameters['query'] ?? '',
+      );
+
+  EarthquakeHistorySearchRoute get _self =>
+      this as EarthquakeHistorySearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/earthquake-history/search',
+    queryParams: {if (_self.query != '') 'query': _self.query},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $eewHistoryRoute => GoRouteData.$route(

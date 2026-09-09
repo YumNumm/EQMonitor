@@ -117,6 +117,13 @@
 		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
 		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
 		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
+		A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */; };
+		A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000D /* SearchEarthquakesIntent.swift */; };
+		A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
+		A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -273,6 +280,10 @@
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
+		A9100000000000000000000B /* EarthquakeIntentDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialog.swift; sourceTree = "<group>"; };
+		A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialogTests.swift; sourceTree = "<group>"; };
+		A9100000000000000000000D /* SearchEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEarthquakesIntent.swift; sourceTree = "<group>"; };
+		A9100000000000000000000E /* EarthquakeSearchURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeSearchURL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -434,6 +445,7 @@
 		3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */ = {
 			isa = PBXGroup;
 			children = (
+				A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */,
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
 				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
 				EQ0000000000000000000003 /* LiveActivityDateTests.swift */,
@@ -535,6 +547,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				A9100000000000000000000D /* SearchEarthquakesIntent.swift */,
 				2709A8762F1FFFF400FBE962 /* Frameworks */,
 				85145B082B1F59A900784C85 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -556,6 +569,8 @@
 		EB0182E4C221D99352C4222C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				A9100000000000000000000B /* EarthquakeIntentDialog.swift */,
+				A9100000000000000000000E /* EarthquakeSearchURL.swift */,
 				62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */,
 				381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */,
 				FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */,
@@ -963,6 +978,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000069 /* WidgetErrorMessage.swift in Sources */,
 				010DC8E64C7C76B8F4F166D5 /* EarthquakeDisplayItem.swift in Sources */,
@@ -981,6 +997,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */,
+				A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */,
+				A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */,
 				B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */,
 				B18000000000000000000002 /* HeadlessTaskState.swift in Sources */,
 				B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */,
@@ -1011,6 +1030,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ000000000000000000006E /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000067 /* WidgetErrorMessage.swift in Sources */,
@@ -1041,6 +1061,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
+				A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				85A1B0012F59A00000000001 /* AppGroupMethodChannel.swift in Sources */,
 				85A1B0212F59C00000000021 /* LiveActivityDebugMethodChannel.swift in Sources */,

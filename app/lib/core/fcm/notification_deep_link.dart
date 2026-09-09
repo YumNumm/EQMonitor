@@ -9,7 +9,10 @@ sealed class NotificationDeepLink {
     '/earthquake-history-details/',
     '/feed/source/',
   ];
-  static const _allowedExactPaths = ['/earthquake-history'];
+  static const _allowedExactPaths = [
+    '/earthquake-history',
+    '/earthquake-history/search',
+  ];
 
   static NotificationDeepLink? fromUri(Uri uri) {
     if (uri.scheme == _internalScheme) {

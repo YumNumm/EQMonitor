@@ -1,3 +1,5 @@
+import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
@@ -219,6 +221,18 @@ class EarthquakeHistoryRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryPage(initialParameter: $extra);
+}
+
+@TypedGoRoute<EarthquakeHistorySearchRoute>(path: '/earthquake-history/search')
+class EarthquakeHistorySearchRoute extends GoRouteData
+    with $EarthquakeHistorySearchRoute, MaterialPageMixin {
+  const new({this.query = ''});
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      EarthquakeHistorySearchPage(key: ValueKey(query), initialQuery: query);
 }
 
 @TypedGoRoute<EewHistoryRoute>(path: '/eew-history')
