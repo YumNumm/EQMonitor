@@ -25,9 +25,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
+  const new({required this.eventId, this.onClose, super.key});
 
   final String eventId;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,16 +36,24 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 
     return switch (detailsState) {
       AsyncError(:final error) => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          leading: onClose == null ? null : BackButton(onPressed: onClose),
+        ),
         body: ErrorCard(
           error: error,
           onReload: () async =>
               ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
-      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
+      AsyncValue(:final value?) => _LoadedContent(
+        key: ValueKey(eventId),
+        earthquake: value,
+        onClose: onClose,
+      ),
       _ => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          leading: onClose == null ? null : BackButton(onPressed: onClose),
+        ),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -65,9 +74,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _LoadedContent extends HookConsumerWidget {
-  const new({required this.earthquake});
+  const new({required this.earthquake, this.onClose, super.key});
 
   final Earthquake earthquake;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -142,6 +152,7 @@ class _LoadedContent extends HookConsumerWidget {
             bottom: false,
             child: BasicModalSheet(
               hasAppBar: false,
+              expandToPane: onClose != null,
               child: SingleChildScrollView(
                 child: SafeArea(
                   child: Column(
@@ -238,7 +249,7 @@ class _LoadedContent extends HookConsumerWidget {
               ),
             ),
           ),
-          if (Navigator.canPop(context))
+          if (onClose != null || Navigator.canPop(context))
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -256,7 +267,7 @@ class _LoadedContent extends HookConsumerWidget {
                     ),
                   ),
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
+                  onPressed: onClose ?? () => context.pop(),
                   color: designSystem.colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),

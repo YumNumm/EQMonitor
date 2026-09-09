@@ -8,10 +8,12 @@ class BasicModalSheet extends HookWidget {
     required this.child,
     super.key,
     this.hasAppBar = true,
+    this.expandToPane = false,
   });
 
   final Widget child;
   final bool hasAppBar;
+  final bool expandToPane;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class BasicModalSheet extends HookWidget {
             ),
           );
 
-          if (isLandscape) {
+          if (isLandscape && !expandToPane) {
             return Align(
               alignment: Alignment.centerRight,
               child: SizedBox(
