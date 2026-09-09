@@ -13,7 +13,7 @@
 import Foundation
 
 /// 解決後の取得プラン
-enum WidgetFetchPlan: Equatable {
+enum WidgetFetchPlan: Equatable, Sendable {
     case nationwide
     case region(code: String)
     case prefecture(code: String)
@@ -143,7 +143,7 @@ enum WidgetRegionResolver {
         }
     }
 
-    private static func settings(from defaults: UserDefaults?) -> WidgetRegionSettings {
+    static func settings(from defaults: UserDefaults?) -> WidgetRegionSettings {
         WidgetRegionSettings(
             isPro: defaults?.bool(forKey: Key.isPro) == true,
             searchType: defaults?.string(forKey: Key.widgetRegionSearchType),

@@ -11,7 +11,7 @@ import SwiftUI
 import EQMonitorAPI
 
 /// Widget表示用の地震情報
-struct EarthquakeDisplayItem: Identifiable, Equatable {
+struct EarthquakeDisplayItem: Identifiable, Equatable, Sendable {
     let id: String
     let hypocenterName: String
     /// 見出しの震度フォールバックを含まない、APIの震源名。
@@ -27,6 +27,8 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     let sourceArrivalTime: Date?
     let originTimePrecision: Components.Schemas.OriginTimePrecision
     let depth: String
+    let depthValue: Double?
+    let regionalIntensity: IntensityValue?
     let originTime: Date
     let formattedTime: String
     let latitude: Double?
@@ -74,6 +76,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
     init(from partial: Components.Schemas.EarthquakePartial) {
         let maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.earthquakeMaxIntensity = maxIntensity
+        self.regionalIntensity = nil
         self.sourceHypocenterName = [partial.hypocenter?.value1.name,
                                     partial.hypocenter?.value1.detailed?.value1.name]
             .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "、")
@@ -89,8 +92,11 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
             maxIntensity: maxIntensity
         )
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
-        self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
+        self.magnitudeValue = partial.hypocenter?.value1.magnitude._type == .NORMAL
+            ? partial.hypocenter?.value1.magnitude.value : nil
         self.maxIntensity = maxIntensity
+        self.depthValue = partial.hypocenter?.value1.depth._type == .NORMAL
+            ? partial.hypocenter?.value1.depth.value : nil
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
         self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
         self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
@@ -107,6 +113,25 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
             self.originTime = Date()
             self.formattedTime = ""
         }
+    }
+
+    /// ID再解決でも一覧と同じ変換を通し、詳細APIの訓練・地震種別を保持する。
+    init(from earthquake: Components.Schemas.Earthquake) {
+        self.init(from: Components.Schemas.EarthquakePartial(
+            event_id: earthquake.event_id, status: earthquake.status,
+            origin_time: earthquake.origin_time, origin_time_precision: earthquake.origin_time_precision,
+            arrival_time: earthquake.arrival_time,
+            hypocenter: earthquake.hypocenter.map { .init(value1: $0.value1) },
+            estimated_intensity_tile: earthquake.estimated_intensity_tile,
+            datasources: earthquake.datasources,
+            intensity: earthquake.intensity.map { .init(value1: .init(
+                max_intensity: $0.value1.max_intensity,
+                max_intensity_class: $0.value1.max_intensity_class.map { .init(value1: $0.value1) })) },
+            telegram_types: earthquake.telegrams.compactMap {
+                Components.Schemas.EarthquakeTelegramType(rawValue: $0.telegram._type.rawValue)
+            },
+            earthquake_type: earthquake.earthquake_type
+        ))
     }
 
     /// 地域/都道府県/市区町村の震度検索結果からの変換初期化
@@ -128,6 +153,7 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         earthquake partial: Components.Schemas.EarthquakePartial
     ) {
         // 地域の震度情報を優先（検索結果の場合）
+        self.regionalIntensity = IntensityValue(from: regionIntensity)
         self.earthquakeMaxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
         self.sourceHypocenterName = [partial.hypocenter?.value1.name,
                                     partial.hypocenter?.value1.detailed?.value1.name]
@@ -146,7 +172,10 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
             maxIntensity: maxIntensity
         )
         self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
-        self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
+        self.magnitudeValue = partial.hypocenter?.value1.magnitude._type == .NORMAL
+            ? partial.hypocenter?.value1.magnitude.value : nil
+        self.depthValue = partial.hypocenter?.value1.depth._type == .NORMAL
+            ? partial.hypocenter?.value1.depth.value : nil
         self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
         self.latitude = partial.hypocenter?.value1.coordinates?.value1.latitude
         self.longitude = partial.hypocenter?.value1.coordinates?.value1.longitude
@@ -186,12 +215,14 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         self.magnitudeValue = magnitudeValue
         self.maxIntensity = maxIntensity
         self.earthquakeMaxIntensity = maxIntensity
+        self.regionalIntensity = nil
         self.earthquakeMaxIntensityClass = nil
         self.earthquakeType = .NORMAL
         self.sourceOriginTime = originTime
         self.sourceArrivalTime = nil
         self.originTimePrecision = .MINUTE
         self.depth = depth
+        self.depthValue = nil
         self.originTime = originTime
         self.formattedTime = Self.formatTime(originTime, isArrival: false)
         self.latitude = latitude

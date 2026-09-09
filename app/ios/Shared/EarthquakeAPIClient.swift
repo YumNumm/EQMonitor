@@ -52,12 +52,26 @@ enum APIError: Error, LocalizedError {
 class EarthquakeAPIService {
     private let client: Client
 
-    init(baseURL: URL) {
+    init(baseURL: URL, transport: any ClientTransport = URLSessionTransport()) {
         self.client = Client(
             serverURL: baseURL,
             configuration: Configuration(dateTranscoder: LenientISO8601DateTranscoder()),
-            transport: URLSessionTransport()
+            transport: transport
         )
+    }
+
+    func fetchEarthquake(eventID: String) async throws -> EarthquakeDisplayItem? {
+        let response = try await client.getV2EarthquakeByEventId(path: .init(eventId: eventID))
+        switch response {
+        case .ok(let response):
+            let item = try EarthquakeDisplayItem(from: response.body.json.earthquake)
+            guard item.id == eventID else { throw APIError.unexpected }
+            return item
+        case .notFound: return nil
+        case .badRequest: throw APIError.serverError(400)
+        case .internalServerError: throw APIError.serverError(500)
+        case .undocumented(let code, _): throw APIError.serverError(code)
+        }
     }
 
     // MARK: - Fetch Earthquakes (全国)
