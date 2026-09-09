@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/layout/history_selection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -16,12 +17,16 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
     required this.dataSource,
     required this.parameter,
     required this.config,
+    this.selectedEventId,
+    this.onSelect,
     super.key,
   });
 
   final EarthquakeHistoryDataSource dataSource;
   final EarthquakeHistoryParameter parameter;
   final EarthquakeHistoryListConfig config;
+  final String? selectedEventId;
+  final ValueChanged<String>? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +39,8 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
         dataSource: dataSource,
         builder: (context, item, _) => _EarthquakeHistoryPagingItem(
           item: item,
+          selected: selectedEventId == item.earthquake.eventId,
+          onSelect: onSelect,
           parameter: parameter,
           showBackgroundColor: config.isFillBackground,
         ),
@@ -56,6 +63,8 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
       headerBuilder: (_, date, _) => _DateHeader(date: date),
       itemBuilder: (context, item, _, _) => _EarthquakeHistoryPagingItem(
         item: item,
+        selected: selectedEventId == item.earthquake.eventId,
+        onSelect: onSelect,
         parameter: parameter,
         showBackgroundColor: config.isFillBackground,
       ),
@@ -76,25 +85,39 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
     required this.item,
     required this.parameter,
     required this.showBackgroundColor,
+    required this.selected,
+    required this.onSelect,
   });
 
   final EarthquakePartial item;
   final EarthquakeHistoryParameter parameter;
   final bool showBackgroundColor;
+  final bool selected;
+  final ValueChanged<String>? onSelect;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        EarthquakeHistoryListTile(
-          item: item,
-          searchParameter: parameter,
-          onTap: () async => EarthquakeHistoryDetailsRoute(
-            eventId: item.earthquake.eventId,
-          ).push<void>(context),
-          showBackgroundColor: showBackgroundColor,
-          visualDensity: VisualDensity.compact,
+        HistorySelection(
+          selected: selected,
+          child: EarthquakeHistoryListTile(
+            item: item,
+            searchParameter: parameter,
+            onTap: () async {
+              final select = onSelect;
+              if (select != null) {
+                select(item.earthquake.eventId);
+              } else {
+                await EarthquakeHistoryDetailsRoute(
+                  eventId: item.earthquake.eventId,
+                ).push<void>(context);
+              }
+            },
+            showBackgroundColor: showBackgroundColor,
+            visualDensity: VisualDensity.compact,
+          ),
         ),
         Divider(
           height: 0,
