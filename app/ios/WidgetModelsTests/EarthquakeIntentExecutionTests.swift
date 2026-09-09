@@ -4,7 +4,7 @@ import Testing
 import EQMonitorAPI
 
 struct EarthquakeIntentExecutionTests {
-    @Test func widgetControlCanOpenSnippetWithoutExistingSnapshot() async throws {
+    @Test func snippetCanFetchWithoutExistingSnapshot() async throws {
         let transport = IntentTestTransport(status: .ok, json: #"{"items":[]}"#)
         let service = try EarthquakeIntentTransportTests().makeService(transport: transport)
         let snippet = EarthquakeSnippetIntent(regionID: nil, minIntensity: nil, limit: 3)

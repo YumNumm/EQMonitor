@@ -1,3 +1,4 @@
+import AppIntents
 import background_location_tracker
 import Flutter
 import flutter_local_notifications
@@ -10,6 +11,12 @@ import WidgetKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    if #available(iOS 18.0, *) {
+      AppDependencyManager.shared.add(dependency: EarthquakeHistoryNavigation { url in
+        await UIApplication.shared.open(url)
+      })
+    }
+
     let backgroundLaunchBootstrap = BackgroundLocationLaunchBootstrap(
       configurePluginRegistrants: {
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { registry in

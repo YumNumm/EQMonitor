@@ -141,6 +141,10 @@
 		B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */; };
 		B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */; };
 		B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */; };
+		C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -318,6 +322,8 @@
 		A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeEntityRestorationTests.swift"; sourceTree = SOURCE_ROOT; };
 		A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentTransportTests.swift"; sourceTree = SOURCE_ROOT; };
 		A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentExecutionTests.swift"; sourceTree = SOURCE_ROOT; };
+		C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntent.swift; sourceTree = "<group>"; };
+		C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntentTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -479,6 +485,7 @@
 		3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */ = {
 			isa = PBXGroup;
 			children = (
+				C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */,
 				A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */,
 				A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */,
 				A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */,
@@ -608,6 +615,7 @@
 			isa = PBXGroup;
 			children = (
 				A9100000000000000000000B /* EarthquakeIntentDialog.swift */,
+				C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */,
 				A9100000000000000000000E /* EarthquakeSearchURL.swift */,
 				62ACEBEF0EEEF36A8EC1B1B1 /* EarthquakeDisplayItem.swift */,
 				381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */,
@@ -1035,6 +1043,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */,
+				C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */,
 				B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */,
 				B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */,
@@ -1085,6 +1095,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ000000000000000000006E /* EewDisplay.swift in Sources */,
 				EQ0000000000000000000065 /* LiveActivityDate.swift in Sources */,
@@ -1116,6 +1127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
