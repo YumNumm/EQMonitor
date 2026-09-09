@@ -27,7 +27,17 @@ class Eew extends _$Eew {
       return const AsyncData([]);
     }
 
-    final restResult = ref.watch(eewRestProvider).whenData(reconcileRestItems);
+    // 再取得中のLoading/Errorは表示中のEEWを置き換えない。
+    // 前回REST値の再適用によるRealtimeの巻き戻しも防ぐ。
+    ref.listen(eewRestProvider, (_, next) {
+      if (next.isLoading || next.hasError) {
+        if (!state.hasValue) {
+          state = next;
+        }
+        return;
+      }
+      state = next.whenData(reconcileRestItems);
+    });
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
@@ -55,7 +65,11 @@ class Eew extends _$Eew {
       }
     });
     ref.onDispose(refreshTimer.cancel);
-    return restResult;
+    final restResult = ref.read(eewRestProvider);
+    final initialItems = restResult.value;
+    return initialItems == null
+        ? restResult
+        : AsyncData(reconcileRestItems(initialItems));
   }
 
   void _upsert(EewTelegramItem item) {

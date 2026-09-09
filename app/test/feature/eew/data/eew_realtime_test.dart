@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,7 +21,7 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 void main() {
-  test('調査: readyとreloadで既存EEWが消える現象を2回再現する', () async {
+  test('readyとアプリ復帰の再取得中も既存EEWを保持する', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
     final pending = <Completer<List<EewTelegramItem>>>[];
@@ -50,15 +52,17 @@ void main() {
           const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
         );
       } else {
-        // resumed listenerと同じ再取得方法で2回目を検証する。
-        container.invalidate(eewRestProvider, asReload: true);
+        final lifecycle = container.read(appLifecycleProvider.notifier);
+        lifecycle.didChangeAppLifecycleState(AppLifecycleState.paused);
+        await container.pump();
+        lifecycle.didChangeAppLifecycleState(AppLifecycleState.resumed);
       }
       await container.pump();
       expect(pending.length, cycle + 2);
-      // REST自身は前回値を保持するが、Eew.buildのwhenDataで失われる。
+      // 通信中でも表示用データを消さない。
       expect(container.read(eewRestProvider).value, [item]);
-      expect(container.read(eewProvider).isLoading, isTrue);
-      expect(container.read(eewProvider).value, isNull);
+      expect(container.read(eewRestProvider).isLoading, isTrue);
+      expect(container.read(eewProvider).value, [item]);
       pending.last.complete([item]);
       await container.pump();
       expect(container.read(eewProvider).value, [item]);
