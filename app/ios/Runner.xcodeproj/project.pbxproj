@@ -124,6 +124,23 @@
 		A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000D /* SearchEarthquakesIntent.swift */; };
 		A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
 		A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
+		B17940000000000000000000 /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000000 /* EarthquakeAPIClient.swift */; };
+		B17940000000000000000001 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000001 /* DesignTokens.swift */; };
+		B17940000000000000000002 /* IntensityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000002 /* IntensityBadge.swift */; };
+		B17940000000000000000003 /* EarthquakeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000003 /* EarthquakeEntity.swift */; };
+		B17940000000000000000004 /* EarthquakeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000004 /* EarthquakeFetcher.swift */; };
+		B17940000000000000000005 /* EarthquakeIntentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000005 /* EarthquakeIntentRequest.swift */; };
+		B17940000000000000000006 /* EarthquakeSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000006 /* EarthquakeSnippetIntent.swift */; };
+		B17940000000000000000007 /* EarthquakeSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000007 /* EarthquakeSnippetView.swift */; };
+		B17940000000000000000008 /* GetLatestEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000008 /* GetLatestEarthquakesIntent.swift */; };
+		B17940000000000000000009 /* GetEarthquakesNearMeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000009 /* GetEarthquakesNearMeIntent.swift */; };
+		B1794000000000000000000A /* JmaCodeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000A /* JmaCodeTable.swift */; };
+		B1794000000000000000000B /* MinIntensityOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000B /* MinIntensityOption.swift */; };
+		B1794000000000000000000C /* RegionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000C /* RegionEntity.swift */; };
+		B1794000000000000000000D /* EarthquakeIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000D /* EarthquakeIntentTests.swift */; };
+		B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */; };
+		B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */; };
+		B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -284,6 +301,23 @@
 		A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialogTests.swift; sourceTree = "<group>"; };
 		A9100000000000000000000D /* SearchEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEarthquakesIntent.swift; sourceTree = "<group>"; };
 		A9100000000000000000000E /* EarthquakeSearchURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeSearchURL.swift; sourceTree = "<group>"; };
+		A17940000000000000000000 /* EarthquakeAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/EarthquakeAPIClient.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000001 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/DesignTokens.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000002 /* IntensityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/IntensityBadge.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000003 /* EarthquakeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeEntity.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000004 /* EarthquakeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeFetcher.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000005 /* EarthquakeIntentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeIntentRequest.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000006 /* EarthquakeSnippetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeSnippetIntent.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000007 /* EarthquakeSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeSnippetView.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000008 /* GetLatestEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/GetLatestEarthquakesIntent.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000009 /* GetEarthquakesNearMeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/GetEarthquakesNearMeIntent.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000A /* JmaCodeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/JmaCodeTable.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000B /* MinIntensityOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/MinIntensityOption.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000C /* RegionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/RegionEntity.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000D /* EarthquakeIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentTests.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeEntityRestorationTests.swift"; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentTransportTests.swift"; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentExecutionTests.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -445,6 +479,10 @@
 		3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */ = {
 			isa = PBXGroup;
 			children = (
+				A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */,
+				A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */,
+				A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */,
+				A1794000000000000000000D /* EarthquakeIntentTests.swift */,
 				A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */,
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
 				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
@@ -997,6 +1035,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */,
+				B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */,
+				B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */,
+				B1794000000000000000000D /* EarthquakeIntentTests.swift in Sources */,
+				B1794000000000000000000C /* RegionEntity.swift in Sources */,
+				B1794000000000000000000B /* MinIntensityOption.swift in Sources */,
+				B1794000000000000000000A /* JmaCodeTable.swift in Sources */,
+				B17940000000000000000009 /* GetEarthquakesNearMeIntent.swift in Sources */,
+				B17940000000000000000008 /* GetLatestEarthquakesIntent.swift in Sources */,
+				B17940000000000000000007 /* EarthquakeSnippetView.swift in Sources */,
+				B17940000000000000000006 /* EarthquakeSnippetIntent.swift in Sources */,
+				B17940000000000000000005 /* EarthquakeIntentRequest.swift in Sources */,
+				B17940000000000000000004 /* EarthquakeFetcher.swift in Sources */,
+				B17940000000000000000003 /* EarthquakeEntity.swift in Sources */,
+				B17940000000000000000002 /* IntensityBadge.swift in Sources */,
+				B17940000000000000000001 /* DesignTokens.swift in Sources */,
+				B17940000000000000000000 /* EarthquakeAPIClient.swift in Sources */,
 				A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */,
 				A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */,
@@ -1519,7 +1574,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppIntentExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppIntentExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitor;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1563,7 +1618,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppIntentExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppIntentExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitor;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1604,7 +1659,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppIntentExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppIntentExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = EQMonitor;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
