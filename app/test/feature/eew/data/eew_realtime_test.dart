@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
@@ -67,6 +68,91 @@ void main() {
       await container.pump();
       expect(container.read(eewProvider).value, [item]);
     }
+  });
+
+  group('REST取得と表示状態の分離', () {
+    late ProviderContainer container;
+    late StreamController<RealtimeEvent> controller;
+    late List<Completer<List<EewTelegramItem>>> requests;
+    late StreamController<DateTime> ticks;
+
+    setUp(() async {
+      controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+      requests = [];
+      ticks = StreamController<DateTime>.broadcast(sync: true);
+      addTearDown(ticks.close);
+      container = ProviderContainer(
+        retry: (_, _) => null,
+        overrides: [
+          timeTickerProvider().overrideWith((ref) => ticks.stream),
+          realtimeEventsProvider.overrideWith(
+            () => _StubRealtimeEvents(controller.stream),
+          ),
+          eewRestProvider.overrideWith((ref) {
+            final request = Completer<List<EewTelegramItem>>();
+            requests.add(request);
+            return request.future;
+          }),
+        ],
+      );
+      addTearDown(controller.close);
+      addTearDown(container.dispose);
+      final subscription = container.listen(eewProvider, (_, _) {});
+      addTearDown(subscription.close);
+      await container.pump();
+    });
+
+    for (final asReload in [true, false]) {
+      test('再取得開始時にRealtimeの最新報を巻き戻さない: asReload=$asReload', () async {
+        requests.single.complete([
+          _eew(serialNo: 1, zoneName: 'rest').toEewTelegramItem,
+        ]);
+        await container.pump();
+        controller.add(
+          RealtimeEvent.eewUpsert(
+            record: _eew(serialNo: 2, zoneName: 'realtime'),
+            source: RealtimeSource.eqmonitor,
+          ),
+        );
+        await container.pump();
+        container.invalidate(eewRestProvider, asReload: asReload);
+        await container.pump();
+        expect(container.read(eewProvider).value?.single.serialNo, 2);
+        requests.last.complete([
+          _eew(serialNo: 1, zoneName: 'stale-rest').toEewTelegramItem,
+        ]);
+        await container.pump();
+        expect(container.read(eewProvider).value?.single.serialNo, 2);
+      });
+    }
+
+    test('初回RESTより先に届いたRealtimeを再取得中と失敗時にも保持する', () async {
+      controller.add(
+        RealtimeEvent.eewUpsert(
+          record: _eew(serialNo: 2, zoneName: 'realtime'),
+          source: RealtimeSource.eqmonitor,
+        ),
+      );
+      await container.pump();
+      container.invalidate(eewRestProvider, asReload: true);
+      await container.pump();
+      expect(container.read(eewProvider).value?.single.serialNo, 2);
+      requests.first.complete([]);
+      requests.last.completeError(StateError('REST unavailable'));
+      await container.pump();
+      expect(container.read(eewRestProvider).hasError, isTrue);
+      expect(container.read(eewProvider).value?.single.serialNo, 2);
+    });
+
+    test('受信済みデータがない場合は初回LoadingとErrorを伝える', () async {
+      expect(container.read(eewProvider).isLoading, isTrue);
+      final error = StateError('REST unavailable');
+      requests.single.completeError(error);
+      await container.pump();
+      expect(container.read(eewProvider).error, same(error));
+      expect(container.read(eewProvider).hasValue, isFalse);
+    });
+
   });
 
   test('full EEW recordを反映し古いserialを無視すること', () async {
