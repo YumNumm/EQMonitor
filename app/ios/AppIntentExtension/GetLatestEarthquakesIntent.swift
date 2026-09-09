@@ -28,24 +28,30 @@ struct GetLatestEarthquakesIntent: AppIntent {
 
     func perform() async throws
         -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
-        if region != nil, !ProStatus.isPro {
-            throw EQIntentError.proRequired
-        }
+        try await execute(service: .shared)
+    }
+
+    func execute(
+        service: EarthquakeAPIService, snapshotID: String = UUID().uuidString
+    ) async throws -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
+        let request = try EarthquakeIntentRequest.current(regionID: region?.id, limit: limit)
         let items = try await EarthquakeFetcher.fetch(
-            plan: region?.fetchPlan ?? .nationwide,
+            plan: request.plan,
             limit: limit,
-            minIntensity: minIntensity?.apiValue
+            minIntensity: minIntensity?.apiValue, service: service
         )
         let summary = EarthquakeIntentDialog.summary(
-            items: items, area: region?.name ?? "全国", isRegional: region != nil
+            items: items, area: request.area, isRegional: region != nil
         )
+        let savedSnapshotID = await EarthquakeSnippetStore.shared.save(.init(
+            request: request, items: items, fetchedAt: Date(), wasRefreshed: false, minIntensity: minIntensity), id: snapshotID)
         return .result(
             value: items.map(EarthquakeEntity.init),
             dialog: IntentDialog(full: "\(summary)", supporting: "\(items.count)件の地震情報を取得しました。"),
             snippetIntent: EarthquakeSnippetIntent(
                 regionID: region?.id,
                 minIntensity: minIntensity,
-                limit: limit
+                limit: limit, snapshotID: savedSnapshotID
             )
         )
     }
@@ -53,16 +59,28 @@ struct GetLatestEarthquakesIntent: AppIntent {
 
 // MARK: - Errors
 
-enum EQIntentError: Error, CustomLocalizedStringResourceConvertible {
+enum EQIntentError: Error, CustomLocalizedStringResourceConvertible, Equatable {
     case proRequired
     case locationUnavailable
+    case invalidRegion
+    case invalidLimit
+    case snapshotUnavailable
+    case fetchFailed(String)
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
         case .proRequired:
             return "地域指定は EQMonitor Pro の機能です。アプリからご登録ください。"
         case .locationUnavailable:
-            return "現在地が未取得です。EQMonitor アプリを起動して位置情報を有効にしてください。"
+            return "保存地域が未設定または変更されています。EQMonitorで位置情報を確認し、もう一度実行してください。"
+        case .invalidRegion:
+            return "対象地域を確認できません。地域を選び直してください。"
+        case .invalidLimit:
+            return "表示件数は1件から10件で指定してください。"
+        case .snapshotUnavailable:
+            return "取得結果の表示期限が切れました。地震情報の確認をもう一度実行してください。"
+        case .fetchFailed(let message):
+            return "\(message)。しばらくしてからもう一度お試しください。"
         }
     }
 }
