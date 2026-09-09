@@ -1,10 +1,10 @@
 # App Intents の情報整合性と音声呼び出しを改善する
 
-2026-09-10調査。未修正。拡張buildと共有テストの成功だけでは正常動作とは判断しない。
+2026-09-10調査、一部修正。Issue: https://github.com/YumNumm/EQMonitor/issues/1794 。拡張buildと共有テストの成功だけでは正常動作とは判断しない。
 
 ## 優先して修正・検証する項目
 
-1. 地域震度を「最大震度」として返している。
+1. 【今回修正】地域震度を「最大震度」として返している。
    - `Shared/EarthquakeDisplayItem.swift`の地域検索用initは地域震度をmaxIntensityへ格納。
    - `AppIntentExtension/EarthquakeEntity.swift`はこれを「最大震度」プロパティへ変換。
    - 公開APIのprefecture/13で、event_id=20260830001711は地域震度1・全国最大震度4。
@@ -36,10 +36,18 @@
 - 地域指定Pro判定は主Intentのみ。Snippet直接実行・更新時の判定を統一する。
 - 通信失敗は主Intent/Fetcherからそのままthrowされ、APIError.fromによる正規化を通らない。
   オフライン・デコード失敗を含め、Siri向けの短い日本語案内を検証する。
-- 主IntentにProvidesDialogがなく、アプリが指定する地震の読み上げ文がない。
+- 【今回修正】主IntentにProvidesDialogを追加。訓練・試験を先に読み上げ、全体最大震度と地域震度を区別する。
 - Intentのperform・Entity復元・Snippet入力検証の専用テストがない。
 
 ## 検証記録
 
 `docs/knowledge/20260910_app_intents_verification_and_siri_ai.md`を参照。
-今回は調査依頼のため動作コードを変更せず、課題を記録した。
+追加実装の記録は `docs/knowledge/20260910_siri_dialog_search.md` を参照。
+
+## Flutterとの照合で判明した追加項目
+
+- 【今回修正】Swift APIの`IntensityPartial`に`max_intensity_class`がなく、過去の震度5・6や非数値分類を保持できなかった。元スキーマへ追加し、生成器で対象型を再生成した。
+- Flutterの履歴時刻表示も`originTimePrecision`を使わず分まで表示する。粗い歴史時刻を精度以上に表示しない対応を別途行う。今回の音声応答は精度を尊重する。
+- 既存Widget/Snippetの`OpenURLIntent`はカスタムスキームを指定しているが、Appleの契約はUniversal Link限定。実機で既存導線を検証し、対応リンクへ移行する。今回の検索はRunnerの`UIApplication.open`で開く。
+- Swift APIの元スキーマには生成済みコードの旧Live Activity操作が5件含まれない。全生成で削除されるため、契約の整理が必要。今回の限定生成スクリプトは恒久的な全生成手順の代替ではない。
+- 検索連携は地域名の候補選択まで。自然文の日付・震度・複合条件の解釈は未実装。

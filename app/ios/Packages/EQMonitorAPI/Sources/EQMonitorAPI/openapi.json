@@ -7694,6 +7694,13 @@
                 "$ref": "#/components/schemas/JmaLpgmIntensity"
               }
             ]
+          },
+          "max_intensity_class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CatalogIntensityClass"
+              }
+            ]
           }
         },
         "required": [
