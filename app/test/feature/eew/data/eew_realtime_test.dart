@@ -19,6 +19,52 @@ final class _StubRealtimeEvents extends RealtimeEvents {
 }
 
 void main() {
+  test('調査: readyとreloadで既存EEWが消える現象を2回再現する', () async {
+    final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
+    addTearDown(controller.close);
+    final pending = <Completer<List<EewTelegramItem>>>[];
+    final item = _eew(serialNo: 1, zoneName: 'rest').toEewTelegramItem;
+    final container = ProviderContainer(
+      overrides: [
+        realtimeEventsProvider.overrideWith(
+          () => _StubRealtimeEvents(controller.stream),
+        ),
+        eewRestProvider.overrideWith((ref) {
+          final request = Completer<List<EewTelegramItem>>();
+          pending.add(request);
+          return request.future;
+        }),
+      ],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(eewProvider, (_, _) {});
+    addTearDown(subscription.close);
+    await container.pump();
+    pending.single.complete([item]);
+    await container.pump();
+    expect(container.read(eewProvider).value, [item]);
+
+    for (var cycle = 0; cycle < 2; cycle += 1) {
+      if (cycle == 0) {
+        controller.add(
+          const RealtimeEvent.ready(source: RealtimeSource.eqmonitor),
+        );
+      } else {
+        // resumed listenerと同じ再取得方法で2回目を検証する。
+        container.invalidate(eewRestProvider, asReload: true);
+      }
+      await container.pump();
+      expect(pending.length, cycle + 2);
+      // REST自身は前回値を保持するが、Eew.buildのwhenDataで失われる。
+      expect(container.read(eewRestProvider).value, [item]);
+      expect(container.read(eewProvider).isLoading, isTrue);
+      expect(container.read(eewProvider).value, isNull);
+      pending.last.complete([item]);
+      await container.pump();
+      expect(container.read(eewProvider).value, [item]);
+    }
+  });
+
   test('full EEW recordを反映し古いserialを無視すること', () async {
     final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
     addTearDown(controller.close);
