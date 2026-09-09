@@ -1,6 +1,9 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
+import 'package:eqmonitor/core/component/layout/history_selection.dart';
+import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
+import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/flow/show_eew_history_notice_flow.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
@@ -21,6 +24,14 @@ class EewHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EewListParameter());
+    final selectedEventId = useState<String?>(null);
+    final eventId = selectedEventId.value;
+    final ValueChanged<String?> selectEvent = (value) {
+      if (selectedEventId.value != value) {
+        ref.read(eewSimulationProvider.notifier).stop();
+        selectedEventId.value = value;
+      }
+    };
     final noticeShownAsync = ref.watch(eewHistoryNoticeShownProvider);
     final noticeShown = switch (noticeShownAsync) {
       AsyncData(:final value) => value,
@@ -45,17 +56,31 @@ class EewHistoryPage extends HookConsumerWidget {
     }, [noticeShown]);
 
     return Scaffold(
-      body: dataSourceAsync.when(
-        loading: () => const _Skeleton(),
-        error: (error, _) => ErrorCard(
-          error: error,
-          onReload: () async =>
-              ref.refresh(eewListDataSourceProvider(parameter.value)),
-        ),
-        data: (dataSource) => _PagingBody(
-          dataSource: dataSource,
-          parameter: parameter,
-          onRefresh: () => dataSource.refresh(),
+      body: HistoryAdaptiveView(
+        onCloseDetail: () => selectEvent(null),
+        detail: eventId == null
+            ? null
+            : EewDetailsByEventIdPage(
+                key: ValueKey(eventId),
+                eventId: eventId,
+                onClose: () => selectEvent(null),
+              ),
+        list: Material(
+          child: dataSourceAsync.when(
+            loading: () => const _Skeleton(),
+            error: (error, _) => ErrorCard(
+              error: error,
+              onReload: () async =>
+                  ref.refresh(eewListDataSourceProvider(parameter.value)),
+            ),
+            data: (dataSource) => _PagingBody(
+              dataSource: dataSource,
+              selectedEventId: eventId,
+              onSelect: selectEvent,
+              parameter: parameter,
+              onRefresh: () => dataSource.refresh(),
+            ),
+          ),
         ),
       ),
     );
@@ -65,11 +90,15 @@ class EewHistoryPage extends HookConsumerWidget {
 class _PagingBody extends StatelessWidget {
   const new({
     required this.dataSource,
+    required this.selectedEventId,
+    required this.onSelect,
     required this.parameter,
     required this.onRefresh,
   });
 
   final EewListDataSource dataSource;
+  final String? selectedEventId;
+  final ValueChanged<String> onSelect;
   final ValueNotifier<EewListParameter> parameter;
   final Future<void> Function() onRefresh;
 
@@ -88,7 +117,10 @@ class _PagingBody extends StatelessWidget {
             centerTitle: false,
             title: Text('緊急地震速報 一覧'),
           ),
-          const PinnedActiveEewSection(),
+          PinnedActiveEewSection(
+            selectedEventId: selectedEventId,
+            onSelect: onSelect,
+          ),
           SliverPersistentHeader(
             pinned: true,
             delegate: EewListParameterPersistentDelegate(
@@ -103,12 +135,13 @@ class _PagingBody extends StatelessWidget {
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                EewHistoryListTile(
-                  item: item,
-                  visualDensity: VisualDensity.compact,
-                  onTap: () async => EewDetailsByEventIdRoute(
-                    eventId: item.eventId,
-                  ).push<void>(context),
+                HistorySelection(
+                  selected: selectedEventId == item.eventId,
+                  child: EewHistoryListTile(
+                    item: item,
+                    visualDensity: VisualDensity.compact,
+                    onTap: () => onSelect(item.eventId),
+                  ),
                 ),
                 Divider(
                   height: 0,
