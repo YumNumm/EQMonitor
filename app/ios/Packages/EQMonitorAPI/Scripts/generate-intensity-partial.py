@@ -4,7 +4,7 @@
 The checked-in OpenAPI snapshot omits legacy Live Activity operations that are
 still present in GeneratedSources. A full regeneration would delete those APIs.
 Generate the changed schema with Apple's generator and replace only that type.
-Usage: python3 Scripts/generate-intensity-partial.py /path/to/swift-openapi-generator
+Usage: python3 Scripts/generate-intensity-partial.py /path/to/swift-openapi-generator [Schema ...]
 """
 
 import pathlib
@@ -13,8 +13,8 @@ import sys
 import tempfile
 
 
-def declaration_span(source: str) -> tuple[int, int]:
-    marker = "        public struct IntensityPartial:"
+def declaration_span(source: str, name: str) -> tuple[int, int]:
+    marker = f"        public struct {name}:"
     start = source.index(marker)
     opening = source.index("{", start)
     depth = 0
@@ -25,7 +25,7 @@ def declaration_span(source: str) -> tuple[int, int]:
             depth -= 1
             if depth == 0:
                 return start, index + 1
-    raise ValueError("Incomplete generated IntensityPartial declaration")
+    raise ValueError(f"Incomplete generated {name} declaration")
 
 
 def main() -> None:
@@ -42,9 +42,11 @@ def main() -> None:
         ], check=True)
         original = target.read_text()
         generated = (output / "Types.swift").read_text()
-        old_start, old_end = declaration_span(original)
-        new_start, new_end = declaration_span(generated)
-        target.write_text(original[:old_start] + generated[new_start:new_end] + original[old_end:])
+        for name in sys.argv[2:] or ["IntensityPartial"]:
+            old_start, old_end = declaration_span(original, name)
+            new_start, new_end = declaration_span(generated, name)
+            original = original[:old_start] + generated[new_start:new_end] + original[old_end:]
+        target.write_text(original)
 
 
 if __name__ == "__main__":

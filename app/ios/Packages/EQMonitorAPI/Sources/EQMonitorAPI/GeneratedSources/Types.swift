@@ -5550,6 +5550,26 @@ public enum Components {
         ///
         /// - Remark: Generated from `#/components/schemas/Intensity`.
         public struct Intensity: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/Intensity/max_intensity_class`.
+            public struct max_intensity_classPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/Intensity/max_intensity_class/value1`.
+                public var value1: Components.Schemas.CatalogIntensityClass
+                /// Creates a new `max_intensity_classPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.CatalogIntensityClass) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Decoder) throws {
+                    self.value1 = try decoder.decodeFromSingleValueContainer()
+                }
+                public func encode(to encoder: any Encoder) throws {
+                    try encoder.encodeToSingleValueContainer(self.value1)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/Intensity/max_intensity_class`.
+            public var max_intensity_class: Components.Schemas.Intensity.max_intensity_classPayload?
             /// - Remark: Generated from `#/components/schemas/Intensity/max_intensity`.
             public var max_intensity: Components.Schemas.JmaIntensity
             /// - Remark: Generated from `#/components/schemas/Intensity/max_lpgm_intensity`.
@@ -5563,10 +5583,10 @@ public enum Components {
                 public init(value1: Components.Schemas.JmaLpgmIntensity) {
                     self.value1 = value1
                 }
-                public init(from decoder: any Swift.Decoder) throws {
+                public init(from decoder: any Decoder) throws {
                     self.value1 = try decoder.decodeFromSingleValueContainer()
                 }
-                public func encode(to encoder: any Swift.Encoder) throws {
+                public func encode(to encoder: any Encoder) throws {
                     try encoder.encodeToSingleValueContainer(self.value1)
                 }
             }
@@ -5579,22 +5599,26 @@ public enum Components {
             /// Creates a new `Intensity`.
             ///
             /// - Parameters:
+            ///   - max_intensity_class:
             ///   - max_intensity:
             ///   - max_lpgm_intensity:
             ///   - intensity_tree:
             ///   - lpgm_intensity_tree:
             public init(
+                max_intensity_class: Components.Schemas.Intensity.max_intensity_classPayload? = nil,
                 max_intensity: Components.Schemas.JmaIntensity,
                 max_lpgm_intensity: Components.Schemas.Intensity.max_lpgm_intensityPayload? = nil,
                 intensity_tree: [Components.Schemas.IntensityTree],
                 lpgm_intensity_tree: [Components.Schemas.LpgmIntensityTree]? = nil
             ) {
+                self.max_intensity_class = max_intensity_class
                 self.max_intensity = max_intensity
                 self.max_lpgm_intensity = max_lpgm_intensity
                 self.intensity_tree = intensity_tree
                 self.lpgm_intensity_tree = lpgm_intensity_tree
             }
             public enum CodingKeys: String, CodingKey {
+                case max_intensity_class
                 case max_intensity
                 case max_lpgm_intensity
                 case intensity_tree
@@ -6717,6 +6741,8 @@ public enum Components {
         }
         /// - Remark: Generated from `#/components/schemas/Earthquake`.
         public struct Earthquake: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/Earthquake/earthquake_type`.
+            public var earthquake_type: Components.Schemas.EarthquakeType
             /// yyyyMMddHHmmss形式のイベントID
             ///
             /// - Remark: Generated from `#/components/schemas/Earthquake/event_id`.
@@ -6740,10 +6766,10 @@ public enum Components {
                 public init(value1: Components.Schemas.Hypocenter) {
                     self.value1 = value1
                 }
-                public init(from decoder: any Swift.Decoder) throws {
+                public init(from decoder: any Decoder) throws {
                     self.value1 = try .init(from: decoder)
                 }
-                public func encode(to encoder: any Swift.Encoder) throws {
+                public func encode(to encoder: any Encoder) throws {
                     try self.value1.encode(to: encoder)
                 }
             }
@@ -6760,10 +6786,10 @@ public enum Components {
                 public init(value1: Components.Schemas.Intensity) {
                     self.value1 = value1
                 }
-                public init(from decoder: any Swift.Decoder) throws {
+                public init(from decoder: any Decoder) throws {
                     self.value1 = try .init(from: decoder)
                 }
-                public func encode(to encoder: any Swift.Encoder) throws {
+                public func encode(to encoder: any Encoder) throws {
                     try self.value1.encode(to: encoder)
                 }
             }
@@ -6788,10 +6814,10 @@ public enum Components {
                 public init(value1: Components.Schemas.Catalog) {
                     self.value1 = value1
                 }
-                public init(from decoder: any Swift.Decoder) throws {
+                public init(from decoder: any Decoder) throws {
                     self.value1 = try .init(from: decoder)
                 }
-                public func encode(to encoder: any Swift.Encoder) throws {
+                public func encode(to encoder: any Encoder) throws {
                     try self.value1.encode(to: encoder)
                 }
             }
@@ -6802,6 +6828,7 @@ public enum Components {
             /// Creates a new `Earthquake`.
             ///
             /// - Parameters:
+            ///   - earthquake_type:
             ///   - event_id: yyyyMMddHHmmss形式のイベントID
             ///   - status:
             ///   - origin_time:
@@ -6814,6 +6841,7 @@ public enum Components {
             ///   - catalog:
             ///   - telegrams:
             public init(
+                earthquake_type: Components.Schemas.EarthquakeType,
                 event_id: Swift.String,
                 status: Components.Schemas.TelegramStatus,
                 origin_time: Foundation.Date? = nil,
@@ -6826,6 +6854,7 @@ public enum Components {
                 catalog: Components.Schemas.Earthquake.catalogPayload? = nil,
                 telegrams: [Components.Schemas.EarthquakeTelegram]
             ) {
+                self.earthquake_type = earthquake_type
                 self.event_id = event_id
                 self.status = status
                 self.origin_time = origin_time
@@ -6839,6 +6868,7 @@ public enum Components {
                 self.telegrams = telegrams
             }
             public enum CodingKeys: String, CodingKey {
+                case earthquake_type
                 case event_id
                 case status
                 case origin_time

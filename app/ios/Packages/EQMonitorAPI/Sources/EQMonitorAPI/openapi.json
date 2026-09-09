@@ -7908,6 +7908,13 @@
       "Intensity": {
         "type": "object",
         "properties": {
+          "max_intensity_class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CatalogIntensityClass"
+              }
+            ]
+          },
           "max_intensity": {
             "$ref": "#/components/schemas/JmaIntensity"
           },
@@ -8570,6 +8577,9 @@
       "Earthquake": {
         "type": "object",
         "properties": {
+          "earthquake_type": {
+            "$ref": "#/components/schemas/EarthquakeType"
+          },
           "event_id": {
             "type": "string",
             "description": "yyyyMMddHHmmss形式のイベントID",
@@ -8635,6 +8645,7 @@
           }
         },
         "required": [
+          "earthquake_type",
           "datasources",
           "event_id",
           "origin_time_precision",
