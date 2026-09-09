@@ -1,20 +1,8 @@
+import 'package:eqmonitor/core/component/layout/pane_viewport_measurement.dart';
 import 'package:flutter/widgets.dart';
 
-typedef LiveMonitorSplitViewportEnvironment = ({
-  Size screenSize,
-  EdgeInsets viewPadding,
-  EdgeInsets viewInsets,
-  Orientation orientation,
-});
-
-typedef LiveMonitorSplitViewportMeasurement = ({
-  Offset globalOrigin,
-  Size viewportSize,
-  Size screenSize,
-  EdgeInsets viewPadding,
-  EdgeInsets viewInsets,
-  Orientation orientation,
-});
+typedef LiveMonitorSplitViewportEnvironment = PaneViewportEnvironment;
+typedef LiveMonitorSplitViewportMeasurement = PaneViewportMeasurement;
 
 class LiveMonitorSplitRatioCalculator {
   const new();
