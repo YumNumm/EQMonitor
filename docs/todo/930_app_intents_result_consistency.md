@@ -13,6 +13,8 @@ Issue: https://github.com/YumNumm/EQMonitor/issues/1794
 - 通信・デコード失敗の短い日本語案内、拡張表示名と生成NLUのEQMonitorへの統一。
 - Intent実行・取得回数・カード再描画・明示更新・Entity復元・欠損/エラーの自動テスト追加。
 
+- Control Center の2つの履歴導線を Runner / Widget 共通の OpenIntent に統一。Snippet とカスタムスキームの OpenURLIntent をこの導線から除去。
+
 ## 残る確認・改善
 
 1. 署名した実機で「EQMonitorで最新の地震を確認」の解決、Snippetの表示・明示更新、Pro失効、保存地域変更、オフライン時の音声を確認する。
@@ -24,5 +26,9 @@ Issue: https://github.com/YumNumm/EQMonitor/issues/1794
 5. Swiftの元スキーマにない旧Live Activity操作5件を整理し、限定生成に依存しない全生成へ戻す。
 6. Siri検索連携は地域名候補の選択まで。自然文の日付・震度・複合条件は未対応。
 
-記録: `docs/knowledge/20260910_app_intents_snapshot_contract.md`
+7. Control Center の「最新の地震を確認」「地震履歴を開く」を実タップし、起動済み・終了状態から履歴が表示されることを確認する。Simulator での Swift テスト成功は、OS による Intent 解決・UI 表示の証明ではない。
+
+8. Runner の全体ビルドを、Flutter 地図パッケージと `flutter_scene` の API が一致する環境で再確認する。今回の検証環境では `FmatType` / `parameterTypeOf` / `interfaceManifestFileName` の不整合で失敗した。無関係な submodule の作業差分は変更していない。
+
+記録: `docs/knowledge/20260910_app_intents_snapshot_contract.md`、`docs/knowledge/20260910_control_center_app_intent.md`
 実機の検証が残るため、この実装のみでIssueを閉じない。
