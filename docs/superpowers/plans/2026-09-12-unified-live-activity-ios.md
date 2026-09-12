@@ -9,7 +9,7 @@
 
 ## 今回の実行範囲
 
-ユーザーがデザイン案を却下し、今後のデザイン作業を禁止したため、当該モック・デザイン仕様は撤回する。契約・共有モデル・デバッグ処理・配信前提に限定して実装を進める。UIを新たに考案せず、表示実装はユーザー指定のデザインが必要な工程として分離する。
+ユーザーがデザイン案を却下したため、当該モック・デザイン仕様は撤回した。その後、Figma Betaの「Live Activity」と「Live Activity Case 2: EEW (+揺れ検知)」の両方を参照する指示を受けた。新しいデザインは考案せず、この既存部品・配置を新契約の表示へ接続する。参照箇所とデータの制約は [Figma参照記録](../../knowledge/20260912_unified_live_activity_figma_reference.md) に固定する。
 
 ## Global Constraints
 
@@ -61,7 +61,7 @@ PR #1203 は確認時点で Go Build / Format が失敗し、他の CI は実行
 | Swift は iOS 26.1 未満を除外、Dart は18以上 | 対応判定を揃える前提修正と境界テスト | 6 |
 | PR Flutter CI に WidgetModelsTests がない | Swift の検証を明示して実機受け入れへ進む | 7 |
 
-今回の依存順は `1 → 4 → 5 → 7`。Task 2–3 は実行しない。Task 6 は端末配信検証の前提として Task 7 より前に完了する。モデル・UI・debug/配信前提をレビュー単位として分割する。旧形式の保護を目的にコードやリリースを分岐させない。
+今回の依存順は `1 → 2–5 → 7`。Task 2–3 はユーザー指定のFigma部品を実装する工程に置き換える。Task 6 は端末配信検証の前提として Task 7 より前に完了する。Swift・Dartは共有fixtureを検証し、debug境界は同時に置き換える。旧形式の保護を目的にコードやリリースを分岐させない。
 
 ## Task 1: 正典 fixture と Swift 共有契約
 
@@ -89,11 +89,19 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 - [ ] 共有モデルと必要な既存型を Runner / WidgetExtension / EQMonitorPreviewWidget / WidgetModelsTests の各対象へ一度ずつ登録する。旧 Runner 定義は Task 4 で削除する。旧型への変換は追加しない。
 - [ ] 下記 Task 7 の Swift テストを実行し、canonical / SHA ID / 日時の round-trip と不正入力拒否を確認する。コミット例: `feat: 統合Live Activityの共有受信モデルを追加`。
 
-## Task 2–3: 表示工程（実行対象外）
+## Task 2–3: ユーザー指定Figmaの表示部品を新契約へ接続
 
-作成した表示仕様・レイアウト・モックは撤回。旧デザインを継承する方針へも戻さない。
-新しいデザインの提案や作成は行わない。今後ユーザーから実装対象のデザインが指定された場合に、そこに含まれる表示を実装する。
-wireのprimary・取消・Magnitude・欠損値などの意味はTask 1/5のモデルで保持する。
+**参照:** [Live Activity](https://www.figma.com/design/AmrOwdlmvdGU03vssT9e1H/EQMonitor--PUBLIC-ver-?node-id=1631-1342)、[Case 2](https://www.figma.com/design/AmrOwdlmvdGU03vssT9e1H/EQMonitor--PUBLIC-ver-?node-id=1899-359)。Case 2の子は既存Lock部品のinstance。却下されたモックは参照しない。
+
+**Files:** 新規 `app/ios/Shared/LiveActivity/UnifiedLiveActivityPresentation.swift`、`app/ios/Widget/LiveActivity/Unified/` 内のWidget・Lock・Island・共通表示部品。変更 `Widget/WidgetBundle.swift`、`EQMonitorPreviewWidget/EQMonitorPreviewWidgetBundle.swift`、pbxproj。旧Attributes・旧Widget・旧状態依存Viewを削除。新規PresentationのSwift tests。
+
+- [ ] `primary`から表示する型を選択し、各型の値の意味を保つ。震度と揺れレベル、予想と観測、全国と現在地を混同しない。取消は該当ブロックの古い数値・到達予想を抑止する。最終報と終了は別状態。
+- [ ] Lockのヘッダー/本文、Islandのleading/trailing/bottomはFigmaの配置を参照する。MAX・地域震度・M/深さ・時計・色・字体は既存部品と照合する。独自の新しいカード、装飾、情報の優先順位は作らない。
+- [ ] デザインに存在してもschemaにない全国の最大長周期値は表示しない。揺れのみのsnapshotからM・深さ・震度を作らない。nullable/optionalは補完せず、省略または未発表という意味を保つ。
+- [ ] EEW地域の震度は0〜7の受信値をそのまま扱い、既存の震度4以上という表示閾値で捨てない。PLUM等の低精度情報で通常の震源推定値を確定値のように出さない。地域名のみのlocationも保持する。
+- [ ] ActivityConfigurationは `EarthquakeLiveActivityAttributes` の1種類。URLは実在するearthquake/eewのeventIdだけから既存URL builderを使い、揺れの論理IDを地震詳細IDにしない。
+- [ ] 3 primary・取消・最終・ended・位置欠損・Magnitude各型・完全snapshotの表示判定をSwift testsで確認する。固定高で本文を切らず、狭幅・Dynamic Typeは既存SwiftUIの可変配置で確認する。
+- [ ] Widget/Preview build後、ユーザー指定Figmaとの一致をローカル表示で確認する。Figma自体へ書き込まない。コードと表示の未検証範囲を区別する。
 
 ## Task 4: Runner ローカルデバッグと一覧
 
@@ -222,5 +230,5 @@ git --no-pager diff --check
 
 - 実装完了: 新契約の全ケース、Dart debug、旧実装削除、Runner/Widget/Preview buildが成功し、Canvas/ローカル操作の結果が記録されている。
 - 配信検証完了: sandbox / productionの実tokenとBroadcastによるStart→Update→End、途中参加・同時発生・統合Event間の結合・再登録が実機で成功している。
-- 表示工程は未実装として区別し、モデルやローカル操作の成功をLive Activity全体の完成としない。
+- 表示・実機工程の検証結果を区別し、モデルやローカル操作の成功をLive Activity全体の完成としない。
 - 受け入れ条件の根拠: Issue #1800のwire/primary/ピーク/終了制御/配信条件を維持し、旧互換・移行・旧UI継承に関する条件は2026-09-12のユーザー指示で置き換える。
