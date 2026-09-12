@@ -153,6 +153,9 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
 - [ ] 情報を全量縦積みせず、主表示＋揺れピーク1行に絞る。Expanded は新レイアウトの標準/省スペース候補を `ViewThatFits` で選び、主情報を残す。終了済みピークは Lock Screen の補助行に必ず残し、狭い Island の全量表示は要求しない。
 - [ ] Preview に揺れ単独、EEW単独、地震情報単独のsnapshot、全ブロック、地域欠損、取消、深発、PLUM、Magnitude4形態を追加する。初回 Start が地震情報を主表示する状態でも描画できるようにする。
 - [ ] 同一 Activity の揺れ→レベル上昇→EEW→地震情報を Preview の連続状態で確認する。日時は Preview に注入した `now` から作る。受信データの不足を実装側の `Date()` で補わない。
+- [ ] 旧 `app/ios/Widget/LiveActivity/Eew/` と `ShakeDetection/`、`EQMonitorLiveActivityWidget.swift`、旧専用 `Common/LocationInfo.swift` を削除する。`Common/SharedComponents.swift` の汎用日時表示だけ必要に応じて新UIに独立移設し、旧見た目の部品は削除する。
+- [ ] 旧 `app/ios/Shared/EewDisplay.swift` と `app/ios/WidgetModelsTests/EewDisplayTests.swift` を新表示モデル/テストへ置換する。旧Preview、target membership、参照を削除する。通常WidgetやFlutterの地震情報画面は削除対象にしない。
+- [ ] 新規 `UnifiedLiveActivityStyle.swift` と `UnifiedEewView.swift` に新デザインのtokensとEEW専用Viewを実装する。[新デザイン仕様](../specs/2026-09-12-unified-live-activity-ios-design.md)の指標、地域/全国の区別、ソース要約、Compact/Minimalを満たす。
 - [ ] Preview target の membershipExceptions に新 Widget 配下ファイルを追加する。新 Shared ファイルの各 target の Sources も確認する。
 - [ ] Task 7 の Widget / Runner / Preview build と Canvas 確認を行う。Light / Dark、長い地名・headline、Dynamic Type、VoiceOver、カメラ脇の切り取りを検証する。コミット例: `feat: 統合Live Activityをロック画面とIslandに表示`。
 
@@ -160,21 +163,20 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
 
 **Files:** 変更 `app/ios/Runner/LiveActivityDebugMethodChannel.swift`。新規 `app/ios/Runner/LiveActivityDebug/UnifiedLiveActivityDebugHandler.swift`、`app/ios/WidgetModelsTests/UnifiedLiveActivityDebugContractTests.swift`。target 登録は `app/ios/Runner.xcodeproj/project.pbxproj`。
 
-**Interfaces:** MethodChannel の新 kind は `unified`。Start は `{kind, attributes: {id}, contentState: JSON文字列}`、Update / End は `{kind, activityId, contentState: JSON文字列?}`、list は引数なし。list は3種類の Activity を `{kind, activityId, logicalId, eventId?}` の配列で返す。旧 kind の Start 引数 `eventId` は引き続き受ける。
+**Interfaces:** MethodChannel は統合専用にし、kind 引数を廃止する。Start は `{attributes: {id}, contentState: JSON文字列}`、Update / End は `{activityId, contentState: JSON文字列?}`、list は引数なし。Start は `{activityId, logicalId, eventId?}`、list はその配列を返す。
 
-- [ ] 引数の共通 guard から eventId 必須条件を外し、旧2種別だけで検証する。新 kind は Task 1 の共有型で decode し、Attributes と state の id 一致を確認する。新しいモデルをこのファイル内に再定義しない。
-- [ ] 旧 Runner 定義は Widget の optional `type` と location の `isWarning` / `isPlum` に合わせて補正する。型名・既存キーを維持し、旧サンプルの decode と encode 後に情報が失われないことをテストする。
+- [ ] 旧2種類のswitch分岐、旧Attributes/ContentState/DebugLiveActivityLocationInfo、旧staleDate処理を削除する。Startは共有型でdecodeし、Attributesとstateのid一致を確認する。
 - [ ] 統合 handler は `Activity<EarthquakeLiveActivityAttributes>.request` を `pushType: nil`、`staleDate: nil` でローカル実行する。これは画面検証用で、Broadcast 購読済みの証拠にしない。
-- [ ] Update は OS の `activityId` で対象を選び、state.id と静的 id が異なる入力は `identity_mismatch`。見つからない ID は `activity_not_found`。誤った kind を含め、処理しなかった Update / End を成功として返さない。
-- [ ] End は任意の最終 snapshot を decode して `.immediate` で終了する。最終 state 未指定なら現 state を利用する。`isFinal` / `isCanceled` による自動 End は追加しない。
-- [ ] list は新旧すべての `Activity<T>.activities` を列挙する。統合の logicalId は attributes.id、eventId は earthquake/eew の実値。旧形式の logicalId は旧 attributes.id の UUID文字列、eventId は実際の旧 eventId。OS ID と混同しない。
-- [ ] Start / Update / End の引数 decode と ID 不一致を XCTest で固定し、実 Activity 操作は Task 5 の画面から検証する。型登録を含む Runner build を通す。コミット例: `feat: 統合Live Activityのローカル操作と一覧を追加`。
+- [ ] Update はOSのactivityIdで選択し、state.idと静的idが異なる場合は `identity_mismatch`、対象不在は `activity_not_found`。旧形式を受けるfallbackは設けない。
+- [ ] Endは任意の最終snapshotをdecodeして `.immediate` で終了する。未指定なら現stateを利用する。`isFinal` / `isCanceled` による自動Endを実装しない。
+- [ ] listは `Activity<EarthquakeLiveActivityAttributes>.activities` だけを列挙する。logicalIdはattributes.id、eventIdはearthquake/eewの実値。OS IDと混同しない。
+- [ ] Start/Update/Endの引数decode・ID不一致・統合型だけの列挙をテストする。旧kind/eventIdだけのStartが通らないことも確認する。Runner buildを通す。コミット例: `feat: ローカルLive Activity操作を統合形式へ置換`。
 
 ## Task 5: Dart の型・preset・JSON編集・セッション復元
 
-**Files:** 新規 `app/lib/feature/live_activity/data/model/{unified_live_activity_content_state,unified_shake_detection,unified_eew,unified_earthquake,unified_live_activity_json_converter}.dart` と生成物。既存 debug ディレクトリは `app/lib/feature/settings/children/config/debug/live_activity/`。その配下の `data/model/debug_live_activity_{kind,preset,session}.dart`、`data/controller/live_activity_local_controller.dart`、`data/repository/debug_live_activity_{content_builder,json_codec}.dart`、`ui/action/debug_live_activity_action.dart`、`ui/page/debug_live_activity_page.dart` を変更。新規 `data/model/debug_live_activity_start_request.dart`。テストは同構造の `app/test/feature/settings/children/config/debug/live_activity/` と `app/test/feature/live_activity/unified_live_activity_contract_test.dart`。
+**Files:** 新規 `app/lib/feature/live_activity/data/model/{unified_live_activity_content_state,unified_shake_detection,unified_eew,unified_earthquake,unified_live_activity_json_converter}.dart` と生成物。既存 debug ディレクトリは `app/lib/feature/settings/children/config/debug/live_activity/`。その配下の `data/model/debug_live_activity_{preset,session}.dart`、`data/controller/live_activity_local_controller.dart`、`data/repository/debug_live_activity_{content_builder,json_codec}.dart`、`ui/action/debug_live_activity_action.dart`、`ui/page/debug_live_activity_page.dart` を変更。削除 `data/model/debug_live_activity_kind.dart`。テストは同構造の `app/test/feature/settings/children/config/debug/live_activity/` と `app/test/feature/live_activity/unified_live_activity_contract_test.dart`。
 
-**Interfaces:** `UnifiedLiveActivityContentState.fromJson(Map<String, dynamic>)` / `toJson()`。`DebugLiveActivityContentBuilder.unifiedFromPreset({required DebugUnifiedPreset preset, required String id, required DateTime now}) -> UnifiedLiveActivityContentState`。`DebugLiveActivityJsonCodec.parseUnified(String raw) -> Result<UnifiedLiveActivityContentState, FormatException>`。Controller は `start({required DebugLiveActivityStartRequest request}) -> Future<String>` と `list() -> Future<List<DebugLiveActivitySession>>` を公開する。
+**Interfaces:** `UnifiedLiveActivityContentState.fromJson(Map<String, dynamic>)` / `toJson()`。`DebugLiveActivityContentBuilder.unifiedFromPreset({required DebugUnifiedPreset preset, required String id, required DateTime now}) -> UnifiedLiveActivityContentState`。`DebugLiveActivityJsonCodec.parse(String raw) -> Result<UnifiedLiveActivityContentState, FormatException>`。Controllerは `start({required UnifiedLiveActivityContentState state}) -> Future<DebugLiveActivitySession>`、`update({required String activityId, required UnifiedLiveActivityContentState state}) -> Future<void>`、`end({required String activityId, UnifiedLiveActivityContentState? state}) -> Future<void>`、`list() -> Future<List<DebugLiveActivitySession>>` を公開する。
 
 - [ ] Freezed の統合 DTO に `DateTime` と enum を用い、ブロック型は Swift と同じ分割にする。`EarthquakeMagnitude` は既存 `app/lib/feature/earthquake_history/data/model/earthquake_magnitude.dart` を再利用し、union を複製しない。
 - [ ] `UnifiedLiveActivityJsonConverter` で wire の `{type: NORMAL, value}` / UNKNOWN / OVER_M8 を既存 EarthquakeMagnitude へ相互変換する。既存 Freezed の `runtimeType` JSON を wire へ直接出さない。normal の value 不在・非有限・不正 type は FormatException。
@@ -194,12 +196,12 @@ test('正典をdecodeしてwire形式に戻せる', () {
 });
 ```
 
-- [ ] `DebugLiveActivityKind.unified('unified', '統合Live Activity')` を追加。`DebugUnifiedPreset` は shake / shakeEscalated / shakeEnded / eew / earthquake / allBlocks / canceledEew / canceledEarthquake / magnitudeUnknown / magnitudeOverM8 / noLocation を用意する。明示されたデバッグ fixture のみ固定値を使う。
-- [ ] StartRequest は sealed class とし、legacy は kind・実 eventId・旧 Map、unified は型付き state を保持する。新 kind の引数は Task 4 の形に encode し、トップレベル eventId を送らない。旧呼び出し元は legacy request に移行し、外部 wire の旧形状は保つ。
-- [ ] Session は `activityId: String`、`kind: DebugLiveActivityKind`、`logicalId: String?`、`eventId: String?` を保持。Start後・画面復帰時・Update/End後に list を読み、OS ID で選択を復元する。旧種別の移行用 session は logicalId 未取得を許容する。
+- [ ] `DebugLiveActivityKind`、`DebugEewPreset`、`DebugShakePreset`、旧形式builderを削除する。`DebugUnifiedPreset` は shake / shakeEscalated / shakeEnded / eew / earthquake / allBlocks / canceledEew / canceledEarthquake / magnitudeUnknown / magnitudeOverM8 / noLocation を用意する。明示されたデバッグ fixture のみ固定値を使う。
+- [ ] Controllerは型付きstateだけを受け、MethodChannel境界でTask 4のJSONへencodeする。全呼び出し元とmockを新しい引数へ変更する。kind、静的eventId、旧Mapを受けるoverloadは削除する。
+- [ ] Sessionは `activityId: String`、`logicalId: String`、`eventId: String?` を保持。Start後・画面復帰時・Update/End後にlistを読み、OS IDで選択を復元する。必ず統合形式のlogicalIdを持つ。
 - [ ] JSON編集の不正値は `primary に対応する情報がありません`、`id が開始時と一致しません` など短い日本語で表示する。生の Swift 例外や巨大 JSON を SnackBar に出さない。未成功の編集内容と選択 Activity を保持する。
 - [ ] preset の切り替えは選択中 Activity の backend id を保持する。別 Activity の作成は明示的な新規開始とする。Start が地震情報主表示の snapshot でも動くよう、揺れからの手順を必須にしない。
-- [ ] MethodChannel mock で新旧 Start の引数、Update/End の OS ID、list の復元、JSON不正時に native を呼ばないことを検証する。画面の kind 切り替え・入力保持・session選択は Widget test を追加する。
+- [ ] MethodChannel mockで統合Startの引数、Update/EndのOS ID、list復元、JSON不正時にnativeを呼ばないことを検証する。画面のシナリオ切り替え・入力保持・session選択はWidget testを追加し、旧種別のUIテストは置換する。
 - [ ] `mise exec -- dart run build_runner build --delete-conflicting-outputs` を app で実行し、対象 Dart tests と analyze を通す。コミット例: `feat: 統合Live Activityのデバッグシナリオを追加`。
 
 ## Task 6: トークン・APNs 環境・OS 対応範囲の前提整備
@@ -226,7 +228,7 @@ return true
 - [ ] [Apple の APNs entitlement 仕様](https://developer.apple.com/documentation/bundleresources/entitlements/aps-environment)と[ActivityKit 配信仕様](https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications)に照らし、Broadcast capability・bundle ID・環境を実機試験前に確認する。確認結果は knowledge、解消前の差分は todo に残す。
 - [ ] 通知設定/位置同期の送信地域が AreaForecastLocalE の3桁コードであることをテスト payload と backend 登録結果で確認する。都道府県コードや観測点 ID を新しい実装から追加送信しない。コミット例: `fix: Live ActivityのOS対応判定を配信条件に揃える`。
 
-## Task 7: 契約・遷移・実機配信の受け入れ
+## Task 7: 新契約・新デザイン・実機配信の受け入れ
 
 **Files:** Task 1 / 2 / 4 / 5 / 6 のテスト。新規 `app/test/fixtures/live_activity/unified/matrix.json`、`docs/knowledge/20260912_unified_live_activity_ios_contract.md`。実機結果は実施日の `docs/knowledge/{YYYYMMDD}_unified_live_activity_acceptance.md`。継続課題は `docs/todo/850_unified_live_activity_activation_prerequisites.md`。
 
@@ -246,10 +248,10 @@ return true
 | 取消 | EEW取消に古い予想値、地震情報取消に古い観測値 | 該当ブロックの値を有効表示しない。ActivityはEnd待ち |
 | 完全snapshot | 前状態にあるlocationが次でnull、ブロックが次でnull | 前状態を独自マージして残さない |
 | ID | backend IDとOS IDが別、誤ったID/種別、揺れ単独のリンク | 正しい対象のみ操作、架空の地震詳細へ遷移しない |
-| 移行 | 旧EEW・旧揺れを開始後、新アプリでUpdate / End | 旧登録・旧decodeが存続し、一覧からも操作可能 |
+| 全面置換 | 新Widget登録・新debug契約・旧コード参照の検索 | Live Activityの登録は新型1種類、旧型/互換adapter/旧kind分岐への参照なし |
 
 - [ ] Swift / Dart 契約テストを先に実行して不足機能による失敗を確認し、各 Task 実装後に再実行する。新規表示のみの細部には機械的なテスト追加をせず、契約・表示判定・遷移・通知条件の回帰を自動化する。
-- [ ] 以下を実行する。Swift tests は既存 scheme 全体、新規モデル＋関連EEW/日時/URLの回帰を含む。`SIMULATOR_UDID` は `xcrun simctl list devices available` で存在を確認した値を設定する。Xcode は現在のアプリが必要とする iOS 27 SDK を使う。
+- [ ] 以下を実行する。Swift tests は既存 scheme 全体、新規モデル・新表示判定・日時/URLの回帰を含む。`SIMULATOR_UDID` は `xcrun simctl list devices available` で存在を確認した値を設定する。Xcode は現在のアプリが必要とする iOS 27 SDK を使う。
 
 ```sh
 # app ディレクトリ
@@ -270,23 +272,19 @@ git --no-pager diff --check
 - [ ] ローカルデバッグで Task 3 の全表示形態と Task 4 の Start→複数Update→End→list消失を確認する。アプリ再起動後の list 復元と、手動dismiss後の対象不在も確認する。
 - [ ] backend の隔離された試験環境とテスト端末で、APNs sandbox / production それぞれ実 token に Start→Broadcast Update→End を送る。production APNs の検証を全利用者への本番切り替えと混同しない。テスト宛先は試験用登録端末に限定する。
 - [ ] 揺れ上昇またはEEW続報で初めて通知条件を満たす端末に、完全snapshotでStartが表示されることを確認する。アプリ側で開始条件を再判定しない。地震情報単独でbackendが新規Eventを開始しない点と、受信開始時にearthquake主表示であることは別。
-- [ ] 別EEW同時発生、複数揺れの結合、旧Endと存続先Startの前後両順序、旧側のみ参加した端末を検証する。独自のID書換え・重複排除・他Activity強制終了をせず、最終的に存続先が更新されることを確認する。
+- [ ] 別EEW同時発生、複数揺れの結合、終了対象の統合ActivityへのEndと存続先Startの前後両順序、終了対象側だけに参加した端末を検証する。独自のID書換え・重複排除・他Activity強制終了をせず、最終的に存続先が更新されることを確認する。
 - [ ] token更新・再登録、通知/Live Activity無効、アプリ非起動・画面ロック状態、OSの古い/新しい対応版、Dynamic Island有無を検証する。記録には app build / OS / 署名環境 / backend image・設定 / 入力シナリオ / APNs応答 / 端末上の結果を分けて残す。
 
-## リリース順序と有効化のゲート
+## 配信検証とリリース
 
-1. アプリの Task 1–6 と自動検証を完了し、`develop` 向けPRをレビューする。新旧3種類の Widget を含む archive のビルドを確認する。
-2. backend PR #1203 を含むリリースの CI 失敗原因を確認し、必要な修正と再検証を済ませる。Release PR #1202・実際のimage公開・Manager/Resolver/Sender配備・canary promoteは別々に結果を記録する。新規配信は無効のまま準備できる。
-3. 新 Widget を含むアプリを実機に導入し、隔離した配信環境で Task 7 を完了する。DB migrationと3サービスのバージョン、resolver/Sender prefix一致、Broadcast設定も運用側で読み戻し確認する。
-4. アプリの公開バージョン・利用者への更新方針・切り替え対象の対応状況・担当者・日時を backend 側と合意して記録する。**アプリ公開済みだけで全端末更新済みとは扱わない**。新Widgetの無い既存アプリをどう解消するか合意できるまで有効化を保留する。端末別対応登録や旧形式フォールバックを新設して解決しない。
-5. 合意した操作で全端末の新規Startを統合形式へ切り替える。旧Startの復旧キューを停止し、切り替え前ActivityのUpdate / Endは継続する。retention設定は本移行と別に無効のまま保つ。
-6. 問題時は運用側で新規Startの切り替え停止/復帰を判断する。既に開始した統合ActivityのUpdate / Endが失われるbackendの一括downgradeや、クライアントの新型削除をしない。復帰操作の新旧Start重複・pending queueの扱いは隔離環境で検証した手順だけ使う。
-
-旧型の削除は本 Issue の実装範囲に入れない。旧Activityの終了・バックエンド復旧キューの収束を確認した後の別変更にする。有効化日時と実機結果は今回の計画段階では決定・達成していない。
+1. 新形式の Task 1–6 と自動検証を完了し、`develop` 向けPRをレビューする。Live Activityは新型1種類を含むarchiveを検証する。
+2. backendの固定schemaと実配信バージョンが一致することを確認する。調査時に失敗していたCIは最新結果を再確認し、image公開・配備・実機受信をそれぞれ記録する。
+3. 新アプリでTask 7のsandbox / production APNs受信を確認する。地域・署名環境・resolver/Sender prefix・Broadcast設定を検証する。
+4. 統合形式を本番で有効化する際は、その配備・配信結果を記録する。旧アプリの普及率待ち、旧Activityの収束待ち、旧形式への復帰手順、migration作業は今回の計画に含めない。
 
 ## 完了の定義
 
-- 実装完了: 全契約ケース、表示判定、Dart debug、旧形式回帰、Runner/Widget/Preview buildが成功し、Canvas/ローカル操作の結果が記録されている。
-- 配信検証完了: sandbox と production の実 token / Broadcast / End を実機で確認し、途中参加・同時発生・マージ・移行・再登録が成功している。
-- 移行完了: 公開アプリと運用側の有効化条件が揃い、切り替え後の新規Startと旧Activity収束を確認している。上の3段階を一つの「完了」にまとめない。
-- 本計画の受け入れ条件対応: Issue のモデル/型/nullable → Task 1・5、UI/primary/ピーク → Task 2・3、Runner/debug/一覧 → Task 4・5、旧互換/最終/取消 → Task 2・4・7、token/地域/途中参加/マージ/一斉切替 → Task 6・7とリリースゲート。
+- 実装完了: 新契約の全ケース、新デザイン、Dart debug、旧実装削除、Runner/Widget/Preview buildが成功し、Canvas/ローカル操作の結果が記録されている。
+- 配信検証完了: sandbox / productionの実tokenとBroadcastによるStart→Update→End、途中参加・同時発生・統合Event間の結合・再登録が実機で成功している。
+- デザイン完了: Lock Screen / Expanded / Compact / Minimalとdebug画面が新仕様に揃い、Light/Dark・長文・文字拡大・欠損・取消・全Magnitude形態を確認している。
+- 受け入れ条件の根拠: Issue #1800のwire/primary/ピーク/終了制御/配信条件を維持し、旧互換・移行・旧UI継承に関する条件は2026-09-12のユーザー指示で置き換える。
