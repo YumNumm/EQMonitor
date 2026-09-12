@@ -86,3 +86,72 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 - [ ] `schemaVersion != 2`、未知 enum、不正日時、primary 欠損を decode エラーにする。デバッグ UI は入力エラーを示し、数値やブロックを補完しない。一般ブロックの未知キーは既存 Codable 同様に無視し、strict な Attributes / Magnitude は正典どおり検証する。
 - [ ] 共有モデルと必要な既存型を Runner / WidgetExtension / EQMonitorPreviewWidget / WidgetModelsTests の各対象へ一度ずつ登録する。旧 Runner 定義はこの時点では変更しない。
 - [ ] 下記 Task 7 の Swift テストを実行し、canonical / SHA ID / 日時の round-trip と不正入力拒否を確認する。コミット例: `feat: 統合Live Activityの共有受信モデルを追加`。
+
+## Task 2: 表示モデル・遷移・詳細リンク
+
+**Files:** 新規 `app/ios/Shared/LiveActivity/UnifiedLiveActivityPresentation.swift`、`app/ios/Widget/LiveActivity/Unified/UnifiedEewViewAdapter.swift`、`app/ios/WidgetModelsTests/UnifiedLiveActivityPresentationTests.swift`。再利用 `app/ios/Shared/{EewDisplay,EarthquakeDetailURL,LiveActivityDate}.swift`。Task 1 の揺れ enum 移設先は `app/ios/Shared/LiveActivity/ShakeDetectionLevel.swift`、既存色拡張の切り出し先は `app/ios/Widget/LiveActivity/ShakeDetection/ShakeDetectionLevel+Style.swift`。
+
+**Interfaces:** `UnifiedLiveActivityPresentation.init(state: UnifiedLiveActivityContentState)` は `primary: UnifiedLiveActivityPrimary`、`detailURL: URL?`、`shakePeak: UnifiedShakeDetection?` を公開。`UnifiedEewViewAdapter.make(state: UnifiedEew) -> EewContentState` は Widget 内だけで使用。Magnitude の `displayText: String` は normal / unknown / overM8 の表示を返し、nil は呼び出し側で非表示にする。
+
+- [ ] `primary` をそのまま選択するテストを作る。3ブロックが存在しても `primary == .eew` の fixture なら EEW を表示し、独自の earthquake 優先への変更をしない。到達時刻の前後で primary が変わらないことも確認する。
+- [ ] adapter は実際の EEW eventId・headline・各 bool・数値・時刻・location をそのまま既存 `EewContentState` へ渡す。日時を旧型の String へ渡す場合のみ ISO 8601 に encode する。`issuedAt` を `time` に代入しない。
+- [ ] 既存 `EewDisplay` の現在地震度・MAX 区別、取消時の値抑止、PLUM のカウントダウン抑止を再利用する。旧 UI の表示閾値（予報では地域震度4以上）と最終報ラベルをこの移行で変更しない。
+- [ ] 地震情報は地域の `location.maxIntensity` と全国の `maxIntensity` を区別し、EEW の予想震度を観測値として流用しない。Magnitude は normal → `M6.8`、unknown → `M不明`、overM8 → `M8以上の巨大地震`、null → 項目非表示。数値0を欠損にしない。
+- [ ] 地震情報取消時は「先ほどの地震情報は取り消されました」とし、古い震度・震源・Mを有効な情報として見せない。別ブロックの取消だけで他ブロックの情報を隠さない。informationType は配列のまま保持し、単一 enum へ縮約しない。
+- [ ] 揺れピークは snapshot の全体 `level` と地域 `location.level` を使用する。`ended` でも保持し、「検知終了・最大の揺れ」として区別する。enum から計測震度の数値を逆算しない。
+- [ ] 詳細リンクは `state.earthquake?.eventId ?? state.eew?.eventId` を `EarthquakeDetailURL.make(eventId:)` に渡す。揺れのみは nil とし、UUID / backend id を地震詳細へ渡さない。EEW eventId に地震情報がまだ無い場合も既存詳細画面の読み込み・未取得表示を確認する。
+
+```swift
+func testMagnitudeLabels() {
+    XCTAssertEqual(UnifiedLiveActivityMagnitude.normal(6.8).displayText, "M6.8")
+    XCTAssertEqual(UnifiedLiveActivityMagnitude.unknown.displayText, "M不明")
+    XCTAssertEqual(UnifiedLiveActivityMagnitude.overM8.displayText, "M8以上の巨大地震")
+}
+```
+
+- [ ] Task 7 の Swift tests で上記の選択・取消・null・リンクと、既存 EewDisplayTests / LiveActivityDateTests を通す。コミット例: `feat: 統合Live Activityの主表示と地域情報を定義`。
+
+## Task 3: Widget と Preview
+
+**Files:** 新規 `app/ios/Widget/LiveActivity/Unified/{EarthquakeLiveActivityWidget,UnifiedLockScreenView,UnifiedDynamicIslandViews,UnifiedEarthquakeView,UnifiedShakeView,UnifiedShakePeakView}.swift`。変更 `app/ios/Widget/WidgetBundle.swift`、`app/ios/EQMonitorPreviewWidget/EQMonitorPreviewWidgetBundle.swift`、`app/ios/Runner.xcodeproj/project.pbxproj`。
+
+**Interfaces:** `EarthquakeLiveActivityWidget: Widget`。`UnifiedLockScreenView(state:)`、`UnifiedEarthquakeView(state:)`、`UnifiedShakeView(state:)`、`UnifiedShakePeakView(state:)` はそれぞれ Task 1 の統合 / 地震 / 揺れ型を受ける。Island 用 View も統合 state を受け、Task 2 の primary 選択を共有する。
+
+| 主表示 | Lock Screen / Expanded | Compact / Minimal |
+| --- | --- | --- |
+| 揺れ検知 | headline・地域名・地域ピーク・全体ピーク・検知時刻・active/ended | 地域ピークを優先し、地域欠損なら全体ピークを最大と区別して表示 |
+| EEW | 既存 EEW レイアウト＋存在する場合のみ揺れピークの補助行 | 既存の地域予想震度＋到達カウントダウン、欠損時は MAX |
+| 地震情報 | headline・観測最大震度・地域名/地域震度・震源/M/深さ/時刻・揺れピーク補助行 | 地域の観測震度を優先し、全国値には MAX。予想と観測を音声ラベルでも区別 |
+
+- [ ] 新 Widget を旧2種類と並べて登録する。新 `ActivityConfiguration` の Lock Screen と Dynamic Island の双方へ `widgetURL` を設定する。揺れだけなら地震詳細 URL は設定しない。
+
+```swift
+ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
+    UnifiedLockScreenView(state: context.state)
+        .widgetURL(UnifiedLiveActivityPresentation(state: context.state).detailURL)
+} dynamicIsland: { context in
+    // UnifiedDynamicIslandViews.swift の leading / trailing / bottom と
+    // compactLeading / compactTrailing / minimal を、同じ primary で構成する。
+    // 実装時は既存 EewLiveActivityWidget の DynamicIsland 構成を基にする。
+}
+```
+
+- [ ] レベル・震度・MAX は文字でも区別する。地点が null のとき「地点情報なし」、空の headline は見出し行を省略し、未提供の地域名を補わない。配信地域が任意設定地域の場合に GPS の現在地だと誤認させる文言を増やさない。
+- [ ] 情報を全量縦積みせず、主表示＋揺れピーク1行に絞る。Expanded は既存 `ViewThatFits` と compact 候補を使い、主情報を残す。終了済みピークは Lock Screen の補助行に必ず残し、狭い Island の全量表示は要求しない。
+- [ ] Preview に揺れ単独、EEW単独、地震情報単独のsnapshot、全ブロック、地域欠損、取消、深発、PLUM、Magnitude4形態を追加する。初回 Start が地震情報を主表示する状態でも描画できるようにする。
+- [ ] 同一 Activity の揺れ→レベル上昇→EEW→地震情報を Preview の連続状態で確認する。日時は Preview に注入した `now` から作る。受信データの不足を実装側の `Date()` で補わない。
+- [ ] Preview target の membershipExceptions に新 Widget 配下ファイルを追加する。新 Shared ファイルの各 target の Sources も確認する。
+- [ ] Task 7 の Widget / Runner / Preview build と Canvas 確認を行う。Light / Dark、長い地名・headline、Dynamic Type、VoiceOver、カメラ脇の切り取りを検証する。コミット例: `feat: 統合Live Activityをロック画面とIslandに表示`。
+
+## Task 4: Runner ローカルデバッグと一覧
+
+**Files:** 変更 `app/ios/Runner/LiveActivityDebugMethodChannel.swift`。新規 `app/ios/Runner/LiveActivityDebug/UnifiedLiveActivityDebugHandler.swift`、`app/ios/WidgetModelsTests/UnifiedLiveActivityDebugContractTests.swift`。target 登録は `app/ios/Runner.xcodeproj/project.pbxproj`。
+
+**Interfaces:** MethodChannel の新 kind は `unified`。Start は `{kind, attributes: {id}, contentState: JSON文字列}`、Update / End は `{kind, activityId, contentState: JSON文字列?}`、list は引数なし。list は3種類の Activity を `{kind, activityId, logicalId, eventId?}` の配列で返す。旧 kind の Start 引数 `eventId` は引き続き受ける。
+
+- [ ] 引数の共通 guard から eventId 必須条件を外し、旧2種別だけで検証する。新 kind は Task 1 の共有型で decode し、Attributes と state の id 一致を確認する。新しいモデルをこのファイル内に再定義しない。
+- [ ] 統合 handler は `Activity<EarthquakeLiveActivityAttributes>.request` を `pushType: nil`、`staleDate: nil` でローカル実行する。これは画面検証用で、Broadcast 購読済みの証拠にしない。
+- [ ] Update は OS の `activityId` で対象を選び、state.id と静的 id が異なる入力は `identity_mismatch`。見つからない ID は `activity_not_found`。誤った kind を含め、処理しなかった Update / End を成功として返さない。
+- [ ] End は任意の最終 snapshot を decode して `.immediate` で終了する。最終 state 未指定なら現 state を利用する。`isFinal` / `isCanceled` による自動 End は追加しない。
+- [ ] list は新旧すべての `Activity<T>.activities` を列挙する。統合の logicalId は attributes.id、eventId は earthquake/eew の実値。旧形式の logicalId は旧 attributes.id の UUID文字列、eventId は実際の旧 eventId。OS ID と混同しない。
+- [ ] Start / Update / End の引数 decode と ID 不一致を XCTest で固定し、実 Activity 操作は Task 5 の画面から検証する。型登録を含む Runner build を通す。コミット例: `feat: 統合Live Activityのローカル操作と一覧を追加`。
