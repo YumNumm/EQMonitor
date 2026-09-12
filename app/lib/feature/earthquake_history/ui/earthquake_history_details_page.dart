@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -33,11 +34,15 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
+    final showBackButton = HistoryDetailScope.showBackButtonOf(context);
 
     return switch (detailsState) {
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(
-          leading: onClose == null ? null : BackButton(onPressed: onClose),
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
         ),
         body: ErrorCard(
           error: error,
@@ -52,7 +57,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       ),
       _ => Scaffold(
         appBar: AppBar(
-          leading: onClose == null ? null : BackButton(onPressed: onClose),
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
         ),
         body: Center(
           child: Column(
@@ -249,7 +257,8 @@ class _LoadedContent extends HookConsumerWidget {
               ),
             ),
           ),
-          if (onClose != null || Navigator.canPop(context))
+          if (HistoryDetailScope.showBackButtonOf(context) &&
+              (onClose != null || Navigator.canPop(context)))
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
