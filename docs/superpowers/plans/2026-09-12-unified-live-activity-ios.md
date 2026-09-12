@@ -211,3 +211,68 @@ return true
 - [ ] 両環境で最終署名を `codesign -d --entitlements :- /absolute/path/to/Runner.app` で確認し、`aps-environment` と登録 request の環境が一致することを記録する。integration test 入口は既存起動処理の依存初期化を使い、mock token は使わない。トークン全文をログ・文書へ残さない。
 - [ ] [Apple の APNs entitlement 仕様](https://developer.apple.com/documentation/bundleresources/entitlements/aps-environment)と[ActivityKit 配信仕様](https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications)に照らし、Broadcast capability・bundle ID・環境を実機試験前に確認する。確認結果は knowledge、解消前の差分は todo に残す。
 - [ ] 通知設定/位置同期の送信地域が AreaForecastLocalE の3桁コードであることをテスト payload と backend 登録結果で確認する。都道府県コードや観測点 ID を新しい実装から追加送信しない。コミット例: `fix: Live ActivityのOS対応判定を配信条件に揃える`。
+
+## Task 7: 契約・遷移・実機配信の受け入れ
+
+**Files:** Task 1 / 2 / 4 / 5 / 6 のテスト。新規 `app/test/fixtures/live_activity/unified/matrix.json`、`docs/knowledge/20260912_unified_live_activity_ios_contract.md`。実機結果は実施日の `docs/knowledge/{YYYYMMDD}_unified_live_activity_acceptance.md`。継続課題は `docs/todo/850_unified_live_activity_activation_prerequisites.md`。
+
+**Interfaces:** fixture matrix は `{name, attributes, contentState, valid}` の配列。Swift と Dart の両方が同じファイルを読む。valid の期待値は下表の条件を使い、decoder 実装から生成しない。
+
+| 分類 | 入力ケース | 合格条件 |
+| --- | --- | --- |
+| 基本契約 | canonical、SHA-256 ID、任意の非空 opaque ID | 既定 Swift decoder と Dart が成功。UUID必須にしない |
+| 存在組合せ | 3ブロックの非空7組合せ、存在する各 primary（計12ケース） | 指定された主表示。全null / 指定ブロックnullは失敗 |
+| 必須性 | 各 required-nullable に null / キー省略、各 optional の省略 | nullを維持、必須キー不在を拒否、optional不在は成功 |
+| 地域 | location null、地域名のみのEEW、optional全項目、`isPlum: true` | 推測なし。`isPlum: false` / optional非null型へのnullは失敗 |
+| 列挙・数値 | 全12震度、長周期0〜4、揺れ5段階、serialNo 0 / -1 / 小数 | 正典範囲だけ成功。`!5-` / `!6-` を保持 |
+| 地震情報 | Magnitude4形態、数値0、informationType複数/空配列 | unknownとnullを区別。配列をそのまま保持 |
+| 不正契約 | schemaVersion違い、空ID、不正日付、未知enum、NORMALのvalue欠落 | decode失敗。デバッグでは短い説明、native操作なし |
+| 日時 | Z、+09:00、fractional、到達前/後/ちょうど | 同じ時刻を保持、負のrangeや独自主表示切替なし |
+| 遷移 | 揺れ→上昇→ended→EEW→最終→地震情報→End | OS activityId維持、ピーク残存、Endまで自動終了しない |
+| 取消 | EEW取消に古い予想値、地震情報取消に古い観測値 | 該当ブロックの値を有効表示しない。ActivityはEnd待ち |
+| 完全snapshot | 前状態にあるlocationが次でnull、ブロックが次でnull | 前状態を独自マージして残さない |
+| ID | backend IDとOS IDが別、誤ったID/種別、揺れ単独のリンク | 正しい対象のみ操作、架空の地震詳細へ遷移しない |
+| 移行 | 旧EEW・旧揺れを開始後、新アプリでUpdate / End | 旧登録・旧decodeが存続し、一覧からも操作可能 |
+
+- [ ] Swift / Dart 契約テストを先に実行して不足機能による失敗を確認し、各 Task 実装後に再実行する。新規表示のみの細部には機械的なテスト追加をせず、契約・表示判定・遷移・通知条件の回帰を自動化する。
+- [ ] 以下を実行する。Swift tests は既存 scheme 全体、新規モデル＋関連EEW/日時/URLの回帰を含む。`SIMULATOR_UDID` は `xcrun simctl list devices available` で存在を確認した値を設定する。Xcode は現在のアプリが必要とする iOS 27 SDK を使う。
+
+```sh
+# app ディレクトリ
+mise exec -- dart run build_runner build --delete-conflicting-outputs
+mise exec -- flutter test test/feature/live_activity test/feature/settings/children/config/debug/live_activity test/feature/devices
+mise exec -- flutter analyze
+# repository root
+xcodebuild -version
+xcrun --sdk iphoneos --show-sdk-version
+xcrun simctl list devices available
+xcodebuild test -project app/ios/Runner.xcodeproj -scheme WidgetModelsTests -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO
+xcodebuild build -project app/ios/Runner.xcodeproj -scheme EQMonitorPreview -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO
+xcodebuild build -project app/ios/Runner.xcodeproj -scheme Runner -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO
+git --no-pager diff --check
+```
+
+- [ ] package 解決・Flutter設定生成は既存手順で事前に完了させる。`WidgetModelsTests` を実行しない PR Flutter CI の green だけを Swift の検証としない。build / test のコマンド、SDK、結果をアプリPRに記録する。
+- [ ] ローカルデバッグで Task 3 の全表示形態と Task 4 の Start→複数Update→End→list消失を確認する。アプリ再起動後の list 復元と、手動dismiss後の対象不在も確認する。
+- [ ] backend の隔離された試験環境とテスト端末で、APNs sandbox / production それぞれ実 token に Start→Broadcast Update→End を送る。production APNs の検証を全利用者への本番切り替えと混同しない。テスト宛先は試験用登録端末に限定する。
+- [ ] 揺れ上昇またはEEW続報で初めて通知条件を満たす端末に、完全snapshotでStartが表示されることを確認する。アプリ側で開始条件を再判定しない。地震情報単独でbackendが新規Eventを開始しない点と、受信開始時にearthquake主表示であることは別。
+- [ ] 別EEW同時発生、複数揺れの結合、旧Endと存続先Startの前後両順序、旧側のみ参加した端末を検証する。独自のID書換え・重複排除・他Activity強制終了をせず、最终的に存続先が更新されることを確認する。
+- [ ] token更新・再登録、通知/Live Activity無効、アプリ非起動・画面ロック状態、OSの古い/新しい対応版、Dynamic Island有無を検証する。記録には app build / OS / 署名環境 / backend image・設定 / 入力シナリオ / APNs応答 / 端末上の結果を分けて残す。
+
+## リリース順序と有効化のゲート
+
+1. アプリの Task 1–6 と自動検証を完了し、`develop` 向けPRをレビューする。新旧3種類の Widget を含む archive のビルドを確認する。
+2. backend PR #1203 を含むリリースの CI 失敗原因を確認し、必要な修正と再検証を済ませる。Release PR #1202・実際のimage公開・Manager/Resolver/Sender配備・canary promoteは別々に結果を記録する。新規配信は無効のまま準備できる。
+3. 新 Widget を含むアプリを実機に導入し、隔離した配信環境で Task 7 を完了する。DB migrationと3サービスのバージョン、resolver/Sender prefix一致、Broadcast設定も運用側で読み戻し確認する。
+4. アプリの公開バージョン・利用者への更新方針・切り替え対象の対応状況・担当者・日時を backend 側と合意して記録する。**アプリ公開済みだけで全端末更新済みとは扱わない**。新Widgetの無い既存アプリをどう解消するか合意できるまで有効化を保留する。端末別対応登録や旧形式フォールバックを新設して解決しない。
+5. 合意した操作で全端末の新規Startを統合形式へ切り替える。旧Startの復旧キューを停止し、切り替え前ActivityのUpdate / Endは継続する。retention設定は本移行と別に無効のまま保つ。
+6. 問題時は運用側で新規Startの切り替え停止/復帰を判断する。既に開始した統合ActivityのUpdate / Endが失われるbackendの一括downgradeや、クライアントの新型削除をしない。復帰操作の新旧Start重複・pending queueの扱いは隔離環境で検証した手順だけ使う。
+
+旧型の削除は本 Issue の実装範囲に入れない。旧Activityの終了・バックエンド復旧キューの収束を確認した後の別変更にする。有効化日時と実機結果は今回の計画段階では決定・達成していない。
+
+## 完了の定義
+
+- 実装完了: 全契約ケース、表示判定、Dart debug、旧形式回帰、Runner/Widget/Preview buildが成功し、Canvas/ローカル操作の結果が記録されている。
+- 配信検証完了: sandbox と production の実 token / Broadcast / End を実機で確認し、途中参加・同時発生・マージ・移行・再登録が成功している。
+- 移行完了: 公開アプリと運用側の有効化条件が揃い、切り替え後の新規Startと旧Activity収束を確認している。上の3段階を一つの「完了」にまとめない。
+- 本計画の受け入れ条件対応: Issue のモデル/型/nullable → Task 1・5、UI/primary/ピーク → Task 2・3、Runner/debug/一覧 → Task 4・5、旧互換/最終/取消 → Task 2・4・7、token/地域/途中参加/マージ/一斉切替 → Task 6・7とリリースゲート。
