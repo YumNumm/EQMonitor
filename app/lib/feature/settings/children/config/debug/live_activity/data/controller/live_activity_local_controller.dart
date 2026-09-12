@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_kind.dart';
+import 'package:eqmonitor/feature/live_activity/data/model/unified_live_activity_content_state.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_session.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,36 +14,26 @@ final liveActivityLocalControllerProvider =
       return const UnsupportedLiveActivityLocalController();
     });
 
-/// アプリ内から ActivityKit を用いて Live Activity をローカル開始・更新・終了する。
-///
-/// Push-to-Start（サーバー経由）とは別経路で、開発時の表示検証に用いる。
 abstract interface class LiveActivityLocalController {
-  /// この端末で Live Activity のローカル開始がサポートされているか。
   Future<bool> isSupported();
 
-  /// Live Activity を開始し、払い出された `activityId` を返す。
-  Future<String> start({
-    required DebugLiveActivityKind kind,
-    required String eventId,
-    required Map<String, dynamic> contentState,
+  Future<DebugLiveActivitySession> start({
+    required UnifiedLiveActivityContentState state,
   });
 
-  /// 既存の Live Activity を更新する。
   Future<void> update({
-    required DebugLiveActivityKind kind,
     required String activityId,
-    required Map<String, dynamic> contentState,
+    required UnifiedLiveActivityContentState state,
   });
 
-  /// Live Activity を終了する。
   Future<void> end({
-    required DebugLiveActivityKind kind,
     required String activityId,
-    Map<String, dynamic>? contentState,
+    UnifiedLiveActivityContentState? state,
   });
+
+  Future<List<DebugLiveActivitySession>> list();
 }
 
-/// iOS 以外のプラットフォーム向けの no-op 実装。
 class UnsupportedLiveActivityLocalController
     implements LiveActivityLocalController {
   const new();
@@ -51,107 +42,227 @@ class UnsupportedLiveActivityLocalController
   Future<bool> isSupported() async => false;
 
   @override
-  Future<String> start({
-    required DebugLiveActivityKind kind,
-    required String eventId,
-    required Map<String, dynamic> contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
-
-  @override
-  Future<void> update({
-    required DebugLiveActivityKind kind,
-    required String activityId,
-    required Map<String, dynamic> contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
-
-  @override
-  Future<void> end({
-    required DebugLiveActivityKind kind,
-    required String activityId,
-    Map<String, dynamic>? contentState,
-  }) => throw const LiveActivityLocalException('この端末ではサポートされていません');
-}
-
-/// `net.yumnumm.eqmonitor/live_activity_debug` MethodChannel 経由の iOS 実装。
-class MethodChannelLiveActivityLocalController
-    implements LiveActivityLocalController {
-  const new();
-
-  static const MethodChannel _channel = MethodChannel(
-    'net.yumnumm.eqmonitor/live_activity_debug',
+  Future<DebugLiveActivitySession> start({
+    required UnifiedLiveActivityContentState state,
+  }) => throw const LiveActivityLocalException(
+    'この端末ではサポートされていません',
+    code: 'unsupported',
   );
 
   @override
-  Future<bool> isSupported() async {
-    final result = await _invoke<bool>('isSupported');
-    return result ?? false;
-  }
-
-  @override
-  Future<String> start({
-    required DebugLiveActivityKind kind,
-    required String eventId,
-    required Map<String, dynamic> contentState,
-  }) async {
-    final activityId = await _invoke<String>('start', <String, dynamic>{
-      'kind': kind.wireName,
-      'eventId': eventId,
-      'contentState': jsonEncode(contentState),
-    });
-    if (activityId == null || activityId.isEmpty) {
-      throw const LiveActivityLocalException('activityId を取得できませんでした');
-    }
-    return activityId;
-  }
-
-  @override
   Future<void> update({
-    required DebugLiveActivityKind kind,
     required String activityId,
-    required Map<String, dynamic> contentState,
-  }) async {
-    await _invoke<void>('update', <String, dynamic>{
-      'kind': kind.wireName,
-      'activityId': activityId,
-      'contentState': jsonEncode(contentState),
-    });
-  }
+    required UnifiedLiveActivityContentState state,
+  }) => throw const LiveActivityLocalException(
+    'この端末ではサポートされていません',
+    code: 'unsupported',
+  );
 
   @override
   Future<void> end({
-    required DebugLiveActivityKind kind,
     required String activityId,
-    Map<String, dynamic>? contentState,
-  }) async {
-    await _invoke<void>('end', <String, dynamic>{
-      'kind': kind.wireName,
-      'activityId': activityId,
-      'contentState': contentState == null ? null : jsonEncode(contentState),
-    });
+    UnifiedLiveActivityContentState? state,
+  }) => throw const LiveActivityLocalException(
+    'この端末ではサポートされていません',
+    code: 'unsupported',
+  );
+
+  @override
+  Future<List<DebugLiveActivitySession>> list() async => const [];
+}
+
+/// MethodChannel の値を JSON に正規化し、StandardMessageCodec の map 型差を隔離する。
+class LiveActivityDebugChannel {
+  const new();
+
+  static const methodChannel = MethodChannel(
+    'net.yumnumm.eqmonitor/live_activity_debug',
+  );
+
+  Future<bool> invokeBool({required String method}) async {
+    try {
+      final value = await methodChannel.invokeMethod<bool>(method);
+      return value ?? false;
+    } on PlatformException catch (error) {
+      throw LiveActivityLocalException.fromPlatform(error);
+    } on MissingPluginException {
+      throw const LiveActivityLocalException(
+        'ネイティブ実装が見つかりません',
+        code: 'missing_plugin',
+      );
+    }
   }
 
-  Future<T?> _invoke<T>(String method, [Map<String, dynamic>? arguments]) async {
+  Future<String> invokeJson({
+    required String method,
+    Map<String, dynamic>? arguments,
+  }) async {
     try {
-      return await _channel.invokeMethod<T>(method, arguments);
-    } on PlatformException catch (e) {
-      throw LiveActivityLocalException(e.message ?? e.code, code: e.code);
-    } on MissingPluginException catch (e) {
-      throw LiveActivityLocalException(
-        e.message ?? 'ネイティブ実装が見つかりません',
+      final value = await methodChannel.invokeMethod(method, arguments);
+      return jsonEncode(value);
+    } on PlatformException catch (error) {
+      throw LiveActivityLocalException.fromPlatform(error);
+    } on MissingPluginException {
+      throw const LiveActivityLocalException(
+        'ネイティブ実装が見つかりません',
+        code: 'missing_plugin',
+      );
+    }
+  }
+
+  Future<void> invokeVoid({
+    required String method,
+    required Map<String, dynamic> arguments,
+  }) async {
+    try {
+      await methodChannel.invokeMethod<void>(method, arguments);
+    } on PlatformException catch (error) {
+      throw LiveActivityLocalException.fromPlatform(error);
+    } on MissingPluginException {
+      throw const LiveActivityLocalException(
+        'ネイティブ実装が見つかりません',
         code: 'missing_plugin',
       );
     }
   }
 }
 
-/// Live Activity のローカル操作で発生した例外。
-class LiveActivityLocalException implements Exception {
-  const new(this.message, {this.code});
+class MethodChannelLiveActivityLocalController
+    implements LiveActivityLocalController {
+  const new({this.channel = const LiveActivityDebugChannel()});
 
-  final String message;
-  final String? code;
+  final LiveActivityDebugChannel channel;
 
   @override
-  String toString() =>
-      code == null ? message : 'LiveActivityLocalException($code): $message';
+  Future<bool> isSupported() => channel.invokeBool(method: 'isSupported');
+
+  @override
+  Future<DebugLiveActivitySession> start({
+    required UnifiedLiveActivityContentState state,
+  }) async {
+    final contentState = validatedJson(state);
+    final response = await channel.invokeJson(
+      method: 'start',
+      arguments: <String, dynamic>{
+        'attributes': <String, dynamic>{'id': state.id},
+        'contentState': contentState,
+      },
+    );
+    return decodeSession(response);
+  }
+
+  @override
+  Future<void> update({
+    required String activityId,
+    required UnifiedLiveActivityContentState state,
+  }) {
+    if (activityId.isEmpty) {
+      throw const LiveActivityLocalException(
+        'activityId が未設定です',
+        code: 'invalid_arguments',
+      );
+    }
+    return channel.invokeVoid(
+      method: 'update',
+      arguments: <String, dynamic>{
+        'activityId': activityId,
+        'contentState': validatedJson(state),
+      },
+    );
+  }
+
+  @override
+  Future<void> end({
+    required String activityId,
+    UnifiedLiveActivityContentState? state,
+  }) {
+    if (activityId.isEmpty) {
+      throw const LiveActivityLocalException(
+        'activityId が未設定です',
+        code: 'invalid_arguments',
+      );
+    }
+    return channel.invokeVoid(
+      method: 'end',
+      arguments: <String, dynamic>{
+        'activityId': activityId,
+        if (state != null) 'contentState': validatedJson(state),
+      },
+    );
+  }
+
+  @override
+  Future<List<DebugLiveActivitySession>> list() async {
+    final response = await channel.invokeJson(method: 'list');
+    try {
+      final decoded = jsonDecode(response);
+      if (decoded is! List) {
+        throw const FormatException('list response is not an array');
+      }
+      return decoded
+          .map((item) {
+            if (item is! Map<String, dynamic>) {
+              throw const FormatException('session is not an object');
+            }
+            return DebugLiveActivitySession.fromJson(item);
+          })
+          .toList(growable: false);
+    } on FormatException {
+      throw const LiveActivityLocalException(
+        'ネイティブ応答が不正です',
+        code: 'invalid_response',
+      );
+    }
+  }
+
+  String validatedJson(UnifiedLiveActivityContentState state) {
+    try {
+      return jsonEncode(state.validated().toJson());
+    } on FormatException {
+      throw const LiveActivityLocalException(
+        'ContentState が不正です',
+        code: 'invalid_content_state',
+      );
+    }
+  }
+
+  DebugLiveActivitySession decodeSession(String response) {
+    try {
+      final decoded = jsonDecode(response);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException('session response is not an object');
+      }
+      return DebugLiveActivitySession.fromJson(decoded);
+    } on FormatException {
+      throw const LiveActivityLocalException(
+        'ネイティブ応答が不正です',
+        code: 'invalid_response',
+      );
+    }
+  }
+}
+
+class LiveActivityLocalException implements Exception {
+  const new(this.message, {required this.code});
+
+  // ignore: unnecessary_type_name_in_constructor
+  factory LiveActivityLocalException.fromPlatform(PlatformException error) =>
+      LiveActivityLocalException(
+        switch (error.code) {
+          'invalid_arguments' => '引数が不正です',
+          'invalid_content_state' => 'ContentState が不正です',
+          'logical_id_mismatch' => 'logical ID が一致しません',
+          'activity_not_found' => 'Live Activity が見つかりません',
+          'unsupported' => 'この端末ではサポートされていません',
+          'live_activity_error' => 'Live Activity の操作に失敗しました',
+          _ => 'Live Activity の操作に失敗しました',
+        },
+        code: error.code,
+      );
+
+  final String message;
+  final String code;
+
+  @override
+  String toString() => 'LiveActivityLocalException($code): $message';
 }

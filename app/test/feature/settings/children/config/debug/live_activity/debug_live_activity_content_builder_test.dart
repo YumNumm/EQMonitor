@@ -1,195 +1,120 @@
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
-import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/live_activity/data/model/unified_live_activity_content_state.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const builder = DebugLiveActivityContentBuilder();
-  final now = DateTime.utc(2024, 1, 1, 7, 10); // = 16:10 JST
+  final now = DateTime.utc(2026, 9, 12, 1, 30);
 
-  group('eewFromPreset', () {
-    test('warning プリセットは警報フィールドと現在地予想を含む', () {
-      final map = builder.eewFromPreset(
-        preset: DebugEewPreset.warning,
-        eventId: 'ev-1',
+  test('all presets produce valid round-trippable complete snapshots', () {
+    for (final preset in DebugUnifiedPreset.values) {
+      final state = builder.unifiedFromPreset(
+        preset: preset,
+        id: 'logical-sequence',
         now: now,
       );
 
-      expect(map['eventId'], 'ev-1');
-      expect(map['type'], 'eew');
-      expect(map['isWarning'], true);
-      expect(map['maxIntensity'], '6+');
-      expect(map['magnitude'], 7.6);
-      expect(map['serialNo'], 32);
-      final location = map['location'] as Map<String, dynamic>;
-      expect(location['regionName'], '東京都23区');
-      expect(location['forecastIntensity'], '5-');
-      expect(location['forecastLpgmIntensity'], '2');
-    });
-
-    test('canceled プリセットは震源情報を null にする', () {
-      final map = builder.eewFromPreset(
-        preset: DebugEewPreset.canceled,
-        eventId: 'ev-2',
-        now: now,
+      expect(state.id, 'logical-sequence', reason: preset.name);
+      expect(
+        UnifiedLiveActivityContentState.fromJson(state.toJson()),
+        state,
+        reason: preset.name,
       );
-
-      expect(map['isCanceled'], true);
-      expect(map['hypocenterName'], isNull);
-      expect(map['magnitude'], isNull);
-      expect(map['depth'], isNull);
-      expect(map['time'], isNull);
-      expect(map['maxIntensity'], isNull);
-    });
-
-    test('time は JST オフセット付き・小数秒なしの ISO8601', () {
-      final map = builder.eewFromPreset(
-        preset: DebugEewPreset.warning,
-        eventId: 'ev-1',
-        now: now,
+      expect(
+        state.toJson().keys,
+        containsAll(<String>['shakeDetection', 'eew', 'earthquake']),
       );
-
-      expect(map['time'], '2024-01-01T16:10:00+09:00');
-    });
+    }
   });
 
-  group('eewFromTelegram', () {
-    test('通常の警報 EEW を変換する', () {
-      final eew = EewTelegramItem(
-        eventId: 'tel-1',
-        status: TelegramStatus.normal,
-        infoType: TelegramInfoType.publication,
-        serialNo: 5,
-        isCanceled: false,
-        isLastInfo: true,
-        reportTime: now,
-        isPlum: false,
-        isWarning: true,
-        originTime: now,
-        headline: 'テスト見出し',
-        hypocenter: const EewHypocenterInfo(
-          code: '100',
-          name: '三陸沖',
-          magnitude: 7.2,
-          depth: 24,
-        ),
-        forecastIntensity: const EewForecastIntensityInfo(
-          regions: [],
-          maxIntensity: JmaIntensity.fiveUpper,
-        ),
-        accuracy: const EewAccuracyInfo(
-          epicenter: 3,
-          hypocenter: 3,
-          depth: 3,
-          magnitudeCalculation: 5,
-          numberOfMagnitudeCalculation: 5,
-        ),
+  test(
+    'logical and sample event IDs stay stable across primary transitions',
+    () {
+      final states =
+          <DebugUnifiedPreset>[
+            .shake,
+            .eew,
+            .earthquake,
+          ].map(
+            (preset) => builder.unifiedFromPreset(
+              preset: preset,
+              id: 'logical-sequence',
+              now: now,
+            ),
+          );
+
+      expect(states.map((state) => state.id).toSet(), <String>{
+        'logical-sequence',
+      });
+      expect(
+        states
+            .expand((state) => [state.eew?.eventId, state.earthquake?.eventId])
+            .whereType<String>()
+            .toSet(),
+        <String>{'debug-event-logical-sequence'},
       );
+    },
+  );
 
-      final map = builder.eewFromTelegram(eew);
-
-      expect(map['eventId'], 'tel-1');
-      expect(map['hypocenterName'], '三陸沖');
-      expect(map['magnitude'], 7.2);
-      expect(map['depth'], 24.0);
-      expect(map['maxIntensity'], '5+');
-      expect(map['isFinal'], true);
-      expect(map['isWarning'], true);
-      expect(map['isOriginTime'], true);
-      expect(map['isPlum'], false);
-      expect(map['headline'], 'テスト見出し');
-    });
-
-    test('PLUM は M・深さを隠す', () {
-      final eew = EewTelegramItem(
-        eventId: 'tel-2',
-        status: TelegramStatus.normal,
-        infoType: TelegramInfoType.publication,
-        serialNo: 1,
-        isCanceled: false,
-        isLastInfo: false,
-        reportTime: now,
-        isPlum: true,
-        isWarning: false,
-        originTime: now,
-        hypocenter: const EewHypocenterInfo(
-          code: '100',
-          name: '関東地方',
-          magnitude: 5,
-          depth: 10,
-        ),
+  test(
+    'noLocation uses explicit null for every required nullable location',
+    () {
+      final state = builder.unifiedFromPreset(
+        preset: DebugUnifiedPreset.noLocation,
+        id: 'logical-no-location',
+        now: now,
       );
+      final json = state.toJson();
 
-      final map = builder.eewFromTelegram(eew);
-
-      expect(map['isPlum'], true);
-      expect(map['magnitude'], isNull);
-      expect(map['depth'], isNull);
-    });
-
-    test('取消報は震源情報を null にする', () {
-      final eew = EewTelegramItem(
-        eventId: 'tel-3',
-        status: TelegramStatus.normal,
-        infoType: TelegramInfoType.publication,
-        serialNo: 2,
-        isCanceled: true,
-        isLastInfo: true,
-        reportTime: now,
-        isPlum: false,
+      expect(
+        (json['shakeDetection'] as Map<String, dynamic>)['location'],
+        isNull,
       );
+      expect((json['eew'] as Map<String, dynamic>)['location'], isNull);
+      expect((json['earthquake'] as Map<String, dynamic>)['location'], isNull);
+    },
+  );
 
-      final map = builder.eewFromTelegram(eew);
+  test('magnitude presets preserve UNKNOWN and OVER_M8 union variants', () {
+    final unknown = builder.unifiedFromPreset(
+      preset: DebugUnifiedPreset.magnitudeUnknown,
+      id: 'logical-magnitude',
+      now: now,
+    );
+    final overM8 = builder.unifiedFromPreset(
+      preset: DebugUnifiedPreset.magnitudeOverM8,
+      id: 'logical-magnitude',
+      now: now,
+    );
 
-      expect(map['isCanceled'], true);
-      expect(map['hypocenterName'], isNull);
-      expect(map['magnitude'], isNull);
-      expect(map['time'], isNull);
-      expect(map['maxIntensity'], isNull);
-    });
+    expect(unknown.earthquake?.magnitude, const EarthquakeMagnitude.unknown());
+    expect(overM8.earthquake?.magnitude, const EarthquakeMagnitude.overM8());
   });
 
-  group('shake', () {
-    test('shakeFromPreset は Level を大文字始まりの文字列に変換する', () {
-      final map = builder.shakeFromPreset(
-        preset: DebugShakePreset.strong,
-        eventId: 'shake-1',
+  test(
+    'ended and canceled presets remain snapshots for update, not end commands',
+    () {
+      final ended = builder.unifiedFromPreset(
+        preset: DebugUnifiedPreset.shakeEnded,
+        id: 'logical-lifecycle',
+        now: now,
+      );
+      final canceledEew = builder.unifiedFromPreset(
+        preset: DebugUnifiedPreset.canceledEew,
+        id: 'logical-lifecycle',
+        now: now,
+      );
+      final canceledEarthquake = builder.unifiedFromPreset(
+        preset: DebugUnifiedPreset.canceledEarthquake,
+        id: 'logical-lifecycle',
         now: now,
       );
 
-      expect(map['type'], 'shake_detection');
-      expect(map['level'], 'Strong');
-      final location = map['location'] as Map<String, dynamic>;
-      expect(location['intensity'], 3.2);
-    });
-
-    test('shakeFromEvent は実データを変換する', () {
-      final event = ShakeDetectionEvent(
-        eventId: 'shake-2',
-        serialNo: 3,
-        createdAt: now,
-        updatedAt: now,
-        expiresAt: now,
-        level: ShakeDetectionLevel.stronger,
-        pointCount: 4,
-        minLat: 35,
-        maxLat: 36,
-        minLng: 139,
-        maxLng: 140,
-        changeReasons: const [],
-      );
-
-      final map = builder.shakeFromEvent(event);
-
-      expect(map['eventId'], 'shake-2');
-      expect(map['level'], 'Stronger');
-      expect(map['detectedAt'], '2024-01-01T16:10:00+09:00');
-      expect(map['location'], isNull);
-    });
-  });
+      expect(ended.shakeDetection?.status, UnifiedShakeDetectionStatus.ended);
+      expect(canceledEew.eew?.isCanceled, true);
+      expect(canceledEarthquake.earthquake?.isCanceled, true);
+    },
+  );
 }

@@ -1,108 +1,135 @@
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
-import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/controller/live_activity_local_controller.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_kind.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_session.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_json_codec.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/action/debug_live_activity_action.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// デバッグ用。アプリ内から ActivityKit を用いて EEW / 揺れ検知の
-/// Live Activity をローカル開始・更新・終了し、表示を検証する。
 class DebugLiveActivityPage extends HookConsumerWidget {
   const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kind = useState(DebugLiveActivityKind.eew);
-    final jsonController = useTextEditingController();
-    final activityIdController = useTextEditingController();
-    final session = useState<DebugLiveActivitySession?>(null);
-    final isBusy = useState(false);
-
     final builder = ref.watch(debugLiveActivityContentBuilderProvider);
     final codec = ref.watch(debugLiveActivityJsonCodecProvider);
     final action = ref.watch(debugLiveActivityActionProvider);
-
-    void fill(Map<String, dynamic> contentState) =>
-        jsonController.text = codec.encode(contentState);
-
-    Future<void> run(Future<void> Function() task) async {
-      if (isBusy.value) {
-        return;
+    final controller = ref.watch(liveActivityLocalControllerProvider);
+    final initialNow = useMemoized(
+      () => ref.read(appClockProvider.notifier).now(),
+      const [],
+    );
+    final logicalId = useState(debugLiveActivityLogicalId(initialNow));
+    final selectedPreset = useState(DebugUnifiedPreset.shake);
+    final initialJson = useMemoized(
+      () => codec.encode(
+        builder.unifiedFromPreset(
+          preset: selectedPreset.value,
+          id: logicalId.value,
+          now: initialNow,
+        ),
+      ),
+      const [],
+    );
+    final jsonController = useTextEditingController(text: initialJson);
+    final activityIdController = useTextEditingController();
+    final selectedSession = useState<DebugLiveActivitySession?>(null);
+    final isBusy = useState(false);
+    final refreshVersion = useState(0);
+    final latestListRequest = useRef(0);
+    final supportFuture = useMemoized(controller.isSupported, [controller]);
+    final support = useFuture(supportFuture);
+    final sessionsFuture = useMemoized(
+      () async {
+        final request = ++latestListRequest.value;
+        final activityIdAtRequest = activityIdController.text;
+        final loaded = await controller.list();
+        if (!context.mounted ||
+            request != latestListRequest.value ||
+            activityIdAtRequest != activityIdController.text) {
+          return loaded;
+        }
+        final selectedActivityId = activityIdController.text;
+        if (selectedActivityId.isEmpty) {
+          return loaded;
+        }
+        DebugLiveActivitySession? restored;
+        for (final session in loaded) {
+          if (session.activityId == selectedActivityId) {
+            restored = session;
+            break;
+          }
+        }
+        selectedSession.value = restored;
+        if (restored == null) {
+          activityIdController.clear();
+        } else {
+          logicalId.value = restored.logicalId;
+        }
+        return loaded;
+      },
+      [controller, refreshVersion.value],
+    );
+    final sessions = useFuture(sessionsFuture);
+    ref.listen(appLifecycleProvider, (previous, next) {
+      if (next == AppLifecycleState.resumed &&
+          previous != AppLifecycleState.resumed &&
+          !isBusy.value) {
+        refreshVersion.value++;
       }
-      isBusy.value = true;
-      try {
-        await task();
-      } finally {
-        isBusy.value = false;
-      }
-    }
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Live Activity テスト')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('種別', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          SegmentedButton<DebugLiveActivityKind>(
-            segments: [
-              for (final value in DebugLiveActivityKind.values)
-                ButtonSegment(value: value, label: Text(value.label)),
-            ],
-            selected: {kind.value},
-            onSelectionChanged: isBusy.value
-                ? null
-                : (selected) {
-                    kind.value = selected.first;
-                    session.value = null;
-                    activityIdController.clear();
-                    jsonController.clear();
-                  },
+          _LogicalIdCard(
+            logicalId: logicalId.value,
+            enabled: !isBusy.value,
+            onNewSequence: () {
+              final now = ref.read(appClockProvider.notifier).now();
+              final nextId = debugLiveActivityLogicalId(now);
+              logicalId.value = nextId;
+              selectedSession.value = null;
+              activityIdController.clear();
+              jsonController.text = codec.encode(
+                builder.unifiedFromPreset(
+                  preset: selectedPreset.value,
+                  id: nextId,
+                  now: now,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 24),
           Text('プリセット', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           _PresetChips(
-            kind: kind.value,
-            onEewPreset: (preset) => fill(
-              builder.eewFromPreset(
-                preset: preset,
-                eventId: _generateEventId(ref, 'eew'),
-                now: ref.read(appClockProvider.notifier).now(),
-              ),
-            ),
-            onShakePreset: (preset) => fill(
-              builder.shakeFromPreset(
-                preset: preset,
-                eventId: _generateEventId(ref, 'shake'),
-                now: ref.read(appClockProvider.notifier).now(),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text('実データから読み込み', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          _RealDataSection(
-            kind: kind.value,
-            onEewSelected: (eew) => fill(builder.eewFromTelegram(eew)),
-            onShakeSelected: (event) => fill(builder.shakeFromEvent(event)),
+            selected: selectedPreset.value,
+            enabled: !isBusy.value,
+            onSelected: (preset) {
+              selectedPreset.value = preset;
+              jsonController.text = codec.encode(
+                builder.unifiedFromPreset(
+                  preset: preset,
+                  id: logicalId.value,
+                  now: ref.read(appClockProvider.notifier).now(),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 24),
           TextField(
             controller: activityIdController,
+            readOnly: true,
             decoration: const InputDecoration(
-              labelText: 'activityId（更新・終了に使用）',
-              helperText: '開始成功時に自動入力されます',
+              labelText: 'OS activityId（更新・終了に使用）',
+              helperText: '開始成功または実行中一覧からの選択で設定されます',
               border: OutlineInputBorder(),
             ),
           ),
@@ -128,210 +155,243 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                 label: const Text('開始'),
                 onPressed: isBusy.value
                     ? null
-                    : () => run(() async {
-                        final result = await action.start(
-                          ref: ref,
-                          context: context,
-                          kind: kind.value,
-                          rawJson: jsonController.text,
-                        );
-                        if (result != null) {
-                          session.value = result;
-                          activityIdController.text = result.activityId;
+                    : () async {
+                        isBusy.value = true;
+                        try {
+                          final result = await action.start(
+                            ref: ref,
+                            context: context,
+                            rawJson: jsonController.text,
+                          );
+                          if (!context.mounted) {
+                            return;
+                          }
+                          if (result != null) {
+                            selectedSession.value = result;
+                            activityIdController.text = result.activityId;
+                            logicalId.value = result.logicalId;
+                            refreshVersion.value++;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isBusy.value = false;
+                          }
                         }
-                      }),
+                      },
               ),
               FilledButton.tonalIcon(
                 icon: const Icon(Icons.refresh),
                 label: const Text('更新'),
                 onPressed: isBusy.value
                     ? null
-                    : () => run(() async {
-                        await action.update(
-                          ref: ref,
-                          context: context,
-                          kind: kind.value,
-                          activityId: activityIdController.text.trim(),
-                          rawJson: jsonController.text,
-                        );
-                      }),
+                    : () async {
+                        isBusy.value = true;
+                        try {
+                          final result = await action.update(
+                            ref: ref,
+                            context: context,
+                            activityId: activityIdController.text.trim(),
+                            rawJson: jsonController.text,
+                          );
+                          if (!context.mounted) {
+                            return;
+                          }
+                          if (result == .success) {
+                            refreshVersion.value++;
+                          } else if (result == .activityNotFound) {
+                            selectedSession.value = null;
+                            activityIdController.clear();
+                            refreshVersion.value++;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isBusy.value = false;
+                          }
+                        }
+                      },
               ),
               OutlinedButton.icon(
                 icon: const Icon(Icons.stop),
                 label: const Text('終了'),
                 onPressed: isBusy.value
                     ? null
-                    : () => run(() async {
-                        final ended = await action.end(
-                          ref: ref,
-                          context: context,
-                          kind: kind.value,
-                          activityId: activityIdController.text.trim(),
-                          rawJson: jsonController.text,
-                        );
-                        if (ended) {
-                          session.value = null;
+                    : () async {
+                        isBusy.value = true;
+                        try {
+                          final result = await action.end(
+                            ref: ref,
+                            context: context,
+                            activityId: activityIdController.text.trim(),
+                            rawJson: jsonController.text,
+                          );
+                          if (!context.mounted) {
+                            return;
+                          }
+                          if (result == .success ||
+                              result == .activityNotFound) {
+                            selectedSession.value = null;
+                            activityIdController.clear();
+                            refreshVersion.value++;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isBusy.value = false;
+                          }
                         }
-                      }),
+                      },
               ),
             ],
           ),
           const SizedBox(height: 24),
-          if (session.value case final current?)
-            _SessionCard(session: current),
-          const _SupportabilityTile(),
+          _ActiveSessions(
+            snapshot: sessions,
+            selectedActivityId: selectedSession.value?.activityId,
+            enabled: !isBusy.value,
+            onRefresh: () => refreshVersion.value++,
+            onSelected: (session) {
+              selectedSession.value = session;
+              activityIdController.text = session.activityId;
+              logicalId.value = session.logicalId;
+            },
+          ),
+          _SupportabilityTile(snapshot: support),
         ],
       ),
     );
   }
+}
 
-  String _generateEventId(WidgetRef ref, String prefix) {
-    final now = ref.read(appClockProvider.notifier).now();
-    return 'debug-$prefix-${now.millisecondsSinceEpoch}';
-  }
+String debugLiveActivityLogicalId(DateTime now) =>
+    'debug-${now.toUtc().millisecondsSinceEpoch}';
+
+class _LogicalIdCard extends StatelessWidget {
+  const new({
+    required this.logicalId,
+    required this.enabled,
+    required this.onNewSequence,
+  });
+
+  final String logicalId;
+  final bool enabled;
+  final VoidCallback onNewSequence;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: ListTile(
+      leading: const Icon(Icons.fingerprint),
+      title: const Text('logical ID'),
+      subtitle: SelectableText(logicalId),
+      trailing: TextButton.icon(
+        onPressed: enabled ? onNewSequence : null,
+        icon: const Icon(Icons.add),
+        label: const Text('新しい系列'),
+      ),
+    ),
+  );
 }
 
 class _PresetChips extends StatelessWidget {
   const new({
-    required this.kind,
-    required this.onEewPreset,
-    required this.onShakePreset,
+    required this.selected,
+    required this.enabled,
+    required this.onSelected,
   });
 
-  final DebugLiveActivityKind kind;
-  final ValueChanged<DebugEewPreset> onEewPreset;
-  final ValueChanged<DebugShakePreset> onShakePreset;
+  final DebugUnifiedPreset selected;
+  final bool enabled;
+  final ValueChanged<DebugUnifiedPreset> onSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: switch (kind) {
-        DebugLiveActivityKind.eew => [
-          for (final preset in DebugEewPreset.values)
-            ActionChip(
-              label: Text(preset.label),
-              onPressed: () => onEewPreset(preset),
-            ),
-        ],
-        DebugLiveActivityKind.shakeDetection => [
-          for (final preset in DebugShakePreset.values)
-            ActionChip(
-              label: Text(preset.label),
-              onPressed: () => onShakePreset(preset),
-            ),
-        ],
-      },
-    );
-  }
+  Widget build(BuildContext context) => Wrap(
+    spacing: 8,
+    runSpacing: 4,
+    children: [
+      for (final preset in DebugUnifiedPreset.values)
+        ChoiceChip(
+          label: Text(preset.label),
+          selected: selected == preset,
+          onSelected: enabled ? (_) => onSelected(preset) : null,
+        ),
+    ],
+  );
 }
 
-class _RealDataSection extends ConsumerWidget {
+class _ActiveSessions extends StatelessWidget {
   const new({
-    required this.kind,
-    required this.onEewSelected,
-    required this.onShakeSelected,
+    required this.snapshot,
+    required this.selectedActivityId,
+    required this.enabled,
+    required this.onRefresh,
+    required this.onSelected,
   });
 
-  final DebugLiveActivityKind kind;
-  final ValueChanged<EewTelegramItem> onEewSelected;
-  final ValueChanged<ShakeDetectionEvent> onShakeSelected;
+  final AsyncSnapshot<List<DebugLiveActivitySession>> snapshot;
+  final String? selectedActivityId;
+  final bool enabled;
+  final VoidCallback onRefresh;
+  final ValueChanged<DebugLiveActivitySession> onSelected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return switch (kind) {
-      DebugLiveActivityKind.eew => _buildEew(context, ref),
-      DebugLiveActivityKind.shakeDetection => _buildShake(context, ref),
-    };
-  }
-
-  Widget _buildEew(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
-    if (eews.isEmpty) {
-      return const Text('発表中の EEW はありません');
-    }
-    return Column(
+  Widget build(BuildContext context) => Card(
+    child: Column(
       children: [
-        for (final eew in eews)
-          ListTile(
-            dense: true,
-            title: Text('${eew.hypocenter?.name ?? eew.headline ?? '(不明)'} '
-                '第${eew.serialNo}報'),
-            subtitle: Text(eew.eventId),
-            trailing: const Icon(Icons.download),
-            onTap: () => onEewSelected(eew),
+        ListTile(
+          title: const Text('実行中の Live Activity'),
+          trailing: IconButton(
+            onPressed: enabled ? onRefresh : null,
+            tooltip: '一覧を再読み込み',
+            icon: const Icon(Icons.refresh),
+          ),
+        ),
+        if (snapshot.connectionState != ConnectionState.done)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
+          )
+        else if (snapshot.hasError)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('実行中一覧を取得できませんでした'),
+          )
+        else if (snapshot.data case final sessions? when sessions.isNotEmpty)
+          for (final session in sessions)
+            ListTile(
+              selected: session.activityId == selectedActivityId,
+              leading: const Icon(Icons.bolt),
+              title: Text(session.activityId),
+              subtitle: Text(
+                session.eventId == null
+                    ? 'logical: ${session.logicalId}'
+                    : 'logical: ${session.logicalId}\nevent: ${session.eventId}',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: enabled ? () => onSelected(session) : null,
+            )
+        else
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('実行中の Live Activity はありません'),
           ),
       ],
-    );
-  }
-
-  Widget _buildShake(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(shakeDetectionProvider);
-    if (events.isEmpty) {
-      return const Text('進行中の揺れ検知はありません');
-    }
-    return Column(
-      children: [
-        for (final event in events)
-          ListTile(
-            dense: true,
-            title: Text('${event.level.name} 第${event.serialNo}報'),
-            subtitle: Text(event.eventId),
-            trailing: const Icon(Icons.download),
-            onTap: () => onShakeSelected(event),
-          ),
-      ],
-    );
-  }
+    ),
+  );
 }
 
-class _SessionCard extends StatelessWidget {
-  const new({required this.session});
+class _SupportabilityTile extends StatelessWidget {
+  const new({required this.snapshot});
 
-  final DebugLiveActivitySession session;
+  final AsyncSnapshot<bool> snapshot;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.bolt),
-        title: Text(session.activityId),
-        subtitle: Text('${session.kind.label} / ${session.eventId}'),
-        trailing: const Icon(Icons.copy),
-        onTap: () async {
-          await Clipboard.setData(ClipboardData(text: session.activityId));
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('activityId をコピーしました')),
-            );
-          }
-        },
-      ),
-    );
-  }
-}
-
-class _SupportabilityTile extends ConsumerWidget {
-  const new();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(liveActivityLocalControllerProvider);
-    return FutureBuilder<bool>(
-      future: controller.isSupported(),
-      builder: (context, snapshot) {
-        final supported = snapshot.data;
-        final text = switch (supported) {
-          null => '対応状況を確認中...',
-          true => 'この端末は Live Activity のローカル開始に対応しています',
-          false => 'この端末は Live Activity のローカル開始に非対応です（iOS 16.1+ が必要）',
-        };
-        return Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Text(text, style: Theme.of(context).textTheme.bodySmall),
-        );
-      },
+    final text = switch (snapshot.data) {
+      null => snapshot.hasError ? '対応状況を確認できませんでした' : '対応状況を確認中...',
+      true => 'この端末はローカル Live Activity に対応しています',
+      false => 'この端末はローカル Live Activity に非対応です（iOS 16.1+ が必要）',
+    };
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Text(text, style: Theme.of(context).textTheme.bodySmall),
     );
   }
 }

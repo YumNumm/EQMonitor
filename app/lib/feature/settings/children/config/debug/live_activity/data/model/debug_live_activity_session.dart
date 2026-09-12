@@ -1,17 +1,27 @@
-import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_kind.dart';
+// ignore_for_file: unnecessary_type_name_in_constructor
 
-/// ローカル開始した Live Activity の識別情報。
-///
-/// `activityId` は iOS の `Activity.id`（開始時にネイティブが払い出す）。
-/// 更新・終了時に同じ ID を指定する。
-class DebugLiveActivitySession {
-  const new({
-    required this.activityId,
-    required this.kind,
-    required this.eventId,
-  });
+import 'package:eqmonitor/feature/live_activity/data/model/unified_live_activity_json_converter.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String activityId;
-  final DebugLiveActivityKind kind;
-  final String eventId;
+part 'debug_live_activity_session.freezed.dart';
+
+/// ActivityKit が保持している Live Activity の識別情報。
+@freezed
+abstract class DebugLiveActivitySession with _$DebugLiveActivitySession {
+  const DebugLiveActivitySession._();
+
+  const factory DebugLiveActivitySession({
+    required String activityId,
+    required String logicalId,
+    required String? eventId,
+  }) = _DebugLiveActivitySession;
+
+  factory DebugLiveActivitySession.fromJson(Map<String, dynamic> json) {
+    final reader = UnifiedLiveActivityJsonReader(json, label: 'session');
+    return DebugLiveActivitySession(
+      activityId: reader.requiredString('activityId', nonEmpty: true),
+      logicalId: reader.requiredString('logicalId', nonEmpty: true),
+      eventId: reader.optionalNonNullString('eventId'),
+    );
+  }
 }
