@@ -28,7 +28,7 @@ struct LiveActivityPlatformSupport {
   @objcMembers public class EQMLiveActivityUtil: NSObject {
     @available(iOS 18.0, *)
     public func pushToStartToken() -> String? {
-      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return nil }
+      guard isPushToStartSupported() else { return nil }
       return Activity<MockLiveActivityAttributes>.pushToStartToken?
         .map { String(format: "%02x", $0) }.joined()
     }
@@ -37,7 +37,7 @@ struct LiveActivityPlatformSupport {
     public func observePushToStartTokenUpdates(
       _ onUpdate: @escaping @Sendable @convention(block) (NSString) -> Void
     ) {
-      guard #available(iOS 18.0, *), isLiveActivitySupported() else { return }
+      guard isPushToStartSupported() else { return }
       Task {
         for await tokenData in Activity<MockLiveActivityAttributes>.pushToStartTokenUpdates {
           onUpdate(tokenData.map { String(format: "%02x", $0) }.joined() as NSString)
