@@ -4,7 +4,7 @@
 
 **Goal:** EEW・揺れ検知・地震情報の完全 snapshot を一つの Live Activity で表示し、旧形式を維持しながら全端末切り替えを可能にする。
 **Architecture:** 新契約の Codable モデルは Runner / Widget / Preview / Tests で共有する。表示は受信した `primary` に従い、EEW の既存表示規則を再利用する。Activity の開始・結合・終了判断は backend に置く。
-**Tech Stack:** Swift / ActivityKit / WidgetKit / SwiftUI、Flutter / Dart / Riverpod、既存 MethodChannel、XCTest / flutter_test。
+**Tech Stack:** Swift / ActivityKit / WidgetKit / SwiftUI、Flutter / Dart / Riverpod、既存 MethodChannel、Swift Testing / XCTest / flutter_test。
 **Spec:** [EQMonitor Issue #1800](https://github.com/YumNumm/EQMonitor/issues/1800)、以下の固定 revision の schema と検証仕様。
 
 ## Global Constraints
@@ -96,16 +96,16 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 - [ ] `primary` をそのまま選択するテストを作る。3ブロックが存在しても `primary == .eew` の fixture なら EEW を表示し、独自の earthquake 優先への変更をしない。到達時刻の前後で primary が変わらないことも確認する。
 - [ ] adapter は実際の EEW eventId・headline・各 bool・数値・時刻・location をそのまま既存 `EewContentState` へ渡す。日時を旧型の String へ渡す場合のみ ISO 8601 に encode する。`issuedAt` を `time` に代入しない。
 - [ ] 既存 `EewDisplay` の現在地震度・MAX 区別、取消時の値抑止、PLUM のカウントダウン抑止を再利用する。旧 UI の表示閾値（予報では地域震度4以上）と最終報ラベルをこの移行で変更しない。
-- [ ] 地震情報は地域の `location.maxIntensity` と全国の `maxIntensity` を区別し、EEW の予想震度を観測値として流用しない。Magnitude は normal → `M6.8`、unknown → `M不明`、overM8 → `M8以上の巨大地震`、null → 項目非表示。数値0を欠損にしない。
+- [ ] 地震情報は地域の `location.maxIntensity` と全国の `maxIntensity` を区別し、EEW の予想震度を観測値として流用しない。IXAC41 だけの状態を観測情報と断定せず、種別に応じた「推計震度分布図」/「地震情報」の見出しを使う。Magnitude は normal → `M6.8`、unknown → `M不明`、overM8 → `M8以上の巨大地震`、null → 項目非表示。数値0を欠損にしない。
 - [ ] 地震情報取消時は「先ほどの地震情報は取り消されました」とし、古い震度・震源・Mを有効な情報として見せない。別ブロックの取消だけで他ブロックの情報を隠さない。informationType は配列のまま保持し、単一 enum へ縮約しない。
 - [ ] 揺れピークは snapshot の全体 `level` と地域 `location.level` を使用する。`ended` でも保持し、「検知終了・最大の揺れ」として区別する。enum から計測震度の数値を逆算しない。
 - [ ] 詳細リンクは `state.earthquake?.eventId ?? state.eew?.eventId` を `EarthquakeDetailURL.make(eventId:)` に渡す。揺れのみは nil とし、UUID / backend id を地震詳細へ渡さない。EEW eventId に地震情報がまだ無い場合も既存詳細画面の読み込み・未取得表示を確認する。
 
 ```swift
-func testMagnitudeLabels() {
-    XCTAssertEqual(UnifiedLiveActivityMagnitude.normal(6.8).displayText, "M6.8")
-    XCTAssertEqual(UnifiedLiveActivityMagnitude.unknown.displayText, "M不明")
-    XCTAssertEqual(UnifiedLiveActivityMagnitude.overM8.displayText, "M8以上の巨大地震")
+@Test func magnitudeLabels() {
+    #expect(UnifiedLiveActivityMagnitude.normal(6.8).displayText == "M6.8")
+    #expect(UnifiedLiveActivityMagnitude.unknown.displayText == "M不明")
+    #expect(UnifiedLiveActivityMagnitude.overM8.displayText == "M8以上の巨大地震")
 }
 ```
 
@@ -115,13 +115,13 @@ func testMagnitudeLabels() {
 
 **Files:** 新規 `app/ios/Widget/LiveActivity/Unified/{EarthquakeLiveActivityWidget,UnifiedLockScreenView,UnifiedDynamicIslandViews,UnifiedEarthquakeView,UnifiedShakeView,UnifiedShakePeakView}.swift`。変更 `app/ios/Widget/WidgetBundle.swift`、`app/ios/EQMonitorPreviewWidget/EQMonitorPreviewWidgetBundle.swift`、`app/ios/Runner.xcodeproj/project.pbxproj`。
 
-**Interfaces:** `EarthquakeLiveActivityWidget: Widget`。`UnifiedLockScreenView(state:)`、`UnifiedEarthquakeView(state:)`、`UnifiedShakeView(state:)`、`UnifiedShakePeakView(state:)` はそれぞれ Task 1 の統合 / 地震 / 揺れ型を受ける。Island 用 View も統合 state を受け、Task 2 の primary 選択を共有する。
+**Interfaces:** `EarthquakeLiveActivityWidget: Widget`。`UnifiedLockScreenView(state:)`、`UnifiedEarthquakeView(state:)`、`UnifiedShakeView(state:)`、`UnifiedShakePeakView(state:)` はそれぞれ Task 1 の統合 / 地震 / 揺れ型を受ける。`UnifiedDynamicIslandViews.swift` に `UnifiedIslandLeadingView` / `UnifiedIslandTrailingView` / `UnifiedIslandBottomView` / `UnifiedCompactLeadingView` / `UnifiedCompactTrailingView` / `UnifiedMinimalView` を定義し、いずれも `state: UnifiedLiveActivityContentState` を受ける。
 
 | 主表示 | Lock Screen / Expanded | Compact / Minimal |
 | --- | --- | --- |
 | 揺れ検知 | headline・地域名・地域ピーク・全体ピーク・検知時刻・active/ended | 地域ピークを優先し、地域欠損なら全体ピークを最大と区別して表示 |
 | EEW | 既存 EEW レイアウト＋存在する場合のみ揺れピークの補助行 | 既存の地域予想震度＋到達カウントダウン、欠損時は MAX |
-| 地震情報 | headline・観測最大震度・地域名/地域震度・震源/M/深さ/時刻・揺れピーク補助行 | 地域の観測震度を優先し、全国値には MAX。予想と観測を音声ラベルでも区別 |
+| 地震情報 | headline・最大震度・地域名/地域震度・震源/M/深さ/時刻・揺れピーク補助行 | 地域震度を優先し、全国値には MAX。EEW予想と区別し、IXAC41単独を観測値と呼ばない |
 
 - [ ] 新 Widget を旧2種類と並べて登録する。新 `ActivityConfiguration` の Lock Screen と Dynamic Island の双方へ `widgetURL` を設定する。揺れだけなら地震詳細 URL は設定しない。
 
@@ -130,9 +130,24 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
     UnifiedLockScreenView(state: context.state)
         .widgetURL(UnifiedLiveActivityPresentation(state: context.state).detailURL)
 } dynamicIsland: { context in
-    // UnifiedDynamicIslandViews.swift の leading / trailing / bottom と
-    // compactLeading / compactTrailing / minimal を、同じ primary で構成する。
-    // 実装時は既存 EewLiveActivityWidget の DynamicIsland 構成を基にする。
+    DynamicIsland {
+        DynamicIslandExpandedRegion(.leading) {
+            UnifiedIslandLeadingView(state: context.state)
+        }
+        DynamicIslandExpandedRegion(.trailing) {
+            UnifiedIslandTrailingView(state: context.state)
+        }
+        DynamicIslandExpandedRegion(.bottom) {
+            UnifiedIslandBottomView(state: context.state)
+        }
+    } compactLeading: {
+        UnifiedCompactLeadingView(state: context.state)
+    } compactTrailing: {
+        UnifiedCompactTrailingView(state: context.state)
+    } minimal: {
+        UnifiedMinimalView(state: context.state)
+    }
+    .widgetURL(UnifiedLiveActivityPresentation(state: context.state).detailURL)
 }
 ```
 
@@ -150,6 +165,7 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
 **Interfaces:** MethodChannel の新 kind は `unified`。Start は `{kind, attributes: {id}, contentState: JSON文字列}`、Update / End は `{kind, activityId, contentState: JSON文字列?}`、list は引数なし。list は3種類の Activity を `{kind, activityId, logicalId, eventId?}` の配列で返す。旧 kind の Start 引数 `eventId` は引き続き受ける。
 
 - [ ] 引数の共通 guard から eventId 必須条件を外し、旧2種別だけで検証する。新 kind は Task 1 の共有型で decode し、Attributes と state の id 一致を確認する。新しいモデルをこのファイル内に再定義しない。
+- [ ] 旧 Runner 定義は Widget の optional `type` と location の `isWarning` / `isPlum` に合わせて補正する。型名・既存キーを維持し、旧サンプルの decode と encode 後に情報が失われないことをテストする。
 - [ ] 統合 handler は `Activity<EarthquakeLiveActivityAttributes>.request` を `pushType: nil`、`staleDate: nil` でローカル実行する。これは画面検証用で、Broadcast 購読済みの証拠にしない。
 - [ ] Update は OS の `activityId` で対象を選び、state.id と静的 id が異なる入力は `identity_mismatch`。見つからない ID は `activity_not_found`。誤った kind を含め、処理しなかった Update / End を成功として返さない。
 - [ ] End は任意の最終 snapshot を decode して `.immediate` で終了する。最終 state 未指定なら現 state を利用する。`isFinal` / `isCanceled` による自動 End は追加しない。
@@ -256,7 +272,7 @@ git --no-pager diff --check
 - [ ] ローカルデバッグで Task 3 の全表示形態と Task 4 の Start→複数Update→End→list消失を確認する。アプリ再起動後の list 復元と、手動dismiss後の対象不在も確認する。
 - [ ] backend の隔離された試験環境とテスト端末で、APNs sandbox / production それぞれ実 token に Start→Broadcast Update→End を送る。production APNs の検証を全利用者への本番切り替えと混同しない。テスト宛先は試験用登録端末に限定する。
 - [ ] 揺れ上昇またはEEW続報で初めて通知条件を満たす端末に、完全snapshotでStartが表示されることを確認する。アプリ側で開始条件を再判定しない。地震情報単独でbackendが新規Eventを開始しない点と、受信開始時にearthquake主表示であることは別。
-- [ ] 別EEW同時発生、複数揺れの結合、旧Endと存続先Startの前後両順序、旧側のみ参加した端末を検証する。独自のID書換え・重複排除・他Activity強制終了をせず、最终的に存続先が更新されることを確認する。
+- [ ] 別EEW同時発生、複数揺れの結合、旧Endと存続先Startの前後両順序、旧側のみ参加した端末を検証する。独自のID書換え・重複排除・他Activity強制終了をせず、最終的に存続先が更新されることを確認する。
 - [ ] token更新・再登録、通知/Live Activity無効、アプリ非起動・画面ロック状態、OSの古い/新しい対応版、Dynamic Island有無を検証する。記録には app build / OS / 署名環境 / backend image・設定 / 入力シナリオ / APNs応答 / 端末上の結果を分けて残す。
 
 ## リリース順序と有効化のゲート
