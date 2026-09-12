@@ -2,10 +2,10 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** EEW・揺れ検知・地震情報の完全 snapshot を一つの Live Activity で表示し、旧形式を維持しながら全端末切り替えを可能にする。
-**Architecture:** 新契約の Codable モデルは Runner / Widget / Preview / Tests で共有する。表示は受信した `primary` に従い、EEW の既存表示規則を再利用する。Activity の開始・結合・終了判断は backend に置く。
+**Goal:** EEW・揺れ検知・地震情報の完全 snapshot を一つの Live Activity で表示し、新形式専用の受信・操作・表示を提供する。
+**Architecture:** 新契約の Codable モデルは Runner / Widget / Preview / Tests で共有する。表示は受信した `primary` に従い、3情報のための新しい表示モデルとデザインを直接構築する。Activity の開始・結合・終了判断は backend に置く。
 **Tech Stack:** Swift / ActivityKit / WidgetKit / SwiftUI、Flutter / Dart / Riverpod、既存 MethodChannel、Swift Testing / XCTest / flutter_test。
-**Spec:** [EQMonitor Issue #1800](https://github.com/YumNumm/EQMonitor/issues/1800)、以下の固定 revision の schema と検証仕様。
+**Spec:** [新デザイン仕様](../specs/2026-09-12-unified-live-activity-ios-design.md)、2026-09-12のユーザー指示「古い形式は維持しなくていい」「Migrationとかも考えないで破壊変更を入れて良い」「デザインも含めて全部新しく」を最優先する。[EQMonitor Issue #1800](https://github.com/YumNumm/EQMonitor/issues/1800)、以下の固定 revision の schema と検証仕様。
 
 ## Global Constraints
 
@@ -13,7 +13,7 @@
 - `schemaVersion: 2`。Start / Update は完全 snapshot。各ブロックと location の null、nullable と optional の差を維持する。
 - `primary` は `shake_detection` / `eew` / `earthquake`。指定ブロック必須。クライアントで優先順位や通知条件を再計算しない。
 - 最終報・取消・到達時刻を Activity 終了とみなさない。120 / 180 / 300 秒の独立終了タイマーを実装しない。
-- 旧 EEW / 揺れ検知の型名・Widget 登録・Update / End を移行期間中は維持する。
+- 旧 EEW / 揺れ検知の型・Widget・デバッグ経路を削除する。互換 adapter、旧形式の decode、移行処理・移行試験・普及待ちの有効化条件は設けない。
 - APNs トークン同期は `PATCH /v2/device/me/apns/LIVE_ACTIVITY_START` と `{token, environment}` を維持する。
 - 個別 Activity update-token、端末別対応バージョン、クライアント Channel 割当 API は追加しない。
 - 地域は AreaForecastLocalE の3桁コード。欠損地点・震度・時刻を推測や固定値で補わない。
@@ -39,27 +39,25 @@ backend の固定基準は `00f2caf9ffef0861f0b9a52cca675593d9c60409`。
 
 正典: [schema](https://github.com/YumNumm/eqmonitor-backend/blob/00f2caf9ffef0861f0b9a52cca675593d9c60409/packages/notification-common/src/types/unified-live-activity-content-state.ts)、[sample](https://github.com/YumNumm/eqmonitor-backend/blob/00f2caf9ffef0861f0b9a52cca675593d9c60409/docs/examples/unified-live-activity-content-state.json)、[projection](https://github.com/YumNumm/eqmonitor-backend/blob/00f2caf9ffef0861f0b9a52cca675593d9c60409/service/notification-resolver/src/live-activity/unified/payload-policy.ts)、[validation](https://github.com/YumNumm/eqmonitor-backend/blob/00f2caf9ffef0861f0b9a52cca675593d9c60409/docs/unified-live-activity-validation.md)。設計書に残る「設計中」より、固定 schema・投影実装・最新検証仕様を優先する。
 
-PR #1203 は確認時点で Go Build / Format が失敗し、他の CI は実行中だった。PR 記載のローカル成功件数を全 CI 成功とは扱わない。migration 適用済みは backend の記録によるもので、この調査では DB・稼働サービス・APNs 配信を再検証していない。Helm 既定値は有効化 `false`、retention `null`。この retention は終了済みデータの保存処理であり、iOS の受信圧縮 codec を追加する意味ではない。
+PR #1203 は確認時点で Go Build / Format が失敗し、他の CI は実行中だった。PR 記載のローカル成功件数を全 CI 成功とは扱わない。この調査では DB・稼働サービス・APNs 配信を再検証していない。Helm 既定値は有効化 `false`、retention `null`。この retention は終了済みデータの保存処理であり、iOS の受信圧縮 codec を追加する意味ではない。
 
-## 方針の比較と採用案
+## 採用方針
 
-1. **共有 wire モデル＋新 Widget＋既存 EEW 表示への adapter（採用）**: 新形式の定義ずれを防ぎ、既存の表示・旧 Activity を保護できる。
-2. Runner / Widget に新モデルをそれぞれ複製: 変更量は少ないが、現在すでにある必須性や location フィールドの不一致を増やす。
-3. 旧モデルを全面的に統合型へ置換: 移行前 Activity の decode / 更新を壊すため採用しない。
+新形式専用の共有 wire モデル・表示モデル・Widget・デバッグ画面へ全面置換する。旧モデルへの変換も旧デザインの継承も行わない。震度やMagnitudeのドメイン型、日時の安全な処理など、表示と互換性に依存しない基礎部品だけを再利用する。旧形式との互換は今回の要件から除外されている。
 
 ## 現状との差分と作業順序
 
 | 現状 | 必要な変更 | Task |
 | --- | --- | --- |
 | 旧 Attributes は UUID と静的 eventId | String id の新共有型・3ブロックを追加 | 1 |
-| 表示は EEW / 揺れ検知の2系統 | `primary` 選択・地震情報・終了済みピーク表示 | 2–3 |
+| 表示は EEW / 揺れ検知の2系統 | 統合専用デザイン・`primary` 選択・情報種別と地域の明示 | 2–3 |
 | Runner の新規開始は eventId 必須 | 新形式の id と OS activityId を分離、一覧復元 | 4 |
-| Dart は2種別・無型 JSON の生成中心 | 統合 DTO / preset / codec / session を追加 | 5 |
+| Dart は2種別・無型 JSON の生成中心 | 旧種別選択を削除し、統合 DTO / preset / codec / session へ置換 | 5 |
 | APNs environment は production 固定 | sandbox 検証用の署名一致設定を用意 | 6 |
 | Swift は iOS 26.1 未満を除外、Dart は18以上 | 対応判定を揃える前提修正と境界テスト | 6 |
 | PR Flutter CI に WidgetModelsTests がない | Swift の検証を明示して実機受け入れへ進む | 7 |
 
-依存順は `1 → 2 → 3 → 4 → 5 → 7`。Task 6 は端末配信検証の前提として Task 7 より前に完了する。モデル・UI・debug/配信前提をレビュー単位として分割できるが、新型 Widget を含むアプリが利用可能になるまで本番有効化しない。
+新デザイン仕様を基準とし、依存順は `1 → 2 → 3 → 4 → 5 → 7`。Task 6 は端末配信検証の前提として Task 7 より前に完了する。モデル・UI・debug/配信前提をレビュー単位として分割する。旧形式の保護を目的にコードやリリースを分岐させない。
 
 ## Task 1: 正典 fixture と Swift 共有契約
 
@@ -84,18 +82,18 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 - [ ] schema の全フィールドを写す。震度は既存 `IntensityValue`（`!5-` / `!6-` を含む）、長周期は既存 `LpgmIntensityValue` を再利用する。揺れレベル enum は既存定義を共有場所へ移し、SwiftUI 色拡張は Widget 側に残す。重複 enum を追加しない。
 - [ ] 必須 nullable は `decode(T?.self, forKey:)`、optional はキー不在を許可する。optional の非 null 型に明示 null が届く場合は不正として扱う。`eew.location.isPlum` は不在または true、serialNo は0以上の整数、数値は有限、ID は非空、primary のブロック存在を検証する。
 - [ ] `schemaVersion != 2`、未知 enum、不正日時、primary 欠損を decode エラーにする。デバッグ UI は入力エラーを示し、数値やブロックを補完しない。一般ブロックの未知キーは既存 Codable 同様に無視し、strict な Attributes / Magnitude は正典どおり検証する。
-- [ ] 共有モデルと必要な既存型を Runner / WidgetExtension / EQMonitorPreviewWidget / WidgetModelsTests の各対象へ一度ずつ登録する。旧 Runner 定義はこの時点では変更しない。
+- [ ] 共有モデルと必要な既存型を Runner / WidgetExtension / EQMonitorPreviewWidget / WidgetModelsTests の各対象へ一度ずつ登録する。旧 Runner 定義は Task 4 で削除する。旧型への変換は追加しない。
 - [ ] 下記 Task 7 の Swift テストを実行し、canonical / SHA ID / 日時の round-trip と不正入力拒否を確認する。コミット例: `feat: 統合Live Activityの共有受信モデルを追加`。
 
 ## Task 2: 表示モデル・遷移・詳細リンク
 
-**Files:** 新規 `app/ios/Shared/LiveActivity/UnifiedLiveActivityPresentation.swift`、`app/ios/Widget/LiveActivity/Unified/UnifiedEewViewAdapter.swift`、`app/ios/WidgetModelsTests/UnifiedLiveActivityPresentationTests.swift`。再利用 `app/ios/Shared/{EewDisplay,EarthquakeDetailURL,LiveActivityDate}.swift`。Task 1 の揺れ enum 移設先は `app/ios/Shared/LiveActivity/ShakeDetectionLevel.swift`、既存色拡張の切り出し先は `app/ios/Widget/LiveActivity/ShakeDetection/ShakeDetectionLevel+Style.swift`。
+**Files:** 新規 `app/ios/Shared/LiveActivity/{UnifiedLiveActivityPresentation,UnifiedEewPresentation,UnifiedEarthquakePresentation,UnifiedShakePresentation}.swift`、`app/ios/WidgetModelsTests/UnifiedLiveActivityPresentationTests.swift`。再利用 `app/ios/Shared/{EarthquakeDetailURL,LiveActivityDate}.swift`。Task 1 の揺れ enum 移設先は `app/ios/Shared/LiveActivity/ShakeDetectionLevel.swift`。新色拡張は `app/ios/Widget/LiveActivity/Unified/UnifiedLiveActivityStyle.swift`。
 
-**Interfaces:** `UnifiedLiveActivityPresentation.init(state: UnifiedLiveActivityContentState)` は `primary: UnifiedLiveActivityPrimary`、`detailURL: URL?`、`shakePeak: UnifiedShakeDetection?` を公開。`UnifiedEewViewAdapter.make(state: UnifiedEew) -> EewContentState` は Widget 内だけで使用。Magnitude の `displayText: String` は normal / unknown / overM8 の表示を返し、nil は呼び出し側で非表示にする。
+**Interfaces:** `UnifiedLiveActivityPresentation.init(state: UnifiedLiveActivityContentState)` は `primary: UnifiedLiveActivityPrimary`、`detailURL: URL?`、`shakePeak: UnifiedShakeDetection?` を公開。`UnifiedEewPresentation.init(state: UnifiedEew)` は `localIntensity: IntensityValue?`、`maximumIntensity: IntensityValue?`、`arrivalDate: Date?` を公開し、新wire型を直接受ける。Magnitude の `displayText: String` は normal / unknown / overM8 の表示を返し、nil は呼び出し側で非表示にする。
 
 - [ ] `primary` をそのまま選択するテストを作る。3ブロックが存在しても `primary == .eew` の fixture なら EEW を表示し、独自の earthquake 優先への変更をしない。到達時刻の前後で primary が変わらないことも確認する。
-- [ ] adapter は実際の EEW eventId・headline・各 bool・数値・時刻・location をそのまま既存 `EewContentState` へ渡す。日時を旧型の String へ渡す場合のみ ISO 8601 に encode する。`issuedAt` を `time` に代入しない。
-- [ ] 既存 `EewDisplay` の現在地震度・MAX 区別、取消時の値抑止、PLUM のカウントダウン抑止を再利用する。旧 UI の表示閾値（予報では地域震度4以上）と最終報ラベルをこの移行で変更しない。
+- [ ] 表示モデルは新wire型を直接読み、受信した地域名・予想値・時刻・精度情報を加工する。日時を表示層でStringへ往復変換しない。`issuedAt` を `time` に代入しない。
+- [ ] 予想震度は提供された0〜7を表示対象とし、旧UIの「予報では4以上のみ」という表示閾値を廃止する。取消時は該当EEWの予想値とカウントダウンを抑止する。地域PLUMでは到達予想を表示しない。通知条件・primaryは変更しない。
 - [ ] 地震情報は地域の `location.maxIntensity` と全国の `maxIntensity` を区別し、EEW の予想震度を観測値として流用しない。IXAC41 だけの状態を観測情報と断定せず、種別に応じた「推計震度分布図」/「地震情報」の見出しを使う。Magnitude は normal → `M6.8`、unknown → `M不明`、overM8 → `M8以上の巨大地震`、null → 項目非表示。数値0を欠損にしない。
 - [ ] 地震情報取消時は「先ほどの地震情報は取り消されました」とし、古い震度・震源・Mを有効な情報として見せない。別ブロックの取消だけで他ブロックの情報を隠さない。informationType は配列のまま保持し、単一 enum へ縮約しない。
 - [ ] 揺れピークは snapshot の全体 `level` と地域 `location.level` を使用する。`ended` でも保持し、「検知終了・最大の揺れ」として区別する。enum から計測震度の数値を逆算しない。
@@ -109,7 +107,7 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 }
 ```
 
-- [ ] Task 7 の Swift tests で上記の選択・取消・null・リンクと、既存 EewDisplayTests / LiveActivityDateTests を通す。コミット例: `feat: 統合Live Activityの主表示と地域情報を定義`。
+- [ ] Task 7 の Swift tests で上記の選択・取消・null・リンクと、新表示モデルの全震度・取消・PLUMのテストと LiveActivityDateTests を通す。旧 EewDisplayTests は新判定テストに置き換える。コミット例: `feat: 統合Live Activityの主表示と地域情報を定義`。
 
 ## Task 3: Widget と Preview
 
@@ -120,10 +118,10 @@ enum UnifiedLiveActivityMagnitude: Hashable {
 | 主表示 | Lock Screen / Expanded | Compact / Minimal |
 | --- | --- | --- |
 | 揺れ検知 | headline・地域名・地域ピーク・全体ピーク・検知時刻・active/ended | 地域ピークを優先し、地域欠損なら全体ピークを最大と区別して表示 |
-| EEW | 既存 EEW レイアウト＋存在する場合のみ揺れピークの補助行 | 既存の地域予想震度＋到達カウントダウン、欠損時は MAX |
+| EEW | 新しい地域指標パネル＋予想震度/到達予想＋震源要約＋受信ソース要約 | 「予」付き地域震度＋到達予想、全国値は MAX を明示 |
 | 地震情報 | headline・最大震度・地域名/地域震度・震源/M/深さ/時刻・揺れピーク補助行 | 地域震度を優先し、全国値には MAX。EEW予想と区別し、IXAC41単独を観測値と呼ばない |
 
-- [ ] 新 Widget を旧2種類と並べて登録する。新 `ActivityConfiguration` の Lock Screen と Dynamic Island の双方へ `widgetURL` を設定する。揺れだけなら地震詳細 URL は設定しない。
+- [ ] Live Activity の登録を新 Widget 1種類に置き換え、旧2種類を削除する。新 `ActivityConfiguration` の Lock Screen と Dynamic Island の双方へ `widgetURL` を設定する。揺れだけなら地震詳細 URL は設定しない。
 
 ```swift
 ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
@@ -152,7 +150,7 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
 ```
 
 - [ ] レベル・震度・MAX は文字でも区別する。地点が null のとき「地点情報なし」、空の headline は見出し行を省略し、未提供の地域名を補わない。配信地域が任意設定地域の場合に GPS の現在地だと誤認させる文言を増やさない。
-- [ ] 情報を全量縦積みせず、主表示＋揺れピーク1行に絞る。Expanded は既存 `ViewThatFits` と compact 候補を使い、主情報を残す。終了済みピークは Lock Screen の補助行に必ず残し、狭い Island の全量表示は要求しない。
+- [ ] 情報を全量縦積みせず、主表示＋揺れピーク1行に絞る。Expanded は新レイアウトの標準/省スペース候補を `ViewThatFits` で選び、主情報を残す。終了済みピークは Lock Screen の補助行に必ず残し、狭い Island の全量表示は要求しない。
 - [ ] Preview に揺れ単独、EEW単独、地震情報単独のsnapshot、全ブロック、地域欠損、取消、深発、PLUM、Magnitude4形態を追加する。初回 Start が地震情報を主表示する状態でも描画できるようにする。
 - [ ] 同一 Activity の揺れ→レベル上昇→EEW→地震情報を Preview の連続状態で確認する。日時は Preview に注入した `now` から作る。受信データの不足を実装側の `Date()` で補わない。
 - [ ] Preview target の membershipExceptions に新 Widget 配下ファイルを追加する。新 Shared ファイルの各 target の Sources も確認する。
