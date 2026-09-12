@@ -5,7 +5,10 @@ enum EarthquakeDetailURL {
         var components = URLComponents()
         components.scheme = "eqmonitor"
         components.host = ""
-        components.path = "/earthquake-history-details/\(eventId)"
+        guard !eventId.isEmpty,
+              let encodedId = eventId.addingPercentEncoding(withAllowedCharacters:
+                .urlPathAllowed.subtracting(CharacterSet(charactersIn: "/%?#"))) else { return nil }
+        components.percentEncodedPath = "/earthquake-history-details/\(encodedId)"
         return components.url
     }
 }
