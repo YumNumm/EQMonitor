@@ -1,5 +1,24 @@
-import ActivityKit
 import Foundation
+
+#if os(iOS)
+  import ActivityKit
+#endif
+
+struct LiveActivityPlatformSupport {
+  let osVersion: OperatingSystemVersion
+  let isMac: Bool
+  let isVision: Bool
+
+  var supportsLocalActivity: Bool {
+    guard !isMac, !isVision else { return false }
+    return osVersion.majorVersion > 16
+      || (osVersion.majorVersion == 16 && osVersion.minorVersion >= 1)
+  }
+
+  var supportsPushToStart: Bool {
+    supportsLocalActivity && osVersion.majorVersion >= 18
+  }
+}
 
 // MARK: - LiveActivityUtil
 
@@ -27,21 +46,24 @@ import Foundation
     }
 
     public func isLiveActivitySupported() -> Bool {
-      guard #available(iOS 16.1, *), !ProcessInfo.processInfo.isiOSAppOnMac else {
-        return false
-      }
-
-      guard #available(iOS 26.1, *), !ProcessInfo.processInfo.isiOSAppOnVision else {
-        return false
-      }
-      return true
+      platformSupport.supportsLocalActivity
     }
 
     public func isPushToStartSupported() -> Bool {
-      guard #available(iOS 18.0, *), isLiveActivitySupported() else {
-        return false
+      platformSupport.supportsPushToStart
+    }
+
+    @nonobjc private var platformSupport: LiveActivityPlatformSupport {
+      let processInfo = ProcessInfo.processInfo
+      var isVision = false
+      if #available(iOS 26.1, *) {
+        isVision = processInfo.isiOSAppOnVision
       }
-      return true
+      return LiveActivityPlatformSupport(
+        osVersion: processInfo.operatingSystemVersion,
+        isMac: processInfo.isiOSAppOnMac,
+        isVision: isVision
+      )
     }
   }
 
