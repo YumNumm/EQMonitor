@@ -2,10 +2,7 @@ import Foundation
 
 struct LiveActivityTimestamp: Codable, Hashable, Sendable {
     let date: Date
-
-    init(_ date: Date) {
-        self.date = date
-    }
+    private let encodedValue: String
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -17,15 +14,17 @@ struct LiveActivityTimestamp: Codable, Hashable, Sendable {
             )
         }
         date = parsed
+        encodedValue = rawValue
     }
 
     func encode(to encoder: Encoder) throws {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         var container = encoder.singleValueContainer()
-        try container.encode(formatter.string(from: date))
+        try container.encode(encodedValue)
     }
+
+    static func == (lhs: Self, rhs: Self) -> Bool { lhs.date == rhs.date }
+
+    func hash(into hasher: inout Hasher) { hasher.combine(date) }
 }
 
 struct LiveActivityTimestampParser {
@@ -36,12 +35,16 @@ struct LiveActivityTimestampParser {
         ) == rawValue.startIndex..<rawValue.endIndex else {
             return nil
         }
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let parsed = formatter.date(from: rawValue)
-            ?? ISO8601DateFormatter().date(from: rawValue)
-        guard let parsed, preservesCalendarComponents(rawValue, date: parsed) else { return nil }
-        return parsed
+        // Validate whole seconds separately: the legacy formatter truncates
+        // fractions after three digits, and Date itself has finite precision.
+        let zone = rawValue.hasSuffix("Z") ? "Z" : String(rawValue.suffix(6))
+        let wholeSeconds = String(rawValue.prefix(19)) + zone
+        guard let parsed = ISO8601DateFormatter().date(from: wholeSeconds),
+              preservesCalendarComponents(rawValue, date: parsed) else { return nil }
+        let fraction = rawValue.dropFirst(19).hasPrefix(".")
+            ? String(rawValue.dropFirst(20).prefix(while: \.isNumber)) : "0"
+        guard let fractionalSeconds = Double("0." + fraction) else { return nil }
+        return parsed.addingTimeInterval(fractionalSeconds)
     }
 
     func preservesCalendarComponents(_ rawValue: String, date: Date) -> Bool {

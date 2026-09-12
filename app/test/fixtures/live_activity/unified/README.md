@@ -6,3 +6,7 @@
 
 `matrix.json` is the shared Swift and Dart contract matrix. Each entry contains
 static `attributes`, a complete `contentState`, and the expected `valid` result.
+
+`sha256.json` uses the canonical state with a 64-character hexadecimal test ID.
+It verifies that the logical ID is opaque and is not restricted to UUID syntax;
+it is a test fixture, not a backend-issued event identifier.

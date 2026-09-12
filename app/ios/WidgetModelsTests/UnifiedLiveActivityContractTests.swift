@@ -117,6 +117,29 @@ struct UnifiedLiveActivityContractTests {
         }
     }
 
+    @Test func fractionalSecondsPreserveWireValueAndDatePrecision() throws {
+        for raw in [
+            "2026-09-11T13:20:00.123456Z",
+            "2026-09-11T22:20:00.123456+09:00",
+            "2026-09-11T13:20:00.1234560000Z",
+        ] {
+            let encoded = try JSONEncoder().encode(raw)
+            let timestamp = try JSONDecoder().decode(LiveActivityTimestamp.self, from: encoded)
+            #expect(abs(timestamp.date.timeIntervalSince1970 - 1789132800.123456) < 0.000001)
+            #expect(try JSONEncoder().encode(timestamp) == encoded)
+        }
+    }
+
+    @Test func opaqueSha256IdentifierIsAcceptedWithoutUuidConversion() throws {
+        let state = try JSONDecoder().decode(UnifiedLiveActivityContentState.self, from: fixtureData(named: "sha256"))
+        let attributes = try JSONDecoder().decode(
+            EarthquakeLiveActivityAttributes.self,
+            from: JSONSerialization.data(withJSONObject: ["id": state.id])
+        )
+        #expect(state.id.count == 64)
+        #expect(attributes.id == state.id)
+    }
+
     private func fixtureData(named name: String) throws -> Data {
         guard let url = Bundle(for: UnifiedLiveActivityFixtureBundleMarker.self)
             .url(forResource: name, withExtension: "json") else {
