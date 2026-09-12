@@ -33,13 +33,7 @@ struct ShakeDetectionContentState: Codable, Hashable {
     }
 }
 
-enum ShakeDetectionLevel: String, Codable, CaseIterable {
-    case weaker = "Weaker"
-    case weak = "Weak"
-    case medium = "Medium"
-    case strong = "Strong"
-    case stronger = "Stronger"
-
+extension ShakeDetectionLevel {
     var displayString: String {
         switch self {
         case .weaker: return "微弱な揺れ"
