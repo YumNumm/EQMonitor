@@ -96,6 +96,44 @@
 		B4B358134720AB041967E6FF /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
+		F10000000000000000000001 /* UnifiedLiveActivityContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* UnifiedLiveActivityContractTests.swift */; };
+		F10000000000000000000002 /* canonical.json in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000012 /* canonical.json */; };
+		F10000000000000000000003 /* matrix.json in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* matrix.json */; };
+		F10000000000000000000101 /* EarthquakeLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */; };
+		F10000000000000000000102 /* UnifiedLiveActivityContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */; };
+		F10000000000000000000103 /* UnifiedShakeDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000203 /* UnifiedShakeDetection.swift */; };
+		F10000000000000000000104 /* UnifiedEew.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000204 /* UnifiedEew.swift */; };
+		F10000000000000000000105 /* UnifiedEarthquake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000205 /* UnifiedEarthquake.swift */; };
+		F10000000000000000000106 /* UnifiedLiveActivityMagnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */; };
+		F10000000000000000000107 /* LiveActivityTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000207 /* LiveActivityTimestamp.swift */; };
+		F10000000000000000000108 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
+		F10000000000000000000111 /* EarthquakeLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */; };
+		F10000000000000000000112 /* UnifiedLiveActivityContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */; };
+		F10000000000000000000113 /* UnifiedShakeDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000203 /* UnifiedShakeDetection.swift */; };
+		F10000000000000000000114 /* UnifiedEew.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000204 /* UnifiedEew.swift */; };
+		F10000000000000000000115 /* UnifiedEarthquake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000205 /* UnifiedEarthquake.swift */; };
+		F10000000000000000000116 /* UnifiedLiveActivityMagnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */; };
+		F10000000000000000000117 /* LiveActivityTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000207 /* LiveActivityTimestamp.swift */; };
+		F10000000000000000000121 /* EarthquakeLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */; };
+		F10000000000000000000122 /* UnifiedLiveActivityContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */; };
+		F10000000000000000000123 /* UnifiedShakeDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000203 /* UnifiedShakeDetection.swift */; };
+		F10000000000000000000124 /* UnifiedEew.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000204 /* UnifiedEew.swift */; };
+		F10000000000000000000125 /* UnifiedEarthquake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000205 /* UnifiedEarthquake.swift */; };
+		F10000000000000000000126 /* UnifiedLiveActivityMagnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */; };
+		F10000000000000000000127 /* LiveActivityTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000207 /* LiveActivityTimestamp.swift */; };
+		F10000000000000000000131 /* EarthquakeLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */; };
+		F10000000000000000000132 /* UnifiedLiveActivityContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */; };
+		F10000000000000000000133 /* UnifiedShakeDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000203 /* UnifiedShakeDetection.swift */; };
+		F10000000000000000000134 /* UnifiedEew.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000204 /* UnifiedEew.swift */; };
+		F10000000000000000000135 /* UnifiedEarthquake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000205 /* UnifiedEarthquake.swift */; };
+		F10000000000000000000136 /* UnifiedLiveActivityMagnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */; };
+		F10000000000000000000137 /* LiveActivityTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000207 /* LiveActivityTimestamp.swift */; };
+		F10000000000000000000141 /* IntensityValuePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000208 /* IntensityValuePresentation.swift */; };
+		F10000000000000000000142 /* IntensityValuePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000208 /* IntensityValuePresentation.swift */; };
+		F10000000000000000000143 /* IntensityValuePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000208 /* IntensityValuePresentation.swift */; };
+		F10000000000000000000144 /* IntensityValuePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000208 /* IntensityValuePresentation.swift */; };
+		F10600000000000000000011 /* EQMLiveActivityUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10600000000000000000001 /* EQMLiveActivityUtil.swift */; };
+		F10600000000000000000012 /* LiveActivityPlatformSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10600000000000000000002 /* LiveActivityPlatformSupportTests.swift */; };
 		C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
 		CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
@@ -301,6 +339,19 @@
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
+		F10000000000000000000011 /* UnifiedLiveActivityContractTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UnifiedLiveActivityContractTests.swift; sourceTree = "<group>"; };
+		F10000000000000000000012 /* canonical.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = canonical.json; sourceTree = "<group>"; };
+		F10000000000000000000013 /* matrix.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = matrix.json; sourceTree = "<group>"; };
+		F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeLiveActivityAttributes.swift; sourceTree = "<group>"; };
+		F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedLiveActivityContentState.swift; sourceTree = "<group>"; };
+		F10000000000000000000203 /* UnifiedShakeDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedShakeDetection.swift; sourceTree = "<group>"; };
+		F10000000000000000000204 /* UnifiedEew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedEew.swift; sourceTree = "<group>"; };
+		F10000000000000000000205 /* UnifiedEarthquake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedEarthquake.swift; sourceTree = "<group>"; };
+		F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedLiveActivityMagnitude.swift; sourceTree = "<group>"; };
+		F10000000000000000000207 /* LiveActivityTimestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityTimestamp.swift; sourceTree = "<group>"; };
+		F10000000000000000000208 /* IntensityValuePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityValuePresentation.swift; sourceTree = "<group>"; };
+		F10600000000000000000001 /* EQMLiveActivityUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EQMLiveActivityUtil.swift; path = ../../packages/live_activity_util/ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift; sourceTree = SOURCE_ROOT; };
+		F10600000000000000000002 /* LiveActivityPlatformSupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityPlatformSupportTests.swift; sourceTree = "<group>"; };
 		A9100000000000000000000B /* EarthquakeIntentDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialog.swift; sourceTree = "<group>"; };
 		A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialogTests.swift; sourceTree = "<group>"; };
 		A9100000000000000000000D /* SearchEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEarthquakesIntent.swift; sourceTree = "<group>"; };
@@ -468,6 +519,7 @@
 		27724A23304DC4E300666426 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				F10600000000000000000001 /* EQMLiveActivityUtil.swift */,
 				EE0700000000000000000002 /* LocationInfo.swift */,
 			);
 			name = "Recovered References";
@@ -485,6 +537,8 @@
 		3770F148FEB3FAEFF53D21CE /* WidgetModelsTests */ = {
 			isa = PBXGroup;
 			children = (
+				F10600000000000000000002 /* LiveActivityPlatformSupportTests.swift */,
+				F10000000000000000000011 /* UnifiedLiveActivityContractTests.swift */,
 				C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */,
 				A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */,
 				A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */,
@@ -505,6 +559,16 @@
 			);
 			path = WidgetModelsTests;
 			sourceTree = "<group>";
+		};
+		F10000000000000000000020 /* UnifiedLiveActivityFixtures */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000012 /* canonical.json */,
+				F10000000000000000000013 /* matrix.json */,
+			);
+			name = UnifiedLiveActivityFixtures;
+			path = ../test/fixtures/live_activity/unified;
+			sourceTree = SOURCE_ROOT;
 		};
 		64F4BDCEBEC9CE1AF4B2B264 /* iOS */ = {
 			isa = PBXGroup;
@@ -552,6 +616,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				F10000000000000000000020 /* UnifiedLiveActivityFixtures */,
 				8561B7922E96D04300E0CCAB /* WidgetExtension.entitlements */,
 				85873D0B2E9182A600ED0F72 /* AppIcon-dev.icon */,
 				85873D092E91821A00ED0F72 /* AppIcon-prod.icon */,
@@ -614,6 +679,8 @@
 		EB0182E4C221D99352C4222C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				F10000000000000000000300 /* LiveActivity */,
+				F10000000000000000000208 /* IntensityValuePresentation.swift */,
 				A9100000000000000000000B /* EarthquakeIntentDialog.swift */,
 				C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */,
 				A9100000000000000000000E /* EarthquakeSearchURL.swift */,
@@ -633,6 +700,20 @@
 				EQ0000000000000000000005 /* EewDisplay.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000300 /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000201 /* EarthquakeLiveActivityAttributes.swift */,
+				F10000000000000000000202 /* UnifiedLiveActivityContentState.swift */,
+				F10000000000000000000203 /* UnifiedShakeDetection.swift */,
+				F10000000000000000000204 /* UnifiedEew.swift */,
+				F10000000000000000000205 /* UnifiedEarthquake.swift */,
+				F10000000000000000000206 /* UnifiedLiveActivityMagnitude.swift */,
+				F10000000000000000000207 /* LiveActivityTimestamp.swift */,
+			);
+			path = LiveActivity;
 			sourceTree = "<group>";
 		};
 		F8BCF7FBC6A9336C62FA711E /* Parameters */ = {
@@ -937,6 +1018,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000002 /* canonical.json in Resources */,
+				F10000000000000000000003 /* matrix.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,6 +1086,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000141 /* IntensityValuePresentation.swift in Sources */,
+				F10000000000000000000121 /* EarthquakeLiveActivityAttributes.swift in Sources */,
+				F10000000000000000000122 /* UnifiedLiveActivityContentState.swift in Sources */,
+				F10000000000000000000123 /* UnifiedShakeDetection.swift in Sources */,
+				F10000000000000000000124 /* UnifiedEew.swift in Sources */,
+				F10000000000000000000125 /* UnifiedEarthquake.swift in Sources */,
+				F10000000000000000000126 /* UnifiedLiveActivityMagnitude.swift in Sources */,
+				F10000000000000000000127 /* LiveActivityTimestamp.swift in Sources */,
 				27145E293039D3F100C3DBAF /* EarthquakeDisplayItem.swift in Sources */,
 				27145EAD3039D40000C3DBAF /* EewDisplay.swift in Sources */,
 				27145EAB3039D40000C3DBAF /* LiveActivityDate.swift in Sources */,
@@ -1024,6 +1115,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000142 /* IntensityValuePresentation.swift in Sources */,
 				A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */,
 				EQ0000000000000000000069 /* WidgetErrorMessage.swift in Sources */,
@@ -1043,6 +1135,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000143 /* IntensityValuePresentation.swift in Sources */,
+				F10600000000000000000011 /* EQMLiveActivityUtil.swift in Sources */,
+				F10600000000000000000012 /* LiveActivityPlatformSupportTests.swift in Sources */,
+				F10000000000000000000131 /* EarthquakeLiveActivityAttributes.swift in Sources */,
+				F10000000000000000000132 /* UnifiedLiveActivityContentState.swift in Sources */,
+				F10000000000000000000133 /* UnifiedShakeDetection.swift in Sources */,
+				F10000000000000000000134 /* UnifiedEew.swift in Sources */,
+				F10000000000000000000135 /* UnifiedEarthquake.swift in Sources */,
+				F10000000000000000000136 /* UnifiedLiveActivityMagnitude.swift in Sources */,
+				F10000000000000000000137 /* LiveActivityTimestamp.swift in Sources */,
+				F10000000000000000000001 /* UnifiedLiveActivityContractTests.swift in Sources */,
 				C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */,
 				C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */,
@@ -1095,6 +1198,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000144 /* IntensityValuePresentation.swift in Sources */,
+				F10000000000000000000111 /* EarthquakeLiveActivityAttributes.swift in Sources */,
+				F10000000000000000000112 /* UnifiedLiveActivityContentState.swift in Sources */,
+				F10000000000000000000113 /* UnifiedShakeDetection.swift in Sources */,
+				F10000000000000000000114 /* UnifiedEew.swift in Sources */,
+				F10000000000000000000115 /* UnifiedEarthquake.swift in Sources */,
+				F10000000000000000000116 /* UnifiedLiveActivityMagnitude.swift in Sources */,
+				F10000000000000000000117 /* LiveActivityTimestamp.swift in Sources */,
 				C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ000000000000000000006E /* EewDisplay.swift in Sources */,
@@ -1127,6 +1238,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000108 /* IntensityValue.swift in Sources */,
+				F10000000000000000000101 /* EarthquakeLiveActivityAttributes.swift in Sources */,
+				F10000000000000000000102 /* UnifiedLiveActivityContentState.swift in Sources */,
+				F10000000000000000000103 /* UnifiedShakeDetection.swift in Sources */,
+				F10000000000000000000104 /* UnifiedEew.swift in Sources */,
+				F10000000000000000000105 /* UnifiedEarthquake.swift in Sources */,
+				F10000000000000000000106 /* UnifiedLiveActivityMagnitude.swift in Sources */,
+				F10000000000000000000107 /* LiveActivityTimestamp.swift in Sources */,
 				C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */,
