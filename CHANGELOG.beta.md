@@ -1,5 +1,45 @@
 # Changelog (Beta)
 
+## [3.0.0-beta.17](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.16...v3.0.0-beta.17) (2026-09-12)
+
+
+### Features
+
+* Siriの検索語をアプリ内検索へ渡す ([8ed9481](https://github.com/YumNumm/EQMonitor/commit/8ed94818dc827ccc82e0ae0c1bc94c8a83af251d))
+* 地域パラメータから検索結果を非同期に取得する ([7e941fa](https://github.com/YumNumm/EQMonitor/commit/7e941fa97b68852b2c4ffe2c16c44f2771bd7c19))
+* 地域候補を選んで地震履歴を開く画面を追加する ([cfd0b9e](https://github.com/YumNumm/EQMonitor/commit/cfd0b9e85fa222bd2bc1c38fcfe1e4e11ab5350e))
+* 地域名から地震履歴の検索候補を作る ([12353a6](https://github.com/YumNumm/EQMonitor/commit/12353a6e7be0653ba788b3d41f03fec76d85ba64))
+* 地震と速報の詳細をペイン内の地図とシートで表示 ([3320f95](https://github.com/YumNumm/EQMonitor/commit/3320f9597ea2dfa4feccd5bc5f0cd78670e9c195))
+* 地震履歴・緊急地震速報一覧のタブレットと折りたたみ表示に対応 ([6a5bc16](https://github.com/YumNumm/EQMonitor/commit/6a5bc16bdc56deb4f2f69ee27c4a5a6737e63e20))
+* 地震履歴一覧をタブレットの二画面表示に対応 ([43d3d61](https://github.com/YumNumm/EQMonitor/commit/43d3d611cad2b497b09b209ff3e0c2e323382e6e))
+* 地震情報の音声応答を追加する ([20a02f2](https://github.com/YumNumm/EQMonitor/commit/20a02f265928532a32b0a9fb210d9096e9ee4d40))
+* 地震検索のディープリンクと経路を追加する ([f5f5409](https://github.com/YumNumm/EQMonitor/commit/f5f5409cfa02e85e309b3c97bd6cd32b2f705367))
+* 履歴ペインのスクロール領域と選択表示を分離 ([814aaac](https://github.com/YumNumm/EQMonitor/commit/814aaac7681d009b9fde6e4b2b7250e7b889f171))
+* 緊急地震速報一覧の詳細選択と二画面表示に対応 ([e8c9cda](https://github.com/YumNumm/EQMonitor/commit/e8c9cda8ebeeac7810c39bd0ed6d5e07348778e6))
+* 表示幅とヒンジ方向から履歴ペインの配置を決定 ([c5b7ee6](https://github.com/YumNumm/EQMonitor/commit/c5b7ee60de1809b583dadf4b13ba9fd4828a1ae9))
+* 選択状態を保持する履歴一覧と詳細の適応表示を追加 ([69627ae](https://github.com/YumNumm/EQMonitor/commit/69627aeac8d48c5d0e348be01fe978f7ce918803))
+
+
+### Bug Fixes
+
+* Control Centerから地震履歴を開く処理を修正 ([192812d](https://github.com/YumNumm/EQMonitor/commit/192812dfa3850490d6ab9d8501b5788163148a78))
+* EEW再取得中の表示消失を防ぐ ([112971c](https://github.com/YumNumm/EQMonitor/commit/112971c6d7e2fa5f51a771ecfc9489fffd0789b2))
+* EEW再取得中も受信済みデータの表示を維持する ([7045043](https://github.com/YumNumm/EQMonitor/commit/704504386e22672df6c5a9f29a843e3a3b2f6fcd))
+* Firebase通知権限の永久拒否状態を表示する ([3235f51](https://github.com/YumNumm/EQMonitor/commit/3235f51b25e0fe6c651d394c87d3d212ab2f2e1c))
+* Intentの通信エラーを日本語案内へ正規化する ([9a1c2c5](https://github.com/YumNumm/EQMonitor/commit/9a1c2c58990b62faa5e771bcd929b2f7a0a08c4c))
+* iOS配布CIをXcode 27対応runnerへ切り替え ([95bbe51](https://github.com/YumNumm/EQMonitor/commit/95bbe5117d905a271cefc3f1ffece4738fbd912d))
+* Siriのアプリ名を揃えてIntentテストを登録する ([4a1fda8](https://github.com/YumNumm/EQMonitor/commit/4a1fda80b6026b2e8a93d120d8117a2568613573))
+* Swift APIに歴史震度分類を追加する ([b4a94f6](https://github.com/YumNumm/EQMonitor/commit/b4a94f6143c1afe23bfba744a920eb3ffdffb6c3))
+* コントロールセンターから地震履歴を開く導線を修正 ([bbf5c76](https://github.com/YumNumm/EQMonitor/commit/bbf5c768934cab4287f52d6cb757a716c7ee710e))
+* 地震Entityの状態と型付きプロパティを公開する ([f2fd1d7](https://github.com/YumNumm/EQMonitor/commit/f2fd1d752a495b4299ded1b94f1ffce852511087))
+* 地震Intentの地域検証と取得結果保持を共通化する ([ed2da22](https://github.com/YumNumm/EQMonitor/commit/ed2da222518dc6a00a60fe783f11686239d1d2be))
+* 地震カードの再描画と明示更新を分離する ([6d184f4](https://github.com/YumNumm/EQMonitor/commit/6d184f4886557527437c5c51202b1461becab8e4))
+* 地震履歴の分割表示では詳細の戻るボタンを隠す ([a0ab6d4](https://github.com/YumNumm/EQMonitor/commit/a0ab6d4b32c082ce1f2eebb734b7fdae4756227a))
+* 地震履歴の分割表示で詳細の戻るボタンを非表示にする ([3f92e94](https://github.com/YumNumm/EQMonitor/commit/3f92e9468cb351948759b320db61da1c602b78f8))
+* 地震詳細のSwift API型を最新契約に揃える ([68628cb](https://github.com/YumNumm/EQMonitor/commit/68628cb926a93b027229b2d33f3e4a118d1a906c))
+* 地震詳細の復元と地域震度の保持を実装する ([6123a08](https://github.com/YumNumm/EQMonitor/commit/6123a08b872f2bc955b5ca68dd9cb505308d8b9c))
+* 音声応答と地震カードで同じ取得結果を表示する ([0528882](https://github.com/YumNumm/EQMonitor/commit/0528882e2a3a7921b605c0c2c3c152fab663f49d))
+
 ## [3.0.0-beta.16](https://github.com/YumNumm/EQMonitor/compare/v3.0.0-beta.15...v3.0.0-beta.16) (2026-09-06)
 
 
