@@ -155,3 +155,59 @@ ActivityConfiguration(for: EarthquakeLiveActivityAttributes.self) { context in
 - [ ] End は任意の最終 snapshot を decode して `.immediate` で終了する。最終 state 未指定なら現 state を利用する。`isFinal` / `isCanceled` による自動 End は追加しない。
 - [ ] list は新旧すべての `Activity<T>.activities` を列挙する。統合の logicalId は attributes.id、eventId は earthquake/eew の実値。旧形式の logicalId は旧 attributes.id の UUID文字列、eventId は実際の旧 eventId。OS ID と混同しない。
 - [ ] Start / Update / End の引数 decode と ID 不一致を XCTest で固定し、実 Activity 操作は Task 5 の画面から検証する。型登録を含む Runner build を通す。コミット例: `feat: 統合Live Activityのローカル操作と一覧を追加`。
+
+## Task 5: Dart の型・preset・JSON編集・セッション復元
+
+**Files:** 新規 `app/lib/feature/live_activity/data/model/{unified_live_activity_content_state,unified_shake_detection,unified_eew,unified_earthquake,unified_live_activity_json_converter}.dart` と生成物。既存 debug ディレクトリは `app/lib/feature/settings/children/config/debug/live_activity/`。その配下の `data/model/debug_live_activity_{kind,preset,session}.dart`、`data/controller/live_activity_local_controller.dart`、`data/repository/debug_live_activity_{content_builder,json_codec}.dart`、`ui/action/debug_live_activity_action.dart`、`ui/page/debug_live_activity_page.dart` を変更。新規 `data/model/debug_live_activity_start_request.dart`。テストは同構造の `app/test/feature/settings/children/config/debug/live_activity/` と `app/test/feature/live_activity/unified_live_activity_contract_test.dart`。
+
+**Interfaces:** `UnifiedLiveActivityContentState.fromJson(Map<String, dynamic>)` / `toJson()`。`DebugLiveActivityContentBuilder.unifiedFromPreset({required DebugUnifiedPreset preset, required String id, required DateTime now}) -> UnifiedLiveActivityContentState`。`DebugLiveActivityJsonCodec.parseUnified(String raw) -> Result<UnifiedLiveActivityContentState, FormatException>`。Controller は `start({required DebugLiveActivityStartRequest request}) -> Future<String>` と `list() -> Future<List<DebugLiveActivitySession>>` を公開する。
+
+- [ ] Freezed の統合 DTO に `DateTime` と enum を用い、ブロック型は Swift と同じ分割にする。`EarthquakeMagnitude` は既存 `app/lib/feature/earthquake_history/data/model/earthquake_magnitude.dart` を再利用し、union を複製しない。
+- [ ] `UnifiedLiveActivityJsonConverter` で wire の `{type: NORMAL, value}` / UNKNOWN / OVER_M8 を既存 EarthquakeMagnitude へ相互変換する。既存 Freezed の `runtimeType` JSON を wire へ直接出さない。normal の value 不在・非有限・不正 type は FormatException。
+- [ ] JmaIntensity / JmaLpgmIntensity / ShakeDetectionLevel も既存 enum を使い、明示 converter で wire 値へ変換する。`!5-` / `!6-` はラベルの「5」「6」に潰さない。enum の `.name` を JSON に直接使わない。
+- [ ] 必須 nullable はキーを保持して null を出力する。`eew.location` 内の optional は `includeIfNull: false` で省略する。schemaVersion・primary・日時・ID・enum の検証は Swift と同じ fixture で確認する。破棄したフィールドを直前の snapshot から復元しない。
+
+```dart
+test('正典をdecodeしてwire形式に戻せる', () {
+  final raw = jsonDecode(File('test/fixtures/live_activity/unified/canonical.json')
+      .readAsStringSync()) as Map<String, dynamic>;
+  final state = UnifiedLiveActivityContentState.fromJson(raw);
+  expect(state.id, raw['id']);
+  expect(state.primary, UnifiedLiveActivityPrimary.earthquake);
+  expect(state.earthquake?.magnitude, const EarthquakeMagnitude.value(value: 6.8));
+  expect(state.toJson()['schemaVersion'], 2);
+  expect(state.toJson().containsKey('runtimeType'), isFalse);
+});
+```
+
+- [ ] `DebugLiveActivityKind.unified('unified', '統合Live Activity')` を追加。`DebugUnifiedPreset` は shake / shakeEscalated / shakeEnded / eew / earthquake / allBlocks / canceledEew / canceledEarthquake / magnitudeUnknown / magnitudeOverM8 / noLocation を用意する。明示されたデバッグ fixture のみ固定値を使う。
+- [ ] StartRequest は sealed class とし、legacy は kind・実 eventId・旧 Map、unified は型付き state を保持する。新 kind の引数は Task 4 の形に encode し、トップレベル eventId を送らない。旧呼び出し元は legacy request に移行し、外部 wire の旧形状は保つ。
+- [ ] Session は `activityId: String`、`kind: DebugLiveActivityKind`、`logicalId: String?`、`eventId: String?` を保持。Start後・画面復帰時・Update/End後に list を読み、OS ID で選択を復元する。旧種別の移行用 session は logicalId 未取得を許容する。
+- [ ] JSON編集の不正値は `primary に対応する情報がありません`、`id が開始時と一致しません` など短い日本語で表示する。生の Swift 例外や巨大 JSON を SnackBar に出さない。未成功の編集内容と選択 Activity を保持する。
+- [ ] preset の切り替えは選択中 Activity の backend id を保持する。別 Activity の作成は明示的な新規開始とする。Start が地震情報主表示の snapshot でも動くよう、揺れからの手順を必須にしない。
+- [ ] MethodChannel mock で新旧 Start の引数、Update/End の OS ID、list の復元、JSON不正時に native を呼ばないことを検証する。画面の kind 切り替え・入力保持・session選択は Widget test を追加する。
+- [ ] `mise exec -- dart run build_runner build --delete-conflicting-outputs` を app で実行し、対象 Dart tests と analyze を通す。コミット例: `feat: 統合Live Activityのデバッグシナリオを追加`。
+
+## Task 6: トークン・APNs 環境・OS 対応範囲の前提整備
+
+**Files:** 確認/修正 `packages/live_activity_util/ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift`。変更/追加テスト `app/test/feature/live_activity/live_activity_token_contract_test.dart`、`app/test/feature/devices/{push_token_platform_capabilities,notification_token_stream,device_repository_apns_environment,push_token_sync_worker}_test.dart`。必要な検証用入口は新規 `app/integration_test/unified_live_activity_apns_test.dart`。純粋な OS 判定テストは新規 `app/ios/WidgetModelsTests/LiveActivityPlatformSupportTests.swift`。
+
+**Interfaces:** public な push-to-start token API と `NotificationToken` は維持する。`apnsEnvironmentProvider` の実機テスト用 override は `api.ApnsEnvironment.development` または `.production` を署名結果に合わせて選ぶ。
+
+- [ ] 現在の `isLiveActivitySupported()` の2番目の guard は iOS 26.1 未満で false を返す。Dart の18以上という配信対応範囲と整合させ、Mac / Vision 除外を availability で個別判定する。ローカル Activity の16.1以上と Broadcast 配信の18以上を区別する。
+
+```swift
+if ProcessInfo.processInfo.isiOSAppOnMac { return false }
+if #available(iOS 26.1, *), ProcessInfo.processInfo.isiOSAppOnVision {
+    return false
+}
+// 上記は既存 iOS 16.1 availability 内。iOS 26.1 未満を一律除外しない。
+return true
+```
+
+- [ ] 対応判定の入力を OS version / isMac / isVision として同じ Swift ソース内の純粋 policy に分け、17.6 / 18 / 26.0 / 26.1 と Mac / Vision をテストする。policy はこのファイルに置き、1ファイルをコンパイルする現 native hook の入力を不用意に変えない。FFI生成物・XCFrameworkは通常の `mise exec -- flutter build ios --simulator --debug --no-codesign` による hook で再生成し、生成差分をレビューする。
+- [ ] push-to-start の初回取得・更新・再登録・失敗後再試行を既存 tests で確認する。個別 Activity の token observer を追加しない。最低対応 OS と実機で token 取得を確認するまで、ソース判定の修正だけを配信成功としない。
+- [ ] 現在の production 固定はリポジトリの Runner.entitlements と既存運用に一致するため、dev flavor を理由に development へ変更しない。sandbox 用の署名済み検証ビルドだけ、integration test の ProviderScope で `apnsEnvironmentProvider.overrideWith((ref) => api.ApnsEnvironment.development)` を注入する。通常リリースの provider は現行の production を維持する。
+- [ ] 両環境で最終署名を `codesign -d --entitlements :- /absolute/path/to/Runner.app` で確認し、`aps-environment` と登録 request の環境が一致することを記録する。integration test 入口は既存起動処理の依存初期化を使い、mock token は使わない。トークン全文をログ・文書へ残さない。
+- [ ] [Apple の APNs entitlement 仕様](https://developer.apple.com/documentation/bundleresources/entitlements/aps-environment)と[ActivityKit 配信仕様](https://developer.apple.com/documentation/ActivityKit/starting-and-updating-live-activities-with-activitykit-push-notifications)に照らし、Broadcast capability・bundle ID・環境を実機試験前に確認する。確認結果は knowledge、解消前の差分は todo に残す。
+- [ ] 通知設定/位置同期の送信地域が AreaForecastLocalE の3桁コードであることをテスト payload と backend 登録結果で確認する。都道府県コードや観測点 ID を新しい実装から追加送信しない。コミット例: `fix: Live ActivityのOS対応判定を配信条件に揃える`。
