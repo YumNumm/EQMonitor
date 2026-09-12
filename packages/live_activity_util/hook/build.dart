@@ -49,6 +49,17 @@ Future<void> main(List<String> args) => build(
     final iosSdkPath = (sdkPathResult.stdout as String).trim();
     logger.info('iOS SDK path: $iosSdkPath');
 
+    final resourceDirResult = await Process.run('xcrun', [
+      'clang',
+      '-print-resource-dir',
+    ]);
+    final clangResourceDir = (resourceDirResult.stdout as String).trim();
+    if (resourceDirResult.exitCode != 0 ||
+        clangResourceDir.isEmpty ||
+        !File('$clangResourceDir/include/stdarg.h').existsSync()) {
+      throw StateError('Failed to resolve selected Xcode Clang headers');
+    }
+
     final simSdkResult = await Process.run('xcrun', [
       '--sdk',
       'iphonesimulator',
@@ -273,13 +284,14 @@ Future<void> main(List<String> args) => build(
       output: Output(
         dartFile: ffiOutputDartFile,
         preamble: '''
-// dart format off
 // ignore_for_file: type=lint
 ''',
       ),
       headers: Headers(
         entryPoints: [generatedHeaderPath],
         compilerOptions: [
+          '-resource-dir',
+          clangResourceDir,
           '-isysroot',
           iosSdkPath,
           '-target',
