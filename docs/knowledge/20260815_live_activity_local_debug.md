@@ -3,65 +3,59 @@ alwaysApply: false
 globs: app/lib/feature/settings/children/config/debug/live_activity/**,app/ios/Runner/LiveActivityDebugMethodChannel.swift
 ---
 
-# Live Activity ローカル開始（デバッグ）
+# 統合 Live Activity のローカルデバッグ
 
-デバッグ画面（`設定 > デバッグ > Live Activity テスト`, iOS のみ）から、アプリ内で
-ActivityKit を用いて EEW / 揺れ検知の Live Activity を **ローカル開始・更新・終了**
-できる。Push-to-Start（サーバー経由）とは別経路で、開発時の表示検証に用いる。
+設定のデバッグ画面から、統合 `EarthquakeLiveActivityAttributes` を ActivityKit で
+ローカル開始・更新・終了できる。Push-to-Start とは別経路であり、端末上の表示確認に使う。
 
-## 構成
+## ID を区別する
 
-- Dart 側は MethodChannel `net.yumnumm.eqmonitor/live_activity_debug` を叩くだけ。
-  - `LiveActivityLocalController`（iOS のみ MethodChannel 実装、他は no-op）
-  - `DebugLiveActivityContentBuilder`（プリセット + 実データ変換 → `Map`）
-  - `DebugLiveActivityJsonCodec`（JSON 整形・検証）
-  - `DebugLiveActivityAction`（検証 → ネイティブ → SnackBar）
-- ネイティブは `app/ios/Runner/LiveActivityDebugMethodChannel.swift`。
-  `Activity.request` / `update` / `end` を呼ぶ。
+- `logicalId`: backend が管理する不透明な Live Activity ID。ContentState の `id` と同一。
+- `activityId`: `Activity.id` として iOS が払い出す OS 側 ID。
+- `eventId`: EEW / 地震情報のイベント ID。揺れ検知だけの snapshot には存在しない。
 
-## ContentState JSON はネイティブ Codable とキーを一致させる
+更新中はプリセットを切り替えても `logicalId` を維持する。新しい系列を明示的に作るとき
+だけ debug 用 ID を払い出す。実行中一覧は ActivityKit を正とし、Preferences へ保存しない。
 
-Widget Extension の `EewContentState` / `ShakeDetectionContentState` /
-`LocationInfo`（Swift）は既定 CodingKeys = プロパティ名（camelCase）。
-`DebugLiveActivityContentBuilder` が生成する `Map` のキーはこれに一致させること。
+## MethodChannel 契約
 
-- EEW: `eventId,type,hypocenterName,magnitude,depth,time,isOriginTime,maxIntensity,serialNo,isFinal,isWarning,isCanceled,headline,isPlum,isLevel,isOnePoint,location`
-- 揺れ検知: `eventId,type,level,detectedAt,location`
-- `location`: `regionName,forecastIntensity,forecastLpgmIntensity,arrivalTime,intensity`
-- `maxIntensity` / `forecastIntensity` は Widget の `IntensityValue` rawValue
-  （`0..7`, `5-`, `5+`, `6-`, `6+`, `!5-`, `!6-`）に一致させる。
-- 時刻は Swift 既定 `ISO8601DateFormatter`（**小数秒なし**）でパースできる
-  JST オフセット付き文字列 `yyyy-MM-ddTHH:mm:ss+09:00` を送る。
+channel は `net.yumnumm.eqmonitor/live_activity_debug`。
 
-## ActivityKit 型の紐付け（重要・macOS 検証必須）
+- `isSupported()` → `bool`
+- `start({attributes: {id}, contentState: JSON文字列})`
+  → `{activityId, logicalId, eventId?}`
+- `update({activityId, contentState: JSON文字列})` → `void`
+- `end({activityId, contentState?: JSON文字列})` → `void`
+- `list()` → `[{activityId, logicalId, eventId?}]`
 
-ローカル `Activity<EewLiveActivityAttributes>.request` した Activity を既存 Widget
-（`app/ios/Widget/LiveActivity/...` の `ActivityConfiguration`）で描画させるには、
-`ActivityAttributes` の **型名** が一致している必要がある。
+`kind` と top-level `eventId` は送らない。start / update は毎回完全な unified snapshot を
+渡し、部分更新として merge しない。最終報・取消・揺れ検知 ended は update 用 snapshot
+であり、それ自体を ActivityKit の end 操作へ変換しない。
 
-現状は `LiveActivityDebugMethodChannel.swift` 内に、Widget と型名・Codable
-フィールドを一致させた `EewLiveActivityAttributes` /
-`ShakeDetectionLiveActivityAttributes` を **重複定義** している（Runner モジュール）。
+Dart の MethodChannel が受け取る map は StandardMessageCodec 上
+`Map<Object?, Object?>` になることがある。`Map<String, dynamic>` へ直接 generic cast
+せず、一度 JSON として正規化してから typed session を検証する。
 
-- ActivityKit の Widget 紐付けは Attributes 型名ベースのため、通常はこれで
-  既存 Widget レイアウトに描画される。
-- **もし macOS 実機検証でローカル開始した Activity が Widget に描画されない場合**、
-  クロスモジュールの型同一性が原因。その際は Widget の Attributes ソース
-  （`EewLiveActivityAttributes.swift` 等）を Runner ターゲットにも所属させる
-  （共有ソース化）にフォールバックする。
+## JSON 境界
 
-## この環境（Linux Cloud Agent）で検証できたこと / できないこと
+編集欄の JSON は `UnifiedLiveActivityContentState.fromJson` で検証してから native へ渡す。
+直接 constructor で作った DTO も同じ境界で再検証する。required nullable のキーは null
+でも省略せず、EEW location の optional non-null キーは値がない場合に省略する。
 
-- 検証済み: Dart 静的解析（`dart analyze`）、ユニットテスト（`flutter test`）
-  17 件パス。MethodChannel の引数・JSON 契約、プリセット/実データ変換、JSON 検証。
-- 未検証（macOS 必須）: iOS ビルド、Swift コンパイル、`Runner.xcodeproj`
-  への 1 ファイル追加（`LiveActivityDebugMethodChannel.swift`）、実機での
-  Live Activity 表示。**macOS でのビルド・実機確認が必要。**
+日時は Z / offset / 小数秒を含む ISO 8601 を受け付ける。Dart の `DateTime.parse` が
+存在しない暦日を繰り上げるため、日付要素を検証してから parse する。秒の小数部は任意桁を
+受け付けるが、Dart の `DateTime` と再エンコードではマイクロ秒精度まで保持される。
 
-## ツール実行メモ（この環境）
+## 対応 OS と確認
 
-- `mise install` は `swift` のインストールに失敗する（`libncurses.so.6` 欠如）。
-  Dart/Flutter 作業では Flutter を直接 PATH に通して回避した。
-  `export PATH="$HOME/.local/share/mise/installs/flutter/<rev>/bin:...:$PATH"`
-- `flutter_scene` submodule 初期化（`git submodule update --init third_party/flutter_scene`）
-  が pub get の前提。
+ローカル開始は iOS 16.1 以上、Push-to-Start token は iOS 18 以上で別判定する。
+モデル・MethodChannel の Dart 検証は次を使う。
+
+```sh
+cd app
+mise exec -- flutter test --no-pub test/feature/live_activity/unified_live_activity_contract_test.dart test/feature/settings/children/config/debug/live_activity
+mise exec -- flutter analyze --no-pub lib/feature/live_activity/data/model lib/feature/settings/children/config/debug/live_activity test/feature/live_activity/unified_live_activity_contract_test.dart test/feature/settings/children/config/debug/live_activity
+```
+
+Dart テストと解析は、iOS build・Simulator 表示・実機 Live Activity 表示の証明とは分けて
+記録する。
