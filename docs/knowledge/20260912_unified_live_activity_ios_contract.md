@@ -8,8 +8,6 @@
 - 地震情報の Magnitude は NORMAL / UNKNOWN / OVER_M8 / null。Dart の既存 EarthquakeMagnitude は再利用できるが、自動生成の runtimeType JSON はこの wire 契約と異なるため converter が必要。
 - Date の wire 値は ISO 8601。ActivityKit の既定 decoder で処理できる Codable を使い、Runner の JSONDecoder 設定変更だけで解決したとしない。
 - 2026-09-12のユーザー指示により、旧2種類のActivityAttributes・Widget・debug分岐を削除する。旧形式との互換、migration、普及待ちは実装要件に含めない。Issue本文よりこの指示を優先する。
-- UIは新しい共有表示モデルで構築し、旧EewDisplayや旧UIへのadapterを作らない。予想震度0〜3も提供されれば表示する。通知条件やprimaryの判定はbackendに置く。
-- デザインの正典は [新デザイン仕様](../superpowers/specs/2026-09-12-unified-live-activity-ios-design.md)。既存のEEW Live Activityの配置・色・フォント・表示閾値に関する知見より、この新仕様を優先する。
 - APNs environment は署名後の entitlement と一致させる。dev flavor と sandbox は同義ではない。現在の provider / entitlements は production。
 - `EQMLiveActivityUtil.isLiveActivitySupported()` の iOS 26.1 guard と Dart の18以上判定に差がある。解消状況は [前提条件](../todo/850_unified_live_activity_activation_prerequisites.md)で追跡する。
 - 新しい Swift ファイルは Runner / Widget / Preview / Test の target membership を確認する。PR Flutter CI の成功だけでは Swift のビルド・モデルテスト完了にならない。
@@ -25,3 +23,5 @@ codesign -d --entitlements :- /absolute/path/to/Runner.app
 ```
 
 詳細な変更対象・テスト・切り替え条件は [実装計画](../superpowers/plans/2026-09-12-unified-live-activity-ios.md)に記載。これは契約調査の記録であり、実装・配信済みの記録ではない。
+
+- ユーザーがデザイン案を却下し、デザイン作業を禁止した。今回の案とモックは撤回し、指定のないデザインを作成しない。契約・モデルの実装と表示工程の未実施を区別する。
