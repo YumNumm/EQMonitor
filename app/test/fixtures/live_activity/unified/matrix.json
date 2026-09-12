@@ -1,0 +1,176 @@
+[
+  {
+    "name": "shake only primary shake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "eew only primary eew",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "earthquake only primary earthquake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "shake and eew primary shake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Medium", "status": "ended", "location": null}, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "shake and eew primary eew",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Strong", "status": "active", "location": null}, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "shake and earthquake primary shake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weaker", "status": "active", "location": null}, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": ["VXSE51"], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "UNKNOWN"}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "shake and earthquake primary earthquake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Stronger", "status": "ended", "location": null}, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": ["VXSE52"], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "OVER_M8"}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "eew and earthquake primary eew",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 1, "isFinal": false, "isWarning": true, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": {"regionName": "Tokyo"}}, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": ["VXSE53"], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "NORMAL", "value": 6.8}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "eew and earthquake primary earthquake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": 5.1, "depth": 20, "time": "2026-09-11T03:35:00Z", "isOriginTime": true, "maxIntensity": "4", "serialNo": 2, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": ["IXAC41"], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "all primary shake",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": {"name": "Tokyo", "level": "Medium"}}, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "all primary eew",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "all primary earthquake",
+    "attributes": {"id": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T12:38:00+09:00", "primary": "earthquake", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T12:35:05.123+09:00", "updatedAt": "2026-09-11T12:36:30+09:00", "level": "Weak", "status": "active", "location": null}, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": true
+  },
+  {
+    "name": "primary block absent",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": null, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": false
+  },
+  {
+    "name": "required nullable location missing",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z"}, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "optional eew location fields omitted",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": {"regionName": "Tokyo"}}, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "optional eew forecast intensity explicit null",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": {"regionName": "Tokyo", "forecastIntensity": null}}, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "optional eew isPlum true",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": {"regionName": "Tokyo", "isPlum": true}}, "earthquake": null},
+    "valid": true
+  },
+  {
+    "name": "optional eew isPlum false",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": 0, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": {"regionName": "Tokyo", "isPlum": false}}, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "unknown primary enum",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "tsunami", "shakeDetection": null, "eew": null, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "negative serial number",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "eew", "shakeDetection": null, "eew": {"eventId": "event", "headline": "eew", "hypocenterName": null, "magnitude": null, "depth": null, "time": null, "isOriginTime": false, "maxIntensity": null, "serialNo": -1, "isFinal": false, "isWarning": false, "isCanceled": false, "isPlum": false, "isLevel": false, "isOnePoint": false, "issuedAt": "2026-09-11T03:36:00Z", "location": null}, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "invalid timestamp",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "September 11", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "normal magnitude missing value",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "NORMAL"}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": false
+  },
+  {
+    "name": "unknown magnitude has forbidden value",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "UNKNOWN", "value": 8}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": false
+  },
+  {
+    "name": "normal magnitude invalid numeric value",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "NORMAL", "value": "NaN"}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": false
+  },
+  {
+    "name": "strict magnitude extra field",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "earthquake", "shakeDetection": null, "eew": null, "earthquake": {"eventId": "event", "headline": "earthquake", "informationType": [], "issuedAt": "2026-09-11T03:38:00Z", "isCanceled": false, "hypocenterName": null, "magnitude": {"type": "OVER_M8", "extra": true}, "depth": null, "originTime": null, "maxIntensity": null, "location": null}},
+    "valid": false
+  },
+  {
+    "name": "strict attributes extra field",
+    "attributes": {"id": "opaque-id", "eventId": "forbidden"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "empty opaque attributes id",
+    "attributes": {"id": ""},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-11T03:38:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "timestamp with trailing junk",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-09-12T09:00:00Zjunk", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": false
+  },
+  {
+    "name": "timestamp with nonexistent calendar date",
+    "attributes": {"id": "opaque-id"},
+    "contentState": {"schemaVersion": 2, "id": "state-id", "updatedAt": "2026-02-30T09:00:00Z", "primary": "shake_detection", "shakeDetection": {"headline": "shake", "detectedAt": "2026-09-11T03:35:05Z", "updatedAt": "2026-09-11T03:36:30Z", "level": "Weak", "status": "active", "location": null}, "eew": null, "earthquake": null},
+    "valid": false
+  }
+]

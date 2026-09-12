@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "019937ad-0000-7000-8000-000000000001",
+  "updatedAt": "2026-09-11T12:38:00+09:00",
+  "primary": "earthquake",
+  "shakeDetection": {
+    "headline": "関東地方で強い揺れを検知しました",
+    "detectedAt": "2026-09-11T12:35:05+09:00",
+    "updatedAt": "2026-09-11T12:36:30+09:00",
+    "level": "Stronger",
+    "status": "ended",
+    "location": {
+      "name": "東京都２３区",
+      "level": "Stronger"
+    }
+  },
+  "eew": {
+    "eventId": "20260911123456",
+    "headline": "茨城県沖で地震 関東地方で強い揺れ",
+    "hypocenterName": "茨城県沖",
+    "magnitude": 6.8,
+    "depth": 30,
+    "time": "2026-09-11T12:34:56+09:00",
+    "isOriginTime": true,
+    "maxIntensity": "6-",
+    "serialNo": 12,
+    "isFinal": true,
+    "isWarning": true,
+    "isCanceled": false,
+    "isPlum": false,
+    "isLevel": false,
+    "isOnePoint": false,
+    "issuedAt": "2026-09-11T12:36:00+09:00",
+    "location": {
+      "regionName": "東京都２３区",
+      "forecastIntensity": "5-",
+      "forecastLpgmIntensity": "2",
+      "arrivalTime": "2026-09-11T12:35:30+09:00",
+      "isWarning": true
+    }
+  },
+  "earthquake": {
+    "eventId": "20260911123456",
+    "headline": "茨城県沖で地震 最大震度６弱",
+    "informationType": ["VXSE53"],
+    "issuedAt": "2026-09-11T12:38:00+09:00",
+    "isCanceled": false,
+    "hypocenterName": "茨城県沖",
+    "magnitude": {
+      "type": "NORMAL",
+      "value": 6.8
+    },
+    "depth": 30,
+    "originTime": "2026-09-11T12:34:56+09:00",
+    "maxIntensity": "6-",
+    "location": {
+      "regionName": "東京都２３区",
+      "maxIntensity": "5-"
+    }
+  }
+}
