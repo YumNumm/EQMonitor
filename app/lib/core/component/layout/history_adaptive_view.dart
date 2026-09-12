@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
 import 'package:eqmonitor/core/component/layout/history_pane.dart';
 import 'package:eqmonitor/core/component/layout/history_pane_layout.dart';
 import 'package:eqmonitor/core/component/layout/pane_viewport_measurement.dart';
@@ -89,7 +90,10 @@ class HistoryAdaptiveView extends HookWidget {
                           child: HistoryPane(
                             bounds: detailBounds ?? available,
                             viewport: size,
-                            child: detail ?? const _UnselectedDetail(),
+                            child: HistoryDetailScope(
+                              isSplit: isSplit,
+                              child: detail ?? const _UnselectedDetail(),
+                            ),
                           ),
                         ),
                       ),
