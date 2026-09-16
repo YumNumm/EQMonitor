@@ -12,9 +12,7 @@ const liveMonitorMapSafeSpacing = 8.0;
 typedef LiveMonitorGeoCoordinate = ({double latitude, double longitude});
 typedef LiveMonitorMapObscuredInsets = ({double top, double bottom});
 
-class LiveMonitorMapFocusBuilder {
-  const new();
-
+class const LiveMonitorMapFocusBuilder() {
   /// [SafeArea] が確保する余白のうち、地図側の固定余白を超える分と
   /// Card の実測高さを合成する。
   static LiveMonitorMapObscuredInsets obscuredInsets({

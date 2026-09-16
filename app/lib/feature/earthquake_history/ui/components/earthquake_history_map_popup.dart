@@ -16,9 +16,7 @@ EarthquakeHistoryMapPopupAction earthquakeHistoryMapPopupAction(Ref ref) =>
     const EarthquakeHistoryMapPopupAction();
 
 /// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
-class EarthquakeHistoryMapPopupAction {
-  const new();
-
+class const EarthquakeHistoryMapPopupAction() {
   /// 観測点タップ時のポップアップ
   ///
   /// [intensityLabel] は [intensity] が null のときにラベルテキストで震度を表示する

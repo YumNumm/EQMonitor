@@ -31,9 +31,7 @@ plugins:
       avoid_eqmonitor_api_in_ui: true
       avoid_mixed_declaration_categories: true
       require_riverpod_generator: true
-      # 既存の `const new(...)` 約320件を Primary Constructor へ移行しきるまで
-      # 無効にしている。移行完了後に true へ切り替えること。
-      prefer_primary_constructor: false
+      prefer_primary_constructor: true
   # flutter_hooks 向けの lint (eslint-plugin-react-hooks 相当)
   # - exhaustive_keys: useEffect などの keys の過不足を検出
   # - rules_of_hooks: if/for/while 内での hook 呼び出しを検出

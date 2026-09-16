@@ -532,26 +532,18 @@ class _TimelineBody extends StatelessWidget {
 }
 
 /// タイムラインの 1 行を表すスペック。
-sealed class _TimelineRowSpec {
-  const new();
-}
+sealed class const _TimelineRowSpec();
 
 /// セクション見出し行（地域・観測点・沖合観測局）。
-class _SectionRowSpec extends _TimelineRowSpec {
-  const new(this.label, {this.indent = 0});
-
-  final String label;
-  final double indent;
-}
+class const _SectionRowSpec(final String label, {final double indent = 0})
+    extends _TimelineRowSpec;
 
 /// 値を表示するデータ行。
-class _DataRowSpec extends _TimelineRowSpec {
-  const new(this.label, this.cellBuilder, {this.indent = 0});
-
-  final String label;
+class const _DataRowSpec(
+  final String label,
 
   /// telegramId に対するセル表示文字列を返すコールバック。
   /// 変化なし (値なし) の場合は null を返す → "—" を表示。
-  final String? Function(String telegramId) cellBuilder;
-  final double indent;
-}
+  final String? Function(String telegramId) cellBuilder, {
+  final double indent = 0,
+}) extends _TimelineRowSpec;

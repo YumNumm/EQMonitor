@@ -5,9 +5,7 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_limits.dart';
 
-final class PmTilesV3HeaderDecoder {
-  const new();
-
+final class const PmTilesV3HeaderDecoder() {
   static const headerLength = 127;
   static const mvtTileType = 1;
   static const maxSignedInteger = 0x7FFFFFFFFFFFFFFF;

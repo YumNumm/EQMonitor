@@ -235,17 +235,11 @@ void main() {
   });
 }
 
-final class _Fixture {
-  const new({
-    required this.controller,
-    required this.container,
-    required this.repository,
-  });
-
-  final StreamController<RealtimeEvent> controller;
-  final ProviderContainer container;
-  final _SpyRepository repository;
-}
+final class const _Fixture({
+  required final StreamController<RealtimeEvent> controller,
+  required final ProviderContainer container,
+  required final _SpyRepository repository,
+});
 
 Future<_Fixture> _startFixture() async {
   final controller = StreamController<RealtimeEvent>.broadcast(sync: true);

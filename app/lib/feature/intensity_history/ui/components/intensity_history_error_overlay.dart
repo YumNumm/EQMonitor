@@ -13,9 +13,7 @@ IntensityHistoryErrorOverlayAction intensityHistoryErrorOverlayAction(
   Ref ref,
 ) => const IntensityHistoryErrorOverlayAction();
 
-class IntensityHistoryErrorOverlayAction {
-  const new();
-
+class const IntensityHistoryErrorOverlayAction() {
   Future<void> retry(WidgetRef ref) async {
     try {
       ref.invalidate(cityMaxIntensityProvider, asReload: true);

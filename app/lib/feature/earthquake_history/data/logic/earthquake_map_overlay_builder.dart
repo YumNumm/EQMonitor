@@ -15,32 +15,22 @@ enum EarthquakeMapOverlayUnavailableReason {
   missingTelegramMetadata,
 }
 
-sealed class EarthquakeMapOverlayBuildResult {
-  const new();
-}
+sealed class const EarthquakeMapOverlayBuildResult();
 
-final class EarthquakeMapOverlayAvailable
-    extends EarthquakeMapOverlayBuildResult {
-  const new({required this.snapshot});
+final class const EarthquakeMapOverlayAvailable({
+  required final EarthquakeMapOverlaySnapshot snapshot,
+}) extends EarthquakeMapOverlayBuildResult;
 
-  final EarthquakeMapOverlaySnapshot snapshot;
-}
-
-final class EarthquakeMapOverlayUnavailable
-    extends EarthquakeMapOverlayBuildResult {
-  const new({required this.reason});
-
-  final EarthquakeMapOverlayUnavailableReason reason;
-}
+final class const EarthquakeMapOverlayUnavailable({
+  required final EarthquakeMapOverlayUnavailableReason reason,
+}) extends EarthquakeMapOverlayBuildResult;
 
 typedef EarthquakeStationObservation = ({
   EarthquakeParameterStationItem station,
   JmaIntensity intensity,
 });
 
-final class EarthquakeMapOverlayBuilder {
-  const new();
-
+final class const EarthquakeMapOverlayBuilder() {
   EarthquakeMapOverlayBuildResult build({
     required Earthquake earthquake,
     required IntensityColors colorModel,

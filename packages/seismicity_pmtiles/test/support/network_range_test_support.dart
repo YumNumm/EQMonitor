@@ -105,19 +105,12 @@ final class PoisonFirstResponseCoordinator {
   );
 }
 
-final class StaticNetworkRangeReply implements NetworkRangeReply {
-  const new({
-    required this.statusCode,
-    required this.body,
-    required this.etagValues,
-    required this.contentRange,
-  });
-
-  final int statusCode;
-  final List<int> body;
-  final List<String>? etagValues;
-  final String? contentRange;
-
+final class const StaticNetworkRangeReply({
+  required final int statusCode,
+  required final List<int> body,
+  required final List<String>? etagValues,
+  required final String? contentRange,
+}) implements NetworkRangeReply {
   @override
   Future<ResponseBody> resolve({
     required RequestOptions options,
@@ -134,11 +127,8 @@ final class StaticNetworkRangeReply implements NetworkRangeReply {
   }
 }
 
-final class FailingNetworkRangeReply implements NetworkRangeReply {
-  const new({required this.statusCode});
-
-  final int? statusCode;
-
+final class const FailingNetworkRangeReply({required final int? statusCode})
+    implements NetworkRangeReply {
   @override
   Future<ResponseBody> resolve({
     required RequestOptions options,

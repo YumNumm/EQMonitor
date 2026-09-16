@@ -195,9 +195,7 @@ void main() {
   });
 }
 
-final class _TestModels {
-  const new();
-
+final class const _TestModels() {
   NotificationSlot currentLocationSlot() => const NotificationSlot(
     id: 'slot-cl',
     slotType: NotificationSlotType.currentLocation,

@@ -9,24 +9,17 @@ NotificationDeliveryLogDetailBuilder notificationDeliveryLogDetailBuilder(
   Ref ref,
 ) => NotificationDeliveryLogDetailBuilder();
 
-final class NotificationDeliveryLogDetail {
-  const new({required this.rows});
-
-  final List<NotificationDeliveryLogDetailRow> rows;
-
+final class const NotificationDeliveryLogDetail({
+  required final List<NotificationDeliveryLogDetailRow> rows,
+}) {
   String get copyText =>
       rows.map((row) => '${row.label}: ${row.value}').join('\n');
 }
 
-final class NotificationDeliveryLogDetailRow {
-  const new({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-}
+final class const NotificationDeliveryLogDetailRow({
+  required final String label,
+  required final String value,
+});
 
 final class NotificationDeliveryLogDetailBuilder {
   NotificationDeliveryLogDetail build({

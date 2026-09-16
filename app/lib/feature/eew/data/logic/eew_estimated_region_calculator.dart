@@ -22,13 +22,9 @@ typedef _RegionCalculation = ({
   double? earliestSWaveTravelTime,
 });
 
-class EewEstimatedRegionCalculator {
-  const new({
-    required this.sWaveTravelTimeLookup,
-  });
-
-  final SWaveTravelTimeLookup sWaveTravelTimeLookup;
-
+class const EewEstimatedRegionCalculator({
+  required final SWaveTravelTimeLookup sWaveTravelTimeLookup,
+}) {
   List<EewEstimatedRegion> calculate({
     required List<EstimatedIntensityRegionStation> stations,
     required List<double> intensities,

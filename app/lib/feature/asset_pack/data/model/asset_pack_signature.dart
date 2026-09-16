@@ -4,15 +4,13 @@ import 'dart:typed_data';
 final _keyIdPattern = RegExp(r'^[a-z0-9][a-z0-9-]{0,63}$');
 final _sha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 
-class AssetPackSignature {
-  const new({
-    required this.schemaVersion,
-    required this.algorithm,
-    required this.keyId,
-    required this.contentSha256,
-    required this.signatureBytes,
-  });
-
+class const AssetPackSignature({
+  required final int schemaVersion,
+  required final String algorithm,
+  required final String keyId,
+  required final String contentSha256,
+  required final Uint8List signatureBytes,
+}) {
   factory fromJson(Map<String, dynamic> json) {
     final schemaVersion = json['schema_version'];
     final algorithm = json['algorithm'];
@@ -48,10 +46,4 @@ class AssetPackSignature {
       signatureBytes: signatureBytes,
     );
   }
-
-  final int schemaVersion;
-  final String algorithm;
-  final String keyId;
-  final String contentSha256;
-  final Uint8List signatureBytes;
 }

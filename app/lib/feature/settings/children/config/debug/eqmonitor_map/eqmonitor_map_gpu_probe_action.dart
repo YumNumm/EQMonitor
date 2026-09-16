@@ -7,23 +7,15 @@ part 'eqmonitor_map_gpu_probe_action.g.dart';
 EqmonitorMapGpuProbeAction eqmonitorMapGpuProbeAction(Ref ref) =>
     const EqmonitorMapGpuProbeAction();
 
-sealed class EqmonitorMapGpuProbeInvalidationResult {
-  const new();
-}
+sealed class const EqmonitorMapGpuProbeInvalidationResult();
 
-final class EqmonitorMapGpuProbeInvalidationSucceeded
-    extends EqmonitorMapGpuProbeInvalidationResult {
-  const new();
-}
+final class const EqmonitorMapGpuProbeInvalidationSucceeded()
+    extends EqmonitorMapGpuProbeInvalidationResult;
 
-final class EqmonitorMapGpuProbeInvalidationNotReady
-    extends EqmonitorMapGpuProbeInvalidationResult {
-  const new();
-}
+final class const EqmonitorMapGpuProbeInvalidationNotReady()
+    extends EqmonitorMapGpuProbeInvalidationResult;
 
-final class EqmonitorMapGpuProbeAction {
-  const new();
-
+final class const EqmonitorMapGpuProbeAction() {
   MapGpuProbeConfiguration withAtlasFixture({
     required MapGpuProbeConfiguration currentConfiguration,
     required MapSpriteAtlasProbeFixture atlasFixture,

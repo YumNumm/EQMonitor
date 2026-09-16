@@ -12,11 +12,8 @@ typedef ResolveAssetPackDownloadTaskFile = Future<File> Function(
   DownloadTask task,
 );
 
-class AssetPackArchiveDownloadException implements Exception {
-  const new(this.message);
-
-  final String message;
-
+class const AssetPackArchiveDownloadException(final String message)
+    implements Exception {
   @override
   String toString() => 'AssetPackArchiveDownloadException: $message';
 }

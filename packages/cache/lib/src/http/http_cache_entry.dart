@@ -1,21 +1,11 @@
 import 'dart:typed_data';
 
-class HttpCacheEntry {
-  const new({
-    required this.key,
-    required this.statusCode,
-    required this.eTag,
-    required this.headers,
-    required this.responseType,
-    required this.body,
-    required this.updatedAtMs,
-  });
-
-  final String key;
-  final int statusCode;
-  final String? eTag;
-  final Map<String, List<String>> headers;
-  final String responseType;
-  final Uint8List body;
-  final int updatedAtMs;
-}
+class const HttpCacheEntry({
+  required final String key,
+  required final int statusCode,
+  required final String? eTag,
+  required final Map<String, List<String>> headers,
+  required final String responseType,
+  required final Uint8List body,
+  required final int updatedAtMs,
+});

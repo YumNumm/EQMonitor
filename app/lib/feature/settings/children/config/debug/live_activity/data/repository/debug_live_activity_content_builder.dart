@@ -17,9 +17,7 @@ DebugLiveActivityContentBuilder debugLiveActivityContentBuilder(Ref ref) =>
 /// 生成される JSON のキーは Widget Extension の Swift `Codable` 構造体
 /// (`EewContentState` / `ShakeDetectionContentState` / `LocationInfo`) の
 /// プロパティ名と一致させる（デフォルトの CodingKeys = プロパティ名）。
-class DebugLiveActivityContentBuilder {
-  const new();
-
+class const DebugLiveActivityContentBuilder() {
   // --- EEW: プリセット ---
 
   Map<String, dynamic> eewFromPreset({
@@ -171,9 +169,7 @@ class DebugLiveActivityContentBuilder {
           : eew.hypocenter?.depth?.toDouble(),
       time: eew.isCanceled ? null : happenedTime,
       isOriginTime: eew.originTime != null,
-      maxIntensity: eew.isCanceled
-          ? null
-          : eew.forecastIntensity?.maxIntensity,
+      maxIntensity: eew.isCanceled ? null : eew.forecastIntensity?.maxIntensity,
       serialNo: eew.serialNo,
       isFinal: eew.isLastInfo,
       isWarning: eew.isWarning ?? false,

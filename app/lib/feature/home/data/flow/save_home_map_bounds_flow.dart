@@ -12,9 +12,7 @@ part 'save_home_map_bounds_flow.g.dart';
 SaveHomeMapBoundsFlow saveHomeMapBoundsFlow(Ref ref) =>
     const SaveHomeMapBoundsFlow();
 
-class SaveHomeMapBoundsFlow {
-  const new();
-
+class const SaveHomeMapBoundsFlow() {
   Future<void> save({
     required BuildContext context,
     required WidgetRef ref,

@@ -56,7 +56,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
     final sync = KyoshinMonitorTimeSync(
       repository: ref.read(kyoshinMonitorRepositoryProvider),
-      timeSampleCalculator: ref.read(kyoshinMonitorTimeSampleCalculatorProvider),
+      timeSampleCalculator: ref.read(
+        kyoshinMonitorTimeSampleCalculatorProvider,
+      ),
       trimmedMeanCalculator: ref.read(
         kyoshinMonitorTrimmedMeanCalculatorProvider,
       ),
@@ -141,17 +143,11 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   }
 }
 
-class KyoshinMonitorTimeSync {
-  const new({
-    required this.repository,
-    required this.timeSampleCalculator,
-    required this.trimmedMeanCalculator,
-  });
-
-  final KyoshinMonitorRepository repository;
-  final KyoshinMonitorTimeSampleCalculator timeSampleCalculator;
-  final KyoshinMonitorTrimmedMeanCalculator trimmedMeanCalculator;
-
+class const KyoshinMonitorTimeSync({
+  required final KyoshinMonitorRepository repository,
+  required final KyoshinMonitorTimeSampleCalculator timeSampleCalculator,
+  required final KyoshinMonitorTrimmedMeanCalculator trimmedMeanCalculator,
+}) {
   Future<Result<KyoshinMonitorTimeSample, Exception>> sample(
     KyoshinMonitorSource source,
   ) => repository.fetchLatestTime(source: source);

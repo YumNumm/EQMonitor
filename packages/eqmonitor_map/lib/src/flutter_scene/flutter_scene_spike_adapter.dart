@@ -269,11 +269,8 @@ class FlutterSceneSpikeAdapter implements SceneSpikeControllerAdapter {
   }
 }
 
-class SceneSpikeMeshUpdateException implements Exception {
-  const new(this.detail);
-
-  final String detail;
-}
+class const SceneSpikeMeshUpdateException(final String detail)
+    implements Exception;
 
 class SceneSpikeMeshUpdateValidator {
   const new _();

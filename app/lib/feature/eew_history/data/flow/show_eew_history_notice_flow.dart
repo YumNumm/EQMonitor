@@ -11,9 +11,7 @@ part 'show_eew_history_notice_flow.g.dart';
 EewHistoryNoticeFlow eewHistoryNoticeFlow(Ref ref) =>
     const EewHistoryNoticeFlow();
 
-class EewHistoryNoticeFlow {
-  const new();
-
+class const EewHistoryNoticeFlow() {
   Future<void> show({
     required WidgetRef ref,
     required BuildContext context,

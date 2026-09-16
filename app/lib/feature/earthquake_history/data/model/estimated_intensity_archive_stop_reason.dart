@@ -5,9 +5,7 @@ enum EstimatedIntensityArchiveStopReason { none, cancelled, timeout }
 typedef EstimatedIntensityArchiveStopReasonReader =
     EstimatedIntensityArchiveStopReason Function();
 
-final class EstimatedIntensityArchiveStopResultMapper {
-  const new();
-
+final class const EstimatedIntensityArchiveStopResultMapper() {
   EstimatedIntensityArchiveDownloadRejected map(
     EstimatedIntensityArchiveStopReason reason,
   ) => EstimatedIntensityArchiveDownloadRejected(

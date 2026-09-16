@@ -32,9 +32,7 @@ enum MapCameraBoundsFitInvalidReason {
 }
 
 /// Pure MapLibre-compatible fit-bounds calculation in logical pixels.
-final class MapCameraBoundsFitter {
-  const new();
-
+final class const MapCameraBoundsFitter() {
   MapCameraBoundsFitResult fit({
     required MapCameraBounds bounds,
     required Size viewportLogicalSize,

@@ -4,13 +4,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 /// シンプルなカラークラス
-class Color {
-  const new(this.red, this.green, this.blue);
-
-  final int red;
-  final int green;
-  final int blue;
-
+class const Color(final int red, final int green, final int blue) {
   // ignore: prefer_constructors_over_static_methods
   static Color fromRGB(int r, int g, int b) {
     return Color(r.clamp(0, 255), g.clamp(0, 255), b.clamp(0, 255));

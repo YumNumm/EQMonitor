@@ -19,17 +19,11 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 part 'api_dio_factory.g.dart';
 
-final class ApiDioFactory {
-  const new({
-    required this.baseUrl,
-    required this.headers,
-    required this.baseInterceptors,
-  });
-
-  final String baseUrl;
-  final Map<String, String> headers;
-  final List<Interceptor> baseInterceptors;
-
+final class const ApiDioFactory({
+  required final String baseUrl,
+  required final Map<String, String> headers,
+  required final List<Interceptor> baseInterceptors,
+}) {
   Dio build({HttpCacheStore? httpCacheStore}) {
     final dio = Dio(DioBaseOptionsFactory.build(baseUrl: baseUrl));
     dio.options

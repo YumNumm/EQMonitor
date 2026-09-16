@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 
-class ContactUrlBuilder {
-  const new();
-
+class const ContactUrlBuilder() {
   Uri buildForIos({
     required String deviceId,
     required String appVersion,

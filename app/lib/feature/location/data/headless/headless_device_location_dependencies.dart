@@ -40,15 +40,10 @@ typedef RunHeadlessDeviceLocationTask = Future<HeadlessTaskResult> Function({
   required String taskUpdateId,
 });
 
-class HeadlessDeviceLocationDependencies {
-  const new({
-    this.getActiveHeadlessTaskId,
-    this.runHeadlessTask,
-  });
-
-  final GetActiveHeadlessTaskId? getActiveHeadlessTaskId;
-  final RunHeadlessDeviceLocationTask? runHeadlessTask;
-
+class const HeadlessDeviceLocationDependencies({
+  final GetActiveHeadlessTaskId? getActiveHeadlessTaskId,
+  final RunHeadlessDeviceLocationTask? runHeadlessTask,
+}) {
   Future<void> run() async {
     final taskUpdateId =
         await (getActiveHeadlessTaskId ??
@@ -67,9 +62,7 @@ class HeadlessDeviceLocationDependencies {
   }
 }
 
-class HeadlessDeviceLocationTaskFactory {
-  const new();
-
+class const HeadlessDeviceLocationTaskFactory() {
   Future<HeadlessTaskResult> run({required String taskUpdateId}) {
     return HeadlessDeviceLocationRunner(
       bridge: const BackgroundLocationTrackerHeadlessBridge(),
@@ -119,9 +112,7 @@ class HeadlessDeviceLocationSyncServiceLoader {
   }
 }
 
-class HeadlessSecureDeviceTokenLoader {
-  const new();
-
+class const HeadlessSecureDeviceTokenLoader() {
   Future<String?> load() {
     const storage = FlutterSecureStorage(
       iOptions: IOSOptions(
@@ -156,9 +147,7 @@ class HeadlessJmaRegionResolverLoader {
   }
 }
 
-class HeadlessEarthquakeParameterAssetLoader {
-  const new();
-
+class const HeadlessEarthquakeParameterAssetLoader() {
   static const bundledPrefix = 'assets/platform/';
 
   Future<String> load({
@@ -251,9 +240,7 @@ class HeadlessEarthquakeParameterAssetLoader {
   }
 }
 
-class HeadlessJmaMapParser {
-  const new();
-
+class const HeadlessJmaMapParser() {
   Map<JmaMapType, JmaMap_JmaMapData> parse(ByteData bytes) {
     final jmaMap = JmaMap.fromBuffer(
       bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
@@ -283,9 +270,7 @@ class HeadlessRestApiUrlLoader {
   );
 }
 
-class HeadlessRestApiUrlResolver {
-  const new();
-
+class const HeadlessRestApiUrlResolver() {
   String resolve({
     required BuildConfig buildConfig,
     required String? savedTelegramUrlJson,
@@ -305,9 +290,7 @@ class HeadlessRestApiUrlResolver {
   }
 }
 
-class HeadlessApiIdentityLoader {
-  const new();
-
+class const HeadlessApiIdentityLoader() {
   Future<HeadlessApiIdentity> load({required String? deviceToken}) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final deviceInfo = DeviceInfoPlugin();
@@ -336,9 +319,7 @@ class HeadlessApiIdentityLoader {
   }
 }
 
-class HeadlessApiDioFactory {
-  const new();
-
+class const HeadlessApiDioFactory() {
   Dio build({
     required String baseUrl,
     required HeadlessApiIdentity identity,

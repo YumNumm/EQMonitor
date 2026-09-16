@@ -19,9 +19,7 @@ CompleteOnboardingFlow completeOnboardingFlow(Ref ref) =>
 /// - 新規ユーザーはアップデートバナーの既読版数を現在版へ初期化し、
 ///   初回ホームで「アップデートしました」バナーを表示しない
 /// - ホームへ遷移する
-class CompleteOnboardingFlow {
-  const new();
-
+class const CompleteOnboardingFlow() {
   Future<void> complete({
     required WidgetRef ref,
     required BuildContext context,

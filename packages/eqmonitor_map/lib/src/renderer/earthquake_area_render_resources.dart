@@ -6,17 +6,11 @@ typedef EarthquakeAreaMaterialParametersFor =
     MapMaterialParameterBlock Function({required EarthquakeAreaStyle style});
 
 /// 1 code分のstyle順序と再利用可能なmaterial parameter block。
-final class EarthquakeAreaRenderStyleEntry {
-  const new({
-    required this.style,
-    required this.declarationOrder,
-    required this.materialParameters,
-  });
-
-  final EarthquakeAreaStyle style;
-  final int declarationOrder;
-  final MapMaterialParameterBlock materialParameters;
-}
+final class const EarthquakeAreaRenderStyleEntry({
+  required final EarthquakeAreaStyle style,
+  required final int declarationOrder,
+  required final MapMaterialParameterBlock materialParameters,
+});
 
 /// 1 snapshot/layer modeについて一度だけ構築するstyle lookup。
 final class EarthquakeAreaRenderStyleResources {

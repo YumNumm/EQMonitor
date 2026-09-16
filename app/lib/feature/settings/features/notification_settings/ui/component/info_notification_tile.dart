@@ -7,9 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 通知項目の補足リンク一覧をボトムシートで表示する。
-class InfoNotificationBottomSheetAction {
-  const new();
-
+class const InfoNotificationBottomSheetAction() {
   Future<void> show(
     BuildContext context, {
     required String title,

@@ -7,9 +7,7 @@ import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 
 enum EarthquakeHistoryMapLayerMode { none, region, city, station, auto }
 
-class EarthquakeHistoryMapLayerModeResolver {
-  const new();
-
+class const EarthquakeHistoryMapLayerModeResolver() {
   EarthquakeHistoryMapLayerMode resolveFillLayerMode({
     required Earthquake earthquake,
     required EarthquakeHistoryFillMode fillMode,

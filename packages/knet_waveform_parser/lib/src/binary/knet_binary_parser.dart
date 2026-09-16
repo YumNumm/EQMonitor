@@ -10,9 +10,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// 防災科研 NIED が提供する WIN32 派生バイナリ形式（`.kwin`）を解析する。
 /// ファイルは可変長 TLV ブロックで構成される情報ブロックと、
 /// 1秒単位のデータブロック（デルタ圧縮）から成る。
-class KnetBinaryParser {
-  const new();
-
+class const KnetBinaryParser() {
   static const _kwinSignature = [0x0a, 0x02, 0x00, 0x00];
 
   /// KWIN バイナリを [KnetBinaryRecord] にパースする
@@ -451,51 +449,34 @@ class KnetBinaryParser {
 }
 
 /// KWIN バイナリパース結果
-class KnetBinaryRecord {
-  const new({
-    required this.earthquakeInfo,
-    required this.stationInfo,
-    required this.recordTime,
-    required this.samplingFrequencyHz,
-    required this.channels,
-    required this.networkType,
-  });
-
-  final KnetEarthquakeInfo? earthquakeInfo;
-  final KnetStationInfo stationInfo;
+class const KnetBinaryRecord({
+  required final KnetEarthquakeInfo? earthquakeInfo,
+  required final KnetStationInfo stationInfo,
 
   /// 記録開始時刻（第 1 秒ブロックのタイムスタンプ）
-  final DateTime recordTime;
+  required final DateTime recordTime,
 
   /// サンプリング周波数 (Hz)
-  final double samplingFrequencyHz;
+  required final double samplingFrequencyHz,
 
   /// チャンネルリスト
-  final List<KnetBinaryChannel> channels;
-
-  final KnetNetworkType networkType;
-}
+  required final List<KnetBinaryChannel> channels,
+  required final KnetNetworkType networkType,
+});
 
 /// KWIN バイナリの 1 チャンネル分データ
-class KnetBinaryChannel {
-  const new({
-    required this.direction,
-    required this.scaleFactorNumerator,
-    required this.scaleFactorDenominator,
-    required this.rawData,
-  });
-
-  final KnetChannelDirection direction;
+class const KnetBinaryChannel({
+  required final KnetChannelDirection direction,
 
   /// スケール係数の分子
-  final double scaleFactorNumerator;
+  required final double scaleFactorNumerator,
 
   /// スケール係数の分母
-  final double scaleFactorDenominator;
+  required final double scaleFactorDenominator,
 
   /// 生デジタル値列
-  final List<int> rawData;
-
+  required final List<int> rawData,
+}) {
   double get scaleFactor => scaleFactorNumerator / scaleFactorDenominator;
 
   /// 加速度波形 (gal)
@@ -503,8 +484,7 @@ class KnetBinaryChannel {
       rawData.map((v) => v * scaleFactor).toList();
 }
 
-class _SecondBlock {
-  const new({required this.timestamp, required this.channelData});
-  final DateTime timestamp;
-  final List<List<int>> channelData;
-}
+class const _SecondBlock({
+  required final DateTime timestamp,
+  required final List<List<int>> channelData,
+});

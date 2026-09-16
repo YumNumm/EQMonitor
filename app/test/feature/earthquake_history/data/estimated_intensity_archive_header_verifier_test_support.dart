@@ -15,13 +15,10 @@ const estimatedIntensityHeaderTestLimits = PmTilesV3Limits(
   maxTileDecodedBytes: 4096,
 );
 
-final class ControlledEstimatedIntensityArchiveOpener
-    implements EstimatedIntensityArchivePmTilesOpener {
-  const new({this.archive, this.failure});
-
-  final PmTilesV3Archive? archive;
-  final PmTilesV3Exception? failure;
-
+final class const ControlledEstimatedIntensityArchiveOpener({
+  final PmTilesV3Archive? archive,
+  final PmTilesV3Exception? failure,
+}) implements EstimatedIntensityArchivePmTilesOpener {
   @override
   Future<PmTilesV3Archive> open({
     required File file,

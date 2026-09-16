@@ -8,9 +8,7 @@ part 'intensity_history_page_action.g.dart';
 IntensityHistoryPageAction intensityHistoryPageAction(Ref ref) =>
     const IntensityHistoryPageAction();
 
-class IntensityHistoryPageAction {
-  const new();
-
+class const IntensityHistoryPageAction() {
   Future<void> retryMapConfiguration(WidgetRef ref) async {
     try {
       ref.invalidate(mapConfigurationProvider, asReload: true);

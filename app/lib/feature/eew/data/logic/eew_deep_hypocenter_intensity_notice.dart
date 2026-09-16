@@ -7,9 +7,7 @@ part 'eew_deep_hypocenter_intensity_notice.g.dart';
 EewDeepHypocenterIntensityNotice eewDeepHypocenterIntensityNotice(Ref ref) =>
     const EewDeepHypocenterIntensityNotice();
 
-class EewDeepHypocenterIntensityNotice {
-  const new();
-
+class const EewDeepHypocenterIntensityNotice() {
   bool shouldShow({required EewTelegramItem eew}) {
     if (eew.isCanceled || eew.shouldHideMagnitudeAndDepth) {
       return false;

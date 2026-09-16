@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 /// ヒンジと最小表示幅から決まる、履歴ペインの配置。
-class HistoryPaneLayout {
-  const new({required this.available, this.list, this.detail});
-
+class const HistoryPaneLayout({
+  required final Rect available,
+  final Rect? list,
+  final Rect? detail,
+}) {
   factory calculate({
     required Size size,
     required Iterable<Rect> avoidBounds,
@@ -69,8 +71,4 @@ class HistoryPaneLayout {
       detail: detailBounds,
     );
   }
-
-  final Rect available;
-  final Rect? list;
-  final Rect? detail;
 }

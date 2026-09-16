@@ -1,9 +1,7 @@
 part of '../model/estimated_intensity_archive_descriptor.dart';
 
 /// Descriptor URL の authority と content-addressed path を検証する。
-final class EstimatedIntensityArchiveUrlValidator {
-  const new();
-
+final class const EstimatedIntensityArchiveUrlValidator() {
   EstimatedIntensityArchiveFailure? validate({
     required String rawUrl,
     required Uri uri,

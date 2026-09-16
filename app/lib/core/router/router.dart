@@ -171,98 +171,82 @@ class GoRouterRedirectException implements Exception {
 }
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
-class SplashRoute extends GoRouteData with $SplashRoute, MaterialPageMixin {
-  const new();
-
+class const SplashRoute()
+    extends GoRouteData
+    with $SplashRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
-class OnboardingRoute extends GoRouteData
+class const OnboardingRoute()
+    extends GoRouteData
     with $OnboardingRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const OnboardingPage();
 }
 
 @TypedGoRoute<OnboardingWebViewRoute>(path: '/onboarding/web-view')
-class OnboardingWebViewRoute extends GoRouteData
-    with $OnboardingWebViewRoute, MaterialPageMixin {
-  const new({required this.title, required this.url});
-
-  final String title;
-  final String url;
-
+class const OnboardingWebViewRoute({
+  required final String title,
+  required final String url,
+}) extends GoRouteData with $OnboardingWebViewRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       AppWebViewPage(title: title, url: url);
 }
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
-class BetaTestingWarningRoute extends GoRouteData
+class const BetaTestingWarningRoute()
+    extends GoRouteData
     with $BetaTestingWarningRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const BetaTestingWarningPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
-class EarthquakeHistoryRoute extends GoRouteData
+class const EarthquakeHistoryRoute({final EarthquakeHistoryParameter? $extra})
+    extends GoRouteData
     with $EarthquakeHistoryRoute, MaterialPageMixin {
-  const new({this.$extra});
-
-  final EarthquakeHistoryParameter? $extra;
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryPage(initialParameter: $extra);
 }
 
 @TypedGoRoute<EarthquakeHistorySearchRoute>(path: '/earthquake-history/search')
-class EarthquakeHistorySearchRoute extends GoRouteData
+class const EarthquakeHistorySearchRoute({final String query = ''})
+    extends GoRouteData
     with $EarthquakeHistorySearchRoute, MaterialPageMixin {
-  const new({this.query = ''});
-
-  final String query;
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistorySearchPage(key: ValueKey(query), initialQuery: query);
 }
 
 @TypedGoRoute<EewHistoryRoute>(path: '/eew-history')
-class EewHistoryRoute extends GoRouteData
+class const EewHistoryRoute()
+    extends GoRouteData
     with $EewHistoryRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EewHistoryPage();
 }
 
 @TypedGoRoute<SeismicityRoute>(path: '/seismicity')
-class SeismicityRoute extends GoRouteData
+class const SeismicityRoute()
+    extends GoRouteData
     with $SeismicityRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SeismicityPage();
 }
 
 @TypedGoRoute<IntensityHistoryRoute>(path: '/intensity-history')
-class IntensityHistoryRoute extends GoRouteData
-    with $IntensityHistoryRoute, MaterialPageMixin {
-  const new({this.prefectureCode, this.cityCode});
-
-  final String? prefectureCode;
-  final String? cityCode;
-
+class const IntensityHistoryRoute({
+  final String? prefectureCode,
+  final String? cityCode,
+}) extends GoRouteData with $IntensityHistoryRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       IntensityHistoryPage(
@@ -274,12 +258,9 @@ class IntensityHistoryRoute extends GoRouteData
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
   path: '/earthquake-history-details/:eventId',
 )
-class EarthquakeHistoryDetailsRoute extends GoRouteData
+class const EarthquakeHistoryDetailsRoute({required final String eventId})
+    extends GoRouteData
     with $EarthquakeHistoryDetailsRoute, MaterialPageMixin {
-  const new({required this.eventId});
-
-  final String eventId;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EarthquakeHistoryDetailsPage(eventId: eventId);
@@ -287,34 +268,27 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
 }
 
 @TypedGoRoute<EarthquakeActivityRoute>(path: '/earthquake-activity')
-class EarthquakeActivityRoute extends GoRouteData
-    with $EarthquakeActivityRoute, MaterialPageMixin {
-  const new({required this.$extra});
-
-  final EarthquakeActivityQuery $extra;
-
+class const EarthquakeActivityRoute({
+  required final EarthquakeActivityQuery $extra,
+}) extends GoRouteData with $EarthquakeActivityRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeActivityPage(initialQuery: $extra);
 }
 
 @TypedGoRoute<LiveMonitorRoute>(path: '/live-monitor')
-class LiveMonitorRoute extends GoRouteData
+class const LiveMonitorRoute()
+    extends GoRouteData
     with $LiveMonitorRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const LiveMonitorPage();
 }
 
 @TypedGoRoute<TelegramListByEventIdRoute>(path: '/telegram-list/:eventId')
-class TelegramListByEventIdRoute extends GoRouteData
+class const TelegramListByEventIdRoute({required final String eventId})
+    extends GoRouteData
     with $TelegramListByEventIdRoute, MaterialPageMixin {
-  const new({required this.eventId});
-
-  final String eventId;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TelegramListByEventIdPage(eventId: eventId);
@@ -330,9 +304,7 @@ class TelegramListByEventIdRoute extends GoRouteData
     ),
   ],
 )
-class HomeRoute extends GoRouteData with $HomeRoute {
-  const new();
-
+class const HomeRoute() extends GoRouteData with $HomeRoute {
   /// `sheet` パッケージのシートと secondary transition を連携させるため、
   /// [MaterialPageMixin] ではなく [MaterialExtendedPage] を使う。
   @override
@@ -345,19 +317,18 @@ class HomeRoute extends GoRouteData with $HomeRoute {
       );
 }
 
-class HomeMapLayerRoute extends GoRouteData
+class const HomeMapLayerRoute()
+    extends GoRouteData
     with $HomeMapLayerRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const HomeMapLayerPage();
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
-class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
-  const new();
-
+class const TalkerRoute()
+    extends GoRouteData
+    with $TalkerRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
 }
@@ -473,37 +444,33 @@ class TalkerRoute extends GoRouteData with $TalkerRoute, MaterialPageMixin {
     ),
   ],
 )
-class SettingsRoute extends GoRouteData with $SettingsRoute, MaterialPageMixin {
-  const new();
-
+class const SettingsRoute()
+    extends GoRouteData
+    with $SettingsRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SettingsPage();
 }
 
-class DisplayRoute extends GoRouteData with $DisplayRoute, MaterialPageMixin {
-  const new();
-
+class const DisplayRoute()
+    extends GoRouteData
+    with $DisplayRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DisplaySettingsPage();
 }
 
-class ThemeSettingsRoute extends GoRouteData
+class const ThemeSettingsRoute()
+    extends GoRouteData
     with $ThemeSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ThemeSettingsPage();
 }
 
-class ThemeEditorRoute extends GoRouteData
+class const ThemeEditorRoute({required final String mode})
+    extends GoRouteData
     with $ThemeEditorRoute, MaterialPageMixin {
-  const new({required this.mode});
-
-  final String mode;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final brightnessMode = ThemeBrightnessMode.values.firstWhere(
@@ -514,10 +481,9 @@ class ThemeEditorRoute extends GoRouteData
   }
 }
 
-class NotificationSettingsRoute extends GoRouteData
+class const NotificationSettingsRoute()
+    extends GoRouteData
     with $NotificationSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationSettingsPage();
@@ -532,34 +498,30 @@ class HomeWidgetSettingsRoute extends GoRouteData
       const HomeWidgetSettingsPage();
 }
 
-class ShakeDetectionSettingsRoute extends GoRouteData
+class const ShakeDetectionSettingsRoute()
+    extends GoRouteData
     with $ShakeDetectionSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ShakeDetectionSettingsPage();
 }
 
-class NotificationHistoryRoute extends GoRouteData
+class const NotificationHistoryRoute()
+    extends GoRouteData
     with $NotificationHistoryRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DebugNotificationDeliveryLogPage();
 }
 
-class DebugRoute extends GoRouteData with $DebugRoute, MaterialPageMixin {
-  const new();
-
+class const DebugRoute()
+    extends GoRouteData
+    with $DebugRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();
 }
 
-final class DebugMenuRouteGuard {
-  const new();
-
+final class const DebugMenuRouteGuard() {
   static String? redirect({
     required bool isAvailable,
     required String matchedLocation,
@@ -572,37 +534,33 @@ final class DebugMenuRouteGuard {
   }
 }
 
-class DebugAuthRoute extends GoRouteData
+class const DebugAuthRoute()
+    extends GoRouteData
     with $DebugAuthRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DebugAuthPage();
 }
 
-class HttpApiEndpointSelectorRoute extends GoRouteData
+class const HttpApiEndpointSelectorRoute()
+    extends GoRouteData
     with $HttpApiEndpointSelectorRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const HttpApiEndpointSelectorPage();
 }
 
-class EarthquakeHistoryConfigRoute extends GoRouteData
+class const EarthquakeHistoryConfigRoute()
+    extends GoRouteData
     with $EarthquakeHistoryConfigRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryConfigPage();
 }
 
-class TermOfServiceRoute extends GoRouteData
+class const TermOfServiceRoute()
+    extends GoRouteData
     with $TermOfServiceRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AppWebViewPage(
@@ -611,10 +569,9 @@ class TermOfServiceRoute extends GoRouteData
       );
 }
 
-class PrivacyPolicyRoute extends GoRouteData
+class const PrivacyPolicyRoute()
+    extends GoRouteData
     with $PrivacyPolicyRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AppWebViewPage(
@@ -623,466 +580,401 @@ class PrivacyPolicyRoute extends GoRouteData
       );
 }
 
-class LicenseRoute extends GoRouteData with $LicenseRoute, MaterialPageMixin {
-  const new();
-
+class const LicenseRoute()
+    extends GoRouteData
+    with $LicenseRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const LicensePage();
 }
 
-class AboutThisAppRoute extends GoRouteData
+class const AboutThisAppRoute()
+    extends GoRouteData
     with $AboutThisAppRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AboutThisAppPage();
 }
 
-class EewDetailsByEventIdRoute extends GoRouteData
+class const EewDetailsByEventIdRoute({required final String eventId})
+    extends GoRouteData
     with $EewDetailsByEventIdRoute, MaterialPageMixin {
-  const new({required this.eventId});
-
-  final String eventId;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EewDetailsByEventIdPage(eventId: eventId);
   }
 }
 
-class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
+class const KyoshinMonitorAboutObservationNetworkRoute()
+    extends GoRouteData
     with $KyoshinMonitorAboutObservationNetworkRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutObservationNetworkPage();
   }
 }
 
-class KyoshinMonitorDataTypeRoute extends GoRouteData
+class const KyoshinMonitorDataTypeRoute()
+    extends GoRouteData
     with $KyoshinMonitorDataTypeRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorDataTypePage();
   }
 }
 
-class DebugEewCardRoute extends GoRouteData
+class const DebugEewCardRoute()
+    extends GoRouteData
     with $DebugEewCardRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugEewCardPage();
   }
 }
 
-class DebugEarthquakeHistoryCardRoute extends GoRouteData
+class const DebugEarthquakeHistoryCardRoute()
+    extends GoRouteData
     with $DebugEarthquakeHistoryCardRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugEarthquakeHistoryCardPage();
   }
 }
 
-class DebugEarthquakeHistoryListTileRoute extends GoRouteData
+class const DebugEarthquakeHistoryListTileRoute()
+    extends GoRouteData
     with $DebugEarthquakeHistoryListTileRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugEarthquakeHistoryListTilePage();
   }
 }
 
-class DebugShakeDetectionCardRoute extends GoRouteData
+class const DebugShakeDetectionCardRoute()
+    extends GoRouteData
     with $DebugShakeDetectionCardRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionCardPage();
   }
 }
 
-class DebugShakeDetectionInsertRoute extends GoRouteData
+class const DebugShakeDetectionInsertRoute()
+    extends GoRouteData
     with $DebugShakeDetectionInsertRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugShakeDetectionInsertPage();
   }
 }
 
-class DebugJmaMapRoute extends GoRouteData
+class const DebugJmaMapRoute()
+    extends GoRouteData
     with $DebugJmaMapRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugJmaMapPage();
   }
 }
 
-class EqmonitorMapDebugRoute extends GoRouteData
+class const EqmonitorMapDebugRoute()
+    extends GoRouteData
     with $EqmonitorMapDebugRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const EqmonitorMapDebugPage();
   }
 }
 
-class DebugKyoshinMonitorRoute extends GoRouteData
+class const DebugKyoshinMonitorRoute()
+    extends GoRouteData
     with $DebugKyoshinMonitorRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugKyoshinMonitorPage();
   }
 }
 
-class PlaygroundRoute extends GoRouteData
+class const PlaygroundRoute()
+    extends GoRouteData
     with $PlaygroundRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
   }
 }
 
-class DebugWebSocketRoute extends GoRouteData
+class const DebugWebSocketRoute()
+    extends GoRouteData
     with $DebugWebSocketRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugWebSocketPage();
   }
 }
 
-class DebugNotificationDeliveryLogRoute extends GoRouteData
+class const DebugNotificationDeliveryLogRoute()
+    extends GoRouteData
     with $DebugNotificationDeliveryLogRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugNotificationDeliveryLogPage();
   }
 }
 
-class DebugNotificationWebhookRoute extends GoRouteData
+class const DebugNotificationWebhookRoute()
+    extends GoRouteData
     with $DebugNotificationWebhookRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugNotificationWebhookPage();
   }
 }
 
-class DebugDeviceAdminRoute extends GoRouteData
+class const DebugDeviceAdminRoute()
+    extends GoRouteData
     with $DebugDeviceAdminRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugDeviceAdminPage();
   }
 }
 
-class DebugDeviceSettingsRoute extends GoRouteData
+class const DebugDeviceSettingsRoute()
+    extends GoRouteData
     with $DebugDeviceSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugDeviceSettingsPage();
   }
 }
 
-class DebugNavigationRoute extends GoRouteData
+class const DebugNavigationRoute()
+    extends GoRouteData
     with $DebugNavigationRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const NavigationDebugPage();
   }
 }
 
-class DebugAppGroupRoute extends GoRouteData
+class const DebugAppGroupRoute()
+    extends GoRouteData
     with $DebugAppGroupRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugAppGroupPage();
   }
 }
 
-class AssetPackDebugRoute extends GoRouteData
+class const AssetPackDebugRoute()
+    extends GoRouteData
     with $AssetPackDebugRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AssetPackDebugPage();
   }
 }
 
-class DebugSharedPreferencesRoute extends GoRouteData
+class const DebugSharedPreferencesRoute()
+    extends GoRouteData
     with $DebugSharedPreferencesRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugSharedPreferencesPage();
   }
 }
 
-class DebugSecureStorageRoute extends GoRouteData
+class const DebugSecureStorageRoute()
+    extends GoRouteData
     with $DebugSecureStorageRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugSecureStoragePage();
   }
 }
 
-class DebugHttpCacheRoute extends GoRouteData
+class const DebugHttpCacheRoute()
+    extends GoRouteData
     with $DebugHttpCacheRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugHttpCachePage();
   }
 }
 
-class DebugIntensityIconRoute extends GoRouteData
+class const DebugIntensityIconRoute()
+    extends GoRouteData
     with $DebugIntensityIconRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const IntensityIconDebugPage();
   }
 }
 
-class DebugTelemetryRoute extends GoRouteData
+class const DebugTelemetryRoute()
+    extends GoRouteData
     with $DebugTelemetryRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugTelemetryPage();
   }
 }
 
-class DebugTsunamiDetailsRoute extends GoRouteData
+class const DebugTsunamiDetailsRoute()
+    extends GoRouteData
     with $DebugTsunamiDetailsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugTsunamiDetailsPage();
   }
 }
 
-class DebugTsunamiTimelineRoute extends GoRouteData
+class const DebugTsunamiTimelineRoute({required final String tsunamiId})
+    extends GoRouteData
     with $DebugTsunamiTimelineRoute, MaterialPageMixin {
-  const new({required this.tsunamiId});
-
-  final String tsunamiId;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TsunamiTelegramTimelineDebugPage(tsunamiId: tsunamiId);
   }
 }
 
-class NiedRoute extends GoRouteData with $NiedRoute, MaterialPageMixin {
-  const new();
-
+class const NiedRoute() extends GoRouteData with $NiedRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const NiedPage();
   }
 }
 
-class AquaRoute extends GoRouteData with $AquaRoute, MaterialPageMixin {
-  const new();
-
+class const AquaRoute() extends GoRouteData with $AquaRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AquaPage();
   }
 }
 
-class AquaCatalogRoute extends GoRouteData
+class const AquaCatalogRoute()
+    extends GoRouteData
     with $AquaCatalogRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AquaCatalogPage();
   }
 }
 
-class FnetRoute extends GoRouteData with $FnetRoute, MaterialPageMixin {
-  const new();
-
+class const FnetRoute() extends GoRouteData with $FnetRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const FnetPage();
   }
 }
 
-class FnetCatalogRoute extends GoRouteData
+class const FnetCatalogRoute()
+    extends GoRouteData
     with $FnetCatalogRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const FnetCatalogPage();
   }
 }
 
-class KnetWaveformRoute extends GoRouteData
+class const KnetWaveformRoute()
+    extends GoRouteData
     with $KnetWaveformRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const KnetWaveformPage();
 }
 
-class KnetCredentialsSettingsRoute extends GoRouteData
+class const KnetCredentialsSettingsRoute()
+    extends GoRouteData
     with $KnetCredentialsSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const KnetCredentialsSettingsPage();
 }
 
-class KnetMediaRoute extends GoRouteData
-    with $KnetMediaRoute, MaterialPageMixin {
-  const new({required this.$extra});
-
+class const KnetMediaRoute({
   /// 地震発生時刻（JST）
-  final DateTime $extra;
-
+  required final DateTime $extra,
+}) extends GoRouteData with $KnetMediaRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetMediaPage(eventTime: $extra);
 }
 
-class KnetRecordListRoute extends GoRouteData
-    with $KnetRecordListRoute, MaterialPageMixin {
-  const new({required this.$extra});
-
+class const KnetRecordListRoute({
   /// 地震発生時刻（JST）
-  final DateTime $extra;
-
+  required final DateTime $extra,
+}) extends GoRouteData with $KnetRecordListRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetRecordListPage(eventTime: $extra);
 }
 
-class KnetStationWaveformRoute extends GoRouteData
+class const KnetStationWaveformRoute({required final KnetStationResult $extra})
+    extends GoRouteData
     with $KnetStationWaveformRoute, MaterialPageMixin {
-  const new({required this.$extra});
-
-  final KnetStationResult $extra;
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetStationWaveformPage(result: $extra);
 }
 
-class HinetSeismicityRoute extends GoRouteData
+class const HinetSeismicityRoute()
+    extends GoRouteData
     with $HinetSeismicityRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const HinetSeismicityPage();
   }
 }
 
-class KyoshinMonitorAboutRoute extends GoRouteData
+class const KyoshinMonitorAboutRoute()
+    extends GoRouteData
     with $KyoshinMonitorAboutRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutPage();
   }
 }
 
-class ChangelogRoute extends GoRouteData
+class const ChangelogRoute()
+    extends GoRouteData
     with $ChangelogRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ChangelogPage();
 }
 
 @TypedGoRoute<FeedRoute>(path: '/feed')
-class FeedRoute extends GoRouteData with $FeedRoute, MaterialPageMixin {
-  const new();
-
+class const FeedRoute() extends GoRouteData with $FeedRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) => const FeedPage();
 }
 
 @TypedGoRoute<FeedDetailsRoute>(path: '/feed/source/:telegramHash')
-class FeedDetailsRoute extends GoRouteData
+class const FeedDetailsRoute({required final String telegramHash})
+    extends GoRouteData
     with $FeedDetailsRoute, MaterialPageMixin {
-  const new({required this.telegramHash});
-
-  final String telegramHash;
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       FeedDetailsPage(telegramHash: telegramHash);
 }
 
 @TypedGoRoute<FeedItemDetailsRoute>(path: '/feed/detail/:id')
-class FeedItemDetailsRoute extends GoRouteData
-    with $FeedItemDetailsRoute, MaterialPageMixin {
-  const new({required this.id, this.$extra});
-
-  final String id;
-  final FeedItem? $extra;
-
+class const FeedItemDetailsRoute({
+  required final String id,
+  final FeedItem? $extra,
+}) extends GoRouteData with $FeedItemDetailsRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       FeedItemDetailsPage(id: id, item: $extra);
 }
 
 @TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
-class TsunamiDetailsRoute extends GoRouteData
+class const TsunamiDetailsRoute({required final String tsunamiId})
+    extends GoRouteData
     with $TsunamiDetailsRoute, MaterialPageMixin {
-  const new({required this.tsunamiId});
-
-  final String tsunamiId;
-
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TsunamiDetailsPage(tsunamiId: tsunamiId);
@@ -1090,19 +982,18 @@ class TsunamiDetailsRoute extends GoRouteData
 }
 
 @TypedGoRoute<PaywallRoute>(path: '/subscription/paywall')
-class PaywallRoute extends GoRouteData with $PaywallRoute, MaterialPageMixin {
-  const new();
-
+class const PaywallRoute()
+    extends GoRouteData
+    with $PaywallRoute, MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const PaywallPage();
 }
 
 @TypedGoRoute<SubscriptionSettingsRoute>(path: '/subscription/settings')
-class SubscriptionSettingsRoute extends GoRouteData
+class const SubscriptionSettingsRoute()
+    extends GoRouteData
     with $SubscriptionSettingsRoute, MaterialPageMixin {
-  const new();
-
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SubscriptionSettingsPage();

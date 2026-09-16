@@ -59,9 +59,7 @@ Future<ReadDebugAuthJwtExpiry> debugAuthJwtExpiry(Ref ref) async {
 DebugAuthSignInAction debugAuthSignInAction(Ref ref) =>
     const DebugAuthSignInAction();
 
-final class DebugAuthSignInAction {
-  const new();
-
+final class const DebugAuthSignInAction() {
   Future<DebugAuthActionOutcome> execute({
     required Ref ref,
     required DebugAuthPresentationOperationCapability capability,
@@ -139,9 +137,7 @@ DebugAuthPasskeyRegistrationAction debugAuthPasskeyRegistrationAction(
   Ref ref,
 ) => const DebugAuthPasskeyRegistrationAction();
 
-final class DebugAuthPasskeyRegistrationAction {
-  const new();
-
+final class const DebugAuthPasskeyRegistrationAction() {
   Future<DebugAuthActionOutcome> execute({
     required Ref ref,
     required DebugAuthPresentationOperationCapability capability,
@@ -173,9 +169,7 @@ final class DebugAuthPasskeyRegistrationAction {
 DebugAuthJwtRefreshAction debugAuthJwtRefreshAction(Ref ref) =>
     const DebugAuthJwtRefreshAction();
 
-final class DebugAuthJwtRefreshAction {
-  const new();
-
+final class const DebugAuthJwtRefreshAction() {
   Future<DebugAuthActionOutcome> execute({
     required Ref ref,
     required DebugAuthPresentationOperationCapability capability,
@@ -219,9 +213,7 @@ final class DebugAuthJwtRefreshAction {
 DebugAuthUserMeAction debugAuthUserMeAction(Ref ref) =>
     const DebugAuthUserMeAction();
 
-final class DebugAuthUserMeAction {
-  const new();
-
+final class const DebugAuthUserMeAction() {
   Future<DebugAuthActionOutcome> execute({
     required Ref ref,
     required DebugAuthPresentationOperationCapability capability,
@@ -270,9 +262,7 @@ final class DebugAuthUserMeAction {
 DebugAuthSignOutAction debugAuthSignOutAction(Ref ref) =>
     const DebugAuthSignOutAction();
 
-final class DebugAuthSignOutAction {
-  const new();
-
+final class const DebugAuthSignOutAction() {
   Future<DebugAuthActionOutcome> execute({
     required Ref ref,
     required DebugAuthPresentationOperationCapability capability,

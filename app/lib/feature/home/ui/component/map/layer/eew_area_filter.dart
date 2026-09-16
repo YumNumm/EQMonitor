@@ -1,6 +1,4 @@
-class EewAreaFilterBuilder {
-  const new();
-
+class const EewAreaFilterBuilder() {
   static const _emptyFilter = <Object>['==', '1', '2'];
 
   List<Object> build(List<String> codes) {

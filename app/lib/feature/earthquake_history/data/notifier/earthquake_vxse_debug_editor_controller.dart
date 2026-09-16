@@ -19,27 +19,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_vxse_debug_editor_controller.g.dart';
 
-class EarthquakeVxseDebugEditorState {
-  const new({
-    required this.selectedType,
-    required this.applyMode,
-    required this.draft,
-    required this.jsonText,
-    required this.validationError,
-    required this.canApply,
-    this.typedInputValues = const {},
-    this.typedInputErrors = const {},
-  });
-
-  final EarthquakeTelegramType selectedType;
-  final EarthquakeVxseApplyMode applyMode;
-  final EarthquakeVxseDebugDraft draft;
-  final String jsonText;
-  final String? validationError;
-  final bool canApply;
-  final Map<String, String> typedInputValues;
-  final Map<String, String> typedInputErrors;
-
+class const EarthquakeVxseDebugEditorState({
+  required final EarthquakeTelegramType selectedType,
+  required final EarthquakeVxseApplyMode applyMode,
+  required final EarthquakeVxseDebugDraft draft,
+  required final String jsonText,
+  required final String? validationError,
+  required final bool canApply,
+  final Map<String, String> typedInputValues = const {},
+  final Map<String, String> typedInputErrors = const {},
+}) {
   /// バリデーション済みのドラフトから、エラーの無い状態を作る。
   factory valid({
     required EarthquakeTelegramType selectedType,
@@ -83,11 +72,9 @@ class EarthquakeVxseDebugEditorState {
 }
 
 /// Provider identity is the event ID; [current] only bootstraps the session.
-class EarthquakeVxseDebugEditorSession {
-  const new({required this.current});
-
-  final Earthquake current;
-
+class const EarthquakeVxseDebugEditorSession({
+  required final Earthquake current,
+}) {
   @override
   int get hashCode => current.eventId.hashCode;
 

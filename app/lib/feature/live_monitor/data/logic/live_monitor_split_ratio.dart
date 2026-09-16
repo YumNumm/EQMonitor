@@ -4,9 +4,7 @@ import 'package:flutter/widgets.dart';
 typedef LiveMonitorSplitViewportEnvironment = PaneViewportEnvironment;
 typedef LiveMonitorSplitViewportMeasurement = PaneViewportMeasurement;
 
-class LiveMonitorSplitRatioCalculator {
-  const new();
-
+class const LiveMonitorSplitRatioCalculator() {
   double updateRatio({
     required double current,
     required double primaryDelta,

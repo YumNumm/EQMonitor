@@ -16,9 +16,7 @@ part 'earthquake_history_debug_sheet.g.dart';
 EarthquakeHistoryDebugSheetAction earthquakeHistoryDebugSheetAction(Ref ref) =>
     const EarthquakeHistoryDebugSheetAction();
 
-class EarthquakeHistoryDebugSheetAction {
-  const new();
-
+class const EarthquakeHistoryDebugSheetAction() {
   Future<void> show({required BuildContext context, required String eventId}) {
     final size = MediaQuery.sizeOf(context);
     if (size.width >= 840) {

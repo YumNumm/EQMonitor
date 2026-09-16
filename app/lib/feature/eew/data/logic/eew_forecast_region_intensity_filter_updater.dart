@@ -9,14 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_forecast_region_intensity_filter_updater.g.dart';
 
 @Riverpod(keepAlive: true)
-EewForecastRegionIntensityFilterUpdater
-eewForecastRegionIntensityFilterUpdater(Ref ref) =>
-    const EewForecastRegionIntensityFilterUpdater();
+EewForecastRegionIntensityFilterUpdater eewForecastRegionIntensityFilterUpdater(
+  Ref ref,
+) => const EewForecastRegionIntensityFilterUpdater();
 
 /// EEW震度予報区域レイヤーの震度別 fill layer を管理する。
-class EewForecastRegionIntensityFilterUpdater {
-  const new();
-
+class const EewForecastRegionIntensityFilterUpdater() {
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   static const List<JmaIntensity> intensityLevels = [

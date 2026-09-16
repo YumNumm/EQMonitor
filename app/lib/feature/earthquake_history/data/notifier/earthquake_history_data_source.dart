@@ -422,24 +422,19 @@ class EarthquakeHistoryDataSource
   }
 }
 
-sealed class _RealtimeListMutation {
-  const new({required this.sequence});
-
-  final int sequence;
+sealed class const _RealtimeListMutation({required final int sequence}) {
   String get eventId;
 }
 
-final class _RealtimeListUpsert extends _RealtimeListMutation {
-  const new({required super.sequence, required this.record});
-
-  final api.Earthquake record;
+final class const _RealtimeListUpsert({
+  required super.sequence,
+  required final api.Earthquake record,
+}) extends _RealtimeListMutation {
   @override
   String get eventId => record.eventId;
 }
 
-final class _RealtimeListDelete extends _RealtimeListMutation {
-  const new({required super.sequence, required this.eventId});
-
-  @override
-  final String eventId;
-}
+final class const _RealtimeListDelete({
+  required super.sequence,
+  @override required final String eventId,
+}) extends _RealtimeListMutation;

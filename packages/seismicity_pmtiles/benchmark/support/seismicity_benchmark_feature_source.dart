@@ -6,46 +6,26 @@ import 'package:uuid/uuid.dart';
 
 /// One transient deterministic benchmark hypocenter derived from a global
 /// index.
-final class SeismicityBenchmarkFeature {
-  const new({
-    required this.index,
-    required this.hypocenterId,
-    required this.hypocenterIdText,
-    required this.globalX,
-    required this.globalY,
-    required this.longitude,
-    required this.latitude,
-    required this.originTimeUnixMilliseconds,
-    required this.magnitude,
-    required this.depthKm,
-    required this.maxIntensityUtf8,
-    required this.determinationFlagUtf8,
-    required this.earthquakeEventIdUtf8,
-    required this.geometryClamped,
-    required this.expectedPublicBytes,
-  });
-
-  final int index;
-  final Uint8List hypocenterId;
-  final String hypocenterIdText;
-  final int globalX;
-  final int globalY;
-  final double longitude;
-  final double latitude;
-  final int originTimeUnixMilliseconds;
-  final double? magnitude;
-  final double? depthKm;
-  final Uint8List? maxIntensityUtf8;
-  final Uint8List? determinationFlagUtf8;
-  final Uint8List earthquakeEventIdUtf8;
-  final bool? geometryClamped;
-  final int expectedPublicBytes;
-}
+final class const SeismicityBenchmarkFeature({
+  required final int index,
+  required final Uint8List hypocenterId,
+  required final String hypocenterIdText,
+  required final int globalX,
+  required final int globalY,
+  required final double longitude,
+  required final double latitude,
+  required final int originTimeUnixMilliseconds,
+  required final double? magnitude,
+  required final double? depthKm,
+  required final Uint8List? maxIntensityUtf8,
+  required final Uint8List? determinationFlagUtf8,
+  required final Uint8List earthquakeEventIdUtf8,
+  required final bool? geometryClamped,
+  required final int expectedPublicBytes,
+});
 
 /// Stateless index → fixture feature derivation for decoder benchmarks.
-final class SeismicityBenchmarkFeatureSource {
-  const new();
-
+final class const SeismicityBenchmarkFeatureSource() {
   static const dataZoom = 6;
   static const extent = 4096;
   static const int fixedPublicBytesPerRow = 16 + 8 + 8 + 4 + 4 + 8 + 4;

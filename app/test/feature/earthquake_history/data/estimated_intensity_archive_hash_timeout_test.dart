@@ -119,13 +119,10 @@ void main() {
   });
 }
 
-final class PausedEstimatedIntensityArchiveFileLengthReader
-    implements EstimatedIntensityArchiveFileLengthReader {
-  const new({required this.started, required this.release});
-
-  final Completer<void> started;
-  final Completer<int> release;
-
+final class const PausedEstimatedIntensityArchiveFileLengthReader({
+  required final Completer<void> started,
+  required final Completer<int> release,
+}) implements EstimatedIntensityArchiveFileLengthReader {
   @override
   Future<int> read({required File file}) {
     started.complete();

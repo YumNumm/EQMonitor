@@ -5,9 +5,7 @@ import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/polygon_orientation.dart';
 
 /// Polygon境界をX方向に走査し、非隣接辺の接触・交差・重複を拒否する。
-final class PolygonSelfIntersectionValidator {
-  const new();
-
+final class const PolygonSelfIntersectionValidator() {
   int validate({
     required List<Int32List> rings,
     required int maxIntersectionChecks,

@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 
-class CacheMissException implements Exception {
-  const new();
-
+class const CacheMissException() implements Exception {
   @override
   String toString() => 'CacheMissException: No cached response found';
 }

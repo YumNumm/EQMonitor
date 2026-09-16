@@ -30,9 +30,7 @@ final class CanonicalOverlayRecord {
   final Map<String, String> fields;
 }
 
-final class EarthquakeMapOverlayDigestBuilder {
-  const new();
-
+final class const EarthquakeMapOverlayDigestBuilder() {
   String buildDataDigest({
     required List<({String stableId, int intensityOrder})> regions,
     required List<({String stableId, int intensityOrder})> cities,

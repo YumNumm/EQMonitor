@@ -8,9 +8,7 @@ part 'eew_warning_overlay_render_policy.g.dart';
 EewWarningOverlayRenderPolicy eewWarningOverlayRenderPolicy(Ref ref) =>
     const EewWarningOverlayRenderPolicy();
 
-class EewWarningOverlayRenderPolicy {
-  const new();
-
+class const EewWarningOverlayRenderPolicy() {
   bool shouldRender({
     required AppLifecycleState lifecycle,
     required EewWarningOverlayMode mode,

@@ -11,9 +11,7 @@ NotificationPresetSlotsBuilder notificationPresetSlotsBuilder(Ref ref) =>
     const NotificationPresetSlotsBuilder();
 
 /// プリセットごとの通知スロット構成を組み立てる。
-class NotificationPresetSlotsBuilder {
-  const new();
-
+class const NotificationPresetSlotsBuilder() {
   static const _currentLocation = NotificationSlotDraft(
     slotType: NotificationSlotType.currentLocation,
     displayOrder: 0,

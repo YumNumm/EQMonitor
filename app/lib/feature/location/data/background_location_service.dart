@@ -42,9 +42,7 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 /// 反映するコーディネーター。
 ///
 /// [Ref] はコンストラクタではなく各メソッドの引数として受け取る。
-class BackgroundLocationSyncCoordinator {
-  const new();
-
+class const BackgroundLocationSyncCoordinator() {
   Future<void> ensureMonitoring(Ref ref) async {
     try {
       final List<NotificationSlot>? slots = await (() async {

@@ -81,12 +81,10 @@ class ReplayDataParser {
   static Uint8List get magicHeader => Uint8List.fromList(utf8.encode('EQRP'));
 }
 
-class ReplayFile {
-  const new({required this.header, required this.data});
-
-  final ReplayFileHeader header;
-  final List<ReplayData> data;
-
+class const ReplayFile({
+  required final ReplayFileHeader header,
+  required final List<ReplayData> data,
+}) {
   @override
   String toString() => 'ReplayFile(header: $header, data: ${data.join(', ')})';
 }

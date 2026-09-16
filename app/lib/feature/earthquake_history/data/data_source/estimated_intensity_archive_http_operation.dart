@@ -1,18 +1,11 @@
 import 'dart:io';
 
-final class EstimatedIntensityArchiveHttpResponse {
-  const new({
-    required this.statusCode,
-    required this.contentEncodings,
-    required this.contentLength,
-    required this.body,
-  });
-
-  final int statusCode;
-  final List<String> contentEncodings;
-  final int contentLength;
-  final Stream<List<int>> body;
-
+final class const EstimatedIntensityArchiveHttpResponse({
+  required final int statusCode,
+  required final List<String> contentEncodings,
+  required final int contentLength,
+  required final Stream<List<int>> body,
+}) {
   @override
   String toString() =>
       'EstimatedIntensityArchiveHttpResponse('
@@ -35,9 +28,7 @@ abstract interface class EstimatedIntensityArchiveHttpOperation {
 typedef EstimatedIntensityArchiveHttpOperationCreator =
     EstimatedIntensityArchiveHttpOperation Function();
 
-final class EstimatedIntensityArchiveHttpOperationFactory {
-  const new();
-
+final class const EstimatedIntensityArchiveHttpOperationFactory() {
   static EstimatedIntensityArchiveHttpOperation create() =>
       DartIoEstimatedIntensityArchiveHttpOperation(client: HttpClient());
 }

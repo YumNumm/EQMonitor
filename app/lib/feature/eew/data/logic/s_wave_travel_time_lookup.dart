@@ -7,9 +7,7 @@ part 's_wave_travel_time_lookup.g.dart';
 SWaveTravelTimeLookup sWaveTravelTimeLookup(Ref ref) =>
     const SWaveTravelTimeLookup();
 
-class SWaveTravelTimeLookup {
-  const new();
-
+class const SWaveTravelTimeLookup() {
   /// 深さ別テーブルを一度だけ準備し、複数の震央距離に対するS波走時を返す。
   List<double?> lookupAll({
     required TravelTimeTables tables,

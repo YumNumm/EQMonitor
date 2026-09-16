@@ -5,15 +5,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 ///
 /// 同じ項目を再タップすると昇順/降順を入れ替え、別項目を選ぶと
 /// その項目の初期順（深さは昇順、それ以外は降順）にする。
-class EarthquakeSortSelection {
-  const new({
-    required this.sortBy,
-    required this.sortOrder,
-  });
-
-  final EarthquakeSortBy sortBy;
-  final SortOrder sortOrder;
-
+class const EarthquakeSortSelection({
+  required final EarthquakeSortBy sortBy,
+  required final SortOrder sortOrder,
+}) {
   EarthquakeSortSelection selecting(EarthquakeSortBy value) {
     if (sortBy == value) {
       return EarthquakeSortSelection(

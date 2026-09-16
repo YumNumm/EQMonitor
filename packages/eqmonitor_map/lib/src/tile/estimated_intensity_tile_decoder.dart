@@ -18,9 +18,7 @@ export 'estimated_intensity_tile_decode_limits.dart';
 
 const estimatedIntensitySourceLayerName = 'seismic_intensity';
 
-final class EstimatedIntensityTileDecoder {
-  const new();
-
+final class const EstimatedIntensityTileDecoder() {
   Future<EstimatedIntensityTileGeometry> decode({
     required Uint8List tileBytes,
     required EstimatedIntensityTileDecodeLimits limits,

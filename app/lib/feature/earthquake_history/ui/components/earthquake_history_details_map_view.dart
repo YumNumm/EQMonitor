@@ -79,9 +79,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
 }
 
 /// 地震履歴地図画面でデバッグ操作を表示するか判定する。
-class EarthquakeHistoryDebuggerVisibility {
-  const new();
-
+class const EarthquakeHistoryDebuggerVisibility() {
   bool shouldShow({
     required bool isDebugBuild,
     required AsyncValue<bool> debugPreference,

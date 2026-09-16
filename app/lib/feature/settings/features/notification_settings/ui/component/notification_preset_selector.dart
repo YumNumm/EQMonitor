@@ -555,9 +555,7 @@ class _CriticalAlertWarningLink extends HookWidget {
 }
 
 /// [NotificationPreset] の表示ラベルを組み立てる。
-class _NotificationPresetLabel {
-  const new();
-
+class const _NotificationPresetLabel() {
   String title(NotificationPreset preset) => switch (preset) {
     NotificationPreset.recommended => '推奨設定',
     NotificationPreset.all => 'すべて',

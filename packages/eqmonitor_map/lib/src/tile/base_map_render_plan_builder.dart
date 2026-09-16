@@ -5,30 +5,18 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
-final class BaseMapTileTransformInput {
-  const new({
-    required this.tileId,
-    required this.zoom,
-    required this.extent,
-  });
-
-  final UnwrappedTileId tileId;
-  final double zoom;
-  final int extent;
-}
+final class const BaseMapTileTransformInput({
+  required final UnwrappedTileId tileId,
+  required final double zoom,
+  required final int extent,
+});
 
 @immutable
-final class BaseMapLayerRenderPlan {
-  const new({
-    required this.tileGeometry,
-    required this.layerGeometry,
-    required this.transformInput,
-  });
-
-  final BaseMapTileGeometry tileGeometry;
-  final BaseMapTileLayerGeometry layerGeometry;
-  final BaseMapTileTransformInput transformInput;
-}
+final class const BaseMapLayerRenderPlan({
+  required final BaseMapTileGeometry tileGeometry,
+  required final BaseMapTileLayerGeometry layerGeometry,
+  required final BaseMapTileTransformInput transformInput,
+});
 
 List<BaseMapLayerRenderPlan> buildBaseMapRenderPlans({
   required List<OverscaledTileId> requestedCover,
@@ -49,9 +37,7 @@ List<BaseMapLayerRenderPlan> buildBaseMapRenderPlans({
   );
 }
 
-final class _BaseMapRenderPlanBuilder {
-  const new();
-
+final class const _BaseMapRenderPlanBuilder() {
   List<BaseMapLayerRenderPlan> build({
     required List<BaseMapRenderTile> renderTiles,
     required double zoom,

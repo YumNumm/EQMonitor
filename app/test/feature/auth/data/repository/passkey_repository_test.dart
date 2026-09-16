@@ -1538,31 +1538,18 @@ final class _CrossAppleAuthGateway implements AppleAuthGateway {
   }
 }
 
-final class _PasskeyFixture {
-  const new({
-    required this.repository,
-    required this.apiClient,
-    required this.sessionRepository,
-    required this.adapter,
-    required this.authenticator,
-    required this.attemptCoordinator,
-    required this.acceptSignInStarted,
-    required this.acceptSignInCallsReader,
-    required this.invalidationCallsReader,
-    required this.hasAcceptedSessionReader,
-  });
-
-  final PasskeyRepository repository;
-  final BetterAuthApiClient apiClient;
-  final BetterAuthSessionRepository sessionRepository;
-  final _PasskeyHttpAdapter adapter;
-  final _FakePasskeyAuthenticator authenticator;
-  final NativeAuthAttemptCoordinator attemptCoordinator;
-  final Completer<void> acceptSignInStarted;
-  final int Function() acceptSignInCallsReader;
-  final int Function() invalidationCallsReader;
-  final bool Function() hasAcceptedSessionReader;
-
+final class const _PasskeyFixture({
+  required final PasskeyRepository repository,
+  required final BetterAuthApiClient apiClient,
+  required final BetterAuthSessionRepository sessionRepository,
+  required final _PasskeyHttpAdapter adapter,
+  required final _FakePasskeyAuthenticator authenticator,
+  required final NativeAuthAttemptCoordinator attemptCoordinator,
+  required final Completer<void> acceptSignInStarted,
+  required final int Function() acceptSignInCallsReader,
+  required final int Function() invalidationCallsReader,
+  required final bool Function() hasAcceptedSessionReader,
+}) {
   int get acceptSignInCalls => acceptSignInCallsReader();
   int get invalidationCalls => invalidationCallsReader();
   bool get hasAcceptedSession => hasAcceptedSessionReader();

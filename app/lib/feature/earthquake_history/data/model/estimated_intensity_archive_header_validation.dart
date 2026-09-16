@@ -11,28 +11,20 @@ enum EstimatedIntensityArchiveHeaderFailure {
   closeFailure,
 }
 
-sealed class EstimatedIntensityArchiveHeaderValidationResult {
-  const new();
-}
+sealed class const EstimatedIntensityArchiveHeaderValidationResult();
 
-final class EstimatedIntensityArchiveHeaderAccepted
-    extends EstimatedIntensityArchiveHeaderValidationResult {
-  const new(this.header);
-
-  final PmTilesV3Header header;
-
+final class const EstimatedIntensityArchiveHeaderAccepted(
+  final PmTilesV3Header header,
+) extends EstimatedIntensityArchiveHeaderValidationResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveHeaderValidationResult.accepted('
       'zoom: ${header.minZoom}-${header.maxZoom})';
 }
 
-final class EstimatedIntensityArchiveHeaderRejected
-    extends EstimatedIntensityArchiveHeaderValidationResult {
-  const new(this.failure);
-
-  final EstimatedIntensityArchiveHeaderFailure failure;
-
+final class const EstimatedIntensityArchiveHeaderRejected(
+  final EstimatedIntensityArchiveHeaderFailure failure,
+) extends EstimatedIntensityArchiveHeaderValidationResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveHeaderValidationResult.rejected('

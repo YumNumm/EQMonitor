@@ -120,19 +120,12 @@ final class _CountingArchive implements SeismicityPmTilesArchive {
   }
 }
 
-final class _Task62BuiltArchive {
-  const new({
-    required this.bytes,
-    required this.descriptor,
-    required this.validTileId,
-    required this.malformedTileId,
-  });
-
-  final Uint8List bytes;
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-  final int validTileId;
-  final int malformedTileId;
-}
+final class const _Task62BuiltArchive({
+  required final Uint8List bytes,
+  required final SeismicityPmTilesArchiveDescriptor descriptor,
+  required final int validTileId,
+  required final int malformedTileId,
+});
 
 final class _Task62Fixtures {
   final tileId = const PmTilesV3TileId();

@@ -15,23 +15,14 @@ typedef ResolveBundledAssetPackRoot = Future<String> Function();
 
 enum AssetPackSourceKind { bundled, downloaded }
 
-class AssetPackSource {
-  const new({
-    required this.kind,
-    required this.rootDirectory,
-    required this.version,
-  });
+class const AssetPackSource({
+  required final AssetPackSourceKind kind,
+  required final Directory rootDirectory,
+  required final String? version,
+});
 
-  final AssetPackSourceKind kind;
-  final Directory rootDirectory;
-  final String? version;
-}
-
-class AssetPackStorageException implements Exception {
-  const new(this.message);
-
-  final String message;
-
+class const AssetPackStorageException(final String message)
+    implements Exception {
   @override
   String toString() => 'AssetPackStorageException: $message';
 }

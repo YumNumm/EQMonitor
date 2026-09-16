@@ -167,9 +167,7 @@ class _EntriesList extends ConsumerWidget {
 
 /// SharedPreferences / AppGroup Preferences のエントリ値をデバッグ表示用の
 /// 文字列へ変換する。
-class _DebugPreferenceValueFormatter {
-  const new();
-
+class const _DebugPreferenceValueFormatter() {
   String typeName(Object? value) => switch (value) {
     bool() => 'bool',
     int() => 'int',
@@ -188,9 +186,7 @@ _DebugPreferencesEditorAction _debugPreferencesEditorAction(Ref ref) =>
 
 /// デバッグ画面から SharedPreferences / AppGroup Preferences の
 /// 読み書き・削除・編集ダイアログ表示を行う。
-class _DebugPreferencesEditorAction {
-  const new();
-
+class const _DebugPreferencesEditorAction() {
   Future<void> remove(WidgetRef ref, _StoreKind kind, String key) async {
     switch (kind) {
       case _StoreKind.shared:

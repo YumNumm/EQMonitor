@@ -1,6 +1,4 @@
-sealed class NotificationDeepLink {
-  const new();
-
+sealed class const NotificationDeepLink() {
   static const _internalScheme = 'eqmonitor';
   // 通知(link)とOSディープリンク(app_links)は意図的に同一の許可リストを共用する。
   // 流入経路によって開ける画面が変わると契約が二重化するため。
@@ -54,14 +52,8 @@ sealed class NotificationDeepLink {
   }
 }
 
-class NotificationRouteLink extends NotificationDeepLink {
-  const new({required this.location});
+class const NotificationRouteLink({required final String location})
+    extends NotificationDeepLink;
 
-  final String location;
-}
-
-class NotificationUrlLink extends NotificationDeepLink {
-  const new({required this.uri});
-
-  final Uri uri;
-}
+class const NotificationUrlLink({required final Uri uri})
+    extends NotificationDeepLink;

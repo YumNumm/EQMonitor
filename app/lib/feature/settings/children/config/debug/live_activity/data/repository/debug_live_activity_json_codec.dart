@@ -10,9 +10,7 @@ DebugLiveActivityJsonCodec debugLiveActivityJsonCodec(Ref ref) =>
     const DebugLiveActivityJsonCodec();
 
 /// ContentState の `Map` と、UI で編集する JSON 文字列を相互変換する。
-class DebugLiveActivityJsonCodec {
-  const new();
-
+class const DebugLiveActivityJsonCodec() {
   /// 人間が編集しやすいようインデント付きで整形する。
   String encode(Map<String, dynamic> contentState) =>
       const JsonEncoder.withIndent('  ').convert(contentState);

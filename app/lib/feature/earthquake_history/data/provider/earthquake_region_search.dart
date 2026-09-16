@@ -9,9 +9,7 @@ part 'earthquake_region_search.g.dart';
 EarthquakeRegionSearch earthquakeRegionSearch(Ref ref) =>
     const EarthquakeRegionSearch();
 
-class EarthquakeRegionSearch {
-  const new();
-
+class const EarthquakeRegionSearch() {
   List<EarthquakeHistorySearchResult> search({
     required EarthquakeParameter parameter,
     required String query,

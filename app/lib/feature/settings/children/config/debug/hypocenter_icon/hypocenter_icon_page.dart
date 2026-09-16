@@ -273,11 +273,8 @@ class _IconLabel extends StatelessWidget {
   }
 }
 
-class _HypocenterPainter extends CustomPainter {
-  const new({required this.type});
-
-  final HypocenterType type;
-
+class const _HypocenterPainter({required final HypocenterType type})
+    extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final offset = Offset(size.width / 2, size.height / 2);

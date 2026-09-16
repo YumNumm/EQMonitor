@@ -19,9 +19,7 @@ part 'error_details_sheet.g.dart';
 ErrorDetailsSheetAction errorDetailsSheetAction(Ref ref) =>
     const ErrorDetailsSheetAction();
 
-class ErrorDetailsSheetAction {
-  const new();
-
+class const ErrorDetailsSheetAction() {
   Future<void> show(
     BuildContext context, {
     required Object error,

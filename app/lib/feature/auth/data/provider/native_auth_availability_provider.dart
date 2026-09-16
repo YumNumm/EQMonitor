@@ -9,19 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'native_auth_availability_provider.g.dart';
 
-final class NativeAuthAvailability {
-  const new({
-    required this.environmentCompatible,
-    required this.googleAvailable,
-    required this.appleAvailable,
-    required this.passkeyAvailable,
-  });
-
-  final bool environmentCompatible;
-  final bool googleAvailable;
-  final bool appleAvailable;
-  final bool passkeyAvailable;
-
+final class const NativeAuthAvailability({
+  required final bool environmentCompatible,
+  required final bool googleAvailable,
+  required final bool appleAvailable,
+  required final bool passkeyAvailable,
+}) {
   NativeAuthActionAvailability actions({
     required bool isSessionReady,
     required bool isAuthenticated,
@@ -45,25 +38,15 @@ final class NativeAuthAvailability {
   }
 }
 
-final class NativeAuthActionAvailability {
-  const new({
-    required this.googleSignIn,
-    required this.appleSignIn,
-    required this.passkeySignIn,
-    required this.passkeyRegistration,
-    required this.jwtRefresh,
-    required this.userMeVerification,
-    required this.signOut,
-  });
-
-  final bool googleSignIn;
-  final bool appleSignIn;
-  final bool passkeySignIn;
-  final bool passkeyRegistration;
-  final bool jwtRefresh;
-  final bool userMeVerification;
-  final bool signOut;
-
+final class const NativeAuthActionAvailability({
+  required final bool googleSignIn,
+  required final bool appleSignIn,
+  required final bool passkeySignIn,
+  required final bool passkeyRegistration,
+  required final bool jwtRefresh,
+  required final bool userMeVerification,
+  required final bool signOut,
+}) {
   bool get allDisabled =>
       !googleSignIn &&
       !appleSignIn &&
@@ -74,9 +57,7 @@ final class NativeAuthActionAvailability {
       !signOut;
 }
 
-final class NativeAuthAvailabilityEvaluator {
-  const new();
-
+final class const NativeAuthAvailabilityEvaluator() {
   NativeAuthAvailability evaluate({
     required BuildConfig buildConfig,
     required bool environmentCompatible,

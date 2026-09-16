@@ -45,9 +45,7 @@ OpenContactAction openContact(Ref ref) => const OpenContactAction();
 
 /// 問い合わせページを開く。呼び出し側は `open(ref, context)` のように
 /// 関数として扱える([call]による callable object)。
-class OpenContactAction {
-  const new();
-
+class const OpenContactAction() {
   Future<void> call(WidgetRef ref, BuildContext context) async {
     try {
       final url = await ref.read(contactUrlProvider.future);

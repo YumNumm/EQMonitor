@@ -26,9 +26,7 @@ MvtTile decodeMvtTile(Uint8List bytes, {required MvtDecodeLimits limits}) {
   return const MvtDecoder().decode(bytes: bytes, limits: limits);
 }
 
-final class MvtDecoder {
-  const new();
-
+final class const MvtDecoder() {
   static const _layerFieldNumber = 3;
 
   MvtTile decode({required Uint8List bytes, required MvtDecodeLimits limits}) {
@@ -57,9 +55,7 @@ final class MvtDecoder {
   }
 }
 
-final class _MvtLayerDecoder {
-  const new();
-
+final class const _MvtLayerDecoder() {
   static const _nameFieldNumber = 1;
   static const _featuresFieldNumber = 2;
   static const _keysFieldNumber = 3;
@@ -184,9 +180,7 @@ final class _MvtLayerDecoder {
   }
 }
 
-final class _MvtFeatureDecoder {
-  const new();
-
+final class const _MvtFeatureDecoder() {
   static const _tagsFieldNumber = 2;
   static const _typeFieldNumber = 3;
   static const _geometryFieldNumber = 4;
@@ -292,9 +286,7 @@ final class _MvtFeatureDecoder {
   }
 }
 
-final class _MvtValueDecoder {
-  const new();
-
+final class const _MvtValueDecoder() {
   String? decode({required Uint8List bytes, required MvtDecodeLimits limits}) {
     final reader = _ProtoReader(bytes);
     var fieldCount = 0;
@@ -365,9 +357,7 @@ final class _CommandBudget {
   }
 }
 
-final class _MvtGeometryDecoder {
-  const new();
-
+final class const _MvtGeometryDecoder() {
   List<Int32List> decode({
     required List<int> rawCommands,
     required MvtGeometryType type,
