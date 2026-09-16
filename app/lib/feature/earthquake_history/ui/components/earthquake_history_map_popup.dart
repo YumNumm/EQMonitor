@@ -7,11 +7,13 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final earthquakeHistoryMapPopupActionProvider = Provider(
-  (ref) => const EarthquakeHistoryMapPopupAction(),
-);
+part 'earthquake_history_map_popup.g.dart';
+
+@Riverpod(keepAlive: true)
+EarthquakeHistoryMapPopupAction earthquakeHistoryMapPopupAction(Ref ref) =>
+    const EarthquakeHistoryMapPopupAction();
 
 /// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
 class EarthquakeHistoryMapPopupAction {

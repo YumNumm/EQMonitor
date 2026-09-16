@@ -5,10 +5,13 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final completeOnboardingFlowProvider = Provider<CompleteOnboardingFlow>(
-  (ref) => const CompleteOnboardingFlow(),
-);
+part 'complete_onboarding_flow.g.dart';
+
+@Riverpod(keepAlive: true)
+CompleteOnboardingFlow completeOnboardingFlow(Ref ref) =>
+    const CompleteOnboardingFlow();
 
 /// オンボーディング完了時の一連の処理をまとめる Flow。
 ///

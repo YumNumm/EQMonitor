@@ -8,10 +8,13 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthqu
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final earthquakeHistoryDebugSheetActionProvider = Provider(
-  (ref) => const EarthquakeHistoryDebugSheetAction(),
-);
+part 'earthquake_history_debug_sheet.g.dart';
+
+@Riverpod(keepAlive: true)
+EarthquakeHistoryDebugSheetAction earthquakeHistoryDebugSheetAction(Ref ref) =>
+    const EarthquakeHistoryDebugSheetAction();
 
 class EarthquakeHistoryDebugSheetAction {
   const new();

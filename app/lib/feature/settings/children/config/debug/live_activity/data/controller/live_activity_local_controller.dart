@@ -3,15 +3,17 @@ import 'dart:io';
 
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_kind.dart';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final liveActivityLocalControllerProvider =
-    Provider<LiveActivityLocalController>((ref) {
-      if (Platform.isIOS) {
-        return const MethodChannelLiveActivityLocalController();
-      }
-      return const UnsupportedLiveActivityLocalController();
-    });
+part 'live_activity_local_controller.g.dart';
+
+@Riverpod(keepAlive: true)
+LiveActivityLocalController liveActivityLocalController(Ref ref) {
+  if (Platform.isIOS) {
+    return const MethodChannelLiveActivityLocalController();
+  }
+  return const UnsupportedLiveActivityLocalController();
+}
 
 /// アプリ内から ActivityKit を用いて Live Activity をローカル開始・更新・終了する。
 ///

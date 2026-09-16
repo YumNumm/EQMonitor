@@ -4,12 +4,13 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final debugLiveActivityContentBuilderProvider =
-    Provider<DebugLiveActivityContentBuilder>(
-      (ref) => const DebugLiveActivityContentBuilder(),
-    );
+part 'debug_live_activity_content_builder.g.dart';
+
+@Riverpod(keepAlive: true)
+DebugLiveActivityContentBuilder debugLiveActivityContentBuilder(Ref ref) =>
+    const DebugLiveActivityContentBuilder();
 
 /// Live Activity の ContentState (`Map<String, dynamic>`) を組み立てる。
 ///

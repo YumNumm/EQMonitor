@@ -9,6 +9,9 @@ import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferen
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'debug_shared_preferences_page.g.dart';
 
 /// 編集対象のストア種別。sync/async 双方のAPI差異をこの層で吸収する。
 enum _StoreKind { shared, appGroup }
@@ -179,9 +182,9 @@ class _DebugPreferenceValueFormatter {
   String preview(Object? value) => '${typeName(value)}: $value';
 }
 
-final _debugPreferencesEditorActionProvider = Provider(
-  (ref) => const _DebugPreferencesEditorAction(),
-);
+@Riverpod(keepAlive: true)
+_DebugPreferencesEditorAction _debugPreferencesEditorAction(Ref ref) =>
+    const _DebugPreferencesEditorAction();
 
 /// デバッグ画面から SharedPreferences / AppGroup Preferences の
 /// 読み書き・削除・編集ダイアログ表示を行う。

@@ -5,10 +5,13 @@ import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/d
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_json_codec.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final debugLiveActivityActionProvider = Provider<DebugLiveActivityAction>(
-  (ref) => const DebugLiveActivityAction(),
-);
+part 'debug_live_activity_action.g.dart';
+
+@Riverpod(keepAlive: true)
+DebugLiveActivityAction debugLiveActivityAction(Ref ref) =>
+    const DebugLiveActivityAction();
 
 /// Live Activity デバッグ画面のイベントハンドラ。
 ///

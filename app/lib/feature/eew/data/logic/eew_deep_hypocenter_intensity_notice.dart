@@ -1,9 +1,11 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final eewDeepHypocenterIntensityNoticeProvider = Provider(
-  (ref) => const EewDeepHypocenterIntensityNotice(),
-);
+part 'eew_deep_hypocenter_intensity_notice.g.dart';
+
+@Riverpod(keepAlive: true)
+EewDeepHypocenterIntensityNotice eewDeepHypocenterIntensityNotice(Ref ref) =>
+    const EewDeepHypocenterIntensityNotice();
 
 class EewDeepHypocenterIntensityNotice {
   const new();
