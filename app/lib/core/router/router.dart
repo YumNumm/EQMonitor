@@ -1,5 +1,3 @@
-import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
-
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
@@ -9,16 +7,18 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/material_page_mixin.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
+import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_activity_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/eew_history/ui/eew_history_page.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
@@ -26,7 +26,6 @@ import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_item_details_page.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
-import 'package:eqmonitor/feature/auth/ui/page/debug_auth_page.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
@@ -56,10 +55,10 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
@@ -91,8 +90,8 @@ import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -105,20 +104,23 @@ GoRouter goRouter(Ref ref) => GoRouter(
   navigatorKey: App.navigatorKey,
   initialLocation: const SplashRoute().location,
   redirect: (context, state) {
-    if (state.matchedLocation == '/splash') {
+    if (state.matchedLocation == SplashRoute().location) {
       return null;
     }
 
     final buildConfig = ref.read(buildConfigProvider);
+    final isDebugMenuAvailable = ref.read(isDebugMenuAvailableProvider);
     final debugRouteRedirect = DebugMenuRouteGuard.redirect(
-      isAvailable: ref.read(isDebugMenuAvailableProvider),
+      isAvailable: isDebugMenuAvailable,
       matchedLocation: state.matchedLocation,
     );
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
     }
     if (!buildConfig.isProFeaturesEnabled &&
-        state.matchedLocation.startsWith('/subscription')) {
+        state.matchedLocation.startsWith(
+          const SubscriptionSettingsRoute().location,
+        )) {
       return const HomeRoute().location;
     }
     if (!buildConfig.isShakeDetectionEnabled &&
