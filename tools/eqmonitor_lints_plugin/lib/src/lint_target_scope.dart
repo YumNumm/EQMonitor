@@ -3,8 +3,7 @@
 /// テストコードは本番コードと設計上の要求が異なるため、
 /// 自作ルールの適用対象外とする（標準 lint は従来どおり適用される）。
 ///
-/// このクラスは `tools/eqmonitor_custom_lints` にも同一内容で複製されている。
-/// 判定ロジックを変更する場合は両方を同時に更新すること。
+/// build_runner 等が生成したコードも、人手で直せないため対象外とする。
 class LintTargetScope {
   const new _();
 
@@ -12,6 +11,16 @@ class LintTargetScope {
     'test',
     'integration_test',
     'test_driver',
+  };
+
+  static const _generatedFileSuffixes = {
+    '.g.dart',
+    '.freezed.dart',
+    '.gen.dart',
+    '.gr.dart',
+    '.mocks.dart',
+    '.tailor.dart',
+    '.config.dart',
   };
 
   /// [path] がテストコードなら `true`。
@@ -34,5 +43,11 @@ class LintTargetScope {
       }
     }
     return false;
+  }
+
+  /// [path] が build_runner 等による生成コードなら `true`。
+  static bool isGenerated({required String path}) {
+    final fileName = path.replaceAll(r'\', '/').split('/').last;
+    return _generatedFileSuffixes.any(fileName.endsWith);
   }
 }
