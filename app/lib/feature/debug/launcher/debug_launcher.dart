@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -32,7 +31,8 @@ class GoRouterCurrentLocationResolver {
 
 /// 端末シェイクまたは Shift+D でデバッグページを開くラッパー。
 ///
-/// kDebugMode / Beta ビルドでのみ有効化することを想定。
+/// 有効かどうかの判定は [isDebugMenuAvailableProvider] に委譲する
+/// (kDebugMode / BETA ビルド / デバッグモード ON / ADMIN ロール)。
 class DebugLauncher extends HookConsumerWidget {
   const new({required this.child, super.key});
 
@@ -50,26 +50,12 @@ class DebugLauncher extends HookConsumerWidget {
     final lastOpen = useRef(DateTime.fromMillisecondsSinceEpoch(0));
 
     useEffect(() {
-      bool isLauncherEnabled() {
-        if (kDebugMode) {
-          return true;
-        }
-        final buildCfg = ref.read(buildConfigProvider);
-        if (!buildCfg.isDeveloperUiEnabled) {
-          return false;
-        }
-        if (buildCfg.isBetaTesting) {
-          return true;
-        }
-        return ref.read(debugProvider).value ?? false;
-      }
-
       void openDebugPage() {
         final now = DateTime.now();
         if (now.difference(lastOpen.value) < openCooldown) {
           return;
         }
-        if (!isLauncherEnabled()) {
+        if (!ref.read(isDebugMenuAvailableProvider)) {
           return;
         }
         lastOpen.value = now;

@@ -25,7 +25,13 @@ mixin _$MvtDecodeLimits {
 /// 前に打ち切るための早期チェックとして働く。
  int get maxCommandsPerFeature;/// layer名のUTF-8 byte長の上限。length-delimitedフィールドの長さを
 /// 読んだ直後、文字列本体を読み出す前に検証する。
- int get maxLayerNameBytes;
+ int get maxLayerNameBytes;/// 1つのlayerが持てるproperty key tableの要素数上限。
+ int get maxKeysPerLayer;/// 1つのlayerが持てるproperty value tableの要素数上限。
+ int get maxValuesPerLayer;/// 1つのfeatureが持てるtag整数の個数上限。tagはkey/value indexの対なので、
+/// 偶数であることもdecoderが検証する。
+ int get maxTagsPerFeature;/// property stringのUTF-8 byte長上限。payloadをviewとして切り出す前に
+/// protobuf lengthを検査する。
+ int get maxPropertyStringBytes;
 /// Create a copy of MvtDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -36,16 +42,16 @@ $MvtDecodeLimitsCopyWith<MvtDecodeLimits> get copyWith => _$MvtDecodeLimitsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MvtDecodeLimits&&(identical(other.maxLayers, maxLayers) || other.maxLayers == maxLayers)&&(identical(other.maxFeaturesPerLayer, maxFeaturesPerLayer) || other.maxFeaturesPerLayer == maxFeaturesPerLayer)&&(identical(other.maxRingsPerFeature, maxRingsPerFeature) || other.maxRingsPerFeature == maxRingsPerFeature)&&(identical(other.maxVerticesPerRing, maxVerticesPerRing) || other.maxVerticesPerRing == maxVerticesPerRing)&&(identical(other.maxCommandsPerFeature, maxCommandsPerFeature) || other.maxCommandsPerFeature == maxCommandsPerFeature)&&(identical(other.maxLayerNameBytes, maxLayerNameBytes) || other.maxLayerNameBytes == maxLayerNameBytes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MvtDecodeLimits&&(identical(other.maxLayers, maxLayers) || other.maxLayers == maxLayers)&&(identical(other.maxFeaturesPerLayer, maxFeaturesPerLayer) || other.maxFeaturesPerLayer == maxFeaturesPerLayer)&&(identical(other.maxRingsPerFeature, maxRingsPerFeature) || other.maxRingsPerFeature == maxRingsPerFeature)&&(identical(other.maxVerticesPerRing, maxVerticesPerRing) || other.maxVerticesPerRing == maxVerticesPerRing)&&(identical(other.maxCommandsPerFeature, maxCommandsPerFeature) || other.maxCommandsPerFeature == maxCommandsPerFeature)&&(identical(other.maxLayerNameBytes, maxLayerNameBytes) || other.maxLayerNameBytes == maxLayerNameBytes)&&(identical(other.maxKeysPerLayer, maxKeysPerLayer) || other.maxKeysPerLayer == maxKeysPerLayer)&&(identical(other.maxValuesPerLayer, maxValuesPerLayer) || other.maxValuesPerLayer == maxValuesPerLayer)&&(identical(other.maxTagsPerFeature, maxTagsPerFeature) || other.maxTagsPerFeature == maxTagsPerFeature)&&(identical(other.maxPropertyStringBytes, maxPropertyStringBytes) || other.maxPropertyStringBytes == maxPropertyStringBytes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxLayers,maxFeaturesPerLayer,maxRingsPerFeature,maxVerticesPerRing,maxCommandsPerFeature,maxLayerNameBytes);
+int get hashCode => Object.hash(runtimeType,maxLayers,maxFeaturesPerLayer,maxRingsPerFeature,maxVerticesPerRing,maxCommandsPerFeature,maxLayerNameBytes,maxKeysPerLayer,maxValuesPerLayer,maxTagsPerFeature,maxPropertyStringBytes);
 
 @override
 String toString() {
-  return 'MvtDecodeLimits(maxLayers: $maxLayers, maxFeaturesPerLayer: $maxFeaturesPerLayer, maxRingsPerFeature: $maxRingsPerFeature, maxVerticesPerRing: $maxVerticesPerRing, maxCommandsPerFeature: $maxCommandsPerFeature, maxLayerNameBytes: $maxLayerNameBytes)';
+  return 'MvtDecodeLimits(maxLayers: $maxLayers, maxFeaturesPerLayer: $maxFeaturesPerLayer, maxRingsPerFeature: $maxRingsPerFeature, maxVerticesPerRing: $maxVerticesPerRing, maxCommandsPerFeature: $maxCommandsPerFeature, maxLayerNameBytes: $maxLayerNameBytes, maxKeysPerLayer: $maxKeysPerLayer, maxValuesPerLayer: $maxValuesPerLayer, maxTagsPerFeature: $maxTagsPerFeature, maxPropertyStringBytes: $maxPropertyStringBytes)';
 }
 
 
@@ -56,7 +62,7 @@ abstract mixin class $MvtDecodeLimitsCopyWith<$Res>  {
   factory $MvtDecodeLimitsCopyWith(MvtDecodeLimits value, $Res Function(MvtDecodeLimits) _then) = _$MvtDecodeLimitsCopyWithImpl;
 @useResult
 $Res call({
- int maxLayers, int maxFeaturesPerLayer, int maxRingsPerFeature, int maxVerticesPerRing, int maxCommandsPerFeature, int maxLayerNameBytes
+ int maxLayers, int maxFeaturesPerLayer, int maxRingsPerFeature, int maxVerticesPerRing, int maxCommandsPerFeature, int maxLayerNameBytes, int maxKeysPerLayer, int maxValuesPerLayer, int maxTagsPerFeature, int maxPropertyStringBytes
 });
 
 
@@ -73,7 +79,7 @@ class _$MvtDecodeLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MvtDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxLayers = null,Object? maxFeaturesPerLayer = null,Object? maxRingsPerFeature = null,Object? maxVerticesPerRing = null,Object? maxCommandsPerFeature = null,Object? maxLayerNameBytes = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxLayers = null,Object? maxFeaturesPerLayer = null,Object? maxRingsPerFeature = null,Object? maxVerticesPerRing = null,Object? maxCommandsPerFeature = null,Object? maxLayerNameBytes = null,Object? maxKeysPerLayer = null,Object? maxValuesPerLayer = null,Object? maxTagsPerFeature = null,Object? maxPropertyStringBytes = null,}) {
   return _then(MvtDecodeLimits(
 maxLayers: null == maxLayers ? _self.maxLayers : maxLayers // ignore: cast_nullable_to_non_nullable
 as int,maxFeaturesPerLayer: null == maxFeaturesPerLayer ? _self.maxFeaturesPerLayer : maxFeaturesPerLayer // ignore: cast_nullable_to_non_nullable
@@ -81,6 +87,10 @@ as int,maxRingsPerFeature: null == maxRingsPerFeature ? _self.maxRingsPerFeature
 as int,maxVerticesPerRing: null == maxVerticesPerRing ? _self.maxVerticesPerRing : maxVerticesPerRing // ignore: cast_nullable_to_non_nullable
 as int,maxCommandsPerFeature: null == maxCommandsPerFeature ? _self.maxCommandsPerFeature : maxCommandsPerFeature // ignore: cast_nullable_to_non_nullable
 as int,maxLayerNameBytes: null == maxLayerNameBytes ? _self.maxLayerNameBytes : maxLayerNameBytes // ignore: cast_nullable_to_non_nullable
+as int,maxKeysPerLayer: null == maxKeysPerLayer ? _self.maxKeysPerLayer : maxKeysPerLayer // ignore: cast_nullable_to_non_nullable
+as int,maxValuesPerLayer: null == maxValuesPerLayer ? _self.maxValuesPerLayer : maxValuesPerLayer // ignore: cast_nullable_to_non_nullable
+as int,maxTagsPerFeature: null == maxTagsPerFeature ? _self.maxTagsPerFeature : maxTagsPerFeature // ignore: cast_nullable_to_non_nullable
+as int,maxPropertyStringBytes: null == maxPropertyStringBytes ? _self.maxPropertyStringBytes : maxPropertyStringBytes // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -166,10 +176,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes,  int maxKeysPerLayer,  int maxValuesPerLayer,  int maxTagsPerFeature,  int maxPropertyStringBytes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MvtDecodeLimits() when $default != null:
-return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes);case _:
+return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes,_that.maxKeysPerLayer,_that.maxValuesPerLayer,_that.maxTagsPerFeature,_that.maxPropertyStringBytes);case _:
   return orElse();
 
 }
@@ -187,10 +197,10 @@ return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeatu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes,  int maxKeysPerLayer,  int maxValuesPerLayer,  int maxTagsPerFeature,  int maxPropertyStringBytes)  $default,) {final _that = this;
 switch (_that) {
 case _MvtDecodeLimits():
-return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes);case _:
+return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes,_that.maxKeysPerLayer,_that.maxValuesPerLayer,_that.maxTagsPerFeature,_that.maxPropertyStringBytes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +217,10 @@ return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeatu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxLayers,  int maxFeaturesPerLayer,  int maxRingsPerFeature,  int maxVerticesPerRing,  int maxCommandsPerFeature,  int maxLayerNameBytes,  int maxKeysPerLayer,  int maxValuesPerLayer,  int maxTagsPerFeature,  int maxPropertyStringBytes)?  $default,) {final _that = this;
 switch (_that) {
 case _MvtDecodeLimits() when $default != null:
-return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes);case _:
+return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeature,_that.maxVerticesPerRing,_that.maxCommandsPerFeature,_that.maxLayerNameBytes,_that.maxKeysPerLayer,_that.maxValuesPerLayer,_that.maxTagsPerFeature,_that.maxPropertyStringBytes);case _:
   return null;
 
 }
@@ -222,7 +232,7 @@ return $default(_that.maxLayers,_that.maxFeaturesPerLayer,_that.maxRingsPerFeatu
 
 
 class _MvtDecodeLimits implements MvtDecodeLimits {
-  const _MvtDecodeLimits({required this.maxLayers, required this.maxFeaturesPerLayer, required this.maxRingsPerFeature, required this.maxVerticesPerRing, required this.maxCommandsPerFeature, required this.maxLayerNameBytes});
+  const _MvtDecodeLimits({required this.maxLayers, required this.maxFeaturesPerLayer, required this.maxRingsPerFeature, required this.maxVerticesPerRing, required this.maxCommandsPerFeature, required this.maxLayerNameBytes, required this.maxKeysPerLayer, required this.maxValuesPerLayer, required this.maxTagsPerFeature, required this.maxPropertyStringBytes});
   
 
 /// 1つのtileに含められるlayer数の上限。
@@ -241,6 +251,16 @@ class _MvtDecodeLimits implements MvtDecodeLimits {
 /// layer名のUTF-8 byte長の上限。length-delimitedフィールドの長さを
 /// 読んだ直後、文字列本体を読み出す前に検証する。
 @override final  int maxLayerNameBytes;
+/// 1つのlayerが持てるproperty key tableの要素数上限。
+@override final  int maxKeysPerLayer;
+/// 1つのlayerが持てるproperty value tableの要素数上限。
+@override final  int maxValuesPerLayer;
+/// 1つのfeatureが持てるtag整数の個数上限。tagはkey/value indexの対なので、
+/// 偶数であることもdecoderが検証する。
+@override final  int maxTagsPerFeature;
+/// property stringのUTF-8 byte長上限。payloadをviewとして切り出す前に
+/// protobuf lengthを検査する。
+@override final  int maxPropertyStringBytes;
 
 /// Create a copy of MvtDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
@@ -252,16 +272,16 @@ _$MvtDecodeLimitsCopyWith<_MvtDecodeLimits> get copyWith => __$MvtDecodeLimitsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MvtDecodeLimits&&(identical(other.maxLayers, maxLayers) || other.maxLayers == maxLayers)&&(identical(other.maxFeaturesPerLayer, maxFeaturesPerLayer) || other.maxFeaturesPerLayer == maxFeaturesPerLayer)&&(identical(other.maxRingsPerFeature, maxRingsPerFeature) || other.maxRingsPerFeature == maxRingsPerFeature)&&(identical(other.maxVerticesPerRing, maxVerticesPerRing) || other.maxVerticesPerRing == maxVerticesPerRing)&&(identical(other.maxCommandsPerFeature, maxCommandsPerFeature) || other.maxCommandsPerFeature == maxCommandsPerFeature)&&(identical(other.maxLayerNameBytes, maxLayerNameBytes) || other.maxLayerNameBytes == maxLayerNameBytes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MvtDecodeLimits&&(identical(other.maxLayers, maxLayers) || other.maxLayers == maxLayers)&&(identical(other.maxFeaturesPerLayer, maxFeaturesPerLayer) || other.maxFeaturesPerLayer == maxFeaturesPerLayer)&&(identical(other.maxRingsPerFeature, maxRingsPerFeature) || other.maxRingsPerFeature == maxRingsPerFeature)&&(identical(other.maxVerticesPerRing, maxVerticesPerRing) || other.maxVerticesPerRing == maxVerticesPerRing)&&(identical(other.maxCommandsPerFeature, maxCommandsPerFeature) || other.maxCommandsPerFeature == maxCommandsPerFeature)&&(identical(other.maxLayerNameBytes, maxLayerNameBytes) || other.maxLayerNameBytes == maxLayerNameBytes)&&(identical(other.maxKeysPerLayer, maxKeysPerLayer) || other.maxKeysPerLayer == maxKeysPerLayer)&&(identical(other.maxValuesPerLayer, maxValuesPerLayer) || other.maxValuesPerLayer == maxValuesPerLayer)&&(identical(other.maxTagsPerFeature, maxTagsPerFeature) || other.maxTagsPerFeature == maxTagsPerFeature)&&(identical(other.maxPropertyStringBytes, maxPropertyStringBytes) || other.maxPropertyStringBytes == maxPropertyStringBytes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,maxLayers,maxFeaturesPerLayer,maxRingsPerFeature,maxVerticesPerRing,maxCommandsPerFeature,maxLayerNameBytes);
+int get hashCode => Object.hash(runtimeType,maxLayers,maxFeaturesPerLayer,maxRingsPerFeature,maxVerticesPerRing,maxCommandsPerFeature,maxLayerNameBytes,maxKeysPerLayer,maxValuesPerLayer,maxTagsPerFeature,maxPropertyStringBytes);
 
 @override
 String toString() {
-  return 'MvtDecodeLimits(maxLayers: $maxLayers, maxFeaturesPerLayer: $maxFeaturesPerLayer, maxRingsPerFeature: $maxRingsPerFeature, maxVerticesPerRing: $maxVerticesPerRing, maxCommandsPerFeature: $maxCommandsPerFeature, maxLayerNameBytes: $maxLayerNameBytes)';
+  return 'MvtDecodeLimits(maxLayers: $maxLayers, maxFeaturesPerLayer: $maxFeaturesPerLayer, maxRingsPerFeature: $maxRingsPerFeature, maxVerticesPerRing: $maxVerticesPerRing, maxCommandsPerFeature: $maxCommandsPerFeature, maxLayerNameBytes: $maxLayerNameBytes, maxKeysPerLayer: $maxKeysPerLayer, maxValuesPerLayer: $maxValuesPerLayer, maxTagsPerFeature: $maxTagsPerFeature, maxPropertyStringBytes: $maxPropertyStringBytes)';
 }
 
 
@@ -272,7 +292,7 @@ abstract mixin class _$MvtDecodeLimitsCopyWith<$Res> implements $MvtDecodeLimits
   factory _$MvtDecodeLimitsCopyWith(_MvtDecodeLimits value, $Res Function(_MvtDecodeLimits) _then) = __$MvtDecodeLimitsCopyWithImpl;
 @override @useResult
 $Res call({
- int maxLayers, int maxFeaturesPerLayer, int maxRingsPerFeature, int maxVerticesPerRing, int maxCommandsPerFeature, int maxLayerNameBytes
+ int maxLayers, int maxFeaturesPerLayer, int maxRingsPerFeature, int maxVerticesPerRing, int maxCommandsPerFeature, int maxLayerNameBytes, int maxKeysPerLayer, int maxValuesPerLayer, int maxTagsPerFeature, int maxPropertyStringBytes
 });
 
 
@@ -289,7 +309,7 @@ class __$MvtDecodeLimitsCopyWithImpl<$Res>
 
 /// Create a copy of MvtDecodeLimits
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxLayers = null,Object? maxFeaturesPerLayer = null,Object? maxRingsPerFeature = null,Object? maxVerticesPerRing = null,Object? maxCommandsPerFeature = null,Object? maxLayerNameBytes = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxLayers = null,Object? maxFeaturesPerLayer = null,Object? maxRingsPerFeature = null,Object? maxVerticesPerRing = null,Object? maxCommandsPerFeature = null,Object? maxLayerNameBytes = null,Object? maxKeysPerLayer = null,Object? maxValuesPerLayer = null,Object? maxTagsPerFeature = null,Object? maxPropertyStringBytes = null,}) {
   return _then(_MvtDecodeLimits(
 maxLayers: null == maxLayers ? _self.maxLayers : maxLayers // ignore: cast_nullable_to_non_nullable
 as int,maxFeaturesPerLayer: null == maxFeaturesPerLayer ? _self.maxFeaturesPerLayer : maxFeaturesPerLayer // ignore: cast_nullable_to_non_nullable
@@ -297,6 +317,10 @@ as int,maxRingsPerFeature: null == maxRingsPerFeature ? _self.maxRingsPerFeature
 as int,maxVerticesPerRing: null == maxVerticesPerRing ? _self.maxVerticesPerRing : maxVerticesPerRing // ignore: cast_nullable_to_non_nullable
 as int,maxCommandsPerFeature: null == maxCommandsPerFeature ? _self.maxCommandsPerFeature : maxCommandsPerFeature // ignore: cast_nullable_to_non_nullable
 as int,maxLayerNameBytes: null == maxLayerNameBytes ? _self.maxLayerNameBytes : maxLayerNameBytes // ignore: cast_nullable_to_non_nullable
+as int,maxKeysPerLayer: null == maxKeysPerLayer ? _self.maxKeysPerLayer : maxKeysPerLayer // ignore: cast_nullable_to_non_nullable
+as int,maxValuesPerLayer: null == maxValuesPerLayer ? _self.maxValuesPerLayer : maxValuesPerLayer // ignore: cast_nullable_to_non_nullable
+as int,maxTagsPerFeature: null == maxTagsPerFeature ? _self.maxTagsPerFeature : maxTagsPerFeature // ignore: cast_nullable_to_non_nullable
+as int,maxPropertyStringBytes: null == maxPropertyStringBytes ? _self.maxPropertyStringBytes : maxPropertyStringBytes // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

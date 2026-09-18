@@ -1,15 +1,14 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_warning_overlay_state.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final eewWarningOverlayRenderPolicyProvider =
-    Provider<EewWarningOverlayRenderPolicy>(
-      (_) => const EewWarningOverlayRenderPolicy(),
-    );
+part 'eew_warning_overlay_render_policy.g.dart';
 
-class EewWarningOverlayRenderPolicy {
-  const new();
+@Riverpod(keepAlive: true)
+EewWarningOverlayRenderPolicy eewWarningOverlayRenderPolicy(Ref ref) =>
+    const EewWarningOverlayRenderPolicy();
 
+class const EewWarningOverlayRenderPolicy() {
   bool shouldRender({
     required AppLifecycleState lifecycle,
     required EewWarningOverlayMode mode,

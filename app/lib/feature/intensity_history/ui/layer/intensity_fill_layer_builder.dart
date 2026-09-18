@@ -1,235 +1,152 @@
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/highest_intensity_entry.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
-import 'package:eqmonitor/feature/intensity_history/data/model/region_code_mapping.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_expression.dart';
-import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:maplibre/maplibre.dart';
 
-/// 地域別最大震度マップの fill/line レイヤー一式を組み立てる。
+/// 市区町村別最大震度マップの fill/line レイヤーを組み立てる。
 ///
-/// 全レイヤーを 1 回の [build] で、必ず「下 → 上」の順に返す。
-/// レイヤーごとに個別の `useEffect` で追加すると、片方だけが再実行された際に
-/// 追加順が入れ替わり Lv1(細分区域)の塗りが Lv2(市区町村)の塗りを覆ってしまう
-/// ため、順序はこのクラスに集約する。
-class IntensityFillLayerBuilder {
-  const new();
-
+/// `areaInformationCityQuake` は全ズームのタイルに存在する
+/// (`BaseMapTileSpec.cityMinZoom` = 0) ため、ズーム帯で塗る対象を切り替える
+/// 必要はなく、市区町村の塗り 1 枚 + 選択中の枠線（ハロー・本線）だけで済む。
+///
+/// 塗りと輪郭線をメソッドごとに分けているのは、更新契機が全く違うため。
+/// 塗りは全国 ~1900 市区町村分の `match` 式を持つので入れ替えが重く、震度
+/// データか配色が変わったときだけ作り直したい。輪郭線はタップごとに変わるが
+/// 1 フィーチャだけで軽い。両者を 1 つの `useEffect` にまとめると、タップの
+/// たびに塗りまで破棄・再追加してしまう。
+///
+/// 相対順序はアンカーと追加順で決まる: 塗りは細分区域の境界線の**下**、
+/// 選択枠はスタイルの最前面に追加する。どちらを先に追加しても塗りは境界線の
+/// 下に留まり、選択枠は他レイヤーに埋もれない。
+class const IntensityFillLayerBuilder() {
   static const sourceId = 'eqmonitor_map';
-  static const regionSourceLayerId = 'areaForecastLocalE';
   static const citySourceLayerId = 'areaInformationCityQuake';
 
-  /// 全国の細分区域の塗り。Lv2 ではフォーカス中の都道府県を除外する。
-  static const regionFillLayerId = 'intensity-history-region-fill';
-
-  /// フォーカス中の都道府県の細分区域の塗り。
-  static const focusedRegionFillLayerId =
-      'intensity-history-focused-region-fill';
-
-  /// フォーカス中の都道府県の市区町村の塗り。
+  /// 市区町村の塗り。
   static const cityFillLayerId = 'intensity-history-city-fill';
-
-  /// フォーカス中の都道府県以外を覆うディム。
-  static const dimFillLayerId = 'intensity-history-dim-fill';
 
   /// 選択中の市区町村の輪郭線。
   static const selectedCityLineLayerId = 'intensity-history-selected-city-line';
 
-  /// [build] が生成しうる全レイヤー ID。除去時にも利用する。
-  static const layerIds = [
-    regionFillLayerId,
-    focusedRegionFillLayerId,
-    cityFillLayerId,
-    dimFillLayerId,
+  /// 選択枠のコントラスト用ハロー。
+  static const selectedCityHaloLayerId = 'intensity-history-selected-city-halo';
+
+  /// [buildFill] が管理するレイヤー ID。
+  static const fillLayerIds = [cityFillLayerId];
+
+  /// [buildSelectedCityLine] が管理するレイヤー ID。
+  static const selectedCityLineLayerIds = [
+    selectedCityHaloLayerId,
     selectedCityLineLayerId,
   ];
 
-  static const regionFillOpacity = 0.7;
   static const cityFillOpacity = 0.8;
-  static const dimFillOpacity = 0.45;
+  static const selectedCityLineWidth = 3.0;
+  static const selectedCityHaloWidth = 6.0;
 
-  List<MapStyleLayerEntry> build({
-    required IntensityHistoryState state,
-    required List<HighestIntensityEntry> prefectureHighest,
-    required List<HighestIntensityEntry> cityHighest,
-    required List<EarthquakeParameterPrefectureItem> prefectures,
+  /// 市区町村ごとの観測史上最大震度の塗り。
+  ///
+  /// [cityMaxIntensities] が空なら空リストを返す（塗る対象が無い）。
+  List<MapStyleLayerEntry> buildFill({
+    required List<CityMaxIntensityEntry> cityMaxIntensities,
     required IntensityColors colorModel,
-    required bool isDarkMode,
   }) {
-    final focusedPrefectureCode = switch (state) {
-      IntensityHistoryStateCity(:final prefectureCode) => prefectureCode,
-      IntensityHistoryStatePrefecture() => null,
-    };
-    final selectedCityCode = switch (state) {
-      IntensityHistoryStateCity(:final selectedCityCode) => selectedCityCode,
-      IntensityHistoryStatePrefecture() => null,
-    };
-    final focusedRegionCodes = focusedPrefectureCode == null
-        ? const <String>[]
-        : RegionCodeMapping.regionCodesOfPrefecture(
-            focusedPrefectureCode,
-            prefectures,
-          );
-    final hasCityFill = focusedPrefectureCode != null && cityHighest.isNotEmpty;
+    if (cityMaxIntensities.isEmpty) {
+      return const [];
+    }
 
-    final entries = <MapStyleLayerEntry>[];
-
-    final regionPairs = regionIntensityPairs(
-      prefectureHighest: prefectureHighest,
-      prefectures: prefectures,
-    );
-    if (regionPairs.isNotEmpty) {
-      final fillColor = IntensityMatchExpressionBuilder.build(
-        regionPairs,
-        colorModel,
-      );
-      entries.add(
-        belowRegionLine(
-          FillStyleLayer(
-            id: regionFillLayerId,
-            sourceId: sourceId,
-            sourceLayerId: regionSourceLayerId,
-            filter: focusedRegionCodes.isEmpty
-                ? null
-                : <Object>['!', regionCodeFilter(focusedRegionCodes)],
-            paint: {'fill-color': fillColor, 'fill-opacity': regionFillOpacity},
-          ),
-        ),
-      );
-
-      if (focusedRegionCodes.isNotEmpty) {
-        // 市区町村ポリゴンは cityMinZoom 未満のタイルに存在しないため、その帯では
-        // 細分区域の塗りを可視表現として残す。市区町村の塗りが出るズームでは
-        // 半透明の重なりによる混色を避けるため透明にする。
-        entries.add(
-          belowRegionLine(
-            FillStyleLayer(
-              id: focusedRegionFillLayerId,
-              sourceId: sourceId,
-              sourceLayerId: regionSourceLayerId,
-              filter: regionCodeFilter(focusedRegionCodes),
-              paint: {
-                'fill-color': fillColor,
-                'fill-opacity': hasCityFill
-                    ? <Object>[
-                        'step',
-                        <Object>['zoom'],
-                        regionFillOpacity,
-                        BaseMapTileSpec.cityMinZoom,
-                        0.0,
-                      ]
-                    : regionFillOpacity,
-              },
+    // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
+    // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
+    return [
+      belowRegionLine(
+        FillStyleLayer(
+          id: cityFillLayerId,
+          sourceId: sourceId,
+          sourceLayerId: citySourceLayerId,
+          paint: {
+            'fill-color': IntensityMatchExpressionBuilder.build(
+              cityMaxIntensities
+                  .map(
+                    (entry) => (
+                      code: entry.cityCode,
+                      intensity: entry.intensity,
+                    ),
+                  )
+                  .toList(),
+              colorModel,
+              propertyKey: 'regioncode',
             ),
-          ),
-        );
-      }
-    }
-
-    if (hasCityFill) {
-      // areaInformationCityQuake のフィーチャ照合プロパティは `regioncode`。
-      // (earthquake_history_fill_layer.dart の cityCodeFilter 参照)
-      final fillColor = IntensityMatchExpressionBuilder.build(
-        cityHighest
-            .map((entry) => (code: entry.code, intensity: entry.intensity))
-            .toList(),
-        colorModel,
-        propertyKey: 'regioncode',
-      );
-      entries.add(
-        belowRegionLine(
-          FillStyleLayer(
-            id: cityFillLayerId,
-            sourceId: sourceId,
-            sourceLayerId: citySourceLayerId,
-            paint: {
-              'fill-color': fillColor,
-              'fill-opacity': <Object>[
-                'step',
-                <Object>['zoom'],
-                0.0,
-                BaseMapTileSpec.cityMinZoom,
-                cityFillOpacity,
-              ],
-            },
-          ),
+            'fill-opacity': cityFillOpacity,
+          },
         ),
-      );
+      ),
+    ];
+  }
+
+  /// 選択中の市区町村の輪郭線。
+  ///
+  /// [selectedCityCode] が null なら空リストを返す（未選択）。
+  /// ハローと本線の 2 枚を最前面に置き、塗りや細分区域境界に埋もれないようにする。
+  List<MapStyleLayerEntry> buildSelectedCityLine({
+    required String? selectedCityCode,
+    required String lineColor,
+    required String haloColor,
+  }) {
+    if (selectedCityCode == null) {
+      return const [];
     }
 
-    if (focusedRegionCodes.isNotEmpty) {
-      entries.add(
-        belowRegionLine(
-          FillStyleLayer(
-            id: dimFillLayerId,
-            sourceId: sourceId,
-            sourceLayerId: regionSourceLayerId,
-            filter: <Object>['!', regionCodeFilter(focusedRegionCodes)],
-            paint: const {
-              'fill-color': '#000000',
-              'fill-opacity': dimFillOpacity,
-            },
-          ),
+    final filter = <Object>[
+      '==',
+      <Object>['get', 'regioncode'],
+      selectedCityCode,
+    ];
+    const layout = <String, Object>{
+      'line-cap': 'round',
+      'line-join': 'round',
+    };
+
+    return [
+      (
+        layer: LineStyleLayer(
+          id: selectedCityHaloLayerId,
+          sourceId: sourceId,
+          sourceLayerId: citySourceLayerId,
+          filter: filter,
+          layout: layout,
+          paint: {
+            'line-color': haloColor,
+            'line-width': selectedCityHaloWidth,
+            'line-opacity': 0.9,
+          },
         ),
-      );
-    }
-
-    if (selectedCityCode != null) {
-      entries.add((
+        belowLayerId: null,
+        aboveLayerId: null,
+        atIndex: null,
+      ),
+      (
         layer: LineStyleLayer(
           id: selectedCityLineLayerId,
           sourceId: sourceId,
           sourceLayerId: citySourceLayerId,
-          filter: <Object>[
-            '==',
-            <Object>['get', 'regioncode'],
-            selectedCityCode,
-          ],
+          filter: filter,
+          layout: layout,
           paint: {
-            'line-color': isDarkMode ? '#FFFFFF' : '#000000',
-            'line-width': 3,
-            'line-opacity': 0.95,
+            'line-color': lineColor,
+            'line-width': selectedCityLineWidth,
+            'line-opacity': 1,
           },
         ),
         belowLayerId: null,
-        aboveLayerId: BaseLayer.areaForecastLocalELine.name,
+        aboveLayerId: null,
         atIndex: null,
-      ));
-    }
-
-    return entries;
+      ),
+    ];
   }
 
-  /// 都道府県ごとの最高震度を、配下の細分区域コードへ展開する。
-  ///
-  /// `areaForecastLocalE` のフィーチャは細分区域コードを持つため、
-  /// 都道府県コードのままでは 1 区域も一致しない。
-  List<({String code, JmaIntensity intensity})> regionIntensityPairs({
-    required List<HighestIntensityEntry> prefectureHighest,
-    required List<EarthquakeParameterPrefectureItem> prefectures,
-  }) => [
-    for (final entry in prefectureHighest)
-      for (final code in RegionCodeMapping.regionCodesOfPrefecture(
-        entry.code,
-        prefectures,
-      ))
-        (code: code, intensity: entry.intensity),
-  ];
-
-  List<Object> regionCodeFilter(List<String> codes) => <Object>[
-    'in',
-    <Object>['get', 'code'],
-    <Object>['literal', codes],
-  ];
-
   /// 細分区域の境界線より下に挿入する。
-  ///
-  /// [MapStyleLayerReplacer.replace] は与えられた順に「同じアンカーの直下」へ挿入する
-  /// ため、先に渡したものが下、後に渡したものが上になる。
   MapStyleLayerEntry belowRegionLine(StyleLayer layer) => (
     layer: layer,
     belowLayerId: BaseLayer.areaForecastLocalELine.name,

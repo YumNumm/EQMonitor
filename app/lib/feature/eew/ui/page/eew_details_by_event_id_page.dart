@@ -1,5 +1,7 @@
+import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_on_eew_replay_allowed_provider.dart';
@@ -20,9 +22,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
+  const new({required this.eventId, this.onClose, super.key});
 
   final String eventId;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +46,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('緊急地震速報の履歴'),
+        leading: onClose == null ? null : BackButton(onPressed: onClose),
         actions: [
           if (simulation != null) ...[
             IconButton(
@@ -82,7 +86,9 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               ? sortedEews.take(simulation.currentIndex + 1).toList()
               : sortedEews;
 
-          final idx = selectedIndex.value;
+          final idx =
+              selectedIndex.value ??
+              (onClose != null ? displayedEews.length - 1 : null);
           final selectedEew =
               (idx != null && idx >= 0 && idx < displayedEews.length)
               ? displayedEews[idx]
@@ -124,7 +130,8 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
               Expanded(
                 child: _ResponsiveLayout(
                   eews: displayedEews,
-                  selectedIndex: selectedIndex.value,
+                  selectedIndex: idx,
+                  useSheet: onClose != null,
                   onSelect: (index) => selectedIndex.value = index,
                   selectedEew: selectedEew,
                   displayMode: displayMode.value,
@@ -170,7 +177,7 @@ class _SimulationView extends HookConsumerWidget {
     DateTime? virtualNow;
     if (simulation != null) {
       final firstReportTime = simulation.reports.first.reportTime;
-      final elapsed = DateTime.now().difference(simulation.startedAt);
+      final elapsed = simulation.playbackElapsedAt(clock.now());
       virtualNow = firstReportTime.add(elapsed);
     }
 
@@ -274,6 +281,7 @@ class _ResponsiveLayout extends HookConsumerWidget {
     required this.displayMode,
     required this.initialCenter,
     required this.initZoom,
+    this.useSheet = false,
   });
 
   final List<EewTelegramItem> eews;
@@ -283,6 +291,7 @@ class _ResponsiveLayout extends HookConsumerWidget {
   final EewDisplayMode displayMode;
   final Geographic initialCenter;
   final double initZoom;
+  final bool useSheet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -320,6 +329,19 @@ class _ResponsiveLayout extends HookConsumerWidget {
           initZoom: initZoom,
           additionalRegions: additionalRegions,
         );
+
+        if (useSheet) {
+          return Stack(
+            children: [
+              Positioned.fill(child: mapWidget),
+              BasicModalSheet(
+                hasAppBar: false,
+                expandToPane: true,
+                child: tableWidget,
+              ),
+            ],
+          );
+        }
 
         if (isLandscape) {
           return Row(

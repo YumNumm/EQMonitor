@@ -7,9 +7,7 @@ part 'notification_region_search.g.dart';
 NotificationRegionSearch notificationRegionSearch(Ref ref) =>
     const NotificationRegionSearch();
 
-final class NotificationRegionSearch {
-  const new();
-
+final class const NotificationRegionSearch() {
   List<T> filter<T>({
     required List<T> items,
     required String query,

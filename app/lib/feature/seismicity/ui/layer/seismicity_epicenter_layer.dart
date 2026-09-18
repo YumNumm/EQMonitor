@@ -148,9 +148,7 @@ class SeismicityEpicenterLayer extends HookConsumerWidget {
   );
 }
 
-class SeismicityEpicenterGeoJsonBuilder {
-  const new();
-
+class const SeismicityEpicenterGeoJsonBuilder() {
   String build({
     required List<SeismicityEvent> events,
     required DateTime now,
@@ -182,9 +180,7 @@ class SeismicityEpicenterGeoJsonBuilder {
   }) => now.toUtc().difference(originTime.toUtc()).inHours.toDouble();
 }
 
-class SeismicityEpicenterStyleBuilder {
-  const new();
-
+class const SeismicityEpicenterStyleBuilder() {
   CircleStyleLayer build({required SeismicityColorMode colorMode}) =>
       CircleStyleLayer(
         id: SeismicityEpicenterLayer.layerId,

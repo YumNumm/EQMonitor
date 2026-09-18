@@ -22,17 +22,20 @@ abstract class BuildConfig with _$BuildConfig {
     required String wsApiUrl,
     required String googleIosClientId,
     required String googleAndroidClientId,
+    @Default('') String googleServerClientId,
+    @Default('') String googleIosReversedClientId,
+    @Default('') String appleServiceId,
     required String buildTimestamp,
     required String buildCommitMessage,
     required String revenueCatApiKeyIos,
     required String revenueCatApiKeyAndroid,
     @Default(false) bool isBetaTesting,
     @Default(false) bool isProFeaturesEnabled,
+    @Default(false) bool isNativeSocialAuthEnabled,
     @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$BuildConfigFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$BuildConfigFromJson(json);
 
   factory fromEnvironment() => BuildConfig(
     restApiUrl: const String.fromEnvironment('REST_API_URL'),
@@ -47,6 +50,13 @@ abstract class BuildConfig with _$BuildConfig {
     googleAndroidClientId: const String.fromEnvironment(
       'GOOGLE_ANDROID_CLIENT_ID',
     ),
+    googleServerClientId: const String.fromEnvironment(
+      'GOOGLE_SERVER_CLIENT_ID',
+    ),
+    googleIosReversedClientId: const String.fromEnvironment(
+      'GOOGLE_IOS_REVERSED_CLIENT_ID',
+    ),
+    appleServiceId: const String.fromEnvironment('APPLE_SERVICE_ID'),
     buildTimestamp: const String.fromEnvironment('BUILD_TIMESTAMP'),
     buildCommitMessage: const String.fromEnvironment('BUILD_COMMIT_MESSAGE'),
     revenueCatApiKeyIos: const String.fromEnvironment('REVENUECAT_API_KEY_IOS'),
@@ -55,6 +65,9 @@ abstract class BuildConfig with _$BuildConfig {
     ),
     isBetaTesting: const bool.fromEnvironment('IS_BETA_TESTING'),
     isProFeaturesEnabled: const bool.fromEnvironment('IS_PRO_FEATURES_ENABLED'),
+    isNativeSocialAuthEnabled: const bool.fromEnvironment(
+      'IS_NATIVE_SOCIAL_AUTH_ENABLED',
+    ),
     isShakeDetectionEnabled: const bool.fromEnvironment(
       'IS_SHAKE_DETECTION_ENABLED',
       defaultValue: true,

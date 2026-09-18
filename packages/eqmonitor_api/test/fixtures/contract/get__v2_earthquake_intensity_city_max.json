@@ -1,0 +1,17 @@
+{
+  "aggregated_at": "2026-08-19T12:00:00.000Z",
+  "items": [
+    {
+      "city_id": "0110000",
+      "max_intensity": "5-"
+    },
+    {
+      "city_id": "0110200",
+      "max_intensity": "4"
+    },
+    {
+      "city_id": "1310100",
+      "max_intensity": "7"
+    }
+  ]
+}

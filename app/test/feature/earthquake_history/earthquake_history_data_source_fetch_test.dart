@@ -122,9 +122,9 @@ void main() {
     },
   );
 
-  // 4. Region パラメータで statuses が転送される
+  // 4. Region パラメータで statuses と地域観測震度範囲が転送される
   test(
-    'EarthquakeHistoryParameterRegion forwards statuses to searchByRegion',
+    'EarthquakeHistoryParameterRegion forwards statuses and intensity range',
     () async {
       final repository = _SpyEarthquakeHistoryRepository();
       const parameter = EarthquakeHistoryParameter.region(
@@ -132,6 +132,8 @@ void main() {
         sortOrder: SortOrder.desc,
         regionCode: '010100',
         statuses: [app.TelegramStatus.training],
+        intensityGte: JmaIntensity.two,
+        intensityLte: JmaIntensity.four,
       );
       final dataSource = EarthquakeHistoryDataSource(
         repository: repository,
@@ -145,6 +147,14 @@ void main() {
       expect(
         repository.searchByRegionCalls.first['statuses'],
         equals([app.TelegramStatus.training]),
+      );
+      expect(
+        repository.searchByRegionCalls.first['intensityGte'],
+        JmaIntensity.two,
+      );
+      expect(
+        repository.searchByRegionCalls.first['intensityLte'],
+        JmaIntensity.four,
       );
     },
   );
@@ -329,7 +339,12 @@ final class _SpyEarthquakeHistoryRepository
     EarthquakeSortBy? sortBy,
     SortOrder? sortOrder,
   }) async {
-    searchByRegionCalls.add({'code': code, 'statuses': statuses});
+    searchByRegionCalls.add({
+      'code': code,
+      'statuses': statuses,
+      'intensityGte': intensityGte,
+      'intensityLte': intensityLte,
+    });
     return PaginatedResponse(
       items: [
         EarthquakePartialRegion(
@@ -375,7 +390,7 @@ final class _SpyEarthquakeHistoryRepository
   }
 
   @override
-  Future<PaginatedResponse<EarthquakePartialRegion>> searchByCity({
+  Future<PaginatedResponse<EarthquakePartialCity>> searchByCity({
     required String code,
     int? limit,
     String? cursor,
@@ -398,8 +413,8 @@ final class _SpyEarthquakeHistoryRepository
     searchByCityCalls.add({'code': code, 'statuses': statuses});
     return PaginatedResponse(
       items: [
-        EarthquakePartialRegion(
-          regionIntensity: JmaIntensity.three,
+        EarthquakePartialCity(
+          cityIntensity: JmaIntensity.three,
           earthquake: _makeEarthquake('event-city'),
         ),
       ],

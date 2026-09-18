@@ -21,6 +21,8 @@ bool shouldStripGeneratedWhitespace({required String fileName}) =>
     fileName.startsWith('catalog_') ||
     fileName == 'hypocenters_api_client.dart' ||
     fileName.startsWith('hypocenter_') ||
+    fileName.startsWith('earthquake_hypocenters_union.') ||
+    fileName.startsWith('migration_service_unavailable_response.') ||
     fileName.startsWith('archives.') ||
     fileName.startsWith('data2.') ||
     fileName.startsWith('data3.') ||

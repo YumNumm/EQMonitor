@@ -1,14 +1,11 @@
 /// Exception thrown when decoding a QZSS DCR message fails.
-class QzssDcrDecoderException implements Exception {
-  /// Creates a new [QzssDcrDecoderException].
-  const new(this.message, {this.sentence});
-
+class const QzssDcrDecoderException(
   /// The error message.
-  final String message;
+  final String message, {
 
   /// The sentence that failed to decode, if available.
-  final String? sentence;
-
+  final String? sentence,
+}) implements Exception {
   @override
   String toString() {
     if (sentence == null) {

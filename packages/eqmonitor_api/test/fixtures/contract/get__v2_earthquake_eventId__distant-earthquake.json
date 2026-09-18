@@ -23,6 +23,52 @@
         "value": 30
       }
     },
+    "hypocenters": [
+      {
+        "datasource": "JMA_INTENSITY_DATABASE",
+        "seq": 0,
+        "record_type": "A",
+        "hypocenter": {
+          "value": {
+            "code": "999",
+            "name": "インドネシア付近"
+          },
+          "coordinates": {
+            "latitude": -3.5,
+            "longitude": 126.8
+          },
+          "magnitude": {
+            "type": "NORMAL",
+            "value": 7.8
+          },
+          "depth": {
+            "type": "NORMAL",
+            "value": 30
+          }
+        },
+        "catalog": {
+          "seq": 0,
+          "record_type": "A",
+          "origin_time": "2025-12-15T12:00:00.000Z",
+          "coordinates": {
+            "latitude": -3.5,
+            "longitude": 126.8
+          },
+          "depth": {
+            "value": 30,
+            "is_free": false
+          },
+          "magnitudes": [
+            {
+              "type": "J",
+              "value": 7.8
+            }
+          ],
+          "epicenter_name": "インドネシア付近",
+          "station_count": 0
+        }
+      }
+    ],
     "intensity": {
       "max_intensity": "1",
       "intensity_tree": [
@@ -37,6 +83,32 @@
     "datasources": [
       "JMA_INTENSITY_DATABASE"
     ],
+    "catalog": {
+      "hypocenters": [
+        {
+          "seq": 0,
+          "record_type": "A",
+          "origin_time": "2025-12-15T12:00:00.000Z",
+          "coordinates": {
+            "latitude": -3.5,
+            "longitude": 126.8
+          },
+          "depth": {
+            "value": 30,
+            "is_free": false
+          },
+          "magnitudes": [
+            {
+              "type": "J",
+              "value": 7.8
+            }
+          ],
+          "epicenter_name": "インドネシア付近",
+          "station_count": 0
+        }
+      ],
+      "station_records": []
+    },
     "telegrams": []
   }
 }

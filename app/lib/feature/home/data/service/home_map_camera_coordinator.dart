@@ -14,9 +14,7 @@ part 'home_map_camera_coordinator.g.dart';
 enum HomeMapCameraUpdateAction { fitToRealtime, returnToHome, none }
 
 /// リアルタイム描画対象とホーム復帰要求からカメラ更新アクションを解決するクラス
-class HomeMapCameraUpdateActionResolver {
-  const new();
-
+class const HomeMapCameraUpdateActionResolver() {
   HomeMapCameraUpdateAction resolve({
     required bool hasRealtimeTargets,
     required bool isAtHome,
@@ -44,12 +42,16 @@ class HomeMapCameraCoordinator {
     required Future<HomeConfigurationModel> home,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
+    bool applyInitialFocus = true,
   }) {
     _cameraGeneration += 1;
     _controller = controller;
     _viewportSize = viewportSize;
     _isHomeFocusRequested = false;
     _operationQueue = MapAutomaticFocusOperationQueue();
+    if (!applyInitialFocus) {
+      return Future<bool?>.value();
+    }
     return handleRealtimeTransition(home: home, eews: eews, shakes: shakes);
   }
 
@@ -67,6 +69,7 @@ class HomeMapCameraCoordinator {
     required Future<HomeConfigurationModel> home,
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
+    bool ignoreAutoZoom = false,
   }) {
     final generation = ++_cameraGeneration;
     final targets = const SeismicMapFocusBuilder().realtimeTargetCoordinates(
@@ -82,6 +85,7 @@ class HomeMapCameraCoordinator {
         eews: eews,
         shakes: shakes,
         generation: generation,
+        ignoreAutoZoom: ignoreAutoZoom,
       ),
       .returnToHome => applyHomeFocus(home: home, generation: generation),
       .none => Future<bool?>.value(),
@@ -93,6 +97,7 @@ class HomeMapCameraCoordinator {
     required List<EewTelegramItem> eews,
     required List<ShakeDetectionEvent> shakes,
     required int generation,
+    bool ignoreAutoZoom = false,
   }) async {
     final configuration = await home;
     final controller = _controller;
@@ -104,7 +109,7 @@ class HomeMapCameraCoordinator {
     if (controller == null || viewportSize == null || !isCurrent()) {
       return null;
     }
-    if (!configuration.eew.autoZoom) {
+    if (!configuration.eew.autoZoom && !ignoreAutoZoom) {
       return null;
     }
 
@@ -127,6 +132,10 @@ class HomeMapCameraCoordinator {
 
   Future<bool?> returnToHome({required Future<HomeConfigurationModel> home}) =>
       applyHomeFocus(home: home, generation: ++_cameraGeneration);
+
+  void cancelAutomaticFocus() {
+    _cameraGeneration += 1;
+  }
 
   Future<bool?> applyHomeFocus({
     required Future<HomeConfigurationModel> home,

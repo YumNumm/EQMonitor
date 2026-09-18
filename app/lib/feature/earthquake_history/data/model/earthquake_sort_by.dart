@@ -9,14 +9,16 @@ enum EarthquakeSortBy {
   magnitude,
   maxIntensity,
   maxLpgmIntensity,
-  depth;
+  depth,
+  regionalIntensity;
 
   String get label => switch (this) {
     .eventId => '発生時刻',
     .magnitude => 'マグニチュード',
-    .maxIntensity => '最大震度',
+    .maxIntensity => '地震の最大震度',
     .maxLpgmIntensity => '長周期階級',
     .depth => '震源の深さ',
+    .regionalIntensity => '選択地域の観測震度',
   };
 
   bool get showsDateHeader => this == .eventId;
@@ -39,5 +41,19 @@ extension EarthquakeSortByToApiExtension on EarthquakeSortBy {
     .maxIntensity => .maxIntensity,
     .maxLpgmIntensity => .maxLpgmIntensity,
     .depth => .depth,
+    .regionalIntensity => throw StateError(
+      '選択地域の観測震度は全地震検索では利用できません',
+    ),
+  };
+}
+
+extension EarthquakeSortByToIntensityApiExtension on EarthquakeSortBy {
+  api.IntensitySearchSortBy get toApiIntensitySearchSortBy => switch (this) {
+    .eventId => .eventId,
+    .magnitude => .magnitude,
+    .maxIntensity => .maxIntensity,
+    .maxLpgmIntensity => .maxLpgmIntensity,
+    .depth => .depth,
+    .regionalIntensity => .intensity,
   };
 }

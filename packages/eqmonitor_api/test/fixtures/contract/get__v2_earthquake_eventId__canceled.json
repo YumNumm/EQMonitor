@@ -4,6 +4,7 @@
     "status": "CANCEL",
     "earthquake_type": "NORMAL",
     "origin_time_precision": "SECOND",
+    "hypocenters": [],
     "datasources": [
       "JMA_DISASTER_INFORMATION_XML"
     ],

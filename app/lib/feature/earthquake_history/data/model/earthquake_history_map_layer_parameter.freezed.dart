@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryMapLayerParameter {
 
- double get regionToCity; double get stationMinZoom; double get stationLabelMinZoom; double get stationTextZoom; double get hypocenterFadeZoom; double get hypocenterErrorMinZoom; double get regionFillOpacity; double get regionLineOpacity; double get cityFillOpacity; double get stationCircleRadiusMin; double get stationCircleRadiusMax; double get stationIconSizeMin; double get stationIconSizeMid; double get stationIconSizeMax; double get hypocenterIconSizeMin; double get hypocenterIconSizeMax; double get hypocenterFadeOpacity;
+ double get regionToCity; double get stationMinZoom; double get stationLabelMinZoom; double get stationTextZoom; double get hypocenterFadeZoom; double get hypocenterErrorMinZoom; double get regionFillOpacity; double get regionLineOpacity; double get cityFillOpacity; double get stationIconSizeMin; double get stationIconSizeMid; double get stationIconSizeMax; double get hypocenterIconSizeMin; double get hypocenterIconSizeMax; double get hypocenterFadeOpacity;
 /// Create a copy of EarthquakeHistoryMapLayerParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $EarthquakeHistoryMapLayerParameterCopyWith<EarthquakeHistoryMapLayerParameter> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerParameter&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.stationTextZoom, stationTextZoom) || other.stationTextZoom == stationTextZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom)&&(identical(other.regionFillOpacity, regionFillOpacity) || other.regionFillOpacity == regionFillOpacity)&&(identical(other.regionLineOpacity, regionLineOpacity) || other.regionLineOpacity == regionLineOpacity)&&(identical(other.cityFillOpacity, cityFillOpacity) || other.cityFillOpacity == cityFillOpacity)&&(identical(other.stationCircleRadiusMin, stationCircleRadiusMin) || other.stationCircleRadiusMin == stationCircleRadiusMin)&&(identical(other.stationCircleRadiusMax, stationCircleRadiusMax) || other.stationCircleRadiusMax == stationCircleRadiusMax)&&(identical(other.stationIconSizeMin, stationIconSizeMin) || other.stationIconSizeMin == stationIconSizeMin)&&(identical(other.stationIconSizeMid, stationIconSizeMid) || other.stationIconSizeMid == stationIconSizeMid)&&(identical(other.stationIconSizeMax, stationIconSizeMax) || other.stationIconSizeMax == stationIconSizeMax)&&(identical(other.hypocenterIconSizeMin, hypocenterIconSizeMin) || other.hypocenterIconSizeMin == hypocenterIconSizeMin)&&(identical(other.hypocenterIconSizeMax, hypocenterIconSizeMax) || other.hypocenterIconSizeMax == hypocenterIconSizeMax)&&(identical(other.hypocenterFadeOpacity, hypocenterFadeOpacity) || other.hypocenterFadeOpacity == hypocenterFadeOpacity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerParameter&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.stationTextZoom, stationTextZoom) || other.stationTextZoom == stationTextZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom)&&(identical(other.regionFillOpacity, regionFillOpacity) || other.regionFillOpacity == regionFillOpacity)&&(identical(other.regionLineOpacity, regionLineOpacity) || other.regionLineOpacity == regionLineOpacity)&&(identical(other.cityFillOpacity, cityFillOpacity) || other.cityFillOpacity == cityFillOpacity)&&(identical(other.stationIconSizeMin, stationIconSizeMin) || other.stationIconSizeMin == stationIconSizeMin)&&(identical(other.stationIconSizeMid, stationIconSizeMid) || other.stationIconSizeMid == stationIconSizeMid)&&(identical(other.stationIconSizeMax, stationIconSizeMax) || other.stationIconSizeMax == stationIconSizeMax)&&(identical(other.hypocenterIconSizeMin, hypocenterIconSizeMin) || other.hypocenterIconSizeMin == hypocenterIconSizeMin)&&(identical(other.hypocenterIconSizeMax, hypocenterIconSizeMax) || other.hypocenterIconSizeMax == hypocenterIconSizeMax)&&(identical(other.hypocenterFadeOpacity, hypocenterFadeOpacity) || other.hypocenterFadeOpacity == hypocenterFadeOpacity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,stationTextZoom,hypocenterFadeZoom,hypocenterErrorMinZoom,regionFillOpacity,regionLineOpacity,cityFillOpacity,stationCircleRadiusMin,stationCircleRadiusMax,stationIconSizeMin,stationIconSizeMid,stationIconSizeMax,hypocenterIconSizeMin,hypocenterIconSizeMax,hypocenterFadeOpacity);
+int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,stationTextZoom,hypocenterFadeZoom,hypocenterErrorMinZoom,regionFillOpacity,regionLineOpacity,cityFillOpacity,stationIconSizeMin,stationIconSizeMid,stationIconSizeMax,hypocenterIconSizeMin,hypocenterIconSizeMax,hypocenterFadeOpacity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerParameter(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, stationTextZoom: $stationTextZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom, regionFillOpacity: $regionFillOpacity, regionLineOpacity: $regionLineOpacity, cityFillOpacity: $cityFillOpacity, stationCircleRadiusMin: $stationCircleRadiusMin, stationCircleRadiusMax: $stationCircleRadiusMax, stationIconSizeMin: $stationIconSizeMin, stationIconSizeMid: $stationIconSizeMid, stationIconSizeMax: $stationIconSizeMax, hypocenterIconSizeMin: $hypocenterIconSizeMin, hypocenterIconSizeMax: $hypocenterIconSizeMax, hypocenterFadeOpacity: $hypocenterFadeOpacity)';
+  return 'EarthquakeHistoryMapLayerParameter(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, stationTextZoom: $stationTextZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom, regionFillOpacity: $regionFillOpacity, regionLineOpacity: $regionLineOpacity, cityFillOpacity: $cityFillOpacity, stationIconSizeMin: $stationIconSizeMin, stationIconSizeMid: $stationIconSizeMid, stationIconSizeMax: $stationIconSizeMax, hypocenterIconSizeMin: $hypocenterIconSizeMin, hypocenterIconSizeMax: $hypocenterIconSizeMax, hypocenterFadeOpacity: $hypocenterFadeOpacity)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $EarthquakeHistoryMapLayerParameterCopyWith<$Res>  {
   factory $EarthquakeHistoryMapLayerParameterCopyWith(EarthquakeHistoryMapLayerParameter value, $Res Function(EarthquakeHistoryMapLayerParameter) _then) = _$EarthquakeHistoryMapLayerParameterCopyWithImpl;
 @useResult
 $Res call({
- double regionToCity, double stationMinZoom, double stationLabelMinZoom, double stationTextZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom, double regionFillOpacity, double regionLineOpacity, double cityFillOpacity, double stationCircleRadiusMin, double stationCircleRadiusMax, double stationIconSizeMin, double stationIconSizeMid, double stationIconSizeMax, double hypocenterIconSizeMin, double hypocenterIconSizeMax, double hypocenterFadeOpacity
+ double regionToCity, double stationMinZoom, double stationLabelMinZoom, double stationTextZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom, double regionFillOpacity, double regionLineOpacity, double cityFillOpacity, double stationIconSizeMin, double stationIconSizeMid, double stationIconSizeMax, double hypocenterIconSizeMin, double hypocenterIconSizeMax, double hypocenterFadeOpacity
 });
 
 
@@ -66,7 +66,7 @@ class _$EarthquakeHistoryMapLayerParameterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerParameter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? stationTextZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,Object? regionFillOpacity = null,Object? regionLineOpacity = null,Object? cityFillOpacity = null,Object? stationCircleRadiusMin = null,Object? stationCircleRadiusMax = null,Object? stationIconSizeMin = null,Object? stationIconSizeMid = null,Object? stationIconSizeMax = null,Object? hypocenterIconSizeMin = null,Object? hypocenterIconSizeMax = null,Object? hypocenterFadeOpacity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? stationTextZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,Object? regionFillOpacity = null,Object? regionLineOpacity = null,Object? cityFillOpacity = null,Object? stationIconSizeMin = null,Object? stationIconSizeMid = null,Object? stationIconSizeMax = null,Object? hypocenterIconSizeMin = null,Object? hypocenterIconSizeMax = null,Object? hypocenterFadeOpacity = null,}) {
   return _then(EarthquakeHistoryMapLayerParameter(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
 as double,stationMinZoom: null == stationMinZoom ? _self.stationMinZoom : stationMinZoom // ignore: cast_nullable_to_non_nullable
@@ -77,8 +77,6 @@ as double,hypocenterErrorMinZoom: null == hypocenterErrorMinZoom ? _self.hypocen
 as double,regionFillOpacity: null == regionFillOpacity ? _self.regionFillOpacity : regionFillOpacity // ignore: cast_nullable_to_non_nullable
 as double,regionLineOpacity: null == regionLineOpacity ? _self.regionLineOpacity : regionLineOpacity // ignore: cast_nullable_to_non_nullable
 as double,cityFillOpacity: null == cityFillOpacity ? _self.cityFillOpacity : cityFillOpacity // ignore: cast_nullable_to_non_nullable
-as double,stationCircleRadiusMin: null == stationCircleRadiusMin ? _self.stationCircleRadiusMin : stationCircleRadiusMin // ignore: cast_nullable_to_non_nullable
-as double,stationCircleRadiusMax: null == stationCircleRadiusMax ? _self.stationCircleRadiusMax : stationCircleRadiusMax // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMin: null == stationIconSizeMin ? _self.stationIconSizeMin : stationIconSizeMin // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMid: null == stationIconSizeMid ? _self.stationIconSizeMid : stationIconSizeMid // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMax: null == stationIconSizeMax ? _self.stationIconSizeMax : stationIconSizeMax // ignore: cast_nullable_to_non_nullable
@@ -170,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationCircleRadiusMin,  double stationCircleRadiusMax,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerParameter() when $default != null:
-return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationCircleRadiusMin,_that.stationCircleRadiusMax,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
   return orElse();
 
 }
@@ -191,10 +189,10 @@ return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationCircleRadiusMin,  double stationCircleRadiusMax,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerParameter():
-return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationCircleRadiusMin,_that.stationCircleRadiusMax,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +209,10 @@ return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationCircleRadiusMin,  double stationCircleRadiusMax,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity,  double stationMinZoom,  double stationLabelMinZoom,  double stationTextZoom,  double hypocenterFadeZoom,  double hypocenterErrorMinZoom,  double regionFillOpacity,  double regionLineOpacity,  double cityFillOpacity,  double stationIconSizeMin,  double stationIconSizeMid,  double stationIconSizeMax,  double hypocenterIconSizeMin,  double hypocenterIconSizeMax,  double hypocenterFadeOpacity)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerParameter() when $default != null:
-return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationCircleRadiusMin,_that.stationCircleRadiusMax,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
+return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoom,_that.stationTextZoom,_that.hypocenterFadeZoom,_that.hypocenterErrorMinZoom,_that.regionFillOpacity,_that.regionLineOpacity,_that.cityFillOpacity,_that.stationIconSizeMin,_that.stationIconSizeMid,_that.stationIconSizeMax,_that.hypocenterIconSizeMin,_that.hypocenterIconSizeMax,_that.hypocenterFadeOpacity);case _:
   return null;
 
 }
@@ -226,7 +224,7 @@ return $default(_that.regionToCity,_that.stationMinZoom,_that.stationLabelMinZoo
 @JsonSerializable()
 
 class _EarthquakeHistoryMapLayerParameter implements EarthquakeHistoryMapLayerParameter {
-  const _EarthquakeHistoryMapLayerParameter({this.regionToCity = 6, this.stationMinZoom = 6, this.stationLabelMinZoom = 9, this.stationTextZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8, this.regionFillOpacity = 0.6, this.regionLineOpacity = 0.8, this.cityFillOpacity = 0.6, this.stationCircleRadiusMin = 0.8, this.stationCircleRadiusMax = 6.7, this.stationIconSizeMin = 0.03, this.stationIconSizeMid = 0.13, this.stationIconSizeMax = 0.5, this.hypocenterIconSizeMin = 0.15, this.hypocenterIconSizeMax = 0.4, this.hypocenterFadeOpacity = 0.6});
+  const _EarthquakeHistoryMapLayerParameter({this.regionToCity = 6, this.stationMinZoom = 6, this.stationLabelMinZoom = 9, this.stationTextZoom = 9, this.hypocenterFadeZoom = 8, this.hypocenterErrorMinZoom = 8, this.regionFillOpacity = 0.6, this.regionLineOpacity = 0.8, this.cityFillOpacity = 0.6, this.stationIconSizeMin = 0.03, this.stationIconSizeMid = 0.13, this.stationIconSizeMax = 0.5, this.hypocenterIconSizeMin = 0.15, this.hypocenterIconSizeMax = 0.4, this.hypocenterFadeOpacity = 0.6});
   factory _EarthquakeHistoryMapLayerParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryMapLayerParameterFromJson(json);
 
 @override@JsonKey() final  double regionToCity;
@@ -238,8 +236,6 @@ class _EarthquakeHistoryMapLayerParameter implements EarthquakeHistoryMapLayerPa
 @override@JsonKey() final  double regionFillOpacity;
 @override@JsonKey() final  double regionLineOpacity;
 @override@JsonKey() final  double cityFillOpacity;
-@override@JsonKey() final  double stationCircleRadiusMin;
-@override@JsonKey() final  double stationCircleRadiusMax;
 @override@JsonKey() final  double stationIconSizeMin;
 @override@JsonKey() final  double stationIconSizeMid;
 @override@JsonKey() final  double stationIconSizeMax;
@@ -260,16 +256,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerParameter&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.stationTextZoom, stationTextZoom) || other.stationTextZoom == stationTextZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom)&&(identical(other.regionFillOpacity, regionFillOpacity) || other.regionFillOpacity == regionFillOpacity)&&(identical(other.regionLineOpacity, regionLineOpacity) || other.regionLineOpacity == regionLineOpacity)&&(identical(other.cityFillOpacity, cityFillOpacity) || other.cityFillOpacity == cityFillOpacity)&&(identical(other.stationCircleRadiusMin, stationCircleRadiusMin) || other.stationCircleRadiusMin == stationCircleRadiusMin)&&(identical(other.stationCircleRadiusMax, stationCircleRadiusMax) || other.stationCircleRadiusMax == stationCircleRadiusMax)&&(identical(other.stationIconSizeMin, stationIconSizeMin) || other.stationIconSizeMin == stationIconSizeMin)&&(identical(other.stationIconSizeMid, stationIconSizeMid) || other.stationIconSizeMid == stationIconSizeMid)&&(identical(other.stationIconSizeMax, stationIconSizeMax) || other.stationIconSizeMax == stationIconSizeMax)&&(identical(other.hypocenterIconSizeMin, hypocenterIconSizeMin) || other.hypocenterIconSizeMin == hypocenterIconSizeMin)&&(identical(other.hypocenterIconSizeMax, hypocenterIconSizeMax) || other.hypocenterIconSizeMax == hypocenterIconSizeMax)&&(identical(other.hypocenterFadeOpacity, hypocenterFadeOpacity) || other.hypocenterFadeOpacity == hypocenterFadeOpacity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerParameter&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.stationMinZoom, stationMinZoom) || other.stationMinZoom == stationMinZoom)&&(identical(other.stationLabelMinZoom, stationLabelMinZoom) || other.stationLabelMinZoom == stationLabelMinZoom)&&(identical(other.stationTextZoom, stationTextZoom) || other.stationTextZoom == stationTextZoom)&&(identical(other.hypocenterFadeZoom, hypocenterFadeZoom) || other.hypocenterFadeZoom == hypocenterFadeZoom)&&(identical(other.hypocenterErrorMinZoom, hypocenterErrorMinZoom) || other.hypocenterErrorMinZoom == hypocenterErrorMinZoom)&&(identical(other.regionFillOpacity, regionFillOpacity) || other.regionFillOpacity == regionFillOpacity)&&(identical(other.regionLineOpacity, regionLineOpacity) || other.regionLineOpacity == regionLineOpacity)&&(identical(other.cityFillOpacity, cityFillOpacity) || other.cityFillOpacity == cityFillOpacity)&&(identical(other.stationIconSizeMin, stationIconSizeMin) || other.stationIconSizeMin == stationIconSizeMin)&&(identical(other.stationIconSizeMid, stationIconSizeMid) || other.stationIconSizeMid == stationIconSizeMid)&&(identical(other.stationIconSizeMax, stationIconSizeMax) || other.stationIconSizeMax == stationIconSizeMax)&&(identical(other.hypocenterIconSizeMin, hypocenterIconSizeMin) || other.hypocenterIconSizeMin == hypocenterIconSizeMin)&&(identical(other.hypocenterIconSizeMax, hypocenterIconSizeMax) || other.hypocenterIconSizeMax == hypocenterIconSizeMax)&&(identical(other.hypocenterFadeOpacity, hypocenterFadeOpacity) || other.hypocenterFadeOpacity == hypocenterFadeOpacity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,stationTextZoom,hypocenterFadeZoom,hypocenterErrorMinZoom,regionFillOpacity,regionLineOpacity,cityFillOpacity,stationCircleRadiusMin,stationCircleRadiusMax,stationIconSizeMin,stationIconSizeMid,stationIconSizeMax,hypocenterIconSizeMin,hypocenterIconSizeMax,hypocenterFadeOpacity);
+int get hashCode => Object.hash(runtimeType,regionToCity,stationMinZoom,stationLabelMinZoom,stationTextZoom,hypocenterFadeZoom,hypocenterErrorMinZoom,regionFillOpacity,regionLineOpacity,cityFillOpacity,stationIconSizeMin,stationIconSizeMid,stationIconSizeMax,hypocenterIconSizeMin,hypocenterIconSizeMax,hypocenterFadeOpacity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerParameter(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, stationTextZoom: $stationTextZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom, regionFillOpacity: $regionFillOpacity, regionLineOpacity: $regionLineOpacity, cityFillOpacity: $cityFillOpacity, stationCircleRadiusMin: $stationCircleRadiusMin, stationCircleRadiusMax: $stationCircleRadiusMax, stationIconSizeMin: $stationIconSizeMin, stationIconSizeMid: $stationIconSizeMid, stationIconSizeMax: $stationIconSizeMax, hypocenterIconSizeMin: $hypocenterIconSizeMin, hypocenterIconSizeMax: $hypocenterIconSizeMax, hypocenterFadeOpacity: $hypocenterFadeOpacity)';
+  return 'EarthquakeHistoryMapLayerParameter(regionToCity: $regionToCity, stationMinZoom: $stationMinZoom, stationLabelMinZoom: $stationLabelMinZoom, stationTextZoom: $stationTextZoom, hypocenterFadeZoom: $hypocenterFadeZoom, hypocenterErrorMinZoom: $hypocenterErrorMinZoom, regionFillOpacity: $regionFillOpacity, regionLineOpacity: $regionLineOpacity, cityFillOpacity: $cityFillOpacity, stationIconSizeMin: $stationIconSizeMin, stationIconSizeMid: $stationIconSizeMid, stationIconSizeMax: $stationIconSizeMax, hypocenterIconSizeMin: $hypocenterIconSizeMin, hypocenterIconSizeMax: $hypocenterIconSizeMax, hypocenterFadeOpacity: $hypocenterFadeOpacity)';
 }
 
 
@@ -280,7 +276,7 @@ abstract mixin class _$EarthquakeHistoryMapLayerParameterCopyWith<$Res> implemen
   factory _$EarthquakeHistoryMapLayerParameterCopyWith(_EarthquakeHistoryMapLayerParameter value, $Res Function(_EarthquakeHistoryMapLayerParameter) _then) = __$EarthquakeHistoryMapLayerParameterCopyWithImpl;
 @override @useResult
 $Res call({
- double regionToCity, double stationMinZoom, double stationLabelMinZoom, double stationTextZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom, double regionFillOpacity, double regionLineOpacity, double cityFillOpacity, double stationCircleRadiusMin, double stationCircleRadiusMax, double stationIconSizeMin, double stationIconSizeMid, double stationIconSizeMax, double hypocenterIconSizeMin, double hypocenterIconSizeMax, double hypocenterFadeOpacity
+ double regionToCity, double stationMinZoom, double stationLabelMinZoom, double stationTextZoom, double hypocenterFadeZoom, double hypocenterErrorMinZoom, double regionFillOpacity, double regionLineOpacity, double cityFillOpacity, double stationIconSizeMin, double stationIconSizeMid, double stationIconSizeMax, double hypocenterIconSizeMin, double hypocenterIconSizeMax, double hypocenterFadeOpacity
 });
 
 
@@ -297,7 +293,7 @@ class __$EarthquakeHistoryMapLayerParameterCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerParameter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? stationTextZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,Object? regionFillOpacity = null,Object? regionLineOpacity = null,Object? cityFillOpacity = null,Object? stationCircleRadiusMin = null,Object? stationCircleRadiusMax = null,Object? stationIconSizeMin = null,Object? stationIconSizeMid = null,Object? stationIconSizeMax = null,Object? hypocenterIconSizeMin = null,Object? hypocenterIconSizeMax = null,Object? hypocenterFadeOpacity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,Object? stationMinZoom = null,Object? stationLabelMinZoom = null,Object? stationTextZoom = null,Object? hypocenterFadeZoom = null,Object? hypocenterErrorMinZoom = null,Object? regionFillOpacity = null,Object? regionLineOpacity = null,Object? cityFillOpacity = null,Object? stationIconSizeMin = null,Object? stationIconSizeMid = null,Object? stationIconSizeMax = null,Object? hypocenterIconSizeMin = null,Object? hypocenterIconSizeMax = null,Object? hypocenterFadeOpacity = null,}) {
   return _then(_EarthquakeHistoryMapLayerParameter(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
 as double,stationMinZoom: null == stationMinZoom ? _self.stationMinZoom : stationMinZoom // ignore: cast_nullable_to_non_nullable
@@ -308,8 +304,6 @@ as double,hypocenterErrorMinZoom: null == hypocenterErrorMinZoom ? _self.hypocen
 as double,regionFillOpacity: null == regionFillOpacity ? _self.regionFillOpacity : regionFillOpacity // ignore: cast_nullable_to_non_nullable
 as double,regionLineOpacity: null == regionLineOpacity ? _self.regionLineOpacity : regionLineOpacity // ignore: cast_nullable_to_non_nullable
 as double,cityFillOpacity: null == cityFillOpacity ? _self.cityFillOpacity : cityFillOpacity // ignore: cast_nullable_to_non_nullable
-as double,stationCircleRadiusMin: null == stationCircleRadiusMin ? _self.stationCircleRadiusMin : stationCircleRadiusMin // ignore: cast_nullable_to_non_nullable
-as double,stationCircleRadiusMax: null == stationCircleRadiusMax ? _self.stationCircleRadiusMax : stationCircleRadiusMax // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMin: null == stationIconSizeMin ? _self.stationIconSizeMin : stationIconSizeMin // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMid: null == stationIconSizeMid ? _self.stationIconSizeMid : stationIconSizeMid // ignore: cast_nullable_to_non_nullable
 as double,stationIconSizeMax: null == stationIconSizeMax ? _self.stationIconSizeMax : stationIconSizeMax // ignore: cast_nullable_to_non_nullable

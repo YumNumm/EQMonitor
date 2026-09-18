@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityPartial {
 
-@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
+@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;@JsonKey(includeIfNull: false, name: 'max_intensity_class') CatalogIntensityClass? get maxIntensityClass;
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $IntensityPartialCopyWith<IntensityPartial> get copyWith => _$IntensityPartialCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&(identical(other.maxIntensityClass, maxIntensityClass) || other.maxIntensityClass == maxIntensityClass));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,maxIntensityClass);
 
 @override
 String toString() {
-  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
+  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, maxIntensityClass: $maxIntensityClass)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $IntensityPartialCopyWith<$Res>  {
   factory $IntensityPartialCopyWith(IntensityPartial value, $Res Function(IntensityPartial) _then) = _$IntensityPartialCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'max_intensity_class') CatalogIntensityClass? maxIntensityClass
 });
 
 
@@ -66,11 +66,12 @@ class _$IntensityPartialCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? maxIntensityClass = freezed,}) {
   return _then(IntensityPartial(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,
+as JmaLpgmIntensity?,maxIntensityClass: freezed == maxIntensityClass ? _self.maxIntensityClass : maxIntensityClass // ignore: cast_nullable_to_non_nullable
+as CatalogIntensityClass?,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'max_intensity_class')  CatalogIntensityClass? maxIntensityClass)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityPartial() when $default != null:
-return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.maxIntensityClass);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'max_intensity_class')  CatalogIntensityClass? maxIntensityClass)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPartial():
-return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.maxIntensityClass);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'max_intensity_class')  CatalogIntensityClass? maxIntensityClass)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPartial() when $default != null:
-return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.maxIntensityClass);case _:
   return null;
 
 }
@@ -211,11 +212,12 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
 @JsonSerializable()
 
 class _IntensityPartial implements IntensityPartial {
-  const _IntensityPartial({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity});
+  const _IntensityPartial({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'max_intensity_class') this.maxIntensityClass});
   factory _IntensityPartial.fromJson(Map<String, dynamic> json) => _$IntensityPartialFromJson(json);
 
 @override@JsonKey(name: 'max_intensity') final  JmaIntensity maxIntensity;
 @override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_intensity_class') final  CatalogIntensityClass? maxIntensityClass;
 
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
@@ -230,16 +232,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&(identical(other.maxIntensityClass, maxIntensityClass) || other.maxIntensityClass == maxIntensityClass));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,maxIntensityClass);
 
 @override
 String toString() {
-  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
+  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, maxIntensityClass: $maxIntensityClass)';
 }
 
 
@@ -250,7 +252,7 @@ abstract mixin class _$IntensityPartialCopyWith<$Res> implements $IntensityParti
   factory _$IntensityPartialCopyWith(_IntensityPartial value, $Res Function(_IntensityPartial) _then) = __$IntensityPartialCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'max_intensity_class') CatalogIntensityClass? maxIntensityClass
 });
 
 
@@ -267,11 +269,12 @@ class __$IntensityPartialCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? maxIntensityClass = freezed,}) {
   return _then(_IntensityPartial(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,
+as JmaLpgmIntensity?,maxIntensityClass: freezed == maxIntensityClass ? _self.maxIntensityClass : maxIntensityClass // ignore: cast_nullable_to_non_nullable
+as CatalogIntensityClass?,
   ));
 }
 

@@ -3,13 +3,11 @@ import 'package:test/test.dart';
 
 void main() {
   group('FeedItemDataUnion EARTHQUAKE_NANKAI', () {
-    // バックエンドは南海トラフ関連の feed item で telegramType: "NANKAI" を
-    // 返す（FeedTelegramType の地震回数系の値ではない）。
-    test('telegramType "NANKAI" を含む payload をパースできる', () {
+    test('南海トラフ情報名を含む payload をパースできる', () {
       final json = <String, Object?>{
         'type': 'EARTHQUAKE_NANKAI',
         'infoType': 'PUBLICATION',
-        'telegramType': 'NANKAI',
+        'telegramType': '南海トラフ地震関連解説情報',
         'earthquakeInfo': {
           'text': '南海トラフ地震関連解説情報',
           'kind': {'code': '1', 'name': '調査中'},
@@ -22,7 +20,7 @@ void main() {
 
       expect(result, isA<FeedItemDataUnionFeedEarthquakeNankaiData>());
       final nankai = result as FeedItemDataUnionFeedEarthquakeNankaiData;
-      expect(nankai.telegramType, 'NANKAI');
+      expect(nankai.telegramType, NankaiTelegramType.undefined1);
       expect(nankai.infoType, InfoType.publication);
       expect(nankai.earthquakeInfo?.text, '南海トラフ地震関連解説情報');
     });
@@ -31,14 +29,14 @@ void main() {
       final json = <String, Object?>{
         'type': 'EARTHQUAKE_NANKAI',
         'infoType': 'PUBLICATION',
-        'telegramType': 'NANKAI',
+        'telegramType': '南海トラフ地震臨時情報',
       };
 
       final result = FeedItemDataUnion.fromJson(json);
 
       expect(result, isA<FeedItemDataUnionFeedEarthquakeNankaiData>());
       final nankai = result as FeedItemDataUnionFeedEarthquakeNankaiData;
-      expect(nankai.telegramType, 'NANKAI');
+      expect(nankai.telegramType, NankaiTelegramType.undefined0);
       expect(nankai.earthquakeInfo, isNull);
     });
   });

@@ -62,14 +62,14 @@ void main() {
     mock((call) async => null);
 
     await controller.update(
-      kind: DebugLiveActivityKind.shakeDetection,
+      kind: DebugLiveActivityKind.eew,
       activityId: 'activity-9',
       contentState: <String, dynamic>{'eventId': 'ev-2'},
     );
 
     final args = calls.single.arguments as Map;
     expect(calls.single.method, 'update');
-    expect(args['kind'], 'shake_detection');
+    expect(args['kind'], 'eew');
     expect(args['activityId'], 'activity-9');
   });
 

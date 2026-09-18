@@ -8,17 +8,11 @@ import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_warning_filter_chip.dart';
 import 'package:material_ui/material_ui.dart';
 
-class EewListParameterPersistentDelegate
-    extends SliverPersistentHeaderDelegate {
-  const new({
-    required this.parameter,
-    required this.onChanged,
-  });
-
+class const EewListParameterPersistentDelegate({
+  required final EewListParameter parameter,
+  required final void Function(EewListParameter) onChanged,
+}) extends SliverPersistentHeaderDelegate {
   static const double height = 48;
-
-  final EewListParameter parameter;
-  final void Function(EewListParameter) onChanged;
 
   @override
   Widget build(

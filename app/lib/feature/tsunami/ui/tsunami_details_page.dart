@@ -65,10 +65,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                       TsunamiWarningStatusCard(tsunami: tsunami),
                       CurrentLocationTsunamiCard(tsunami: tsunami),
                       TsunamiRegionList(tsunami: tsunami),
-                      if (tsunami.updatedAt
-                              .toLocal()
-                              .difference(DateTime.now())
-                              .abs() >
+                      if (tsunami.updatedAt.difference(DateTime.now()).abs() >
                           const Duration(hours: 24))
                         const AdBanner(),
                       for (final earthquake in tsunami.earthquakes)

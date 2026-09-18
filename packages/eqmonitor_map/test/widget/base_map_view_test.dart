@@ -2,13 +2,197 @@
 // (Global Constraints「widget testとgolden testは追加しない」)。ここでは
 // gesture callbackから分離したpure関数(`cameraAfterGestureUpdate`/
 // `canonicalZoomFor`)だけを検証する。
+import 'package:eqmonitor_map/src/flutter_scene/earthquake_overlay_material_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/flutter_scene_sprite_resource_owner.dart';
+import 'package:eqmonitor_map/src/flutter_scene/map_gpu_probe.dart';
+import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_mercator_projection.dart';
+import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/earthquake_overlay_coverage.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
+import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
+import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
+import 'package:eqmonitor_map/src/tile/verified_pm_tiles_source.dart';
 import 'package:eqmonitor_map/src/widget/base_map_view.dart';
+import 'package:eqmonitor_map/src/widget/map_view_camera_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 void main() {
+  testWidgets('initialization error view never renders raw error details', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: BaseMapViewInitializationError(),
+      ),
+    );
+
+    expect(find.text('ベースレイヤーの初期化に失敗しました。'), findsOneWidget);
+    expect(find.textContaining('/private/secret.pmtiles'), findsNothing);
+    expect(find.textContaining('https://tiles.example.invalid'), findsNothing);
+    expect(find.textContaining('sha256:'), findsNothing);
+    expect(find.textContaining('Exception'), findsNothing);
+  });
+
+  test(
+    'typed sprite initialization failure disables only sprite resources',
+    () async {
+      final resources = await loadOptionalFlutterSceneSpriteResources<int>(
+        load: () async => throw const FlutterSceneSpriteInitializationFailure(
+          message: 'invalid manifest',
+        ),
+      );
+
+      expect(resources, isNull);
+    },
+  );
+
+  test('unexpected sprite initialization error still propagates', () async {
+    await expectLater(
+      loadOptionalFlutterSceneSpriteResources<int>(
+        load: () async => throw StateError('unexpected'),
+      ),
+      throwsStateError,
+    );
+  });
+
+  test('exposes nullable earthquake overlay and coverage callback inputs', () {
+    final overlay = createEarthquakeMapOverlaySnapshot(
+      versionStamp: createMapOverlayVersionStamp(
+        sourceIdentity: createMapSourceIdentity(value: 'event-a'),
+        sourceIncarnation: createMapSourceIncarnation(value: 'incarnation-a'),
+        dataSequence: 1,
+        dataDigest: 'data-a',
+        renderGeneration: 1,
+        renderDigest: 'render-a',
+      ),
+      regionToCityZoom: 6,
+      stationMinZoom: 6,
+      regionStyles: const [],
+      cityStyles: const [],
+      stations: const [],
+      spriteAtlas: null,
+      sprites: const [],
+      maxSpritePolicyBatches: 1,
+    );
+    void callback(EarthquakeOverlayCoverageSnapshot _) {}
+    final clock = SystemMapClock.start(
+      domain: createMapClockDomainId(value: 'base-map-view-test'),
+    );
+    final cameraController = MapViewCameraController();
+    final gpuProbeController = MapGpuProbeController();
+    const gpuProbeConfiguration = MapGpuProbeConfiguration(
+      faultPoint: null,
+      atlasFixture: MapSpriteAtlasProbeFixture.production,
+    );
+    void gpuCounterCallback(MapGpuResourceCounterSnapshot _) {}
+    addTearDown(cameraController.dispose);
+    final view = BaseMapView(
+      source: const VerifiedPmTilesSource(
+        sourceInstanceId: 'archive-a',
+        absolutePath: '/tmp/archive.pmtiles',
+        sizeBytes: 1,
+        sha256:
+            '0000000000000000000000000000000000000000000000000000000000000000',
+      ),
+      initialCamera: const MapCamera(
+        centerLongitude: 139.7,
+        centerLatitude: 35.7,
+        zoom: 6,
+      ),
+      clock: clock,
+      cameraController: cameraController,
+      limits: const MapBaseLayerLimits(
+        minZoom: 0,
+        maxZoom: 10,
+        pmTilesLimits: PmTilesV3Limits(
+          maxDirectoryDepth: 3,
+          rootDirectoryWindowLength: 16384,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxDirectoryEntries: 65536,
+          maxCachedLeafDirectories: 4,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
+        ),
+        decodeLimits: BaseMapTileDecodeLimits(
+          mvtLimits: MvtDecodeLimits(
+            maxLayers: 16,
+            maxFeaturesPerLayer: 100,
+            maxRingsPerFeature: 100,
+            maxVerticesPerRing: 100,
+            maxCommandsPerFeature: 1000,
+            maxLayerNameBytes: 64,
+            maxKeysPerLayer: 64,
+            maxValuesPerLayer: 100,
+            maxTagsPerFeature: 64,
+            maxPropertyStringBytes: 256,
+          ),
+          fillLimits: FillMeshBuilderLimits(
+            maxHolesPerPolygon: 10,
+            maxVerticesPerFeature: 100,
+            maxVerticesPerSegment: 100,
+            maxIntersectionChecks: 4096,
+          ),
+          lineLimits: LineMeshBuilderLimits(maxVerticesPerSegment: 100),
+          lineMiterLimit: 4,
+        ),
+        maxCachedTileGeometries: 8,
+        maxParentFallbackSteps: 4,
+        maxInFlightDecodes: 2,
+        maxFramesInFlight: 3,
+        spriteRendererLimits: MapSpriteRendererLimits(
+          maxActiveAtlases: 1,
+          maxTopologyVariants: 1,
+          maxPolicyBatches: 1,
+        ),
+        maxSceneNodeCount: 32,
+      ),
+      earthquakeOverlay: overlay,
+      onEarthquakeOverlayCoverageChanged: callback,
+      gpuProbeConfiguration: gpuProbeConfiguration,
+      onGpuResourceCounterChanged: gpuCounterCallback,
+      gpuProbeController: gpuProbeController,
+    );
+
+    expect(view.earthquakeOverlay, same(overlay));
+    expect(view.onEarthquakeOverlayCoverageChanged, same(callback));
+    expect(view.clock, same(clock));
+    expect(view.cameraController, same(cameraController));
+    expect(view.gpuProbeConfiguration, same(gpuProbeConfiguration));
+    expect(view.onGpuResourceCounterChanged, same(gpuCounterCallback));
+    expect(view.gpuProbeController, same(gpuProbeController));
+
+    final changedProbe = BaseMapView(
+      source: view.source,
+      initialCamera: view.initialCamera,
+      limits: view.limits,
+      clock: view.clock,
+      cameraController: view.cameraController,
+      earthquakeOverlay: view.earthquakeOverlay,
+      onEarthquakeOverlayCoverageChanged:
+          view.onEarthquakeOverlayCoverageChanged,
+      gpuProbeConfiguration: const MapGpuProbeConfiguration(
+        faultPoint: MapGpuFaultPoint.frameSubmit,
+        atlasFixture: MapSpriteAtlasProbeFixture.edgeBleed,
+      ),
+      onGpuResourceCounterChanged: view.onGpuResourceCounterChanged,
+      gpuProbeController: view.gpuProbeController,
+    );
+    expect(
+      baseMapViewControllerLifecycleIdentity(view),
+      baseMapViewControllerLifecycleIdentity(changedProbe),
+      reason: 'probe configuration is an in-place runtime update',
+    );
+  });
+
   group('cameraAfterGestureUpdate', () {
     const camera = MapCamera(
       centerLongitude: 139.767,

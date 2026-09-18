@@ -33,7 +33,8 @@ permissions:
   contents: read
 
 env:
-  XCODE_VERSION: 26.6
+  # The xcode-27 image includes prereleases until the stable SDK is available.
+  XCODE_VERSION: latest
   GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
   GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
 
@@ -202,7 +203,8 @@ jobs:
     name: Build iOS
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-ios }}
-    runs-on: macos-26
+    # SearchEarthquakesIntent uses the iOS 27 system.searchInApp schema.
+    runs-on: xcode-27
     permissions:
       contents: read
     timeout-minutes: 30
@@ -249,6 +251,16 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      - name: Verify Xcode and iOS SDK
+        run: |
+          xcodebuild -version
+          sdk_version="$(xcrun --sdk iphoneos --show-sdk-version)"
+          echo "iOS SDK: $sdk_version"
+          if [[ "${sdk_version%%.*}" != "27" ]]; then
+            echo "::error::SearchEarthquakesIntent requires the iOS 27 SDK."
+            exit 1
+          fi
+
       - name: Enable Swift Package Manager
         run: |
           flutter config --enable-swift-package-manager
@@ -283,9 +295,21 @@ jobs:
           if [ "$DEPLOY_IOS_EXTERNAL" = "true" ]; then
             BETA_ARGS+=(--dart-define IS_SHAKE_DETECTION_ENABLED="false")
           fi
+          # pubspec の `3.0.0-beta.11` を flutter にそのまま渡すと、iOS 向けサニタイズが
+          # 数字とドット以外を除去して CFBundleShortVersionString が `3.0.0.11` になる。
+          # 4 セグメントは App Store Connect に ITMS-90060 で弾かれるため、
+          # プレリリース識別子とビルドメタデータを落とした x.y.z を明示的に渡す。
+          BUILD_NAME=$(sed -n 's/^version: *\([^ #]*\).*/\1/p' pubspec.yaml)
+          BUILD_NAME=${BUILD_NAME%%-*}
+          BUILD_NAME=${BUILD_NAME%%+*}
+          if ! [[ "$BUILD_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::unexpected build-name '${BUILD_NAME}' derived from app/pubspec.yaml"
+            exit 1
+          fi
           flutter build ios --config-only \
             --no-codesign \
             --no-pub \
+            --build-name="$BUILD_NAME" \
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=../environment/.env.prod \
             --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \

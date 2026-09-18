@@ -6,12 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'knet_credentials_provider.g.dart';
 
 /// BOSAI 認証情報（ユーザーID + パスワード）
-class KnetCredentials {
-  const new({required this.userId, required this.password});
-
-  final String userId;
-  final String password;
-}
+class const KnetCredentials({
+  required final String userId,
+  required final String password,
+});
 
 /// SecureStorage から BOSAI 認証情報を読み書きする Notifier
 @Riverpod(keepAlive: true)

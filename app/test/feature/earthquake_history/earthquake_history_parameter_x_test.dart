@@ -18,7 +18,7 @@ void main() {
 
     group('withRegion', () {
       test(
-        '1. All(magnitudeGte:5, statuses) → prefecture で共通フィルタ引き継ぎ・sortBy強制eventId',
+        '1. All(magnitudeGte:5, statuses) → prefecture で共通フィルタとsortByを引き継ぐ',
         () {
           const result = (
             searchType: RegionSearchType.prefecture,
@@ -35,8 +35,7 @@ void main() {
           expect(p.intensityLte, JmaIntensity.fiveLower);
           expect(p.magnitudeGte, 5.0);
           expect(p.statuses, [TelegramStatus.normal]);
-          // sortBy は eventId に強制される
-          expect(p.sortBy, EarthquakeSortBy.eventId);
+          expect(p.sortBy, EarthquakeSortBy.magnitude);
           // sortOrder は元の値を引き継ぐ
           expect(p.sortOrder, SortOrder.asc);
         },
@@ -54,7 +53,7 @@ void main() {
         expect(param, isA<EarthquakeHistoryParameterRegion>());
         final p = param as EarthquakeHistoryParameterRegion;
         expect(p.regionCode, '010100');
-        expect(p.sortBy, EarthquakeSortBy.eventId);
+        expect(p.sortBy, EarthquakeSortBy.magnitude);
       });
 
       test('2b. searchType=city → EarthquakeHistoryParameterCity', () {
@@ -69,7 +68,7 @@ void main() {
         expect(param, isA<EarthquakeHistoryParameterCity>());
         final p = param as EarthquakeHistoryParameterCity;
         expect(p.cityCode, '01100');
-        expect(p.sortBy, EarthquakeSortBy.eventId);
+        expect(p.sortBy, EarthquakeSortBy.magnitude);
       });
 
       test('2c. searchType=station → EarthquakeHistoryParameterStation', () {
@@ -84,7 +83,7 @@ void main() {
         expect(param, isA<EarthquakeHistoryParameterStation>());
         final p = param as EarthquakeHistoryParameterStation;
         expect(p.stationCode, '0110100');
-        expect(p.sortBy, EarthquakeSortBy.eventId);
+        expect(p.sortBy, EarthquakeSortBy.magnitude);
       });
 
       test('3. Prefecture(...).withRegion(city) → City に切り替わり共通フィルタ引き継ぎ', () {
@@ -143,7 +142,7 @@ void main() {
         },
       );
 
-      test('5. withRegion 時 sortBy は eventId に強制される', () {
+      test('5. withRegion 時はsortByを維持する', () {
         const allWithMagnitudeSort = EarthquakeHistoryParameterAll(
           sortBy: EarthquakeSortBy.magnitude,
           sortOrder: SortOrder.asc,
@@ -156,10 +155,39 @@ void main() {
           intensityLte: null,
         );
         final param = allWithMagnitudeSort.withRegion(result);
-        // sortBy は magnitude だったが、地域指定後は eventId に強制
-        expect(param.sortBy, EarthquakeSortBy.eventId);
+        expect(param.sortBy, EarthquakeSortBy.magnitude);
         // sortOrder は保持される
         expect(param.sortOrder, SortOrder.asc);
+      });
+
+      test('6. 地域専用sortで地域を切り替えてもsortByを維持する', () {
+        const city = EarthquakeHistoryParameterCity(
+          sortBy: EarthquakeSortBy.regionalIntensity,
+          sortOrder: SortOrder.desc,
+          cityCode: '131016',
+        );
+        const result = (
+          searchType: RegionSearchType.city,
+          code: '1720400',
+          name: '輪島市',
+          intensityGte: null,
+          intensityLte: null,
+        );
+
+        expect(
+          city.withRegion(result).sortBy,
+          EarthquakeSortBy.regionalIntensity,
+        );
+      });
+
+      test('7. 地域専用sortで地域指定を外すとeventIdに戻す', () {
+        const city = EarthquakeHistoryParameterCity(
+          sortBy: EarthquakeSortBy.regionalIntensity,
+          sortOrder: SortOrder.desc,
+          cityCode: '1720400',
+        );
+
+        expect(city.toAll().sortBy, EarthquakeSortBy.eventId);
       });
     });
 

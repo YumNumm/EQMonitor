@@ -8,9 +8,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// K-NET CSV は物理値（gal）を直接記録した形式。
 /// `#` プレフィックスのコメント行でヘッダを記述し、
 /// `#` なしのデータ行に時刻・相対時刻・各チャンネルの加速度が格納される。
-class KnetCsvParser {
-  const new();
-
+class const KnetCsvParser() {
   /// CSV テキストを [KnetCsvRecord] にパースする
   KnetCsvRecord parse(String source) {
     final lines = source.split('\n').map((l) => l.trim()).toList();
@@ -235,42 +233,25 @@ class KnetCsvParser {
 }
 
 /// K-NET CSV 1データポイント
-class KnetCsvDataPoint {
-  const new({
-    required this.time,
-    required this.relativeTimeSec,
-    required this.accelerationsGal,
-  });
-
+class const KnetCsvDataPoint({
   /// 絶対時刻（JST）
-  final DateTime time;
+  required final DateTime time,
 
   /// 記録開始からの相対時刻（秒）
-  final double relativeTimeSec;
+  required final double relativeTimeSec,
 
   /// 各チャンネルの加速度（gal）
-  final List<double> accelerationsGal;
-}
+  required final List<double> accelerationsGal,
+});
 
 /// K-NET CSV パース結果
-class KnetCsvRecord {
-  const new({
-    required this.earthquakeInfo,
-    required this.stationInfo,
-    required this.offsets,
-    required this.channelDirections,
-    required this.dataPoints,
-    required this.samplingFrequencyHz,
-    required this.durationTimeSec,
-    required this.networkType,
-  });
-
-  final KnetEarthquakeInfo? earthquakeInfo;
-  final KnetStationInfo? stationInfo;
-  final List<double> offsets;
-  final List<KnetChannelDirection> channelDirections;
-  final List<KnetCsvDataPoint> dataPoints;
-  final double samplingFrequencyHz;
-  final double? durationTimeSec;
-  final KnetNetworkType networkType;
-}
+class const KnetCsvRecord({
+  required final KnetEarthquakeInfo? earthquakeInfo,
+  required final KnetStationInfo? stationInfo,
+  required final List<double> offsets,
+  required final List<KnetChannelDirection> channelDirections,
+  required final List<KnetCsvDataPoint> dataPoints,
+  required final double samplingFrequencyHz,
+  required final double? durationTimeSec,
+  required final KnetNetworkType networkType,
+});

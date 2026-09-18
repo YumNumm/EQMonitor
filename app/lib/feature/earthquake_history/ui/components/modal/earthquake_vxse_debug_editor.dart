@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
@@ -166,7 +167,7 @@ class _SharedReportFields extends StatelessWidget {
           _ControlledTextFormField(
             fieldKey: const Key('reported-at-field'),
             fieldId: 'reportedAt',
-            value: state.draft.reportedAt.toIso8601String(),
+            value: state.draft.reportedAt.tokyoDateTime.toIso8601String(),
             label: '発表時刻 (ISO 8601)',
             notifier: notifier,
             validation: (value) =>
@@ -269,7 +270,7 @@ class _HypocenterFields extends StatelessWidget {
             const SizedBox(height: 8),
             _ControlledTextFormField(
               fieldId: 'arrivalTime',
-              value: arrivalTime?.toIso8601String() ?? '',
+              value: arrivalTime?.tokyoDateTime.toIso8601String() ?? '',
               label: '検知時刻',
               notifier: notifier,
               validation: (value) =>
@@ -283,7 +284,7 @@ class _HypocenterFields extends StatelessWidget {
             const SizedBox(height: 8),
             _ControlledTextFormField(
               fieldId: 'originTime',
-              value: originTime?.toIso8601String() ?? '',
+              value: originTime?.tokyoDateTime.toIso8601String() ?? '',
               label: '発生時刻',
               notifier: notifier,
               validation: (value) =>
@@ -2823,7 +2824,7 @@ class _CommentRow extends StatelessWidget {
             _ControlledTextFormField(
               fieldKey: const Key('comment-reported-at'),
               fieldId: '$fieldPrefix.reportedAt',
-              value: comment.reportedAt.toIso8601String(),
+              value: comment.reportedAt.tokyoDateTime.toIso8601String(),
               label: 'コメント発表時刻',
               notifier: notifier,
               validation: (value) =>

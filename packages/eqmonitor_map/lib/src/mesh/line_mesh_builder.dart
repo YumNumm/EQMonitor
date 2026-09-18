@@ -257,8 +257,8 @@ _buildRing(Int32List ring, {required double miterLimit}) {
     final y = ys[i];
     // 中心線の同じ座標を2頂点分格納し、押し出し法線を+/-反転させることで
     // 線の両側(plus側/minus側)を表す。ここで生成する法線はMVT入力と同じ
-    // tile-local Y-down座標系の方向ベクトルであり、Flutter Scene/shaderへ
-    // 渡す直前に`BaseMapGeometryFactory`がclip/NDC Y-up座標系へ変換する。
+    // tile-local Y-down座標系の方向ベクトルであり、packed meshへ詰める
+    // `packBaseMapLineMesh`がclip/NDC Y-up座標系へ変換する。
     positions[i * 4] = x;
     positions[i * 4 + 1] = y;
     positions[i * 4 + 2] = x;

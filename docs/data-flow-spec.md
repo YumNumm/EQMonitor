@@ -96,7 +96,8 @@ DMDATA (気象庁データプロバイダ)
 | エンドポイント | `GET /v2/realtime/ws?ticket=<JWT>` |
 | 接続時 | Redis Pub/Sub の購読完了後に `{type:"ready"}` を送信。クライアントはその後 REST 同期 |
 | リアルタイム | `realtime:broadcast:v1` Pub/Sub を subscribe し `{type:"realtime", data:{...}}` で転送 |
-| ping/pong | 15 秒ごとに `{type:"ping"}` を送信し、15 秒以内に `{type:"pong"}` がなければ切断 |
+| ping/pong (生存確認) | 15 秒ごとに `{type:"ping"}` を送信し、15 秒以内に `{type:"pong"}` がなければ切断 |
+| ping/pong (RTT 計測) | クライアントの `{type:"ping", pingId}` に `{type:"pong", pingId}` を echo。1 秒未満の連投は捨てる |
 
 ### 2.5 EQMonitor Flutter アプリ
 **役割**: WebSocket 接続を確立し、受信データを Riverpod プロバイダとして提供する
@@ -106,8 +107,10 @@ DMDATA (気象庁データプロバイダ)
 eqmonitorWebSocketTicket (チケット取得・自動更新)
   └─ eqmonitorWebSocket (WebSocket 接続)
        └─ eqmonitorWsEventStream (raw WebSocketEvent ストリーム)
+            │    └─ WsHeartbeatResponder でサーバー ping に pong 返送
             └─ eqmonitorWsPayloadStream (WsMessage にパース)
-                 ├─ EqMonitorWsStatus (ping → pong 応答・接続状態管理)
+                 ├─ EqMonitorWsStatus (接続状態・サーバー ping 受信間隔)
+                 ├─ EqmonitorWsPingProbe (クライアント起因 ping で RTT 計測)
                  └─ eqMonitorWsDataSource (RealtimeEvent に変換)
                       └─ RealtimeEvents (keepAlive: true、全ソース集約)
 ```
@@ -265,11 +268,28 @@ Flutter app                    api/api           api/websocket
     │                             │                    │
     │◄── {type:"realtime", data:<envelope>} ─── (Pub/Sub) ───│
     │                             │                    │
-    │◄── {type:"ping"} ──────────────────────────────│ (15秒ごと)
+    │◄── {type:"ping"} ──────────────────────────────│ (15秒ごと / 生存確認)
     │── {type:"pong"} ──────────────────────────────►│
+    │                             │                    │
+    │── {type:"ping", pingId} ──────────────────────►│ (20秒ごと / RTT計測)
+    │◄── {type:"pong", pingId} ──────────────────────│
 ```
 
 チケット TTL: デフォルト 1800 秒、Flutter 側は expiry 30 秒前に自動更新。
+
+**2 系統の ping/pong**: 向きで用途が分かれる。
+
+| 向き | メッセージ | 用途 |
+|------|-----------|------|
+| server → client | `{type:"ping"}` | 生存確認。client は `{type:"pong"}` を返す。返さないと 15 秒で切断 |
+| client → server | `{type:"ping", pingId}` | RTT 計測。server は `pingId` を echo する |
+| server → client | `{type:"pong", pingId}` | 上記への応答 |
+
+サーバー起因 ping は `pingId` を持たないため、クライアントからは RTT を求められない
+（測れるのは ping の受信間隔＝約 15 秒だけ）。クライアント起因 ping はこのために
+ある。`pingId` は接続ごとの連番で、echo された値が一致したものだけ RTT に計上する。
+`pingId` はサーバーがそのまま送り返す値なので、長さ 64 文字以内の非空文字列だけを
+受け付ける。
 
 ### 5.2 WebSocket メッセージ型 (Flutter 側)
 
@@ -296,8 +316,22 @@ type: "realtime"  → WsRealtimeMessage
     "estimated_intensity" → upsert + EstimatedIntensityEvent
 
 type: "ping"      → WsPingMessage
-  (EqMonitorWsStatusNotifier が {type:"pong"} を自動返送)
+  (接続層 EqmonitorWsEventStream が WsHeartbeatResponder で
+   {type:"pong"} を自動返送。下流に listener がいなくても返る)
+
+type: "pong"      → WsPongMessage {pingId}
+  (EqmonitorWsPingProbe が送信時刻との差分を RTT として記録)
 ```
+
+**送信メッセージ**:
+
+```
+WsClientPongMessage  {type:"pong"}            ← サーバー起因 ping への応答
+WsClientPingMessage  {type:"ping", pingId}    ← RTT 計測用（20 秒ごと）
+```
+
+RTT 計測は `eqmonitorWsPingProbeProvider` (autoDispose) が担当し、
+watch されている間（現状は WebSocket デバッグ画面を開いている間）だけ ping を送る。
 
 ### 5.3 スナップショット取得ウィンドウ
 

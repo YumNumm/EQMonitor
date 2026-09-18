@@ -1,6 +1,8 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
@@ -50,7 +52,11 @@ void main() {
         SharedPreferencesKey.deviceProvisioned.key: true,
       });
       final prefs = await SharedPreferences.getInstance();
-      final authRepo = _MemoryDeviceAuthRepository()..savedToken = 'valid-jwt';
+      final authRepo = _MemoryDeviceAuthRepository()
+        ..savedToken = JWT({
+          'sub': 'device:01976d8e-7d12-7000-8000-1234567890ab',
+          'exp': 0,
+        }).sign(SecretKey('test-secret'));
 
       final container = ProviderContainer(
         overrides: [
@@ -68,6 +74,101 @@ void main() {
       expect(status, DeviceProvisioningStatus.notRequired);
     },
   );
+
+  test(
+    'provisioning clears malformed JWT and returns required',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final authRepo = _MemoryDeviceAuthRepository()..savedToken = 'not-a-jwt';
+
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith((ref) async => authRepo),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final status = await container.read(deviceProvisioningProvider.future);
+      expect(status, DeviceProvisioningStatus.required);
+      expect(authRepo.savedToken, isNull);
+
+      final repo = await container.read(
+        deviceProvisioningRepositoryProvider.future,
+      );
+      expect(await repo.isProvisioned(), isFalse);
+    },
+  );
+
+  test(
+    'provisioning clears JWT without device subject and returns required',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesKey.deviceProvisioned.key: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final authRepo = _MemoryDeviceAuthRepository()
+        ..savedToken = JWT({
+          'sub': 'user:01976d8e-7d12-7000-8000-1234567890ab',
+        }).sign(SecretKey('test-secret'));
+
+      final container = ProviderContainer(
+        overrides: [
+          app_prefs.sharedPreferencesProvider.overrideWithValue(
+            app_prefs.SharedPreferencesAsync(prefs),
+          ),
+          deviceAuthRepositoryProvider.overrideWith((ref) async => authRepo),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final status = await container.read(deviceProvisioningProvider.future);
+      expect(status, DeviceProvisioningStatus.required);
+      expect(authRepo.savedToken, isNull);
+
+      final repo = await container.read(
+        deviceProvisioningRepositoryProvider.future,
+      );
+      expect(await repo.isProvisioned(), isFalse);
+    },
+  );
+
+  test('不正JWTを削除した後はキャッシュ済みDevice IDも破棄する', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesKey.deviceProvisioned.key: true,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final authRepo = _MemoryDeviceAuthRepository()
+      ..savedToken = JWT({
+        'sub': 'device:device-a',
+      }).sign(SecretKey('test-secret'));
+    final container = ProviderContainer(
+      overrides: [
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(prefs),
+        ),
+        deviceAuthRepositoryProvider.overrideWith((ref) async => authRepo),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    expect(await container.read(deviceIdProvider.future), 'device-a');
+    authRepo.savedToken = 'not-a-jwt';
+
+    expect(
+      await container.read(deviceProvisioningProvider.future),
+      DeviceProvisioningStatus.required,
+    );
+    await expectLater(
+      container.read(deviceIdProvider.future),
+      throwsA(isA<StateError>()),
+    );
+  });
 
   test(
     'provisioning returns required when flag is false',

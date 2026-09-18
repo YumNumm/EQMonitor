@@ -7,9 +7,7 @@ import 'package:eqmonitor/feature/subscription/data/exception/revenue_cat_unavai
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 
-class RevenueCatConfigurator {
-  const new();
-
+class const RevenueCatConfigurator() {
   Future<void> ensureConfigured() async {
     if (kIsWeb || (!Platform.isIOS && !Platform.isAndroid)) {
       throw const RevenueCatUnavailableException(

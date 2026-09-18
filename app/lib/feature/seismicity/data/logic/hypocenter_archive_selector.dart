@@ -2,9 +2,7 @@ import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart'
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
 
-class HypocenterArchiveSelector {
-  const new();
-
+class const HypocenterArchiveSelector() {
   List<HypocenterArchive> initialSelection({
     required List<HypocenterArchive> archives,
   }) {

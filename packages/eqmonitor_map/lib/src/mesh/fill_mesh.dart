@@ -8,13 +8,7 @@ import 'dart:typed_data';
 /// (segment)へ分割して返す
 /// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
 /// 「Fill頂点生成」節)。
-final class FillMesh {
-  const new({
-    required this.positions,
-    required this.indices,
-    required this.vertexCount,
-  });
-
+final class const FillMesh({
   /// tile-local座標のx, yを交互に詰めたfloat32頂点列。法線・UVは持たない。
   /// fillの描画は`gl_Position = u_matrix * vec4(a_pos, 0, 1)`という行列積
   /// だけで完結し、複雑さはすべてこのbuffer生成側に押し込む設計であるため、
@@ -22,12 +16,12 @@ final class FillMesh {
   ///
   /// MVT extent外(負値やbuffer領域で宣言されたextentを超える座標)の頂点も
   /// 落とさずそのまま含む。tile境界のclipは描画側のscissorが担当する。
-  final Float32List positions;
+  required final Float32List positions,
 
   /// 3個1組でtriangleを表すindex buffer。[positions]内の頂点index
   /// (0-based)を指す。
-  final Uint16List indices;
+  required final Uint16List indices,
 
   /// [positions]に含まれる頂点数(`positions.length ~/ 2`と一致する)。
-  final int vertexCount;
-}
+  required final int vertexCount,
+});

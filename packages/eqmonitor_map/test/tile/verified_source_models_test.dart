@@ -24,6 +24,34 @@ void main() {
         ),
       );
     });
+
+    test('localとremoteの文字列は配布先情報とdigestを保持しない', () {
+      const localPath = '/private/archive/source.pmtiles';
+      const localSha =
+          'abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd';
+      const remoteUrl =
+          'https://private.example/archive.pmtiles?credential=secret';
+      const remoteSha =
+          '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+      const local = VerifiedPmTilesSource(
+        sourceInstanceId: 'local-private',
+        absolutePath: localPath,
+        sizeBytes: 128,
+        sha256: localSha,
+      );
+      final remote = createVerifiedRemotePmTilesSource(
+        sourceInstanceId: 'remote-private',
+        sourceRevision: 1,
+        url: Uri.parse(remoteUrl),
+        sizeBytes: 128,
+        sha256: remoteSha,
+      );
+
+      expect(local.toString(), isNot(contains(localPath)));
+      expect(local.toString(), isNot(contains(localSha)));
+      expect(remote.toString(), isNot(contains(remoteUrl)));
+      expect(remote.toString(), isNot(contains(remoteSha)));
+    });
   });
 
   group('createVerifiedRemotePmTilesSource', () {

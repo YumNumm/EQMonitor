@@ -10,34 +10,22 @@ enum MvtGeometryType {
 
 /// decode結果のtile。frame hot pathで毎tile生成されるdecode結果であり
 /// 永続化しないため、Freezedにはしない。
-final class MvtTile {
-  const new({required this.layers});
+final class const MvtTile({required final List<MvtLayer> layers});
 
-  final List<MvtLayer> layers;
-}
+final class const MvtLayer({
+  required final String name,
+  required final int version,
+  required final int extent,
+  required final List<MvtFeature> features,
+});
 
-final class MvtLayer {
-  const new({
-    required this.name,
-    required this.version,
-    required this.extent,
-    required this.features,
-  });
-
-  final String name;
-  final int version;
-  final int extent;
-  final List<MvtFeature> features;
-}
-
-/// properties(tag/key/value)とfeature IDはwire上ではskipするが、この
-/// 縦切りではlayer名だけでstylingが足りるためモデルへ持たせない。
-final class MvtFeature {
-  const new({required this.type, required this.rings});
-
-  final MvtGeometryType type;
+final class const MvtFeature({
+  required final MvtGeometryType type,
 
   /// ringごとにx, yを交互に詰めたtile-local座標。Pointはpartが1つの
   /// ringとして入り、LineString/Polygonはpart(ring)ごとに1要素になる。
-  final List<Int32List> rings;
-}
+  required final List<Int32List> rings,
+
+  /// MVTのtag/key/value tableから解決した文字列property。
+  required final Map<String, String> properties,
+});

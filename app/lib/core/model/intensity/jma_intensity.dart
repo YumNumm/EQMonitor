@@ -32,7 +32,10 @@ enum JmaIntensity {
     .seven => '7',
   };
 
+  /// 震度アイコンに載せる主文字。未発表は `-` で「値がない」ことを示す。
+  /// 文章中の「不明」は [label] を使う。
   String get mainText => switch (this) {
+    .unknown => '-',
     .fiveUnknown => '5',
     .fiveLower => '5',
     .fiveUpper => '5',

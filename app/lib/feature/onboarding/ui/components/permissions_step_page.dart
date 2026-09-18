@@ -252,9 +252,9 @@ class _PermissionActionCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: .start,
+        spacing: designSystem.spacing.sm,
         children: [
           Text(title, style: designSystem.typography.titleMedium),
-          SizedBox(height: designSystem.spacing.sm),
           _PermissionDescriptionText(
             description: description,
             linkLabel: linkLabel,
@@ -270,7 +270,6 @@ class _PermissionActionCard extends StatelessWidget {
               ),
             ),
           ],
-          SizedBox(height: designSystem.spacing.md),
           Align(
             alignment: .centerRight,
             child: Wrap(

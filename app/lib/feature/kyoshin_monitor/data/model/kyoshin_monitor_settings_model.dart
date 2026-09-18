@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/data/service/kyoshin_monitor_delay_adjust_service.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_delay.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
@@ -41,30 +41,6 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
       _$KyoshinMonitorSettingsModelFromJson(json);
 }
 
-extension KyoshinMonitorSettingsModelX on KyoshinMonitorSettingsModel {
-  RealtimeLayer get effectiveRealtimeLayer =>
-      realtimeDataType.isLpgm ? RealtimeLayer.surface : realtimeLayer;
-
-  bool get canSelectRealtimeLayer => useKmoni && !realtimeDataType.isLpgm;
-
-  /// 実際に画像を取得するホスト。
-  ///
-  /// LPGM 系列は長周期地震動モニタにしか存在しないため、[monitorSource] が
-  /// [KyoshinMonitorSource.kmoni] でも LPGM 系列が選ばれていれば
-  /// 長周期地震動モニタから取得する。`latest.json` の取得先もこれに揃える。
-  KyoshinMonitorSource get effectiveMonitorSource =>
-      realtimeDataType.isLpgm ? KyoshinMonitorSource.lmoni : monitorSource;
-
-  /// 公開遅延を学習する単位。
-  ///
-  /// ホストではなく画像の生成パイプラインで決まる。長周期地震動モニタを
-  /// 選んでいても、震度などの非 LPGM 系列は `/img_svr/` 経由で強震モニタの
-  /// パイプラインから配信されるため [KyoshinMonitorDelayProfile.kmoni] になる。
-  KyoshinMonitorDelayProfile get delayProfile => realtimeDataType.isLpgm
-      ? KyoshinMonitorDelayProfile.lpgm
-      : KyoshinMonitorDelayProfile.kmoni;
-}
-
 @freezed
 abstract class KyoshinMonitorSettingsApiModel
     with _$KyoshinMonitorSettingsApiModel {
@@ -77,8 +53,8 @@ abstract class KyoshinMonitorSettingsApiModel
     /// 画像取得頻度
     @Default(Duration(seconds: 1))
     @Assert(
-      'imageFetchInterval.inSeconds > 1',
-      'imageFetchInterval must be greater than 1 second',
+      'imageFetchInterval.inSeconds >= 1',
+      'imageFetchInterval must be at least 1 second',
     )
     Duration imageFetchInterval,
 
@@ -114,14 +90,6 @@ abstract class KyoshinMonitorSettingsApiModel
 
   factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorSettingsApiModelFromJson(json);
-}
-
-extension KyoshinMonitorSettingsApiModelX on KyoshinMonitorSettingsApiModel {
-  KyoshinMonitorDelayAdjustConfig get delayAdjustConfig =>
-      KyoshinMonitorDelayAdjustConfig(
-        minOffset: minOffset,
-        maxOffset: maxOffset,
-      );
 }
 
 @JsonEnum(valueField: 'url')

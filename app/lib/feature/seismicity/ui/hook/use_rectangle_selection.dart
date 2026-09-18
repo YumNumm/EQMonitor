@@ -5,24 +5,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 ///
 /// 画面座標(Offset)のみを扱う。地理座標への変換は呼び出し側
 /// ([SeismicitySelectionOverlay])が [MapController.toLngLat] を用いて行う。
-class RectangleSelectionState {
-  const new({
-    required this.dragStart,
-    required this.dragCurrent,
-    required this.startDrag,
-    required this.updateDrag,
-    required this.endDrag,
-  });
-
-  final Offset? dragStart;
-  final Offset? dragCurrent;
-  final void Function(Offset) startDrag;
-  final void Function(Offset) updateDrag;
+class const RectangleSelectionState({
+  required final Offset? dragStart,
+  required final Offset? dragCurrent,
+  required final void Function(Offset) startDrag,
+  required final void Function(Offset) updateDrag,
 
   /// ドラッグ終了時に確定した矩形(画面座標)を返し、内部状態をリセットする。
   /// ドラッグが開始されていなければ null を返す。
-  final Rect? Function() endDrag;
-
+  required final Rect? Function() endDrag,
+}) {
   /// これ未満のドラッグ距離(論理ピクセル)は誤タップ等による退化した矩形と
   /// みなし、選択を確定しない([endDrag] が null を返す)。
   static const minimumDragExtent = 4.0;

@@ -29,6 +29,17 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
 class EqmonitorWsEventStream extends _$EqmonitorWsEventStream {
   var _retryCount = 0;
 
+  /// これは状態ではなくイベント列なので、同じ値でも必ず通知する。
+  ///
+  /// 既定では前回の state と `==` のとき listener に通知されない。
+  /// [TextDataReceived] は text の値等価なので、`{"type":"ping"}` のように
+  /// 内容が完全に同じフレームが連続すると 2 回目以降が観測できなくなる。
+  @override
+  bool updateShouldNotify(
+    AsyncValue<WebSocketEvent> previous,
+    AsyncValue<WebSocketEvent> next,
+  ) => true;
+
   @override
   Stream<WebSocketEvent> build() async* {
     ref.listen(appLifecycleProvider, (_, next) {

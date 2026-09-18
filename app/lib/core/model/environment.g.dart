@@ -30,6 +30,18 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'google_android_client_id',
         (v) => v as String,
       ),
+      googleServerClientId: $checkedConvert(
+        'google_server_client_id',
+        (v) => v as String? ?? '',
+      ),
+      googleIosReversedClientId: $checkedConvert(
+        'google_ios_reversed_client_id',
+        (v) => v as String? ?? '',
+      ),
+      appleServiceId: $checkedConvert(
+        'apple_service_id',
+        (v) => v as String? ?? '',
+      ),
       buildTimestamp: $checkedConvert('build_timestamp', (v) => v as String),
       buildCommitMessage: $checkedConvert(
         'build_commit_message',
@@ -51,6 +63,10 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'is_pro_features_enabled',
         (v) => v as bool? ?? false,
       ),
+      isNativeSocialAuthEnabled: $checkedConvert(
+        'is_native_social_auth_enabled',
+        (v) => v as bool? ?? false,
+      ),
       isShakeDetectionEnabled: $checkedConvert(
         'is_shake_detection_enabled',
         (v) => v as bool? ?? true,
@@ -66,12 +82,16 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
     'wsApiUrl': 'ws_api_url',
     'googleIosClientId': 'google_ios_client_id',
     'googleAndroidClientId': 'google_android_client_id',
+    'googleServerClientId': 'google_server_client_id',
+    'googleIosReversedClientId': 'google_ios_reversed_client_id',
+    'appleServiceId': 'apple_service_id',
     'buildTimestamp': 'build_timestamp',
     'buildCommitMessage': 'build_commit_message',
     'revenueCatApiKeyIos': 'revenue_cat_api_key_ios',
     'revenueCatApiKeyAndroid': 'revenue_cat_api_key_android',
     'isBetaTesting': 'is_beta_testing',
     'isProFeaturesEnabled': 'is_pro_features_enabled',
+    'isNativeSocialAuthEnabled': 'is_native_social_auth_enabled',
     'isShakeDetectionEnabled': 'is_shake_detection_enabled',
   },
 );
@@ -86,12 +106,16 @@ Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
       'ws_api_url': instance.wsApiUrl,
       'google_ios_client_id': instance.googleIosClientId,
       'google_android_client_id': instance.googleAndroidClientId,
+      'google_server_client_id': instance.googleServerClientId,
+      'google_ios_reversed_client_id': instance.googleIosReversedClientId,
+      'apple_service_id': instance.appleServiceId,
       'build_timestamp': instance.buildTimestamp,
       'build_commit_message': instance.buildCommitMessage,
       'revenue_cat_api_key_ios': instance.revenueCatApiKeyIos,
       'revenue_cat_api_key_android': instance.revenueCatApiKeyAndroid,
       'is_beta_testing': instance.isBetaTesting,
       'is_pro_features_enabled': instance.isProFeaturesEnabled,
+      'is_native_social_auth_enabled': instance.isNativeSocialAuthEnabled,
       'is_shake_detection_enabled': instance.isShakeDetectionEnabled,
     };
 

@@ -9,9 +9,7 @@ part 'notification_region_add_action.g.dart';
 NotificationRegionAddAction notificationRegionAddAction(Ref ref) =>
     const NotificationRegionAddAction();
 
-final class NotificationRegionAddAction {
-  const new();
-
+final class const NotificationRegionAddAction() {
   Future<void> add({
     required WidgetRef ref,
     required NotificationRegionSelection selection,

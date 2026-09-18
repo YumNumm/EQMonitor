@@ -3,106 +3,121 @@ import 'dart:ui';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/city_highest_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
-import 'package:eqmonitor/feature/intensity_history/data/notifier/prefecture_highest_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
-/// 地域別最大震度マップの上部フローティングパネル。
+/// 市区町村別最大震度マップの上部フローティングパネル。
 ///
-/// - Lv1(全都道府県表示): 「全国」を表示。
-/// - Lv2(特定都道府県フォーカス): 都道府県名・最高震度バッジ・観測件数を表示。
+/// - 未選択: 「市区町村別 最大観測震度」と集計の最終更新時刻を表示。
+/// - 市区町村選択中: 都道府県名・市区町村名・最大震度バッジと最終更新時刻を表示。
 class RegionFloatingPanel extends ConsumerWidget {
   const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(intensityHistoryControllerProvider);
-    final theme = Theme.of(context);
+    final selectedCity = ref
+        .watch(intensityHistoryControllerProvider)
+        .selectedCity;
+    final cityMaxIntensity = ref
+        .watch(cityMaxIntensityProvider)
+        .valueOrPrevious;
 
-    return switch (state) {
-      IntensityHistoryStatePrefecture() => _PrefecturePanel(theme: theme),
-      IntensityHistoryStateCity(
-        :final prefectureCode,
-        :final prefectureName,
-        :final selectedCityCode,
-        :final selectedCityName,
-      ) =>
-        _CityPanel(
-          prefectureCode: prefectureCode,
-          prefectureName: prefectureName,
-          selectedCityCode: selectedCityCode,
-          selectedCityName: selectedCityName,
-          theme: theme,
-        ),
+    return switch (selectedCity) {
+      null => _NationwidePanel(cityMaxIntensity: cityMaxIntensity),
+      final selectedCity => _CityPanel(
+        selectedCity: selectedCity,
+        cityMaxIntensity: cityMaxIntensity,
+      ),
     };
   }
 }
 
-class _PrefecturePanel extends StatelessWidget {
-  const new({required this.theme});
+/// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
+class _RefreshedAtLabel extends StatelessWidget {
+  const new({
+    required this.aggregatedAt,
+  });
 
-  final ThemeData theme;
+  final DateTime? aggregatedAt;
 
   @override
   Widget build(BuildContext context) {
+    final aggregatedAt = this.aggregatedAt;
+    if (aggregatedAt == null) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      '${aggregatedAt.formatWithTz(.monthDayHourMinute)} 更新',
+      maxLines: 1,
+      overflow: .ellipsis,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.7),
+        fontFamily: FontFamily.googleSansCode,
+      ),
+    );
+  }
+}
+
+class _NationwidePanel extends StatelessWidget {
+  const new({required this.cityMaxIntensity});
+
+  final CityMaxIntensity? cityMaxIntensity;
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = context.designSystem.typography;
+
     return Card(
       color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Text(
-          '全国',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '市区町村別 ',
+                    style: typography.bodySmall.copyWith(
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '最大観測震度',
+                    style: typography.titleSmall,
+                  ),
+                ],
+              ),
+            ),
+            _RefreshedAtLabel(aggregatedAt: cityMaxIntensity?.aggregatedAt),
+          ],
         ),
       ),
     );
   }
 }
 
-class _CityPanel extends ConsumerWidget {
-  const new({
-    required this.prefectureCode,
-    required this.prefectureName,
-    required this.selectedCityCode,
-    required this.selectedCityName,
-    required this.theme,
-  });
+class _CityPanel extends StatelessWidget {
+  const new({required this.selectedCity, required this.cityMaxIntensity});
 
-  final String prefectureCode;
-  final String prefectureName;
-  final String? selectedCityCode;
-  final String? selectedCityName;
-  final ThemeData theme;
+  final IntensityHistorySelectedCity selectedCity;
+  final CityMaxIntensity? cityMaxIntensity;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cityCode = selectedCityCode;
-    final cityName = selectedCityName;
-    final selectedCity = cityCode != null && cityName != null
-        ? (code: cityCode, name: cityName)
-        : null;
-    final prefectureHighestAsync = ref.watch(prefectureHighestProvider);
-    final prefectureEntry = prefectureHighestAsync.valueOrPrevious
-        ?.where((e) => e.code == prefectureCode)
-        .firstOrNull;
-    final cityHighestAsync = selectedCity != null
-        ? ref.watch(cityHighestProvider(prefectureCode))
-        : null;
-    final selectedCityEntryCode = selectedCity?.code;
-    final cityEntry = selectedCityEntryCode == null
-        ? null
-        : cityHighestAsync?.valueOrPrevious
-              ?.where((e) => e.code == selectedCityEntryCode)
-              .firstOrNull;
-    final entry = selectedCity != null ? cityEntry : prefectureEntry;
-    final displayName = selectedCity?.name ?? prefectureName;
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final maxIntensity = cityMaxIntensity?.intensityOfCity(selectedCity.code);
 
     return Card(
       color: context.designSystem.colorTheme.surface.withValues(alpha: 0.9),
@@ -124,24 +139,15 @@ class _CityPanel extends ConsumerWidget {
         ),
         child: Semantics(
           button: true,
-          label: '$displayNameの詳細を表示',
+          label: '${selectedCity.name}の詳細を表示',
           child: InkWell(
             onTap: () async {
-              if (selectedCity != null) {
-                await AreaDetailModalAction().showCity(
-                  context,
-                  cityCode: selectedCity.code,
-                  cityName: selectedCity.name,
-                  regionName: prefectureName,
-                  summary: cityEntry,
-                );
-                return;
-              }
-              await AreaDetailModalAction().showPrefecture(
+              await CityDetailModalAction().show(
                 context,
-                prefectureCode: prefectureCode,
-                prefectureName: prefectureName,
-                summary: prefectureEntry,
+                cityCode: selectedCity.code,
+                cityName: selectedCity.name,
+                prefectureName: selectedCity.prefectureName,
+                maxIntensity: maxIntensity,
               );
             },
             child: Padding(
@@ -149,9 +155,9 @@ class _CityPanel extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (entry != null) ...[
+                  if (maxIntensity case final maxIntensity?) ...[
                     JmaIntensityIcon(
-                      intensity: entry.intensity,
+                      intensity: maxIntensity,
                       type: IntensityIconType.filled,
                       size: 36,
                     ),
@@ -162,36 +168,28 @@ class _CityPanel extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (selectedCity != null)
-                          Text(
-                            prefectureName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: context
-                                  .designSystem
-                                  .colorTheme
-                                  .onSurfaceVariant,
-                            ),
-                          ),
                         Text(
-                          displayName,
+                          selectedCity.prefectureName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: context
+                                .designSystem
+                                .colorTheme
+                                .onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          selectedCity.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (entry != null)
-                          Text(
-                            '${entry.count}件',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: context.designSystem.colorTheme.onSurface
-                                  .withValues(alpha: 0.7),
-                            ),
-                          ),
+                        _RefreshedAtLabel(
+                          aggregatedAt: cityMaxIntensity?.aggregatedAt,
+                        ),
                       ],
                     ),
                   ),

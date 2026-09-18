@@ -24,6 +24,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   @override
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
     List<TelegramStatus> statuses = const [.normal],
+    IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -51,6 +52,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'statuses': statuses,
+      r'includeIncomplete': includeIncomplete?.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -131,60 +133,26 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }
 
   @override
-  Future<HttpResponse<HighestIntensityResponse>>
-  getV2EarthquakeIntensityPrefectureHighest({
-    List<TelegramStatus> statuses = const [.normal],
-  }) async {
+  Future<HttpResponse<CityMaxIntensityResponse>>
+  getV2EarthquakeIntensityCityMax() async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'statuses': statuses};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<HighestIntensityResponse>>(
+    final _options = _setStreamType<HttpResponse<CityMaxIntensityResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/earthquake/intensity/prefecture/highest',
+            '/v2/earthquake/intensity/city/max',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late HighestIntensityResponse _value;
+    late CityMaxIntensityResponse _value;
     try {
-      _value = HighestIntensityResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<HighestIntensityResponse>>
-  getV2EarthquakeIntensityPrefectureCodeCityHighest({
-    required String code,
-    List<TelegramStatus> statuses = const [.normal],
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'statuses': statuses};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<HighestIntensityResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/earthquake/intensity/prefecture/${code}/city/highest',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late HighestIntensityResponse _value;
-    try {
-      _value = HighestIntensityResponse.fromJson(_result.data!);
+      _value = CityMaxIntensityResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -198,7 +166,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   getV2EarthquakeIntensityRegionCode({
     required String code,
     List<TelegramStatus> statuses = const [.normal],
-    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
@@ -221,10 +190,13 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? latitudeLte,
     String? longitudeGte,
     String? longitudeLte,
+    JmaIntensity? maxIntensityLte,
+    JmaIntensity? maxIntensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'statuses': statuses,
+      r'includeIncomplete': includeIncomplete?.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -248,6 +220,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'latitudeLte': latitudeLte,
       r'longitudeGte': longitudeGte,
       r'longitudeLte': longitudeLte,
+      r'maxIntensityLte': maxIntensityLte?.toJson(),
+      r'maxIntensityGte': maxIntensityGte?.toJson(),
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -282,7 +256,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   getV2EarthquakeIntensityPrefectureCode({
     required String code,
     List<TelegramStatus> statuses = const [.normal],
-    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
@@ -305,10 +280,13 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? latitudeLte,
     String? longitudeGte,
     String? longitudeLte,
+    JmaIntensity? maxIntensityLte,
+    JmaIntensity? maxIntensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'statuses': statuses,
+      r'includeIncomplete': includeIncomplete?.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -332,6 +310,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'latitudeLte': latitudeLte,
       r'longitudeGte': longitudeGte,
       r'longitudeLte': longitudeLte,
+      r'maxIntensityLte': maxIntensityLte?.toJson(),
+      r'maxIntensityGte': maxIntensityGte?.toJson(),
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -366,7 +346,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   getV2EarthquakeIntensityCityCode({
     required String code,
     List<TelegramStatus> statuses = const [.normal],
-    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
@@ -389,10 +370,13 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? latitudeLte,
     String? longitudeGte,
     String? longitudeLte,
+    JmaIntensity? maxIntensityLte,
+    JmaIntensity? maxIntensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'statuses': statuses,
+      r'includeIncomplete': includeIncomplete?.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -416,6 +400,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'latitudeLte': latitudeLte,
       r'longitudeGte': longitudeGte,
       r'longitudeLte': longitudeLte,
+      r'maxIntensityLte': maxIntensityLte?.toJson(),
+      r'maxIntensityGte': maxIntensityGte?.toJson(),
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -447,7 +433,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   getV2EarthquakeIntensityStationCode({
     required String code,
     List<TelegramStatus> statuses = const [.normal],
-    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    IncludeIncomplete? includeIncomplete = IncludeIncomplete.valueFalse,
+    IntensitySearchSortBy? sortBy = IntensitySearchSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
@@ -470,10 +457,13 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? latitudeLte,
     String? longitudeGte,
     String? longitudeLte,
+    JmaIntensity? maxIntensityLte,
+    JmaIntensity? maxIntensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'statuses': statuses,
+      r'includeIncomplete': includeIncomplete?.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -497,6 +487,8 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'latitudeLte': latitudeLte,
       r'longitudeGte': longitudeGte,
       r'longitudeLte': longitudeLte,
+      r'maxIntensityLte': maxIntensityLte?.toJson(),
+      r'maxIntensityGte': maxIntensityGte?.toJson(),
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

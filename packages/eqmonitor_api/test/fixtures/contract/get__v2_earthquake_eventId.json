@@ -23,6 +23,31 @@
         "value": 10
       }
     },
+    "hypocenters": [
+      {
+        "datasource": "JMA_DISASTER_INFORMATION_XML",
+        "reported_at": "2025-12-15T12:03:02.000Z",
+        "source_telegram_id": "stub-telegram-vxse53",
+        "hypocenter": {
+          "value": {
+            "code": "311",
+            "name": "茨城県北部"
+          },
+          "coordinates": {
+            "latitude": 36.7,
+            "longitude": 140.7
+          },
+          "magnitude": {
+            "type": "NORMAL",
+            "value": 4.5
+          },
+          "depth": {
+            "type": "NORMAL",
+            "value": 10
+          }
+        }
+      }
+    ],
     "intensity": {
       "max_intensity": "4",
       "intensity_tree": [

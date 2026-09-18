@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/flow/debug_device_lifecycle_flow.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
@@ -457,6 +458,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
   String _authLabel(AuthorizationStatus s) => switch (s) {
     AuthorizationStatus.authorized => '許可済み',
     AuthorizationStatus.denied => '拒否',
+    AuthorizationStatus.deniedPermanently => '拒否（端末の設定から変更）',
     AuthorizationStatus.notDetermined => '未確認',
     AuthorizationStatus.provisional => '仮承認（サイレント通知のみ）',
   };
@@ -513,7 +515,7 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
     throw ArgumentError('deviceId is empty');
   }
   final repo = await ref.watch(deviceRepositoryProvider.future);
-  final result = await repo.getDevice(deviceId);
+  final result = await repo.getDevice();
   return switch (result) {
     Success(:final value) => value,
     Failure(:final exception) => throw exception,
@@ -1218,9 +1220,7 @@ class _NotificationHistoryTile extends StatelessWidget {
     if (parsed == null) {
       return raw;
     }
-    final local = parsed.toLocal();
-    return '${local.year}/${local.month.toString().padLeft(2, '0')}/${local.day.toString().padLeft(2, '0')} '
-        '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+    return parsed.formatWithTz(.yearMonthDayHourMinute);
   }
 }
 

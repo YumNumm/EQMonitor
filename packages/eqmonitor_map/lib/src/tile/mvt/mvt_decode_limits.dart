@@ -30,5 +30,19 @@ abstract class MvtDecodeLimits with _$MvtDecodeLimits {
     /// layer名のUTF-8 byte長の上限。length-delimitedフィールドの長さを
     /// 読んだ直後、文字列本体を読み出す前に検証する。
     required int maxLayerNameBytes,
+
+    /// 1つのlayerが持てるproperty key tableの要素数上限。
+    required int maxKeysPerLayer,
+
+    /// 1つのlayerが持てるproperty value tableの要素数上限。
+    required int maxValuesPerLayer,
+
+    /// 1つのfeatureが持てるtag整数の個数上限。tagはkey/value indexの対なので、
+    /// 偶数であることもdecoderが検証する。
+    required int maxTagsPerFeature,
+
+    /// property stringのUTF-8 byte長上限。payloadをviewとして切り出す前に
+    /// protobuf lengthを検査する。
+    required int maxPropertyStringBytes,
   }) = _MvtDecodeLimits;
 }

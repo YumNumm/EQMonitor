@@ -2,6 +2,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'pmtiles_v3_exception.freezed.dart';
 
+/// PMTilesのどのresource budgetを超えたかを、payloadを保持せずに分類する。
+enum PmTilesV3Resource {
+  directoryEncoded,
+  directoryDecoded,
+  directoryEntries,
+  tileEncoded,
+  tileDecoded,
+}
+
 @freezed
 sealed class PmTilesV3Exception with _$PmTilesV3Exception implements Exception {
   const factory invalidRange({
@@ -21,6 +30,12 @@ sealed class PmTilesV3Exception with _$PmTilesV3Exception implements Exception {
   const factory sourceReadFailed({
     required String reason,
   }) = PmTilesV3SourceReadFailedException;
+
+  const factory resourceLimitExceeded({
+    required PmTilesV3Resource resource,
+    required int limit,
+    required int actual,
+  }) = PmTilesV3ResourceLimitExceededException;
 
   const factory invalidTileId({
     required int tileId,

@@ -33,10 +33,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,sourceInstanceId,absolutePath,sizeBytes,sha256);
 
-@override
-String toString() {
-  return 'VerifiedPmTilesSource(sourceInstanceId: $sourceInstanceId, absolutePath: $absolutePath, sizeBytes: $sizeBytes, sha256: $sha256)';
-}
 
 
 }
@@ -235,10 +231,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,sourceInstanceId,absolutePath,sizeBytes,sha256);
 
-@override
-String toString() {
-  return 'VerifiedPmTilesSource(sourceInstanceId: $sourceInstanceId, absolutePath: $absolutePath, sizeBytes: $sizeBytes, sha256: $sha256)';
-}
 
 
 }
@@ -294,10 +286,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
 
-@override
-String toString() {
-  return 'VerifiedRemotePmTilesSource(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
-}
 
 
 }
@@ -331,10 +319,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,sourceInstanceId,sourceRevision,url,sizeBytes,sha256);
 
-@override
-String toString() {
-  return 'VerifiedRemotePmTilesSource._(sourceInstanceId: $sourceInstanceId, sourceRevision: $sourceRevision, url: $url, sizeBytes: $sizeBytes, sha256: $sha256)';
-}
 
 
 }

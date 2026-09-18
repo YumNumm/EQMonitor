@@ -55,6 +55,59 @@ platform確認は
 [`docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`](../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md)
 を参照してください。
 
+## Scene renderer contract (#1593)
+
+`BaseMapView`はScene nodeを自分で組みません。描画は次の一本道だけです。
+
+```text
+BaseMapTileCache (decode済みFillMesh/LineMesh、Scene非依存)
+  → BaseMapPackedMeshCache      … tile単位でMapPackedMeshを安定identityで保持
+  → buildBaseMapRenderSubmission … sortKey / batchKey / pipeline / uniformを確定
+  → MapRenderBatchAdapter.submit
+      └─ FlutterSceneBaseMapAdapter … batch → scene.Mesh/Node
+           └─ MapGpuResourceLedger  … contextGenerationとframes-in-flightでretire
+```
+
+callerが守る契約は次のとおりです。
+
+- Flutter Scene型が現れるのは`lib/src/flutter_scene/`と`lib/src/widget/`だけです。
+  `foundation/`・`renderer/`・`mesh/`・`tile/`・`geo/`は`flutter_scene`を
+  importしません。これはdoc commentの約束ではなく
+  [`test/renderer/renderer_scene_independence_test.dart`](test/renderer/renderer_scene_independence_test.dart)
+  がsource走査で機械的に保証します。
+- packed meshのlayoutは`renderer/base_map_packed_mesh.dart`の
+  fill(stride 8、`position2D`)とline(stride 16、`position2D` + `lineExtrude2D`)
+  だけです。`lineExtrude2D`は**clip/NDC Y-up済み**であり、Y反転はpackerが行います
+  (adapterは反転しません)。
+- `MapRenderPacket`はGPU resource idを持ちません。adapterは
+  **`MapPackedMesh`のinstance identity**をGPU resourceのkeyにします。したがって
+  `BaseMapPackedMeshCache`は同じ`(sourceInstanceId, CanonicalTileId)`へ同じ
+  instanceを返し続ける責務を負い、これが崩れると毎frame再uploadになります。
+- batchKeyは`scopeKey = sourceInstanceId`、`materialKey = styleLayerId`です。
+  tile識別子をkeyへ入れないことでlayerごとに1 batchへまとまり、tile位置は
+  `MapRenderBatch.instanceTransforms`が持ちます。
+- 色と半線幅はCPUで確定した`MapMaterialParameterBlock`のbyte列として渡し、
+  adapterがdecodeして`setColor`/`setVec2`します。shader内でzoom補間しません。
+  materialは`styleLayerId`ごとに1 instanceを読み込むだけで、値を焼き込みません。
+- backgroundに入るとGPU resourceを手放し、tile要求・decode・uploadを止めます。
+  foreground復帰でcontext generationを1つ進め、**CPU側のpacked meshから**
+  再uploadします(PMTiles再readとMVT再decodeは起きません)。遷移表は
+  `renderer/map_render_lifecycle_policy.dart`のpure関数であり、GPUなしで
+  検証しています。
+
+> [!IMPORTANT]
+> retireの意味は**Dart参照を落としてGC対象にすること**までです。
+> `flutter_scene`の`gpu.DeviceBuffer`は`dispose()`を持たないため、GPUメモリの
+> 解放時期は決定的ではありません
+> ([`docs/todo/820_flutter_scene_batched_instance_slot_clobber.md`](../../docs/todo/820_flutter_scene_batched_instance_slot_clobber.md)
+> と同じ制約)。frames-in-flight世代が保証するのは「in-flightのframeが
+> 参照しているかもしれない参照を落とさない」ことだけです。
+
+**#1593でdevice/simulatorの可視確認は実施していません。** 検証は
+`flutter test`(561件)と`dart analyze . --fatal-infos`(診断0件)のみです。
+GPU可視出力、pinch、background復帰後の再描画は残余platform riskのままです
+([`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md))。
+
 ## Tile pipeline contract
 
 #1591のtile pipelineは`VerifiedTileSource → BaseMapTileRepository →
@@ -179,7 +232,9 @@ pass/fail artifactは生成しません。
 - `createSceneSpikeCameraSetup()`が返す`NodeCamera` +
   `FlutterSceneOrthographicProjection`、`FlutterSceneSpikeView`、
   `BaseMapMaterialPreflightView`は可視出力未確認のdiagnostic pathであり、#1589の
-  supported routeではない。削除・再配線・resize/lifecycle検証は#1593で扱う。
+  supported routeではない。#1593は`BaseMapView`をfoundation契約経由の描画へ
+  移すところまでを扱い、**これらspike/preflight surfaceの削除と可視出力確認は
+  行っていない**(引き続き未確認のdiagnostic pathとして残っている)。
 
 Android/iOS GPU、実際のpinch、祖先fallbackの画面差し替え、非4096 archiveのGPU表示は
 残余platform riskである。device/simulator、golden、E2Eは今回実施していない。

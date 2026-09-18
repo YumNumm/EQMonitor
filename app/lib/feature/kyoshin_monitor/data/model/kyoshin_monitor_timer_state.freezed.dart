@@ -19,7 +19,7 @@ mixin _$KyoshinMonitorTimerState {
 /// 端末時計から見た `latest_time` のずれ (トリム平均)
 ///
 /// 通常は負の値。端末時計の誤差を含むため、そのまま現在時刻から引いては
-/// いけない。[publishDelay] を使うこと。
+/// いけない。公開遅延は TimeSampleCalculator で求める。
  Duration get shift;/// `latest.json` 取得の往復時間 (トリム平均)
  Duration get roundTripTime;/// どのデータソースに対して測った値か
  KyoshinMonitorSource get source;/// 測定に使ったサンプル数
@@ -227,7 +227,7 @@ class _KyoshinMonitorTimerState implements KyoshinMonitorTimerState {
 /// 端末時計から見た `latest_time` のずれ (トリム平均)
 ///
 /// 通常は負の値。端末時計の誤差を含むため、そのまま現在時刻から引いては
-/// いけない。[publishDelay] を使うこと。
+/// いけない。公開遅延は TimeSampleCalculator で求める。
 @override final  Duration shift;
 /// `latest.json` 取得の往復時間 (トリム平均)
 @override final  Duration roundTripTime;

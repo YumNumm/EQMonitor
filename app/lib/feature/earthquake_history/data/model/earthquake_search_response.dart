@@ -91,17 +91,17 @@ extension IntensityPrefectureSearchResponseToApp
 }
 
 extension IntensityCitySearchResponseToApp on api.IntensityCitySearchResponse {
-  PaginatedResponse<EarthquakePartialRegion> toAppResponse({
+  PaginatedResponse<EarthquakePartialCity> toAppResponse({
     required EarthquakeParameterCityItem cityItem,
     required EarthquakeParameter parameter,
   }) => PaginatedResponse(
     items: items
         .map(
-          (item) => EarthquakePartialRegion(
+          (item) => EarthquakePartialCity(
             earthquake: item.earthquake.toEarthquakePartial(
               parameter: parameter,
             ),
-            regionIntensity: item.intensity.toJmaIntensity,
+            cityIntensity: item.intensity.toJmaIntensity,
           ),
         )
         .toList(),

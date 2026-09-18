@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
@@ -5,7 +6,6 @@ import 'package:eqmonitor/feature/changelog/data/provider/changelog_entries_prov
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class ChangelogPage extends ConsumerWidget {
   const new({super.key});
@@ -74,7 +74,7 @@ class ChangelogEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = DateFormat('yyyy年MM月dd日').format(entry.date.toLocal());
+    final dateStr = entry.date.formatWithTz(.yearMonthDayJapanese);
     final content = entry.content;
 
     return Padding(

@@ -3,12 +3,7 @@ const eqmonitorMapLibrary = EqmonitorMapLibrary(
   supportedPlatforms: ['ios', 'android'],
 );
 
-class EqmonitorMapLibrary {
-  const new({
-    required this.packageName,
-    required this.supportedPlatforms,
-  });
-
-  final String packageName;
-  final List<String> supportedPlatforms;
-}
+class const EqmonitorMapLibrary({
+  required final String packageName,
+  required final List<String> supportedPlatforms,
+});

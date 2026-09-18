@@ -22,6 +22,7 @@ void main() {
       dio: Dio()..httpClientAdapter = adapter,
       preferences: preferences,
       verifySignature: ({required content, required sidecar}) async => true,
+      baseUrl: assetPackDistributionBaseUrl,
     );
   });
 
@@ -76,6 +77,7 @@ void main() {
         sharedPreferences: await SharedPreferences.getInstance(),
       ),
       verifySignature: ({required content, required sidecar}) async => false,
+      baseUrl: assetPackDistributionBaseUrl,
     );
     adapter
       ..enqueueJson(_manifest(revision: 10, latestVersion: '2.0.0'))

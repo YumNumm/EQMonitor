@@ -13,13 +13,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late _SlotApiAdapter adapter;
+  late api.ApiClient apiClient;
   late NotificationSlotRepository repository;
 
   setUp(() {
     adapter = _SlotApiAdapter();
     final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
       ..httpClientAdapter = adapter;
-    repository = NotificationSlotRepository(api.ApiClient(dio));
+    apiClient = api.ApiClient(dio);
+    repository = NotificationSlotRepository(api: apiClient);
   });
 
   group('getSlots', () {
@@ -74,6 +76,23 @@ void main() {
         adapter.lastRequestBody!.containsKey('earthquake_min_intensity'),
         isFalse,
       );
+    });
+  });
+
+  group('putDeviceLocation', () {
+    test('Repositoryは重複判定せず同じpayloadもAPIへ送る', () async {
+      await repository.putDeviceLocation(
+        region: 301,
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      );
+      await repository.putDeviceLocation(
+        region: 301,
+        city: '0820100',
+        tsunamiForecastRegion: '201',
+      );
+
+      expect(adapter.deviceLocationPutCount, 2);
     });
   });
 
@@ -260,6 +279,7 @@ final class _SlotApiAdapter implements HttpClientAdapter {
   Map<String, dynamic>? lastRequestBody;
   List<dynamic>? lastRequestList;
   String? lastDeletedSlotId;
+  int deviceLocationPutCount = 0;
 
   @override
   void close({bool force = false}) {}
@@ -285,6 +305,11 @@ final class _SlotApiAdapter implements HttpClientAdapter {
     }
     if (options.data is List) {
       lastRequestList = List<dynamic>.from(options.data as List);
+    }
+
+    if (path.endsWith('/device/me/location') && method == 'PUT') {
+      deviceLocationPutCount += 1;
+      return _jsonResponse(jsonEncode(lastRequestBody));
     }
 
     if (path.endsWith('/slots') && method == 'PUT') {

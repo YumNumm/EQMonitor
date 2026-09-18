@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:knet_api_client/knet_api_client.dart';
 import 'package:test/test.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
 String _fixture(String name) => File('test/fixtures/$name').readAsStringSync();
 
 void main() {
+  setUpAll(tz_data.initializeTimeZones);
+
   group('KnetDirectoryParser.parseYears', () {
     late String html;
 
@@ -48,7 +52,10 @@ void main() {
 
     test('先頭レコードが 2024-01-01 16:06:00', () {
       final records = KnetDirectoryParser.parseRecords(html);
-      expect(records.first, equals(DateTime(2024, 1, 1, 16, 6)));
+      final first = records.first;
+      expect(first, isA<tz.TZDateTime>());
+      expect(first.location.name, 'Asia/Tokyo');
+      expect(first.toUtc(), DateTime.utc(2024, 1, 1, 7, 6));
     });
 
     test('すべて 2024 年 1 月のレコードである', () {
@@ -74,7 +81,7 @@ void main() {
 </body></html>''';
       final records = KnetDirectoryParser.parseRecords(badHtml);
       expect(records, hasLength(1));
-      expect(records.first, equals(DateTime(2024, 1, 1, 16, 6)));
+      expect(records.first.toUtc(), DateTime.utc(2024, 1, 1, 7, 6));
     });
   });
 

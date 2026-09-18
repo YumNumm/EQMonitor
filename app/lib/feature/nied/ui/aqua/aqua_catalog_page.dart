@@ -6,15 +6,14 @@ import 'package:core/core.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class AquaCatalogPage extends HookConsumerWidget {
   const new({super.key});
@@ -319,8 +318,6 @@ class _EventCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
     final urlGenerator = useMemoized(FocalMechanismUrlGenerator.new);
     final urls = useMemoized(
       () => (
@@ -329,8 +326,6 @@ class _EventCard extends HookWidget {
       ),
       [event],
     );
-    final jst = tz.getLocation('Asia/Tokyo');
-    final originTime = tz.TZDateTime.from(event.originTime, jst);
     return ListTile(
       title: Text(event.region),
       subtitle: DefaultTextStyle.merge(
@@ -342,7 +337,9 @@ class _EventCard extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text('発生日時: ${dateFormat.format(originTime)} JST'),
+            Text(
+              '発生日時: ${event.originTime.formatWithTz(.yearMonthDayHourMinuteSecondHyphen)} JST',
+            ),
             Text(
               'M${event.magnitude.toStringAsFixed(1)} / 深さ ${event.depth.toStringAsFixed(0)}km',
             ),

@@ -134,18 +134,18 @@ const entry = AssetPackDistributionEntry(
   archiveSizeBytes: 10 * 1024 * 1024,
   archiveSha256:
       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  localizations: {
-    'ja': AssetPackChangelogLocalization(
+  localizations: AssetPackChangelogLocalizations(
+    ja: AssetPackChangelogLocalization(
       sections: [
         AssetPackChangelogSection(title: '地図', items: ['地図データを更新しました']),
       ],
     ),
-    'en': AssetPackChangelogLocalization(
+    en: AssetPackChangelogLocalization(
       sections: [
         AssetPackChangelogSection(title: 'Map', items: ['Updated map data']),
       ],
     ),
-  },
+  ),
 );
 
 const previousEntry = AssetPackDistributionEntry(
@@ -156,13 +156,13 @@ const previousEntry = AssetPackDistributionEntry(
   archiveSizeBytes: 8 * 1024 * 1024,
   archiveSha256:
       'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  localizations: {
-    'ja': AssetPackChangelogLocalization(
+  localizations: AssetPackChangelogLocalizations(
+    ja: AssetPackChangelogLocalization(
       sections: [
         AssetPackChangelogSection(title: 'パラメータ', items: ['地域データを更新しました']),
       ],
     ),
-    'en': AssetPackChangelogLocalization(
+    en: AssetPackChangelogLocalization(
       sections: [
         AssetPackChangelogSection(
           title: 'Parameters',
@@ -170,5 +170,5 @@ const previousEntry = AssetPackDistributionEntry(
         ),
       ],
     ),
-  },
+  ),
 );

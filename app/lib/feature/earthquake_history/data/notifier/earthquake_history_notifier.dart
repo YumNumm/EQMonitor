@@ -32,7 +32,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       if (next case AsyncData(:final value)) {
         switch (value) {
           case RealtimeEarthquakeUpsertEvent(:final record):
-            applyRealtimeRecord(record);
+            if (applyRealtimeRecord(record)) {
+              ref.invalidateSelf();
+            }
           case RealtimeEarthquakeDeleteEvent(:final eventId):
             applyRealtimeDelete(eventId);
           case _:
@@ -258,14 +260,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
   }
 
-  void applyRealtimeRecord(api.Earthquake record) {
+  bool applyRealtimeRecord(api.Earthquake record) {
     _mutations.add(
       _NotifierRealtimeUpsert(sequence: ++_mutationSequence, record: record),
     );
     final repository = _repository;
     final value = state.value;
     if (value == null || repository == null) {
-      return;
+      return true;
     }
     final previous = value.items
         .where((item) => item.earthquake.eventId == record.eventId)
@@ -280,8 +282,11 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       case EarthquakeRealtimeListRemove():
         _removeItem(record.eventId);
       case EarthquakeRealtimeListPreserve():
-        return;
+        break;
+      case EarthquakeRealtimeListRefetch():
+        break;
     }
+    return previous == null || decision is EarthquakeRealtimeListRefetch;
   }
 
   void applyRealtimeDelete(String eventId) {
@@ -352,6 +357,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
               }
             case EarthquakeRealtimeListPreserve():
               break;
+            case EarthquakeRealtimeListRefetch():
+              break;
           }
       }
     }
@@ -367,33 +374,22 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 }
 
-sealed class _NotifierRealtimeMutation {
-  const new({required this.sequence});
-
-  final int sequence;
+sealed class const _NotifierRealtimeMutation({required final int sequence}) {
   String get eventId;
 }
 
-final class _NotifierRealtimeUpsert extends _NotifierRealtimeMutation {
-  const new({
-    required super.sequence,
-    required this.record,
-  });
-
-  final api.Earthquake record;
+final class const _NotifierRealtimeUpsert({
+  required super.sequence,
+  required final api.Earthquake record,
+}) extends _NotifierRealtimeMutation {
   @override
   String get eventId => record.eventId;
 }
 
-final class _NotifierRealtimeDelete extends _NotifierRealtimeMutation {
-  const new({
-    required super.sequence,
-    required this.eventId,
-  });
-
-  @override
-  final String eventId;
-}
+final class const _NotifierRealtimeDelete({
+  required super.sequence,
+  @override required final String eventId,
+}) extends _NotifierRealtimeMutation;
 
 class EarthquakeParameterHasNotInitializedException implements Exception;
 

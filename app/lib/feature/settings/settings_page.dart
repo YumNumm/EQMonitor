@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/asset_pack/data/notifier/asset_pack_manifest_provider.dart';
 import 'package:eqmonitor/feature/asset_pack/ui/component/asset_pack_update_card.dart';
+import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -25,6 +26,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value;
+    final isDebugMenuAvailable = ref.watch(isDebugMenuAvailableProvider);
     final buildConfig = ref.watch(buildConfigProvider);
     final isDeveloperUiEnabled = buildConfig.isDeveloperUiEnabled;
     final isProFeaturesEnabled = buildConfig.isProFeaturesEnabled;
@@ -172,16 +174,17 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (isDeveloperUiEnabled && (isDebugEnabled ?? false)) ...[
-                  Center(
-                    child: Text(
-                      'Debug Mode',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: context.designSystem.colorTheme.onSurface
-                            .withValues(alpha: 0.8),
+                if (isDebugMenuAvailable) ...[
+                  if (isDebugEnabled ?? false)
+                    Center(
+                      child: Text(
+                        'Debug Mode',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: context.designSystem.colorTheme.onSurface
+                              .withValues(alpha: 0.8),
+                        ),
                       ),
                     ),
-                  ),
                   const Divider(),
                   ListTile(
                     title: const Text('デバッグメニュー'),

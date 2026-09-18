@@ -154,6 +154,91 @@ void main() {
       verifyNoMoreInteractions(controller);
     });
 
+    test('autoZoom無効でも明示EEW再フォーカスはcamera命令を出す', () async {
+      final coordinator = HomeMapCameraCoordinator();
+      final controller = MockMapController();
+      const home = HomeConfigurationModel(
+        eew: HomeEewSettings(autoZoom: false),
+      );
+
+      await coordinator.setController(
+        controller: controller,
+        viewportSize: const Size(375, 667),
+        home: Future.value(home),
+        eews: [_sampleEew()],
+        shakes: const [],
+      );
+      stubCameraAnimations(controller: controller, animate: () async {});
+
+      final result = await coordinator.handleRealtimeTransition(
+        home: Future.value(home),
+        eews: [_sampleEew()],
+        shakes: const [],
+        ignoreAutoZoom: true,
+      );
+
+      expect(result, isFalse);
+      verify(
+        controller.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: 0,
+          pitch: 0,
+        ),
+      ).called(1);
+      verifyNoMoreInteractions(controller);
+    });
+
+    test('初期フォーカス無効のcontroller登録はcamera命令を出さない', () async {
+      final coordinator = HomeMapCameraCoordinator();
+      final controller = MockMapController();
+
+      final result = await coordinator.setController(
+        controller: controller,
+        viewportSize: const Size(375, 667),
+        home: Future.value(const HomeConfigurationModel()),
+        eews: [_sampleEew()],
+        shakes: const [],
+        applyInitialFocus: false,
+      );
+
+      expect(result, isNull);
+      verifyNoMoreInteractions(controller);
+    });
+
+    test('フォーカスcancel後は進行中のcamera結果を適用しない', () async {
+      final coordinator = HomeMapCameraCoordinator();
+      final controller = MockMapController();
+      final animation = Completer<void>();
+      stubCameraAnimations(
+        controller: controller,
+        animate: () => animation.future,
+      );
+
+      final focus = coordinator.setController(
+        controller: controller,
+        viewportSize: const Size(375, 667),
+        home: Future.value(const HomeConfigurationModel()),
+        eews: [_sampleEew()],
+        shakes: const [],
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      coordinator.cancelAutomaticFocus();
+      animation.complete();
+
+      expect(await focus, isNull);
+      verify(
+        controller.animateCamera(
+          center: anyNamed('center'),
+          zoom: anyNamed('zoom'),
+          bearing: 0,
+          pitch: 0,
+        ),
+      ).called(1);
+      verifyNoMoreInteractions(controller);
+    });
+
     test('controller切替後は新controllerへactual viewportでfocusする', () async {
       final coordinator = HomeMapCameraCoordinator();
       final oldController = MockMapController();

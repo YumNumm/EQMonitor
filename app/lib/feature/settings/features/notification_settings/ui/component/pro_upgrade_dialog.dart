@@ -4,9 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// Pro プランへのアップグレード案内ダイアログの表示を担う。
-class ProUpgradeDialogAction {
-  const new();
-
+class const ProUpgradeDialogAction() {
   Future<void> show(BuildContext context) async {
     await showDialog<void>(
       context: context,

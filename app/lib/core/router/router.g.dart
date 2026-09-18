@@ -14,6 +14,7 @@ List<RouteBase> get $appRoutes => [
   $onboardingWebViewRoute,
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
+  $earthquakeHistorySearchRoute,
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
@@ -178,6 +179,41 @@ mixin $EarthquakeHistoryRoute on GoRouteData {
   @override
   void replace(BuildContext context) =>
       context.replace(location, extra: _self.$extra);
+}
+
+RouteBase get $earthquakeHistorySearchRoute => GoRouteData.$route(
+  path: '/earthquake-history/search',
+  hasOverriddenOnExit: false,
+  factory: $EarthquakeHistorySearchRoute._fromState,
+);
+
+mixin $EarthquakeHistorySearchRoute on GoRouteData {
+  static EarthquakeHistorySearchRoute _fromState(GoRouterState state) =>
+      EarthquakeHistorySearchRoute(
+        query: state.uri.queryParameters['query'] ?? '',
+      );
+
+  EarthquakeHistorySearchRoute get _self =>
+      this as EarthquakeHistorySearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/earthquake-history/search',
+    queryParams: {if (_self.query != '') 'query': _self.query},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $eewHistoryRoute => GoRouteData.$route(
@@ -607,6 +643,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'auth',
+          hasOverriddenOnExit: false,
+          factory: $DebugAuthRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'kyoshin-monitor',
           hasOverriddenOnExit: false,
           factory: $DebugKyoshinMonitorRoute._fromState,
@@ -660,6 +701,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'notification-delivery-log',
           hasOverriddenOnExit: false,
           factory: $DebugNotificationDeliveryLogRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'notification-webhooks',
+          hasOverriddenOnExit: false,
+          factory: $DebugNotificationWebhookRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'device-admin',
@@ -1197,6 +1243,27 @@ mixin $HttpApiEndpointSelectorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugAuthRoute on GoRouteData {
+  static DebugAuthRoute _fromState(GoRouterState state) =>
+      const DebugAuthRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/auth');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugKyoshinMonitorRoute on GoRouteData {
   static DebugKyoshinMonitorRoute _fromState(GoRouterState state) =>
       const DebugKyoshinMonitorRoute();
@@ -1419,6 +1486,28 @@ mixin $DebugNotificationDeliveryLogRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/notification-delivery-log');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugNotificationWebhookRoute on GoRouteData {
+  static DebugNotificationWebhookRoute _fromState(GoRouterState state) =>
+      const DebugNotificationWebhookRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/notification-webhooks');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2163,4 +2252,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'374bb8a49a7410728dca91eef90bc879261be244';
+String _$goRouterHash() => r'3a3c1127433ff0858c896f61e43a3f3a6eff0c8e';

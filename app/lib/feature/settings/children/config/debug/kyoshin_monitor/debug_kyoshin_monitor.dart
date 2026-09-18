@@ -4,16 +4,17 @@ import 'dart:typed_data';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_offset_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_delay_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugKyoshinMonitorPage extends StatelessWidget {
   const new({super.key});
@@ -66,11 +67,6 @@ class _Body extends ConsumerWidget {
                 AsyncData(:final value) =>
                   const JsonEncoder.withIndent('  ').convert({
                     ...value.toJson(),
-                    'shift': value.shift.toString(),
-                    'round_trip_time': value.roundTripTime.toString(),
-                    'publish_delay_with_ntp': value
-                        .publishDelay(ref.read(ntpProvider.notifier).offset)
-                        .toString(),
                   }),
                 AsyncError(:final error) => error.toString(),
                 _ => 'Loading...',
@@ -80,28 +76,30 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('時刻同期 / オフセット', style: titleTextStyle),
               Text(
                 const JsonEncoder.withIndent('  ').convert({
-                  'ntp_offset': ref
-                      .read(ntpProvider.notifier)
-                      .offset
-                      ?.toString(),
+                  'ntp_offset': ref.watch(ntpProvider).value?.offset.toString(),
                   'ntp_last_synced_at': ref
                       .watch(ntpProvider)
                       .value
                       ?.updatedAt
-                      ?.toIso8601String(),
+                      .tokyoDateTime
+                      .toIso8601String(),
                   'effective_offset': ref
-                      .watch(kyoshinMonitorEffectiveOffsetProvider)
+                      .watch(kyoshinMonitorImageDelayProvider)
                       ?.toString(),
                   'offset_adjustments': ref
                       .watch(kyoshinMonitorOffsetAdjustmentProvider)
                       .map((key, value) => MapEntry(key.name, '$value')),
                 }),
                 style: bodyTextStyle,
+              ),
+              FilledButton(
+                child: Text("Invalidate NTP"),
+                onPressed: () async => ref.invalidate(ntpProvider),
               ),
             ],
           ),
@@ -131,8 +129,9 @@ class _Body extends ConsumerWidget {
                     if (state.isLoading) const Icon(Icons.refresh, size: 16),
                   ],
                 ),
-                Text(switch (state) {
-                  AsyncData(:final value) =>
+                Text(switch (state.value) {
+                  _ when state.hasError => state.error.toString(),
+                  KyoshinMonitorState value =>
                     const JsonEncoder.withIndent('  ').convert({
                       ...() {
                         final j = Map<String, dynamic>.from(value.toJson())
@@ -149,7 +148,6 @@ class _Body extends ConsumerWidget {
                       },
                       'current_image_raw': value.currentImageRaw?.length,
                     }),
-                  AsyncError(:final error) => error.toString(),
                   _ => 'Loading...',
                 }, style: bodyTextStyle),
                 if (state.value?.currentImageRaw case final currentImageRaw?)

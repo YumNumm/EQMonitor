@@ -32,9 +32,7 @@ class MapLibreEventProvider extends StatelessWidget {
 /// MapLibre イベントを受け取るコントローラ。
 ///
 /// emit は現在 no-op。将来的にイベントをリスナーへ転送する実装に拡張可能。
-class MapLibreEventController {
-  const new();
-
+class const MapLibreEventController() {
   void emit(MapEvent event) {}
 }
 

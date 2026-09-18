@@ -12,8 +12,15 @@ sealed class WsMessage with _$WsMessage {
   const factory realtime({required RealtimeEventEnvelope data}) =
       WsRealtimeMessage;
 
+  /// サーバー起因の生存確認 ping。`{"type":"pong"}` を返す必要がある。
   @FreezedUnionValue('ping')
   const factory ping() = WsPingMessage;
+
+  /// クライアント起因 ping への応答。[pingId] は送信した値の echo。
+  ///
+  /// pingId を持たない古いサーバー実装にも耐えられるよう nullable にしている。
+  @FreezedUnionValue('pong')
+  const factory pong({String? pingId}) = WsPongMessage;
 
   @FreezedUnionValue('ready')
   const factory ready() = WsReadyMessage;

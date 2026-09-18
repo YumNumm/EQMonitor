@@ -13,6 +13,9 @@
 #   LOOKBACK          遡るビルド数 (既定 5、ios のみ)
 #   ASC_BIN           asc CLI のパス (任意)
 #
+# GitHub Actions の beta タグ (v*-beta.*) では、CHANGELOG.beta.md の
+# 対象リリース節を TestFlight 用のプレーンテキストへ変換する。
+#
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -25,6 +28,9 @@ ASC_APP_ID="${ASC_APP_ID:-6447546703}"
 TESTFLIGHT_LOCALE="${TESTFLIGHT_LOCALE:-ja}"
 LOOKBACK="${LOOKBACK:-5}"
 ASC_BIN="${ASC_BIN:-}"
+GITHUB_REF_TYPE="${GITHUB_REF_TYPE:-}"
+GITHUB_REF_NAME="${GITHUB_REF_NAME:-}"
+BETA_CHANGELOG_PATH="${BETA_CHANGELOG_PATH:-$REPO_ROOT/CHANGELOG.beta.md}"
 
 log() { printf '\033[1;34m==>\033[0m %s\n' "$*" >&2; }
 die() {
@@ -154,6 +160,28 @@ resolve_base_sha_for_platform() {
 	esac
 }
 
+generate_beta_release_note() {
+	local body
+	[ -f "$BETA_CHANGELOG_PATH" ] ||
+		die "beta changelog が見つかりません: $BETA_CHANGELOG_PATH"
+
+	if ! body="$(
+		python3 "$SCRIPT_DIR/render_release_please_changelog.py" \
+			--changelog-path "$BETA_CHANGELOG_PATH" \
+			--version "$GITHUB_REF_NAME"
+	)"; then
+		die "beta changelog の変換に失敗しました: $GITHUB_REF_NAME"
+	fi
+
+	mkdir -p "$(dirname "$OUTPUT_PATH")"
+	printf '%s\n\nrev: %s\n' "$body" "$HEAD_SHA" |
+		python3 "$SCRIPT_DIR/truncate_release_note.py" --max-chars "$MAX_LENGTH" \
+			>"$OUTPUT_PATH"
+
+	log "beta changelog から変更履歴を書き出しました: $OUTPUT_PATH ($GITHUB_REF_NAME)"
+	cat "$OUTPUT_PATH" >&2
+}
+
 [ -n "$PLATFORM" ] || die "PLATFORM を指定してください (ios | android)"
 case "$PLATFORM" in
 ios | android) ;;
@@ -163,6 +191,12 @@ esac
 [ -n "$OUTPUT_PATH" ] || die "OUTPUT_PATH を指定してください"
 
 HEAD_SHA="$(git -C "$REPO_ROOT" rev-parse HEAD)"
+
+if [ "$PLATFORM" = ios ] && [ "$GITHUB_REF_TYPE" = tag ] &&
+	[[ "$GITHUB_REF_NAME" == v*-beta.* ]]; then
+	generate_beta_release_note
+	exit 0
+fi
 
 if [ -n "$BASE_SHA" ]; then
 	git -C "$REPO_ROOT" cat-file -e "$BASE_SHA^{commit}" 2>/dev/null ||

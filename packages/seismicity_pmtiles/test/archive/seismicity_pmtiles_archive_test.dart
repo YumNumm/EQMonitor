@@ -140,15 +140,15 @@ void main() {
 
   test(
     'rejects an archive that violates producer clustered ordering '
-    '(regression guard for validateEntireArchiveEagerly: true)',
+    '(regression guard for validateFullArchiveOnOpen: true)',
     () async {
       // seismicity_pmtiles はproducer契約としてclustered orderingとtile
       // 件数の一致を保証しており、SeismicityPmTilesArchiveOpenerは
-      // pmtiles_v3へ `validateEntireArchiveEagerly: true` を明示的に渡す
+      // pmtiles_v3へ `validateFullArchiveOnOpen: true` を明示的に渡す
       // ことでそれをruntimeでも検証している
       // (seismicity_pmtiles_archive.dart)。この1行が失われたり
       // `false` に変わったりすると、pmtiles_v3は既定でarchive全体を
-      // eagerに走査しなくなるため、このテストは落ちなくなる。
+      // 先行走査しなくなるため、このテストは落ちなくなる。
       final bytes = _buildClusteredOrderingViolationFixtureBytes();
       final reader = TrackingRandomAccessReader(bytes: bytes);
 

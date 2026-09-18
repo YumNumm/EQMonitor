@@ -9,12 +9,38 @@ import Foundation
 import EQMonitorAPI
 
 enum EarthquakeFetcher {
+    static func fetchEntity(_ id: String, service: EarthquakeAPIService = .shared) async throws -> EarthquakeDisplayItem? {
+        do {
+            return try await service.fetchEarthquake(eventID: id)
+        } catch {
+            throw normalizedError(error)
+        }
+    }
+
     static func fetch(
         plan: WidgetFetchPlan,
         limit: Int,
-        minIntensity: Components.Schemas.JmaIntensity?
+        minIntensity: Components.Schemas.JmaIntensity?,
+        service: EarthquakeAPIService = .shared
     ) async throws -> [EarthquakeDisplayItem] {
-        let service = EarthquakeAPIService.shared
+        do {
+            return try await fetchItems(plan: plan, limit: limit, minIntensity: minIntensity, service: service)
+        } catch {
+            throw normalizedError(error)
+        }
+    }
+
+    static func normalizedError(_ error: any Error) -> any Error {
+        if error is CancellationError || (error as? ClientError)?.underlyingError is CancellationError {
+            return CancellationError()
+        }
+        return EQIntentError.fetchFailed(APIError.from(error).errorDescription ?? WidgetErrorMessage.unknown)
+    }
+
+    static func fetchItems(
+        plan: WidgetFetchPlan, limit: Int, minIntensity: Components.Schemas.JmaIntensity?,
+        service: EarthquakeAPIService
+    ) async throws -> [EarthquakeDisplayItem] {
         switch plan {
         case .nationwide:
             return try await service.fetchEarthquakes(

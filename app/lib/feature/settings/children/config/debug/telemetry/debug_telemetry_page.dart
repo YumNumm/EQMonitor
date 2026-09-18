@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -237,7 +238,12 @@ class _EventTile extends StatelessWidget {
                       children: [
                         _DetailRow('ID', '${event.id}'),
                         _DetailRow('Type', event.eventType),
-                        _DetailRow('Time', time.toIso8601String()),
+                        _DetailRow(
+                          'Time',
+                          time.formatWithTz(
+                            .yearMonthDayHourMinuteSecondMillisecond,
+                          ),
+                        ),
                         _DetailRow('Event ID', event.eventId ?? '(null)'),
                         _DetailRow('Synced', event.synced ? 'Yes' : 'No'),
                         const SizedBox(height: 12),

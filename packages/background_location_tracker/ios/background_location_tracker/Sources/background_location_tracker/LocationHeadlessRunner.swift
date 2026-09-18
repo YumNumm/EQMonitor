@@ -1,39 +1,88 @@
+import BackgroundTasks
 import CoreLocation
 import Flutter
 import Foundation
+import OSLog
 
 public typealias PluginRegistrantCallback = (FlutterEngine) -> Void
 
-/// アプリがkilled状態から位置情報で起動された時に
-/// Headless FlutterEngineを起動してDartコードを実行するクラス。
+/// Significant Location ChangeとOS retry taskからDartのheadless処理を起動する。
 public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
     public static let shared = LocationHeadlessRunner()
 
-    /// アプリのAppDelegateで設定するプラグイン登録コールバック。
     public static var pluginRegistrantCallback: PluginRegistrantCallback?
 
+    private static let appRefreshTaskIdentifier =
+        "net.yumnumm.eqmonitor.background-location-refresh"
+    private static let processingTaskIdentifier =
+        "net.yumnumm.eqmonitor.background-location-processing"
+
+    private let pendingStore = PendingLocationStore()
+    private let taskState: HeadlessTaskState
+    private let retryScheduler: HeadlessRetryScheduling
+    private let applicationExecutionCoordinator: HeadlessApplicationExecutionCoordinator
     private var headlessEngine: FlutterEngine?
-    private var channel: FlutterMethodChannel?
-    private var pendingLocations: [(Double, Double)] = []
-    private var isReady = false
+    private var activeSystemTask: HeadlessSystemTask?
     private var locationManager: CLLocationManager?
-    private var hasStarted = false
+    private var hasStartedLocationRelaunch = false
+    private var hasRegisteredRetryTasks = false
+    private lazy var applicationActiveRetryObserver =
+        HeadlessApplicationActiveRetryObserver(
+            notificationCenter: .default,
+            hasPendingLocation: { [weak self] in
+                self?.pendingStore.peek(consumer: .deviceLocation) != nil
+            },
+            resubmitRetry: { [weak self] in
+                self?.retryScheduler.scheduleRetry()
+            }
+        )
 
-    private override init() {}
-
-    private var storedCallbackHandle: Int64? {
-        let value = UserDefaults.standard.object(forKey: "blt_callback_handle")
-        guard let rawValue = value else { return nil }
-        if let intValue = rawValue as? Int64 { return intValue }
-        if let intValue = rawValue as? Int { return Int64(intValue) }
-        return nil
+    override private init() {
+        let taskState = HeadlessTaskState()
+        let retryScheduler = HeadlessRetryScheduler(
+            appRefreshIdentifier: Self.appRefreshTaskIdentifier,
+            processingIdentifier: Self.processingTaskIdentifier,
+            submitter: BackgroundTaskRetryRequestSubmitter(),
+            diagnose: HeadlessRetryDiagnostics.record
+        )
+        self.taskState = taskState
+        self.retryScheduler = retryScheduler
+        applicationExecutionCoordinator = HeadlessApplicationExecutionCoordinator(
+            state: taskState,
+            taskStarter: ApplicationBackgroundTaskStarter(
+                application: UIKitBackgroundTaskApplication()
+            ),
+            retryScheduler: retryScheduler
+        )
+        super.init()
     }
 
-    /// killed状態からの復帰時にAppDelegateから呼ぶ。
-    /// CLLocationManagerを再生成して位置更新を待つ。
+    public var activeUpdateId: String? {
+        taskState.activeUpdateId
+    }
+
+    public func registerRetryTaskHandlers() {
+        guard !hasRegisteredRetryTasks else { return }
+        hasRegisteredRetryTasks = true
+
+        BGTaskScheduler.shared.register(
+            forTaskWithIdentifier: Self.appRefreshTaskIdentifier,
+            using: .main
+        ) { [weak self] task in
+            self?.startFromScheduledRetry(task: task)
+        }
+        BGTaskScheduler.shared.register(
+            forTaskWithIdentifier: Self.processingTaskIdentifier,
+            using: .main
+        ) { [weak self] task in
+            self?.startFromScheduledRetry(task: task)
+        }
+    }
+
+    /// `.location` launch optionを受け取った後に監視を復元する。
     public func startFromLaunchOptions() {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !hasStartedLocationRelaunch else { return }
+        hasStartedLocationRelaunch = true
 
         let manager = CLLocationManager()
         manager.delegate = self
@@ -41,33 +90,134 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         manager.startMonitoringSignificantLocationChanges()
     }
 
-    public func start(latitude: Double, longitude: Double) {
-        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
-        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
-        let defaults = UserDefaults.standard
-        defaults.set(latitude, forKey: "blt_pending_lat")
-        defaults.set(longitude, forKey: "blt_pending_lon")
-        defaults.set(Date().timeIntervalSince1970, forKey: "blt_pending_ts")
-
-        pendingLocations.append((latitude, longitude))
-        launchEngine()
+    public func resubmitRetryIfPending() {
+        guard pendingStore.peek(consumer: .deviceLocation) != nil else {
+            return
+        }
+        retryScheduler.scheduleRetry()
     }
 
-    private func launchEngine() {
-        guard storedCallbackHandle != nil else {
-            pendingLocations.removeAll()
+    public func startApplicationActiveRetryObservation() {
+        applicationActiveRetryObserver.start()
+    }
+
+    public func start(
+        latitude: Double,
+        longitude: Double,
+        accuracy: Double,
+        timestampMillis: Int64
+    ) {
+        guard let stored = pendingStore.save(
+            latitude: latitude,
+            longitude: longitude,
+            accuracy: accuracy,
+            timestampMillis: timestampMillis
+        ) else {
             return
         }
+        startStored(updateId: stored.updateId, scheduledTask: nil)
+    }
 
-        if headlessEngine != nil {
-            sendPendingLocations()
+    func startPending(updateId: String) {
+        startStored(updateId: updateId, scheduledTask: nil)
+    }
+
+    func complete(
+        updateId: String,
+        result: HeadlessTaskResult
+    ) {
+        let completionResult: HeadlessTaskCompletionResult = switch result {
+        case .success:
+            .success
+        case .retry:
+            .retry
+        case .terminalFailure:
+            .terminalFailure
+        }
+        guard let effect = taskState.complete(
+            updateId: updateId,
+            result: completionResult
+        ) else {
             return
         }
+        DispatchQueue.main.async { [weak self] in
+            self?.finish(updateId: updateId, effect: effect)
+        }
+    }
 
-        guard let handle = storedCallbackHandle,
-              let info = FlutterCallbackCache.lookupCallbackInformation(handle)
+    public func locationManager(
+        _: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let location = locations.last else { return }
+        start(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude,
+            accuracy: location.horizontalAccuracy,
+            timestampMillis: Int64(location.timestamp.timeIntervalSince1970 * 1000)
+        )
+    }
+
+    public func locationManager(
+        _: CLLocationManager,
+        didFailWithError _: Error
+    ) {}
+
+    private var storedCallbackInformation: FlutterCallbackInformation? {
+        let storedValue = UserDefaults.standard.object(
+            forKey: BackgroundLocationStorageKey.callbackHandle
+        )
+        let callbackHandle: Int64?
+        switch storedValue {
+        case let value as Int64:
+            callbackHandle = value
+        case let value as Int:
+            callbackHandle = Int64(value)
+        default:
+            callbackHandle = nil
+        }
+        guard let callbackHandle else { return nil }
+        return FlutterCallbackCache.lookupCallbackInformation(callbackHandle)
+    }
+
+    private func startFromScheduledRetry(task: BGTask) {
+        guard let pending = pendingStore.peek(consumer: .deviceLocation) else {
+            task.setTaskCompleted(success: true)
+            return
+        }
+        startStored(updateId: pending.updateId, scheduledTask: task)
+    }
+
+    private func startStored(updateId: String, scheduledTask: BGTask?) {
+        if let scheduledTask {
+            guard taskState.begin(updateId: updateId) == .launch else {
+                scheduledTask.setTaskCompleted(success: false)
+                retryScheduler.scheduleRetry()
+                return
+            }
+            activeSystemTask = ScheduledBackgroundTask(task: scheduledTask)
+            scheduledTask.expirationHandler = { [weak self] in
+                self?.expire(updateId: updateId)
+            }
+        } else {
+            let preparation = applicationExecutionCoordinator.prepare(
+                updateId: updateId,
+                expirationHandler: { [weak self] in
+                    self?.expire(updateId: updateId)
+                }
+            )
+            switch preparation {
+            case let .launch(systemTask):
+                activeSystemTask = systemTask
+            case .coalesced, .retryFinalized:
+                return
+            }
+        }
+
+        guard let callbackInformation = storedCallbackInformation,
+              let registrant = Self.pluginRegistrantCallback
         else {
-            pendingLocations.removeAll()
+            requestRetryCompletion(updateId: updateId)
             return
         }
 
@@ -77,52 +227,115 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
             allowHeadlessExecution: true
         )
         headlessEngine = engine
-        engine.run(
-            withEntrypoint: info.callbackName,
-            libraryURI: info.callbackLibraryPath
-        )
-        // アプリが設定したコールバックでプラグインを登録する
-        LocationHeadlessRunner.pluginRegistrantCallback?(engine)
+        guard engine.run(
+            withEntrypoint: callbackInformation.callbackName,
+            libraryURI: callbackInformation.callbackLibraryPath
+        ) else {
+            requestRetryCompletion(updateId: updateId)
+            return
+        }
+        registrant(engine)
+    }
 
-        channel = FlutterMethodChannel(
-            name: "background_location_tracker/headless",
-            binaryMessenger: engine.binaryMessenger
-        )
-        channel?.setMethodCallHandler { [weak self] call, result in
-            if call.method == "ready" {
-                self?.isReady = true
-                self?.sendPendingLocations()
-                result(nil)
+    private func requestRetryCompletion(updateId: String) {
+        guard let effect = taskState.complete(
+            updateId: updateId,
+            result: .retry
+        ) else {
+            return
+        }
+        finish(updateId: updateId, effect: effect)
+    }
+
+    private func expire(updateId: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self,
+                  let effect = taskState.expire(updateId: updateId)
+            else {
+                return
             }
+            finish(updateId: updateId, effect: effect)
         }
     }
 
-    private func sendPendingLocations() {
-        guard isReady else { return }
-        let locations = pendingLocations
-        pendingLocations.removeAll()
-        for (lat, lon) in locations {
-            channel?.invokeMethod(
-                "onLocationUpdate",
-                arguments: ["latitude": lat, "longitude": lon]
+    private func finish(
+        updateId: String,
+        effect: HeadlessTaskFinishEffect
+    ) {
+        guard let finalization = taskState.finalize(updateId: updateId) else {
+            return
+        }
+
+        let engine = headlessEngine
+        headlessEngine = nil
+        engine?.destroyContext()
+
+        let systemTask = activeSystemTask
+        activeSystemTask = nil
+        systemTask?.complete(success: effect.backgroundTaskSucceeded)
+
+        if effect.shouldScheduleRetry {
+            retryScheduler.scheduleRetry()
+        } else if let nextUpdateId = finalization.nextUpdateId {
+            startStored(updateId: nextUpdateId, scheduledTask: nil)
+        }
+    }
+}
+
+private final class ScheduledBackgroundTask: HeadlessSystemTask {
+    private let task: BGTask
+    private let lock = NSLock()
+    private var isCompleted = false
+
+    init(task: BGTask) {
+        self.task = task
+    }
+
+    func complete(success: Bool) {
+        let shouldComplete = lock.withLock {
+            guard !isCompleted else { return false }
+            isCompleted = true
+            return true
+        }
+        if shouldComplete {
+            task.setTaskCompleted(success: success)
+        }
+    }
+}
+
+private final class BackgroundTaskRetryRequestSubmitter: HeadlessRetryRequestSubmitting {
+    private let scheduler: BGTaskScheduler
+
+    init(scheduler: BGTaskScheduler = .shared) {
+        self.scheduler = scheduler
+    }
+
+    func submit(_ request: HeadlessRetryRequest) throws {
+        switch request.kind {
+        case .appRefresh:
+            try scheduler.submit(
+                BGAppRefreshTaskRequest(identifier: request.identifier)
             )
+        case .processing:
+            let processingRequest = BGProcessingTaskRequest(
+                identifier: request.identifier
+            )
+            processingRequest.requiresNetworkConnectivity = true
+            processingRequest.requiresExternalPower = false
+            try scheduler.submit(processingRequest)
         }
     }
+}
 
-    // MARK: - CLLocationManagerDelegate (killed状態復帰時のみ使用)
+private enum HeadlessRetryDiagnostics {
+    private static let logger = Logger(
+        subsystem: "net.yumnumm.background_location_tracker",
+        category: "HeadlessRetry"
+    )
 
-    public func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-        guard let location = locations.last else { return }
-        start(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-    }
-
-    public func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
-    ) {
-        // サイレントに無視する
+    static func record(_ failure: HeadlessRetrySubmissionFailure) {
+        logger.error(
+            "BGTask submit failed identifier=\(failure.identifier, privacy: .public) errorCode=\(failure.errorCode, privacy: .public)"
+        )
     }
 }

@@ -67,13 +67,18 @@ struct ArrivalCountdownTests {
         #expect(range.upperBound == now.addingTimeInterval(30))
     }
 
-    /// 到達時刻を過ぎた瞬間に `now...arrival` を作ると ClosedRange の事前条件違反で
-    /// クラッシュする。境界（同時刻・過去）で必ず nil になることを保証する。
-    @Test func returnsNilOnceMainShockHasArrived() {
+    /// 到達後は終了済み区間を返し、`Text(timerInterval:)` が `00:00` を出す。
+    /// `now...arrival` を過去方向に作ると ClosedRange の事前条件違反でクラッシュする。
+    @Test func returnsCompletedIntervalOnceMainShockHasArrived() throws {
         let now = Date(timeIntervalSince1970: 1_704_093_000)
-        #expect(ArrivalCountdown.remaining(until: now, now: now) == nil)
-        #expect(ArrivalCountdown.remaining(until: now.addingTimeInterval(-0.001), now: now) == nil)
-        #expect(ArrivalCountdown.remaining(until: now.addingTimeInterval(-60), now: now) == nil)
+        let atArrival = try #require(ArrivalCountdown.remaining(until: now, now: now))
+        #expect(atArrival.lowerBound == now)
+        #expect(atArrival.upperBound == now)
+
+        let past = now.addingTimeInterval(-60)
+        let afterArrival = try #require(ArrivalCountdown.remaining(until: past, now: now))
+        #expect(afterArrival.lowerBound == past)
+        #expect(afterArrival.upperBound == past)
     }
 
     @Test func returnsNilWhenArrivalTimeIsUnknown() {

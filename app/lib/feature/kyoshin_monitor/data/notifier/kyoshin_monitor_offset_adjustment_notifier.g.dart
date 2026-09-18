@@ -62,7 +62,7 @@ final class KyoshinMonitorOffsetAdjustmentProvider
 }
 
 String _$kyoshinMonitorOffsetAdjustmentHash() =>
-    r'01384492a647ccfeedf42b12dc3b6f266afbc614';
+    r'd9dff952ae70b6d9d09962a730e2fbcda90800b0';
 
 /// パイプライン別の、`latest.json` 実測値からの補正量。
 ///

@@ -1,0 +1,18 @@
+{
+  "EarthquakeObservationVertex": {
+    "type": "vertex",
+    "file": "assets/earthquake_observation.vert"
+  },
+  "EarthquakeObservationFragment": {
+    "type": "fragment",
+    "file": "assets/earthquake_observation.frag"
+  },
+  "MapSpriteVertex": {
+    "type": "vertex",
+    "file": "assets/earthquake_sprite.vert"
+  },
+  "MapSpriteFragment": {
+    "type": "fragment",
+    "file": "assets/earthquake_sprite.frag"
+  }
+}

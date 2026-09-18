@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_legend.d
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiTimelineOverlay extends ConsumerWidget {
   const new({required this.tsunamiId, super.key});
@@ -155,8 +155,9 @@ class _ExpandedOverlay extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      DateFormat('MM/dd HH:mm')
-                          .format(currentTelegram.publishedAt.toLocal()),
+                      currentTelegram.publishedAt.formatWithTz(
+                        DateTimeFormat.monthDayHourMinute,
+                      ),
                       style: TextStyle(
                         fontSize: 11,
                         color: designSystem.colorTheme.onSurfaceVariant,
@@ -393,17 +394,15 @@ class _TimeMarkers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final format = DateFormat('HH:mm');
-
     if (telegrams.length <= 1) {
       return const SizedBox.shrink();
     }
 
-    final firstTime = format.format(
-      telegrams.first.telegram.publishedAt.toLocal(),
+    final firstTime = telegrams.first.telegram.publishedAt.formatWithTz(
+      DateTimeFormat.hourMinute,
     );
-    final lastTime = format.format(
-      telegrams.last.telegram.publishedAt.toLocal(),
+    final lastTime = telegrams.last.telegram.publishedAt.formatWithTz(
+      DateTimeFormat.hourMinute,
     );
 
     return Padding(

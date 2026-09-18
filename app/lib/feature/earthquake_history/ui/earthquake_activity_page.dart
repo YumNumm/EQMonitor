@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_binner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_summary_builder.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_bin_interval.dart';
@@ -9,7 +10,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_ac
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class EarthquakeActivityPage extends HookConsumerWidget {
   const new({required this.initialQuery, super.key});
@@ -45,7 +45,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
           padding: const EdgeInsets.all(12),
           children: [
             Text(
-              '基準時刻 ${DateFormat('yyyy/MM/dd HH:mm').format(query.value.baseOriginTime.toLocal())}',
+              '基準時刻 ${query.value.baseOriginTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
             ),
             const Text('近接する地震を時空間条件で抽出したもので、前震・余震を断定するものではありません。'),
             const Text('地震履歴に収録された情報を集計しており、観測された全地震ではありません。'),
@@ -99,7 +99,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
                 ),
                 title: Text(item.hypocenter?.name ?? '震源地不明'),
                 subtitle: Text(
-                  '${DateFormat('yyyy/MM/dd HH:mm').format(item.originTime?.toLocal() ?? query.value.baseOriginTime.toLocal())}  '
+                  '${(item.originTime ?? query.value.baseOriginTime).formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}  '
                   '${switch (item.hypocenter?.magnitude) {
                     EarthquakeMagnitudeValue(:final value) => 'M${value.toStringAsFixed(1)}',
                     EarthquakeMagnitudeOverM8() => 'M8超',
@@ -108,7 +108,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
                 ),
               ),
             Text(
-              '最終更新 ${DateFormat('yyyy/MM/dd HH:mm').format(value.fetchedAt.toLocal())}',
+              '最終更新 ${value.fetchedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
               textAlign: TextAlign.end,
             ),
           ],
@@ -263,7 +263,9 @@ class _ActivityChart extends StatelessWidget {
                       SizedBox(
                         width: 72,
                         child: Text(
-                          DateFormat('MM/dd HH:mm').format(bin.start.toLocal()),
+                          bin.start.formatWithTz(
+                            DateTimeFormat.monthDayHourMinute,
+                          ),
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),

@@ -66,7 +66,7 @@ final class _DeviceInfoProvider
   }
 }
 
-String _$_deviceInfoHash() => r'ee2acd4f0440b61dfea0d82b15347af70ba51313';
+String _$_deviceInfoHash() => r'b93771d9b3a6f185138707392533b763d1739368';
 
 final class _DeviceInfoFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<RegisteredDevice>, String> {

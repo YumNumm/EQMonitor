@@ -2,21 +2,29 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_history_state.freezed.dart';
 
-/// 地域別最大震度マップのフォーカス状態。
+/// 市区町村別最大震度マップの選択状態。
 ///
-/// - [IntensityHistoryStatePrefecture]: Lv1 全都道府県表示。
-/// - [IntensityHistoryStateCity]: Lv2 特定都道府県にフォーカス中。
+/// 全国どのズームでも市区町村単位で塗り分けるため、都道府県フォーカス
+/// (旧 Lv1/Lv2 のドリルダウン) は持たない。画面が覚えておく必要があるのは
+/// 「いま輪郭線を引いている市区町村」だけ。
 @freezed
-sealed class IntensityHistoryState with _$IntensityHistoryState {
-  /// Lv1: 全都道府県表示状態。
-  const factory prefecture() =
-      IntensityHistoryStatePrefecture;
+abstract class IntensityHistoryState with _$IntensityHistoryState {
+  const factory({
+    /// 選択中の市区町村。未選択なら `null`。
+    IntensityHistorySelectedCity? selectedCity,
+  }) = _IntensityHistoryState;
+}
 
-  /// Lv2: 特定都道府県にフォーカス中の状態。
-  const factory city({
-    required String prefectureCode,
+/// 選択中の市区町村。
+@freezed
+abstract class IntensityHistorySelectedCity
+    with _$IntensityHistorySelectedCity {
+  const factory({
+    /// 気象庁防災情報XMLフォーマットの市区町村コード(7桁)。
+    required String code,
+    required String name,
+
+    /// 所属都道府県名。パネル・モーダルの親ラベルに使う。
     required String prefectureName,
-    String? selectedCityCode,
-    String? selectedCityName,
-  }) = IntensityHistoryStateCity;
+  }) = _IntensityHistorySelectedCity;
 }

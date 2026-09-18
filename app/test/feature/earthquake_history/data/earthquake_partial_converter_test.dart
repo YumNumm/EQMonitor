@@ -1,12 +1,48 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 void main() {
+  group('IntensityPartial', () {
+    test('旧震度階級を JSON 往復で保持すること', () {
+      final intensity = api.IntensityPartial.fromJson(const {
+        'max_intensity': '5-',
+        'max_intensity_class': '5',
+      });
+
+      expect(intensity.maxIntensityClass, api.CatalogIntensityClass.value5);
+    });
+
+    test('旧震度階級をアプリモデルへ保持すること', () {
+      const intensity = api.IntensityPartial(
+        maxIntensity: api.JmaIntensity.value5minus,
+        maxIntensityClass: api.CatalogIntensityClass.value5,
+      );
+
+      final converted = intensity.toEarthquakeIntensityPartial(
+        parameter: const EarthquakeParameter(
+          metadata: ParameterMetadata(
+            type: ParameterType.earthquakeStations,
+            schemaVersion: 1,
+            sourceVersion: 'test',
+            sourceUpdatedAt: null,
+            sourceUrls: [],
+            sha256: 'test',
+          ),
+          prefectures: [],
+        ),
+      );
+
+      expect(converted.toJson(), containsPair('max_intensity_class', 'five'));
+    });
+  });
+
   group('OriginTimePrecisionApiExtension', () {
     test('全列挙値が変換されること', () {
       const cases = <api.OriginTimePrecision, OriginTimePrecision>{

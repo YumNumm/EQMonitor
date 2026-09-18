@@ -868,17 +868,11 @@ void main() {
   });
 }
 
-final class _CacheHitRefreshFixture {
-  const new({
-    required this.controller,
-    required this.container,
-    required this.refreshResult,
-  });
-
-  final StreamController<RealtimeEvent> controller;
-  final ProviderContainer container;
-  final Completer<Earthquake> refreshResult;
-}
+final class const _CacheHitRefreshFixture({
+  required final StreamController<RealtimeEvent> controller,
+  required final ProviderContainer container,
+  required final Completer<Earthquake> refreshResult,
+});
 
 Future<_CacheHitRefreshFixture> _startCacheHitRefresh() async {
   final controller = StreamController<RealtimeEvent>.broadcast(sync: true);
@@ -981,6 +975,7 @@ api.Earthquake _earthquake({
   earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  hypocenters: const [],
   estimatedIntensityTile: estimatedIntensityTile,
   telegrams: [
     api.EarthquakeTelegram(

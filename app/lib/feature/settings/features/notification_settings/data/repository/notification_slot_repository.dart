@@ -17,7 +17,7 @@ const JmaIntensity defaultNotificationSlotMinIntensity = JmaIntensity.three;
 
 @Riverpod(keepAlive: true)
 Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
-    NotificationSlotRepository(await ref.watch(apiClientProvider.future));
+    NotificationSlotRepository(api: await ref.watch(apiClientProvider.future));
 
 /// 通知スロットの最小震度を決定する。
 ///
@@ -28,9 +28,7 @@ Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
 ///
 /// 現在地・地域スロットは UI を経由しない経路でも下限を下回らないよう
 /// [NotificationMinIntensityPolicy.clamp] で引き上げる。
-class NotificationSlotMinIntensityResolver {
-  const new();
-
+class const NotificationSlotMinIntensityResolver() {
   JmaIntensity? resolve({
     required NotificationSlotType slotType,
     required NotificationKind kind,
@@ -49,7 +47,7 @@ class NotificationSlotMinIntensityResolver {
 }
 
 class NotificationSlotRepository {
-  new(this._api);
+  new({required api.ApiClient api}) : _api = api;
 
   final api.ApiClient _api;
 
@@ -145,14 +143,17 @@ class NotificationSlotRepository {
   }
 
   Future<void> putDeviceLocation({
-    required int regionId,
-    String? cityCode,
+    required int region,
+    String? city,
+    String? tsunamiForecastRegion,
   }) async {
+    final body = api.DeviceLocationRequest(
+      region: region.toString(),
+      city: city,
+      tsunamiForecastRegion: tsunamiForecastRegion,
+    );
     await _api.device.putV2DeviceMeLocation(
-      body: api.DeviceLocationRequest(
-        regionId: regionId.toString(),
-        cityCode: cityCode,
-      ),
+      body: body,
     );
   }
 

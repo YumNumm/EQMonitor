@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer_geojson_updater.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_offset_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_delay_provider.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -246,7 +246,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           final now = ref.read(appClockProvider.notifier).now();
           // 設定が有効なら、強震モニタ画像の取得対象時刻に合わせる。
           final kyoshinMonitorOffset = alignToKyoshinMonitor
-              ? ref.read(kyoshinMonitorEffectiveOffsetProvider)
+              ? ref.read(kyoshinMonitorImageDelayProvider)
               : null;
           final baseTime = kyoshinMonitorOffset == null
               ? now

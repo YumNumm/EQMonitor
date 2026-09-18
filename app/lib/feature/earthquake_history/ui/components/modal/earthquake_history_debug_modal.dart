@@ -154,22 +154,6 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 (v) => notifier.save(value.copyWith(cityFillOpacity: v)),
               ),
 
-              _header(context, '観測点サイズ (circle-radius)'),
-              _slider(
-                '最小 (z4)',
-                value.stationCircleRadiusMin,
-                0,
-                20,
-                (v) => notifier.save(value.copyWith(stationCircleRadiusMin: v)),
-              ),
-              _slider(
-                '最大 (z10)',
-                value.stationCircleRadiusMax,
-                0,
-                20,
-                (v) => notifier.save(value.copyWith(stationCircleRadiusMax: v)),
-              ),
-
               _header(context, '観測点アイコンサイズ'),
               _slider(
                 '最小 (z3)',

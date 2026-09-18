@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:eqmonitor_websocket/src/ws_pong_message.dart';
+import 'package:eqmonitor_websocket/src/ws_client_pong_message.dart';
 
-class WsHeartbeatResponder {
-  const new();
-
+/// サーバー起因 ping (`{"type":"ping"}`) に pong を返す。
+///
+/// クライアント起因 ping の RTT 計測は [WsRttTracker] 側の責務。
+class const WsHeartbeatResponder() {
   String? buildResponse(String text) {
     try {
       final json = jsonDecode(text);
@@ -14,7 +15,7 @@ class WsHeartbeatResponder {
       if (json['type'] != 'ping') {
         return null;
       }
-      return jsonEncode(const WsPongMessage().toJson());
+      return jsonEncode(const WsClientPongMessage().toJson());
     } on FormatException {
       return null;
     }

@@ -9,10 +9,53 @@ import 'package:eqmonitor/core/provider/interceptor/device_auth_token_intercepto
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:eqmonitor/feature/location/data/logic/device_location_sync_service.dart';
+import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
+import 'package:eqmonitor/feature/location/data/model/pending_device_location.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
+  test('secure token保存前にDevice Location送信成功値を削除する', () async {
+    final events = <String>[];
+    final preferences = _MemorySecurePreferencesDataSource(events: events);
+    final repository = DeviceAuthRepository(
+      preferences,
+      onCredentialsWillChange: () async => events.add('location:clear'),
+    );
+
+    await repository.saveToken(token: 'secret-device-token');
+
+    expect(events, ['location:clear', 'secure:set']);
+    expect(preferences.values.values, contains('secret-device-token'));
+  });
+
+  test('secure token削除前にDevice Location送信成功値を削除する', () async {
+    final events = <String>[];
+    final preferences = _MemorySecurePreferencesDataSource(events: events)
+      ..values[SecureStorageKey.deviceToken] = 'secret-device-token';
+    final repository = DeviceAuthRepository(
+      preferences,
+      onCredentialsWillChange: () async => events.add('location:clear'),
+    );
+
+    await repository.clearToken();
+
+    expect(events, ['location:clear', 'secure:remove']);
+    expect(preferences.values, isEmpty);
+  });
+
   test(
     'registerDevice persists returned device token before reading me',
     () async {
@@ -30,7 +73,6 @@ void main() {
       );
 
       final result = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -41,6 +83,77 @@ void main() {
       expect(adapter.authorizationHeaders, [null, 'Bearer device-jwt']);
     },
   );
+
+  test('404再登録後は送信成功値を削除して同じ地域でも再送する', () async {
+    final preferences = SharedPreferencesAsync();
+    final oldScope = DeviceLocationSyncScope.fromApiBaseUrl(
+      apiBaseUrl: 'https://example.com',
+    );
+    final stateRepository = SharedPreferencesDeviceLocationSyncStateRepository(
+      preferences,
+    );
+    await stateRepository.writeAvailability(
+      DeviceLocationSyncAvailability.enabled,
+    );
+    const payload = DeviceLocationPayload(
+      region: '301',
+      city: '0820100',
+      tsunamiForecastRegion: '201',
+    );
+    await stateRepository.writeLastSent(scope: oldScope, payload: payload);
+    final securePreferences = _MemorySecurePreferencesDataSource()
+      ..values[SecureStorageKey.deviceToken] = 'stale-jwt';
+    final authRepository = DeviceAuthRepository(
+      securePreferences,
+      onCredentialsWillChange: stateRepository.clearLastSent,
+    );
+    final adapter = _DeviceRegisterAdapter(
+      rejectStaleAuthorization: true,
+      staleAuthorizationStatusCode: 404,
+    );
+    final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
+      ..interceptors.add(
+        DeviceAuthTokenInterceptor(readToken: authRepository.readToken),
+      )
+      ..httpClientAdapter = adapter;
+    final deviceRepository = DeviceRepository(
+      api: api.ApiClient(dio),
+      authRepository: authRepository,
+      apnsEnvironment: api.ApnsEnvironment.development,
+    );
+
+    final registration = await deviceRepository.registerDevice(
+      devicePlatform: DevicePlatform.ios,
+      deviceLocale: DeviceLocale.ja,
+    );
+    final newScope = DeviceLocationSyncScope.fromApiBaseUrl(
+      apiBaseUrl: 'https://example.com',
+    );
+    final sent = <DeviceLocationPayload>[];
+    final result =
+        await DeviceLocationSyncService(
+          scope: newScope,
+          stateRepository: stateRepository,
+          resolvePayload: ({required latitude, required longitude}) async =>
+              payload,
+          sendPayload: ({required payload}) async => sent.add(payload),
+        ).syncPending(
+          location: const PendingDeviceLocation(
+            updateId: 'same-region-after-reprovision',
+            latitude: 36,
+            longitude: 140,
+            accuracy: 10,
+            timestampMillis: 1000,
+          ),
+        );
+
+    expect(registration, isA<Success<RegisteredDevice, Exception>>());
+    expect(newScope, oldScope);
+    expect(result, DeviceLocationSyncResult.sent);
+    expect(sent, [same(payload)]);
+    expect((await preferences.getAll()).values, isNot(contains('stale-jwt')));
+    expect((await preferences.getAll()).values, isNot(contains('device-jwt')));
+  });
 
   test(
     'registerDevice reuses saved token when confirmation retry recovers',
@@ -59,12 +172,10 @@ void main() {
       );
 
       final first = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
       final second = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -99,7 +210,6 @@ void main() {
       );
 
       final result = await repository.registerDevice(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -133,7 +243,6 @@ void main() {
       );
 
       final result = await repository.fetchOrRegister(
-        deviceId: 'local-device-id',
         devicePlatform: DevicePlatform.ios,
         deviceLocale: DeviceLocale.ja,
       );
@@ -163,7 +272,7 @@ void main() {
         apnsEnvironment: api.ApnsEnvironment.development,
       );
 
-      final result = await repository.deleteDevice('local-device-id');
+      final result = await repository.deleteDevice();
 
       expect(result, isA<Success<void, Exception>>());
       expect(authRepository.savedToken, isNull);
@@ -193,6 +302,9 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
 
 final class _MemorySecurePreferencesDataSource
     implements PreferencesDataSource<SecureStorageKey> {
+  new({this.events});
+
+  final List<String>? events;
   final values = <SecureStorageKey, String>{};
 
   @override
@@ -200,6 +312,7 @@ final class _MemorySecurePreferencesDataSource
     required SecureStorageKey key,
     required String value,
   }) async {
+    events?.add('secure:set');
     values[key] = value;
   }
 
@@ -251,6 +364,7 @@ final class _MemorySecurePreferencesDataSource
 
   @override
   Future<void> remove({required SecureStorageKey key}) async {
+    events?.add('secure:remove');
     values.remove(key);
   }
 
@@ -264,10 +378,12 @@ final class _DeviceRegisterAdapter implements HttpClientAdapter {
   new({
     this.failFirstMeRequest = false,
     this.rejectStaleAuthorization = false,
+    this.staleAuthorizationStatusCode = 401,
   });
 
   final bool failFirstMeRequest;
   final bool rejectStaleAuthorization;
+  final int staleAuthorizationStatusCode;
   final paths = <String>[];
   final authorizationHeaders = <String?>[];
   var _meRequests = 0;
@@ -299,8 +415,11 @@ final class _DeviceRegisterAdapter implements HttpClientAdapter {
           options.headers['Authorization'] == 'Bearer stale-jwt') {
         throw DioException.badResponse(
           requestOptions: options,
-          response: Response(requestOptions: options, statusCode: 401),
-          statusCode: 401,
+          response: Response(
+            requestOptions: options,
+            statusCode: staleAuthorizationStatusCode,
+          ),
+          statusCode: staleAuthorizationStatusCode,
         );
       }
       if (failFirstMeRequest && _meRequests == 1) {

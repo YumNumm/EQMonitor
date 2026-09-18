@@ -5,14 +5,7 @@ import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_inten
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:eqmonitor/feature/eew/data/logic/s_wave_travel_time_lookup.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
-
-final eewEstimatedRegionCalculatorProvider = Provider(
-  (ref) => EewEstimatedRegionCalculator(
-    sWaveTravelTimeLookup: ref.watch(sWaveTravelTimeLookupProvider),
-  ),
-);
 
 typedef _RegionCalculation = ({
   String name,
@@ -20,13 +13,9 @@ typedef _RegionCalculation = ({
   double? earliestSWaveTravelTime,
 });
 
-class EewEstimatedRegionCalculator {
-  const new({
-    required this.sWaveTravelTimeLookup,
-  });
-
-  final SWaveTravelTimeLookup sWaveTravelTimeLookup;
-
+class const EewEstimatedRegionCalculator({
+  required final SWaveTravelTimeLookup sWaveTravelTimeLookup,
+}) {
   List<EewEstimatedRegion> calculate({
     required List<EstimatedIntensityRegionStation> stations,
     required List<double> intensities,
@@ -77,23 +66,24 @@ class EewEstimatedRegionCalculator {
       );
     }
 
-    return [
-      for (final entry in regionMap.entries)
-        EewEstimatedRegion(
-          regionCode: entry.key,
-          regionName: entry.value.name,
-          intensity: entry.value.maxIntensity,
-          jmaIntensity: entry.value.maxIntensity.toJmaIntensity,
-          sWaveArrivalTime: switch ((
-            originTime,
-            entry.value.earliestSWaveTravelTime,
-          )) {
-            (final originTime?, final travelTime?) => originTime.add(
-              Duration(milliseconds: (travelTime * 1000).round()),
-            ),
-            _ => null,
-          },
-        ),
-    ];
+    return regionMap.entries
+        .map(
+          (entry) => EewEstimatedRegion(
+            regionCode: entry.key,
+            regionName: entry.value.name,
+            intensity: entry.value.maxIntensity,
+            jmaIntensity: entry.value.maxIntensity.toJmaIntensity,
+            sWaveArrivalTime: switch ((
+              originTime,
+              entry.value.earliestSWaveTravelTime,
+            )) {
+              (final originTime?, final travelTime?) => originTime.add(
+                Duration(milliseconds: (travelTime * 1000).round()),
+              ),
+              _ => null,
+            },
+          ),
+        )
+        .toList();
   }
 }

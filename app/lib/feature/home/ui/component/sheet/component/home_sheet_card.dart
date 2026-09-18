@@ -48,9 +48,9 @@ class HomeSheetCardHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        spacing.lg,
         spacing.md,
-        action == null ? spacing.lg : spacing.sm,
+        spacing.md,
+        action == null ? spacing.md : spacing.sm,
         spacing.xs,
       ),
       child: Row(

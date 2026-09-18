@@ -51,14 +51,6 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
             'city_fill_opacity',
             (v) => (v as num?)?.toDouble() ?? 0.6,
           ),
-          stationCircleRadiusMin: $checkedConvert(
-            'station_circle_radius_min',
-            (v) => (v as num?)?.toDouble() ?? 0.8,
-          ),
-          stationCircleRadiusMax: $checkedConvert(
-            'station_circle_radius_max',
-            (v) => (v as num?)?.toDouble() ?? 6.7,
-          ),
           stationIconSizeMin: $checkedConvert(
             'station_icon_size_min',
             (v) => (v as num?)?.toDouble() ?? 0.03,
@@ -96,8 +88,6 @@ _$EarthquakeHistoryMapLayerParameterFromJson(Map<String, dynamic> json) =>
         'regionFillOpacity': 'region_fill_opacity',
         'regionLineOpacity': 'region_line_opacity',
         'cityFillOpacity': 'city_fill_opacity',
-        'stationCircleRadiusMin': 'station_circle_radius_min',
-        'stationCircleRadiusMax': 'station_circle_radius_max',
         'stationIconSizeMin': 'station_icon_size_min',
         'stationIconSizeMid': 'station_icon_size_mid',
         'stationIconSizeMax': 'station_icon_size_max',
@@ -119,8 +109,6 @@ Map<String, dynamic> _$EarthquakeHistoryMapLayerParameterToJson(
   'region_fill_opacity': instance.regionFillOpacity,
   'region_line_opacity': instance.regionLineOpacity,
   'city_fill_opacity': instance.cityFillOpacity,
-  'station_circle_radius_min': instance.stationCircleRadiusMin,
-  'station_circle_radius_max': instance.stationCircleRadiusMax,
   'station_icon_size_min': instance.stationIconSizeMin,
   'station_icon_size_mid': instance.stationIconSizeMid,
   'station_icon_size_max': instance.stationIconSizeMax,

@@ -7,9 +7,7 @@ import 'package:eqmonitor/feature/map/data/model/base_map_tile_spec.dart';
 
 enum EarthquakeHistoryMapLayerMode { none, region, city, station, auto }
 
-class EarthquakeHistoryMapLayerModeResolver {
-  const new();
-
+class const EarthquakeHistoryMapLayerModeResolver() {
   EarthquakeHistoryMapLayerMode resolveFillLayerMode({
     required Earthquake earthquake,
     required EarthquakeHistoryFillMode fillMode,
@@ -53,6 +51,10 @@ class EarthquakeHistoryMapLayerModeResolver {
   /// [BaseMapTileSpec.cityMinZoom] 未満に切り替え点を置くと、市区町村ポリゴンが
   /// タイルに存在しないため細分区域も市区町村も塗られない帯ができる。
   /// 永続化済みの古い設定値（下限より小さい値）も同様に潰れるので切り上げる。
+  ///
+  /// タイル側の下限は現在 0（全ズームに市区町村ポリゴンがある）なので、この
+  /// 切り上げは実質無効。タイル側で再び市区町村を高ズームへ寄せたときに
+  /// 自動で効くよう残している。
   double effectiveRegionToCityZoom(double regionToCity) =>
       max(regionToCity, BaseMapTileSpec.cityMinZoom);
 

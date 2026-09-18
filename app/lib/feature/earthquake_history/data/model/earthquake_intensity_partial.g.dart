@@ -23,12 +23,17 @@ _EarthquakeIntensityPartial _$EarthquakeIntensityPartialFromJson(
         'max_lpgm_intensity',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
+      maxIntensityClass: $checkedConvert(
+        'max_intensity_class',
+        (v) => $enumDecodeNullable(_$ShindoDbIntensityClassEnumMap, v),
+      ),
     );
     return val;
   },
   fieldKeyMap: const {
     'maxIntensity': 'max_intensity',
     'maxLpgmIntensity': 'max_lpgm_intensity',
+    'maxIntensityClass': 'max_intensity_class',
   },
 );
 
@@ -37,6 +42,8 @@ Map<String, dynamic> _$EarthquakeIntensityPartialToJson(
 ) => <String, dynamic>{
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity],
+  'max_intensity_class':
+      _$ShindoDbIntensityClassEnumMap[instance.maxIntensityClass],
 };
 
 const _$JmaIntensityEnumMap = {
@@ -62,4 +69,25 @@ const _$JmaLpgmIntensityEnumMap = {
   JmaLpgmIntensity.two: 'two',
   JmaLpgmIntensity.three: 'three',
   JmaLpgmIntensity.four: 'four',
+};
+
+const _$ShindoDbIntensityClassEnumMap = {
+  ShindoDbIntensityClass.one: 'one',
+  ShindoDbIntensityClass.two: 'two',
+  ShindoDbIntensityClass.three: 'three',
+  ShindoDbIntensityClass.four: 'four',
+  ShindoDbIntensityClass.five: 'five',
+  ShindoDbIntensityClass.fiveLower: 'fiveLower',
+  ShindoDbIntensityClass.fiveUpper: 'fiveUpper',
+  ShindoDbIntensityClass.six: 'six',
+  ShindoDbIntensityClass.sixLower: 'sixLower',
+  ShindoDbIntensityClass.sixUpper: 'sixUpper',
+  ShindoDbIntensityClass.seven: 'seven',
+  ShindoDbIntensityClass.unknownFelt: 'unknownFelt',
+  ShindoDbIntensityClass.conspicuous: 'conspicuous',
+  ShindoDbIntensityClass.semiConspicuous: 'semiConspicuous',
+  ShindoDbIntensityClass.semiLocal: 'semiLocal',
+  ShindoDbIntensityClass.local: 'local',
+  ShindoDbIntensityClass.felt: 'felt',
+  ShindoDbIntensityClass.nearbyFelt: 'nearbyFelt',
 };

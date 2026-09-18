@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'catalog_intensity_class.dart';
 import 'jma_intensity.dart';
 import 'jma_lpgm_intensity.dart';
 
@@ -17,6 +18,8 @@ abstract class IntensityPartial with _$IntensityPartial {
     required JmaIntensity maxIntensity,
     @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
+    @JsonKey(includeIfNull: false,name: 'max_intensity_class')
+    CatalogIntensityClass? maxIntensityClass,
   }) = _IntensityPartial;
   
   factory IntensityPartial.fromJson(Map<String, Object?> json) => _$IntensityPartialFromJson(json);

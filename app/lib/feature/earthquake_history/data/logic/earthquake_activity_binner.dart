@@ -3,9 +3,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activ
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_intensity_category.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 
-class EarthquakeActivityBinner {
-  const new();
-
+class const EarthquakeActivityBinner() {
   List<EarthquakeActivityBin> build({
     required List<EarthquakePartialNormal> items,
     required EarthquakeActivityBinInterval interval,

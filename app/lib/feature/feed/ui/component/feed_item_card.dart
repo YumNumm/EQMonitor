@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 extension FeedItemDataDisplay on FeedItemData {
@@ -40,7 +40,7 @@ class FeedItemListTileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = DateFormat('yyyy/MM/dd HH:mm').format(item.publishedAt);
+    final dateStr = item.publishedAt.formatWithTz(.yearMonthDayHourMinute);
 
     return Row(
       children: [

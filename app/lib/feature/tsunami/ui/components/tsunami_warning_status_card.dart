@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_history_overlay.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiWarningStatusCard extends StatelessWidget {
   const new({required this.tsunami, super.key});
@@ -85,7 +85,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
               child: Text(
-                '最終更新: ${DateFormat('yyyy/MM/dd HH:mm').format(tsunami.updatedAt.toLocal())}',
+                '最終更新: ${tsunami.updatedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
                 style: TextStyle(
                   fontSize: 12,
                   color: designSystem.colorTheme.onSurfaceVariant,

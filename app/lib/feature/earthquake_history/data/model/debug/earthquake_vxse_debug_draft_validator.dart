@@ -6,9 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 
 /// [EarthquakeVxseDebugEditorController] の編集中ドラフトを検証する。
-class EarthquakeVxseDebugDraftValidator {
-  const new();
-
+class const EarthquakeVxseDebugDraftValidator() {
   EarthquakeTelegramType initialType({required Earthquake current}) {
     const supported = {
       EarthquakeTelegramType.vxse51,

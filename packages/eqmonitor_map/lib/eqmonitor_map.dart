@@ -11,6 +11,10 @@ export 'package:pmtiles_v3/pmtiles_v3.dart'
 
 export 'src/eqmonitor_map_library.dart';
 export 'src/flutter_scene/base_map_material_preflight_view.dart';
+export 'src/flutter_scene/flutter_scene_sprite_resource_owner.dart'
+    show MapSpriteRendererLimits;
+export 'src/flutter_scene/map_gpu_probe.dart';
+export 'src/foundation/async_generation_token.dart';
 export 'src/foundation/frame/map_clock.dart';
 export 'src/foundation/frame/map_frame_revision.dart';
 export 'src/foundation/frame/map_frame_snapshot.dart';
@@ -39,18 +43,33 @@ export 'src/foundation/revision/map_revision_commit_store.dart';
 export 'src/foundation/revision/map_revision_state_owner.dart';
 export 'src/foundation/revision/map_source_identity.dart';
 export 'src/geo/map_camera.dart';
+export 'src/geo/map_camera_bounds.dart';
+export 'src/geo/map_camera_bounds_fitter.dart';
 export 'src/geo/map_viewport.dart';
 export 'src/mesh/fill_mesh_builder_limits.dart';
 export 'src/mesh/line_mesh_builder_limits.dart';
+export 'src/overlay/earthquake_map_overlay_snapshot.dart';
+export 'src/overlay/earthquake_overlay_controller.dart';
+export 'src/overlay/earthquake_overlay_coverage.dart';
+export 'src/overlay/map_overlay_version_stamp.dart';
+export 'src/overlay/map_point_sprite_feature.dart';
+export 'src/overlay/map_sprite_atlas.dart';
+export 'src/overlay/map_zoom_scalar_policy.dart';
 export 'src/renderer/eqmonitor_orthographic_projection.dart';
 export 'src/renderer/map_render_batch_adapter.dart';
 export 'src/renderer/map_scene_renderer_adapter.dart';
 export 'src/renderer/spike_mesh_frame.dart';
 export 'src/tile/base_map_tile_decoder.dart' show BaseMapTileDecodeLimits;
+export 'src/tile/estimated_intensity_tile_decode_exception.dart';
+export 'src/tile/estimated_intensity_tile_decode_limits.dart';
+export 'src/tile/estimated_intensity_tile_decoder.dart'
+    show EstimatedIntensityTileDecoder, estimatedIntensitySourceLayerName;
+export 'src/tile/estimated_intensity_tile_geometry.dart';
 export 'src/tile/map_tile_fallback_policy.dart';
 export 'src/tile/map_tile_pipeline_budget.dart';
 export 'src/tile/mvt/mvt_decode_limits.dart';
 export 'src/tile/verified_pm_tiles_source.dart';
 export 'src/widget/base_map_view.dart';
+export 'src/widget/map_view_camera_controller.dart';
 
 // The physical-device Scene spike stays under src as a manual smoke harness.

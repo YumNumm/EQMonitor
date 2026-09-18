@@ -5,32 +5,20 @@ import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_manifest.dart';
 import 'package:path/path.dart' as p;
 
-class AssetPackContentException implements Exception {
-  const new(this.message);
-
-  final String message;
-
+class const AssetPackContentException(final String message)
+    implements Exception {
   @override
   String toString() => 'AssetPackContentException: $message';
 }
 
-class AssetPackContentEntry {
-  const new({
-    required this.id,
-    required this.path,
-    required this.sha256,
-    required this.sizeBytes,
-  });
+class const AssetPackContentEntry({
+  required final String id,
+  required final String path,
+  required final String sha256,
+  required final int sizeBytes,
+});
 
-  final String id;
-  final String path;
-  final String sha256;
-  final int sizeBytes;
-}
-
-class AssetPackContentValidator {
-  const new();
-
+class const AssetPackContentValidator() {
   Future<AssetPackManifest> validate({
     required Directory rootDirectory,
     required String expectedVersion,

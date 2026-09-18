@@ -9,9 +9,7 @@ part 'live_monitor_exit_action.g.dart';
 LiveMonitorExitAction liveMonitorExitAction(Ref ref) =>
     const LiveMonitorExitAction();
 
-class LiveMonitorExitAction {
-  const new();
-
+class const LiveMonitorExitAction() {
   Future<void> confirm({
     required WidgetRef ref,
     required BuildContext context,

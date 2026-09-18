@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
@@ -12,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_re
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,7 +39,9 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     if (next case AsyncData(:final value)) {
       switch (value) {
         case RealtimeEarthquakeUpsertEvent(:final record):
-          dataSource.applyRealtimeRecord(record);
+          if (dataSource.applyRealtimeRecord(record)) {
+            ref.invalidateSelf();
+          }
         case RealtimeEarthquakeDeleteEvent(:final eventId):
           dataSource.applyRealtimeDelete(eventId);
         case _:
@@ -93,13 +95,11 @@ class EarthquakeHistoryDataSource
     super.dispose();
   }
 
-  static final _dateFormatter = DateFormat('yyyy/MM/dd');
-
   @override
   String groupBy(EarthquakePartial value) {
     final dateTime =
         value.earthquake.originTime ?? value.earthquake.arrivalTime;
-    return dateTime != null ? _dateFormatter.format(dateTime.toLocal()) : '不明';
+    return dateTime?.formatWithTz(DateTimeFormat.yearMonthDay) ?? '不明';
   }
 
   @override
@@ -295,20 +295,22 @@ class EarthquakeHistoryDataSource
     }
   }
 
-  void applyRealtimeRecord(api.Earthquake record) {
+  bool applyRealtimeRecord(api.Earthquake record) {
     _mutations.add(
       _RealtimeListUpsert(sequence: ++_mutationSequence, record: record),
     );
     final previous = notifier.values
         .where((item) => item.earthquake.eventId == record.eventId)
         .firstOrNull;
+    final decision = EarthquakeRealtimeListReconciler(
+      parameter: _parameter,
+      repository: _repository,
+    ).decide(record: record, previous: previous);
     _applyDecision(
-      EarthquakeRealtimeListReconciler(
-        parameter: _parameter,
-        repository: _repository,
-      ).decide(record: record, previous: previous),
+      decision,
       eventId: record.eventId,
     );
+    return previous == null || decision is EarthquakeRealtimeListRefetch;
   }
 
   void applyRealtimeDelete(String eventId) {
@@ -379,6 +381,8 @@ class EarthquakeHistoryDataSource
         applyRealtimeDeleteWithoutMutation(eventId);
       case EarthquakeRealtimeListPreserve():
         return;
+      case EarthquakeRealtimeListRefetch():
+        return;
     }
   }
 
@@ -412,28 +416,25 @@ class EarthquakeHistoryDataSource
         }
       case EarthquakeRealtimeListPreserve():
         return;
+      case EarthquakeRealtimeListRefetch():
+        return;
     }
   }
 }
 
-sealed class _RealtimeListMutation {
-  const new({required this.sequence});
-
-  final int sequence;
+sealed class const _RealtimeListMutation({required final int sequence}) {
   String get eventId;
 }
 
-final class _RealtimeListUpsert extends _RealtimeListMutation {
-  const new({required super.sequence, required this.record});
-
-  final api.Earthquake record;
+final class const _RealtimeListUpsert({
+  required super.sequence,
+  required final api.Earthquake record,
+}) extends _RealtimeListMutation {
   @override
   String get eventId => record.eventId;
 }
 
-final class _RealtimeListDelete extends _RealtimeListMutation {
-  const new({required super.sequence, required this.eventId});
-
-  @override
-  final String eventId;
-}
+final class const _RealtimeListDelete({
+  required super.sequence,
+  @override required final String eventId,
+}) extends _RealtimeListMutation;

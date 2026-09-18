@@ -16,9 +16,9 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/home_map_label_lay
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/components/connection_status_card.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/connection_status_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
@@ -207,7 +207,15 @@ class _MapLibreMapHost extends HookConsumerWidget {
             await controller.enableLocation();
           }
         },
-        onEvent: (event) => MapLibreEventProvider.maybeOf(context)?.emit(event),
+        onEvent: (event) {
+          MapLibreEventProvider.maybeOf(context)?.emit(event);
+          if (event is MapEventStartMoveCamera &&
+              event.reason == CameraChangeReason.apiGesture) {
+            ref
+                .read(homeMapCameraStateProvider.notifier)
+                .handleUserMapGesture();
+          }
+        },
         children: children,
       ),
     );
@@ -248,8 +256,12 @@ class _MapHeader extends ConsumerWidget {
     );
 
     final isDebug = ref.watch(debugProvider).value ?? false;
+    final isEewFocusActive = ref.watch(
+      homeMapCameraStateProvider.select((state) => state.isEewFocusActive),
+    );
 
     final controllerCard = HomeMapControllerCard(
+      isLocationButtonEnabled: !isEewFocusActive,
       onLayerButtonTap: () async =>
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>

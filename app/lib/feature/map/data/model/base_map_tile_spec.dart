@@ -6,10 +6,13 @@
 abstract final class BaseMapTileSpec {
   /// `areaInformationCityQuake` の地物が存在する最小ズーム。
   ///
-  /// タイル生成時に市区町村の全 feature へ `tippecanoe: {minzoom: 6}` を
-  /// 付与しているため（backend `tools/base-map-pmtiles/convert_to_geojson.py`
-  /// の `CITY_QUAKE_FEATURE_MINZOOM`）、これ未満のズームのタイルには
-  /// 市区町村ポリゴンが 1 件も含まれない。
-  /// 市区町村の塗りつぶしはこのズーム未満では細分区域へフォールバックさせる。
-  static const cityMinZoom = 6.0;
+  /// タイル生成時の `tippecanoe: {minzoom}` (backend
+  /// `tools/base-map-pmtiles/convert_to_geojson.py` の
+  /// `CITY_QUAKE_FEATURE_MINZOOM`) と一致させる。これはタイルセット自身の
+  /// 最小ズーム (`-Z0`) と同じなので、市区町村ポリゴンは全ズームに存在する。
+  ///
+  /// 0 なのでこの値による下限クランプは実質無効だが、定数は残す。タイル側で
+  /// 再びこの層を高ズームへ寄せる（`--maximum-tile-bytes` を上げる代わりに
+  /// minzoom を上げる）判断をしたときに、参照側を一箇所直せば追従できる。
+  static const cityMinZoom = 0.0;
 }

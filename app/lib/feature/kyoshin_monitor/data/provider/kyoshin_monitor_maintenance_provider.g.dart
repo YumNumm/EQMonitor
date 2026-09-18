@@ -51,4 +51,4 @@ final class KyoshinMonitorMaintenanceProvider
 }
 
 String _$kyoshinMonitorMaintenanceHash() =>
-    r'53cc188e79c961b1c1e80d0b8017dc16c9847536';
+    r'a16f47a42339542003f7310faa159906c6acae24';

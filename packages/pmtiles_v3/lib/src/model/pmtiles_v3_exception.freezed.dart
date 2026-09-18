@@ -56,14 +56,15 @@ extension PmTilesV3ExceptionPatterns on PmTilesV3Exception {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PmTilesV3InvalidRangeException value)?  invalidRange,TResult Function( PmTilesV3CorruptArchiveException value)?  corruptArchive,TResult Function( PmTilesV3UnsupportedCompressionException value)?  unsupportedCompression,TResult Function( PmTilesV3SourceReadFailedException value)?  sourceReadFailed,TResult Function( PmTilesV3InvalidTileIdException value)?  invalidTileId,TResult Function( PmTilesV3InvalidTileCoordinateException value)?  invalidTileCoordinate,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PmTilesV3InvalidRangeException value)?  invalidRange,TResult Function( PmTilesV3CorruptArchiveException value)?  corruptArchive,TResult Function( PmTilesV3UnsupportedCompressionException value)?  unsupportedCompression,TResult Function( PmTilesV3SourceReadFailedException value)?  sourceReadFailed,TResult Function( PmTilesV3ResourceLimitExceededException value)?  resourceLimitExceeded,TResult Function( PmTilesV3InvalidTileIdException value)?  invalidTileId,TResult Function( PmTilesV3InvalidTileCoordinateException value)?  invalidTileCoordinate,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException() when invalidRange != null:
 return invalidRange(_that);case PmTilesV3CorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that);case PmTilesV3UnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that);case PmTilesV3SourceReadFailedException() when sourceReadFailed != null:
-return sourceReadFailed(_that);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
+return sourceReadFailed(_that);case PmTilesV3ResourceLimitExceededException() when resourceLimitExceeded != null:
+return resourceLimitExceeded(_that);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that);case PmTilesV3InvalidTileCoordinateException() when invalidTileCoordinate != null:
 return invalidTileCoordinate(_that);case _:
   return orElse();
@@ -83,14 +84,15 @@ return invalidTileCoordinate(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PmTilesV3InvalidRangeException value)  invalidRange,required TResult Function( PmTilesV3CorruptArchiveException value)  corruptArchive,required TResult Function( PmTilesV3UnsupportedCompressionException value)  unsupportedCompression,required TResult Function( PmTilesV3SourceReadFailedException value)  sourceReadFailed,required TResult Function( PmTilesV3InvalidTileIdException value)  invalidTileId,required TResult Function( PmTilesV3InvalidTileCoordinateException value)  invalidTileCoordinate,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PmTilesV3InvalidRangeException value)  invalidRange,required TResult Function( PmTilesV3CorruptArchiveException value)  corruptArchive,required TResult Function( PmTilesV3UnsupportedCompressionException value)  unsupportedCompression,required TResult Function( PmTilesV3SourceReadFailedException value)  sourceReadFailed,required TResult Function( PmTilesV3ResourceLimitExceededException value)  resourceLimitExceeded,required TResult Function( PmTilesV3InvalidTileIdException value)  invalidTileId,required TResult Function( PmTilesV3InvalidTileCoordinateException value)  invalidTileCoordinate,}){
 final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException():
 return invalidRange(_that);case PmTilesV3CorruptArchiveException():
 return corruptArchive(_that);case PmTilesV3UnsupportedCompressionException():
 return unsupportedCompression(_that);case PmTilesV3SourceReadFailedException():
-return sourceReadFailed(_that);case PmTilesV3InvalidTileIdException():
+return sourceReadFailed(_that);case PmTilesV3ResourceLimitExceededException():
+return resourceLimitExceeded(_that);case PmTilesV3InvalidTileIdException():
 return invalidTileId(_that);case PmTilesV3InvalidTileCoordinateException():
 return invalidTileCoordinate(_that);}
 }
@@ -106,14 +108,15 @@ return invalidTileCoordinate(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PmTilesV3InvalidRangeException value)?  invalidRange,TResult? Function( PmTilesV3CorruptArchiveException value)?  corruptArchive,TResult? Function( PmTilesV3UnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( PmTilesV3SourceReadFailedException value)?  sourceReadFailed,TResult? Function( PmTilesV3InvalidTileIdException value)?  invalidTileId,TResult? Function( PmTilesV3InvalidTileCoordinateException value)?  invalidTileCoordinate,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PmTilesV3InvalidRangeException value)?  invalidRange,TResult? Function( PmTilesV3CorruptArchiveException value)?  corruptArchive,TResult? Function( PmTilesV3UnsupportedCompressionException value)?  unsupportedCompression,TResult? Function( PmTilesV3SourceReadFailedException value)?  sourceReadFailed,TResult? Function( PmTilesV3ResourceLimitExceededException value)?  resourceLimitExceeded,TResult? Function( PmTilesV3InvalidTileIdException value)?  invalidTileId,TResult? Function( PmTilesV3InvalidTileCoordinateException value)?  invalidTileCoordinate,}){
 final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException() when invalidRange != null:
 return invalidRange(_that);case PmTilesV3CorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that);case PmTilesV3UnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that);case PmTilesV3SourceReadFailedException() when sourceReadFailed != null:
-return sourceReadFailed(_that);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
+return sourceReadFailed(_that);case PmTilesV3ResourceLimitExceededException() when resourceLimitExceeded != null:
+return resourceLimitExceeded(_that);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that);case PmTilesV3InvalidTileCoordinateException() when invalidTileCoordinate != null:
 return invalidTileCoordinate(_that);case _:
   return null;
@@ -132,13 +135,14 @@ return invalidTileCoordinate(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( String reason)?  sourceReadFailed,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,TResult Function( int z,  int x,  int y)?  invalidTileCoordinate,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult Function( String reason)?  corruptArchive,TResult Function( int compression)?  unsupportedCompression,TResult Function( String reason)?  sourceReadFailed,TResult Function( PmTilesV3Resource resource,  int limit,  int actual)?  resourceLimitExceeded,TResult Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,TResult Function( int z,  int x,  int y)?  invalidTileCoordinate,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException() when invalidRange != null:
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case PmTilesV3CorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that.reason);case PmTilesV3UnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that.compression);case PmTilesV3SourceReadFailedException() when sourceReadFailed != null:
-return sourceReadFailed(_that.reason);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
+return sourceReadFailed(_that.reason);case PmTilesV3ResourceLimitExceededException() when resourceLimitExceeded != null:
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case PmTilesV3InvalidTileCoordinateException() when invalidTileCoordinate != null:
 return invalidTileCoordinate(_that.z,_that.x,_that.y);case _:
   return orElse();
@@ -158,13 +162,14 @@ return invalidTileCoordinate(_that.z,_that.x,_that.y);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( String reason)  sourceReadFailed,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,required TResult Function( int z,  int x,  int y)  invalidTileCoordinate,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int offset,  int length,  int sizeBytes)  invalidRange,required TResult Function( String reason)  corruptArchive,required TResult Function( int compression)  unsupportedCompression,required TResult Function( String reason)  sourceReadFailed,required TResult Function( PmTilesV3Resource resource,  int limit,  int actual)  resourceLimitExceeded,required TResult Function( int tileId,  int minTileId,  int maxTileId)  invalidTileId,required TResult Function( int z,  int x,  int y)  invalidTileCoordinate,}) {final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException():
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case PmTilesV3CorruptArchiveException():
 return corruptArchive(_that.reason);case PmTilesV3UnsupportedCompressionException():
 return unsupportedCompression(_that.compression);case PmTilesV3SourceReadFailedException():
-return sourceReadFailed(_that.reason);case PmTilesV3InvalidTileIdException():
+return sourceReadFailed(_that.reason);case PmTilesV3ResourceLimitExceededException():
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case PmTilesV3InvalidTileIdException():
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case PmTilesV3InvalidTileCoordinateException():
 return invalidTileCoordinate(_that.z,_that.x,_that.y);}
 }
@@ -180,13 +185,14 @@ return invalidTileCoordinate(_that.z,_that.x,_that.y);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( String reason)?  sourceReadFailed,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,TResult? Function( int z,  int x,  int y)?  invalidTileCoordinate,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int offset,  int length,  int sizeBytes)?  invalidRange,TResult? Function( String reason)?  corruptArchive,TResult? Function( int compression)?  unsupportedCompression,TResult? Function( String reason)?  sourceReadFailed,TResult? Function( PmTilesV3Resource resource,  int limit,  int actual)?  resourceLimitExceeded,TResult? Function( int tileId,  int minTileId,  int maxTileId)?  invalidTileId,TResult? Function( int z,  int x,  int y)?  invalidTileCoordinate,}) {final _that = this;
 switch (_that) {
 case PmTilesV3InvalidRangeException() when invalidRange != null:
 return invalidRange(_that.offset,_that.length,_that.sizeBytes);case PmTilesV3CorruptArchiveException() when corruptArchive != null:
 return corruptArchive(_that.reason);case PmTilesV3UnsupportedCompressionException() when unsupportedCompression != null:
 return unsupportedCompression(_that.compression);case PmTilesV3SourceReadFailedException() when sourceReadFailed != null:
-return sourceReadFailed(_that.reason);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
+return sourceReadFailed(_that.reason);case PmTilesV3ResourceLimitExceededException() when resourceLimitExceeded != null:
+return resourceLimitExceeded(_that.resource,_that.limit,_that.actual);case PmTilesV3InvalidTileIdException() when invalidTileId != null:
 return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case PmTilesV3InvalidTileCoordinateException() when invalidTileCoordinate != null:
 return invalidTileCoordinate(_that.z,_that.x,_that.y);case _:
   return null;
@@ -201,7 +207,7 @@ return invalidTileCoordinate(_that.z,_that.x,_that.y);case _:
 
 class PmTilesV3InvalidRangeException implements PmTilesV3Exception {
   const PmTilesV3InvalidRangeException({required this.offset, required this.length, required this.sizeBytes});
-  
+
 
  final  int offset;
  final  int length;
@@ -458,6 +464,76 @@ class _$PmTilesV3SourceReadFailedExceptionCopyWithImpl<$Res>
   return _then(PmTilesV3SourceReadFailedException(
 reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PmTilesV3ResourceLimitExceededException implements PmTilesV3Exception {
+  const PmTilesV3ResourceLimitExceededException({required this.resource, required this.limit, required this.actual});
+
+
+ final  PmTilesV3Resource resource;
+ final  int limit;
+ final  int actual;
+
+/// Create a copy of PmTilesV3Exception
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PmTilesV3ResourceLimitExceededExceptionCopyWith<PmTilesV3ResourceLimitExceededException> get copyWith => _$PmTilesV3ResourceLimitExceededExceptionCopyWithImpl<PmTilesV3ResourceLimitExceededException>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PmTilesV3ResourceLimitExceededException&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.actual, actual) || other.actual == actual));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,resource,limit,actual);
+
+@override
+String toString() {
+  return 'PmTilesV3Exception.resourceLimitExceeded(resource: $resource, limit: $limit, actual: $actual)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PmTilesV3ResourceLimitExceededExceptionCopyWith<$Res> implements $PmTilesV3ExceptionCopyWith<$Res> {
+  factory $PmTilesV3ResourceLimitExceededExceptionCopyWith(PmTilesV3ResourceLimitExceededException value, $Res Function(PmTilesV3ResourceLimitExceededException) _then) = _$PmTilesV3ResourceLimitExceededExceptionCopyWithImpl;
+@useResult
+$Res call({
+ PmTilesV3Resource resource, int limit, int actual
+});
+
+
+
+
+}
+/// @nodoc
+class _$PmTilesV3ResourceLimitExceededExceptionCopyWithImpl<$Res>
+    implements $PmTilesV3ResourceLimitExceededExceptionCopyWith<$Res> {
+  _$PmTilesV3ResourceLimitExceededExceptionCopyWithImpl(this._self, this._then);
+
+  final PmTilesV3ResourceLimitExceededException _self;
+  final $Res Function(PmTilesV3ResourceLimitExceededException) _then;
+
+/// Create a copy of PmTilesV3Exception
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? resource = null,Object? limit = null,Object? actual = null,}) {
+  return _then(PmTilesV3ResourceLimitExceededException(
+resource: null == resource ? _self.resource : resource // ignore: cast_nullable_to_non_nullable
+as PmTilesV3Resource,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
+as int,actual: null == actual ? _self.actual : actual // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

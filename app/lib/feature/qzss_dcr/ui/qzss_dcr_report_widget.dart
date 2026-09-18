@@ -1,9 +1,9 @@
 import 'package:dart_azarashi/dart_azarashi.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/qzss_dcr/data/provider/qzss_serial_port_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class QzssDcrReportWidget extends HookConsumerWidget {
   const new({super.key});
@@ -30,14 +30,18 @@ class QzssDcrReportWidget extends HookConsumerWidget {
               Text(
                 '災危通報を受信していません',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'GNSS受信機を接続し、衛星からの信号を受信してください',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: designSystem.colorTheme.onSurface.withValues(alpha: 0.4),
+                  color: designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.4,
+                  ),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -119,7 +123,9 @@ class QzssDcrReportWidget extends HookConsumerWidget {
             // 受信時刻（現在時刻）
             _InfoRow(
               label: '受信時刻',
-              value: DateFormat('yyyy/MM/dd HH:mm:ss').format(DateTime.now()),
+              value: DateTime.now().formatWithTz(
+                .yearMonthDayHourMinuteSecond,
+              ),
               icon: Icons.access_time,
             ),
 

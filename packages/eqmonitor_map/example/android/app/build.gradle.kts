@@ -30,7 +30,7 @@ android {
     }
 
     buildTypes {
-        profile {
+        getByName("profile") {
             // CI profile APK has no release keystore; use debug signing.
             signingConfig = signingConfigs.getByName("debug")
         }

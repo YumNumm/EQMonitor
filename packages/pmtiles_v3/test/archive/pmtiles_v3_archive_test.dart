@@ -1,19 +1,26 @@
 import 'dart:typed_data';
 
 import 'package:pmtiles_v3/pmtiles_v3.dart';
+import 'package:pmtiles_v3/src/archive/pmtiles_v3_compression_decoder.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
 import 'package:test/test.dart';
 
 import '../support/pmtiles_v3_fixture_builder.dart';
 
-// このファイルの大半のテストは、archive全体をeagerに走査したときの
+// このファイルの大半のテストは、archive全体を先行走査したときの
 // directory木・clustered orderingの検証を確かめるものなので、
-// `openFixture`はeager検証を明示的に有効化する。既定(無効)側の挙動は
+// `openFixture`は全体走査を明示的に有効化する。既定(無効)側の挙動は
 // 別途「既定ではarchive全体を検証しない」テストで固定する。
 const _limits = PmTilesV3Limits(
   maxDirectoryDepth: 3,
   rootDirectoryWindowLength: 16384,
-  validateEntireArchiveEagerly: true,
+  maxDirectoryEncodedBytes: 1 << 20,
+  maxDirectoryDecodedBytes: 8 << 20,
+  maxDirectoryEntries: 65536,
+  maxCachedLeafDirectories: 4,
+  maxTileEncodedBytes: 4 << 20,
+  maxTileDecodedBytes: 16 << 20,
+  validateFullArchiveOnOpen: true,
 );
 
 void main() {
@@ -123,6 +130,156 @@ void main() {
     await archive.close();
   });
 
+  test('classifies root directory resource limits', () async {
+    for (final limits in [
+      _limits.copyWith(maxDirectoryEncodedBytes: 0),
+      _limits.copyWith(maxDirectoryDecodedBytes: 4),
+      _limits.copyWith(maxDirectoryEntries: 0),
+    ]) {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
+        ],
+        internalCompression: PmTilesV3CompressionDecoder.gzipCompression,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+      await expectLater(
+        PmTilesV3Archive.open(reader: reader, limits: limits),
+        throwsA(isA<PmTilesV3ResourceLimitExceededException>()),
+      );
+      expect(reader._closeCalls, 1);
+    }
+  });
+
+  test('rejects negative caller limits before reading the archive', () async {
+    final fixture = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureTile(tileId: 0, bytes: [1]),
+      ],
+    );
+    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+    await expectLater(
+      PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(maxTileDecodedBytes: -1),
+      ),
+      throwsA(
+        isA<ArgumentError>().having(
+          (error) => error.name,
+          'name',
+          'maxTileDecodedBytes',
+        ),
+      ),
+    );
+
+    expect(reader.reads, isEmpty);
+    expect(reader._closeCalls, 1);
+  });
+
+  test(
+    'evicts least recently used leaf directories at the caller limit',
+    () async {
+      final fixture = builder.build(
+        rootEntries: const [
+          PmTilesV3FixtureLeaf(
+            tileId: 5,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 5, bytes: [5]),
+            ],
+          ),
+          PmTilesV3FixtureLeaf(
+            tileId: 6,
+            entries: [
+              PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+            ],
+          ),
+        ],
+        minZoom: 2,
+      );
+      final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+      final archive = await PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(
+          maxCachedLeafDirectories: 1,
+          validateFullArchiveOnOpen: false,
+        ),
+      );
+
+      expect(await archive.readTileById(tileId: 5), orderedEquals([5]));
+      expect(await archive.readTileById(tileId: 6), orderedEquals([6]));
+      expect(await archive.readTileById(tileId: 5), orderedEquals([5]));
+      expect(reader.reads, hasLength(8));
+
+      await archive.close();
+    },
+  );
+
+  test('applies the decoded directory limit when reading a leaf', () async {
+    final fixture = builder.build(
+      rootEntries: const [
+        PmTilesV3FixtureLeaf(
+          tileId: 5,
+          entries: [
+            PmTilesV3FixtureTile(tileId: 5, bytes: [5]),
+            PmTilesV3FixtureTile(tileId: 6, bytes: [6]),
+          ],
+        ),
+      ],
+      minZoom: 2,
+    );
+    final reader = TrackingRandomAccessReader(bytes: fixture.bytes);
+
+    await expectLater(
+      PmTilesV3Archive.open(
+        reader: reader,
+        limits: _limits.copyWith(maxDirectoryDecodedBytes: 5),
+      ),
+      throwsA(
+        isA<PmTilesV3ResourceLimitExceededException>().having(
+          (exception) => exception.resource,
+          'resource',
+          PmTilesV3Resource.directoryDecoded,
+        ),
+      ),
+    );
+    expect(reader._closeCalls, 1);
+  });
+
+  test(
+    'applies encoded and decoded limits to none/gzip tile payloads',
+    () async {
+      for (final compression in [
+        PmTilesV3CompressionDecoder.none,
+        PmTilesV3CompressionDecoder.gzipCompression,
+      ]) {
+        final payload = List<int>.filled(32, 7);
+        final fixture = builder.build(
+          rootEntries: [PmTilesV3FixtureTile(tileId: 0, bytes: payload)],
+          tileCompression: compression,
+        );
+        final archive = await PmTilesV3Archive.open(
+          reader: TrackingRandomAccessReader(bytes: fixture.bytes),
+          limits: _limits.copyWith(
+            maxTileEncodedBytes: compression == PmTilesV3CompressionDecoder.none
+                ? payload.length - 1
+                : 4 << 20,
+            maxTileDecodedBytes: compression == PmTilesV3CompressionDecoder.none
+                ? 16 << 20
+                : payload.length - 1,
+          ),
+        );
+
+        await expectLater(
+          archive.readTileById(tileId: 0),
+          throwsA(isA<PmTilesV3ResourceLimitExceededException>()),
+        );
+        await archive.close();
+      }
+    },
+  );
+
   test('supports three directory levels and rejects a fourth', () async {
     final validFixture = builder.build(
       rootEntries: const [
@@ -178,8 +335,7 @@ void main() {
   });
 
   test(
-    'honors a caller-supplied directory depth limit when eagerly '
-    'validated',
+    'honors a caller-supplied directory depth limit during full validation',
     () async {
       final fixture = builder.build(
         rootEntries: const [
@@ -200,7 +356,13 @@ void main() {
           limits: const PmTilesV3Limits(
             maxDirectoryDepth: 1,
             rootDirectoryWindowLength: 16384,
-            validateEntireArchiveEagerly: true,
+            maxDirectoryEncodedBytes: 1 << 20,
+            maxDirectoryDecodedBytes: 8 << 20,
+            maxDirectoryEntries: 65536,
+            maxCachedLeafDirectories: 4,
+            maxTileEncodedBytes: 4 << 20,
+            maxTileDecodedBytes: 16 << 20,
+            validateFullArchiveOnOpen: true,
           ),
         ),
         throwsA(isA<PmTilesV3CorruptArchiveException>()),
@@ -210,10 +372,10 @@ void main() {
 
   test(
     'honors a caller-supplied directory depth limit when a leaf is '
-    'actually read, even without eager validation',
+    'actually read, even without full validation',
     () async {
-      // 既定(validateEntireArchiveEagerly: false)ではarchive全体を
-      // eagerに走査しないため、depth超過はopen時ではなく、実際にその
+      // 既定(validateFullArchiveOnOpen: false)ではarchive全体を
+      // 先行走査しないため、depth超過はopen時ではなく、実際にその
       // leafへ到達するtile読み取り時に検出される(per-tile bounded検証)。
       final fixture = builder.build(
         rootEntries: const [
@@ -232,6 +394,12 @@ void main() {
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 1,
           rootDirectoryWindowLength: 16384,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxDirectoryEntries: 65536,
+          maxCachedLeafDirectories: 4,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
         ),
       );
 
@@ -552,11 +720,11 @@ void main() {
 
   test(
     'does not scan the archive for clustered ordering violations by '
-    'default (validateEntireArchiveEagerly: false)',
+    'default (validateFullArchiveOnOpen: false)',
     () async {
       // 本番相当のbase mapアーカイブのように、直前と同一offsetへの重複排除
       // 参照や前方ジャンプを含むclustered archiveでも、既定の限定
-      // (eager検証なし)ではopenが成功し、実際に読んだtileも正しく
+      // (先行検証なし)ではopenが成功し、実際に読んだtileも正しく
       // 復号できることを固定する。
       final forwardGap = builder.build(
         rootEntries: const [
@@ -571,6 +739,12 @@ void main() {
         limits: const PmTilesV3Limits(
           maxDirectoryDepth: 3,
           rootDirectoryWindowLength: 16384,
+          maxDirectoryEncodedBytes: 1 << 20,
+          maxDirectoryDecodedBytes: 8 << 20,
+          maxDirectoryEntries: 65536,
+          maxCachedLeafDirectories: 4,
+          maxTileEncodedBytes: 4 << 20,
+          maxTileDecodedBytes: 16 << 20,
         ),
       );
 

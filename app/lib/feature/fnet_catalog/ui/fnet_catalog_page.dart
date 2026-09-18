@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/fnet_catalog/data/notifier/fnet_catalog_notifier.dart';
 import 'package:eqmonitor/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,7 +11,7 @@ class FnetCatalogPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentYear = DateTime.now().year;
+    final currentYear = DateTime.now().tokyoDateTime.year;
     final selectedYear = useState(currentYear);
     final selectedMonth = useState<int?>(null);
 
@@ -108,7 +109,7 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentYear = DateTime.now().year;
+    final currentYear = DateTime.now().tokyoDateTime.year;
     final years = List.generate(10, (index) => currentYear - index);
 
     return Container(

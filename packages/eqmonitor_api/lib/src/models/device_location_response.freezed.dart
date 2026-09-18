@@ -16,7 +16,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceLocationResponse {
 
-@JsonKey(name: 'region_id') String get regionId;@JsonKey(includeIfNull: true, name: 'city_code') String? get cityCode;@JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code') String? get tsunamiForecastRegionCode;
+/// 気象庁防災情報XMLコード表 AreaForecastLocalE（地震情報／細分区域）のコード
+ String get region;/// 気象庁防災情報XMLコード表 AreaInformationCity（気象・地震・火山情報／市町村等）のコード
+@JsonKey(includeIfNull: true) String? get city;/// 気象庁防災情報XMLコード表 AreaTsunami（津波予報区）のコード
+@JsonKey(includeIfNull: true) String? get tsunamiForecastRegion;
 /// Create a copy of DeviceLocationResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +32,16 @@ $DeviceLocationResponseCopyWith<DeviceLocationResponse> get copyWith => _$Device
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceLocationResponse&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.tsunamiForecastRegionCode, tsunamiForecastRegionCode) || other.tsunamiForecastRegionCode == tsunamiForecastRegionCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceLocationResponse&&(identical(other.region, region) || other.region == region)&&(identical(other.city, city) || other.city == city)&&(identical(other.tsunamiForecastRegion, tsunamiForecastRegion) || other.tsunamiForecastRegion == tsunamiForecastRegion));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionId,cityCode,tsunamiForecastRegionCode);
+int get hashCode => Object.hash(runtimeType,region,city,tsunamiForecastRegion);
 
 @override
 String toString() {
-  return 'DeviceLocationResponse(regionId: $regionId, cityCode: $cityCode, tsunamiForecastRegionCode: $tsunamiForecastRegionCode)';
+  return 'DeviceLocationResponse(region: $region, city: $city, tsunamiForecastRegion: $tsunamiForecastRegion)';
 }
 
 
@@ -49,7 +52,7 @@ abstract mixin class $DeviceLocationResponseCopyWith<$Res>  {
   factory $DeviceLocationResponseCopyWith(DeviceLocationResponse value, $Res Function(DeviceLocationResponse) _then) = _$DeviceLocationResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'region_id') String regionId,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code') String? tsunamiForecastRegionCode
+ String region,@JsonKey(includeIfNull: true) String? city,@JsonKey(includeIfNull: true) String? tsunamiForecastRegion
 });
 
 
@@ -66,11 +69,11 @@ class _$DeviceLocationResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceLocationResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? cityCode = freezed,Object? tsunamiForecastRegionCode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? region = null,Object? city = freezed,Object? tsunamiForecastRegion = freezed,}) {
   return _then(DeviceLocationResponse(
-regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
-as String,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String?,tsunamiForecastRegionCode: freezed == tsunamiForecastRegionCode ? _self.tsunamiForecastRegionCode : tsunamiForecastRegionCode // ignore: cast_nullable_to_non_nullable
+region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as String,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,tsunamiForecastRegion: freezed == tsunamiForecastRegion ? _self.tsunamiForecastRegion : tsunamiForecastRegion // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  String regionId, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code')  String? tsunamiForecastRegionCode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String region, @JsonKey(includeIfNull: true)  String? city, @JsonKey(includeIfNull: true)  String? tsunamiForecastRegion)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceLocationResponse() when $default != null:
-return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);case _:
+return $default(_that.region,_that.city,_that.tsunamiForecastRegion);case _:
   return orElse();
 
 }
@@ -177,10 +180,10 @@ return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  String regionId, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code')  String? tsunamiForecastRegionCode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String region, @JsonKey(includeIfNull: true)  String? city, @JsonKey(includeIfNull: true)  String? tsunamiForecastRegion)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceLocationResponse():
-return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);case _:
+return $default(_that.region,_that.city,_that.tsunamiForecastRegion);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +200,10 @@ return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  String regionId, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code')  String? tsunamiForecastRegionCode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String region, @JsonKey(includeIfNull: true)  String? city, @JsonKey(includeIfNull: true)  String? tsunamiForecastRegion)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceLocationResponse() when $default != null:
-return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);case _:
+return $default(_that.region,_that.city,_that.tsunamiForecastRegion);case _:
   return null;
 
 }
@@ -212,12 +215,15 @@ return $default(_that.regionId,_that.cityCode,_that.tsunamiForecastRegionCode);c
 @JsonSerializable()
 
 class _DeviceLocationResponse implements DeviceLocationResponse {
-  const _DeviceLocationResponse({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode, @JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code') required this.tsunamiForecastRegionCode});
+  const _DeviceLocationResponse({required this.region, @JsonKey(includeIfNull: true) required this.city, @JsonKey(includeIfNull: true) required this.tsunamiForecastRegion});
   factory _DeviceLocationResponse.fromJson(Map<String, dynamic> json) => _$DeviceLocationResponseFromJson(json);
 
-@override@JsonKey(name: 'region_id') final  String regionId;
-@override@JsonKey(includeIfNull: true, name: 'city_code') final  String? cityCode;
-@override@JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code') final  String? tsunamiForecastRegionCode;
+/// 気象庁防災情報XMLコード表 AreaForecastLocalE（地震情報／細分区域）のコード
+@override final  String region;
+/// 気象庁防災情報XMLコード表 AreaInformationCity（気象・地震・火山情報／市町村等）のコード
+@override@JsonKey(includeIfNull: true) final  String? city;
+/// 気象庁防災情報XMLコード表 AreaTsunami（津波予報区）のコード
+@override@JsonKey(includeIfNull: true) final  String? tsunamiForecastRegion;
 
 /// Create a copy of DeviceLocationResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -232,16 +238,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceLocationResponse&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.tsunamiForecastRegionCode, tsunamiForecastRegionCode) || other.tsunamiForecastRegionCode == tsunamiForecastRegionCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceLocationResponse&&(identical(other.region, region) || other.region == region)&&(identical(other.city, city) || other.city == city)&&(identical(other.tsunamiForecastRegion, tsunamiForecastRegion) || other.tsunamiForecastRegion == tsunamiForecastRegion));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionId,cityCode,tsunamiForecastRegionCode);
+int get hashCode => Object.hash(runtimeType,region,city,tsunamiForecastRegion);
 
 @override
 String toString() {
-  return 'DeviceLocationResponse(regionId: $regionId, cityCode: $cityCode, tsunamiForecastRegionCode: $tsunamiForecastRegionCode)';
+  return 'DeviceLocationResponse(region: $region, city: $city, tsunamiForecastRegion: $tsunamiForecastRegion)';
 }
 
 
@@ -252,7 +258,7 @@ abstract mixin class _$DeviceLocationResponseCopyWith<$Res> implements $DeviceLo
   factory _$DeviceLocationResponseCopyWith(_DeviceLocationResponse value, $Res Function(_DeviceLocationResponse) _then) = __$DeviceLocationResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'region_id') String regionId,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: true, name: 'tsunami_forecast_region_code') String? tsunamiForecastRegionCode
+ String region,@JsonKey(includeIfNull: true) String? city,@JsonKey(includeIfNull: true) String? tsunamiForecastRegion
 });
 
 
@@ -269,11 +275,11 @@ class __$DeviceLocationResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeviceLocationResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? cityCode = freezed,Object? tsunamiForecastRegionCode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? region = null,Object? city = freezed,Object? tsunamiForecastRegion = freezed,}) {
   return _then(_DeviceLocationResponse(
-regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
-as String,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String?,tsunamiForecastRegionCode: freezed == tsunamiForecastRegionCode ? _self.tsunamiForecastRegionCode : tsunamiForecastRegionCode // ignore: cast_nullable_to_non_nullable
+region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as String,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,tsunamiForecastRegion: freezed == tsunamiForecastRegion ? _self.tsunamiForecastRegion : tsunamiForecastRegion // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

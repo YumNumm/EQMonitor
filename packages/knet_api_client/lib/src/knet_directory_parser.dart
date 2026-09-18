@@ -1,8 +1,11 @@
 import 'package:html/parser.dart' as html_parser;
+import 'package:timezone/timezone.dart' as tz;
 
 /// Apache style directory listing HTML から エントリ名一覧を抽出するパーサー
 class KnetDirectoryParser {
   const new _();
+
+  static final _tokyo = tz.getLocation('Asia/Tokyo');
 
   /// HTML から相対リンク（末尾 `/` 付きディレクトリ）の名前一覧を返す
   ///
@@ -64,13 +67,13 @@ class KnetDirectoryParser {
       ..sort();
   }
 
-  /// 記録一覧ページ HTML から地震発生時刻（ローカル時刻）のリストを返す
+  /// 記録一覧ページ HTML から地震発生時刻（Asia/Tokyo）のリストを返す
   ///
   /// 各エントリは `YYYYMMDDHHmmss` 形式のディレクトリ名として表現される。
   /// パース失敗したエントリは除外する。
-  static List<DateTime> parseRecords(String html) {
+  static List<tz.TZDateTime> parseRecords(String html) {
     final entries = parseEntries(html);
-    final records = <DateTime>[];
+    final records = <tz.TZDateTime>[];
     for (final entry in entries) {
       final dt = _parseTimestamp(entry);
       if (dt != null) {
@@ -80,7 +83,7 @@ class KnetDirectoryParser {
     return records;
   }
 
-  static DateTime? _parseTimestamp(String s) {
+  static tz.TZDateTime? _parseTimestamp(String s) {
     if (s.length != 14) {
       return null;
     }
@@ -98,6 +101,6 @@ class KnetDirectoryParser {
         second == null) {
       return null;
     }
-    return DateTime(year, month, day, hour, minute, second);
+    return tz.TZDateTime(_tokyo, year, month, day, hour, minute, second);
   }
 }

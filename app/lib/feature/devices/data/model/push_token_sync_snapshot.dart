@@ -3,17 +3,11 @@ import 'package:eqmonitor/feature/devices/data/model/push_token_sync_worker_stat
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 
 /// 3種類のプッシュトークンそれぞれの同期状態スナップショット。
-final class PushTokenSyncSnapshot {
-  const new({
-    required this.fcm,
-    required this.apnsNotification,
-    required this.apnsPushToStart,
-  });
-
-  final PushTokenKindState fcm;
-  final PushTokenKindState apnsNotification;
-  final PushTokenKindState apnsPushToStart;
-
+final class const PushTokenSyncSnapshot({
+  required final PushTokenKindState fcm,
+  required final PushTokenKindState apnsNotification,
+  required final PushTokenKindState apnsPushToStart,
+}) {
   bool get allSynced => kindEntries.every(
     (entry) => switch (entry.value) {
       SyncedTokenState() ||
@@ -82,45 +76,26 @@ final class PushTokenSyncSnapshot {
   };
 }
 
-sealed class PushTokenKindState {
-  const new();
-}
+sealed class const PushTokenKindState();
 
-final class NotApplicableTokenState extends PushTokenKindState {
-  const new();
-}
+final class const NotApplicableTokenState() extends PushTokenKindState;
 
-final class AbsentTokenState extends PushTokenKindState {
-  const new();
-}
+final class const AbsentTokenState() extends PushTokenKindState;
 
-final class SyncingTokenState extends PushTokenKindState {
-  const new({required this.attempt});
+final class const SyncingTokenState({required final int attempt})
+    extends PushTokenKindState;
 
-  final int attempt;
-}
+final class const WaitingTokenState({
+  required final int attempt,
+  required final DeviceProvisioningException error,
+  required final DateTime resumeAt,
+}) extends PushTokenKindState;
 
-final class WaitingTokenState extends PushTokenKindState {
-  const new({
-    required this.attempt,
-    required this.error,
-    required this.resumeAt,
-  });
+final class const SyncedTokenState() extends PushTokenKindState;
 
-  final int attempt;
-  final DeviceProvisioningException error;
-  final DateTime resumeAt;
-}
-
-final class SyncedTokenState extends PushTokenKindState {
-  const new();
-}
-
-final class FailedTokenState extends PushTokenKindState {
-  const new({required this.error});
-
-  final DeviceProvisioningException error;
-}
+final class const FailedTokenState({
+  required final DeviceProvisioningException error,
+}) extends PushTokenKindState;
 
 extension PushTokenKindStateConverter on PushTokenSyncWorkerState {
   PushTokenKindState toKindState() => switch (this) {

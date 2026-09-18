@@ -32,7 +32,7 @@ import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 地震活動画面(震央分布 + 矩形選択によるM-T図・積算・深さ断面)。
@@ -466,8 +466,6 @@ class _MapBody extends HookConsumerWidget {
     );
   }
 
-  static final _generatedAtFormat = DateFormat('yyyy/MM/dd HH:mm');
-
   static String _generatedAtLabel(DateTime generatedAt) =>
-      '${_generatedAtFormat.format(generatedAt.toLocal())} 時点のデータ';
+      '${generatedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)} 時点のデータ';
 }

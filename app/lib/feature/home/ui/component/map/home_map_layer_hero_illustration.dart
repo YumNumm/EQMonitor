@@ -106,23 +106,14 @@ class _LayerLabelChip extends StatelessWidget {
   }
 }
 
-class _HomeMapLayerHeroPainter extends CustomPainter {
-  const new({
-    required this.progress,
-    required this.baseColor,
-    required this.layerColor,
-    required this.accentColor,
-    required this.outlineColor,
-    required this.glowColor,
-  });
-
-  final double progress;
-  final Color baseColor;
-  final Color layerColor;
-  final Color accentColor;
-  final Color outlineColor;
-  final Color glowColor;
-
+class const _HomeMapLayerHeroPainter({
+  required final double progress,
+  required final Color baseColor,
+  required final Color layerColor,
+  required final Color accentColor,
+  required final Color outlineColor,
+  required final Color glowColor,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width * 0.54, size.height * 0.48);

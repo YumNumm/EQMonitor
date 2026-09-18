@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/data/api/kyoshin_monitor_web_api_client_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_client_provider.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

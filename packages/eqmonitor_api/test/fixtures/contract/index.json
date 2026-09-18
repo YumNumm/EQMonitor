@@ -38,6 +38,11 @@
   },
   {
     "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__estimated-intensity-archive.json",
+    "fixture": "estimated-intensity-archive"
+  },
+  {
+    "key": "GET /v2/earthquake",
     "file": "get__v2_earthquake__full-info.json",
     "fixture": "full-info"
   },
@@ -78,6 +83,11 @@
   },
   {
     "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__estimated-intensity-archive.json",
+    "fixture": "estimated-intensity-archive"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
     "file": "get__v2_earthquake_eventId__intensity-report-only.json",
     "fixture": "intensity-report-only"
   },
@@ -108,6 +118,20 @@
   {
     "key": "GET /v2/earthquake/intensity/city/:code",
     "file": "get__v2_earthquake_intensity_city_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/city/max",
+    "file": "get__v2_earthquake_intensity_city_max__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/city/max",
+    "file": "get__v2_earthquake_intensity_city_max__response-at-null.json",
+    "fixture": "response-at-null"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/city/max",
+    "file": "get__v2_earthquake_intensity_city_max.json"
   },
   {
     "key": "GET /v2/earthquake/intensity/prefecture/:code",

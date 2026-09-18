@@ -21,6 +21,10 @@ extensions.configure<LibraryExtension>("android") {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 kotlin {
@@ -30,5 +34,7 @@ kotlin {
 }
 
 dependencies {
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    testImplementation("junit:junit:4.13.2")
 }

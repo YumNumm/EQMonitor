@@ -595,17 +595,11 @@ final class _FakeMapLibreMapState extends MapLibreMapState {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-final class _ProductionFixture {
-  const new({
-    required this.container,
-    required this.repository,
-    required this.realtimeController,
-  });
-
-  final ProviderContainer container;
-  final _SpyRepository repository;
-  final StreamController<RealtimeEvent> realtimeController;
-
+final class const _ProductionFixture({
+  required final ProviderContainer container,
+  required final _SpyRepository repository,
+  required final StreamController<RealtimeEvent> realtimeController,
+}) {
   Future<void> dispose() async {
     container.dispose();
     await realtimeController.close();
@@ -690,6 +684,7 @@ final _realtimeEarthquake = api.Earthquake(
   earthquakeType: api.EarthquakeType.distant,
   originTimePrecision: api.OriginTimePrecision.second,
   datasources: const [api.EarthquakeDatasource.jmaDisasterInformationXml],
+  hypocenters: const [],
   telegrams: [
     api.EarthquakeTelegram(
       telegram: api.Telegram(

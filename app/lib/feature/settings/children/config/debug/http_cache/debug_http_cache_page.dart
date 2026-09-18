@@ -1,6 +1,7 @@
 import 'package:cache/cache.dart';
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_entries_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/http_cache_key_display.dart';
@@ -135,7 +136,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
     final eTagLabel = entry.eTag ?? 'なし';
     final updatedAtLabel = DateTime.fromMillisecondsSinceEpoch(
       entry.updatedAtMs,
-    ).toLocal().toString();
+    ).formatWithTz(.yearMonthDayHourMinuteSecondMillisecond);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

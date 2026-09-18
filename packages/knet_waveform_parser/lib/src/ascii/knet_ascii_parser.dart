@@ -7,9 +7,7 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// K-NET ASCII フォーマットは 17 行のヘッダと 18 行目以降のデータで構成される。
 /// 各ヘッダ行のラベルフィールドは固定幅（最大18文字）で、
 /// 19文字目以降（0-indexed では位置18以降）が値フィールドになる。
-class KnetAsciiParser {
-  const new();
-
+class const KnetAsciiParser() {
   /// ASCII テキストを [KnetRecord] にパースする
   ///
   /// [source] K-NET ASCII フォーマットのテキスト
@@ -235,11 +233,10 @@ class KnetAsciiParser {
 }
 
 /// K-NET パースエラー
-class KnetParseException implements Exception {
-  const new(this.message, [this.stackTrace]);
-  final String message;
-  final StackTrace? stackTrace;
-
+class const KnetParseException(
+  final String message, [
+  final StackTrace? stackTrace,
+]) implements Exception {
   @override
   String toString() => 'KnetParseException: $message';
 }

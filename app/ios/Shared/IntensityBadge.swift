@@ -7,6 +7,42 @@
 
 import SwiftUI
 
+/// 震度バッジの表示内容。
+///
+/// 予想最大震度が未発表（nil）の報でもバッジを消さないための型。
+/// 消すとレイアウトが崩れるうえ、「震度 0 が発表された」のか
+/// 「まだ発表されていない」のかを読み手が区別できなくなる。
+struct IntensityBadgeAppearance {
+    let main: String
+    let sub: String?
+    let backgroundColor: Color
+    let textColor: Color
+}
+
+extension IntensityBadgeAppearance {
+    /// 予想最大震度が未発表のときの表示。灰色地に「-」を置く。
+    static let unavailable = IntensityBadgeAppearance(
+        main: "-",
+        sub: nil,
+        backgroundColor: Color(rgb: 0x757575),
+        textColor: .white
+    )
+
+    init(intensity: IntensityValue?) {
+        guard let intensity else {
+            self = .unavailable
+            return
+        }
+        let parts = intensity.formattedParts
+        self.init(
+            main: parts.main,
+            sub: parts.sub,
+            backgroundColor: intensity.backgroundColor,
+            textColor: intensity.textColor
+        )
+    }
+}
+
 struct IntensityBadge: View {
     let intensity: (main: String, sub: String?)
     let backgroundColor: Color

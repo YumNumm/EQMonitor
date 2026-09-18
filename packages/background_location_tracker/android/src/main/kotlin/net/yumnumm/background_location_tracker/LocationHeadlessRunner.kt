@@ -1,60 +1,134 @@
 package net.yumnumm.background_location_tracker
 
 import android.content.Context
+import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
-import io.flutter.embedding.engine.loader.FlutterLoader
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
 
-/// アプリがkilled状態から位置情報BroadcastReceiverで起動した時に
-/// Headless FlutterEngineを起動してDartコードを実行するクラス。
-class LocationHeadlessRunner(private val context: Context) {
-    companion object {
-        private const val PREFS_NAME = "blt_prefs"
-        private const val KEY_CALLBACK_HANDLE = "callback_handle"
-        private const val HEADLESS_CHANNEL = "background_location_tracker/headless"
-    }
+internal interface ManagedHeadlessEngine {
+    val bindingKey: Any
 
-    fun start(latitude: Double, longitude: Double) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    fun registerAndExecute(
+        callbackInformation: FlutterCallbackInformation,
+        appBundlePath: String
+    )
 
-        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
-        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
-        prefs.edit()
-            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(latitude))
-            .putLong("pending_lon_bits", java.lang.Double.doubleToRawLongBits(longitude))
-            .putLong("pending_ts", System.currentTimeMillis())
-            .apply()
+    fun destroy()
+}
 
-        val handle = prefs.getLong(KEY_CALLBACK_HANDLE, 0L)
-        if (handle == 0L) return
+private class FlutterManagedHeadlessEngine(
+    private val context: Context
+) : ManagedHeadlessEngine {
+    private val engine = FlutterEngine(context, emptyArray(), false)
 
-        val loader = FlutterLoader()
-        loader.startInitialization(context)
-        loader.ensureInitializationComplete(context, arrayOf())
+    override val bindingKey: Any
+        get() = engine.dartExecutor.binaryMessenger
 
-        val callbackInfo =
-            FlutterCallbackInformation.lookupCallbackInformation(handle) ?: return
-
-        val engine = FlutterEngine(context)
+    override fun registerAndExecute(
+        callbackInformation: FlutterCallbackInformation,
+        appBundlePath: String
+    ) {
+        val registrant = Class.forName(GENERATED_PLUGIN_REGISTRANT)
+        val registerWith = registrant.getDeclaredMethod(
+            "registerWith",
+            FlutterEngine::class.java
+        )
+        registerWith.invoke(null, engine)
         engine.dartExecutor.executeDartCallback(
             DartExecutor.DartCallback(
                 context.assets,
-                loader.findAppBundlePath(),
-                callbackInfo
+                appBundlePath,
+                callbackInformation
             )
         )
+    }
 
-        val channel = MethodChannel(engine.dartExecutor.binaryMessenger, HEADLESS_CHANNEL)
-        channel.setMethodCallHandler { call, result ->
-            if (call.method == "ready") {
-                channel.invokeMethod(
-                    "onLocationUpdate",
-                    mapOf("latitude" to latitude, "longitude" to longitude)
-                )
-                result.success(null)
-            }
+    override fun destroy() = engine.destroy()
+
+    private companion object {
+        const val GENERATED_PLUGIN_REGISTRANT =
+            "io.flutter.plugins.GeneratedPluginRegistrant"
+    }
+}
+
+/// WorkManagerからTask 5のDart callbackを起動する。
+internal class LocationHeadlessRunner(
+    private val context: Context,
+    private val completionRegistry: HeadlessTaskCompletionRegistry =
+        HeadlessTaskCompletionRegistry.shared,
+    private val callbackHandleReader: () -> Long? = {
+        val preferences = context.getSharedPreferences(
+            BackgroundLocationStorageKeys.PREFERENCES_NAME,
+            Context.MODE_PRIVATE
+        )
+        if (preferences.contains(BackgroundLocationStorageKeys.CALLBACK_HANDLE)) {
+            preferences.getLong(BackgroundLocationStorageKeys.CALLBACK_HANDLE, 0L)
+                .takeIf { it != 0L }
+        } else {
+            null
         }
+    },
+    private val callbackInformationReader: (Long) -> FlutterCallbackInformation? =
+        FlutterCallbackInformation::lookupCallbackInformation,
+    private val flutterBundleLoader: () -> String = {
+        val loader = FlutterInjector.instance().flutterLoader()
+        loader.startInitialization(context)
+        loader.ensureInitializationComplete(context, emptyArray())
+        loader.findAppBundlePath()
+    },
+    private val engineFactory: () -> ManagedHeadlessEngine = {
+        FlutterManagedHeadlessEngine(context)
+    }
+) {
+    fun start(
+        registration: HeadlessTaskCompletionRegistry.Registration
+    ): ManagedHeadlessEngine? {
+        val callbackHandle = callbackHandleReader() ?: return null
+        val appBundlePath = flutterBundleLoader()
+        val engine = engineFactory()
+        if (!completionRegistry.bindEngine(registration, engine.bindingKey)) {
+            engine.destroy()
+            return null
+        }
+
+        val callbackInformation = try {
+            callbackInformationReader(callbackHandle)
+        } catch (error: Exception) {
+            release(registration = registration, engine = engine)
+            throw error
+        } catch (error: LinkageError) {
+            release(registration = registration, engine = engine)
+            throw error
+        }
+        if (callbackInformation == null) {
+            release(registration = registration, engine = engine)
+            return null
+        }
+
+        try {
+            engine.registerAndExecute(
+                callbackInformation = callbackInformation,
+                appBundlePath = appBundlePath
+            )
+            return engine
+        } catch (error: Exception) {
+            release(registration = registration, engine = engine)
+            throw error
+        } catch (error: LinkageError) {
+            release(registration = registration, engine = engine)
+            throw error
+        }
+    }
+
+    private fun release(
+        registration: HeadlessTaskCompletionRegistry.Registration,
+        engine: ManagedHeadlessEngine
+    ) {
+        completionRegistry.unbindEngine(
+            registration = registration,
+            engineKey = engine.bindingKey
+        )
+        engine.destroy()
     }
 }

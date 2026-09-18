@@ -1,0 +1,16 @@
+material {
+  name: "EarthquakeAreaFill",
+  shading_model: unlit,
+  blending: alpha,
+  culling: none,
+  parameters: [
+    { type: vec4, name: fill_color, hint: source_color, default: [1.0, 1.0, 1.0, 0.6] },
+  ],
+}
+
+fragment {
+  void Surface(inout MaterialInputs material) {
+    material.base_color = material_params.fill_color;
+    PrepareMaterial(material);
+  }
+}

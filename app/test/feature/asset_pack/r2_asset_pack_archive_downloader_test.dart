@@ -5,6 +5,8 @@ import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_distribution_
 import 'package:eqmonitor/feature/asset_pack/data/repository/r2_asset_pack_archive_downloader.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../fixtures/asset_pack_distribution.dart';
+
 void main() {
   late Directory temporaryDirectory;
 
@@ -91,5 +93,5 @@ const distributionEntry = AssetPackDistributionEntry(
   archiveSizeBytes: 3,
   archiveSha256:
       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  localizations: {},
+  localizations: assetPackChangelogLocalizationsFixture,
 );

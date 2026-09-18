@@ -8,12 +8,10 @@ part 'hinet_credentials_provider.g.dart';
 /// Hi-net(BOSAI)認証情報(ユーザーID + パスワード)。
 ///
 /// **注意**: 値そのものをコード・ログ・fixtureへ書き出さないこと。
-class HinetCredentials {
-  const new({required this.userId, required this.password});
-
-  final String userId;
-  final String password;
-}
+class const HinetCredentials({
+  required final String userId,
+  required final String password,
+});
 
 /// SecureStorage から Hi-net 認証情報を読み書きするNotifier。
 ///

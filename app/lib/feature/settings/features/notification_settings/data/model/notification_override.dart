@@ -24,10 +24,10 @@ enum InterruptionLevel { passive, active, timeSensitive, critical }
 
 extension InterruptionLevelLabel on InterruptionLevel {
   String get label => switch (this) {
-    .passive => '通常',
-    .active => 'アクティブ',
-    .timeSensitive => '時間重要',
-    .critical => 'クリティカル',
+    .passive => 'サイレント',
+    .active => 'デフォルト',
+    .timeSensitive => '即時通知',
+    .critical => '重大な通知',
   };
 }
 

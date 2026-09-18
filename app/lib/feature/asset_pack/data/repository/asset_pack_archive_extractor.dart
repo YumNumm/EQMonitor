@@ -3,34 +3,21 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
 
-class AssetPackArchiveException implements Exception {
-  const new(this.message);
-
-  final String message;
-
+class const AssetPackArchiveException(final String message)
+    implements Exception {
   @override
   String toString() => 'AssetPackArchiveException: $message';
 }
 
-class AssetPackArchiveLimits {
-  const new({
-    this.maxFiles = 1024,
-    this.maxUncompressedBytes = 1024 * 1024 * 1024,
-    this.maxSingleFileBytes = 768 * 1024 * 1024,
-  });
+class const AssetPackArchiveLimits({
+  final int maxFiles = 1024,
+  final int maxUncompressedBytes = 1024 * 1024 * 1024,
+  final int maxSingleFileBytes = 768 * 1024 * 1024,
+});
 
-  final int maxFiles;
-  final int maxUncompressedBytes;
-  final int maxSingleFileBytes;
-}
-
-class AssetPackArchiveExtractor {
-  const new({
-    this.limits = const AssetPackArchiveLimits(),
-  });
-
-  final AssetPackArchiveLimits limits;
-
+class const AssetPackArchiveExtractor({
+  final AssetPackArchiveLimits limits = const AssetPackArchiveLimits(),
+}) {
   Future<void> extract({
     required File archiveFile,
     required Directory destinationDirectory,

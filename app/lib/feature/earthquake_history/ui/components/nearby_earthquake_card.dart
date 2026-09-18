@@ -7,18 +7,23 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_selection.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_query.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NearbyEarthquakeCard extends HookConsumerWidget {
-  const new({required this.earthquake, super.key,});
+  const new({
+    required this.earthquake,
+    super.key,
+  });
 
   final Earthquake earthquake;
 
@@ -36,20 +41,24 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
       EarthquakeDepthUnknown() || null => null,
     };
     final parameter = useState(const NearbyEarthquakeParameter());
-    final sortBy = useState(EarthquakeSortBy.maxIntensity);
-    final sortOrder = useState(SortOrder.desc);
+    final sort = useState(
+      const EarthquakeSortSelection(
+        sortBy: EarthquakeSortBy.maxIntensity,
+        sortOrder: SortOrder.desc,
+      ),
+    );
     final query = NearbyEarthquakeQuery(
       excludeEventId: earthquake.eventId,
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       depth: depth,
       parameter: parameter.value,
-      sortBy: sortBy.value,
-      sortOrder: sortOrder.value,
+      sortBy: sort.value.sortBy,
+      sortOrder: sort.value.sortOrder,
     );
     final searchParameter = EarthquakeHistoryParameter.all(
-      sortBy: sortBy.value,
-      sortOrder: sortOrder.value,
+      sortBy: sort.value.sortBy,
+      sortOrder: sort.value.sortOrder,
       latitudeGte: query.latitudeGte,
       latitudeLte: query.latitudeLte,
       longitudeGte: query.longitudeGte,
@@ -84,22 +93,11 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
             hasDepth: depth != null,
           ),
           const SizedBox(height: 8),
-          _NearbyEarthquakeSortChips(
-            sortBy: sortBy.value,
-            sortOrder: sortOrder.value,
+          EarthquakeSortChips(
+            sortBy: sort.value.sortBy,
+            sortOrder: sort.value.sortOrder,
             onChanged: (value) {
-              if (sortBy.value == value) {
-                sortOrder.value = switch (sortOrder.value) {
-                  .asc => .desc,
-                  .desc => .asc,
-                };
-                return;
-              }
-              sortBy.value = value;
-              sortOrder.value = switch (value) {
-                .depth => .asc,
-                _ => .desc,
-              };
+              sort.value = sort.value.selecting(value);
             },
           ),
           const SizedBox(height: 8),
@@ -175,58 +173,6 @@ class _NearbyEarthquakeParameterSummary extends StatelessWidget {
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: context.designSystem.colorTheme.onSurfaceVariant,
         ),
-      ),
-    );
-  }
-}
-
-class _NearbyEarthquakeSortChips extends StatelessWidget {
-  const new({
-    required this.sortBy,
-    required this.sortOrder,
-    required this.onChanged,
-  });
-
-  final EarthquakeSortBy sortBy;
-  final SortOrder sortOrder;
-  final ValueChanged<EarthquakeSortBy> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    const options = [
-      (EarthquakeSortBy.eventId, '発生時刻'),
-      (EarthquakeSortBy.magnitude, 'M'),
-      (EarthquakeSortBy.maxIntensity, '最大震度'),
-      (EarthquakeSortBy.depth, '深さ'),
-    ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 4,
-        children: [
-          for (final (value, label) in options)
-            FilterChip(
-              selected: sortBy == value,
-              showCheckmark: false,
-              label: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(label),
-                  if (sortBy == value) ...[
-                    const SizedBox(width: 2),
-                    Icon(switch (sortOrder) {
-                      .asc => Icons.arrow_upward,
-                      .desc => Icons.arrow_downward,
-                    }, size: 14),
-                  ],
-                ],
-              ),
-              onSelected: (_) => onChanged(value),
-              visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-        ],
       ),
     );
   }

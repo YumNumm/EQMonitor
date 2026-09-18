@@ -17,9 +17,7 @@ AssetPackStorageRootResolver assetPackStorageRootResolver(Ref ref) =>
 /// 直下に同梱 Pack の展開先 `bundled/`、ダウンロード済み Pack の `packs/`、
 /// 展開途中の `staging/` を置く。ユーザーには見えず、バックアップ対象にも
 /// ならない `applicationSupport` 配下を使う。
-class AssetPackStorageRootResolver {
-  const new();
-
+class const AssetPackStorageRootResolver() {
   Future<Directory> resolve() async {
     final supportDirectory = await getApplicationSupportDirectory();
     return Directory(p.join(supportDirectory.path, 'eqmonitor_asset_packs'));

@@ -5,9 +5,7 @@ typedef LiveMonitorDurationValidation = ({
   LiveMonitorDurationValidationError? error,
 });
 
-class LiveMonitorDurationValidator {
-  const new();
-
+class const LiveMonitorDurationValidator() {
   LiveMonitorDurationValidation validate(String raw) {
     if (raw.isEmpty) {
       return (seconds: null, error: .empty);

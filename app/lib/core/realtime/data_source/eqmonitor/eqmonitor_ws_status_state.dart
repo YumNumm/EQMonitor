@@ -8,8 +8,9 @@ enum WsPhase { connecting, connected, disconnected }
 abstract class EqMonitorWsStatusState with _$EqMonitorWsStatusState {
   const factory({
     @Default(WsPhase.connecting) WsPhase phase,
-    String? currentUrl,
+
     DateTime? lastPingAt,
-    Duration? pingRtt,
+
+    Duration? serverPingInterval,
   }) = _EqMonitorWsStatusState;
 }

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "event_id": "20260823020050",
+      "status": "NORMAL",
+      "earthquake_type": "NORMAL",
+      "origin_time_precision": "SECOND",
+      "estimated_intensity_tile": "https://tiles.eqmonitor.app/ixac41/20260823020050/86eecccd44b812c294b8d06e6224a373bede507ce21bd5380535ae0ae7eda2aa.pmtiles",
+      "estimated_intensity_tile_archive": {
+        "url": "https://tiles.eqmonitor.app/ixac41/20260823020050/86eecccd44b812c294b8d06e6224a373bede507ce21bd5380535ae0ae7eda2aa.pmtiles",
+        "size_bytes": 1013133,
+        "sha256": "86eecccd44b812c294b8d06e6224a373bede507ce21bd5380535ae0ae7eda2aa"
+      },
+      "datasources": [
+        "JMA_DISASTER_INFORMATION_XML"
+      ],
+      "telegram_types": []
+    }
+  ]
+}

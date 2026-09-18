@@ -103,7 +103,38 @@ GPUレベルの実験で確認した。`base_map_line.fmat`のfragment shaderを
 `.superpowers/sdd/2026-08-05-eqmonitor-map-base-layer-pmtiles/extrude-gpu-probe-report.md`
 にある(このディレクトリはgit管理外)。
 
-## spike/preflight camera配線は#1593で検証する
+## #1593 (foundation契約経由の描画) で先送りした項目
+
+`BaseMapView`の描画をpacked mesh → `MapRenderPacket` → `MapRenderBatch` →
+`MapRenderBatchAdapter`へ移した際、意図的に残した項目。いずれも
+`flutter test`(561件)と`dart analyze --fatal-infos`(診断0件)は通っているが、
+**GPU可視出力は確認していない。**
+
+- 実機/simulatorでの可視確認そのもの。fill/lineが以前と同じ見た目で描かれるか、
+  background復帰後に再描画されるか、pinch中にuploadが0へ収束するか
+  (HUDに`gpuMeshes`/`uploads`を出したので観測はできる)。
+- `MeshGeometry.fromArrays`は`normals`省略時にtriangle listのarea-weighted
+  頂点法線を生成する。base mapのshaderは法線を読まないので純粋な無駄だが、
+  #1589以前と同じ引数のまま(法線省略)にして挙動差を増やさない選択をした。
+  ゼロ法線を明示的に渡す最適化は可視確認後に検討する。
+- `MeshGeometry.fromArrays`の`retainCpuData`は既定の`true`のまま。CPU側の
+  正本は`BaseMapPackedMeshCache`なので二重保持になっているが、`false`が
+  boundsやupdate系へ与える影響を実機で確認できていないため据え置いた。
+- pack → unpackの往復。`fromArrays`がstructure-of-arraysしか受け取らないため、
+  interleavedなpacked bufferを一度解いている。mesh 1つにつき1回だけであり
+  cacheされるが、flutter_sceneがraw vertex bufferを受け取るAPIを持てば
+  `unpackBaseMapSceneGeometryArgs`ごと不要になる。
+- packerはUI isolateで動く。`docs/todo/840_eqmonitor_map_packed_worker_payload.md`
+  の実測(realistic tileで出力payload約112KB)に照らして問題ないと判断したが、
+  cover総入れ替え時のframe timingは実測していない。
+- `MapGpuResourceLedger`のretireは参照解放までで、GPUメモリの解放時期は
+  GC依存。`gpu.DeviceBuffer`に`dispose()`が入ったら決定的な解放へ寄せる。
+- adapterの`applyBaseMapMaterialParameters`と`_geometryFor`はGPU型
+  (`PreprocessedMaterial`/`MeshGeometry`)を要するためunit testが無い。
+  検証しているのはpure関数(`unpackBaseMapSceneGeometryArgs`、uniformの
+  encode/decode、lifecycle遷移表)だけである。
+
+## spike/preflight camera配線は#1593で検証する予定だったが未実施
 
 上記の実験中に別の不具合が判明した。**`scene_spike_camera.dart`と同型の
 camera配線（`NodeCamera` + `FlutterSceneOrthographicProjection`（内部で
@@ -121,5 +152,8 @@ shaderbundleに`in vec2 extrude;`が入ることまでは確認したが、描�
 確認していなかった。#1589では`BaseMapView`の恒等cameraとnode transform経路だけを
 正式化する。spike/preflightのcamera配線は#1589のsupported routeではない。
 
-`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`の可視出力、GPU lifecycle、
-context recovery、resizeは#1593で一緒に確認する。
+`FlutterSceneSpikeView`と`BaseMapMaterialPreflightView`の可視出力、resizeは
+**#1593でも確認していない**。#1593が入れたのはGPU lifecycle(context generationと
+frames-in-flightのretire)とcontext recovery(background復帰でCPU packed meshから
+再upload)の**実装とunit test**だけであり、spike/preflight surfaceそのものは
+未確認のdiagnostic pathとして残っている。

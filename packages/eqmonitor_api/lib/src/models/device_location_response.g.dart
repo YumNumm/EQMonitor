@@ -10,31 +10,22 @@ part of 'device_location_response.dart';
 
 _DeviceLocationResponse _$DeviceLocationResponseFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_DeviceLocationResponse',
-  json,
-  ($checkedConvert) {
-    final val = _DeviceLocationResponse(
-      regionId: $checkedConvert('region_id', (v) => v as String),
-      cityCode: $checkedConvert('city_code', (v) => v as String?),
-      tsunamiForecastRegionCode: $checkedConvert(
-        'tsunami_forecast_region_code',
-        (v) => v as String?,
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {
-    'regionId': 'region_id',
-    'cityCode': 'city_code',
-    'tsunamiForecastRegionCode': 'tsunami_forecast_region_code',
-  },
-);
+) => $checkedCreate('_DeviceLocationResponse', json, ($checkedConvert) {
+  final val = _DeviceLocationResponse(
+    region: $checkedConvert('region', (v) => v as String),
+    city: $checkedConvert('city', (v) => v as String?),
+    tsunamiForecastRegion: $checkedConvert(
+      'tsunamiForecastRegion',
+      (v) => v as String?,
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$DeviceLocationResponseToJson(
   _DeviceLocationResponse instance,
 ) => <String, dynamic>{
-  'region_id': instance.regionId,
-  'city_code': instance.cityCode,
-  'tsunami_forecast_region_code': instance.tsunamiForecastRegionCode,
+  'region': instance.region,
+  'city': instance.city,
+  'tsunamiForecastRegion': instance.tsunamiForecastRegion,
 };

@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "shaders": {
+    "MapSpriteVertex": {
+      "stage": "vertex",
+      "inputs": [
+        {"name":"centerMercator","location":1,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":2,"columns":1,"offset":8},
+        {"name":"corner","location":0,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":2,"columns":1,"offset":0},
+        {"name":"logicalSize","location":3,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":2,"columns":1,"offset":32},
+        {"name":"uvRect","location":2,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":4,"columns":1,"offset":16},
+        {"name":"opacity","location":4,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":1,"columns":1,"offset":40},
+        {"name":"priority","location":5,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":1,"columns":1,"offset":44}
+      ],
+      "uniformBlocks": [
+        {
+          "name": "SpriteFrame",
+          "set": 0,
+          "binding": 0,
+          "sizeInBytes": 64,
+          "fields": [
+            {"name":"cameraWorld","type":"float","offsetInBytes":0,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1},
+            {"name":"viewportZoom","type":"float","offsetInBytes":16,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1},
+            {"name":"sizePolicy","type":"float","offsetInBytes":32,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1},
+            {"name":"opacityPolicy","type":"float","offsetInBytes":48,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1}
+          ]
+        }
+      ],
+      "sampledImages": []
+    },
+    "EarthquakeObservationVertex": {
+      "stage": "vertex",
+      "inputs": [
+        {"name":"centerMercator","location":1,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":2,"columns":1,"offset":8},
+        {"name":"radiusLogicalPixels","location":3,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":1,"columns":1,"offset":32},
+        {"name":"corner","location":0,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":2,"columns":1,"offset":0},
+        {"name":"color","location":2,"set":0,"binding":0,"type":"float","bitWidth":32,"vecSize":4,"columns":1,"offset":16}
+      ],
+      "uniformBlocks": [
+        {
+          "name": "ObservationFrame",
+          "set": 0,
+          "binding": 0,
+          "sizeInBytes": 32,
+          "fields": [
+            {"name":"camera_world","type":"float","offsetInBytes":0,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1},
+            {"name":"viewport_stroke","type":"float","offsetInBytes":16,"elementSizeInBytes":16,"totalSizeInBytes":16,"arrayElements":0,"vecSize":4,"columns":1}
+          ]
+        }
+      ],
+      "sampledImages": []
+    },
+    "MapSpriteFragment": {
+      "stage": "fragment",
+      "inputs": [],
+      "uniformBlocks": [],
+      "sampledImages": [
+        {"name":"spriteAtlas","set":0,"binding":64}
+      ]
+    },
+    "EarthquakeObservationFragment": {
+      "stage": "fragment",
+      "inputs": [],
+      "uniformBlocks": [],
+      "sampledImages": []
+    }
+  }
+}

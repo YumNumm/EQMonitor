@@ -5,9 +5,7 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_chunk.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityDecoderWorkerFinisher {
-  const new();
-
+final class const SeismicityDecoderWorkerFinisher() {
   SeismicityPmTilesDataset materialize({
     required SeismicityDatasetTransfer transfer,
     required SeismicityPmTilesArchiveDescriptor acceptedDescriptor,

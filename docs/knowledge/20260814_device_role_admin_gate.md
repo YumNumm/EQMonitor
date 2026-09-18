@@ -45,7 +45,30 @@ UI に理由を表示する前提で設計する。
 
 ## 運用
 
-Admin 扱いにするデバイスは、backend の Helm values
-（`deploy/k8s/values/tokyo/{develop,production}.yaml` の
-`eqmonitorApi.adminDeviceIds`）へ UUID をカンマ区切りで追加する。
-デバイス ID はデバッグ画面のデバイス情報から確認できる。
+Admin 扱いにするデバイス ID は **SealedSecret で管理する**。values に平文で
+書くと ArgoCD のレンダリング結果と git 履歴の両方に端末識別子が残るため。
+
+- 値の実体: SealedSecret `eqmonitor-secrets` の `ADMIN_DEVICE_IDS`
+  （`deploy/k8s/charts/eqmonitor/templates/sealed-eqmonitor-secrets.yaml`）。
+  カンマ区切りの UUID 一覧。cluster-wide スコープなので develop / production で
+  同じ値が復号される。
+- 注入の ON/OFF: `deploy/k8s/values/tokyo/{develop,production}.yaml` の
+  `eqmonitorApi.adminDeviceIds.enabled`。**両方を true にする。**
+  片方だけだと、その環境へ繋いだアプリが常に `role: USER` になる。
+- デバイス ID はアプリのデバッグ画面のデバイス情報から確認できる。
+
+デバイスを追加するときは、既存の値へ追記した上で再シールする:
+
+```bash
+kubectl create secret generic eqmonitor-secrets \
+  --namespace eqmonitor-tokyo-production \
+  --from-literal=ADMIN_DEVICE_IDS='<既存の一覧>,<追加する UUID>' \
+  --dry-run=client -o json \
+  | kubeseal --scope cluster-wide --format yaml \
+      --controller-namespace kube-system --controller-name sealed-secrets-controller
+```
+
+出力の `ADMIN_DEVICE_IDS:` 行だけを `sealed-eqmonitor-secrets.yaml` の
+`encryptedData` へ差し替える（キーは個別に暗号化されるため他の行は触らない）。
+検証は `kubeseal --validate`、レンダリングの回帰は
+`deploy/k8s/charts/eqmonitor/test/api-admin-device-ids.sh` で確認する。

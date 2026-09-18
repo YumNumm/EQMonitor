@@ -19,17 +19,11 @@ import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeHistoryParameterPersistentDelegate
-    extends SliverPersistentHeaderDelegate {
-  const new({
-    required this.parameter,
-    required this.onChanged,
-  });
-
+class const EarthquakeHistoryParameterPersistentDelegate({
+  required final EarthquakeHistoryParameter parameter,
+  required final void Function(EarthquakeHistoryParameter) onChanged,
+}) extends SliverPersistentHeaderDelegate {
   static const double height = 48;
-
-  final EarthquakeHistoryParameter parameter;
-  final void Function(EarthquakeHistoryParameter) onChanged;
 
   @override
   Widget build(
@@ -85,7 +79,7 @@ class _FilterChipBar extends ConsumerWidget {
         chip: SortFilterChip(
           sortBy: parameter.sortBy,
           sortOrder: parameter.sortOrder,
-          sortByLocked: isRegionFiltered,
+          regionalIntensityEnabled: isRegionFiltered,
           onChanged: (sortBy, sortOrder) => onChanged(
             parameter.copyWith(sortBy: sortBy, sortOrder: sortOrder),
           ),
@@ -96,6 +90,7 @@ class _FilterChipBar extends ConsumerWidget {
         isActive:
             parameter.intensityGte != null || parameter.intensityLte != null,
         chip: IntensityFilterChip(
+          filterLabel: isRegionFiltered ? '選択地域の観測震度' : '最大観測震度',
           min: parameter.intensityGte,
           max: parameter.intensityLte,
           onChanged: (min, max) => onChanged(

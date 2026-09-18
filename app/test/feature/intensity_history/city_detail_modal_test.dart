@@ -23,11 +23,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class _FakeEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+class _RegionalIntensityEarthquakeHistoryNotifier
+    extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
     EarthquakeHistoryParameter parameter,
   ) async {
+    if (parameter.sortBy != EarthquakeSortBy.regionalIntensity ||
+        parameter.sortOrder != SortOrder.desc) {
+      throw StateError('市区町村の観測震度降順ではありません');
+    }
     return PaginatedResponse(
       items: [_earthquakePartialForList(parameter)],
       nextToken: null,
@@ -92,6 +97,23 @@ class _CountingPagedEarthquakeHistoryNotifier
   }
 }
 
+class _RecordingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
+  static final parameters = <EarthquakeHistoryParameter>[];
+
+  static void reset() => parameters.clear();
+
+  @override
+  Future<PaginatedResponse<EarthquakePartial>> build(
+    EarthquakeHistoryParameter parameter,
+  ) async {
+    parameters.add(parameter);
+    return PaginatedResponse(
+      items: [_earthquakePartialForList(parameter)],
+      nextToken: null,
+    );
+  }
+}
+
 class _PendingEarthquakeHistoryNotifier extends EarthquakeHistoryNotifier {
   @override
   Future<PaginatedResponse<EarthquakePartial>> build(
@@ -129,10 +151,6 @@ EarthquakePartial _earthquakePartialForList(
     estimatedIntensityTileUrl: null,
   );
   return switch (parameter) {
-    EarthquakeHistoryParameterPrefecture() => EarthquakePartialPrefecture(
-      prefectureIntensity: JmaIntensity.sixLower,
-      earthquake: earthquake,
-    ),
     EarthquakeHistoryParameterCity() => EarthquakePartialRegion(
       regionIntensity: JmaIntensity.fiveUpper,
       earthquake: earthquake,
@@ -169,20 +187,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _RegionalIntensityEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -198,39 +212,6 @@ void main() {
     expect(find.textContaining('TODO'), findsNothing);
   });
 
-  testWidgets('都道府県モーダルで地震一覧が表示される', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(800, 1200));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.prefecture(
-              prefectureCode: '1700',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_FakeEarthquakeHistoryNotifier.new),
-        ],
-        child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showPrefecture(
-            context,
-            prefectureCode: '1700',
-            prefectureName: '石川県',
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pumpAndSettle();
-
-    expect(find.text('石川県'), findsOneWidget);
-    expect(find.text('観測した地震'), findsOneWidget);
-    expect(find.text('能登半島沖'), findsOneWidget);
-  });
-
   testWidgets('地震一覧が空の場合は空表示になる', (tester) async {
     await tester.binding.setSurfaceSize(const Size(800, 1200));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -238,20 +219,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_EmptyEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _EmptyEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -270,20 +247,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_ErrorEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _ErrorEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -302,20 +275,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_PendingEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _PendingEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -335,20 +304,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_PagedEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _PagedEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -372,20 +337,16 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          earthquakeHistoryProvider(
-            const EarthquakeHistoryParameter.city(
-              cityCode: '1720400',
-              sortBy: EarthquakeSortBy.eventId,
-              sortOrder: SortOrder.desc,
-            ),
-          ).overrideWith(_CountingPagedEarthquakeHistoryNotifier.new),
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _CountingPagedEarthquakeHistoryNotifier(),
+          ),
         ],
         child: _modalTestApp(
-          onPressed: (context) => AreaDetailModalAction().showCity(
+          onPressed: (context) => CityDetailModalAction().show(
             context,
             cityCode: '1720400',
             cityName: '輪島市',
-            regionName: '石川県',
+            prefectureName: '石川県',
           ),
         ),
       ),
@@ -402,5 +363,54 @@ void main() {
     await tester.pump();
 
     expect(_CountingPagedEarthquakeHistoryNotifier.fetchNextDataCallCount, 1);
+  });
+
+  testWidgets('ソートチップの選択で検索条件の並び替えが切り替わる', (tester) async {
+    _RecordingEarthquakeHistoryNotifier.reset();
+    await tester.binding.setSurfaceSize(const Size(800, 1200));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          earthquakeHistoryProvider.overrideWith2(
+            (_) => _RecordingEarthquakeHistoryNotifier(),
+          ),
+        ],
+        child: _modalTestApp(
+          onPressed: (context) => CityDetailModalAction().show(
+            context,
+            cityCode: '1720400',
+            cityName: '輪島市',
+            prefectureName: '石川県',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    for (final label in ['発生時刻', 'M', '最大震度', '深さ']) {
+      expect(find.widgetWithText(FilterChip, label), findsOneWidget);
+    }
+
+    final initial = _RecordingEarthquakeHistoryNotifier.parameters.single;
+    expect(initial.sortBy, EarthquakeSortBy.regionalIntensity);
+    expect(initial.sortOrder, SortOrder.desc);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'M'));
+    await tester.pumpAndSettle();
+
+    final byMagnitude = _RecordingEarthquakeHistoryNotifier.parameters.last;
+    expect(byMagnitude.sortBy, EarthquakeSortBy.magnitude);
+    expect(byMagnitude.sortOrder, SortOrder.desc);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'M'));
+    await tester.pumpAndSettle();
+
+    final reversed = _RecordingEarthquakeHistoryNotifier.parameters.last;
+    expect(reversed.sortBy, EarthquakeSortBy.magnitude);
+    expect(reversed.sortOrder, SortOrder.asc);
   });
 }

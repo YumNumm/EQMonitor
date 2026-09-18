@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_stat
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiRegionList extends StatelessWidget {
   const new({required this.tsunami, super.key});
@@ -183,7 +183,7 @@ class _ForecastDetails extends StatelessWidget {
           );
         } else if (arrivalTime != null) {
           parts.add(
-            '到達予想: ${DateFormat('HH:mm').format(arrivalTime.toLocal())}頃',
+            '到達予想: ${arrivalTime.formatWithTz(DateTimeFormat.hourMinute)}頃',
           );
         }
       }

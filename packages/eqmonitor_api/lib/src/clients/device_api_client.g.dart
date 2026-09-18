@@ -1128,11 +1128,14 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<DeviceNotificationWebhookResponse>>
-  postV2DeviceMeNotificationWebhooks() async {
+  postV2DeviceMeNotificationWebhooks({
+    required CreateDeviceNotificationWebhookRequest body,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
     final _options =
         _setStreamType<HttpResponse<DeviceNotificationWebhookResponse>>(
           Options(method: 'POST', headers: _headers, extra: _extra)

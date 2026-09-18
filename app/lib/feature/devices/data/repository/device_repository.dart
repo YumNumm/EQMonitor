@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
+import 'package:eqmonitor/feature/devices/data/model/device_notification_webhook.dart';
 import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
@@ -35,7 +36,7 @@ class DeviceRepository {
   final DeviceAuthRepository _authRepository;
   final api.ApnsEnvironment _apnsEnvironment;
 
-  Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
+  Future<Result<RegisteredDevice, Exception>> getDevice() =>
       Result.capture(() async {
         final response = await _api.device.getV2DeviceMe();
         return response.data.toRegisteredDevice;
@@ -52,8 +53,21 @@ class DeviceRepository {
         return response.data.role.toDeviceRole;
       });
 
+  Future<Result<List<DeviceNotificationWebhook>, Exception>>
+  getNotificationWebhooks() => Result.capture(() async {
+    final response = await _api.device.getV2DeviceMeNotificationWebhooks();
+    return response.data.map((webhook) => webhook.toModel()).toList();
+  });
+
+  Future<Result<DeviceNotificationWebhook, Exception>>
+  createNotificationWebhook() => Result.capture(() async {
+    final response = await _api.device.postV2DeviceMeNotificationWebhooks(
+      body: const api.CreateDeviceNotificationWebhookRequest(),
+    );
+    return response.data.toModel();
+  });
+
   Future<Result<RegisteredDevice, Exception>> registerDevice({
-    required String deviceId,
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) => Result.capture(() async {
@@ -81,25 +95,22 @@ class DeviceRepository {
     return getResponse.data.toRegisteredDevice;
   });
 
-  Future<Result<void, Exception>> deleteDevice(String deviceId) =>
-      Result.capture(() async {
-        await _api.device.deleteV2DeviceMe();
-        await _authRepository.clearToken();
-      });
+  Future<Result<void, Exception>> deleteDevice() => Result.capture(() async {
+    await _api.device.deleteV2DeviceMe();
+    await _authRepository.clearToken();
+  });
 
   Future<Result<RegisteredDevice, Exception>> fetchOrRegister({
-    required String deviceId,
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) async {
-    final getResult = await getDevice(deviceId);
+    final getResult = await getDevice();
     switch (getResult) {
       case Success(:final value):
         return Success(value);
       case Failure(:final exception, :final stackTrace):
         if (_shouldRegisterAfterGetFailure(exception)) {
           return registerDevice(
-            deviceId: deviceId,
             devicePlatform: devicePlatform,
             deviceLocale: deviceLocale,
           );
@@ -111,17 +122,16 @@ class DeviceRepository {
   /// Migrates settings from a v2.6 Supabase device to this v3 device.
   ///
   /// Sequence (per spec):
-  /// 1. GET device — if 200 it already exists, skip PUT.
-  /// 2. PUT device  — only when step 1 returned 404.
-  /// 3. POST /migrate with [oldDeviceId].
+  /// 1. GET /v2/device/me — if 200 it already exists, skip registration.
+  /// 2. POST /v2/device — only when step 1 returned 404.
+  /// 3. POST /v2/device/me/migrate with [oldDeviceId].
   ///
   /// 409 on migrate is treated as idempotent success (already migrated).
   Future<Result<void, Exception>> migrateFromLegacy({
-    required String deviceId,
     required String oldDeviceId,
   }) async {
     // Step 1 — check existence
-    final getResult = await getDevice(deviceId);
+    final getResult = await getDevice();
     final alreadyRegistered = switch (getResult) {
       Success() => true,
       Failure(:final exception) when _isNotFound(exception) => false,
@@ -133,8 +143,7 @@ class DeviceRepository {
 
     // Step 2 — register only when absent
     if (!alreadyRegistered) {
-      final putResult = await registerDevice(
-        deviceId: deviceId,
+      final registerResult = await registerDevice(
         devicePlatform: kIsWeb
             ? .ios
             : Platform.isIOS
@@ -142,8 +151,8 @@ class DeviceRepository {
             : .android,
         deviceLocale: .ja,
       );
-      if (putResult is Failure<RegisteredDevice, Exception>) {
-        return Failure(putResult.exception, putResult.stackTrace);
+      if (registerResult is Failure<RegisteredDevice, Exception>) {
+        return Failure(registerResult.exception, registerResult.stackTrace);
       }
     }
 

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:material_ui/material_ui.dart' as material;
 import 'package:material_ui/material_ui.dart' hide LicensePage;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +15,7 @@ class LicensePage extends ConsumerWidget {
     return material.LicensePage(
       applicationName: 'EQMonitor',
       applicationLegalese:
-          '${DateTime.now().year} © Ryotaro Onoue All Rights Reserved.',
+          '${DateTime.now().tokyoDateTime.year} © Ryotaro Onoue All Rights Reserved.',
       applicationVersion:
           'v${packageInfo.version} (${packageInfo.buildNumber})',
       applicationIcon: material.Column(

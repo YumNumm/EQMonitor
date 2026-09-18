@@ -10,29 +10,26 @@ part of 'intensity_history_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 地域別最大震度マップのフォーカス状態を管理する Notifier。
+/// 市区町村別最大震度マップの選択状態を管理する Notifier。
 ///
-/// - 初期状態は [IntensityHistoryStatePrefecture]（Lv1 全都道府県表示）。
-/// - [focusPrefecture] で [IntensityHistoryStateCity]（Lv2）に遷移。
-/// - [backToPrefecture] で Lv1 に戻る。
+/// 初期状態は未選択。[selectCity] / [deselectCity] で選択中の市区町村だけを
+/// 出し入れする。
 
 @ProviderFor(IntensityHistoryController)
 final intensityHistoryControllerProvider =
     IntensityHistoryControllerProvider._();
 
-/// 地域別最大震度マップのフォーカス状態を管理する Notifier。
+/// 市区町村別最大震度マップの選択状態を管理する Notifier。
 ///
-/// - 初期状態は [IntensityHistoryStatePrefecture]（Lv1 全都道府県表示）。
-/// - [focusPrefecture] で [IntensityHistoryStateCity]（Lv2）に遷移。
-/// - [backToPrefecture] で Lv1 に戻る。
+/// 初期状態は未選択。[selectCity] / [deselectCity] で選択中の市区町村だけを
+/// 出し入れする。
 final class IntensityHistoryControllerProvider
     extends
         $NotifierProvider<IntensityHistoryController, IntensityHistoryState> {
-  /// 地域別最大震度マップのフォーカス状態を管理する Notifier。
+  /// 市区町村別最大震度マップの選択状態を管理する Notifier。
   ///
-  /// - 初期状態は [IntensityHistoryStatePrefecture]（Lv1 全都道府県表示）。
-  /// - [focusPrefecture] で [IntensityHistoryStateCity]（Lv2）に遷移。
-  /// - [backToPrefecture] で Lv1 に戻る。
+  /// 初期状態は未選択。[selectCity] / [deselectCity] で選択中の市区町村だけを
+  /// 出し入れする。
   IntensityHistoryControllerProvider._()
     : super(
         from: null,
@@ -61,13 +58,12 @@ final class IntensityHistoryControllerProvider
 }
 
 String _$intensityHistoryControllerHash() =>
-    r'39ac4878f184430a09694268de5b16fbb76b1bca';
+    r'd316932cd1648577d1796ffc27196596add1e27d';
 
-/// 地域別最大震度マップのフォーカス状態を管理する Notifier。
+/// 市区町村別最大震度マップの選択状態を管理する Notifier。
 ///
-/// - 初期状態は [IntensityHistoryStatePrefecture]（Lv1 全都道府県表示）。
-/// - [focusPrefecture] で [IntensityHistoryStateCity]（Lv2）に遷移。
-/// - [backToPrefecture] で Lv1 に戻る。
+/// 初期状態は未選択。[selectCity] / [deselectCity] で選択中の市区町村だけを
+/// 出し入れする。
 
 abstract class _$IntensityHistoryController
     extends $Notifier<IntensityHistoryState> {

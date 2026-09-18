@@ -10,14 +10,15 @@ part of 'eqmonitor_ws_payload_stream.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// 受信フレームを [WsMessage] にパースして流す。
 
-@ProviderFor(eqmonitorWsPayloadStream)
+@ProviderFor(EqmonitorWsPayloadStream)
 final eqmonitorWsPayloadStreamProvider = EqmonitorWsPayloadStreamProvider._();
 
+/// 受信フレームを [WsMessage] にパースして流す。
 final class EqmonitorWsPayloadStreamProvider
-    extends
-        $FunctionalProvider<AsyncValue<WsMessage>, WsMessage, Stream<WsMessage>>
-    with $FutureModifier<WsMessage>, $StreamProvider<WsMessage> {
+    extends $StreamNotifierProvider<EqmonitorWsPayloadStream, WsMessage> {
+  /// 受信フレームを [WsMessage] にパースして流す。
   EqmonitorWsPayloadStreamProvider._()
     : super(
         from: null,
@@ -34,14 +35,28 @@ final class EqmonitorWsPayloadStreamProvider
 
   @$internal
   @override
-  $StreamProviderElement<WsMessage> $createElement($ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
-
-  @override
-  Stream<WsMessage> create(Ref ref) {
-    return eqmonitorWsPayloadStream(ref);
-  }
+  EqmonitorWsPayloadStream create() => EqmonitorWsPayloadStream();
 }
 
 String _$eqmonitorWsPayloadStreamHash() =>
-    r'c07fd8248ba4802579008f116a5a963f9fe138e3';
+    r'caa58b05bed949449c6ab777b9866af3a118515d';
+
+/// 受信フレームを [WsMessage] にパースして流す。
+
+abstract class _$EqmonitorWsPayloadStream extends $StreamNotifier<WsMessage> {
+  Stream<WsMessage> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<WsMessage>, WsMessage>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<WsMessage>, WsMessage>,
+              AsyncValue<WsMessage>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

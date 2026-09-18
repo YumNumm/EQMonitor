@@ -78,12 +78,12 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('デフォルト').last);
+    await tester.tap(find.byType(DropdownButton<NotificationSound>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(InterruptionLevel.critical.name).last);
+    await tester.tap(find.text(InterruptionLevel.critical.label).last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('追加'));
@@ -127,7 +127,7 @@ void main() {
       InterruptionLevel.active,
     );
 
-    await tester.tap(find.text(InterruptionLevel.passive.name).last);
+    await tester.tap(find.text(InterruptionLevel.passive.label).last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('保存'));

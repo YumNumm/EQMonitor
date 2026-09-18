@@ -1,4 +1,3 @@
-import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
@@ -101,22 +100,22 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
       entries: _resolveNames(value, current.availableSubRegions),
       availableSubRegions: current.availableSubRegions,
     ));
-    try {
-      await BackgroundLocationTracker.startMonitoring();
-    } on Object catch (e, st) {
-      talker.error(
-        '[ShakeDetection] BackgroundLocationTracker.startMonitoring',
-        e,
-        st,
-      );
-    }
+    final slots = await (() async {
+      try {
+        return await ref.read(notificationSlotsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[ShakeDetection] read notification slots failed', e, st);
+        return null;
+      }
+    })();
+    await const BackgroundLocationMonitoringLifecycle().reconcile(
+      slots: slots,
+      shakeDetectionState: state.requireValue,
+    );
   }
 
   Future<void> removeEntry(String entryId) async {
     final current = state.requireValue;
-    final removesCurrentLocation = current.entries.any(
-      (e) => e.id == entryId && e.isCurrentLocation,
-    );
     final apiClient = await ref.read(apiClientProvider.future);
     final updated = current.entries.where((e) => e.id != entryId).toList();
     final response = await apiClient.device.putV2DeviceMeSettingsShakeDetection(
@@ -128,14 +127,18 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
       availableSubRegions: current.availableSubRegions,
     );
     state = AsyncData(nextState);
-    if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
-      final slots = ref.read(notificationSlotsProvider).value;
-      const lifecycle = BackgroundLocationMonitoringLifecycle();
-      await lifecycle.stopIfUnused(
-        slots: slots,
-        shakeDetectionState: nextState,
-      );
-    }
+    final slots = await (() async {
+      try {
+        return await ref.read(notificationSlotsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[ShakeDetection] read notification slots failed', e, st);
+        return null;
+      }
+    })();
+    await const BackgroundLocationMonitoringLifecycle().reconcile(
+      slots: slots,
+      shakeDetectionState: nextState,
+    );
   }
 
   Future<void> updateLevel(String entryId, ShakeDetectionLevel newLevel) async {

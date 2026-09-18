@@ -4,6 +4,9 @@ import 'package:dart_earcut/dart_earcut.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_build_exception.dart';
 import 'package:eqmonitor_map/src/mesh/fill_mesh_builder_limits.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_self_intersection_validator.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_signed_area.dart';
+import 'package:eqmonitor_map/src/mesh/polygon_topology_validator.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
 
 /// index bufferがUint16のため、1つの[FillMesh] segmentが持てる頂点数の
@@ -17,7 +20,8 @@ const _maxIndexableVerticesPerSegment = 65536;
 /// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
 /// 「Fill頂点生成」節: `classifyRings` → `limitHoles` → `earcut`)。
 final class FillMeshBuilder {
-  new({required this.limits}) {
+  new({required this.limits})
+    : _remainingIntersectionChecks = limits.maxIntersectionChecks {
     if (limits.maxVerticesPerSegment <= 0 ||
         limits.maxVerticesPerSegment > _maxIndexableVerticesPerSegment) {
       throw ArgumentError.value(
@@ -27,9 +31,17 @@ final class FillMeshBuilder {
             'are stored as Uint16.',
       );
     }
+    if (limits.maxIntersectionChecks < 0) {
+      throw ArgumentError.value(
+        limits.maxIntersectionChecks,
+        'limits.maxIntersectionChecks',
+        'must not be negative.',
+      );
+    }
   }
 
   final FillMeshBuilderLimits limits;
+  int _remainingIntersectionChecks;
 
   /// [features]をtile-local座標のfill meshへ変換する。全featureの頂点が
   /// 1 segmentに収まらない場合、featureの境界でのみ分割した複数の
@@ -40,11 +52,12 @@ final class FillMeshBuilder {
   /// それ以外の型が混じっているのは呼び出し側の実装誤りなので
   /// [ArgumentError]で落とす([FillMeshBuildException]は入力データ
   /// (untrusted tile bytes)由来の問題専用に予約する)。
+  /// 比較回数の残量は呼び出し間で共有されるため、呼び出し側はtileごとに
+  /// builderを1つ生成し、そのtileの全fill layerで同じinstanceを使う。
   List<FillMesh> build(Iterable<MvtFeature> features) {
     final segments = <FillMesh>[];
     var positions = <double>[];
     var indices = <int>[];
-
     void flush() {
       if (positions.isEmpty) {
         return;
@@ -70,6 +83,20 @@ final class FillMeshBuilder {
       }
 
       final polygons = _classifyRings(feature.rings, limits: limits);
+      final intersectionChecks = const PolygonSelfIntersectionValidator()
+          .validate(
+            rings: feature.rings,
+            maxIntersectionChecks: _remainingIntersectionChecks,
+          );
+      _remainingIntersectionChecks -= intersectionChecks;
+      final topologyChecks = const PolygonTopologyValidator().validate(
+        polygons: [
+          for (final polygon in polygons)
+            (exterior: polygon.exterior, holes: polygon.holes),
+        ],
+        maxChecks: _remainingIntersectionChecks,
+      );
+      _remainingIntersectionChecks -= topologyChecks;
       final featurePositions = <double>[];
       final featureTriangleIndices = <int>[];
       var localOffset = 0;
@@ -161,14 +188,14 @@ List<_RawPolygon> _classifyRings(
       );
     }
 
-    final signedAreaTwice = _signedAreaTwice(ring);
-    if (signedAreaTwice == 0) {
+    final signedAreaSign = const PolygonSignedArea().sign(ring);
+    if (signedAreaSign == 0) {
       throw const FillMeshBuildException.degenerateRing(
         reason: 'A ring has zero signed area and encloses no surface.',
       );
     }
 
-    if (signedAreaTwice > 0) {
+    if (signedAreaSign > 0) {
       polygons.add(_RawPolygon(exterior: ring));
       continue;
     }
@@ -191,23 +218,6 @@ List<_RawPolygon> _classifyRings(
     current.holes.add(ring);
   }
   return polygons;
-}
-
-/// ringの符号付き面積の2倍を整数のまま計算する。tile-local座標はint32の
-/// 範囲を持ち得るため、doubleではなくint(64bit)で積算し、ゼロ判定の丸め
-/// 誤差を避ける。
-int _signedAreaTwice(Int32List ring) {
-  final vertexCount = ring.length ~/ 2;
-  var sum = 0;
-  for (var i = 0; i < vertexCount; i++) {
-    final x0 = ring[i * 2];
-    final y0 = ring[i * 2 + 1];
-    final nextIndex = (i + 1) % vertexCount;
-    final x1 = ring[nextIndex * 2];
-    final y1 = ring[nextIndex * 2 + 1];
-    sum += x0 * y1 - x1 * y0;
-  }
-  return sum;
 }
 
 /// 1つのpolygon(外形+穴)を`dart_earcut`で三角形化する。

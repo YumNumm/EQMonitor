@@ -6,11 +6,11 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor/feature/eew_history/data/repository/eew_list_repository.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -75,12 +75,10 @@ class EewListDataSource
   final EewListRepository _repository;
   final EewListParameter _parameter;
 
-  static final _dateFormatter = DateFormat('yyyy/MM/dd');
-
   @override
   String groupBy(EewTelegramItem value) {
     final dateTime = value.originTime ?? value.reportTime;
-    return _dateFormatter.format(dateTime.toLocal());
+    return dateTime.formatWithTz(DateTimeFormat.yearMonthDay);
   }
 
   @override

@@ -26,9 +26,7 @@ MvtTile decodeMvtTile(Uint8List bytes, {required MvtDecodeLimits limits}) {
   return const MvtDecoder().decode(bytes: bytes, limits: limits);
 }
 
-final class MvtDecoder {
-  const new();
-
+final class const MvtDecoder() {
   static const _layerFieldNumber = 3;
 
   MvtTile decode({required Uint8List bytes, required MvtDecodeLimits limits}) {
@@ -57,11 +55,11 @@ final class MvtDecoder {
   }
 }
 
-final class _MvtLayerDecoder {
-  const new();
-
+final class const _MvtLayerDecoder() {
   static const _nameFieldNumber = 1;
   static const _featuresFieldNumber = 2;
+  static const _keysFieldNumber = 3;
+  static const _valuesFieldNumber = 4;
   static const _extentFieldNumber = 5;
   static const _versionFieldNumber = 15;
 
@@ -70,33 +68,62 @@ final class _MvtLayerDecoder {
     String? name;
     int? version;
     int? extent;
-    final features = <MvtFeature>[];
+    final featureBytes = <Uint8List>[];
+    final keys = <String>[];
+    final values = <String?>[];
     while (!reader.isAtEnd) {
       final tag = reader.readTag();
       if (tag.fieldNumber == _nameFieldNumber &&
           tag.wireType == _wireTypeLengthDelimited) {
-        final nameBytes = reader.readLengthDelimited();
-        if (nameBytes.length > limits.maxLayerNameBytes) {
-          throw MvtDecodeException.limitExceeded(
-            reason:
+        name = _decodeUtf8(
+          reader.readLengthDelimited(
+            maxLength: limits.maxLayerNameBytes,
+            limitReason:
                 'A layer name exceeds the configured byte limit '
                 '(${limits.maxLayerNameBytes}).',
-          );
-        }
-        name = utf8.decode(nameBytes);
+          ),
+        );
       } else if (tag.fieldNumber == _featuresFieldNumber &&
           tag.wireType == _wireTypeLengthDelimited) {
-        final featureBytes = reader.readLengthDelimited();
-        if (features.length >= limits.maxFeaturesPerLayer) {
+        if (featureBytes.length >= limits.maxFeaturesPerLayer) {
           throw MvtDecodeException.limitExceeded(
             reason:
                 'A layer exceeds the configured feature limit '
                 '(${limits.maxFeaturesPerLayer}).',
           );
         }
-        features.add(
-          const _MvtFeatureDecoder().decode(
-            bytes: featureBytes,
+        featureBytes.add(reader.readLengthDelimited());
+      } else if (tag.fieldNumber == _keysFieldNumber &&
+          tag.wireType == _wireTypeLengthDelimited) {
+        if (keys.length >= limits.maxKeysPerLayer) {
+          throw MvtDecodeException.limitExceeded(
+            reason:
+                'A layer exceeds the configured property key limit '
+                '(${limits.maxKeysPerLayer}).',
+          );
+        }
+        keys.add(
+          _decodeUtf8(
+            reader.readLengthDelimited(
+              maxLength: limits.maxPropertyStringBytes,
+              limitReason:
+                  'A property key exceeds the configured byte limit '
+                  '(${limits.maxPropertyStringBytes}).',
+            ),
+          ),
+        );
+      } else if (tag.fieldNumber == _valuesFieldNumber &&
+          tag.wireType == _wireTypeLengthDelimited) {
+        if (values.length >= limits.maxValuesPerLayer) {
+          throw MvtDecodeException.limitExceeded(
+            reason:
+                'A layer exceeds the configured property value limit '
+                '(${limits.maxValuesPerLayer}).',
+          );
+        }
+        values.add(
+          const _MvtValueDecoder().decode(
+            bytes: reader.readLengthDelimited(),
             limits: limits,
           ),
         );
@@ -135,6 +162,15 @@ final class _MvtLayerDecoder {
         reason: 'A layer declares a non-positive extent $resolvedExtent.',
       );
     }
+    final features = <MvtFeature>[
+      for (final bytes in featureBytes)
+        const _MvtFeatureDecoder().decode(
+          bytes: bytes,
+          keys: keys,
+          values: values,
+          limits: limits,
+        ),
+    ];
     return MvtLayer(
       name: resolvedName,
       version: resolvedVersion,
@@ -144,25 +180,38 @@ final class _MvtLayerDecoder {
   }
 }
 
-final class _MvtFeatureDecoder {
-  const new();
-
+final class const _MvtFeatureDecoder() {
+  static const _tagsFieldNumber = 2;
   static const _typeFieldNumber = 3;
   static const _geometryFieldNumber = 4;
 
   MvtFeature decode({
     required Uint8List bytes,
+    required List<String> keys,
+    required List<String?> values,
     required MvtDecodeLimits limits,
   }) {
     final reader = _ProtoReader(bytes);
-    // GeomType未指定時のprotobuf既定値はUNKNOWN(0)。properties(tag/key/value)
-    // とfeature IDはこの縦切りではモデルへ持たせないため、値を保持せずwire上
-    // のskipだけ行う。
+    // GeomType未指定時のprotobuf既定値はUNKNOWN(0)。
     var geomTypeValue = 0;
     List<int>? rawCommands;
+    final tags = <int>[];
     while (!reader.isAtEnd) {
       final tag = reader.readTag();
-      if (tag.fieldNumber == _typeFieldNumber &&
+      if (tag.fieldNumber == _tagsFieldNumber &&
+          tag.wireType == _wireTypeLengthDelimited) {
+        final tagReader = _ProtoReader(reader.readLengthDelimited());
+        while (!tagReader.isAtEnd) {
+          if (tags.length >= limits.maxTagsPerFeature) {
+            throw MvtDecodeException.limitExceeded(
+              reason:
+                  'A feature exceeds the configured property tag limit '
+                  '(${limits.maxTagsPerFeature}).',
+            );
+          }
+          tags.add(tagReader.readVarintValue());
+        }
+      } else if (tag.fieldNumber == _typeFieldNumber &&
           tag.wireType == _wireTypeVarint) {
         geomTypeValue = reader.readVarintValue();
       } else if (tag.fieldNumber == _geometryFieldNumber &&
@@ -179,7 +228,37 @@ final class _MvtFeatureDecoder {
       type: type,
       limits: limits,
     );
-    return MvtFeature(type: type, rings: rings);
+    if (tags.length.isOdd) {
+      throw const MvtDecodeException.malformedProtobuf(
+        reason: 'A feature property tag list must contain key/value pairs.',
+      );
+    }
+    final properties = <String, String>{};
+    final seenKeys = <String>{};
+    for (var index = 0; index < tags.length; index += 2) {
+      final keyIndex = tags[index];
+      final valueIndex = tags[index + 1];
+      if (keyIndex >= keys.length || valueIndex >= values.length) {
+        throw const MvtDecodeException.malformedProtobuf(
+          reason: 'A feature property tag index is outside its layer table.',
+        );
+      }
+      final key = keys[keyIndex];
+      if (!seenKeys.add(key)) {
+        throw const MvtDecodeException.malformedProtobuf(
+          reason: 'A feature has duplicate property keys.',
+        );
+      }
+      final value = values[valueIndex];
+      if (value != null) {
+        properties[key] = value;
+      }
+    }
+    return MvtFeature(
+      type: type,
+      rings: rings,
+      properties: Map.unmodifiable(properties),
+    );
   }
 
   MvtGeometryType _mapGeometryType(int value) {
@@ -207,6 +286,58 @@ final class _MvtFeatureDecoder {
   }
 }
 
+final class const _MvtValueDecoder() {
+  String? decode({required Uint8List bytes, required MvtDecodeLimits limits}) {
+    final reader = _ProtoReader(bytes);
+    var fieldCount = 0;
+    String? stringValue;
+    while (!reader.isAtEnd) {
+      final tag = reader.readTag();
+      final isString =
+          tag.fieldNumber == 1 && tag.wireType == _wireTypeLengthDelimited;
+      final isFloat = tag.fieldNumber == 2 && tag.wireType == _wireType32Bit;
+      final isDouble = tag.fieldNumber == 3 && tag.wireType == _wireType64Bit;
+      final isInteger =
+          (tag.fieldNumber == 4 ||
+              tag.fieldNumber == 5 ||
+              tag.fieldNumber == 6 ||
+              tag.fieldNumber == 7) &&
+          tag.wireType == _wireTypeVarint;
+      if (isString || isFloat || isDouble || isInteger) {
+        fieldCount++;
+        if (fieldCount > 1) {
+          throw const MvtDecodeException.malformedProtobuf(
+            reason: 'An MVT Value must contain at most one typed field.',
+          );
+        }
+      }
+      if (isString) {
+        stringValue = _decodeUtf8(
+          reader.readLengthDelimited(
+            maxLength: limits.maxPropertyStringBytes,
+            limitReason:
+                'A property string exceeds the configured byte limit '
+                '(${limits.maxPropertyStringBytes}).',
+          ),
+        );
+      } else {
+        reader.skipField(tag.wireType);
+      }
+    }
+    return stringValue;
+  }
+}
+
+String _decodeUtf8(Uint8List bytes) {
+  try {
+    return utf8.decode(bytes);
+  } on FormatException {
+    throw const MvtDecodeException.malformedProtobuf(
+      reason: 'A protobuf string is not valid UTF-8.',
+    );
+  }
+}
+
 /// commandの総数(繰り返し回数の総和)を、頂点を読み出す前に検証するための
 /// 早期チェック。ring/頂点ごとの上限はbufferへ積んだ後に効くのに対し、これは
 /// 単一のcommand headerが巨大なcountを宣言した時点でbailoutする。
@@ -226,9 +357,7 @@ final class _CommandBudget {
   }
 }
 
-final class _MvtGeometryDecoder {
-  const new();
-
+final class const _MvtGeometryDecoder() {
   List<Int32List> decode({
     required List<int> rawCommands,
     required MvtGeometryType type,
@@ -532,8 +661,16 @@ final class _ProtoReader {
     );
   }
 
-  Uint8List readLengthDelimited() {
+  Uint8List readLengthDelimited({int? maxLength, String? limitReason}) {
     final length = _readVarintValue(maxBytes: 5);
+    if (maxLength != null && length > maxLength) {
+      throw MvtDecodeException.limitExceeded(
+        reason:
+            limitReason ??
+            'A length-delimited field exceeds the configured byte limit '
+                '($maxLength).',
+      );
+    }
     if (length > _length - _offset) {
       throw const MvtDecodeException.malformedProtobuf(
         reason: 'A length-delimited field exceeds the buffer bounds.',

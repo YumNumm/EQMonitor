@@ -1,17 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-final class HypocenterAnalysisProgress {
-  const new({
-    required this.completedArchives,
-    required this.totalArchives,
-    required this.fetchedEvents,
-  });
-
-  final int completedArchives;
-  final int totalArchives;
-  final int fetchedEvents;
-
+final class const HypocenterAnalysisProgress({
+  required final int completedArchives,
+  required final int totalArchives,
+  required final int fetchedEvents,
+}) {
   @override
   bool operator ==(Object other) =>
       other is HypocenterAnalysisProgress &&

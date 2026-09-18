@@ -10,27 +10,15 @@ part of 'eqmonitor_ws_status_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻とサーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
-/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 
 @ProviderFor(EqMonitorWsStatus)
 final eqMonitorWsStatusProvider = EqMonitorWsStatusProvider._();
 
-/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻とサーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
-/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 final class EqMonitorWsStatusProvider
     extends $NotifierProvider<EqMonitorWsStatus, EqMonitorWsStatusState> {
-  /// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
-  ///
-  /// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-  /// [WsPingMessage] 受信時に最終 ping 時刻とサーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
-  /// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
+  /// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
   EqMonitorWsStatusProvider._()
     : super(
         from: null,
@@ -58,13 +46,9 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'154a764f74f43e9ac5ed9a3239462d7673247869';
+String _$eqMonitorWsStatusHash() => r'e3023c38b55cc361dc06534c31fa325d2fbf61a0';
 
-/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
-///
-/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
-/// [WsPingMessage] 受信時に最終 ping 時刻とサーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
-/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
+/// WebSocket の接続状態・サーバー起因 ping の受信状況を保持する
 
 abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
   EqMonitorWsStatusState build();

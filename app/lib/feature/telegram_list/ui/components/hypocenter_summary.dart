@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_telegram_body_quake_model.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 /// 震源サマリ表示コンポーネント
 ///
@@ -81,12 +81,14 @@ class _OriginTimeLine extends StatelessWidget {
     final theme = Theme.of(context);
     final colorTheme = context.designSystem.colorTheme;
 
-    final dateTime = DateTime.tryParse(originTime)?.toLocal();
+    final dateTime = DateTime.tryParse(originTime);
     if (dateTime == null) {
       return const SizedBox.shrink();
     }
 
-    final formatted = DateFormat('yyyy/MM/dd HH:mm').format(dateTime);
+    final formatted = dateTime.formatWithTz(
+      DateTimeFormat.yearMonthDayHourMinute,
+    );
 
     return Text(
       '$formattedごろ発生',

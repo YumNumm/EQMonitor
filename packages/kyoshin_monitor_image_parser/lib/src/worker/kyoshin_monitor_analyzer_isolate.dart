@@ -11,41 +11,20 @@ import 'package:kyoshin_monitor_image_parser/src/exception/kyoshin_monitor_worke
 import 'package:kyoshin_monitor_image_parser/src/model/kyoshin_monitor_observation_point.dart';
 import 'package:kyoshin_monitor_image_parser/src/parser/kyoshin_monitor_image_parser.dart';
 
-/// GIF 解析と GeoJSON 文字列生成を Worker Isolate で行う結果。
-final class AnalyzeResult {
-  const new({
-    required this.geoJson,
-    required this.featureCount,
-    this.parseMicros,
-    this.geoJsonBuildMicros,
-  });
+final class const AnalyzeResult({
+  required final String geoJson,
+  required final int featureCount,
+  final int? parseMicros,
+  final int? geoJsonBuildMicros,
+});
 
-  final String geoJson;
-  final int featureCount;
-  final int? parseMicros;
-  final int? geoJsonBuildMicros;
-}
-
-/// 常駐 Worker Isolate へのハンドル。
-final class KyoshinMonitorAnalyzerIsolate {
-  new _({
-    required Isolate isolate,
-    required ReceivePort mainReceive,
-    required SendPort workerSendPort,
-    required StreamSubscription<Object?> subscription,
-    required Map<int, Completer<AnalyzeResult>> pending,
-  }) : _isolate = isolate,
-       _mainReceive = mainReceive,
-       _workerSendPort = workerSendPort,
-       _subscription = subscription,
-       _pending = pending;
-
-  final Isolate _isolate;
-  final ReceivePort _mainReceive;
-  final SendPort _workerSendPort;
-  final StreamSubscription<Object?> _subscription;
-  final Map<int, Completer<AnalyzeResult>> _pending;
-
+final class KyoshinMonitorAnalyzerIsolate._({
+  required final Isolate _isolate,
+  required final ReceivePort _mainReceive,
+  required final SendPort _workerSendPort,
+  required final StreamSubscription<Object?> _subscription,
+  required final Map<int, Completer<AnalyzeResult>> _pending,
+}) {
   var _nextId = 0;
 
   /// [points] をキャッシュして解析用 Isolate を起動する。
@@ -76,19 +55,16 @@ final class KyoshinMonitorAnalyzerIsolate {
         if (c == null) {
           return;
         }
-        if (message.result != null) {
-          c.complete(message.result!);
-        } else {
-          final st = message.errorStack != null
-              ? StackTrace.fromString(message.errorStack!)
-              : StackTrace.empty;
+        final result = message.result;
+        if (result == null) {
           c.completeError(
             KyoshinMonitorWorkerException(
               message.errorMessage ?? 'unknown',
-              st,
+              StackTrace.fromString(message.errorStack ?? ''),
             ),
-            st,
           );
+        } else {
+          c.complete(result);
         }
       }
     });
@@ -103,7 +79,7 @@ final class KyoshinMonitorAnalyzerIsolate {
       );
 
       workerSendPort = await workerPortCompleter.future;
-      workerSendPort.send(_InitMessage(points));
+      workerSendPort.send(_InitMessage(points: points));
       await initAck.future;
     } on Object {
       await subscription.cancel();
@@ -125,7 +101,7 @@ final class KyoshinMonitorAnalyzerIsolate {
     final id = _nextId++;
     final completer = Completer<AnalyzeResult>();
     _pending[id] = completer;
-    _workerSendPort.send(_AnalyzeMessage(id, gifBytes));
+    _workerSendPort.send(_AnalyzeMessage(id: id, gifBytes: gifBytes));
     return completer.future;
   }
 
@@ -137,40 +113,25 @@ final class KyoshinMonitorAnalyzerIsolate {
   }
 }
 
-final class _InitMessage {
-  const new(this.points);
+final class const _InitMessage({
+  required final List<NamedObservationPoint> points,
+});
 
-  final List<NamedObservationPoint> points;
-}
+final class const _InitAck();
 
-final class _InitAck {
-  const new();
-}
+final class const _AnalyzeMessage({
+  required final int id,
+  required final Uint8List gifBytes,
+});
 
-final class _AnalyzeMessage {
-  const new(this.id, this.gifBytes);
+final class const _ShutdownMessage();
 
-  final int id;
-  final Uint8List gifBytes;
-}
-
-final class _ShutdownMessage {
-  const new();
-}
-
-final class _AnalyzeResponseMessage {
-  const new({
-    required this.id,
-    this.result,
-    this.errorMessage,
-    this.errorStack,
-  });
-
-  final int id;
-  final AnalyzeResult? result;
-  final String? errorMessage;
-  final String? errorStack;
-}
+final class const _AnalyzeResponseMessage({
+  required final int id,
+  final AnalyzeResult? result,
+  final String? errorMessage,
+  final String? errorStack,
+});
 
 @pragma('vm:entry-point')
 void _workerEntryPoint(SendPort mainSendPort) {
@@ -275,7 +236,11 @@ Future<void> _runAnalyze(
     first = false;
     count++;
     final intensity = obs.scaleToIntensity;
-    final colorHex = _colorHex(obs.r, obs.g, obs.b);
+    final colorHex =
+        '#${obs.r.toRadixString(16).padLeft(2, '0')}'
+                '${obs.g.toRadixString(16).padLeft(2, '0')}'
+                '${obs.b.toRadixString(16).padLeft(2, '0')}'
+            .toUpperCase();
     sb
       ..write('{"type":"Feature","geometry":{"type":"Point","coordinates":[')
       ..write(named.longitude.toStringAsFixed(6))
@@ -292,9 +257,3 @@ Future<void> _runAnalyze(
   sb.write(']}');
   return (sb.toString(), count);
 }
-
-String _colorHex(int r, int g, int b) =>
-    '#${r.toRadixString(16).padLeft(2, '0')}'
-            '${g.toRadixString(16).padLeft(2, '0')}'
-            '${b.toRadixString(16).padLeft(2, '0')}'
-        .toUpperCase();
