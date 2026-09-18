@@ -2,8 +2,6 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_live_activity_content_builder.g.dart';
@@ -15,7 +13,7 @@ DebugLiveActivityContentBuilder debugLiveActivityContentBuilder(Ref ref) =>
 /// Live Activity の ContentState (`Map<String, dynamic>`) を組み立てる。
 ///
 /// 生成される JSON のキーは Widget Extension の Swift `Codable` 構造体
-/// (`EewContentState` / `ShakeDetectionContentState` / `LocationInfo`) の
+/// (`EewContentState` / `LocationInfo`) の
 /// プロパティ名と一致させる（デフォルトの CodingKeys = プロパティ名）。
 class const DebugLiveActivityContentBuilder() {
   // --- EEW: プリセット ---
@@ -181,45 +179,6 @@ class const DebugLiveActivityContentBuilder() {
     );
   }
 
-  // --- 揺れ検知: プリセット ---
-
-  Map<String, dynamic> shakeFromPreset({
-    required DebugShakePreset preset,
-    required String eventId,
-    required DateTime now,
-  }) {
-    final level = switch (preset) {
-      DebugShakePreset.weaker => ShakeDetectionLevel.weaker,
-      DebugShakePreset.weak => ShakeDetectionLevel.weak,
-      DebugShakePreset.medium => ShakeDetectionLevel.medium,
-      DebugShakePreset.strong => ShakeDetectionLevel.strong,
-      DebugShakePreset.stronger => ShakeDetectionLevel.stronger,
-    };
-    final intensity = switch (preset) {
-      DebugShakePreset.weaker => 0.4,
-      DebugShakePreset.weak => 0.8,
-      DebugShakePreset.medium => 1.6,
-      DebugShakePreset.strong => 3.2,
-      DebugShakePreset.stronger => 4.8,
-    };
-    return _shake(
-      eventId: eventId,
-      level: level,
-      detectedAt: now,
-      location: _location(regionName: '東京都23区', intensity: intensity),
-    );
-  }
-
-  // --- 揺れ検知: 実データ変換 ---
-
-  Map<String, dynamic> shakeFromEvent(ShakeDetectionEvent event) {
-    return _shake(
-      eventId: event.eventId,
-      level: event.level,
-      detectedAt: event.createdAt,
-    );
-  }
-
   // --- 内部ヘルパー ---
 
   Map<String, dynamic> _eew({
@@ -263,27 +222,11 @@ class const DebugLiveActivityContentBuilder() {
     };
   }
 
-  Map<String, dynamic> _shake({
-    required String eventId,
-    required ShakeDetectionLevel level,
-    required DateTime detectedAt,
-    Map<String, dynamic>? location,
-  }) {
-    return <String, dynamic>{
-      'eventId': eventId,
-      'type': 'shake_detection',
-      'level': _shakeLevelWireValue(level),
-      'detectedAt': _iso8601Jst(detectedAt),
-      'location': location,
-    };
-  }
-
   Map<String, dynamic> _location({
     required String regionName,
     JmaIntensity? forecastIntensity,
     JmaLpgmIntensity? forecastLpgmIntensity,
     DateTime? arrivalTime,
-    double? intensity,
   }) {
     return <String, dynamic>{
       'regionName': regionName,
@@ -294,7 +237,6 @@ class const DebugLiveActivityContentBuilder() {
           ? null
           : _lpgmWireValue(forecastLpgmIntensity),
       'arrivalTime': arrivalTime == null ? null : _iso8601Jst(arrivalTime),
-      'intensity': intensity,
     };
   }
 
@@ -323,14 +265,6 @@ class const DebugLiveActivityContentBuilder() {
     JmaLpgmIntensity.two => '2',
     JmaLpgmIntensity.three => '3',
     JmaLpgmIntensity.four => '4',
-  };
-
-  String _shakeLevelWireValue(ShakeDetectionLevel level) => switch (level) {
-    ShakeDetectionLevel.weaker => 'Weaker',
-    ShakeDetectionLevel.weak => 'Weak',
-    ShakeDetectionLevel.medium => 'Medium',
-    ShakeDetectionLevel.strong => 'Strong',
-    ShakeDetectionLevel.stronger => 'Stronger',
   };
 
   /// Swift の `ISO8601DateFormatter`（既定オプション = 小数秒なし）で
