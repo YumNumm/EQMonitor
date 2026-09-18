@@ -13,12 +13,7 @@ part 'complete_onboarding_flow.g.dart';
 CompleteOnboardingFlow completeOnboardingFlow(Ref ref) =>
     const CompleteOnboardingFlow();
 
-/// オンボーディング完了時の一連の処理をまとめる Flow。
-///
-/// - 完了フラグを永続化する
-/// - 新規ユーザーはアップデートバナーの既読版数を現在版へ初期化し、
-///   初回ホームで「アップデートしました」バナーを表示しない
-/// - ホームへ遷移する
+/// オンボーディング完了時の一連の処理
 class const CompleteOnboardingFlow() {
   Future<void> complete({
     required WidgetRef ref,
@@ -28,7 +23,6 @@ class const CompleteOnboardingFlow() {
       ref,
       (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
     );
-    // 既読版数の初期化に失敗してもオンボーディング完了・遷移は妨げない。
     try {
       final version = ref.read(packageInfoProvider).version;
       await ref
