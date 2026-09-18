@@ -334,6 +334,7 @@
 				Assets.xcassets,
 				DesignSystem.swift,
 				LiveActivity/Common/LocationInfo.swift,
+				LiveActivity/Common/ShakeDetectionLevel.swift,
 				LiveActivity/Common/SharedComponents.swift,
 				LiveActivity/Eew/EewIntensityViews.swift,
 				LiveActivity/Eew/EewLiveActivityAttributes.swift,
@@ -341,8 +342,6 @@
 				LiveActivity/Eew/EewLocationViews.swift,
 				LiveActivity/Eew/EewSourceMetricsView.swift,
 				LiveActivity/EQMonitorLiveActivityWidget.swift,
-				LiveActivity/ShakeDetection/ShakeDetectionLiveActivityAttributes.swift,
-				LiveActivity/ShakeDetection/ShakeDetectionLiveActivityView.swift,
 				Views/EarthquakeWidgetView.swift,
 				Widget.swift,
 			);
