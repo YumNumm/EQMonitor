@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 110;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -87,15 +87,43 @@
 		A47F6602271A89052A753BD0 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
 		A55E7C010000000000000001 /* platform in Resources */ = {isa = PBXBuildFile; fileRef = A55E7C010000000000000002 /* platform */; };
 		A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */; };
+		A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
+		A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */; };
+		A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000D /* SearchEarthquakesIntent.swift */; };
+		A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
+		A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
 		AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AABB00022F30A00100000002 /* EQMonitorAPI */; };
 		B17000000000000000000001 /* BackgroundLocationPendingLocationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */; };
 		B17000000000000000000002 /* PendingLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17000000000000000000004 /* PendingLocationStore.swift */; };
+		B17940000000000000000000 /* Shared/EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000000 /* Shared/EarthquakeAPIClient.swift */; };
+		B17940000000000000000001 /* Shared/DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000001 /* Shared/DesignTokens.swift */; };
+		B17940000000000000000002 /* Shared/IntensityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000002 /* Shared/IntensityBadge.swift */; };
+		B17940000000000000000003 /* AppIntentExtension/EarthquakeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000003 /* AppIntentExtension/EarthquakeEntity.swift */; };
+		B17940000000000000000004 /* AppIntentExtension/EarthquakeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000004 /* AppIntentExtension/EarthquakeFetcher.swift */; };
+		B17940000000000000000005 /* AppIntentExtension/EarthquakeIntentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000005 /* AppIntentExtension/EarthquakeIntentRequest.swift */; };
+		B17940000000000000000006 /* AppIntentExtension/EarthquakeSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000006 /* AppIntentExtension/EarthquakeSnippetIntent.swift */; };
+		B17940000000000000000007 /* AppIntentExtension/EarthquakeSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000007 /* AppIntentExtension/EarthquakeSnippetView.swift */; };
+		B17940000000000000000008 /* AppIntentExtension/GetLatestEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000008 /* AppIntentExtension/GetLatestEarthquakesIntent.swift */; };
+		B17940000000000000000009 /* AppIntentExtension/GetEarthquakesNearMeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000009 /* AppIntentExtension/GetEarthquakesNearMeIntent.swift */; };
+		B1794000000000000000000A /* AppIntentExtension/JmaCodeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000A /* AppIntentExtension/JmaCodeTable.swift */; };
+		B1794000000000000000000B /* AppIntentExtension/MinIntensityOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000B /* AppIntentExtension/MinIntensityOption.swift */; };
+		B1794000000000000000000C /* AppIntentExtension/RegionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000C /* AppIntentExtension/RegionEntity.swift */; };
+		B1794000000000000000000D /* WidgetModelsTests/EarthquakeIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000D /* WidgetModelsTests/EarthquakeIntentTests.swift */; };
+		B1794000000000000000000E /* WidgetModelsTests/EarthquakeEntityRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000E /* WidgetModelsTests/EarthquakeEntityRestorationTests.swift */; };
+		B1794000000000000000000F /* WidgetModelsTests/EarthquakeIntentTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000F /* WidgetModelsTests/EarthquakeIntentTransportTests.swift */; };
+		B17940000000000000000010 /* WidgetModelsTests/EarthquakeIntentExecutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000010 /* WidgetModelsTests/EarthquakeIntentExecutionTests.swift */; };
 		B18000000000000000000001 /* BackgroundLocationHeadlessTaskStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000003 /* BackgroundLocationHeadlessTaskStateTests.swift */; };
 		B18000000000000000000002 /* HeadlessTaskState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18000000000000000000004 /* HeadlessTaskState.swift */; };
 		B19000000000000000000001 /* HeadlessExecutionLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */; };
 		B4B358134720AB041967E6FF /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BC0CFBCC72CE2AE431EFB5A8 /* RegionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90F30E033EFA7F3A113F856 /* RegionType.swift */; };
 		BFEAEC9B65D462419D75AB02 /* IntensityValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A26E10F0EF7D7FEC86D79 /* IntensityValue.swift */; };
+		C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
+		C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */; };
 		C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF843E9B82869CED39772C0 /* DesignTokens.swift */; };
 		CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61F759DEA69779A5080005D8 /* GoogleSansCode[MONO,wght].ttf */; };
 		D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11111111111111111111111 /* WidgetLayoutPolicy.swift */; };
@@ -117,34 +145,6 @@
 		EQ0000000000000000000070 /* EewDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000006 /* EewDisplayTests.swift */; };
 		EQ0000000000000000000071 /* WidgetRegionResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */; };
 		EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EQ0000000000000000000001 /* LiveActivityDate.swift */; };
-		A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
-		A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
-		A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000B /* EarthquakeIntentDialog.swift */; };
-		A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */; };
-		A91000000000000000000005 /* SearchEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000D /* SearchEarthquakesIntent.swift */; };
-		A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
-		A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100000000000000000000E /* EarthquakeSearchURL.swift */; };
-		B17940000000000000000000 /* EarthquakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000000 /* EarthquakeAPIClient.swift */; };
-		B17940000000000000000001 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000001 /* DesignTokens.swift */; };
-		B17940000000000000000002 /* IntensityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000002 /* IntensityBadge.swift */; };
-		B17940000000000000000003 /* EarthquakeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000003 /* EarthquakeEntity.swift */; };
-		B17940000000000000000004 /* EarthquakeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000004 /* EarthquakeFetcher.swift */; };
-		B17940000000000000000005 /* EarthquakeIntentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000005 /* EarthquakeIntentRequest.swift */; };
-		B17940000000000000000006 /* EarthquakeSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000006 /* EarthquakeSnippetIntent.swift */; };
-		B17940000000000000000007 /* EarthquakeSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000007 /* EarthquakeSnippetView.swift */; };
-		B17940000000000000000008 /* GetLatestEarthquakesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000008 /* GetLatestEarthquakesIntent.swift */; };
-		B17940000000000000000009 /* GetEarthquakesNearMeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000009 /* GetEarthquakesNearMeIntent.swift */; };
-		B1794000000000000000000A /* JmaCodeTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000A /* JmaCodeTable.swift */; };
-		B1794000000000000000000B /* MinIntensityOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000B /* MinIntensityOption.swift */; };
-		B1794000000000000000000C /* RegionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000C /* RegionEntity.swift */; };
-		B1794000000000000000000D /* EarthquakeIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000D /* EarthquakeIntentTests.swift */; };
-		B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */; };
-		B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */; };
-		B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */; };
-		C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
-		C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
-		C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */; };
-		C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,49 +181,41 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		27145F0F3039E00000C3DBAF /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
 				27145F103039E00000C3DBAF /* EQMonitorPreviewWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27D62BBF2FF6E75000EF6A27 /* Embed ExtensionKit Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
-			dstSubfolderSpec = 16;
+			dstSubfolder = Product;
 			files = (
 				27D62BBE2FF6E75000EF6A27 /* AppIntentExtension.appex in Embed ExtensionKit Extensions */,
 			);
 			name = "Embed ExtensionKit Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85145B192B1F59D100784C85 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
 				85C54D0C2E96C7EA00BFBBAB /* WidgetExtension.appex in Embed Foundation Extensions */,
 				85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolder = Frameworks;
 			files = (
 				2709A8782F20000D00FBE962 /* LiveActivityUtil.xcframework in Embed Frameworks */,
 				A1B2C3D42F6A000100000003 /* AssetsUtil.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -275,9 +267,30 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBCF4697AA1879785D2E137 /* jma_code_table.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = jma_code_table.json; path = ../assets/parameters/jma_code_table.json; sourceTree = "<group>"; };
+		A17940000000000000000000 /* Shared/EarthquakeAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/EarthquakeAPIClient.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000001 /* Shared/DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/DesignTokens.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000002 /* Shared/IntensityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/IntensityBadge.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000003 /* AppIntentExtension/EarthquakeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/EarthquakeEntity.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000004 /* AppIntentExtension/EarthquakeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/EarthquakeFetcher.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000005 /* AppIntentExtension/EarthquakeIntentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/EarthquakeIntentRequest.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000006 /* AppIntentExtension/EarthquakeSnippetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/EarthquakeSnippetIntent.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000007 /* AppIntentExtension/EarthquakeSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/EarthquakeSnippetView.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000008 /* AppIntentExtension/GetLatestEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/GetLatestEarthquakesIntent.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000009 /* AppIntentExtension/GetEarthquakesNearMeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/GetEarthquakesNearMeIntent.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000A /* AppIntentExtension/JmaCodeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/JmaCodeTable.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000B /* AppIntentExtension/MinIntensityOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/MinIntensityOption.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000C /* AppIntentExtension/RegionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentExtension/RegionEntity.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000D /* WidgetModelsTests/EarthquakeIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetModelsTests/EarthquakeIntentTests.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000E /* WidgetModelsTests/EarthquakeEntityRestorationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetModelsTests/EarthquakeEntityRestorationTests.swift; sourceTree = SOURCE_ROOT; };
+		A1794000000000000000000F /* WidgetModelsTests/EarthquakeIntentTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetModelsTests/EarthquakeIntentTransportTests.swift; sourceTree = SOURCE_ROOT; };
+		A17940000000000000000010 /* WidgetModelsTests/EarthquakeIntentExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetModelsTests/EarthquakeIntentExecutionTests.swift; sourceTree = SOURCE_ROOT; };
 		A1B2C3D42F6A000100000001 /* AssetsUtil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AssetsUtil.xcframework; sourceTree = "<group>"; };
 		A55E7C010000000000000002 /* platform */ = {isa = PBXFileReference; lastKnownFileType = folder; name = platform; path = ../assets/platform; sourceTree = "<group>"; };
 		A5A2B0003268000000000001 /* ApnsTokenEventChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApnsTokenEventChannel.swift; sourceTree = "<group>"; };
+		A9100000000000000000000B /* EarthquakeIntentDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialog.swift; sourceTree = "<group>"; };
+		A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialogTests.swift; sourceTree = "<group>"; };
+		A9100000000000000000000D /* SearchEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEarthquakesIntent.swift; sourceTree = "<group>"; };
+		A9100000000000000000000E /* EarthquakeSearchURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeSearchURL.swift; sourceTree = "<group>"; };
 		AB5330C1132EC785A60DE272 /* EarthquakeAPIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeAPIClient.swift; sourceTree = "<group>"; };
 		AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B17000000000000000000003 /* BackgroundLocationPendingLocationStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundLocationPendingLocationStoreTests.swift; sourceTree = "<group>"; };
@@ -286,6 +299,8 @@
 		B18000000000000000000004 /* HeadlessTaskState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessTaskState.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessTaskState.swift; sourceTree = SOURCE_ROOT; };
 		B19000000000000000000002 /* HeadlessExecutionLifecycle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeadlessExecutionLifecycle.swift; path = ../../packages/background_location_tracker/ios/background_location_tracker/Sources/background_location_tracker/HeadlessExecutionLifecycle.swift; sourceTree = SOURCE_ROOT; };
 		B6B6DA9CE2EEF26041AC4AA5 /* WidgetRegionResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolver.swift; sourceTree = "<group>"; };
+		C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntent.swift; sourceTree = "<group>"; };
+		C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntentTests.swift; sourceTree = "<group>"; };
 		C90F30E033EFA7F3A113F856 /* RegionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegionType.swift; sourceTree = "<group>"; };
 		C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarthquakeDisplayItemTests.swift; sourceTree = "<group>"; };
 		CEF843E9B82869CED39772C0 /* DesignTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
@@ -301,33 +316,10 @@
 		EQ0000000000000000000006 /* EewDisplayTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EewDisplayTests.swift; sourceTree = "<group>"; };
 		EQ0000000000000000000007 /* WidgetRegionResolverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetRegionResolverTests.swift; sourceTree = "<group>"; };
 		FB4211733B19AA27C617F8A5 /* TelegramStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelegramStatus.swift; sourceTree = "<group>"; };
-		A9100000000000000000000B /* EarthquakeIntentDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialog.swift; sourceTree = "<group>"; };
-		A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeIntentDialogTests.swift; sourceTree = "<group>"; };
-		A9100000000000000000000D /* SearchEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEarthquakesIntent.swift; sourceTree = "<group>"; };
-		A9100000000000000000000E /* EarthquakeSearchURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakeSearchURL.swift; sourceTree = "<group>"; };
-		A17940000000000000000000 /* EarthquakeAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/EarthquakeAPIClient.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000001 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/DesignTokens.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000002 /* IntensityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/IntensityBadge.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000003 /* EarthquakeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeEntity.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000004 /* EarthquakeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeFetcher.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000005 /* EarthquakeIntentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeIntentRequest.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000006 /* EarthquakeSnippetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeSnippetIntent.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000007 /* EarthquakeSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/EarthquakeSnippetView.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000008 /* GetLatestEarthquakesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/GetLatestEarthquakesIntent.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000009 /* GetEarthquakesNearMeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/GetEarthquakesNearMeIntent.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000A /* JmaCodeTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/JmaCodeTable.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000B /* MinIntensityOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/MinIntensityOption.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000C /* RegionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIntentExtension/RegionEntity.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000D /* EarthquakeIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentTests.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeEntityRestorationTests.swift"; sourceTree = SOURCE_ROOT; };
-		A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentTransportTests.swift"; sourceTree = SOURCE_ROOT; };
-		A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WidgetModelsTests/EarthquakeIntentExecutionTests.swift"; sourceTree = SOURCE_ROOT; };
-		C17940000000000000000001 /* OpenEarthquakeHistoryIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntent.swift; sourceTree = "<group>"; };
-		C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEarthquakeHistoryIntentTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		27145E1B3039D35E00C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		27145E1B3039D35E00C3DBAF /* Exceptions for "Widget" folder in "EQMonitorPreviewWidget" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntent.swift,
@@ -342,26 +334,33 @@
 				LiveActivity/Eew/EewLocationViews.swift,
 				LiveActivity/Eew/EewSourceMetricsView.swift,
 				LiveActivity/EQMonitorLiveActivityWidget.swift,
+				LiveActivity/Unified/EarthquakeLiveActivityAttributes.swift,
+				LiveActivity/Unified/UnifiedLiveActivityComponents.swift,
+				LiveActivity/Unified/UnifiedLiveActivityDisplay.swift,
+				LiveActivity/Unified/UnifiedLockScreenView.swift,
+				LiveActivity/Unified/UnifiedLiveActivityPreviewData.swift,
+				LiveActivity/Unified/UnifiedLiveActivityPreviews.swift,
+				LiveActivity/Unified/UnifiedLiveActivityWidget.swift,
 				Views/EarthquakeWidgetView.swift,
 				Widget.swift,
 			);
 			target = 27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */;
 		};
-		27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		27145F043039E00000C3DBAF /* Exceptions for "EQMonitorPreviewWidget" folder in "EQMonitorPreviewWidget" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 27145F053039E00000C3DBAF /* EQMonitorPreviewWidget */;
 		};
-		27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 27D62BB42FF6E75000EF6A27 /* AppIntentExtension */;
 		};
-		463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntentExtension.swift,
@@ -370,7 +369,7 @@
 			);
 			target = 85C54CF82E96C7E700BFBBAB /* WidgetExtension */;
 		};
-		85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		85C54D102E96C7EA00BFBBAB /* Exceptions for "Widget" folder in "WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -380,77 +379,90 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		27145E053039D29C00C3DBAF /* EQMonitorPreview */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreview; sourceTree = "<group>"; };
-		27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (27145F043039E00000C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EQMonitorPreviewWidget; sourceTree = "<group>"; };
-		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (463834D25A2C7A8F74710E0C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27D62BC32FF6E75000EF6A27 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AppIntentExtension; sourceTree = "<group>"; };
-		85C54CFE2E96C7E800BFBBAB /* Widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (85C54D102E96C7EA00BFBBAB /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 27145E1B3039D35E00C3DBAF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Widget; sourceTree = "<group>"; };
+		27145E053039D29C00C3DBAF /* EQMonitorPreview */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = EQMonitorPreview;
+			sourceTree = "<group>";
+		};
+		27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				27145F043039E00000C3DBAF /* Exceptions for "EQMonitorPreviewWidget" folder in "EQMonitorPreviewWidget" target */,
+			);
+			path = EQMonitorPreviewWidget;
+			sourceTree = "<group>";
+		};
+		27D62BB62FF6E75000EF6A27 /* AppIntentExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				463834D25A2C7A8F74710E0C /* Exceptions for "AppIntentExtension" folder in "WidgetExtension" target */,
+				27D62BC32FF6E75000EF6A27 /* Exceptions for "AppIntentExtension" folder in "AppIntentExtension" target */,
+			);
+			path = AppIntentExtension;
+			sourceTree = "<group>";
+		};
+		85C54CFE2E96C7E800BFBBAB /* Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				85C54D102E96C7EA00BFBBAB /* Exceptions for "Widget" folder in "WidgetExtension" target */,
+				27145E1B3039D35E00C3DBAF /* Exceptions for "Widget" folder in "EQMonitorPreviewWidget" target */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		27145E013039D29C00C3DBAF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27145F073039E00000C3DBAF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				27145F123039E00000C3DBAF /* EQMonitorAPI in Frameworks */,
 				27145F143039E00000C3DBAF /* SwiftUI.framework in Frameworks */,
 				27145F133039E00000C3DBAF /* WidgetKit.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27D62BB22FF6E75000EF6A27 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				2151DA831C4D53D6DDA591BA /* EQMonitorAPI in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		76CD9F51AAE25F830B2112F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				73C3E9ED8A2ABFBC54043F9B /* Foundation.framework in Frameworks */,
 				460F18C0D79451920BDB7DBD /* EQMonitorAPI in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85C54CF62E96C7E700BFBBAB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */,
 				85C54CFD2E96C7E800BFBBAB /* SwiftUI.framework in Frameworks */,
 				85C54CFB2E96C7E800BFBBAB /* WidgetKit.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85E6094B2BFF792C00C21983 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				85B4051A2C08E73300EB3835 /* Gzip in Frameworks */,
 				85C9C3EF2D9F053700F047DF /* SwiftProtobuf in Frameworks */,
 				85D1E0012F5A000000000001 /* SQLite in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				2709A8772F1FFFF400FBE962 /* LiveActivityUtil.xcframework in Frameworks */,
 				A1B2C3D42F6A000100000002 /* AssetsUtil.xcframework in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -468,6 +480,19 @@
 			isa = PBXGroup;
 			children = (
 				EE0700000000000000000002 /* LocationInfo.swift */,
+				A1794000000000000000000C /* AppIntentExtension/RegionEntity.swift */,
+				A1794000000000000000000B /* AppIntentExtension/MinIntensityOption.swift */,
+				A1794000000000000000000A /* AppIntentExtension/JmaCodeTable.swift */,
+				A17940000000000000000009 /* AppIntentExtension/GetEarthquakesNearMeIntent.swift */,
+				A17940000000000000000008 /* AppIntentExtension/GetLatestEarthquakesIntent.swift */,
+				A17940000000000000000007 /* AppIntentExtension/EarthquakeSnippetView.swift */,
+				A17940000000000000000006 /* AppIntentExtension/EarthquakeSnippetIntent.swift */,
+				A17940000000000000000005 /* AppIntentExtension/EarthquakeIntentRequest.swift */,
+				A17940000000000000000004 /* AppIntentExtension/EarthquakeFetcher.swift */,
+				A17940000000000000000003 /* AppIntentExtension/EarthquakeEntity.swift */,
+				A17940000000000000000002 /* Shared/IntensityBadge.swift */,
+				A17940000000000000000001 /* Shared/DesignTokens.swift */,
+				A17940000000000000000000 /* Shared/EarthquakeAPIClient.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -485,10 +510,10 @@
 			isa = PBXGroup;
 			children = (
 				C17940000000000000000005 /* OpenEarthquakeHistoryIntentTests.swift */,
-				A17940000000000000000010 /* EarthquakeIntentExecutionTests.swift */,
-				A1794000000000000000000F /* EarthquakeIntentTransportTests.swift */,
-				A1794000000000000000000E /* EarthquakeEntityRestorationTests.swift */,
-				A1794000000000000000000D /* EarthquakeIntentTests.swift */,
+				A17940000000000000000010 /* WidgetModelsTests/EarthquakeIntentExecutionTests.swift */,
+				A1794000000000000000000F /* WidgetModelsTests/EarthquakeIntentTransportTests.swift */,
+				A1794000000000000000000E /* WidgetModelsTests/EarthquakeEntityRestorationTests.swift */,
+				A1794000000000000000000D /* WidgetModelsTests/EarthquakeIntentTests.swift */,
 				A9100000000000000000000C /* EarthquakeIntentDialogTests.swift */,
 				C983AB8FC2BFED453E240464 /* EarthquakeDisplayItemTests.swift */,
 				E11333333333333333333333 /* WidgetBehaviorTests.swift */,
@@ -663,8 +688,6 @@
 				27145E053039D29C00C3DBAF /* EQMonitorPreview */,
 			);
 			name = EQMonitorPreview;
-			packageProductDependencies = (
-			);
 			productName = EQMonitorPreview;
 			productReference = 27145E043039D29C00C3DBAF /* EQMonitorPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -678,8 +701,6 @@
 				27145F083039E00000C3DBAF /* Resources */,
 			);
 			buildRules = (
-			);
-			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
 				27145F023039E00000C3DBAF /* EQMonitorPreviewWidget */,
@@ -702,8 +723,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			fileSystemSynchronizedGroups = (
 				27D62BB62FF6E75000EF6A27 /* AppIntentExtension */,
 			);
@@ -724,8 +743,6 @@
 				85C54CF72E96C7E700BFBBAB /* Resources */,
 			);
 			buildRules = (
-			);
-			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
 				27D62BB62FF6E75000EF6A27 /* AppIntentExtension */,
@@ -748,8 +765,6 @@
 				85E6094C2BFF792C00C21983 /* Resources */,
 			);
 			buildRules = (
-			);
-			dependencies = (
 			);
 			name = FcmServiceExtension;
 			packageProductDependencies = (
@@ -800,8 +815,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = WidgetModelsTests;
 			packageProductDependencies = (
 				BC34B83B5D16BD405E6A31AB /* EQMonitorAPI */,
@@ -840,7 +853,6 @@
 				};
 			};
 			buildConfigurationList = 97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -848,6 +860,7 @@
 				ja,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
 				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "Packages/EQMonitorAPI" */,
@@ -855,6 +868,7 @@
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				85D1E0032F5A000000000003 /* XCRemoteSwiftPackageReference "SQLite" */,
 			);
+			preferredProjectObjectVersion = 110;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -873,51 +887,40 @@
 /* Begin PBXResourcesBuildPhase section */
 		27145E023039D29C00C3DBAF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27145F083039E00000C3DBAF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				27145EB13039D40000C3DBAF /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */,
 				27145EB23039D40000C3DBAF /* GoogleSansCode[MONO,wght].ttf in Resources */,
 				27145EB33039D40000C3DBAF /* jma_code_table.json in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27D62BB32FF6E75000EF6A27 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				148E1710922ECC78935B0F1B /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */,
 				42AE86200FF1EB824EDFBD5F /* GoogleSansCode[MONO,wght].ttf in Resources */,
 				9960E2AAD6D7C4F16928DDFD /* jma_code_table.json in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85C54CF72E96C7E700BFBBAB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				0B2B30E0935DA561969A279D /* jma_code_table.json in Resources */,
 				249D6465025F226E74A29C18 /* GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf in Resources */,
 				CE4199B16869AA473ED81368 /* GoogleSansCode[MONO,wght].ttf in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85E6094C2BFF792C00C21983 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		97C146EC1CF9000F007C117D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A55E7C010000000000000001 /* platform in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
@@ -930,14 +933,11 @@
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9AE9FF09270C2C1D1C2C3A70 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
@@ -945,62 +945,46 @@
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
 			inputPaths = (
 				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
+			shellScript = (
+				"/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin",
+				"",
+			);
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
 			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+			shellScript = (
+				"/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build",
+				"",
+			);
 		};
 		AABB00042F40A00100000004 /* Patch purchases-ios-spm */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
 			name = "Patch purchases-ios-spm";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"${SRCROOT}/scripts/patch_purchases_paywall_color.sh\" \"${SRCROOT}/../build/ios/SourcePackages/checkouts/purchases-ios-spm/Sources/Paywalls/PaywallColor.swift\"\n";
+			shellScript = (
+				"/bin/sh \"${SRCROOT}/scripts/patch_purchases_paywall_color.sh\" \"${SRCROOT}/../build/ios/SourcePackages/checkouts/purchases-ios-spm/Sources/Paywalls/PaywallColor.swift\"",
+				"",
+			);
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		27145E003039D29C00C3DBAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27145F063039E00000C3DBAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				27145E293039D3F100C3DBAF /* EarthquakeDisplayItem.swift in Sources */,
 				27145EAD3039D40000C3DBAF /* EewDisplay.swift in Sources */,
@@ -1017,11 +1001,9 @@
 				27145EA93039D40000C3DBAF /* WidgetLayoutPolicy.swift in Sources */,
 				27145EAA3039D40000C3DBAF /* EarthquakeDetailURL.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		27D62BB12FF6E75000EF6A27 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A91000000000000000000001 /* EarthquakeIntentDialog.swift in Sources */,
 				EQ00000000000000000000C8 /* LiveActivityDate.swift in Sources */,
@@ -1036,31 +1018,29 @@
 				C905E0E780206CF2C8BD7D24 /* DesignTokens.swift in Sources */,
 				4249338FACAFE04B499C18E5 /* IntensityBadge.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7602BD56083EF2077224E514 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C17940000000000000000006 /* OpenEarthquakeHistoryIntentTests.swift in Sources */,
 				C17940000000000000000004 /* OpenEarthquakeHistoryIntent.swift in Sources */,
-				B17940000000000000000010 /* EarthquakeIntentExecutionTests.swift in Sources */,
-				B1794000000000000000000F /* EarthquakeIntentTransportTests.swift in Sources */,
-				B1794000000000000000000E /* EarthquakeEntityRestorationTests.swift in Sources */,
-				B1794000000000000000000D /* EarthquakeIntentTests.swift in Sources */,
-				B1794000000000000000000C /* RegionEntity.swift in Sources */,
-				B1794000000000000000000B /* MinIntensityOption.swift in Sources */,
-				B1794000000000000000000A /* JmaCodeTable.swift in Sources */,
-				B17940000000000000000009 /* GetEarthquakesNearMeIntent.swift in Sources */,
-				B17940000000000000000008 /* GetLatestEarthquakesIntent.swift in Sources */,
-				B17940000000000000000007 /* EarthquakeSnippetView.swift in Sources */,
-				B17940000000000000000006 /* EarthquakeSnippetIntent.swift in Sources */,
-				B17940000000000000000005 /* EarthquakeIntentRequest.swift in Sources */,
-				B17940000000000000000004 /* EarthquakeFetcher.swift in Sources */,
-				B17940000000000000000003 /* EarthquakeEntity.swift in Sources */,
-				B17940000000000000000002 /* IntensityBadge.swift in Sources */,
-				B17940000000000000000001 /* DesignTokens.swift in Sources */,
-				B17940000000000000000000 /* EarthquakeAPIClient.swift in Sources */,
+				B17940000000000000000010 /* WidgetModelsTests/EarthquakeIntentExecutionTests.swift in Sources */,
+				B1794000000000000000000F /* WidgetModelsTests/EarthquakeIntentTransportTests.swift in Sources */,
+				B1794000000000000000000E /* WidgetModelsTests/EarthquakeEntityRestorationTests.swift in Sources */,
+				B1794000000000000000000D /* WidgetModelsTests/EarthquakeIntentTests.swift in Sources */,
+				B1794000000000000000000C /* AppIntentExtension/RegionEntity.swift in Sources */,
+				B1794000000000000000000B /* AppIntentExtension/MinIntensityOption.swift in Sources */,
+				B1794000000000000000000A /* AppIntentExtension/JmaCodeTable.swift in Sources */,
+				B17940000000000000000009 /* AppIntentExtension/GetEarthquakesNearMeIntent.swift in Sources */,
+				B17940000000000000000008 /* AppIntentExtension/GetLatestEarthquakesIntent.swift in Sources */,
+				B17940000000000000000007 /* AppIntentExtension/EarthquakeSnippetView.swift in Sources */,
+				B17940000000000000000006 /* AppIntentExtension/EarthquakeSnippetIntent.swift in Sources */,
+				B17940000000000000000005 /* AppIntentExtension/EarthquakeIntentRequest.swift in Sources */,
+				B17940000000000000000004 /* AppIntentExtension/EarthquakeFetcher.swift in Sources */,
+				B17940000000000000000003 /* AppIntentExtension/EarthquakeEntity.swift in Sources */,
+				B17940000000000000000002 /* Shared/IntensityBadge.swift in Sources */,
+				B17940000000000000000001 /* Shared/DesignTokens.swift in Sources */,
+				B17940000000000000000000 /* Shared/EarthquakeAPIClient.swift in Sources */,
 				A91000000000000000000007 /* EarthquakeSearchURL.swift in Sources */,
 				A91000000000000000000004 /* EarthquakeIntentDialogTests.swift in Sources */,
 				A91000000000000000000003 /* EarthquakeIntentDialog.swift in Sources */,
@@ -1088,11 +1068,9 @@
 				1209177840DD3D17C94E1B5D /* RegionType.swift in Sources */,
 				E8CFD3E6506B946469164594 /* ColorRGB.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85C54CF52E96C7E700BFBBAB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C17940000000000000000003 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000002 /* EarthquakeIntentDialog.swift in Sources */,
@@ -1111,20 +1089,16 @@
 				D11111111111111111111111 /* WidgetLayoutPolicy.swift in Sources */,
 				D11333333333333333333333 /* EarthquakeDetailURL.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85E6094A2BFF792C00C21983 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				85E6095F2BFF7B6400C21983 /* NotificationService.swift in Sources */,
 				85A1B0102F59B00000000010 /* TelemetryWriter.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C17940000000000000000002 /* OpenEarthquakeHistoryIntent.swift in Sources */,
 				A91000000000000000000006 /* EarthquakeSearchURL.swift in Sources */,
@@ -1135,7 +1109,6 @@
 				A5A2B0013268000000000001 /* ApnsTokenEventChannel.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -1184,7 +1157,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		0498F7B504ACA15EA0241515 /* Profile */ = {
+		0498F7B504ACA15EA0241515 /* Profile configuration for PBXNativeTarget "WidgetModelsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1199,7 +1172,7 @@
 			};
 			name = Profile;
 		};
-		0F29E6D6D20C39B491EA0FCE /* Release */ = {
+		0F29E6D6D20C39B491EA0FCE /* Release configuration for PBXNativeTarget "WidgetModelsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1214,7 +1187,7 @@
 			};
 			name = Release;
 		};
-		249021D3217E4FDB00AE95B9 /* Profile */ = {
+		249021D3217E4FDB00AE95B9 /* Profile configuration for PBXProject "Runner" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1270,7 +1243,7 @@
 			};
 			name = Profile;
 		};
-		249021D4217E4FDB00AE95B9 /* Profile */ = {
+		249021D4217E4FDB00AE95B9 /* Profile configuration for PBXNativeTarget "Runner" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
@@ -1309,7 +1282,7 @@
 			};
 			name = Profile;
 		};
-		27145E0C3039D29E00C3DBAF /* Debug */ = {
+		27145E0C3039D29E00C3DBAF /* Debug configuration for PBXNativeTarget "EQMonitorPreview" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1354,7 +1327,7 @@
 			};
 			name = Debug;
 		};
-		27145E0D3039D29E00C3DBAF /* Release */ = {
+		27145E0D3039D29E00C3DBAF /* Release configuration for PBXNativeTarget "EQMonitorPreview" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1395,7 +1368,7 @@
 			};
 			name = Release;
 		};
-		27145E0E3039D29E00C3DBAF /* Profile */ = {
+		27145E0E3039D29E00C3DBAF /* Profile configuration for PBXNativeTarget "EQMonitorPreview" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1436,7 +1409,7 @@
 			};
 			name = Profile;
 		};
-		27145F0A3039E00000C3DBAF /* Debug */ = {
+		27145F0A3039E00000C3DBAF /* Debug configuration for PBXNativeTarget "EQMonitorPreviewWidget" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1482,7 +1455,7 @@
 			};
 			name = Debug;
 		};
-		27145F0B3039E00000C3DBAF /* Release */ = {
+		27145F0B3039E00000C3DBAF /* Release configuration for PBXNativeTarget "EQMonitorPreviewWidget" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1524,7 +1497,7 @@
 			};
 			name = Release;
 		};
-		27145F0C3039E00000C3DBAF /* Profile */ = {
+		27145F0C3039E00000C3DBAF /* Profile configuration for PBXNativeTarget "EQMonitorPreviewWidget" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1566,7 +1539,7 @@
 			};
 			name = Profile;
 		};
-		27D62BC02FF6E75000EF6A27 /* Debug */ = {
+		27D62BC02FF6E75000EF6A27 /* Debug configuration for PBXNativeTarget "AppIntentExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1611,7 +1584,7 @@
 			};
 			name = Debug;
 		};
-		27D62BC12FF6E75000EF6A27 /* Release */ = {
+		27D62BC12FF6E75000EF6A27 /* Release configuration for PBXNativeTarget "AppIntentExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1652,7 +1625,7 @@
 			};
 			name = Release;
 		};
-		27D62BC22FF6E75000EF6A27 /* Profile */ = {
+		27D62BC22FF6E75000EF6A27 /* Profile configuration for PBXNativeTarget "AppIntentExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1693,7 +1666,7 @@
 			};
 			name = Profile;
 		};
-		4F2FB1568F48EC9C5B58D2B2 /* Debug */ = {
+		4F2FB1568F48EC9C5B58D2B2 /* Debug configuration for PBXNativeTarget "WidgetModelsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1707,7 +1680,7 @@
 			};
 			name = Debug;
 		};
-		85C54D0D2E96C7EA00BFBBAB /* Debug */ = {
+		85C54D0D2E96C7EA00BFBBAB /* Debug configuration for PBXNativeTarget "WidgetExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1760,7 +1733,7 @@
 			};
 			name = Debug;
 		};
-		85C54D0E2E96C7EA00BFBBAB /* Release */ = {
+		85C54D0E2E96C7EA00BFBBAB /* Release configuration for PBXNativeTarget "WidgetExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1809,7 +1782,7 @@
 			};
 			name = Release;
 		};
-		85C54D0F2E96C7EA00BFBBAB /* Profile */ = {
+		85C54D0F2E96C7EA00BFBBAB /* Profile configuration for PBXNativeTarget "WidgetExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1858,7 +1831,7 @@
 			};
 			name = Profile;
 		};
-		85E609572BFF792C00C21983 /* Debug */ = {
+		85E609572BFF792C00C21983 /* Debug configuration for PBXNativeTarget "FcmServiceExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1901,7 +1874,7 @@
 			};
 			name = Debug;
 		};
-		85E609582BFF792C00C21983 /* Release */ = {
+		85E609582BFF792C00C21983 /* Release configuration for PBXNativeTarget "FcmServiceExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1940,7 +1913,7 @@
 			};
 			name = Release;
 		};
-		85E609592BFF792C00C21983 /* Profile */ = {
+		85E609592BFF792C00C21983 /* Profile configuration for PBXNativeTarget "FcmServiceExtension" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 851D722F2D9F07910083EB9B /* Environment.xcconfig */;
 			buildSettings = {
@@ -1980,7 +1953,7 @@
 			};
 			name = Profile;
 		};
-		97C147031CF9000F007C117D /* Debug */ = {
+		97C147031CF9000F007C117D /* Debug configuration for PBXProject "Runner" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2041,7 +2014,7 @@
 			};
 			name = Debug;
 		};
-		97C147041CF9000F007C117D /* Release */ = {
+		97C147041CF9000F007C117D /* Release configuration for PBXProject "Runner" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2099,7 +2072,7 @@
 			};
 			name = Release;
 		};
-		97C147061CF9000F007C117D /* Debug */ = {
+		97C147061CF9000F007C117D /* Debug configuration for PBXNativeTarget "Runner" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
@@ -2139,7 +2112,7 @@
 			};
 			name = Debug;
 		};
-		97C147071CF9000F007C117D /* Release */ = {
+		97C147071CF9000F007C117D /* Release configuration for PBXNativeTarget "Runner" */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
@@ -2184,81 +2157,73 @@
 		27145E0F3039D29E00C3DBAF /* Build configuration list for PBXNativeTarget "EQMonitorPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27145E0C3039D29E00C3DBAF /* Debug */,
-				27145E0D3039D29E00C3DBAF /* Release */,
-				27145E0E3039D29E00C3DBAF /* Profile */,
+				27145E0C3039D29E00C3DBAF /* Debug configuration for PBXNativeTarget "EQMonitorPreview" */,
+				27145E0D3039D29E00C3DBAF /* Release configuration for PBXNativeTarget "EQMonitorPreview" */,
+				27145E0E3039D29E00C3DBAF /* Profile configuration for PBXNativeTarget "EQMonitorPreview" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		27145F093039E00000C3DBAF /* Build configuration list for PBXNativeTarget "EQMonitorPreviewWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27145F0A3039E00000C3DBAF /* Debug */,
-				27145F0B3039E00000C3DBAF /* Release */,
-				27145F0C3039E00000C3DBAF /* Profile */,
+				27145F0A3039E00000C3DBAF /* Debug configuration for PBXNativeTarget "EQMonitorPreviewWidget" */,
+				27145F0B3039E00000C3DBAF /* Release configuration for PBXNativeTarget "EQMonitorPreviewWidget" */,
+				27145F0C3039E00000C3DBAF /* Profile configuration for PBXNativeTarget "EQMonitorPreviewWidget" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		27D62BC42FF6E75000EF6A27 /* Build configuration list for PBXNativeTarget "AppIntentExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27D62BC02FF6E75000EF6A27 /* Debug */,
-				27D62BC12FF6E75000EF6A27 /* Release */,
-				27D62BC22FF6E75000EF6A27 /* Profile */,
+				27D62BC02FF6E75000EF6A27 /* Debug configuration for PBXNativeTarget "AppIntentExtension" */,
+				27D62BC12FF6E75000EF6A27 /* Release configuration for PBXNativeTarget "AppIntentExtension" */,
+				27D62BC22FF6E75000EF6A27 /* Profile configuration for PBXNativeTarget "AppIntentExtension" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		51452B3212F054AB69F6FEFF /* Build configuration list for PBXNativeTarget "WidgetModelsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0F29E6D6D20C39B491EA0FCE /* Release */,
-				4F2FB1568F48EC9C5B58D2B2 /* Debug */,
-				0498F7B504ACA15EA0241515 /* Profile */,
+				0F29E6D6D20C39B491EA0FCE /* Release configuration for PBXNativeTarget "WidgetModelsTests" */,
+				4F2FB1568F48EC9C5B58D2B2 /* Debug configuration for PBXNativeTarget "WidgetModelsTests" */,
+				0498F7B504ACA15EA0241515 /* Profile configuration for PBXNativeTarget "WidgetModelsTests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		85C54D112E96C7EA00BFBBAB /* Build configuration list for PBXNativeTarget "WidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				85C54D0D2E96C7EA00BFBBAB /* Debug */,
-				85C54D0E2E96C7EA00BFBBAB /* Release */,
-				85C54D0F2E96C7EA00BFBBAB /* Profile */,
+				85C54D0D2E96C7EA00BFBBAB /* Debug configuration for PBXNativeTarget "WidgetExtension" */,
+				85C54D0E2E96C7EA00BFBBAB /* Release configuration for PBXNativeTarget "WidgetExtension" */,
+				85C54D0F2E96C7EA00BFBBAB /* Profile configuration for PBXNativeTarget "WidgetExtension" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		85E609562BFF792C00C21983 /* Build configuration list for PBXNativeTarget "FcmServiceExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				85E609572BFF792C00C21983 /* Debug */,
-				85E609582BFF792C00C21983 /* Release */,
-				85E609592BFF792C00C21983 /* Profile */,
+				85E609572BFF792C00C21983 /* Debug configuration for PBXNativeTarget "FcmServiceExtension" */,
+				85E609582BFF792C00C21983 /* Release configuration for PBXNativeTarget "FcmServiceExtension" */,
+				85E609592BFF792C00C21983 /* Profile configuration for PBXNativeTarget "FcmServiceExtension" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				97C147031CF9000F007C117D /* Debug */,
-				97C147041CF9000F007C117D /* Release */,
-				249021D3217E4FDB00AE95B9 /* Profile */,
+				97C147031CF9000F007C117D /* Debug configuration for PBXProject "Runner" */,
+				97C147041CF9000F007C117D /* Release configuration for PBXProject "Runner" */,
+				249021D3217E4FDB00AE95B9 /* Profile configuration for PBXProject "Runner" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				97C147061CF9000F007C117D /* Debug */,
-				97C147071CF9000F007C117D /* Release */,
-				249021D4217E4FDB00AE95B9 /* Profile */,
+				97C147061CF9000F007C117D /* Debug configuration for PBXNativeTarget "Runner" */,
+				97C147071CF9000F007C117D /* Release configuration for PBXNativeTarget "Runner" */,
+				249021D4217E4FDB00AE95B9 /* Profile configuration for PBXNativeTarget "Runner" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
@@ -2343,4 +2308,5 @@
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
+	validationLevel = 1;
 }
