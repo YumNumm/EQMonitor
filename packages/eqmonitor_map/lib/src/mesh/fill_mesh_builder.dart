@@ -17,8 +17,8 @@ const _maxIndexableVerticesPerSegment = 65536;
 /// [FillMesh]を組み立てる。三角形化自体は自前実装せず`dart_earcut`
 /// (`Earcut.triangulateRaw`)へ委譲し、このbuilderはring winding分類・
 /// 穴込みでのearcut呼び出し・segment分割だけを担う
-/// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
-/// 「Fill頂点生成」節: `classifyRings` → `limitHoles` → `earcut`)。
+/// (docs/knowledge/map_renderer_references.md
+/// MapLibre Native節: `classifyRings` → `limitHoles` → `earcut`)。
 final class FillMeshBuilder {
   new({required this.limits})
     : _remainingIntersectionChecks = limits.maxIntersectionChecks {

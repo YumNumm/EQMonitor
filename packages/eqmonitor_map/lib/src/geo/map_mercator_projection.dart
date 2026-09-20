@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-/// Web Mercator投影。`docs/knowledge/20260805_maplibre_native_renderer_reference.md`
+/// Web Mercator投影。`docs/knowledge/map_renderer_references.md`
 /// が記録するMapLibre Native (`TransformState::zoomScale`/`Projection::project_`)
 /// と同じ定数・式を使う。zoomのpixel基準を512に固定しているのは、既存の
 /// vector tileと同じ見た目を保つため（tileSize_D相当）。

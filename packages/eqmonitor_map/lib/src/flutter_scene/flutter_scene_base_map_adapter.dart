@@ -30,7 +30,7 @@ final class const BaseMapSceneGeometryArgs({
   /// 押し出し法線を運ぶという意味論の逸脱があるが、`setCustomAttribute`経由の
   /// custom vertex attributeは値がshaderへ届かず同じ頂点の`position`が読まれる
   /// 不具合を実機で確認したため使わない(経緯は
-  /// `docs/todo/800_eqmonitor_map_deferred_verification.md`)。
+  /// `docs/todo/820_map_renderer_and_migration.md`)。
   required final Float32List? extrudes,
 });
 

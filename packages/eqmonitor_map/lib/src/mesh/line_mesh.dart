@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 /// Lineレイヤー1 segment分の描画用メッシュ。中心線の各頂点へ押し出し法線を
 /// 持たせるだけで、実際の線幅ぶんの押し出しはshader側の頂点シェーダーが担う
-/// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
-/// 「Line頂点生成」「Line shader」節。MapLibreの
+/// (docs/knowledge/map_renderer_references.md
+/// MapLibre Native節のline generator/shader。MapLibreの
 /// `gl_Position = u_matrix * vec4(pos, 0, 1) + u_matrix * vec4(extrude, 0, 0)`
 /// と同じ、変換後に押し出しを加算する構成を想定する)。
 ///

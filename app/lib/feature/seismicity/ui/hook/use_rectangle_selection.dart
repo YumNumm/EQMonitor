@@ -25,7 +25,7 @@ class const RectangleSelectionState({
 /// flutter_hooks の `useState` 等は呼び出し元が static メソッドか
 /// トップレベル関数かを区別しないため、クラスの static メソッドとして
 /// 定義しても Hook の登録順序は変わらない
-/// (`docs/knowledge/20260814_flutter_hooks_top_level_function_alternative.md`)。
+/// (`docs/knowledge/development_environment.md`)。
 class RectangleSelectionHook {
   const new _();
 

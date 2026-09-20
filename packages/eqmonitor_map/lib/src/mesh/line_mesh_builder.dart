@@ -25,10 +25,10 @@ const _antiParallelEpsilon = 1e-6;
 /// [LineMesh]を組み立てる。
 ///
 /// joinはmiterのみ、capはbuttのみ実装する
-/// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
-/// 「Line頂点生成」節。bevel/round/dash/linesofarは実装しない)。頂点属性は
-/// float32のみとし、MapLibreの6 byte packing(押し出し法線をint8へ量子化する
-/// 方式)は採用しない(同docの「採用しないもの」節。`gpu.VertexFormat`の
+/// (docs/knowledge/map_renderer_references.md
+/// MapLibre Native節。bevel/round/dash/linesofarは実装しない)。頂点属性は
+/// float32のみとし、MapLibreのint16/uint8 packingは採用しない
+/// (同節で参照する方式。`gpu.VertexFormat`の
 /// int16/uint8正規化対応が未検証のため)。
 ///
 /// Douglas-Peuckerによる間引きはこのbuilderでは実装しない。間引きを後段で
@@ -241,8 +241,8 @@ _buildRing(Int32List ring, {required double miterLimit}) {
         // prevNormalとnextNormalのなす角の半分、すなわちsegment同士の
         // turn angleの半分)であるため、miterLength == 1 / cosHalfAngle
         // == 2 / sumLength で求まる
-        // (docs/knowledge/20260805_maplibre_native_renderer_reference.md
-        // 「Line頂点生成」節)。
+        // (docs/knowledge/map_renderer_references.md
+        // MapLibre Native節のline generator)。
         joinX = sumX / sumLength;
         joinY = sumY / sumLength;
         miterLength = 2 / sumLength;

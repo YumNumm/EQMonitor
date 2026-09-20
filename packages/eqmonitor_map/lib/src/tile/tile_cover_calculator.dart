@@ -4,8 +4,8 @@ import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/geo/tile_id.dart';
 
 /// camera/viewportから「1frameで要求するtile座標集合」を求める。
-/// `docs/knowledge/20260805_maplibre_native_renderer_reference.md`の
-/// 「tile cover」節が記録するMapLibre Nativeの現行実装は、world copyごとの
+/// `docs/knowledge/map_renderer_references.md`の
+/// MapLibre Native節で参照する実装は、world copyごとの
 /// root AABBを四分木で分割し`Frustum`との交差判定で枝刈りする3D LOD実装
 /// (`tileCover(TileCoverParameters, ...)`)だが、bearing/pitchを持たない
 /// EQMonitorには過剰であり、同ファイルに併存する旧実装
