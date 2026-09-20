@@ -51,4 +51,4 @@ final class IsDebugMenuAvailableProvider
 }
 
 String _$isDebugMenuAvailableHash() =>
-    r'985553ef9387f1892ae73d43774f64db065fb7b6';
+    r'e692ad3a3ef2841156341a0c52f54edd2e037746';

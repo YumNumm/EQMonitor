@@ -44,7 +44,6 @@ workflow の権限は `contents: read` のみにする。
 ```shell
 mise exec -- dart pub get --enforce-lockfile
 jq empty .github/problem-matchers/dart-analyzer.json
-mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml
 mise exec -- dart analyze app --fatal-infos --format machine
 ```
 

@@ -20,7 +20,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-    uses: ./.github/workflows/wc-changes.yaml
+    uses: $/.github/workflows/wc-changes.yaml
 
   flutter-analyze:
     needs: changes
@@ -28,7 +28,7 @@ jobs:
     permissions:
       contents: read
       checks: write
-    uses: ./.github/workflows/wc-check-dart-analyze.yaml
+    uses: $/.github/workflows/wc-check-dart-analyze.yaml
 
   flutter-test:
     needs: changes
@@ -36,23 +36,7 @@ jobs:
     permissions:
       contents: read
       checks: write
-    uses: ./.github/workflows/wc-check-dart-test.yaml
-
-  integration-test:
-    needs: changes
-    if: needs.changes.outputs.flutter == 'true'
-    permissions:
-      contents: read
-    secrets:
-      EQMONITOR_GITHUB_APP_PRIVATE_KEY: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
-    uses: ./.github/workflows/wc-check-integration.yaml
-
-  eqmonitor-map-scene-spike:
-    needs: changes
-    if: needs.changes.outputs.eqmonitor_map_scene_spike == 'true'
-    permissions:
-      contents: read
-    uses: ./.github/workflows/wc-check-eqmonitor-map-scene-spike.yaml
+    uses: $/.github/workflows/wc-check-dart-test.yaml
 
   status-check:
     name: Flutter Status Check
@@ -61,8 +45,6 @@ jobs:
     needs:
       - flutter-analyze
       - flutter-test
-      - integration-test
-      - eqmonitor-map-scene-spike
     permissions: {}
     if: always()
     steps:

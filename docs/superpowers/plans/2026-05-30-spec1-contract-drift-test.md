@@ -1,5 +1,7 @@
 # Spec ① 契約/drift テスト Implementation Plan
 
+> 廃止済み: #1802 に伴い契約 drift テスト・fixtures・コピー処理を削除した。以下は導入時の履歴であり、現在の実行手順ではない。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** backend の API レスポンス形状が変わったとき、Flutter 側の Freezed モデルが追従できているかを CI（既存 `dart test`）で自動検出する drift テストを、純 Dart・新規依存ゼロで導入する。

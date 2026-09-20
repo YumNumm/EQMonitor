@@ -9,7 +9,7 @@ discriminatorがないunionは `swagger_parser` が `fromJson` を
 
 1. variantを一意に判定できるJSONフィールドをBackendの契約から確認する。
 2. `generate.dart` の `_patchUnionFromJson` を使う専用パッチを追加する。
-3. APIの契約fixtureを取り込み、unionの全variantを実JSONでパースする。
+3. 対象モデルの単体テストで、unionの全variantのJSONをパースする。
 
 例: `Earthquake.hypocenters` は `datasource` で判別する。
 
@@ -24,4 +24,4 @@ mise exec -C packages/eqmonitor_api -- dart test
 ```
 
 Backend更新後は生成コードのコンパイルだけでなく、
-`contract_drift_test.dart` でBackendのfixtureをパースできることまで確認する。
+対象モデルのデシリアライズも個別の単体テストで確認する。api-stub 由来の契約 drift テストは #1802 に伴い削除済み。

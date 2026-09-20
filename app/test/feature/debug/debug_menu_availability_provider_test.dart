@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/model/environment.dart';
-import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_provider.dart';
+import 'package:eqmonitor/feature/debug/data/logic/debug_menu_availability_resolver.dart';
 import 'package:eqmonitor/feature/devices/data/model/device_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,7 +27,7 @@ bool _resolve({
   required bool isDebugEnabled,
   bool isBetaTesting = false,
   Flavor flavor = Flavor.prod,
-}) => resolveDebugMenuAvailability(
+}) => const DebugMenuAvailabilityResolver().resolve(
   isDebugBuild: false,
   role: role,
   buildConfig: _buildConfig(isBetaTesting: isBetaTesting, flavor: flavor),
@@ -94,7 +94,7 @@ void main() {
 
     test('デバッグビルドならロールもデバッグモードも問わず開ける', () {
       expect(
-        resolveDebugMenuAvailability(
+        const DebugMenuAvailabilityResolver().resolve(
           isDebugBuild: true,
           role: null,
           buildConfig: _buildConfig(isBetaTesting: true),

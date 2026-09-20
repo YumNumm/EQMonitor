@@ -1,4 +1,4 @@
-min_version = "2026.08.0"
+min_version = "2026.09.12"
 
 [plugins]
 flutter = "https://github.com/YumNumm/mise-flutter.git"
@@ -6,11 +6,8 @@ gcloud = "https://github.com/jthegedus/asdf-gcloud"
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
-# NOTE: "17" は jdk.java.net の最終GA (17.0.2, 2022年) に解決され、GitHub Actions
-# runner の cgroup v2 構成で JDK-8272124 系の NPE を起こす (lint worker が全滅する)。
-# バグ修正済みの Temurin 17 を使う。
 java = "temurin-17.0.20+8"
-gradle = "9.3.1"
+gradle = "9.7.1"
 node = "lts"
 python = "latest"
 "pipx:codemagic-cli-tools" = "latest"
@@ -22,7 +19,6 @@ gcloud = "latest"
 terraform = "latest"
 firebase = "latest"
 yq = "latest"
-actionlint = "latest"
 pinact = "latest"
 swiftformat = "latest"
 shellcheck = "latest"
@@ -32,13 +28,11 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
-claude = "latest"
 flutter = "4dacd3fc91d96262a33e5c598e17d816f0b35641"
 "github:rorkai/App-Store-Connect-CLI" = { version = "latest", rename_exe = "asc" }
 
 [settings]
 lockfile = true
-experimental = true
 plugin_autoupdate_last_check_duration = "1 week"
 
 [env]

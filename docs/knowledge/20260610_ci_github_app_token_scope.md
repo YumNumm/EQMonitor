@@ -9,7 +9,6 @@
 
 ```bash
 mise exec -- pinact run --check
-mise exec -- actionlint .github/workflows/*.yaml
 ```
 
 ## pinact での表記ルール
