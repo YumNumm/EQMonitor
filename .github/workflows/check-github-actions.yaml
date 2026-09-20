@@ -165,7 +165,7 @@ jobs:
         with:
           install_args: zizmor
 
-      - name: Run zizmor (GitHub annotations)
+      - name: Run zizmor
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

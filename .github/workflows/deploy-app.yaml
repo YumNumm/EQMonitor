@@ -218,7 +218,7 @@ jobs:
 
       # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
       - name: Init flutter_scene submodule
-        uses: ./.github/actions/init-flutter-scene-submodule
+        uses: $/.github/actions/init-flutter-scene-submodule
 
       - name: Extract SOPS Age Key File
         run: |
@@ -617,7 +617,7 @@ jobs:
 
       # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
       - name: Init flutter_scene submodule
-        uses: ./.github/actions/init-flutter-scene-submodule
+        uses: $/.github/actions/init-flutter-scene-submodule
 
       - name: Extract SOPS Age Key File
         run: |
