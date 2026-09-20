@@ -41,7 +41,7 @@ canonical snapshot migration の通常 gate は次を repository root から実�
 
 ```bash
 mise exec -- dart test packages/eqmonitor_websocket/test/ws_message_test.dart
-(cd packages/eqmonitor_api && mise exec -- dart test --exclude-tags integration)
+(cd packages/eqmonitor_api && mise exec -- dart test)
 mise exec -- flutter test app/test/core/realtime
 mise exec -- flutter test app/test/feature/shake_detection
 mise exec -- flutter test app/test/feature/playback_mode
@@ -53,7 +53,7 @@ git --no-pager status --short
 全体 suite には migration 外の既知の前提・失敗がある。
 
 - `mise exec -- dart test packages/eqmonitor_websocket/test` は、legacy earthquake fixture に必須の `datasources` がない2件で失敗する。canonical parser は上記の focused test で検証する。
-- API test は fixture path が package cwd 基準なので repository root から実行しない。integration test は起動中の api-stub（`STUB_BASE_URL`、既定 `http://localhost:8790`）が必要で、通常 gate では除外する。
+- API test は fixture path が package cwd 基準なので repository root から実行しない。
 
 生成物を更新した場合は生成コマンドの前後で差分を確認する。
 
