@@ -215,7 +215,7 @@ struct UnifiedHeaderContainer: View {
                 trailingBadge
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.vertical, 4)
             .background(display.headerBackgroundColor)
         }
         .clipShape(ContainerRelativeShape())
@@ -229,7 +229,7 @@ struct UnifiedHeaderContainer: View {
         } else if let intensity = display.headerIntensity {
             UnifiedIntensityBadge(
                 intensity: intensity,
-                size: 38,
+                size: 30,
                 source: display.intensitySource,
                 chipStyle: chipStyle,
                 isMaximum: true
@@ -385,7 +385,7 @@ struct UnifiedEewStrip: View {
             }
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 5)
+        .padding(.vertical, 2)
         .background(
             Color.white.opacity(0.08),
             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
