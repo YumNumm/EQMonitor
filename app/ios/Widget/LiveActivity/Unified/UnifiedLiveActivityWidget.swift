@@ -40,7 +40,12 @@ struct EarthquakeLiveActivityWidget: Widget {
             } compactTrailing: {
                 UnifiedCompactTrailingView(state: context.state)
             } minimal: {
-                UnifiedCompactLeadingView(state: context.state)
+                if UnifiedLiveActivityDisplay(context.state).primary == .eew,
+                   let eew = context.state.eew {
+                    EewMinimalView(state: eew.eewContentState)
+                } else {
+                    UnifiedCompactLeadingView(state: context.state)
+                }
             }
             .keylineTint(UnifiedLiveActivityDisplay(context.state).keylineTint)
         }
@@ -65,12 +70,8 @@ struct UnifiedCompactLeadingView: View {
                 size: 24
             )
         case .eew:
-            if display.eew?.display.isCanceled == true {
-                EewCanceledSymbol(size: 20)
-            } else if let intensity = display.locationIntensity {
-                UnifiedIntensityBadge(intensity: intensity, size: 26)
-            } else {
-                EewMaximumIntensityView(intensity: display.headerIntensity, size: 20)
+            if let eew = display.eew {
+                EewCompactLeadingView(state: eew.eewContentState)
             }
         case .earthquake:
             if let intensity = display.locationIntensity {
@@ -103,15 +104,7 @@ struct UnifiedCompactTrailingView: View {
             }
         case .eew:
             if let eew = display.eew {
-                if let remaining = ArrivalCountdown.remaining(until: eew.display.countdownArrivalDate) {
-                    ArrivalCountdownText(remaining: remaining, size: 14, color: .white)
-                } else {
-                    EewStatusPill(
-                        isWarning: eew.display.isWarning,
-                        isCanceled: eew.display.isCanceled,
-                        compact: true
-                    )
-                }
+                EewCompactTrailingView(state: eew.eewContentState)
             }
         case .earthquake:
             if let name = display.earthquake?.primaryInformationType?.shortName {
@@ -136,7 +129,9 @@ struct UnifiedExpandedLeadingView: View {
     private var display: UnifiedLiveActivityDisplay { UnifiedLiveActivityDisplay(state) }
 
     var body: some View {
-        if let level = display.headerShakeLevel {
+        if display.primary == .eew, let eew = display.eew {
+            EewExpandedLeadingView(state: eew.eewContentState)
+        } else if let level = display.headerShakeLevel {
             VStack(alignment: .leading, spacing: 2) {
                 Text("揺れ")
                     .font(AppFonts.flex(size: 9, weight: .medium))
@@ -178,27 +173,10 @@ struct UnifiedExpandedTrailingView: View {
             }
         case .eew:
             if let eew = display.eew {
-                if eew.display.isCanceled {
-                    if let serialLabel = eew.display.serialLabel {
-                        Text(serialLabel)
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(.white.opacity(0.75))
-                            .fixedSize()
-                            .padding(4)
-                    }
-                } else {
-                    UnifiedMetricsRow(
-                        magnitudeText: eew.magnitude.map { "M" + String(format: "%.1f", $0) },
-                        depth: eew.depth,
-                        lowAccuracyLabel: eew.display.isLowAccuracyDetection
-                            ? (eew.isPlum == true ? "PLUM法" : eew.isLevel == true ? "レベル法" : "低精度")
-                            : nil,
-                        size: 21
-                    )
-                }
+                EewExpandedTrailingView(state: eew.eewContentState)
             }
         case .earthquake:
-            if let earthquake = display.earthquake, earthquake.isCanceled != true {
+            if let earthquake = display.earthquake {
                 UnifiedMetricsRow(
                     magnitudeText: earthquake.magnitude?.displayText,
                     depth: earthquake.depth,
@@ -219,54 +197,54 @@ struct UnifiedExpandedBottomView: View {
     private var display: UnifiedLiveActivityDisplay { UnifiedLiveActivityDisplay(state) }
 
     var body: some View {
+        if display.primary == .eew, let eew = display.eew {
+            ViewThatFits(in: .vertical) {
+                EewExpandedBottomView(state: eew.eewContentState)
+                    .fixedSize(horizontal: false, vertical: true)
+                EewExpandedBottomView(state: eew.eewContentState, compact: true)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else {
+            summary
+        }
+    }
+
+    private var summary: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(display.typeLabel)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.white.opacity(0.8))
-                .fixedSize(horizontal: true, vertical: true)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
 
             if let headline = display.headline, !headline.isEmpty {
                 Text(headline)
                     .font(AppFonts.flex(size: 16, weight: .heavy))
                     .foregroundStyle(.white)
-                    .lineLimit(2)
-            }
-
-            if let date = eventDate {
-                Text("\(eventLabel)  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.75))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.7)
             }
 
             if display.showsLocation {
-                UnifiedLocationPanel(display: display, chipStyle: .topBar, badgeSize: 44)
-                    .padding(.top, 2)
-            }
-
-            if let eew = display.eewStrip {
-                UnifiedEewStrip(eew: eew).padding(.top, 2)
+                HStack(spacing: 4) {
+                    Text("現在地")
+                    if let name = display.locationName {
+                        Text(name)
+                    }
+                    if let intensity = display.locationIntensity {
+                        Text("観測震度 \(intensity.displayString)")
+                            .fontWeight(.bold)
+                    } else if let level = display.locationShakeLevel {
+                        Text(level.displayString).fontWeight(.bold)
+                    }
+                }
+                .font(AppFonts.flex(size: 11, weight: .medium))
+                .foregroundStyle(.white.opacity(0.85))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var eventDate: Date? {
-        switch display.primary {
-        case .eew: return display.eew?.timeDate
-        case .earthquake: return display.earthquake?.originDate
-        case .shakeDetection: return display.shakeDetection?.detectedDate
-        case .empty: return nil
-        }
-    }
-
-    private var eventLabel: String {
-        switch display.primary {
-        case .eew: return display.eew?.timeLabel ?? "地震発生"
-        case .earthquake: return "地震発生"
-        case .shakeDetection: return "検知"
-        case .empty: return ""
-        }
-    }
 }
