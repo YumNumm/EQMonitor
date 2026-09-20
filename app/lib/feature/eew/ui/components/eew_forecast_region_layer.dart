@@ -74,10 +74,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ),
       [warningAreaSelector, eew],
     );
-    final warningReportKey = switch (eew) {
-      final event? => (event.eventId, event.serialNo),
-      null => null,
-    };
     final latestWarningCodes = useRef<List<String>>(warningCodes);
     latestWarningCodes.value = warningCodes;
 
@@ -259,7 +255,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       [
         styleController,
         displayMode,
-        warningReportKey,
         warningCodes,
       ],
     );

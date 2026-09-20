@@ -42,12 +42,13 @@ const List<InterruptionLevel> nationwideEewWarningLevels = [
 /// [slotType] の EEW 警報で選べる割り込みレベルを返す。
 ///
 /// 地域スロットは EEW 警報の対象外のため、全国と同じ一覧を返す。
-List<InterruptionLevel> interruptionLevelsFor(NotificationSlotType slotType) =>
-    switch (slotType) {
-      NotificationSlotType.currentLocation => currentLocationEewWarningLevels,
-      NotificationSlotType.nationwide ||
-      NotificationSlotType.region => nationwideEewWarningLevels,
-    };
+extension NotificationSlotTypeEewWarning on NotificationSlotType {
+  List<InterruptionLevel> get eewWarningInterruptionLevels => switch (this) {
+    NotificationSlotType.currentLocation => currentLocationEewWarningLevels,
+    NotificationSlotType.nationwide ||
+    NotificationSlotType.region => nationwideEewWarningLevels,
+  };
+}
 
 @freezed
 abstract class EewWarningSettings with _$EewWarningSettings {

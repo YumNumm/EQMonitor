@@ -67,17 +67,17 @@ void main() {
   group('interruptionLevelsFor', () {
     test('現在地は重大な通知を選べる', () {
       expect(
-        interruptionLevelsFor(NotificationSlotType.currentLocation),
+        NotificationSlotType.currentLocation.eewWarningInterruptionLevels,
         contains(InterruptionLevel.critical),
       );
     });
 
     test('全国は重大な通知を選べない', () {
       expect(
-        interruptionLevelsFor(NotificationSlotType.nationwide),
+        NotificationSlotType.nationwide.eewWarningInterruptionLevels,
         isNot(contains(InterruptionLevel.critical)),
       );
-      expect(interruptionLevelsFor(NotificationSlotType.nationwide), [
+      expect(NotificationSlotType.nationwide.eewWarningInterruptionLevels, [
         InterruptionLevel.passive,
         InterruptionLevel.active,
         InterruptionLevel.timeSensitive,
@@ -86,11 +86,11 @@ void main() {
 
     test('既定値はそれぞれの選択肢に含まれる', () {
       expect(
-        interruptionLevelsFor(NotificationSlotType.currentLocation),
+        NotificationSlotType.currentLocation.eewWarningInterruptionLevels,
         contains(currentLocationEewWarningDefaultLevel),
       );
       expect(
-        interruptionLevelsFor(NotificationSlotType.nationwide),
+        NotificationSlotType.nationwide.eewWarningInterruptionLevels,
         contains(nationwideEewWarningDefaultLevel),
       );
     });

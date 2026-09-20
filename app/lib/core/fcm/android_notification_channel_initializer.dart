@@ -75,12 +75,9 @@ class AndroidNotificationChannelInitializer {
   }
 }
 
-class AndroidFlutterLocalNotificationsChannelPlatform
-    implements AndroidNotificationChannelPlatform {
-  const new({required this.plugin});
-
-  final AndroidFlutterLocalNotificationsPlugin plugin;
-
+class const AndroidFlutterLocalNotificationsChannelPlatform({
+  required final AndroidFlutterLocalNotificationsPlugin plugin,
+}) implements AndroidNotificationChannelPlatform {
   @override
   Future<void> deleteChannel(String id) =>
       plugin.deleteNotificationChannel(channelId: id);
@@ -94,10 +91,8 @@ class AndroidFlutterLocalNotificationsChannelPlatform
       plugin.createNotificationChannel(channel);
 }
 
-class NoopAndroidNotificationChannelPlatform
+class const NoopAndroidNotificationChannelPlatform()
     implements AndroidNotificationChannelPlatform {
-  const new();
-
   @override
   Future<void> deleteChannel(String id) async {}
 
