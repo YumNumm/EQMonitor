@@ -13,12 +13,9 @@ abstract interface class ApnsTokenCallbackDataSource {
   Stream<String> get tokenUpdates;
 }
 
-final class EventChannelApnsTokenCallbackDataSource
-    implements ApnsTokenCallbackDataSource {
-  const new(this._channel);
-
-  final EventChannel _channel;
-
+final class const EventChannelApnsTokenCallbackDataSource(
+  final EventChannel _channel,
+) implements ApnsTokenCallbackDataSource {
   @override
   Stream<String> get tokenUpdates async* {
     await for (final value in _channel.receiveBroadcastStream()) {

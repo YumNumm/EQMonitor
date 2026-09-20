@@ -5,9 +5,7 @@ import 'package:pmtiles_v3/pmtiles_v3.dart';
 ///
 /// PMTiles version、section範囲と重なり、internal compressionの対応状況は
 /// archive open側の検証を正とし、ここでは再実装しない。
-final class EstimatedIntensityArchiveHeaderValidator {
-  const new();
-
+final class const EstimatedIntensityArchiveHeaderValidator() {
   static const mvtTileType = 1;
   static const gzipTileCompression = 2;
 

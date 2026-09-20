@@ -7,3 +7,5 @@ paths:
  .github/workflows/**/*.yaml:
    ignore:
      - label "ubuntu-slim" is unknown
+     # Official preview image; not yet recognized by actionlint 1.7.12.
+     - label "xcode-27" is unknown

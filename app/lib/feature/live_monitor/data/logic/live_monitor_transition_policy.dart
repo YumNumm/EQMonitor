@@ -1,21 +1,13 @@
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_display_state.dart';
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_event.dart';
 
-final class LiveMonitorTransitionDecision {
-  const new({
-    required this.next,
-    required this.deadline,
-    required this.closeControlPanel,
-  });
+final class const LiveMonitorTransitionDecision({
+  required final LiveMonitorDisplayState next,
+  required final DateTime? deadline,
+  required final bool closeControlPanel,
+});
 
-  final LiveMonitorDisplayState next;
-  final DateTime? deadline;
-  final bool closeControlPanel;
-}
-
-final class LiveMonitorTransitionPolicy {
-  const new();
-
+final class const LiveMonitorTransitionPolicy() {
   LiveMonitorTransitionDecision resolve({
     required LiveMonitorDisplayState current,
     required LiveMonitorDetectedEvent event,

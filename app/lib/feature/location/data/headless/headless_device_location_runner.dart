@@ -34,10 +34,8 @@ abstract interface class HeadlessBackgroundLocationBridge {
   });
 }
 
-class BackgroundLocationTrackerHeadlessBridge
+class const BackgroundLocationTrackerHeadlessBridge()
     implements HeadlessBackgroundLocationBridge {
-  const new();
-
   @override
   Future<bool> acknowledgePendingLocation({
     required String updateId,
@@ -62,9 +60,7 @@ class BackgroundLocationTrackerHeadlessBridge
   }) => BackgroundLocationTracker.peekPendingLocation(consumer: consumer);
 }
 
-class HeadlessDeviceLocationErrorClassifier {
-  const new();
-
+class const HeadlessDeviceLocationErrorClassifier() {
   HeadlessTaskResult classify(Object error) {
     if (error is! DioException) {
       return HeadlessTaskResult.retry;

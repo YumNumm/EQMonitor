@@ -239,9 +239,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryStationGeoJsonBuilder {
-  const new();
-
+class const EarthquakeHistoryStationGeoJsonBuilder() {
   static const iconSmallPrefix = 'JmaIntensity.small.';
   static const iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
   static const lpgmIconSmallPrefix = 'JmaLpgmIntensity.small.';
@@ -349,9 +347,7 @@ class EarthquakeHistoryStationGeoJsonBuilder {
   }
 }
 
-class EarthquakeHistoryStationIntensityLayerBuilder {
-  const new();
-
+class const EarthquakeHistoryStationIntensityLayerBuilder() {
   static const sourceId = 'eq-history-station-intensity';
   static const iconLayerId = 'eq-history-station-intensity-icon';
   static const labelLayerId = 'eq-history-station-intensity-label';

@@ -39,9 +39,7 @@ Future<LocationAccuracyStatus> locationAccuracyStatus(Ref ref) async {
 }
 
 /// iOS の「正確な位置情報」の一時許可を要求する。
-final class TemporaryPreciseLocationRequester {
-  const new();
-
+final class const TemporaryPreciseLocationRequester() {
   /// Android には該当APIが無い（`requestTemporaryFullAccuracy` は
   /// `notImplemented`）ため、iOS 以外では何もしない。
   /// 呼び出し後は [locationAccuracyStatusProvider] を invalidate すること。

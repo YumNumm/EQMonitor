@@ -2,9 +2,7 @@ enum LiveMonitorExitRequestSource { panel, systemBack }
 
 enum LiveMonitorExitDraftDecision { continueExit, confirmDiscard, cancel }
 
-class LiveMonitorExitPolicy {
-  const new();
-
+class const LiveMonitorExitPolicy() {
   bool shouldContinueExit({
     required LiveMonitorExitRequestSource source,
     required bool isPanelOpen,

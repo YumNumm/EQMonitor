@@ -58,9 +58,7 @@ typedef MapClockCaptureCreator = MapClockCapture Function({
   required MapMonotonicInstant? previousMonotonicInstant,
 });
 
-final class SystemUtcWallSource implements MapUtcWallSource {
-  const new();
-
+final class const SystemUtcWallSource() implements MapUtcWallSource {
   @override
   DateTime captureUtc() => DateTime.now().toUtc();
 }
@@ -72,12 +70,11 @@ final class SystemMonotonicSource implements MapMonotonicSource {
     required this._stopwatch,
   });
 
-  factory start({required MapClockDomainId domain}) =>
-      SystemMonotonicSource._(
-        domain: domain,
-        sourceIdentity: createMapMonotonicSourceIdentity(),
-        stopwatch: Stopwatch()..start(),
-      );
+  factory start({required MapClockDomainId domain}) => SystemMonotonicSource._(
+    domain: domain,
+    sourceIdentity: createMapMonotonicSourceIdentity(),
+    stopwatch: Stopwatch()..start(),
+  );
 
   final Stopwatch _stopwatch;
 

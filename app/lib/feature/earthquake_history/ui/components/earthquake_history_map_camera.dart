@@ -18,9 +18,7 @@ const kEarthquakeHistoryMapHypocenterZoom = 6.5;
 const double kEarthquakeHistoryMapFocusZoom = 8;
 
 /// 地震履歴詳細マップのカメラ位置（中心・ズーム・フォーカス座標）を算出する。
-class EarthquakeHistoryMapCamera {
-  const new();
-
+class const EarthquakeHistoryMapCamera() {
   MapCameraBoundsFitResult initialRegionCamera({
     required Earthquake earthquake,
     required JmaMap_JmaMapData regionMap,

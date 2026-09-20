@@ -993,17 +993,11 @@ final class MemoryPreferencesDataSource
   }) async => values[key] = value;
 }
 
-final class GoogleSignInInitialization {
-  const new({
-    required this.clientId,
-    required this.serverClientId,
-    required this.nonce,
-  });
-
-  final String clientId;
-  final String serverClientId;
-  final String nonce;
-
+final class const GoogleSignInInitialization({
+  required final String clientId,
+  required final String serverClientId,
+  required final String nonce,
+}) {
   @override
   bool operator ==(Object other) =>
       other is GoogleSignInInitialization &&
@@ -1015,12 +1009,7 @@ final class GoogleSignInInitialization {
   int get hashCode => Object.hash(clientId, serverClientId, nonce);
 }
 
-final class AppleSignInRequest {
-  const new({
-    required this.nonce,
-    required this.webAuthenticationOptions,
-  });
-
-  final String nonce;
-  final WebAuthenticationOptions? webAuthenticationOptions;
-}
+final class const AppleSignInRequest({
+  required final String nonce,
+  required final WebAuthenticationOptions? webAuthenticationOptions,
+});

@@ -15,10 +15,8 @@ abstract interface class EstimatedIntensityArchivePmTilesOpener {
 
 /// 検証済み一時fileをPMTiles v3 archiveとして開く本番実装。
 /// resource上限は呼出元が必ず[PmTilesV3Limits]で渡す。
-final class DartIoEstimatedIntensityArchivePmTilesOpener
+final class const DartIoEstimatedIntensityArchivePmTilesOpener()
     implements EstimatedIntensityArchivePmTilesOpener {
-  const new();
-
   @override
   Future<PmTilesV3Archive> open({
     required File file,

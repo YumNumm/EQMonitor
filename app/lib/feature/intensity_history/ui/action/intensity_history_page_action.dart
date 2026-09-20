@@ -1,13 +1,14 @@
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final intensityHistoryPageActionProvider = Provider(
-  (_) => const IntensityHistoryPageAction(),
-);
+part 'intensity_history_page_action.g.dart';
 
-class IntensityHistoryPageAction {
-  const new();
+@Riverpod(keepAlive: true)
+IntensityHistoryPageAction intensityHistoryPageAction(Ref ref) =>
+    const IntensityHistoryPageAction();
 
+class const IntensityHistoryPageAction() {
   Future<void> retryMapConfiguration(WidgetRef ref) async {
     try {
       ref.invalidate(mapConfigurationProvider, asReload: true);

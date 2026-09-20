@@ -20,14 +20,13 @@ sealed class SceneSpikeLifecycleState with _$SceneSpikeLifecycleState {
     required bool requiresResourceRebuild,
   }) = _SceneSpikeLifecycleState;
 
-  factory initial() =>
-      const SceneSpikeLifecycleState.internal(
-        phase: .detached,
-        appResourceGeneration: 0,
-        mayTick: false,
-        mayUpload: false,
-        requiresResourceRebuild: false,
-      );
+  factory initial() => const SceneSpikeLifecycleState.internal(
+    phase: .detached,
+    appResourceGeneration: 0,
+    mayTick: false,
+    mayUpload: false,
+    requiresResourceRebuild: false,
+  );
 }
 
 @Freezed(copyWith: false, fromJson: false, toJson: false)
@@ -41,9 +40,7 @@ sealed class SceneSpikeLifecycleEvent with _$SceneSpikeLifecycleEvent {
   const factory disposed() = _Disposed;
 }
 
-class SceneSpikeLifecycleReducer {
-  const new();
-
+class const SceneSpikeLifecycleReducer() {
   SceneSpikeLifecycleState reduce({
     required SceneSpikeLifecycleState state,
     required SceneSpikeLifecycleEvent event,

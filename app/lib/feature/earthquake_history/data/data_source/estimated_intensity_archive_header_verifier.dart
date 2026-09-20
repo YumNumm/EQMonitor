@@ -7,15 +7,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intens
 import 'package:pmtiles_v3/pmtiles_v3.dart';
 
 /// SHA-256検証済みの一時fileを開き、受入可能なPMTilesか確認する。
-final class EstimatedIntensityArchiveHeaderVerifier {
-  const new({
-    this.opener = const DartIoEstimatedIntensityArchivePmTilesOpener(),
-    this.headerValidator = const EstimatedIntensityArchiveHeaderValidator(),
-  });
-
-  final EstimatedIntensityArchivePmTilesOpener opener;
-  final EstimatedIntensityArchiveHeaderValidator headerValidator;
-
+final class const EstimatedIntensityArchiveHeaderVerifier({
+  final EstimatedIntensityArchivePmTilesOpener opener =
+      const DartIoEstimatedIntensityArchivePmTilesOpener(),
+  final EstimatedIntensityArchiveHeaderValidator headerValidator =
+      const EstimatedIntensityArchiveHeaderValidator(),
+}) {
   Future<EstimatedIntensityArchiveHeaderValidationResult> verify({
     required VerifiedEstimatedIntensityArchiveDownload download,
     required PmTilesV3Limits limits,

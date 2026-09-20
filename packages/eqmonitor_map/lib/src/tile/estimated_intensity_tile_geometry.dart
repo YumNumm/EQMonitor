@@ -41,16 +41,11 @@ final class EstimatedIntensityClassGeometry {
 }
 
 /// Required layer が存在した推計震度 tile の decode 結果。
-sealed class EstimatedIntensityTileGeometry {
-  const new({required this.extent});
-
-  final int extent;
-}
+sealed class const EstimatedIntensityTileGeometry({required final int extent});
 
 /// Required layer は存在するが feature が0件の authoritative empty。
-final class EstimatedIntensityTileEmpty extends EstimatedIntensityTileGeometry {
-  const new({required super.extent});
-}
+final class const EstimatedIntensityTileEmpty({required super.extent})
+    extends EstimatedIntensityTileGeometry;
 
 /// 全 feature の検証と mesh 化が完了した tile。
 final class EstimatedIntensityTileReady extends EstimatedIntensityTileGeometry {

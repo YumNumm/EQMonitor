@@ -8,21 +8,19 @@ import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/d
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_json_codec.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/ui/action/debug_live_activity_action.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// デバッグ用。アプリ内から ActivityKit を用いて EEW / 揺れ検知の
+/// デバッグ用。アプリ内から ActivityKit を用いて EEW の
 /// Live Activity をローカル開始・更新・終了し、表示を検証する。
 class DebugLiveActivityPage extends HookConsumerWidget {
   const new({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kind = useState(DebugLiveActivityKind.eew);
+    const kind = DebugLiveActivityKind.eew;
     final jsonController = useTextEditingController();
     final activityIdController = useTextEditingController();
     final session = useState<DebugLiveActivitySession?>(null);
@@ -52,39 +50,13 @@ class DebugLiveActivityPage extends HookConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('種別', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          SegmentedButton<DebugLiveActivityKind>(
-            segments: [
-              for (final value in DebugLiveActivityKind.values)
-                ButtonSegment(value: value, label: Text(value.label)),
-            ],
-            selected: {kind.value},
-            onSelectionChanged: isBusy.value
-                ? null
-                : (selected) {
-                    kind.value = selected.first;
-                    session.value = null;
-                    activityIdController.clear();
-                    jsonController.clear();
-                  },
-          ),
-          const SizedBox(height: 24),
           Text('プリセット', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           _PresetChips(
-            kind: kind.value,
             onEewPreset: (preset) => fill(
               builder.eewFromPreset(
                 preset: preset,
                 eventId: _generateEventId(ref, 'eew'),
-                now: ref.read(appClockProvider.notifier).now(),
-              ),
-            ),
-            onShakePreset: (preset) => fill(
-              builder.shakeFromPreset(
-                preset: preset,
-                eventId: _generateEventId(ref, 'shake'),
                 now: ref.read(appClockProvider.notifier).now(),
               ),
             ),
@@ -93,9 +65,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
           Text('実データから読み込み', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           _RealDataSection(
-            kind: kind.value,
             onEewSelected: (eew) => fill(builder.eewFromTelegram(eew)),
-            onShakeSelected: (event) => fill(builder.shakeFromEvent(event)),
           ),
           const SizedBox(height: 24),
           TextField(
@@ -132,7 +102,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                         final result = await action.start(
                           ref: ref,
                           context: context,
-                          kind: kind.value,
+                          kind: kind,
                           rawJson: jsonController.text,
                         );
                         if (result != null) {
@@ -150,7 +120,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                         await action.update(
                           ref: ref,
                           context: context,
-                          kind: kind.value,
+                          kind: kind,
                           activityId: activityIdController.text.trim(),
                           rawJson: jsonController.text,
                         );
@@ -165,7 +135,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                         final ended = await action.end(
                           ref: ref,
                           context: context,
-                          kind: kind.value,
+                          kind: kind,
                           activityId: activityIdController.text.trim(),
                           rawJson: jsonController.text,
                         );
@@ -177,8 +147,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
             ],
           ),
           const SizedBox(height: 24),
-          if (session.value case final current?)
-            _SessionCard(session: current),
+          if (session.value case final current?) _SessionCard(session: current),
           const _SupportabilityTile(),
         ],
       ),
@@ -192,62 +161,35 @@ class DebugLiveActivityPage extends HookConsumerWidget {
 }
 
 class _PresetChips extends StatelessWidget {
-  const new({
-    required this.kind,
-    required this.onEewPreset,
-    required this.onShakePreset,
-  });
+  const new({required this.onEewPreset});
 
-  final DebugLiveActivityKind kind;
   final ValueChanged<DebugEewPreset> onEewPreset;
-  final ValueChanged<DebugShakePreset> onShakePreset;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 8,
       runSpacing: 4,
-      children: switch (kind) {
-        DebugLiveActivityKind.eew => [
-          for (final preset in DebugEewPreset.values)
-            ActionChip(
-              label: Text(preset.label),
-              onPressed: () => onEewPreset(preset),
-            ),
-        ],
-        DebugLiveActivityKind.shakeDetection => [
-          for (final preset in DebugShakePreset.values)
-            ActionChip(
-              label: Text(preset.label),
-              onPressed: () => onShakePreset(preset),
-            ),
-        ],
-      },
+      children: [
+        for (final preset in DebugEewPreset.values)
+          ActionChip(
+            label: Text(preset.label),
+            onPressed: () => onEewPreset(preset),
+          ),
+      ],
     );
   }
 }
 
 class _RealDataSection extends ConsumerWidget {
-  const new({
-    required this.kind,
-    required this.onEewSelected,
-    required this.onShakeSelected,
-  });
+  const new({required this.onEewSelected});
 
-  final DebugLiveActivityKind kind;
   final ValueChanged<EewTelegramItem> onEewSelected;
-  final ValueChanged<ShakeDetectionEvent> onShakeSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return switch (kind) {
-      DebugLiveActivityKind.eew => _buildEew(context, ref),
-      DebugLiveActivityKind.shakeDetection => _buildShake(context, ref),
-    };
-  }
-
-  Widget _buildEew(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
+    final eews =
+        ref.watch(eewAliveTelegramProvider) ?? const <EewTelegramItem>[];
     if (eews.isEmpty) {
       return const Text('発表中の EEW はありません');
     }
@@ -256,30 +198,13 @@ class _RealDataSection extends ConsumerWidget {
         for (final eew in eews)
           ListTile(
             dense: true,
-            title: Text('${eew.hypocenter?.name ?? eew.headline ?? '(不明)'} '
-                '第${eew.serialNo}報'),
+            title: Text(
+              '${eew.hypocenter?.name ?? eew.headline ?? '(不明)'} '
+              '第${eew.serialNo}報',
+            ),
             subtitle: Text(eew.eventId),
             trailing: const Icon(Icons.download),
             onTap: () => onEewSelected(eew),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildShake(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(shakeDetectionProvider);
-    if (events.isEmpty) {
-      return const Text('進行中の揺れ検知はありません');
-    }
-    return Column(
-      children: [
-        for (final event in events)
-          ListTile(
-            dense: true,
-            title: Text('${event.level.name} 第${event.serialNo}報'),
-            subtitle: Text(event.eventId),
-            trailing: const Icon(Icons.download),
-            onTap: () => onShakeSelected(event),
           ),
       ],
     );

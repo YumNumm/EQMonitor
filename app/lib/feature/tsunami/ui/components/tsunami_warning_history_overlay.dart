@@ -152,17 +152,11 @@ class _HistoryOverlay extends StatelessWidget {
   }
 }
 
-class _WarningTimelineEntry {
-  const new({
-    required this.time,
-    required this.description,
-    required this.isLast,
-  });
-
-  final DateTime time;
-  final String description;
-  final bool isLast;
-}
+class const _WarningTimelineEntry({
+  required final DateTime time,
+  required final String description,
+  required final bool isLast,
+});
 
 class _TimelineEntry extends StatelessWidget {
   const new({required this.entry});

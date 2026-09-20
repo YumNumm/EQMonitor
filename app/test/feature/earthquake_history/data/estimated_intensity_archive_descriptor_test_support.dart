@@ -1,8 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 
-final class EstimatedIntensityArchiveDescriptorTestSupport {
-  const new();
-
+final class const EstimatedIntensityArchiveDescriptorTestSupport() {
   static const eventId = '20260823020050';
   static const allowedHost = 'tiles.example.test';
   static const validator = EstimatedIntensityArchiveDescriptorValidator();

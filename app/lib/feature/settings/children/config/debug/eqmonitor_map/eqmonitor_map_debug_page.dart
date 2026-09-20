@@ -200,32 +200,20 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
   }
 }
 
-final class _EqmonitorMapGpuProbeBindings {
-  const new({
-    required this.configuration,
-    required this.controller,
-    required this.counterSnapshot,
-    required this.onCounterChanged,
-    required this.onAtlasFixtureChanged,
-    required this.onFaultPointChanged,
-    required this.onInvalidateRendererContextGeneration,
-  });
+final class const _EqmonitorMapGpuProbeBindings({
+  required final MapGpuProbeConfiguration configuration,
+  required final MapGpuProbeController controller,
+  required final MapGpuResourceCounterSnapshot? counterSnapshot,
+  required final ValueChanged<MapGpuResourceCounterSnapshot> onCounterChanged,
+  required final ValueChanged<MapSpriteAtlasProbeFixture> onAtlasFixtureChanged,
+  required final ValueChanged<MapGpuFaultPoint?> onFaultPointChanged,
+  required final VoidCallback onInvalidateRendererContextGeneration,
+});
 
-  final MapGpuProbeConfiguration configuration;
-  final MapGpuProbeController controller;
-  final MapGpuResourceCounterSnapshot? counterSnapshot;
-  final ValueChanged<MapGpuResourceCounterSnapshot> onCounterChanged;
-  final ValueChanged<MapSpriteAtlasProbeFixture> onAtlasFixtureChanged;
-  final ValueChanged<MapGpuFaultPoint?> onFaultPointChanged;
-  final VoidCallback onInvalidateRendererContextGeneration;
-}
-
-final class EqmonitorMapDebugGpuCounterCallbackGuard {
-  const new({required this.isMounted, required this.onSnapshot});
-
-  final bool Function() isMounted;
-  final ValueChanged<MapGpuResourceCounterSnapshot> onSnapshot;
-
+final class const EqmonitorMapDebugGpuCounterCallbackGuard({
+  required final bool Function() isMounted,
+  required final ValueChanged<MapGpuResourceCounterSnapshot> onSnapshot,
+}) {
   void publish(MapGpuResourceCounterSnapshot snapshot) {
     if (isMounted()) {
       onSnapshot(snapshot);

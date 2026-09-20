@@ -177,9 +177,7 @@ class _KyoshinMonitorObservationLayerBody extends HookConsumerWidget {
   }
 }
 
-class KyoshinMonitorObservationLayerBuilder {
-  const new();
-
+class const KyoshinMonitorObservationLayerBuilder() {
   CircleStyleLayer build({
     required double radiusScaleFactor,
     required KyoshinMonitorMarkerType markerType,

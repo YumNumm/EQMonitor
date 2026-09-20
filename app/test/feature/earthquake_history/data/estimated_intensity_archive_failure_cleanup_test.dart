@@ -117,12 +117,9 @@ void main() {
   });
 }
 
-final class CloseFailingPartWriter
-    implements EstimatedIntensityArchivePartWriter {
-  const new({required this.delegate});
-
-  final EstimatedIntensityArchivePartWriter delegate;
-
+final class const CloseFailingPartWriter({
+  required final EstimatedIntensityArchivePartWriter delegate,
+}) implements EstimatedIntensityArchivePartWriter {
   @override
   Future<void> write(List<int> bytes) => delegate.write(bytes);
 

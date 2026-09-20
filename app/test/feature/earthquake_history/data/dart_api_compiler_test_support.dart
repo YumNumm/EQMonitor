@@ -1,11 +1,9 @@
 import 'dart:io';
 
-final class DartApiCompiler {
-  const new({
-    required this.dartExecutable,
-    required this.packageConfig,
-  });
-
+final class const DartApiCompiler({
+  required final String dartExecutable,
+  required final String packageConfig,
+}) {
   static DartApiCompiler resolve() {
     var workspace = Directory.current;
     while (!File(
@@ -36,9 +34,6 @@ final class DartApiCompiler {
       packageConfig: '${workspace.path}/.dart_tool/package_config.json',
     );
   }
-
-  final String dartExecutable;
-  final String packageConfig;
 
   Future<ProcessResult> compile({
     required Directory directory,

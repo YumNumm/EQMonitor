@@ -10,9 +10,7 @@ part 'error_dialog.g.dart';
 @riverpod
 ErrorDialogAction errorDialogAction(Ref ref) => const ErrorDialogAction();
 
-class ErrorDialogAction {
-  const new();
-
+class const ErrorDialogAction() {
   Future<void> show(
     BuildContext context, {
     required Object error,

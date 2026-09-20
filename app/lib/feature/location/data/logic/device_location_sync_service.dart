@@ -19,19 +19,12 @@ typedef SendDeviceLocationPayload = Future<void> Function({
   required DeviceLocationPayload payload,
 });
 
-class DeviceLocationSyncService {
-  const new({
-    required this.scope,
-    required this.stateRepository,
-    required this.resolvePayload,
-    required this.sendPayload,
-  });
-
-  final DeviceLocationSyncScope scope;
-  final DeviceLocationSyncStateRepository stateRepository;
-  final ResolveDeviceLocationPayload resolvePayload;
-  final SendDeviceLocationPayload sendPayload;
-
+class const DeviceLocationSyncService({
+  required final DeviceLocationSyncScope scope,
+  required final DeviceLocationSyncStateRepository stateRepository,
+  required final ResolveDeviceLocationPayload resolvePayload,
+  required final SendDeviceLocationPayload sendPayload,
+}) {
   Future<DeviceLocationSyncResult> syncPending({
     required PendingDeviceLocation? location,
   }) async {

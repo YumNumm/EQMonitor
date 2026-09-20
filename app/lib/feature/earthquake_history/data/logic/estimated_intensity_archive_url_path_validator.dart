@@ -3,9 +3,7 @@ part of '../model/estimated_intensity_archive_descriptor.dart';
 final _encodedSeparatorPattern = RegExp('%(?:2f|5c)', caseSensitive: false);
 
 /// Decoded segment と raw path の両方を照合し、URI alias を拒否する。
-final class EstimatedIntensityArchiveUrlPathValidator {
-  const new();
-
+final class const EstimatedIntensityArchiveUrlPathValidator() {
   EstimatedIntensityArchiveFailure? validate({
     required String rawUrl,
     required Uri uri,

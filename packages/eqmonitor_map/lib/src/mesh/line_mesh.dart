@@ -11,17 +11,10 @@ import 'dart:typed_data';
 /// `FillMesh`と同じく高々65536個(index値0〜65535)に制限される。1回のbuild
 /// 呼び出しがこの上限を超えるfeature群を渡された場合、`LineMeshBuilder`は
 /// 複数の[LineMesh](segment)へ分割して返す。
-final class LineMesh {
-  const new({
-    required this.positions,
-    required this.extrudes,
-    required this.indices,
-    required this.vertexCount,
-  });
-
+final class const LineMesh({
   /// tile-local座標のx, yを交互に詰めたfloat32頂点列。中心線上の座標であり、
   /// 押し出し済みの座標ではない。[extrudes]と同じ頂点index同士が対応する。
-  final Float32List positions;
+  required final Float32List positions,
 
   /// [positions]と同じ頂点indexに対応する押し出し法線のx, yを交互に詰めた
   /// float32列。
@@ -38,12 +31,12 @@ final class LineMesh {
   /// GPUへは`MeshGeometry.fromArrays`の組み込み`texCoords`引数として渡る
   /// (custom attributeは値がshaderへ届かない不具合を実機で確認したため
   /// 使わない。`flutter_scene/flutter_scene_base_map_adapter.dart`参照)。
-  final Float32List extrudes;
+  required final Float32List extrudes,
 
   /// 3個1組でtriangleを表すindex buffer。[positions]内の頂点index
   /// (0-based)を指す。triangle stripではなく明示的なtriangle listである。
-  final Uint16List indices;
+  required final Uint16List indices,
 
   /// [positions]に含まれる頂点数(`positions.length ~/ 2`と一致する)。
-  final int vertexCount;
-}
+  required final int vertexCount,
+});

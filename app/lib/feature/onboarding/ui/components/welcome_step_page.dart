@@ -177,9 +177,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
 }
 
 /// プロビジョニングの失敗を UI 表示用の文言へ変換する。
-class DeviceProvisioningErrorMessage {
-  const new();
-
+class const DeviceProvisioningErrorMessage() {
   String of(Object error) => switch (error) {
     DeviceProvisioningException(:final userMessage) => userMessage,
     _ => error.toString(),

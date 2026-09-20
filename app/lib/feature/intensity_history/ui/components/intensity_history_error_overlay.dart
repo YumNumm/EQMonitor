@@ -4,15 +4,16 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final intensityHistoryErrorOverlayActionProvider =
-    Provider<IntensityHistoryErrorOverlayAction>(
-      (_) => const IntensityHistoryErrorOverlayAction(),
-    );
+part 'intensity_history_error_overlay.g.dart';
 
-class IntensityHistoryErrorOverlayAction {
-  const new();
+@Riverpod(keepAlive: true)
+IntensityHistoryErrorOverlayAction intensityHistoryErrorOverlayAction(
+  Ref ref,
+) => const IntensityHistoryErrorOverlayAction();
 
+class const IntensityHistoryErrorOverlayAction() {
   Future<void> retry(WidgetRef ref) async {
     try {
       ref.invalidate(cityMaxIntensityProvider, asReload: true);

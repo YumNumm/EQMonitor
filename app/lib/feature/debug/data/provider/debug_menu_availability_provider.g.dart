@@ -10,44 +10,13 @@ part of 'debug_menu_availability_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// デバッグメニュー(`/settings/debug` 配下)を開いてよいか。
-///
-/// 判定ロジックは [resolveDebugMenuAvailability] を参照。
-///
-/// go_router の `redirect` から同期的に読むため、非同期依存は
-/// [AsyncValue.value] を参照する。ロール取得前は null 扱いで権限なし側に倒れ、
-/// 取得完了後に再評価される。
-///
-/// keepAlive にしているのは、`redirect` の単発の [Ref.read] で
-/// 非同期依存が未解決のまま false と判定され、正当な遷移が弾かれるのを防ぐため。
 
 @ProviderFor(isDebugMenuAvailable)
 final isDebugMenuAvailableProvider = IsDebugMenuAvailableProvider._();
 
-/// デバッグメニュー(`/settings/debug` 配下)を開いてよいか。
-///
-/// 判定ロジックは [resolveDebugMenuAvailability] を参照。
-///
-/// go_router の `redirect` から同期的に読むため、非同期依存は
-/// [AsyncValue.value] を参照する。ロール取得前は null 扱いで権限なし側に倒れ、
-/// 取得完了後に再評価される。
-///
-/// keepAlive にしているのは、`redirect` の単発の [Ref.read] で
-/// 非同期依存が未解決のまま false と判定され、正当な遷移が弾かれるのを防ぐため。
-
 final class IsDebugMenuAvailableProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// デバッグメニュー(`/settings/debug` 配下)を開いてよいか。
-  ///
-  /// 判定ロジックは [resolveDebugMenuAvailability] を参照。
-  ///
-  /// go_router の `redirect` から同期的に読むため、非同期依存は
-  /// [AsyncValue.value] を参照する。ロール取得前は null 扱いで権限なし側に倒れ、
-  /// 取得完了後に再評価される。
-  ///
-  /// keepAlive にしているのは、`redirect` の単発の [Ref.read] で
-  /// 非同期依存が未解決のまま false と判定され、正当な遷移が弾かれるのを防ぐため。
   IsDebugMenuAvailableProvider._()
     : super(
         from: null,
@@ -82,4 +51,4 @@ final class IsDebugMenuAvailableProvider
 }
 
 String _$isDebugMenuAvailableHash() =>
-    r'5c4578be7946880fd8d820ae71e5db65de936467';
+    r'985553ef9387f1892ae73d43774f64db065fb7b6';

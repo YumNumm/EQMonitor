@@ -14,9 +14,7 @@ abstract interface class EstimatedIntensityArchivePartWriter {
 typedef EstimatedIntensityArchivePartWriterCreator =
     Future<EstimatedIntensityArchivePartWriter> Function(File file);
 
-final class EstimatedIntensityArchivePartWriterFactory {
-  const new();
-
+final class const EstimatedIntensityArchivePartWriterFactory() {
   static Future<EstimatedIntensityArchivePartWriter> create(File file) =>
       DartIoEstimatedIntensityArchivePartWriter.open(file);
 }

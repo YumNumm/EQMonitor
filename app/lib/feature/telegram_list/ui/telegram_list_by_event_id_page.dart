@@ -278,11 +278,10 @@ class _SectionedList extends StatelessWidget {
   }
 }
 
-class _SequenceInfo {
-  const new({required this.sequenceNumber, this.previousId});
-  final int sequenceNumber;
-  final String? previousId;
-}
+class const _SequenceInfo({
+  required final int sequenceNumber,
+  final String? previousId,
+});
 
 // ---------------------------------------------------------------------------
 // Section header

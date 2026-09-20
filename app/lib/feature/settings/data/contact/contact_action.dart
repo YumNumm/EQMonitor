@@ -5,13 +5,16 @@ import 'package:eqmonitor/feature/settings/data/contact/contact_url_builder.dart
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final contactTargetPlatformProvider = Provider<TargetPlatform>(
-  (_) => defaultTargetPlatform,
-);
+part 'contact_action.g.dart';
 
-final contactUrlProvider = FutureProvider<Uri>((ref) async {
+@Riverpod(keepAlive: true)
+TargetPlatform contactTargetPlatform(Ref ref) => defaultTargetPlatform;
+
+@Riverpod(keepAlive: true)
+Future<Uri> contactUrl(Ref ref) async {
   final deviceId = await ref.read(deviceIdProvider.future);
   final packageInfo = ref.read(packageInfoProvider);
   const builder = ContactUrlBuilder();
@@ -31,22 +34,18 @@ final contactUrlProvider = FutureProvider<Uri>((ref) async {
     ),
     _ => throw UnsupportedError('Unsupported contact platform'),
   };
-});
+}
 
-final contactUrlLauncherProvider = Provider<Future<bool> Function(Uri)>(
-  (_) =>
-      (url) => launchUrl(url, mode: LaunchMode.externalApplication),
-);
+@Riverpod(keepAlive: true)
+Future<bool> Function(Uri) contactUrlLauncher(Ref ref) =>
+    (url) => launchUrl(url, mode: LaunchMode.externalApplication);
 
-final openContactProvider = Provider<OpenContactAction>(
-  (_) => const OpenContactAction(),
-);
+@Riverpod(keepAlive: true)
+OpenContactAction openContact(Ref ref) => const OpenContactAction();
 
 /// 問い合わせページを開く。呼び出し側は `open(ref, context)` のように
 /// 関数として扱える([call]による callable object)。
-class OpenContactAction {
-  const new();
-
+class const OpenContactAction() {
   Future<void> call(WidgetRef ref, BuildContext context) async {
     try {
       final url = await ref.read(contactUrlProvider.future);

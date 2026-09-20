@@ -40,15 +40,10 @@ DeviceLocationMonitoringReconciler deviceLocationMonitoringReconciler(
   },
 );
 
-final class DeviceLocationMonitoringReconciler {
-  const new({
-    required this.afterDeleteAction,
-    required this.afterReprovisionAction,
-  });
-
-  final DeviceLocationMonitoringAction afterDeleteAction;
-  final DeviceLocationMonitoringAction afterReprovisionAction;
-
+final class const DeviceLocationMonitoringReconciler({
+  required final DeviceLocationMonitoringAction afterDeleteAction,
+  required final DeviceLocationMonitoringAction afterReprovisionAction,
+}) {
   Future<void> afterDelete() => afterDeleteAction();
 
   Future<void> afterReprovision() => afterReprovisionAction();

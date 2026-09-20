@@ -108,7 +108,6 @@ extension EewContentState {
                 forecastIntensity: localIntensity,
                 forecastLpgmIntensity: nil,
                 arrivalTime: arrival ? formatter.string(from: now.addingTimeInterval(31)) : nil,
-                intensity: nil,
                 isWarning: locationWarning
             ) : nil
         return EewContentState(
@@ -155,8 +154,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "5-",
             forecastLpgmIntensity: "2",
-            arrivalTime: "2024-01-01T16:12:30+09:00",
-            intensity: nil
+            arrivalTime: "2024-01-01T16:12:30+09:00"
         )
     )
 
@@ -243,8 +241,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "4",
             forecastLpgmIntensity: nil,
-            arrivalTime: nil,
-            intensity: nil
+            arrivalTime: nil
         )
     )
 
@@ -269,8 +266,7 @@ extension EewContentState {
             regionName: "神奈川県東部",
             forecastIntensity: "3",
             forecastLpgmIntensity: nil,
-            arrivalTime: nil,
-            intensity: nil
+            arrivalTime: nil
         )
     )
 
@@ -317,8 +313,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "5-",
             forecastLpgmIntensity: "2",
-            arrivalTime: "2024-01-06T16:12:30+09:00",
-            intensity: nil
+            arrivalTime: "2024-01-06T16:12:30+09:00"
         )
     )
 
@@ -349,8 +344,7 @@ extension EewContentState {
                 forecastLpgmIntensity: "2",
                 arrivalTime: formatter.string(
                     from: Date().addingTimeInterval(secondsUntilArrival)
-                ),
-                intensity: nil
+                )
             )
         )
     }
@@ -536,8 +530,7 @@ extension EewContentState {
                 regionName: "富山県東部",
                 forecastIntensity: forecastIntensity,
                 forecastLpgmIntensity: nil,
-                arrivalTime: formatter.string(from: arrivalTime),
-                intensity: nil
+                arrivalTime: formatter.string(from: arrivalTime)
             )
         )
     }
@@ -571,8 +564,7 @@ extension EewContentState {
                 regionName: "東京都23区",
                 forecastIntensity: "2",
                 forecastLpgmIntensity: nil,
-                arrivalTime: formatter.string(from: arrivalTime),
-                intensity: nil
+                arrivalTime: formatter.string(from: arrivalTime)
             )
         )
     }

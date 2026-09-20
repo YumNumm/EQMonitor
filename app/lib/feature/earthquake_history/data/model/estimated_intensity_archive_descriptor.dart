@@ -9,17 +9,11 @@ final _estimatedIntensitySha256Pattern = RegExp(r'^[0-9a-f]{64}$');
 /// Generated API model から pure validator へ渡す package-neutral input。
 ///
 /// 未検証のため、download や map package へ直接渡してはならない。
-final class EstimatedIntensityArchiveDescriptorInput {
-  const new({
-    required this.url,
-    required this.sizeBytes,
-    required this.sha256,
-  });
-
-  final String url;
-  final int sizeBytes;
-  final String sha256;
-
+final class const EstimatedIntensityArchiveDescriptorInput({
+  required final String url,
+  required final int sizeBytes,
+  required final String sha256,
+}) {
   @override
   String toString() =>
       'EstimatedIntensityArchiveDescriptorInput('

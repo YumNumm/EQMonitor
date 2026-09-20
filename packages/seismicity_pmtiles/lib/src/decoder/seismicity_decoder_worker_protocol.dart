@@ -5,9 +5,9 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_archive_descript
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-sealed class SeismicityDecoderWorkerRequest {
-  const new({required this.requestId});
-
+sealed class const SeismicityDecoderWorkerRequest({
+  required final int requestId,
+}) {
   const factory initialize({
     required int requestId,
     required SendPort responsePort,
@@ -24,44 +24,28 @@ sealed class SeismicityDecoderWorkerRequest {
   const factory finish({
     required int requestId,
   }) = SeismicityDecoderWorkerFinishRequest;
-
-  final int requestId;
 }
 
-final class SeismicityDecoderWorkerInitializeRequest
-    extends SeismicityDecoderWorkerRequest {
-  const new({
-    required super.requestId,
-    required this.responsePort,
-    required this.acceptedDescriptor,
-    required this.chunkCapacity,
-  });
+final class const SeismicityDecoderWorkerInitializeRequest({
+  required super.requestId,
+  required final SendPort responsePort,
+  required final SeismicityPmTilesArchiveDescriptor acceptedDescriptor,
+  required final int chunkCapacity,
+}) extends SeismicityDecoderWorkerRequest;
 
-  final SendPort responsePort;
-  final SeismicityPmTilesArchiveDescriptor acceptedDescriptor;
-  final int chunkCapacity;
-}
+final class const SeismicityDecoderWorkerDecodeRequest({
+  required super.requestId,
+  required final int tileId,
+  required final TransferableTypedData tileBytes,
+}) extends SeismicityDecoderWorkerRequest;
 
-final class SeismicityDecoderWorkerDecodeRequest
-    extends SeismicityDecoderWorkerRequest {
-  const new({
-    required super.requestId,
-    required this.tileId,
-    required this.tileBytes,
-  });
+final class const SeismicityDecoderWorkerFinishRequest({
+  required super.requestId,
+}) extends SeismicityDecoderWorkerRequest;
 
-  final int tileId;
-  final TransferableTypedData tileBytes;
-}
-
-final class SeismicityDecoderWorkerFinishRequest
-    extends SeismicityDecoderWorkerRequest {
-  const new({required super.requestId});
-}
-
-sealed class SeismicityDecoderWorkerResponse {
-  const new({required this.requestId});
-
+sealed class const SeismicityDecoderWorkerResponse({
+  required final int requestId,
+}) {
   const factory ready({
     required int requestId,
   }) = SeismicityDecoderWorkerReadyResponse;
@@ -80,41 +64,23 @@ sealed class SeismicityDecoderWorkerResponse {
     required int requestId,
     required SeismicityPmTilesException error,
   }) = SeismicityDecoderWorkerFailureResponse;
-
-  final int requestId;
 }
 
-final class SeismicityDecoderWorkerReadyResponse
-    extends SeismicityDecoderWorkerResponse {
-  const new({required super.requestId});
-}
+final class const SeismicityDecoderWorkerReadyResponse({
+  required super.requestId,
+}) extends SeismicityDecoderWorkerResponse;
 
-final class SeismicityDecoderWorkerProgressResponse
-    extends SeismicityDecoderWorkerResponse {
-  const new({
-    required super.requestId,
-    required this.progress,
-  });
+final class const SeismicityDecoderWorkerProgressResponse({
+  required super.requestId,
+  required final SeismicityPmTilesDecodeProgress progress,
+}) extends SeismicityDecoderWorkerResponse;
 
-  final SeismicityPmTilesDecodeProgress progress;
-}
+final class const SeismicityDecoderWorkerFinishedResponse({
+  required super.requestId,
+  required final SeismicityDatasetTransfer datasetTransfer,
+}) extends SeismicityDecoderWorkerResponse;
 
-final class SeismicityDecoderWorkerFinishedResponse
-    extends SeismicityDecoderWorkerResponse {
-  const new({
-    required super.requestId,
-    required this.datasetTransfer,
-  });
-
-  final SeismicityDatasetTransfer datasetTransfer;
-}
-
-final class SeismicityDecoderWorkerFailureResponse
-    extends SeismicityDecoderWorkerResponse {
-  const new({
-    required super.requestId,
-    required this.error,
-  });
-
-  final SeismicityPmTilesException error;
-}
+final class const SeismicityDecoderWorkerFailureResponse({
+  required super.requestId,
+  required final SeismicityPmTilesException error,
+}) extends SeismicityDecoderWorkerResponse;

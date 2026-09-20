@@ -2,9 +2,7 @@ import 'dart:async';
 
 const _maximumBackoff = Duration(seconds: 60);
 
-final class PushTokenBackoff {
-  const new();
-
+final class const PushTokenBackoff() {
   Duration durationFor({required int attempt, Duration? retryAfter}) {
     if (retryAfter != null) {
       return retryAfter > _maximumBackoff ? _maximumBackoff : retryAfter;

@@ -32,12 +32,10 @@ extension EarthquakeMapSpriteAtlasLimitsKeyConverter on MapSpriteAtlasLimits {
   );
 }
 
-final class EarthquakeMapSpriteAtlasException implements Exception {
-  const new({required this.reason, required this.assetPath});
-
-  final EarthquakeMapSpriteAtlasFailureReason reason;
-  final String? assetPath;
-
+final class const EarthquakeMapSpriteAtlasException({
+  required final EarthquakeMapSpriteAtlasFailureReason reason,
+  required final String? assetPath,
+}) implements Exception {
   @override
   String toString() => 'Earthquake map sprite atlas failed: ${reason.name}';
 }
@@ -53,10 +51,8 @@ abstract interface class EarthquakeMapSpriteImageDecoder {
   });
 }
 
-final class FlutterEarthquakeMapSpriteImageDecoder
+final class const FlutterEarthquakeMapSpriteImageDecoder()
     implements EarthquakeMapSpriteImageDecoder {
-  const new();
-
   @override
   Future<EarthquakeMapSpriteImage> decode({
     required String assetPath,
@@ -128,9 +124,7 @@ final class FlutterEarthquakeMapSpriteImageDecoder
   }
 }
 
-final class EarthquakeMapSpriteAssetLoader {
-  const new();
-
+final class const EarthquakeMapSpriteAssetLoader() {
   Future<EarthquakeMapSpriteImage> load({
     required AssetBundle bundle,
     required EarthquakeMapSpriteImageDecoder decoder,
@@ -187,40 +181,29 @@ final class EarthquakeMapSpriteAssetLoader {
   }
 }
 
-sealed class _EarthquakeMapSpriteLoadResult {
-  const new();
-
+sealed class const _EarthquakeMapSpriteLoadResult() {
   EarthquakeMapSpriteImage unwrap();
 }
 
-final class _EarthquakeMapSpriteLoadSuccess
-    extends _EarthquakeMapSpriteLoadResult {
-  const new(this.image);
-
-  final EarthquakeMapSpriteImage image;
-
+final class const _EarthquakeMapSpriteLoadSuccess(
+  final EarthquakeMapSpriteImage image,
+) extends _EarthquakeMapSpriteLoadResult {
   @override
   EarthquakeMapSpriteImage unwrap() => image;
 }
 
-final class _EarthquakeMapSpriteLoadException
-    extends _EarthquakeMapSpriteLoadResult {
-  const new(this.error, this.stackTrace);
-
-  final Exception error;
-  final StackTrace stackTrace;
-
+final class const _EarthquakeMapSpriteLoadException(
+  final Exception error,
+  final StackTrace stackTrace,
+) extends _EarthquakeMapSpriteLoadResult {
   @override
   Never unwrap() => Error.throwWithStackTrace(error, stackTrace);
 }
 
-final class _EarthquakeMapSpriteLoadError
-    extends _EarthquakeMapSpriteLoadResult {
-  const new(this.error, this.stackTrace);
-
-  final Error error;
-  final StackTrace stackTrace;
-
+final class const _EarthquakeMapSpriteLoadError(
+  final Error error,
+  final StackTrace stackTrace,
+) extends _EarthquakeMapSpriteLoadResult {
   @override
   Never unwrap() => Error.throwWithStackTrace(error, stackTrace);
 }

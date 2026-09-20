@@ -4,18 +4,15 @@ import 'dart:math' as math;
 import 'package:eqmonitor/feature/map/data/logic/lat_lng_grid_interval_selector.dart';
 import 'package:maplibre/maplibre.dart';
 
-final class LatLngGridGeoJsonBuilder {
-  const new({
-    this.intervalSelector = const LatLngGridIntervalSelector(),
-  });
-
+final class const LatLngGridGeoJsonBuilder({
+  final LatLngGridIntervalSelector intervalSelector =
+      const LatLngGridIntervalSelector(),
+}) {
   static const mercatorLimit = 85.0511287798066;
   static const maxFeatureCount = 20;
   static const coordinateScale = 1000000000000;
   static const emptyFeatureCollection =
       '{"type":"FeatureCollection","features":[]}';
-
-  final LatLngGridIntervalSelector intervalSelector;
 
   String build({required LngLatBounds bounds, required int zoomLevel}) {
     final longitudeWest = bounds.longitudeWest;

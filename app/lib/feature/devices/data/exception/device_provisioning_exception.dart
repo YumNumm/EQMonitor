@@ -1,11 +1,10 @@
 /// プロビジョニング処理で発生しうるエラーの sealed 階層。
 ///
 /// 全サブクラスは [userMessage]（UI 表示用）と [isRetryable]（自動再試行可否）を持つ。
-sealed class DeviceProvisioningException implements Exception {
-  const new({this.cause, this.stackTrace});
-  final Object? cause;
-  final StackTrace? stackTrace;
-
+sealed class const DeviceProvisioningException({
+  final Object? cause,
+  final StackTrace? stackTrace,
+}) implements Exception {
   String get userMessage;
   bool get isRetryable;
 
@@ -15,9 +14,8 @@ sealed class DeviceProvisioningException implements Exception {
 }
 
 /// ネットワーク不通・タイムアウト・TLS エラー。
-final class NetworkUnreachableException extends DeviceProvisioningException {
-  const new({super.cause, super.stackTrace});
-
+final class const NetworkUnreachableException({super.cause, super.stackTrace})
+    extends DeviceProvisioningException {
   @override
   String get userMessage => 'ネットワークに接続できません';
 
@@ -26,16 +24,12 @@ final class NetworkUnreachableException extends DeviceProvisioningException {
 }
 
 /// 5xx サーバーエラー。
-final class ServerErrorException extends DeviceProvisioningException {
-  const new({
-    required this.statusCode,
-    this.body,
-    super.cause,
-    super.stackTrace,
-  });
-  final int statusCode;
-  final String? body;
-
+final class const ServerErrorException({
+  required final int statusCode,
+  final String? body,
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => 'サーバーエラーが発生しました';
 
@@ -44,16 +38,12 @@ final class ServerErrorException extends DeviceProvisioningException {
 }
 
 /// 400 / 422 リクエスト不正（バグまたは互換性の問題）。
-final class InvalidRequestException extends DeviceProvisioningException {
-  const new({
-    required this.statusCode,
-    this.body,
-    super.cause,
-    super.stackTrace,
-  });
-  final int statusCode;
-  final String? body;
-
+final class const InvalidRequestException({
+  required final int statusCode,
+  final String? body,
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => '無効なリクエストです';
 
@@ -68,14 +58,11 @@ enum AuthorizationFailureReason {
 }
 
 /// 認証 / 認可エラー。AppCheck 失敗は再試行可能。
-final class AuthorizationException extends DeviceProvisioningException {
-  const new({
-    required this.reason,
-    super.cause,
-    super.stackTrace,
-  });
-  final AuthorizationFailureReason reason;
-
+final class const AuthorizationException({
+  required final AuthorizationFailureReason reason,
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => switch (reason) {
     AuthorizationFailureReason.appCheckUnavailable => '認証トークンを取得できません',
@@ -89,10 +76,11 @@ final class AuthorizationException extends DeviceProvisioningException {
 }
 
 /// 429 レート制限。[retryAfter] が非 null の場合は優先的に使用する。
-final class RateLimitedException extends DeviceProvisioningException {
-  const new({this.retryAfter, super.cause, super.stackTrace});
-  final Duration? retryAfter;
-
+final class const RateLimitedException({
+  final Duration? retryAfter,
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => 'リクエストが多すぎます。しばらくお待ちください';
 
@@ -110,16 +98,12 @@ enum PushTokenFailureReason {
 }
 
 /// プッシュトークン取得失敗。
-final class PushTokenUnavailableException extends DeviceProvisioningException {
-  const new({
-    required this.kind,
-    required this.reason,
-    super.cause,
-    super.stackTrace,
-  });
-  final PushTokenKind kind;
-  final PushTokenFailureReason reason;
-
+final class const PushTokenUnavailableException({
+  required final PushTokenKind kind,
+  required final PushTokenFailureReason reason,
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => switch (reason) {
     PushTokenFailureReason.permissionDenied => '通知の許可が必要です',
@@ -136,9 +120,8 @@ final class PushTokenUnavailableException extends DeviceProvisioningException {
 }
 
 /// SharedPreferences 書き込み失敗。
-final class LocalStorageException extends DeviceProvisioningException {
-  const new({super.cause, super.stackTrace});
-
+final class const LocalStorageException({super.cause, super.stackTrace})
+    extends DeviceProvisioningException {
   @override
   String get userMessage => 'ローカルデータの保存に失敗しました';
 
@@ -147,10 +130,10 @@ final class LocalStorageException extends DeviceProvisioningException {
 }
 
 /// 上記に分類できない予期しないエラー。
-final class UnexpectedProvisioningException
-    extends DeviceProvisioningException {
-  const new({super.cause, super.stackTrace});
-
+final class const UnexpectedProvisioningException({
+  super.cause,
+  super.stackTrace,
+}) extends DeviceProvisioningException {
   @override
   String get userMessage => '予期しないエラーが発生しました';
 

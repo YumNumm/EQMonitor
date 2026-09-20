@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/repository/better_auth_session_repository.dart';
 
-final class BetterAuthSessionTokenManager {
-  const new();
-
+final class const BetterAuthSessionTokenManager() {
   Future<void> persist<T>({
     required Response<T> response,
     required BetterAuthSessionRepository sessionRepository,

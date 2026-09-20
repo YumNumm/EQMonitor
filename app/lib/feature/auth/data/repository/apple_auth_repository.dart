@@ -18,19 +18,12 @@ abstract interface class AppleAuthGateway {
   });
 }
 
-final class AppleNativeCredential {
-  const new({
-    required this.identityToken,
-    this.email,
-    this.firstName,
-    this.lastName,
-  });
-
-  final String? identityToken;
-  final String? email;
-  final String? firstName;
-  final String? lastName;
-}
+final class const AppleNativeCredential({
+  required final String? identityToken,
+  final String? email,
+  final String? firstName,
+  final String? lastName,
+});
 
 abstract interface class AppleSignInPlugin {
   Future<AppleNativeCredential> signIn({
@@ -39,9 +32,7 @@ abstract interface class AppleSignInPlugin {
   });
 }
 
-final class AppleSignInPluginAdapter implements AppleSignInPlugin {
-  const new();
-
+final class const AppleSignInPluginAdapter() implements AppleSignInPlugin {
   @override
   Future<AppleNativeCredential> signIn({
     required String nonce,

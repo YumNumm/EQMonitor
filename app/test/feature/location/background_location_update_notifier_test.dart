@@ -149,12 +149,9 @@ final class _RecordingDeviceLocationSyncStateRepository
   }
 }
 
-final class _RecordingBackgroundLocationSyncCoordinator
-    extends BackgroundLocationSyncCoordinator {
-  const new(this.events);
-
-  final List<String> events;
-
+final class const _RecordingBackgroundLocationSyncCoordinator(
+  final List<String> events,
+) extends BackgroundLocationSyncCoordinator {
   @override
   Future<bool> syncCurrentLocationToAppGroup(
     Ref ref, {

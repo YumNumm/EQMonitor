@@ -33,19 +33,12 @@ final class MapGpuProbeAtlasFixtureTransition {
   final MapSpriteAtlasProbeFixture next;
 }
 
-final class MapGpuProbeConfigurationUpdate {
-  const new({
-    required this.faultPointChanged,
-    required this.atlasTransitionToken,
-  });
+final class const MapGpuProbeConfigurationUpdate({
+  required final bool faultPointChanged,
+  required final MapGpuProbeAtlasTransitionToken? atlasTransitionToken,
+});
 
-  final bool faultPointChanged;
-  final MapGpuProbeAtlasTransitionToken? atlasTransitionToken;
-}
-
-final class _MapGpuProbeRuntimeIdentity {
-  const new();
-}
+final class const _MapGpuProbeRuntimeIdentity();
 
 final class MapGpuProbeAtlasTransitionToken {
   const MapGpuProbeAtlasTransitionToken._({

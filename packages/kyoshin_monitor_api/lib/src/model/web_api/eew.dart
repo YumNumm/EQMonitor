@@ -93,9 +93,4 @@ abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
 }
 
 /// 位置情報
-class Location {
-  const new(this.latitude, this.longitude);
-
-  final double latitude;
-  final double longitude;
-}
+class const Location(final double latitude, final double longitude);

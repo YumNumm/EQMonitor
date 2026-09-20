@@ -124,9 +124,7 @@ final class SeismicityDatasetAccumulator {
   }
 }
 
-final class SeismicityChunkLengthSummer {
-  const new();
-
+final class const SeismicityChunkLengthSummer() {
   int sumChecked({required List<SeismicityPmTilesChunk> chunks}) {
     var sum = 0;
     for (final chunk in chunks) {
@@ -142,9 +140,7 @@ final class SeismicityChunkLengthSummer {
   }
 }
 
-final class SeismicityDatasetChunkSumGate {
-  const new();
-
+final class const SeismicityDatasetChunkSumGate() {
   void ensureMatches({
     required List<SeismicityPmTilesChunk> chunks,
     required int expectedFeatureCount,

@@ -6,9 +6,7 @@ part 'kyoshin_monitor_image_delay_status.g.dart';
 KyoshinMonitorImageDelayStatus kyoshinMonitorImageDelayStatus(Ref ref) =>
     const KyoshinMonitorImageDelayStatus();
 
-class KyoshinMonitorImageDelayStatus {
-  const new();
-
+class const KyoshinMonitorImageDelayStatus() {
   /// [targetTime] は取得対象の時刻で、常に現在時刻([now])より過去になる。
   /// データが [delay] 以上遅れている (= `now - targetTime > delay`) 場合に
   /// 遅延とみなす。

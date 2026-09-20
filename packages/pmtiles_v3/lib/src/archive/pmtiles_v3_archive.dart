@@ -34,17 +34,13 @@ abstract interface class PmTilesV3Archive {
   Future<void> close();
 }
 
-final class PmTilesV3ArchiveOpener {
-  const new({
-    this.headerDecoder = const PmTilesV3HeaderDecoder(),
-    this.directoryDecoder = const PmTilesV3DirectoryDecoder(),
-    this.compressionDecoder = const PmTilesV3CompressionDecoder(),
-  });
-
-  final PmTilesV3HeaderDecoder headerDecoder;
-  final PmTilesV3DirectoryDecoder directoryDecoder;
-  final PmTilesV3CompressionDecoder compressionDecoder;
-
+final class const PmTilesV3ArchiveOpener({
+  final PmTilesV3HeaderDecoder headerDecoder = const PmTilesV3HeaderDecoder(),
+  final PmTilesV3DirectoryDecoder directoryDecoder =
+      const PmTilesV3DirectoryDecoder(),
+  final PmTilesV3CompressionDecoder compressionDecoder =
+      const PmTilesV3CompressionDecoder(),
+}) {
   Future<PmTilesV3Archive> open({
     required PmTilesRandomAccessReader reader,
     required PmTilesV3Limits limits,
@@ -251,11 +247,9 @@ final class _PmTilesV3ArchiveImpl implements PmTilesV3Archive {
   }
 }
 
-final class PmTilesV3DirectoryValidator {
-  const new({required this.header});
-
-  final PmTilesV3Header header;
-
+final class const PmTilesV3DirectoryValidator({
+  required final PmTilesV3Header header,
+}) {
   void validate({
     required List<PmTilesV3DirectoryEntry> entries,
     required int lowerTileId,

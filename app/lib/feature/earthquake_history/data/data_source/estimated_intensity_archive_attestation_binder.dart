@@ -4,9 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intens
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 
 /// Verifier resultを現在のdescriptorと一時fileへ再bindし、replayを拒否する。
-final class EstimatedIntensityArchiveAttestationBinder {
-  const new();
-
+final class const EstimatedIntensityArchiveAttestationBinder() {
   EstimatedIntensityArchiveDownloadResult bind({
     required EstimatedIntensityArchiveDownloadResult result,
     required EstimatedIntensityArchiveDescriptor descriptor,

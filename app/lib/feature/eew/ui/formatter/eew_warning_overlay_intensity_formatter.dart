@@ -1,8 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 
-class EewWarningOverlayIntensityFormatter {
-  const new();
-
+class const EewWarningOverlayIntensityFormatter() {
   String format({required JmaIntensity intensity, required bool isOver}) {
     final value = switch (intensity) {
       JmaIntensity.unknown => '不明',

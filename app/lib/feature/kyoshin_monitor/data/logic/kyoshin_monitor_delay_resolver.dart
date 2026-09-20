@@ -16,9 +16,7 @@ KyoshinMonitorDelayResolver kyoshinMonitorDelayResolver(Ref ref) =>
 /// 補正は公開遅延そのものではなく「測定値からの差分」として保持する。
 /// こうすることで、`latest.json` の再同期が端末時計のドリフトやサーバ側の
 /// 遅延変動を追従し続ける一方で、学習した詰めぶんは維持される。
-class KyoshinMonitorDelayResolver {
-  const new();
-
+class const KyoshinMonitorDelayResolver() {
   /// 画像取得に使う公開遅延。
   Duration imageDelay({
     required Duration publishDelay,

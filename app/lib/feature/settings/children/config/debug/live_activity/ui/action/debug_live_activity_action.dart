@@ -5,17 +5,18 @@ import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/d
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_json_codec.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final debugLiveActivityActionProvider = Provider<DebugLiveActivityAction>(
-  (ref) => const DebugLiveActivityAction(),
-);
+part 'debug_live_activity_action.g.dart';
+
+@Riverpod(keepAlive: true)
+DebugLiveActivityAction debugLiveActivityAction(Ref ref) =>
+    const DebugLiveActivityAction();
 
 /// Live Activity デバッグ画面のイベントハンドラ。
 ///
 /// JSON の検証 → ネイティブ操作 → SnackBar 表示までを担う。
-class DebugLiveActivityAction {
-  const new();
-
+class const DebugLiveActivityAction() {
   /// Live Activity を開始する。成功時のみ [DebugLiveActivitySession] を返す。
   Future<DebugLiveActivitySession?> start({
     required WidgetRef ref,
@@ -46,7 +47,9 @@ class DebugLiveActivityAction {
         eventId: eventId,
       );
     } on LiveActivityLocalException catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('開始に失敗しました: ${e.message}')));
+      messenger.showSnackBar(
+        SnackBar(content: Text('開始に失敗しました: ${e.message}')),
+      );
       return null;
     }
   }
@@ -74,11 +77,17 @@ class DebugLiveActivityAction {
     try {
       await ref
           .read(liveActivityLocalControllerProvider)
-          .update(kind: kind, activityId: activityId, contentState: contentState);
+          .update(
+            kind: kind,
+            activityId: activityId,
+            contentState: contentState,
+          );
       messenger.showSnackBar(const SnackBar(content: Text('更新しました')));
       return true;
     } on LiveActivityLocalException catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('更新に失敗しました: ${e.message}')));
+      messenger.showSnackBar(
+        SnackBar(content: Text('更新に失敗しました: ${e.message}')),
+      );
       return false;
     }
   }
@@ -114,7 +123,9 @@ class DebugLiveActivityAction {
       messenger.showSnackBar(const SnackBar(content: Text('終了しました')));
       return true;
     } on LiveActivityLocalException catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('終了に失敗しました: ${e.message}')));
+      messenger.showSnackBar(
+        SnackBar(content: Text('終了に失敗しました: ${e.message}')),
+      );
       return false;
     }
   }

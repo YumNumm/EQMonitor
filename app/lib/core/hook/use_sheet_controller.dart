@@ -9,11 +9,9 @@ SheetController useSheetController({
   String debugLabel = 'useSheetController',
 }) => use(_UseSheetControllerHook(debugLabel: debugLabel));
 
-class _UseSheetControllerHook extends Hook<SheetController> {
-  const new({this.debugLabel = 'useSheetController'});
-
-  final String debugLabel;
-
+class const _UseSheetControllerHook({
+  final String debugLabel = 'useSheetController',
+}) extends Hook<SheetController> {
   @override
   HookState<SheetController, Hook<SheetController>> createState() =>
       _UseSheetControllerHookState();

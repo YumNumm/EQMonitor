@@ -27,128 +27,60 @@ struct GetLatestEarthquakesIntent: AppIntent {
     var limit: Int
 
     func perform() async throws
-        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ShowsSnippetIntent {
-        if region != nil, !ProStatus.isPro {
-            throw EQIntentError.proRequired
-        }
+        -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
+        try await execute(service: .shared)
+    }
+
+    func execute(
+        service: EarthquakeAPIService, snapshotID: String = UUID().uuidString
+    ) async throws -> some IntentResult & ReturnsValue<[EarthquakeEntity]> & ProvidesDialog & ShowsSnippetIntent {
+        let request = try EarthquakeIntentRequest.current(regionID: region?.id, limit: limit)
         let items = try await EarthquakeFetcher.fetch(
-            plan: region?.fetchPlan ?? .nationwide,
+            plan: request.plan,
             limit: limit,
-            minIntensity: minIntensity?.apiValue
+            minIntensity: minIntensity?.apiValue, service: service
         )
+        let summary = EarthquakeIntentDialog.summary(
+            items: items, area: request.area, isRegional: region != nil
+        )
+        let savedSnapshotID = await EarthquakeSnippetStore.shared.save(.init(
+            request: request, items: items, fetchedAt: Date(), wasRefreshed: false, minIntensity: minIntensity), id: snapshotID)
         return .result(
             value: items.map(EarthquakeEntity.init),
+            dialog: IntentDialog(full: "\(summary)", supporting: "\(items.count)件の地震情報を取得しました。"),
             snippetIntent: EarthquakeSnippetIntent(
                 regionID: region?.id,
                 minIntensity: minIntensity,
-                limit: limit
+                limit: limit, snapshotID: savedSnapshotID
             )
         )
-    }
-}
-
-// MARK: - Snippet Intent
-
-/// カード描画本体。ボタン操作のたびにシステムが perform を再実行するため、
-/// 常に最新のデータで再描画される。`SnippetIntent` は iOS 26 以降。
-@available(iOS 26.0, *)
-struct EarthquakeSnippetIntent: SnippetIntent {
-    static let title: LocalizedStringResource = "地震情報カード"
-
-    @Parameter(title: "地域ID")
-    var regionID: String?
-
-    @Parameter(title: "最小震度")
-    var minIntensity: MinIntensityOption?
-
-    @Parameter(title: "表示件数")
-    var limit: Int
-
-    init() {}
-
-    init(regionID: String?, minIntensity: MinIntensityOption?, limit: Int) {
-        self.regionID = regionID
-        self.minIntensity = minIntensity
-        self.limit = limit
-    }
-
-    func perform() async throws -> some IntentResult & ShowsSnippetView {
-        let items = try await EarthquakeFetcher.fetch(
-            plan: Self.plan(fromRegionID: regionID),
-            limit: limit,
-            minIntensity: minIntensity?.apiValue
-        )
-        return .result(
-            view: EarthquakeSnippetView(
-                title: Self.snippetTitle(regionID: regionID, minIntensity: minIntensity),
-                items: items,
-                reloadIntent: self
-            )
-        )
-    }
-
-    /// `"prefecture:01"` / `"city:0123500"` / `"region:350"` → 取得プラン
-    static func plan(fromRegionID id: String?) -> WidgetFetchPlan {
-        guard let id else { return .nationwide }
-        let parts = id.split(separator: ":", maxSplits: 1)
-        guard parts.count == 2 else { return .nationwide }
-        let code = String(parts[1])
-        switch parts[0] {
-        case "prefecture":
-            return .prefecture(code: code)
-        case "city":
-            return .city(code: code)
-        case "region":
-            return .region(code: code)
-        default:
-            return .nationwide
-        }
-    }
-
-    static func snippetTitle(regionID: String?, minIntensity: MinIntensityOption?) -> String {
-        let base: String
-        if let regionID {
-            if regionID.hasPrefix("region:") {
-                base = "現在地の地震情報"
-            } else {
-                let table = JmaCodeTable.shared
-                let name = (table.prefectures + table.cities)
-                    .first { "\($0.kind.rawValue):\($0.code)" == regionID }?
-                    .nameJa
-                base = name.map { "\($0)の地震情報" } ?? "地震情報"
-            }
-        } else {
-            base = "全国の地震情報"
-        }
-        if let minIntensity {
-            return base + "（\(MinIntensityOption.caseDisplayRepresentations[minIntensity]?.title ?? "")）"
-        }
-        return base
-    }
-}
-
-// MARK: - Pro Status
-
-enum ProStatus {
-    /// Flutter アプリが App Group に書き込んだ Pro 加入状態
-    static var isPro: Bool {
-        UserDefaults(suiteName: "group.net.yumnumm.eqmonitor")?
-            .bool(forKey: "isPro") == true
     }
 }
 
 // MARK: - Errors
 
-enum EQIntentError: Error, CustomLocalizedStringResourceConvertible {
+enum EQIntentError: Error, CustomLocalizedStringResourceConvertible, Equatable {
     case proRequired
     case locationUnavailable
+    case invalidRegion
+    case invalidLimit
+    case snapshotUnavailable
+    case fetchFailed(String)
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
         case .proRequired:
             return "地域指定は EQMonitor Pro の機能です。アプリからご登録ください。"
         case .locationUnavailable:
-            return "現在地が未取得です。EQMonitor アプリを起動して位置情報を有効にしてください。"
+            return "保存地域が未設定または変更されています。EQMonitorで位置情報を確認し、もう一度実行してください。"
+        case .invalidRegion:
+            return "対象地域を確認できません。地域を選び直してください。"
+        case .invalidLimit:
+            return "表示件数は1件から10件で指定してください。"
+        case .snapshotUnavailable:
+            return "取得結果の表示期限が切れました。地震情報の確認をもう一度実行してください。"
+        case .fetchFailed(let message):
+            return "\(message)。しばらくしてからもう一度お試しください。"
         }
     }
 }

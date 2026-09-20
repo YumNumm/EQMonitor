@@ -26,24 +26,22 @@ enum EqmonitorMapCoverageState {
   complete,
 }
 
-final class EqmonitorMapOverlayPresentation {
-  const new({
-    required this.eventIdLabel,
-    required this.originTimeLabel,
-    required this.statusLabel,
-    required this.message,
-    required this.overlay,
-    required this.isError,
-    required this.dataSequence,
-    required this.renderGeneration,
-    required this.inputCounts,
-    required this.coverageState,
-    required this.coverageDiagnostic,
-    required this.currentZoom,
-    required this.hypocenter,
-    required this.canMoveToHypocenter,
-  });
-
+final class const EqmonitorMapOverlayPresentation({
+  required final String eventIdLabel,
+  required final String originTimeLabel,
+  required final String statusLabel,
+  required final String message,
+  required final EarthquakeMapOverlaySnapshot? overlay,
+  required final bool isError,
+  required final int? dataSequence,
+  required final int? renderGeneration,
+  required final EqmonitorMapOverlayInputCounts? inputCounts,
+  required final EqmonitorMapCoverageState coverageState,
+  required final EarthquakeOverlayCoverageDiagnostic? coverageDiagnostic,
+  required final double? currentZoom,
+  required final EqmonitorMapHypocenter? hypocenter,
+  required final bool canMoveToHypocenter,
+}) {
   factory from({
     required AsyncValue<LatestEarthquakeOverlayData> overlayState,
     required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,
@@ -53,26 +51,9 @@ final class EqmonitorMapOverlayPresentation {
     coverageSnapshot: coverageSnapshot,
     committedCamera: committedCamera,
   );
-
-  final String eventIdLabel;
-  final String originTimeLabel;
-  final String statusLabel;
-  final String message;
-  final EarthquakeMapOverlaySnapshot? overlay;
-  final bool isError;
-  final int? dataSequence;
-  final int? renderGeneration;
-  final EqmonitorMapOverlayInputCounts? inputCounts;
-  final EqmonitorMapCoverageState coverageState;
-  final EarthquakeOverlayCoverageDiagnostic? coverageDiagnostic;
-  final double? currentZoom;
-  final EqmonitorMapHypocenter? hypocenter;
-  final bool canMoveToHypocenter;
 }
 
-final class EqmonitorMapOverlayPresentationBuilder {
-  const new();
-
+final class const EqmonitorMapOverlayPresentationBuilder() {
   EqmonitorMapOverlayPresentation build({
     required AsyncValue<LatestEarthquakeOverlayData> overlayState,
     required EarthquakeOverlayCoverageSnapshot? coverageSnapshot,

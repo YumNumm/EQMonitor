@@ -4,11 +4,9 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class MapJmaIntensityUint8ListJsonConverter
+class const MapJmaIntensityUint8ListJsonConverter()
     implements
         JsonConverter<Map<JmaIntensity, Uint8List>, Map<String, dynamic>> {
-  const new();
-
   @override
   Map<JmaIntensity, Uint8List> fromJson(Map<String, dynamic> json) =>
       Map<JmaIntensity, Uint8List>.from(
@@ -25,11 +23,9 @@ class MapJmaIntensityUint8ListJsonConverter
       object.map((key, value) => MapEntry(key.name, value.toList()));
 }
 
-class MapJmaLpgmIntensityUint8ListJsonConverter
+class const MapJmaLpgmIntensityUint8ListJsonConverter()
     implements
         JsonConverter<Map<JmaLpgmIntensity, Uint8List>, Map<String, dynamic>> {
-  const new();
-
   @override
   Map<JmaLpgmIntensity, Uint8List> fromJson(Map<String, dynamic> json) =>
       Map<JmaLpgmIntensity, Uint8List>.from(

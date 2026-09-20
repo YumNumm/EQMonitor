@@ -3,14 +3,15 @@ import 'package:eqmonitor/feature/eew_history/data/notifier/eew_history_notice_n
 import 'package:eqmonitor/feature/eew_history/ui/components/eew_history_notice_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final eewHistoryNoticeFlowProvider = Provider<EewHistoryNoticeFlow>(
-  (ref) => const EewHistoryNoticeFlow(),
-);
+part 'show_eew_history_notice_flow.g.dart';
 
-class EewHistoryNoticeFlow {
-  const new();
+@Riverpod(keepAlive: true)
+EewHistoryNoticeFlow eewHistoryNoticeFlow(Ref ref) =>
+    const EewHistoryNoticeFlow();
 
+class const EewHistoryNoticeFlow() {
   Future<void> show({
     required WidgetRef ref,
     required BuildContext context,

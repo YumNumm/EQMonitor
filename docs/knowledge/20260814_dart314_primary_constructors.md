@@ -58,6 +58,39 @@ done
 **primary constructor へは機械的に変換しない。** 変換する場合は
 フィールド化したい引数に `final` を付け、名前付き引数を private 名にしない。
 
+## 一括変換するときの前提条件
+
+`const new(...)` → primary constructor の変換を機械的に行う場合、
+次の条件を全て満たすクラスだけを対象にする（1件でも外れたら手作業に回す）。
+
+- 引数が `this.x` / `super.x` だけで構成されている（`_` 始まりの名前付き引数を作らない）
+- initializer list (`: _x = x`, `: assert(...)`, `: super(...)`) と body を持たない
+- 生成的な名前付きコンストラクタ（`const new _()` / `new initial()`）を持たない
+  - `factory` は primary constructor と共存できるので対象にしてよい
+- 移動するフィールドが `final Type name;` 形式（doc comment / `@override` は引数側へ移す）
+- フィールド宣言をクラス直下のメンバから探す。メソッド / factory body 内の
+  ローカル変数 (`final Uint8List signatureBytes;`) を誤って拾うと、
+  `assignment_to_final` や `duplicate_definition` で壊れる
+
+変換後の検証は次の順で行う。`dart analyze` だけでは不足する。
+
+```bash
+# 変換したファイルだけを整形する（リポジトリ全体に dart format をかけると
+# formatter のバージョン差で無関係な 500 ファイル以上が変わる。
+# docs/todo/500_dart_format_version_drift.md 参照）
+xargs mise exec flutter -- dart format < changed_files.txt
+
+mise exec flutter -- dart analyze app packages
+cd app && mise exec flutter -- flutter build bundle --debug --no-pub  # CFE
+cd app && mise exec flutter -- flutter test
+```
+
+`mise exec --` は mise.toml の全ツールを解決するため、未インストールの
+重量級ツール（swift 等）のダウンロードが始まる。Flutter / Dart だけ使うときは
+`mise exec flutter -- dart ...` のようにツールを限定する。
+
+変換対象外として残したクラスは `docs/todo/450_primary_constructor_remaining.md` にある。
+
 ## 検証方法
 
 `flutter analyze` だけでなく CFE を通す確認をする。

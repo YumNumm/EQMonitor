@@ -17,9 +17,7 @@ final _loopbackIpv4 = RegExp(
 /// ための sealed marker。`BaseMapTileRepository`は本型で local/remote を
 /// 網羅的に判別する。sealedのため subtype は本 library(このファイルと
 /// 生成 part)に閉じている。
-sealed class VerifiedTileSource {
-  const new();
-
+sealed class const VerifiedTileSource() {
   /// archiveの実体を区別する識別子。同一URL/pathでも中身が更新された別の
   /// downloadを別物として扱うために使う。
   String get sourceInstanceId;

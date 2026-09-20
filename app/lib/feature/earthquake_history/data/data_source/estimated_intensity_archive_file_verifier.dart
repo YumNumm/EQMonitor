@@ -14,23 +14,16 @@ abstract interface class EstimatedIntensityArchiveFileLengthReader {
   Future<int> read({required File file});
 }
 
-final class DartIoEstimatedIntensityArchiveFileLengthReader
+final class const DartIoEstimatedIntensityArchiveFileLengthReader()
     implements EstimatedIntensityArchiveFileLengthReader {
-  const new();
-
   @override
   Future<int> read({required File file}) => file.length();
 }
 
-final class DartIoEstimatedIntensityArchiveFileVerifier
-    implements EstimatedIntensityArchiveFileVerifier {
-  const new({
-    this.fileLengthReader =
-        const DartIoEstimatedIntensityArchiveFileLengthReader(),
-  });
-
-  final EstimatedIntensityArchiveFileLengthReader fileLengthReader;
-
+final class const DartIoEstimatedIntensityArchiveFileVerifier({
+  final EstimatedIntensityArchiveFileLengthReader fileLengthReader =
+      const DartIoEstimatedIntensityArchiveFileLengthReader(),
+}) implements EstimatedIntensityArchiveFileVerifier {
   @override
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,

@@ -8,9 +8,7 @@ typedef PolygonRings = ({Int32List exterior, List<Int32List> holes});
 /// 交差しないring間の包含関係がPolygon topologyとして正しいか検証する。
 /// 全ring境界の交差・接触を先に拒否しているため、代表点がring内なら対象ring
 /// 全体がそのring内にある。この前提により辺同士の再比較をせず包含を判定する。
-final class PolygonTopologyValidator {
-  const new();
-
+final class const PolygonTopologyValidator() {
   int validate({
     required List<PolygonRings> polygons,
     required int maxChecks,

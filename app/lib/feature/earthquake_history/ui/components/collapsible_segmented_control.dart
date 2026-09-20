@@ -117,8 +117,7 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
   }
 }
 
-class SegmentItem<T> {
-  const new({required this.value, required this.label});
-  final T value;
-  final String label;
-}
+class const SegmentItem<T>({
+  required final T value,
+  required final String label,
+});

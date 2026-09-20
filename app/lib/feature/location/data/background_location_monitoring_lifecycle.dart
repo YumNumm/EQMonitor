@@ -5,13 +5,9 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 
 typedef BackgroundLocationMonitoringAction = Future<void> Function();
 
-final class BackgroundLocationUpdateRetry {
-  const new({
-    this.baseDelay = const Duration(milliseconds: 250),
-  });
-
-  final Duration baseDelay;
-
+final class const BackgroundLocationUpdateRetry({
+  final Duration baseDelay = const Duration(milliseconds: 250),
+}) {
   Future<T> run<T>({required Future<T> Function() action}) async {
     for (var attempt = 1; attempt <= 3; attempt++) {
       try {
@@ -27,9 +23,7 @@ final class BackgroundLocationUpdateRetry {
   }
 }
 
-final class BackgroundLocationMonitoringPolicy {
-  const new();
-
+final class const BackgroundLocationMonitoringPolicy() {
   bool shouldMonitor({
     required List<NotificationSlot> slots,
     required ShakeDetectionState? shakeDetectionState,
@@ -51,17 +45,14 @@ final class BackgroundLocationMonitoringPolicy {
   }
 }
 
-final class BackgroundLocationMonitoringLifecycle {
-  const new({
-    this.policy = const BackgroundLocationMonitoringPolicy(),
-    this.startMonitoring = BackgroundLocationTracker.startMonitoring,
-    this.stopMonitoring = BackgroundLocationTracker.stopMonitoring,
-  });
-
-  final BackgroundLocationMonitoringPolicy policy;
-  final BackgroundLocationMonitoringAction startMonitoring;
-  final BackgroundLocationMonitoringAction stopMonitoring;
-
+final class const BackgroundLocationMonitoringLifecycle({
+  final BackgroundLocationMonitoringPolicy policy =
+      const BackgroundLocationMonitoringPolicy(),
+  final BackgroundLocationMonitoringAction startMonitoring =
+      BackgroundLocationTracker.startMonitoring,
+  final BackgroundLocationMonitoringAction stopMonitoring =
+      BackgroundLocationTracker.stopMonitoring,
+}) {
   Future<void> stop() async {
     try {
       await stopMonitoring();

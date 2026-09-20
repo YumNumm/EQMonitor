@@ -14,9 +14,7 @@ part 'test_notification_send_action.g.dart';
 TestNotificationSendAction testNotificationSendAction(Ref ref) =>
     const TestNotificationSendAction();
 
-class TestNotificationSendAction {
-  const new();
-
+class const TestNotificationSendAction() {
   Future<bool> handle({
     required WidgetRef ref,
     required BuildContext context,

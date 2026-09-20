@@ -3,12 +3,10 @@ import 'package:flutter/foundation.dart';
 
 /// 1つの予報区・市区町村codeに対応するFill mesh群。
 @immutable
-final class CodedFillGeometry {
-  const new({required this.code, required this.meshes});
-
-  final String code;
-  final List<FillMesh> meshes;
-}
+final class const CodedFillGeometry({
+  required final String code,
+  required final List<FillMesh> meshes,
+});
 
 /// 同種の震度区域source layerから得た、code付きFill geometry。
 @immutable

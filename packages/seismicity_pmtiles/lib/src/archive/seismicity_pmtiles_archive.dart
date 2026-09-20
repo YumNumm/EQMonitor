@@ -45,9 +45,7 @@ abstract interface class SeismicityPmTilesArchive {
   Future<void> close();
 }
 
-final class SeismicityPmTilesArchiveOpener {
-  const new();
-
+final class const SeismicityPmTilesArchiveOpener() {
   Future<SeismicityPmTilesArchive> open({
     required PmTilesRandomAccessReader reader,
     required SeismicityPmTilesArchiveDescriptor descriptor,

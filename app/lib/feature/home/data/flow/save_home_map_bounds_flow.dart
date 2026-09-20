@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final saveHomeMapBoundsFlowProvider = Provider<SaveHomeMapBoundsFlow>(
-  (ref) => const SaveHomeMapBoundsFlow(),
-);
+part 'save_home_map_bounds_flow.g.dart';
 
-class SaveHomeMapBoundsFlow {
-  const new();
+@Riverpod(keepAlive: true)
+SaveHomeMapBoundsFlow saveHomeMapBoundsFlow(Ref ref) =>
+    const SaveHomeMapBoundsFlow();
 
+class const SaveHomeMapBoundsFlow() {
   Future<void> save({
     required BuildContext context,
     required WidgetRef ref,

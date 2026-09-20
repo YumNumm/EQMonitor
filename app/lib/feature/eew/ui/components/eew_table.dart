@@ -217,9 +217,7 @@ extension _EewTableColumnEx on _EewTableColumn {
   };
 }
 
-class _EewTableColumnValue {
-  const new({required this.value, required this.isNumeric});
-
-  final String value;
-  final bool isNumeric;
-}
+class const _EewTableColumnValue({
+  required final String value,
+  required final bool isNumeric,
+});

@@ -6,9 +6,7 @@ part 'notification_region_map_filter.g.dart';
 NotificationRegionMapFilter notificationRegionMapFilter(Ref ref) =>
     const NotificationRegionMapFilter();
 
-final class NotificationRegionMapFilter {
-  const new();
-
+final class const NotificationRegionMapFilter() {
   List<Object> buildRegion(String? regionCode) => regionCode == null
       ? buildMatchNothing('code')
       : <Object>[

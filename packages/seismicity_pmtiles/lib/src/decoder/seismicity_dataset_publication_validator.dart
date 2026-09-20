@@ -5,15 +5,12 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
 /// Fail-closed publication gate for every real or injected worker factory.
-final class SeismicityDatasetPublicationValidator {
-  const new({
-    this.chunkValidator = const SeismicityPmTilesChunkValidator(),
-    this.chunkSumGate = const SeismicityDatasetChunkSumGate(),
-  });
-
-  final SeismicityPmTilesChunkValidator chunkValidator;
-  final SeismicityDatasetChunkSumGate chunkSumGate;
-
+final class const SeismicityDatasetPublicationValidator({
+  final SeismicityPmTilesChunkValidator chunkValidator =
+      const SeismicityPmTilesChunkValidator(),
+  final SeismicityDatasetChunkSumGate chunkSumGate =
+      const SeismicityDatasetChunkSumGate(),
+}) {
   void validate({
     required SeismicityPmTilesDataset dataset,
     required SeismicityPmTilesArchiveDescriptor acceptedDescriptor,

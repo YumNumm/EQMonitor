@@ -11,9 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_teleg
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 
-class EarthquakeVxseDebugReducer {
-  const new();
-
+class const EarthquakeVxseDebugReducer() {
   Earthquake apply({
     required Earthquake current,
     required EarthquakeVxseDebugDraft draft,
@@ -965,47 +963,24 @@ class EarthquakeVxseDebugReducer {
   }
 }
 
-sealed class EarthquakeVxseDebugDraftValidationIssue {
-  const new();
-}
+sealed class const EarthquakeVxseDebugDraftValidationIssue();
 
-final class EarthquakeVxseDebugCommentTypeValidationIssue
-    extends EarthquakeVxseDebugDraftValidationIssue {
-  const new({
-    required this.commentIndex,
-    required this.actualType,
-    required this.expectedType,
-  });
+final class const EarthquakeVxseDebugCommentTypeValidationIssue({
+  required final int commentIndex,
+  required final EarthquakeTelegramType actualType,
+  required final EarthquakeTelegramType expectedType,
+}) extends EarthquakeVxseDebugDraftValidationIssue;
 
-  final int commentIndex;
-  final EarthquakeTelegramType actualType;
-  final EarthquakeTelegramType expectedType;
-}
+final class const EarthquakeVxseDebugStationParentValidationIssue({
+  required final String stationCode,
+  required final Set<String> cityCodes,
+}) extends EarthquakeVxseDebugDraftValidationIssue;
 
-final class EarthquakeVxseDebugStationParentValidationIssue
-    extends EarthquakeVxseDebugDraftValidationIssue {
-  const new({
-    required this.stationCode,
-    required this.cityCodes,
-  });
+final class const EarthquakeVxseDebugDuplicateIdentityValidationIssue({
+  required final String collection,
+  required final String identity,
+}) extends EarthquakeVxseDebugDraftValidationIssue;
 
-  final String stationCode;
-  final Set<String> cityCodes;
-}
-
-final class EarthquakeVxseDebugDuplicateIdentityValidationIssue
-    extends EarthquakeVxseDebugDraftValidationIssue {
-  const new({
-    required this.collection,
-    required this.identity,
-  });
-
-  final String collection;
-  final String identity;
-}
-
-class EarthquakeVxseDebugDraftValidationException implements Exception {
-  const new(this.issues);
-
-  final List<EarthquakeVxseDebugDraftValidationIssue> issues;
-}
+class const EarthquakeVxseDebugDraftValidationException(
+  final List<EarthquakeVxseDebugDraftValidationIssue> issues,
+) implements Exception;

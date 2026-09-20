@@ -1,44 +1,37 @@
 //
-//  ShakeDetectionLiveActivityAttributes.swift
+//  ShakeDetectionLevel.swift
 //  Widget
 //
+//  揺れ検知レベルの配色・文言。
+//
+//  揺れ検知単独の Live Activity は廃止し、統合 Live Activity
+//  (`EarthquakeLiveActivityAttributes`) の `shakeDetection` ブロックで扱う。
+//  backend の順序は `Weaker < Weak < Medium < Strong < Stronger`。
+//
 
-import ActivityKit
 import SwiftUI
 
-struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
-    public typealias ContentState = ShakeDetectionContentState
-
-    public var id = UUID()
-    let eventId: String
-}
-
-struct ShakeDetectionContentState: Codable, Hashable {
-    let eventId: String
-    /// イベント種別（backend は "shake_detection" を送る）。
-    /// UI では使わないため optional。必須にすると backend が欠落させた瞬間に
-    /// content-state 全体のデコードが失敗し Live Activity が表示されなくなる。
-    let type: String?
-    let level: String?
-    let detectedAt: String?
-    let location: LocationInfo?
-
-    var shakeLevel: ShakeDetectionLevel? {
-        guard let level = level else { return nil }
-        return ShakeDetectionLevel(rawValue: level)
-    }
-
-    var detectedDate: Date? {
-        LiveActivityDate.parse(detectedAt)
-    }
-}
-
-enum ShakeDetectionLevel: String, Codable, CaseIterable {
+enum ShakeDetectionLevel: String, Codable, CaseIterable, Comparable {
     case weaker = "Weaker"
     case weak = "Weak"
     case medium = "Medium"
     case strong = "Strong"
     case stronger = "Stronger"
+
+    /// backend が定める強さの順序。文字列比較では正しく並ばないため明示する。
+    private var order: Int {
+        switch self {
+        case .weaker: return 0
+        case .weak: return 1
+        case .medium: return 2
+        case .strong: return 3
+        case .stronger: return 4
+        }
+    }
+
+    static func < (lhs: ShakeDetectionLevel, rhs: ShakeDetectionLevel) -> Bool {
+        lhs.order < rhs.order
+    }
 
     var displayString: String {
         switch self {
@@ -107,11 +100,5 @@ enum ShakeDetectionLevel: String, Codable, CaseIterable {
         case .stronger:
             return Color(red: 0.7, green: 0.1, blue: 0.1)
         }
-    }
-}
-
-extension ShakeDetectionLiveActivityAttributes {
-    func prefixedKey(_ key: String) -> String {
-        return "\(id)_\(key)"
     }
 }

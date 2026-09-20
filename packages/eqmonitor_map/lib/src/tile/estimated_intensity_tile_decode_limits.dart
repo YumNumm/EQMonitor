@@ -3,19 +3,12 @@ import 'package:eqmonitor_map/src/mesh/line_mesh_builder_limits.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 
 /// 推計震度 MVT decode と mesh 生成へ適用する caller-owned 上限。
-final class EstimatedIntensityTileDecodeLimits {
-  const new({
-    required this.mvtLimits,
-    required this.fillLimits,
-    required this.lineLimits,
-    required this.lineMiterLimit,
-  });
-
-  final MvtDecodeLimits mvtLimits;
-  final FillMeshBuilderLimits fillLimits;
-  final LineMeshBuilderLimits lineLimits;
-  final double lineMiterLimit;
-
+final class const EstimatedIntensityTileDecodeLimits({
+  required final MvtDecodeLimits mvtLimits,
+  required final FillMeshBuilderLimits fillLimits,
+  required final LineMeshBuilderLimits lineLimits,
+  required final double lineMiterLimit,
+}) {
   EstimatedIntensityTileDecodeLimits copyWith({
     MvtDecodeLimits? mvtLimits,
     FillMeshBuilderLimits? fillLimits,

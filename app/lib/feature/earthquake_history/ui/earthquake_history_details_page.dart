@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -25,26 +26,42 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
+  const new({required this.eventId, this.onClose, super.key});
 
   final String eventId;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
+    final showBackButton = HistoryDetailScope.showBackButtonOf(context);
 
     return switch (detailsState) {
       AsyncError(:final error) => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
+        ),
         body: ErrorCard(
           error: error,
           onReload: () async =>
               ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
-      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
+      AsyncValue(:final value?) => _LoadedContent(
+        key: ValueKey(eventId),
+        earthquake: value,
+        onClose: onClose,
+      ),
       _ => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
+        ),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -65,9 +82,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _LoadedContent extends HookConsumerWidget {
-  const new({required this.earthquake});
+  const new({required this.earthquake, this.onClose, super.key});
 
   final Earthquake earthquake;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -142,6 +160,7 @@ class _LoadedContent extends HookConsumerWidget {
             bottom: false,
             child: BasicModalSheet(
               hasAppBar: false,
+              expandToPane: onClose != null,
               child: SingleChildScrollView(
                 child: SafeArea(
                   child: Column(
@@ -238,7 +257,8 @@ class _LoadedContent extends HookConsumerWidget {
               ),
             ),
           ),
-          if (Navigator.canPop(context))
+          if (HistoryDetailScope.showBackButtonOf(context) &&
+              (onClose != null || Navigator.canPop(context)))
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -256,7 +276,7 @@ class _LoadedContent extends HookConsumerWidget {
                     ),
                   ),
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
+                  onPressed: onClose ?? () => context.pop(),
                   color: designSystem.colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),

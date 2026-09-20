@@ -28,9 +28,7 @@ Future<NotificationSlotRepository> notificationSlotRepository(Ref ref) async =>
 ///
 /// 現在地・地域スロットは UI を経由しない経路でも下限を下回らないよう
 /// [NotificationMinIntensityPolicy.clamp] で引き上げる。
-class NotificationSlotMinIntensityResolver {
-  const new();
-
+class const NotificationSlotMinIntensityResolver() {
   JmaIntensity? resolve({
     required NotificationSlotType slotType,
     required NotificationKind kind,

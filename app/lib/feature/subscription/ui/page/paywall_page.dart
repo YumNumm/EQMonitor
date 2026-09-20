@@ -118,17 +118,11 @@ class _PaywallHero extends StatelessWidget {
   }
 }
 
-class _Benefit {
-  const new({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-}
+class const _Benefit({
+  required final IconData icon,
+  required final String title,
+  required final String description,
+});
 
 class _BenefitsSection extends StatelessWidget {
   const new();
@@ -189,7 +183,11 @@ class _BenefitRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(benefit.icon, color: context.designSystem.colorTheme.primary, size: 24),
+          Icon(
+            benefit.icon,
+            color: context.designSystem.colorTheme.primary,
+            size: 24,
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

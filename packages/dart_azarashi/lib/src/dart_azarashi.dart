@@ -5,10 +5,7 @@ import 'package:dart_azarashi/src/decoder/ublox_decoder.dart';
 /// Main entry point for the dart_azarashi library.
 ///
 /// Provides access to various decoders for QZSS DCR messages.
-class DartAzarashi {
-  /// Creates a new instance of [DartAzarashi].
-  const new();
-
+class const DartAzarashi() {
   /// Decoder for NMEA format messages ($QZQSM,55,...).
   ///
   /// See IS-QZSS-DCR-015 Section 4.3.1 for format specification.

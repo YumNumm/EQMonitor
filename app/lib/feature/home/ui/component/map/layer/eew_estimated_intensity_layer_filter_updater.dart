@@ -3,9 +3,7 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:maplibre/maplibre.dart';
 
-class EewEstimatedIntensityLayerFilterUpdater {
-  const new();
-
+class const EewEstimatedIntensityLayerFilterUpdater() {
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   Future<void> update({

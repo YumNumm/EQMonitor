@@ -7,26 +7,17 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_header_decoder.dart';
 
 import 'seismicity_pmtiles_directory_writer.dart';
 
-final class SeismicityPmTilesArchiveTilePayload {
-  const new({
-    required this.tileId,
-    required this.bytes,
-    this.runLength = 1,
-  });
-
-  final int tileId;
-  final Uint8List bytes;
-  final int runLength;
-}
+final class const SeismicityPmTilesArchiveTilePayload({
+  required final int tileId,
+  required final Uint8List bytes,
+  final int runLength = 1,
+});
 
 /// Test-only exact PMTiles v3 archive byte assembler (no open/descriptor).
-final class SeismicityPmTilesArchiveWriter {
-  const new({
-    this.directoryWriter = const SeismicityPmTilesDirectoryWriter(),
-  });
-
-  final SeismicityPmTilesDirectoryWriter directoryWriter;
-
+final class const SeismicityPmTilesArchiveWriter({
+  final SeismicityPmTilesDirectoryWriter directoryWriter =
+      const SeismicityPmTilesDirectoryWriter(),
+}) {
   static const metadataJson = '{}';
   static const int mvtTileType = PmTilesV3HeaderDecoder.mvtTileType;
 

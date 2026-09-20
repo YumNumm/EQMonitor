@@ -1,9 +1,7 @@
-final class KyoshinMonitorWorkerException implements Exception {
-  const new(this.message, [this.stackTrace]);
-
-  final String message;
-  final StackTrace? stackTrace;
-
+final class const KyoshinMonitorWorkerException(
+  final String message, [
+  final StackTrace? stackTrace,
+]) implements Exception {
   @override
   String toString() => message;
 }

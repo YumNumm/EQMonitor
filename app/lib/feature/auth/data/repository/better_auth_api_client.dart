@@ -464,9 +464,7 @@ final class BetterAuthPasskeyAuthenticationOperation {
   }
 }
 
-final class _BetterAuthPasskeyRegistrationResponseParser {
-  const new();
-
+final class const _BetterAuthPasskeyRegistrationResponseParser() {
   bool isValid({required String? body}) {
     if (body == null || body.isEmpty) {
       return false;
@@ -542,25 +540,15 @@ final class _BetterAuthSessionEstablishmentFactory {
   }
 }
 
-final class _BetterAuthSessionEstablishment {
-  const new({
-    required this.sessionRepository,
-    required this.cookieStore,
-    required this.cookieTransaction,
-    required this.sessionGeneration,
-    required this.existingSessionToken,
-    required this.establishmentGate,
-    required this.establishmentId,
-  });
-
-  final BetterAuthSessionRepository sessionRepository;
-  final BetterAuthCookieStore cookieStore;
-  final BetterAuthCookieTransaction cookieTransaction;
-  final int sessionGeneration;
-  final String? existingSessionToken;
-  final BetterAuthSessionEstablishmentGate establishmentGate;
-  final int establishmentId;
-
+final class const _BetterAuthSessionEstablishment({
+  required final BetterAuthSessionRepository sessionRepository,
+  required final BetterAuthCookieStore cookieStore,
+  required final BetterAuthCookieTransaction cookieTransaction,
+  required final int sessionGeneration,
+  required final String? existingSessionToken,
+  required final BetterAuthSessionEstablishmentGate establishmentGate,
+  required final int establishmentId,
+}) {
   bool get isCurrent =>
       sessionRepository.generation == sessionGeneration &&
       cookieStore.canCommit(transaction: cookieTransaction) &&
@@ -843,35 +831,21 @@ final class BetterAuthCookieStore {
   }
 }
 
-final class BetterAuthCookieTransaction {
-  const new({
-    required this.baseSnapshot,
-    required this.transactionSnapshot,
-  });
+final class const BetterAuthCookieTransaction({
+  required final BetterAuthCookieSnapshot baseSnapshot,
+  required final BetterAuthCookieSnapshot transactionSnapshot,
+});
 
-  final BetterAuthCookieSnapshot baseSnapshot;
-  final BetterAuthCookieSnapshot transactionSnapshot;
-}
+final class const BetterAuthCookieSnapshot({
+  required final CookieJar cookieJar,
+});
 
-final class BetterAuthCookieSnapshot {
-  const new({required this.cookieJar});
-
-  final CookieJar cookieJar;
-}
-
-final class BetterAuthCookieRequestContext {
-  const new({
-    required this.cookieManager,
-    required this.cookieSnapshot,
-    required this.cookieTransaction,
-    required this.sessionGeneration,
-  });
-
-  final CookieManager cookieManager;
-  final BetterAuthCookieSnapshot cookieSnapshot;
-  final BetterAuthCookieTransaction? cookieTransaction;
-  final int sessionGeneration;
-}
+final class const BetterAuthCookieRequestContext({
+  required final CookieManager cookieManager,
+  required final BetterAuthCookieSnapshot cookieSnapshot,
+  required final BetterAuthCookieTransaction? cookieTransaction,
+  required final int sessionGeneration,
+});
 
 final class BetterAuthCookieInterceptor extends Interceptor {
   new({

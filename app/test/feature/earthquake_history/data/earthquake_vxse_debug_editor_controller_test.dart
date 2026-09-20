@@ -559,12 +559,10 @@ _Fixture _fixture() {
   return _Fixture(container: container, current: current);
 }
 
-class _Fixture {
-  const new({required this.container, required this.current});
-
-  final ProviderContainer container;
-  final Earthquake current;
-
+class const _Fixture({
+  required final ProviderContainer container,
+  required final Earthquake current,
+}) {
   EarthquakeVxseDebugEditorController get notifier => container.read(
     earthquakeVxseDebugEditorControllerProvider(
       EarthquakeVxseDebugEditorSession(current: current),

@@ -587,9 +587,7 @@ List<void Function()> revisionInventory() {
   ];
 }
 
-final class _StateOwner implements MapRevisionStateOwner<int> {
-  const new();
-
+final class const _StateOwner() implements MapRevisionStateOwner<int> {
   @override
   MapRevisionCandidate<int> own({
     required MapRevisionCandidate<int> candidate,
@@ -665,11 +663,7 @@ MapFrameSnapshot _snapshot(MapClock clock, MapFrameRevisionStamp revision) =>
       contextGeneration: 0,
     );
 
-final class _Clock implements MapClock {
-  const new(this.value);
-
-  final MapClockCapture value;
-
+final class const _Clock(final MapClockCapture value) implements MapClock {
   @override
   MapClockCapture capture() => value;
 }
@@ -708,12 +702,8 @@ final class _ElementFactory implements MapElementFactory {
   MapElement create({required MapNode node}) => _Element(node.identity);
 }
 
-final class _Element implements MapElement {
-  const new(this.identity);
-
-  @override
-  final MapNodeIdentity identity;
-
+final class const _Element(@override final MapNodeIdentity identity)
+    implements MapElement {
   @override
   void mount() {}
 

@@ -1,9 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ColorJsonConverter implements JsonConverter<Color, String> {
-  const new();
-
+class const ColorJsonConverter() implements JsonConverter<Color, String> {
   @override
   Color fromJson(String json) {
     // 16進数カラーコード（例: #FF0000FF または 0xFF0000FF）をColorに変換
