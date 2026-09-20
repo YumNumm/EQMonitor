@@ -17,50 +17,44 @@ struct EewSourceMetricsView: View {
                 .overlay(ContainerRelativeShape().strokeBorder(.white.opacity(0.5)))
                 .padding(4)
         } else {
-            let layout = vertical
-                // Figmaはcap heightでトリム済み。Google Sans Codeの行ボックスには
-                // 約10ptの上下余白があるため、10ptをさらに足すと行間が二重になる。
-                ? AnyLayout(VStackLayout(alignment: .center, spacing: 0))
-                : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8 / 3))
-            layout {
-                if let magnitude = state.magnitude {
-                    EewMetricView(
-                        label: "M", value: String(format: "%.1f", magnitude),
-                        size: size, trackingRatio: -0.22, spacing: 0
-                    )
-                }
-                if let depth = state.depth {
-                    EewMetricView(
-                        label: "深さ", value: String(Int(depth)), unit: "km",
-                        size: size, trackingRatio: -0.03, spacing: size * 0.074
-                    )
-                }
-            }
+            SourceMetricsView(
+                magnitude: state.magnitude.map { String(format: "%.1f", $0) },
+                depth: state.depth, vertical: vertical, size: size
+            )
         }
     }
 }
 
 @available(iOS 16.1, *)
-private struct EewMetricView: View {
-    let label: String
-    let value: String
-    var unit: String = ""
-    let size: CGFloat
-    let trackingRatio: CGFloat
-    let spacing: CGFloat
+struct SourceMetricsView: View {
+    var magnitude: String?
+    var depth: Double?
+    var vertical = false
+    var size: CGFloat = 77.23 / 3
+    var emphasizeMagnitude = false
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: spacing) {
-            Text(label)
-                .font(AppFonts.code(size: size * 0.44, weight: .medium))
-                .foregroundStyle(.white.opacity(0.8))
-            Text(value)
-                .font(AppFonts.code(size: size, weight: .bold))
-                .tracking(size * trackingRatio)
-            if !unit.isEmpty {
-                Text(unit)
-                    .font(AppFonts.code(size: size * 0.44, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.8))
+        let labelFont = AppFonts.flex(size: max(8, size * 0.44), weight: .medium)
+        let valueFont = AppFonts.code(size: size, weight: .bold)
+        let magnitudeText = magnitude.map {
+            Text("\(Text("M").font(labelFont))\(Text($0).font(valueFont))")
+                .foregroundColor(emphasizeMagnitude ? Color(rgb: 0xFF6E6E) : .white)
+        }
+        let depthText = depth.map {
+            Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text("km").font(labelFont))")
+        }
+        Group {
+            if vertical {
+                VStack(spacing: 0) {
+                    magnitudeText
+                    depthText
+                }
+            } else if let magnitudeText, let depthText {
+                // 一つの Text として縮小し、Mだけが省略されたり深さに重ならないようにする。
+                Text("\(magnitudeText)  \(depthText)")
+            } else {
+                magnitudeText
+                depthText
             }
         }
         .foregroundStyle(.white)

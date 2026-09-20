@@ -178,7 +178,7 @@ struct UnifiedExpandedTrailingView: View {
         case .earthquake:
             if let earthquake = display.earthquake {
                 UnifiedMetricsRow(
-                    magnitudeText: earthquake.magnitude?.displayText,
+                    magnitude: earthquake.magnitude?.displayValue,
                     depth: earthquake.depth,
                     emphasizeMagnitude: earthquake.magnitude?.isOverM8 == true,
                     size: 21

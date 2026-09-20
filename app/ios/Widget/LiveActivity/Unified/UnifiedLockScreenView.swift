@@ -11,20 +11,26 @@ struct UnifiedLockScreenView: View {
     }
 
     var body: some View {
-        if display.primary == .eew, let eew = display.eew {
-            EewLockScreenView(state: eew.eewContentState)
-        } else {
-            VStack(alignment: .leading, spacing: 4) {
-                UnifiedHeaderContainer(display: display, chipStyle: chipStyle)
-                content
-                if let eew = display.eewStrip {
-                    UnifiedEewStrip(eew: eew)
+        // 主表示を入れ替えても背景の View は保持する。
+        VStack(spacing: 0) {
+            if display.primary == .eew, let eew = display.eew {
+                EewLockScreenView(state: eew.eewContentState)
+                    .transition(.identity)
+            } else {
+                VStack(alignment: .leading, spacing: 2) {
+                    UnifiedHeaderContainer(display: display, chipStyle: chipStyle)
+                    content
+                    if let eew = display.eewStrip {
+                        UnifiedEewStrip(eew: eew)
+                    }
                 }
+                .padding(12)
+                .transition(.identity)
             }
-            .padding(8)
-            .foregroundStyle(.white)
-            .background(.black)
         }
+        .foregroundStyle(.white)
+        .background(.black)
+        .animation(nil, value: display.primary)
     }
 
     @ViewBuilder
@@ -67,7 +73,7 @@ private struct EarthquakeBody: View {
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 if let date = earthquake.originDate {
                     Text("地震発生  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
                         .font(AppFonts.code(size: 10, weight: .medium))
@@ -77,15 +83,14 @@ private struct EarthquakeBody: View {
                 }
                 // 震源名はヘッダーの見出しに含まれるため重複させない。
                 UnifiedMetricsRow(
-                    magnitudeText: earthquake.magnitude?.displayText,
+                    magnitude: earthquake.magnitude?.displayValue,
                     depth: earthquake.depth,
-                    emphasizeMagnitude: earthquake.magnitude?.isOverM8 == true,
-                    size: 22
+                    emphasizeMagnitude: earthquake.magnitude?.isOverM8 == true
                 )
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if display.showsLocation {
-                UnifiedLocationPanel(display: display, chipStyle: chipStyle, badgeSize: 38)
+                UnifiedLocationPanel(display: display, chipStyle: chipStyle, badgeSize: 36)
             }
         }
     }

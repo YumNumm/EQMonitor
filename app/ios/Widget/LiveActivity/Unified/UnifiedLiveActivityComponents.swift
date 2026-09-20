@@ -187,7 +187,7 @@ struct UnifiedHeaderContainer: View {
     let display: UnifiedLiveActivityDisplay
     var chipStyle: IntensityChipStyle = .corner
 
-    private let stripeHeight: CGFloat = 8
+    private let stripeHeight: CGFloat = 5
 
     var body: some View {
         VStack(spacing: 0) {
@@ -204,10 +204,10 @@ struct UnifiedHeaderContainer: View {
 
                     if let headline = display.headline, !headline.isEmpty {
                         Text(headline)
-                            .font(AppFonts.flex(size: 15, weight: .heavy))
+                            .font(AppFonts.flex(size: 16, weight: .heavy))
                             .foregroundStyle(liveActivityHeaderPrimaryTextColor)
                             .lineLimit(1)
-                            .minimumScaleFactor(0.5)
+                            .minimumScaleFactor(0.85)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -215,7 +215,7 @@ struct UnifiedHeaderContainer: View {
                 trailingBadge
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 4)
+            .padding(.vertical, 8)
             .background(display.headerBackgroundColor)
         }
         .clipShape(ContainerRelativeShape())
@@ -226,10 +226,10 @@ struct UnifiedHeaderContainer: View {
         if let level = display.headerShakeLevel {
             UnifiedShakeLevelBadge(level: level, size: 34)
                 .fixedSize()
-        } else if let intensity = display.headerIntensity {
+        } else if let intensity = display.lockScreenHeaderIntensity {
             UnifiedIntensityBadge(
                 intensity: intensity,
-                size: 30,
+                size: 26,
                 source: display.intensitySource,
                 chipStyle: chipStyle,
                 isMaximum: true
@@ -244,7 +244,7 @@ struct UnifiedHeaderContainer: View {
 /// M・深さの 1 行。低精度の EEW では検知手法を出して数値を出さない。
 @available(iOS 16.1, *)
 struct UnifiedMetricsRow: View {
-    var magnitudeText: String?
+    var magnitude: String?
     var depth: Double?
     var emphasizeMagnitude = false
     var lowAccuracyLabel: String?
@@ -260,28 +260,10 @@ struct UnifiedMetricsRow: View {
                 .padding(.vertical, 3)
                 .overlay(ContainerRelativeShape().strokeBorder(.white.opacity(0.5)))
         } else {
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
-                if let magnitudeText {
-                    Text(magnitudeText)
-                        .font(AppFonts.code(size: size, weight: .bold))
-                        .foregroundStyle(emphasizeMagnitude ? Color(rgb: 0xFF6E6E) : .white)
-                }
-                if let depth {
-                    HStack(alignment: .firstTextBaseline, spacing: size * 0.074) {
-                        Text("深さ")
-                            .font(AppFonts.code(size: size * 0.44, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.8))
-                        Text(String(Int(depth)))
-                            .font(AppFonts.code(size: size, weight: .bold))
-                            .foregroundStyle(.white)
-                        Text("km")
-                            .font(AppFonts.code(size: size * 0.44, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.8))
-                    }
-                }
-            }
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
+            SourceMetricsView(
+                magnitude: magnitude, depth: depth, size: size,
+                emphasizeMagnitude: emphasizeMagnitude
+            )
         }
     }
 }
@@ -357,14 +339,19 @@ struct UnifiedEewStrip: View {
     let eew: UnifiedEew
 
     var body: some View {
-        HStack(spacing: 6) {
-            Text(eew.display.headerLabel)
-                .font(AppFonts.flex(size: 10, weight: .bold))
+        HStack(spacing: 8) {
+            Text(eew.display.headerLabel.replacingOccurrences(of: "緊急地震速報", with: "EEW"))
+                .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(.white.opacity(0.75))
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.85)
 
-            Spacer(minLength: 4)
+            if eew.isCanceled != true {
+                EewSourceMetricsView(state: eew.eewContentState, size: 12)
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+
+            Spacer(minLength: 0)
 
             if let intensity = eew.intensityValue, eew.isCanceled != true {
                 HStack(spacing: 3) {
@@ -372,8 +359,9 @@ struct UnifiedEewStrip: View {
                         .font(AppFonts.flex(size: 9, weight: .bold))
                         .foregroundStyle(.white.opacity(0.7))
                     Text(intensity.displayString)
-                        .font(AppFonts.code(size: 11, weight: .heavy))
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
                         .foregroundStyle(intensity.textColor)
+                        .fixedSize()
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
                         .background(
@@ -385,7 +373,7 @@ struct UnifiedEewStrip: View {
             }
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 2)
+        .padding(.vertical, 1)
         .background(
             Color.white.opacity(0.08),
             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
