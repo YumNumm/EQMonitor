@@ -35,7 +35,7 @@
   mise exec -- dart run melos exec --dir-exists=test --concurrency=4 -- 'mise exec -- flutter test --dart-define=CI=true --file-reporter="json:test_report.log"'
   ```
   Keep the command after Melos `--` as one quoted string; otherwise nested `mise exec` can misparse Flutter flags.
-- Run API package tests from `packages/eqmonitor_api` with `mise exec -- dart test`. These use committed fixtures and do not require a running backend.
+- Run API package tests from `packages/eqmonitor_api` with `mise exec -- dart test`. These do not require a running backend.
 - Custom analyzer rules live in `tools/eqmonitor_lints_plugin`; test changes there with `mise exec -- dart test` from that directory. Root `analysis_options.yaml` enables this plugin and Flutter Hooks linting.
 - Format touched Dart files with `mise exec -- dart format <paths>`. Markdown: `mise exec -- pnpm exec textlint <paths>` (internal docs have exclusions in `.textlintignore`).
 - Emergency-information decisions, conversions, state transitions, notifications, persistence, and bug fixes need automated regression tests. Display-only changes need not add widget tests; run relevant existing tests/analysis and explain why no tests were added.

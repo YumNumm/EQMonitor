@@ -1,5 +1,7 @@
 # Spec ① 契約 drift テスト — quarantine findings
 
+> 廃止済み: #1802 に伴いテスト本体と quarantine の追跡ガードを削除した。以下は導入時の調査記録。
+
 - 日付: 2026-05-30
 - 関連: `2026-05-30-spec1-contract-drift-test-design.md`、テスト `packages/eqmonitor_api/test/contract_drift_test.dart`
 
