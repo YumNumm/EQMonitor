@@ -90,14 +90,13 @@
 - Create: `docs/superpowers/plans/2026-08-03-eqmonitor-map-mise-and-spike-simplification.md`
 - Modify: `packages/eqmonitor_map/README.md`
 - Modify: `packages/eqmonitor_map/example/README.md`
-- Modify: `docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`
-- Modify: `docs/knowledge/20260802_flutter_scene_scene_source_pin.md`
+- Modify: `docs/knowledge/development_environment.md`
 - Delete: `docs/knowledge/20260802_eqmonitor_map_flutter_scene_device_gate.md`
 - Delete: `docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-physical-verification.md`
 - Modify: `docs/superpowers/plans/2026-08-02-eqmonitor-map-scene-spike.md`
 - Modify: `docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`
-- Modify: `docs/knowledge/20260802_eqmonitor_map_renderer_constraints.md`
-- Modify: `docs/todo/800_eqmonitor_map_deferred_verification.md`
+- Modify: `docs/knowledge/map_renderer.md`
+- Modify: `docs/todo/820_map_renderer_and_migration.md`
 - Modify: `docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-01-design.md`
 - Modify: `docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md`
 
@@ -106,7 +105,7 @@
 - [ ] renderer foundationを止める旧device gateをmanual smoke確認へ置き換え、evidence専用knowledge/physical verification planは削除する。
 - [ ] 履歴として残す旧spike planには冒頭へsuperseded注記と現行planへのリンクを追加する。
 - [ ] Scene spike PR draftを実際の最小harness/mise workflow/未実施の実機確認に合わせて全面更新する。
-- [ ] `docs/todo/800_eqmonitor_map_deferred_verification.md`はperformance HUD、widget/golden/benchmark、実機profile/release確認だけを未完了事項として残す。
+- [ ] `docs/todo/820_map_renderer_and_migration.md`の当該項目はperformance HUD、widget/golden/benchmark、実機profile/release確認だけを未完了事項として残す。
 - [ ] `rg -n "mise bootstrap repos|write_scene_spike_defines|validate_scene_spike_evidence|canonical evidence|canonical_evidence|4-run|695c954f237fabef65d49fa7199002851d2dcd88" README.md packages/eqmonitor_map docs/knowledge docs/todo docs/superpowers/pr-drafts`で現行運用文書に旧参照がないことを確認する。superseded planと、廃止対象を正確に記録する承認済みdesign/current plan内の記述は許容する。
 - [ ] 変更を`Docs: Scene spikeをmanual smoke手順へ簡素化`としてコミットする。
 

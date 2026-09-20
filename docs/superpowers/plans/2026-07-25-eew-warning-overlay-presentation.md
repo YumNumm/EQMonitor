@@ -43,7 +43,7 @@
 - Create: `app/lib/feature/eew/data/service/eew_warning_overlay_vibration_service.dart`
 - Create: `app/lib/feature/eew/data/service/eew_warning_overlay_vibration_service.g.dart`
 - Test: `app/test/feature/eew/data/service/eew_warning_overlay_vibration_service_test.dart`
-- Create: `docs/knowledge/20260725_eew_warning_overlay_vibration.md`
+- Modify: `docs/knowledge/eew_realtime.md`
 
 **Interfaces:**
 - Produces: `EewWarningOverlayVibrationGateway`, `VibrationPackageGateway`, `EewWarningOverlayVibrationService.start()` / `cancel()`, `eewWarningOverlayVibrationServiceProvider`
@@ -158,7 +158,7 @@ Expected: PASS。
 - [ ] **Step 6: commitする**
 
 ```bash
-git add app/pubspec.yaml pubspec.lock app/lib/feature/eew/data/service app/test/feature/eew/data/service docs/knowledge/20260725_eew_warning_overlay_vibration.md
+git add app/pubspec.yaml pubspec.lock app/lib/feature/eew/data/service app/test/feature/eew/data/service docs/knowledge/eew_realtime.md
 git commit -m "feat: EEW警報overlayの振動serviceを追加"
 ```
 

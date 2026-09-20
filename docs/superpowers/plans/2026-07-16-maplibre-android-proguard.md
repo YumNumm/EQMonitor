@@ -141,7 +141,7 @@ Expected: one integer byte count; calculate its byte and percentage difference f
 ### Task 3: Knowledge record and repository checks
 
 **Files:**
-- Create: `docs/knowledge/20260716_maplibre_android_jnigen_proguard.md`
+- Modify: `docs/knowledge/native_build_release.md`
 
 **Interfaces:**
 - Consumes: confirmed root cause, keep rule, build command, and artifact check.
@@ -170,7 +170,7 @@ Expected: both commands exit 0.
 - [ ] **Step 3: Commit the focused implementation**
 
 ```bash
-git add tool/verify_maplibre_android_classes.sh app/android/app/proguard-rules.pro app/android/app/build.gradle.kts docs/knowledge/20260716_maplibre_android_jnigen_proguard.md
+git add tool/verify_maplibre_android_classes.sh app/android/app/proguard-rules.pro app/android/app/build.gradle.kts docs/knowledge/native_build_release.md
 git commit -m "fix: MapLibreのAndroidクラスをR8削除から保護"
 ```
 

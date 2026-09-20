@@ -138,7 +138,7 @@ flowchart LR
 - README は、海が `areaForecastLocalEwLine` のオレンジで塗られたように見える既知不具合があり、原因/修正未着手と書いている。
   - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/README.md`
 - 一方で TODO には、真因は `Geometry.setCustomAttribute('extrude', ...)` が shader に届かず position が読まれていたこと、`texCoords` 経由へ変更する方針が記録されている。
-  - `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md`
+  - `docs/todo/820_map_renderer_and_migration.md`
 - 現コードはその対策を取り込んでいる。
   - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/lib/src/flutter_scene/base_map_geometry_factory.dart`
   - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/assets/base_map_line.fmat`
@@ -152,7 +152,7 @@ flowchart LR
 
 - decode: `/home/yumnumm/EQMonitor/packages/eqmonitor_map/lib/src/tile/mvt/mvt_decoder.dart`
 - fixed use: `/home/yumnumm/EQMonitor/packages/eqmonitor_map/lib/src/widget/base_map_view.dart`
-- risk memo: `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md`
+- risk memo: `docs/todo/820_map_renderer_and_migration.md`
 
 現 all.pmtiles の実測 layer extent は 4096 なので今は破綻しないが、設計上は layer/tile の実 extent を geometry まで伝播すべき。Home Map replacement 前には直すべき correctness debt。
 
@@ -169,7 +169,7 @@ unit test では hole 付き polygon の triangulation、hole-before-exterior re
 Line は miter join + butt cap のみ。MapLibre の bevel/round/flip bevel/fake round/dash/linesofar は未実装。
 
 - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/lib/src/mesh/line_mesh_builder.dart`
-- `/home/yumnumm/EQMonitor/docs/knowledge/20260805_maplibre_native_renderer_reference.md`
+- `docs/knowledge/map_renderer_references.md`
 
 鋭角は miter length clamp で見た目が崩れることを許容する実装。地図の行政界・海岸線で目立つ可能性は残る。
 
@@ -177,7 +177,7 @@ Line は miter join + butt cap のみ。MapLibre の bevel/round/flip bevel/fake
 
 MVT extent を超える buffer 領域の scissor/clip は未実装。`FillMesh` / `LineMesh` は tile 境界外 vertex を保持して描画する。
 
-- `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md`
+- `docs/todo/820_map_renderer_and_migration.md`
 
 ### Duplicate fallback rendering
 
@@ -200,7 +200,7 @@ TODO には `scene.NodeCamera + EqmonitorOrthographicProjection` 配線では描
 固定値:
 
 - Flutter SDK: `4dacd3fc91d96262a33e5c598e17d816f0b35641`
-  - `/home/yumnumm/EQMonitor/docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`
+  - `docs/knowledge/development_environment.md`
 - Flutter package constraint: `flutter: ^3.44.0`
   - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/pubspec.yaml`
 - Flutter Scene:
@@ -211,13 +211,13 @@ TODO には `scene.NodeCamera + EqmonitorOrthographicProjection` 配線では描
 - `scene` dependency override:
   - same repo/ref, path `packages/scene`
   - hosted/floating fallback はしない。
-  - `/home/yumnumm/EQMonitor/docs/knowledge/20260802_flutter_scene_scene_source_pin.md`
+  - `docs/knowledge/development_environment.md`
 
 Flutter GPU / Impeller:
 
 - Flutter Scene 0.20.0 は pre-1.0 で、新しい Flutter master と Flutter GPU を要求する。
 - 実行時は `--enable-flutter-gpu --enable-impeller` が前提として知見化されている。
-- `/home/yumnumm/EQMonitor/docs/knowledge/20260802_flutter_scene_large_static_instances.md`
+- `docs/knowledge/map_renderer.md`
 
 Dart Data Assets:
 

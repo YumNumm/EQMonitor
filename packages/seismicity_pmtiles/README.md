@@ -160,7 +160,7 @@ mise exec -- dart run packages/seismicity_pmtiles/benchmark/seismicity_pmtiles_d
   --informational-time-threshold-ms 60000
 ```
 
-詳細は [`docs/knowledge/20260809_seismicity_pmtiles_decoder.md`](../../docs/knowledge/20260809_seismicity_pmtiles_decoder.md)。
+詳細は [`docs/knowledge/pmtiles.md`](../../docs/knowledge/pmtiles.md)。
 
 ## 検証
 

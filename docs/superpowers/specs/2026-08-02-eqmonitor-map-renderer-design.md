@@ -140,7 +140,7 @@ WGS84 Geographic
 
 参考: https://maplibre.org/maplibre-native/docs/book/design/coordinate-system.html
 
-実装レベルの正本は`docs/knowledge/20260805_maplibre_native_renderer_reference.md`に固定commitで
+実装レベルの正本は`docs/knowledge/map_renderer_references.md`に固定commitで
 記録する。そこから確定した数値と行列合成は次のとおりである。
 
 - `scale = 2^zoom`、`worldSize = scale * 512`とする。zoomのpixel基準は512であり、既存MapLibre
@@ -151,7 +151,7 @@ WGS84 Geographic
   し、`s = worldSize / 2^z`とする。頂点bufferはtile-local座標のまま保持し、world座標へCPUで
   展開しない。最終形は`clip = projection * tileMatrix * vec4(tileLocalPos, 0, 1)`である。
 - 初期実装のprojectionは正射影の2D行列とする。pitch/bearing/perspectiveを含む
-  camera-to-clip行列は`docs/todo/650_eqmonitor_map_3d_camera.md`の対象であり、この行列を
+  camera-to-clip行列は`docs/todo/820_map_renderer_and_migration.md`の対象であり、この行列を
   差し替えるだけで移行できる形に保つ。
 
 地理座標は経度、緯度、`altitudeMeters`を保持する。地表は0、地下は負、地上は正とする。初期描画は正射影でも頂点を常にXYZで扱い、将来の投影変更でfeatureモデルを変更しない。
@@ -239,7 +239,7 @@ Flutter SceneのScene GraphをFeature単位では使用しない。`tile × laye
 ### Fill/Lineの頂点仕様
 
 MapLibre Nativeの頂点生成とshaderを実装の正本とする。詳細と引用は
-`docs/knowledge/20260805_maplibre_native_renderer_reference.md`にある。
+`docs/knowledge/map_renderer_references.md`にある。
 
 Fillはtile-local座標だけを持つ頂点と、穴込みearcutの三角形indexで構成する。法線とUVを持たせない。
 外形と穴の分類、穴数上限、index bufferのbit幅による頂点数上限とsegment分割規則を明示する。
@@ -263,7 +263,7 @@ viewportから毎frame確定し、`vec2`のuniformとして渡す。viewport変�
 この不一致は実際に不具合として発現した。doc commentが「`world_position`はtile行列適用後・
 camera/projection適用前」と仮定したまま半線幅をlogical pixelの生値で渡していたため、NDC空間で
 `1.0`（可視範囲±1の半分）の押し出しとなり画面が塗り潰された。経緯は
-`docs/todo/800_eqmonitor_map_deferred_verification.md`に記録する。
+`docs/todo/820_map_renderer_and_migration.md`に記録する。
 
 初期実装の頂点属性はfloat32とする。押し出し法線は`MeshGeometry.fromArrays`の組み込み
 `texCoords`（`vec2`）で渡す。`Geometry.setCustomAttribute`経由のcustom vertex attributeは、
@@ -278,13 +278,13 @@ zoom依存propertyはCPUで現zoomの値を確定してuniform定数として渡
 補間しない。
 
 joinはmiter、capはbuttから始める。miter limit超過時のbevel、round join/cap、`linesofar`とdashは
-基本形の描画が出た後に足す。この段階差は`docs/todo/800_eqmonitor_map_deferred_verification.md`へ
+基本形の描画が出た後に足す。この段階差は`docs/todo/820_map_renderer_and_migration.md`へ
 記録する。
 
 ジオメトリcacheは整数zoom単位で持ち、非整数zoomはtile行列のscaleで吸収する。zoomが小数だけ
 変わったときに頂点bufferを作り直さない。線幅はこのscaleで逆補正し、frame内の微小zoomで太さが
 変動しないようにする。この戦略はKEViで実証されたものであり、帰属は
-`docs/knowledge/20260802_kevi_map_renderer_reference.md`に記録する。
+`docs/knowledge/map_renderer_references.md`に記録する。
 
 動的点群はWGS84からnormalized projectionへの結果をFeature ID単位でcacheし、zoom変更時はscaleとscreen transformだけを更新する。投影済み点とflat grid spatial indexを描画候補、label collision、hit testでimmutableに共有する。少数点は線形探索、多数点はgridを使う閾値をpolicyで設定する。hover/selectionはcollection objectではなく安定Feature IDで更新後のfeatureへ再束縛する。
 
@@ -348,7 +348,7 @@ HUD、Widget/Golden test、実機性能試験は後続TODOとするが、後か�
 BSD-2-Clauseの[maplibre/maplibre-native](https://github.com/maplibre/maplibre-native/tree/f1905c521577f009c70179fac53e3f4f67a3fa53)
 commit `f1905c521577f009c70179fac53e3f4f67a3fa53`を、Web Mercator、tile cover、overzoom、world wrap、
 Fill/Line頂点生成、line押し出しshader、tileライフサイクルの実装正本として参照した。ファイル単位の
-記録と引用は`docs/knowledge/20260805_maplibre_native_renderer_reference.md`にある。
+記録と引用は`docs/knowledge/map_renderer_references.md`にある。
 
 採用するのは座標変換の式と2段のtile行列、tile ID 3層の役割分担、earcutによる穴込み三角形化、
 押し出しを変換後に加算するline shader、子→親の順のtile fallback、worker parseとmain thread
@@ -374,7 +374,7 @@ incarnation tokenで再現する。
   非同期三角形化中に`zoom±1`のcacheを代用表示するfallback、直近使用zoom±1だけを保持するcache
   eviction、間引きしてから三角形化する順序を、GPU mesh cacheの設計へ反映する。行列で吸収する
   対象がcanvas変換ではなくtile行列になる点だけが異なる。詳細は
-  `docs/knowledge/20260802_kevi_map_renderer_reference.md`に記録する。
+  `docs/knowledge/map_renderer_references.md`に記録する。
 
 KEViはSkia/Avaloniaの直接描画で、PMTiles/MVT tile engineではない。Miller projection、1回だけのlongitude wrap、全体`SKPicture` invalidation、host lock中のrender、次frameでのresource dispose、毎frame全再描画は採用しない。tile selection、overzoom、wrap、Web MercatorはMapLibreの仕様・実装を正とする。
 
@@ -434,4 +434,4 @@ Home Mapの移行matrixをstack内でversion管理する。
 | hazard | 観測点、震源、P/S波、区域状態でsource revision、fresh/stale表示、expired fail-closed規則を満たす |
 | platform | label asset新schemaとFlutter Scene lifecycleをiOS/Android実機で検証済み |
 
-ベース地図、ラベル、観測点、震源、P/S波、区域状態、camera、現在地、Homeで実際に使うinteraction、障害時表示がmatrixを満たし、性能観測で継続利用可能と判断できるまでHomeのMapLibre pathを削除しない。その後は`docs/todo/780_eqmonitor_map_maplibre_surface_migrations.md`に従って地図surfaceを一つずつ移行し、全surface完了までMapLibre packageと共有設定を削除しない。
+ベース地図、ラベル、観測点、震源、P/S波、区域状態、camera、現在地、Homeで実際に使うinteraction、障害時表示がmatrixを満たし、性能観測で継続利用可能と判断できるまでHomeのMapLibre pathを削除しない。その後は`docs/todo/820_map_renderer_and_migration.md`に従って地図surfaceを一つずつ移行し、全surface完了までMapLibre packageと共有設定を削除しない。

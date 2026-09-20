@@ -467,7 +467,7 @@ flutter build ios --config-only ... "${BETA_ARGS[@]}"
 **Files:**
 
 - Modify: `docs/beta/ios-testflight-checklist.md`（`IS_BETA_TESTING` の説明を develop / beta で分ける）
-- Create: `docs/knowledge/20260814_deploy_release_notes_and_beta_flag.md`
+- Modify: `docs/knowledge/delivery_ci.md`
 
 - [ ] **Step 1: knowledge に運用ルールを書く**
 

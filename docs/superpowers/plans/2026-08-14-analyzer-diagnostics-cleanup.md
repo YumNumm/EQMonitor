@@ -1828,7 +1828,7 @@ Expected: Step 2 と同じ結果。
 ## Task 19: 全体検証と知見の記録
 
 **Files:**
-- Create: `docs/knowledge/20260814_analyzer-plugin-scope-and-exemptions.md`
+- Modify: `docs/knowledge/development_environment.md`
 
 **Interfaces:**
 - Consumes: Task 1〜18 の全変更
@@ -1871,7 +1871,7 @@ Expected: 差分なし。
 
 - [ ] **Step 5: 知見を記録する**
 
-`docs/knowledge/20260814_analyzer-plugin-scope-and-exemptions.md` に次を書く。
+`docs/knowledge/development_environment.md` に次を書く。
 
 - 自作 analyzer plugin の適用範囲（テストコード除外）と、その判定を `LintTargetScope` で一元管理していること
 - `avoid_top_level_functions` の許可条件 3 つ（`main` / `@riverpod` / `@pragma('vm:entry-point')`）と、`@pragma` を第 1 引数まで検査する理由
@@ -1885,7 +1885,7 @@ Expected: 差分なし。
 
 ```bash
 cd /workspace
-git add docs/knowledge/20260814_analyzer-plugin-scope-and-exemptions.md
+git add docs/knowledge/development_environment.md
 git commit -m "Docs: Analyzer plugin の適用範囲と除外条件の知見を記録"
 ```
 

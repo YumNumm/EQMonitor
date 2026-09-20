@@ -9,7 +9,7 @@
 - ✅ Dart-level test: `packages/eqmonitor_map/test/flutter_scene/base_map_geometry_factory_test.dart:192-224` は `LineMeshBuilder -> buildLineGeometryArgs -> shader式相当 -> screen logical px変換` を通し、horizontal / vertical / 45° / 30° / 135° で直交性と長さを検証している。GPU shader自体は実行せずモデル化しているが、今回の符号反転はDart側の本番経路にあるため、修正箇所はテストで直接覆われている。
 - ✅ `.fmat` との整合: `packages/eqmonitor_map/assets/base_map_line.fmat:75-82` はclip/NDC Y-upへ変換済みの `vertex.uv` をそのまま使う説明と式になっており、Dart側のY反転と整合している。
 - ✅ doc comment contract: 生成側の `packages/eqmonitor_map/lib/src/mesh/line_mesh_builder.dart:258-261`、production/output surfaceの `packages/eqmonitor_map/lib/src/mesh/line_mesh.dart:3-11` / `packages/eqmonitor_map/lib/src/mesh/line_mesh.dart:29-44`、消費側の `packages/eqmonitor_map/lib/src/flutter_scene/base_map_geometry_factory.dart:40-53` / `packages/eqmonitor_map/assets/base_map_line.fmat:3-10` が同じcontractを説明している。
-- ✅ TODO: `docs/todo/700_eqmonitor_map_line_extrude_projection.md` は現在のcontract、orthographic north-locked限定である理由、pitch/bearing/perspective前にMapLibre-style設計が必要なこと、`docs/knowledge/20260805_maplibre_native_renderer_reference.md` 参照を含んでいる。
+- ✅ TODO: `docs/todo/820_map_renderer_and_migration.md` は現在のcontract、orthographic north-locked限定である理由、pitch/bearing/perspective前にMapLibre-style設計が必要なこと、`docs/knowledge/map_renderer_references.md` 参照を含んでいる。
 - ✅ tile-boundary scope: scissor/clipやancestor fallback dedupeは触っていない。
 - ✅ logic changes in review fix: `/tmp/line-mesh-doc-fix.diff` は `packages/eqmonitor_map/lib/src/mesh/line_mesh.dart` のdoc commentのみを変更しており、constructor、fields、types、runtime codeには変更がない。
 - ✅ commit: report上もdiff上もcommitはしていない。
