@@ -174,9 +174,7 @@ extension UnifiedLiveActivityContentState {
             earthquakeIntensityReportOnly(now: now),
             earthquakeMagnitudeUnknown(now: now),
             earthquakeOverM8(now: now),
-            earthquakeCanceled(now: now),
             earthquakeWithoutEew(now: now),
-            empty(now: now),
         ]
     }
 
@@ -369,20 +367,6 @@ extension UnifiedLiveActivityContentState {
         )
     }
 
-    /// 地震情報の取消
-    static func earthquakeCanceled(now: Date = Date()) -> UnifiedLiveActivityContentState {
-        preview(
-            primary: "earthquake",
-            eew: .preview(time: now.addingTimeInterval(-90), serialNo: 3, isFinal: true),
-            earthquake: .preview(
-                informationType: ["VXSE53"],
-                isCanceled: true,
-                originTime: now.addingTimeInterval(-90)
-            ),
-            now: now
-        )
-    }
-
     /// EEW を伴わない地震情報。仕様上は起こらないが表示を破綻させない
     static func earthquakeWithoutEew(now: Date = Date()) -> UnifiedLiveActivityContentState {
         preview(
@@ -393,11 +377,6 @@ extension UnifiedLiveActivityContentState {
             ),
             now: now
         )
-    }
-
-    /// primary が指すブロックが欠けた異常系
-    static func empty(now: Date = Date()) -> UnifiedLiveActivityContentState {
-        preview(primary: "earthquake", now: now)
     }
 
     // MARK: 遷移の系列

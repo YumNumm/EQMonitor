@@ -76,14 +76,8 @@ private struct LockScreenPreviewFrame<Content: View>: View {
             LockScreenPreviewFrame(title: "EEW 取消（終了させない）") {
                 UnifiedLockScreenView(state: .eewCanceled(now: now))
             }
-            LockScreenPreviewFrame(title: "地震情報 取消") {
-                UnifiedLockScreenView(state: .earthquakeCanceled(now: now))
-            }
             LockScreenPreviewFrame(title: "EEW なしの地震情報（防御的）") {
                 UnifiedLockScreenView(state: .earthquakeWithoutEew(now: now))
-            }
-            LockScreenPreviewFrame(title: "ブロック欠損（異常系）") {
-                UnifiedLockScreenView(state: .empty(now: now))
             }
         }
         .padding()
