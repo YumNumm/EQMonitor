@@ -110,7 +110,6 @@ Generated files (`*.g.dart`, `*.freezed.dart`) are committed. Run `melos run gen
 - `flutter.yaml` — `dart analyze` + unit tests on PR and merge_group
 - `deploy-app.yaml` — iOS/Android builds on push to `develop` (macos-26, Xcode 26.6)
 - `flutter-auto-fix.yaml` — Auto-format on PR
-- `actionlint.yaml` — GitHub Actions syntax validation
 
 ## Pre-commit Hooks (hk)
 

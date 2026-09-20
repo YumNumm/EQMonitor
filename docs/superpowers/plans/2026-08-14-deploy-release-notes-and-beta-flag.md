@@ -459,13 +459,6 @@ flutter build ios --config-only ... "${BETA_ARGS[@]}"
 
 `build-ios` / `build-android` の `needs` は既に `define-matrix` のみでよい。
 
-- [ ] **Step 2: actionlint（可能なら）**
-
-```bash
-mise exec -- actionlint .github/workflows/deploy-app.yaml
-```
-
-Expected: 新規 Job / needs 周りのエラーなし
 
 ---
 

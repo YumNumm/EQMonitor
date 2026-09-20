@@ -717,15 +717,6 @@ Expected: Step 1 と同じ `avoid_null_assertion_operator` の件数が出る。
           mise exec -- dart test
 ```
 
-- [ ] **Step 5: workflow の構文を検証**
-
-```bash
-cd /workspace
-mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml
-```
-
-Expected: 出力なし（エラーなし）。
-
 - [ ] **Step 6: 全体の診断件数を計測して記録する**
 
 ```bash

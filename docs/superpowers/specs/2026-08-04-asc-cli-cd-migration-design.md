@@ -154,7 +154,6 @@ asc workflow run asset_pack_upload APP_ID:… ASSET_PACK_ID:… ARCHIVE_PATH:…
 - 削除する TS/Python のテスト（distribute-external の単体テスト、
   test_asc_client.py）は実装ごと削除する。asc CLI 自体の動作は上流でテストされて
   いるため、リポジトリ側では YAML 上のフラグ組み立てシェルのみが検証対象。
-- actionlint / zizmor（pre-commit）を通す。
 
 ## リスクと対応
 

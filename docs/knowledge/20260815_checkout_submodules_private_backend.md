@@ -44,10 +44,8 @@ public な `flutter_scene` のみ個別に取れば認証は要らない。
 
 ## backend が本当に必要なジョブ
 
-`wc-check-integration.yaml` のみ（api-stub を node で起動するため）。ここは
-`actions/create-github-app-token` で `YumNumm/eqmonitor-backend` に
-`contents:read` のトークンを発行し、`submodules: true` + `token:` を使う。
-GitHub App が対象リポジトリへ install されていることが前提。
+api-stub を起動する結合テストの専用ジョブは削除済み。
+Flutter の解析・テストでは backend submodule の取得は不要。
 
 ## ローカル手順との一致
 
