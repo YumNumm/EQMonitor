@@ -1,0 +1,8 @@
+# 結合テスト（integration タグ）は起動中の api-stub を必要とするため、既定では skip する。
+# CI 専用ジョブ（api-stub 起動済み）が次で明示実行する:
+#   dart test --run-skipped --tags integration
+# 通常の `dart test` / `melos run test:dart` は integration を skip し、ユニットと
+# 契約 drift テスト（タグ無し）のみ実行する。
+tags:
+  integration:
+    skip: "起動中の api-stub が必要。`dart test --run-skipped --tags integration` で実行"
