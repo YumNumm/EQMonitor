@@ -7,38 +7,24 @@ part 'eqmonitor_map_camera_action.g.dart';
 EqmonitorMapCameraAction eqmonitorMapCameraAction(Ref ref) =>
     const EqmonitorMapCameraAction();
 
-sealed class EqmonitorMapCameraActionResult {
-  const new();
-}
+sealed class const EqmonitorMapCameraActionResult();
 
-final class EqmonitorMapCameraActionSucceeded
-    extends EqmonitorMapCameraActionResult {
-  const new({required this.command});
+final class const EqmonitorMapCameraActionSucceeded({
+  required final MapCameraCommandSucceeded command,
+}) extends EqmonitorMapCameraActionResult;
 
-  final MapCameraCommandSucceeded command;
-}
+final class const EqmonitorMapCameraActionNotReady()
+    extends EqmonitorMapCameraActionResult;
 
-final class EqmonitorMapCameraActionNotReady
-    extends EqmonitorMapCameraActionResult {
-  const new();
-}
+final class const EqmonitorMapCameraActionHypocenterUnavailable()
+    extends EqmonitorMapCameraActionResult;
 
-final class EqmonitorMapCameraActionHypocenterUnavailable
-    extends EqmonitorMapCameraActionResult {
-  const new();
-}
+final class const EqmonitorMapCameraActionInvalidHypocenter()
+    extends EqmonitorMapCameraActionResult;
 
-final class EqmonitorMapCameraActionInvalidHypocenter
-    extends EqmonitorMapCameraActionResult {
-  const new();
-}
-
-final class EqmonitorMapCameraActionCommandFailed
-    extends EqmonitorMapCameraActionResult {
-  const new({required this.failure});
-
-  final MapCameraCommandFailure failure;
-}
+final class const EqmonitorMapCameraActionCommandFailed({
+  required final MapCameraCommandFailure failure,
+}) extends EqmonitorMapCameraActionResult;
 
 String eqmonitorMapCameraActionMessage(EqmonitorMapCameraActionResult result) =>
     switch (result) {
@@ -57,9 +43,7 @@ String eqmonitorMapCameraActionMessage(EqmonitorMapCameraActionResult result) =>
         },
     };
 
-final class EqmonitorMapCameraAction {
-  const new();
-
+final class const EqmonitorMapCameraAction() {
   Future<EqmonitorMapCameraActionResult> moveToHypocenter({
     required MapViewCameraController controller,
     required double? longitude,

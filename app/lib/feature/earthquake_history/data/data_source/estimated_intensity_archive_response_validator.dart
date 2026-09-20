@@ -4,9 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/data_source/estimated_
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_descriptor.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 
-final class EstimatedIntensityArchiveResponseValidator {
-  const new();
-
+final class const EstimatedIntensityArchiveResponseValidator() {
   EstimatedIntensityArchiveDownloadFailure? validate({
     required EstimatedIntensityArchiveHttpResponse response,
     required EstimatedIntensityArchiveDescriptor descriptor,

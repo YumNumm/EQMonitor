@@ -461,9 +461,7 @@ class _TsunamiObservationStationLayer extends HookConsumerWidget {
   }
 }
 
-class TsunamiMapGeoJsonBuilder {
-  const new();
-
+class const TsunamiMapGeoJsonBuilder() {
   static const emptyFeatureCollection =
       '{"type":"FeatureCollection","features":[]}';
 

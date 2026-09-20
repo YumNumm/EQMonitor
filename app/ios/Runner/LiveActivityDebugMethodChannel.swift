@@ -17,9 +17,8 @@ import Foundation
 ///   - `update` (kind, activityId, contentState[JSON String]) → `nil`
 ///   - `end`    (kind, activityId, contentState[JSON String?]) → `nil`
 ///
-/// - Important: ここで定義する `EewLiveActivityAttributes` /
-///   `ShakeDetectionLiveActivityAttributes` は、Widget Extension 側の同名型
-///   （`app/ios/Widget/LiveActivity/...`）と **型名・Codable フィールド名** を
+/// - Important: ここで定義する `EewLiveActivityAttributes` は、Widget Extension 側の
+///   同名型（`app/ios/Widget/LiveActivity/...`）と **型名・Codable フィールド名** を
 ///   一致させている。ActivityKit は ActivityAttributes 型名で Widget の
 ///   `ActivityConfiguration` と紐付けるため、ローカル開始した Activity は既存の
 ///   Widget レイアウトで描画される。フィールドを変更する場合は両方を同期すること。
@@ -87,16 +86,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
                     pushType: nil
                 )
                 result(activity.id)
-            case "shake_detection":
-                let state = try JSONDecoder().decode(
-                    ShakeDetectionLiveActivityAttributes.ContentState.self, from: stateData
-                )
-                let activity = try Activity.request(
-                    attributes: ShakeDetectionLiveActivityAttributes(eventId: eventId),
-                    content: ActivityContent(state: state, staleDate: Self.shakeStaleDate()),
-                    pushType: nil
-                )
-                result(activity.id)
             default:
                 result(Self.argumentError("unknown kind: \(kind)"))
             }
@@ -134,16 +123,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
                     where activity.id == activityId {
                         await activity.update(
                             ActivityContent(state: state, staleDate: Self.eewStaleDate())
-                        )
-                    }
-                case "shake_detection":
-                    let state = try JSONDecoder().decode(
-                        ShakeDetectionLiveActivityAttributes.ContentState.self, from: stateData
-                    )
-                    for activity in Activity<ShakeDetectionLiveActivityAttributes>.activities
-                    where activity.id == activityId {
-                        await activity.update(
-                            ActivityContent(state: state, staleDate: Self.shakeStaleDate())
                         )
                     }
                 default:
@@ -188,17 +167,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
                             dismissalPolicy: .immediate
                         )
                     }
-                case "shake_detection":
-                    let state = try Self.decodeOptional(
-                        ShakeDetectionLiveActivityAttributes.ContentState.self, json: contentStateJson
-                    )
-                    for activity in Activity<ShakeDetectionLiveActivityAttributes>.activities
-                    where activity.id == activityId {
-                        await activity.end(
-                            state.map { ActivityContent(state: $0, staleDate: nil) },
-                            dismissalPolicy: .immediate
-                        )
-                    }
                 default:
                     result(Self.argumentError("unknown kind: \(kind)"))
                     return
@@ -223,12 +191,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
     private static func eewStaleDate() -> Date {
         // 仕様書 9.3: EEW 開始/更新時の stale-date は 30 分後。
         Date().addingTimeInterval(30 * 60)
-    }
-
-    @available(iOS 16.1, *)
-    private static func shakeStaleDate() -> Date {
-        // 仕様書 9.2: 揺れ検知開始時の stale-date は 10 分後。
-        Date().addingTimeInterval(10 * 60)
     }
 
     private static func argumentError(_ message: String = "invalid arguments") -> FlutterError {
@@ -278,20 +240,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
         let eventId: String
     }
 
-    @available(iOS 16.1, *)
-    struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
-        struct ContentState: Codable, Hashable {
-            let eventId: String
-            let type: String
-            let level: String?
-            let detectedAt: String?
-            let location: DebugLiveActivityLocationInfo?
-        }
-
-        var id = UUID()
-        let eventId: String
-    }
-
     /// Widget 側 `LocationInfo` と同一の JSON 形状。型名の衝突を避けるため別名で定義する
     /// （ActivityKit の紐付けには ContentState の型名は不要で、フィールドの一致のみが要件）。
     struct DebugLiveActivityLocationInfo: Codable, Hashable {
@@ -299,7 +247,6 @@ final class LiveActivityDebugMethodChannel: NSObject, FlutterPlugin {
         let forecastIntensity: String?
         let forecastLpgmIntensity: String?
         let arrivalTime: String?
-        let intensity: Double?
     }
 
 #endif

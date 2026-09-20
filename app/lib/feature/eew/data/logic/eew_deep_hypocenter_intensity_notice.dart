@@ -1,13 +1,13 @@
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final eewDeepHypocenterIntensityNoticeProvider = Provider(
-  (ref) => const EewDeepHypocenterIntensityNotice(),
-);
+part 'eew_deep_hypocenter_intensity_notice.g.dart';
 
-class EewDeepHypocenterIntensityNotice {
-  const new();
+@Riverpod(keepAlive: true)
+EewDeepHypocenterIntensityNotice eewDeepHypocenterIntensityNotice(Ref ref) =>
+    const EewDeepHypocenterIntensityNotice();
 
+class const EewDeepHypocenterIntensityNotice() {
   bool shouldShow({required EewTelegramItem eew}) {
     if (eew.isCanceled || eew.shouldHideMagnitudeAndDepth) {
       return false;

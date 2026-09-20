@@ -4,9 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 
-final class SeismicityPmTilesContentRangeValidator {
-  const new();
-
+final class const SeismicityPmTilesContentRangeValidator() {
   Uint8List validate({
     required Headers headers,
     required Uint8List bytes,

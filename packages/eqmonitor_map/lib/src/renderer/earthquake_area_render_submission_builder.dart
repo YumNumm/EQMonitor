@@ -31,19 +31,12 @@ final MapNodeKey earthquakeAreaRenderNodeKey = createMapNodeKey(
 );
 
 /// `earthquake_area_fill.fmat`へ渡す非premultiplied RGBA。
-final class EarthquakeAreaFillMaterialValues {
-  const new({
-    required this.red,
-    required this.green,
-    required this.blue,
-    required this.alpha,
-  });
-
-  final double red;
-  final double green;
-  final double blue;
-  final double alpha;
-}
+final class const EarthquakeAreaFillMaterialValues({
+  required final double red,
+  required final double green,
+  required final double blue,
+  required final double alpha,
+});
 
 /// snapshotとexact tile結果から震度区域Fill submissionを構築する。
 MapRenderSubmission buildEarthquakeAreaRenderSubmission({

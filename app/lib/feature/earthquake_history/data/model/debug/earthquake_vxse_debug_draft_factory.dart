@@ -96,9 +96,7 @@ const earthquakeVxseDebugSampleLpgmRegion = LpgmIntensityRegion(
   maxLpgmIntensity: earthquakeVxseDebugSampleMaxLpgmIntensity,
 );
 
-class EarthquakeVxseDebugDraftFactory {
-  const new();
-
+class const EarthquakeVxseDebugDraftFactory() {
   EarthquakeVxseDebugDraft create({
     required Earthquake current,
     required EarthquakeTelegramType type,

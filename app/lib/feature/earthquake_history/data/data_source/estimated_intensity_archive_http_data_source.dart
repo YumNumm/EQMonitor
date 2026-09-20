@@ -9,18 +9,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intens
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_cleanup_diagnostic.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 
-final class EstimatedIntensityArchiveHttpDataSource {
-  const new({
-    this.operationFactory =
-        EstimatedIntensityArchiveHttpOperationFactory.create,
-    this.responseValidator = const EstimatedIntensityArchiveResponseValidator(),
-    this.streamVerifier = const EstimatedIntensityArchiveStreamVerifier(),
-    this.diagnosticReporter = EstimatedIntensityArchiveDiagnostics.ignore,
-  });
-  final EstimatedIntensityArchiveHttpOperationCreator operationFactory;
-  final EstimatedIntensityArchiveResponseValidator responseValidator;
-  final EstimatedIntensityArchiveStreamVerifier streamVerifier;
-  final EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter;
+final class const EstimatedIntensityArchiveHttpDataSource({
+  final EstimatedIntensityArchiveHttpOperationCreator operationFactory =
+      EstimatedIntensityArchiveHttpOperationFactory.create,
+  final EstimatedIntensityArchiveResponseValidator responseValidator =
+      const EstimatedIntensityArchiveResponseValidator(),
+  final EstimatedIntensityArchiveStreamVerifier streamVerifier =
+      const EstimatedIntensityArchiveStreamVerifier(),
+  final EstimatedIntensityArchiveDiagnosticReporter diagnosticReporter =
+      EstimatedIntensityArchiveDiagnostics.ignore,
+}) {
   Future<EstimatedIntensityArchiveDownloadResult> download({
     required EstimatedIntensityArchiveDescriptor descriptor,
     required Directory temporaryDirectory,

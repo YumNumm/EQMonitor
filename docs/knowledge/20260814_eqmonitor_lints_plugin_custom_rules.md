@@ -49,3 +49,31 @@ grep -c '^\(ERROR\|WARNING\|INFO\)|' /tmp/check.txt
 残りは `!` で強制アクセスする既存コードは、チェック漏れによる潜在的な
 ランタイムクラッシュを埋め込んでいることがある。`!` を除去する際は
 「本当にそのフィールドも null チェック済みか」を必ず確認すること。
+
+## `require_riverpod_generator`（手書き Provider の禁止）
+
+`final xxxProvider = Provider(...)` のように Riverpod Generator を通さない
+Provider 宣言を禁止する。`@riverpod` を付けた関数 / Notifier class として
+宣言し、生成された Provider を利用する。
+
+`Provider.autoDispose(...)` / `Provider.family(...)` のようなビルダー経由の
+宣言や、prefix 付き import（`riverpod.Provider(...)`）も検出する。
+判定は `ManualProviderDetection`（式の左右に現れる型名候補を集めて
+Provider 型名集合と照合する）に集約している。Riverpod の新しい Provider 型を
+使い始めたら、この集合へ型名を追加すること。
+
+## `prefer_primary_constructor`（`const new(...)` の Primary Constructor 化）
+
+class 本体の `const new({required this.a});` + `final int a;` は
+`class const Foo({required final int a});` へ書き換える。
+
+誤検出を避けるため、判定（`PrimaryConstructorConvertibility`）は次をすべて
+満たす場合のみ報告する保守的な条件になっている。
+
+- `const` かつ無名（`factory` / `external` / 名前付きは対象外）
+- 初期化子リスト・リダイレクト・本体を持たない
+- 引数がすべて `this.x` で、対応するフィールドが `final` かつ
+  初期化子・`late` を伴わない
+- class が `extends` を持たない（**Widget / State はここで一括除外される**）
+- class 本体にコンストラクタが 1 つだけ（他のコンストラクタの初期化子リストから
+  Primary Constructor が宣言するフィールドを初期化できないため）

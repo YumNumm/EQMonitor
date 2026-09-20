@@ -6,9 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 /// EQMonitor API 向け User-Agent 文字列を組み立てる。
 ///
 /// 例: `net.yumnumm.eqmonitor/3.0.0+100 (+https://github.com/YumNumm/EQMonitor) (iPhone17,1; iOS 18.0)`
-class ApiUserAgentBuilder {
-  const new();
-
+class const ApiUserAgentBuilder() {
   static const repositoryUrl = 'https://github.com/YumNumm/EQMonitor';
 
   String build({

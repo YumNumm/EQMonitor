@@ -261,23 +261,27 @@ class _NotificationConditionCard extends StatelessWidget {
               onChanged: onMinIntensityChanged,
             ),
           ),
-          const Divider(height: 1),
-          if (isPro)
-            ListTile(
-              title: const Text('震度別設定'),
-              subtitle: overrides.isEmpty
-                  ? const Text('震度ごとに通知をオーバーライドできます')
-                  : Text('${overrides.length}件の設定'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: onOverrideTap,
-            )
-          else
-            LockedSettingTile(
-              title: '震度別設定',
-              subtitle: 'Proで利用できます',
-              locked: true,
-              onTap: () async => const ProUpgradeDialogAction().show(context),
-            ),
+          // 震度別設定は音・割り込みレベルの上書きであり iOS 固有の契約のため、
+          // Android では OS の通知チャンネル設定へ委ねて非表示にする。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            if (isPro)
+              ListTile(
+                title: const Text('震度別設定'),
+                subtitle: overrides.isEmpty
+                    ? const Text('震度ごとに通知をオーバーライドできます')
+                    : Text('${overrides.length}件の設定'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: onOverrideTap,
+              )
+            else
+              LockedSettingTile(
+                title: '震度別設定',
+                subtitle: 'Proで利用できます',
+                locked: true,
+                onTap: () async => const ProUpgradeDialogAction().show(context),
+              ),
+          ],
         ],
       ),
     );
@@ -305,6 +309,7 @@ class _WarningSettingsCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+    final levels = interruptionLevelsFor(slotType);
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -329,30 +334,34 @@ class _WarningSettingsCard extends StatelessWidget {
             trailing: AppSwitch(value: enabled, onChanged: onChanged),
             onTap: () => onChanged(!enabled),
           ),
-          const Divider(height: 1),
-          ListTile(
-            enabled: enabled,
-            title: const Text('割り込みレベル'),
-            trailing: DropdownMenu<InterruptionLevel>(
-              initialSelection: interruptionLevel,
+          // 割り込みレベルは iOS の通知契約の設定。Android の重要度は
+          // Notification Channel 側で管理するため、OS の設定へ委ねる。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            ListTile(
               enabled: enabled,
-              requestFocusOnTap: false,
-              width: 180,
-              onSelected: (next) {
-                if (next != null) {
-                  onInterruptionLevelChanged(next);
-                }
-              },
-              dropdownMenuEntries: InterruptionLevel.values
-                  .map(
-                    (level) => DropdownMenuEntry(
-                      value: level,
-                      label: level.label,
-                    ),
-                  )
-                  .toList(),
+              title: const Text('割り込みレベル'),
+              trailing: DropdownMenu<InterruptionLevel>(
+                initialSelection: levels.contains(interruptionLevel)
+                    ? interruptionLevel
+                    : levels.last,
+                enabled: enabled,
+                requestFocusOnTap: false,
+                width: 180,
+                onSelected: (next) {
+                  if (next != null) {
+                    onInterruptionLevelChanged(next);
+                  }
+                },
+                dropdownMenuEntries: levels
+                    .map(
+                      (level) =>
+                          DropdownMenuEntry(value: level, label: level.label),
+                    )
+                    .toList(),
+              ),
             ),
-          ),
+          ],
           const Divider(height: 1),
           Padding(
             padding: EdgeInsets.all(spacing.md),

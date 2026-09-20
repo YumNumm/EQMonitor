@@ -7,9 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// ホーム設定に基づく [MapOptions] を構築するクラス
-class HomeMapOptionsBuilder {
-  const new();
-
+class const HomeMapOptionsBuilder() {
   /// ホーム設定から全マップ共通の maxZoom と gestures を取り出す
   ({double maxZoom, MapGestures gestures}) sharedOptions(HomeMapSettings map) {
     final maxZ = (map.maxZoom ?? 22).clamp(0.0, 24.0);

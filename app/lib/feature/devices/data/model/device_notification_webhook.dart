@@ -1,20 +1,12 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
-final class DeviceNotificationWebhook {
-  const new({
-    required this.id,
-    required this.createdAt,
-    required this.expiresAt,
-    required this.approved,
-    required this.webhookUrl,
-  });
-
-  final String id;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final bool approved;
-  final String? webhookUrl;
-}
+final class const DeviceNotificationWebhook({
+  required final String id,
+  required final DateTime createdAt,
+  required final DateTime? expiresAt,
+  required final bool approved,
+  required final String? webhookUrl,
+});
 
 extension DeviceNotificationWebhookConverter
     on api.DeviceNotificationWebhookResponse {

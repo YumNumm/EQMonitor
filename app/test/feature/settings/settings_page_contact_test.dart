@@ -105,11 +105,8 @@ final _packageInfo = PackageInfo(
   buildNumber: '456',
 );
 
-class _FakeOpenContactAction extends OpenContactAction {
-  const new(this._onCall);
-
-  final void Function() _onCall;
-
+class const _FakeOpenContactAction(final void Function() _onCall)
+    extends OpenContactAction {
   @override
   Future<void> call(WidgetRef ref, BuildContext context) async {
     _onCall();

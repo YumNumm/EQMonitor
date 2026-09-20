@@ -181,9 +181,7 @@ class EarthquakeHistoryShindoDbStationLayerBuilder {
   );
 }
 
-class EarthquakeHistoryShindoDbStationGeoJsonBuilder {
-  const new();
-
+class const EarthquakeHistoryShindoDbStationGeoJsonBuilder() {
   String build({required ShindoDbIntensityTree tree}) {
     final features = <Map<String, dynamic>>[];
     final sortedClasses = {

@@ -5,13 +5,11 @@ import 'package:crypto/crypto.dart';
 
 enum NativeAuthProvider { google, apple }
 
-final class AppleInitialUser {
-  const new({this.email, this.firstName, this.lastName});
-
-  final String? email;
-  final String? firstName;
-  final String? lastName;
-
+final class const AppleInitialUser({
+  final String? email,
+  final String? firstName,
+  final String? lastName,
+}) {
   bool get hasValue =>
       email?.isNotEmpty == true ||
       firstName?.isNotEmpty == true ||
@@ -37,19 +35,12 @@ final class AppleInitialUser {
   int get hashCode => Object.hash(email, firstName, lastName);
 }
 
-final class NativeAuthCredential {
-  const new({
-    required this.provider,
-    required this.idToken,
-    required this.nonce,
-    this.appleUser,
-  });
-
-  final NativeAuthProvider provider;
-  final String idToken;
-  final String nonce;
-  final AppleInitialUser? appleUser;
-
+final class const NativeAuthCredential({
+  required final NativeAuthProvider provider,
+  required final String idToken,
+  required final String nonce,
+  final AppleInitialUser? appleUser,
+}) {
   Map<String, dynamic> toBetterAuthPayload() => {
     'provider': provider.name,
     'idToken': <String, dynamic>{
@@ -61,12 +52,10 @@ final class NativeAuthCredential {
   };
 }
 
-final class NativeAuthNonce {
-  const new({required this.raw, required this.sha256});
-
-  final String raw;
-  final String sha256;
-}
+final class const NativeAuthNonce({
+  required final String raw,
+  required final String sha256,
+});
 
 abstract interface class NativeAuthNonceGenerator {
   NativeAuthNonce generate();

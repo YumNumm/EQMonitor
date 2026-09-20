@@ -15,12 +15,10 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async =>
           .clearLastSent,
     );
 
-class DeviceAuthRepository {
-  const new(this._preferences, {this.onCredentialsWillChange});
-
-  final PreferencesDataSource<SecureStorageKey> _preferences;
-  final Future<void> Function()? onCredentialsWillChange;
-
+class const DeviceAuthRepository(
+  final PreferencesDataSource<SecureStorageKey> _preferences, {
+  final Future<void> Function()? onCredentialsWillChange,
+}) {
   Future<String?> readToken() =>
       _preferences.getString(key: SecureStorageKey.deviceToken);
 

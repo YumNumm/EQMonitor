@@ -298,7 +298,9 @@ class _TestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 通知音・割り込みレベル系の導線は iOS 限定表示のため、iOS で検証する。
     final theme = ThemeData.light().copyWith(
+      platform: TargetPlatform.iOS,
       extensions: [DesignSystemThemeExtension.light()],
     );
     return MaterialApp(theme: theme, home: home);

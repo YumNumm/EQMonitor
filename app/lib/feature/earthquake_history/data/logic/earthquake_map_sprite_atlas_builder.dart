@@ -33,9 +33,7 @@ final class EarthquakeMapSpriteImage {
   final Uint8List rgbaBytes;
 }
 
-final class EarthquakeMapSpriteAtlasBuilder {
-  const new();
-
+final class const EarthquakeMapSpriteAtlasBuilder() {
   MapSpriteAtlas build({
     required EarthquakeMapSpriteImage normalImage,
     required EarthquakeMapSpriteImage lowPrecisionImage,
@@ -110,9 +108,7 @@ final class _EarthquakeMapSpriteAtlasLayout {
   final int height;
 }
 
-final class _EarthquakeMapSpriteAtlasLimitValidator {
-  const new();
-
+final class const _EarthquakeMapSpriteAtlasLimitValidator() {
   void validateDimensions({
     required EarthquakeMapSpriteImage normalImage,
     required EarthquakeMapSpriteImage lowPrecisionImage,
@@ -159,18 +155,12 @@ final class _EarthquakeMapSpriteAtlasLimitValidator {
   }
 }
 
-final class _EarthquakeMapSpritePlacement {
-  const new({
-    required this.regionId,
-    required this.image,
-    required this.cellLeft,
-  });
-
+final class const _EarthquakeMapSpritePlacement({
+  required final String regionId,
+  required final EarthquakeMapSpriteImage image,
+  required final int cellLeft,
+}) {
   static const _padding = MapSpriteAtlas.regionExtrusionPixels;
-
-  final String regionId;
-  final EarthquakeMapSpriteImage image;
-  final int cellLeft;
 
   int get cellWidth => image.width + _padding * 2;
 
@@ -230,9 +220,7 @@ final class _EarthquakeMapSpritePlacement {
   }
 }
 
-final class _EarthquakeMapSpriteAtlasIdentityBuilder {
-  const new();
-
+final class const _EarthquakeMapSpriteAtlasIdentityBuilder() {
   String build({
     required _EarthquakeMapSpriteAtlasLayout layout,
     required Uint8List rgbaBytes,

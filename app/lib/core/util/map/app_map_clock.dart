@@ -1,20 +1,15 @@
 import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 
-final class AppMapUtcWallSource implements MapUtcWallSource {
-  const new(this._now);
-
-  final DateTime Function() _now;
-
+final class const AppMapUtcWallSource(final DateTime Function() _now)
+    implements MapUtcWallSource {
   @override
   DateTime captureUtc() => _now().toUtc();
 }
 
 const createAppMapClock = AppMapClockFactory();
 
-final class AppMapClockFactory {
-  const new();
-
+final class const AppMapClockFactory() {
   MapClock call({
     required DateTime Function() now,
     required MapClockSourceIdentity sourceIdentity,

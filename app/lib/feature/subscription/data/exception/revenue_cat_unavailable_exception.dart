@@ -3,11 +3,9 @@ enum RevenueCatUnavailableReason {
   apiKeyNotConfigured,
 }
 
-final class RevenueCatUnavailableException implements Exception {
-  const new({required this.reason});
-
-  final RevenueCatUnavailableReason reason;
-
+final class const RevenueCatUnavailableException({
+  required final RevenueCatUnavailableReason reason,
+}) implements Exception {
   String get userMessage => switch (reason) {
     RevenueCatUnavailableReason.unsupportedPlatform => 'このプラットフォームでは購入できません',
     RevenueCatUnavailableReason.apiKeyNotConfigured => '現在この機能はご利用いただけません',

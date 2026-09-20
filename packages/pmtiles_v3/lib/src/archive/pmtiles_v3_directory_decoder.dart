@@ -5,16 +5,12 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_entry.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
-final class PmTilesV3DirectoryDecoder {
-  const new({
-    this.compressionDecoder = const PmTilesV3CompressionDecoder(),
-    this.tileId = const PmTilesV3TileId(),
-  });
-
+final class const PmTilesV3DirectoryDecoder({
+  final PmTilesV3CompressionDecoder compressionDecoder =
+      const PmTilesV3CompressionDecoder(),
+  final PmTilesV3TileId tileId = const PmTilesV3TileId(),
+}) {
   static const maxSignedInteger = 0x7FFFFFFFFFFFFFFF;
-
-  final PmTilesV3CompressionDecoder compressionDecoder;
-  final PmTilesV3TileId tileId;
 
   List<PmTilesV3DirectoryEntry> decode({
     required Uint8List bytes,

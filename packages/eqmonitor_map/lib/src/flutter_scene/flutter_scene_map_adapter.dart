@@ -371,15 +371,10 @@ scene.StaticInstanceGeometry createFlutterSceneObservationGeometry({
 }
 
 /// GPU呼び出し前に確定するScene mesh nodeのplan。
-final class FlutterSceneMeshBatchPlan {
-  const new({
-    required this.batch,
-    required this.kind,
-  });
-
-  final MapRenderBatch batch;
-  final MapSceneMeshLayerKind kind;
-}
+final class const FlutterSceneMeshBatchPlan({
+  required final MapRenderBatch batch,
+  required final MapSceneMeshLayerKind kind,
+});
 
 enum FlutterSceneLayerPreflightFailureReason {
   instanceBatchTypeMismatch,

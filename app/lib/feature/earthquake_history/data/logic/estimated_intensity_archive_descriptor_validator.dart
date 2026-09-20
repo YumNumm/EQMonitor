@@ -1,16 +1,12 @@
 part of '../model/estimated_intensity_archive_descriptor.dart';
 
-final class EarthquakeEventIdValidator {
-  const new();
-
+final class const EarthquakeEventIdValidator() {
   bool validate(String eventId) =>
       _estimatedIntensityEventIdPattern.hasMatch(eventId);
 }
 
 /// API descriptor を package-neutral な検証済み値へ変換する pure boundary。
-final class EstimatedIntensityArchiveDescriptorValidator {
-  const new();
-
+final class const EstimatedIntensityArchiveDescriptorValidator() {
   EstimatedIntensityArchiveValidationResult validate({
     required String eventId,
     required EstimatedIntensityArchiveDescriptorInput? input,

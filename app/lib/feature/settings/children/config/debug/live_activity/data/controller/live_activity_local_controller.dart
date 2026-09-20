@@ -3,15 +3,17 @@ import 'dart:io';
 
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_kind.dart';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final liveActivityLocalControllerProvider =
-    Provider<LiveActivityLocalController>((ref) {
-      if (Platform.isIOS) {
-        return const MethodChannelLiveActivityLocalController();
-      }
-      return const UnsupportedLiveActivityLocalController();
-    });
+part 'live_activity_local_controller.g.dart';
+
+@Riverpod(keepAlive: true)
+LiveActivityLocalController liveActivityLocalController(Ref ref) {
+  if (Platform.isIOS) {
+    return const MethodChannelLiveActivityLocalController();
+  }
+  return const UnsupportedLiveActivityLocalController();
+}
 
 /// アプリ内から ActivityKit を用いて Live Activity をローカル開始・更新・終了する。
 ///
@@ -43,10 +45,8 @@ abstract interface class LiveActivityLocalController {
 }
 
 /// iOS 以外のプラットフォーム向けの no-op 実装。
-class UnsupportedLiveActivityLocalController
+class const UnsupportedLiveActivityLocalController()
     implements LiveActivityLocalController {
-  const new();
-
   @override
   Future<bool> isSupported() async => false;
 
@@ -73,10 +73,8 @@ class UnsupportedLiveActivityLocalController
 }
 
 /// `net.yumnumm.eqmonitor/live_activity_debug` MethodChannel 経由の iOS 実装。
-class MethodChannelLiveActivityLocalController
+class const MethodChannelLiveActivityLocalController()
     implements LiveActivityLocalController {
-  const new();
-
   static const MethodChannel _channel = MethodChannel(
     'net.yumnumm.eqmonitor/live_activity_debug',
   );
@@ -130,7 +128,10 @@ class MethodChannelLiveActivityLocalController
     });
   }
 
-  Future<T?> _invoke<T>(String method, [Map<String, dynamic>? arguments]) async {
+  Future<T?> _invoke<T>(
+    String method, [
+    Map<String, dynamic>? arguments,
+  ]) async {
     try {
       return await _channel.invokeMethod<T>(method, arguments);
     } on PlatformException catch (e) {
@@ -145,12 +146,10 @@ class MethodChannelLiveActivityLocalController
 }
 
 /// Live Activity のローカル操作で発生した例外。
-class LiveActivityLocalException implements Exception {
-  const new(this.message, {this.code});
-
-  final String message;
-  final String? code;
-
+class const LiveActivityLocalException(
+  final String message, {
+  final String? code,
+}) implements Exception {
   @override
   String toString() =>
       code == null ? message : 'LiveActivityLocalException($code): $message';

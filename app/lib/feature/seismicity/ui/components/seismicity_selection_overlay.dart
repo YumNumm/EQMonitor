@@ -80,12 +80,10 @@ class SeismicitySelectionOverlay extends HookWidget {
   }
 }
 
-class _SelectionPainter extends CustomPainter {
-  const new({required this.start, required this.current});
-
-  final Offset? start;
-  final Offset? current;
-
+class const _SelectionPainter({
+  required final Offset? start,
+  required final Offset? current,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final start = this.start;

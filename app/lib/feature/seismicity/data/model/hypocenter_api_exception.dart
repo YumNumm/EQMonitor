@@ -5,17 +5,11 @@ enum HypocenterApiErrorKind {
   cancelled,
 }
 
-class HypocenterApiException implements Exception {
-  const new({
-    required this.message,
-    this.statusCode,
-    this.kind = HypocenterApiErrorKind.network,
-  });
-
-  final String message;
-  final int? statusCode;
-  final HypocenterApiErrorKind kind;
-
+class const HypocenterApiException({
+  required final String message,
+  final int? statusCode,
+  final HypocenterApiErrorKind kind = HypocenterApiErrorKind.network,
+}) implements Exception {
   bool get isRevisionChanged =>
       kind == HypocenterApiErrorKind.revisionChanged || statusCode == 409;
 

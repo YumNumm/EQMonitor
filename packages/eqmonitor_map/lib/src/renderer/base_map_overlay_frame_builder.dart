@@ -20,25 +20,15 @@ typedef EarthquakeOverlayExactTileMissReasonFor =
     EarthquakeOverlayExactTileMissReason Function(CanonicalTileId tileId);
 
 /// BaseMapViewが1 frameでsubmitする内容と次frameへ持ち越すoverlay state。
-final class BaseMapOverlayFrameResult {
-  const new({
-    required this.overlay,
-    required this.submission,
-    required this.coverage,
-    required this.diagnostic,
-    required this.observationBatchForReuse,
-    required this.spriteBatchesForReuse,
-    required this.shouldRetireGpuResources,
-  });
-
-  final EarthquakeMapOverlaySnapshot? overlay;
-  final MapSceneFrameSubmission? submission;
-  final EarthquakeOverlayCoverage coverage;
-  final EarthquakeOverlayCoverageDiagnostic diagnostic;
-  final ObservationPointBatch? observationBatchForReuse;
-  final List<MapPointSpriteInstanceBatch> spriteBatchesForReuse;
-  final bool shouldRetireGpuResources;
-}
+final class const BaseMapOverlayFrameResult({
+  required final EarthquakeMapOverlaySnapshot? overlay,
+  required final MapSceneFrameSubmission? submission,
+  required final EarthquakeOverlayCoverage coverage,
+  required final EarthquakeOverlayCoverageDiagnostic diagnostic,
+  required final ObservationPointBatch? observationBatchForReuse,
+  required final List<MapPointSpriteInstanceBatch> spriteBatchesForReuse,
+  required final bool shouldRetireGpuResources,
+});
 
 /// snapshot選択、exact coverage、Fill/観測点を1つのScene frameへ統合する。
 BaseMapOverlayFrameResult buildBaseMapOverlayFrame({

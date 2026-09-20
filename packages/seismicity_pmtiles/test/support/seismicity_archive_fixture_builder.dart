@@ -10,25 +10,15 @@ import 'package:vector_tile/raw/raw_vector_tile.dart';
 import 'seismicity_mvt_fixture_builder.dart';
 import 'seismicity_pmtiles_archive_writer.dart';
 
-final class SeismicityArchiveFixture {
-  const new({
-    required this.bytes,
-    required this.descriptor,
-    required this.occupiedTileIds,
-    required this.decompressedTiles,
-    required this.truncatedHeader,
-    required this.truncatedDirectory,
-    required this.truncatedTileData,
-  });
-
-  final Uint8List bytes;
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-  final List<int> occupiedTileIds;
-  final Map<int, Uint8List> decompressedTiles;
-  final Uint8List truncatedHeader;
-  final Uint8List truncatedDirectory;
-  final Uint8List truncatedTileData;
-}
+final class const SeismicityArchiveFixture({
+  required final Uint8List bytes,
+  required final SeismicityPmTilesArchiveDescriptor descriptor,
+  required final List<int> occupiedTileIds,
+  required final Map<int, Uint8List> decompressedTiles,
+  required final Uint8List truncatedHeader,
+  required final Uint8List truncatedDirectory,
+  required final Uint8List truncatedTileData,
+});
 
 /// Test-only gzip PMTiles fixture composition over Task 57 writer.
 final class SeismicityArchiveFixtureBuilder {

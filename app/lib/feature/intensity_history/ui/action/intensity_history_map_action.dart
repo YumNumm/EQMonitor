@@ -20,9 +20,7 @@ IntensityHistoryMapAction intensityHistoryMapAction(Ref ref) =>
     const IntensityHistoryMapAction();
 
 /// 市区町村別最大震度マップのタップ操作を担う。
-class IntensityHistoryMapAction {
-  const new();
-
+class const IntensityHistoryMapAction() {
   /// 地図タップを市区町村の選択として解釈する。
   ///
   /// ズームに依らずポリゴン判定で市区町村を特定する。都道府県・細分区域への

@@ -1,7 +1,5 @@
 import 'package:cookie_jar/cookie_jar.dart';
 
-final class BetterAuthCookieJarFactory {
-  const new();
-
+final class const BetterAuthCookieJarFactory() {
   CookieJar create() => CookieJar();
 }

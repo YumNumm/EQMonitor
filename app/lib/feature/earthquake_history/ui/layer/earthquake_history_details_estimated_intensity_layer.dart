@@ -61,9 +61,7 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
   }
 }
 
-class EarthquakeHistoryEstimatedIntensityStyle {
-  const new();
-
+class const EarthquakeHistoryEstimatedIntensityStyle() {
   static const sourceId = 'earthquake-history-estimated-intensity';
   static const fillLayerId = 'earthquake-history-estimated-intensity-fill';
   static const lineLayerId = 'earthquake-history-estimated-intensity-line';

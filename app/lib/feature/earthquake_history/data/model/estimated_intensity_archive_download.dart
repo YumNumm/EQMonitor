@@ -24,27 +24,19 @@ enum EstimatedIntensityArchiveDownloadFailure {
   storageFailure,
 }
 
-sealed class EstimatedIntensityArchiveDownloadResult {
-  const new();
-}
+sealed class const EstimatedIntensityArchiveDownloadResult();
 
-final class EstimatedIntensityArchiveDownloadSuccess
-    extends EstimatedIntensityArchiveDownloadResult {
-  const new(this.archive);
-
-  final VerifiedEstimatedIntensityArchiveDownload archive;
-
+final class const EstimatedIntensityArchiveDownloadSuccess(
+  final VerifiedEstimatedIntensityArchiveDownload archive,
+) extends EstimatedIntensityArchiveDownloadResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveDownloadResult.success(identity: redacted)';
 }
 
-final class EstimatedIntensityArchiveDownloadRejected
-    extends EstimatedIntensityArchiveDownloadResult {
-  const new(this.failure);
-
-  final EstimatedIntensityArchiveDownloadFailure failure;
-
+final class const EstimatedIntensityArchiveDownloadRejected(
+  final EstimatedIntensityArchiveDownloadFailure failure,
+) extends EstimatedIntensityArchiveDownloadResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveDownloadResult.rejected(failure: $failure)';

@@ -6,15 +6,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
-class IntensityTreeConverter {
-  const new({
-    required this.parameter,
-    this.shindoDbStations,
-  });
-
-  final EarthquakeParameter parameter;
-  final ShindoDbStationsParameter? shindoDbStations;
-
+class const IntensityTreeConverter({
+  required final EarthquakeParameter parameter,
+  final ShindoDbStationsParameter? shindoDbStations,
+}) {
   Iterable<EarthquakeParameterPrefectureItem> get _allPrefectures =>
       parameter.prefectures;
 

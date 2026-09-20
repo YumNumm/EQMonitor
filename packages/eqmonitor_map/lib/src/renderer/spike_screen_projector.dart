@@ -2,9 +2,7 @@ import 'dart:ui';
 
 import 'package:vector_math/vector_math_64.dart';
 
-class SpikeScreenProjector {
-  const new();
-
+class const SpikeScreenProjector() {
   Offset fromClip({
     required Vector3 clip,
     required Size logicalSize,

@@ -125,54 +125,37 @@ const baseMapLayerSpecs = <BaseMapLayerSpec>[
 /// frame/tileごとに毎回生成するdecode結果であり永続化しないため、
 /// `MvtTile`/`FillMesh`/`LineMesh`と同じ理由でFreezedにはしない。
 @immutable
-sealed class BaseMapTileLayerGeometry {
-  const new({
-    required this.styleLayerId,
-    required this.extent,
-  });
-
-  final String styleLayerId;
+sealed class const BaseMapTileLayerGeometry({
+  required final String styleLayerId,
 
   /// 対応するMVT source layerが存在する場合に、そのlayerが宣言したextent。
   ///
   /// `null`はsparse tileでsource layer自体が欠損している場合のみを表す。
-  final int? extent;
-}
+  required final int? extent,
+});
 
-final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
-  const new({
-    required super.styleLayerId,
-    required super.extent,
-    required this.meshes,
-  });
+final class const BaseMapTileFillLayerGeometry({
+  required super.styleLayerId,
+  required super.extent,
+  required final List<FillMesh> meshes,
+}) extends BaseMapTileLayerGeometry;
 
-  final List<FillMesh> meshes;
-}
-
-final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
-  const new({
-    required super.styleLayerId,
-    required super.extent,
-    required this.meshes,
-  });
-
-  final List<LineMesh> meshes;
-}
+final class const BaseMapTileLineLayerGeometry({
+  required super.styleLayerId,
+  required super.extent,
+  required final List<LineMesh> meshes,
+}) extends BaseMapTileLayerGeometry;
 
 @immutable
-class BaseMapTileGeometry {
-  const new({
-    required this.layers,
-    this.earthquakeAreas = const EarthquakeAreaTileGeometry.empty(),
-  });
-
+class const BaseMapTileGeometry({
   /// [baseMapLayerSpecs]から[BaseMapLayerKind.background]を除いた行と
   /// 同じ順序・同じ件数。
-  final List<BaseMapTileLayerGeometry> layers;
+  required final List<BaseMapTileLayerGeometry> layers,
 
   /// 地震情報のcodeに対応する予報区・市区町村のFill geometry。
-  final EarthquakeAreaTileGeometry earthquakeAreas;
-}
+  final EarthquakeAreaTileGeometry earthquakeAreas =
+      const EarthquakeAreaTileGeometry.empty(),
+});
 
 /// [BaseMapTileDecoder.decode]が使う上限値一式。呼び出し側が明示し、
 /// decoder内部に固定fallbackは置かない(`MvtDecodeLimits`と同じ運用方針)。
@@ -211,9 +194,7 @@ abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
 /// 計測誤差の範囲(1ms未満)に収まり、`TransferableTypedData`が節約できる
 /// コピー時間よりゾーンコピー自体の分岐・APIの複雑さの方が上回る。
 /// 根拠なく重い機構を入れない(Global Constraints)ため採用しない。
-final class BaseMapTileDecoder {
-  const new();
-
+final class const BaseMapTileDecoder() {
   Future<BaseMapTileGeometry> decode({
     required Uint8List tileBytes,
     required BaseMapTileDecodeLimits limits,

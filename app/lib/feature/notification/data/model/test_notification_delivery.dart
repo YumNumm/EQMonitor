@@ -107,31 +107,18 @@ extension TestScenarioTypeApiExtension on TestScenarioType {
 }
 
 /// テストシナリオ実行結果
-class TestScenarioDeliveryResult {
-  const new({
-    required this.eventId,
-    required this.stepsPlanned,
-    required this.telegramTypes,
-  });
+class const TestScenarioDeliveryResult({
+  required final String eventId,
+  required final int stepsPlanned,
+  required final List<String> telegramTypes,
+});
 
-  final String eventId;
-  final int stepsPlanned;
-  final List<String> telegramTypes;
-}
-
-class TestScenarioTypeDeliveryResult {
-  const new({
-    required this.message,
-    required this.scenario,
-    required this.eventId,
-    required this.prettyJson,
-  });
-
-  final String message;
-  final String scenario;
-  final String eventId;
-  final String prettyJson;
-}
+class const TestScenarioTypeDeliveryResult({
+  required final String message,
+  required final String scenario,
+  required final String eventId,
+  required final String prettyJson,
+});
 
 extension TestScenarioDeliveryResultApiExtension on api.TestScenarioResponse {
   TestScenarioDeliveryResult get toTestScenarioDeliveryResult =>

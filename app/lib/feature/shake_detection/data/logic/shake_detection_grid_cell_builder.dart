@@ -8,18 +8,12 @@ part 'shake_detection_grid_cell_builder.g.dart';
 ShakeDetectionGridCellBuilder shakeDetectionGridCellBuilder(Ref ref) =>
     ShakeDetectionGridCellBuilder();
 
-class ShakeDetectionGridCell {
-  const new({
-    required this.minLat,
-    required this.minLng,
-    required this.level,
-  });
-
+class const ShakeDetectionGridCell({
+  required final double minLat,
+  required final double minLng,
+  required final ShakeDetectionLevel level,
+}) {
   static const step = 0.25;
-
-  final double minLat;
-  final double minLng;
-  final ShakeDetectionLevel level;
 
   double get maxLat => minLat + step;
   double get maxLng => minLng + step;

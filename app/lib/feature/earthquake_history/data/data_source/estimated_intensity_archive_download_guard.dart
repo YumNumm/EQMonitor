@@ -89,8 +89,6 @@ final class EstimatedIntensityArchiveDownloadGuard {
   }
 }
 
-final class EstimatedIntensityArchiveStoppedException implements Exception {
-  const new(this.reason);
-
-  final EstimatedIntensityArchiveStopReason reason;
-}
+final class const EstimatedIntensityArchiveStoppedException(
+  final EstimatedIntensityArchiveStopReason reason,
+) implements Exception;

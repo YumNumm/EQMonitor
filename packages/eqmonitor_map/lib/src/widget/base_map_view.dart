@@ -1258,9 +1258,7 @@ class _BaseMapController extends ChangeNotifier
 /// 焼き込んだ完成済みのclip座標(`baseMapTileViewProjectionMatrixFor`)を
 /// 持たせるため、
 /// Scene側のcameraが二重に変換をかけないようにする。
-class _IdentityCameraProjection implements scene.CameraProjection {
-  const new();
-
+class const _IdentityCameraProjection() implements scene.CameraProjection {
   @override
   scene_math.Matrix4 getProjectionMatrix(double aspectRatio) =>
       scene_math.Matrix4.identity();

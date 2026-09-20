@@ -51,19 +51,12 @@ void main() {
   }
 }
 
-final class _Task63Case {
-  const new({
-    required this.name,
-    required this.bytes,
-    required this.descriptor,
-    required this.matcher,
-  });
-
-  final String name;
-  final Uint8List bytes;
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-  final Matcher matcher;
-}
+final class const _Task63Case({
+  required final String name,
+  required final Uint8List bytes,
+  required final SeismicityPmTilesArchiveDescriptor descriptor,
+  required final Matcher matcher,
+});
 
 final class _CountingReader implements PmTilesRandomAccessReader {
   new({required this.inner}) : closeCount = 0;

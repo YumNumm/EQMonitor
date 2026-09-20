@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_display_mode.dart';
@@ -36,6 +37,7 @@ import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -59,16 +61,32 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
+    final requiresRegionMap =
+        !showingDb &&
+        ref
+            .watch(earthquakeHistoryMapBoundsCalculatorProvider)
+            .requiresRegionMap(earthquake: earthquake, dbTree: null);
+    final regionMap = requiresRegionMap ? ref.watch(jmaMapProvider) : null;
+    if (requiresRegionMap && regionMap?.value == null) {
+      return switch (regionMap) {
+        AsyncError(:final error) => Center(child: ErrorCard(error: error)),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
+      };
+    }
 
     return switch (mapConfiguration) {
       AsyncData(value: MapConfiguration(styleString: final styleString?)) =>
         MapOperationQueueScope(
           child: MapLibreEventProvider(
-            child: _MapContent(
-              styleString: styleString,
-              earthquake: earthquake,
-              displayMode: displayMode,
-              showingDb: showingDb,
+            child: LayoutBuilder(
+              builder: (context, constraints) => _MapContent(
+                styleString: styleString,
+                earthquake: earthquake,
+                displayMode: displayMode,
+                showingDb: showingDb,
+                regionMap: regionMap?.value?.areaForecastLocalE,
+                viewportSize: constraints.biggest,
+              ),
             ),
           ),
         ),
@@ -79,9 +97,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
 }
 
 /// 地震履歴地図画面でデバッグ操作を表示するか判定する。
-class EarthquakeHistoryDebuggerVisibility {
-  const new();
-
+class const EarthquakeHistoryDebuggerVisibility() {
   bool shouldShow({
     required bool isDebugBuild,
     required AsyncValue<bool> debugPreference,
@@ -91,12 +107,16 @@ class EarthquakeHistoryDebuggerVisibility {
 class _MapContent extends HookConsumerWidget {
   const new({
     required this.styleString,
+    required this.regionMap,
+    required this.viewportSize,
     required this.earthquake,
     required this.displayMode,
     required this.showingDb,
   });
 
   final String styleString;
+  final JmaMap_JmaMapData? regionMap;
+  final Size viewportSize;
   final Earthquake earthquake;
   final IntensityDisplayMode displayMode;
   final bool showingDb;
@@ -165,11 +185,28 @@ class _MapContent extends HookConsumerWidget {
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
 
     const mapCamera = EarthquakeHistoryMapCamera();
-    final center = mapCamera.initialCenter(earthquake);
-    final zoom = mapCamera.initialZoom(earthquake);
+    var center = mapCamera.initialCenter(earthquake);
+    var zoom = mapCamera.initialZoom(earthquake);
     final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
+    if (regionMap case final map?) {
+      final fit = mapCamera.initialRegionCamera(
+        earthquake: earthquake,
+        regionMap: map,
+        viewportSize: viewportSize,
+        maxZoom: maxZoom,
+      );
+      if (fit case MapCameraBoundsFitSucceeded(:final camera)) {
+        center = Geographic(
+          lon: camera.centerLongitude,
+          lat: camera.centerLatitude,
+        );
+        zoom = camera.zoom;
+      } else {
+        return const Center(child: Text('地図の表示範囲を取得できませんでした'));
+      }
+    }
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: zoom,

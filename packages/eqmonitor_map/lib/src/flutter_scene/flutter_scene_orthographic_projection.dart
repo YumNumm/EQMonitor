@@ -2,11 +2,9 @@ import 'package:eqmonitor_map/src/renderer/eqmonitor_orthographic_projection.dar
 import 'package:flutter_scene/scene.dart' as scene;
 import 'package:vector_math/vector_math.dart' as scene_math;
 
-class FlutterSceneOrthographicProjection implements scene.CameraProjection {
-  const new({required this.projection});
-
-  final EqmonitorOrthographicProjection projection;
-
+class const FlutterSceneOrthographicProjection({
+  required final EqmonitorOrthographicProjection projection,
+}) implements scene.CameraProjection {
   @override
   scene_math.Matrix4 getProjectionMatrix(double aspectRatio) =>
       scene_math.Matrix4.fromList(

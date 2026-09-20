@@ -15,9 +15,7 @@ part 'eqmonitor_realtime_event_mapper.g.dart';
 EqMonitorRealtimeEventMapper eqMonitorRealtimeEventMapper(Ref ref) =>
     const EqMonitorRealtimeEventMapper();
 
-class EqMonitorRealtimeEventMapper {
-  const new();
-
+class const EqMonitorRealtimeEventMapper() {
   List<RealtimeEvent> map(WsMessage message) => switch (message) {
     WsRealtimeMessage(:final data) => switch (data) {
       api.RealtimeEewUpsertEvent(:final payload) => [

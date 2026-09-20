@@ -4,9 +4,7 @@ import 'dart:typed_data';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_bounded_bytes_sink.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
-final class PmTilesV3CompressionDecoder {
-  const new();
-
+final class const PmTilesV3CompressionDecoder() {
   static const none = 1;
   static const gzipCompression = 2;
 

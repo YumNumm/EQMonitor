@@ -305,16 +305,11 @@ final class BaseMapTileCache {
 
 /// [BaseMapTileCache.lookupWithFallback]の結果。
 @immutable
-sealed class BaseMapTileFallbackResult {
-  const new();
-}
+sealed class const BaseMapTileFallbackResult();
 
 /// 要求どおりのtileがcache済みだった場合。
-final class BaseMapTileFallbackExact extends BaseMapTileFallbackResult {
-  const new(this.geometry);
-
-  final BaseMapTileGeometry geometry;
-}
+final class const BaseMapTileFallbackExact(final BaseMapTileGeometry geometry)
+    extends BaseMapTileFallbackResult;
 
 /// 要求tileは未cacheだが、`z+1`の子4枚が全てcache済みだった場合。
 final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
@@ -327,20 +322,12 @@ final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
 
 /// 要求tileも子4枚も未cacheで、`stepsUp`段上の祖先[tileId]がcache済み
 /// だった場合。
-final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
-  const new(
-    this.geometry, {
-    required this.tileId,
-    required this.stepsUp,
-  });
-
-  final BaseMapTileGeometry geometry;
-  final CanonicalTileId tileId;
-  final int stepsUp;
-}
+final class const BaseMapTileFallbackParent(
+  final BaseMapTileGeometry geometry, {
+  required final CanonicalTileId tileId,
+  required final int stepsUp,
+}) extends BaseMapTileFallbackResult;
 
 /// 要求tile・子4枚・`maxParentSteps`段以内の祖先のいずれもcacheされていない
 /// 場合。
-final class BaseMapTileFallbackMiss extends BaseMapTileFallbackResult {
-  const new();
-}
+final class const BaseMapTileFallbackMiss() extends BaseMapTileFallbackResult;

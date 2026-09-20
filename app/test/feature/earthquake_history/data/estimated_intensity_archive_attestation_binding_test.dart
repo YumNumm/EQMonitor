@@ -72,12 +72,9 @@ Future<EstimatedIntensityArchiveDownloadResult> downloadWithVerifier({
       limits: estimatedIntensityTransportTestLimits,
     );
 
-final class ReplayEstimatedIntensityArchiveFileVerifier
-    implements EstimatedIntensityArchiveFileVerifier {
-  const new(this.result);
-
-  final EstimatedIntensityArchiveDownloadResult result;
-
+final class const ReplayEstimatedIntensityArchiveFileVerifier(
+  final EstimatedIntensityArchiveDownloadResult result,
+) implements EstimatedIntensityArchiveFileVerifier {
   @override
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveDescriptor descriptor,

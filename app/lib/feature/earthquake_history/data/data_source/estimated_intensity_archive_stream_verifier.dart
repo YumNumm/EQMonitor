@@ -10,19 +10,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intens
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_download.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/estimated_intensity_archive_stop_reason.dart';
 
-final class EstimatedIntensityArchiveStreamVerifier {
-  const new({
-    this.stopResultMapper = const EstimatedIntensityArchiveStopResultMapper(),
-    this.fileVerifier = const DartIoEstimatedIntensityArchiveFileVerifier(),
-    this.partWriterFactory = EstimatedIntensityArchivePartWriterFactory.create,
-    this.attestationBinder = const EstimatedIntensityArchiveAttestationBinder(),
-  });
-
-  final EstimatedIntensityArchiveStopResultMapper stopResultMapper;
-  final EstimatedIntensityArchiveFileVerifier fileVerifier;
-  final EstimatedIntensityArchivePartWriterCreator partWriterFactory;
-  final EstimatedIntensityArchiveAttestationBinder attestationBinder;
-
+final class const EstimatedIntensityArchiveStreamVerifier({
+  final EstimatedIntensityArchiveStopResultMapper stopResultMapper =
+      const EstimatedIntensityArchiveStopResultMapper(),
+  final EstimatedIntensityArchiveFileVerifier fileVerifier =
+      const DartIoEstimatedIntensityArchiveFileVerifier(),
+  final EstimatedIntensityArchivePartWriterCreator partWriterFactory =
+      EstimatedIntensityArchivePartWriterFactory.create,
+  final EstimatedIntensityArchiveAttestationBinder attestationBinder =
+      const EstimatedIntensityArchiveAttestationBinder(),
+}) {
   Future<EstimatedIntensityArchiveDownloadResult> verify({
     required EstimatedIntensityArchiveHttpResponse response,
     required EstimatedIntensityArchiveDescriptor descriptor,

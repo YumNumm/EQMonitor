@@ -21,35 +21,25 @@ enum EstimatedIntensityArchiveFailure {
 }
 
 /// API field の欠落、検証成功、検証失敗を区別する結果。
-sealed class EstimatedIntensityArchiveValidationResult {
-  const new();
-}
+sealed class const EstimatedIntensityArchiveValidationResult();
 
-final class EstimatedIntensityArchiveValidationMissing
+final class const EstimatedIntensityArchiveValidationMissing()
     extends EstimatedIntensityArchiveValidationResult {
-  const new();
-
   @override
   String toString() => 'EstimatedIntensityArchiveValidationResult.missing()';
 }
 
-final class EstimatedIntensityArchiveValidationValid
-    extends EstimatedIntensityArchiveValidationResult {
-  const new(this.descriptor);
-
-  final EstimatedIntensityArchiveDescriptor descriptor;
-
+final class const EstimatedIntensityArchiveValidationValid(
+  final EstimatedIntensityArchiveDescriptor descriptor,
+) extends EstimatedIntensityArchiveValidationResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveValidationResult.valid($descriptor)';
 }
 
-final class EstimatedIntensityArchiveValidationInvalid
-    extends EstimatedIntensityArchiveValidationResult {
-  const new(this.failure);
-
-  final EstimatedIntensityArchiveFailure failure;
-
+final class const EstimatedIntensityArchiveValidationInvalid(
+  final EstimatedIntensityArchiveFailure failure,
+) extends EstimatedIntensityArchiveValidationResult {
   @override
   String toString() =>
       'EstimatedIntensityArchiveValidationResult.invalid('

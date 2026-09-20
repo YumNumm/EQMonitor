@@ -15,21 +15,14 @@ import 'package:vector_math/vector_math.dart' as scene_math;
 /// (GPU初期化を要する呼び出しの直前までをpure関数にする、というこのpackage
 /// 既存の方針に従う)。
 @immutable
-final class BaseMapSceneGeometryArgs {
-  const new({
-    required this.positions,
-    required this.indices,
-    required this.extrudes,
-  });
-
+final class const BaseMapSceneGeometryArgs({
   /// tile-local座標を3成分(x, y, 0)へ展開したfloat32頂点列。
   ///
   /// packed meshは2成分しか持たない([baseMapFillPackedMeshLayout]のdoc
   /// comment参照)。3成分positionはFlutter Sceneの`MeshGeometry.fromArrays`
   /// 側の制約なので、z=0の埋めはこのadapter層だけで行う。
-  final Float32List positions;
-
-  final Uint16List indices;
+  required final Float32List positions,
+  required final Uint16List indices,
 
   /// clip/NDC Y-up済みの押し出し法線。Fillはnull。
   ///
@@ -38,8 +31,8 @@ final class BaseMapSceneGeometryArgs {
   /// custom vertex attributeは値がshaderへ届かず同じ頂点の`position`が読まれる
   /// 不具合を実機で確認したため使わない(経緯は
   /// `docs/todo/800_eqmonitor_map_deferred_verification.md`)。
-  final Float32List? extrudes;
-}
+  required final Float32List? extrudes,
+});
 
 /// [mesh]のpacked byteを`MeshGeometry.fromArrays`の引数へ解く。
 ///
