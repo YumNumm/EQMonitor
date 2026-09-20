@@ -581,10 +581,6 @@ git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレー�
 
 注: `APP_STORE_CONNECT_API_KEY_ID` / `_ISSUER_ID` は mise env 経由で `$GITHUB_ENV` に展開済み（`Set environment variables` ステップ）。`.p8` は `Extract App Store Connect API Key` ステップで `$HOME/.private_keys/` に展開済み。`build-ios` は `fetch-depth: 0` で checkout 済みのため `git describe`/`git log` が機能する。
 
-- [ ] **Step 6: actionlint で検証**
-
-Run: `mise exec -- actionlint .github/workflows/deploy-app.yaml && echo OK`
-Expected: 出力なしで終了し `OK`。エラーがあれば該当箇所を修正して再実行。
 
 - [ ] **Step 7: Commit**
 

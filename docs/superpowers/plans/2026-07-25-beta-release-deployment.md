@@ -6,7 +6,8 @@
 
 **Architecture:** beta tag pushを `Deploy App` の正式トリガーにし、イベントから配布matrixを決めるロジックをテスト可能なshell scriptへ分離する。GitHub生成Release NotesはPython sanitizerを通し、変更タイトルだけを無害化して正式な作者メンションを維持する。
 
-**Tech Stack:** GitHub Actions YAML、Bash、Python 3標準ライブラリ、`unittest`、actionlint、mise
+**Tech Stack:** GitHub Actions YAML、Bash、Python 3標準ライブラリ、`unittest`、mise
+
 
 ## Global Constraints
 
@@ -223,14 +224,12 @@ Add `define-matrix` to `deploy-android-google-play.needs`, then use
 - Google認証actionは `token_format: access_token` を出力し、external公開時だけ
   ensure scriptへ渡す。
 
-- [ ] **Step 6: Run focused tests and actionlint**
 
 ```bash
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
-mise exec -- actionlint .github/workflows/*.yaml
 ```
 
-Expected: both commands exit 0 without warnings.
+Expected: the command exits 0 without warnings.
 
 - [ ] **Step 7: Commit and push**
 
@@ -296,12 +295,10 @@ Repair mode:
 
 Install Python through the existing mise configuration before invoking the sanitizer if the ubuntu-slim runner does not expose it through mise.
 
-- [ ] **Step 4: Run contract test, sanitizer tests, and actionlint**
 
 ```bash
 mise exec -- bash scripts/ci/test_create_beta_release_workflow.sh
 mise exec -- python3 -m unittest scripts/release/test_sanitize_release_notes.py -v
-mise exec -- actionlint .github/workflows/*.yaml
 ```
 
 Expected: all commands exit 0.
@@ -339,7 +336,6 @@ Document:
 mise exec -- python3 -m unittest scripts/release/test_sanitize_release_notes.py -v
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
 mise exec -- bash scripts/ci/test_create_beta_release_workflow.sh
-mise exec -- actionlint .github/workflows/*.yaml
 git --no-pager diff --check
 ```
 
@@ -414,7 +410,6 @@ Add the failure mode and the rule that repository scripts require checkout to
 
 ```bash
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
-mise exec -- actionlint .github/workflows/*.yaml
 git --no-pager diff --check
 ```
 

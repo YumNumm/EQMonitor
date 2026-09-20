@@ -74,8 +74,7 @@ root `README.md`の環境構築へcustom Flutter plugin、`mise install`、revis
 3. `flutter pub get --enforce-lockfile`後、resolved Flutter Scene revisionがlockfileと一致する
    ことを確認する。
 4. `packages/eqmonitor_map`のformat、strict analyze、unit testを実行する。
-5. 関連workflowへ`actionlint`を実行する。
-6. Linuxで実行できないiOS/Android profile/release smoke testは、READMEのmanual checklistへ
+5. Linuxで実行できないiOS/Android profile/release smoke testは、READMEのmanual checklistへ
    明示し、実行済みとは扱わない。
 
 ## 非対象

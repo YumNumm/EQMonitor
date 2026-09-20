@@ -80,7 +80,6 @@
 - [ ] packageから未使用の`device_info_plus`、`json_annotation`、`json_serializable` direct dependencyを`mise exec -- flutter pub remove ...`で除去し、workspace lockfileを更新する。Freezed/build_runnerは残す。
 - [ ] package export/example commentをmanual smoke harnessの説明へ更新する。
 - [ ] `rg -n "write_scene_spike_defines|canonicalEvidence|SceneSpikeEvidence|SceneSpikeCapability|scene_spike_defines|SceneSpikeRuntimeObservation" packages/eqmonitor_map .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml`がno matchになることを確認する。
-- [ ] `mise exec -- actionlint .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml`をproject rootで実行する。
 - [ ] `mise exec -- flutter test`を`packages/eqmonitor_map`で実行する。
 - [ ] 変更を`Refactor: Scene spike evidence harnessを削除`としてコミットする。
 
@@ -124,7 +123,6 @@
 - [ ] `mise exec -- dart format --output=none --set-exit-if-changed packages/eqmonitor_map/lib packages/eqmonitor_map/test packages/eqmonitor_map/example/lib`を実行する。
 - [ ] `mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map`を実行する。
 - [ ] `mise exec -- flutter test`を`packages/eqmonitor_map`で実行する。
-- [ ] `mise exec -- actionlint .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml .github/workflows/wc-check-dart-analyze.yaml .github/workflows/wc-check-dart-test.yaml .github/workflows/wc-check-integration.yaml .github/workflows/deploy-app.yaml .github/workflows/wc-changes.yaml`を実行する。
 - [ ] `git diff --check`と旧evidence/validator/writer参照の最終`rg`を実行する。
 - [ ] iOS/Android profile/release実機確認は未実施としてPR draftへ明記する。Linuxで成功を主張しない。
 - [ ] 検証で必要になった修正だけを適切な既存コミットへ追加するか、`Fix: Scene spike簡素化後の検証不備を修正`としてコミットする。

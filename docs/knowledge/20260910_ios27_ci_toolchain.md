@@ -19,7 +19,6 @@ xcrun swiftc -typecheck \
   -module-cache-path /tmp/eqmonitor-ci-swift27 \
   app/ios/Runner/SearchEarthquakesIntent.swift \
   app/ios/Shared/EarthquakeSearchURL.swift
-actionlint .github/workflows/deploy-app.yaml
 ```
 
 ## 公式資料

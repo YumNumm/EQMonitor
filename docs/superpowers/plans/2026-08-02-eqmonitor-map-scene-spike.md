@@ -193,7 +193,6 @@ Flutterを使うanalyze、test、integration、iOS deploy、Android deploy job�
 
 mise-actionの`install_args`から`flutter`だけを除き、jobが必要とする他toolは保持する。`wc-check-dart-analyze`と`wc-check-dart-test`は空の`install_args`にせず`install: false`を指定し、全tool installを防ぐ。integration、iOS、Android jobはFlutter以外に実際に使うtoolだけを`install_args`へ残す。SDK checkout後に`mise bootstrap repos status --missing`と`mise exec -- flutter --version --machine`を実行し、shimとrevisionを検証する。`mise lock`で`mise.lock`のFlutter tool entryを除去する。
 
-Run: `mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml .github/workflows/wc-check-dart-test.yaml .github/workflows/wc-check-integration.yaml .github/workflows/deploy-app.yaml`
 
 Expected: no findings.
 

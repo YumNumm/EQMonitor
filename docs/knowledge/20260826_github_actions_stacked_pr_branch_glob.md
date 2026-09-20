@@ -30,10 +30,8 @@ on:
 ## 確認
 
 ```bash
-mise exec -- actionlint -color
 gh run list --repo YumNumm/EQMonitor --branch <head-branch>
 gh pr checks <number> --repo YumNumm/EQMonitor
 ```
 
-最下段だけでなく、base branchに`/`を含む上段PRで`PR Flutter Check`、
-`Check GitHub Actions`、`ActionLint`が作成されることを確認する。
+最下段だけでなく、base branchに`/`を含む上段PRでも`PR Flutter Check`が作成されることを確認する。

@@ -410,7 +410,6 @@ Confirm `gh` is available on `macos-26` runners（通常プリインストール
 - [ ] **Step 2: Lint the workflow**
 
 ```bash
-mise exec -- actionlint .github/workflows/deploy-app.yaml
 # and/or
 mise exec -- zizmor .github/workflows/deploy-app.yaml
 ```

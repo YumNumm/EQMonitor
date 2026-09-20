@@ -15,7 +15,6 @@
 - PR は `--repo YumNumm/EQMonitor`、ベースブランチ `develop`（CLAUDE.md 厳守）
 - pre-commit（hk）で gitleaks / zizmor / pinact / shellcheck が走る。シェルは shellcheck を通すこと
 - 新規 worktree では最初のコミット前に `mise trust` を実行する（未 trust だと hk の postinstall が失敗する）
-- GitHub Actions の変更は `mise exec -- actionlint` と `mise exec -- zizmor .github/workflows/<file>` を通すこと
 - 認証情報は SOPS 暗号化済み `.env.json` から `mise env` で環境変数として供給される（`APP_STORE_CONNECT_API_KEY_ID` / `APP_STORE_CONNECT_API_ISSUER_ID` / `APP_STORE_CONNECT_API_KEY_BASE64`）。GitHub Actions secrets には存在しない
 - App ID は `6447546703`、外部ベータグループ ID は `bd75f066-fd92-4175-b2d6-f34952737557`、Background Assets パック ID は `eqmonitor-assets`
 - 生成コードのコメントは「なぜ」のみ（自明なコメント禁止）
@@ -255,7 +254,6 @@ Expected: `.github/` や設定ファイルにヒットなし（docs/ 配下の�
 - [ ] **Step 4: lint**
 
 ```bash
-mise exec -- actionlint
 mise exec -- zizmor .github/workflows/deploy-app.yaml
 ```
 
@@ -544,7 +542,6 @@ grep -rn "upload_ios_background_assets\|asc_client" --exclude-dir=node_modules -
 - [ ] **Step 6: lint**
 
 ```bash
-mise exec -- actionlint
 mise exec -- zizmor .github/workflows/upload-asset-pack.yaml
 ```
 
@@ -577,7 +574,6 @@ Expected: ヒットなし（docs/ 除外時）。
 - [ ] **Step 2: lint 一式**
 
 ```bash
-mise exec -- actionlint
 shellcheck scripts/ci/testflight_test_notes.sh scripts/ci/asset_pack_ensure.sh scripts/ci/asset_pack_wait_version.sh
 python3 -m json.tool .asc/workflow.json > /dev/null
 asc workflow validate
