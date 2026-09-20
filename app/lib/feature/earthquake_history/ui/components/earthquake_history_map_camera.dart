@@ -1,7 +1,13 @@
+import 'dart:math' as math;
+
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor_map/eqmonitor_map.dart';
+import 'package:flutter/widgets.dart';
+import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 地震履歴詳細マップの初期表示位置（震源が取れない場合のフォールバック）
@@ -14,6 +20,34 @@ const double kEarthquakeHistoryMapFocusZoom = 8;
 /// 地震履歴詳細マップのカメラ位置（中心・ズーム・フォーカス座標）を算出する。
 class EarthquakeHistoryMapCamera {
   const new();
+
+  MapCameraBoundsFitResult initialRegionCamera({
+    required Earthquake earthquake,
+    required JmaMap_JmaMapData regionMap,
+    required Size viewportSize,
+    required double maxZoom,
+  }) {
+    final points = const EarthquakeHistoryMapBoundsCalculator()
+        .regionBoundsPoints(earthquake: earthquake, regionMap: regionMap);
+    if (points.isEmpty) {
+      return const MapCameraBoundsFitInvalid(
+        reason: MapCameraBoundsFitInvalidReason.invalidBounds,
+      );
+    }
+    return const MapCameraBoundsFitter().fit(
+      bounds: MapCameraBounds(
+        west: points.map((point) => point.longitude).reduce(math.min),
+        south: points.map((point) => point.latitude).reduce(math.min),
+        east: points.map((point) => point.longitude).reduce(math.max),
+        north: points.map((point) => point.latitude).reduce(math.max),
+      ),
+      viewportLogicalSize: viewportSize,
+      devicePixelRatio: 1,
+      padding: const EdgeInsets.all(48),
+      minZoom: 0,
+      maxZoom: math.min(10, maxZoom),
+    );
+  }
 
   /// 震源があればその位置、なければ日本付近の既定位置
   Geographic initialCenter(Earthquake earthquake) {
