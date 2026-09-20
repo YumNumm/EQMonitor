@@ -165,7 +165,7 @@ void main() {
     ];
 
     for (final entry in cases) {
-      expect(eqmonitorMapCameraActionMessage(entry.$1), entry.$2);
+      expect(const EqmonitorMapCameraAction().messageFor(entry.$1), entry.$2);
     }
   });
 }

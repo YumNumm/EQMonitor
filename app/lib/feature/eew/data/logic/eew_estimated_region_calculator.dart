@@ -6,6 +6,15 @@ import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart
 import 'package:eqmonitor/feature/eew/data/logic/s_wave_travel_time_lookup.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_estimated_region.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'eew_estimated_region_calculator.g.dart';
+
+@Riverpod(keepAlive: true)
+EewEstimatedRegionCalculator eewEstimatedRegionCalculator(Ref ref) =>
+    EewEstimatedRegionCalculator(
+      sWaveTravelTimeLookup: ref.watch(sWaveTravelTimeLookupProvider),
+    );
 
 typedef _RegionCalculation = ({
   String name,

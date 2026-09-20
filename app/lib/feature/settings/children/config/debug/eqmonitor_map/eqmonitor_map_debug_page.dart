@@ -146,7 +146,11 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(eqmonitorMapCameraActionMessage(result)),
+                  content: Text(
+                    ref
+                        .read(eqmonitorMapCameraActionProvider)
+                        .messageFor(result),
+                  ),
                 ),
               );
           }

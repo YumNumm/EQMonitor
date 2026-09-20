@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,27 +14,37 @@ EewForecastRegionIntensityFilterUpdater eewForecastRegionIntensityFilterUpdater(
 ) => const EewForecastRegionIntensityFilterUpdater();
 
 class const EewForecastRegionIntensityFilterUpdater() {
+  static const _areaFilterBuilder = EewAreaFilterBuilder();
+
+  static const List<JmaIntensity> intensityLevels = [
+    JmaIntensity.one,
+    JmaIntensity.two,
+    JmaIntensity.three,
+    JmaIntensity.four,
+    JmaIntensity.fiveLower,
+    JmaIntensity.fiveUpper,
+    JmaIntensity.sixUnknown,
+    JmaIntensity.sixLower,
+    JmaIntensity.sixUpper,
+    JmaIntensity.seven,
+  ];
+
+  String detailLayerId(JmaIntensity intensity) =>
+      'eew-details-intensity-fill-${intensity.name}';
+
   Future<void> update({
     required StyleController styleController,
     required List<EewForecastRegionInfo> regionMaxIntensities,
-  }) async => await JmaIntensity.values
-      .map<Future<void>?>((intensity) {
-        final codes = regionMaxIntensities
-            .where((r) => r.intensity == intensity)
-            .map((r) => r.code)
-            .toList();
-        if (codes.isEmpty) {
-          return null;
-        }
-        return styleController.updateFilter(
-          id: 'eew-details-intensity-fill-${intensity.name}',
-          filter: <Object>[
-            'in',
-            ['get', 'code'],
-            ['literal', codes],
-          ],
-        );
-      })
-      .nonNulls
-      .wait;
+  }) async {
+    await intensityLevels.map((intensity) {
+      final codes = regionMaxIntensities
+          .where((region) => region.intensity == intensity)
+          .map((region) => region.code)
+          .toList();
+      return styleController.updateFilter(
+        id: detailLayerId(intensity),
+        filter: _areaFilterBuilder.build(codes),
+      );
+    }).wait;
+  }
 }

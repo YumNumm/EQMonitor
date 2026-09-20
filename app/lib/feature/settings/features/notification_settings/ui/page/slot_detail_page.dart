@@ -309,7 +309,7 @@ class _WarningSettingsCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
-    final levels = interruptionLevelsFor(slotType);
+    final levels = slotType.eewWarningInterruptionLevels;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
