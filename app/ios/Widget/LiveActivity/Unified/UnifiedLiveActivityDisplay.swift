@@ -97,6 +97,15 @@ struct UnifiedLiveActivityDisplay {
 
     // MARK: - ヘッダー右の震度・レベル
 
+    /// 震度速報を受信済みなら、見出しに含まれる最大震度を右側で繰り返さない。
+    var lockScreenHeaderIntensity: IntensityValue? {
+        if primary == .earthquake,
+           state.earthquake?.informationType?.contains("VXSE51") == true {
+            return nil
+        }
+        return headerIntensity
+    }
+
     /// ヘッダー右に出す最大震度。揺れ検知は震度を持たないため nil
     var headerIntensity: IntensityValue? {
         switch primary {

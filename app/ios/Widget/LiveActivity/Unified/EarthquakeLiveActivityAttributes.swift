@@ -229,18 +229,20 @@ struct UnifiedMagnitude: Codable, Hashable {
     let type: String?
     let value: Double?
 
-    var displayText: String? {
+    var displayValue: String? {
         switch type {
         case "NORMAL":
-            return value.map { "M" + String(format: "%.1f", $0) }
+            return value.map { String(format: "%.1f", $0) }
         case "UNKNOWN":
-            return "M不明"
+            return "不明"
         case "OVER_M8":
-            return "M8以上"
+            return "8+"
         default:
             return nil
         }
     }
+
+    var displayText: String? { displayValue.map { "M" + $0 } }
 
     /// 巨大地震。M 表示自体を強調する
     var isOverM8: Bool { type == "OVER_M8" }

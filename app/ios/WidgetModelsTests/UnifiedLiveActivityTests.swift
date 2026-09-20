@@ -2,6 +2,34 @@ import Foundation
 import Testing
 
 struct UnifiedLiveActivityTests {
+    @Test(arguments: [["VXSE51"], ["VXSE51", "VXSE53"], ["VXSE53", "VXSE51"]])
+    func intensityReportRemovesDuplicateHeaderBadge(types: [String]) throws {
+        let json = """
+        {"primary":"earthquake","earthquake":{"informationType":\(String(decoding: try JSONEncoder().encode(types), as: UTF8.self)),"maxIntensity":"6-"}}
+        """
+        let state = try JSONDecoder().decode(UnifiedLiveActivityContentState.self, from: Data(json.utf8))
+        let display = UnifiedLiveActivityDisplay(state)
+        #expect(display.lockScreenHeaderIntensity == nil)
+        #expect(display.headerIntensity == .sixLower)
+    }
+
+    @Test(arguments: ["VXSE52", "VXSE53"])
+    func sourceReportKeepsHeaderBadge(type: String) throws {
+        let json = """
+        {"primary":"earthquake","earthquake":{"informationType":["\(type)"],"maxIntensity":"6-"}}
+        """
+        let state = try JSONDecoder().decode(UnifiedLiveActivityContentState.self, from: Data(json.utf8))
+        #expect(UnifiedLiveActivityDisplay(state).lockScreenHeaderIntensity == .sixLower)
+    }
+
+    @Test func magnitudeLabelsDistinguishUnknownMissingAndOverM8() {
+        #expect(UnifiedMagnitude(type: "NORMAL", value: 6.8).displayText == "M6.8")
+        #expect(UnifiedMagnitude(type: "NORMAL", value: nil).displayText == nil)
+        #expect(UnifiedMagnitude(type: "UNKNOWN", value: nil).displayText == "M不明")
+        #expect(UnifiedMagnitude(type: "OVER_M8", value: nil).displayText == "M8+")
+        #expect(UnifiedMagnitude(type: nil, value: nil).displayText == nil)
+    }
+
     @Test func eewViewStatePreservesAllPayloadFields() throws {
         let json = Data("""
         {"eventId":"20260921000000","headline":"関東で強い揺れ",
