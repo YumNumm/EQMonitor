@@ -69,5 +69,4 @@ beta manifest は直近の beta タグに合わせる（例: `3.0.0-beta.10`）�
 python3 -c "import json; json.load(open('release-please-config.json')); json.load(open('release-please-config.beta.json'))"
 bash scripts/ci/test_release_please_dual_track.sh
 bash scripts/ci/test_create_beta_release_workflow.sh
-mise exec -- actionlint .github/workflows/release-please.yaml .github/workflows/create-beta-release.yaml
 ```

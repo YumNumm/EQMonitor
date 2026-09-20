@@ -97,7 +97,6 @@
 - [ ] `wrangler r2 object get` でversion keyが存在する場合は失敗し、put後にcustom domainから再取得してSHA-256を照合する。
 - [ ] signatureを先、manifestを最後にputし、公開URLから署名とZIPをend-to-end再検証する。
 - [ ] `force_redispatch` 経路でもR2未公開なら指定Releaseをbootstrap公開し、公開済みなら検証だけ行う。
-- [ ] actionlint/zizmor/secret scanとpackage testを実行し、workflowとrunbookを分けてcommitする。
 
 ### Task 5: bundled Pack resolver and platform cleanup
 
@@ -212,7 +211,6 @@
 - [ ] staging testを先に、iOS/Android/macOSが同じRelease ZIPとpack_versionを使う期待へ変更する。
 - [ ] deploy jobsがbuild前にfull Packをstageするよう変更し、iOS slim JMA extractionも維持する。
 - [ ] Managed Background Assets upload workflowと専用scripts/configを削除する。
-- [ ] shellcheck/actionlint/zizmor、Flutter asset presence check、Android AAB/iOS config buildを実行する。
 - [ ] backend fixtureをlocal HTTPで配信し、manifest検出→ZIP取得→改ざん拒否→有効化→旧版cleanup→bundle fallbackを統合testする。
 - [ ] `docs/knowledge/20260816_r2_asset_pack_runtime.md` に運用知見を記録し、docsとcleanupを分けてcommitする。
 

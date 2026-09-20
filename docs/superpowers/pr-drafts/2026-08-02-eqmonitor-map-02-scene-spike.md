@@ -64,19 +64,11 @@ mise exec -- dart pub get --enforce-lockfile
 mise exec -- dart format --output=none --set-exit-if-changed \
   packages/eqmonitor_map/lib packages/eqmonitor_map/test packages/eqmonitor_map/example/lib
 mise exec -- flutter analyze --no-pub --fatal-infos packages/eqmonitor_map
-mise exec -- actionlint \
-  .github/workflows/wc-check-eqmonitor-map-scene-spike.yaml \
-  .github/workflows/wc-check-dart-analyze.yaml \
-  .github/workflows/wc-check-dart-test.yaml \
-  .github/workflows/wc-check-integration.yaml \
-  .github/workflows/deploy-app.yaml \
-  .github/workflows/wc-changes.yaml
 cd packages/eqmonitor_map && mise exec -- flutter test
 ```
 
 - package unit test: 50件pass
 - strict analyze: issue 0
-- format、actionlint、`git diff --check`: pass
 
 ## Deferred work
 
