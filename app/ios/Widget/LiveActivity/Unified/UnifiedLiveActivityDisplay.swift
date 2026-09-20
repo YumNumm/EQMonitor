@@ -73,7 +73,6 @@ struct UnifiedLiveActivityDisplay {
             return state.eew?.display.headerLabel ?? "緊急地震速報"
         case .earthquake:
             guard let earthquake = state.earthquake else { return "地震情報" }
-            if earthquake.isCanceled == true { return "地震情報" }
             return earthquake.primaryInformationType?.displayName ?? "地震情報"
         case .empty:
             return "地震情報"
@@ -90,14 +89,11 @@ struct UnifiedLiveActivityDisplay {
             return eew.display.headerHeadline(from: eew.headline)
         case .earthquake:
             guard let earthquake = state.earthquake else { return nil }
-            if earthquake.isCanceled == true { return Self.earthquakeCanceledTitle }
             return earthquake.headline
         case .empty:
             return nil
         }
     }
-
-    static let earthquakeCanceledTitle = "先ほどの地震情報は取り消されました"
 
     // MARK: - ヘッダー右の震度・レベル
 
@@ -108,8 +104,7 @@ struct UnifiedLiveActivityDisplay {
             guard let eew = state.eew, eew.isCanceled != true else { return nil }
             return eew.intensityValue
         case .earthquake:
-            guard let earthquake = state.earthquake,
-                  earthquake.isCanceled != true else { return nil }
+            guard let earthquake = state.earthquake else { return nil }
             return earthquake.intensityValue
         case .shakeDetection, .empty:
             return nil
@@ -150,7 +145,6 @@ struct UnifiedLiveActivityDisplay {
         case .eew:
             return state.eew?.display.localIntensity
         case .earthquake:
-            guard state.earthquake?.isCanceled != true else { return nil }
             return state.earthquake?.location?.intensityValue
         case .shakeDetection, .empty:
             return nil
@@ -186,7 +180,6 @@ struct UnifiedLiveActivityDisplay {
                 : Color(red: 0.8, green: 0.4, blue: 0.05)
         case .earthquake:
             guard let earthquake = state.earthquake else { return Self.neutralHeaderColor }
-            if earthquake.isCanceled == true { return Color(red: 0.4, green: 0.4, blue: 0.4) }
             return Self.earthquakeHeaderColor(for: earthquake.intensityValue)
         case .empty:
             return Self.neutralHeaderColor
@@ -206,7 +199,6 @@ struct UnifiedLiveActivityDisplay {
                 : [Color.orange, Color(red: 0.5, green: 0.25, blue: 0.0)]
         case .earthquake:
             guard let earthquake = state.earthquake else { return Self.neutralStripeColors }
-            if earthquake.isCanceled == true { return Self.neutralStripeColors }
             return Self.earthquakeStripeColors(for: earthquake.intensityValue)
         case .empty:
             return Self.neutralStripeColors
@@ -224,7 +216,6 @@ struct UnifiedLiveActivityDisplay {
             return display.isWarning ? .red : .orange
         case .earthquake:
             guard let earthquake = state.earthquake else { return .gray }
-            if earthquake.isCanceled == true { return .gray }
             return earthquake.intensityValue?.backgroundColor ?? .gray
         case .empty:
             return .gray

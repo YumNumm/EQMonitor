@@ -97,6 +97,18 @@ struct UnifiedEew: Codable, Hashable {
     /// 旧 EEW Live Activity と同一の JSON 形状のため `LocationInfo` を再利用する
     let location: LocationInfo?
 
+    /// 表示は旧 EEW と共通化し、欠損値もそのまま引き渡す。
+    var eewContentState: EewContentState {
+        EewContentState(
+            eventId: eventId, type: nil, hypocenterName: hypocenterName,
+            magnitude: magnitude, depth: depth, time: time,
+            isOriginTime: isOriginTime, maxIntensity: maxIntensity,
+            serialNo: serialNo, isFinal: isFinal, isWarning: isWarning,
+            isCanceled: isCanceled, headline: headline, isPlum: isPlum,
+            isLevel: isLevel, isOnePoint: isOnePoint, location: location
+        )
+    }
+
     var intensityValue: IntensityValue? {
         maxIntensity.flatMap(IntensityValue.init(rawValue:))
     }
