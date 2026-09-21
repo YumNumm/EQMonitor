@@ -2,8 +2,9 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/seismicity/data/logic/seismicity_depth_projection.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_event.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 深さ断面図(緯度方向 / 経度方向の投影切替)。
 ///
@@ -28,19 +29,24 @@ class SeismicityDepthSectionChart extends HookWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: SegmentedButton<SeismicityDepthProjectionAxis>(
-            segments: const [
-              ButtonSegment(
-                value: SeismicityDepthProjectionAxis.latitude,
-                label: Text('緯度方向'),
-              ),
-              ButtonSegment(
-                value: SeismicityDepthProjectionAxis.longitude,
-                label: Text('経度方向'),
-              ),
+          child: M3EToggleButtonGroup(
+            type: M3EButtonGroupType.connected,
+            actions: const [
+              M3EToggleButtonGroupAction(label: Text('緯度方向')),
+              M3EToggleButtonGroupAction(label: Text('経度方向')),
             ],
-            selected: {axis.value},
-            onSelectionChanged: (selected) => axis.value = selected.single,
+            selectedIndex: (<SeismicityDepthProjectionAxis>[
+              SeismicityDepthProjectionAxis.latitude,
+              SeismicityDepthProjectionAxis.longitude,
+            ]).indexOf(axis.value),
+            onSelectedIndexChanged: (index) {
+              if (index == null) return;
+              final selected = <SeismicityDepthProjectionAxis>[
+                SeismicityDepthProjectionAxis.latitude,
+                SeismicityDepthProjectionAxis.longitude,
+              ][index];
+              axis.value = selected;
+            },
           ),
         ),
         Expanded(
