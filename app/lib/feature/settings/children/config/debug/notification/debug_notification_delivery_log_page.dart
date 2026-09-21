@@ -131,7 +131,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
               );
             }
             if (items.value.isEmpty) {
-              return RefreshIndicator(
+              return M3EPullToRefreshIndicator(
+                onError: (error, stackTrace) =>
+                    Error.throwWithStackTrace(error, stackTrace),
                 onRefresh: loadFirstPage,
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -150,7 +152,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                 ),
               );
             }
-            return RefreshIndicator(
+            return M3EPullToRefreshIndicator(
+              onError: (error, stackTrace) =>
+                  Error.throwWithStackTrace(error, stackTrace),
               onRefresh: loadFirstPage,
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -181,7 +185,11 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       final detail = ref
                           .read(notificationDeliveryLogDetailBuilderProvider)
                           .build(entry: item);
-                      await showModalBottomSheet<void>(
+                      await showM3EModalBottomSheet<void>(
+                        style: const M3EBottomSheetStyle(
+                          padding: EdgeInsets.zero,
+                        ),
+                        useSafeArea: false,
                         context: context,
                         showDragHandle: true,
                         isScrollControlled: true,

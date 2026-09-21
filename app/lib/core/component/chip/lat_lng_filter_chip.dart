@@ -75,7 +75,9 @@ class LatLngFilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<LatLngRange?>(
+        final result = await showM3EModalBottomSheet<LatLngRange?>(
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
           clipBehavior: Clip.antiAlias,
           context: context,
           isScrollControlled: true,

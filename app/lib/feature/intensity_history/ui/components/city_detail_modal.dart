@@ -26,7 +26,9 @@ class CityDetailModalAction {
     required String cityName,
     required String prefectureName,
     JmaIntensity? maxIntensity,
-  }) => showModalBottomSheet<void>(
+  }) => showM3EModalBottomSheet<void>(
+    useSafeArea: false,
+    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
     clipBehavior: Clip.antiAlias,

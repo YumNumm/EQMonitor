@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class EqmonitorMapGpuProbePanel extends StatelessWidget {
               primary: false,
               shrinkWrap: true,
               children: [
-                ExpansionTile(
+                ExpandableSection(
                   title: const Text('GPU Probe'),
                   subtitle: Text(generationLabel),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

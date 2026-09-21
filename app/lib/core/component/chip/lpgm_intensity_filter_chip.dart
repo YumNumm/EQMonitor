@@ -24,7 +24,12 @@ class LpgmIntensityFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(JmaLpgmIntensity?, JmaLpgmIntensity?)?>(
+            await showM3EModalBottomSheet<
+              (JmaLpgmIntensity?, JmaLpgmIntensity?)?
+            >(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) =>

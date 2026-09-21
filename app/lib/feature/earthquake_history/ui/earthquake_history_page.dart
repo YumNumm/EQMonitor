@@ -16,6 +16,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   const new({super.key, this.initialParameter});
@@ -143,7 +144,8 @@ class _PagingBody extends ConsumerWidget {
     // 広告非表示時は広告分の高さを確保しない
     final adBannerHeight = AdBanner.heightOf(ref);
 
-    return RefreshIndicator(
+    return M3EPullToRefreshIndicator(
+      onError: Error.throwWithStackTrace,
       onRefresh: onRefresh,
       edgeOffset:
           MediaQuery.paddingOf(context).top +

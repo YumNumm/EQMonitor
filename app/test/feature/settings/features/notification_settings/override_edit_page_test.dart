@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -162,6 +164,80 @@ void main() {
       InterruptionLevel.passive,
     );
   });
+  testWidgets('保存が遅れて失敗しても削除対象と隣の条件を復元する', (tester) async {
+    final overrides = [
+      for (final intensity in [
+        JmaIntensity.one,
+        JmaIntensity.three,
+        JmaIntensity.fiveUpper,
+      ])
+        NotificationOverride(
+          minJmaIntensity: intensity,
+          sound: 'default',
+          interruptionLevel: .active,
+        ),
+    ];
+    final container = await _pumpPage(
+      tester,
+      overrides: overrides,
+      slotId: 'region-1',
+    );
+    addTearDown(container.dispose);
+    final notifier = container.read(
+      notificationSlotsProvider.notifier,
+    ) as _FakeNotificationSlotsNotifier;
+    final gate = Completer<void>();
+    notifier.saveGate = gate;
+    notifier.failSave = true;
+
+    await tester.drag(find.text('震度3以上'), const Offset(-700, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('震度3以上'), findsNothing);
+    gate.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.text('震度1以上'), findsOneWidget);
+    expect(find.text('震度3以上'), findsOneWidget);
+    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(notifier.lastEarthquakeOverrides, isNull);
+    expect(find.textContaining('設定の保存に失敗しました'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('中央の条件だけを識別して削除し隣の通知条件を保持する', (tester) async {
+    final overrides = [
+      for (final intensity in [
+        JmaIntensity.one,
+        JmaIntensity.three,
+        JmaIntensity.fiveUpper,
+      ])
+        NotificationOverride(
+          minJmaIntensity: intensity,
+          sound: 'default',
+          interruptionLevel: .active,
+        ),
+    ];
+    final container = await _pumpPage(
+      tester,
+      overrides: overrides,
+      slotId: 'region-1',
+    );
+    addTearDown(container.dispose);
+    await tester.drag(find.text('震度3以上'), const Offset(-700, 0));
+    await tester.pumpAndSettle();
+
+    final notifier = container.read(
+      notificationSlotsProvider.notifier,
+    ) as _FakeNotificationSlotsNotifier;
+    expect(
+      notifier.lastEarthquakeOverrides?.map((entry) => entry.minJmaIntensity),
+      [JmaIntensity.one, JmaIntensity.fiveUpper],
+    );
+    expect(find.text('震度1以上'), findsOneWidget);
+    expect(find.text('震度3以上'), findsNothing);
+    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<ProviderContainer> _pumpPage(
@@ -215,6 +291,8 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
 
   final NotificationSlot _initial;
   List<NotificationOverride>? lastEarthquakeOverrides;
+  Completer<void>? saveGate;
+  bool failSave = false;
 
   @override
   Future<List<NotificationSlot>> build() async => [_initial];
@@ -232,6 +310,8 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
+    await saveGate?.future;
+    if (failSave) throw StateError('保存テストエラー');
     lastEarthquakeOverrides = earthquakeOverrides;
     final current = state.value ?? [_initial];
     state = AsyncData([

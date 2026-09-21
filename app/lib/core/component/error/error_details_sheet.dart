@@ -28,7 +28,9 @@ class const ErrorDetailsSheetAction() {
     StackTrace? stackTrace,
   }) {
     final occurredAt = DateTime.now();
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       isScrollControlled: true,
       showDragHandle: true,

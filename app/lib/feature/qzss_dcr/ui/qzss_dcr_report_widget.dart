@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:dart_azarashi/dart_azarashi.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
@@ -135,7 +136,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
 
             // 生データ（デバッグ用）
             const SizedBox(height: 16),
-            ExpansionTile(
+            ExpandableSection(
               title: const Text('生データ'),
               children: [
                 Padding(

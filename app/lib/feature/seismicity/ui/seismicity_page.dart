@@ -179,7 +179,11 @@ class SeismicityPage extends HookConsumerWidget {
                         onPressed: manifest == null
                             ? null
                             : () async {
-                                await showModalBottomSheet<void>(
+                                await showM3EModalBottomSheet<void>(
+                                  useSafeArea: false,
+                                  style: const M3EBottomSheetStyle(
+                                    padding: EdgeInsets.zero,
+                                  ),
                                   context: context,
                                   isScrollControlled: true,
                                   builder: (context) => FractionallySizedBox(

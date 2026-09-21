@@ -30,7 +30,10 @@ class SortFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(EarthquakeSortBy, SortOrder)?>(
+            await showM3EModalBottomSheet<(EarthquakeSortBy, SortOrder)?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) => _SortFilterModal(

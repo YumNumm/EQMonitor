@@ -1,3 +1,5 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -13,7 +15,10 @@ class const InfoNotificationBottomSheetAction() {
     required String title,
     required List<InfoLink> links,
   }) {
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+      isScrollControlled: false,
+      useSafeArea: false,
       context: context,
       builder: (context) => SafeArea(
         child: Padding(

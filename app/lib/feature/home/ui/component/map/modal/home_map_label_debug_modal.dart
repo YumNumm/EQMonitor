@@ -10,7 +10,9 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
   const new _();
 
   static Future<void> show({required BuildContext context}) =>
-      showModalBottomSheet(
+      showM3EModalBottomSheet(
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
         isScrollControlled: true,

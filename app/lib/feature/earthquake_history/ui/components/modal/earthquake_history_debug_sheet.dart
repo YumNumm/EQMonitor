@@ -35,7 +35,9 @@ class const EarthquakeHistoryDebugSheetAction() {
         ),
       );
     }
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       clipBehavior: Clip.antiAlias,
       isScrollControlled: true,

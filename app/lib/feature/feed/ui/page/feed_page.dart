@@ -14,6 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class FeedPage extends HookConsumerWidget {
   const new({super.key});
@@ -60,7 +61,8 @@ class _PagingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return M3EPullToRefreshIndicator(
+      onError: Error.throwWithStackTrace,
       onRefresh: dataSource.refresh,
       edgeOffset: MediaQuery.paddingOf(context).top + kToolbarHeight,
       child: CustomScrollView(

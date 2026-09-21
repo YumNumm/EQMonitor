@@ -75,7 +75,8 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
         children: [
           CachedDataBanner(values: [asyncDetails]),
           Expanded(
-            child: RefreshIndicator(
+            child: M3EPullToRefreshIndicator(
+              onError: Error.throwWithStackTrace,
               onRefresh: () async {
                 ref.invalidate(
                   telegramListByEventIdProvider(eventId),

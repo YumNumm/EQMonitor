@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
@@ -308,7 +309,7 @@ class _DetailsTile extends StatelessWidget {
         .where((h) => h.seq != primary.seq)
         .toList();
 
-    return ExpansionTile(
+    return ExpandableSection(
       title: Text(
         '詳細',
         style: theme.textTheme.bodySmall?.copyWith(

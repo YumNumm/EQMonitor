@@ -12,7 +12,9 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
   const new({super.key});
 
   static Future<void> show(BuildContext context) async {
-    await showModalBottomSheet<void>(
+    await showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

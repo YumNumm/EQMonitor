@@ -59,3 +59,13 @@
 - `app/ios/scripts/patch_purchases_paywall_color.sh` は依存pinが `purchases-ios-spm >= 5.78.0` を満たしたら不要性を検証して削除する。
 - `app/lib/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart` は詳細modal/pageのUXを決めて古いコメントを整理する。`packages/extensions/README.md` / `packages/lat_lng/README.md` のtemplate TODOを実態に合わせる。
 - map utility/asset generator のgeometry guardは入力shape契約をfixtureで確認する。問い合わせ画面の非mobile対応を採用するなら `app/lib/feature/settings/data/contact/contact_action.dart` の案内を設計する。
+
+## 750: Flutter main 更新時点で再現する既存の検証失敗
+
+- Flutter `19946f91c8d9de18a4674460d015229cc0b2534f` のUI移行前でも、関連テスト12件が失敗する。
+- `theme_editor_page_test.dart` の3件はColorPicker内部のFlutter Materialと `material_ui` の境界で `No Material widget found` となる。依存の境界をそろえて色選択を検証する。
+- `notification_delivery_log_detail_builder_test.dart` の3件は時刻・表示文言、`notification_preset_selector_test.dart` の1件と `slot_detail_page_test.dart` の2件は通知文言の全角・半角差を現行仕様と照合する。
+- `earthquake_vxse_debug_editor_test.dart` のJSON手動編集2件はコメント欠損・未知の型の期待値を確認する。データ保持の要件を弱めず修正する。
+- `earthquake_history_debug_sheet_test.dart` の1件は `earthquake_summary_header.dart` のWrap直下のExpandedで `ParentDataWidget` エラーになる。地震情報の時刻表示を保ってレイアウトを修正する。
+- 全体解析の既存診断はnullアサーション3件と `GlobalMaterialLocalizations` の非推奨4件。Material境界のdelegateを一律に削除せず解消する。
+- 完了条件: 上記テストと全体解析が成功し、通知内容・時刻・地震データの意味を維持する。

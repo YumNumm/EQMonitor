@@ -22,7 +22,10 @@ class StatusFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<List<TelegramStatus>?>(
+        final result = await showM3EModalBottomSheet<List<TelegramStatus>?>(
+          isScrollControlled: false,
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
           clipBehavior: Clip.antiAlias,
           context: context,
           builder: (context) =>

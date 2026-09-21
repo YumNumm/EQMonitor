@@ -124,7 +124,9 @@ class _EntriesList extends ConsumerWidget {
       error: (error, _) => Center(child: Text('エラー: $error')),
       data: (list) {
         if (list.isEmpty) {
-          return RefreshIndicator(
+          return M3EPullToRefreshIndicator(
+            onError: (error, stackTrace) =>
+                Error.throwWithStackTrace(error, stackTrace),
             onRefresh: () async => onRefresh(),
             child: ListView(
               children: const [
@@ -134,7 +136,9 @@ class _EntriesList extends ConsumerWidget {
             ),
           );
         }
-        return RefreshIndicator(
+        return M3EPullToRefreshIndicator(
+          onError: (error, stackTrace) =>
+              Error.throwWithStackTrace(error, stackTrace),
           onRefresh: () async => onRefresh(),
           child: ListView.builder(
             itemCount: list.length,

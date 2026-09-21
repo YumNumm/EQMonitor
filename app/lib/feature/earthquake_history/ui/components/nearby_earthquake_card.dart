@@ -78,7 +78,10 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
           _NearbyEarthquakeHeader(
             onSettingsPressed: () async {
               final result =
-                  await showModalBottomSheet<NearbyEarthquakeParameter>(
+                  await showM3EModalBottomSheet<NearbyEarthquakeParameter>(
+                    isScrollControlled: false,
+                    useSafeArea: false,
+                    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
                     context: context,
                     builder: (context) => NearbyEarthquakeParameterSheet(
                       initial: parameter.value,

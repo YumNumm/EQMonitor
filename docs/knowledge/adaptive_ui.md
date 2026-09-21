@@ -101,3 +101,13 @@ mise exec -- dart analyze lib/core/component/layout lib/feature/eew_history/ui
 # packages/eqmonitor_api/から
 mise exec -- dart test test/city_max_intensity_response_test.dart
 ```
+
+## M3E の一覧・シートの境界
+
+- ページング履歴は既存のSliverとsticky headerを保持し、行をM3Eのsegmented itemで描画する。追加読み込み・エラー再試行を通常の全件リストへ置き換えない。
+- `showM3EModalBottomSheet` は既定の `isScrollControlled` と `useSafeArea` が従来と異なるため明示する。既存の子Widgetが余白を持つ場合は `M3EBottomSheetStyle(padding: EdgeInsets.zero)` を指定する。
+- `M3EPullToRefreshIndicator` は `onError` 省略時に例外を消費する。従来の失敗通知を保持する画面では `Error.throwWithStackTrace` を渡す。
+- 展開見出しは `ExpandableSection` にまとめ、開閉状態・キーボード・読み上げの操作を維持する。
+- m3e_core 1.1.4 のdismissible listはアニメーション破棄後に削除結果を待つ。遅延して `false` を返すと破棄済みcontrollerへアクセスするため、`ConfirmedDismissibleList` で保存結果と表示を仲介する。
+- 通知設定の保存はAPIが返す確定済みslotを再取得の前に反映する。再取得が失敗しても、後続編集で削除済みの上書き条件を復活させない。
+- 削除に成功したIDは取得済み一覧から消えるまで非表示を維持する。失敗時は行とスクロールを復元し、並び替え後もindexではなくIDで削除する。読み上げの削除操作も同じ保存経路を使う。
