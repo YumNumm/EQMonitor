@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
@@ -6,9 +7,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// `_OverrideFormDialog`(StatefulWidget)の振る舞いを、HookWidget化前に固定するテスト。
 void main() {
@@ -20,23 +22,27 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
     expect(find.text('震度別設定を追加'), findsOneWidget);
     expect(
       tester
-          .widget<DropdownButton<JmaIntensity>>(
-            find.byType(DropdownButton<JmaIntensity>),
+          .widget<ControlledDropdown<JmaIntensity>>(
+            find.byType(ControlledDropdown<JmaIntensity>),
           )
+          .items
+          .singleWhere((item) => item.selected)
           .value,
       JmaIntensity.zero,
     );
     expect(
       tester
-          .widget<DropdownButton<NotificationSound>>(
-            find.byType(DropdownButton<NotificationSound>),
+          .widget<ControlledDropdown<NotificationSound>>(
+            find.byType(ControlledDropdown<NotificationSound>),
           )
+          .items
+          .singleWhere((item) => item.selected)
           .value,
       NotificationSound.defaultSound,
     );
@@ -58,7 +64,7 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('キャンセル'));
@@ -75,15 +81,21 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButton<NotificationSound>));
+    await tester.tap(find.byType(ControlledDropdown<NotificationSound>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(InterruptionLevel.critical.label).last);
+    final criticalOption = find.widgetWithText(
+      RadioListTile<InterruptionLevel>,
+      InterruptionLevel.critical.label,
+    );
+    await tester.ensureVisible(criticalOption);
+    await tester.pumpAndSettle();
+    await tester.tap(criticalOption);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('追加'));
@@ -118,6 +130,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('震度別設定を編集'), findsOneWidget);
+    final intensityDropdown = tester.widget<ControlledDropdown<JmaIntensity>>(
+      find.byType(ControlledDropdown<JmaIntensity>),
+    );
+    expect(intensityDropdown.enabled, isFalse);
+    expect(
+      intensityDropdown.items.singleWhere((item) => item.selected).value,
+      JmaIntensity.three,
+    );
     expect(
       tester
           .widget<RadioGroup<InterruptionLevel>>(
