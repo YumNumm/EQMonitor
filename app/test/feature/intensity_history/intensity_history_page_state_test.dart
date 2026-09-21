@@ -4,9 +4,10 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/intensity_history/ui/intensity_history_page.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _FakeMapConfigurationNotifier extends MapConfigurationNotifier {
   new(this._build);
@@ -32,7 +33,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(find.byTooltip('戻る'), findsOneWidget);
 
     await tester.tap(find.byTooltip('戻る'));
@@ -72,7 +73,7 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(find.text('再試行'), findsNothing);
 
     await tester.tap(find.byTooltip('戻る'));
