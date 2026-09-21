@@ -1,9 +1,10 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:material_ui/material_ui.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:eqmonitor/core/util/date_time_format.dart';
+import 'package:material_ui/material_ui.dart' hide ConnectionState;
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
   const new({this.onTap, super.key});
@@ -88,7 +89,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                       const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator.adaptive(),
+                        child: AccessibleCircularProgressIndicator(),
                       ),
                     ],
                   },

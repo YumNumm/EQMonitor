@@ -7,11 +7,11 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_image_delay_status.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/repository/kyoshin_monitor_repository.dart';
 import 'package:flutter/widgets.dart';
@@ -146,7 +146,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // エラー表示に落とさずオフセットを調整して直前の表示を維持する。
     if (state case AsyncError(:final error)) {
       if (error is DioException && error.response?.statusCode == 404) {
-        final delayProfile = ref.read(kyoshinMonitorImageRequestProvider).delayProfile;
+        final delayProfile = ref
+            .read(kyoshinMonitorImageRequestProvider)
+            .delayProfile;
         ref
             .read(kyoshinMonitorOffsetAdjustmentProvider.notifier)
             .onFetchFailed(delayProfile);
