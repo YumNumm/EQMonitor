@@ -37,7 +37,7 @@
 | `eew/ui/components/eew_details_map_view.dart` | forecast region、static/simulation P/S波、震源、表示範囲 |
 | `earthquake_history/ui/components/earthquake_history_details_map_view.dart` | region/city、推計震度、Shindo DB、station、震源/誤差、mode、fitBounds、popup |
 | `intensity_history/ui/intensity_history_page.dart` | prefecture/city、click/long-click、drill-down/back、fitBounds、modal |
-| `earthquake_history/ui/components/region_picker_map_page.dart` | tap座標からJMA地域解決、loading、選択確定 |
+| `region_selection/ui/component/region_selection_map.dart` | 行政区域・震央地名のtap解決、単一／複数選択highlight、loading／retry、選択確定 |
 | `tsunami/ui/components/tsunami_details_map_view.dart` | warning coastline、震源、station/state、fitBounds、style lifecycle |
 | `seismicity/ui/seismicity_page.dart` | epicenter、color/span、矩形選択、座標変換、analysis panel |
 | `settings/children/config/debug/hinet_seismicity/ui/hinet_seismicity_page.dart` | epicenter、filter、矩形選択、座標変換、analysis panel |
@@ -45,6 +45,13 @@
 - 揺れ検知履歴画面は現在削除済み。再導入する場合だけ typed polygon fill/line と fitBounds を移行対象へ戻す。
 - Intensity History と Earthquake History details は render hit で layer を識別した後、地理座標から最近傍 region/city/station を解決する二段階 query を fixture 化する。Home の gate にはしない。
 - 全 surface 共通の完了条件: layer順、Light/Dark、loading/degraded/error、camera/gesture/fitBounds、必要な hit test が一致する。全 consumer/test/debug route 移行後に MapLibre package、event/queue/style helper、platform asset 連携を削除する。`lockBearing` 設定/UI は rotation policy 決定まで維持する。
+
+## 780: 共通地域選択の実機確認
+
+- `app/lib/feature/region_selection` の一覧・地図・単一／複数選択は自動テストで確認する。iOS/Android の native 地図表示と hit test は未検証。
+- Asset Pack v0.1 を使い、都道府県・観測用細分区域・通知EEW区域・市区町村・震央領域のタップと選択highlightを確認する。震央の海域、境界上の複数候補、地図領域のない地名の一覧選択、旧packの案内も確認する。
+- 種別・一覧／地図切替、連打、選択解除中のlookup完了、戻る、theme変更、background復帰で選択が復活せず、layer重複・例外がないことを確認する。
+- 小画面・文字拡大で選択確認欄と候補ボタンが操作できることを確認し、端末・OS・build modeと結果を記録する。
 
 ## 770 / 450: Web と将来 surface
 

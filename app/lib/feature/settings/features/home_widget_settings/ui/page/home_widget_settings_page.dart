@@ -1,16 +1,15 @@
-import 'package:m3e_core/m3e_core.dart';
-import 'package:eqmonitor/core/component/selector/city_selector.dart';
-import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/model/widget_region_selection.dart';
 import 'package:eqmonitor/feature/settings/features/home_widget_settings/data/notifier/widget_region_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_feature_widgets.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
-import 'package:material_ui/material_ui.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeWidgetSettingsPage extends ConsumerWidget {
   const new({super.key});
@@ -59,14 +58,33 @@ class _WidgetRegionSection extends ConsumerWidget {
         await const ProUpgradeDialogAction().show(context);
         return;
       }
-      final result = await Navigator.of(context).push<WidgetRegionSelection>(
-        MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (_) => _WidgetRegionPickerPage(initial: region),
+      final result = await RegionSelectionRoute(
+        $extra: RegionSelectionRequest(
+          title: '任意地域を選択',
+          kinds: const [.prefecture, .city],
+          initialSelection: [
+            if (region != null)
+              RegionOption(
+                kind: region.searchType == RegionSearchType.prefecture
+                    ? .prefecture
+                    : .city,
+                code: region.code,
+                name: region.name,
+              ),
+          ],
         ),
-      );
-      if (result != null) {
-        await ref.read(widgetRegionProvider.notifier).save(result);
+      ).push<List<RegionOption>>(context);
+      final picked = result?.firstOrNull;
+      if (picked != null) {
+        await ref
+            .read(widgetRegionProvider.notifier)
+            .save(
+              WidgetRegionSelection(
+                searchType: picked.kind == .prefecture ? .prefecture : .city,
+                code: picked.code,
+                name: picked.name,
+              ),
+            );
       }
     }
 
@@ -87,108 +105,6 @@ class _WidgetRegionSection extends ConsumerWidget {
             onTap: () async => ref.read(widgetRegionProvider.notifier).clear(),
           ),
       ],
-    );
-  }
-}
-
-class _WidgetRegionPickerPage extends HookWidget {
-  const new({this.initial});
-
-  final WidgetRegionSelection? initial;
-
-  @override
-  Widget build(BuildContext context) {
-    final searchType = useState(
-      initial?.searchType ?? RegionSearchType.prefecture,
-    );
-    final selectedCode = useState<String?>(initial?.code);
-    final selectedName = useState<String?>(initial?.name);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('任意地域を選択'),
-        actions: [
-          switch (selectedCode.value) {
-            final code? when code.isNotEmpty => M3ETextButton(
-              onPressed: () => Navigator.of(context).pop(
-                WidgetRegionSelection(
-                  searchType: searchType.value,
-                  code: code,
-                  name: selectedName.value ?? '',
-                ),
-              ),
-              child: const Text('決定'),
-            ),
-            _ => const M3ETextButton(onPressed: null, child: Text('決定')),
-          },
-        ],
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Row(
-              children: [
-                ChoiceChip(
-                  label: const Text('都道府県'),
-                  selected: searchType.value == RegionSearchType.prefecture,
-                  onSelected: (s) {
-                    if (s) {
-                      searchType.value = RegionSearchType.prefecture;
-                      selectedCode.value = null;
-                      selectedName.value = null;
-                    }
-                  },
-                ),
-                const SizedBox(width: 8),
-                ChoiceChip(
-                  label: const Text('市区町村'),
-                  selected: searchType.value == RegionSearchType.city,
-                  onSelected: (s) {
-                    if (s) {
-                      searchType.value = RegionSearchType.city;
-                      selectedCode.value = null;
-                      selectedName.value = null;
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (searchType.value == RegionSearchType.prefecture)
-              PrefectureSelector(
-                selectedCode: selectedCode.value,
-                onChanged: (selection) {
-                  selectedCode.value = selection?.code;
-                  selectedName.value = selection?.name.ja;
-                },
-              )
-            else
-              CitySelector(
-                selectedCode: selectedCode.value,
-                selectedName: selectedName.value,
-                onChanged: (selection) {
-                  selectedCode.value = selection?.code;
-                  selectedName.value = selection?.name;
-                },
-              ),
-            if (selectedName.value case final name? when name.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.place_outlined),
-                  title: Text(name),
-                  subtitle: Text(
-                    searchType.value == RegionSearchType.prefecture
-                        ? '都道府県'
-                        : '市区町村',
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 }

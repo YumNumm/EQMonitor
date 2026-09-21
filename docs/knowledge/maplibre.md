@@ -34,9 +34,17 @@
 
 ## 通知地域と EEW フォーカス
 
+### 共通の地域選択
+
+- 地域選択は `feature/region_selection` の `RegionSelectionRoute` に集約する。`RegionSelectionRequest.kinds` で対象種別、`mode` で単一・複数選択、`initialSelection` で復元、`allowEmpty` で全解除の確定可否を指定する。結果は `List<RegionOption>`、キャンセルは `null`、全解除は空リスト。
+- ホーム指定地域、観測地域フィルター、通知追加、ウィジェット設定、履歴の地域検索は共通の検索・一覧・地図・選択確認を使う。既存の単一地域を保存する呼び出し元は単一選択のまま利用する。震央フィルターは複数選択。
+- 通知は `notification: true` と `eewRegion` / `city` を組み合わせ、同じ市でも親EEW区域が違う候補を区別する。一般の観測用細分区域を通知区域へ転用しない。
+- Asset Pack v0.1 の `areaEpicenter` は数値属性 `id` を持つ。`areaEpicenter` コード表のコードを数値として照合し、地名と読みはコード表から取得する。未知IDは選ばず、地図領域がない地名は一覧に残す。旧packで当該layerがない場合も一覧で選択できる。
+- 震央条件は `EarthquakeHistoryParameter.epicenterCodes` へ保存する。観測地域・震度などの条件とは独立し、地域変更や個別解除で相互の条件を消さない。
+- 地図lookupは種別・親・選択・styleの変更とdisposeで無効化する。検索結果の遅延完了で解除済みの選択を戻さない。選択overlayは専用layerを使い、cleanupで除去する。
+
 - 通知の `regionId` は `areaForecastLocalEew`、市区町村の表示名・ふりがなは `EarthquakeParameter` が正本。観測点を含む `jma_code_table.areaInformationCity` は親区域の結合に限定し、結合不能を近隣地域で補わない。
 - 通知地域のタップ検索とカメラ操作は世代を持ち、完了時・キュー実行開始時の最新世代と mounted を確認する。dispose で世代と controller を無効化する。
-- 地域選択の cleanup は既存 filter を復元する。全国表示では市区町村を隠し、region フォーカス後に配下の code で絞り、zoom は市区町村表示下限以上にする。
 - EEW 自動フォーカスを解除するのは `apiGesture`。`developerAnimation` / `apiAnimation` では解除しない。iOS の理由は bitmask として判定し、`TransitionCancelled` 単独を gesture とみなさない。
 - 解除後は同じ EEW の更新で再開せず、新 event ID で再開する。EEW 中のホームボタンは `autoZoom` によらず EEW へ再フォーカスする。animation 開始前に状態を公開し、完了時は session 一致を確認する。
 - 揺れ検知は南西端 inclusive の 0.25° 格子へ points を集約し、各セルの最大レベルだけを枠線で描く。空セル・中心/四隅 marker は描かない。レベル順で高い枠を上へ置き、Weaker は `#546E7A`。

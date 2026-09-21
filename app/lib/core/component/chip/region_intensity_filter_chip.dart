@@ -1,21 +1,13 @@
-import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
-import 'package:eqmonitor/core/component/selector/city_selector.dart';
-import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_region_selection.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:m3e_core/m3e_core.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/region_intensity_result.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:material_ui/material_ui.dart';
 
-typedef RegionIntensityResult = ({
-  RegionSearchType searchType,
-  String code,
-  String name,
-  JmaIntensity? intensityGte,
-  JmaIntensity? intensityLte,
-});
+export 'package:eqmonitor/feature/earthquake_history/data/model/region_intensity_result.dart';
 
 class RegionIntensityFilterChip extends StatelessWidget {
   const new({
@@ -33,296 +25,53 @@ class RegionIntensityFilterChip extends StatelessWidget {
   final String? regionName;
   final JmaIntensity? regionIntensityGte;
   final JmaIntensity? regionIntensityLte;
-  final void Function(RegionIntensityResult?)? onChanged;
-
-  bool get _isActive => regionCode != null;
+  final ValueChanged<RegionIntensityResult?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return RawChip(
-      onSelected: (_) async {
-        final result = await Navigator.of(context).push<RegionIntensityResult?>(
-          MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (_) => _RegionIntensityPickerPage(
-              initialSearchType: regionSearchType,
-              initialCode: regionCode,
-              initialName: regionName,
-              initialIntensityGte: regionIntensityGte,
-              initialIntensityLte: regionIntensityLte,
-            ),
-          ),
-        );
-        if (result != null) {
-          onChanged?.call(result);
-        }
-      },
-      label: _isActive
-          ? Text(
-              _buildLabel(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            )
-          : const Text('地域'),
-      onDeleted: _isActive ? () => onChanged?.call(null) : null,
-      selected: _isActive,
-      selectedColor: context.designSystem.colorTheme.secondaryContainer,
-    );
-  }
-
-  String _buildLabel() {
-    final name = regionName ?? '';
-    final intensityRange = _intensityRangeLabel();
-    if (intensityRange != null) {
-      return '$name ($intensityRange)';
-    }
-    return name;
-  }
-
-  String? _intensityRangeLabel() {
-    final gte = regionIntensityGte;
-    final lte = regionIntensityLte;
-    return switch ((gte, lte)) {
-      (null, null) => null,
-      (final gte?, final lte?) when gte == lte => '震度${gte.label}',
-      (final gte?, final lte?) => '震度${gte.label}~${lte.label}',
-      (final gte?, null) => '震度${gte.label}以上',
-      (null, final lte?) => '震度${lte.label}以下',
+    const converter = EarthquakeRegionSelection();
+    final code = regionCode;
+    final type = regionSearchType;
+    final range = switch ((regionIntensityGte, regionIntensityLte)) {
+      (null, null) => '',
+      (final min?, final max?) when min == max => '（震度${min.label}）',
+      (final min?, final max?) => '（震度${min.label}〜${max.label}）',
+      (final min?, null) => '（震度${min.label}以上）',
+      (null, final max?) => '（震度${max.label}以下）',
     };
-  }
-}
-
-class _RegionIntensityPickerPage extends HookConsumerWidget {
-  const new({
-    this.initialSearchType,
-    this.initialCode,
-    this.initialName,
-    this.initialIntensityGte,
-    this.initialIntensityLte,
-  });
-
-  final RegionSearchType? initialSearchType;
-  final String? initialCode;
-  final String? initialName;
-  final JmaIntensity? initialIntensityGte;
-  final JmaIntensity? initialIntensityLte;
-
-  static const List<JmaIntensity> _sliderValues = [
-    JmaIntensity.one,
-    JmaIntensity.two,
-    JmaIntensity.three,
-    JmaIntensity.four,
-    JmaIntensity.fiveLower,
-    JmaIntensity.fiveUpper,
-    JmaIntensity.sixLower,
-    JmaIntensity.sixUpper,
-    JmaIntensity.seven,
-  ];
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final searchType = useState(initialSearchType ?? .prefecture);
-    final selectedCode = useState<String?>(initialCode);
-    final selectedName = useState<String?>(initialName);
-    final intensityGte = useState<JmaIntensity?>(initialIntensityGte);
-    final intensityLte = useState<JmaIntensity?>(initialIntensityLte);
-    final useIntensityFilter = useState(
-      initialIntensityGte != null || initialIntensityLte != null,
-    );
-
-    final selectedCodeValue = selectedCode.value;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('地域の震度で絞り込み'),
-        actions: [
-          M3ETextButton(
-            onPressed: selectedCodeValue != null && selectedCodeValue.isNotEmpty
-                ? () => Navigator.of(context).pop((
-                    searchType: searchType.value,
-                    code: selectedCodeValue,
-                    name: selectedName.value ?? '',
-                    intensityGte: useIntensityFilter.value
-                        ? intensityGte.value
-                        : null,
-                    intensityLte: useIntensityFilter.value
-                        ? intensityLte.value
-                        : null,
-                  ))
-                : null,
-            child: const Text('決定'),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              '地域を選択して、その地域で観測された震度で絞り込みます。',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                ChoiceChip(
-                  label: const Text('都道府県'),
-                  selected: searchType.value == RegionSearchType.prefecture,
-                  onSelected: (s) {
-                    if (s) {
-                      searchType.value = RegionSearchType.prefecture;
-                      selectedCode.value = null;
-                      selectedName.value = null;
-                    }
-                  },
+    return RawChip(
+      selected: code != null,
+      label: Text(code == null ? '地域' : '${regionName ?? code}$range'),
+      onDeleted: code == null ? null : () => onChanged?.call(null),
+      onSelected: (_) async {
+        final result = await RegionSelectionRoute(
+          $extra: RegionSelectionRequest(
+            title: '観測地域を選択',
+            allowEmpty: true,
+            initialSelection: [
+              if (code != null && type != null)
+                RegionOption(
+                  kind: converter.kind(type),
+                  code: code,
+                  name: regionName ?? code,
                 ),
-                const SizedBox(width: 8),
-                ChoiceChip(
-                  label: const Text('市区町村'),
-                  selected: searchType.value == .city,
-                  onSelected: (s) {
-                    if (s) {
-                      searchType.value = .city;
-                      selectedCode.value = null;
-                      selectedName.value = null;
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (searchType.value == RegionSearchType.prefecture)
-              PrefectureSelector(
-                selectedCode: selectedCode.value,
-                onChanged: (selection) {
-                  if (selection != null) {
-                    selectedCode.value = selection.code;
-                    selectedName.value = selection.name.ja;
-                  } else {
-                    selectedCode.value = null;
-                    selectedName.value = null;
-                  }
-                },
-              )
-            else
-              CitySelector(
-                selectedCode: selectedCode.value,
-                selectedName: selectedName.value,
-                onChanged: (selection) {
-                  if (selection != null) {
-                    selectedCode.value = selection.code;
-                    selectedName.value = selection.name;
-                  } else {
-                    selectedCode.value = null;
-                    selectedName.value = null;
-                  }
-                },
-              ),
-            if (selectedName.value case final selectedNameValue?
-                when selectedNameValue.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.place_outlined),
-                  title: Text(selectedNameValue),
-                  subtitle: Text(
-                    searchType.value == RegionSearchType.prefecture
-                        ? '都道府県'
-                        : '市区町村',
-                  ),
-                ),
-              ),
             ],
-            const SizedBox(height: 24),
-            SwitchListTile(
-              title: const Text('震度で絞り込む'),
-              subtitle: const Text('選択した地域で観測された震度の範囲を指定'),
-              value: useIntensityFilter.value,
-              onChanged: (v) => useIntensityFilter.value = v,
-            ),
-            if (useIntensityFilter.value) ...[
-              const SizedBox(height: 8),
-              _IntensityRangeSelector(
-                min: intensityGte.value ?? JmaIntensity.one,
-                max: intensityLte.value ?? JmaIntensity.seven,
-                sliderValues: _sliderValues,
-                onChanged: (min, max) {
-                  intensityGte.value = min == JmaIntensity.one ? null : min;
-                  intensityLte.value = max == JmaIntensity.seven ? null : max;
-                },
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _IntensityRangeSelector extends HookWidget {
-  const new({
-    required this.min,
-    required this.max,
-    required this.sliderValues,
-    required this.onChanged,
-  });
-
-  final JmaIntensity min;
-  final JmaIntensity max;
-  final List<JmaIntensity> sliderValues;
-  final void Function(JmaIntensity min, JmaIntensity max) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    int valueToIndex(JmaIntensity v) =>
-        sliderValues.indexOf(v).clamp(0, sliderValues.length - 1);
-    JmaIntensity indexToValue(int i) =>
-        sliderValues[i.clamp(0, sliderValues.length - 1)];
-
-    return Column(
-      children: [
-        AccessibleRangeSlider(
-          semanticFormatterCallback: (value) =>
-              '震度${indexToValue(value.toInt()).label}',
-          value: RangeValues(
-            valueToIndex(min).toDouble(),
-            valueToIndex(max).toDouble(),
           ),
-          max: (sliderValues.length - 1).toDouble(),
-          onChanged: (state) {
-            onChanged(
-              indexToValue(state.start.toInt()),
-              indexToValue(state.end.toInt()),
-            );
-          },
-          label: '震度${min.label} ～ 震度${max.label}',
-          divisions: sliderValues.length - 1,
-        ),
-        Text(
-          _rangeLabel(),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
+        ).push<List<RegionOption>>(context);
+        if (result == null) {
+          return;
+        }
+        final selected = result.firstOrNull;
+        onChanged?.call(
+          selected == null
+              ? null
+              : converter.result(
+                  option: selected,
+                  intensityGte: regionIntensityGte,
+                  intensityLte: regionIntensityLte,
+                ),
+        );
+      },
     );
-  }
-
-  String _rangeLabel() {
-    if (min == JmaIntensity.one && max == JmaIntensity.seven) {
-      return '全て';
-    }
-    if (min == max) {
-      return '震度${min.label}';
-    }
-    if (min == JmaIntensity.one) {
-      return '震度${max.label} 以下';
-    }
-    if (max == JmaIntensity.seven) {
-      return '震度${min.label} 以上';
-    }
-    return '震度${min.label} ~ 震度${max.label}';
   }
 }

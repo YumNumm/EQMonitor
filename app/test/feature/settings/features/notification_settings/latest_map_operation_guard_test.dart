@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/logic/latest_map_operation_guard.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/latest_map_operation_guard.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

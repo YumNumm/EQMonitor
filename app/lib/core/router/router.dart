@@ -44,6 +44,8 @@ import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
+import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
+import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:eqmonitor/feature/seismicity/ui/seismicity_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
@@ -224,6 +226,15 @@ class const EarthquakeHistorySearchRoute({final String query = ''})
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistorySearchPage(key: ValueKey(query), initialQuery: query);
+}
+
+@TypedGoRoute<RegionSelectionRoute>(path: '/region-selection')
+class const RegionSelectionRoute({final RegionSelectionRequest? $extra})
+    extends GoRouteData
+    with $RegionSelectionRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      RegionSelectionPage(request: $extra ?? const RegionSelectionRequest());
 }
 
 @TypedGoRoute<EewHistoryRoute>(path: '/eew-history')

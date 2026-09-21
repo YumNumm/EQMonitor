@@ -19,7 +19,7 @@ class RegionCodeMapping {
   /// 市区町村コードから所属都道府県コードを返す。
   ///
   /// city.code の上 2 桁が prefecture.code の上 2 桁と一致する規則を利用する
-  /// (`city_selector.dart` の `substring(0,2)` ロジックに準拠)。
+  /// 市区町村コードの先頭2桁を都道府県コードとして扱う。
   ///
   /// 一致する都道府県が存在しない場合は `null` を返す。
   static String? prefectureCodeOfCity(
