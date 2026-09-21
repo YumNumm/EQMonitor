@@ -2,6 +2,7 @@ import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/component/chip/datasource_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/epicenter_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lat_lng_filter_chip.dart';
@@ -206,10 +207,19 @@ class _FilterChipBar extends ConsumerWidget {
           },
         ),
       ),
-      // 地域絞り込み中は Datasource(9)/TelegramType(10)/LatLng(11) を含めない
+      (
+        order: 9,
+        isActive: parameter.epicenterCodes?.isNotEmpty ?? false,
+        chip: EpicenterFilterChip(
+          codes: parameter.epicenterCodes,
+          onChanged: (codes) =>
+              onChanged(parameter.copyWith(epicenterCodes: codes)),
+        ),
+      ),
+      // 地域絞り込み中は Datasource/TelegramType/LatLng を含めない
       if (!isRegionFiltered) ...[
         (
-          order: 9,
+          order: 10,
           isActive: parameter.datasource != null,
           chip: DatasourceFilterChip(
             datasource: parameter.datasource,
@@ -219,7 +229,7 @@ class _FilterChipBar extends ConsumerWidget {
         ),
         if (isDebugEnabled)
           (
-            order: 10,
+            order: 11,
             isActive: parameter.telegramTypes != null,
             chip: TelegramTypeFilterChip(
               telegramTypes: parameter.telegramTypes,
@@ -228,7 +238,7 @@ class _FilterChipBar extends ConsumerWidget {
             ),
           ),
         (
-          order: 11,
+          order: 12,
           isActive:
               parameter.latitudeGte != null ||
               parameter.latitudeLte != null ||

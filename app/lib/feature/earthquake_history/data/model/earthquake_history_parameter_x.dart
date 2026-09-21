@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/component/chip/region_intensity_filter_chip.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/region_intensity_result.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 

@@ -2,7 +2,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
+import 'package:eqmonitor/feature/home/ui/action/home_region_selection_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_list_config_view.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:material_ui/material_ui.dart';
@@ -82,8 +82,8 @@ class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
       },
       trailing: const Icon(Icons.chevron_right),
       onTap: () async {
-        final result = await HomeDesignatedRegionPickerPage.show(
-          context,
+        final result = await const HomeRegionSelectionAction().pick(
+          context: context,
           initialParameter: parameter,
         );
         if (result == null) {

@@ -14,7 +14,7 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthqu
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_selector.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
-import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
+import 'package:eqmonitor/feature/home/ui/action/home_region_selection_action.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -38,8 +38,8 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
             : null;
 
         Future<void> openRegionPicker() async {
-          final result = await HomeDesignatedRegionPickerPage.show(
-            context,
+          final result = await const HomeRegionSelectionAction().pick(
+            context: context,
             initialParameter: home.common.parameter,
           );
           if (result == null) {
