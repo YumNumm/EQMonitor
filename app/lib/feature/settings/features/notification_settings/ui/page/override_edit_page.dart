@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/dismissible/confirmed_dismissible_list.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -127,18 +128,47 @@ class OverrideEditPage extends HookConsumerWidget {
                 ],
               ),
             )
-          : ListView.builder(
+          : ConfirmedDismissibleList<NotificationOverride>(
+              items: sorted,
+              itemId: (entry) => entry.minJmaIntensity.name,
               padding: const EdgeInsets.only(top: 8, bottom: 80),
-              itemCount: sorted.length,
-              itemBuilder: (context, index) {
-                final entry = sorted[index];
-                return _OverrideTile(
-                  entry: entry,
-                  onTap: () =>
-                      _showEditDialog(context, ref, slot, sorted, index),
-                  onDismissed: () => _deleteOverride(ref, slot, sorted, index),
-                );
-              },
+              style: M3EDismissibleCardStyle(
+                direction: .endToStart,
+                color: context.designSystem.colorTheme.surfaceContainerHigh,
+                outerRadius: context.designSystem.shape.card,
+                padding: EdgeInsets.zero,
+                margin: EdgeInsets.symmetric(
+                  horizontal: context.designSystem.spacing.lg,
+                  vertical: context.designSystem.spacing.xs,
+                ),
+                border: BorderSide(
+                  color: context.designSystem.colorTheme.outlineVariant,
+                ),
+                background: ColoredBox(
+                  color: context.designSystem.colorTheme.error,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 24),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              itemBuilder: (_, entry) => _OverrideTile(entry: entry),
+              onTap: (entry) => _showEditDialog(
+                context,
+                ref,
+                slot,
+                sorted,
+                sorted.indexWhere(
+                  (item) => item.minJmaIntensity == entry.minJmaIntensity,
+                ),
+              ),
+              onDismiss: (entry) => _deleteOverride(ref, entry.minJmaIntensity),
             ),
     );
   }
@@ -208,21 +238,29 @@ class OverrideEditPage extends HookConsumerWidget {
     await _saveOverrides(ref, slot, updated);
   }
 
-  Future<void> _deleteOverride(
+  Future<bool> _deleteOverride(
     WidgetRef ref,
-    NotificationSlot? slot,
-    List<NotificationOverride> sorted,
-    int index,
+    JmaIntensity intensity,
   ) async {
-    if (slot == null) {
-      return;
-    }
-
-    final updated = [...sorted]..removeAt(index);
-    await _saveOverrides(ref, slot, updated);
+    final slot = ref
+        .read(notificationSlotsProvider)
+        .value
+        ?.where((candidate) => candidate.id == slotId)
+        .firstOrNull;
+    if (slot == null) return false;
+    final current = switch (overrideType) {
+      NotificationKind.eew => slot.eewOverrides,
+      NotificationKind.earthquake => slot.earthquakeOverrides,
+    };
+    if (current == null) return false;
+    final updated = current
+        .where((entry) => entry.minJmaIntensity != intensity)
+        .toList();
+    if (updated.length == current.length) return true;
+    return _saveOverrides(ref, slot, updated);
   }
 
-  Future<void> _saveOverrides(
+  Future<bool> _saveOverrides(
     WidgetRef ref,
     NotificationSlot slot,
     List<NotificationOverride> overrides,
@@ -271,80 +309,33 @@ class OverrideEditPage extends HookConsumerWidget {
                 );
           });
       }
+      return true;
     } on Object {
-      return;
+      return false;
     }
   }
 }
 
 class _OverrideTile extends StatelessWidget {
-  const new({
-    required this.entry,
-    required this.onTap,
-    required this.onDismissed,
-  });
+  const new({required this.entry});
 
   final NotificationOverride entry;
-  final VoidCallback onTap;
-  final VoidCallback onDismissed;
 
   @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-        vertical: spacing.xs,
-      ),
-      child: Dismissible(
-        key: ValueKey(entry.minJmaIntensity),
-        direction: DismissDirection.endToStart,
-        onDismissed: (_) => onDismissed(),
-        background: Card(
-          color: context.designSystem.colorTheme.error,
-          shape: RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(shape.card),
-          ),
-          child: const Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 24),
-              child: Icon(Icons.delete, color: Colors.white),
-            ),
-          ),
-        ),
-        child: Card.outlined(
-          margin: EdgeInsets.zero,
-          color: colorTheme.surfaceContainerHigh,
-          clipBehavior: Clip.antiAlias,
-          elevation: 0,
-          shape: RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(shape.card),
-            side: BorderSide(color: colorTheme.outlineVariant),
-          ),
-          child: ListTile(
-            onTap: onTap,
-            leading: _IntensityBadge(intensity: entry.minJmaIntensity),
-            title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
-            subtitle: Text(
-              '${switch (entry.sound) {
-                'default' => 'デフォルト',
-                'eew_warning' => 'EEW警報',
-                'eew_forecast' => 'EEW予報',
-                'earthquake' => '地震情報',
-                _ => entry.sound,
-              }} / ${entry.interruptionLevel.name}',
-            ),
-            trailing: const Icon(Icons.chevron_right),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => ListTile(
+    leading: _IntensityBadge(intensity: entry.minJmaIntensity),
+    title: Text(entry.minJmaIntensity.minIntensityThresholdLabel),
+    subtitle: Text(
+      '${switch (entry.sound) {
+        'default' => 'デフォルト',
+        'eew_warning' => 'EEW警報',
+        'eew_forecast' => 'EEW予報',
+        'earthquake' => '地震情報',
+        _ => entry.sound,
+      }} / ${entry.interruptionLevel.name}',
+    ),
+    trailing: const Icon(Icons.chevron_right),
+  );
 }
 
 class _IntensityBadge extends StatelessWidget {
