@@ -1,4 +1,5 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -7,6 +8,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_region_add_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
@@ -23,7 +25,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
@@ -408,7 +409,21 @@ class _SlotListSection extends ConsumerWidget {
     final regionSlotCount = slots
         .where((s) => s.slotType == NotificationSlotType.region)
         .length;
-    final canAddRegion = isPro || regionSlotCount < maxRegions;
+    final isAdding = ref.watch(
+      NotificationSlotsNotifier.addRegionMutation,
+    ) is MutationPending;
+    final canAddRegion = !isAdding && (isPro || regionSlotCount < maxRegions);
+    ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) async {
+      if (next is! MutationError || !context.mounted) {
+        return;
+      }
+      final error = next.error;
+      if (error is DioException && error.response?.statusCode == 402) {
+        await const ProUpgradeDialogAction().show(context);
+      } else {
+        await ref.read(errorDialogActionProvider).show(context, error: error);
+      }
+    });
 
     final tiles = <Widget>[];
     var regionIndex = 0;
@@ -488,11 +503,9 @@ class _SlotListSection extends ConsumerWidget {
           child: FilledButton.tonalIcon(
             onPressed: canAddRegion
                 ? () async {
-                    await Navigator.of(context).push<void>(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const RegionPickerPage(),
-                      ),
-                    );
+                    await ref
+                        .read(notificationRegionAddActionProvider)
+                        .pickAndAdd(context: context, ref: ref);
                   }
                 : null,
             icon: const Icon(Icons.add),
