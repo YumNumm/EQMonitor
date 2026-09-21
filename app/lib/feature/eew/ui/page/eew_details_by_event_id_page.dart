@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -252,22 +253,27 @@ class _DisplayModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<EewDisplayMode>(
-      segments: const [
-        ButtonSegment(
-          value: EewDisplayMode.intensity,
-          icon: Icon(Icons.layers),
-          label: Text('震度'),
-        ),
-        ButtonSegment(
-          value: EewDisplayMode.warning,
+    return M3EToggleButtonGroup(
+      type: M3EButtonGroupType.connected,
+      actions: const [
+        M3EToggleButtonGroupAction(icon: Icon(Icons.layers), label: Text('震度')),
+        M3EToggleButtonGroupAction(
           icon: Icon(Icons.warning_amber),
           label: Text('警報'),
         ),
       ],
-      selected: {displayMode},
-      onSelectionChanged: (selected) => onChanged(selected.first),
-      showSelectedIcon: false,
+      selectedIndex: (<EewDisplayMode>[
+        EewDisplayMode.intensity,
+        EewDisplayMode.warning,
+      ]).indexOf(displayMode),
+      onSelectedIndexChanged: (index) {
+        if (index == null) return;
+        final selected = <EewDisplayMode>[
+          EewDisplayMode.intensity,
+          EewDisplayMode.warning,
+        ][index];
+        onChanged(selected);
+      },
     );
   }
 }
