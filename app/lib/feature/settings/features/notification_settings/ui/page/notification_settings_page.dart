@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -444,7 +446,7 @@ class _SlotListSection extends ConsumerWidget {
         if (slotsAsync.isLoading && slots.isEmpty)
           const Padding(
             padding: EdgeInsets.all(24),
-            child: Center(child: CircularProgressIndicator.adaptive()),
+            child: Center(child: AccessibleCircularProgressIndicator()),
           ),
         if (slotsAsync.hasError && !slotsAsync.isLoading)
           Padding(
@@ -463,7 +465,7 @@ class _SlotListSection extends ConsumerWidget {
         if (!hasNationwide)
           Padding(
             padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-            child: FilledButton.tonalIcon(
+            child: M3EFilledButton.tonalIcon(
               onPressed: () async {
                 await NotificationSlotsNotifier.putNationwideMutation.run(ref, (
                   tsx,
@@ -485,7 +487,7 @@ class _SlotListSection extends ConsumerWidget {
           ),
         Padding(
           padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-          child: FilledButton.tonalIcon(
+          child: M3EFilledButton.tonalIcon(
             onPressed: canAddRegion
                 ? () async {
                     await Navigator.of(context).push<void>(
@@ -574,7 +576,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
     final settingsAsync = ref.watch(generalNotificationSettingsProvider);
     final settings = settingsAsync.value;
     if (settings == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     final designSystem = context.designSystem;

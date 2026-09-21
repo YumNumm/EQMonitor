@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region_map_selection.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -27,7 +29,7 @@ class NotificationRegionMapSelectionCard extends StatelessWidget {
             if (isResolving)
               const SizedBox.square(
                 dimension: 24,
-                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                child: AccessibleCircularProgressIndicator(strokeWidth: 2),
               )
             else
               const Icon(Icons.touch_app_outlined),
@@ -43,7 +45,7 @@ class NotificationRegionMapSelectionCard extends StatelessWidget {
             const SizedBox(height: 4),
             const Text('市区町村を選ぶ場合は地図をタップしてください'),
             const SizedBox(height: 8),
-            FilledButton(
+            M3EFilledButton(
               onPressed: isResolving ? null : onDecideRegion,
               child: const Text('この地域全域を選択'),
             ),
@@ -56,11 +58,11 @@ class NotificationRegionMapSelectionCard extends StatelessWidget {
             Text(region.name, style: Theme.of(context).textTheme.bodySmall),
             Text(city.name, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            FilledButton(
+            M3EFilledButton(
               onPressed: isResolving ? null : onDecideCity,
               child: const Text('この市区町村を選択'),
             ),
-            TextButton(
+            M3ETextButton(
               onPressed: isResolving ? null : onBackToRegion,
               child: const Text('地域全域の選択に戻る'),
             ),
