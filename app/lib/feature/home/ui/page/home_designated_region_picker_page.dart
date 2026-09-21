@@ -3,9 +3,10 @@ import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// ホーム地震履歴カードの「指定地域」を設定するためのページ。
 ///
@@ -113,7 +114,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
         title: const Text('指定地域を選択'),
         actions: [
           if (canApply)
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(context).pop(buildParameter()),
               child: const Text('決定'),
             ),
@@ -184,7 +185,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
                 },
               ),
             const SizedBox(height: 12),
-            OutlinedButton.icon(
+            M3EOutlinedButton.icon(
               onPressed: openMap,
               icon: const Icon(Icons.map_outlined),
               label: const Text('地図から選択'),
@@ -211,7 +212,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
                 ),
               ),
             const SizedBox(height: 24),
-            FilledButton(
+            M3EFilledButton(
               onPressed: canApply
                   ? () => Navigator.of(context).pop(buildParameter())
                   : null,
@@ -220,7 +221,7 @@ class HomeDesignatedRegionPickerPage extends HookConsumerWidget {
             if (initialParameter is EarthquakeHistoryParameterCity ||
                 initialParameter is EarthquakeHistoryParameterPrefecture) ...[
               const SizedBox(height: 8),
-              OutlinedButton(
+              M3EOutlinedButton(
                 onPressed: () => Navigator.of(context).pop(
                   const EarthquakeHistoryParameter.all(
                     sortBy: .eventId,

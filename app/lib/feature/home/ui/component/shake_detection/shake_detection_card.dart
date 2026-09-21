@@ -1,10 +1,11 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
   const new({
@@ -147,7 +148,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
           ),
           if (regionsAsync.isLoading) ...[
             SizedBox(height: spacing.xs),
-            const LinearProgressIndicator(minHeight: 2),
+            const AccessibleLinearProgressIndicator(minHeight: 2),
           ],
           if (regions.isNotEmpty) ...[
             SizedBox(height: spacing.xs),

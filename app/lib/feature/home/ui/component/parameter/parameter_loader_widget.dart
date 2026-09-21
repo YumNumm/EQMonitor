@@ -1,8 +1,10 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ParameterLoaderWidget extends HookConsumerWidget {
   const new({super.key});
@@ -33,9 +35,9 @@ class ParameterLoaderWidget extends HookConsumerWidget {
             ),
             const SizedBox(height: 8),
             if (state.isLoading)
-              const CircularProgressIndicator.adaptive()
+              const AccessibleCircularProgressIndicator()
             else
-              FilledButton(
+              M3EFilledButton(
                 child: const Text('再取得'),
                 onPressed: () async =>
                     ref.invalidate(jmaParameterProvider, asReload: true),
@@ -63,7 +65,7 @@ class ParameterLoaderWidget extends HookConsumerWidget {
               SizedBox(
                 width: 16,
                 height: 16,
-                child: CircularProgressIndicator.adaptive(),
+                child: AccessibleCircularProgressIndicator(),
               ),
             ],
           ),
