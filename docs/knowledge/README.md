@@ -37,14 +37,14 @@
 
 2026-09-21 の文書整理で、現行コード・設定と過去の記録を照合しました。実機・本番配信・private backend の動作確認は行っていません。
 
-- **CI と開発コマンド:** 不正なローカル `uses` 指定、Melos の生成タスク・Dart-only filter、起動設定の相対パスを直す。完了条件は [ビルド・配布](../todo/950_build_and_release.md) と [開発ツール](../todo/770_tooling_and_test_followups.md)。
+- **CI と開発コマンド:** Melos の生成タスク・Dart-only filter、起動設定の相対パスを直す。完了条件は [ビルド・配布](../todo/950_build_and_release.md) と [開発ツール](../todo/770_tooling_and_test_followups.md)。
 - **データ契約と性能:** seismicity descriptor の公開、remote range の内容検証、CPU/GPU 合計保持量、cover 外 decode の受入を改善する。[地図データ](../todo/950_map_data_pipeline.md) に集約。
 - **表示とライフサイクル:** GPU の復帰・remount、App Intents、EEW 再取得、通知 preset の build 中更新を確認する。[TODO 一覧](../todo/README.md) から対象分野を選ぶ。
 - **文書の劣化防止:** 相対リンク・参照パスの CI 検査を追加する。完了済みの障害や削除済み package の作業を残さない。[開発ツール](../todo/770_tooling_and_test_followups.md) で追跡。
 
 ## 更新・削除の基準
 
-- 説明・見出しは日本語。ファイル名、識別子、コマンド、ログ、固有名詞は必要に応じて原文のまま使う。
+- 説明・見出しは日本語。ファイル名、識別子、コマンド、ログ、固有名詞は原文のまま使う。
 - 日付別の作業記録を増やさず、既存の分野別文書へ現行の制約・対処・参照先を追記する。独立した話題だけ文書を追加し、この入口にリンクする。
 - 実装済み・設計上の要求・未検証を区別する。版やコマンドは設定を正本にし、確認日と根拠になる path を残す。
 - 重複・置き換え済みの知見は必要な内容を統合して削除する。廃止運用や対象の消滅した TODO は削除する。未検証というだけで、完了済み作業を再び TODO にしない。

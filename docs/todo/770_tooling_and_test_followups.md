@@ -2,6 +2,12 @@
 
 数値は元の優先度。過去の失敗件数を現在のbaselineとはみなさず、対象packageで再現して未達だけを直す。
 
+## 770: PR の Flutter 検証での mise 全ツール解決
+
+- `wc-check-dart-{analyze,test}.yaml` の Flutter 検証が `vfox:gcloud` の `module 'metadata' not found` で停止する。Flutter 導入後の `mise exec --` が対象外のツールまで解決する経路と、gcloud の plugin 設定を確認する。
+- `pipx:codemagic-cli-tools` の lockfile が参照する `.mise/locks/pipx-codemagic-cli-tools/0.69.0` も未配置。Android CD からは未使用依存として除去したが、workspace 全体の導入では修復が必要。
+- 完了条件: clean runner で PR の解析とテストが起動・完走し、必要なツールだけを再現可能に導入できる。
+
 ## 770: 既存テスト失敗の再確認
 
 - `app/` で `mise exec -- flutter test test --dart-define=CI=true --file-reporter=json:test_report.log` を実行する。repository rootから `app/test` を指定するとasset rootが変わるため比較しない。
