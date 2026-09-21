@@ -1,8 +1,10 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_history_search_results.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistorySearchPage extends HookConsumerWidget {
@@ -40,7 +42,7 @@ class EarthquakeHistorySearchPage extends HookConsumerWidget {
           Expanded(
             child: results.when(
               loading: () =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
+                  const Center(child: AccessibleCircularProgressIndicator()),
               error: (_, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -48,7 +50,7 @@ class EarthquakeHistorySearchPage extends HookConsumerWidget {
                     mainAxisSize: .min,
                     children: [
                       const Text('地域情報を読み込めませんでした。'),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () => ref.invalidate(parameterSetProvider),
                         child: const Text('再読み込み'),
                       ),
