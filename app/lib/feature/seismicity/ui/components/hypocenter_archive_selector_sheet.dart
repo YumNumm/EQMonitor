@@ -1,8 +1,9 @@
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_id.dart';
 import 'package:eqmonitor/feature/seismicity/data/model/hypocenter_archive_partition.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HypocenterArchiveSelectorSheet extends HookWidget {
   const new({
@@ -88,7 +89,7 @@ class HypocenterArchiveSelectorSheet extends HookWidget {
                 ],
               ),
             ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: draft.value.isEmpty
                   ? null
                   : () {
