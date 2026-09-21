@@ -15,6 +15,7 @@ List<RouteBase> get $appRoutes => [
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $earthquakeHistorySearchRoute,
+  $regionSelectionRoute,
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
@@ -214,6 +215,37 @@ mixin $EarthquakeHistorySearchRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $regionSelectionRoute => GoRouteData.$route(
+  path: '/region-selection',
+  hasOverriddenOnExit: false,
+  factory: $RegionSelectionRoute._fromState,
+);
+
+mixin $RegionSelectionRoute on GoRouteData {
+  static RegionSelectionRoute _fromState(GoRouterState state) =>
+      RegionSelectionRoute($extra: state.extra as RegionSelectionRequest?);
+
+  RegionSelectionRoute get _self => this as RegionSelectionRoute;
+
+  @override
+  String get location => GoRouteData.$location('/region-selection');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $eewHistoryRoute => GoRouteData.$route(
