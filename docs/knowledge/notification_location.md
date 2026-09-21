@@ -17,6 +17,16 @@
 - プリセット初期化の同期callback問題は[UI残件](../todo/800_ui_and_navigation.md)。
   `NotificationPresetSelector`のuseEffect内onChangedは現コードにも存在し、実機再現は未実施。
 
+## 揺れ検知の通知条件
+
+- デバッグ画面の「揺れ検知の通知設定」から現在地・全国・細分化地域を設定する。画面は既存の通常設定ルートでも再利用でき、公開機能フラグは維持する。
+- 手動地域はAsset Packの地震情報の都道府県→細分化地域から選ぶ。観測点マスターをAPIから取得しない。地域コードは3桁のAreaForecastLocalEで、EEW地域コードとは別。
+- 現在地は共通Device Location APIへ送信する。揺れ検知条件のPUTや、市区町村コードから観測点IDへの変換は行わない。地域未取得の間は現在地通知を行わない。
+- `DeviceLocationConsumersRepository` が独立に読み込まれた通常通知と揺れ検知を合成し、OS監視とheadless用の可否を更新する。更新は直列化し、読み込み順によって揺れ検知の現在地が無効にならないようにする。
+- 揺れ検知の現在地を有効にしたときと、権限が「常に許可」になったときに監視を再開し、初回位置を共通同期処理へ送る。OS設定から復帰した場合も権限を再確認する。位置取得・同期の失敗は条件保存の失敗と区別し、画面に再試行と最後に同期した地域を表示する。
+- 旧地域条件はバックエンドで無効保存し、`requires_reconfiguration` がある間は再設定を案内する。保存失敗時は既存の設定表示を維持する。
+- 通知タイトルは条件を満たす設定地域の最高レベル、本文はイベント全体の最大レベルと都道府県。設定地域が同じ最高レベルなら複数列挙する。全国と現在地・地域の併存にも対応する。
+
 ## 実行経路と保証境界
 
 Android の通知 channel は [channel 運用](android_notification_channels.md) を参照する。
@@ -39,8 +49,8 @@ Android の通知 channel は [channel 運用](android_notification_channels.md)
   両者完了後だけpending全体を削除し、古いIDのackで新しいpendingを変更しない。
 - deviceLocationはsent/unchanged/disabled/HTTP 400のterminal処理で完了する。
   uninitialized、認証、network、timeout、地域解決、その他4xx/5xxはretryで保持する。
-- headlessはdeviceLocationだけを完了し、appEffectsは通常起動で揺れ検知・App Group・Widget反映後に完了する。
-- slot状態はenabled/disabled/uninitialized。未初期化を無効とみなさず、通常起動で取得しheadlessではretryする。
+- headlessはdeviceLocationだけを完了し、appEffectsは通常起動でApp Group・Widget反映後に完了する。
+- 現在地のconsumer状態はenabled/disabled/uninitialized。通常通知の現在地slotと、有効な揺れ検知現在地条件のORを永続化する。両方の読み込みが完了するまでは無効化しない。headlessは同じ永続状態を使用する。
 - 重複排除recordはAPI endpointと送信済み地域payload。token保存/削除直前に消し、endpoint変更は別scope。
   token/hash/raw座標を記録せず、headless device IDは通常Engineと同じJWT subから復元する。
   token未保存/不正時にUDIDから代替IDを作らず、認証失敗をretryへ残す。

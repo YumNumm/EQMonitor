@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -13,6 +14,7 @@ import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/location/data/model/device_location_payload.dart';
 import 'package:eqmonitor/feature/location/data/provider/device_location_sync_scope_provider.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_consumers_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
@@ -20,7 +22,6 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jma_map/jma_map.dart';
@@ -92,14 +93,8 @@ final class _FakeShakeDetectionSettingsNotifier
   @override
   Future<ShakeDetectionState> build() async => (
     entries: const <ShakeDetectionEntry>[],
-    availableSubRegions: const <ShakeDetectionSubRegion>[],
+    requiresReconfiguration: false,
   );
-
-  @override
-  Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
-    events?.add('appEffects:shake');
-    return false;
-  }
 }
 
 final class _RecordingDeviceLocationSyncStateRepository
@@ -287,84 +282,6 @@ final class _FakeNotificationSlotsApiAdapter implements HttpClientAdapter {
   }
 }
 
-/// `ShakeDetectionSettingsNotifier` が読む `apiClientProvider` を差し替える
-/// HTTP アダプタ。揺れ検知設定の GET / PUT とサブ地域マスター GET を模倣する。
-final class _FakeShakeApiAdapter implements HttpClientAdapter {
-  new({
-    this.shakeEntries = const [],
-    this.availableSubRegions = const [],
-  });
-
-  List<ShakeDetectionEntry> shakeEntries;
-  List<ShakeDetectionSubRegion> availableSubRegions;
-
-  // PUT で送られた揺れ検知設定を記録する。
-  final putShakeDetectionCalls = <List<api.ShakeDetectionSettingRequest>>[];
-
-  @override
-  void close({bool force = false}) {}
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    final path = options.path;
-    final method = options.method;
-
-    if (path.endsWith('/shake-detection/sub-regions') && method == 'GET') {
-      return _jsonResponse(
-        jsonEncode([for (final s in availableSubRegions) _subRegionJson(s)]),
-      );
-    }
-
-    if (path.endsWith('/shake-detection') && method == 'GET') {
-      return _jsonResponse(
-        jsonEncode([
-          for (final e in shakeEntries)
-            _shakeResponseJson(
-              id: e.id,
-              subRegionId: e.subRegionId,
-              minLevel: e.minLevel.toApiShakeDetectionLevel,
-              isCurrentLocation: e.isCurrentLocation,
-            ),
-        ]),
-      );
-    }
-
-    if (path.endsWith('/shake-detection') && method == 'PUT') {
-      // `options.data` は Dio の transformer を通す前の値で、enum が
-      // instance のまま残る。実際に送信される wire JSON へ round-trip して
-      // から decode する。
-      final list = (jsonDecode(jsonEncode(options.data)) as List)
-          .cast<Map<String, dynamic>>();
-      final requests = list
-          .map(
-            (e) => api.ShakeDetectionSettingRequest.fromJson(
-              Map<String, Object?>.from(e),
-            ),
-          )
-          .toList();
-      putShakeDetectionCalls.add(requests);
-      // サーバ往復を模倣して同じ内容を id 付きで返す。
-      return _jsonResponse(
-        jsonEncode([
-          for (final (i, r) in requests.indexed)
-            _shakeResponseJson(
-              id: 'srv-$i',
-              subRegionId: r.subRegionId,
-              minLevel: r.minLevel,
-              isCurrentLocation: r.isCurrentLocation,
-            ),
-        ]),
-      );
-    }
-
-    throw UnimplementedError('Unhandled: $method $path');
-  }
-}
-
 ResponseBody _jsonResponse(String body, {int statusCode = 200}) =>
     ResponseBody.fromString(
       body,
@@ -373,26 +290,6 @@ ResponseBody _jsonResponse(String body, {int statusCode = 200}) =>
         'content-type': ['application/json'],
       },
     );
-
-Map<String, dynamic> _subRegionJson(ShakeDetectionSubRegion s) => {
-  'id': s.id,
-  'code': s.code,
-  'name': s.name,
-};
-
-Map<String, dynamic> _shakeResponseJson({
-  required String id,
-  required String? subRegionId,
-  required api.ShakeDetectionLevel minLevel,
-  required bool isCurrentLocation,
-}) => {
-  'id': id,
-  'sub_region_id': subRegionId,
-  'min_level': minLevel.toJson(),
-  'is_current_location': isCurrentLocation,
-  'created_at': '2026-06-30T00:00:00Z',
-  'updated_at': '2026-06-30T00:00:00Z',
-};
 
 const Map<String, Object?> _currentLocationSlotResponse = {
   'id': 'slot-cl',
@@ -415,22 +312,6 @@ const Map<String, Object?> _currentLocationSlotResponse = {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-ProviderContainer _createShakeContainer(_FakeShakeApiAdapter adapter) {
-  final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
-    ..httpClientAdapter = adapter;
-  return ProviderContainer(
-    overrides: [
-      deviceProvisioningProvider.overrideWith(
-        _FakeDeviceProvisioningNotifier.new,
-      ),
-      apiClientProvider.overrideWith((ref) async => api.ApiClient(dio)),
-      notificationSlotsProvider.overrideWith(
-        () => _FakeNotificationSlotsNotifier(slots: const []),
-      ),
-    ],
-  );
-}
 
 ProviderContainer _createLocationSyncContainer({
   required _FakeDeviceLocationApiAdapter adapter,
@@ -476,7 +357,7 @@ ProviderContainer _createNotificationSlotsSyncContainer(
 ) {
   final dio = Dio(BaseOptions(baseUrl: 'https://example.com'))
     ..httpClientAdapter = adapter;
-  return ProviderContainer(
+  final container = ProviderContainer(
     overrides: [
       deviceProvisioningProvider.overrideWith(
         _FakeDeviceProvisioningNotifier.new,
@@ -487,6 +368,13 @@ ProviderContainer _createNotificationSlotsSyncContainer(
       ),
     ],
   );
+  unawaited(
+    container.read(deviceLocationConsumersRepositoryProvider).updateShake((
+      entries: [],
+      requiresReconfiguration: false,
+    )),
+  );
+  return container;
 }
 
 @Riverpod(keepAlive: true)
@@ -659,7 +547,7 @@ void main() {
         await state.readAvailability(),
         DeviceLocationSyncAvailability.disabled,
       );
-      expect(monitoringEvents, ['start', 'stop']);
+      expect(monitoringEvents, ['stop', 'start', 'start', 'stop']);
     });
 
     test('一括置換成功後に現在地スロット有無を保存する', () async {
@@ -691,7 +579,7 @@ void main() {
         await state.readAvailability(),
         DeviceLocationSyncAvailability.disabled,
       );
-      expect(monitoringEvents, ['start', 'stop']);
+      expect(monitoringEvents, ['stop', 'start', 'stop']);
     });
 
     test('API失敗時は現在地スロット有無を先行変更しない', () async {
@@ -716,20 +604,6 @@ void main() {
     });
   });
 
-  test('揺れ検知の現在地consumer追加・削除で監視をreconcileする', () async {
-    final monitoringEvents = <String>[];
-    recordMonitoringCalls(monitoringEvents);
-    final container = _createShakeContainer(_FakeShakeApiAdapter());
-    addTeardownToContainer(container);
-    await container.read(shakeDetectionSettingsProvider.future);
-    final notifier = container.read(shakeDetectionSettingsProvider.notifier);
-
-    await notifier.addCurrentLocation();
-    await notifier.removeEntry('srv-0');
-
-    expect(monitoringEvents, ['start', 'stop']);
-  });
-
   test('起動時に両consumerがなければ残存するOS監視を停止する', () async {
     final monitoringEvents = <String>[];
     recordMonitoringCalls(monitoringEvents);
@@ -748,238 +622,6 @@ void main() {
   // ==========================================================================
   // ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion
   // ==========================================================================
-  group('ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion', () {
-    test('cityCode に一致する availableSubRegion があれば subRegionId を更新する', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: null,
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-          ShakeDetectionSubRegion(id: 'sr-2', code: '0720300', name: 'いわき市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      // Wait for build to complete
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('0720100');
-
-      expect(result, isTrue);
-      expect(adapter.putShakeDetectionCalls, hasLength(1));
-      final putEntries = adapter.putShakeDetectionCalls.first;
-      expect(putEntries.first.subRegionId, 'sr-1');
-      expect(putEntries.first.isCurrentLocation, isTrue);
-      // wire JSON では `min_level: "Medium"` として送られる。
-      expect(putEntries.first.minLevel, api.ShakeDetectionLevel.medium);
-    });
-
-    test('現在地エントリがない場合は更新せず false を返す', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: null,
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: false, // ← 現在地ではない
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('0720100');
-
-      expect(result, isFalse);
-      expect(adapter.putShakeDetectionCalls, isEmpty);
-    });
-
-    test('subRegionId が変化しない場合は PUT せず false を返す', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: 'sr-1', // ← 既に sr-1
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('0720100');
-
-      expect(result, isFalse);
-      expect(adapter.putShakeDetectionCalls, isEmpty);
-    });
-
-    test(
-      'cityCode が availableSubRegions に存在しない場合は subRegionId を null にする',
-      () async {
-        final adapter = _FakeShakeApiAdapter(
-          shakeEntries: const [
-            ShakeDetectionEntry(
-              id: 'entry-1',
-              subRegionId: 'sr-1',
-              subRegionName: null,
-              minLevel: ShakeDetectionLevel.medium,
-              isCurrentLocation: true,
-            ),
-          ],
-          availableSubRegions: const [
-            ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-          ],
-        );
-        final container = _createShakeContainer(adapter);
-        addTeardownToContainer(container);
-
-        await container.read(shakeDetectionSettingsProvider.future);
-
-        // 存在しない cityCode を渡す
-        final result = await container
-            .read(shakeDetectionSettingsProvider.notifier)
-            .updateCurrentLocationSubRegion('9999999');
-
-        expect(result, isTrue);
-        expect(adapter.putShakeDetectionCalls, hasLength(1));
-        expect(adapter.putShakeDetectionCalls.first.first.subRegionId, isNull);
-      },
-    );
-
-    test('cityCode が null の場合は subRegionId を null にする', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: 'sr-1',
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion(null);
-
-      expect(result, isTrue);
-      expect(adapter.putShakeDetectionCalls, hasLength(1));
-      expect(adapter.putShakeDetectionCalls.first.first.subRegionId, isNull);
-    });
-
-    test('都市移動: subRegionId が別の sub_region に更新される', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: 'sr-1',
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-          ShakeDetectionSubRegion(id: 'sr-2', code: '0720300', name: 'いわき市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('0720300');
-
-      expect(result, isTrue);
-      expect(adapter.putShakeDetectionCalls, hasLength(1));
-      expect(adapter.putShakeDetectionCalls.first.first.subRegionId, 'sr-2');
-    });
-
-    test('エントリが空の場合は false を返す', () async {
-      final adapter = _FakeShakeApiAdapter();
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('0720100');
-
-      expect(result, isFalse);
-      expect(adapter.putShakeDetectionCalls, isEmpty);
-    });
-
-    test('連続更新: 状態が正しく遷移する', () async {
-      final adapter = _FakeShakeApiAdapter(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: null,
-            subRegionName: null,
-            minLevel: ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-          ShakeDetectionSubRegion(id: 'sr-2', code: '0720300', name: 'いわき市'),
-        ],
-      );
-      final container = _createShakeContainer(adapter);
-      addTeardownToContainer(container);
-
-      await container.read(shakeDetectionSettingsProvider.future);
-      final notifier = container.read(shakeDetectionSettingsProvider.notifier);
-
-      // 1st update: null → sr-1
-      expect(await notifier.updateCurrentLocationSubRegion('0720100'), isTrue);
-      // 2nd update: same city → no-op
-      expect(await notifier.updateCurrentLocationSubRegion('0720100'), isFalse);
-      // 3rd update: sr-1 → sr-2
-      expect(await notifier.updateCurrentLocationSubRegion('0720300'), isTrue);
-
-      expect(adapter.putShakeDetectionCalls, hasLength(2));
-    });
-  });
-
   group('BackgroundLocationSyncCoordinator', () {
     test('通常Engineのlive位置更新ではDevice Location APIを送信しない', () async {
       final adapter = _FakeDeviceLocationApiAdapter();
@@ -1072,7 +714,6 @@ void main() {
       ]);
       expect(events, [
         'appEffects:appGroup',
-        'appEffects:shake',
         'ack:appEffects',
       ]);
     });
@@ -1129,7 +770,7 @@ void main() {
         ).future,
       );
 
-      expect(events, contains('appEffects:shake'));
+      expect(events, isNot(contains('appEffects:shake')));
       expect(events, contains('ack:appEffects'));
       expect(events, isNot(contains('ack:deviceLocation')));
       expect(events, isNot(contains('deviceLocation:writeLastSent')));

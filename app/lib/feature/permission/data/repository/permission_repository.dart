@@ -59,7 +59,11 @@ class PermissionRepository({
   _requestAlwaysLocationPermission,
   required final Future<void> Function() _onLocationPermissionGranted,
   required final Future<void> Function() _openNotificationSettings,
+  final Future<void> Function() _openLocationSettings =
+      AppSettings.openAppSettings,
 }) {
+  Future<void> openLocationSettings() => _openLocationSettings();
+
   Future<OsNotificationPermission> getNotificationPermission() async {
     final settings = await _readMessaging().getNotificationSettings();
     return OsNotificationPermission.fromNotificationSettings(settings);

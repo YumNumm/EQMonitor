@@ -49,6 +49,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
+  /// [epicenterCodes] - 震源地名コード（4桁の数字、最大3件）。epicenterCodes=0350&epicenterCodes=0351 のように繰り返し指定し、いずれかに一致する地震を返します。.
+  ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
   /// [latitudeLte] - -180~180 の実数(string).
@@ -114,6 +116,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
+  /// [epicenterCodes] - 震源地名コード（4桁の数字、最大3件）。epicenterCodes=0350&epicenterCodes=0351 のように繰り返し指定し、いずれかに一致する地震を返します。.
+  ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
   /// [latitudeLte] - -180~180 の実数(string).
@@ -172,6 +176,8 @@ abstract class EarthquakeApiClient {
   /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
   /// [originTimeLte] - 日付 (例: 2024-01-01).
+  ///
+  /// [epicenterCodes] - 震源地名コード（4桁の数字、最大3件）。epicenterCodes=0350&epicenterCodes=0351 のように繰り返し指定し、いずれかに一致する地震を返します。.
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -232,6 +238,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
+  /// [epicenterCodes] - 震源地名コード（4桁の数字、最大3件）。epicenterCodes=0350&epicenterCodes=0351 のように繰り返し指定し、いずれかに一致する地震を返します。.
+  ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
   /// [latitudeLte] - -180~180 の実数(string).
@@ -290,6 +298,8 @@ abstract class EarthquakeApiClient {
   /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
   /// [originTimeLte] - 日付 (例: 2024-01-01).
+  ///
+  /// [epicenterCodes] - 震源地名コード（4桁の数字、最大3件）。epicenterCodes=0350&epicenterCodes=0351 のように繰り返し指定し、いずれかに一致する地震を返します。.
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///

@@ -2,6 +2,10 @@
 
 数値は元の優先度。実機表示の確認は未完了。
 
+## 800: 揺れ検知通知の細分化地域設定
+
+- 実機で権限、OS終了後の位置同期、APNs／FCMの通知文面を確認する。実機検証は未実施。
+
 ## 800: material_ui 境界
 
 - `app/lib/feature/settings/children/application_info/{about_this_app,term_of_service_page,privacy_policy_page}.dart` の Markdown に明示的なstyleまたは共通rendererを渡し、`feature/changelog/ui/page/changelog_page.dart` と共通化する。完了条件: Light/Darkで本文/リンクが読める。

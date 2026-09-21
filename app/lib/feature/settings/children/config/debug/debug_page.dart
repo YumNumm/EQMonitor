@@ -331,6 +331,13 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugShakeDetectionCardRoute().push(context),
             ),
             ListTile(
+              title: const Text('揺れ検知の通知設定'),
+              subtitle: const Text('現在地・全国・細分化地域の通知条件を設定'),
+              leading: const Icon(Icons.notifications_active_outlined),
+              onTap: () async =>
+                  const DebugShakeDetectionSettingsRoute().push(context),
+            ),
+            ListTile(
               title: const Text('揺れ検知を挿入'),
               subtitle: Text(
                 'プリセットをホーム地図・カードへマージ表示',
