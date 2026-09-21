@@ -1,3 +1,5 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -97,7 +99,7 @@ class _Body extends ConsumerWidget {
                 }),
                 style: bodyTextStyle,
               ),
-              FilledButton(
+              M3EFilledButton(
                 child: Text("Invalidate NTP"),
                 onPressed: () async => ref.invalidate(ntpProvider),
               ),

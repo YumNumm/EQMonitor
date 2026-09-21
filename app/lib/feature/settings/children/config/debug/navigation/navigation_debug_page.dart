@@ -1,6 +1,8 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NavigationDebugPage extends StatelessWidget {
   const new({super.key});
@@ -37,7 +39,7 @@ class _RouteDropdownMenu extends HookWidget {
         final paths = routeBases.toPaths();
         return paths
             .where((path) => !path.contains('debug'))
-            .map((path) => DropdownMenuEntry<String>(value: path, label: path))
+            .map((path) => M3EDropdownItem<String>(value: path, label: path))
             .toList();
       },
       // keys にリテラルではなく routeBases 自体を渡しているため、
@@ -50,13 +52,11 @@ class _RouteDropdownMenu extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DropdownMenu<String>(
-          dropdownMenuEntries: dropdownMenuEntries,
-          expandedInsets: EdgeInsets.zero,
-          onSelected: (selectedPath) {
-            if (selectedPath == null) {
-              return;
-            }
+        ControlledDropdown<String>(
+          items: dropdownMenuEntries,
+          onSelectionChanged: (selectedItems) {
+            if (selectedItems.isEmpty) return;
+            final selectedPath = selectedItems.first.value;
             pathEditController.text = selectedPath;
           },
         ),
@@ -70,7 +70,7 @@ class _RouteDropdownMenu extends HookWidget {
           maxLines: 2,
         ),
         const SizedBox.square(dimension: 16),
-        ElevatedButton(
+        M3EElevatedButton(
           onPressed: () => router.go(pathEditController.text),
           child: const Text('Go'),
         ),

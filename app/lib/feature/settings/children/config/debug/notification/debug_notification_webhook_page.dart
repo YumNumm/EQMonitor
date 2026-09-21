@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -77,19 +80,19 @@ class DebugNotificationWebhookPage extends HookConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: M3EExtendedFloatingActionButton(
         onPressed: issuing.value ? null : issue,
         icon: issuing.value
             ? const SizedBox.square(
                 dimension: 20,
-                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                child: AccessibleCircularProgressIndicator(strokeWidth: 2),
               )
             : const Icon(Icons.add_link),
         label: Text(issuing.value ? '発行中' : 'Webhookを発行'),
       ),
       body: switch ((loading.value, error.value, webhooks.value)) {
         (true, _, []) => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         (_, final exception?, []) => _ErrorBody(
           exception: exception,
@@ -185,7 +188,7 @@ class _ErrorBody extends StatelessWidget {
             const SizedBox(height: 8),
             SelectableText(exception.toString(), textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('再試行'),
