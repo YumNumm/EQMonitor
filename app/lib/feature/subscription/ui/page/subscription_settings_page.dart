@@ -1,11 +1,13 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// サブスクリプションの状態確認 / 管理画面。
@@ -20,7 +22,8 @@ class SubscriptionSettingsPage extends ConsumerWidget {
       backgroundColor: colorTheme.surfaceContainerLow,
       appBar: AppBar(title: const Text('EQMonitor Pro')),
       body: statusAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -92,18 +95,16 @@ class _ActiveSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FilledButton.tonal(
-          style: FilledButton.styleFrom(
+        M3EFilledButton.tonal(
+          decoration: M3EButtonDecoration.styleFrom(
             minimumSize: const Size.fromHeight(52),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            borderRadius: 20,
           ),
           onPressed: () async => flow.openStoreSubscriptionManagement(),
           child: const Text('サブスクリプションを管理'),
         ),
         const SizedBox(height: 8),
-        TextButton(
+        M3ETextButton(
           onPressed: isRestoring
               ? null
               : () async => flow.restorePurchases(ref, context),
@@ -154,18 +155,16 @@ class _InactiveSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FilledButton(
-          style: FilledButton.styleFrom(
+        M3EFilledButton(
+          decoration: M3EButtonDecoration.styleFrom(
             minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            borderRadius: 20,
           ),
           onPressed: () async => const PaywallRoute().push<void>(context),
           child: const Text('EQMonitor Pro にアップグレード'),
         ),
         const SizedBox(height: 8),
-        TextButton(
+        M3ETextButton(
           onPressed: isRestoring
               ? null
               : () async => flow.restorePurchases(ref, context),

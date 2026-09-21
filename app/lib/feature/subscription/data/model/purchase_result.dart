@@ -8,6 +8,5 @@ part 'purchase_result.freezed.dart';
 sealed class PurchaseResult with _$PurchaseResult {
   const factory success() = PurchaseResultSuccess;
   const factory cancelled() = PurchaseResultCancelled;
-  const factory failed(PurchaseFailureReason reason) =
-      PurchaseResultFailed;
+  const factory failed(PurchaseFailureReason reason) = PurchaseResultFailed;
 }
