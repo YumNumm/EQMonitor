@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ActionButton extends StatelessWidget {
@@ -41,17 +41,15 @@ class ActionButton extends StatelessWidget {
     accentColor: accentColor,
     isEnabled: true,
     padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Flexible(
-      child: Center(
-        child: Text(
-          text,
-          style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
-              .copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1.1,
-              ),
-        ),
+    child: Center(
+      child: Text(
+        text,
+        style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+            .copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: 1.1,
+            ),
       ),
     ),
   );
@@ -87,22 +85,14 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enabledWidget = BorderedContainer(
-      accentColor: accentColor ?? Colors.blue.shade800,
-      onPressed: onPressed,
-      child: Padding(padding: padding, child: child),
-    );
-    final disabledWidget = DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        color: Colors.white.withValues(alpha: 0.75),
-        border: const Border.fromBorderSide(BorderSide(color: Colors.grey)),
+    return M3EButton(
+      onPressed: isEnabled ? onPressed : null,
+      style: accentColor == Colors.transparent ? .outlined : .filled,
+      decoration: M3EButtonDecoration.styleFrom(
+        backgroundColor: accentColor,
+        padding: padding,
       ),
       child: child,
-    );
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 150),
-      child: isEnabled ? enabledWidget : disabledWidget,
     );
   }
 }
