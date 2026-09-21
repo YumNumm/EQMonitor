@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -6,8 +7,9 @@ import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:extensions/extensions.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedDetailsPage extends ConsumerWidget {
@@ -29,7 +31,7 @@ class FeedDetailsPage extends ConsumerWidget {
             child: feed.when(
               skipError: true,
               loading: () =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
+                  const Center(child: AccessibleCircularProgressIndicator()),
               error: (error, _) => ErrorCard(
                 error: error,
                 onReload: () async =>
@@ -96,7 +98,7 @@ class FeedDetailsBody extends StatelessWidget {
           Text(_bodyText(item).toHalfWidth),
           if (url != null) ...[
             const SizedBox(height: 24),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: () async => launchUrl(url, mode: .externalApplication),
               icon: const Icon(Icons.open_in_new),
               label: const Text('詳細を開く'),

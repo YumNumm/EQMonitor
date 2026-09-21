@@ -94,8 +94,7 @@ sealed class FeedItemData with _$FeedItemData {
 
   const factory incident({String? url}) = FeedItemDataIncident;
 
-  const factory developerMessage({String? url}) =
-      FeedItemDataDeveloperMessage;
+  const factory developerMessage({String? url}) = FeedItemDataDeveloperMessage;
 }
 
 @freezed
