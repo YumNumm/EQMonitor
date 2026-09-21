@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_entries_provider.dart';
@@ -22,11 +23,11 @@ class DebugHttpCacheAction {
         title: const Text('エントリを削除'),
         content: const Text('このキャッシュエントリを削除しますか？'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('キャンセル'),
           ),
-          FilledButton(
+          M3EFilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('削除'),
           ),
@@ -63,11 +64,11 @@ class DebugHttpCacheAction {
         title: const Text('すべて削除'),
         content: const Text('HTTPキャッシュをすべて削除しますか？'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('キャンセル'),
           ),
-          FilledButton(
+          M3EFilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('削除'),
           ),

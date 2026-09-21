@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:cache/cache.dart';
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
@@ -44,13 +46,14 @@ class DebugHttpCachePage extends HookConsumerWidget {
         ],
       ),
       body: entriesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('取得に失敗しました: $error'),
-              TextButton(
+              M3ETextButton(
                 onPressed: () => ref.invalidate(debugHttpCacheEntriesProvider),
                 child: const Text('再試行'),
               ),
@@ -164,7 +167,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
                 Text('eTag: $eTagLabel'),
                 Text('Content-Type: $contentType'),
                 const SizedBox(height: 8),
-                FilledButton(
+                M3EFilledButton(
                   onPressed: () async {
                     await ref
                         .read(debugHttpCacheActionProvider)
