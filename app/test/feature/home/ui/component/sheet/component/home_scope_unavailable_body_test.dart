@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// `HomeScopeUnavailableBody` 表示用の最小限の `MaterialApp` ラッパー。
 ///
@@ -31,8 +32,8 @@ void main() {
       ),
     );
 
-    // 何もテキストや FilledButton が出ないことを確認
-    expect(find.byType(FilledButton), findsNothing);
+    // 何もテキストや M3EFilledButton が出ないことを確認
+    expect(find.byType(M3EFilledButton), findsNothing);
     expect(find.text('地域を設定する'), findsNothing);
   });
 
@@ -54,7 +55,7 @@ void main() {
       find.textContaining('指定地域'),
       findsWidgets,
     );
-    final button = find.widgetWithText(FilledButton, '地域を設定する');
+    final button = find.widgetWithText(M3EFilledButton, '地域を設定する');
     expect(button, findsOneWidget);
 
     await tester.tap(button);
@@ -75,7 +76,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(FilledButton, '地域を設定する'), findsNothing);
+      expect(find.widgetWithText(M3EFilledButton, '地域を設定する'), findsNothing);
     },
   );
 }

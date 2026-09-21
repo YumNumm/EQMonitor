@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
@@ -37,7 +40,7 @@ class HinetSeismicityPage extends HookConsumerWidget {
         ),
         AsyncError(:final error) => Center(child: ErrorCard(error: error)),
         AsyncData() => const _CredentialsForm(),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
+        _ => const Center(child: AccessibleCircularProgressIndicator()),
       },
     );
   }
@@ -69,7 +72,7 @@ class _CredentialsForm extends HookConsumerWidget {
             decoration: const InputDecoration(labelText: 'パスワード'),
           ),
           const SizedBox(height: 16),
-          FilledButton(
+          M3EFilledButton(
             onPressed: isSaving.value
                 ? null
                 : () async {
@@ -92,7 +95,7 @@ class _CredentialsForm extends HookConsumerWidget {
                 ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Text('保存'),
           ),
@@ -181,7 +184,7 @@ class _FetchBody extends HookConsumerWidget {
                   children: [
                     const Text('M ≥'),
                     Expanded(
-                      child: Slider(
+                      child: AccessibleSlider(
                         value: minMagnitude.value,
                         min: -2,
                         max: 7,
@@ -194,13 +197,15 @@ class _FetchBody extends HookConsumerWidget {
                   ],
                 ),
               ),
-              FilledButton.icon(
+              M3EFilledButton.icon(
                 onPressed: isFetching.value ? null : handleFetch,
                 icon: isFetching.value
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: AccessibleCircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       )
                     : const Icon(Icons.download),
                 label: Text(isFetching.value ? '取得中...' : '取得'),
@@ -223,7 +228,9 @@ class _FetchBody extends HookConsumerWidget {
           ),
         ),
         if (progress.value case final p?)
-          LinearProgressIndicator(value: p.completedRequests / p.totalRequests),
+          AccessibleLinearProgressIndicator(
+            value: p.completedRequests / p.totalRequests,
+          ),
         if (fetchError.value case final error?)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -243,7 +250,7 @@ class _FetchBody extends HookConsumerWidget {
                   ),
                 ),
                 if (error is HinetLoginException)
-                  TextButton(
+                  M3ETextButton(
                     onPressed: () async {
                       await HinetCredentialsNotifier.clearMutation.run(
                         ref,
@@ -290,7 +297,7 @@ class _FetchBody extends HookConsumerWidget {
               ],
             ),
             AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-            _ => const Center(child: CircularProgressIndicator.adaptive()),
+            _ => const Center(child: AccessibleCircularProgressIndicator()),
           },
         ),
         if (selectedBounds.value case final bounds?)
@@ -324,7 +331,7 @@ class _DatePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return M3EOutlinedButton(
       onPressed: () async {
         final picked = await showDatePicker(
           context: context,

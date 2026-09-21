@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/intensity_history_loading_overlay.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _ControllableCityMaxIntensityNotifier extends CityMaxIntensityNotifier {
   final requests = <Completer<CityMaxIntensity>>[];
@@ -40,7 +41,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
 
     final notifier = container.read(
       cityMaxIntensityProvider.notifier,
@@ -50,7 +51,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
   });
 
   testWidgets('取得済みデータの再読み込み中は進捗表示でマップを覆わない', (
@@ -84,6 +85,6 @@ void main() {
     container.invalidate(cityMaxIntensityProvider);
     await tester.pump();
 
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
   });
 }

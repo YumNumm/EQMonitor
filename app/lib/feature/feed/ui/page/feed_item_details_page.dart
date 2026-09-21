@@ -1,10 +1,12 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_notifier.dart';
 import 'package:eqmonitor/feature/feed/ui/page/feed_details_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 一覧で取得済みの [FeedItem] を表示するお知らせ詳細ページ。
 ///
@@ -30,7 +32,7 @@ class FeedItemDetailsPage extends ConsumerWidget {
       if (resolved != null) {
         body = FeedDetailsBody(item: resolved.toDetail());
       } else if (state.isLoading) {
-        body = const Center(child: CircularProgressIndicator.adaptive());
+        body = const Center(child: AccessibleCircularProgressIndicator());
       } else {
         body = const _FeedItemNotFound();
       }
@@ -55,7 +57,7 @@ class _FeedItemNotFound extends StatelessWidget {
           children: [
             const Text('お知らせが見つかりませんでした'),
             const SizedBox(height: 16),
-            FilledButton(
+            M3EFilledButton(
               onPressed: () async => const FeedRoute().push<void>(context),
               child: const Text('お知らせ一覧へ'),
             ),

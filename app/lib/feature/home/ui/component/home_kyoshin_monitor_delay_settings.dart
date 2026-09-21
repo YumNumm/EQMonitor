@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
@@ -5,11 +7,12 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_ima
 import 'package:eqmonitor/feature/kyoshin_monitor/data/logic/kyoshin_monitor_time_sample_calculator.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_delay.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_delay_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_request_provider.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class HomeKyoshinMonitorDelaySettings extends ConsumerWidget {
@@ -203,7 +206,7 @@ class _CurrentDelayTile extends ConsumerWidget {
           ),
           Text('適用値: $imageDelayLabel', style: typography.bodySmall),
           SizedBox(height: spacing.sm),
-          TextButton.icon(
+          M3ETextButton.icon(
             onPressed: adjustment == Duration.zero
                 ? null
                 : () async {
@@ -442,15 +445,32 @@ class _DelayDropdownField<T> extends StatelessWidget {
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),
           SizedBox(height: spacing.md),
-          DropdownMenu<T>(
+          SizedBox(
             width: double.infinity,
-            initialSelection: value,
-            dropdownMenuEntries: entries,
-            onSelected: (next) async {
-              if (next != null) {
-                await onChanged(next);
-              }
-            },
+            child: ControlledDropdown<T>(
+              singleSelect: true,
+              items:
+                  (entries
+                          .map(
+                            (entry) => M3EDropdownItem(
+                              value: entry.value,
+                              label: entry.label,
+                              disabled: !entry.enabled,
+                            ),
+                          )
+                          .toList())
+                      .map(
+                        (item) => item.copyWith(selected: item.value == value),
+                      )
+                      .toList(),
+              onSelectionChanged: (selection) async {
+                if (selection.isEmpty) return;
+                final next = selection.first.value;
+                if (next != null) {
+                  await onChanged(next);
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -501,7 +521,7 @@ class _DurationSliderTile extends StatelessWidget {
           ),
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),
-          Slider(
+          AccessibleSlider(
             value: valueMilliseconds
                 .clamp(
                   minMilliseconds,

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -24,13 +26,13 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/observation_max_height_condition.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/value/tsunami_warning_kind.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geobase/geobase.dart' as geo;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TsunamiDetailsMapView extends HookConsumerWidget {
   const new({required this.tsunami, super.key});
@@ -49,7 +51,7 @@ class TsunamiDetailsMapView extends HookConsumerWidget {
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }

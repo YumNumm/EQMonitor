@@ -1,7 +1,9 @@
+import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IntensityFilterChip extends StatelessWidget {
   const new({
@@ -125,8 +127,10 @@ class _IntensityFilterModal extends HookWidget {
               ),
             ),
             const SizedBox(height: 24),
-            RangeSlider(
-              values: RangeValues(
+            AccessibleRangeSlider(
+              semanticFormatterCallback: (value) =>
+                  '震度${indexToValue(value.toInt()).label}',
+              value: RangeValues(
                 valueToIndex(min.value).toDouble(),
                 valueToIndex(max.value).toDouble(),
               ),
@@ -135,10 +139,7 @@ class _IntensityFilterModal extends HookWidget {
                 min.value = indexToValue(state.start.toInt());
                 max.value = indexToValue(state.end.toInt());
               },
-              labels: RangeLabels(
-                '震度${min.value.label}',
-                '震度${max.value.label}',
-              ),
+              label: '震度${min.value.label} ～ 震度${max.value.label}',
               divisions: _sliderValues.length - 1,
             ),
             const SizedBox(height: 16),
@@ -154,11 +155,11 @@ class _IntensityFilterModal extends HookWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context).pop((min.value, max.value)),
                   child: const Text('完了'),

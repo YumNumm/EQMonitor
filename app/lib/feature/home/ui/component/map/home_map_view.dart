@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -18,8 +19,8 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_la
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/connection_status_card.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -61,7 +62,7 @@ class HomeMapView extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator.adaptive(),
+              const AccessibleCircularProgressIndicator(),
               SizedBox(height: spacing.md),
               Text('地図を準備しています', style: typography.bodyMedium),
             ],

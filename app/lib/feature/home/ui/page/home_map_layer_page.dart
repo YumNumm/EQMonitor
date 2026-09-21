@@ -1,5 +1,8 @@
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -16,6 +19,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class HomeMapLayerPage extends ConsumerWidget {
@@ -335,15 +339,32 @@ class _SettingDropdownField<T> extends StatelessWidget {
             ],
           ),
           SizedBox(height: spacing.md),
-          DropdownMenu<T>(
+          SizedBox(
             width: double.infinity,
-            initialSelection: value,
-            onSelected: (next) async {
-              if (next != null) {
-                await onChanged(next);
-              }
-            },
-            dropdownMenuEntries: entries,
+            child: ControlledDropdown<T>(
+              singleSelect: true,
+              items:
+                  (entries
+                          .map(
+                            (entry) => M3EDropdownItem(
+                              value: entry.value,
+                              label: entry.label,
+                              disabled: !entry.enabled,
+                            ),
+                          )
+                          .toList())
+                      .map(
+                        (item) => item.copyWith(selected: item.value == value),
+                      )
+                      .toList(),
+              onSelectionChanged: (selection) async {
+                if (selection.isEmpty) return;
+                final next = selection.first.value;
+                if (next != null) {
+                  await onChanged(next);
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -390,10 +411,25 @@ class _SettingSegmentedField<T> extends StatelessWidget {
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),
           SizedBox(height: spacing.md),
-          SegmentedButton<T>(
-            segments: segments,
-            selected: selected,
-            onSelectionChanged: (next) async {
+          M3EToggleButtonGroup(
+            type: M3EButtonGroupType.connected,
+            actions: segments
+                .map(
+                  (segment) => M3EToggleButtonGroupAction(
+                    label: segment.label,
+                    icon: segment.icon,
+                    enabled: segment.enabled,
+                    tooltip: segment.tooltip,
+                  ),
+                )
+                .toList(),
+            selectedIndex: (segments.map((segment) => segment.value).toList())
+                .indexOf((selected).single),
+            onSelectedIndexChanged: (index) async {
+              if (index == null) return;
+              final next = {
+                segments.map((segment) => segment.value).toList()[index],
+              };
               await onSelectionChanged(next);
             },
           ),
@@ -445,11 +481,11 @@ class _SettingActionTile extends StatelessWidget {
             ),
           ),
           SizedBox(height: spacing.md),
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: () async {
               await onPressed();
             },
-            style: FilledButton.styleFrom(
+            decoration: M3EButtonDecoration.styleFrom(
               backgroundColor: colorTheme.surfaceContainerHighest,
               foregroundColor:
                   context.designSystem.colorTheme.onPrimaryContainer,
@@ -945,7 +981,7 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
           ),
           if (min != null) ...[
             SizedBox(height: context.designSystem.spacing.md),
-            Slider(
+            AccessibleSlider(
               value: min.clamp(-3, 7),
               min: -3,
               max: 7,
@@ -1097,7 +1133,7 @@ class _MapMaxZoomTile extends ConsumerWidget {
           ),
           if (maxZoom != null) ...[
             SizedBox(height: context.designSystem.spacing.md),
-            Slider(
+            AccessibleSlider(
               value: maxZoom.clamp(4, 18),
               min: 4,
               max: 18,

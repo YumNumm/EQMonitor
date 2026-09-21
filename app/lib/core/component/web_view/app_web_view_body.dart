@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 enum AppWebViewLoadStatus { loading, loaded, error }
@@ -23,7 +25,7 @@ class AppWebViewBody extends StatelessWidget {
       AppWebViewLoadStatus.loading => ColoredBox(
         color: designSystem.colorTheme.surface,
         child: Center(
-          child: CircularProgressIndicator(
+          child: AccessibleCircularProgressIndicator(
             color: designSystem.colorTheme.primary,
           ),
         ),
@@ -46,7 +48,7 @@ class AppWebViewBody extends StatelessWidget {
                   style: designSystem.typography.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-                FilledButton.tonal(
+                M3EFilledButton.tonal(
                   onPressed: onRetry,
                   child: const Text('再読み込み'),
                 ),

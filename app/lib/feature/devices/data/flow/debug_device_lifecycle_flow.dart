@@ -3,8 +3,9 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/model/push_token_force_resync_result.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_device_lifecycle_flow.g.dart';
@@ -168,14 +169,14 @@ class DebugDeviceLifecycleConfirmDialog {
         title: Text(title),
         content: Text(content),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
             child: const Text('キャンセル'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            style: isDestructive
-                ? TextButton.styleFrom(
+            decoration: isDestructive
+                ? M3EButtonDecoration.styleFrom(
                     foregroundColor:
                         dialogContext.designSystem.colorTheme.error,
                   )

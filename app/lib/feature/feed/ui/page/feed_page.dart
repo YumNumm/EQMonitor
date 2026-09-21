@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
@@ -40,7 +42,7 @@ class FeedPage extends HookConsumerWidget {
     return Scaffold(
       body: dataSourceAsync.when(
         loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => ErrorCard(
           error: error,
           onReload: () async => ref.invalidate(feedDataSourceProvider),
@@ -78,7 +80,7 @@ class _PagingBody extends StatelessWidget {
               ).push<void>(context),
             ),
             initialLoadingWidget: Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: AccessibleCircularProgressIndicator(),
             ),
             appendLoadingWidget: Skeletonizer(
               child: FeedItemListTile(item: FeedLoadingDummyItem.create('2')),

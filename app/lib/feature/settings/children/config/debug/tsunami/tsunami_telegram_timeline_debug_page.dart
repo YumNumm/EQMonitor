@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/timeline/estimation_timeline_entry.dart';
@@ -33,7 +34,7 @@ class TsunamiTelegramTimelineDebugPage extends HookConsumerWidget {
         children: [
           switch (asyncValue) {
             AsyncLoading() => const Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: AccessibleCircularProgressIndicator(),
             ),
             AsyncError(:final error) => Center(
               child: Padding(

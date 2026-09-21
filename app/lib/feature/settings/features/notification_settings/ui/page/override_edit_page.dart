@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
@@ -6,9 +7,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 const List<JmaIntensity> _overrideIntensities = [
@@ -94,7 +96,7 @@ class OverrideEditPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       floatingActionButton: canAdd
-          ? FloatingActionButton(
+          ? M3EFloatingActionButton(
               onPressed: () =>
                   _showAddDialog(context, ref, slot, sorted, usedIntensities),
               child: const Icon(Icons.add),
@@ -403,42 +405,39 @@ class _OverrideFormDialog extends HookWidget {
           children: [
             Text('最小震度', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
-            DropdownButton<JmaIntensity>(
-              value: selectedIntensity.value,
-              isExpanded: true,
-              onChanged: isEditing
-                  ? null
-                  : (next) {
-                      if (next != null) {
-                        selectedIntensity.value = next;
-                      }
-                    },
+            ControlledDropdown<JmaIntensity>(
+              enabled: !isEditing,
               items: [
                 for (final intensity in availableIntensities)
-                  DropdownMenuItem(
+                  M3EDropdownItem(
                     value: intensity,
-                    child: Text(intensity.minIntensityLabel),
+                    label: intensity.minIntensityLabel,
+                    selected: intensity == selectedIntensity.value,
                   ),
               ],
+              onSelectionChanged: (selectedItems) {
+                if (selectedItems.isEmpty) return;
+                final next = selectedItems.first.value;
+                selectedIntensity.value = next;
+              },
             ),
             const SizedBox(height: 16),
             Text('通知音', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
-            DropdownButton<NotificationSound>(
-              value: selectedSound.value,
-              isExpanded: true,
-              onChanged: (next) {
-                if (next != null) {
-                  selectedSound.value = next;
-                }
-              },
+            ControlledDropdown<NotificationSound>(
               items: [
                 for (final sound in NotificationSound.values)
-                  DropdownMenuItem(
+                  M3EDropdownItem(
                     value: sound,
-                    child: Text(sound.displayName),
+                    label: sound.displayName,
+                    selected: sound == selectedSound.value,
                   ),
               ],
+              onSelectionChanged: (selectedItems) {
+                if (selectedItems.isEmpty) return;
+                final next = selectedItems.first.value;
+                selectedSound.value = next;
+              },
             ),
             const SizedBox(height: 16),
             Text('割り込みレベル', style: Theme.of(context).textTheme.labelLarge),
@@ -467,11 +466,11 @@ class _OverrideFormDialog extends HookWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () => Navigator.of(context).pop(
             NotificationOverride(
               minJmaIntensity: selectedIntensity.value,

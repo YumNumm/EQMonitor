@@ -29,8 +29,7 @@ abstract class PrePeriod with _$PrePeriod {
     required double sva,
   }) = _PrePeriod;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$PrePeriodFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$PrePeriodFromJson(json);
 }
 
 extension IntensityStationApiExtension on api.IntensityStationItem {

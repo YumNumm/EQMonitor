@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
@@ -30,11 +31,11 @@ class DebugAppGroupAction {
           keyboardType: TextInputType.url,
         ),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('キャンセル'),
           ),
-          FilledButton(
+          M3EFilledButton(
             onPressed: () {
               Navigator.of(context).pop(controller.text.trim());
             },

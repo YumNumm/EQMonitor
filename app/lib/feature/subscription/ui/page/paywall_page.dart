@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
@@ -76,7 +77,7 @@ class PaywallPage extends ConsumerWidget {
                     child: isPurchasing
                         ? const SizedBox.square(
                             dimension: 20,
-                            child: CircularProgressIndicator.adaptive(
+                            child: AccessibleCircularProgressIndicator(
                               strokeWidth: 2,
                             ),
                           )

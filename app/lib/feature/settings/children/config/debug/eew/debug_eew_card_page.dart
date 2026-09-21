@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -9,10 +11,11 @@ import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// デバッグ用。ホーム画面と同じ [EewCard] の見た目を、パラメータ操作で検証する。
 class DebugEewCardPage extends HookConsumerWidget {
@@ -177,18 +180,20 @@ class DebugEewCardPage extends HookConsumerWidget {
               children: [
                 _LabeledRow(
                   label: 'TelegramStatus',
-                  child: SegmentedButton<TelegramStatus>(
-                    showSelectedIcon: false,
-                    segments: TelegramStatus.values
+                  child: M3EToggleButtonGroup(
+                    type: M3EButtonGroupType.connected,
+                    actions: TelegramStatus.values
                         .map(
-                          (e) => ButtonSegment(
-                            value: e,
+                          (e) => M3EToggleButtonGroupAction(
                             label: Text(e.name, style: _paramValueStyle),
                           ),
                         )
                         .toList(),
-                    selected: {status.value},
-                    onSelectionChanged: (s) => status.value = s.first,
+                    selectedIndex: TelegramStatus.values.indexOf(status.value),
+                    onSelectedIndexChanged: (index) {
+                      if (index != null)
+                        status.value = TelegramStatus.values[index];
+                    },
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -249,29 +254,50 @@ class DebugEewCardPage extends HookConsumerWidget {
                 ),
                 _LabeledRow(
                   label: 'accuracy.epicenter（1+origin無し=レベル法 / 1+origin有り=1点）',
-                  child: SegmentedButton<int?>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: null, label: Text('null')),
-                      ButtonSegment(value: 1, label: Text('1')),
-                      ButtonSegment(value: 4, label: Text('4')),
+                  child: M3EToggleButtonGroup(
+                    type: M3EButtonGroupType.connected,
+                    actions: const [
+                      M3EToggleButtonGroupAction(label: Text('null')),
+                      M3EToggleButtonGroupAction(label: Text('1')),
+                      M3EToggleButtonGroupAction(label: Text('4')),
                     ],
-                    selected: {accuracyEpicenter.value},
-                    onSelectionChanged: (s) =>
-                        accuracyEpicenter.value = s.first,
+                    selectedIndex: const <int?>[
+                      null,
+                      1,
+                      4,
+                    ].indexOf(accuracyEpicenter.value),
+                    onSelectedIndexChanged: (index) {
+                      if (index != null)
+                        accuracyEpicenter.value = const <int?>[
+                          null,
+                          1,
+                          4,
+                        ][index];
+                    },
                   ),
                 ),
                 _LabeledRow(
                   label: 'isWarning（nullは headline 由来にフォールバック）',
-                  child: SegmentedButton<bool?>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: false, label: Text('false')),
-                      ButtonSegment(value: null, label: Text('null')),
-                      ButtonSegment(value: true, label: Text('true')),
+                  child: M3EToggleButtonGroup(
+                    type: M3EButtonGroupType.connected,
+                    actions: const [
+                      M3EToggleButtonGroupAction(label: Text('false')),
+                      M3EToggleButtonGroupAction(label: Text('null')),
+                      M3EToggleButtonGroupAction(label: Text('true')),
                     ],
-                    selected: {isWarning.value},
-                    onSelectionChanged: (s) => isWarning.value = s.first,
+                    selectedIndex: const <bool?>[
+                      false,
+                      null,
+                      true,
+                    ].indexOf(isWarning.value),
+                    onSelectedIndexChanged: (index) {
+                      if (index != null)
+                        isWarning.value = const <bool?>[
+                          false,
+                          null,
+                          true,
+                        ][index];
+                    },
                   ),
                 ),
                 _SmallField(
@@ -295,7 +321,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                 ),
                 _LabeledRow(
                   label: '発生/検知時刻（ローカル表示）',
-                  child: OutlinedButton(
+                  child: M3EOutlinedButton(
                     onPressed: () async {
                       final base = originTime.value ?? DateTime.now();
                       final d = await showDatePicker(
@@ -342,7 +368,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Slider(
+                        child: AccessibleSlider(
                           value: magnitude.value ?? 7.2,
                           max: 9.5,
                           divisions: 95,
@@ -350,7 +376,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                           onChanged: (v) => magnitude.value = v,
                         ),
                       ),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () => magnitude.value =
                             magnitude.value == null ? 7.2 : null,
                         child: Text(
@@ -366,7 +392,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Slider(
+                        child: AccessibleSlider(
                           value: (depth.value ?? 24).toDouble(),
                           max: 700,
                           divisions: 70,
@@ -374,7 +400,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                           onChanged: (v) => depth.value = v.round(),
                         ),
                       ),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () =>
                             depth.value = depth.value == null ? 24 : null,
                         child: Text(
@@ -395,22 +421,23 @@ class DebugEewCardPage extends HookConsumerWidget {
               children: [
                 _LabeledRow(
                   label: 'maxIntensity',
-                  child: DropdownButton<JmaIntensity>(
-                    isExpanded: true,
-                    value: maxIntensity.value,
-                    style: _paramValueStyle,
+                  child: ControlledDropdown<JmaIntensity>(
                     items: JmaIntensity.values
                         .map(
-                          (e) => DropdownMenuItem(
+                          (e) => M3EDropdownItem(
                             value: e,
-                            child: Text(e.label, style: _paramValueStyle),
+                            label: e.label,
+                            selected: e == maxIntensity.value,
                           ),
                         )
                         .toList(),
-                    onChanged: (v) {
-                      if (v != null) {
-                        maxIntensity.value = v;
-                      }
+                    fieldStyle: M3EDropdownFieldStyle(
+                      selectedTextStyle: _paramValueStyle,
+                    ),
+                    onSelectionChanged: (selectedItems) {
+                      if (selectedItems.isEmpty) return;
+                      final v = selectedItems.first.value;
+                      maxIntensity.value = v;
                     },
                   ),
                 ),
@@ -427,22 +454,29 @@ class DebugEewCardPage extends HookConsumerWidget {
                 if (showLpgmSection.value) ...[
                   _LabeledRow(
                     label: 'maxLpgmIntensity',
-                    child: DropdownButton<JmaLpgmIntensity?>(
-                      isExpanded: true,
-                      value: maxLpgm.value,
-                      style: _paramValueStyle,
+                    child: ControlledDropdown<JmaLpgmIntensity?>(
                       items: [
-                        const DropdownMenuItem<JmaLpgmIntensity?>(
-                          child: Text('null', style: _paramValueStyle),
+                        M3EDropdownItem(
+                          value: null,
+                          label: 'null',
+                          selected: null == maxLpgm.value,
                         ),
                         ...JmaLpgmIntensity.values.map(
-                          (e) => DropdownMenuItem(
+                          (e) => M3EDropdownItem(
                             value: e,
-                            child: Text(e.label, style: _paramValueStyle),
+                            label: e.label,
+                            selected: e == maxLpgm.value,
                           ),
                         ),
                       ],
-                      onChanged: (v) => maxLpgm.value = v,
+                      fieldStyle: M3EDropdownFieldStyle(
+                        selectedTextStyle: _paramValueStyle,
+                      ),
+                      onSelectionChanged: (selectedItems) {
+                        if (selectedItems.isEmpty) return;
+                        final v = selectedItems.first.value;
+                        maxLpgm.value = v;
+                      },
                     ),
                   ),
                   _BoolRow(
@@ -478,22 +512,23 @@ class DebugEewCardPage extends HookConsumerWidget {
                 if (showLocalRegion.value && detectedRegionCode != null) ...[
                   _LabeledRow(
                     label: '現在地の予測震度',
-                    child: DropdownButton<JmaIntensity>(
-                      isExpanded: true,
-                      value: localRegionIntensity.value,
-                      style: _paramValueStyle,
+                    child: ControlledDropdown<JmaIntensity>(
                       items: JmaIntensity.values
                           .map(
-                            (e) => DropdownMenuItem(
+                            (e) => M3EDropdownItem(
                               value: e,
-                              child: Text(e.label, style: _paramValueStyle),
+                              label: e.label,
+                              selected: e == localRegionIntensity.value,
                             ),
                           )
                           .toList(),
-                      onChanged: (v) {
-                        if (v != null) {
-                          localRegionIntensity.value = v;
-                        }
+                      fieldStyle: M3EDropdownFieldStyle(
+                        selectedTextStyle: _paramValueStyle,
+                      ),
+                      onSelectionChanged: (selectedItems) {
+                        if (selectedItems.isEmpty) return;
+                        final v = selectedItems.first.value;
+                        localRegionIntensity.value = v;
                       },
                     ),
                   ),
@@ -505,7 +540,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                   if (showCountdown.value && !isArrivedLocal.value)
                     _LabeledRow(
                       label: '到達まで: ${countdownSeconds.value} 秒',
-                      child: Slider(
+                      child: AccessibleSlider(
                         value: countdownSeconds.value.toDouble(),
                         min: 5,
                         max: 120,

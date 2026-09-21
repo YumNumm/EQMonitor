@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
@@ -23,6 +24,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hyp
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
@@ -66,7 +68,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator.adaptive(),
+              const AccessibleCircularProgressIndicator(),
               const SizedBox(height: 8),
               Text(
                 '各地の震度データを取得中...',
@@ -303,12 +305,12 @@ class _TelegramListButton extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: FilledButton.tonalIcon(
+      child: M3EFilledButton.tonalIcon(
         onPressed: () =>
             TelegramListByEventIdRoute(eventId: eventId).push<void>(context),
         icon: const Icon(Icons.list_alt),
         label: const Text('電文一覧を見る'),
-        style: FilledButton.styleFrom(
+        decoration: M3EButtonDecoration.styleFrom(
           minimumSize: const Size(double.infinity, 48),
           backgroundColor: designSystem.colorTheme.secondaryContainer,
           foregroundColor: designSystem.colorTheme.onSecondaryContainer,

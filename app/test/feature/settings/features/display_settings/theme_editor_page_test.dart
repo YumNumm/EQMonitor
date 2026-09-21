@@ -155,10 +155,13 @@ void main() {
       find.byKey(const ValueKey('intensity-fg-mode-震度7')),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('intensity-fg-mode-震度7')));
-    await tester.pumpAndSettle();
-    // ToggleButtons/SegmentedButton等で「手動」を選択
-    await tester.tap(find.text('手動').last);
+    final manualOption = find
+        .descendant(
+          of: find.byKey(const ValueKey('intensity-fg-mode-震度7')),
+          matching: find.text('手動'),
+        )
+        .hitTestable();
+    await tester.tap(manualOption);
     await tester.pumpAndSettle();
     await tester.ensureVisible(
       find.byKey(const ValueKey('intensity-fg-manual-震度7')),

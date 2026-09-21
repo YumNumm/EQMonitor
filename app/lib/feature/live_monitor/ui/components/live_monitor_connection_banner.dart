@@ -1,8 +1,9 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorConnectionBanner extends ConsumerWidget {
   const new({super.key});
@@ -45,7 +46,7 @@ class LiveMonitorConnectionBanner extends ConsumerWidget {
                     children: [
                       SizedBox.square(
                         dimension: 16,
-                        child: CircularProgressIndicator.adaptive(
+                        child: AccessibleCircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation(
                             colorScheme.primary,

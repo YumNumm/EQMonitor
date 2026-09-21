@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_observation_point.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -5,10 +7,11 @@ import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugJmaMapPage extends HookConsumerWidget {
   const new({super.key});
@@ -177,7 +180,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          ElevatedButton.icon(
+                          M3EElevatedButton.icon(
                             onPressed: useCurrentLocation,
                             icon: const Icon(Icons.my_location),
                             label: const Text('現在位置を使用'),
@@ -195,7 +198,9 @@ class DebugJmaMapPage extends HookConsumerWidget {
                             AsyncLoading() => const SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: AccessibleCircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
                             ),
                           },
                         ],
@@ -222,32 +227,35 @@ class DebugJmaMapPage extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      DropdownButtonFormField<JmaMapType>(
-                        initialValue: selectedMapType.value,
+                      InputDecorator(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        items: JmaMapType.values.map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(switch (type) {
-                              JmaMapType.areaForecastLocalEew => '地震情報／緊急地震速報',
-                              JmaMapType.areaForecastLocalE => '地震情報',
-                              JmaMapType.areaInformationCity => '市区町村等',
-                              JmaMapType.areaTsunami => '津波予報区',
-                              JmaMapType.observationPoint => '地震観測点',
-                            }),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
+                        child: ControlledDropdown<JmaMapType>(
+                          items: JmaMapType.values.map((type) {
+                            return M3EDropdownItem(
+                              value: type,
+                              label: switch (type) {
+                                JmaMapType.areaForecastLocalEew =>
+                                  '地震情報／緊急地震速報',
+                                JmaMapType.areaForecastLocalE => '地震情報',
+                                JmaMapType.areaInformationCity => '市区町村等',
+                                JmaMapType.areaTsunami => '津波予報区',
+                                JmaMapType.observationPoint => '地震観測点',
+                              },
+                              selected: type == selectedMapType.value,
+                            );
+                          }).toList(),
+                          onSelectionChanged: (selectedItems) {
+                            if (selectedItems.isEmpty) return;
+                            final value = selectedItems.first.value;
                             searchResult.value = null;
                             selectedMapType.value = value;
-                          }
-                        },
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      TextButton(onPressed: search, child: const Text('検索')),
+                      M3ETextButton(onPressed: search, child: const Text('検索')),
                     ],
                   ),
                 ),

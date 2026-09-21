@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:io';
 
 import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
@@ -563,7 +565,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
               ? const SizedBox(
                   width: 24,
                   height: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                 )
               : IconButton(
                   icon: const Icon(Icons.refresh),
@@ -597,7 +599,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
             leading: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
             title: Text('読み込み中...'),
           ),
@@ -744,13 +746,13 @@ class _StartApiDebugSection extends ConsumerWidget {
             onPressed: () => ref.invalidate(startProvider),
           ),
         ),
-        if (startAsync.isRefreshing) const LinearProgressIndicator(),
+        if (startAsync.isRefreshing) const AccessibleLinearProgressIndicator(),
         switch (startAsync) {
           AsyncLoading() when !startAsync.hasValue => const ListTile(
             leading: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
             title: Text('取得中...'),
           ),

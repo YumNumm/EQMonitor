@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/map_clock_source_identity_provider.dart';
 import 'package:eqmonitor/core/util/map/app_map_clock.dart';
@@ -197,7 +198,7 @@ class _EqmonitorMapDebugContent extends HookConsumerWidget {
           },
         ),
         loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, stackTrace) => const _EqmonitorMapDebugSourceError(),
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
@@ -19,9 +19,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_prec
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _RegionalIntensityEarthquakeHistoryNotifier
     extends EarthquakeHistoryNotifier {
@@ -293,7 +294,7 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(find.text('地震一覧を読み込んでいます'), findsOneWidget);
   });
 
@@ -355,7 +356,7 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
-    final loadMoreButton = find.widgetWithText(OutlinedButton, 'さらに読み込む');
+    final loadMoreButton = find.text('さらに読み込む');
 
     await tester.tap(loadMoreButton);
     await tester.pump();

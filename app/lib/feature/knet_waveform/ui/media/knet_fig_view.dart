@@ -1,11 +1,15 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_client_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// K-NET all/fig PNG 図を表示するビュー
 class KnetFigView extends HookConsumerWidget {
@@ -18,7 +22,7 @@ class KnetFigView extends HookConsumerWidget {
     final clientAsync = ref.watch(knetDownloadClientProvider);
 
     return clientAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, _) => _ErrorView(
         message: 'クライアント初期化エラー: $e',
         onRetry: () =>
@@ -101,16 +105,25 @@ class _FigTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: DropdownMenu<KnetFigType>(
-        initialSelection: selected,
-        onSelected: (value) {
-          if (value != null) {
+      child: SizedBox(
+        width: 180,
+        child: ControlledDropdown<KnetFigType>(
+          singleSelect: true,
+          items:
+              (KnetFigType.values
+                      .map((t) => M3EDropdownItem(value: t, label: t.label))
+                      .toList())
+                  .map(
+                    (item) => item.copyWith(selected: item.value == selected),
+                  )
+                  .toList(),
+          onSelectionChanged: (selection) {
+            if (selection.isEmpty) return;
+            final value = selection.first.value;
+
             onChanged(value);
-          }
-        },
-        dropdownMenuEntries: KnetFigType.values
-            .map((t) => DropdownMenuEntry(value: t, label: t.label))
-            .toList(),
+          },
+        ),
       ),
     );
   }
@@ -132,7 +145,7 @@ class _ImageArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     if (errorMessage case final errorMessage?) {
@@ -141,7 +154,7 @@ class _ImageArea extends StatelessWidget {
 
     final imageBytes = this.imageBytes;
     if (imageBytes == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     return InteractiveViewer(
@@ -181,7 +194,7 @@ class _ErrorView extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('再試行'),

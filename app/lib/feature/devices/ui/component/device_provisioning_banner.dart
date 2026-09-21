@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/banner/app_banner.dart';
@@ -6,9 +8,10 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class DeviceProvisioningBanner extends ConsumerWidget {
@@ -97,7 +100,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
         backgroundColor: colorTheme.errorContainer,
         foregroundColor: colorTheme.onErrorContainer,
         message: lastError.userMessage,
-        trailing: FilledButton.tonal(
+        trailing: M3EFilledButton.tonal(
           onPressed: onRetry,
           child: const Text('再試行'),
         ),
@@ -114,7 +117,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
         trailing: const SizedBox(
           width: 20,
           height: 20,
-          child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+          child: AccessibleCircularProgressIndicator(strokeWidth: 2),
         ),
       ),
       RetryIdle() when isLoading => _BannerTile(
@@ -125,7 +128,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
         trailing: const SizedBox(
           width: 20,
           height: 20,
-          child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+          child: AccessibleCircularProgressIndicator(strokeWidth: 2),
         ),
       ),
       RetryIdle() when isProvisioningRequired => _BannerTile(
@@ -133,7 +136,7 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
         backgroundColor: colorTheme.errorContainer,
         foregroundColor: colorTheme.onErrorContainer,
         message: '通知の初期設定が完了していません',
-        trailing: FilledButton.tonal(
+        trailing: M3EFilledButton.tonal(
           onPressed: onRetry,
           child: const Text('再試行'),
         ),

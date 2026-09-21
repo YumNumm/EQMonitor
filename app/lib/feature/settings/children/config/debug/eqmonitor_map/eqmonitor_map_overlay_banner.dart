@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/latest_earthquake_overlay_provider.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -283,7 +284,7 @@ class EqmonitorMapOverlayBanner extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             key: eqmonitorMapMoveToHypocenterKey,
             onPressed: presentation.canMoveToHypocenter
                 ? onMoveToHypocenter

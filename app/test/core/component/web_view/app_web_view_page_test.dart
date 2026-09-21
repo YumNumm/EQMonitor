@@ -1,9 +1,9 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/web_view/app_web_view_page.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:cupertino_ui/cupertino_ui.dart'
     show GlobalCupertinoLocalizations;
-import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_localizations/flutter_localizations.dart'
     as flutter_localizations;
 import 'package:material_ui/material_ui.dart';
@@ -35,7 +35,7 @@ void main() {
         reason: 'isForMainFrame=$frame',
       );
       expect(
-        find.byType(flutter.CircularProgressIndicator),
+        find.byType(M3ECircularProgressIndicator),
         frame == true ? findsNothing : findsOneWidget,
         reason: 'isForMainFrame=$frame',
       );
@@ -58,7 +58,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('ページを読み込めませんでした'), findsNothing);
-    expect(find.byType(flutter.CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('HTTP 400以上のmain-frame応答だけを全画面エラーにする', (tester) async {
@@ -111,7 +111,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.byType(flutter.CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(find.text('ページを読み込めませんでした'), findsNothing);
   });
 
@@ -150,7 +150,7 @@ void main() {
     await tester.pump();
 
     expect(platform.creations, hasLength(2));
-    expect(find.byType(flutter.CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     final webView = tester.widget<InAppWebView>(find.byType(InAppWebView));
     expect(webView.key, const ValueKey<int>(1));
     expect(
@@ -185,7 +185,7 @@ void main() {
     emitLoadStop(callbacks: firstCallbacks, url: _initialUrl);
     await tester.pump();
 
-    expect(find.byType(flutter.CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(find.text('ページを読み込めませんでした'), findsNothing);
   });
 }

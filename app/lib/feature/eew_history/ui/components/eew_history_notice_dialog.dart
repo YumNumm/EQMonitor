@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class EewHistoryNoticeDialog extends StatelessWidget {
   const new({super.key});
@@ -9,7 +10,7 @@ class EewHistoryNoticeDialog extends StatelessWidget {
       title: const Text('緊急地震速報の履歴について'),
       content: const Text('履歴一覧では、1つの緊急地震速報につき、最終報の情報を表示しています。'),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(true),
           child: const Text('OK'),
         ),

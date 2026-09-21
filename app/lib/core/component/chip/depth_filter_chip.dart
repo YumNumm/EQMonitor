@@ -1,6 +1,8 @@
+import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DepthFilterChip extends StatelessWidget {
   const new({this.min, this.max, this.onChanged, super.key});
@@ -97,8 +99,9 @@ class _DepthFilterModal extends HookWidget {
               ),
             ),
             const SizedBox(height: 24),
-            RangeSlider(
-              values: RangeValues(min.value.toDouble(), max.value.toDouble()),
+            AccessibleRangeSlider(
+              semanticFormatterCallback: (value) => '${value.round()}km',
+              value: RangeValues(min.value.toDouble(), max.value.toDouble()),
               min: initialMin.toDouble(),
               max: initialMax.toDouble(),
               onChanged: (state) {
@@ -107,7 +110,7 @@ class _DepthFilterModal extends HookWidget {
                 max.value =
                     (state.end.toInt() / 10).roundToDouble().toInt() * 10;
               },
-              labels: RangeLabels('${min.value}km', '${max.value}km'),
+              label: '${min.value}km ～ ${max.value}km',
               divisions: (initialMax - initialMin) ~/ 10,
             ),
             const SizedBox(height: 16),
@@ -123,11 +126,11 @@ class _DepthFilterModal extends HookWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context).pop((min.value, max.value)),
                   child: const Text('完了'),

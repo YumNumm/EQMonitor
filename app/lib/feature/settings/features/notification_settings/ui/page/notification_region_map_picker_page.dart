@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -72,7 +75,7 @@ class NotificationRegionMapPickerPage extends HookConsumerWidget {
     if (styleString == null || catalog == null || isolate == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('地図から地域を選択')),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
+        body: const Center(child: AccessibleCircularProgressIndicator()),
       );
     }
 
@@ -315,7 +318,7 @@ class _NotificationRegionMapError extends StatelessWidget {
       children: [
         const Text('地図情報を読み込めませんでした'),
         const SizedBox(height: 8),
-        FilledButton.tonal(onPressed: onRetry, child: const Text('再試行')),
+        M3EFilledButton.tonal(onPressed: onRetry, child: const Text('再試行')),
       ],
     ),
   );
