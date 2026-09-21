@@ -1,9 +1,12 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 市区町村選択結果
 typedef CitySelection = ({String code, String name, String prefectureName});
@@ -37,12 +40,12 @@ class CitySelector extends HookConsumerWidget {
         onChanged: onChanged,
       ),
       AsyncError(:final error) => Text('エラー: $error'),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }
 
-class _CitySelectionBody extends HookWidget {
+class _CitySelectionBody extends StatelessWidget {
   const new({
     required this.parameterSet,
     required this.selectedCode,
@@ -67,6 +70,16 @@ class _CitySelectionBody extends HookWidget {
         .expand((p) => p.regions)
         .toList();
 
+    final prefectureItems = [
+      const M3EDropdownItem<String>(value: '', label: '選択してください'),
+      for (final prefecture in prefectures)
+        M3EDropdownItem(
+          value: prefecture.code,
+          label: prefecture.name.ja,
+          selected: prefecture.code == selectedPrefectureCode.value,
+        ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -77,23 +90,17 @@ class _CitySelectionBody extends HookWidget {
           ),
         ),
         const SizedBox(height: 4),
-        DropdownMenu<String>(
-          expandedInsets: EdgeInsets.zero,
-          initialSelection: selectedPrefectureCode.value,
-          hintText: '都道府県を選択',
-          onSelected: (code) {
+        ControlledDropdown<String>(
+          singleSelect: true,
+          allowEmptySelection: true,
+
+          fieldStyle: const M3EDropdownFieldStyle(hintText: '都道府県を選択'),
+          onSelectionChanged: (selection) {
+            final code = selection.firstOrNull?.value;
             selectedPrefectureCode.value = code;
             onChanged(null);
           },
-          dropdownMenuEntries: [
-            const DropdownMenuEntry<String>(
-              value: '',
-              label: '選択してください',
-            ),
-            ...prefectures.map(
-              (e) => DropdownMenuEntry(value: e.code, label: e.name.ja),
-            ),
-          ],
+          items: prefectureItems,
         ),
         if (selectedPrefectureCode.value case final prefCode?
             when prefCode.isNotEmpty) ...[
@@ -158,16 +165,29 @@ class _CityDropdown extends StatelessWidget {
             .ja ??
         '';
 
+    final cityItems = [
+      const M3EDropdownItem<String>(value: '', label: '選択してください'),
+      for (final city in cities)
+        M3EDropdownItem(
+          value: city.code,
+          label: city.name,
+          selected: city.code == selectedCode,
+        ),
+    ];
+
     if (cities.isEmpty) {
       return const Text('該当する市区町村がありません');
     }
 
-    return DropdownMenu<String>(
-      expandedInsets: EdgeInsets.zero,
-      initialSelection: selectedCode,
-      hintText: '市区町村を選択',
-      enableFilter: true,
-      onSelected: (code) {
+    return ControlledDropdown<String>(
+      singleSelect: true,
+      allowEmptySelection: true,
+
+      fieldStyle: const M3EDropdownFieldStyle(hintText: '市区町村を選択'),
+      searchEnabled: true,
+      searchStyle: const M3ESearchStyle(hintText: '市区町村を検索'),
+      onSelectionChanged: (selection) {
+        final code = selection.firstOrNull?.value;
         if (code != null && code.isNotEmpty) {
           final city = cities.firstWhereOrNull((c) => c.code == code);
           if (city == null) {
@@ -182,15 +202,7 @@ class _CityDropdown extends StatelessWidget {
           onChanged(null);
         }
       },
-      dropdownMenuEntries: [
-        const DropdownMenuEntry<String>(
-          value: '',
-          label: '選択してください',
-        ),
-        ...cities.map(
-          (e) => DropdownMenuEntry(value: e.code, label: e.name),
-        ),
-      ],
+      items: cityItems,
     );
   }
 }
