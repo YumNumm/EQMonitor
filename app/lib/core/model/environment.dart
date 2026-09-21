@@ -30,7 +30,7 @@ abstract class BuildConfig with _$BuildConfig {
     required String revenueCatApiKeyIos,
     required String revenueCatApiKeyAndroid,
     @Default(false) bool isBetaTesting,
-    @Default(false) bool isProFeaturesEnabled,
+    @Default(true) bool isProFeaturesEnabled,
     @Default(false) bool isNativeSocialAuthEnabled,
     @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;

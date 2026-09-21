@@ -61,7 +61,7 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       isProFeaturesEnabled: $checkedConvert(
         'is_pro_features_enabled',
-        (v) => v as bool? ?? false,
+        (v) => v as bool? ?? true,
       ),
       isNativeSocialAuthEnabled: $checkedConvert(
         'is_native_social_auth_enabled',

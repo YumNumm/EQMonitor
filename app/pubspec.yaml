@@ -191,6 +191,7 @@ dependencies:
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^8.1.0
   passkeys: ^2.22.3
+  m3e_core: ^1.1.4
 
 dev_dependencies:
   build_runner: ^2.11.1

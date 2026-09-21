@@ -35,7 +35,9 @@ class SettingsPage extends ConsumerWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('設定')),
+      appBar: AppBar(
+        title: const Text('設定'),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -58,15 +60,10 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 const _AppVersionInformation(),
                 const AssetPackUpdateCard(),
-                if (isProFeaturesEnabled) ...[
-                  const SettingsSectionHeader(text: 'EQMonitor Pro'),
-                  ListTile(
-                    title: const Text('EQMonitor Pro'),
-                    leading: const Icon(Icons.workspace_premium_outlined),
-                    onTap: () async =>
-                        const SubscriptionSettingsRoute().push<void>(context),
+                if (isProFeaturesEnabled)
+                  Card.outlined(
+                    
                   ),
-                ],
                 const SettingsSectionHeader(text: '各種設定'),
                 ListTile(
                   title: const Text('通知設定'),
