@@ -38,7 +38,7 @@ void main() {
     await tester.pump();
 
     await tester.scrollUntilVisible(
-      find.text('問い合わせ'),
+      find.text('問い合わせ').hitTestable(),
       300,
       scrollable: find.byType(Scrollable),
     );
@@ -73,11 +73,12 @@ void main() {
     await tester.pump();
 
     await tester.scrollUntilVisible(
-      find.text('問い合わせ'),
+      find.text('問い合わせ').hitTestable(),
       300,
       scrollable: find.byType(Scrollable),
     );
-    await tester.tap(find.text('問い合わせ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('問い合わせ').hitTestable());
 
     expect(opened, true);
   });
