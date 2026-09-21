@@ -1,9 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _warnings = [
   'ベータテスト中のため、予期しないバグやクラッシュが発生する可能性があります。',
@@ -199,7 +200,7 @@ class _AgreementBottom extends ConsumerWidget {
           children: [
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
+              child: M3EFilledButton(
                 onPressed: () async {
                   await BetaTestingAgreed.agreeMutation.run(
                     ref,
@@ -210,17 +211,13 @@ class _AgreementBottom extends ConsumerWidget {
                     context.go('/');
                   }
                 },
-                style: FilledButton.styleFrom(
+                decoration: M3EButtonDecoration.styleFrom(
                   backgroundColor: designSystem.colorTheme.status.warning,
                   foregroundColor: const Color(0xFF0F141A),
                   padding: EdgeInsets.symmetric(
                     vertical: designSystem.spacing.lg,
                   ),
-                  shape: RoundedSuperellipseBorder(
-                    borderRadius: BorderRadius.circular(
-                      designSystem.shape.button,
-                    ),
-                  ),
+                  borderRadius: designSystem.shape.button,
                 ),
                 child: Text(
                   '同意して利用する',
