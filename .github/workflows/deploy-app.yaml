@@ -99,6 +99,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
         with:
           cache: false
@@ -164,6 +165,8 @@ jobs:
 
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "yq"
@@ -238,6 +241,8 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "flutter xcbeautify"
@@ -469,6 +474,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
           GITHUB_TOKEN: ${{ github.token }}
         with:
           cache: false
@@ -555,6 +561,8 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "firebase yq"
@@ -639,6 +647,8 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "flutter java python"
@@ -768,6 +778,8 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "firebase yq"
@@ -877,6 +889,8 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        env:
+          CURL_HOME: ${{ github.workspace }}/scripts/ci/mise-curl
         with:
           cache: false
           install_args: "github:YumNumm/google-play-cli yq"
