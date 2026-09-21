@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('manual JSON更新はfocusに依存せず可視typed formへ同期する', (tester) async {
@@ -57,7 +58,7 @@ void main() {
     await _scrollTo(tester, const Key('vxse-apply-button'));
     expect(
       tester
-          .widget<FilledButton>(find.byKey(const Key('vxse-apply-button')))
+          .widget<M3EFilledButton>(find.byKey(const Key('vxse-apply-button')))
           .onPressed,
       isNull,
     );
@@ -893,7 +894,7 @@ void main() {
 
     expect(find.text('{broken'), findsOneWidget);
     expect(find.text('JSONの形式が正しくありません'), findsOneWidget);
-    final button = tester.widget<FilledButton>(
+    final button = tester.widget<M3EFilledButton>(
       find.byKey(const Key('vxse-apply-button')),
     );
     expect(button.onPressed, isNull);
