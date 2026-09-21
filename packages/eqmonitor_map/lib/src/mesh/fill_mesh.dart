@@ -6,8 +6,8 @@ import 'dart:typed_data';
 /// 高々65536個(index値0〜65535)に制限される。1回のbuild呼び出しがこの上限を
 /// 超えるfeature群を渡された場合、`FillMeshBuilder`は複数の[FillMesh]
 /// (segment)へ分割して返す
-/// (docs/knowledge/20260805_maplibre_native_renderer_reference.md
-/// 「Fill頂点生成」節)。
+/// (docs/knowledge/map_renderer_references.md
+/// MapLibre Native節のfill generator)。
 final class const FillMesh({
   /// tile-local座標のx, yを交互に詰めたfloat32頂点列。法線・UVは持たない。
   /// fillの描画は`gl_Position = u_matrix * vec4(a_pos, 0, 1)`という行列積

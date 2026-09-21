@@ -68,7 +68,7 @@ git commit -m "CI: Dart解析をproblem matcherへ移行"
 ### Task 2: CI 運用知見と最終検証
 
 **Files:**
-- Create: `docs/knowledge/20260816_github_actions_dart_analyzer_annotations.md`
+- Modify: `docs/knowledge/development_environment.md`
 
 **Interfaces:**
 - Consumes: Task 1 の matcher 登録方式と解析コマンド
@@ -91,7 +91,7 @@ Expected: 構文エラーと whitespace error がなく、意図した3ファイ
 - [ ] **Step 3: 知見をコミットして push する**
 
 ```shell
-git add docs/knowledge/20260816_github_actions_dart_analyzer_annotations.md
+git add docs/knowledge/development_environment.md
 git commit -m "Docs: Dart解析注釈のCI運用を記録"
 git push
 ```

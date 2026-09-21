@@ -23,6 +23,8 @@ backend の `release-asset-pack.yaml` は ZIP を生成した後、R2 へ
 `ZIP -> manifest.sig -> manifest.json` の順で公開し、公開物を再取得して
 署名まで検証してから `asset_pack_released` を dispatch する。
 
+signature と manifest は別 object なので公開は原子的ではない。一時的不一致は署名検証で拒否し、現行 Pack を維持して再試行する。公開履歴は append-only とし、過去 entry の変更・削除を行わない。これらは公開運用の契約であり、今回 backend の実行結果を再検証したものではない。
+
 EQMonitor の `.github/workflows/upload-asset-pack.yaml` は dispatch を受け、
 公開カスタムドメインから 3 ファイルを再取得し、次を検証する。
 
@@ -37,15 +39,16 @@ EQMonitor の `.github/workflows/upload-asset-pack.yaml` は dispatch を受け�
 `app/assets/platform/` へ原子的に配置する。Android と iOS のリリース CI は
 ビルド前に必ずこれを実行する。
 
-- Android: `app/android/app/build.gradle.kts` が `app/assets/platform` だけを
-  generated assets の `platform/` として base app に含める。初回解決時に
-  app-private storage へ展開する。
-- iOS / macOS: Xcode Runner の folder reference で `platform/` を Bundle
-  Resources に含める。
+- 現行の読み出しは Flutter assets が正本。`app/pubspec.yaml` に宣言した
+  `platform/` の manifest・map・parameters を `rootBundle` から読み、
+  Dart の `BundledAssetPackRepository` が app support へ展開する。
+- Android generated assets、Xcode の folder reference、旧 AssetsUtil framework の
+  残存整理は [Asset Pack TODO](todo/850_asset_pack.md) で追跡する。
 - iOS native extension 用の縮小 JMA テーブルも必要な場合は
   `tool/asset_pack/stage_from_r2.sh --target all` を使う。
 
 同梱 Pack はアプリの更新でのみ置き換わり、R2 更新を適用・削除しても残る。
+ローカル staging、同梱ディレクトリ、実ファイル内容の検証は [Asset Pack の知見](knowledge/asset_pack.md) を参照する。
 
 ## ランタイム更新
 
@@ -82,6 +85,7 @@ backend repository に必要な値:
 - variable `CLOUDFLARE_ACCOUNT_ID`
 
 鍵ローテーション時は旧 manifest が配信され得る期間、旧公開鍵もアプリに残す。
+新しい公開鍵を含むアプリを先に配布し、その後に配信側の署名鍵を切り替える。
 
 ## 手動確認
 

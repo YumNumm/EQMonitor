@@ -31,16 +31,16 @@ alwaysApply: true
 ```text
 lib/
 ├── core/          # アプリ全体の根幹（共通コンポーネント・テーマ・ルーター・ユーティリティ等）
-├── features/      # 機能単位のモジュール
+├── feature/       # 機能単位のモジュール
 ├── page/          # トップレベルのページ（必要に応じて）
 ├── app.dart
 └── main.dart
 ```
 
-### features/${NAME}/ の構造
+### feature/${NAME}/ の構造
 
 ```text
-features/${NAME}/
+feature/${NAME}/
 ├── data/
 │   ├── model/
 │   ├── repository/

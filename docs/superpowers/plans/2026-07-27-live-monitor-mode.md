@@ -1530,7 +1530,7 @@ git commit -m "feat: LiveMonitor中のEEW表示を統合"
 - Create: `app/lib/feature/live_monitor/data/provider/live_monitor_wake_lock_controller.g.dart` (generated)
 - Modify: `app/lib/app.dart`
 - Test: `app/test/feature/live_monitor/data/live_monitor_wake_lock_controller_test.dart`
-- Create: `docs/knowledge/20260727_live_monitor_wake_lock.md`
+- Modify: `docs/knowledge/adaptive_ui.md`
 
 **Interfaces:**
 - Consumes: session active, `LiveMonitorSettings.keepScreenAwake`, `appLifecycleProvider`.
@@ -1621,7 +1621,7 @@ class LiveMonitorWakeLockController
 
 - [ ] **Step 5: Document the lifecycle invariant**
 
-`docs/knowledge/20260727_live_monitor_wake_lock.md` must state: only the session/lifecycle controller calls wakelock_plus; background, exit, and setting-off resolve to disable; plugin errors must not replace seismic information UI; iOS and Android need manual foreground/background verification. Include the dependency and focused test commands.
+`docs/knowledge/adaptive_ui.md` must state: only the session/lifecycle controller calls wakelock_plus; background, exit, and setting-off resolve to disable; plugin errors must not replace seismic information UI; iOS and Android need manual foreground/background verification. Include the dependency and focused test commands.
 
 - [ ] **Step 6: Generate providers and rerun tests**
 
@@ -1634,7 +1634,7 @@ Expected: PASS for every lifecycle/setting/session transition and failure contai
 - [ ] **Step 7: Commit wake-lock support and knowledge**
 
 ```bash
-git add app/pubspec.yaml pubspec.lock app/lib/app.dart app/lib/feature/live_monitor/data/service app/lib/feature/live_monitor/data/provider app/test/feature/live_monitor/data/live_monitor_wake_lock_controller_test.dart docs/knowledge/20260727_live_monitor_wake_lock.md
+git add app/pubspec.yaml pubspec.lock app/lib/app.dart app/lib/feature/live_monitor/data/service app/lib/feature/live_monitor/data/provider app/test/feature/live_monitor/data/live_monitor_wake_lock_controller_test.dart docs/knowledge/adaptive_ui.md
 git commit -m "feat: LiveMonitor中の画面点灯を維持"
 ```
 

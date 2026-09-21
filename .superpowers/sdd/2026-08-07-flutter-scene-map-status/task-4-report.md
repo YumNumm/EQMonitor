@@ -8,8 +8,8 @@
 - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/README.md`
 - `/home/yumnumm/EQMonitor/packages/eqmonitor_map/example/README.md`
 - `/home/yumnumm/EQMonitor/.github/workflows/**`
-- `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md`
-- `/home/yumnumm/EQMonitor/docs/todo/770_existing_eqmonitor_flutter_test_failures.md`
+- `docs/todo/820_map_renderer_and_migration.md`
+- `docs/todo/770_tooling_and_test_followups.md`
 - `git --no-pager log --oneline -40 -- packages/eqmonitor_map`
 
 ## 結論
@@ -102,7 +102,7 @@
 
 ## 2. 自動テストで未カバー / deferred の範囲
 
-`/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md` と README で延期が明示されているもの:
+`docs/todo/820_map_renderer_and_migration.md` と README で追跡する延期項目（この記録時点）:
 
 - Performance HUD と、metrics 収集自体の CPU/memory overhead・event drop 検証。
 - pan、pinch zoom、loading、degraded 表示の Widget test。
@@ -224,7 +224,7 @@ README の `BaseMapView` 実機/simulator確認結果では、Task 10 時点で 
 - `fdfe0d5c6 Fix: BaseMapTileCacheのzoom窓を非対称にし、深い祖先fallbackを保持する`
   - pinch zoom などの zoom jump で祖先 fallback を残す修正。
 
-注意: `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md` と README には、flood の真因や「未修正」記述が残っているが、最新 log ではその後に `texCoords` 修正と半線幅 NDC 修正が入っている。したがって docs は一部 stale になっている可能性が高い。ただし、修正後の simulator/物理端末 smoke 成功記録は見つからなかった。
+注意: この記録時点のTODO（現在は `docs/todo/820_map_renderer_and_migration.md` に統合）と README には、flood の真因や「未修正」記述が残っているが、最新 log ではその後に `texCoords` 修正と半線幅 NDC 修正が入っている。したがって docs は一部 stale になっている可能性が高い。ただし、修正後の simulator/物理端末 smoke 成功記録は見つからなかった。
 
 ## 5. 現在のテスト実行結果
 
@@ -269,7 +269,7 @@ flood/line 不具合については recent commits で原因修正が入って�
 
 ### 中: `NodeCamera + EqmonitorOrthographicProjection` 経路の描画不能疑い
 
-`docs/todo/800_eqmonitor_map_deferred_verification.md` は、`scene_spike_camera.dart` と同型の `scene.NodeCamera + EqmonitorOrthographicProjection` 配線で可視レンダリングが出ない、と記録している。`BaseMapView` は `_IdentityCameraProjection + viewProjectionMatrixFor を node へ焼き込む方式` なので直接の base map blocker ではないが、Scene spike / material preflight の信頼性には影響する。
+この記録時点のTODO（現在は `docs/todo/820_map_renderer_and_migration.md` に統合）は、`scene_spike_camera.dart` と同型の `scene.NodeCamera + EqmonitorOrthographicProjection` 配線で可視レンダリングが出ない、と記録している。`BaseMapView` は `_IdentityCameraProjection + viewProjectionMatrixFor を node へ焼き込む方式` なので直接の base map blocker ではないが、Scene spike / material preflight の信頼性には影響する。
 
 ### 中: 同じ祖先 fallback tile の重複描画排除なし
 
@@ -287,7 +287,7 @@ MVT extent を超える buffer 領域の頂点も Fill/Line mesh に含まれ、
 
 現在の base layer Fill/Line 表示だけなら成立するが、将来の label/hit test/semantics/動的 layer では properties/feature ID が必要になる。README の初期スコープには label/typed dynamic layer/hit test が含まれるが、現状は `BaseMapView` の base layer 範囲外。
 
-## 7. `docs/todo/770_existing_eqmonitor_flutter_test_failures.md` との関係
+## 7. `docs/todo/770_tooling_and_test_followups.md` との関係
 
 この TODO は app 側 `eqmonitor` suite の既存 18 failures を記録したもので、`eqmonitor_map` package 単体のテスト失敗ではない。`wc-check-dart-test.yaml` は melos で test dir を持つ全 package/app を走らせるため、app suite の既存 failure が残っている場合は PR 全体の Flutter test gate に影響し得る。ただしこの TODO の失敗内訳は theme/settings/feed/background location 等で、`eqmonitor_map` の correctness とは直接関係しない。
 

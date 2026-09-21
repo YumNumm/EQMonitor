@@ -27,7 +27,7 @@
 - `app/test/feature/telegram_list/intensity_region_list_test.dart`: 震度アイコンとレイアウトのWidgetテスト。
 - `app/lib/feature/telegram_list/data/model/earthquake_body_diff.dart`: 既知値同士だけを差分とする契約。
 - `app/test/feature/telegram_list/domain/earthquake_body_diff_test.dart`: 不明値と実訂正の単体テスト。
-- `docs/knowledge/20260816_telegram_list_realtime_refresh.md`: 今後の同種画面で守る購読ルール。
+- `docs/knowledge/eew_realtime.md`: 今後の同種画面で守る購読ルール。
 
 ---
 
@@ -203,7 +203,7 @@
 ### Task 4: 知見記録と全体検証
 
 **Files:**
-- Create: `docs/knowledge/20260816_telegram_list_realtime_refresh.md`
+- Modify: `docs/knowledge/eew_realtime.md`
 
 **Interfaces:**
 - Consumes: Task 1〜3の確定した実装契約。
@@ -230,7 +230,7 @@
 - [ ] **Step 4: 知見をコミットする**
 
   ```bash
-  git add docs/knowledge/20260816_telegram_list_realtime_refresh.md
+   git add docs/knowledge/eew_realtime.md
   git commit -m "Docs: 電文画面のリアルタイム購読規約を記録"
   ```
 

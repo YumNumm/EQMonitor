@@ -391,7 +391,7 @@ git commit -m "Feat: Android通知チャネルを再構成"
 ### Task 6: Android通知知見の記録
 
 **Files:**
-- Create: `docs/knowledge/20260817_android_notification_channels.md`
+- Modify: `docs/knowledge/android_notification_channels.md`
 
 **Interfaces:**
 - Produces: 今後のChannel変更で守る運用ルール。
@@ -412,7 +412,7 @@ git commit -m "Feat: Android通知チャネルを再構成"
 - [ ] **Step 2: 文書をコミット・pushする**
 
 ```bash
-git add docs/knowledge/20260817_android_notification_channels.md
+git add docs/knowledge/android_notification_channels.md
 git commit -m "Docs: Android通知チャネル運用を記録"
 git push
 ```
