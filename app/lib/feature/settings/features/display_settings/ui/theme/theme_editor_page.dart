@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/model/intensity_color_entry.dart';
@@ -56,7 +57,7 @@ class ThemeEditorPage extends ConsumerWidget {
       body: ListView(
         children: [
           ..._flatCategories.map(
-            (category) => ExpansionTile(
+            (category) => ExpandableSection(
               title: Text(_categoryLabel(category)),
               children: ThemeColorFieldDefs.all
                   .where((def) => def.category == category)
@@ -70,7 +71,7 @@ class ThemeEditorPage extends ConsumerWidget {
                   .toList(),
             ),
           ),
-          ExpansionTile(
+          ExpandableSection(
             title: Text(_categoryLabel(_mapCategory)),
             children: ThemeColorFieldDefs.all
                 .where((def) => def.category == _mapCategory)
@@ -83,7 +84,7 @@ class ThemeEditorPage extends ConsumerWidget {
                 )
                 .toList(),
           ),
-          ExpansionTile(
+          ExpandableSection(
             title: const Text('震度配色'),
             subtitle: Text(IntensityFieldGroup.intensity.description),
             children: IntensityFieldDefs.all
@@ -98,7 +99,7 @@ class ThemeEditorPage extends ConsumerWidget {
                 )
                 .toList(),
           ),
-          ExpansionTile(
+          ExpandableSection(
             title: const Text('推計震度配色'),
             subtitle: Text(IntensityFieldGroup.estimatedIntensity.description),
             children: IntensityFieldDefs.all
