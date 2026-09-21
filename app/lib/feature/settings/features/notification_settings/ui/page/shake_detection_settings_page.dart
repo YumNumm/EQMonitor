@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
+import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/permission/ui/component/notification_permission_banner.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/shake_detection_settings_action.dart';
@@ -64,11 +65,7 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                 if (state.entries.any(
                   (e) => e.isCurrentLocation && e.enabled,
                 )) ...[
-                  const ListTile(
-                    leading: Icon(Icons.my_location),
-                    title: Text('現在地の細分化地域で通知'),
-                    subtitle: Text('現在地が未取得、または地域を判定できない間は通知されません。'),
-                  ),
+                  const _CurrentLocationStatus(),
                   if (permission.value != LocationPermission.always)
                     ListTile(
                       title: const Text('位置情報の「常に許可」が必要です'),
@@ -192,6 +189,41 @@ class ShakeDetectionSettingsPage extends ConsumerWidget {
                   ),
               ],
             ),
+    );
+  }
+}
+
+class _CurrentLocationStatus extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final location = ref.watch(currentDeviceLocationProvider);
+    final regions = ref.watch(shakeDetectionRegionsProvider);
+    final code = location.value?.region;
+    final name = regions.value
+        ?.expand((p) => p.regions)
+        .where((r) => r.code == code)
+        .firstOrNull
+        ?.name
+        .ja;
+    final subtitle = location.isLoading
+        ? '現在地を確認しています…'
+        : location.hasError
+        ? '現在地の取得・同期に失敗しました。位置情報と通信を確認して再試行してください。'
+        : code == null
+        ? '現在地は未取得です。地域を判定できるまで現在地の通知は届きません。'
+        : '最後に同期した地域: ${name ?? code}';
+    return ListTile(
+      leading: const Icon(Icons.my_location),
+      title: const Text('現在地の細分化地域で通知'),
+      subtitle: Text(subtitle),
+      trailing: M3ETextButton(
+        onPressed: location.isLoading
+            ? null
+            : () => const ShakeDetectionSettingsAction().refreshLocation(ref),
+        child: const Text('現在地を更新'),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
+import 'package:eqmonitor/feature/location/data/notifier/current_device_location_notifier.dart';
 import 'package:eqmonitor/feature/permission/data/repository/permission_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
@@ -21,13 +22,21 @@ class const ShakeDetectionSettingsAction() {
   Future<void> requestLocationPermission(WidgetRef ref) async {
     try {
       await locationPermissionMutation.run(ref, (tsx) async {
-        await tsx
-            .get(permissionRepositoryProvider)
-            .requestBackgroundLocationPermission();
+        final repository = tsx.get(permissionRepositoryProvider);
+        final granted = await repository.requestBackgroundLocationPermission();
+        if (!granted) await repository.openLocationSettings();
       });
       ref.invalidate(backgroundLocationPermissionProvider);
     } on Object {
       // Keep the permission guidance visible when permission cannot be requested.
     }
+  }
+
+  static final refreshLocationMutation = Mutation<void>();
+
+  Future<void> refreshLocation(WidgetRef ref) async {
+    await refreshLocationMutation.run(ref, (tsx) async {
+      await tsx.get(currentDeviceLocationProvider.notifier).refresh();
+    });
   }
 }

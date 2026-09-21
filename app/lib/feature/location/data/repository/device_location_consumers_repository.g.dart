@@ -61,4 +61,4 @@ final class DeviceLocationConsumersRepositoryProvider
 }
 
 String _$deviceLocationConsumersRepositoryHash() =>
-    r'973b12fa658b49569f5cfe7e927864e61169bbf4';
+    r'b00ab779a42f00fbe4d9b63fe256a92da21aea29';
