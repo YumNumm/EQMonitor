@@ -5,8 +5,8 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LpgmStationDetailSheet extends ConsumerWidget {
@@ -244,13 +244,11 @@ class _RelatedLinksCard extends StatelessWidget {
   static const List<({String title, String url})> _links = [
     (
       title: '長周期地震動階級および長周期地震動階級関連解説表について',
-      url:
-          'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_level.html',
+      url: 'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_level.html',
     ),
     (
       title: '固有周期と建物の関係について',
-      url:
-          'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_period.html',
+      url: 'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_period.html',
     ),
   ];
 

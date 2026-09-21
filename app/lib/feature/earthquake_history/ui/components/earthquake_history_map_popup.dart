@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -200,7 +201,7 @@ class _AreaPopupBody extends StatelessWidget {
               ),
             if (intensityHistoryRoute case final route?) ...[
               const SizedBox(height: 8),
-              TextButton.icon(
+              M3ETextButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(route.push<void>(context));

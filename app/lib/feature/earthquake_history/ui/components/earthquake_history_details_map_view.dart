@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
@@ -39,12 +41,12 @@ import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const new({
@@ -70,7 +72,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
     if (requiresRegionMap && regionMap?.value == null) {
       return switch (regionMap) {
         AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
+        _ => const Center(child: AccessibleCircularProgressIndicator()),
       };
     }
 
@@ -91,7 +93,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }

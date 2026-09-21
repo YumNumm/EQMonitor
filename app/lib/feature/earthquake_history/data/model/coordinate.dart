@@ -13,8 +13,7 @@ sealed class Coordinate with _$Coordinate {
     required double longitude,
   }) = CoordinateLatLng;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$CoordinateFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$CoordinateFromJson(json);
 }
 
 extension CoordinateApiExtension on api.Coordinate {
