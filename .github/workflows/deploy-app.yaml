@@ -44,7 +44,8 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
-    timeout-minutes: 1
+    # Checkout alone can exceed one minute on ubuntu-slim.
+    timeout-minutes: 5
     outputs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
