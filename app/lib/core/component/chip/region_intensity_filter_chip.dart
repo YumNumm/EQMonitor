@@ -1,11 +1,13 @@
+import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef RegionIntensityResult = ({
   RegionSearchType searchType,
@@ -134,7 +136,7 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
       appBar: AppBar(
         title: const Text('地域の震度で絞り込み'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: selectedCodeValue != null && selectedCodeValue.isNotEmpty
                 ? () => Navigator.of(context).pop((
                     searchType: searchType.value,
@@ -281,8 +283,10 @@ class _IntensityRangeSelector extends HookWidget {
 
     return Column(
       children: [
-        RangeSlider(
-          values: RangeValues(
+        AccessibleRangeSlider(
+          semanticFormatterCallback: (value) =>
+              '震度${indexToValue(value.toInt()).label}',
+          value: RangeValues(
             valueToIndex(min).toDouble(),
             valueToIndex(max).toDouble(),
           ),
@@ -293,7 +297,7 @@ class _IntensityRangeSelector extends HookWidget {
               indexToValue(state.end.toInt()),
             );
           },
-          labels: RangeLabels('震度${min.label}', '震度${max.label}'),
+          label: '震度${min.label} ～ 震度${max.label}',
           divisions: sliderValues.length - 1,
         ),
         Text(
