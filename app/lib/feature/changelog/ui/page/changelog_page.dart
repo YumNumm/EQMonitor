@@ -1,11 +1,13 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
 import 'package:eqmonitor/feature/changelog/data/provider/changelog_entries_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChangelogPage extends ConsumerWidget {
   const new({super.key});
@@ -18,7 +20,7 @@ class ChangelogPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('変更履歴')),
       body: switch (state) {
         AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         AsyncError(:final error) => Center(
           child: Column(
@@ -34,7 +36,7 @@ class ChangelogPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              FilledButton.tonal(
+              M3EFilledButton.tonal(
                 onPressed: () => ref.invalidate(changelogProvider),
                 child: const Text('再試行'),
               ),
