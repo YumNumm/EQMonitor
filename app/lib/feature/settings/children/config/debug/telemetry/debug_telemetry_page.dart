@@ -199,7 +199,9 @@ class _EventTile extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        await showModalBottomSheet<void>(
+        await showM3EModalBottomSheet<void>(
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+          useSafeArea: false,
           context: context,
           isScrollControlled: true,
           builder: (context) => DraggableScrollableSheet(

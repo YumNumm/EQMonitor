@@ -98,7 +98,9 @@ class DebugNotificationWebhookPage extends HookConsumerWidget {
           exception: exception,
           onRetry: load,
         ),
-        (_, _, []) => RefreshIndicator(
+        (_, _, []) => M3EPullToRefreshIndicator(
+          onError: (error, stackTrace) =>
+              Error.throwWithStackTrace(error, stackTrace),
           onRefresh: load,
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -108,7 +110,9 @@ class DebugNotificationWebhookPage extends HookConsumerWidget {
             ],
           ),
         ),
-        _ => RefreshIndicator(
+        _ => M3EPullToRefreshIndicator(
+          onError: (error, stackTrace) =>
+              Error.throwWithStackTrace(error, stackTrace),
           onRefresh: load,
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
