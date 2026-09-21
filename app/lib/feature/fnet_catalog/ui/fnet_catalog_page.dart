@@ -42,7 +42,8 @@ class FnetCatalogPage extends HookConsumerWidget {
           ),
         ),
       ),
-      body: RefreshIndicator(
+      body: M3EPullToRefreshIndicator(
+        onError: Error.throwWithStackTrace,
         onRefresh: () async {
           ref.invalidate(
             fnetCatalogProvider(

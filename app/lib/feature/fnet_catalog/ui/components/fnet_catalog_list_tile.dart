@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:nied_api_client/nied_api_client.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 /// F-netカタログのリストタイル
 class FnetCatalogListTile extends StatelessWidget {
@@ -85,7 +86,9 @@ class FnetCatalogListTile extends StatelessWidget {
     );
   }
 
-  void _showDetails(BuildContext context) => showModalBottomSheet<void>(
+  void _showDetails(BuildContext context) => showM3EModalBottomSheet<void>(
+    useSafeArea: false,
+    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
     builder: (context) => DraggableScrollableSheet(

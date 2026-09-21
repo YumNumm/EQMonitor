@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_traili
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
 class JmaIntensityContent extends HookWidget {
@@ -574,7 +575,12 @@ class _LpgmCityTile extends HookWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
-                    onTap: () => showModalBottomSheet<void>(
+                    onTap: () => showM3EModalBottomSheet<void>(
+                      isScrollControlled: false,
+                      useSafeArea: false,
+                      style: const M3EBottomSheetStyle(
+                        padding: EdgeInsets.zero,
+                      ),
                       context: context,
                       clipBehavior: Clip.antiAlias,
                       builder: (_) => LpgmStationDetailSheet(station: station),

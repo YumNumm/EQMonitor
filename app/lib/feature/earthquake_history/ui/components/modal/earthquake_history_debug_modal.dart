@@ -10,7 +10,9 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
   const new({super.key});
 
   static Future<void> show({required BuildContext context}) =>
-      showModalBottomSheet(
+      showM3EModalBottomSheet(
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
         isScrollControlled: true,

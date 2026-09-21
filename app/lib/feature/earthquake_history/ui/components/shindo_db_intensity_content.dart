@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class ShindoDbIntensityContent extends HookWidget {
   const new({required this.tree, super.key});
@@ -282,7 +283,10 @@ class _ShindoDbStationChips extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: () => showModalBottomSheet<void>(
+              onTap: () => showM3EModalBottomSheet<void>(
+                isScrollControlled: false,
+                useSafeArea: false,
+                style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
                 context: context,
                 clipBehavior: Clip.antiAlias,
                 builder: (_) => ShindoDbStationDetailSheet(station: station),

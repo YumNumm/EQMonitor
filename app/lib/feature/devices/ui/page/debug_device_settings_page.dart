@@ -55,7 +55,8 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('デバイス・通知')),
-      body: RefreshIndicator(
+      body: M3EPullToRefreshIndicator(
+        onError: Error.throwWithStackTrace,
         onRefresh: onRefresh,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

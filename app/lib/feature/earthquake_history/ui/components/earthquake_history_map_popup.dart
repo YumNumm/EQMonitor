@@ -29,7 +29,10 @@ class const EarthquakeHistoryMapPopupAction() {
     required JmaLpgmIntensity? lpgmIntensity,
     String? intensityLabel,
   }) {
-    return showModalBottomSheet(
+    return showM3EModalBottomSheet(
+      isScrollControlled: false,
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       clipBehavior: Clip.antiAlias,
       builder: (context) => _StationPopupBody(
@@ -50,7 +53,10 @@ class const EarthquakeHistoryMapPopupAction() {
     required JmaIntensity? maxIntensity,
     IntensityHistoryRoute? intensityHistoryRoute,
   }) {
-    return showModalBottomSheet(
+    return showM3EModalBottomSheet(
+      isScrollControlled: false,
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       clipBehavior: Clip.antiAlias,
       builder: (context) => _AreaPopupBody(
