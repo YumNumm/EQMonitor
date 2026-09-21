@@ -18,7 +18,10 @@ class TelegramTypeFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<List<EarthquakeTelegramType>?>(
+            await showM3EModalBottomSheet<List<EarthquakeTelegramType>?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) =>

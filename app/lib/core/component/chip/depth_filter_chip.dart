@@ -24,7 +24,10 @@ class DepthFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<(int?, int?)?>(
+        final result = await showM3EModalBottomSheet<(int?, int?)?>(
+          isScrollControlled: false,
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
           clipBehavior: Clip.antiAlias,
           context: context,
           builder: (context) =>

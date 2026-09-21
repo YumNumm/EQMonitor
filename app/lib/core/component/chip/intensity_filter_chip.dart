@@ -30,7 +30,10 @@ class IntensityFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(JmaIntensity?, JmaIntensity?)?>(
+            await showM3EModalBottomSheet<(JmaIntensity?, JmaIntensity?)?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) => _IntensityFilterModal(

@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class EarthquakeTypeFilterChip extends StatelessWidget {
   const new({
@@ -19,12 +20,16 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<({EarthquakeType? value})?>(
-          clipBehavior: Clip.antiAlias,
-          context: context,
-          builder: (context) =>
-              _EarthquakeTypeFilterModal(currentType: earthquakeType),
-        );
+        final result =
+            await showM3EModalBottomSheet<({EarthquakeType? value})?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+              clipBehavior: Clip.antiAlias,
+              context: context,
+              builder: (context) =>
+                  _EarthquakeTypeFilterModal(currentType: earthquakeType),
+            );
         if (result != null && context.mounted) {
           onChanged?.call(result.value);
         }

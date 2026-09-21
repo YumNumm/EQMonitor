@@ -24,7 +24,10 @@ class MagnitudeFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<(double?, double?)?>(
+        final result = await showM3EModalBottomSheet<(double?, double?)?>(
+          isScrollControlled: false,
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
           clipBehavior: Clip.antiAlias,
           context: context,
           builder: (context) =>
