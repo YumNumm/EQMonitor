@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -108,7 +109,7 @@ class _WidgetRegionPickerPage extends HookWidget {
         title: const Text('任意地域を選択'),
         actions: [
           switch (selectedCode.value) {
-            final code? when code.isNotEmpty => TextButton(
+            final code? when code.isNotEmpty => M3ETextButton(
               onPressed: () => Navigator.of(context).pop(
                 WidgetRegionSelection(
                   searchType: searchType.value,
@@ -118,7 +119,7 @@ class _WidgetRegionPickerPage extends HookWidget {
               ),
               child: const Text('決定'),
             ),
-            _ => const TextButton(onPressed: null, child: Text('決定')),
+            _ => const M3ETextButton(onPressed: null, child: Text('決定')),
           },
         ],
       ),

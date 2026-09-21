@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -91,7 +92,7 @@ class _ModeSection extends ConsumerWidget {
           ),
           Align(
             alignment: .centerRight,
-            child: FilledButton.tonal(
+            child: M3EFilledButton.tonal(
               onPressed: () async =>
                   ThemeEditorRoute(mode: mode.name).push<void>(context),
               child: const Text('編集'),

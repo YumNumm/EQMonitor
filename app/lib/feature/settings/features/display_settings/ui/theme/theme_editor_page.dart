@@ -6,10 +6,11 @@ import 'package:eqmonitor/core/theme/model/intensity_text_color.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_field_def.dart';
 import 'package:eqmonitor/core/theme/model/theme_color_set.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/data/notifier/theme_editor_controller.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ThemeEditorPage extends ConsumerWidget {
   const new({required this.mode, super.key});
@@ -185,15 +186,19 @@ class _IntensityFieldTile extends StatelessWidget {
           : Row(
               children: [
                 const Text('文字色: '),
-                SegmentedButton<bool>(
+                M3EToggleButtonGroup(
+                  type: M3EButtonGroupType.connected,
                   key: ValueKey('intensity-fg-mode-$keySuffix'),
-                  segments: const [
-                    ButtonSegment(value: true, label: Text('自動')),
-                    ButtonSegment(value: false, label: Text('手動')),
+                  actions: const [
+                    M3EToggleButtonGroupAction(label: Text('自動')),
+                    M3EToggleButtonGroupAction(label: Text('手動')),
                   ],
-                  selected: {entry.foreground is IntensityTextColorAuto},
-                  onSelectionChanged: (selection) {
-                    final isAuto = selection.first;
+                  selectedIndex: entry.foreground is IntensityTextColorAuto
+                      ? 0
+                      : 1,
+                  onSelectedIndexChanged: (index) {
+                    if (index == null) return;
+                    final isAuto = index == 0;
                     onChanged(
                       entry.copyWith(
                         foreground: isAuto
@@ -283,11 +288,11 @@ class _ColorPickerDialog extends HookWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () => Navigator.of(context).pop(current.value),
           child: const Text('適用'),
         ),
