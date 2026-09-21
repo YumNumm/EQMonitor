@@ -82,7 +82,7 @@ Interfaces: 共通結果を `EarthquakeHistoryParameter`、`NotificationRegionSe
 - [x] `mise exec -- dart analyze app --fatal-infos --format machine` の結果を確認。
 - [x] 実機未検証を既存TODOへ記録。共通化契約を関連knowledgeへ統合。
 - [x] 独立レビューを受け、重要指摘を修正・回帰確認。
-- [ ] 意図した変更をstageしてhk check、論理単位でcommit、push、YumNumm/EQMonitorのdevelop向けPRを作成。
+- [x] 意図した変更をstageしてhk check、論理単位でcommit、push、YumNumm/EQMonitorのdevelop向けPRを作成。
 
 ## Execution ledger
 
@@ -97,3 +97,4 @@ Interfaces: 共通結果を `EarthquakeHistoryParameter`、`NotificationRegionSe
 - 生成: 最新SDKで通常の `dart run build_runner build --delete-conflicting-outputs` が成功。生成されたrouterと新規model/providerを反映し、flutter_genが出力しなくなった空のfonts定義も生成結果に合わせた。
 - レビュー: 独立レビューの3指摘（遅延lookup、都道府県かな、worker再試行）を修正し、再レビューで重要指摘なし。実機地図確認はTODOに残した。
 - 統合: 最新developのM3E移行と競合する旧pickerを共通画面へ置換し、M3ETextButtonとAccessibleProgressIndicatorを共通画面へ継承した。PMTilesメタデータ読込はappの直接path依存として宣言した。
+- 公開: `feature/unified-region-selection` をpushし、develop向け [PR #1823](https://github.com/YumNumm/EQMonitor/pull/1823) を作成した。
