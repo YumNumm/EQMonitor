@@ -183,7 +183,19 @@ class _EarthquakeInformationBody extends StatelessWidget {
           hypocenterWidget,
         ],
         const Row(),
-        if (timeText != null) Wrap(children: [Text(timeText)]),
+        if (timeText != null)
+          Expanded(
+            child: Text(
+              timeText,
+              style: TextStyle(
+                fontFamily: FontFamily.googleSansCode,
+                fontFamilyFallback: [
+                  FontFamily.googleSansFlex,
+                  FontFamily.notoSansJP,
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -212,7 +224,10 @@ class _HypocenterWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
-        Text(label, style: textTheme.labelStyle(bodySmall)),
+        Text(
+          label,
+          style: textTheme.labelStyle(bodySmall),
+        ),
         const SizedBox(width: 4),
         Flexible(
           child: Text.rich(

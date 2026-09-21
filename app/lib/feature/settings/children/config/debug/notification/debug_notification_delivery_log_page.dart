@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/logic/notification_delivery_log_detail_builder.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/services.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
   const new({super.key});
@@ -206,13 +207,38 @@ class _NotificationLogTile extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
     final ok = item.result == PushNotificationDeliveryResult.ok;
     final resultColor = ok ? colorTheme.primary : colorTheme.error;
+    final liveActivityEventType = item.liveActivityEventType;
 
     return ListTile(
       title: Text(
         item.title ?? '[タイトルなし]',
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      subtitle: Text(item.body ?? '[本文なし]', maxLines: 4, overflow: .ellipsis),
+      subtitle: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Text(
+              item.body ?? '[本文なし]',
+              maxLines: 4,
+              overflow: .ellipsis,
+            ),
+          ),
+          if (liveActivityEventType != null)
+            Text(
+              switch (liveActivityEventType) {
+                PushNotificationLiveActivityEventType.start =>
+                  'Live Activity 開始',
+                PushNotificationLiveActivityEventType.update =>
+                  'Live Activity 更新',
+                PushNotificationLiveActivityEventType.end => 'Live Activity 終了',
+              },
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.designSystem.colorTheme.onSurfaceVariant,
+              ),
+            ),
+        ],
+      ),
       trailing: Icon(
         ok ? Icons.check_circle_outline : Icons.error_outline,
         color: resultColor,
@@ -302,7 +328,13 @@ class _LogDetailRow extends StatelessWidget {
           const SizedBox(height: 4),
           SelectableText(
             row.value,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontFamily: FontFamily.googleSansCode,
+              fontFamilyFallback: [
+                FontFamily.googleSansFlex,
+                FontFamily.notoSansJP,
+              ],
+            ),
           ),
         ],
       ),

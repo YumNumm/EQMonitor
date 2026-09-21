@@ -11,7 +11,7 @@ extension NullableValueRequirement<T extends Object> on T? {
   T orFailBecause(String because) {
     final value = this;
     if (value == null) {
-      throw StateError('必ず非 null のはずの値が null でした: $because');
+      throw StateError('非nullであるべき値がnullです: $because');
     }
     return value;
   }

@@ -17,7 +17,7 @@ class NtpConfig extends _$NtpConfig {
       sharedPreferencesDataSourceProvider.future,
     );
     final json = await sharedPreferences.getString(
-      key: SharedPreferencesKey.ntpConfig,
+      key: .ntpConfig,
     );
     if (json == null) {
       return const NtpConfigModel();

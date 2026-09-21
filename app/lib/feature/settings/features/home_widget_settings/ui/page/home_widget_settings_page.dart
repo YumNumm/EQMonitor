@@ -159,7 +159,7 @@ class _WidgetRegionPickerPage extends HookWidget {
                 selectedCode: selectedCode.value,
                 onChanged: (selection) {
                   selectedCode.value = selection?.code;
-                  selectedName.value = selection?.name;
+                  selectedName.value = selection?.name.ja;
                 },
               )
             else

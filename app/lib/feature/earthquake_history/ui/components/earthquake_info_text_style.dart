@@ -18,6 +18,7 @@ extension EarthquakeInfoTextStyle on TextTheme {
     return base?.copyWith(
       fontWeight: FontWeight.bold,
       fontFamily: FontFamily.notoSansJP,
+      letterSpacing: -1,
     );
   }
 }

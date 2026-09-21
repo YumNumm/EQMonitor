@@ -28,10 +28,11 @@ final class NotificationDeliveryLogDetailBuilder {
     final parsedCreatedAt = DateTime.tryParse(entry.createdAtIso);
     final formattedCreatedAt = parsedCreatedAt == null
         ? entry.createdAtIso
-        : parsedCreatedAt.formatWithTz(.yearMonthDayHourMinuteSecond);
+        : parsedCreatedAt.formatWithTz(
+            .yearMonthDayHourMinuteSecondMillisecond,
+          );
     final title = entry.title;
     final body = entry.body;
-    final errorMessage = entry.errorMessage;
 
     return NotificationDeliveryLogDetail(
       rows: [
@@ -39,21 +40,13 @@ final class NotificationDeliveryLogDetailBuilder {
           label: '配信日時',
           value: formattedCreatedAt,
         ),
-        NotificationDeliveryLogDetailRow(
-          label: '配信結果',
-          value: switch (entry.result) {
-            PushNotificationDeliveryResult.ok => '成功',
-            PushNotificationDeliveryResult.ng => '失敗',
-          },
-        ),
+        if (entry.result == .ng)
+          NotificationDeliveryLogDetailRow(label: '配信結果', value: "配信失敗"),
+
         if (title != null && title.trim().isNotEmpty)
           NotificationDeliveryLogDetailRow(label: 'タイトル', value: title),
         if (body != null && body.trim().isNotEmpty)
           NotificationDeliveryLogDetailRow(label: '本文', value: body),
-        if (entry.result == PushNotificationDeliveryResult.ng &&
-            errorMessage != null &&
-            errorMessage.trim().isNotEmpty)
-          NotificationDeliveryLogDetailRow(label: 'エラー内容', value: errorMessage),
       ],
     );
   }

@@ -223,31 +223,35 @@ class _LoadedContent extends HookConsumerWidget {
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                for (final line in telegramCommentLines)
-                                  TextSpan(text: '$line\n'),
-                                TextSpan(
-                                  text:
-                                      'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                                        EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
-                                        EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
-                                      }).join(', ')}',
-                                ),
-                              ],
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color:
-                                      designSystem.colorTheme.onSurfaceVariant,
-                                  fontSize: 11,
-                                ),
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  for (final line in telegramCommentLines)
+                                    TextSpan(text: '$line\n'),
+                                  TextSpan(
+                                    text:
+                                        'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
+                                          EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
+                                        }).join(', ')}',
+                                  ),
+                                ],
+                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: designSystem
+                                        .colorTheme
+                                        .onSurfaceVariant,
+                                    fontSize: 11,
+                                  ),
+                            ),
                           ),
                         ),
                       _TelegramListButton(eventId: earthquake.eventId),

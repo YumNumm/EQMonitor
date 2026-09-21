@@ -62,7 +62,50 @@ class SettingsPage extends ConsumerWidget {
                 const AssetPackUpdateCard(),
                 if (isProFeaturesEnabled)
                   Card.outlined(
-                    
+                    clipBehavior: .antiAlias,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    color: theme.colorScheme.primaryContainer,
+                    child: InkWell(
+                      onTap: () async => PaywallRoute().push<void>(context),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.workspace_premium_rounded,
+                              color: theme.colorScheme.onPrimaryContainer,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                spacing: 2,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "EQMonitor Pro",
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: .bold,
+                                      fontFamily: FontFamily.googleSansFlex,
+                                      color:
+                                          theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                  Text("Proプランに加入頂くことで、ご利用いただける機能が増えます"),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward_ios_outlined),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 const SettingsSectionHeader(text: '各種設定'),
                 ListTile(

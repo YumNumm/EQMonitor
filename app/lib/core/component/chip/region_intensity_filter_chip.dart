@@ -195,7 +195,7 @@ class _RegionIntensityPickerPage extends HookConsumerWidget {
                 onChanged: (selection) {
                   if (selection != null) {
                     selectedCode.value = selection.code;
-                    selectedName.value = selection.name;
+                    selectedName.value = selection.name.ja;
                   } else {
                     selectedCode.value = null;
                     selectedName.value = null;

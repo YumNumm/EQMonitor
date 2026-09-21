@@ -81,11 +81,11 @@ class _AssetPackAvailableCard extends ConsumerWidget {
     final designSystem = context.designSystem;
     final sizeMiB = entry.archiveSizeBytes / (1024 * 1024);
     return Card.outlined(
-      margin: EdgeInsets.zero,
+      margin: EdgeInsets.only(bottom: designSystem.spacing.md),
       child: ListTile(
         leading: const Icon(Icons.download_for_offline_outlined),
-        title: Text('Asset Pack v${entry.version} を利用できます'),
-        subtitle: Text('ダウンロードサイズ: ${sizeMiB.toStringAsFixed(1)} MiB'),
+        title: Text('新しい地図データ Asset Pack v${entry.version} を利用できます'),
+        subtitle: Text('ダウンロードサイズ: ${sizeMiB.toStringAsFixed(1)} MB'),
         trailing: const Icon(Icons.chevron_right_rounded),
         contentPadding: EdgeInsets.symmetric(
           horizontal: designSystem.spacing.md,

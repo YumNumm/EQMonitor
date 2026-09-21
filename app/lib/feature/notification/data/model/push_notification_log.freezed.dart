@@ -288,7 +288,7 @@ as String?,
 /// @nodoc
 mixin _$PushNotificationLogEntry {
 
- String get streamId; String get deviceId; PushNotificationDeliveryFramework get framework; PushNotificationDeliveryResult get result; String get createdAtIso; String? get errorCode; String? get errorMessage; String? get eventId; String? get title; String? get body; String? get androidPriority; String? get androidNotificationPriority; String? get channelId; String? get apnsPriority; String? get interruptionLevel;
+ String get streamId; String get deviceId; PushNotificationDeliveryFramework get framework; PushNotificationDeliveryResult get result; String get createdAtIso; String? get errorCode; String? get errorMessage; String? get eventId; String? get title; String? get body; String? get androidPriority; String? get androidNotificationPriority; String? get channelId; String? get apnsPriority; String? get interruptionLevel; PushNotificationLiveActivityEventType? get liveActivityEventType;
 /// Create a copy of PushNotificationLogEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -301,16 +301,16 @@ $PushNotificationLogEntryCopyWith<PushNotificationLogEntry> get copyWith => _$Pu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel)&&(identical(other.liveActivityEventType, liveActivityEventType) || other.liveActivityEventType == liveActivityEventType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel);
+int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel,liveActivityEventType);
 
 @override
 String toString() {
-  return 'PushNotificationLogEntry(streamId: $streamId, deviceId: $deviceId, framework: $framework, result: $result, createdAtIso: $createdAtIso, errorCode: $errorCode, errorMessage: $errorMessage, eventId: $eventId, title: $title, body: $body, androidPriority: $androidPriority, androidNotificationPriority: $androidNotificationPriority, channelId: $channelId, apnsPriority: $apnsPriority, interruptionLevel: $interruptionLevel)';
+  return 'PushNotificationLogEntry(streamId: $streamId, deviceId: $deviceId, framework: $framework, result: $result, createdAtIso: $createdAtIso, errorCode: $errorCode, errorMessage: $errorMessage, eventId: $eventId, title: $title, body: $body, androidPriority: $androidPriority, androidNotificationPriority: $androidNotificationPriority, channelId: $channelId, apnsPriority: $apnsPriority, interruptionLevel: $interruptionLevel, liveActivityEventType: $liveActivityEventType)';
 }
 
 
@@ -321,7 +321,7 @@ abstract mixin class $PushNotificationLogEntryCopyWith<$Res>  {
   factory $PushNotificationLogEntryCopyWith(PushNotificationLogEntry value, $Res Function(PushNotificationLogEntry) _then) = _$PushNotificationLogEntryCopyWithImpl;
 @useResult
 $Res call({
- String streamId, String deviceId, PushNotificationDeliveryFramework framework, PushNotificationDeliveryResult result, String createdAtIso, String? errorCode, String? errorMessage, String? eventId, String? title, String? body, String? androidPriority, String? androidNotificationPriority, String? channelId, String? apnsPriority, String? interruptionLevel
+ String streamId, String deviceId, PushNotificationDeliveryFramework framework, PushNotificationDeliveryResult result, String createdAtIso, String? errorCode, String? errorMessage, String? eventId, String? title, String? body, String? androidPriority, String? androidNotificationPriority, String? channelId, String? apnsPriority, String? interruptionLevel, PushNotificationLiveActivityEventType? liveActivityEventType
 });
 
 
@@ -338,7 +338,7 @@ class _$PushNotificationLogEntryCopyWithImpl<$Res>
 
 /// Create a copy of PushNotificationLogEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? streamId = null,Object? deviceId = null,Object? framework = null,Object? result = null,Object? createdAtIso = null,Object? errorCode = freezed,Object? errorMessage = freezed,Object? eventId = freezed,Object? title = freezed,Object? body = freezed,Object? androidPriority = freezed,Object? androidNotificationPriority = freezed,Object? channelId = freezed,Object? apnsPriority = freezed,Object? interruptionLevel = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? streamId = null,Object? deviceId = null,Object? framework = null,Object? result = null,Object? createdAtIso = null,Object? errorCode = freezed,Object? errorMessage = freezed,Object? eventId = freezed,Object? title = freezed,Object? body = freezed,Object? androidPriority = freezed,Object? androidNotificationPriority = freezed,Object? channelId = freezed,Object? apnsPriority = freezed,Object? interruptionLevel = freezed,Object? liveActivityEventType = freezed,}) {
   return _then(PushNotificationLogEntry(
 streamId: null == streamId ? _self.streamId : streamId // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
@@ -355,7 +355,8 @@ as String?,androidNotificationPriority: freezed == androidNotificationPriority ?
 as String?,channelId: freezed == channelId ? _self.channelId : channelId // ignore: cast_nullable_to_non_nullable
 as String?,apnsPriority: freezed == apnsPriority ? _self.apnsPriority : apnsPriority // ignore: cast_nullable_to_non_nullable
 as String?,interruptionLevel: freezed == interruptionLevel ? _self.interruptionLevel : interruptionLevel // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,liveActivityEventType: freezed == liveActivityEventType ? _self.liveActivityEventType : liveActivityEventType // ignore: cast_nullable_to_non_nullable
+as PushNotificationLiveActivityEventType?,
   ));
 }
 
@@ -440,10 +441,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel,  PushNotificationLiveActivityEventType? liveActivityEventType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PushNotificationLogEntry() when $default != null:
-return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
+return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel,_that.liveActivityEventType);case _:
   return orElse();
 
 }
@@ -461,10 +462,10 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel,  PushNotificationLiveActivityEventType? liveActivityEventType)  $default,) {final _that = this;
 switch (_that) {
 case _PushNotificationLogEntry():
-return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
+return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel,_that.liveActivityEventType);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -481,10 +482,10 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String streamId,  String deviceId,  PushNotificationDeliveryFramework framework,  PushNotificationDeliveryResult result,  String createdAtIso,  String? errorCode,  String? errorMessage,  String? eventId,  String? title,  String? body,  String? androidPriority,  String? androidNotificationPriority,  String? channelId,  String? apnsPriority,  String? interruptionLevel,  PushNotificationLiveActivityEventType? liveActivityEventType)?  $default,) {final _that = this;
 switch (_that) {
 case _PushNotificationLogEntry() when $default != null:
-return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
+return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAtIso,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel,_that.liveActivityEventType);case _:
   return null;
 
 }
@@ -496,7 +497,7 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 @JsonSerializable()
 
 class _PushNotificationLogEntry implements PushNotificationLogEntry {
-  const _PushNotificationLogEntry({required this.streamId, required this.deviceId, required this.framework, required this.result, required this.createdAtIso, this.errorCode, this.errorMessage, this.eventId, this.title, this.body, this.androidPriority, this.androidNotificationPriority, this.channelId, this.apnsPriority, this.interruptionLevel});
+  const _PushNotificationLogEntry({required this.streamId, required this.deviceId, required this.framework, required this.result, required this.createdAtIso, this.errorCode, this.errorMessage, this.eventId, this.title, this.body, this.androidPriority, this.androidNotificationPriority, this.channelId, this.apnsPriority, this.interruptionLevel, this.liveActivityEventType});
   factory _PushNotificationLogEntry.fromJson(Map<String, dynamic> json) => _$PushNotificationLogEntryFromJson(json);
 
 @override final  String streamId;
@@ -514,6 +515,7 @@ class _PushNotificationLogEntry implements PushNotificationLogEntry {
 @override final  String? channelId;
 @override final  String? apnsPriority;
 @override final  String? interruptionLevel;
+@override final  PushNotificationLiveActivityEventType? liveActivityEventType;
 
 /// Create a copy of PushNotificationLogEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -528,16 +530,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PushNotificationLogEntry&&(identical(other.streamId, streamId) || other.streamId == streamId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.framework, framework) || other.framework == framework)&&(identical(other.result, result) || other.result == result)&&(identical(other.createdAtIso, createdAtIso) || other.createdAtIso == createdAtIso)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.androidPriority, androidPriority) || other.androidPriority == androidPriority)&&(identical(other.androidNotificationPriority, androidNotificationPriority) || other.androidNotificationPriority == androidNotificationPriority)&&(identical(other.channelId, channelId) || other.channelId == channelId)&&(identical(other.apnsPriority, apnsPriority) || other.apnsPriority == apnsPriority)&&(identical(other.interruptionLevel, interruptionLevel) || other.interruptionLevel == interruptionLevel)&&(identical(other.liveActivityEventType, liveActivityEventType) || other.liveActivityEventType == liveActivityEventType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel);
+int get hashCode => Object.hash(runtimeType,streamId,deviceId,framework,result,createdAtIso,errorCode,errorMessage,eventId,title,body,androidPriority,androidNotificationPriority,channelId,apnsPriority,interruptionLevel,liveActivityEventType);
 
 @override
 String toString() {
-  return 'PushNotificationLogEntry(streamId: $streamId, deviceId: $deviceId, framework: $framework, result: $result, createdAtIso: $createdAtIso, errorCode: $errorCode, errorMessage: $errorMessage, eventId: $eventId, title: $title, body: $body, androidPriority: $androidPriority, androidNotificationPriority: $androidNotificationPriority, channelId: $channelId, apnsPriority: $apnsPriority, interruptionLevel: $interruptionLevel)';
+  return 'PushNotificationLogEntry(streamId: $streamId, deviceId: $deviceId, framework: $framework, result: $result, createdAtIso: $createdAtIso, errorCode: $errorCode, errorMessage: $errorMessage, eventId: $eventId, title: $title, body: $body, androidPriority: $androidPriority, androidNotificationPriority: $androidNotificationPriority, channelId: $channelId, apnsPriority: $apnsPriority, interruptionLevel: $interruptionLevel, liveActivityEventType: $liveActivityEventType)';
 }
 
 
@@ -548,7 +550,7 @@ abstract mixin class _$PushNotificationLogEntryCopyWith<$Res> implements $PushNo
   factory _$PushNotificationLogEntryCopyWith(_PushNotificationLogEntry value, $Res Function(_PushNotificationLogEntry) _then) = __$PushNotificationLogEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String streamId, String deviceId, PushNotificationDeliveryFramework framework, PushNotificationDeliveryResult result, String createdAtIso, String? errorCode, String? errorMessage, String? eventId, String? title, String? body, String? androidPriority, String? androidNotificationPriority, String? channelId, String? apnsPriority, String? interruptionLevel
+ String streamId, String deviceId, PushNotificationDeliveryFramework framework, PushNotificationDeliveryResult result, String createdAtIso, String? errorCode, String? errorMessage, String? eventId, String? title, String? body, String? androidPriority, String? androidNotificationPriority, String? channelId, String? apnsPriority, String? interruptionLevel, PushNotificationLiveActivityEventType? liveActivityEventType
 });
 
 
@@ -565,7 +567,7 @@ class __$PushNotificationLogEntryCopyWithImpl<$Res>
 
 /// Create a copy of PushNotificationLogEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? streamId = null,Object? deviceId = null,Object? framework = null,Object? result = null,Object? createdAtIso = null,Object? errorCode = freezed,Object? errorMessage = freezed,Object? eventId = freezed,Object? title = freezed,Object? body = freezed,Object? androidPriority = freezed,Object? androidNotificationPriority = freezed,Object? channelId = freezed,Object? apnsPriority = freezed,Object? interruptionLevel = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? streamId = null,Object? deviceId = null,Object? framework = null,Object? result = null,Object? createdAtIso = null,Object? errorCode = freezed,Object? errorMessage = freezed,Object? eventId = freezed,Object? title = freezed,Object? body = freezed,Object? androidPriority = freezed,Object? androidNotificationPriority = freezed,Object? channelId = freezed,Object? apnsPriority = freezed,Object? interruptionLevel = freezed,Object? liveActivityEventType = freezed,}) {
   return _then(_PushNotificationLogEntry(
 streamId: null == streamId ? _self.streamId : streamId // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
@@ -582,7 +584,8 @@ as String?,androidNotificationPriority: freezed == androidNotificationPriority ?
 as String?,channelId: freezed == channelId ? _self.channelId : channelId // ignore: cast_nullable_to_non_nullable
 as String?,apnsPriority: freezed == apnsPriority ? _self.apnsPriority : apnsPriority // ignore: cast_nullable_to_non_nullable
 as String?,interruptionLevel: freezed == interruptionLevel ? _self.interruptionLevel : interruptionLevel // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,liveActivityEventType: freezed == liveActivityEventType ? _self.liveActivityEventType : liveActivityEventType // ignore: cast_nullable_to_non_nullable
+as PushNotificationLiveActivityEventType?,
   ));
 }
 
