@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +45,7 @@ void main() {
             '/': (_) => const Scaffold(body: Text('ホーム')),
             '/selector': (_) => Consumer(
               builder: (context, ref, _) => Scaffold(
-                body: FilledButton(
+                body: M3EFilledButton(
                   onPressed: () => ref
                       .read(saveHomeMapBoundsFlowProvider)
                       .save(
