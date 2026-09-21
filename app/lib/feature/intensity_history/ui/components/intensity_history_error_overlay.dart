@@ -2,8 +2,9 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_history_error_overlay.g.dart';
@@ -108,13 +109,13 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                   child: Wrap(
                     spacing: 4,
                     children: [
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () async {
                           await action.retry(ref);
                         },
                         child: const Text('再試行'),
                       ),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () => action.showDetails(
                           ref: ref,
                           context: context,
