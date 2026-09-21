@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
@@ -27,12 +28,12 @@ class LicensePage extends ConsumerWidget {
               child: Assets.images.icon.image(height: 80),
             ),
           ),
-          TextButton(
+          M3ETextButton(
             child: const Text('https://github.com/YumNumm/EQMonitor'),
             onPressed: () async =>
                 launchUrlString('https://github.com/YumNumm/EQMonitor'),
           ),
-          TextButton(
+          M3ETextButton(
             child: const Text('https://license.eqmonitor.app'),
             onPressed: () async =>
                 launchUrlString('https://license.eqmonitor.app'),

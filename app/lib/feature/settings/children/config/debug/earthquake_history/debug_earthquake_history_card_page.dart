@@ -1,6 +1,12 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+
 import 'dart:math';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
+
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
@@ -14,9 +20,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_statio
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum _DebugMode {
   preliminary('速報値'),
@@ -38,7 +45,7 @@ class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
       appBar: AppBar(title: const Text('地震履歴 Debug')),
       body: switch (paramAsync) {
         AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         AsyncError(:final error) => Center(child: Text('エラー: $error')),
         AsyncData(:final value) => _DebugBody(param: value.earthquake),
@@ -79,40 +86,42 @@ class _DebugBody extends HookWidget {
             children: [
               _LabeledRow(
                 label: 'モード',
-                child: SegmentedButton<_DebugMode>(
-                  segments: _DebugMode.values
+                child: M3EToggleButtonGroup(
+                  type: M3EButtonGroupType.connected,
+                  actions: _DebugMode.values
                       .map(
-                        (e) => ButtonSegment(value: e, label: Text(e.label)),
+                        (e) => M3EToggleButtonGroupAction(label: Text(e.label)),
                       )
                       .toList(),
-                  selected: {mode.value},
-                  onSelectionChanged: (s) => mode.value = s.first,
+                  selectedIndex: _DebugMode.values.indexOf(mode.value),
+                  onSelectedIndexChanged: (index) {
+                    if (index != null) mode.value = _DebugMode.values[index];
+                  },
                 ),
               ),
               _LabeledRow(
                 label: '最大震度',
-                child: DropdownButton<JmaIntensity>(
-                  value: maxIntensity.value,
-                  isDense: true,
+                child: ControlledDropdown<JmaIntensity>(
                   items: JmaIntensity.values
                       .where((e) => e != JmaIntensity.unknown)
                       .map(
-                        (e) => DropdownMenuItem(
+                        (e) => M3EDropdownItem(
                           value: e,
-                          child: Text(e.label),
+                          label: e.label,
+                          selected: e == maxIntensity.value,
                         ),
                       )
                       .toList(),
-                  onChanged: (v) {
-                    if (v != null) {
-                      maxIntensity.value = v;
-                    }
+                  onSelectionChanged: (selectedItems) {
+                    if (selectedItems.isEmpty) return;
+                    final v = selectedItems.first.value;
+                    maxIntensity.value = v;
                   },
                 ),
               ),
               _LabeledRow(
                 label: '観測数: ${count.value}',
-                child: Slider(
+                child: AccessibleSlider(
                   value: count.value.toDouble(),
                   min: 1,
                   max: 100,
