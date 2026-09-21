@@ -2,10 +2,11 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/page/onboarding_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Widget _app(Widget child) => MaterialApp(
@@ -76,7 +77,7 @@ void main() {
     );
     await _pumpFrames(tester);
 
-    expect(find.widgetWithText(FilledButton, 'はじめる'), findsOneWidget);
+    expect(find.widgetWithText(M3EFilledButton, 'はじめる'), findsOneWidget);
   });
 
   testWidgets('移行済みで「はじめる」押下すると onboardingCompleted が true', (tester) async {
@@ -103,7 +104,7 @@ void main() {
     );
     await _pumpFrames(tester);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'はじめる'));
+    await tester.tap(find.widgetWithText(M3EFilledButton, 'はじめる'));
     await _pumpFrames(tester, times: 5);
 
     expect(container.read(onboardingCompletedProvider).value, isTrue);
