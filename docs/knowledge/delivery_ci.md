@@ -97,7 +97,7 @@ asc testflight crashes list --paginate --sort=-createdDate --output json
 
 - repository内scriptを実行するjobは、そのstepより前にcheckoutする。
 - Flutter jobは public な `third_party/flutter_scene` だけを
-  `.github/actions/init-flutter-scene-submodule` で初期化する。private backendは通常不要。
+  checkout 後の `git submodule update --init --depth 1 third_party/flutter_scene` で初期化する。private backendは通常不要。
   `submodules: true` は直下backendも取得するため、`recursive` から変えるだけでは404を防げない。
 - private repositoryが本当に必要なjobだけGitHub App tokenの対象に追加する。
   再帰取得ならnested private repoもinstall対象と `repositories` 一覧に必要。
@@ -107,8 +107,10 @@ asc testflight crashes list --paginate --sort=-createdDate --output json
 - PR base branchの `/` を含む名前には `pull_request.branches: ["**"]` が必要。
   `"*"` は `/` を跨がない。pushのbranch filterは別ポリシーとして扱う。
 - actionのSHA固定コメントは `# vX.Y.Z`。確認は `mise exec -- pinact run --check`。
-- 現行workflowに `uses: $/.github/...` が残る。ローカル参照の `./.github/...` と不一致で、
-  CI起動の確認・修正が必要。文書統合時点ではworkflowは変更していない。
+- `uses: $/...` は正式な自リポジトリ参照構文。action として取得するとリポジトリ全体の
+  archive 展開が走り、追跡済みの dangling な Terraform symlink で checkout 前に失敗する。
+  Flutter submodule の初期化は `run` で直接実行し、archive 取得を避ける。再利用 workflow の
+  `$/` 参照は維持する。`scripts/ci/test_flutter_job_setup.py` で取得方法と順序を検査する。
 - ローカルで配布なしに確認できる回帰scriptは `scripts/ci/test_resolve_deploy_app_policy.sh`、
   `test_release_please_dual_track.sh`、`test_create_beta_release_workflow.sh`、`test_generate_release_note.sh`。
 

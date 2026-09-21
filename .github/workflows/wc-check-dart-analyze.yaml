@@ -20,7 +20,9 @@ jobs:
           persist-credentials: false
 
       - name: Init flutter_scene submodule
-        uses: $/.github/actions/init-flutter-scene-submodule
+        # Avoid downloading this repository as an action: its archive contains
+        # dangling Terraform symlinks. Only the public Dart dependency is needed.
+        run: git submodule update --init --depth 1 third_party/flutter_scene
 
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4

@@ -133,6 +133,11 @@ jobs:
 
   generate-release-note-android:
     name: Generate Release Note (Android)
+    # Reading track notes also creates an edit and invalidates this user's other edit.
+    concurrency:
+      group: eqmonitor-google-play-edit
+      cancel-in-progress: false
+      queue: max
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-android }}
     runs-on: ubuntu-24.04
@@ -218,7 +223,9 @@ jobs:
 
       # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
       - name: Init flutter_scene submodule
-        uses: $/.github/actions/init-flutter-scene-submodule
+        # Avoid downloading this repository as an action: its archive contains
+        # dangling Terraform symlinks. Only the public Dart dependency is needed.
+        run: git submodule update --init --depth 1 third_party/flutter_scene
 
       - name: Extract SOPS Age Key File
         run: |
@@ -617,7 +624,9 @@ jobs:
 
       # third_party/flutter_scene は pubspec の path 依存なので pub 解決に必須
       - name: Init flutter_scene submodule
-        uses: $/.github/actions/init-flutter-scene-submodule
+        # Avoid downloading this repository as an action: its archive contains
+        # dangling Terraform symlinks. Only the public Dart dependency is needed.
+        run: git submodule update --init --depth 1 third_party/flutter_scene
 
       - name: Extract SOPS Age Key File
         run: |
@@ -632,7 +641,7 @@ jobs:
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           cache: false
-          install_args: "flutter java uv python pipx:codemagic-cli-tools"
+          install_args: "flutter java python"
 
       - name: Precache Flutter Android artifacts
         run: flutter precache --android
@@ -813,6 +822,10 @@ jobs:
 
   deploy-android-google-play:
     name: Deploy Android (Google Play)
+    concurrency:
+      group: eqmonitor-google-play-edit
+      cancel-in-progress: false
+      queue: max
     needs:
       - build-android
       - define-matrix

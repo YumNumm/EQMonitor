@@ -2,11 +2,6 @@
 
 数値は元の優先度。設定の修正と署名済み成果物の検証は分けて完了判定する。
 
-## 950: CI ローカル action / workflow の参照修正
-
-- `.github/workflows/pr-flutter-check.yaml`、`wc-check-dart-{analyze,test}.yaml`、`deploy-app.yaml` などの `uses: $/.github/...` を、GitHub Actions の相対指定 `./.github/...` へ修正する。
-- 完了条件: 全ローカル参照先が存在し、PR の解析・テストおよび配布 workflow の呼び出しを検証できる。設定 typo の修正と実際の配布成功は区別する。
-
 ## 950 / 880: Android AGP 移行と成果物確認
 
 - 950: `app/android/app/build.gradle.kts` は `StageBundledAssetPackTask` と `variant.sources.assets.addGeneratedSourceDirectory` に移行済み。旧 Provider→SourceSet の build blocker は解消したが、実 SDK で release AAB を作り `assets/platform` の同梱と task dependency を確認する作業は残る。
