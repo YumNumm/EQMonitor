@@ -266,7 +266,7 @@ void main() {
     );
     await tester.tap(find.byKey(const Key('magnitude-type-dropdown')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('unknown').last);
+    await _selectDropdownOption(tester, 'unknown');
     await tester.pumpAndSettle();
 
     final ordinaryDetails = find.byKey(const Key('ordinary-station-details'));
@@ -547,7 +547,7 @@ void main() {
     await _scrollFinderTo(tester, dropdown);
     await tester.tap(dropdown.hitTestable());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('5-').last);
+    await _selectDropdownOption(tester, '5-');
     await tester.pumpAndSettle();
 
     final draft = await _readDraft(tester) as EarthquakeVxse53DebugDraft;
@@ -566,7 +566,7 @@ void main() {
     await _scrollFinderTo(tester, dropdown);
     await tester.tap(dropdown.hitTestable());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('3').last);
+    await _selectDropdownOption(tester, '3');
     await tester.pumpAndSettle();
 
     final draft = await _readDraft(tester) as EarthquakeVxse62DebugDraft;
@@ -766,7 +766,7 @@ void main() {
       await _scrollFinderTo(tester, dropdown);
       await tester.tap(dropdown.hitTestable().first);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('5-').last);
+      await _selectDropdownOption(tester, '5-');
       await tester.pumpAndSettle();
 
       final state = container.read(
@@ -799,7 +799,7 @@ void main() {
     await _scrollToTop(tester);
     await tester.tap(find.byKey(const Key('vxse-type-dropdown')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('VXSE62').last);
+    await _selectDropdownOption(tester, 'VXSE62');
     await tester.pumpAndSettle();
 
     await _scrollTo(tester, const Key('hypocenter-fields'));
@@ -984,8 +984,25 @@ Future<void> _selectType(
   await _scrollToTop(tester);
   await tester.tap(find.byKey(const Key('vxse-type-dropdown')));
   await tester.pumpAndSettle();
-  await tester.tap(find.text(type.name.toUpperCase()).last);
+  await _selectDropdownOption(tester, type.name.toUpperCase());
   await tester.pumpAndSettle();
+}
+
+Future<void> _selectDropdownOption(WidgetTester tester, String label) async {
+  final option = find.text(label).hitTestable();
+  await tester.scrollUntilVisible(
+    option,
+    80,
+    scrollable: find
+        .byWidgetPredicate(
+          (widget) =>
+              widget is Scrollable &&
+              widget.axisDirection == AxisDirection.down,
+        )
+        .hitTestable()
+        .last,
+  );
+  await tester.tap(option.last);
 }
 
 Future<EarthquakeVxseDebugDraft> _readDraft(WidgetTester tester) async {
@@ -1007,15 +1024,18 @@ Future<void> _pumpEditor(
 }) => tester.pumpWidget(
   ProviderScope(
     child: MaterialApp(
-      home: MediaQuery(
-        data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
-        child: Scaffold(
-          body: SizedBox(
-            width: width,
-            height: 560,
-            child: EarthquakeVxseDebugEditor(
-              current: current ?? _currentEarthquake(),
-            ),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.linear(textScale),
+        ),
+        child: child ?? const SizedBox.shrink(),
+      ),
+      home: Scaffold(
+        body: SizedBox(
+          width: width,
+          height: 560,
+          child: EarthquakeVxseDebugEditor(
+            current: current ?? _currentEarthquake(),
           ),
         ),
       ),

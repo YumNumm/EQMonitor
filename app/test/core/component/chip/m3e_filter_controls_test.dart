@@ -56,7 +56,11 @@ void main() {
     );
     await tester.tap(find.byType(RawChip));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('降順 ↓').hitTestable());
+    await tester.ensureVisible(find.byType(M3EToggleButtonGroup));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(M3EToggleButton, '降順 ↓').hitTestable(),
+    );
     await tester.pumpAndSettle();
     expect(
       tester
@@ -64,7 +68,9 @@ void main() {
           .selectedIndex,
       SortOrder.values.indexOf(SortOrder.desc),
     );
-    await tester.tap(find.text('昇順 ↑').hitTestable());
+    await tester.tap(
+      find.widgetWithText(M3EToggleButton, '昇順 ↑').hitTestable(),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('完了'));
     await tester.pumpAndSettle();
