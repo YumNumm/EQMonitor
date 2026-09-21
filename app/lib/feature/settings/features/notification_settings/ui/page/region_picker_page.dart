@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:dio/dio.dart';
@@ -100,11 +103,11 @@ class RegionPickerPage extends HookConsumerWidget {
               ],
             ),
           ),
-          if (isAdding) const LinearProgressIndicator(),
+          if (isAdding) const AccessibleLinearProgressIndicator(),
           Expanded(
             child: switch (catalogAsync) {
               AsyncLoading() => const Center(
-                child: CircularProgressIndicator.adaptive(),
+                child: AccessibleCircularProgressIndicator(),
               ),
               AsyncError() => _RegionCatalogError(
                 onRetry: () =>
@@ -177,7 +180,7 @@ class _RegionCatalogError extends StatelessWidget {
       children: [
         const Text('地域情報を読み込めませんでした'),
         const SizedBox(height: 8),
-        FilledButton.tonal(onPressed: onRetry, child: const Text('再試行')),
+        M3EFilledButton.tonal(onPressed: onRetry, child: const Text('再試行')),
       ],
     ),
   );

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
@@ -24,7 +25,7 @@ class PerIntensitySoundSettingsPage extends ConsumerWidget {
           if (slotsAsync.isLoading && slots.isEmpty)
             const Padding(
               padding: EdgeInsets.all(24),
-              child: Center(child: CircularProgressIndicator.adaptive()),
+              child: Center(child: AccessibleCircularProgressIndicator()),
             )
           else ...[
             const SettingsSectionHeader(text: '緊急地震速報(予報)'),
