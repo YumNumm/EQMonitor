@@ -9,6 +9,22 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class FlutterJobSetupTest(unittest.TestCase):
+    def test_download_retry_config_is_scoped_to_mise_actions(self):
+        workflow = json.loads(subprocess.check_output(
+            ["mise", "exec", "yq", "--", "yq", "-o=json", ".",
+             str(ROOT / ".github/workflows/deploy-app.yaml")], text=True,
+        ))
+        self.assertNotIn("CURL_HOME", workflow.get("env", {}))
+        for job in workflow["jobs"].values():
+            self.assertNotIn("CURL_HOME", job.get("env", {}))
+            for step in job["steps"]:
+                curl_home = step.get("env", {}).get("CURL_HOME")
+                if step.get("uses", "").startswith("jdx/mise-action@"):
+                    self.assertEqual(curl_home,
+                                     "${{ github.workspace }}/scripts/ci/mise-curl")
+                else:
+                    self.assertIsNone(curl_home)
+
     def test_play_edit_users_share_a_cross_run_queue(self):
         workflow = json.loads(subprocess.check_output(
             ["mise", "exec", "yq", "--", "yq", "-o=json", ".",

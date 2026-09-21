@@ -84,6 +84,9 @@ jobs:
       - name: Verify Flutter job setup
         run: python3 scripts/ci/test_flutter_job_setup.py
 
+      - name: Verify mise download retries
+        run: python3 scripts/ci/test_mise_download_retry.py
+
       - name: Run ghalint
         run: |
           set -euo pipefail
