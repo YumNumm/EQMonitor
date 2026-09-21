@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_
 import 'package:eqmonitor/feature/earthquake_history/ui/page/earthquake_history_search_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -22,7 +23,7 @@ void main() {
         ),
       ),
     );
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     result.complete(const []);
     await tester.pumpAndSettle();
     expect(find.textContaining('該当する地域がありません'), findsOneWidget);

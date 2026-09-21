@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -6,8 +8,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_debug_sheet.g.dart';
@@ -32,7 +35,9 @@ class const EarthquakeHistoryDebugSheetAction() {
         ),
       );
     }
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       clipBehavior: Clip.antiAlias,
       isScrollControlled: true,
@@ -57,7 +62,7 @@ class EarthquakeHistoryDebugSheet extends ConsumerWidget {
         current: value,
       ),
       AsyncError() => const Center(child: Text('地震情報を読み込めませんでした')),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }
@@ -103,7 +108,7 @@ class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: TextButton(
+                      child: M3ETextButton(
                         key: const Key('earthquake-debug-reset-button'),
                         onPressed: () => ref
                             .read(earthquakeVxseDebugActionProvider)

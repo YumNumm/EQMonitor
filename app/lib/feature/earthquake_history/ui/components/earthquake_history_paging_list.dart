@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -37,7 +38,9 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
     if (!showDateHeaders) {
       return SliverPagingList<String?, EarthquakePartial>(
         dataSource: dataSource,
-        builder: (context, item, _) => _EarthquakeHistoryPagingItem(
+        builder: (context, item, index) => _EarthquakeHistoryPagingItem(
+          index: index,
+          totalCount: dataSource.notifier.values.length,
           item: item,
           selected: selectedEventId == item.earthquake.eventId,
           onSelect: onSelect,
@@ -61,13 +64,23 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
       dataSource: dataSource,
       stickyHeader: true,
       headerBuilder: (_, date, _) => _DateHeader(date: date),
-      itemBuilder: (context, item, _, _) => _EarthquakeHistoryPagingItem(
-        item: item,
-        selected: selectedEventId == item.earthquake.eventId,
-        onSelect: onSelect,
-        parameter: parameter,
-        showBackgroundColor: config.isFillBackground,
-      ),
+      itemBuilder: (context, item, globalIndex, localIndex) =>
+          _EarthquakeHistoryPagingItem(
+            index: localIndex,
+            totalCount: dataSource.groupedValues
+                .firstWhere(
+                  (group) =>
+                      group.children.length > localIndex &&
+                      group.children[localIndex].index == globalIndex,
+                )
+                .children
+                .length,
+            item: item,
+            selected: selectedEventId == item.earthquake.eventId,
+            onSelect: onSelect,
+            parameter: parameter,
+            showBackgroundColor: config.isFillBackground,
+          ),
       initialLoadingWidget: const EarthquakeHistorySkeleton(scrollable: false),
       appendLoadingWidget: const EarthquakeHistorySkeleton(
         itemCount: 2,
@@ -83,6 +96,8 @@ class EarthquakeHistoryPagingList extends StatelessWidget {
 class _EarthquakeHistoryPagingItem extends StatelessWidget {
   const new({
     required this.item,
+    required this.index,
+    required this.totalCount,
     required this.parameter,
     required this.showBackgroundColor,
     required this.selected,
@@ -90,6 +105,8 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
   });
 
   final EarthquakePartial item;
+  final int index;
+  final int totalCount;
   final EarthquakeHistoryParameter parameter;
   final bool showBackgroundColor;
   final bool selected;
@@ -97,34 +114,34 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        HistorySelection(
-          selected: selected,
-          child: EarthquakeHistoryListTile(
-            item: item,
-            searchParameter: parameter,
-            onTap: () async {
-              final select = onSelect;
-              if (select != null) {
-                select(item.earthquake.eventId);
-              } else {
-                await EarthquakeHistoryDetailsRoute(
-                  eventId: item.earthquake.eventId,
-                ).push<void>(context);
-              }
-            },
-            showBackgroundColor: showBackgroundColor,
-            visualDensity: VisualDensity.compact,
-          ),
+    const decoration = M3ESegmentedListDecoration();
+    return M3ESegmentedItem(
+      key: ValueKey(item.earthquake.eventId),
+      index: index,
+      position: calculateSegmentedItemPosition(index, totalCount),
+      outerRadius: decoration.outerRadius,
+      innerRadius: decoration.innerRadius,
+      padding: EdgeInsets.zero,
+      color: Colors.transparent,
+      child: HistorySelection(
+        selected: selected,
+        child: EarthquakeHistoryListTile(
+          item: item,
+          searchParameter: parameter,
+          onTap: () async {
+            final select = onSelect;
+            if (select != null) {
+              select(item.earthquake.eventId);
+            } else {
+              await EarthquakeHistoryDetailsRoute(
+                eventId: item.earthquake.eventId,
+              ).push<void>(context);
+            }
+          },
+          showBackgroundColor: showBackgroundColor,
+          visualDensity: VisualDensity.compact,
         ),
-        Divider(
-          height: 0,
-          thickness: 0,
-          color: context.designSystem.colorTheme.onInverseSurface,
-        ),
-      ],
+      ),
     );
   }
 }

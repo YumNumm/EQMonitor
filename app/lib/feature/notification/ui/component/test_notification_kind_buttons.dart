@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class TestNotificationKindButtons extends StatelessWidget {
@@ -19,13 +21,13 @@ class TestNotificationKindButtons extends StatelessWidget {
       kind,
     ) {
       final isPending = pendingKind == kind;
-      return FilledButton.tonal(
+      return M3EFilledButton.tonal(
         onPressed: pendingKind == null ? () async => onPressed(kind) : null,
         child: isPending
             ? const SizedBox(
                 width: 18,
                 height: 18,
-                child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                child: AccessibleCircularProgressIndicator(strokeWidth: 2),
               )
             : Text(kind.displayLabel),
       );

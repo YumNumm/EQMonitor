@@ -22,9 +22,8 @@ abstract class EarthquakeActivityQuery with _$EarthquakeActivityQuery {
 
   DateTime get requestedEnd => baseOriginTime.add(Duration(days: afterDays));
 
-  DateTime effectiveEnd({required DateTime now}) => requestedEnd.isBefore(now)
-      ? requestedEnd
-      : now;
+  DateTime effectiveEnd({required DateTime now}) =>
+      requestedEnd.isBefore(now) ? requestedEnd : now;
 
   int? get depthGte => switch ((depth, depthOffsetKm)) {
     (final int value, final int offset) => (value - offset).clamp(0, 2000),

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/secure_storage/debug_secure_storage_entries_provider.dart';
@@ -24,7 +26,7 @@ class DebugSecureStoragePage extends HookConsumerWidget {
         ],
       ),
       body: _EntriesList(entries: entries),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: M3EFloatingActionButton(
         onPressed: () async {
           await showDialog<void>(
             context: context,
@@ -47,11 +49,13 @@ class _EntriesList extends HookConsumerWidget {
     final revealedKeys = useState<Set<String>>({});
 
     return entries.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, _) => Center(child: Text('エラー: $error')),
       data: (list) {
         if (list.isEmpty) {
-          return RefreshIndicator(
+          return M3EPullToRefreshIndicator(
+            onError: (error, stackTrace) =>
+                Error.throwWithStackTrace(error, stackTrace),
             onRefresh: () async {
               ref.invalidate(debugSecureStorageEntriesProvider);
             },
@@ -65,7 +69,9 @@ class _EntriesList extends HookConsumerWidget {
           );
         }
 
-        return RefreshIndicator(
+        return M3EPullToRefreshIndicator(
+          onError: (error, stackTrace) =>
+              Error.throwWithStackTrace(error, stackTrace),
           onRefresh: () async {
             ref.invalidate(debugSecureStorageEntriesProvider);
           },
@@ -151,11 +157,11 @@ class _EditDialog extends HookConsumerWidget {
         style: const TextStyle(fontFamily: FontFamily.googleSansCode),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () async {
             final action = ref.read(debugSecureStorageActionProvider);
             await action.write(ref, key: entry.key, value: controller.text);
@@ -200,11 +206,11 @@ class _AddDialog extends HookConsumerWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () async {
             final key = keyController.text.trim();
             if (key.isEmpty) {

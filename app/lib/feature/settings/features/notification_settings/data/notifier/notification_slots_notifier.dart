@@ -69,6 +69,17 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       slots: [currentLocationSlot],
       shakeDetectionState: shakeDetectionState,
     );
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == currentLocationSlot.id) currentLocationSlot else slot,
+        if (!previous.any((slot) => slot.id == currentLocationSlot.id))
+          currentLocationSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 
@@ -141,7 +152,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.putNationwide(
+    final updatedSlot = await repo.putNationwide(
       eewEnabled: eewEnabled,
       eewMinIntensity: eewMinIntensity,
       eewOverrides: eewOverrides,
@@ -149,6 +160,16 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == updatedSlot.id) updatedSlot else slot,
+        if (!previous.any((slot) => slot.id == updatedSlot.id)) updatedSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 
@@ -205,7 +226,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.updateRegion(
+    final updatedSlot = await repo.updateRegion(
       slotId: slotId,
       regionName: regionName,
       cityCode: cityCode,
@@ -217,6 +238,16 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == updatedSlot.id) updatedSlot else slot,
+        if (!previous.any((slot) => slot.id == updatedSlot.id)) updatedSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 

@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -93,7 +94,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              FilledButton.icon(
+              M3EFilledButton.icon(
                 icon: const Icon(Icons.play_arrow),
                 label: const Text('開始'),
                 onPressed: isBusy.value
@@ -111,7 +112,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                         }
                       }),
               ),
-              FilledButton.tonalIcon(
+              M3EFilledButton.tonalIcon(
                 icon: const Icon(Icons.refresh),
                 label: const Text('更新'),
                 onPressed: isBusy.value
@@ -126,7 +127,7 @@ class DebugLiveActivityPage extends HookConsumerWidget {
                         );
                       }),
               ),
-              OutlinedButton.icon(
+              M3EOutlinedButton.icon(
                 icon: const Icon(Icons.stop),
                 label: const Text('終了'),
                 onPressed: isBusy.value

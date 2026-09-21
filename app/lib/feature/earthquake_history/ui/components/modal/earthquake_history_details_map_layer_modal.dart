@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -5,10 +7,10 @@ import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
   const new({super.key});
@@ -155,7 +157,7 @@ class _LocationSettingCards extends ConsumerWidget {
           ],
         ),
       ),
-      loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, _) => Center(child: Text('$error')),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -13,9 +14,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CityDetailModalAction {
   Future<void> show(
@@ -24,7 +26,9 @@ class CityDetailModalAction {
     required String cityName,
     required String prefectureName,
     JmaIntensity? maxIntensity,
-  }) => showModalBottomSheet<void>(
+  }) => showM3EModalBottomSheet<void>(
+    useSafeArea: false,
+    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
     clipBehavior: Clip.antiAlias,
@@ -189,7 +193,7 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: OutlinedButton.icon(
+              child: M3EOutlinedButton.icon(
                 onPressed: isAppending
                     ? null
                     : () async {
@@ -227,7 +231,7 @@ class _InitialLoadingSliver extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator.adaptive(),
+            AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
             Text('地震一覧を読み込んでいます'),
           ],

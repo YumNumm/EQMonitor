@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'live_monitor_exit_action.g.dart';
@@ -22,11 +23,11 @@ class const LiveMonitorExitAction() {
       builder: (context) => AlertDialog.adaptive(
         title: const Text('LiveMonitor モードを終了しますか？'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('キャンセル'),
           ),
-          FilledButton(
+          M3EFilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('終了'),
           ),
@@ -66,11 +67,11 @@ class const LiveMonitorExitAction() {
         title: const Text('表示時間を保存できませんでした'),
         content: const Text('入力中の変更を破棄してLiveMonitor モードを終了しますか？'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('戻る'),
           ),
-          FilledButton(
+          M3EFilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('変更を破棄して終了'),
           ),

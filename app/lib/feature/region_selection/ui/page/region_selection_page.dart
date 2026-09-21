@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_search.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/region_selection_reducer.dart';
@@ -7,6 +8,7 @@ import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RegionSelectionPage extends ConsumerWidget {
@@ -32,7 +34,7 @@ class RegionSelectionPage extends ConsumerWidget {
       ),
       loading: () => Scaffold(
         appBar: AppBar(title: Text(request.title)),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
+        body: const Center(child: AccessibleCircularProgressIndicator()),
       ),
       error: (_, _) => Scaffold(
         appBar: AppBar(title: Text(request.title)),
@@ -41,7 +43,7 @@ class RegionSelectionPage extends ConsumerWidget {
             mainAxisSize: .min,
             children: [
               const Text('地域情報を読み込めませんでした'),
-              TextButton(
+              M3ETextButton(
                 onPressed: () {
                   ref.invalidate(parameterSetProvider);
                   ref.invalidate(
@@ -104,7 +106,7 @@ class _RegionSelectionContent extends HookWidget {
       appBar: AppBar(
         title: Text(request.title),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: !canConfirm
                 ? null
                 : () {
@@ -200,7 +202,7 @@ class _RegionSelectionContent extends HookWidget {
                 child: Row(
                   children: [
                     Expanded(child: Text('${scope.name}の地域')),
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () {
                         parent.value = null;
                       },
@@ -298,7 +300,7 @@ class _RegionSelectionContent extends HookWidget {
                     ),
                   ),
                   if (selected.isNotEmpty)
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () {
                         selection.value = const [];
                       },

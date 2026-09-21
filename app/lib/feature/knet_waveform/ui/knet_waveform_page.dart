@@ -1,11 +1,13 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class KnetWaveformPage extends ConsumerWidget {
   const new({super.key});
@@ -17,7 +19,8 @@ class KnetWaveformPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('K-NET 強震波形')),
       body: credentials.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (e, _) => Center(child: Text('エラー: $e')),
         data: (data) {
           if (data == null) {
@@ -66,7 +69,7 @@ class _UnconfiguredView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: onSetup,
               icon: const Icon(Icons.settings),
               label: const Text('認証情報を設定する'),
@@ -104,19 +107,19 @@ class _ConfiguredView extends StatelessWidget {
             const SizedBox(height: 8),
             Text('ユーザー: $userId', style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 24),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: () => _openYearPicker(context),
               icon: const Icon(Icons.image_search),
               label: const Text('PNG図・MP4動画を表示'),
             ),
             const SizedBox(height: 12),
-            FilledButton.tonalIcon(
+            M3EFilledButton.tonalIcon(
               onPressed: () => _openYearPickerForRecords(context),
               icon: const Icon(Icons.sensors),
               label: const Text('観測点一覧・波形を表示'),
             ),
             const SizedBox(height: 12),
-            OutlinedButton.icon(
+            M3EOutlinedButton.icon(
               onPressed: () =>
                   const KnetCredentialsSettingsRoute().push<void>(context),
               icon: const Icon(Icons.settings),
@@ -201,7 +204,8 @@ class _YearPickerDialog extends ConsumerWidget {
       content: SizedBox(
         width: double.maxFinite,
         child: yearsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () =>
+              const Center(child: AccessibleCircularProgressIndicator()),
           error: (e, _) => Center(child: Text('エラー: $e')),
           data: (years) {
             final reversed = years.reversed.toList();
@@ -221,7 +225,7 @@ class _YearPickerDialog extends ConsumerWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
@@ -248,7 +252,8 @@ class _MonthPickerDialog extends ConsumerWidget {
       content: SizedBox(
         width: double.maxFinite,
         child: monthsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () =>
+              const Center(child: AccessibleCircularProgressIndicator()),
           error: (e, _) => Center(child: Text('エラー: $e')),
           data: (months) {
             final reversed = months.reversed.toList();
@@ -268,7 +273,7 @@ class _MonthPickerDialog extends ConsumerWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
@@ -299,7 +304,8 @@ class _RecordPickerDialog extends HookConsumerWidget {
         width: double.maxFinite,
         height: MediaQuery.of(context).size.height * 0.6,
         child: recordsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () =>
+              const Center(child: AccessibleCircularProgressIndicator()),
           error: (e, _) => Center(child: Text('エラー: $e')),
           data: (records) {
             final filtered = query.value.isEmpty
@@ -339,7 +345,7 @@ class _RecordPickerDialog extends HookConsumerWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),

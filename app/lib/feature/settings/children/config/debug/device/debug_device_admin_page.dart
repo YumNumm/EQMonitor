@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -26,7 +28,7 @@ class DebugDeviceAdminPage extends ConsumerWidget {
       body: deviceIdAsync.when(
         data: (deviceId) => _DebugDeviceAdminBody(deviceId: deviceId),
         loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (e, _) => _ErrorBody(message: e.toString()),
       ),
     );
@@ -97,7 +99,7 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
         Expanded(
           child: switch ((snapshot.connectionState, snapshot.data)) {
             (ConnectionState.waiting, _) => const Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: AccessibleCircularProgressIndicator(),
             ),
             (ConnectionState.done, _) when snapshot.hasError => _ErrorBody(
               message: snapshot.error.toString(),
@@ -204,16 +206,16 @@ class _Body extends HookConsumerWidget {
           title: const Text('デバイスを削除'),
           content: const Text('この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？'),
           actions: [
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('キャンセル'),
             ),
-            TextButton(
+            M3ETextButton(
               onPressed: () {
                 confirmed = true;
                 Navigator.of(context).pop();
               },
-              style: TextButton.styleFrom(
+              decoration: M3EButtonDecoration.styleFrom(
                 foregroundColor: context.designSystem.colorTheme.error,
               ),
               child: const Text('削除'),
@@ -305,7 +307,7 @@ class _Body extends HookConsumerWidget {
         const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerLeft,
-          child: OutlinedButton.icon(
+          child: M3EOutlinedButton.icon(
             onPressed: () async =>
                 Clipboard.setData(ClipboardData(text: deviceId)),
             icon: const Icon(Icons.copy, size: 18),
@@ -348,18 +350,20 @@ class _Body extends HookConsumerWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: isBusy.value ? null : () async => registerOrRefresh(),
               icon: isBusy.value
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                      child: AccessibleCircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
                     )
                   : const Icon(Icons.cloud_upload_outlined),
               label: Text(device == null ? 'サーバーに登録' : '再登録（PUT）'),
             ),
-            FilledButton.tonalIcon(
+            M3EFilledButton.tonalIcon(
               onPressed: device == null || isBusy.value
                   ? null
                   : () async => deleteDevice(),
@@ -408,7 +412,7 @@ class _Body extends HookConsumerWidget {
         const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
-          child: FilledButton(
+          child: M3EFilledButton(
             onPressed: device == null || isBusy.value
                 ? null
                 : () async => saveNotificationSettings(),
@@ -416,7 +420,7 @@ class _Body extends HookConsumerWidget {
                 ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Text('通知条件をサーバーに反映'),
           ),

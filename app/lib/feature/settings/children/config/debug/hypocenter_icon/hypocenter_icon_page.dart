@@ -1,3 +1,5 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:io';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
@@ -114,7 +116,7 @@ class _HypocenterIconsSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        FilledButton.icon(
+        M3EFilledButton.icon(
           onPressed: () async => _captureAndShare(
             controller: normalController,
             fileName: 'normal_hypocenter.png',
@@ -158,7 +160,7 @@ class _HypocenterIconsSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        FilledButton.icon(
+        M3EFilledButton.icon(
           onPressed: () async => _captureAndShare(
             controller: lowPreciseController,
             fileName: 'low_precise_hypocenter.png',

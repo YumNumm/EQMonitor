@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/ads/data/flow/ads_opt_out_flow.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 広告 opt-out 前に Pro へ誘導する販促ボトムシート。
 ///
@@ -11,7 +12,9 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
   const new({super.key});
 
   static Future<void> show(BuildContext context) async {
-    await showModalBottomSheet<void>(
+    await showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -66,30 +69,26 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             if (isProFeaturesEnabled) ...[
-              FilledButton(
-                style: FilledButton.styleFrom(
+              M3EFilledButton(
+                decoration: M3EButtonDecoration.styleFrom(
                   minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  borderRadius: 20,
                 ),
                 onPressed: () async => flow.showPaywall(ref, context),
                 child: const Text('EQMonitor Pro を見る'),
               ),
               const SizedBox(height: 8),
             ],
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
+            M3EOutlinedButton(
+              decoration: M3EButtonDecoration.styleFrom(
                 minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                borderRadius: 20,
               ),
               onPressed: () async => flow.continueWithoutAds(ref, context),
               child: const Text('広告なしで続ける（無料）'),
             ),
             const SizedBox(height: 4),
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('キャンセル'),
             ),

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -8,6 +10,7 @@ import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_update_i
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AssetPackUpdateCard extends HookConsumerWidget {
@@ -176,11 +179,11 @@ class _AssetPackConsentDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: const Text('あとで'),
         ),
-        FilledButton.icon(
+        M3EFilledButton.icon(
           onPressed: () => Navigator.of(context).pop(true),
           icon: const Icon(Icons.download_rounded),
           label: const Text('ダウンロード'),
@@ -220,7 +223,7 @@ class _AssetPackInstallingCard extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            LinearProgressIndicator(value: determinateProgress),
+            AccessibleLinearProgressIndicator(value: determinateProgress),
             const SizedBox(height: 8),
             Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],

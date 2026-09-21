@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -27,7 +28,7 @@ class _ProUpgradeDialog extends ConsumerWidget {
         title: const Text('現在ご利用いただけません'),
         content: const Text('このビルドでは、EQMonitor Pro は利用できません。'),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('閉じる'),
           ),
@@ -39,11 +40,11 @@ class _ProUpgradeDialog extends ConsumerWidget {
       title: const Text('Proプランが必要です'),
       content: const Text('この機能を利用するにはProプランへのアップグレードが必要です。'),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('閉じる'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () async {
             Navigator.of(context).pop();
             await const PaywallRoute().push<void>(context);

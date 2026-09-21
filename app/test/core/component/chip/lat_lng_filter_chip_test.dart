@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/component/chip/lat_lng_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   Widget wrap({LatLngRange? value, void Function(LatLngRange?)? onChanged}) =>
@@ -35,9 +36,9 @@ void main() {
       .first;
 
   bool isDoneEnabled(WidgetTester tester) {
-    final button = tester.widget<TextButton>(
+    final button = tester.widget<M3ETextButton>(
       find
-          .ancestor(of: find.text('完了'), matching: find.byType(TextButton))
+          .ancestor(of: find.text('完了'), matching: find.byType(M3ETextButton))
           .first,
     );
     return button.onPressed != null;
@@ -89,7 +90,7 @@ void main() {
 
     await tester.tap(
       find
-          .ancestor(of: find.text('完了'), matching: find.byType(TextButton))
+          .ancestor(of: find.text('完了'), matching: find.byType(M3ETextButton))
           .first,
     );
     await tester.pumpAndSettle();

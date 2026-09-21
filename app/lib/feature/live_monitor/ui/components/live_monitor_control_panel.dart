@@ -3,9 +3,10 @@ import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_
 import 'package:eqmonitor/feature/live_monitor/data/model/live_monitor_settings.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_control_panel_notifier.dart';
 import 'package:eqmonitor/feature/live_monitor/data/notifier/live_monitor_settings_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorControlPanel extends HookConsumerWidget {
   const new({
@@ -167,22 +168,29 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
               const SizedBox(height: 16),
               Text('表示方式', style: Theme.of(context).textTheme.labelLarge),
               const SizedBox(height: 8),
-              SegmentedButton<LiveMonitorDisplayMode>(
-                segments: const [
-                  ButtonSegment(
-                    value: LiveMonitorDisplayMode.automatic,
+              M3EToggleButtonGroup(
+                type: M3EButtonGroupType.connected,
+                actions: const [
+                  M3EToggleButtonGroupAction(
                     label: Text('自動切替'),
                     icon: Icon(Icons.auto_awesome),
                   ),
-                  ButtonSegment(
-                    value: LiveMonitorDisplayMode.split,
+                  M3EToggleButtonGroupAction(
                     label: Text('分割表示'),
                     icon: Icon(Icons.splitscreen),
                   ),
                 ],
-                selected: {settings.displayMode},
-                onSelectionChanged: (selection) async {
-                  final displayMode = selection.first;
+                selectedIndex: (<LiveMonitorDisplayMode>[
+                  LiveMonitorDisplayMode.automatic,
+                  LiveMonitorDisplayMode.split,
+                ]).indexOf(settings.displayMode),
+                onSelectedIndexChanged: (index) async {
+                  if (index == null) return;
+                  final selection = <LiveMonitorDisplayMode>[
+                    LiveMonitorDisplayMode.automatic,
+                    LiveMonitorDisplayMode.split,
+                  ][index];
+                  final displayMode = selection;
                   await LiveMonitorSettingsNotifier.saveMutation.run(ref, (
                     tsx,
                   ) async {
@@ -245,7 +253,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  TextButton(
+                  M3ETextButton(
                     onPressed: () async {
                       final committedRaw = durationController.text;
                       final committedRevision = durationRevision.value;
@@ -269,7 +277,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
                     },
                     child: const Text('閉じる'),
                   ),
-                  FilledButton.tonalIcon(
+                  M3EFilledButton.tonalIcon(
                     onPressed: () async {
                       await onExit();
                     },

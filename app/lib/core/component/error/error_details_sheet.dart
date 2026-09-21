@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eqmonitor/core/component/error/error_diagnostics.dart';
+
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -8,9 +9,10 @@ import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'error_details_sheet.g.dart';
@@ -26,7 +28,9 @@ class const ErrorDetailsSheetAction() {
     StackTrace? stackTrace,
   }) {
     final occurredAt = DateTime.now();
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
@@ -104,7 +108,7 @@ class _ErrorDetailsSheet extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: FilledButton.tonalIcon(
+                  child: M3EFilledButton.tonalIcon(
                     onPressed: () async {
                       await HapticFeedback.errorNotification();
                       await Clipboard.setData(ClipboardData(text: diagnostics));
@@ -119,7 +123,7 @@ class _ErrorDetailsSheet extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                TextButton.icon(
+                M3ETextButton.icon(
                   onPressed: () async {
                     final open = ref.read(openContactProvider);
                     await open(ref, context);

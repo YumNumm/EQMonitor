@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -37,7 +38,9 @@ class _PagingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return M3EPullToRefreshIndicator(
+      onError: (error, stackTrace) =>
+          Error.throwWithStackTrace(error, stackTrace),
       onRefresh: dataSource.refresh,
       child: CustomScrollView(
         slivers: [

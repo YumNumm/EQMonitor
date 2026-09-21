@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -11,9 +12,9 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_earthquake_card.
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_region_list.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_timeline_overlay.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_status_card.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TsunamiDetailsPage extends HookConsumerWidget {
   const new({required this.tsunamiId, super.key});
@@ -30,7 +31,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
     return switch (state) {
       AsyncLoading() => Scaffold(
         appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
+        body: const Center(child: AccessibleCircularProgressIndicator()),
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),

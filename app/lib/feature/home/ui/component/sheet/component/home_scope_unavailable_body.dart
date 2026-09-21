@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// スコープに対する検索パラメータが取れない（未設定 / 未解決）ときに
 /// シート上に表示する案内ブロック。
@@ -134,7 +135,7 @@ class _CurrentLocationUnavailable extends HookWidget {
         icon: Icons.location_off_outlined,
         message: '位置情報の利用が許可されていません。許可すると現在地周辺の地震を表示できます。',
         actions: [
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: () async {
               await Geolocator.requestPermission();
               await refreshPermission();
@@ -148,7 +149,7 @@ class _CurrentLocationUnavailable extends HookWidget {
         icon: Icons.location_disabled_outlined,
         message: '位置情報の利用が拒否されています。アプリの設定から許可してください。',
         actions: [
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: () async {
               await Geolocator.openAppSettings();
               await refreshPermission();
@@ -163,7 +164,7 @@ class _CurrentLocationUnavailable extends HookWidget {
         icon: Icons.gps_not_fixed_outlined,
         message: '現在地から地震情報を取得できませんでした。電波状況などをご確認のうえ再試行してください。',
         actions: [
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             onPressed: () {
               onRetry();
               unawaited(Future.microtask(refreshPermission));
@@ -189,7 +190,7 @@ class _CustomUnavailable extends StatelessWidget {
       message: '指定地域が未設定です。表示したい都道府県・市区町村を選んでください。',
       actions: [
         if (onConfigureRegion != null)
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: onConfigureRegion,
             child: const Text('地域を設定する'),
           ),

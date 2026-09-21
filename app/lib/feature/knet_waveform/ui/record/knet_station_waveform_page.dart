@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:math';
 
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
@@ -8,10 +10,11 @@ import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.d
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_station_analysis_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_waveform_parser/knet_waveform_parser.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 観測点波形・スペクトル解析ページ
 class KnetStationWaveformPage extends HookConsumerWidget {
@@ -68,17 +71,24 @@ class KnetStationWaveformPage extends HookConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: SegmentedButton<int>(
-                  segments: const [
-                    ButtonSegment(value: 0, label: Text('加速度 (gal)')),
-                    ButtonSegment(value: 1, label: Text('速度 (cm/s)')),
-                    ButtonSegment(value: 2, label: Text('変位 (cm)')),
+                child: M3EToggleButtonGroup(
+                  size: M3EButtonSize.xs,
+                  type: M3EButtonGroupType.connected,
+                  actions: const [
+                    M3EToggleButtonGroupAction(label: Text('加速度 (gal)')),
+                    M3EToggleButtonGroupAction(label: Text('速度 (cm/s)')),
+                    M3EToggleButtonGroupAction(label: Text('変位 (cm)')),
                   ],
-                  selected: {waveType.value},
-                  onSelectionChanged: (s) => waveType.value = s.first,
-                  style: const ButtonStyle(
-                    visualDensity: VisualDensity.compact,
-                  ),
+                  selectedIndex: (<int>[
+                    0,
+                    1,
+                    2,
+                  ]).indexOf(waveType.value),
+                  onSelectedIndexChanged: (index) {
+                    if (index == null) return;
+                    final s = <int>[0, 1, 2][index];
+                    waveType.value = s;
+                  },
                 ),
               ),
               Expanded(
@@ -117,7 +127,7 @@ class KnetStationWaveformPage extends HookConsumerWidget {
       return _WaveformChart(record: record, channelIndex: ch);
     }
     return analysisAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, _) => Center(child: Text('解析エラー: $e')),
       data: (analysis) {
         final data = waveType == 1 ? analysis.velocity : analysis.displacement;
@@ -434,7 +444,7 @@ class _SpectrumView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return analysis.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, _) => Center(child: Text('解析エラー: $e')),
       data: (a) => _SpectrumChart(spectrum: a.responseSpectrum5pct),
     );
@@ -474,15 +484,20 @@ class _SpectrumChart extends HookWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          child: SegmentedButton<int>(
-            segments: const [
-              ButtonSegment(value: 0, label: Text('Sa (gal)')),
-              ButtonSegment(value: 1, label: Text('Sv (cm/s)')),
-              ButtonSegment(value: 2, label: Text('Sd (cm)')),
+          child: M3EToggleButtonGroup(
+            size: M3EButtonSize.xs,
+            type: M3EButtonGroupType.connected,
+            actions: const [
+              M3EToggleButtonGroupAction(label: Text('Sa (gal)')),
+              M3EToggleButtonGroupAction(label: Text('Sv (cm/s)')),
+              M3EToggleButtonGroupAction(label: Text('Sd (cm)')),
             ],
-            selected: {selected.value},
-            onSelectionChanged: (s) => selected.value = s.first,
-            style: const ButtonStyle(visualDensity: VisualDensity.compact),
+            selectedIndex: (<int>[0, 1, 2]).indexOf(selected.value),
+            onSelectedIndexChanged: (index) {
+              if (index == null) return;
+              final s = <int>[0, 1, 2][index];
+              selected.value = s;
+            },
           ),
         ),
         Padding(
@@ -576,7 +591,7 @@ class _FourierView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return analysis.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, _) => Center(child: Text('解析エラー: $e')),
       data: (a) => _FourierChart(spectrum: a.fourierSpectrum),
     );

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
@@ -11,9 +12,10 @@ import 'package:eqmonitor/feature/live_monitor/data/provider/live_monitor_latest
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_layers.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_earthquake_overlay.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_map_host.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorEarthquakePane extends HookConsumerWidget {
   const new({super.key});
@@ -38,7 +40,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator.adaptive(),
+                    AccessibleCircularProgressIndicator(),
                     SizedBox(height: 12),
                     Text('最新の地震情報を読み込んでいます'),
                   ],
@@ -165,7 +167,7 @@ class LiveMonitorLatestEarthquakeUnavailable extends StatelessWidget {
             children: [
               Text(message),
               const SizedBox(height: 8),
-              FilledButton(onPressed: onRetry, child: const Text('再試行')),
+              M3EFilledButton(onPressed: onRetry, child: const Text('再試行')),
             ],
           ),
         ),

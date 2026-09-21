@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/component/error/error_message_builder.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'error_dialog.g.dart';
@@ -51,13 +52,13 @@ class _ErrorDialogBody extends ConsumerWidget {
       title: Text(resolvedTitle),
       content: Text(message),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => ref
               .read(errorDetailsSheetActionProvider)
               .show(context, error: error, stackTrace: stackTrace),
           child: const Text('詳細'),
         ),
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('閉じる'),
         ),

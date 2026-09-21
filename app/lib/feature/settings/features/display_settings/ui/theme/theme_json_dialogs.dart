@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
@@ -33,7 +34,7 @@ class ThemeImportExportSection extends HookConsumerWidget {
           title: const Text('インポートに失敗しました'),
           content: Text(message),
           actions: [
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: const Text('閉じる'),
             ),
@@ -75,11 +76,11 @@ class ThemeImportExportSection extends HookConsumerWidget {
                     .toList(),
               ),
               actions: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(),
                   child: const Text('キャンセル'),
                 ),
-                FilledButton(
+                M3EFilledButton(
                   onPressed: state.value.isEmpty
                       ? null
                       : () => Navigator.of(dialogContext).pop(state.value),
@@ -111,11 +112,11 @@ class ThemeImportExportSection extends HookConsumerWidget {
             decoration: const InputDecoration(hintText: 'テーマJSONを貼り付け'),
           ),
           actions: [
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: const Text('キャンセル'),
             ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: () => Navigator.of(dialogContext).pop(controller.text),
               child: const Text('インポート'),
             ),
@@ -140,15 +141,15 @@ class ThemeImportExportSection extends HookConsumerWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: () => exportMode(ThemeBrightnessMode.light),
             child: const Text('ライトをエクスポート'),
           ),
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: () => exportMode(ThemeBrightnessMode.dark),
             child: const Text('ダークをエクスポート'),
           ),
-          FilledButton.tonal(
+          M3EFilledButton.tonal(
             onPressed: showImportDialog,
             child: const Text('JSONをインポート'),
           ),

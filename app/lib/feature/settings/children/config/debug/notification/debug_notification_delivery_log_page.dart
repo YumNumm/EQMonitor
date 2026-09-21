@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -99,12 +102,12 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
       body: switch (ref.watch(deviceIdProvider)) {
         AsyncError(:final error) => Center(child: Text('端末 ID 取得エラー: $error')),
         AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         AsyncData<String>() => Builder(
           builder: (context) {
             if (loading.value && items.value.isEmpty && error.value == null) {
-              return const Center(child: CircularProgressIndicator.adaptive());
+              return const Center(child: AccessibleCircularProgressIndicator());
             }
             if (error.value != null && items.value.isEmpty) {
               return Center(
@@ -115,7 +118,7 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                     children: [
                       Text(error.value.toString(), textAlign: TextAlign.center),
                       const SizedBox(height: 16),
-                      FilledButton.icon(
+                      M3EFilledButton.icon(
                         onPressed: () {
                           refreshTick.value++;
                         },
@@ -128,7 +131,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
               );
             }
             if (items.value.isEmpty) {
-              return RefreshIndicator(
+              return M3EPullToRefreshIndicator(
+                onError: (error, stackTrace) =>
+                    Error.throwWithStackTrace(error, stackTrace),
                 onRefresh: loadFirstPage,
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -147,7 +152,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                 ),
               );
             }
-            return RefreshIndicator(
+            return M3EPullToRefreshIndicator(
+              onError: (error, stackTrace) =>
+                  Error.throwWithStackTrace(error, stackTrace),
               onRefresh: loadFirstPage,
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -160,8 +167,8 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       padding: const EdgeInsets.all(16),
                       child: Center(
                         child: loadingMore.value
-                            ? const CircularProgressIndicator.adaptive()
-                            : TextButton.icon(
+                            ? const AccessibleCircularProgressIndicator()
+                            : M3ETextButton.icon(
                                 onPressed: () async {
                                   await loadMore();
                                 },
@@ -178,7 +185,11 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       final detail = ref
                           .read(notificationDeliveryLogDetailBuilderProvider)
                           .build(entry: item);
-                      await showModalBottomSheet<void>(
+                      await showM3EModalBottomSheet<void>(
+                        style: const M3EBottomSheetStyle(
+                          padding: EdgeInsets.zero,
+                        ),
+                        useSafeArea: false,
                         context: context,
                         showDragHandle: true,
                         isScrollControlled: true,

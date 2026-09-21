@@ -41,3 +41,9 @@
 
 - `app/lib/feature/intensity_history/data/model/intensity_history_state.dart` の `prefecture()`→`nationwide()`、`city(...)`→`prefectureFocused(...)`、controllerの `backToPrefecture()`→`backToNationwide()` を検討する。
 - 完了条件: controller/map action/page/fill layer/region panelと `app/test/feature/intensity_history/` を追従しFreezed再生成。別都道府県tapの既存修正を回帰させない。
+
+## 800: M3E 移行後の実機表示・操作確認
+
+- iOS / Android の Light・Dark、文字拡大、VoiceOver / TalkBack で、選択値・無効状態・ボタン表示とスライダーの増減を確認する。Widget Test の成功と実機検証を区別する。
+- モーダルのキーボード表示時、画面分割時の高さ・スクロール、地図操作パネルとの重なりを確認する。
+- 通知上書き設定の削除失敗時に項目が復元され、別の項目が消えないことを実通信でも確認する。

@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/region_selection/ui/component/region_selection
 import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 const cities = [
@@ -114,7 +115,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(attempts, 2);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
     pending.completeError(Exception('disposed'));
     await tester.pump();
@@ -236,7 +237,7 @@ void main() {
         ),
       ),
     );
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     completer.complete(cities);
     await tester.pumpAndSettle();
     expect(find.text('該当する地域がありません'), findsOneWidget);

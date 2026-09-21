@@ -1,5 +1,8 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/material.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 const eqmonitorMapGpuProbeAtlasFixtureKey = ValueKey(
   'eqmonitor-map-gpu-probe-atlas-fixture',
@@ -72,24 +75,22 @@ class EqmonitorMapGpuProbePanel extends StatelessWidget {
               primary: false,
               shrinkWrap: true,
               children: [
-                ExpansionTile(
+                ExpandableSection(
                   title: const Text('GPU Probe'),
                   subtitle: Text(generationLabel),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: [
-                    DropdownButtonFormField<MapSpriteAtlasProbeFixture>(
-                      key: eqmonitorMapGpuProbeAtlasFixtureKey,
-                      initialValue: atlasFixture,
-                      isExpanded: true,
+                    InputDecorator(
                       decoration: const InputDecoration(
                         labelText: 'Atlas fixture',
                       ),
-                      items: MapSpriteAtlasProbeFixture.values
-                          .map(
-                            (fixture) => DropdownMenuItem(
-                              value: fixture,
-                              child: Text(
-                                switch (fixture) {
+                      child: ControlledDropdown<MapSpriteAtlasProbeFixture>(
+                        key: eqmonitorMapGpuProbeAtlasFixtureKey,
+                        items: MapSpriteAtlasProbeFixture.values
+                            .map(
+                              (fixture) => M3EDropdownItem(
+                                value: fixture,
+                                label: switch (fixture) {
                                   MapSpriteAtlasProbeFixture.production =>
                                     'Production',
                                   MapSpriteAtlasProbeFixture.orientation2x2 =>
@@ -99,30 +100,29 @@ class EqmonitorMapGpuProbePanel extends StatelessWidget {
                                   MapSpriteAtlasProbeFixture.edgeBleed =>
                                     'Edge bleed',
                                 },
+                                selected: fixture == atlasFixture,
                               ),
-                            ),
-                          )
-                          .toList(growable: false),
-                      onChanged: (value) {
-                        if (value != null) {
+                            )
+                            .toList(growable: false),
+                        onSelectionChanged: (selectedItems) {
+                          if (selectedItems.isEmpty) return;
+                          final value = selectedItems.first.value;
                           onAtlasFixtureChanged(value);
-                        }
-                      },
+                        },
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    DropdownButtonFormField<_MapGpuFaultSelection>(
-                      key: eqmonitorMapGpuProbeFaultPointKey,
-                      initialValue: selectedFault,
-                      isExpanded: true,
+                    InputDecorator(
                       decoration: const InputDecoration(
                         labelText: 'Fault point',
                       ),
-                      items: _MapGpuFaultSelection.values
-                          .map(
-                            (selection) => DropdownMenuItem(
-                              value: selection,
-                              child: Text(
-                                switch (selection) {
+                      child: ControlledDropdown<_MapGpuFaultSelection>(
+                        key: eqmonitorMapGpuProbeFaultPointKey,
+                        items: _MapGpuFaultSelection.values
+                            .map(
+                              (selection) => M3EDropdownItem(
+                                value: selection,
+                                label: switch (selection) {
                                   _MapGpuFaultSelection.none => 'なし',
                                   _MapGpuFaultSelection.atlasUpload =>
                                     'Atlas upload',
@@ -131,27 +131,30 @@ class EqmonitorMapGpuProbePanel extends StatelessWidget {
                                   _MapGpuFaultSelection.frameSubmit =>
                                     'Frame submit',
                                 },
+                                selected: selection == selectedFault,
                               ),
-                            ),
-                          )
-                          .toList(growable: false),
-                      onChanged: (selection) {
-                        final nextFault = switch (selection) {
-                          null || _MapGpuFaultSelection.none => null,
-                          _MapGpuFaultSelection.atlasUpload =>
-                            MapGpuFaultPoint.atlasUpload,
-                          _MapGpuFaultSelection.shaderInterface =>
-                            MapGpuFaultPoint.shaderInterface,
-                          _MapGpuFaultSelection.frameSubmit =>
-                            MapGpuFaultPoint.frameSubmit,
-                        };
-                        onFaultPointChanged(nextFault);
-                      },
+                            )
+                            .toList(growable: false),
+                        onSelectionChanged: (selectedItems) {
+                          if (selectedItems.isEmpty) return;
+                          final selection = selectedItems.first.value;
+                          final nextFault = switch (selection) {
+                            _MapGpuFaultSelection.none => null,
+                            _MapGpuFaultSelection.atlasUpload =>
+                              MapGpuFaultPoint.atlasUpload,
+                            _MapGpuFaultSelection.shaderInterface =>
+                              MapGpuFaultPoint.shaderInterface,
+                            _MapGpuFaultSelection.frameSubmit =>
+                              MapGpuFaultPoint.frameSubmit,
+                          };
+                          onFaultPointChanged(nextFault);
+                        },
+                      ),
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
-                      child: OutlinedButton.icon(
+                      child: M3EOutlinedButton.icon(
                         key: eqmonitorMapGpuProbeInvalidateGenerationKey,
                         onPressed: onInvalidateRendererContextGeneration,
                         icon: const Icon(Icons.refresh),

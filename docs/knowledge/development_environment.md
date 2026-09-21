@@ -23,6 +23,27 @@ Scene 更新時は `git submodule status third_party/flutter_scene` と
 `pubspec.lock` の `flutter_scene` / `scene` がともに submodule の path を指すことを確認する。
 `scene` override の削除は必要 API が揃った revision で別途検証する。
 
+## M3E の SDK 制約と main の固定
+
+- `m3e_core 1.1.4` は Flutter `>=3.47.0` を要求する。
+  `3.47.0-1.0.pre-*` は正式版より小さいため、この制約を満たさない。
+  pub cache の制約書き換えや一時的な path override を共有設定に使わない。
+- Flutter main を利用する場合も、ブランチ名ではなく取得したコミットを
+  `mise.toml` / `mise.lock` に固定する。
+- 新しい SDK は初回起動後にアーティファクトの取得が必要。
+  `flutter_gpu from sdk doesn't exist` は初期化不足でも発生するため、
+  パッケージ削除と判断する前に `flutter precache` を実行する。
+- SDK が固定する `test` / `test_api` / `test_core` が変わった場合は、
+  lockfile を更新したうえで `--enforce-lockfile` による再解決を確認する。
+
+```sh
+mise install flutter
+mise exec -- flutter precache --linux
+mise exec -- dart pub get
+mise exec -- dart pub get --enforce-lockfile
+mise exec -- dart run melos bootstrap
+```
+
 ## Linux・CI・Apple プラグインの準備
 
 - Linux で mise 未導入なら公式インストーラで導入し、`$HOME/.local/bin` を PATH に追加する。

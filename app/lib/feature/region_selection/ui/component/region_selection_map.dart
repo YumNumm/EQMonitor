@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/location/data/jma_map_isolate.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/latest_map_operation_guard.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_map_metadata_provider.dart';
 import 'package:eqmonitor/feature/region_selection/ui/action/region_selection_map_action.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map_layer.dart';
-import 'package:eqmonitor/feature/region_selection/data/logic/latest_map_operation_guard.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -70,7 +72,7 @@ class RegionSelectionMap extends HookConsumerWidget {
     if (configuration.isLoading ||
         metadata.isLoading ||
         (worker?.isLoading ?? false)) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
     if (configuration.hasError ||
         metadata.hasError ||
@@ -80,7 +82,7 @@ class RegionSelectionMap extends HookConsumerWidget {
           mainAxisSize: .min,
           children: [
             const Text('地図を読み込めませんでした。一覧からも選択できます。'),
-            TextButton(
+            M3ETextButton(
               onPressed: () {
                 ref.invalidate(mapConfigurationProvider);
                 ref.invalidate(regionMapMetadataProvider);
@@ -97,7 +99,7 @@ class RegionSelectionMap extends HookConsumerWidget {
     if (style == null ||
         metadata.value == null ||
         (worker?.isLoading ?? false)) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
     final hasEpicenter = metadata.requireValue.layers.any(
       (layer) => layer.id == 'areaEpicenter',
@@ -198,7 +200,7 @@ class RegionSelectionMap extends HookConsumerWidget {
         if (resolving.value || (!ready.value && !layerError.value))
           const Align(
             alignment: Alignment.topCenter,
-            child: LinearProgressIndicator(),
+            child: AccessibleLinearProgressIndicator(),
           ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -212,7 +214,7 @@ class RegionSelectionMap extends HookConsumerWidget {
                   children: [
                     if (layerError.value) ...[
                       const Text('地図を読み込めませんでした。一覧からも選択できます。'),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () => retry.value++,
                         child: const Text('再試行'),
                       ),
@@ -221,7 +223,7 @@ class RegionSelectionMap extends HookConsumerWidget {
                     if (kind == .epicenter)
                       const Text('地図に範囲のない震央地名は一覧から選択できます'),
                     for (final candidate in candidates.value)
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () {
                           onSelected(candidate);
                           candidates.value = const [];

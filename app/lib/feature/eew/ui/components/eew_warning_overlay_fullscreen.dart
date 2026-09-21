@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayFullscreen extends StatelessWidget {
@@ -103,9 +104,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: OutlinedButton.icon(
+                                child: M3EOutlinedButton.icon(
                                   onPressed: onMinimize,
-                                  style: OutlinedButton.styleFrom(
+                                  decoration: M3EButtonDecoration.styleFrom(
                                     foregroundColor:
                                         colorScheme.onErrorContainer,
                                     side: BorderSide(
@@ -118,9 +119,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: FilledButton.icon(
+                                child: M3EFilledButton.icon(
                                   onPressed: onClose,
-                                  style: FilledButton.styleFrom(
+                                  decoration: M3EButtonDecoration.styleFrom(
                                     backgroundColor: colorScheme.error,
                                     foregroundColor: colorScheme.onError,
                                   ),

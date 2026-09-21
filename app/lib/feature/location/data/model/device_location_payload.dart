@@ -9,8 +9,7 @@ abstract class DeviceLocationPayload with _$DeviceLocationPayload {
   const factory({
     required String region,
     String? city,
-    @JsonKey(name: 'tsunamiForecastRegion')
-    String? tsunamiForecastRegion,
+    @JsonKey(name: 'tsunamiForecastRegion') String? tsunamiForecastRegion,
   }) = _DeviceLocationPayload;
 
   factory fromJson(Map<String, dynamic> json) =>

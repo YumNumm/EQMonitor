@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef LatLngRange = ({
   double? latitudeGte,
@@ -74,7 +75,9 @@ class LatLngFilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<LatLngRange?>(
+        final result = await showM3EModalBottomSheet<LatLngRange?>(
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
           clipBehavior: Clip.antiAlias,
           context: context,
           isScrollControlled: true,
@@ -305,11 +308,11 @@ class _LatLngFilterModal extends HookWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
+                  M3ETextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: const Text('キャンセル'),
                   ),
-                  TextButton(
+                  M3ETextButton(
                     onPressed: isValid
                         ? () => Navigator.of(context).pop((
                             latitudeGte: latGte.value,

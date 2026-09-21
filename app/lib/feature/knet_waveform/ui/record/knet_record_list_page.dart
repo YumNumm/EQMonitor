@@ -1,12 +1,13 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_progress_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_event_stations_provider.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// K-NET イベントの観測点一覧ページ
 class KnetRecordListPage extends ConsumerWidget {
@@ -82,7 +83,7 @@ class _DownloadProgressView extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (progress == null) ...[
-              const CircularProgressIndicator(),
+              const AccessibleCircularProgressIndicator(),
               const SizedBox(height: 16),
               const Text('ディレクトリ一覧を取得中…'),
             ] else ...[
@@ -103,7 +104,7 @@ class _DownloadProgressView extends ConsumerWidget {
     final value = p.total > 0 ? p.received / p.total : null;
     return Column(
       children: [
-        LinearProgressIndicator(value: value),
+        AccessibleLinearProgressIndicator(value: value),
         const SizedBox(height: 8),
         if (value != null)
           Text(

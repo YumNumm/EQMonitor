@@ -1,3 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -57,11 +60,11 @@ class DebugTelemetryPage extends HookConsumerWidget {
                   title: const Text('全イベントを削除'),
                   content: Text('${totalCount.value}件のイベントを削除しますか？'),
                   actions: [
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () => Navigator.pop(context, false),
                       child: const Text('キャンセル'),
                     ),
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () => Navigator.pop(context, true),
                       child: const Text('削除'),
                     ),
@@ -86,7 +89,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
           const Divider(height: 1),
           Expanded(
             child: isLoading.value
-                ? const Center(child: CircularProgressIndicator.adaptive())
+                ? const Center(child: AccessibleCircularProgressIndicator())
                 : events.value.isEmpty
                 ? const Center(child: Text('イベントはまだありません'))
                 : ListView.separated(
@@ -196,7 +199,9 @@ class _EventTile extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        await showModalBottomSheet<void>(
+        await showM3EModalBottomSheet<void>(
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+          useSafeArea: false,
           context: context,
           isScrollControlled: true,
           builder: (context) => DraggableScrollableSheet(

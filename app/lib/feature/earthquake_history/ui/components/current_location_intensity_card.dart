@@ -15,11 +15,12 @@ import 'package:eqmonitor/feature/location/data/location_accuracy_provider.dart'
 import 'package:eqmonitor/feature/location/data/logic/current_location_precision.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 現在地に対応する震度を表示する。
 class CurrentLocationIntensityCard extends HookConsumerWidget {
@@ -238,8 +239,8 @@ class _CoarseLocationNotice extends ConsumerWidget {
           ),
         ),
         if (isReduced && Platform.isIOS)
-          TextButton(
-            style: TextButton.styleFrom(
+          M3ETextButton(
+            decoration: M3EButtonDecoration.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -11,6 +12,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 const _currentLocationWarningDescription =
@@ -44,7 +46,8 @@ void main() {
 
     expect(find.text('緊急地震速報（警報）'), findsOneWidget);
     expect(find.text(_currentLocationWarningDescription), findsOneWidget);
-    expect(find.byType(DropdownMenu<JmaIntensity>), findsNWidgets(2));
+    expect(find.byType(ControlledDropdown<JmaIntensity>), findsNWidgets(2));
+    expect(slotsNotifier.lastEewMinIntensity, isNull);
 
     final warningTile = find.widgetWithText(ListTile, '有効').at(1);
     await tester.ensureVisible(warningTile);
@@ -65,11 +68,13 @@ void main() {
       EewWarningTarget.currentLocationOnly,
     );
 
-    final eewDropdown = find.byType(DropdownMenu<JmaIntensity>).first;
-    final dropdown = tester.widget<DropdownMenu<JmaIntensity>>(eewDropdown);
+    final eewDropdown = find.byType(ControlledDropdown<JmaIntensity>).first;
+    final dropdown = tester.widget<ControlledDropdown<JmaIntensity>>(
+      eewDropdown,
+    );
     // 現在地の EEW は震度4未満・「すべて」を選択肢に持たない
     expect(
-      dropdown.dropdownMenuEntries.map((e) => e.value),
+      dropdown.items.map((e) => e.value),
       const [
         JmaIntensity.four,
         JmaIntensity.fiveLower,
@@ -79,16 +84,22 @@ void main() {
         JmaIntensity.seven,
       ],
     );
-    dropdown.onSelected?.call(JmaIntensity.fiveLower);
+    dropdown.onSelectionChanged?.call(const [
+      M3EDropdownItem(
+        value: JmaIntensity.fiveLower,
+        label: '震度5弱以上',
+        selected: true,
+      ),
+    ]);
     await tester.pumpAndSettle();
     expect(slotsNotifier.lastEewMinIntensity, JmaIntensity.fiveLower);
 
-    final earthquakeDropdown = tester.widget<DropdownMenu<JmaIntensity>>(
-      find.byType(DropdownMenu<JmaIntensity>).at(1),
+    final earthquakeDropdown = tester.widget<ControlledDropdown<JmaIntensity>>(
+      find.byType(ControlledDropdown<JmaIntensity>).at(1),
     );
     // 現在地の地震情報は震度1以上のみ
     expect(
-      earthquakeDropdown.dropdownMenuEntries.first.value,
+      earthquakeDropdown.items.first.value,
       JmaIntensity.one,
     );
   });

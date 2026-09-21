@@ -42,6 +42,31 @@
   HeroController等の残件は[UI・画面遷移](../todo/800_ui_and_navigation.md)。
 - 外部packageのTheme.ofやexact SDK型検出でも同種の不整合が起こり得る。
 
+## M3E の選択状態とアクセシビリティ
+
+- 通常のボタンは `m3e_core` の部品を使い、既存の無効条件・処理中表示・色指定を維持する。
+- アプリ状態と同期するドロップダウンは `ControlledDropdown` を使う。
+  `m3e_core 1.1.4` は項目の再設定でも選択コールバックを呼ぶため、
+  再描画によって設定保存が走らないよう、外部更新とユーザー操作を分離する。
+- 選択肢としての `null` は未選択と区別する。M3E 内部へは非nullのrecordで渡し、
+  呼び出し側には元の型で返す。選択必須の場合は選択中項目の再タップで空にしない。
+- メニュー表示中に無効化された場合も、選択イベントから保存処理を起動しない。
+- M3E のカスタム描画部品には標準 Slider / ProgressIndicator と同じ読み上げ情報がない。
+  `AccessibleSlider` / `AccessibleRangeSlider` / `Accessible*ProgressIndicator` を使う。
+  範囲入力は上下限を個別に操作でき、互いの値を越えないようにする。
+- 時刻シークは時刻ラベルと増減操作を提供する。津波タイムラインは隣接する電文へ進み、
+  動画は再生時間の範囲内に収める。最新電文の選択表現も維持する。
+- M3E に直接 `SliderTheme` を渡しても反映されない設定がある。
+  対応する native decoration / track / handle 引数へ移す。
+
+```sh
+# app/ から
+mise exec -- flutter test test/core/component/selector \
+  test/core/component/slider test/core/component/chip/m3e_filter_controls_test.dart \
+  test/feature/knet_waveform/ui/media/knet_movie_seekbar_test.dart \
+  test/feature/tsunami/tsunami_timeline_accessibility_test.dart --dart-define=CI=true
+```
+
 ## 条件付き表示と更新時刻
 
 - Row/Column spacingはSizedBox.shrinkも子として数える。非表示バナーをchildrenへ載せないか、
@@ -76,3 +101,13 @@ mise exec -- dart analyze lib/core/component/layout lib/feature/eew_history/ui
 # packages/eqmonitor_api/から
 mise exec -- dart test test/city_max_intensity_response_test.dart
 ```
+
+## M3E の一覧・シートの境界
+
+- ページング履歴は既存のSliverとsticky headerを保持し、行をM3Eのsegmented itemで描画する。追加読み込み・エラー再試行を通常の全件リストへ置き換えない。
+- `showM3EModalBottomSheet` は既定の `isScrollControlled` と `useSafeArea` が従来と異なるため明示する。既存の子Widgetが余白を持つ場合は `M3EBottomSheetStyle(padding: EdgeInsets.zero)` を指定する。
+- `M3EPullToRefreshIndicator` は `onError` 省略時に例外を消費する。従来の失敗通知を保持する画面では `Error.throwWithStackTrace` を渡す。
+- 展開見出しは `ExpandableSection` にまとめ、開閉状態・キーボード・読み上げの操作を維持する。
+- m3e_core 1.1.4 のdismissible listはアニメーション破棄後に削除結果を待つ。遅延して `false` を返すと破棄済みcontrollerへアクセスするため、`ConfirmedDismissibleList` で保存結果と表示を仲介する。
+- 通知設定の保存はAPIが返す確定済みslotを再取得の前に反映する。再取得が失敗しても、後続編集で削除済みの上書き条件を復活させない。
+- 削除に成功したIDは取得済み一覧から消えるまで非表示を維持する。失敗時は行とスクロールを復元し、並び替え後もindexではなくIDで削除する。読み上げの削除操作も同じ保存経路を使う。

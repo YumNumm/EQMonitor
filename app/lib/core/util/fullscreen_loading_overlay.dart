@@ -1,7 +1,11 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
+
 import 'dart:developer';
 
 import 'package:eqmonitor/app.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 class FullScreenCircularProgressIndicator extends StatelessWidget {
@@ -41,6 +45,6 @@ class FullScreenCircularProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator.adaptive());
+    return const Center(child: AccessibleCircularProgressIndicator());
   }
 }

@@ -21,9 +21,11 @@ class TelegramListByEventId extends _$TelegramListByEventId {
   Future<TelegramListByEventIdState> build(String eventId) async {
     _refreshGeneration += 1;
     ref.listen(realtimeEventsProvider, (_, next) {
-      if (next case AsyncData(
-        value: RealtimeEarthquakeUpsertEvent(:final record),
-      ) when record.eventId == eventId) {
+      if (next
+          case AsyncData(
+            value: RealtimeEarthquakeUpsertEvent(:final record),
+          )
+          when record.eventId == eventId) {
         ref.invalidateSelf();
       }
     });

@@ -91,8 +91,9 @@ Interfaces: 共通結果を `EarthquakeHistoryParameter`、`NotificationRegionSe
 
 - 実装: 共通catalog・単一／複数reducer・一覧／地図UIを実装し、ホーム、履歴、通知、ウィジェットを接続。旧picker・selector・検索providerと専用テストを共通テストへ置換した。
 - Asset Pack: 公開v0.1.0 ZIPの署名・hashを既存検証ツールで確認。`areaEpicenter.id`は数値、地名はJMAコード表から取得する。fixtureにmetadataと地名の抜粋を記録した。
-- 検証: 新規25件を含む関連151件を実行し148件成功。通知の文言期待値3件は変更前commit `4e5708b38` でも同じ失敗を再現した。format、textlint、hk check、手書きコードのdiff checkは成功。Freezedのformat-off出力にある空白は生成結果として保持した。
-- 解析: 型エラー・変更箇所の診断なし。未変更のnull assertion警告3件とHooks lint pluginのRangeErrorがあり、app全体の解析成功とは扱わない。既存TODOへ記録した。
-- 環境制約: pinned Flutterは3.47 prereleaseで、既存m3e依存のFlutter下限制約を満たさず通常のpub getが失敗する。lockfileと一致するローカルcacheから検証用package_configを構成し、テストは`--no-pub`、生成はcached build_runnerのentrypointをmise経由で実行した。SDK・依存pinは変更していない。
-- 生成: app全体のbuild_runnerが成功。生成されたrouterと新規model/providerを反映し、flutter_genが出力しなくなった空のfonts定義も生成結果に合わせた。
+- 検証: 最新developのM3E操作を含めて関連156件を実行し153件成功（新規25件を含む）。通知の文言期待値3件は変更前commit `4e5708b38` でも同じ失敗を再現した。format、textlint、hk check、手書きコードのdiff checkは成功。Freezedのformat-off出力にある空白は生成結果として保持した。
+- 解析: 最新SDKで型エラー・変更箇所の診断は0件。未変更箇所にnull assertion警告3件と非推奨API診断4件があるため、app全体は終了コード2。初期SDKでのHooks lint plugin例外は最新SDKで再現しなくなった。
+- 環境: 初期のFlutter 3.47 prereleaseでは既存m3e依存の制約で通常のpub getが失敗したため、lockfile一致cacheで検証した。その後、最新develop `d370fc824` のSDK更新を取り込み、通常の `dart pub get --enforce-lockfile` と27 packageのmelos bootstrapが成功した。
+- 生成: 最新SDKで通常の `dart run build_runner build --delete-conflicting-outputs` が成功。生成されたrouterと新規model/providerを反映し、flutter_genが出力しなくなった空のfonts定義も生成結果に合わせた。
 - レビュー: 独立レビューの3指摘（遅延lookup、都道府県かな、worker再試行）を修正し、再レビューで重要指摘なし。実機地図確認はTODOに残した。
+- 統合: 最新developのM3E移行と競合する旧pickerを共通画面へ置換し、M3ETextButtonとAccessibleProgressIndicatorを共通画面へ継承した。PMTilesメタデータ読込はappの直接path依存として宣言した。

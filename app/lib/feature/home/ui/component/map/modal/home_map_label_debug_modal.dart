@@ -1,13 +1,18 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_map_label_parameter_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeMapLabelDebugModal extends ConsumerWidget {
   const new _();
 
   static Future<void> show({required BuildContext context}) =>
-      showModalBottomSheet(
+      showM3EModalBottomSheet(
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
         isScrollControlled: true,
@@ -29,7 +34,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
       builder: (context, scrollController) {
         return switch (param) {
           AsyncLoading() => const Center(
-            child: CircularProgressIndicator.adaptive(),
+            child: AccessibleCircularProgressIndicator(),
           ),
           AsyncError(:final error) => Center(child: Text('Error: $error')),
           AsyncData(:final value) => ListView(
@@ -60,7 +65,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                       ),
                     ),
                     const Spacer(),
-                    TextButton(
+                    M3ETextButton(
                       onPressed: notifier.reset,
                       child: const Text('リセット'),
                     ),
@@ -161,7 +166,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
             child: Text(label, style: const TextStyle(fontSize: 12)),
           ),
           Expanded(
-            child: Slider(
+            child: AccessibleSlider(
               value: value.clamp(min, max),
               min: min,
               max: max,

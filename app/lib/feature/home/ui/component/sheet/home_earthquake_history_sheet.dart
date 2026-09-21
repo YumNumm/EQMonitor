@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_c
 import 'package:eqmonitor/feature/home/ui/action/home_region_selection_action.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -130,7 +131,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
             ),
             Align(
               alignment: .centerEnd,
-              child: TextButton(
+              child: M3ETextButton(
                 onPressed: paramAsync.value == null
                     ? null
                     : () async =>

@@ -23,6 +23,5 @@ abstract class LocalizedName with _$LocalizedName {
     String? mn,
   }) = _LocalizedName;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$LocalizedNameFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$LocalizedNameFromJson(json);
 }

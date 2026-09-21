@@ -1,8 +1,11 @@
+import 'dart:math' as math;
+
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 // cf. https://gist.github.com/YumNumm/3433d5e1f522d512f88f3608a921dcb4
 
 // ignore_for_file: avoid_classes_with_only_static_members, parameter_assignments
 
-import 'dart:math' as math;
+import 'package:m3e_core/m3e_core.dart';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // 追加
@@ -312,19 +315,21 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
               children: [
                 const Text('Parameter: '),
                 const SizedBox(width: 8),
-                DropdownButton<ParamType>(
-                  value: selectedType.value,
-                  items: ParamType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    if (val != null) {
+                Expanded(
+                  child: ControlledDropdown<ParamType>(
+                    items: ParamType.values.map((type) {
+                      return M3EDropdownItem(
+                        value: type,
+                        label: type.name,
+                        selected: type == selectedType.value,
+                      );
+                    }).toList(),
+                    onSelectionChanged: (selectedItems) {
+                      if (selectedItems.isEmpty) return;
+                      final val = selectedItems.first.value;
                       selectedType.value = val;
-                    }
-                  },
+                    },
+                  ),
                 ),
               ],
             ),
@@ -344,7 +349,10 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
             const SizedBox(height: 16),
 
             //=== 3) ボタン ===
-            ElevatedButton(onPressed: onConvert, child: const Text('変換して表示')),
+            M3EElevatedButton(
+              onPressed: onConvert,
+              child: const Text('変換して表示'),
+            ),
             const SizedBox(height: 24),
 
             //=== 4) 結果表示 ===

@@ -8,9 +8,9 @@ import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_exten
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
@@ -38,11 +38,12 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dar
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre_platform_interface/maplibre_platform_interface.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
@@ -179,7 +180,7 @@ void main() {
             ),
             home: Consumer(
               builder: (context, ref, child) => Scaffold(
-                body: FilledButton(
+                body: M3EFilledButton(
                   onPressed: () => ref
                       .read(earthquakeHistoryDebugSheetActionProvider)
                       .show(context: context, eventId: _eventId),
@@ -256,7 +257,7 @@ void main() {
           home: Consumer(
             builder: (context, ref, child) => Scaffold(
               body: Center(
-                child: FilledButton(
+                child: M3EFilledButton(
                   onPressed: () => ref
                       .read(earthquakeHistoryDebugSheetActionProvider)
                       .show(context: context, eventId: _eventId),
@@ -318,7 +319,7 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
 
     await tester.pumpWidget(
       ProviderScope(
@@ -374,7 +375,7 @@ void main() {
     notifier.showLoadingWithPrevious();
     await tester.pump();
     expect(find.text('地震情報'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
 
     notifier.showErrorWithPrevious();
     await tester.pump();
@@ -398,7 +399,7 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
 
     await tester.pumpWidget(
       ProviderScope(

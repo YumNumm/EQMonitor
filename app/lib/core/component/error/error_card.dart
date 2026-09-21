@@ -3,8 +3,9 @@ import 'package:eqmonitor/core/component/error/error_message_builder.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ErrorCard extends ConsumerWidget {
   const new({
@@ -77,7 +78,7 @@ class ErrorCard extends ConsumerWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (onReload case final reload?)
-                  FilledButton.tonalIcon(
+                  M3EFilledButton.tonalIcon(
                     onPressed: showLoadingOverlayOnReload
                         ? () => FullScreenCircularProgressIndicator.showUntil(
                             context,
@@ -90,14 +91,14 @@ class ErrorCard extends ConsumerWidget {
                     label: const Text('再試行'),
                   ),
                 if (showDetails)
-                  TextButton(
+                  M3ETextButton(
                     onPressed: () => ref
                         .read(errorDetailsSheetActionProvider)
                         .show(context, error: error, stackTrace: stackTrace),
                     child: const Text('詳細'),
                   ),
                 if (showContact)
-                  TextButton(
+                  M3ETextButton(
                     onPressed: () async {
                       final open = ref.read(openContactProvider);
                       await open(ref, context);

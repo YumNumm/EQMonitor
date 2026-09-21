@@ -63,7 +63,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
     );
 
     return permissionState.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('権限の確認に失敗しました: $error')),
       data: (state) => Padding(
         padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
@@ -233,11 +233,11 @@ class _PermissionActionCard extends StatelessWidget {
     final actionButtons = isGranted
         ? const [Icon(Icons.check), Text('許可しました')]
         : [
-            TextButton(
+            M3ETextButton(
               onPressed: isSkipped || !isEnabled ? null : onSkip,
               child: Text(isSkipped ? 'スキップしました' : 'スキップ'),
             ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: isSkipped || !isEnabled ? null : onAllow,
               child: const Text('許可する'),
             ),

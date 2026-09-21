@@ -1,14 +1,19 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart';
+
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_app_group_preferences_entries_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shared_preferences/debug_shared_preferences_entries_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_shared_preferences_page.g.dart';
@@ -52,7 +57,7 @@ class DebugSharedPreferencesPage extends HookConsumerWidget {
         ),
         floatingActionButton: Builder(
           builder: (context) {
-            return FloatingActionButton(
+            return M3EFloatingActionButton(
               onPressed: () {
                 final index = DefaultTabController.of(context).index;
                 final kind = (isIOS && index == 1)
@@ -115,11 +120,13 @@ class _EntriesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return entries.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, _) => Center(child: Text('エラー: $error')),
       data: (list) {
         if (list.isEmpty) {
-          return RefreshIndicator(
+          return M3EPullToRefreshIndicator(
+            onError: (error, stackTrace) =>
+                Error.throwWithStackTrace(error, stackTrace),
             onRefresh: () async => onRefresh(),
             child: ListView(
               children: const [
@@ -129,7 +136,9 @@ class _EntriesList extends ConsumerWidget {
             ),
           );
         }
-        return RefreshIndicator(
+        return M3EPullToRefreshIndicator(
+          onError: (error, stackTrace) =>
+              Error.throwWithStackTrace(error, stackTrace),
           onRefresh: () async => onRefresh(),
           child: ListView.builder(
             itemCount: list.length,
@@ -535,7 +544,7 @@ class _StringListEditor extends HookWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ...buildFields(),
-        TextButton.icon(
+        M3ETextButton.icon(
           icon: const Icon(Icons.add),
           label: const Text('要素を追加'),
           onPressed: () => items.value = [...items.value, ''],
@@ -554,7 +563,7 @@ class _SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(onPressed: onPressed, child: const Text('保存'));
+    return M3EFilledButton(onPressed: onPressed, child: const Text('保存'));
   }
 }
 
@@ -589,35 +598,39 @@ class _AddDialog extends HookConsumerWidget {
               decoration: const InputDecoration(labelText: 'キー名'),
             ),
             const SizedBox(height: 8),
-            DropdownButton<_NewValueType>(
-              value: type.value,
-              isExpanded: true,
-              items: const [
-                DropdownMenuItem(
-                  value: _NewValueType.boolType,
-                  child: Text('bool'),
-                ),
-                DropdownMenuItem(
-                  value: _NewValueType.intType,
-                  child: Text('int'),
-                ),
-                DropdownMenuItem(
-                  value: _NewValueType.doubleType,
-                  child: Text('double'),
-                ),
-                DropdownMenuItem(
-                  value: _NewValueType.stringType,
-                  child: Text('String'),
-                ),
-                DropdownMenuItem(
-                  value: _NewValueType.stringListType,
-                  child: Text('List<String>'),
-                ),
-              ],
-              onChanged: (v) {
-                if (v != null) {
-                  type.value = v;
-                }
+            ControlledDropdown<_NewValueType>(
+              items:
+                  ([
+                        M3EDropdownItem(
+                          value: _NewValueType.boolType,
+                          label: 'bool',
+                        ),
+                        M3EDropdownItem(
+                          value: _NewValueType.intType,
+                          label: 'int',
+                        ),
+                        M3EDropdownItem(
+                          value: _NewValueType.doubleType,
+                          label: 'double',
+                        ),
+                        M3EDropdownItem(
+                          value: _NewValueType.stringType,
+                          label: 'String',
+                        ),
+                        M3EDropdownItem(
+                          value: _NewValueType.stringListType,
+                          label: 'List<String>',
+                        ),
+                      ])
+                      .map(
+                        (item) =>
+                            item.copyWith(selected: item.value == (type.value)),
+                      )
+                      .toList(),
+              onSelectionChanged: (selectedItems) {
+                if (selectedItems.isEmpty) return;
+                final v = selectedItems.first.value;
+                type.value = v;
               },
             ),
             const SizedBox(height: 8),

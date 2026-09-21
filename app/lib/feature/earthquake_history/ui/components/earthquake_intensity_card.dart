@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
@@ -82,7 +83,7 @@ class EarthquakeIntensityCard extends StatelessWidget {
                   _ => const Center(
                     child: Padding(
                       padding: EdgeInsets.all(8),
-                      child: CircularProgressIndicator.adaptive(),
+                      child: AccessibleCircularProgressIndicator(),
                     ),
                   ),
                 },

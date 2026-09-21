@@ -40,8 +40,7 @@ abstract class Earthquake with _$Earthquake {
     EarthquakeCatalog? catalog,
   }) = _Earthquake;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$EarthquakeFromJson(json);
 }
 
 extension EarthquakeApiExtension on api.Earthquake {
