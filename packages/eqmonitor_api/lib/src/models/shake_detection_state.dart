@@ -26,11 +26,11 @@ abstract class ShakeDetectionState with _$ShakeDetectionState {
     required DateTime updatedAt,
     required DateTime expiresAt,
     required Level level,
-    required List<ChangeReasons> changeReasons,
     required List<MergedEvents> mergedEvents,
     required int pointCount,
     required Region region,
     required List<Points> points,
+    required List<ChangeReasons> changeReasons,
     @JsonKey(includeIfNull: false)
     Test? test,
     @JsonKey(includeIfNull: false)

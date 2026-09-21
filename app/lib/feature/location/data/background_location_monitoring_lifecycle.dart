@@ -29,7 +29,10 @@ final class const BackgroundLocationMonitoringPolicy() {
     required ShakeDetectionState? shakeDetectionState,
   }) =>
       slots.any((s) => s.slotType == NotificationSlotType.currentLocation) ||
-      shakeDetectionState?.entries.any((e) => e.isCurrentLocation) == true;
+      shakeDetectionState?.entries.any(
+            (e) => e.isCurrentLocation && e.enabled,
+          ) ==
+          true;
 
   bool shouldStop({
     required List<NotificationSlot>? slots,

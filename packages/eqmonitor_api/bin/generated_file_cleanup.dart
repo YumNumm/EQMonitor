@@ -15,6 +15,9 @@ const generatedWhitespaceDependencyFiles = {
 };
 
 bool shouldStripGeneratedWhitespace({required String fileName}) =>
+    fileName == 'export.dart' ||
+    fileName == 'create_device_notification_webhook_request.dart' ||
+    fileName == 'estimated_intensity_tile_archive.dart' ||
     isLegacyGeneratedContractPath(relativePath: 'models/$fileName') ||
     isLegacyGeneratedContractPath(relativePath: 'clients/$fileName') ||
     fileName == 'catalog.dart' ||

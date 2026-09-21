@@ -234,12 +234,12 @@ final class const _TestModels() {
           if (hasCurrentLocation)
             const ShakeDetectionEntry(
               id: 'current',
-              subRegionId: null,
-              subRegionName: null,
+              regionCode: null,
+              enabled: true,
               minLevel: ShakeDetectionLevel.medium,
-              isCurrentLocation: true,
+              targetType: ShakeDetectionTargetType.currentLocation,
             ),
         ],
-        availableSubRegions: <ShakeDetectionSubRegion>[],
+        requiresReconfiguration: false,
       );
 }

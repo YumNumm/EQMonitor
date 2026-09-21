@@ -8,19 +8,18 @@ part 'estimated_intensity_tile_archive.freezed.dart';
 part 'estimated_intensity_tile_archive.g.dart';
 
 @Freezed()
-abstract class EstimatedIntensityTileArchive
-    with _$EstimatedIntensityTileArchive {
+abstract class EstimatedIntensityTileArchive with _$EstimatedIntensityTileArchive {
   const factory EstimatedIntensityTileArchive({
     /// 推計震度PMTilesのHTTPSフルURL
     required String url,
 
     /// 推計震度PMTilesのバイト数
-    @JsonKey(name: 'size_bytes') required int sizeBytes,
+    @JsonKey(name: 'size_bytes')
+    required int sizeBytes,
 
     /// 推計震度PMTilesのSHA-256
     required String sha256,
   }) = _EstimatedIntensityTileArchive;
 
-  factory EstimatedIntensityTileArchive.fromJson(Map<String, Object?> json) =>
-      _$EstimatedIntensityTileArchiveFromJson(json);
+  factory EstimatedIntensityTileArchive.fromJson(Map<String, Object?> json) => _$EstimatedIntensityTileArchiveFromJson(json);
 }

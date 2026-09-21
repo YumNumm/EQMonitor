@@ -4,8 +4,6 @@
 
 ## 800: 揺れ検知通知の細分化地域設定
 
-- [承認済み設計](../superpowers/specs/2026-09-21-shake-notification-regions-design.md)に沿って、現在地・全国・細分化地域の通知条件とデバッグ画面の入口を実装する。[実装計画](../superpowers/plans/2026-09-21-shake-notification-regions.md)のレビュー待ち、実装未着手。
-- 観測点マスターは Asset Pack に統一し、現在地が全国通知になる経路を修正する。タイトルの登録地域と本文のイベント全体を分け、回帰テストで確認する。
 - 実機で権限、OS終了後の位置同期、APNs／FCMの通知文面を確認する。実機検証は未実施。
 
 ## 800: material_ui 境界

@@ -399,6 +399,9 @@ class const TalkerRoute()
         TypedGoRoute<DebugShakeDetectionCardRoute>(
           path: 'shake-detection-card',
         ),
+        TypedGoRoute<DebugShakeDetectionSettingsRoute>(
+          path: 'shake-detection-settings',
+        ),
         TypedGoRoute<DebugShakeDetectionInsertRoute>(
           path: 'shake-detection-insert',
         ),
@@ -525,6 +528,14 @@ class const NotificationHistoryRoute()
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DebugNotificationDeliveryLogPage();
+}
+
+class const DebugShakeDetectionSettingsRoute()
+    extends GoRouteData
+    with $DebugShakeDetectionSettingsRoute, MaterialPageMixin {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ShakeDetectionSettingsPage();
 }
 
 class const DebugRoute()
