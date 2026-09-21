@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -17,6 +19,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -70,7 +73,7 @@ class SlotDetailPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: slot == null
-          ? const Center(child: CircularProgressIndicator.adaptive())
+          ? const Center(child: AccessibleCircularProgressIndicator())
           : ListView(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
               children: [
@@ -341,24 +344,29 @@ class _WarningSettingsCard extends StatelessWidget {
             ListTile(
               enabled: enabled,
               title: const Text('割り込みレベル'),
-              trailing: DropdownMenu<InterruptionLevel>(
-                initialSelection: levels.contains(interruptionLevel)
-                    ? interruptionLevel
-                    : levels.last,
-                enabled: enabled,
-                requestFocusOnTap: false,
+              trailing: SizedBox(
                 width: 180,
-                onSelected: (next) {
-                  if (next != null) {
+                child: ControlledDropdown<InterruptionLevel>(
+                  enabled: enabled,
+                  items: levels
+                      .map(
+                        (level) => M3EDropdownItem(
+                          value: level,
+                          label: level.label,
+                          selected:
+                              level ==
+                              (levels.contains(interruptionLevel)
+                                  ? interruptionLevel
+                                  : levels.last),
+                        ),
+                      )
+                      .toList(),
+                  onSelectionChanged: (selectedItems) {
+                    if (selectedItems.isEmpty) return;
+                    final next = selectedItems.first.value;
                     onInterruptionLevelChanged(next);
-                  }
-                },
-                dropdownMenuEntries: levels
-                    .map(
-                      (level) =>
-                          DropdownMenuEntry(value: level, label: level.label),
-                    )
-                    .toList(),
+                  },
+                ),
               ),
             ),
           ],

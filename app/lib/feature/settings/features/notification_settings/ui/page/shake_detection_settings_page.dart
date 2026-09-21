@@ -1,9 +1,12 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -144,7 +147,7 @@ class _Body extends ConsumerWidget {
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: FilledButton.tonal(
+            child: M3EFilledButton.tonal(
               onPressed: isBusy || state.entries.any((e) => e.isCurrentLocation)
                   ? null
                   : () async {
@@ -164,7 +167,9 @@ class _Body extends ConsumerWidget {
                   ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                      child: AccessibleCircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
                     )
                   : const Text('現在地を追加'),
             ),
@@ -197,39 +202,35 @@ class _ShakeEntryCard extends StatelessWidget {
     return ListTile(
       title: Text(name),
       subtitle: isBusy
-          ? const LinearProgressIndicator()
-          : DropdownButtonHideUnderline(
-              child: DropdownButton<ShakeDetectionLevel>(
-                value: entry.minLevel,
-                isDense: true,
-                items: ShakeDetectionLevel.values
-                    .map(
-                      (level) => DropdownMenuItem(
-                        value: level,
-                        child: Text(switch (level) {
-                          ShakeDetectionLevel.weaker => '最小（Weaker）',
-                          ShakeDetectionLevel.weak => '小（Weak）',
-                          ShakeDetectionLevel.medium => '中（Medium）',
-                          ShakeDetectionLevel.strong => '大（Strong）',
-                          ShakeDetectionLevel.stronger => '最大（Stronger）',
-                        }),
-                      ),
-                    )
-                    .toList(),
-                onChanged: isBusy
-                    ? null
-                    : (level) {
-                        if (level != null) {
-                          onLevelChanged(level);
-                        }
+          ? const AccessibleLinearProgressIndicator()
+          : ControlledDropdown<ShakeDetectionLevel>(
+              enabled: !isBusy,
+              items: ShakeDetectionLevel.values
+                  .map(
+                    (level) => M3EDropdownItem(
+                      value: level,
+                      label: switch (level) {
+                        ShakeDetectionLevel.weaker => '最小（Weaker）',
+                        ShakeDetectionLevel.weak => '小（Weak）',
+                        ShakeDetectionLevel.medium => '中（Medium）',
+                        ShakeDetectionLevel.strong => '大（Strong）',
+                        ShakeDetectionLevel.stronger => '最大（Stronger）',
                       },
-              ),
+                      selected: level == entry.minLevel,
+                    ),
+                  )
+                  .toList(),
+              onSelectionChanged: (selectedItems) {
+                if (selectedItems.isEmpty) return;
+                final level = selectedItems.first.value;
+                onLevelChanged(level);
+              },
             ),
       trailing: isBusy
           ? const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             )
           : IconButton(
               tooltip: '削除',
@@ -259,7 +260,7 @@ class _ErrorBody extends StatelessWidget {
           const SizedBox(height: 16),
           const Text('設定の読み込みに失敗しました'),
           const SizedBox(height: 16),
-          FilledButton.icon(
+          M3EFilledButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
             label: const Text('再試行'),
