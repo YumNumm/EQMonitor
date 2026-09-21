@@ -1,9 +1,7 @@
-import 'dart:async';
-
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeMapControllerCard extends StatelessWidget {
   const new({
@@ -25,84 +23,89 @@ class HomeMapControllerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
-
-    final divider = Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.xs),
-      child: Divider(height: 0, color: colorTheme.outlineVariant),
+    final divider = M3EFloatingToolbarDivider(
+      orientation: Axis.horizontal,
+      color: colorTheme.outlineVariant,
     );
 
-    Future<void> hapticFeedback() async => HapticFeedback.lightImpact();
-
-    return Card(
-      color: colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
-      clipBehavior: Clip.hardEdge,
-      elevation: 0,
-      shape: RoundedSuperellipseBorder(
-        borderRadius: BorderRadius.circular(shape.md),
-        side: BorderSide(color: colorTheme.outlineVariant),
-      ),
-      child: IntrinsicWidth(
-        child: Column(
+    return Padding(
+      padding: CardTheme.of(context).margin ?? const EdgeInsets.all(4),
+      child: M3EVerticalFloatingToolbar(
+        expanded: true,
+        decoration: M3EFloatingToolbarDecoration(
+          colors: M3EFloatingToolbarDefaults.standardColors(context).copyWith(
+            toolbarContainerColor: colorTheme.surfaceContainerHigh.withValues(
+              alpha: 0.92,
+            ),
+          ),
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(designSystem.shape.md),
+            side: BorderSide(color: colorTheme.outlineVariant),
+          ),
+          expandedShadowElevation: 0,
+          collapsedShadowElevation: 0,
+        ),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
-          children:
-              [
-                    InkWell(
-                      child: Padding(
-                        padding: EdgeInsets.all(spacing.sm),
-                        child: const Icon(Icons.layers_rounded),
-                      ),
-                      onTap: () async {
-                        await hapticFeedback();
-                        onLayerButtonTap?.call();
-                      },
-                    ),
-                    InkWell(
-                      child: Padding(
-                        padding: EdgeInsets.all(spacing.sm),
-                        child: Icon(
-                          Icons.home_rounded,
-                          color: isLocationButtonEnabled
-                              ? null
-                              : colorTheme.onSurface.withValues(alpha: 0.38),
-                        ),
-                      ),
-                      onTap: isLocationButtonEnabled
-                          ? () async {
-                              await hapticFeedback();
-                              onLocationButtonTap?.call();
-                            }
-                          : null,
-                    ),
-                    if (onLabelDebugButtonTap != null)
-                      InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.all(spacing.sm),
-                          child: const Icon(Icons.label_rounded),
-                        ),
-                        onTap: () async {
-                          await hapticFeedback();
-                          onLabelDebugButtonTap?.call();
-                        },
-                      ),
-                    if (onDebugButtonTap != null)
-                      InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.all(spacing.sm),
-                          child: const Icon(Icons.bug_report_rounded),
-                        ),
-                        onTap: () async {
-                          await hapticFeedback();
-                          onDebugButtonTap?.call();
-                        },
-                      ),
-                  ]
-                  .mapIndexed((index, child) => [if (index > 0) divider, child])
-                  .flattened
-                  .toList(),
+          children: [
+            _MapToolbarButton(
+              icon: Icons.layers_rounded,
+              tooltip: '地図レイヤー設定',
+              onPressed: onLayerButtonTap,
+            ),
+            divider,
+            _MapToolbarButton(
+              icon: Icons.home_rounded,
+              tooltip: 'ホームの表示範囲に戻す',
+              enabled: isLocationButtonEnabled,
+              onPressed: onLocationButtonTap,
+            ),
+            if (onLabelDebugButtonTap != null) ...[
+              divider,
+              _MapToolbarButton(
+                icon: Icons.label_rounded,
+                tooltip: '地図ラベルをデバッグ',
+                onPressed: onLabelDebugButtonTap,
+              ),
+            ],
+            if (onDebugButtonTap != null) ...[
+              divider,
+              _MapToolbarButton(
+                icon: Icons.bug_report_rounded,
+                tooltip: '地図をデバッグ',
+                onPressed: onDebugButtonTap,
+              ),
+            ],
+          ],
         ),
       ),
     );
   }
+}
+
+class _MapToolbarButton extends StatelessWidget {
+  const new({
+    required this.icon,
+    required this.tooltip,
+    required this.onPressed,
+    this.enabled = true,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback? onPressed;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    icon: Icon(icon),
+    tooltip: tooltip,
+    enableFeedback: false,
+    onPressed: enabled
+        ? () async {
+            await HapticFeedback.lightImpact();
+            onPressed?.call();
+          }
+        : null,
+  );
 }
