@@ -232,7 +232,7 @@ class _DeviceProvisioningFailureCard extends StatelessWidget {
           SizedBox(height: designSystem.spacing.sm),
           Align(
             alignment: .centerRight,
-            child: TextButton(onPressed: onRetry, child: const Text('再試行')),
+            child: M3ETextButton(onPressed: onRetry, child: const Text('再試行')),
           ),
         ],
       ),
@@ -259,18 +259,18 @@ class DeviceRegistrationErrorDialogAction {
         title: const Text('デバイスの登録に失敗しました'),
         content: Text(message),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('閉じる'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () {
               Navigator.of(context).pop();
               onRetry();
             },
             child: const Text('再試行'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () => ref
                 .read(errorDetailsSheetActionProvider)
                 .show(context, error: error, stackTrace: stackTrace),
