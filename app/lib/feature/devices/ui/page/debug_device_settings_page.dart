@@ -1,6 +1,9 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -30,6 +33,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -220,7 +224,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
                 SizedBox(
                   width: 16,
                   height: 16,
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                 ),
                 SizedBox(width: 8),
                 Text('プロビジョニング中…'),
@@ -228,7 +232,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
             ),
           ] else if (needsProvision) ...[
             const SizedBox(height: 12),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: () {
                 ref.read(deviceProvisioningProvider.notifier).reset();
                 unawaited(
@@ -339,7 +343,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              FilledButton.tonalIcon(
+              M3EFilledButton.tonalIcon(
                 onPressed: isProcessing
                     ? null
                     : () {
@@ -350,13 +354,13 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
                               .onError<Object>((_, _) {}),
                         );
                       },
-                style: FilledButton.styleFrom(
+                decoration: M3EButtonDecoration.styleFrom(
                   foregroundColor: colorTheme.error,
                 ),
                 icon: const Icon(Icons.delete_outline),
                 label: const Text('削除'),
               ),
-              FilledButton.icon(
+              M3EFilledButton.icon(
                 onPressed: isProcessing
                     ? null
                     : () {
@@ -379,7 +383,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
                 const SizedBox(
                   width: 16,
                   height: 16,
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                 ),
                 const SizedBox(width: 8),
                 Text(isDeleting ? 'デバイスを削除中…' : '再プロビジョニング中…'),
@@ -448,7 +452,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
         _ => const Center(
           child: Padding(
             padding: EdgeInsets.all(8),
-            child: CircularProgressIndicator.adaptive(),
+            child: AccessibleCircularProgressIndicator(),
           ),
         ),
       },
@@ -501,7 +505,7 @@ class _DeviceInfoSection extends ConsumerWidget {
         _ => const Center(
           child: Padding(
             padding: EdgeInsets.all(8),
-            child: CircularProgressIndicator.adaptive(),
+            child: AccessibleCircularProgressIndicator(),
           ),
         ),
       },
@@ -671,7 +675,7 @@ class _TokenStatusRow extends StatelessWidget {
         ),
         if (onResend case final resend?) ...[
           const SizedBox(width: 8),
-          TextButton.icon(
+          M3ETextButton.icon(
             onPressed: isResendEnabled ? resend : null,
             icon: const Icon(Icons.send_outlined, size: 16),
             label: const Text('再送信'),
@@ -825,7 +829,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     return _SectionCard(
       title: '全般通知設定',
       child: settings == null
-          ? const Center(child: CircularProgressIndicator.adaptive())
+          ? const Center(child: AccessibleCircularProgressIndicator())
           : Column(
               children: [
                 AppSwitchListTile(
@@ -844,13 +848,13 @@ class _NotificationSettingsSection extends HookConsumerWidget {
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: FilledButton(
+                  child: M3EFilledButton(
                     onPressed: isBusy.value ? null : submit,
                     child: isBusy.value
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator.adaptive(
+                            child: AccessibleCircularProgressIndicator(
                               strokeWidth: 2,
                             ),
                           )
@@ -978,13 +982,13 @@ class _TestScenarioSection extends HookConsumerWidget {
             onSubmitted: (_) async => run(),
           ),
           const SizedBox(height: 12),
-          FilledButton.icon(
+          M3EFilledButton.icon(
             onPressed: isPending.value ? null : () async => run(),
             icon: isPending.value
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.play_arrow),
             label: const Text('シナリオを実行'),
@@ -1049,7 +1053,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
                 ),
               ),
               actions: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('閉じる'),
                 ),
@@ -1074,35 +1078,32 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          DropdownButtonFormField<TestScenarioType>(
-            initialValue: selectedScenario.value,
-            decoration: const InputDecoration(
-              labelText: 'シナリオ種別',
-              border: OutlineInputBorder(),
-            ),
+          ControlledDropdown<TestScenarioType>(
+            singleSelect: true,
+            enabled: !isPending.value,
+            fieldStyle: const M3EDropdownFieldStyle(hintText: 'シナリオ種別'),
             items: [
               for (final scenario in TestScenarioType.values)
-                DropdownMenuItem(
+                M3EDropdownItem(
                   value: scenario,
-                  child: Text(scenario.displayLabel),
+                  label: scenario.displayLabel,
+                  selected: scenario == selectedScenario.value,
                 ),
             ],
-            onChanged: isPending.value
-                ? null
-                : (value) {
-                    if (value != null) {
-                      selectedScenario.value = value;
-                    }
-                  },
+            onSelectionChanged: (selection) {
+              if (selection.isNotEmpty) {
+                selectedScenario.value = selection.first.value;
+              }
+            },
           ),
           const SizedBox(height: 12),
-          FilledButton.icon(
+          M3EFilledButton.icon(
             onPressed: isPending.value ? null : () async => run(),
             icon: isPending.value
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                    child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.play_arrow),
             label: const Text('シナリオ種別を実行'),
@@ -1156,7 +1157,7 @@ class _HistorySection extends ConsumerWidget {
         _ => const Center(
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator.adaptive(),
+            child: AccessibleCircularProgressIndicator(),
           ),
         ),
       },
