@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_save_queue.dart';
 import 'package:eqmonitor/feature/live_monitor/data/logic/live_monitor_duration_validator.dart';
@@ -16,10 +17,10 @@ import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_connec
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_control_panel.dart';
 import 'package:eqmonitor/feature/live_monitor/ui/components/live_monitor_split_view.dart';
 import 'package:flutter/gestures.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorPage extends HookConsumerWidget {
   const new({super.key});
@@ -213,7 +214,7 @@ class LiveMonitorPage extends HookConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator.adaptive(),
+            AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
             Text('LiveMonitor モードを準備しています'),
           ],

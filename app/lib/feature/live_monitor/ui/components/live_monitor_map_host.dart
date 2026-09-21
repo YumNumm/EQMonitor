@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
@@ -7,10 +8,11 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/data/service/map_automatic_focus_controller.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiveMonitorMapHost extends StatelessWidget {
   const new({
@@ -194,7 +196,7 @@ class _LiveMonitorMapLoadingCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator.adaptive(),
+              AccessibleCircularProgressIndicator(),
               SizedBox(height: 12),
               Text('地図を準備しています'),
             ],
@@ -221,7 +223,7 @@ class _LiveMonitorMapErrorCard extends StatelessWidget {
             children: [
               const Text('地図を読み込めませんでした'),
               const SizedBox(height: 8),
-              FilledButton(onPressed: onRetry, child: const Text('再試行')),
+              M3EFilledButton(onPressed: onRetry, child: const Text('再試行')),
             ],
           ),
         ),
