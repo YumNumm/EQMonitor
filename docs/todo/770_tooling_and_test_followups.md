@@ -4,6 +4,8 @@
 
 ## 770: 既存テスト失敗の再確認
 
+- 通知の `slot_detail_page_test.dart` の警報設定2件と `notification_preset_selector_test.dart` の通知許可ダイアログ1件は、地域選択共通化時に変更前の `4e5708b38` でも失敗を再現した。期待する文言と現行UIを照合し、正しい仕様にテストを合わせる。通知・課金の本番挙動をテスト都合で変更しない。
+
 - `app/` で `mise exec -- flutter test test --dart-define=CI=true --file-reporter=json:test_report.log` を実行する。repository rootから `app/test` を指定するとasset rootが変わるため比較しない。
 - 旧失敗対象: `theme_settings_page_test.dart` / `theme_editor_page_test.dart`（theme ready待ち）、`home_earthquake_history_parameter_provider_test.dart`（asc/desc）、`feed_item_list_tile_test.dart`（「頃発表」）、`background_location_update_notifier_test.dart`（fake adapterのenum→wire JSON）、`live_monitor_detected_event_notifier_test.dart`、`override_edit_page_test.dart`（通知UIの「震度0以上」表現）。`app/test/` で該当名を検索し、現行仕様とassertionを照合する。
 - 完了条件: 対象テストとpackage suiteが成功し、緊急情報の本番挙動をfixture都合で変更していない。
@@ -42,6 +44,8 @@
 - private DI引数のpositional化、assertのbody化、named constructorのredirect可否を必要なクラスごとに判断する。完了条件: 公開API/情報を失わず変換できるものだけ変換し、残る言語制約をルール側で説明できる。
 
 ## 400: analyzer plugin の package 適用範囲
+
+- pinned SDKでapp解析時に `flutter_hooks_lint_plugin` の `ExhaustiveKeysRule` → `formatList` が `RangeError (length)` を発生させる。解析結果に型エラーがなくても、plugin診断を完走できたとは扱わない。SDK・analyzer・pluginの互換性と診断引数を確認し、例外なしで既知の違反fixtureを検出できることを完了条件とする。
 
 - `analysis_options.yaml`、`app/analysis_options.yaml`、`packages/*/analysis_options.yaml` のinclude chainと `tools/eqmonitor_lints_plugin/` の対象scopeを調べる。
 - pure Dart/Flutterごとに有効ルールを決め、必要なpackageへ適用する。診断0件だけをplugin無効/有効の証拠にしない。
