@@ -1,14 +1,17 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef RegionPickerResult = ({String code, String name});
 
@@ -85,7 +88,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
     if (styleString == null) {
       return Scaffold(
         appBar: AppBar(title: Text(title)),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
+        body: const Center(child: AccessibleCircularProgressIndicator()),
       );
     }
 
@@ -94,7 +97,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
         title: Text(title),
         actions: [
           if (resolvedValue != null)
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(context).pop(resolvedValue),
               child: const Text('決定'),
             ),
@@ -111,7 +114,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
             },
           ),
           if (isResolving.value)
-            const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: AccessibleCircularProgressIndicator()),
           if (resolvedValue == null && !isResolving.value)
             Positioned(
               bottom: 32,
@@ -149,7 +152,7 @@ class RegionPickerMapPage extends HookConsumerWidget {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () =>
                             Navigator.of(context).pop(resolvedValue),
                         child: const Text('決定'),
