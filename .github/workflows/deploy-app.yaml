@@ -133,6 +133,11 @@ jobs:
 
   generate-release-note-android:
     name: Generate Release Note (Android)
+    # Reading track notes also creates an edit and invalidates this user's other edit.
+    concurrency:
+      group: eqmonitor-google-play-edit
+      cancel-in-progress: false
+      queue: max
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-android }}
     runs-on: ubuntu-24.04
@@ -817,6 +822,10 @@ jobs:
 
   deploy-android-google-play:
     name: Deploy Android (Google Play)
+    concurrency:
+      group: eqmonitor-google-play-edit
+      cancel-in-progress: false
+      queue: max
     needs:
       - build-android
       - define-matrix

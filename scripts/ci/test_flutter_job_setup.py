@@ -9,6 +9,19 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class FlutterJobSetupTest(unittest.TestCase):
+    def test_play_edit_users_share_a_cross_run_queue(self):
+        workflow = json.loads(subprocess.check_output(
+            ["mise", "exec", "yq", "--", "yq", "-o=json", ".",
+             str(ROOT / ".github/workflows/deploy-app.yaml")], text=True,
+        ))
+        for job in ("generate-release-note-android", "deploy-android-google-play"):
+            with self.subTest(job=job):
+                self.assertEqual(workflow["jobs"][job]["concurrency"], {
+                    "group": "eqmonitor-google-play-edit",
+                    "cancel-in-progress": False,
+                    "queue": "max",
+                })
+
     def test_public_submodule_after_checkout(self):
         cases = {
             "deploy-app.yaml": ("build-ios", "build-android"),
