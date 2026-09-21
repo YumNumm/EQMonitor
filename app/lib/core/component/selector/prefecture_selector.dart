@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,7 +25,7 @@ class PrefectureSelector extends ConsumerWidget {
     final parameterSet = ref.watch(parameterSetProvider).value;
     if (parameterSet == null) {
       return const Center(
-        child: M3ECircularProgressIndicator(),
+        child: AccessibleCircularProgressIndicator(),
       );
     }
     final prefectures = parameterSet
@@ -31,7 +33,7 @@ class PrefectureSelector extends ConsumerWidget {
         .codeTables
         .areaInformationPrefectureEarthquake;
 
-    return M3EDropdownMenu(
+    return ControlledDropdown(
       items: prefectures
           .map(
             (prefecture) => M3EDropdownItem(
@@ -42,7 +44,8 @@ class PrefectureSelector extends ConsumerWidget {
           )
           .toList(),
       singleSelect: true,
-      haptic: .medium,
+      allowEmptySelection: true,
+      fieldStyle: M3EDropdownFieldStyle(hintText: hintText),
       onSelectionChanged: (selection) {
         final first = selection.firstOrNull;
         if (first == null) {
