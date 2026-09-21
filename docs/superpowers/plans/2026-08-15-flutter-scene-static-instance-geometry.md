@@ -110,7 +110,7 @@ final class StaticInstanceGeometry extends Geometry {
 
 **Files:**
 - Modify: `third_party/flutter_scene`（submodule commit を新 SHA へ）
-- Modify: `docs/knowledge/20260802_flutter_scene_scene_source_pin.md`（pin 更新手順の実績を追記）
+- Modify: `docs/knowledge/development_environment.md`（pin 更新手順の実績を追記）
 
 - [ ] **Step 1:** fork へ push し、**`gh pr create --repo YumNumm/flutter_scene --base master`** で PR を作る
 - [ ] **Step 2:** EQMonitor 側で submodule を新 SHA へ進め、`mise exec -- flutter pub get` で lockfile を更新
@@ -131,5 +131,5 @@ final class StaticInstanceGeometry extends Geometry {
 
 - Issue: #1602 / parent #1612
 - Design: `docs/superpowers/specs/2026-08-02-seismicity-flutter-scene-design.md`（「採用方式 > 描画」節）
-- Knowledge: `docs/knowledge/20260802_flutter_scene_large_static_instances.md`
-- pin 運用: `docs/knowledge/20260802_flutter_scene_scene_source_pin.md`
+- Knowledge: `docs/knowledge/map_renderer.md`
+- pin 運用: `docs/knowledge/development_environment.md`

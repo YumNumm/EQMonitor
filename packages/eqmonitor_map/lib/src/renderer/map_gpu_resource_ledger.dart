@@ -14,7 +14,7 @@ import 'dart:collection';
 /// **決定的な GPU メモリ解放は約束しない。** `flutter_scene` の `gpu.DeviceBuffer` は
 /// `NativeFieldWrapperClass1` を継承するだけで `dispose()`/`destroy()` を持たず、
 /// 実際に VRAM が返る時期は GC 依存で観測できない
-/// （`docs/todo/820_flutter_scene_batched_instance_slot_clobber.md`、
+/// （`docs/todo/820_map_renderer_and_migration.md`、
 /// `docs/superpowers/plans/2026-08-15-flutter-scene-static-instance-geometry.md`
 /// に同じ注意書きがある）。
 ///

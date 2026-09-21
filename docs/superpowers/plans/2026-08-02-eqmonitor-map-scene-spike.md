@@ -23,7 +23,7 @@
 - Flutter/Dart commandは必ず`mise exec --`経由、依存追加は`mise exec -- flutter pub add`、生成は`mise exec -- dart run build_runner build --delete-conflicting-outputs`で行う。
 - Flutter Scene型をdomain、evidence model、公開adapter interfaceへ漏らさない。
 - 保存・交換するmodelはFreezedとjson_serializableを使う。`Float32List`を持つframe-local mesh入力はhot-path例外とし、JSONへ通さない。
-- Widget、golden、性能benchmark testは`docs/todo/800_eqmonitor_map_deferred_verification.md`の後続範囲とする。純粋ロジックのunit testと物理端末gateはこのstackで実施する。
+- Widget、golden、性能benchmark testは`docs/todo/820_map_renderer_and_migration.md`の後続範囲とする。純粋ロジックのunit testと物理端末gateはこのstackで実施する。
 - `SceneSpike*` observation/evidenceと単一label painterはこのgate専用のinternal APIであり、public barrelへexportしない。`03-foundation`の`MapPerformance*`や`07-labels`の配置/collision APIを先取りしない。
 - PMTiles、MVT、GeoJSON、label collision、MapNode/Element reconciler、MapLibre置換、3D/地下震源/断層はこのspikeへ入れない。
 - iOS/Androidのprofileとreleaseでgate evidenceが揃うまで`03-foundation`を開始しない。未実施、観測不能、例外、resource recovery未証明はpassに変換しない。
@@ -55,7 +55,7 @@
 - Create: `tool/eqmonitor_map/run_pinned_flutter_tool`
 - Create: `tool/eqmonitor_map/flutter_sdk_guard.sh`
 - Create: `tool/eqmonitor_map/test/run_pinned_flutter_tool_test.sh`
-- Create: `docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md`
+- Modify: `docs/knowledge/development_environment.md`
 
 **Interfaces:**
 - Consumes: mise `bootstrap.repos`とroot configuration。
@@ -231,7 +231,7 @@ iOS profile/release `--no-codesign` buildをblockingにする。生成済みdart
 git add .gitignore mise.toml mise.lock pubspec.lock .github/workflows tool/eqmonitor_map \
   packages/eqmonitor_lints packages/assets_util/example/analysis_options.yaml \
   packages/assets_util/example/pubspec.yaml \
-  docs/knowledge/20260802_eqmonitor_map_flutter_scene_toolchain.md
+  docs/knowledge/development_environment.md
 git commit -m "Toolchain: Flutter masterを固定"
 ```
 
@@ -983,7 +983,7 @@ git commit -m "Spike: Scene描画とラベルoverlayを追加"
 - Create when captured: `packages/eqmonitor_map/example/evidence/android-profile.json`
 - Create when captured: `packages/eqmonitor_map/example/evidence/android-release.json`
 - Create: `docs/knowledge/20260802_eqmonitor_map_flutter_scene_device_gate.md`
-- Modify: `docs/todo/800_eqmonitor_map_deferred_verification.md`
+- Modify: `docs/todo/820_map_renderer_and_migration.md`
 - Create: `docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md`
 - Create: `packages/eqmonitor_map/tool/validate_scene_spike_evidence.dart`
 - Create: `packages/eqmonitor_map/test/tool/validate_scene_spike_evidence_test.dart`
@@ -1083,7 +1083,7 @@ READMEへ以下を記録する。
 - `03-foundation`へ進める条件
 - package follow-up list: Widget/golden/performance tests、HUD、PMTiles/MVT、declarative MapNode/Element、labels、3D/地下震源/断層
 
-device knowledgeには端末/OS/backend/build mode、lifecycle操作、判明したFlutter Scene制約を再現command付きで残す。後続test項目は既存`docs/todo/800_eqmonitor_map_deferred_verification.md`へ重複なく追記する。
+device knowledgeには端末/OS/backend/build mode、lifecycle操作、判明したFlutter Scene制約を再現command付きで残す。後続test項目は既存`docs/todo/820_map_renderer_and_migration.md`へ重複なく追記する。
 
 - [ ] **Step 7: stack 02 PR本文の下書きをファイルへ保存する**
 
@@ -1120,7 +1120,7 @@ Expected: format/analyze/unit tests/diff check pass。evidence validatorはphysi
 - [ ] **Step 9: commitしてstack branchをpushする**
 
 ```bash
-git add packages/eqmonitor_map/README.md packages/eqmonitor_map/example/evidence packages/eqmonitor_map/tool packages/eqmonitor_map/test/tool docs/knowledge/20260802_eqmonitor_map_flutter_scene_device_gate.md docs/todo/800_eqmonitor_map_deferred_verification.md docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md
+git add packages/eqmonitor_map/README.md packages/eqmonitor_map/example/evidence packages/eqmonitor_map/tool packages/eqmonitor_map/test/tool docs/knowledge/20260802_eqmonitor_map_flutter_scene_device_gate.md docs/todo/820_map_renderer_and_migration.md docs/superpowers/pr-drafts/2026-08-02-eqmonitor-map-02-scene-spike.md
 git commit -m "Docs: Scene実機gate結果を記録"
 git push -u origin codex/eqmonitor-map-02-scene-spike
 ```

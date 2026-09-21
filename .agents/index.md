@@ -11,7 +11,7 @@
 
 ## Setup and commands
 
-- Use `mise exec --` for every Flutter/Dart command. `mise.toml` pins a Flutter commit with a prerelease Dart SDK; trust manifests, lockfiles, and CI over outdated README/CLAUDE setup instructions.
+- Use `mise exec --` for every Flutter/Dart command. Toolchain pins are in `mise.toml` / `mise.lock`; resolved Dart dependencies are in `pubspec.lock`.
 - Bootstrap from the repository root in order:
   ```sh
   mise install
@@ -19,10 +19,9 @@
   mise exec -- dart pub get --enforce-lockfile
   mise exec -- dart run melos bootstrap
   ```
-- `app/pubspec.yaml` enables SPM, native assets (SQLite), and Dart data assets (map shaders) at project level; global `flutter config` settings alone do not configure CI.
-- If Apple plugin sync fails with `rsync ... SourcePackages ... No such file or directory`, run `mkdir -p app/build/ios/SourcePackages app/build/macos/SourcePackages` from root and retry. See `docs/knowledge/20260822_flutter-test-sourcepackages-directory.md`.
-- Copy `environment/.env.example` to the ignored `environment/.env.dev` and fill in environment-specific values. Run from `app/`: `mise exec -- flutter run --dart-define-from-file=../environment/.env.dev`. `.vscode/launch.json` currently omits the required `../`.
-- Before running the app, stage the bundled Asset Pack from root: `mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled` (`--target all` also refreshes the slim iOS extension table). This uses public signed downloads, without `GH_TOKEN`. Do not commit `.gitkeep` deletions caused by staging; see `docs/knowledge/20260819_bundled_asset_pack_flutter_assets.md`.
+- For iOS, enable SPM: `mise exec -- flutter config --enable-swift-package-manager`.
+- Run Flutter from `app/`. With the separately supplied root `environment/.env.dev` available: `mise exec -- flutter run --dart-define-from-file=../environment/.env.dev`. Paths are relative to the working directory; `.vscode/launch.json` currently omits the `../`.
+- 同梱 Asset Pack は root で `mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled` を実行して配置する。iOS native 用は `--target ios-native`、両方は `--target all`。公開 R2 配信を使い、旧 GitHub Release 用スクリプトや `GH_TOKEN` は不要。iOS の slim JMA parameter はコミット済み。
 - Use workspace-pinned Melos via `mise exec -- dart run melos ...`; do not globally activate Melos. Add dependencies from the owning package with `mise exec -- flutter pub add <package>`.
 - Codegen in the affected package: `mise exec -- dart run build_runner build --delete-conflicting-outputs`. Workspace codegen: `mise exec -- dart run melos run rebuild`. The current `generate` task references undefined `generate:dart` / `generate:flutter` tasks.
 - API contract regeneration is separate: from `packages/eqmonitor_api`, run `mise exec -- dart run bin/generate.dart`. It requires `backend/api/api/openapi.json`, replaces `lib/src`, and applies compatibility patches before build_runner; direct `swagger_parser` skips these patches.
@@ -30,9 +29,10 @@
 
 ## Focused verification
 
+- TDD（テスト駆動開発）は必須ではない。テスト先行や RED → GREEN の証跡を一律に要求せず、変更リスクに応じて実装後のテスト追加や既存テストによる確認を選ぶ。必要な回帰テストの範囲は `docs/knowledge/test_strategy.md` を参照する。
 - CI app analysis, from root: `mise exec -- dart analyze app --fatal-infos --format machine`. Workspace analysis: `mise exec -- dart run melos run analyze`.
 - From `app/` or a Flutter package: `mise exec -- flutter test test/path_test.dart --dart-define=CI=true`. From a pure Dart package: `mise exec -- dart test test/path_test.dart`.
-- Workspace tests: `mise exec -- dart run melos run test`. CI uses:
+- Workspace tests: use the CI-equivalent command below. `melos run test` has a known Flutter/Dart package-filter issue; see `docs/knowledge/testing.md` for separate execution.
   ```sh
   mise exec -- dart run melos exec --dir-exists=test --concurrency=4 -- 'mise exec -- flutter test --dart-define=CI=true --file-reporter="json:test_report.log"'
   ```
@@ -49,7 +49,8 @@
 - Preferences: `.cursor/rules/preferences-key-management.mdc`. Keys belong in `SharedPreferencesKey` / `SecureStorageKey` under `app/lib/core/data/preferences/{shared,secure}/`; access goes through `SharedPreferencesDataSource` / `SecurePreferencesDataSource`.
 - Never substitute invented fixed or random values for missing earthquake data. EEW display changes must follow `.cursor/rules/eew-depth-forecast-intensity.mdc`: depth and published intensity are independent; unavailable intensity retains a `-` badge.
 - Estimated-intensity changes: `.cursor/rules/estimated-intensity-isolate.mdc` (reuse the persistent worker rather than per-frame `Isolate.run()`). Map renderer changes: `.cursor/rules/map-renderer-references.mdc` (required pinned reference implementations).
-- Record unfinished work in `docs/todo/{3-digit-priority}_{title}.md` (higher number = higher priority). New operational/platform lessons go in `docs/knowledge/{YYYYMMDD}_<topic>.md`; consult existing knowledge before duplicating it.
+- 未完了の課題は `docs/todo/{3-digit-priority}_{title}.md` に記録する（数値が大きいほど高優先度）。関連する既存 TODO に追記し、完了が確認できた項目は削除する。実機検証待ちは未検証として残す。
+- 知見は `docs/knowledge/README.md` を入口に、作業に関係する分野だけ読む。知見・TODO の全件読み込みは不要。新しい知見は既存の分野別文書へ統合し、独立した話題のみ新規作成する。経緯やログは Git 履歴・PR に残し、本文は現行の制約・対処・参照先を中心に保つ。
 
 ## Git and GitHub
 

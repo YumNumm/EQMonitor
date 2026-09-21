@@ -120,4 +120,4 @@ run、GitHub Deployments、TestFlight、Firebase、Google Play `external` の状
 ## 運用知識
 
 betaタグと外部配布の関係、GitHub Deploymentの確認方法、Release Notes内の
-メンション安全化を `docs/knowledge/20260725_beta_release_deployment.md` に記録する。
+メンション安全化を `docs/knowledge/delivery_ci.md` に記録する。

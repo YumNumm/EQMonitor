@@ -11,7 +11,7 @@ Goal: `packages/eqmonitor_map` の Flutter Scene 実装の現状を調査し、�
 - Task 4: テスト/CI/既知不具合・deferred verification — complete (task-4-report.md)
 - Task 5: dashmap (bdero) 参考実装の知見抽出 — complete (task-5-dashmap-report.md)
 - 統合: status-report-draft.md 作成済み
-- 知見記録: docs/knowledge/20260807_dashmap_flutter_scene_reference.md 作成済み (未commit)
+- 知見記録: docs/knowledge/map_renderer_references.md に統合
 
 ## Findings so far
 

@@ -32,22 +32,22 @@
 - 実機検証が未完了。Scene exampleの物理iOS/Android profile/release manual smoke、BaseMapViewの物理端末確認、pinch-zoom確認、Line幅・tile境界の目視確認、祖先fallbackの実機確認が未確認としてREADME/TODOに残る。
 - `FlutterSceneSpikeView` / `BaseMapMaterialPreflightView` の `NodeCamera + EqmonitorOrthographicProjection` 経路が実際に描画されるかは未確認。TODOでは `BaseMapView` は別配線で描画されると記録。
 - Widget/golden/performance benchmark/HUDは未実装。`packages/eqmonitor_map/test/widget/base_map_view_test.dart` はGestureから分離したpure関数のみ検証し、BaseMapView本体のWidget testではない。
-- MapLibre surface移行は未着手。`docs/todo/780_eqmonitor_map_maplibre_surface_migrations.md` の全surfaceチェックボックスが未チェックで、Home Mapすら移行完了していない。
+- MapLibre surface移行は未着手。統合先 `docs/todo/820_map_renderer_and_migration.md` で追跡する全surfaceは、この記録時点では未完了で、Home Mapすら移行完了していない。
 
 ## 4. Open TODOs ranked by priority/blocking
 
-1. **P800 / blocking for renderer confidence:** `/home/yumnumm/EQMonitor/docs/todo/800_eqmonitor_map_deferred_verification.md`
+1. **P800 / blocking for renderer confidence:** `docs/todo/820_map_renderer_and_migration.md`
    - 物理iOS/Android profile/release manual smoke、Widget/Golden/performance benchmark、HUD。
    - Task 10由来の具体ギャップ: properties/feature ID decode、bevel/round/dash、Douglas-Peucker、scissor、非正規varint拒否、実tile hole fixture、extent伝搬、fallback重複描画排除。
    - `BaseMapTileGeometry` extent未伝搬は設計違反に近く、次のbase-layer安定化で優先して潰すべき。
-2. **P780 / blocking for MapLibre removal:** `/home/yumnumm/EQMonitor/docs/todo/780_eqmonitor_map_maplibre_surface_migrations.md`
+2. **P780 / blocking for MapLibre removal:** `docs/todo/820_map_renderer_and_migration.md`
    - Home、bounds selector、Live Monitor、EEW details、Earthquake History、Intensity History、Region picker、Tsunami、Seismicity、Hi-net debug、Shake Detection historyの全移行が未チェック。
    - `lockBearing` UI/設定とMapLibre package削除は全surface完了まで不可。
-3. **P650 / future 3D and seismicity relation:** `/home/yumnumm/EQMonitor/docs/todo/650_eqmonitor_map_3d_camera.md`
+3. **P650 / future 3D and seismicity relation:** `docs/todo/820_map_renderer_and_migration.md`
    - bearing/pitch、透視投影、地形、地下震源、断層面。2D base mapの次 milestone ではなく、3D seismicityや将来camera設計時の対象。
-4. **P450 / future product surface:** `/home/yumnumm/EQMonitor/docs/todo/450_eqmonitor_map_future_surface.md`
+4. **P450 / future product surface:** `docs/todo/820_map_renderer_and_migration.md`
    - Performance HUD、desktop/Web、線上ラベル、汎用package化。初期iOS/Androidの性能・障害時挙動確立後。
 
 ## 5. Recommended next milestone
 
-次のmilestoneは「`BaseMapView` stabilization slice」として、Home統合やMapNode全面実装へ進む前に、`docs/todo/800_eqmonitor_map_deferred_verification.md` のうちベースレイヤーに直接効く項目を閉じるのがよい。具体的には MVT extentを`BaseMapTileGeometry`へ伝搬し、pinch/ancestor fallback/Line幅/tile境界をiOS simulatorだけでなく少なくとも物理Androidまたは物理iOS profileで確認し、現在のREADMEの古いflood記述と修正済みコミット後の実態を再同期する。その後に labels / dynamic layers / Home integration のstackへ進む方が、生命に関わる表示の移行として根拠を保ちやすい。
+次のmilestoneは「`BaseMapView` stabilization slice」として、Home統合やMapNode全面実装へ進む前に、`docs/todo/820_map_renderer_and_migration.md` のうちベースレイヤーに直接効く項目を閉じるのがよい。具体的には MVT extentを`BaseMapTileGeometry`へ伝搬し、pinch/ancestor fallback/Line幅/tile境界をiOS simulatorだけでなく少なくとも物理Androidまたは物理iOS profileで確認し、現在のREADMEの古いflood記述と修正済みコミット後の実態を再同期する。その後に labels / dynamic layers / Home integration のstackへ進む方が、生命に関わる表示の移行として根拠を保ちやすい。

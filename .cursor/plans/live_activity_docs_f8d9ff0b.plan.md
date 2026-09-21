@@ -9,7 +9,7 @@ todos:
     content: "`backend/docs/apns-live-activity-broadcast.md` に EEW 現行フロー・既知リスク・監視設計を追記する"
     status: pending
   - id: update-knowledge-link
-    content: "`docs/knowledge/20260501_live_activity_input_push_channel.md` に参照先と確認観点を追加する"
+    content: "`docs/knowledge/push_and_auth.md` に参照先と確認観点を追加する"
     status: pending
   - id: add-observability-todo
     content: EEW・揺れ検知・通知配信全体の監視実装 TODO ドキュメントを追加する
@@ -53,17 +53,17 @@ event: 'update',
 
 ## 更新するドキュメント
 
-- [`docs/live-activity-implementation-review.md`](docs/live-activity-implementation-review.md)
+- [`docs/live-activity-implementation-review.md`](../../docs/live-activity-implementation-review.md)
   - EEW start フローの `header["apns-channel-id"]` を `input-push-channel` に修正。
   - start は device 環境、update/end は現状 production 固定であることを明記。
   - 「開始されるが更新されない」調査観点に、環境不一致・チャンネル未同期・Broadcast 送信メトリクス不足を追加。
 
-- [`backend/docs/apns-live-activity-broadcast.md`](backend/docs/apns-live-activity-broadcast.md)
+- [`backend/docs/apns-live-activity-broadcast.md`](../../backend/docs/apns-live-activity-broadcast.md)
   - 現在の EEW start/update/end 実装フローを、`notification-resolver` と `notification-sender` の責務分担として追記。
   - `input-push-channel` と `apns-channel-id` の使い分け、`eew.region.{code}` / `eew.region.0` のチャンネル決定ルールを整理。
   - sandbox/production の注意点を追加し、現状の production 固定を既知リスクとして明記。
 
-- [`docs/knowledge/20260501_live_activity_input_push_channel.md`](docs/knowledge/20260501_live_activity_input_push_channel.md)
+- [`docs/knowledge/push_and_auth.md`](../../docs/knowledge/push_and_auth.md)
   - 既存ナレッジに関連ドキュメントへのリンクと、更新が届かない時の最短確認観点を少しだけ追加。
 
 - 新規または既存 TODO ドキュメント

@@ -62,7 +62,7 @@
 - `app/test/feature/shake_detection/data/shake_detection_snapshot_reducer_test.dart` — revision ordering。
 - `app/test/feature/shake_detection/data/shake_detection_provider_test.dart` — ready/REST/WS race と完全置換。
 - `app/test/feature/shake_detection/data/shake_detection_visible_test.dart` — canonical correlation / expiry 表示判定。
-- `docs/knowledge/20260719_shake_detection_snapshot_sync.md` — 今後の realtime snapshot 同期ルール。
+- `docs/knowledge/eew_realtime.md` — 今後の realtime snapshot 同期ルール。
 
 ---
 
@@ -1660,7 +1660,7 @@ git push
 ### Task 7: Document the synchronization rule and run final verification
 
 **Files:**
-- Create: `docs/knowledge/20260719_shake_detection_snapshot_sync.md`
+- Modify: `docs/knowledge/eew_realtime.md`
 - Verify: all files changed in Tasks 1-6
 
 **Interfaces:**
@@ -1749,7 +1749,7 @@ Run:
 
 ```bash
 git --no-pager diff --stat
-git --no-pager diff -- packages/eqmonitor_websocket app/lib/core/realtime app/lib/feature/shake_detection docs/knowledge/20260719_shake_detection_snapshot_sync.md
+git --no-pager diff -- packages/eqmonitor_websocket app/lib/core/realtime app/lib/feature/shake_detection docs/knowledge/eew_realtime.md
 ```
 
 Verify all of these exact invariants in the diff:
@@ -1767,7 +1767,7 @@ no client travel-time correlation
 - [ ] **Step 6: Commit, push, and prepare PR**
 
 ```bash
-git add docs/knowledge/20260719_shake_detection_snapshot_sync.md
+git add docs/knowledge/eew_realtime.md
 git commit -m "docs: 揺れ検知snapshot同期ルールを記録"
 git push
 ```

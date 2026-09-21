@@ -201,7 +201,7 @@ Expected: `No issues found!`。
 
 テストファイルを含めると、全テストの必須 `main()` に対する既知の
 `avoid_top_level_functions` debt 1件が発生する。これは
-`docs/todo/760_existing_eqmonitor_custom_lint_debt.md` の対象であり、
+`docs/todo/770_tooling_and_test_followups.md` の対象であり、
 本修正では一括 ignore を追加しない。
 
 - [x] **Step 4: 差分の健全性を確認する**

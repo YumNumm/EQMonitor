@@ -159,7 +159,7 @@ Expected: the same tests pass with unchanged exception and fallback behavior.
 ### Task 5: Verify, document, and publish
 
 **Files:**
-- Create: `docs/knowledge/20260816_dart_3_13_analyzer_migration.md`
+- Modify: `docs/knowledge/development_environment.md`
 
 **Interfaces:**
 - Consumes: the completed app changes.

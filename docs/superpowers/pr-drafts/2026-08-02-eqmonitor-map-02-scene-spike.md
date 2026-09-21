@@ -80,5 +80,5 @@ cd packages/eqmonitor_map && mise exec -- flutter test
 - label placement/collision/semantics
 
 検証の未完了項目は
-[`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md)
+[`docs/todo/820_map_renderer_and_migration.md`](../../todo/820_map_renderer_and_migration.md)
 で追跡します。bearing/pitch、Web/desktop、汎用package化は初期scope外です。

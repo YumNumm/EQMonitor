@@ -658,7 +658,7 @@ Fill/Lineと同じestimated full candidate stampへ切り替わる。
 - Create: `packages/eqmonitor_map/test/integration/estimated_intensity_event_fixture_test.dart`
 - Create: `packages/eqmonitor_map/test/integration/estimated_intensity_lifecycle_test.dart`
 - Create: `app/test/feature/settings/children/config/debug/eqmonitor_map/estimated_intensity_runtime_configuration_test.dart`
-- Modify after runtime discovery: `docs/knowledge/20260825_estimated_intensity_archive_identity.md`
+- Modify after runtime discovery: `docs/knowledge/pmtiles.md`
 
 manifest は actual archive bytes を repositoryへ固定埋め込みするものではない。通常CIでは同じschemaと
 identity関係を持つrepository内deterministic archive fixtureを使う。API contract fixtureが指すactual bytesとの

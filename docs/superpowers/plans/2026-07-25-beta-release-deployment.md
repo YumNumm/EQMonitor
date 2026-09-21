@@ -314,7 +314,7 @@ git push
 ### Task 4: Operational knowledge and final verification
 
 **Files:**
-- Create: `docs/knowledge/20260725_beta_release_deployment.md`
+- Modify: `docs/knowledge/delivery_ci.md`
 
 **Interfaces:**
 - Documents exact commands and expected GitHub Deployment/store states.
@@ -344,7 +344,7 @@ Expected: all commands exit 0; no warnings or whitespace errors.
 - [ ] **Step 3: Commit and push knowledge**
 
 ```bash
-git add docs/knowledge/20260725_beta_release_deployment.md
+git add docs/knowledge/delivery_ci.md
 git commit -m "docs: beta外部配布の運用手順を記録"
 git push
 ```
@@ -368,7 +368,7 @@ Open a draft PR from `fix/beta-release-deployment` to `develop`. Include root ca
 **Files:**
 - Modify: `.github/workflows/deploy-app.yaml`
 - Modify: `scripts/ci/test_resolve_deploy_app_policy.sh`
-- Modify: `docs/knowledge/20260725_beta_release_deployment.md`
+- Modify: `docs/knowledge/delivery_ci.md`
 
 **Interfaces:**
 - Consumes: repository contents checked out at the workflow run ref.
@@ -404,7 +404,7 @@ Add the pinned repository checkout action before `Decide which app to deploy`:
 - [x] **Step 4: Record the runner workspace requirement**
 
 Add the failure mode and the rule that repository scripts require checkout to
-`docs/knowledge/20260725_beta_release_deployment.md`.
+`docs/knowledge/delivery_ci.md`.
 
 - [x] **Step 5: Run focused and workflow verification**
 
