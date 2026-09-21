@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TelegramTypeFilterChip extends StatelessWidget {
   const new({this.telegramTypes, this.onChanged, super.key});
@@ -126,11 +127,11 @@ class _TelegramTypeFilterModal extends HookWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(
                     selected.value.toList()
                       ..sort((a, b) => a.index.compareTo(b.index)),

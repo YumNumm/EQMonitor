@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StatusFilterChip extends StatelessWidget {
   const new({required this.statuses, this.onChanged, super.key});
@@ -118,11 +119,11 @@ class _StatusFilterModal extends HookWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context)
                           .pop(selectedStatuses.value.toList()),
