@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -39,7 +40,7 @@ class CachedDataBanner extends StatelessWidget {
         leading: SizedBox(
           width: 12,
           height: 12,
-          child: CircularProgressIndicator(
+          child: AccessibleCircularProgressIndicator(
             strokeWidth: 1.5,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -83,7 +84,7 @@ class RevalidatingBanner extends StatelessWidget {
                   leading: SizedBox(
                     width: 12,
                     height: 12,
-                    child: CircularProgressIndicator(
+                    child: AccessibleCircularProgressIndicator(
                       strokeWidth: 1.5,
                       color: colorScheme.onSurfaceVariant,
                     ),
