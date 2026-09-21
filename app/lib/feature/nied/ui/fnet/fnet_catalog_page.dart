@@ -1,14 +1,17 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 
 class FnetCatalogPage extends HookConsumerWidget {
@@ -57,7 +60,7 @@ class _FnetCatalogList extends HookConsumerWidget {
     final snapshot = useFuture(future);
 
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     if (snapshot.hasError) {
@@ -69,7 +72,7 @@ class _FnetCatalogList extends HookConsumerWidget {
             const SizedBox(height: 16),
             Text('エラーが発生しました\n${snapshot.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
+            M3EElevatedButton(
               onPressed: () {
                 (context as Element).markNeedsBuild();
               },
@@ -164,7 +167,7 @@ class _MonthSelector extends StatelessWidget {
               final month => '対象月: ${month.year}年${month.month}月',
             }, style: theme.textTheme.titleSmall),
           ),
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             onPressed: () async {
               final result = await showAdaptiveDialog<Month?>(
                 context: context,
@@ -180,7 +183,7 @@ class _MonthSelector extends StatelessWidget {
           ),
           if (selectedMonth != null) ...[
             const SizedBox(width: 8),
-            OutlinedButton(
+            M3EOutlinedButton(
               onPressed: () => onMonthChanged(null),
               child: const Text('クリア'),
             ),
@@ -225,47 +228,72 @@ class _MonthPickerDialog extends HookWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: DropdownMenu<int>(
-              initialSelection: selectedYear.value,
-              label: const Text('年'),
-              dropdownMenuEntries: years
-                  .map(
-                    (year) => DropdownMenuEntry(value: year, label: '$year年'),
-                  )
-                  .toList(),
-              onSelected: (value) {
-                if (value != null) {
+            child: SizedBox(
+              width: 180,
+              child: ControlledDropdown<int>(
+                fieldStyle: M3EDropdownFieldStyle(hintText: '年'),
+                singleSelect: true,
+                items:
+                    (years
+                            .map(
+                              (year) =>
+                                  M3EDropdownItem(value: year, label: '$year年'),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected: item.value == selectedYear.value,
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   selectedYear.value = value;
-                }
-              },
+                },
+              ),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: DropdownMenu<int>(
-              initialSelection: selectedMonth.value,
-              label: const Text('月'),
-              dropdownMenuEntries: availableMonths
-                  .map(
-                    (month) =>
-                        DropdownMenuEntry(value: month, label: '$month月'),
-                  )
-                  .toList(),
-              onSelected: (value) {
-                if (value != null) {
+            child: SizedBox(
+              width: 180,
+              child: ControlledDropdown<int>(
+                fieldStyle: M3EDropdownFieldStyle(hintText: '月'),
+                singleSelect: true,
+                items:
+                    (availableMonths
+                            .map(
+                              (month) => M3EDropdownItem(
+                                value: month,
+                                label: '$month月',
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected: item.value == selectedMonth.value,
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   selectedMonth.value = value;
-                }
-              },
+                },
+              ),
             ),
           ),
         ],
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        TextButton(
+        M3ETextButton(
           onPressed: () {
             Navigator.of(
               context,
