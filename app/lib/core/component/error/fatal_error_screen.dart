@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/foundation.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class FatalErrorScreen extends StatelessWidget {
@@ -43,7 +44,7 @@ class FatalErrorScreen extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 24),
-              FilledButton.icon(
+              M3EFilledButton.icon(
                 onPressed: () => const HomeRoute().go(context),
                 icon: const Icon(Icons.home_rounded),
                 label: const Text('ホームへ戻る'),
