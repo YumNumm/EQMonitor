@@ -37,6 +37,11 @@ class FlutterJobSetupTest(unittest.TestCase):
                         self.assertFalse(step.get("uses", "").startswith(
                             ("$/", "YumNumm/EQMonitor@", "YumNumm/EQMonitor/")),
                             "Repo action downloads encounter dangling symlinks")
+                    if job == "build-android":
+                        install = next(step for step in steps
+                                       if step.get("name") == "Install Mise dependencies")
+                        self.assertNotIn("pipx:codemagic-cli-tools",
+                                         install["with"]["install_args"].split())
 
 
 if __name__ == "__main__":
