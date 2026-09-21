@@ -42,6 +42,31 @@
   HeroController等の残件は[UI・画面遷移](../todo/800_ui_and_navigation.md)。
 - 外部packageのTheme.ofやexact SDK型検出でも同種の不整合が起こり得る。
 
+## M3E の選択状態とアクセシビリティ
+
+- 通常のボタンは `m3e_core` の部品を使い、既存の無効条件・処理中表示・色指定を維持する。
+- アプリ状態と同期するドロップダウンは `ControlledDropdown` を使う。
+  `m3e_core 1.1.4` は項目の再設定でも選択コールバックを呼ぶため、
+  再描画によって設定保存が走らないよう、外部更新とユーザー操作を分離する。
+- 選択肢としての `null` は未選択と区別する。M3E 内部へは非nullのrecordで渡し、
+  呼び出し側には元の型で返す。選択必須の場合は選択中項目の再タップで空にしない。
+- メニュー表示中に無効化された場合も、選択イベントから保存処理を起動しない。
+- M3E のカスタム描画部品には標準 Slider / ProgressIndicator と同じ読み上げ情報がない。
+  `AccessibleSlider` / `AccessibleRangeSlider` / `Accessible*ProgressIndicator` を使う。
+  範囲入力は上下限を個別に操作でき、互いの値を越えないようにする。
+- 時刻シークは時刻ラベルと増減操作を提供する。津波タイムラインは隣接する電文へ進み、
+  動画は再生時間の範囲内に収める。最新電文の選択表現も維持する。
+- M3E に直接 `SliderTheme` を渡しても反映されない設定がある。
+  対応する native decoration / track / handle 引数へ移す。
+
+```sh
+# app/ から
+mise exec -- flutter test test/core/component/selector \
+  test/core/component/slider test/core/component/chip/m3e_filter_controls_test.dart \
+  test/feature/knet_waveform/ui/media/knet_movie_seekbar_test.dart \
+  test/feature/tsunami/tsunami_timeline_accessibility_test.dart --dart-define=CI=true
+```
+
 ## 条件付き表示と更新時刻
 
 - Row/Column spacingはSizedBox.shrinkも子として数える。非表示バナーをchildrenへ載せないか、
