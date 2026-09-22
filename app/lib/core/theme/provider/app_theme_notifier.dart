@@ -136,7 +136,7 @@ class AppThemeNotifier extends _$AppThemeNotifier {
 
 @riverpod
 ThemeColorSet activeColorSet(Ref ref) {
-  final brightness = ref.watch(brightnessProvider);
+  final brightness = ref.watch(effectiveBrightnessProvider);
   // App 起動直後は appTheme が AsyncLoading。requireValue すると
   // AsyncValueIsLoadingException で fatal になるため、未完了時は
   // Notifier 自身と同じ default にフォールバックする。
