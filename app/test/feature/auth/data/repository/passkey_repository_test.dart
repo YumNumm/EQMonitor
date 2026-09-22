@@ -556,6 +556,10 @@ void main() {
         kind: AuthFailureKind.passkeyUnsupported,
       ),
       (
+        exception: passkey.RestoreCredentialUnsupportedException(),
+        kind: AuthFailureKind.passkeyUnsupported,
+      ),
+      (
         exception: passkey.DomainNotAssociatedException('association'),
         kind: AuthFailureKind.passkeyDomainAssociation,
       ),
@@ -1407,6 +1411,10 @@ void main() {
       ),
       (
         exception: passkey.DeviceNotSupportedException(),
+        kind: AuthFailureKind.passkeyUnsupported,
+      ),
+      (
+        exception: passkey.RestoreCredentialUnsupportedException(),
         kind: AuthFailureKind.passkeyUnsupported,
       ),
       (

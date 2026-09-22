@@ -529,7 +529,8 @@ final class const PasskeyFailureMapper() {
       passkey.PasskeyAuthCancelledException() => AuthFailureKind.cancelled,
       passkey.TimeoutException() => AuthFailureKind.timeout,
       passkey.DeviceNotSupportedException() ||
-      passkey.PasskeyUnsupportedException() =>
+      passkey.PasskeyUnsupportedException() ||
+      passkey.RestoreCredentialUnsupportedException() =>
         AuthFailureKind.passkeyUnsupported,
       passkey.DomainNotAssociatedException() =>
         AuthFailureKind.passkeyDomainAssociation,
