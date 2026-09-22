@@ -184,16 +184,14 @@ class _EarthquakeInformationBody extends StatelessWidget {
         ],
         const Row(),
         if (timeText != null)
-          Expanded(
-            child: Text(
-              timeText,
-              style: TextStyle(
-                fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: [
-                  FontFamily.googleSansFlex,
-                  FontFamily.notoSansJP,
-                ],
-              ),
+          Text(
+            timeText,
+            style: TextStyle(
+              fontFamily: FontFamily.googleSansCode,
+              fontFamilyFallback: [
+                FontFamily.googleSansFlex,
+                FontFamily.notoSansJP,
+              ],
             ),
           ),
       ],
