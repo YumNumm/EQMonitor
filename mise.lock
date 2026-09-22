@@ -85,30 +85,30 @@ backend = "asdf:https://github.com/YumNumm/mise-flutter.git"
 specifiers = ["19946f91c8d9de18a4674460d015229cc0b2534f"]
 
 [[tools.gcloud]]
-version = "585.0.0"
+version = "586.0.0"
 backend = "vfox:gcloud"
 specifiers = ["latest"]
 
 [tools.gcloud."platforms.linux-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-linux-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-linux-arm.tar.gz"
 
 [tools.gcloud."platforms.linux-arm64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-linux-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-linux-arm.tar.gz"
 
 [tools.gcloud."platforms.linux-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-linux-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-linux-x86_64.tar.gz"
 
 [tools.gcloud."platforms.linux-x64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-linux-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-linux-x86_64.tar.gz"
 
 [tools.gcloud."platforms.macos-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-darwin-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-darwin-arm.tar.gz"
 
 [tools.gcloud."platforms.macos-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-darwin-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-darwin-x86_64.tar.gz"
 
 [tools.gcloud."platforms.windows-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-585.0.0-windows-x86_64-bundled-python.zip"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-586.0.0-windows-x86_64-bundled-python.zip"
 
 [[tools.ghalint]]
 version = "1.5.6"
@@ -479,7 +479,7 @@ provenance = "github-attestations"
 version = "0.69.0"
 backend = "pipx:codemagic-cli-tools"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.69.0", digest = "sha256:a2d88cb70b5b8d5b4a734fc03191721795e460a1bb581779d70f0dcaf70078d0" }
+uv = { path = ".mise/locks/pipx-codemagic-cli-tools/0.69.0", digest = "sha256:c1113c4e79b88a0e2432e16a7d04a8b6a3719b56ebaf245508aeb5fdb44f0ff0" }
 
 [[tools.pkl]]
 version = "0.32.1"
