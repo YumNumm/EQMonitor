@@ -86,7 +86,7 @@ as Bounds?,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get period {
-
+  
   return $HypocenterCoverageCopyWith<$Res>(_self.period, (value) {
     return _then(_self.copyWith(period: value));
   });
@@ -324,7 +324,7 @@ as Bounds?,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCoverageCopyWith<$Res> get period {
-
+  
   return $HypocenterCoverageCopyWith<$Res>(_self.period, (value) {
     return _then(_self.copyWith(period: value));
   });

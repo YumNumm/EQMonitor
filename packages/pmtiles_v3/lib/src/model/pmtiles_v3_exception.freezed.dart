@@ -207,7 +207,7 @@ return invalidTileCoordinate(_that.z,_that.x,_that.y);case _:
 
 class PmTilesV3InvalidRangeException implements PmTilesV3Exception {
   const PmTilesV3InvalidRangeException({required this.offset, required this.length, required this.sizeBytes});
-
+  
 
  final  int offset;
  final  int length;
@@ -475,7 +475,7 @@ as String,
 
 class PmTilesV3ResourceLimitExceededException implements PmTilesV3Exception {
   const PmTilesV3ResourceLimitExceededException({required this.resource, required this.limit, required this.actual});
-
+  
 
  final  PmTilesV3Resource resource;
  final  int limit;

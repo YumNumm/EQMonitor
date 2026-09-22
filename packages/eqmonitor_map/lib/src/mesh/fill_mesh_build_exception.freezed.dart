@@ -358,7 +358,7 @@ as String,
 
 class FillMeshSelfIntersectionException implements FillMeshBuildException {
   const FillMeshSelfIntersectionException({required this.reason});
-
+  
 
 @override final  String reason;
 
@@ -424,7 +424,7 @@ as String,
 
 class FillMeshInvalidTopologyException implements FillMeshBuildException {
   const FillMeshInvalidTopologyException({required this.reason});
-
+  
 
 @override final  String reason;
 

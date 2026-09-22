@@ -285,7 +285,7 @@ return invalidTileId(_that.tileId,_that.minTileId,_that.maxTileId);case _:
 
 class SeismicityPmTilesInvalidDescriptorException implements SeismicityPmTilesException {
   const SeismicityPmTilesInvalidDescriptorException({required this.reason});
-
+  
 
  final  String reason;
 
@@ -553,7 +553,7 @@ as int,
 
 class SeismicityPmTilesResourceLimitExceededException implements SeismicityPmTilesException {
   const SeismicityPmTilesResourceLimitExceededException({required this.resource, required this.limit, required this.actual});
-
+  
 
  final  SeismicityPmTilesResource resource;
  final  int limit;

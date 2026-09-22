@@ -699,7 +699,16 @@ class $$TelemetryEventsTableTableManager
                 createdAtMs: createdAtMs,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$TelemetryEventsTable, TelemetryEventRow>(table),
+                  BaseReferences<
+                    _$TelemetryDatabase,
+                    $TelemetryEventsTable,
+                    TelemetryEventRow
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
