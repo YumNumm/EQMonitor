@@ -339,7 +339,7 @@ class _LogDetailRow extends StatelessWidget {
           const SizedBox(height: 4),
           SelectableText(
             row.value,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: [
                 FontFamily.googleSansFlex,

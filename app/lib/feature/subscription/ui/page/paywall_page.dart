@@ -244,13 +244,13 @@ class _PlanCard extends StatelessWidget {
             children: [
               Text(
                 '¥300',
-                style: textTheme.headlineLarge!.copyWith(
+                style: textTheme.headlineLarge?.copyWith(
                   fontFamily: FontFamily.googleSansFlex,
                 ),
               ),
               Text(
                 '/月',
-                style: textTheme.bodyMedium!.copyWith(
+                style: textTheme.bodyMedium?.copyWith(
                   fontFamily: FontFamily.googleSansFlex,
                 ),
               ),

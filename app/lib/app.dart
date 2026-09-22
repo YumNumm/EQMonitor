@@ -51,6 +51,8 @@ class App extends HookConsumerWidget {
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
+        // Flutter Material を使う依存との互換性のため両方の delegate が必要。
+        // ignore: deprecated_member_use
         flutter_localizations.GlobalMaterialLocalizations.delegate,
         flutter_localizations.GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

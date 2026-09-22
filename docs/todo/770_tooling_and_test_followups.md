@@ -42,6 +42,7 @@
 
 - `mise.toml` / lockfile のSDKでlocal/CI/agentを統一し、touched file外へformatter差分が広がる範囲を計測する。必要な一括formatは専用変更にする。
 - 完了条件: pinned SDKで再formatが冪等になり、CIのformat確認とlocalが一致する。生成物や他人の差分を無断で差し戻さない。
+- Freezedの再生成で末尾空白が復活する。`dart format off` のためformatterでは除去されない。生成後処理の適用範囲と冪等性を確認する。
 
 ## 450: primary constructor 残件
 
@@ -51,7 +52,8 @@
 
 ## 400: analyzer plugin の package 適用範囲
 
-
+- `mise exec -- dart run melos run analyze --no-select` で、app以外の13パッケージに計145件のカスタムlint警告が出る。対象は `cache`、`core`、`dart_azarashi`、`earthquake_replay`、`jma_map`、`knet_api_client`、`knet_waveform_parser`、`kyoshin_monitor_api`、`kyoshin_monitor_image_parser`、`live_activity_util`、`msgpack_dart`、`nied_api_client`、`telemetry_store`。
+- 診断には生成ファイルのトップレベル関数やnullアサーションも含まれる。生成ファイルを直接修正せず、ルールの対象範囲と生成設定を確認する。
 - `analysis_options.yaml`、`app/analysis_options.yaml`、`packages/*/analysis_options.yaml` のinclude chainと `tools/eqmonitor_lints_plugin/` の対象scopeを調べる。
 - pure Dart/Flutterごとに有効ルールを決め、必要なpackageへ適用する。診断0件だけをplugin無効/有効の証拠にしない。
 - 完了条件: 意図したpackageの違反fixtureに診断が出て、generated/test scopeは `LintTargetScope` の回帰テストと一致する。
@@ -70,5 +72,5 @@
 - `notification_delivery_log_detail_builder_test.dart` の3件は時刻・表示文言、`notification_preset_selector_test.dart` の1件と `slot_detail_page_test.dart` の2件は通知文言の全角・半角差を現行仕様と照合する。
 - `earthquake_vxse_debug_editor_test.dart` のJSON手動編集2件はコメント欠損・未知の型の期待値を確認する。データ保持の要件を弱めず修正する。
 - `earthquake_history_debug_sheet_test.dart` の1件は `earthquake_summary_header.dart` のWrap直下のExpandedで `ParentDataWidget` エラーになる。地震情報の時刻表示を保ってレイアウトを修正する。
-- 全体解析の既存診断はnullアサーション3件と `GlobalMaterialLocalizations` の非推奨4件。Material境界のdelegateを一律に削除せず解消する。
+- Flutter Materialを使う依存の移行完了後に、互換用の `flutter_localizations.GlobalMaterialLocalizations.delegate` と局所的な非推奨抑制を削除する。現在は `material_ui` と両方のdelegateが必要。
 - 完了条件: 上記テストと全体解析が成功し、通知内容・時刻・地震データの意味を維持する。
