@@ -1,0 +1,36 @@
+name: LiveActivityCompatibility
+options:
+  bundleIdPrefix: net.yumnumm.eqmonitor.tests
+  deploymentTarget:
+    iOS: "26.0"
+packages:
+  EQMonitorAPI:
+    path: ../../app/ios/Packages/EQMonitorAPI
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    GENERATE_INFOPLIST_FILE: YES
+    CODE_SIGNING_ALLOWED: NO
+targets:
+  LiveActivityCompatibilityTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ../../app/ios/Widget/LiveActivity
+        excludes:
+          - Unified/UnifiedLiveActivityPreviews.swift
+      - path: ../../app/ios/Shared/IntensityValue.swift
+      - path: ../../app/ios/Shared/ColorRGB.swift
+      - path: ../../app/ios/Shared/DesignTokens.swift
+      - path: ../../app/ios/Shared/IntensityBadge.swift
+      - path: ../../app/ios/Shared/EewDisplay.swift
+      - path: ../../app/ios/Shared/LiveActivityDate.swift
+      - path: ../../app/ios/WidgetModelsTests/UnifiedLiveActivityTests.swift
+      - path: ../../app/ios/WidgetModelsTests/EewDisplayTests.swift
+      - path: ../../app/ios/WidgetModelsTests/LiveActivityDateTests.swift
+      - path: RenderTests.swift
+    dependencies:
+      - package: EQMonitorAPI
+    scheme:
+      testTargets:
+        - LiveActivityCompatibilityTests
