@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
-import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
@@ -14,9 +14,9 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
-import 'package:m3e_core/m3e_core.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   const new({super.key, this.initialParameter});
@@ -141,58 +141,43 @@ class _PagingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 広告非表示時は広告分の高さを確保しない
-    final adBannerHeight = AdBanner.heightOf(ref);
-
-    return M3EPullToRefreshIndicator(
-      onError: Error.throwWithStackTrace,
-      onRefresh: onRefresh,
-      edgeOffset:
-          MediaQuery.paddingOf(context).top +
-          kToolbarHeight +
-          adBannerHeight +
-          EarthquakeHistoryParameterPersistentDelegate.height,
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            centerTitle: false,
-            title: const Text('地震履歴'),
-            bottom: adBannerHeight == 0
-                ? null
-                : PreferredSize(
-                    preferredSize: Size.fromHeight(adBannerHeight),
-                    child: const AdBanner(),
-                  ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: EarthquakeHistoryParameterPersistentDelegate(
-              parameter: parameter.value,
-              onChanged: onParameterChanged,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('地震履歴'),
+        bottom: EarthquakeHistoryParameterRow(
+          parameter: parameter.value,
+          onChanged: onParameterChanged,
+        ),
+      ),
+      body: M3EPullToRefreshIndicator(
+        onError: (error, stackTrace) => talker.error(error, stackTrace),
+        hapticFeedback: .medium,
+        onRefresh: onRefresh,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: RevalidatingBanner(
+                isRevalidating: dataSource.isRevalidating,
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: RevalidatingBanner(
-              isRevalidating: dataSource.isRevalidating,
-            ),
-          ),
-          EarthquakeHistoryPagingList(
-            dataSource: dataSource,
-            selectedEventId: selectedEventId,
-            onSelect: onSelect,
-            parameter: parameter.value,
-            config: config,
-          ),
-          SliverToBoxAdapter(
-            child: AppendLoadStateBuilder(
+            EarthquakeHistoryPagingList(
               dataSource: dataSource,
-              builder: (context, hasMore, isLoading) => !hasMore && !isLoading
-                  ? const EarthquakeHistoryAllFetched()
-                  : const SizedBox.shrink(),
+              selectedEventId: selectedEventId,
+              onSelect: onSelect,
+              parameter: parameter.value,
+              config: config,
             ),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: AppendLoadStateBuilder(
+                dataSource: dataSource,
+                builder: (context, hasMore, isLoading) => !hasMore && !isLoading
+                    ? const EarthquakeHistoryAllFetched()
+                    : const SizedBox.shrink(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

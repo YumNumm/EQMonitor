@@ -2,8 +2,8 @@ import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/component/chip/datasource_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
-import 'package:eqmonitor/core/component/chip/epicenter_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/epicenter_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lat_lng_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lpgm_intensity_filter_chip.dart';
@@ -17,37 +17,23 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
-class const EarthquakeHistoryParameterPersistentDelegate({
+class const EarthquakeHistoryParameterRow({
   required final EarthquakeHistoryParameter parameter,
   required final void Function(EarthquakeHistoryParameter) onChanged,
-}) extends SliverPersistentHeaderDelegate {
-  static const double height = 48;
+}) extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(48);
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context) {
     return ColoredBox(
       color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(
-    covariant EarthquakeHistoryParameterPersistentDelegate oldDelegate,
-  ) => parameter != oldDelegate.parameter;
 }
 
 class _FilterChipBar extends ConsumerWidget {

@@ -1,6 +1,7 @@
-import 'package:eqmonitor/core/component/layout/history_selection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_selection.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -114,13 +115,12 @@ class _EarthquakeHistoryPagingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const decoration = M3ESegmentedListDecoration();
     return M3ESegmentedItem(
       key: ValueKey(item.earthquake.eventId),
       index: index,
       position: calculateSegmentedItemPosition(index, totalCount),
-      outerRadius: decoration.outerRadius,
-      innerRadius: decoration.innerRadius,
+      outerRadius: 0,
+      innerRadius: 0,
       padding: EdgeInsets.zero,
       color: Colors.transparent,
       child: HistorySelection(
@@ -195,6 +195,9 @@ class _DateHeader extends StatelessWidget {
         date,
         style: theme.textTheme.titleSmall?.copyWith(
           color: designSystem.colorTheme.onSurface,
+          fontFamily: FontFamily.googleSansCode,
+          fontFamilyFallback: const [FontFamily.notoSansJP],
+          letterSpacing: -0.2,
         ),
       ),
     );

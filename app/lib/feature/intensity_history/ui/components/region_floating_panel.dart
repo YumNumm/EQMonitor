@@ -40,7 +40,6 @@ class RegionFloatingPanel extends ConsumerWidget {
   }
 }
 
-/// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
 class _RefreshedAtLabel extends StatelessWidget {
   const new({
     required this.aggregatedAt,

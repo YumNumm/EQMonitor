@@ -25,9 +25,8 @@ class FeedDetailsPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('お知らせ')),
       body: Column(
         children: [
-          CachedDataBanner(values: [feed]),
+          CachedDataBanner(values: [feed],),
           Expanded(
-            // 再検証失敗時は stale を表示し続け、失敗はバナーが伝える。
             child: feed.when(
               skipError: true,
               loading: () =>

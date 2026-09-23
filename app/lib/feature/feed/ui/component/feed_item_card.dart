@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
+import 'package:extensions/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 
 extension FeedItemDataDisplay on FeedItemData {
@@ -11,7 +12,7 @@ extension FeedItemDataDisplay on FeedItemData {
     FeedItemDataEarthquakeNankai(:final text) => text ?? '',
     FeedItemDataAppUpdate(:final version) => 'バージョン ${version ?? ""}',
     FeedItemDataIncident() => '障害情報',
-    FeedItemDataDeveloperMessage() => '開発者メッセージ',
+    FeedItemDataDeveloperMessage() => '開発者からのお知らせ',
   };
 
   String? get url => switch (this) {
@@ -42,6 +43,9 @@ class FeedItemListTileContent extends StatelessWidget {
     final theme = Theme.of(context);
     final dateStr = item.publishedAt.formatWithTz(.yearMonthDayHourMinute);
 
+    final summaryFirstLine = item.summary?.split("\n").firstOrNull;
+    final title = summaryFirstLine ?? item.title ?? "";
+
     return Row(
       children: [
         Expanded(
@@ -49,9 +53,10 @@ class FeedItemListTileContent extends StatelessWidget {
             crossAxisAlignment: .start,
             children: [
               Text(
-                (item.title ?? "").replaceAll("◆", "").replaceAll("\n", ""),
+                title.replaceAll("◆", "").replaceAll("\n", "").toHalfWidth,
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: .bold,
+                  color: context.designSystem.colorTheme.onSurface,
                 ),
                 maxLines: 1,
                 overflow: .ellipsis,
