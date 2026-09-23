@@ -33,7 +33,7 @@ class IntensityFillLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
-    final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
+    final isDarkMode = Theme.brightnessOf(context) == .dark;
 
     final selectedCityCode = ref.watch(
       intensityHistoryControllerProvider.select(

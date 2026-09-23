@@ -44,7 +44,7 @@ class FeedItemListTile extends StatelessWidget {
       title: Text(
         title,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
         maxLines: 1,
         overflow: .ellipsis,
@@ -60,7 +60,7 @@ class FeedItemListTile extends StatelessWidget {
                 color: colorTheme.onSurfaceVariant,
               ),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           Text(
             dateStr,

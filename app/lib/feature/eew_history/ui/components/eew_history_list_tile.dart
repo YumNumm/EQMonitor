@@ -63,7 +63,7 @@ class EewHistoryListTile extends StatelessWidget {
                 '警報',
                 style: TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontSize: 11,
                 ),
               ),
@@ -72,7 +72,7 @@ class EewHistoryListTile extends StatelessWidget {
             child: Text(
               title.toHalfWidth,
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           ),

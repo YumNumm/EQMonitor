@@ -583,12 +583,12 @@ class _MapControllerCard extends StatelessWidget {
 
     return Card(
       color: colorTheme.surfaceContainerHighest,
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: .hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             InkWell(
               onTap: () async {

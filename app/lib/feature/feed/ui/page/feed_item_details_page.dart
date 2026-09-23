@@ -53,7 +53,7 @@ class _FeedItemNotFound extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Text('お知らせが見つかりませんでした'),
             const SizedBox(height: 16),

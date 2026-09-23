@@ -55,7 +55,7 @@ class ThemeImportExportSection extends HookConsumerWidget {
             return AlertDialog.adaptive(
               title: const Text('適用先を選択'),
               content: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: ThemeBrightnessMode.values
                     .where(theme.supportsMode)
                     .map(

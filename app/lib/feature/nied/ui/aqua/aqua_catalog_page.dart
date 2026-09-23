@@ -73,7 +73,7 @@ class _AquaCatalogList extends HookConsumerWidget {
     if (snapshot.hasError) {
       return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
@@ -120,7 +120,7 @@ class _AquaCatalogList extends HookConsumerWidget {
                       child: Text(
                         '${entry.key.year}/${entry.key.month}/${entry.key.day}',
                         style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                           color: designSystem.colorTheme.onSurface,
                           fontFamily: FontFamily.googleSansCode,
                         ),
@@ -256,7 +256,7 @@ class _MonthPickerDialog extends HookWidget {
     return AlertDialog.adaptive(
       title: const Text('年月を選択'),
       content: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Expanded(
             child: SizedBox(
@@ -361,7 +361,7 @@ class _EventCard extends HookWidget {
           fontFamilyFallback: [FontFamily.notoSansJP],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const SizedBox(height: 4),
             Text(
@@ -380,7 +380,7 @@ class _EventCard extends HookWidget {
         ),
       ),
       trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         spacing: 4,
         children: [
           Image.network(

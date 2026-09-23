@@ -61,8 +61,8 @@ class ExpandableSection extends HookWidget {
               ],
               Expanded(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
                     DefaultTextStyle.merge(
                       style: textTheme.titleMedium,
@@ -88,8 +88,8 @@ class ExpandableSection extends HookWidget {
         Padding(
           padding: childrenPadding,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: .min,
+            crossAxisAlignment: .stretch,
             children: children,
           ),
         ),

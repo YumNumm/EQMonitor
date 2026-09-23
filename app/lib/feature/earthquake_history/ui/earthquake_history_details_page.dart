@@ -66,14 +66,14 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         ),
         body: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const AccessibleCircularProgressIndicator(),
               const SizedBox(height: 8),
               Text(
                 '各地の震度データを取得中...',
                 style: Theme.of(context).textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                    ?.copyWith(fontWeight: .bold),
               ),
             ],
           ),

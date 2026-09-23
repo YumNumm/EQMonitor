@@ -27,7 +27,7 @@ class AppEmptyState extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Icon(
               icon,
@@ -38,7 +38,7 @@ class AppEmptyState extends StatelessWidget {
             Text(
               message,
               style: designSystem.typography.titleSmall,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             if (description case final description?) ...[
               SizedBox(height: designSystem.spacing.xs),
@@ -47,7 +47,7 @@ class AppEmptyState extends StatelessWidget {
                 style: designSystem.typography.bodySmall.copyWith(
                   color: designSystem.colorTheme.onSurfaceVariant,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ],
             if (action != null && actionLabel != null) ...[

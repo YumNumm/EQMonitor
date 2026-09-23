@@ -23,7 +23,7 @@ class EewTable extends StatelessWidget {
 
     return SizedBox.expand(
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: .horizontal,
         child: SingleChildScrollView(
           primary: true,
           child: DataTable(
@@ -50,7 +50,7 @@ class EewTable extends StatelessWidget {
                       ],
                     ),
                     numeric: e.isNumeric,
-                    headingRowAlignment: MainAxisAlignment.center,
+                    headingRowAlignment: .center,
                   ),
                 )
                 .toList(),

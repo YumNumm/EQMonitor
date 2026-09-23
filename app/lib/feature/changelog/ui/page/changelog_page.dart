@@ -24,7 +24,7 @@ class ChangelogPage extends ConsumerWidget {
         ),
         AsyncError(:final error) => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const Icon(Icons.error_outline, size: 48),
               const SizedBox(height: 16),
@@ -33,7 +33,7 @@ class ChangelogPage extends ConsumerWidget {
               Text(
                 error.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
               const SizedBox(height: 16),
               M3EFilledButton.tonal(
@@ -82,14 +82,14 @@ class ChangelogEntryCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
               Text(
                 'v${entry.version}',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
               const SizedBox(width: 8),
@@ -149,8 +149,8 @@ class _ThemedMarkdownBody extends StatelessWidget {
         h5: textTheme.titleSmall,
         h6: textTheme.titleSmall,
         listBullet: textTheme.bodyMedium,
-        strong: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        em: textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+        strong: textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+        em: textTheme.bodyMedium?.copyWith(fontStyle: .italic),
         a: textTheme.bodyMedium?.copyWith(decoration: TextDecoration.underline),
         code: textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
       ),

@@ -139,7 +139,7 @@ class EewCard extends ConsumerWidget {
                 eew.status.name,
                 style: TextStyle(
                   fontSize: 100,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                   color: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
                   fontFamily: codeFontFamily,
                   letterSpacing: -0.5,
@@ -205,7 +205,7 @@ class _EewMainCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       margin: EdgeInsets.zero,
       color: colorTheme.surfaceContainerHigh,
       shape: RoundedSuperellipseBorder(
@@ -213,7 +213,7 @@ class _EewMainCard extends StatelessWidget {
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           _EewCardHeader(
             eew: eew,
@@ -230,13 +230,13 @@ class _EewMainCard extends StatelessWidget {
               bottom: spacing.xs,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 if (eew.isCanceled)
                   Text(
                     '緊急地震速報は取り消されました',
                     style: designSystem.typography.titleMedium.copyWith(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                     ),
                   )
                 else ...[
@@ -341,7 +341,7 @@ class _EewCardHeader extends StatelessWidget {
                 fontWeight: .w700,
                 color: Colors.white,
               ),
-              overflow: TextOverflow.visible,
+              overflow: .visible,
             ),
         ],
       ),
@@ -360,7 +360,7 @@ class _EewCardHeader extends StatelessWidget {
             countdownText ?? '到達済み',
             style: typography.monoMedium.copyWith(
               fontSize: 20,
-              fontWeight: FontWeight.w700,
+              fontWeight: .w700,
               color: Colors.white,
               letterSpacing: -0.5,
             ),
@@ -374,7 +374,7 @@ class _EewCardHeader extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(color: headerBackgroundColor),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           WarningStripeDecoration(
             colors: eew.isCanceled
@@ -422,7 +422,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
     final spacing = designSystem.spacing;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       spacing: spacing.xs,
       children: [
         Text(
@@ -468,7 +468,7 @@ class _EewHypocenterSection extends StatelessWidget {
     final depth = hypocenter?.depth;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       spacing: spacing.xs,
       children: [
         if (detectionMethodLabel != null)
@@ -485,8 +485,8 @@ class _EewHypocenterSection extends StatelessWidget {
             ],
           ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
+          crossAxisAlignment: .baseline,
+          textBaseline: .alphabetic,
           children: [
             _SecondaryLabel(text: timeLabel),
             const SizedBox(width: 4),
@@ -545,7 +545,7 @@ class _EewLocalForecastSection extends StatelessWidget {
                 regionDisplayName,
                 style: typography.labelMedium,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
               ),
             ),
           ],
@@ -573,7 +573,7 @@ class _EewLpgmSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(spacing.sm),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '予想最大長周期地震動階級 ${intensity.label}',
@@ -601,7 +601,7 @@ class _BackgroundIndexText extends StatelessWidget {
           index,
           style: TextStyle(
             fontSize: 100,
-            fontWeight: FontWeight.w700,
+            fontWeight: .w700,
             fontFamily: codeFontFamily,
             color: colorTheme.onSurfaceVariant.withValues(alpha: 0.3),
           ),
@@ -641,9 +641,9 @@ class _MagnitudeRow extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
+      textBaseline: .alphabetic,
       children: [
         Text(
           'M ',
@@ -675,9 +675,9 @@ class _DepthRow extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
+      textBaseline: .alphabetic,
       children: [
         Text(
           '深さ ',

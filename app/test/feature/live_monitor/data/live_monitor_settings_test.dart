@@ -27,14 +27,15 @@ void main() {
 
   test('縦横比率と表示方式を一つの設定として復元する', () async {
     SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.liveMonitorSettings.key:
-          jsonEncode(<String, dynamic>{
-            'display_mode': 'split',
-            'earthquake_display_seconds': 24,
-            'keep_screen_awake': false,
-            'portrait_realtime_ratio': 0.35,
-            'landscape_realtime_ratio': 0.7,
-          }),
+      SharedPreferencesKey.liveMonitorSettings.key: jsonEncode(
+        <String, dynamic>{
+          'display_mode': 'split',
+          'earthquake_display_seconds': 24,
+          'keep_screen_awake': false,
+          'portrait_realtime_ratio': 0.35,
+          'landscape_realtime_ratio': 0.7,
+        },
+      ),
     });
     final container = ProviderContainer();
     addTearDown(container.dispose);
@@ -48,12 +49,13 @@ void main() {
 
   test('破損した永続値は承認済みの範囲と既定値に正規化する', () async {
     SharedPreferences.setMockInitialValues({
-      SharedPreferencesKey.liveMonitorSettings.key:
-          jsonEncode(<String, dynamic>{
-            'earthquake_display_seconds': 301,
-            'portrait_realtime_ratio': 0.1,
-            'landscape_realtime_ratio': 0.9,
-          }),
+      SharedPreferencesKey.liveMonitorSettings.key: jsonEncode(
+        <String, dynamic>{
+          'earthquake_display_seconds': 301,
+          'portrait_realtime_ratio': 0.1,
+          'landscape_realtime_ratio': 0.9,
+        },
+      ),
     });
     final container = ProviderContainer();
     addTearDown(container.dispose);

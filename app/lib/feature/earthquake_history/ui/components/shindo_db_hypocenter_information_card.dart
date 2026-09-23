@@ -84,9 +84,9 @@ class _MaxIntensityWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
-        const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('最大震度', style: TextStyle(fontWeight: .bold)),
         const SizedBox(height: 4),
         ShindoDbIntensityClassIcon(intensityClass: maxIntensity, size: 60),
       ],
@@ -142,9 +142,9 @@ class _MagnitudeRow extends StatelessWidget {
 
     if (magnitudes.isEmpty) {
       return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
+        mainAxisSize: .min,
+        crossAxisAlignment: .baseline,
+        textBaseline: .alphabetic,
         children: [
           Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
           Text('不明', style: textTheme.valueStyle(textTheme.headlineMedium)),
@@ -154,12 +154,12 @@ class _MagnitudeRow extends StatelessWidget {
 
     final first = magnitudes.first;
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
+          mainAxisSize: .min,
+          crossAxisAlignment: .baseline,
+          textBaseline: .alphabetic,
           children: [
             Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
             Text(
@@ -197,7 +197,7 @@ class _DepthRow extends StatelessWidget {
     final hasSecondaryInfo = stderr != null || hypocenter.depthIsFree;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Text.rich(
           TextSpan(
@@ -354,14 +354,14 @@ class _HypocenterSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Text(
             '震源 $index',
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: FontFamily.notoSansJP,
             ),
           ),

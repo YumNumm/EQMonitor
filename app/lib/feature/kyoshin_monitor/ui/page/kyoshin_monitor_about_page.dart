@@ -19,7 +19,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               spacing: 8,
               children: [
                 Text(
@@ -86,7 +86,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(title, style: style?.copyWith(fontWeight: FontWeight.bold)),
+      child: Text(title, style: style?.copyWith(fontWeight: .bold)),
     );
   }
 }
@@ -116,7 +116,7 @@ class _InfoCard extends StatelessWidget {
           if (isWarning)
             Center(
               child: FittedBox(
-                fit: BoxFit.scaleDown,
+                fit: .scaleDown,
                 child: Icon(
                   Icons.warning_rounded,
                   color: designSystem.colorTheme.onErrorContainer.withValues(
@@ -129,7 +129,7 @@ class _InfoCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 for (var i = 0; i < items.length; i++) ...[
                   if (i > 0) const SizedBox(height: 8),
@@ -177,7 +177,7 @@ class _InfoItemWidget extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '• ${item.title}',

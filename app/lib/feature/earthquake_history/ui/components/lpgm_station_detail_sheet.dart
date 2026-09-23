@@ -24,8 +24,8 @@ class LpgmStationDetailSheet extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(
@@ -81,12 +81,12 @@ class _Header extends ConsumerWidget {
         ],
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 station.station.name.ja,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontFamily: FontFamily.notoSansJP,
                 ),
               ),
@@ -126,7 +126,7 @@ class _PrePeriodsTable extends StatelessWidget {
         Text(
           '長周期地震動の周期別階級',
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
@@ -168,7 +168,7 @@ class _PrePeriodsTable extends StatelessWidget {
                         child: Text(
                           p.lpgmIntensity.label,
                           style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             color: entry.resolvedForeground,
                             fontFamily: FontFamily.googleSansCode,
                           ),
@@ -208,7 +208,7 @@ class _PrePeriodsTable extends StatelessWidget {
           child: Text(
             text,
             style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: [FontFamily.notoSansJP],
               color: context.designSystem.colorTheme.onSurface,
@@ -261,7 +261,7 @@ class _RelatedLinksCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
               children: [
@@ -274,7 +274,7 @@ class _RelatedLinksCard extends StatelessWidget {
                 Text(
                   '気象庁ホームページ',
                   style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     color: context.designSystem.colorTheme.onSurfaceVariant,
                     fontFamily: FontFamily.notoSansJP,
                   ),

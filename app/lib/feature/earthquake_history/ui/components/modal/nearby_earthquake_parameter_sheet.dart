@@ -29,8 +29,8 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(
@@ -47,7 +47,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
             Text(
               '探索パラメータの設定',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 20),
@@ -123,7 +123,7 @@ class _SliderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Row(
           children: [
@@ -131,7 +131,7 @@ class _SliderRow extends StatelessWidget {
             Text(
               displayText,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 color: context.designSystem.colorTheme.primary,
               ),
             ),

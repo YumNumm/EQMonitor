@@ -42,8 +42,7 @@ abstract class ThemeColorSet with _$ThemeColorSet {
     @JsonKey(name: 'map') required MapColors mapColors,
   }) = _ThemeColorSet;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$ThemeColorSetFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$ThemeColorSetFromJson(json);
 
   const new _();
 

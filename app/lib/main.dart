@@ -111,8 +111,8 @@ class AppBootstrap {
     }
 
     await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top],
+      .edgeToEdge,
+      overlays: [.top],
     );
 
     SystemChrome.setSystemUIOverlayStyle(

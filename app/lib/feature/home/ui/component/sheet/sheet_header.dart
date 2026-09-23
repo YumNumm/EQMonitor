@@ -16,7 +16,7 @@ class SheetHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           ?action,

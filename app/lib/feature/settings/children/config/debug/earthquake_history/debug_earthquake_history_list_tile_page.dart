@@ -218,7 +218,7 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: context.designSystem.colorTheme.primary,
         ),
       ),

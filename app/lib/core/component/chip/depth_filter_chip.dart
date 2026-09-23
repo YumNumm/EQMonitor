@@ -28,7 +28,7 @@ class DepthFilterChip extends StatelessWidget {
           isScrollControlled: false,
           useSafeArea: false,
           style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           context: context,
           builder: (context) =>
               _DepthFilterModal(currentMin: min, currentMax: max),
@@ -41,7 +41,7 @@ class DepthFilterChip extends StatelessWidget {
           ? const Text('震源の深さ')
           : Text(
               range.toRangeString,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: range.isAllSelected
           ? null
@@ -88,8 +88,8 @@ class _DepthFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -97,7 +97,7 @@ class _DepthFilterModal extends HookWidget {
               child: Text(
                 '震源の深さ',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -121,13 +121,13 @@ class _DepthFilterModal extends HookWidget {
               child: Text(
                 (min.value, max.value).toRangeString,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
                 M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),

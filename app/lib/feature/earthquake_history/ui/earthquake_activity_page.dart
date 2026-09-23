@@ -112,13 +112,13 @@ class EarthquakeActivityPage extends HookConsumerWidget {
               ),
             Text(
               '最終更新 ${value.fetchedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
-              textAlign: TextAlign.end,
+              textAlign: .end,
             ),
           ],
         ),
         AsyncError() => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const Text('周辺の地震活動を取得できませんでした'),
               M3EFilledButton(
@@ -154,7 +154,7 @@ class _ActivityControls extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           M3EOutlinedButton(
             onPressed: query.beforeDays >= 30
@@ -291,7 +291,7 @@ class _ActivityChart extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const Text('時間別地震回数'),
             for (final bin in bins)

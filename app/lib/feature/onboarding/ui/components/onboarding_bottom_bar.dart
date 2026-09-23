@@ -147,8 +147,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                         children: [
                           const TextSpan(text: '次へ をタップすることで '),
                           WidgetSpan(
-                            alignment: PlaceholderAlignment.baseline,
-                            baseline: TextBaseline.alphabetic,
+                            alignment: .baseline,
+                            baseline: .alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: '利用規約',
                               onTap: () => const TermOfServiceRoute()
@@ -157,8 +157,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                           ),
                           const TextSpan(text: ' と '),
                           WidgetSpan(
-                            alignment: PlaceholderAlignment.baseline,
-                            baseline: TextBaseline.alphabetic,
+                            alignment: .baseline,
+                            baseline: .alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: 'プライバシーポリシー',
                               onTap: () => const PrivacyPolicyRoute()

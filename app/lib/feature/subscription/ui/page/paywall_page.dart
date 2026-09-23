@@ -188,7 +188,7 @@ class _BenefitRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Icon(
             benefit.icon,
@@ -198,7 +198,7 @@ class _BenefitRow extends StatelessWidget {
           const SizedBox(width: 16),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(benefit.title, style: textTheme.titleSmall),
                 const SizedBox(height: 4),
@@ -228,7 +228,7 @@ class _PlanCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
@@ -239,8 +239,8 @@ class _PlanCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: .baseline,
+            textBaseline: .alphabetic,
             children: [
               Text(
                 '¥300',
@@ -276,7 +276,7 @@ class _LegalLinksRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      alignment: WrapAlignment.center,
+      alignment: .center,
       spacing: 4,
       children: [
         M3EButton(

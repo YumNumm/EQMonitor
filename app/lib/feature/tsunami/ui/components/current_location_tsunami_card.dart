@@ -76,13 +76,13 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Card(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (stripeColors.isNotEmpty)
               WarningStripeDecoration(colors: stripeColors),
@@ -94,7 +94,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -104,7 +104,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                 '現在地付近の津波情報',
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   color: designSystem.colorTheme.onSurface,
                 ),
               ),
@@ -127,7 +127,7 @@ class CurrentLocationTsunamiCard extends ConsumerWidget {
                   '観測状況',
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: .w600,
                     color: designSystem.colorTheme.onSurface,
                   ),
                 ),

@@ -29,7 +29,7 @@ class SeismicitySelectionOverlay extends HookWidget {
     return IgnorePointer(
       ignoring: !enabled,
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+        behavior: .opaque,
         onPanStart: (details) => selection.startDrag(details.localPosition),
         onPanUpdate: (details) => selection.updateDrag(details.localPosition),
         onPanEnd: (_) => _handleDragEnd(selection),
@@ -96,13 +96,13 @@ class const _SelectionPainter({
       rect,
       Paint()
         ..color = const Color(0x332196F3)
-        ..style = PaintingStyle.fill,
+        ..style = .fill,
     );
     canvas.drawRect(
       rect,
       Paint()
         ..color = const Color(0xFF2196F3)
-        ..style = PaintingStyle.stroke
+        ..style = .stroke
         ..strokeWidth = 1.5,
     );
   }

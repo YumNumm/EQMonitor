@@ -38,7 +38,7 @@ class IntensityRegionList extends StatelessWidget {
       ..sort((a, b) => b.orderIndex.compareTo(a.orderIndex));
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         for (final intensity in sortedKeys)
           if (grouped[intensity] case final entries?)
@@ -71,7 +71,7 @@ class _IntensityRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           JmaIntensityIcon(intensity: intensity, type: .filled, size: 28),
           const SizedBox(width: 8),
@@ -115,7 +115,7 @@ class _PrefectureRegionList extends StatelessWidget {
     final sortedPrefCodes = byPrefecture.keys.toList()..sort();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         for (final prefCode in sortedPrefCodes)
           if (byPrefecture[prefCode] case final entries?)
@@ -148,7 +148,7 @@ class _PrefectureRegionRow extends StatelessWidget {
         Text(
           prefectureName,
           style: theme.textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         for (final entry in entries) _RegionChip(entry: entry),
@@ -167,7 +167,7 @@ class _RegionChip extends StatelessWidget {
     final theme = Theme.of(context);
     final baseStyle =
         theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12);
-    final boldStyle = baseStyle.copyWith(fontWeight: FontWeight.bold);
+    final boldStyle = baseStyle.copyWith(fontWeight: .bold);
 
     return switch (entry.diffType) {
       IntensityDiffType.same => Text(entry.name, style: baseStyle),

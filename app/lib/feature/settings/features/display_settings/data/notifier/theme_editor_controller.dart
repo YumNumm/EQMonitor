@@ -49,7 +49,7 @@ class ThemeEditorController extends _$ThemeEditorController {
   }
 
   Brightness _brightnessFor(ThemeBrightnessMode mode) => switch (mode) {
-    ThemeBrightnessMode.light => Brightness.light,
-    ThemeBrightnessMode.dark => Brightness.dark,
+    ThemeBrightnessMode.light => .light,
+    ThemeBrightnessMode.dark => .dark,
   };
 }

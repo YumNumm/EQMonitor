@@ -191,7 +191,7 @@ class _CurrentLocationIntensityContent extends StatelessWidget {
                 Text(
                   title,
                   style: textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 Wrap(
@@ -243,7 +243,7 @@ class _CoarseLocationNotice extends ConsumerWidget {
             decoration: M3EButtonDecoration.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              tapTargetSize: .shrinkWrap,
             ),
             onPressed: () async {
               await const TemporaryPreciseLocationRequester().request();

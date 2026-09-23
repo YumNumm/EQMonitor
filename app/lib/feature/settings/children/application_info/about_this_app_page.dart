@@ -137,7 +137,7 @@ class _DeviceIdTile extends ConsumerWidget {
         horizontal: designSystem.spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             'デバイスID',

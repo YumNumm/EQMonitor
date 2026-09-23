@@ -26,7 +26,7 @@ class const EarthquakeHistoryDebugSheetAction() {
       return showDialog<void>(
         context: context,
         builder: (context) => Dialog(
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           child: SizedBox(
             width: math.min(size.width * 0.8, 960),
             height: size.height * 0.9,
@@ -39,7 +39,7 @@ class const EarthquakeHistoryDebugSheetAction() {
       useSafeArea: false,
       style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       isScrollControlled: true,
       builder: (context) => FractionallySizedBox(
         heightFactor: 0.9,
@@ -86,7 +86,7 @@ class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
                 child: Text(
                   '地震詳細 Debug',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),

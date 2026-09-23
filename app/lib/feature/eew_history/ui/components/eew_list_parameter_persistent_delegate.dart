@@ -47,7 +47,7 @@ class _FilterChipBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final spacing = context.designSystem.spacing;
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Row(

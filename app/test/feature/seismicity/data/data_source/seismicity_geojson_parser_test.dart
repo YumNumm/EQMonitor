@@ -7,13 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('GeoJSON FeatureCollection を SeismicityEvent のリストへ変換する', () {
     const parser = SeismicityGeoJsonParser();
-    final json =
-        jsonDecode(
-              File(
-                'test/fixtures/seismicity/geojson_p1m.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
+    final json = jsonDecode(
+      File(
+        'test/fixtures/seismicity/geojson_p1m.json',
+      ).readAsStringSync(),
+    ) as Map<String, dynamic>;
 
     final events = parser.parse(json);
 

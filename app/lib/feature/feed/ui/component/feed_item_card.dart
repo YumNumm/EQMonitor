@@ -51,10 +51,10 @@ class FeedItemListTileContent extends StatelessWidget {
               Text(
                 (item.title ?? "").replaceAll("◆", "").replaceAll("\n", ""),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
               ),
               Text(
                 dateStr,

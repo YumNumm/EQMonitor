@@ -73,7 +73,7 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
     return BorderedContainer(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _NearbyEarthquakeHeader(
             onSettingsPressed: () async {
@@ -143,7 +143,7 @@ class _NearbyEarthquakeHeader extends StatelessWidget {
               'この震源の近傍で発生した地震',
               style: Theme.of(
                 context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ).textTheme.titleMedium?.copyWith(fontWeight: .bold),
             ),
           ),
           IconButton(

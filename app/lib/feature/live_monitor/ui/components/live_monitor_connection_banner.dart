@@ -42,7 +42,7 @@ class LiveMonitorConnectionBanner extends ConsumerWidget {
                     vertical: 8,
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       SizedBox.square(
                         dimension: 16,

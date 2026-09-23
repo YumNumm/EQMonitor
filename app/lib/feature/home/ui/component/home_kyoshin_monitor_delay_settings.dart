@@ -118,7 +118,7 @@ class _AutoAdjustmentTile extends ConsumerWidget {
       ),
       title: Text(
         '遅延を自動調整',
-        style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+        style: typography.titleSmall.copyWith(fontWeight: .w600),
       ),
       subtitle: Text(
         '画像の未公開エラーと取得成功をもとに補正値を学習します。',
@@ -191,11 +191,11 @@ class _CurrentDelayTile extends ConsumerWidget {
         spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '現在の遅延',
-            style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+            style: typography.titleSmall.copyWith(fontWeight: .w600),
           ),
           SizedBox(height: spacing.xs),
           Text('対象: $profileLabel', style: typography.bodySmall),
@@ -436,11 +436,11 @@ class _DelayDropdownField<T> extends StatelessWidget {
         spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             title,
-            style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+            style: typography.titleSmall.copyWith(fontWeight: .w600),
           ),
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),
@@ -513,11 +513,11 @@ class _DurationSliderTile extends StatelessWidget {
         spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             title,
-            style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+            style: typography.titleSmall.copyWith(fontWeight: .w600),
           ),
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),

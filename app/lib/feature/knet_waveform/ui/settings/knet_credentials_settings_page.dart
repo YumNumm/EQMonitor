@@ -40,7 +40,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     '防災科研 強震観測網 認証情報',
@@ -65,7 +65,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.person),
             ),
-            textInputAction: TextInputAction.next,
+            textInputAction: .next,
             onChanged: (_) => verifyResult.value = null,
           ),
           const SizedBox(height: 12),
@@ -78,7 +78,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               prefixIcon: Icon(Icons.lock),
             ),
             obscureText: true,
-            textInputAction: TextInputAction.done,
+            textInputAction: .done,
             onChanged: (_) => verifyResult.value = null,
           ),
           const SizedBox(height: 16),

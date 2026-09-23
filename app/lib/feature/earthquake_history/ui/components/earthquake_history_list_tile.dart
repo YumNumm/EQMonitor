@@ -105,13 +105,13 @@ class EarthquakeHistoryListTile extends StatelessWidget {
       title: Text(
         title.toHalfWidth,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: titleTextColor,
         ),
       ),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: .start,
+        mainAxisSize: .min,
         children: [
           Text.rich(
             TextSpan(
@@ -215,7 +215,7 @@ class _AreaIntensityChip extends StatelessWidget {
         label + ' ' + intensity.label,
         style: TextStyle(
           color: entry.resolvedForeground,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           fontSize: 12,
         ),
       ),

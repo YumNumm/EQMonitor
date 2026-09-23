@@ -137,7 +137,7 @@ class _TimelineBody extends StatelessWidget {
             child: Text(
               '項目',
               style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           ),
@@ -148,14 +148,14 @@ class _TimelineBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(6),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 t.title,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 maxLines: 2,
               ),
               Text(_fmtDt(t.publishedAt), style: theme.textTheme.labelSmall),
@@ -183,9 +183,9 @@ class _TimelineBody extends StatelessWidget {
               child: Text(
                 label,
                 style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
               ),
             ),
           );
@@ -205,7 +205,7 @@ class _TimelineBody extends StatelessWidget {
               child: Text(
                 label,
                 style: theme.textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 maxLines: 3,
               ),
             ),
@@ -218,7 +218,7 @@ class _TimelineBody extends StatelessWidget {
             child: Text(
               cellBuilder(t.telegramId) ?? '—',
               style: theme.textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               maxLines: 3,
             ),
           ),

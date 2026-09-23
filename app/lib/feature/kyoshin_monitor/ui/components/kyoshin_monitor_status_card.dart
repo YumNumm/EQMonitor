@@ -51,7 +51,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
             child: DefaultTextStyle(
               style: dateTextStyle,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   // 現在時刻
                   ...switch (status) {

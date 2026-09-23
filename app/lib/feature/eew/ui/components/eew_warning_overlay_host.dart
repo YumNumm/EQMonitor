@@ -92,6 +92,6 @@ class EewWarningOverlayHost extends HookConsumerWidget {
       EewWarningOverlayMode.hidden => const SizedBox.shrink(),
     };
 
-    return Stack(fit: StackFit.expand, children: [child, overlay]);
+    return Stack(fit: .expand, children: [child, overlay]);
   }
 }

@@ -43,7 +43,7 @@ class SheetFloatingActionButtons extends HookWidget {
           child: Container(
             margin: const EdgeInsets.all(4),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: .end,
               children: fab,
             ),
           ),

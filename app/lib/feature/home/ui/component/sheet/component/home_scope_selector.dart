@@ -109,7 +109,7 @@ class _ScopeChip extends StatelessWidget {
     return Material(
       color: colorTheme.surfaceContainerLow,
       shape: StadiumBorder(side: BorderSide(color: colorTheme.outlineVariant)),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(

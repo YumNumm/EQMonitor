@@ -45,9 +45,7 @@ void main() {
         code: '130000',
         name: '東京都',
       );
-      await container
-          .read(widgetRegionProvider.notifier)
-          .save(selection);
+      await container.read(widgetRegionProvider.notifier).save(selection);
 
       expect(container.read(widgetRegionProvider).value, selection);
 
@@ -66,13 +64,15 @@ void main() {
       addTearDown(container.dispose);
       await container.read(widgetRegionProvider.future);
 
-      await container.read(widgetRegionProvider.notifier).save(
-        const WidgetRegionSelection(
-          searchType: RegionSearchType.city,
-          code: '13101',
-          name: '千代田区',
-        ),
-      );
+      await container
+          .read(widgetRegionProvider.notifier)
+          .save(
+            const WidgetRegionSelection(
+              searchType: RegionSearchType.city,
+              code: '13101',
+              name: '千代田区',
+            ),
+          );
       await container.read(widgetRegionProvider.notifier).clear();
 
       expect(container.read(widgetRegionProvider).value, isNull);

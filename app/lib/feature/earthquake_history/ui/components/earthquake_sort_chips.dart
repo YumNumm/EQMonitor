@@ -35,7 +35,7 @@ class EarthquakeSortChips extends StatelessWidget {
               selected: sortBy == value,
               showCheckmark: false,
               label: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Text(label),
                   if (sortBy == value) ...[
@@ -49,7 +49,7 @@ class EarthquakeSortChips extends StatelessWidget {
               ),
               onSelected: (_) => onChanged(value),
               visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              materialTapTargetSize: .shrinkWrap,
             ),
         ],
       ),

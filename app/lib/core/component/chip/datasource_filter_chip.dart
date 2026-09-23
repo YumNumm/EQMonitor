@@ -21,7 +21,7 @@ class DatasourceFilterChip extends StatelessWidget {
               isScrollControlled: false,
               useSafeArea: false,
               style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) => _DatasourceFilterModal(current: datasource),
             );
@@ -32,7 +32,7 @@ class DatasourceFilterChip extends StatelessWidget {
       label: datasource != null
           ? Text(
               datasource.label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             )
           : const Text('データソース'),
       onDeleted: isActive ? () => onChanged?.call(null) : null,
@@ -68,8 +68,8 @@ class _DatasourceFilterModal extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -77,7 +77,7 @@ class _DatasourceFilterModal extends StatelessWidget {
               child: Text(
                 'データソース',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),

@@ -69,7 +69,7 @@ class _ActiveSection extends ConsumerWidget {
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Row(
                 children: [
@@ -140,7 +140,7 @@ class _InactiveSection extends ConsumerWidget {
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('現在のプラン', style: textTheme.labelMedium),
               const SizedBox(height: 8),

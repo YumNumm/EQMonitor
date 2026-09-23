@@ -155,7 +155,7 @@ class _ColorFieldTile extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             color: def.getter(colorSet),
-            shape: BoxShape.circle,
+            shape: .circle,
             border: Border.all(color: context.designSystem.colorTheme.outline),
           ),
         ),
@@ -236,7 +236,7 @@ class _IntensityFieldTile extends StatelessWidget {
                       height: 24,
                       decoration: BoxDecoration(
                         color: color,
-                        shape: BoxShape.circle,
+                        shape: .circle,
                         border: Border.all(
                           color: context.designSystem.colorTheme.outline,
                         ),
@@ -262,7 +262,7 @@ class _IntensityFieldTile extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             color: entry.background,
-            shape: BoxShape.circle,
+            shape: .circle,
             border: Border.all(color: context.designSystem.colorTheme.outline),
           ),
         ),

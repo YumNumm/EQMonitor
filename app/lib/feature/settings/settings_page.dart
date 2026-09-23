@@ -52,9 +52,9 @@ class SettingsPage extends ConsumerWidget {
                       height: 80,
                       child: Material(
                         borderRadius: BorderRadius.circular(16),
-                        clipBehavior: Clip.antiAlias,
+                        clipBehavior: .antiAlias,
                         elevation: 4,
-                        child: Assets.images.icon.image(fit: BoxFit.contain),
+                        child: Assets.images.icon.image(fit: .contain),
                       ),
                     ),
                   ),
@@ -86,7 +86,7 @@ class SettingsPage extends ConsumerWidget {
                             Expanded(
                               child: Column(
                                 spacing: 2,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: .start,
                                 children: [
                                   Text(
                                     "EQMonitor Pro",

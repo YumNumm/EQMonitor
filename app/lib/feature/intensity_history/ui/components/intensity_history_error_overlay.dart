@@ -83,8 +83,8 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               children: [
                 Row(
                   children: [
@@ -98,7 +98,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                         '震度情報を更新できません',
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: designSystem.colorTheme.onErrorContainer,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                         ),
                       ),
                     ),

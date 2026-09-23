@@ -49,13 +49,13 @@ class TsunamiEarthquakeCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   hypo.name ?? '', // TODO: 名前がない場合のUIを決める
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: .w600,
                     color: designSystem.colorTheme.onSurface,
                   ),
                 ),

@@ -97,7 +97,7 @@ class _TsunamiListTile extends StatelessWidget {
         : context.designSystem.colorTheme.tertiary;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         ListTile(
           leading: CircleAvatar(
@@ -107,18 +107,18 @@ class _TsunamiListTile extends StatelessWidget {
               statusLabel.substring(0, 1),
               style: theme.textTheme.labelSmall?.copyWith(
                 color: statusColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           ),
           title: Text(
             hypocenterName ?? '震源不明',
             style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               if (originTime != null)
                 Text(
@@ -210,7 +210,7 @@ class _TsunamiListSkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
+          : Column(mainAxisSize: .min, children: tiles),
     );
   }
 }

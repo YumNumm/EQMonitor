@@ -331,7 +331,7 @@ class _EqmonitorMapDebugSourceError extends StatelessWidget {
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.error,
           ),
-          textAlign: TextAlign.center,
+          textAlign: .center,
         ),
       ),
     );

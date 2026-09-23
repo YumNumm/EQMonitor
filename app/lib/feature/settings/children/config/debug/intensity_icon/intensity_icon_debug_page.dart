@@ -98,7 +98,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -150,7 +150,7 @@ class _JmaIntensityGrid extends ConsumerWidget {
           Text('エラー: $e', style: const TextStyle(color: Colors.red)),
       data: (data) => Table(
         defaultColumnWidth: const IntrinsicColumnWidth(),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        defaultVerticalAlignment: .middle,
         children: [
           TableRow(
             decoration: BoxDecoration(
@@ -217,7 +217,7 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
           Text('エラー: $e', style: const TextStyle(color: Colors.red)),
       data: (data) => Table(
         defaultColumnWidth: const IntrinsicColumnWidth(),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        defaultVerticalAlignment: .middle,
         children: [
           TableRow(
             decoration: BoxDecoration(
@@ -285,7 +285,7 @@ class _RenderedImage extends StatelessWidget {
         child: const Icon(Icons.error_outline, size: 16),
       );
     }
-    return Image.memory(b, width: size, height: size, fit: BoxFit.contain);
+    return Image.memory(b, width: size, height: size, fit: .contain);
   }
 }
 

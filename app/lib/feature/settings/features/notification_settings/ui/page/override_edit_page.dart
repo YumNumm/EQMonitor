@@ -106,7 +106,7 @@ class OverrideEditPage extends HookConsumerWidget {
       body: sorted.isEmpty
           ? Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Icon(
                     Icons.tune,
@@ -358,7 +358,7 @@ class _IntensityBadge extends StatelessWidget {
       child: Text(
         intensity.label,
         style: TextStyle(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: colorTheme.onPrimaryContainer,
         ),
       ),
@@ -391,8 +391,8 @@ class _OverrideFormDialog extends HookWidget {
       title: Text(isEditing ? '震度別設定を編集' : '震度別設定を追加'),
       content: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Text('最小震度', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
@@ -441,7 +441,7 @@ class _OverrideFormDialog extends HookWidget {
                 }
               },
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   for (final level in InterruptionLevel.values)
                     RadioListTile<InterruptionLevel>(

@@ -17,7 +17,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
     const splitRatioCalculator = LiveMonitorSplitRatioCalculator();
     final mediaQuery = MediaQuery.of(context);
     final orientation = mediaQuery.orientation;
-    final isPortrait = orientation == Orientation.portrait;
+    final isPortrait = orientation == .portrait;
     final avoidBounds = DisplayFeatureSubScreen.avoidBounds(mediaQuery)
         .toList(growable: false);
     final settings =
@@ -162,7 +162,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
                     ? SystemMouseCursors.resizeUpDown
                     : SystemMouseCursors.resizeLeftRight,
                 child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
+                  behavior: .opaque,
                   onPanUpdate: hasSplitDisplayFeature
                       ? null
                       : (details) {
@@ -201,7 +201,7 @@ class LiveMonitorSplitView extends HookConsumerWidget {
               child: Opacity(
                 opacity: awaitingViewportMeasurement ? 0 : 1,
                 child: Flex(
-                  direction: isPortrait ? Axis.vertical : Axis.horizontal,
+                  direction: isPortrait ? .vertical : .horizontal,
                   children: [
                     SizedBox(
                       width: isPortrait ? null : primaryExtent,

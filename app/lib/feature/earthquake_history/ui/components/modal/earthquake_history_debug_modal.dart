@@ -14,7 +14,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
         useSafeArea: false,
         style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         isScrollControlled: true,
         builder: (context) => const EarthquakeHistoryDebugModal(),
       );
@@ -66,7 +66,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                     final title = Text(
                       'レイヤーパラメータ (Debug)',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     );
                     final resetButton = M3ETextButton(
@@ -75,7 +75,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                     );
                     if (usesStackedHeader) {
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: .stretch,
                         children: [
                           title,
                           Align(
@@ -261,7 +261,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
             child: Text(
               value.toStringAsFixed(decimals),
               style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.end,
+              textAlign: .end,
             ),
           ),
         ],

@@ -72,9 +72,9 @@ void main() {
       expect(syncBuildTracker.buildCount, 0);
 
       syncBuildTracker.allowBuild = true;
-      final provisioningNotifier =
-          container.read(deviceProvisioningProvider.notifier)
-              as _ControllableDeviceProvisioningNotifier;
+      final provisioningNotifier = container.read(
+        deviceProvisioningProvider.notifier,
+      ) as _ControllableDeviceProvisioningNotifier;
       provisioningNotifier.completeProvisioning();
       await tester.pumpAndSettle();
 

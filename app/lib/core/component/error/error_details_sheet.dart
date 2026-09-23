@@ -86,8 +86,8 @@ class _ErrorDetailsSheet extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: .min,
+          crossAxisAlignment: .stretch,
           children: [
             Text('エラー詳細', style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),

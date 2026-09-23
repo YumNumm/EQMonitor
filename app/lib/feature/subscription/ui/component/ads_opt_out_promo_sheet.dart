@@ -41,8 +41,8 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
         ),
         padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: .min,
+          crossAxisAlignment: .stretch,
           children: [
             Center(
               child: Container(

@@ -34,7 +34,7 @@ class const EarthquakeHistoryMapPopupAction() {
       useSafeArea: false,
       style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       builder: (context) => _StationPopupBody(
         stationName: stationName,
         intensity: intensity,
@@ -58,7 +58,7 @@ class const EarthquakeHistoryMapPopupAction() {
       useSafeArea: false,
       style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       builder: (context) => _AreaPopupBody(
         areaName: areaName,
         maxIntensity: maxIntensity,
@@ -88,8 +88,8 @@ class _StationPopupBody extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(
@@ -163,8 +163,8 @@ class _AreaPopupBody extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(

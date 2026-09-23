@@ -51,8 +51,8 @@ class ErrorCard extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Icon(
               Icons.error_outline_rounded,
@@ -62,7 +62,7 @@ class ErrorCard extends ConsumerWidget {
             Text(
               title ?? 'エラーが発生しました',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 4),
@@ -75,7 +75,7 @@ class ErrorCard extends ConsumerWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 if (onReload case final reload?)
                   M3EFilledButton.tonalIcon(

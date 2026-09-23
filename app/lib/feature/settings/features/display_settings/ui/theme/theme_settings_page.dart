@@ -23,7 +23,7 @@ class ThemeSettingsPage extends StatelessWidget {
       appBar: AppBar(title: const Text('テーマ設定')),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             SettingsSectionHeader(text: 'ライト用テーマ'),
             _ModeSection(mode: ThemeBrightnessMode.light),
@@ -167,7 +167,7 @@ class _Swatch extends StatelessWidget {
           height: 24,
           decoration: BoxDecoration(
             color: color,
-            shape: BoxShape.circle,
+            shape: .circle,
             border: Border.all(color: context.designSystem.colorTheme.outline),
           ),
         ),

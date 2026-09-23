@@ -54,8 +54,8 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
           child: Text(
             realtimeDataType.displayName,
             style: designSystem.typography.monoSmall.copyWith(
-              textBaseline: TextBaseline.alphabetic,
-              fontWeight: FontWeight.w700,
+              textBaseline: .alphabetic,
+              fontWeight: .w700,
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
@@ -77,15 +77,15 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
           border: Border.all(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               type.unit == ''
                   ? type.title
                   : '${type.title.toUpperCase()} [${type.unit}]',
               style: designSystem.typography.monoSmall.copyWith(
-                textBaseline: TextBaseline.alphabetic,
-                fontWeight: FontWeight.w700,
+                textBaseline: .alphabetic,
+                fontWeight: .w700,
                 fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [FontFamily.notoSansJP],
               ),
@@ -100,7 +100,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               textColor: designSystem.colorTheme.onSurface,
               tickInterval: 3,
               textStyle: designSystem.typography.monoSmall.copyWith(
-                textBaseline: TextBaseline.alphabetic,
+                textBaseline: .alphabetic,
                 fontSize: 10,
                 fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [FontFamily.notoSansJP],

@@ -123,7 +123,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 jmaMap.value
@@ -136,12 +136,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Text(
                         '位置情報',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                           fontSize: 18,
                         ),
                       ),
@@ -217,12 +217,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Text(
                         'JMAマップ種類',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                           fontSize: 18,
                         ),
                       ),
@@ -269,12 +269,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         const Text(
                           '検索結果',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             fontSize: 18,
                           ),
                         ),
@@ -292,12 +292,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         const Text(
                           '最寄り地震観測点',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                             fontSize: 18,
                           ),
                         ),
@@ -335,7 +335,7 @@ class _ResultInfo extends StatelessWidget {
     final bounds = item.bounds;
     final distanceToCoastlineKm = item.distanceToCoastlineKm;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (property != null) ...[
           if (property.code.isNotEmpty)
@@ -373,7 +373,7 @@ class _ObservationPointInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         _InfoRow(label: 'コード', value: item.code),
         _InfoRow(label: '名前', value: item.name.ja),
@@ -395,13 +395,13 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
           ),
           Expanded(child: Text(value)),

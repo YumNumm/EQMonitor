@@ -78,7 +78,7 @@ class LatLngFilterChip extends StatelessWidget {
         final result = await showM3EModalBottomSheet<LatLngRange?>(
           useSafeArea: false,
           style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           context: context,
           isScrollControlled: true,
           builder: (context) => _LatLngFilterModal(
@@ -100,7 +100,7 @@ class LatLngFilterChip extends StatelessWidget {
       label: _isActive
           ? Text(
               _buildLabel(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             )
           : const Text('緯度経度'),
       onDeleted: _isActive ? () => onChanged?.call(null) : null,
@@ -211,8 +211,8 @@ class _LatLngFilterModal extends HookWidget {
         ),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
             children: [
               Center(child: sheetBar),
               Padding(
@@ -223,7 +223,7 @@ class _LatLngFilterModal extends HookWidget {
                 child: Text(
                   '緯度経度範囲',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),
@@ -306,7 +306,7 @@ class _LatLngFilterModal extends HookWidget {
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: .end,
                 children: [
                   M3ETextButton(
                     onPressed: () => Navigator.of(context).pop(),

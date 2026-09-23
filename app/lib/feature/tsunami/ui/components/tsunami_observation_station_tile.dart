@@ -22,13 +22,13 @@ class TsunamiObservationStationTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             station.name,
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
               color: designSystem.colorTheme.onSurface,
             ),
           ),
@@ -46,7 +46,7 @@ class TsunamiObservationStationTile extends StatelessWidget {
               _formatMaxHeight(maxHeight),
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: _isImportant(maxHeight) ? FontWeight.bold : null,
+                fontWeight: _isImportant(maxHeight) ? .bold : null,
                 color: _isImportant(maxHeight)
                     ? const Color(0xFFB31A1A)
                     : designSystem.colorTheme.onSurfaceVariant,

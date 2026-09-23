@@ -43,7 +43,7 @@ class JmaIntensityContent extends HookWidget {
 
     if (intensityTree.isEmpty) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _PreliminaryBadge(),
           if (regions.isEmpty)
@@ -156,7 +156,7 @@ class _PreliminaryBadge extends StatelessWidget {
             '速報',
             style: TextStyle(
               color: context.designSystem.colorTheme.onErrorContainer,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
         ),
@@ -203,7 +203,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
       subtitle: Text(
         regionNames,
         maxLines: 4,
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
         style: const TextStyle(fontFamily: FontFamily.notoSansJP, fontSize: 13),
       ),
     );
@@ -234,7 +234,7 @@ class _IntensityLevelSection extends HookWidget {
         .join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -332,7 +332,7 @@ class _LpgmIntensityLevelSection extends HookWidget {
     final regionNames = prefectures.map((e) => e.region.name.ja).join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -553,7 +553,7 @@ class _LpgmCityTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -582,7 +582,7 @@ class _LpgmCityTile extends HookWidget {
                         padding: EdgeInsets.zero,
                       ),
                       context: context,
-                      clipBehavior: Clip.antiAlias,
+                      clipBehavior: .antiAlias,
                       builder: (_) => LpgmStationDetailSheet(station: station),
                     ),
                     child: Container(

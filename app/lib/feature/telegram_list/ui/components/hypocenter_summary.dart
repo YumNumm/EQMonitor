@@ -40,7 +40,7 @@ class HypocenterSummary extends StatelessWidget {
     ];
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text.rich(
           TextSpan(
@@ -48,7 +48,7 @@ class HypocenterSummary extends StatelessWidget {
               TextSpan(
                 text: epicenterName,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
               TextSpan(

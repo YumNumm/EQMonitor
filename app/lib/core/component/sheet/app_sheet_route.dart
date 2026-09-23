@@ -11,7 +11,7 @@ class AppSheetRoute<T> extends SheetRoute<T> {
           bottom: false,
           child: Material(
             elevation: 2,
-            clipBehavior: Clip.hardEdge,
+            clipBehavior: .hardEdge,
             shape: const RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),

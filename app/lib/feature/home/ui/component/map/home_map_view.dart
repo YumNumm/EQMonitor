@@ -60,7 +60,7 @@ class HomeMapView extends ConsumerWidget {
             border: Border.all(color: colorTheme.outlineVariant),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const AccessibleCircularProgressIndicator(),
               SizedBox(height: spacing.md),
@@ -241,8 +241,8 @@ class _MapHeader extends ConsumerWidget {
 
     final kyoshinMonitorColumn = Column(
       key: const ValueKey('kyoshin_monitor_status_card'),
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         KyoshinMonitorStatusCard(
           onTap: () async => const HomeMapLayerRoute().push<void>(context),
@@ -276,8 +276,8 @@ class _MapHeader extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(context.designSystem.spacing.sm),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: .spaceBetween,
+        crossAxisAlignment: .start,
         children: [
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),

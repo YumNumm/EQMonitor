@@ -70,7 +70,7 @@ class _HistoryOverlay extends StatelessWidget {
         Positioned.fill(
           child: GestureDetector(
             onTap: onDismiss,
-            behavior: HitTestBehavior.opaque,
+            behavior: .opaque,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
@@ -90,14 +90,14 @@ class _HistoryOverlay extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       title,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -173,7 +173,7 @@ class _TimelineEntry extends StatelessWidget {
 
     return IntrinsicHeight(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 20,
@@ -184,7 +184,7 @@ class _TimelineEntry extends StatelessWidget {
                   height: 10,
                   margin: const EdgeInsets.only(top: 4),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: .circle,
                     color: entry.isLast
                         ? designSystem.colorTheme.outline
                         : colorTheme.primary,
@@ -213,7 +213,7 @@ class _TimelineEntry extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     '$timeStrごろ',

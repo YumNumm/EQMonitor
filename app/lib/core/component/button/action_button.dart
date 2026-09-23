@@ -46,7 +46,7 @@ class ActionButton extends StatelessWidget {
         text,
         style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
             .copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: Colors.white,
               letterSpacing: 1.1,
             ),
@@ -69,7 +69,7 @@ class ActionButton extends StatelessWidget {
         text,
         style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
             .copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: textColor,
               letterSpacing: 1.1,
             ),

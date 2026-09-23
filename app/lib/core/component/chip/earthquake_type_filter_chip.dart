@@ -25,7 +25,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
               isScrollControlled: false,
               useSafeArea: false,
               style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) =>
                   _EarthquakeTypeFilterModal(currentType: earthquakeType),
@@ -38,7 +38,7 @@ class EarthquakeTypeFilterChip extends StatelessWidget {
           ? const Text('種別')
           : Text(
               earthquakeType.displayLabel,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null),
       selected: !isDefault,
@@ -73,8 +73,8 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -82,7 +82,7 @@ class _EarthquakeTypeFilterModal extends StatelessWidget {
               child: Text(
                 '地震種別',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),

@@ -43,8 +43,8 @@ class EewWarningOverlayBanner extends StatelessWidget {
       color: colorScheme.errorContainer,
       elevation: 8,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           const EewWarningOverlayTopStripe(),
           SafeArea(
@@ -55,7 +55,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 10, 4, 12),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: .center,
                   children: [
                     ExcludeSemantics(
                       child: JmaIntensityIcon(
@@ -67,14 +67,14 @@ class EewWarningOverlayBanner extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .start,
                         children: [
                           Text(
                             bannerLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               color: colorScheme.onErrorContainer,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: .w800,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -82,7 +82,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
                             headline,
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: colorScheme.onErrorContainer,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: .w800,
                               height: 1.2,
                             ),
                           ),
@@ -95,7 +95,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
                                 '予想震度$intensityText',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onErrorContainer,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: .w700,
                                 ),
                               ),
                               if (arrivalText case final text?)
@@ -103,7 +103,7 @@ class EewWarningOverlayBanner extends StatelessWidget {
                                   text,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: colorScheme.onErrorContainer,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: .w700,
                                   ),
                                 ),
                             ],

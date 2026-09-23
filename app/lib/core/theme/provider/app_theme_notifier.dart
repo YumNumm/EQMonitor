@@ -152,8 +152,8 @@ ThemeColorSet activeColorSet(Ref ref) {
 ThemeColorSet colorSetForBrightness(Ref ref, Brightness brightness) {
   final themes = ref.watch(appThemeProvider).value;
   final theme = switch (brightness) {
-    Brightness.light => themes?.lightTheme ?? AppTheme.eqmonitorDefault(),
-    Brightness.dark => themes?.darkTheme ?? AppTheme.eqmonitorDefault(),
+    .light => themes?.lightTheme ?? AppTheme.eqmonitorDefault(),
+    .dark => themes?.darkTheme ?? AppTheme.eqmonitorDefault(),
   };
   return theme.colorSetFor(brightness);
 }

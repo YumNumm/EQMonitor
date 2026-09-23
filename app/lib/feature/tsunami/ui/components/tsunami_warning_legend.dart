@@ -26,14 +26,14 @@ class TsunamiWarningLegend extends StatelessWidget {
         border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '津波警報',
             style: TextStyle(
               fontSize: 11,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: designSystem.colorTheme.onSurface,
             ),
           ),
@@ -42,7 +42,7 @@ class TsunamiWarningLegend extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 1),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Container(
                     width: 4,

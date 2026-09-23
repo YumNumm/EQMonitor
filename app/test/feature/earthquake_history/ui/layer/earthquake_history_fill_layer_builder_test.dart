@@ -181,28 +181,24 @@ void main() {
     });
 
     test('sourceId は eqmonitor_map', () {
-      final layer =
-          builder.buildCityLayer(
-                idPrefix: 'test',
-                codes: ['1010001'],
-                color: '#FF0000',
-                mode: mode,
-                parameter: parameter,
-              )
-              as FillStyleLayer;
+      final layer = builder.buildCityLayer(
+        idPrefix: 'test',
+        codes: ['1010001'],
+        color: '#FF0000',
+        mode: mode,
+        parameter: parameter,
+      ) as FillStyleLayer;
       expect(layer.sourceId, 'eqmonitor_map');
     });
 
     test('sourceLayerId は areaInformationCityQuake', () {
-      final layer =
-          builder.buildCityLayer(
-                idPrefix: 'test',
-                codes: ['1010001'],
-                color: '#FF0000',
-                mode: mode,
-                parameter: parameter,
-              )
-              as FillStyleLayer;
+      final layer = builder.buildCityLayer(
+        idPrefix: 'test',
+        codes: ['1010001'],
+        color: '#FF0000',
+        mode: mode,
+        parameter: parameter,
+      ) as FillStyleLayer;
       expect(layer.sourceLayerId, 'areaInformationCityQuake');
     });
 
@@ -218,15 +214,13 @@ void main() {
     });
 
     test('filter に regioncode フィールドを使う', () {
-      final layer =
-          builder.buildCityLayer(
-                idPrefix: 'test',
-                codes: ['1010001', '1310000'],
-                color: '#FF0000',
-                mode: mode,
-                parameter: parameter,
-              )
-              as FillStyleLayer;
+      final layer = builder.buildCityLayer(
+        idPrefix: 'test',
+        codes: ['1010001', '1310000'],
+        color: '#FF0000',
+        mode: mode,
+        parameter: parameter,
+      ) as FillStyleLayer;
       expect(layer.filter, [
         'in',
         ['get', 'regioncode'],
@@ -238,15 +232,13 @@ void main() {
     });
 
     test('fill-color に指定した色が入る', () {
-      final layer =
-          builder.buildCityLayer(
-                idPrefix: 'test',
-                codes: ['1010001'],
-                color: '#ABCDEF',
-                mode: mode,
-                parameter: parameter,
-              )
-              as FillStyleLayer;
+      final layer = builder.buildCityLayer(
+        idPrefix: 'test',
+        codes: ['1010001'],
+        color: '#ABCDEF',
+        mode: mode,
+        parameter: parameter,
+      ) as FillStyleLayer;
       expect(layer.paint['fill-color'], '#ABCDEF');
     });
   });

@@ -174,7 +174,7 @@ class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
       child: Skeletonizer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             for (var index = 0; index < 3; index++) ...[
               const ListTile(

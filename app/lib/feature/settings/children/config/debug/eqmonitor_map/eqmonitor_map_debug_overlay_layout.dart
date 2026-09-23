@@ -15,14 +15,14 @@ class EqmonitorMapDebugOverlayLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Stack(
-    fit: StackFit.expand,
+    fit: .expand,
     children: [
       map,
       Positioned.fill(
         child: SafeArea(
           minimum: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Flexible(
                 flex: 2,

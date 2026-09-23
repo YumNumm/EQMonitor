@@ -210,12 +210,12 @@ class _ParamSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               title,
               style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
+                  ?.copyWith(fontSize: 11, fontWeight: .w600),
             ),
             const SizedBox(height: 8),
             child,

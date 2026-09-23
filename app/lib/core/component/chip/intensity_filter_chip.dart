@@ -34,7 +34,7 @@ class IntensityFilterChip extends StatelessWidget {
               isScrollControlled: false,
               useSafeArea: false,
               style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) => _IntensityFilterModal(
                 currentMin: min,
@@ -50,7 +50,7 @@ class IntensityFilterChip extends StatelessWidget {
           ? Text(filterLabel)
           : Text(
               filterLabel + ': ' + range.toRangeString,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: range.isAllSelected
           ? null
@@ -116,8 +116,8 @@ class _IntensityFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -125,7 +125,7 @@ class _IntensityFilterModal extends HookWidget {
               child: Text(
                 filterLabel,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -150,13 +150,13 @@ class _IntensityFilterModal extends HookWidget {
               child: Text(
                 (min.value, max.value).toRangeString,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
                 M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),

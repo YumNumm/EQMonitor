@@ -176,7 +176,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
     return _SectionCard(
       title: '起動時プロビジョニング',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _KeyValueRow(label: 'Device ID', value: deviceIdAsync.value ?? '…'),
           _KeyValueRow(
@@ -277,7 +277,7 @@ class _StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           if (icon != null) ...[
             Icon(icon, size: 12, color: textColor),
@@ -288,7 +288,7 @@ class _StatusChip extends StatelessWidget {
               label,
               style: Theme.of(context).textTheme.labelSmall
                   ?.copyWith(color: textColor),
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ),
         ],
@@ -338,7 +338,7 @@ class _DeviceLifecycleSection extends HookConsumerWidget {
       title: 'デバイス操作',
       subtitle: 'サーバー登録とローカル認証情報を検証用に操作します',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Wrap(
             spacing: 8,
@@ -417,7 +417,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
       ),
       child: switch (permAsync) {
         AsyncData(:final value) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             _KeyValueRow(
               label: '許可状態',
@@ -492,7 +492,7 @@ class _DeviceInfoSection extends ConsumerWidget {
       title: 'デバイス（サーバー情報）',
       child: switch (deviceAsync) {
         AsyncData(:final value) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             _KeyValueRow(label: 'ID', value: value.id),
             _KeyValueRow(label: 'UserID', value: value.userId ?? '未登録'),
@@ -546,7 +546,7 @@ class _TokenSection extends HookConsumerWidget {
     return _SectionCard(
       title: 'プッシュトークン同期',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _TokenStatusRow(
             label: 'FCM',
@@ -701,7 +701,7 @@ class _SettingsProviderStatusSection extends ConsumerWidget {
       title: '設定プロバイダー状態',
       subtitle: 'プロビジョニング完了後にロードされる',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _ProviderStatusRow(label: '通知スロット', state: slots),
           _ProviderStatusRow(label: '揺れ検知設定', state: shakeDetection),
@@ -970,12 +970,12 @@ class _TestScenarioSection extends HookConsumerWidget {
           'イベントIDの実データをDBから取得し、実際の通知パイプライン経由で'
           'この端末にのみ配信します（EEW + VXSE51/52/53）',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           TextField(
             controller: controller,
             enabled: !isPending.value,
-            textInputAction: TextInputAction.go,
+            textInputAction: .go,
             decoration: const InputDecoration(
               labelText: 'イベントID',
               border: OutlineInputBorder(),
@@ -1077,7 +1077,7 @@ class _TestScenarioTypeSection extends HookConsumerWidget {
           'シナリオ種別を指定して通知パイプラインを実行し、'
           'この端末にのみテスト通知を配信します',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           ControlledDropdown<TestScenarioType>(
             singleSelect: true,
@@ -1209,7 +1209,7 @@ class _NotificationHistoryTile extends StatelessWidget {
         _formatCreatedAt(item.createdAtIso),
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      subtitle: Text(subtitle, maxLines: 4, overflow: TextOverflow.ellipsis),
+      subtitle: Text(subtitle, maxLines: 4, overflow: .ellipsis),
       trailing: Icon(
         ok ? Icons.check_circle_outline : Icons.error_outline,
         color: resultColor,
@@ -1279,14 +1279,14 @@ class _SectionCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           title,
@@ -1327,7 +1327,7 @@ class _KeyValueRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 120,

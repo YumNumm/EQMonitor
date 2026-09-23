@@ -50,7 +50,7 @@ class _RouteDropdownMenu extends HookWidget {
     final pathEditController = useTextEditingController();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         ControlledDropdown<String>(
           items: dropdownMenuEntries,

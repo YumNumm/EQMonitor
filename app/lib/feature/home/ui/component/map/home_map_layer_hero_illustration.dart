@@ -36,7 +36,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
         borderRadius: BorderRadius.circular(shape.xl),
         border: Border.all(color: colorTheme.outlineVariant),
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: RepaintBoundary(
         child: CustomPaint(
           painter: _HomeMapLayerHeroPainter(
@@ -98,7 +98,7 @@ class _LayerLabelChip extends StatelessWidget {
           label,
           style: typography.labelMedium.copyWith(
             color: context.designSystem.colorTheme.onSurface,
-            fontWeight: FontWeight.w700,
+            fontWeight: .w700,
           ),
         ),
       ),
@@ -123,7 +123,7 @@ class const _HomeMapLayerHeroPainter({
 
     final shadowPaint = Paint()
       ..color = glowColor
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18);
+      ..maskFilter = const MaskFilter.blur(.normal, 18);
     canvas.drawCircle(
       center.translate(0, 6),
       size.shortestSide * 0.22,
@@ -155,9 +155,9 @@ class const _HomeMapLayerHeroPainter({
       const Radius.circular(22),
     );
 
-    final fillPaint = Paint()..style = PaintingStyle.fill;
+    final fillPaint = Paint()..style = .fill;
     final strokePaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 1.2;
 
     fillPaint.color = baseColor.withValues(alpha: 0.95);
@@ -176,10 +176,10 @@ class const _HomeMapLayerHeroPainter({
     canvas.drawRRect(topLayer, strokePaint);
 
     final pathPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 2
       ..color = Colors.white.withValues(alpha: 0.26)
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = .round;
 
     final path = Path()
       ..moveTo(size.width * 0.20, size.height * 0.68)
@@ -197,7 +197,7 @@ class const _HomeMapLayerHeroPainter({
       );
     canvas.drawPath(path, pathPaint);
 
-    final nodePaint = Paint()..style = PaintingStyle.fill;
+    final nodePaint = Paint()..style = .fill;
     final nodes = <Offset>[
       Offset(size.width * 0.25, size.height * 0.63),
       Offset(size.width * 0.43, size.height * 0.56),
@@ -215,14 +215,14 @@ class const _HomeMapLayerHeroPainter({
       canvas.drawCircle(
         node,
         10 + localPulse * 10,
-        nodePaint..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+        nodePaint..maskFilter = const MaskFilter.blur(.normal, 10),
       );
       nodePaint.maskFilter = null;
     }
 
     final radarCenter = Offset(size.width * 0.22, size.height * 0.30);
     final radarPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 1.4
       ..color = Colors.white.withValues(alpha: 0.18);
     canvas.drawCircle(radarCenter, 18, radarPaint);
@@ -238,7 +238,7 @@ class const _HomeMapLayerHeroPainter({
     );
 
     final accentPaint = Paint()
-      ..style = PaintingStyle.fill
+      ..style = .fill
       ..color = accentColor.withValues(alpha: 0.85);
     canvas.drawCircle(
       Offset(size.width * 0.68 + drift * 0.55, size.height * 0.23),

@@ -26,7 +26,7 @@ class StatusFilterChip extends StatelessWidget {
           isScrollControlled: false,
           useSafeArea: false,
           style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           context: context,
           builder: (context) =>
               _StatusFilterModal(currentStatuses: currentStatuses),
@@ -41,7 +41,7 @@ class StatusFilterChip extends StatelessWidget {
               currentStatuses.length == TelegramStatus.values.length
                   ? '全て'
                   : currentStatuses.map((s) => s.label).join(', '),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(initialStatuses),
       selected: !isDefault,
@@ -80,8 +80,8 @@ class _StatusFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -89,7 +89,7 @@ class _StatusFilterModal extends HookWidget {
               child: Text(
                 'ステータス',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -120,7 +120,7 @@ class _StatusFilterModal extends HookWidget {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
                 M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),

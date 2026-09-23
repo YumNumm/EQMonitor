@@ -47,7 +47,7 @@ class _UnconfiguredView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Icon(
               Icons.lock_outline,
@@ -58,7 +58,7 @@ class _UnconfiguredView extends StatelessWidget {
             Text(
               'BOSAI 認証情報が未設定です',
               style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             const SizedBox(height: 8),
             Text(
@@ -66,7 +66,7 @@ class _UnconfiguredView extends StatelessWidget {
               ' 事前に NIED のサイトでユーザー登録を行い、'
               ' 認証情報を設定してください。',
               style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             const SizedBox(height: 24),
             M3EFilledButton.icon(
@@ -92,7 +92,7 @@ class _ConfiguredView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Icon(
               Icons.sensors,

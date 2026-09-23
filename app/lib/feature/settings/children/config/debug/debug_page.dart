@@ -502,7 +502,7 @@ class _AppCheckSection extends ConsumerWidget {
               value ?? 'null',
               style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           },
           onTap: () async {
@@ -563,7 +563,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
     final paramAsync = ref.watch(parameterSetProvider);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           title: const Text('パラメータ'),
@@ -696,7 +696,7 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
     final notifier = ref.read(backgroundLocationDebugSettingsProvider.notifier);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const ListTile(
           title: Text('バックグラウンド位置情報デバッグ通知'),
@@ -741,7 +741,7 @@ class _StartApiDebugSection extends ConsumerWidget {
     final startValue = startAsync.value;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           title: const Text('Start API'),

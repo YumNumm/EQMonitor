@@ -212,7 +212,7 @@ class LiveMonitorPage extends HookConsumerWidget {
     final body = switch (settings) {
       null => const Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
@@ -241,7 +241,7 @@ class LiveMonitorPage extends HookConsumerWidget {
           children: [
             Positioned.fill(
               child: Listener(
-                behavior: HitTestBehavior.translucent,
+                behavior: .translucent,
                 onPointerDown: (event) {
                   if (settings == null || panelOpen) {
                     tapTracker.cancelAll();

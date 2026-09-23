@@ -83,7 +83,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
         .join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -102,7 +102,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
           subtitle: Text(
             prefectureNames,
             maxLines: 4,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: const TextStyle(
               fontFamily: FontFamily.notoSansJP,
               fontSize: 13,
@@ -174,7 +174,7 @@ class _ShindoDbPrefectureTile extends HookWidget {
           contentPadding: const EdgeInsets.only(left: 8, right: 8),
           title: Text(
             prefecture.prefecture.name.ja,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
           onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
@@ -210,7 +210,7 @@ class _ShindoDbCityTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -244,7 +244,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -252,7 +252,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
           contentPadding: const EdgeInsets.only(left: 8, right: 8),
           title: const Text(
             '市区町村不明',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
           onTap: () => isExpanded.value = !isExpanded.value,
@@ -288,7 +288,7 @@ class _ShindoDbStationChips extends StatelessWidget {
                 useSafeArea: false,
                 style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
                 context: context,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: .antiAlias,
                 builder: (_) => ShindoDbStationDetailSheet(station: station),
               ),
               child: Container(

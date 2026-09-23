@@ -37,7 +37,7 @@ class ShakeDetectionCard extends ConsumerWidget {
           side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
             _ShakeDetectionCardBody(event: event, regionsAsync: regionsAsync),
@@ -78,7 +78,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: typography.titleSmall.copyWith(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                   color: Colors.white,
                 ),
               ),
@@ -138,7 +138,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
         vertical: spacing.sm,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '${event.pointCount}地点で検知',

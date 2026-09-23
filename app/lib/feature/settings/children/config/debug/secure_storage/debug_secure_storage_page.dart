@@ -89,11 +89,11 @@ class _EntriesList extends HookConsumerWidget {
                 subtitle: Text(
                   preview,
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: const TextStyle(fontFamily: FontFamily.googleSansCode),
                 ),
                 trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     IconButton(
                       icon: Icon(
@@ -188,7 +188,7 @@ class _AddDialog extends HookConsumerWidget {
       title: const Text('新規追加'),
       content: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             TextField(
               controller: keyController,

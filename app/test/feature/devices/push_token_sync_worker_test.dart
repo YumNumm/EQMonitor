@@ -376,28 +376,33 @@ void main() {
       expect(upserts, ['same-token', 'same-token']);
     });
 
-    test('forceResync clears a non-retryable failure and upserts again', () async {
-      var calls = 0;
-      final worker = PushTokenSyncWorker(
-        upsert: (_) async {
-          calls++;
-          if (calls == 1) {
-            throw const InvalidRequestException(statusCode: 400);
-          }
-        },
-        backoff: InterruptibleBackoff(delayOverride: (_) async {}),
-      );
-      addTearDown(worker.dispose);
+    test(
+      'forceResync clears a non-retryable failure and upserts again',
+      () async {
+        var calls = 0;
+        final worker = PushTokenSyncWorker(
+          upsert: (_) async {
+            calls++;
+            if (calls == 1) {
+              throw const InvalidRequestException(statusCode: 400);
+            }
+          },
+          backoff: InterruptibleBackoff(delayOverride: (_) async {}),
+        );
+        addTearDown(worker.dispose);
 
-      worker.accept(token: 'blocked-token');
-      await worker.states.whereState<PushTokenSyncWorkerFailed>().first;
-      expect(calls, 1);
+        worker.accept(token: 'blocked-token');
+        await worker.states.whereState<PushTokenSyncWorkerFailed>().first;
+        expect(calls, 1);
 
-      final synced = worker.states.whereState<PushTokenSyncWorkerSynced>().first;
-      worker.forceResync();
-      await synced;
-      expect(calls, 2);
-    });
+        final synced = worker.states
+            .whereState<PushTokenSyncWorkerSynced>()
+            .first;
+        worker.forceResync();
+        await synced;
+        expect(calls, 2);
+      },
+    );
 
     test('forceResync is a no-op when no token has been accepted', () async {
       final upserts = <String>[];

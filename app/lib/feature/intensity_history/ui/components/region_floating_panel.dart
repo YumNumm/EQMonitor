@@ -81,8 +81,8 @@ class _NationwidePanel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .start,
+          mainAxisSize: .min,
           children: [
             Text.rich(
               TextSpan(
@@ -128,13 +128,13 @@ class _CityPanel extends StatelessWidget {
           outer: ImageFilter.blur(
             sigmaX: 8,
             sigmaY: 8,
-            tileMode: TileMode.mirror,
+            tileMode: .mirror,
           ),
           inner: ColorFilter.mode(
             context.designSystem.colorTheme.surfaceContainerLow.withValues(
               alpha: 0.7,
             ),
-            BlendMode.srcATop,
+            .srcATop,
           ),
         ),
         child: Semantics(
@@ -153,7 +153,7 @@ class _CityPanel extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   if (maxIntensity case final maxIntensity?) ...[
                     JmaIntensityIcon(
@@ -165,13 +165,13 @@ class _CityPanel extends StatelessWidget {
                   ],
                   Flexible(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .start,
+                      mainAxisSize: .min,
                       children: [
                         Text(
                           selectedCity.prefectureName,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: context
                                 .designSystem
@@ -182,9 +182,9 @@ class _CityPanel extends StatelessWidget {
                         Text(
                           selectedCity.name,
                           maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         _RefreshedAtLabel(

@@ -135,7 +135,7 @@ class _PagingBody extends StatelessWidget {
             stickyHeader: true,
             headerBuilder: (_, date, _) => _DateHeader(date: date),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 HistorySelection(
                   selected: selectedEventId == item.eventId,
@@ -194,7 +194,7 @@ class _Skeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
+          : Column(mainAxisSize: .min, children: tiles),
     );
   }
 }

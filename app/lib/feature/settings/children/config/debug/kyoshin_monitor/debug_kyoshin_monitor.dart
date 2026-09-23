@@ -43,13 +43,13 @@ class _Body extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     final titleTextStyle = textTheme.titleMedium?.copyWith(
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
     final bodyTextStyle = textTheme.bodySmall?.copyWith(
-      fontWeight: FontWeight.w400,
+      fontWeight: .w400,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
@@ -58,11 +58,11 @@ class _Body extends ConsumerWidget {
 
     return Column(
       spacing: 8,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorTimerNotifier', style: titleTextStyle),
               Text(switch (kyoshinMonitorTimerState) {
@@ -108,7 +108,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorTimerStream', style: titleTextStyle),
               Text(switch (ref.watch(kyoshinMonitorTimerStreamProvider)) {
@@ -123,7 +123,7 @@ class _Body extends ConsumerWidget {
           child: () {
             final state = ref.watch(kyoshinMonitorProvider);
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
                   children: [
@@ -172,7 +172,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorMaintenance', style: titleTextStyle),
               Text(switch (ref.watch(kyoshinMonitorMaintenanceProvider)) {
@@ -187,7 +187,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorSettings', style: titleTextStyle),
               Text(

@@ -36,13 +36,13 @@ class TsunamiWarningStatusCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Card(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (showStripe)
               WarningStripeDecoration(
@@ -63,7 +63,7 @@ class TsunamiWarningStatusCard extends StatelessWidget {
                       style: TextStyle(
                         color: headerFg,
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),

@@ -56,7 +56,7 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
               color: designSystem.colorTheme.onSurfaceVariant,
             ),
             maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ),
       ),
@@ -135,7 +135,7 @@ class _ExpandedOverlay extends StatelessWidget {
         border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Row(
             children: [
@@ -143,17 +143,17 @@ class _ExpandedOverlay extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       currentTelegram.title,
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                         color: designSystem.colorTheme.onSurface,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                     Text(
                       currentTelegram.publishedAt.formatWithTz(
@@ -277,7 +277,7 @@ class _CollapsedOverlay extends StatelessWidget {
         border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Icon(
             Icons.timeline,
@@ -421,7 +421,7 @@ class _TimeMarkers extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: .spaceBetween,
         children: [
           Text(
             firstTime,

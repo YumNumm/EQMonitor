@@ -264,7 +264,7 @@ class EqmonitorMapOverlayBanner extends StatelessWidget {
       elevation: 2,
       color: colorScheme.surface.withValues(alpha: 0.92),
       borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: ListView(
         primary: false,
         shrinkWrap: true,
@@ -281,7 +281,7 @@ class EqmonitorMapOverlayBanner extends StatelessWidget {
             presentation.message,
             style: textStyle?.copyWith(
               color: presentation.isError ? colorScheme.error : null,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
             ),
           ),
           M3EOutlinedButton.icon(

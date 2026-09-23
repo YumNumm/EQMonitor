@@ -18,7 +18,7 @@ class FatalErrorScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Icon(
                 Icons.error_outline_rounded,
@@ -31,7 +31,7 @@ class FatalErrorScreen extends StatelessWidget {
               Text(
                 'お手数ですが、アプリを再操作してください。',
                 style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
               if (kDebugMode && error != null) ...[
                 const SizedBox(height: 16),
@@ -40,7 +40,7 @@ class FatalErrorScreen extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: designSystem.colorTheme.onSurfaceVariant,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
               ],
               const SizedBox(height: 24),
@@ -68,13 +68,13 @@ class FatalErrorWidgetBuilder {
   /// MaterialApp 祖先が無い状況でも安全に描画する。
   static Widget build(FlutterErrorDetails details) {
     return Directionality(
-      textDirection: TextDirection.ltr,
+      textDirection: .ltr,
       child: Container(
         color: const Color(0xFF1C1B1F),
         alignment: Alignment.center,
         padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Icon(
               Icons.error_outline_rounded,
@@ -99,7 +99,7 @@ class FatalErrorWidgetBuilder {
                   fontSize: 12,
                   decoration: TextDecoration.none,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ],
           ],

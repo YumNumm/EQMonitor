@@ -23,7 +23,7 @@ class ParameterLoaderWidget extends HookConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       const Text('観測点情報の取得に失敗しました'),
                       if (error is DioException)

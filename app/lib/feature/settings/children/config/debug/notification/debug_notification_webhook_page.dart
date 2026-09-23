@@ -144,7 +144,7 @@ class _WebhookTile extends StatelessWidget {
       ),
       title: Text(webhook.approved ? '承認済み' : '承認待ち'),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SelectableText(webhook.id),
           Text('発行: ${dateFormat.format(webhook.createdAt.toLocal())}'),
@@ -186,11 +186,11 @@ class _ErrorBody extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Text('Webhook一覧を取得できませんでした'),
             const SizedBox(height: 8),
-            SelectableText(exception.toString(), textAlign: TextAlign.center),
+            SelectableText(exception.toString(), textAlign: .center),
             const SizedBox(height: 16),
             M3EFilledButton.icon(
               onPressed: onRetry,

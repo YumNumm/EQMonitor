@@ -52,7 +52,7 @@ class ConnectionStatusCard extends ConsumerWidget {
           vertical: designSystem.spacing.xs,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Icon(icon, size: 14, color: color),
             const SizedBox(width: 4),

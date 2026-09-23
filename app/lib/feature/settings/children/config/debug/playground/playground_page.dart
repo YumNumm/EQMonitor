@@ -357,7 +357,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
 
             //=== 4) 結果表示 ===
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 // 色プレビュー
                 Container(width: 80, height: 80, color: color.value),
@@ -365,7 +365,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
                 // テキスト情報
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text('入力値 = ${valueParam.value} (${selectedType.value})'),
                       Text('p = ${p.value.toStringAsFixed(4)}'),

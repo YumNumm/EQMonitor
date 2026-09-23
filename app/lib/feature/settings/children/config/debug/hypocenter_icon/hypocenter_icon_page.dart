@@ -50,7 +50,7 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 18, fontWeight: .bold),
     );
   }
 }
@@ -66,7 +66,7 @@ class _SubSectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8, bottom: 4),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        style: const TextStyle(fontSize: 14, fontWeight: .w600),
       ),
     );
   }
@@ -81,11 +81,11 @@ class _HypocenterIconsSection extends StatelessWidget {
     final lowPreciseController = ScreenshotController();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const _SubSectionHeader(title: '通常の震源アイコン'),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Column(
               children: [
@@ -127,7 +127,7 @@ class _HypocenterIconsSection extends StatelessWidget {
         const SizedBox(height: 16),
         const _SubSectionHeader(title: '精度の低い震源アイコン'),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Column(
               children: [
@@ -200,7 +200,7 @@ class _JmaIntensityShowcase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         for (final type in IntensityIconType.values) ...[
           _SubSectionHeader(title: type.name),
@@ -231,7 +231,7 @@ class _JmaLpgmIntensityShowcase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         for (final type in IntensityIconType.values) ...[
           _SubSectionHeader(title: type.name),
@@ -265,7 +265,7 @@ class _IconLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         child,
         const SizedBox(height: 4),
@@ -289,7 +289,7 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = Colors.black
             ..isAntiAlias = true
-            ..style = PaintingStyle.stroke
+            ..style = .stroke
             ..strokeWidth = 25,
         )
         ..drawCircle(
@@ -298,7 +298,7 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = Colors.white
             ..isAntiAlias = true
-            ..style = PaintingStyle.stroke
+            ..style = .stroke
             ..strokeWidth = 18,
         )
         ..drawCircle(
@@ -307,7 +307,7 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 255, 0, 0)
             ..isAntiAlias = true
-            ..style = PaintingStyle.stroke
+            ..style = .stroke
             ..strokeWidth = 10,
         );
     } else if (type == HypocenterType.normal) {
@@ -319,8 +319,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 0, 0, 0)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 25,
         )
         ..drawLine(
@@ -329,8 +329,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 0, 0, 0)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 25,
         )
         ..drawLine(
@@ -339,8 +339,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 255, 255, 255)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 18,
         )
         ..drawLine(
@@ -349,8 +349,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 255, 255, 255)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 18,
         )
         ..drawLine(
@@ -359,8 +359,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 255, 0, 0)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 12,
         )
         ..drawLine(
@@ -369,8 +369,8 @@ class const _HypocenterPainter({required final HypocenterType type})
           Paint()
             ..color = const Color.fromARGB(255, 255, 0, 0)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.square
-            ..style = PaintingStyle.stroke
+            ..strokeCap = .square
+            ..style = .stroke
             ..strokeWidth = 12,
         );
     }

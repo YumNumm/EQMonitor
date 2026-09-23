@@ -68,7 +68,7 @@ class FnetCatalogPage extends HookConsumerWidget {
                   ),
           AsyncError(:final error) => Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               children: [
                 const Icon(Icons.error_outline, size: 64, color: Colors.red),
                 const SizedBox(height: 16),

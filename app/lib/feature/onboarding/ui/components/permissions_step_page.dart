@@ -117,8 +117,8 @@ class _PermissionsStepPage extends HookConsumerWidget {
                   children: [
                     const TextSpan(text: '端末の位置情報を利用して、適した通知をお知らせします。\n'),
                     WidgetSpan(
-                      alignment: PlaceholderAlignment.baseline,
-                      baseline: TextBaseline.alphabetic,
+                      alignment: .baseline,
+                      baseline: .alphabetic,
                       child: _InlineTextLink(
                         label: 'EQMonitorにおける位置情報の扱い方',
                         onTap: () => openWebView(title: '位置情報の扱い方'),
@@ -183,7 +183,7 @@ class _PermissionSection extends StatelessWidget {
     final designSystem = context.designSystem;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         Text(title, style: designSystem.typography.titleLarge),
         if (description case final description?) ...[
@@ -317,8 +317,8 @@ class _PermissionDescriptionText extends StatelessWidget {
         children: [
           TextSpan(text: parts.first),
           WidgetSpan(
-            alignment: PlaceholderAlignment.baseline,
-            baseline: TextBaseline.alphabetic,
+            alignment: .baseline,
+            baseline: .alphabetic,
             child: _InlineTextLink(label: label, onTap: onTap),
           ),
           TextSpan(text: parts.length > 1 ? parts[1] : ''),

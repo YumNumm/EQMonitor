@@ -139,7 +139,7 @@ class _OnboardingPresetList extends StatelessWidget {
     final designSystem = context.designSystem;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         for (var index = 0; index < presets.length; index++) ...[
           if (index > 0) SizedBox(height: designSystem.spacing.md),
@@ -199,7 +199,7 @@ class _OnboardingPresetCard extends StatelessWidget {
             ),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Row(
                 children: [
@@ -357,14 +357,14 @@ class _SettingsPresetGroup extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           for (var index = 0; index < presets.length; index++) ...[
             if (index > 0) const Divider(height: 1),
@@ -424,19 +424,19 @@ class _SettingsPresetTile extends StatelessWidget {
           vertical: spacing.md,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             _PresetSelectionMark(isSelected: isSelected && isEnabled),
             SizedBox(width: spacing.sm),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     const _NotificationPresetLabel().title(preset),
                     style: designSystem.typography.titleMedium.copyWith(
                       color: titleColor,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                     ),
                   ),
                   SizedBox(height: spacing.xs),
@@ -482,7 +482,7 @@ class _PresetSelectionMark extends StatelessWidget {
       width: 24,
       height: 24,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
+        shape: .circle,
         border: Border.all(
           color: isSelected ? colorTheme.primary : colorTheme.outline,
           width: isSelected ? 6 : 3,
@@ -503,7 +503,7 @@ class _CustomPresetTrailing extends StatelessWidget {
     final designSystem = context.designSystem;
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Icon(
           Icons.chevron_right,

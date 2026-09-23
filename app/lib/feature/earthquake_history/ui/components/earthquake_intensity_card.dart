@@ -50,7 +50,7 @@ class EarthquakeIntensityCard extends StatelessWidget {
             elevation: 1,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
                   children: [

@@ -24,7 +24,7 @@ class HomeMapControllerCard extends StatelessWidget {
     final designSystem = context.designSystem;
     final colorTheme = designSystem.colorTheme;
     final divider = M3EFloatingToolbarDivider(
-      orientation: Axis.horizontal,
+      orientation: .horizontal,
       color: colorTheme.outlineVariant,
     );
 
@@ -46,7 +46,7 @@ class HomeMapControllerCard extends StatelessWidget {
           collapsedShadowElevation: 0,
         ),
         content: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             _MapToolbarButton(
               icon: Icons.layers_rounded,

@@ -56,7 +56,7 @@ class _WarningHeader extends StatelessWidget {
         0,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Container(
             width: 64,
@@ -144,7 +144,7 @@ class _WarningCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(designSystem.spacing.lg),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Container(
             width: 28,
@@ -153,14 +153,14 @@ class _WarningCard extends StatelessWidget {
               color: designSystem.colorTheme.status.warning.withValues(
                 alpha: 0.15,
               ),
-              shape: BoxShape.circle,
+              shape: .circle,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: designSystem.typography.labelMedium.copyWith(
                   color: designSystem.colorTheme.status.warning,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                 ),
               ),
             ),
@@ -196,7 +196,7 @@ class _AgreementBottom extends ConsumerWidget {
           designSystem.spacing.xxl,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             SizedBox(
               width: double.infinity,
@@ -223,7 +223,7 @@ class _AgreementBottom extends ConsumerWidget {
                   '同意して利用する',
                   style: designSystem.typography.labelLarge.copyWith(
                     color: const Color(0xFF0F141A),
-                    fontWeight: FontWeight.w700,
+                    fontWeight: .w700,
                   ),
                 ),
               ),
@@ -234,7 +234,7 @@ class _AgreementBottom extends ConsumerWidget {
               style: designSystem.typography.bodySmall.copyWith(
                 color: designSystem.colorTheme.outline,
               ),
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
           ],
         ),

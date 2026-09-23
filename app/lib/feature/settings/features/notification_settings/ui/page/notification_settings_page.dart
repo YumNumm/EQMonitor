@@ -186,7 +186,7 @@ class _MasterNotificationControl extends StatelessWidget {
                     '通知を受け取る',
                     style: typography.titleMedium.copyWith(
                       color: designSystem.colorTheme.onSurface,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                     ),
                   ),
                 ),
@@ -284,14 +284,14 @@ class _CustomSettingsSection extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           _InlineSwitchTile(
             title: '推計震度分布図',
@@ -456,7 +456,7 @@ class _SlotListSection extends ConsumerWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (slotsAsync.isLoading && slots.isEmpty)
           const Padding(
@@ -605,14 +605,14 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
@@ -711,7 +711,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             title: const Text('津波通知'),
             subtitle: const Text('現在実装中です。今後のアップデートで利用可能になります。'),
             trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 const ComingSoonBadge(),
                 SizedBox(width: spacing.sm),

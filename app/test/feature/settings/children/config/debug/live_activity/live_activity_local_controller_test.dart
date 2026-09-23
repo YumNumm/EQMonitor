@@ -27,23 +27,26 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('start は kind / eventId / contentState(JSON) を送り activityId を返す', () async {
-    mock((call) async => call.method == 'start' ? 'activity-123' : null);
+  test(
+    'start は kind / eventId / contentState(JSON) を送り activityId を返す',
+    () async {
+      mock((call) async => call.method == 'start' ? 'activity-123' : null);
 
-    final activityId = await controller.start(
-      kind: DebugLiveActivityKind.eew,
-      eventId: 'ev-1',
-      contentState: <String, dynamic>{'eventId': 'ev-1', 'type': 'eew'},
-    );
+      final activityId = await controller.start(
+        kind: DebugLiveActivityKind.eew,
+        eventId: 'ev-1',
+        contentState: <String, dynamic>{'eventId': 'ev-1', 'type': 'eew'},
+      );
 
-    expect(activityId, 'activity-123');
-    final args = calls.single.arguments as Map;
-    expect(calls.single.method, 'start');
-    expect(args['kind'], 'eew');
-    expect(args['eventId'], 'ev-1');
-    final decoded = jsonDecode(args['contentState'] as String) as Map;
-    expect(decoded['type'], 'eew');
-  });
+      expect(activityId, 'activity-123');
+      final args = calls.single.arguments as Map;
+      expect(calls.single.method, 'start');
+      expect(args['kind'], 'eew');
+      expect(args['eventId'], 'ev-1');
+      final decoded = jsonDecode(args['contentState'] as String) as Map;
+      expect(decoded['type'], 'eew');
+    },
+  );
 
   test('start で activityId が空なら例外', () async {
     mock((call) async => '');

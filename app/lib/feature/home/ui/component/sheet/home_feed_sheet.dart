@@ -51,7 +51,7 @@ class HomeFeedSheet extends ConsumerWidget {
             value.items.isEmpty
                 ? const _HomeFeedEmpty()
                 : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     children: [
                       for (final (index, item)
                           in value.items.take(3).indexed) ...[
@@ -109,7 +109,7 @@ class _HomeFeedEmpty extends StatelessWidget {
             style: designSystem.typography.bodyMedium.copyWith(
               color: colorTheme.onSurfaceVariant,
             ),
-            textAlign: TextAlign.center,
+            textAlign: .center,
           ),
         ],
       ),
@@ -153,7 +153,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
       child: Skeletonizer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             for (var i = 0; i < 3; i++) ...[
               Container(
@@ -214,10 +214,10 @@ class _UnreadFeedBanner extends ConsumerWidget {
                   (item.title ?? item.summary ?? '').replaceAll('◆', ''),
                   style: typography.titleSmall.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
               IconButton(

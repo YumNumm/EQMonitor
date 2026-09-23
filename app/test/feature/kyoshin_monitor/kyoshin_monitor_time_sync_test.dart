@@ -57,7 +57,10 @@ void main() {
         receivedAt: DateTime.utc(2026, 8, 19, 0, 17, 30, 400),
         latestTime: DateTime.utc(2026, 8, 19, 0, 17, 29),
       );
-      expect(timeSample.roundTripTime(sample), const Duration(milliseconds: 400));
+      expect(
+        timeSample.roundTripTime(sample),
+        const Duration(milliseconds: 400),
+      );
     });
 
     test('ずれは送受信の中点で評価され、往復時間の片道ぶんが打ち消される', () {

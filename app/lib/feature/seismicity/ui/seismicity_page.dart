@@ -160,7 +160,7 @@ class SeismicityPage extends HookConsumerWidget {
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
+                  crossAxisAlignment: .center,
                   children: [
                     SeismicityDataModeSelector(
                       value: mode.value,
@@ -264,7 +264,7 @@ class SeismicityPage extends HookConsumerWidget {
                     ),
                   (SeismicityDataMode.allHypocenters, _) => Center(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         AccessibleCircularProgressIndicator(
                           value: analysisProgress == null
@@ -389,8 +389,8 @@ class _MapBody extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
                   children: [
                     Text(
                       '表示失敗: ${archiveFailures.map((failure) {
@@ -440,8 +440,8 @@ class _MapBody extends HookConsumerWidget {
                           vertical: 4,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: .start,
+                          mainAxisSize: .min,
                           children: [
                             const Text('取得失敗のため前回データを表示中'),
                             Text(

@@ -304,7 +304,7 @@ class _SectionHeader extends StatelessWidget {
         title,
         style: theme.textTheme.labelLarge?.copyWith(
           color: context.designSystem.colorTheme.primary,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
     );
@@ -333,7 +333,7 @@ class _EewNavigationCard extends StatelessWidget {
         title: Text(
           '緊急地震速報（$count報）',
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         trailing: const Icon(Icons.chevron_right),
@@ -363,7 +363,7 @@ class _TelegramListSkeleton extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Container(width: 120, height: 14, color: Colors.white),
                     const SizedBox(height: 8),

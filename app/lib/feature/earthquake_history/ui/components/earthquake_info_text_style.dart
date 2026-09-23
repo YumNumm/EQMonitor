@@ -10,13 +10,13 @@ extension EarthquakeInfoTextStyle on TextTheme {
     }
     return base.copyWith(
       color: base.color?.withValues(alpha: 0.8),
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
     );
   }
 
   TextStyle? valueStyle(TextStyle? base) {
     return base?.copyWith(
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
       fontFamily: FontFamily.notoSansJP,
       letterSpacing: -1,
     );

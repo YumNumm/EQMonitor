@@ -65,5 +65,5 @@ enum SharedPreferencesKey(final String key) {
   ),
   feedLastReadPublishedAt('feed_last_read_published_at'),
   eewHistoryNoticeShown('eew_history_notice_shown'),
-  eewWarningOverlayEnabled('eew_warning_overlay_enabled');
+  eewWarningOverlayEnabled('eew_warning_overlay_enabled'),
 }

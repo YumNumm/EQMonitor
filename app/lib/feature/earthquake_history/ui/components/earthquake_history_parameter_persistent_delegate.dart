@@ -285,7 +285,7 @@ class _FilterChipBar extends ConsumerWidget {
     });
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Row(

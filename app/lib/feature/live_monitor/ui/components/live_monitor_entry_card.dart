@@ -20,7 +20,7 @@ class LiveMonitorEntryCard extends StatelessWidget {
 
       child: Card.outlined(
         margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         child: ListTile(
           leading: const Icon(Icons.monitor_heart_outlined),
           title: const Text('LiveMonitor モード'),

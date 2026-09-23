@@ -28,32 +28,40 @@ void main() {
   group('BuildConfig.isDeveloperUiEnabled', () {
     test('BETA かつ prod のときのみ false', () {
       expect(
-        _buildConfig(flavor: Flavor.prod, isBetaTesting: true)
-            .isDeveloperUiEnabled,
+        _buildConfig(
+          flavor: Flavor.prod,
+          isBetaTesting: true,
+        ).isDeveloperUiEnabled,
         isFalse,
       );
     });
 
     test('BETA でも dev flavor なら true', () {
       expect(
-        _buildConfig(flavor: Flavor.dev, isBetaTesting: true)
-            .isDeveloperUiEnabled,
+        _buildConfig(
+          flavor: Flavor.dev,
+          isBetaTesting: true,
+        ).isDeveloperUiEnabled,
         isTrue,
       );
     });
 
     test('prod でも BETA でなければ true', () {
       expect(
-        _buildConfig(flavor: Flavor.prod, isBetaTesting: false)
-            .isDeveloperUiEnabled,
+        _buildConfig(
+          flavor: Flavor.prod,
+          isBetaTesting: false,
+        ).isDeveloperUiEnabled,
         isTrue,
       );
     });
 
     test('dev かつ非 BETA なら true', () {
       expect(
-        _buildConfig(flavor: Flavor.dev, isBetaTesting: false)
-            .isDeveloperUiEnabled,
+        _buildConfig(
+          flavor: Flavor.dev,
+          isBetaTesting: false,
+        ).isDeveloperUiEnabled,
         isTrue,
       );
     });

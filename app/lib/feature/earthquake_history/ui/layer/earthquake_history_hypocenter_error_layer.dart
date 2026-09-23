@@ -30,7 +30,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == .dark;
     final enqueue = useMapOperationQueue();
     final layerBuilder = useMemoized(
       EarthquakeHistoryHypocenterErrorLayerBuilder.new,

@@ -70,7 +70,7 @@ class EqmonitorMapGpuProbePanel extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: Card(
-            clipBehavior: Clip.antiAlias,
+            clipBehavior: .antiAlias,
             child: ListView(
               primary: false,
               shrinkWrap: true,
@@ -195,7 +195,7 @@ class _EqmonitorMapGpuResourceCounterRow extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 2),
     child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         SizedBox(width: 72, child: Text(label)),
         Expanded(

@@ -30,7 +30,7 @@ class EarthquakeLpgmIntensityCard extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   '最大長周期地震動階級',
@@ -42,7 +42,7 @@ class EarthquakeLpgmIntensityCard extends StatelessWidget {
                 Text(
                   '階級${maxLpgmIntensity.label}',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ],

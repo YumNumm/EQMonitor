@@ -22,7 +22,7 @@ class TelegramTypeFilterChip extends StatelessWidget {
               isScrollControlled: false,
               useSafeArea: false,
               style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) =>
                   _TelegramTypeFilterModal(current: telegramTypes),
@@ -38,7 +38,7 @@ class TelegramTypeFilterChip extends StatelessWidget {
       label: isActive
           ? Text(
               _buildLabel(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             )
           : const Text('電文種別'),
       onDeleted: isActive ? () => onChanged?.call(null) : null,
@@ -89,8 +89,8 @@ class _TelegramTypeFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -98,7 +98,7 @@ class _TelegramTypeFilterModal extends HookWidget {
               child: Text(
                 '電文種別',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -128,7 +128,7 @@ class _TelegramTypeFilterModal extends HookWidget {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
                 M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),

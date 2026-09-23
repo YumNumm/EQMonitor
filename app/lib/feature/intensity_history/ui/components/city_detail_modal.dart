@@ -31,7 +31,7 @@ class CityDetailModalAction {
     style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
-    clipBehavior: Clip.antiAlias,
+    clipBehavior: .antiAlias,
     builder: (context) => _CityDetailModal(
       cityCode: cityCode,
       cityName: cityName,
@@ -99,7 +99,7 @@ class _CityDetailModal extends HookConsumerWidget {
                 child: Text(
                   '観測した地震',
                   style: Theme.of(context).textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                      ?.copyWith(fontWeight: .bold),
                 ),
               ),
             ),
@@ -229,7 +229,7 @@ class _InitialLoadingSliver extends StatelessWidget {
       hasScrollBody: false,
       child: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
@@ -278,7 +278,7 @@ class _SummarySection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (maxIntensity case final maxIntensity?) ...[
             JmaIntensityIcon(
@@ -290,7 +290,7 @@ class _SummarySection extends StatelessWidget {
           ],
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   prefectureName,
@@ -300,9 +300,9 @@ class _SummarySection extends StatelessWidget {
                 ),
                 Text(
                   cityName,
-                  textAlign: TextAlign.left,
+                  textAlign: .left,
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 Text(

@@ -142,7 +142,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
           Text(

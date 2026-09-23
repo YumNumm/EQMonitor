@@ -115,7 +115,7 @@ class _SharedReportFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('電文', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -266,7 +266,7 @@ class _HypocenterFields extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('震源', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -588,7 +588,7 @@ class _SeismicIntensityFields extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('震度', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -726,7 +726,7 @@ class _Vxse51PrefectureFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: .stretch,
     children: [
       Text('都道府県', style: Theme.of(context).textTheme.titleSmall),
       for (final entry in prefectures.entries)
@@ -834,7 +834,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: .stretch,
     children: [
       Text('都道府県・市区町村・観測点', style: Theme.of(context).textTheme.titleSmall),
       for (final entry in tree.entries)
@@ -1210,7 +1210,7 @@ class _LpgmFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('長周期地震動', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -1604,7 +1604,7 @@ class _CommentsFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('コメント', style: Theme.of(context).textTheme.titleMedium),
           for (final (index, comment) in draft.comments.indexed)
@@ -1686,7 +1686,7 @@ class _JsonEditor extends HookWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('JSON', style: Theme.of(context).textTheme.titleMedium),
             TextField(
@@ -1734,7 +1734,7 @@ class _OrdinaryRegionRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 110,
@@ -1860,7 +1860,7 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 100,
@@ -1986,7 +1986,7 @@ class _OrdinaryCityRow extends StatelessWidget {
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               SizedBox(
                 width: 120,
@@ -2173,7 +2173,7 @@ class _OrdinaryStationRow extends StatelessWidget {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 SizedBox(
                   width: 120,
@@ -2303,7 +2303,7 @@ class _LpgmRegionRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 120,
@@ -2429,7 +2429,7 @@ class _LpgmPrefectureRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 120,
@@ -2559,7 +2559,7 @@ class _LpgmStationRow extends StatelessWidget {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 SizedBox(
                   width: 120,
@@ -2682,7 +2682,7 @@ class _StationDetailsFields extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         _ControlledTextFormField(
           fieldKey: const Key('station-sva'),
@@ -2719,7 +2719,7 @@ class _StationDetailsFields extends StatelessWidget {
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                crossAxisAlignment: WrapCrossAlignment.center,
+                crossAxisAlignment: .center,
                 children: [
                   SizedBox(
                     width: 90,

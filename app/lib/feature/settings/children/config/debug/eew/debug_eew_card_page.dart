@@ -176,7 +176,7 @@ class DebugEewCardPage extends HookConsumerWidget {
           _ParamSection(
             title: 'ステータス・種別',
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 _LabeledRow(
                   label: 'TelegramStatus',
@@ -312,7 +312,7 @@ class DebugEewCardPage extends HookConsumerWidget {
           _ParamSection(
             title: '時刻・震源',
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 _BoolRow(
                   label: 'originTime を使う（OFFで arrival のみ＝検知扱い）',
@@ -417,7 +417,7 @@ class DebugEewCardPage extends HookConsumerWidget {
           _ParamSection(
             title: '予想震度・長周期',
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 _LabeledRow(
                   label: 'maxIntensity',
@@ -491,7 +491,7 @@ class DebugEewCardPage extends HookConsumerWidget {
           _ParamSection(
             title: 'カウントダウン・現在地予測震度',
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -561,7 +561,7 @@ class DebugEewCardPage extends HookConsumerWidget {
           _ParamSection(
             title: '表示オプション',
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 _BoolRow(
                   label: '複数件時のインデックス（透かし数字）',
@@ -614,7 +614,7 @@ class DebugEewCardPage extends HookConsumerWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: .stretch,
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -899,12 +899,12 @@ class _ParamSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               title,
               style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
+                  ?.copyWith(fontSize: 11, fontWeight: .w600),
             ),
             const SizedBox(height: 8),
             child,
@@ -926,7 +926,7 @@ class _LabeledRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(label, style: DebugEewCardPage._paramLabelStyle),
           child,
@@ -979,7 +979,7 @@ class _SmallField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(label, style: DebugEewCardPage._paramLabelStyle),
           if (child case final child?)

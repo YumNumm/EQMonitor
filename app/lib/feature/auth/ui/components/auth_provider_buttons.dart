@@ -30,7 +30,7 @@ class AuthProviderButtons extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('Nativeサインイン', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),

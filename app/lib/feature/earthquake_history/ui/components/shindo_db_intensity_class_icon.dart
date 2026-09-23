@@ -73,7 +73,7 @@ class ShindoDbIntensityClassMapIcon extends StatelessWidget {
       width: size,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          shape: .circle,
           color: bg,
           border: Border.all(color: borderColor, width: 5),
         ),
@@ -81,13 +81,13 @@ class ShindoDbIntensityClassMapIcon extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(2),
             child: FittedBox(
-              fit: BoxFit.scaleDown,
+              fit: .scaleDown,
               child: Text(
                 intensityClass.label,
                 style: TextStyle(
                   color: fg,
                   fontSize: 100,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontFamily: FontFamily.googleSansCode,
                   fontFamilyFallback: const [FontFamily.notoSansJP],
                 ),
@@ -136,13 +136,13 @@ class ShindoDbIntensityClassIcon extends StatelessWidget {
           ),
           child: Center(
             child: FittedBox(
-              fit: BoxFit.scaleDown,
+              fit: .scaleDown,
               child: Text(
                 intensityClass.label,
                 style: TextStyle(
                   color: entry.resolvedForeground,
                   fontSize: size,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontFamily: FontFamily.googleSansCode,
                   fontFamilyFallback: const [FontFamily.notoSansJP],
                 ),
@@ -163,13 +163,13 @@ class ShindoDbIntensityClassIcon extends StatelessWidget {
         ),
         child: Center(
           child: FittedBox(
-            fit: BoxFit.scaleDown,
+            fit: .scaleDown,
             child: Text(
               intensityClass.label,
               style: TextStyle(
                 color: context.designSystem.colorTheme.onSurface,
                 fontSize: size,
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: const [FontFamily.notoSansJP],
               ),

@@ -194,7 +194,7 @@ class _LiveMonitorMapLoadingCard extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               AccessibleCircularProgressIndicator(),
               SizedBox(height: 12),
@@ -219,7 +219,7 @@ class _LiveMonitorMapErrorCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const Text('地図を読み込めませんでした'),
               const SizedBox(height: 8),

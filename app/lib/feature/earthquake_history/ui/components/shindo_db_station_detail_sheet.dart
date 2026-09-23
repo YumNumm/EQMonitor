@@ -22,8 +22,8 @@ class ShindoDbStationDetailSheet extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(
@@ -73,7 +73,7 @@ class _Header extends StatelessWidget {
     final historicalDesc = record.intensityClass.historicalDescription;
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ShindoDbIntensityClassIcon(
           intensityClass: record.intensityClass,
@@ -82,12 +82,12 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 station.name,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontFamily: FontFamily.notoSansJP,
                 ),
               ),
@@ -198,12 +198,12 @@ class _MaxAccelTable extends StatelessWidget {
         gal != null ? '${gal.toStringAsFixed(2)}gal' : '-';
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '最大加速度',
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
@@ -212,7 +212,7 @@ class _MaxAccelTable extends StatelessWidget {
           border: TableBorder.all(
             color: context.designSystem.colorTheme.outlineVariant,
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultVerticalAlignment: .middle,
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -258,7 +258,7 @@ class _MaxAccelTable extends StatelessWidget {
           child: Text(
             text,
             style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: FontFamily.notoSansJP,
             ),
           ),
@@ -304,12 +304,12 @@ class _PeriodsTable extends StatelessWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '周期',
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
@@ -318,7 +318,7 @@ class _PeriodsTable extends StatelessWidget {
           border: TableBorder.all(
             color: context.designSystem.colorTheme.outlineVariant,
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultVerticalAlignment: .middle,
           columnWidths: const {0: IntrinsicColumnWidth()},
           children: [
             TableRow(
@@ -354,7 +354,7 @@ class _PeriodsTable extends StatelessWidget {
           child: Text(
             text,
             style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: const [FontFamily.notoSansJP],
             ),
@@ -405,7 +405,7 @@ class _RelatedLinksCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
               children: [
@@ -418,7 +418,7 @@ class _RelatedLinksCard extends StatelessWidget {
                 Text(
                   '気象庁ホームページ',
                   style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     color: context.designSystem.colorTheme.onSurfaceVariant,
                     fontFamily: FontFamily.notoSansJP,
                   ),

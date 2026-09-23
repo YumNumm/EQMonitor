@@ -95,7 +95,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                   child: Text(
                     telegram.title,
                     style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                     ),
                   ),
                 ),
@@ -114,7 +114,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                       '#$sequenceNumber',
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: designSystem.colorTheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),
@@ -188,7 +188,7 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
             ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
             : const SizedBox.shrink(),
       .vxse53 => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (quake != null)
             HypocenterSummary(quake: quake, diff: hypocenterDiff),
@@ -206,7 +206,7 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
             ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
             : const SizedBox.shrink(),
       .vxse62 => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (quake != null)
             HypocenterSummary(quake: quake, diff: hypocenterDiff),

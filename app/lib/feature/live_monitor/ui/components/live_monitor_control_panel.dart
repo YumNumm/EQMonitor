@@ -124,7 +124,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
         child: Material(
           color: colorScheme.surfaceContainerHigh,
           elevation: 8,
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           borderRadius: BorderRadius.circular(28),
           child: ListView(
             shrinkWrap: true,
@@ -249,7 +249,7 @@ class LiveMonitorControlPanel extends HookConsumerWidget {
               ),
               const SizedBox(height: 12),
               Wrap(
-                alignment: WrapAlignment.end,
+                alignment: .end,
                 spacing: 8,
                 runSpacing: 8,
                 children: [

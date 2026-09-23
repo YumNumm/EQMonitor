@@ -168,7 +168,7 @@ class _SettingsSection extends HookWidget {
       margin: EdgeInsets.zero,
       elevation: 0,
       color: colorTheme.surfaceContainerLow,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.sheet),
         side: BorderSide(color: colorTheme.outlineVariant),
@@ -196,7 +196,7 @@ class _SettingsSection extends HookWidget {
                         Text(
                           title,
                           style: typography.titleMedium.copyWith(
-                            fontWeight: FontWeight.w700,
+                            fontWeight: .w700,
                           ),
                         ),
                         SizedBox(height: spacing.xs),
@@ -264,7 +264,7 @@ class _SettingSwitchTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+        style: typography.titleSmall.copyWith(fontWeight: .w600),
       ),
       subtitle: Text(subtitle, style: typography.bodySmall),
       trailing: AppSwitch(
@@ -312,19 +312,19 @@ class _SettingDropdownField<T> extends StatelessWidget {
         spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       title,
                       style: typography.titleSmall.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     SizedBox(height: spacing.xs),
@@ -402,11 +402,11 @@ class _SettingSegmentedField<T> extends StatelessWidget {
         spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             title,
-            style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+            style: typography.titleSmall.copyWith(fontWeight: .w600),
           ),
           SizedBox(height: spacing.xs),
           Text(subtitle, style: typography.bodySmall),
@@ -467,11 +467,11 @@ class _SettingActionTile extends StatelessWidget {
         spacing.xl,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             title,
-            style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
+            style: typography.titleSmall.copyWith(fontWeight: .w600),
           ),
           SizedBox(height: spacing.xs),
           Text(
@@ -938,19 +938,19 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
         context.designSystem.spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       '観測点フィルター',
                       style: typography.titleSmall.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     SizedBox(height: context.designSystem.spacing.xs),
@@ -1092,19 +1092,19 @@ class _MapMaxZoomTile extends ConsumerWidget {
         context.designSystem.spacing.lg,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       '最大ズームを制限',
                       style: typography.titleSmall.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     SizedBox(height: context.designSystem.spacing.xs),

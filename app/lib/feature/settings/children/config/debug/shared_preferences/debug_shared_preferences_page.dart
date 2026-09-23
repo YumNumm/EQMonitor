@@ -149,7 +149,7 @@ class _EntriesList extends ConsumerWidget {
                 subtitle: Text(
                   const _DebugPreferenceValueFormatter().preview(entry.value),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: const TextStyle(fontFamily: FontFamily.googleSansCode),
                 ),
                 trailing: IconButton(
@@ -460,7 +460,7 @@ class _BoolEditor extends HookWidget {
   Widget build(BuildContext context) {
     final state = useState(initialValue);
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         SwitchListTile(
           title: Text(state.value.toString()),
@@ -489,7 +489,7 @@ class _SingleFieldEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         TextField(
           controller: controller,
@@ -541,7 +541,7 @@ class _StringListEditor extends HookWidget {
     ];
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         ...buildFields(),
         M3ETextButton.icon(
@@ -591,7 +591,7 @@ class _AddDialog extends HookConsumerWidget {
       title: const Text('新規追加'),
       content: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             TextField(
               controller: keyController,

@@ -14,7 +14,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
         useSafeArea: false,
         style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         isScrollControlled: true,
         builder: (context) => const HomeMapLabelDebugModal._(),
       );
@@ -61,7 +61,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
                     Text(
                       'マップラベル (Debug)',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                     const Spacer(),
@@ -180,7 +180,7 @@ class HomeMapLabelDebugModal extends ConsumerWidget {
             child: Text(
               value.toStringAsFixed(decimals),
               style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.end,
+              textAlign: .end,
             ),
           ),
         ],

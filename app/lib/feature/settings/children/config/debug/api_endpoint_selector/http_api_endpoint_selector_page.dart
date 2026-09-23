@@ -127,7 +127,7 @@ class _ServerTile extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
+              shape: .circle,
               color: selected ? accentColor : Colors.transparent,
               border: Border.all(
                 color: selected ? accentColor : Colors.grey,
@@ -141,14 +141,14 @@ class _ServerTile extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
                   children: [
                     Text(
                       label,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                         color: selected ? accentColor : null,
                       ),
                     ),
@@ -191,7 +191,7 @@ class _UrlRow extends StatelessWidget {
           '$label: ',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: context.designSystem.colorTheme.outline,
-            fontWeight: FontWeight.w600,
+            fontWeight: .w600,
           ),
         ),
         Expanded(
@@ -201,7 +201,7 @@ class _UrlRow extends StatelessWidget {
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: 'monospace',
             ),
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ),
       ],

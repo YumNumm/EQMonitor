@@ -20,7 +20,7 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
         await _load() ?? const MapConfiguration(theme: MapTheme.system);
     if (savedState.theme == MapTheme.system) {
       savedState = savedState.copyWith(
-        theme: brightness == Brightness.dark ? MapTheme.dark : MapTheme.light,
+        theme: brightness == .dark ? MapTheme.dark : MapTheme.light,
       );
     }
 

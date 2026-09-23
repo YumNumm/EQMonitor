@@ -31,7 +31,7 @@ class _CompleteStepPage extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
           Text('準備完了', style: designSystem.typography.displayMedium),

@@ -44,7 +44,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 40,
         height: 48 / 40,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       displayMedium: TextStyle(
@@ -52,7 +52,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 36,
         height: 44 / 36,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       headlineLarge: TextStyle(
@@ -60,7 +60,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 32,
         height: 40 / 32,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       headlineMedium: TextStyle(
@@ -68,7 +68,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 28,
         height: 36 / 28,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       headlineSmall: TextStyle(
@@ -76,7 +76,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 24,
         height: 30 / 24,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       titleLarge: TextStyle(
@@ -84,7 +84,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 22,
         height: 28 / 22,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       titleMedium: TextStyle(
@@ -92,7 +92,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 18,
         height: 24 / 18,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       titleSmall: TextStyle(
@@ -100,7 +100,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 22 / 16,
-        fontWeight: FontWeight.w600,
+        fontWeight: .w600,
         color: colorTheme.onSurface,
       ),
       bodyLarge: TextStyle(
@@ -108,7 +108,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 24 / 16,
-        fontWeight: FontWeight.w400,
+        fontWeight: .w400,
         color: colorTheme.onSurface,
       ),
       bodyMedium: TextStyle(
@@ -116,7 +116,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
-        fontWeight: FontWeight.w400,
+        fontWeight: .w400,
         color: colorTheme.onSurfaceVariant,
       ),
       bodySmall: TextStyle(
@@ -124,7 +124,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 13,
         height: 18 / 13,
-        fontWeight: FontWeight.w400,
+        fontWeight: .w400,
         color: colorTheme.onSurfaceVariant,
       ),
       labelLarge: TextStyle(
@@ -132,7 +132,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         color: colorTheme.onSurface,
       ),
       labelMedium: TextStyle(
@@ -140,7 +140,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 12,
         height: 16 / 12,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         letterSpacing: 0.2,
         color: colorTheme.onSurfaceVariant,
       ),
@@ -149,7 +149,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 11,
         height: 14 / 11,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         letterSpacing: 0.2,
         color: colorTheme.outline,
       ),
@@ -158,7 +158,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 22 / 16,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         color: colorTheme.onSurface,
       ),
       monoMedium: TextStyle(
@@ -166,7 +166,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         color: colorTheme.onSurface,
       ),
       monoSmall: TextStyle(
@@ -174,7 +174,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 12,
         height: 16 / 12,
-        fontWeight: FontWeight.w500,
+        fontWeight: .w500,
         color: colorTheme.onSurfaceVariant,
       ),
     );

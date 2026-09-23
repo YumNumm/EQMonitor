@@ -69,7 +69,7 @@ class EarthquakeSummaryHeader extends StatelessWidget {
                     item.status.name,
                     style: TextStyle(
                       fontSize: 100,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                       color: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
                       fontFamily: FontFamily.googleSansCode,
                       letterSpacing: -0.5,
@@ -95,9 +95,9 @@ class _MaxIntensityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
-        const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('最大震度', style: TextStyle(fontWeight: .bold)),
         const SizedBox(height: 4),
         JmaIntensityIcon(
           type: .filled,
@@ -157,8 +157,8 @@ class _EarthquakeInformationBody extends StatelessWidget {
 
     return Wrap(
       spacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.end,
-      alignment: WrapAlignment.center,
+      crossAxisAlignment: .end,
+      alignment: .center,
       children: [
         const Row(),
         if (isOverseasEvent) ...[
@@ -218,9 +218,9 @@ class _HypocenterWidget extends StatelessWidget {
     final titleMedium = textTheme.titleMedium ?? const TextStyle();
 
     return Row(
-      textBaseline: TextBaseline.ideographic,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: .ideographic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
       children: [
         Text(
           label,
@@ -305,16 +305,16 @@ class _UnknownInfoWidget extends StatelessWidget {
     final titleLarge = textTheme.titleLarge ?? const TextStyle();
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
+      textBaseline: .alphabetic,
       children: [
         Text(label, style: textTheme.labelStyle(titleSmall)),
         const SizedBox(width: 4),
         Text(
           value,
           style: titleLarge.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.googleSansCode,
             fontFamilyFallback: [FontFamily.notoSansJP],
           ),

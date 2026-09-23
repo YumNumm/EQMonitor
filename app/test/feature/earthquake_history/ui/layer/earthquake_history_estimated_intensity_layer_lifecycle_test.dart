@@ -79,10 +79,8 @@ void main() {
       '#666666',
       ['get', 'fill'],
     ];
-    final fillLayer =
-        controller.addedLayers.whereType<FillStyleLayer>().single;
-    final lineLayer =
-        controller.addedLayers.whereType<LineStyleLayer>().single;
+    final fillLayer = controller.addedLayers.whereType<FillStyleLayer>().single;
+    final lineLayer = controller.addedLayers.whereType<LineStyleLayer>().single;
     expect(fillLayer.paint['fill-color'], expectedExpression);
     expect(lineLayer.paint['line-color'], expectedExpression);
   });

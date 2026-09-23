@@ -27,11 +27,11 @@ class TelegramListTile extends StatelessWidget {
       title: Text(
         telegram.title,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           const SizedBox(height: 4),
           _InfoRow(label: '電文種別', value: telegram.type.name.toUpperCase()),
@@ -53,13 +53,13 @@ class TelegramListTile extends StatelessWidget {
                 fontSize: 12,
               ),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ],
         ],
       ),
       trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           if (onTap != null) ...[
             const SizedBox(width: 8),
@@ -96,10 +96,10 @@ class _InfoRow extends StatelessWidget {
           child: Text(
             value,
             style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: .w500,
               fontSize: 12,
             ),
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ),
       ],

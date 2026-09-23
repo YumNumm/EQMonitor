@@ -36,7 +36,7 @@ class AppWebViewBody extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(designSystem.spacing.xl),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               spacing: designSystem.spacing.md,
               children: [
                 Text(
@@ -46,7 +46,7 @@ class AppWebViewBody extends StatelessWidget {
                 Text(
                   '通信状況を確認して、もう一度お試しください。',
                   style: designSystem.typography.bodyMedium,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 M3EFilledButton.tonal(
                   onPressed: onRetry,
@@ -59,6 +59,6 @@ class AppWebViewBody extends StatelessWidget {
       ),
     };
 
-    return Stack(fit: StackFit.expand, children: [webView, overlay]);
+    return Stack(fit: .expand, children: [webView, overlay]);
   }
 }

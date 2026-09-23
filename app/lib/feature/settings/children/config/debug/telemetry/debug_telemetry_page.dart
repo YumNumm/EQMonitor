@@ -80,7 +80,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           _SummaryCard(
             totalCount: totalCount.value,
@@ -123,7 +123,7 @@ class _SummaryCard extends StatelessWidget {
         children: [
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   '合計: $totalCount件',
@@ -179,11 +179,11 @@ class _EventTile extends StatelessWidget {
         event.eventType,
         style: theme.textTheme.bodyMedium?.copyWith(
           fontFamily: 'monospace',
-          fontWeight: FontWeight.w600,
+          fontWeight: .w600,
         ),
       ),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             timeStr,
@@ -239,7 +239,7 @@ class _EventTile extends StatelessWidget {
                     controller: scrollController,
                     padding: const EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         _DetailRow('ID', '${event.id}'),
                         _DetailRow('Type', event.eventType),
@@ -299,7 +299,7 @@ class _DetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 80,

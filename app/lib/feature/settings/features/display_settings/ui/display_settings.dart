@@ -29,7 +29,7 @@ class _Body extends StatelessWidget {
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const SettingsSectionHeader(text: '配色設定'),
             const _ThemeSelector(),
@@ -56,9 +56,7 @@ class _ThemeSelector extends ConsumerWidget {
     final brightness = MediaQuery.platformBrightnessOf(context);
 
     Widget buildThemeChoice(ThemeMode mode) {
-      final modeBrightness = mode == ThemeMode.light
-          ? Brightness.light
-          : Brightness.dark;
+      final modeBrightness = mode == ThemeMode.light ? .light : .dark;
       return Expanded(
         child: GestureDetector(
           onTap: () async =>
@@ -71,7 +69,7 @@ class _ThemeSelector extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(24),
                   child: switch (mode) {
                     ThemeMode.light => Assets.images.theme.light.image(
-                      fit: BoxFit.contain,
+                      fit: .contain,
                     ),
                     ThemeMode.dark => Assets.images.theme.dark.image(),
                     _ => throw UnimplementedError(),
@@ -143,7 +141,7 @@ class _ThemeSelector extends ConsumerWidget {
                     value
                         ? ThemeMode.system
                         : PlatformDispatcher.instance.platformBrightness ==
-                              Brightness.light
+                              .light
                         ? ThemeMode.light
                         : ThemeMode.dark,
                   ),
@@ -153,8 +151,7 @@ class _ThemeSelector extends ConsumerWidget {
                 .setThemeMode(
                   state != ThemeMode.system
                       ? ThemeMode.system
-                      : PlatformDispatcher.instance.platformBrightness ==
-                            Brightness.light
+                      : PlatformDispatcher.instance.platformBrightness == .light
                       ? ThemeMode.light
                       : ThemeMode.dark,
                 ),

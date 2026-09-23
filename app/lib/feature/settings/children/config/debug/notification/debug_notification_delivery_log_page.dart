@@ -114,9 +114,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     children: [
-                      Text(error.value.toString(), textAlign: TextAlign.center),
+                      Text(error.value.toString(), textAlign: .center),
                       const SizedBox(height: 16),
                       M3EFilledButton.icon(
                         onPressed: () {
@@ -226,7 +226,7 @@ class _NotificationLogTile extends StatelessWidget {
         style: Theme.of(context).textTheme.titleSmall,
       ),
       subtitle: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Expanded(
             child: Text(
@@ -273,7 +273,7 @@ class _LogDetailSheet extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 8, 8),
@@ -328,7 +328,7 @@ class _LogDetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             row.label,

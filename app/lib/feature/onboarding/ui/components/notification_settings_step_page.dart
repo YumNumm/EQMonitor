@@ -41,7 +41,7 @@ class _MigratedNotificationSettingsStepPage extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
           Text('通知設定', style: designSystem.typography.displayMedium),

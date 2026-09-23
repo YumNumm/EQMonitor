@@ -171,7 +171,7 @@ class EarthquakeHistorySkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
+          : Column(mainAxisSize: .min, children: tiles),
     );
   }
 }

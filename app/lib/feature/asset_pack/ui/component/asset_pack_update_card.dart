@@ -159,7 +159,7 @@ class _AssetPackConsentDialog extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       'v${change.version} • ${change.section.title}',

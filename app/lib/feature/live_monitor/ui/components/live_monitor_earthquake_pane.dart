@@ -38,7 +38,7 @@ class LiveMonitorEarthquakePane extends HookConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     AccessibleCircularProgressIndicator(),
                     SizedBox(height: 12),
@@ -163,7 +163,7 @@ class LiveMonitorLatestEarthquakeUnavailable extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Text(message),
               const SizedBox(height: 8),

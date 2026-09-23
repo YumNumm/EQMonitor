@@ -72,21 +72,21 @@ class _UnavailableContainer extends StatelessWidget {
           border: Border.all(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Icon(icon, color: designSystem.colorTheme.onSurfaceVariant),
             SizedBox(height: spacing.sm),
             Text(
               message,
               style: typography.bodyMedium,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             if (actions.isNotEmpty) ...[
               SizedBox(height: spacing.md),
               Wrap(
                 spacing: spacing.sm,
                 runSpacing: spacing.sm,
-                alignment: WrapAlignment.center,
+                alignment: .center,
                 children: actions,
               ),
             ],

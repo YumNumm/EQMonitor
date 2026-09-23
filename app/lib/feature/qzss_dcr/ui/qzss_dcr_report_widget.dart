@@ -20,7 +20,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Icon(
                 Icons.satellite_alt,
@@ -44,7 +44,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
                     alpha: 0.4,
                   ),
                 ),
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ],
           ),
@@ -78,7 +78,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             // ヘッダー
             Row(
@@ -92,7 +92,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
                   child: Text(
                     '災危通報受信',
                     style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                     ),
                   ),
                 ),
@@ -174,7 +174,7 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (icon != null) ...[
             Icon(icon, size: 20),
@@ -185,7 +185,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           ),

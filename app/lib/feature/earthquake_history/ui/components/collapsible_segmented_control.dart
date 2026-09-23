@@ -102,8 +102,8 @@ class CollapsibleSegmentedControl<T> extends HookWidget {
                               ? designSystem.colorTheme.onSecondaryContainer
                               : designSystem.colorTheme.onSurfaceVariant,
                           fontWeight: segment.value == selected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                              ? .bold
+                              : .normal,
                         ),
                       ),
                     ),

@@ -51,7 +51,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
               ),
               child: const Text(
                 'マップレイヤー',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: .bold),
               ),
             ),
             automaticallyImplyLeading: false,
@@ -88,12 +88,12 @@ class _LocationSettingCards extends ConsumerWidget {
       data: (config) => Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               '現在位置マーカー',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 8),
@@ -192,10 +192,10 @@ class _LocationCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   Icon(
                     icon,
@@ -210,7 +210,7 @@ class _LocationCard extends StatelessWidget {
                       color: isSelected
                           ? designSystem.colorTheme.onPrimaryContainer
                           : designSystem.colorTheme.onSurfaceVariant,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                     ),
                   ),
                 ],

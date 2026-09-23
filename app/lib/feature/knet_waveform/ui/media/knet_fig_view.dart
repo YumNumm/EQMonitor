@@ -163,7 +163,7 @@ class _ImageArea extends StatelessWidget {
       child: Center(
         child: Image.memory(
           imageBytes,
-          fit: BoxFit.contain,
+          fit: .contain,
           errorBuilder: (context, error, _) =>
               _ErrorView(message: error.toString(), onRetry: onRetry),
         ),
@@ -184,13 +184,13 @@ class _ErrorView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               message,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),

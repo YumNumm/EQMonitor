@@ -22,7 +22,7 @@ class PinnedActiveEewSection extends ConsumerWidget {
       child: Padding(
         padding: EdgeInsets.all(spacing.sm),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           spacing: spacing.sm,
           children: [
             for (final eew in eews)

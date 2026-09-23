@@ -50,7 +50,7 @@ class DebugHttpCachePage extends HookConsumerWidget {
             const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Text('取得に失敗しました: $error'),
               M3ETextButton(
@@ -68,7 +68,7 @@ class DebugHttpCachePage extends HookConsumerWidget {
           );
 
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               _HttpCacheHeader(
                 totalSizeLabel: totalSizeLabel,
@@ -111,7 +111,7 @@ class _HttpCacheHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [Text('総容量: $totalSizeLabel'), Text('件数: $entryCount')],
       ),
     );
@@ -142,7 +142,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
     ).formatWithTz(.yearMonthDayHourMinuteSecondMillisecond);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         ListTile(
           title: Text(keyDisplay.urlLabel(key: entry.key)),
@@ -158,7 +158,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 Text('キー: ${entry.key}'),
                 Text('更新: $updatedAtLabel'),

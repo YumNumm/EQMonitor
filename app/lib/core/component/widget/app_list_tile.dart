@@ -78,7 +78,7 @@ class AppListTile extends StatelessWidget {
         shape: shape,
         tileColor: backgroundColor,
         textColor: textColor,
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: const TextStyle(fontWeight: .bold)),
         subtitle: Text(subtitle),
         trailing: trailing,
       ),

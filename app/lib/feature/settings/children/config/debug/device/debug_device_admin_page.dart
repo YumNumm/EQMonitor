@@ -325,7 +325,7 @@ class _Body extends HookConsumerWidget {
             ),
           ),
           final registeredDevice => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               _InfoRow(label: 'デバイス ID', value: registeredDevice.id),
               _InfoRow(
@@ -441,7 +441,7 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 112,
@@ -474,7 +474,7 @@ class _ErrorBody extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(message, textAlign: TextAlign.center),
+        child: Text(message, textAlign: .center),
       ),
     );
   }

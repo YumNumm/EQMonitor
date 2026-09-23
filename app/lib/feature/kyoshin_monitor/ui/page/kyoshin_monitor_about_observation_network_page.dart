@@ -18,7 +18,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               spacing: 16,
               children: [
                 Card(
@@ -124,14 +124,14 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                 Text(
                   '関連リンク',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 const Card(
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         _LinkItem(
                           title: '地震の基礎知識とその観測 - NIED',
@@ -179,7 +179,7 @@ class _ObservationNetworkSection extends StatelessWidget {
     final url = this.url;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         InkWell(
           onTap: url != null ? () async => launchUrlString(url) : null,
@@ -189,7 +189,7 @@ class _ObservationNetworkSection extends StatelessWidget {
                 child: Text(
                   title,
                   style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     color: titleColor,
                   ),
                 ),

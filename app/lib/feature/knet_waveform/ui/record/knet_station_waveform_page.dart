@@ -167,7 +167,7 @@ class _MetricsHeader extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             // 震度アイコン
             JmaIntensityIcon(
@@ -179,7 +179,7 @@ class _MetricsHeader extends StatelessWidget {
             // 観測点情報
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   if (info != null)
                     Text(
@@ -247,7 +247,7 @@ class _MetricChip extends StatelessWidget {
         children: [
           TextSpan(
             text: '$label ',
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: .w600),
           ),
           TextSpan(text: value),
         ],

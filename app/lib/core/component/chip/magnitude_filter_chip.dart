@@ -28,7 +28,7 @@ class MagnitudeFilterChip extends StatelessWidget {
           isScrollControlled: false,
           useSafeArea: false,
           style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           context: context,
           builder: (context) =>
               _MagnitudeFilterModal(currentMin: min, currentMax: max),
@@ -41,7 +41,7 @@ class MagnitudeFilterChip extends StatelessWidget {
           ? const Text('マグニチュード')
           : Text(
               range.toRangeString,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: range.isAllSelected
           ? null
@@ -85,8 +85,8 @@ class _MagnitudeFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -94,7 +94,7 @@ class _MagnitudeFilterModal extends HookWidget {
               child: Text(
                 'マグニチュード',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -121,13 +121,13 @@ class _MagnitudeFilterModal extends HookWidget {
               child: Text(
                 (min.value, max.value).toRangeString,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
                 M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),

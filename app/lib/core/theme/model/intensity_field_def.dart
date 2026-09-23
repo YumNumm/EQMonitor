@@ -13,7 +13,7 @@ enum IntensityFieldGroup({
     description: '最大震度5弱以上を観測する地震が発生した時に発表される推計震度分布図の塗りつぶしで利用します',
     // 推計震度は分布図の塗りつぶしのみで文字を描画しないため文字色を持たない
     hasForeground: false,
-  );
+  ),
 }
 
 class const IntensityFieldDef({

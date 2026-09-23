@@ -58,7 +58,7 @@ class _CredentialsForm extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           const Text('NIED(BOSAI)アカウントのID/パスワードを入力してください。'),
           const SizedBox(height: 8),
@@ -166,7 +166,7 @@ class _FetchBody extends HookConsumerWidget {
           child: Wrap(
             spacing: 12,
             runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               _DatePickerButton(
                 label: '開始',

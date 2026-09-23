@@ -93,7 +93,7 @@ class _SheetBody extends ConsumerWidget {
         top: false,
         minimum: EdgeInsets.fromLTRB(spacing.md, 0, spacing.md, spacing.md),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           crossAxisAlignment: .stretch,
           children: [
             // バナー・EEW カードは表示条件を満たさないとき何も描画しないため、

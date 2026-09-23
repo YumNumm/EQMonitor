@@ -26,7 +26,7 @@ class _OnboardingCompleteHero extends StatelessWidget {
     return Container(
       width: 160,
       height: 160,
-      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
+      decoration: BoxDecoration(color: backgroundColor, shape: .circle),
       child: Icon(Icons.check_rounded, color: color, size: 80),
     );
   }
