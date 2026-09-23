@@ -10,9 +10,9 @@ import WidgetKit
 @main
 struct EQMonitorPreviewWidgetBundle: WidgetBundle {
     var body: some Widget {
-        EarthquakeWidget()
         if #available(iOS 16.1, *) {
             EewLiveActivityWidget()
+            EarthquakeLiveActivityWidget()
         }
     }
 }
@@ -93,6 +93,88 @@ private let eewPreviewAttributes = EewLiveActivityAttributes(eventId: "202401011
     EewLiveActivityWidget()
 } contentStates: {
     for state in EewContentState.canceledSequence() {
+        state
+    }
+}
+
+// MARK: - 統合 Live Activity Previews
+
+// ActivityConfiguration を通すため実機の Live Activity に近い。
+// レイアウトの試行は Widget/LiveActivity/Unified/UnifiedLiveActivityPreviews.swift の
+// 素の View Preview の方が速く回せる。
+
+private let unifiedPreviewAttributes = EarthquakeLiveActivityAttributes(
+    id: UnifiedLiveActivityContentState.previewId
+)
+
+#Preview(
+    "統合 デザイン確認 - Lock Screen",
+    as: .content,
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.designReviewStates() {
+        state
+    }
+}
+
+#Preview(
+    "統合 デザイン確認 - Expanded",
+    as: .dynamicIsland(.expanded),
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.designReviewStates() {
+        state
+    }
+}
+
+#Preview(
+    "統合 デザイン確認 - Compact",
+    as: .dynamicIsland(.compact),
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.designReviewStates() {
+        state
+    }
+}
+
+#Preview(
+    "統合 デザイン確認 - Minimal",
+    as: .dynamicIsland(.minimal),
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.designReviewStates() {
+        state
+    }
+}
+
+#Preview(
+    "統合 揺れ検知→EEW→地震情報 - Lock Screen",
+    as: .content,
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.progressionSequence() {
+        state
+    }
+}
+
+#Preview(
+    "統合 揺れ検知→EEW→地震情報 - Expanded",
+    as: .dynamicIsland(.expanded),
+    using: unifiedPreviewAttributes
+) {
+    EarthquakeLiveActivityWidget()
+} contentStates: {
+    for state in UnifiedLiveActivityContentState.progressionSequence()  {
         state
     }
 }

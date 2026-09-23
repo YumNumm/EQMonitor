@@ -14,7 +14,7 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 }
 
 struct EewContentState: Codable, Hashable {
-    let eventId: String
+    let eventId: String?
     let type: String?
     let hypocenterName: String?
     let magnitude: Double?
