@@ -22,7 +22,7 @@ class PermissionNotifier extends _$PermissionNotifier {
   Future<PermissionState> build() async {
     ref.listen(appLifecycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
-        await refresh();
+        ref.invalidateSelf();
       }
     });
     return loadFromOs();
@@ -43,15 +43,11 @@ class PermissionNotifier extends _$PermissionNotifier {
     );
   }
 
-  Future<void> refresh() async {
-    state = AsyncData(await loadFromOs());
-  }
-
   Future<bool> requestNotification() async {
     await ref
         .read(permissionRepositoryProvider)
         .requestNotificationPermission();
-    await refresh();
+    ref.invalidateSelf();
     return state.requireValue.isNotificationGranted;
   }
 
@@ -59,7 +55,8 @@ class PermissionNotifier extends _$PermissionNotifier {
     await ref
         .read(permissionRepositoryProvider)
         .requestCriticalAlertPermission();
-    await refresh();
+    ref.invalidateSelf();
+
     return state.requireValue.isCriticalAlertGranted;
   }
 
@@ -67,7 +64,8 @@ class PermissionNotifier extends _$PermissionNotifier {
     await ref
         .read(permissionRepositoryProvider)
         .requestForegroundLocationPermission();
-    await refresh();
+    ref.invalidateSelf();
+
     return state.requireValue.isForegroundLocationGranted;
   }
 
@@ -75,7 +73,8 @@ class PermissionNotifier extends _$PermissionNotifier {
     await ref
         .read(permissionRepositoryProvider)
         .requestBackgroundLocationPermission();
-    await refresh();
+    ref.invalidateSelf();
+
     return state.requireValue.isBackgroundLocationGranted;
   }
 }

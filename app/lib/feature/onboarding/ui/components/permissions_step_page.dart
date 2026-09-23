@@ -146,7 +146,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 SizedBox(height: designSystem.spacing.md),
                 _PermissionActionCard(
                   title: 'アプリを開いていない時の位置情報',
-                  description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意!: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
+                  description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
                   isGranted: state.isBackgroundLocationGranted,
                   isSkipped: isBackgroundLocationSkipped.value,
                   isEnabled: !isProcessing && state.isForegroundLocationGranted,
@@ -231,7 +231,10 @@ class _PermissionActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final actionButtons = isGranted
-        ? const [Icon(Icons.check), Text('許可しました')]
+        ? const [
+            Icon(Icons.check),
+            Text('許可しました'),
+          ]
         : [
             M3ETextButton(
               onPressed: isSkipped || !isEnabled ? null : onSkip,

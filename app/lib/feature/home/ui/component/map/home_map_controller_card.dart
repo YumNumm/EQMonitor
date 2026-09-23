@@ -28,24 +28,17 @@ class HomeMapControllerCard extends StatelessWidget {
       color: colorTheme.outlineVariant,
     );
 
-    return Padding(
-      padding: CardTheme.of(context).margin ?? const EdgeInsets.all(4),
-      child: M3EVerticalFloatingToolbar(
-        expanded: true,
-        decoration: M3EFloatingToolbarDecoration(
-          colors: M3EFloatingToolbarDefaults.standardColors(context).copyWith(
-            toolbarContainerColor: colorTheme.surfaceContainerHigh.withValues(
-              alpha: 0.92,
-            ),
-          ),
-          shape: RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(designSystem.shape.md),
-            side: BorderSide(color: colorTheme.outlineVariant),
-          ),
-          expandedShadowElevation: 0,
-          collapsedShadowElevation: 0,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorTheme.surfaceContainer,
+        border: Border.all(
+          color: colorTheme.outlineVariant,
         ),
-        content: Column(
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+      ),
+      child: Padding(
+        padding: CardTheme.of(context).margin ?? const EdgeInsets.all(4),
+        child: Column(
           mainAxisSize: .min,
           children: [
             _MapToolbarButton(
@@ -97,11 +90,16 @@ class _MapToolbarButton extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) => IconButton(
-    icon: Icon(icon),
-    tooltip: tooltip,
-    enableFeedback: false,
-    onPressed: enabled
+  Widget build(BuildContext context) => InkWell(
+    child: Tooltip(
+      message: tooltip,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon),
+      ),
+    ),
+    enableFeedback: true,
+    onTap: enabled
         ? () async {
             await HapticFeedback.lightImpact();
             onPressed?.call();
