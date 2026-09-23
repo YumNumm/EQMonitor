@@ -16,19 +16,19 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: ../../app/ios/Widget/LiveActivity
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Widget/LiveActivity
         excludes:
           - Unified/UnifiedLiveActivityPreviews.swift
-      - path: ../../app/ios/Shared/IntensityValue.swift
-      - path: ../../app/ios/Shared/ColorRGB.swift
-      - path: ../../app/ios/Shared/DesignTokens.swift
-      - path: ../../app/ios/Shared/IntensityBadge.swift
-      - path: ../../app/ios/Shared/EewDisplay.swift
-      - path: ../../app/ios/Shared/LiveActivityDate.swift
-      - path: ../../app/ios/WidgetModelsTests/UnifiedLiveActivityTests.swift
-      - path: ../../app/ios/WidgetModelsTests/EewDisplayTests.swift
-      - path: ../../app/ios/WidgetModelsTests/LiveActivityDateTests.swift
-      - path: RenderTests.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/IntensityValue.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/ColorRGB.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/DesignTokens.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/IntensityBadge.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/EewDisplay.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Shared/LiveActivityDate.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/WidgetModelsTests/UnifiedLiveActivityTests.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/WidgetModelsTests/EewDisplayTests.swift
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/WidgetModelsTests/LiveActivityDateTests.swift
+      - path: ${EQMONITOR_REPO_ROOT}/tool/live_activity_tests/RenderTests.swift
     dependencies:
       - package: EQMonitorAPI
     scheme:
