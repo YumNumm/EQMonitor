@@ -200,7 +200,7 @@ Widget/LiveActivity/Unified/
 - 旧 `EewLiveActivityAttributes` と `EewLiveActivityWidget` は**移行期間中残す**。移行前に開始した Activity の Update / End を受け取るため。
 - 旧 `ShakeDetectionLiveActivityAttributes` / `ShakeDetectionLiveActivityWidget` は**削除済み**（統合形式へ一本化）。揺れ検知の Live Activity は最長 120 秒で End されるため、移行期間中に取り残されるリスクが小さい。
   - 配色・文言は `Widget/LiveActivity/Common/ShakeDetectionLevel.swift` に退避し、統合 LA で再利用する。
-- `UNIFIED_LIVE_ACTIVITY_ENABLED` の有効化は、新 Widget 型を含むビルドが行き渡ってから。端末別の旧形式フォールバックは設けない。
+- 現行バックエンドは端末の `device_notification.live_activity_mode` (`legacy` / `unified`) で配信形式を分ける。`unified` への変更は、この Widget を含むビルドのインストール後に行う。クライアント側で旧形式への独自フォールバックは行わない。
 
 ## 受け入れ条件との対応
 
@@ -208,7 +208,19 @@ Widget/LiveActivity/Unified/
 |---|---|
 | 正典サンプル・64 文字 SHA-256 ID の decode | `id` を `String` として定義。`WidgetModelsTests` で正典 JSON を decode |
 | 3 ブロックの組み合わせ・null・optional | `UnifiedLiveActivityDisplay` のテストで全組み合わせを固定 |
-| Magnitude 4 形態・informationType 複数要素 | 独自デコード + 表示テスト |
+| Magnitude 4 形態・informationType 複数要素 | Codable モデルと表示テスト |
 | 揺れ検知 → 上昇 → EEW → 地震情報の遷移 | Preview の sequence（`EewContentState.warningSequence` と同じ作り）で確認 |
 | 最終報・取消で終了しない | クライアントに終了タイマーを持たせない |
 | 旧形式の Update / End | 旧 EEW Widget を残す |
+
+## 再実行できる契約検証
+
+macOS と Xcode（iOS シミュレータ）、XcodeGen を用意し、リポジトリルートで次を実行する。
+
+```sh
+tool/live_activity_tests/run.sh
+```
+
+実際の Widget/LiveActivity ソースとローカル EQMonitorAPI パッケージを一時プロジェクトでビルドする。Flutter の生成設定や Firebase の依存解決は不要。正典 JSON、本番で保存された揺れ検知 snapshot と同じ形状（論理 ID は匿名化）、64文字 ID、全ブロック組み合わせ、nullable な地域、終了済み検知、Magnitude を検証する。描画テストは320pt幅で画像を生成できることだけを確認する。カスタムフォント・見切れ・Dynamic Island の実表示や APNs の配送成功は保証しない。
+
+Runner/Dart のローカルデバッグ画面への統合形式追加は、この Widget 配信対応とは別の作業として残る。アプリ全体のビルドや実機検証も、この集中テストとは区別する。
