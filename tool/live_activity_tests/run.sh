@@ -3,6 +3,8 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 build_dir="$(mktemp -d "${TMPDIR:-/tmp}/eqmonitor-live-activity.XXXXXX")"
 trap 'rm -rf "$build_dir"' EXIT
+EQMONITOR_REPO_ROOT="$(cd "$script_dir/../.." && pwd)"
+export EQMONITOR_REPO_ROOT
 xcodegen generate --spec "$script_dir/project.yml" --project "$build_dir"
 simulator_id="$(xcrun simctl list devices available --json | python3 -c '
 import json, sys

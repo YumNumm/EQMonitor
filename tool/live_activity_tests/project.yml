@@ -5,7 +5,7 @@ options:
     iOS: "26.0"
 packages:
   EQMonitorAPI:
-    path: ../../app/ios/Packages/EQMonitorAPI
+    path: ${EQMONITOR_REPO_ROOT}/app/ios/Packages/EQMonitorAPI
 settings:
   base:
     SWIFT_VERSION: "5.0"
