@@ -16,6 +16,7 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
+      - path: ${EQMONITOR_REPO_ROOT}/app/ios/Widget/DesignSystem.swift
       - path: ${EQMONITOR_REPO_ROOT}/app/ios/Widget/LiveActivity
         excludes:
           - Unified/UnifiedLiveActivityPreviews.swift
