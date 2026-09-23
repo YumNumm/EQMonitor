@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';

@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:m3e_core/m3e_core.dart';
 
 const eqmonitorMapGpuProbeAtlasFixtureKey = ValueKey(

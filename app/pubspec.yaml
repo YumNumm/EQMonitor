@@ -212,6 +212,10 @@ dev_dependencies:
   test: ^1.29.0
   theme_tailor: ^4.0.1
 
+  flutter_riverpod: any
+  maplibre_platform_interface: any
+  plugin_platform_interface: any
+  xml: any
 flutter_gen:
   output: lib/core/gen/ # Optional (default: lib/gen/)
   line_length: 80

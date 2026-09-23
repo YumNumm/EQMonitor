@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 地図の操作面とデバッグ用overlayのhit-test順を一箇所で定義する。
 class EqmonitorMapDebugOverlayLayout extends StatelessWidget {

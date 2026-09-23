@@ -1,7 +1,7 @@
 import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_overlay_banner.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 EqmonitorMapOverlayPresentation presentation({required bool canMove}) =>

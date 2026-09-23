@@ -18,7 +18,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_map/eqmonitor_map.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lat_lng/lat_lng.dart';
 
