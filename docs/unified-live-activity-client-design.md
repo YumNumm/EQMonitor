@@ -2,7 +2,7 @@
 
 対象 Issue: [#1800](https://github.com/YumNumm/EQMonitor/issues/1800)
 
-バックエンド正典:
+バックエンド仕様:
 
 - Valibot schema: `backend/packages/notification-common/src/types/unified-live-activity-content-state.ts`
 - JSON サンプル: `backend/docs/examples/unified-live-activity-content-state.json`
@@ -202,25 +202,18 @@ Widget/LiveActivity/Unified/
   - 配色・文言は `Widget/LiveActivity/Common/ShakeDetectionLevel.swift` に退避し、統合 LA で再利用する。
 - 現行バックエンドは端末の `device_notification.live_activity_mode` (`legacy` / `unified`) で配信形式を分ける。`unified` への変更は、この Widget を含むビルドのインストール後に行う。クライアント側で旧形式への独自フォールバックは行わない。
 
-## 受け入れ条件との対応
+## 実装の対応範囲
 
-| 受け入れ条件 | 対応 |
+| データ・動作 | 対応 |
 |---|---|
-| 正典サンプル・64 文字 SHA-256 ID の decode | `id` を `String` として定義。`WidgetModelsTests` で正典 JSON を decode |
-| 3 ブロックの組み合わせ・null・optional | `UnifiedLiveActivityDisplay` のテストで全組み合わせを固定 |
-| Magnitude 4 形態・informationType 複数要素 | Codable モデルと表示テスト |
-| 揺れ検知 → 上昇 → EEW → 地震情報の遷移 | Preview の sequence（`EewContentState.warningSequence` と同じ作り）で確認 |
+| 64 文字 SHA-256 ID | `id` を `String` として定義 |
+| 3 ブロックの組み合わせ・null・optional | Optional なモデルと `UnifiedLiveActivityDisplay` で表示を選択 |
+| Magnitude 4 形態・informationType 複数要素 | Codable モデルから表示値を生成 |
+| 揺れ検知 → 上昇 → EEW → 地震情報の遷移 | Preview の sequence を用意 |
 | 最終報・取消で終了しない | クライアントに終了タイマーを持たせない |
 | 旧形式の Update / End | 旧 EEW Widget を残す |
 
-## 再実行できる契約検証
+## 残る確認事項
 
-macOS と Xcode（iOS シミュレータ）、XcodeGen を用意し、リポジトリルートで次を実行する。
-
-```sh
-tool/live_activity_tests/run.sh
-```
-
-実際の Widget/LiveActivity ソースとローカル EQMonitorAPI パッケージを一時プロジェクトでビルドする。Flutter の生成設定や Firebase の依存解決は不要。正典 JSON、本番で保存された揺れ検知 snapshot と同じ形状（論理 ID は匿名化）、64文字 ID、全ブロック組み合わせ、nullable な地域、終了済み検知、Magnitude を検証する。描画テストは320pt幅で画像を生成できることだけを確認する。カスタムフォント・見切れ・Dynamic Island の実表示や APNs の配送成功は保証しない。
-
-Runner/Dart のローカルデバッグ画面への統合形式追加は、この Widget 配信対応とは別の作業として残る。アプリ全体のビルドや実機検証も、この集中テストとは区別する。
+Canvas と Dynamic Island の見切れ、実機での APNs Start→Broadcast Update→End は未確認。
+Runner/Dart のローカルデバッグ画面への統合形式追加と、アプリ全体のビルド確認は別途必要。

@@ -4,7 +4,7 @@
 //
 //  統合 Live Activity の Attributes / ContentState。
 //
-//  backend 正典:
+//  backend 仕様:
 //  - packages/notification-common/src/types/unified-live-activity-content-state.ts
 //  - docs/examples/unified-live-activity-content-state.json
 //
