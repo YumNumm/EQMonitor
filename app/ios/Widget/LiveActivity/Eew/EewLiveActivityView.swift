@@ -18,7 +18,7 @@ struct HeaderContainer: View {
     let display: EewDisplay
     let headline: String?
 
-    private let stripeHeight: CGFloat = 8
+    private let stripeHeight: CGFloat = 5
 
     var body: some View {
         VStack(spacing: 0) {
