@@ -2,7 +2,7 @@
 
 ## 実行する場所とコマンド
 
-回帰テストの範囲は [テスト方針](test_strategy.md)、
+修正依頼時のテスト追加・TDD の扱いは [テスト方針](test_strategy.md)、
 SDK・submodule の準備は [development_environment.md](development_environment.md) を参照。
 
 - Flutter テストは必ず対象 package 内で実行する。app なら `app/` が working directory。

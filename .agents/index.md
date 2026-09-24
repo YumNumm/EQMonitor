@@ -29,7 +29,7 @@
 
 ## Focused verification
 
-- TDD（テスト駆動開発）は必須ではない。テスト先行や RED → GREEN の証跡を一律に要求せず、変更リスクに応じて実装後のテスト追加や既存テストによる確認を選ぶ。必要な回帰テストの範囲は `docs/knowledge/test_strategy.md` を参照する。
+- 修正依頼では、回帰テストを含む自動テストの新規作成や TDD（テスト駆動開発）は不要。ユーザーが明示的に依頼した場合のみ行い、テスト先行や RED → GREEN の証跡を修正の前提にしない。詳細は `docs/knowledge/test_strategy.md` を参照する。
 - CI app analysis, from root: `mise exec -- dart analyze app --fatal-infos --format machine`. Workspace analysis: `mise exec -- dart run melos run analyze`.
 - From `app/` or a Flutter package: `mise exec -- flutter test test/path_test.dart --dart-define=CI=true`. From a pure Dart package: `mise exec -- dart test test/path_test.dart`.
 - Workspace tests: use the CI-equivalent command below. `melos run test` has a known Flutter/Dart package-filter issue; see `docs/knowledge/testing.md` for separate execution.
@@ -40,7 +40,7 @@
 - Pure Dart suites: run `mise exec -- dart test` in `packages/eqmonitor_api` or `tools/eqmonitor_lints_plugin`. The latter is in the workspace despite a stale CI comment; root `analysis_options.yaml` enables it alongside Flutter Hooks linting.
 - Native shared logic: from root, `xcodebuild -project app/ios/Runner.xcodeproj -scheme WidgetModelsTests -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO test`. Fresh worktrees need generated Flutter/Xcode configuration; see `docs/knowledge/20260910_app_intents_snapshot_contract.md`. Flutter CI does not run this suite.
 - Format touched Dart files with `mise exec -- dart format <paths>`. Markdown: `mise exec -- pnpm exec textlint <paths>`; `.agents/**` is ignored, so lint this guide through `AGENTS.md`.
-- Emergency-information decisions, conversions, state transitions, notifications, persistence, and bug fixes need automated regression tests. Display-only changes need not add widget tests; run relevant existing tests/analysis and explain why no tests were added.
+- 緊急情報の判定、データ変換、状態遷移、通知条件、永続化、障害修正にも上記の方針を適用する。変更に関連する既存テストや静的解析で確認し、テストを新規作成しない理由の説明は不要。
 
 ## Rules to read before changing code
 
