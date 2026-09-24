@@ -107,3 +107,45 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
     return element.handleCreate(ref, build);
   }
 }
+
+@ProviderFor(effectiveBrightness)
+final effectiveBrightnessProvider = EffectiveBrightnessProvider._();
+
+final class EffectiveBrightnessProvider
+    extends $FunctionalProvider<ui.Brightness, ui.Brightness, ui.Brightness>
+    with $Provider<ui.Brightness> {
+  EffectiveBrightnessProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'effectiveBrightnessProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$effectiveBrightnessHash();
+
+  @$internal
+  @override
+  $ProviderElement<ui.Brightness> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ui.Brightness create(Ref ref) {
+    return effectiveBrightness(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ui.Brightness value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ui.Brightness>(value),
+    );
+  }
+}
+
+String _$effectiveBrightnessHash() =>
+    r'2c45e1891fae28203c58507d2bdfbadb4efe9dfd';
