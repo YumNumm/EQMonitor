@@ -102,8 +102,12 @@ asc testflight crashes list --paginate --sort=-createdDate --output json
 - private repositoryが本当に必要なjobだけGitHub App tokenの対象に追加する。
   再帰取得ならnested private repoもinstall対象と `repositories` 一覧に必要。
   install対象外を1件でも列挙するとtoken発行自体が422になる。
-- CIの小さなjobは `mise exec python -- python3 ...` のように必要ツールを絞る。
-  不要なFlutter等の導入を避ける。古いSwift/libncurses障害は現行mise設定の必須要件ではない。
+- CIのツール対象はjobの `MISE_ENABLE_TOOLS` で絞る。`mise-action` の `install_args` や
+  `mise exec python -- ...` の引数だけでは、その後の `mise exec` による全ツール導入を防げない。
+- Flutter検証jobは `flutter,node,python` を許可し、DartはFlutter同梱版を使う。
+  この制限はMelosから起動する子プロセスにも引き継ぐ。`MISE_NO_HOOKS=true` でローカルcommit用のhook導入を省く。
+- clean checkoutでは解析・テスト前に `tool/asset_pack/stage_from_r2.sh --target bundled` で
+  同梱Asset Packを配置する。署名検証にNode、レイアウト検証にPythonを使う。
 - PR base branchの `/` を含む名前には `pull_request.branches: ["**"]` が必要。
   `"*"` は `/` を跨がない。pushのbranch filterは別ポリシーとして扱う。
 - actionのSHA固定コメントは `# vX.Y.Z`。確認は `mise exec -- pinact run --check`。

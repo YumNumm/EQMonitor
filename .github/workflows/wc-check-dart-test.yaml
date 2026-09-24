@@ -12,6 +12,11 @@ jobs:
     name: Flutter Test
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      # Inherited by the nested mise exec commands launched through Melos.
+      MISE_ENABLE_TOOLS: flutter,node,python
+      # Git hooks are for local commits, not ephemeral CI checkouts.
+      MISE_NO_HOOKS: "true"
     permissions:
       contents: read
       checks: write
@@ -43,13 +48,16 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
-          install_args: "flutter"
+          install_args: "flutter node python"
 
       - name: Verify pinned Flutter SDK
         run: mise exec -- flutter --version --machine
 
       - name: Precache Flutter Linux artifacts
         run: mise exec -- flutter precache --linux
+
+      - name: Stage bundled Asset Pack
+        run: mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled
 
       - name: Resolve dependencies
         run: mise exec -- dart pub get --enforce-lockfile
