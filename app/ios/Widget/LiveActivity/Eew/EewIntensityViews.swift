@@ -31,7 +31,7 @@ struct EewMaximumIntensityView: View {
                         .padding(.top, size * 0.18)
                 }
             } else {
-                VStack(alignment: .leading, spacing: -size * 0.12) {
+                VStack(alignment: .center, spacing: -size * 0.12) {
                     Text("MAX")
                         .font(AppFonts.code(size: max(7, size * 0.28), weight: .heavy))
                     Text(appearance.main)
