@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
@@ -60,6 +61,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
             child: BasicModalSheet(
               hasAppBar: false,
               child: SingleChildScrollView(
+                physics: const BottomBouncingScrollPhysics(),
                 child: SafeArea(
                   child: Column(
                     children: [

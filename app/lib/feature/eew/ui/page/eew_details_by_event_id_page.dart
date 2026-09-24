@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -326,6 +327,9 @@ class _ResponsiveLayout extends HookConsumerWidget {
           eews: eews,
           selectedIndex: selectedIndex,
           onSelect: onSelect,
+          verticalScrollPhysics: useSheet
+              ? const BottomBouncingScrollPhysics()
+              : null,
         );
 
         final mapWidget = EewDetailsMapView(
