@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
@@ -19,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   const new({super.key});
@@ -30,8 +28,14 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     final paramAsync = ref.watch(homeEarthquakeHistoryParameterProvider);
 
     return homeAsync.when(
+      skipLoadingOnReload: true,
       data: (home) {
         final scope = home.common.earthquakeHistoryScope;
+        final parameter = paramAsync.value;
+        // 地域の再判定中も履歴を監視し、autoDispose による再取得を防ぐ。
+        final historyAsync = parameter == null
+            ? null
+            : ref.watch(earthquakeHistoryProvider(parameter));
         final selection = paramAsync.value?.regionSelection;
         final locationName = selection != null
             ? ref.watch(regionNameProvider(selection.$1, selection.$2)).value ??
@@ -60,6 +64,12 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           children: [
             HomeSheetCardHeader(
               title: '最近の地震',
+              titleTrailing:
+                  homeAsync.isLoading ||
+                      paramAsync.isLoading ||
+                      (historyAsync?.isLoading ?? false)
+                  ? const _HistoryLoadingIndicator()
+                  : null,
               action: HomeScopeSelector(
                 scope: scope,
                 onScopeChanged: (newScope) async {
@@ -80,6 +90,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               ),
             ),
             paramAsync.when(
+              skipLoadingOnReload: true,
               data: (param) {
                 if (param == null) {
                   return HomeScopeUnavailableBody(
@@ -93,34 +104,35 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                         : null,
                   );
                 }
-                final state = ref.watch(earthquakeHistoryProvider(param));
-                final listSection = switch (state) {
-                  AsyncData(:final value) =>
-                    value.items.isEmpty
-                        ? const EarthquakeHistoryNotFound()
-                        : HomeEarthquakeList(
-                            earthquakes: value.items,
-                            showCurrentLocationIntensity:
-                                scope == .currentLocation,
-                          ),
-                  AsyncError(:final error) => ErrorCard(
-                    error: error,
-                    onReload: () async {
-                      ref.invalidate(
-                        homeEarthquakeHistoryParameterProvider,
-                        asReload: true,
-                      );
-                      ref.invalidate(
-                        earthquakeHistoryProvider(param),
-                        asReload: true,
-                      );
-                    },
-                  ),
-                  _ => const _HomeEarthquakeHistorySheetSkeleton(),
-                };
-                return listSection;
+                return historyAsync?.when(
+                      skipLoadingOnReload: true,
+                      skipError: historyAsync.isLoading,
+                      data: (value) => value.items.isEmpty
+                          ? const EarthquakeHistoryNotFound()
+                          : HomeEarthquakeList(
+                              earthquakes: value.items,
+                              showCurrentLocationIntensity:
+                                  scope == .currentLocation,
+                            ),
+                      error: (error, _) => ErrorCard(
+                        error: error,
+                        showLoadingOverlayOnReload: false,
+                        onReload: () async {
+                          ref.invalidate(
+                            homeEarthquakeHistoryParameterProvider,
+                            asReload: true,
+                          );
+                          ref.invalidate(
+                            earthquakeHistoryProvider(param),
+                            asReload: true,
+                          );
+                        },
+                      ),
+                      loading: () => const SizedBox.shrink(),
+                    ) ??
+                    const SizedBox.shrink();
               },
-              loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
+              loading: () => const SizedBox.shrink(),
               error: (error, _) => ErrorCard(
                 error: error,
                 onReload: () async => ref.invalidate(
@@ -145,8 +157,10 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
       },
       loading: () => const HomeSheetCard(
         children: [
-          HomeSheetCardHeader(title: '最近の地震'),
-          _HomeEarthquakeHistorySheetSkeleton(),
+          HomeSheetCardHeader(
+            title: '最近の地震',
+            titleTrailing: _HistoryLoadingIndicator(),
+          ),
         ],
       ),
       error: (error, _) => HomeSheetCard(
@@ -163,31 +177,16 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   }
 }
 
-class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
+class _HistoryLoadingIndicator extends StatelessWidget {
   const new();
 
   @override
   Widget build(BuildContext context) {
-    final spacing = context.designSystem.spacing;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
-      child: Skeletonizer(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            for (var index = 0; index < 3; index++) ...[
-              const ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(radius: 16),
-                title: Text('2026/04/21 12:34'),
-                subtitle: Text('最大震度4 / M5.2 / 東京都'),
-                trailing: Icon(Icons.chevron_right_rounded),
-              ),
-              if (index != 2) SizedBox(height: spacing.sm),
-            ],
-          ],
-        ),
+    return Semantics(
+      label: '最近の地震を読み込み中',
+      child: const SizedBox.square(
+        dimension: 20,
+        child: M3ECircularProgressIndicator(strokeWidth: 2),
       ),
     );
   }

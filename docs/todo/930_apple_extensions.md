@@ -37,5 +37,6 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 - `WidgetModelsTests` で判断ロジックを継続検証し、取消報・未入電バッジ・Dynamic Island 展開時の切れを Preview/実機で確認する。必要な SwiftUI snapshot fixture と macOS CI の採否を決める。
 - 統合 Live Activity の実機表示は未検証。地震情報の M・深さが EEW と同じ余白・配置（展開時は縦積み）になり、ヘッダー右に最大観測震度がなく、State 9 の M8+ が白文字で収まることを確認する。
+- 統合型 Live Activity の上下配置の最大震度で、`MAX` と数字・未発表の `-` が左右中央に揃うことを実機で確認する。5弱〜6強の配置も確認する。
 - Android Widget は未実装。採用する場合は `app/android/` に AppWidgetProvider/Glance を実装し、Pro未加入・未設定時の全国 fallback を iOS の `WidgetRegionResolver` と揃えてテストする。
 - extension 版番号は [ビルド・配布](950_build_and_release.md) の300を参照。

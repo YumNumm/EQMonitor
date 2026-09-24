@@ -35,9 +35,10 @@ class HomeSheetCard extends StatelessWidget {
 }
 
 class HomeSheetCardHeader extends StatelessWidget {
-  const new({required this.title, this.action, super.key});
+  const new({required this.title, this.titleTrailing, this.action, super.key});
 
   final String title;
+  final Widget? titleTrailing;
   final Widget? action;
 
   @override
@@ -58,10 +59,19 @@ class HomeSheetCardHeader extends StatelessWidget {
         spacing: spacing.sm,
         children: [
           Flexible(
-            child: Text(
-              title,
-              style: typography.titleSmall.copyWith(fontWeight: .bold),
-              overflow: .ellipsis,
+            child: Row(
+              mainAxisSize: .min,
+              spacing: spacing.sm,
+              children: [
+                Flexible(
+                  child: Text(
+                    title,
+                    style: typography.titleSmall.copyWith(fontWeight: .bold),
+                    overflow: .ellipsis,
+                  ),
+                ),
+                if (titleTrailing case final trailing?) trailing,
+              ],
             ),
           ),
           if (action case final action?) Flexible(child: action),
