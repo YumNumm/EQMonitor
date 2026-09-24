@@ -37,6 +37,7 @@
 
 ## 400 / 200: scroll と共有見出し
 
+- 400: 地震詳細・EEW履歴・津波詳細のシート内スクロールを Home と同じ `BottomBouncingScrollPhysics` に設定済み。iOS / Android 実機で上端からのシート縮小、下端のバウンド、EEW表の横スクロールを確認する。実機検証は未実施。
 - 400: `app/lib/page/home_page.dart` の `_SheetBody` を遅延list/sliverへ移す場合は、sheet drag・`BottomBouncingScrollPhysics` の追従/bounceを確認する。
 - 400: `app/lib/feature/home/ui/component/sheet/sheet_header.dart` を利用featureに依存しない `app/lib/core/component/` へ移し、earthquake history / kyoshin monitor の呼び出しとspacing/typographyを揃える。
 - 200: `LiveMonitorEarthquakeCard` の全行先行生成をindexからのpresenter/遅延構築へ変更する。完了条件: 通常/大文字/縦横分割でcard高さ・内部scrollを維持し、画面外行を先行生成しない。

@@ -9,12 +9,14 @@ class EewTable extends StatelessWidget {
     required this.eews,
     this.selectedIndex,
     this.onSelect,
+    this.verticalScrollPhysics,
     super.key,
   });
 
   final List<EewTelegramItem> eews;
   final int? selectedIndex;
   final void Function(int index)? onSelect;
+  final ScrollPhysics? verticalScrollPhysics;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class EewTable extends StatelessWidget {
         scrollDirection: .horizontal,
         child: SingleChildScrollView(
           primary: true,
+          physics: verticalScrollPhysics,
           child: DataTable(
             horizontalMargin: 0,
             columnSpacing: 4,

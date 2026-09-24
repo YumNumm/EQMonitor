@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -164,6 +165,7 @@ class _LoadedContent extends HookConsumerWidget {
               hasAppBar: false,
               expandToPane: onClose != null,
               child: SingleChildScrollView(
+                physics: const BottomBouncingScrollPhysics(),
                 child: SafeArea(
                   child: Column(
                     children: [
