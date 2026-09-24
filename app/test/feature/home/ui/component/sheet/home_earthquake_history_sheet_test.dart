@@ -114,6 +114,36 @@ void main() {
     expect(find.byType(M3ECircularProgressIndicator), findsNothing);
   });
 
+  testWidgets('再取得の失敗を表示し、再試行中はキャッシュと見出しの進捗を表示する', (tester) async {
+    final fixture = _Fixture();
+    await fixture.showLoaded(tester);
+    fixture.historyResult = Completer<PaginatedResponse<EarthquakePartial>>();
+    fixture.container.invalidate(
+      earthquakeHistoryProvider(fixture.requests.single),
+    );
+    await tester.pump();
+    fixture.historyResult?.completeError(Exception('refresh failed'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ErrorCard), findsOneWidget);
+    expect(find.text('再試行'), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
+
+    fixture.historyResult = Completer<PaginatedResponse<EarthquakePartial>>();
+    await tester.tap(find.text('再試行'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(ErrorCard), findsNothing);
+    expect(find.byType(HomeEarthquakeList), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
+
+    fixture.historyResult?.complete(_Fixture.page);
+    await tester.pumpAndSettle();
+    expect(find.byType(ErrorCard), findsNothing);
+    expect(find.byType(HomeEarthquakeList), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
+  });
+
   testWidgets('再判定で地域が取得できなくなった場合は古い一覧を消す', (tester) async {
     final fixture = _Fixture();
     await fixture.showLoaded(tester);

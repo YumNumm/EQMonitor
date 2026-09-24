@@ -106,7 +106,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 }
                 return historyAsync?.when(
                       skipLoadingOnReload: true,
-                      skipError: true,
+                      skipError: historyAsync.isLoading,
                       data: (value) => value.items.isEmpty
                           ? const EarthquakeHistoryNotFound()
                           : HomeEarthquakeList(
@@ -116,6 +116,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                             ),
                       error: (error, _) => ErrorCard(
                         error: error,
+                        showLoadingOverlayOnReload: false,
                         onReload: () async {
                           ref.invalidate(
                             homeEarthquakeHistoryParameterProvider,
