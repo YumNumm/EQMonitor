@@ -1,8 +1,6 @@
-import 'dart:async';
-
+import 'package:eqmonitor/core/component/selector/dropdown_menu_chip.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
-import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// [HomeEarthquakeHistoryScope] の表示用ラベルとアイコン。
@@ -42,103 +40,30 @@ class HomeScopeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final shape = designSystem.shape;
-    final typography = designSystem.typography;
-
-    return MenuAnchor(
-      style: MenuStyle(
-        padding: WidgetStateProperty.all(.zero),
-        backgroundColor: WidgetStatePropertyAll(colorTheme.surfaceContainerLow),
-        shape: WidgetStateProperty.all(
-          RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(shape.md),
-            side: BorderSide(color: colorTheme.outlineVariant),
-          ),
-        ),
-      ),
-      menuChildren: [
+    return DropdownMenuChip<HomeEarthquakeHistoryScope>(
+      label: locationName ?? scope.label,
+      icon: scope.icon,
+      value: scope,
+      entries: [
         for (final value in HomeEarthquakeHistoryScope.values)
-          MenuItemButton(
-            leadingIcon: Icon(value.icon, size: 20),
-            trailingIcon: value == scope
-                ? Icon(Icons.check_rounded, size: 20, color: colorTheme.primary)
-                : null,
-            onPressed: () => onScopeChanged(value),
-            child: Text(value.label, style: typography.bodyLarge),
+          DropdownMenuChipEntry(
+            value: value,
+            label: value.label,
+            icon: value.icon,
           ),
-        if (onEditRegion case final onEditRegion?) ...[
-          const Divider(height: 1),
+      ],
+      onSelected: onScopeChanged,
+      additionalMenuChildren: [
+        if (onEditRegion case final onEditRegion?)
           MenuItemButton(
             leadingIcon: const Icon(Icons.edit_location_alt_outlined, size: 20),
             onPressed: onEditRegion,
-            child: Text('地域を再選択', style: typography.bodyLarge),
+            child: Text(
+              '地域を再選択',
+              style: context.designSystem.typography.bodyLarge,
+            ),
           ),
-        ],
       ],
-      builder: (context, controller, child) => _ScopeChip(
-        scope: scope,
-        locationName: locationName,
-        onTap: () {
-          unawaited(HapticFeedback.lightImpact());
-          if (controller.isOpen) {
-            controller.close();
-          } else {
-            controller.open();
-          }
-        },
-      ),
-    );
-  }
-}
-
-class _ScopeChip extends StatelessWidget {
-  const new({required this.scope, required this.onTap, this.locationName});
-
-  final HomeEarthquakeHistoryScope scope;
-  final VoidCallback onTap;
-  final String? locationName;
-
-  @override
-  Widget build(BuildContext context) {
-    final designSystem = context.designSystem;
-    final colorTheme = designSystem.colorTheme;
-    final spacing = designSystem.spacing;
-
-    return Material(
-      color: colorTheme.surfaceContainerLow,
-      shape: StadiumBorder(side: BorderSide(color: colorTheme.outlineVariant)),
-      clipBehavior: .antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.md,
-            vertical: spacing.sm,
-          ),
-          child: Row(
-            mainAxisSize: .min,
-            spacing: spacing.xs,
-            children: [
-              Icon(scope.icon, size: 16, color: colorTheme.onSurfaceVariant),
-              Flexible(
-                child: Text(
-                  locationName ?? scope.label,
-                  style: designSystem.typography.labelLarge,
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                ),
-              ),
-              Icon(
-                Icons.expand_more_rounded,
-                size: 18,
-                color: colorTheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
