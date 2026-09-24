@@ -6,6 +6,10 @@
 
 - 実機で権限、OS終了後の位置同期、APNs／FCMの通知文面を確認する。実機検証は未実施。
 
+## 800: 地域選択の非表示フィルター修正後の実機確認
+
+- 対象: `app/lib/feature/region_selection/`。iOS 実機で地図の初期表示、選択・全解除、地域種別切り替え、震央選択からの切り替えを確認する。クラッシュせず、解除後のハイライトと不要な震央領域が消えることを完了条件とする。実機の画面操作は未検証。
+
 ## 800: material_ui 境界
 
 - `app/lib/feature/settings/children/application_info/{about_this_app,term_of_service_page,privacy_policy_page}.dart` の Markdown に明示的なstyleまたは共通rendererを渡し、`feature/changelog/ui/page/changelog_page.dart` と共通化する。完了条件: Light/Darkで本文/リンクが読める。

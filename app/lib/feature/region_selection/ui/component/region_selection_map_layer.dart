@@ -111,7 +111,9 @@ class RegionSelectionMapLayer extends HookWidget {
           if (mounted && hasEpicenter) {
             await style.updateFilter(
               id: RegionMapLayers.epicenterHit,
-              filter: current.kind == .epicenter ? null : const ['==', 1, 0],
+              filter: current.kind == .epicenter
+                  ? null
+                  : RegionMapLayers.hiddenFilter,
             );
           }
         }),

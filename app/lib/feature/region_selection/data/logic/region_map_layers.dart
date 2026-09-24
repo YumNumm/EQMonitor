@@ -4,6 +4,12 @@ import 'package:maplibre/maplibre.dart';
 final class const RegionMapLayers() {
   static const epicenterHit = 'region-selection-epicenter-hit';
   static const source = 'eqmonitor_map';
+  // 数値同士の比較は iOS で旧形式の属性フィルターと解釈されるため、空集合を使う。
+  static const hiddenFilter = [
+    'in',
+    ['get', 'code'],
+    ['literal', <String>[]],
+  ];
   static const layers = {
     RegionKind.region: ('areaForecastLocalE', 'code'),
     RegionKind.eewRegion: ('areaForecastLocalEew', 'code'),
@@ -28,14 +34,14 @@ final class const RegionMapLayers() {
           id: 'region-selection-${entry.key.name}-fill',
           sourceId: source,
           sourceLayerId: entry.value.$1,
-          filter: const ['==', 1, 0],
+          filter: hiddenFilter,
           paint: {'fill-color': color, 'fill-opacity': 0.25},
         ),
         LineStyleLayer(
           id: 'region-selection-${entry.key.name}-line',
           sourceId: source,
           sourceLayerId: entry.value.$1,
-          filter: const ['==', 1, 0],
+          filter: hiddenFilter,
           paint: {'line-color': color, 'line-width': 2.5},
         ),
       ],
@@ -68,7 +74,7 @@ final class const RegionMapLayers() {
       sourceId: source,
       sourceLayerId: sourceLayer,
       filter: codes.isEmpty
-          ? const ['==', 1, 0]
+          ? hiddenFilter
           : [
               'in',
               ['get', property],
