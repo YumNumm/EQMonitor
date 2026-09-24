@@ -177,10 +177,10 @@ struct UnifiedExpandedTrailingView: View {
             }
         case .earthquake:
             if let earthquake = display.earthquake {
-                UnifiedMetricsRow(
+                SourceMetricsView(
                     magnitude: earthquake.magnitude?.displayValue,
                     depth: earthquake.depth,
-                    emphasizeMagnitude: earthquake.magnitude?.isOverM8 == true,
+                    vertical: true,
                     size: 21
                 )
             }
