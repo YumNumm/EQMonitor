@@ -8,7 +8,7 @@
 | 作業 | 要点と参照先 |
 | --- | --- |
 | セットアップ・worktree・解析 | [開発環境](development_environment.md)。SDK は mise、依存は lockfile、Scene は submodule commit が正本。package 単位で検証する。 |
-| テスト方針 | [変更リスクとテスト](test_strategy.md)。**TDD は必須ではない**。緊急情報・状態遷移・障害修正などに必要な回帰テストは維持する。 |
+| テスト方針 | [修正依頼時のテスト方針](test_strategy.md)。修正依頼での回帰テストの新規作成・TDD は、ユーザーが明示的に依頼した場合のみ行う。関連する既存テストと静的解析で確認する。 |
 | テスト環境の問題 | [テスト実行](testing.md)。実行 cwd、Native Assets、family override、フォントを確認し、古い失敗記録を免除に使わない。 |
 | Freezed・OpenAPI・Pigeon | [コード生成](code_generation.md)。生成元と現行依存を直し、生成物を手編集しない。 |
 | HTTP・JSON・端末移行 | [API とデータ](api_and_data.md)。cache は opt-in、JSON の構造と値検証は分離、移行は durable workflow で再開可能にする。 |
