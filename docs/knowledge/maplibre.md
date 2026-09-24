@@ -21,6 +21,7 @@
 - 震度色を持つ半透明の細分区域・市区町村 fill を重ねない。切替 zoom では下側の opacity を 0 にする。
 - iOS の zoom 依存 `interpolate` は式の最上位に置く。倍率は各 stop 値へ畳み込み、乗算式の内側へ zoom 式を入れない。
 - iOS の色 `match` は fork 側で型付きの `NSExpression(forMGLMatching:in:defaultValue:)` に変換する。Dart の式テストだけで native の色型変換を検証済みとしない。
+- 非表示 filter に `['==', 1, 0]` を使わない。MapLibre Native はこれを旧形式の比較と解釈し、数値の属性名を拒否する。iOS では predicate 設定時に `NSInvalidArgumentException` が発生し、Dart の catch では捕捉できない。地域選択は `RegionMapLayers.hiddenFilter` の空集合への所属判定を使う。
 
 ## 座標・選択・初期カメラ
 
