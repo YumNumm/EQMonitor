@@ -59,9 +59,7 @@ class AccessibleLinearProgressIndicator extends StatelessWidget {
     final progress = value;
     return Semantics(
       label: semanticsLabel,
-      role: progress == null
-          ? SemanticsRole.loadingSpinner
-          : SemanticsRole.progressBar,
+      role: progress == null ? .loadingSpinner : .progressBar,
       minValue: progress == null ? null : '0',
       maxValue: progress == null ? null : '100',
       value: progress == null

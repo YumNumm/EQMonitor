@@ -1,6 +1,6 @@
-import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
@@ -25,7 +25,9 @@ class FeedDetailsPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('お知らせ')),
       body: Column(
         children: [
-          CachedDataBanner(values: [feed],),
+          CachedDataBanner(
+            values: [feed],
+          ),
           Expanded(
             child: feed.when(
               skipError: true,
@@ -94,7 +96,11 @@ class FeedDetailsBody extends StatelessWidget {
             ],
           ),
           const Divider(),
-          Text(_bodyText(item).toHalfWidth),
+          Text(
+            _removeContactInfo(
+              _bodyText(item),
+            ).toHalfWidth,
+          ),
           if (url != null) ...[
             const SizedBox(height: 24),
             M3EFilledButton.icon(
@@ -117,5 +123,15 @@ class FeedDetailsBody extends StatelessWidget {
         text ?? earthquakeInfo?.text ?? item.summary ?? '',
       final data => data.text,
     };
+  }
+
+  /// 本文末尾の問い合わせ先を削除する
+  static String _removeContactInfo(String text) {
+    // `本件問い合わせ先` よりも後ろの文字列を削除する
+    final contactInfoIndex = text.indexOf('本件問い合わせ先');
+    if (contactInfoIndex == -1) {
+      return text;
+    }
+    return text.substring(0, contactInfoIndex);
   }
 }

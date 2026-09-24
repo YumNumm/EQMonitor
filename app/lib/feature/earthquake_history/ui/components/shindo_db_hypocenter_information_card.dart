@@ -311,7 +311,7 @@ class _DetailsTile extends StatelessWidget {
 
     return ExpandableSection(
       title: Text(
-        '詳細',
+        '震源の詳細情報',
         style: theme.textTheme.bodySmall?.copyWith(
           fontFamily: FontFamily.notoSansJP,
         ),
@@ -319,7 +319,6 @@ class _DetailsTile extends StatelessWidget {
       tilePadding: EdgeInsets.zero,
       childrenPadding: const EdgeInsets.only(bottom: 8),
       children: [
-        _InfoRow(label: 'レコード種別', value: primary.recordTypeLabel),
         if (primary.determinationFlagLabel case final label?)
           _InfoRow(label: '決定フラグ', value: label),
         if (primary.evaluationLabel case final label?)
@@ -333,11 +332,6 @@ class _DetailsTile extends StatelessWidget {
         ),
         for (final (i, h) in others.indexed)
           _HypocenterSection(index: i + 2, hypocenter: h),
-        if (catalog.linkMatchConfidence case final confidence?)
-          _InfoRow(
-            label: '照合信頼度',
-            value: '${(confidence * 100).toStringAsFixed(0)}%',
-          ),
       ],
     );
   }
@@ -394,7 +388,7 @@ class _InfoRow extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       child: Row(
         children: [
           SizedBox(
@@ -403,7 +397,8 @@ class _InfoRow extends StatelessWidget {
               label,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: context.designSystem.colorTheme.onSurfaceVariant,
-                fontFamily: FontFamily.notoSansJP,
+                fontFamily: FontFamily.googleSansCode,
+                fontFamilyFallback: const [FontFamily.notoSansJP],
               ),
             ),
           ),
@@ -412,7 +407,10 @@ class _InfoRow extends StatelessWidget {
               value,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: const [FontFamily.notoSansJP],
+                fontFamilyFallback: const [
+                  FontFamily.googleSansCode,
+                  FontFamily.notoSansJP,
+                ],
               ),
             ),
           ),

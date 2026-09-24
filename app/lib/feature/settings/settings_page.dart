@@ -1,4 +1,3 @@
-import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/api/http_cache_store_provider.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -18,6 +17,7 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -227,20 +227,11 @@ class SettingsPage extends ConsumerWidget {
                     ],
                   ),
                 ],
-                Center(
-                  child: Text(
-                    'Powered by Flutter',
-                    style: textTheme.bodySmall?.copyWith(
-                      color: context.designSystem.colorTheme.onSurface
-                          .withValues(alpha: 0.8),
-                    ),
-                  ),
-                ),
                 if (isDebugMenuAvailable) ...[
                   if (isDebugEnabled ?? false)
                     Center(
                       child: Text(
-                        'Debug Mode',
+                        'Debug Mode✌️',
                         style: textTheme.bodySmall?.copyWith(
                           color: context.designSystem.colorTheme.onSurface
                               .withValues(alpha: 0.8),

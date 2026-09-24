@@ -53,34 +53,35 @@ class ExpandableSection extends HookWidget {
           button: true,
           expanded: expanded.value,
           onTap: toggle,
-          child: Row(
-            children: [
-              if (leading case final leading?) ...[
-                leading,
-                const SizedBox(width: 16),
-              ],
-              Expanded(
-                child: Column(
-                  mainAxisSize: .min,
-                  crossAxisAlignment: .start,
-                  children: [
-                    DefaultTextStyle.merge(
-                      style: textTheme.titleMedium,
-                      child: title,
-                    ),
-                    if (subtitle case final subtitle?)
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              spacing: 16,
+              children: [
+                if (leading case final leading?) leading,
+                Expanded(
+                  child: Column(
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .start,
+                    children: [
                       DefaultTextStyle.merge(
-                        style: textTheme.bodyMedium,
-                        child: subtitle,
+                        style: textTheme.titleMedium,
+                        child: title,
                       ),
-                  ],
+                      if (subtitle case final subtitle?)
+                        DefaultTextStyle.merge(
+                          style: textTheme.bodyMedium,
+                          child: subtitle,
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-              if (trailing case final trailing?) ...[
-                const SizedBox(width: 16),
-                trailing,
+                if (trailing case final trailing?) ...[
+                  const SizedBox(width: 16),
+                  trailing,
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
