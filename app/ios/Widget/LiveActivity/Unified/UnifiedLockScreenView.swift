@@ -17,8 +17,8 @@ struct UnifiedLockScreenView: View {
                 EewLockScreenView(state: eew.eewContentState)
                     .transition(.identity)
             } else {
-                VStack(alignment: .leading, spacing: 2) {
-                    UnifiedHeaderContainer(display: display, chipStyle: chipStyle)
+                VStack(alignment: .leading, spacing: 8) {
+                    UnifiedHeaderContainer(display: display)
                     content
                     if let eew = display.eewStrip {
                         UnifiedEewStrip(eew: eew)
@@ -73,7 +73,7 @@ private struct EarthquakeBody: View {
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 8) {
                 if let date = earthquake.originDate {
                     Text("地震発生  \(JSTDateFormat.monthDay(date)) \(JSTDateFormat.timeWithSeconds(date))")
                         .font(AppFonts.code(size: 10, weight: .medium))
@@ -82,10 +82,9 @@ private struct EarthquakeBody: View {
                         .minimumScaleFactor(0.8)
                 }
                 // 震源名はヘッダーの見出しに含まれるため重複させない。
-                UnifiedMetricsRow(
+                SourceMetricsView(
                     magnitude: earthquake.magnitude?.displayValue,
-                    depth: earthquake.depth,
-                    emphasizeMagnitude: earthquake.magnitude?.isOverM8 == true
+                    depth: earthquake.depth
                 )
             }
             .frame(maxWidth: .infinity, alignment: .leading)

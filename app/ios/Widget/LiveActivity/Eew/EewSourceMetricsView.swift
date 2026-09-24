@@ -31,14 +31,12 @@ struct SourceMetricsView: View {
     var depth: Double?
     var vertical = false
     var size: CGFloat = 77.23 / 3
-    var emphasizeMagnitude = false
 
     var body: some View {
         let labelFont = AppFonts.flex(size: max(8, size * 0.44), weight: .medium)
         let valueFont = AppFonts.code(size: size, weight: .bold)
         let magnitudeText = magnitude.map {
             Text("\(Text("M").font(labelFont))\(Text($0).font(valueFont))")
-                .foregroundColor(emphasizeMagnitude ? Color(rgb: 0xFF6E6E) : .white)
         }
         let depthText = depth.map {
             Text("\(Text("深さ ").font(labelFont))\(Text(String(Int($0))).font(valueFont))\(Text("km").font(labelFont))")

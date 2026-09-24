@@ -181,11 +181,10 @@ struct UnifiedShakeLevelBadge: View {
 
 // MARK: - ヘッダー
 
-/// 主表示ブロックの色・種別・見出し・最大値を載せるヘッダー。
+/// 主表示ブロックの色・種別・見出しと、揺れ検知時のレベルを載せるヘッダー。
 @available(iOS 16.1, *)
 struct UnifiedHeaderContainer: View {
     let display: UnifiedLiveActivityDisplay
-    var chipStyle: IntensityChipStyle = .corner
 
     private let stripeHeight: CGFloat = 5
 
@@ -212,59 +211,16 @@ struct UnifiedHeaderContainer: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                trailingBadge
+                if let level = display.headerShakeLevel {
+                    UnifiedShakeLevelBadge(level: level, size: 34)
+                        .fixedSize()
+                }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(display.headerBackgroundColor)
         }
         .clipShape(ContainerRelativeShape())
-    }
-
-    @ViewBuilder
-    private var trailingBadge: some View {
-        if let level = display.headerShakeLevel {
-            UnifiedShakeLevelBadge(level: level, size: 34)
-                .fixedSize()
-        } else if let intensity = display.lockScreenHeaderIntensity {
-            UnifiedIntensityBadge(
-                intensity: intensity,
-                size: 26,
-                source: display.intensitySource,
-                chipStyle: chipStyle,
-                isMaximum: true
-            )
-            .fixedSize()
-        }
-    }
-}
-
-// MARK: - 震源要素
-
-/// M・深さの 1 行。低精度の EEW では検知手法を出して数値を出さない。
-@available(iOS 16.1, *)
-struct UnifiedMetricsRow: View {
-    var magnitude: String?
-    var depth: Double?
-    var emphasizeMagnitude = false
-    var lowAccuracyLabel: String?
-    var size: CGFloat = 77.23 / 3
-
-    var body: some View {
-        if let lowAccuracyLabel {
-            Text(lowAccuracyLabel)
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(.white)
-                .fixedSize()
-                .padding(.horizontal, 7)
-                .padding(.vertical, 3)
-                .overlay(ContainerRelativeShape().strokeBorder(.white.opacity(0.5)))
-        } else {
-            SourceMetricsView(
-                magnitude: magnitude, depth: depth, size: size,
-                emphasizeMagnitude: emphasizeMagnitude
-            )
-        }
     }
 }
 
