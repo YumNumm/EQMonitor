@@ -43,7 +43,7 @@ class const IntensityFillLayerBuilder() {
   ];
 
   static const cityFillOpacity = 0.8;
-  static const selectedCityLineWidth = 3.0;
+  static const selectedCityLineWidth = 2.5;
   static const selectedCityHaloWidth = 6.0;
 
   /// 市区町村ごとの観測史上最大震度の塗り。
