@@ -26,14 +26,15 @@ import 'package:maplibre/maplibre.dart';
 class IntensityFillLayer extends HookConsumerWidget {
   const new({required this.items, super.key});
 
-  final List<CityMaxIntensityEntry> items;
+  final List<CityMaxIntensityEntry>? items;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
-    final isDarkMode = Theme.brightnessOf(context) == .dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = colorScheme.brightness == .dark;
 
     final selectedCityCode = ref.watch(
       intensityHistoryControllerProvider.select(
@@ -65,12 +66,13 @@ class IntensityFillLayer extends HookConsumerWidget {
     useEffect(
       () {
         final controller = styleController;
-        if (controller == null) {
+        final currentItems = latestItems.value;
+        if (controller == null || currentItems == null) {
           return null;
         }
 
         final layers = builder.buildFill(
-          cityMaxIntensities: latestItems.value,
+          cityMaxIntensities: currentItems,
           colorModel: colorModel,
         );
 
@@ -107,7 +109,7 @@ class IntensityFillLayer extends HookConsumerWidget {
 
         final layers = builder.buildSelectedCityLine(
           selectedCityCode: selectedCityCode,
-          lineColor: colorSet.primary.toHexStringRGB(),
+          lineColor: colorScheme.primary.toHexStringRGB(),
           haloColor: isDarkMode ? '#000000' : '#FFFFFF',
         );
 
@@ -135,7 +137,7 @@ class IntensityFillLayer extends HookConsumerWidget {
       [
         styleController,
         selectedCityCode,
-        colorSet.primary,
+        colorScheme.primary,
         isDarkMode,
         enqueue,
         action,

@@ -31,6 +31,8 @@
 
 ## 600: region panel の pending timer
 
+- 2026-09-25: 同梱Asset Packのないworktreeでは「市区町村選択状態でタップすると市区町村詳細モーダルが開く」が `AssetPackNotReadyException` と `pumpAndSettle` timeout で失敗する。`develop` の `3f659ea79` でも再現。必要なproviderをoverrideし、テストをローカルpack配置に依存させない。
+
 - 対象: `app/test/feature/intensity_history/` の `region_floating_panel_test.dart`。「都道府県フォーカス状態でタップすると都道府県詳細モーダルが開く」のRiverpod retry 800ms timerを再確認する。
 - 完了条件: 必要なprovider override/teardownでWidget破棄後のtimerを残さず、単独と全体並列で `!timersPending` が出ない。
 
