@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'subscription_product_id_provider.g.dart';
 
-const _iosMonthlyProductId = 'net.yumnumm.eqmonitor.pro.monthly';
+const _iosMonthlyProductId = 'net.yumnumm.eqmontior.pro.monthly';
 const _androidMonthlyProductId = 'eqmonitor.pro.monthly:eqmonitor-pro-monthly';
 
 @riverpod

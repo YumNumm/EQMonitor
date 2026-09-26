@@ -39,12 +39,14 @@ class SubscriptionRepository {
           : current.availablePackages
                 .where(
                   (package) =>
-                      package.storeProduct.identifier == _monthlyProductId,
+                      package.storeProduct.identifier == _monthlyProductId &&
+                      package.packageType == rc.PackageType.monthly &&
+                      package.storeProduct.subscriptionPeriod == 'P1M',
                 )
                 .toList();
-      final monthlyPackage = matchingPackages.isEmpty
-          ? current?.monthly
-          : matchingPackages.first;
+      final monthlyPackage = matchingPackages.length == 1
+          ? matchingPackages.single
+          : null;
       if (monthlyPackage == null) {
         return const PurchaseOutcome(
           result: PurchaseResult.failed(PurchaseFailureReason.planNotFound),
