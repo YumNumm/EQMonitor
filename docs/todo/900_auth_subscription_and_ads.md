@@ -58,3 +58,14 @@
 - device本人性、App Check登録、Bearer `/me` / realtime ticket、challenge一回性/期限/レート制限、revoke/監査、管理CLI、Webhook認証・event ID冪等性、購読API/有料API guard の現行実装を照合し、未達だけを実装する。challenge通知のSlack連携は任意。
 - JWT鍵rotation、macOS/Web対応、手動付与（期限付き/永続）、tier、RevenueCat TRANSFER を決定する。旧案のDB初期化・migration撤去・無期限JWTをそのまま実行しない。
 - 完了条件: 重複/順不同Webhook、期限/grace/失効、revoke、購入復元/identity移行、通知設定と配信制限、challenge再使用を契約テストで固定し、OpenAPI再生成と app E2E が一致する。
+
+
+## RevenueCat #1831 実装後のリリース確認（2026-09-26）
+
+- [ ] backend PR #1297 のmigration/backfill・配備とRevenueCat server secret/Webhook接続を確認する。
+- [ ] #1844: 実機2台でログインなし復元、双方のPro継続、更新・返金・失効・再インストール・匿名移行を検証する。
+- [ ] 初回Webhook欠落は409 pending。保持済みの検証取引がないケースはWebhook再送で復旧させ、任意のイベント欠落を自動復旧済みと扱わない。
+- [ ] #1843: Console申告・公開ポリシーと購入/顧客ID/照会snapshotの保持期間・削除請求手順を確定する。
+- 実装契約と検証コマンド: `docs/knowledge/20260926_revenuecat_1831_preparation.md`。既存Main entitlementは保持する。
+
+- [ ] 既存UIテストの期待文言を現行表示と整合する。`notification_preset_selector_test.dart` のダイアログ本文1件と `slot_detail_page_test.dart` の全角括弧見出し2件は、develop `81386a797` の独立checkoutでも同じ失敗を確認済み（#1831差分による退行ではない）。

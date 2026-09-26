@@ -1,10 +1,59 @@
-# RevenueCat #1831 実装準備
+# RevenueCat #1831 実装契約・検証手順
 
-調査日: 2026-09-26。対象: origin/develop `81386a797`。
-状態: 調査・設計案。アプリ実装、外部設定変更、実購入検証は未実施。
-親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
+更新日: 2026-09-26。親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
+状態: アプリ・backendのPR実装。配備・ストア設定変更・実購入検証は未実施。
 
-## 現行コードで確認したこと
+## 確定した仕様
+
+- ユーザー決定: 同じストアアカウントの複数端末でProを同時利用可能とし、復元で旧端末の権限を解除しない。
+- ユーザー決定: EQMonitorアカウントへのログインは不要。ストア購入の復元だけで利用する。
+- アプリのRevenueCat App User IDにはサーバー登録済みdevice IDを使う。購入と利用deviceはbackendで別に管理し、SDKのTRANSFERによる権限移動をそのままアプリの権限喪失にしない。
+- 通知・広告・WidgetのPro判定はすべて認証済みbackend確認値を正本にする。SDKだけのactive値では付与しない。
+
+## 実装と安全条件
+
+- iOS月額商品は #1839 のASC確認記録の `net.yumnumm.eqmontior.pro.monthly`（綴りも一致させる）。Androidは `eqmonitor.pro.monthly:eqmonitor-pro-monthly`。
+- Product ID、monthly package、`P1M`期間がすべて一致する唯一のpackageのみ購入可能。取得したpriceStringを表示し、表示したpackage自体を購入へ渡す。商品がない・取得中・エラーなら購入できない。
+- device登録確認 → JWTとdevice ID照合 → 匿名SDK configure → 必要なlogIn(deviceId) → SDK identity一致確認 → 操作、をprocess全体のSDKロック内で行う。無条件logOut/restoreは行わない。
+- credential保存・削除でdevice IDをinvalidateし、操作前後にtokenを照合する。旧世代の非同期応答は新deviceへ反映しない。
+- 購入/復元前にGET `/v2/subscription/me` で認証を確認し、その後POST `/v2/subscription/sync` で反映を確認する。POSTのbodyに購入・端末IDを申告しない。
+- 同期失敗・反映待ちを購入成立失敗と混同しない。再試行ボタンは同期のみ実行し、再購入しない。SDK更新・foreground復帰・確認済み期限で再評価する。
+- 初回取得失敗と401ではProを付与しない。同期通信エラーでは同一deviceで既に確認済みの権限を期限までメモリ上で維持可能だが、再起動をまたぐ権限キャッシュは追加しない。更新中は前deviceの権限を使わない。
+- start APIのFree/Pro制限を選び、開いたままの通知設定画面にも反映する。上限超過の保存済み地域は削除しない。制限が不明なら固定数にフォールバックせず再取得を表示する。
+- backend companion: https://github.com/YumNumm/eqmonitor-backend/pull/1297 。認証済みdeviceのサーバー照会結果を、保持済みWebhookの取引・商品・store・environmentと照合して共有を認める。TRANSFERには取引IDがないため、それだけでは復元先の権限を付与しない。取引を特定できるWebhookまたは認証済み同期の照合で付与する。既存Main entitlement・商品は変更しない。
+
+## 検証コマンド
+
+Flutter/Dartはrepo指定のmise経由で、Widget testはshader assetを解決できる `app/` から実行する。
+
+```sh
+cd app
+mise exec -- flutter test test/feature/subscription
+mise exec -- flutter test test/feature/devices test/feature/settings/features/notification_settings test/core/provider/interceptor/device_auth_token_interceptor_test.dart
+mise exec -- flutter analyze lib/feature/subscription lib/feature/settings/features/notification_settings
+```
+
+- API生成はbackendのOpenAPIを使い、`packages/eqmonitor_api` で `mise exec -- dart run bin/generate.dart --openapi <file>` を実行する。subscription応答のstatus分岐も生成元で維持する。
+- 生成: `mise exec -- dart run build_runner build --delete-conflicting-outputs`。build-filter利用時も対象外のtracked生成物が削除される場合があるため、生成後の `git --no-pager diff --name-status` を確認し、無関係な削除を含めない。
+- repoはmise `2026.09.12` 以上が必要。今回の環境では署名元releaseのchecksumを照合したtask-local mise `2026.9.14` を使い、`MISE_AUTO_INSTALL=false` で無関係なgcloud/codemagicの自動導入を避け、通常commit hookを実行した。
+
+## 今回の自動検証結果
+
+- アプリの購読・device・通知設定・広告・App Group・認証interceptor: 294成功、既存の3失敗。
+- 3失敗は独立したdevelop `81386a797` でも同じ結果（該当2ファイルは6成功/3失敗）。プリセット確認ダイアログの本文1件、slot詳細の警報見出し2件の期待文言が一致しない。今回の変更による失敗はない。
+- 購読テスト47件（上記に含む）とAPI packageテスト26件はすべて成功。変更対象のアプリ静的解析は指摘なし。
+- SDK初期化・認証変更・同時操作、購入後の反映待ち/通信失敗/401と再試行、復元元Proの維持、期限切れ、feature flag off、価格未取得/失敗/大文字サイズ、Free→Pro→Free・超過地域保持を検証。
+- 実ストアでの購入成立や通知配信を保証する結果ではない。以下の実機・配備確認は未実施。
+
+## 未実施の受け入れ検証（#1844）
+
+- backend migration・backfill・配備、server RevenueCat secret、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
+- TestFlight/Play内部テストの新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール。端末Bで復元後もA/B双方がProで、返金/失効が双方へ反映されること。
+- RevenueCatの標準移管とlegacy共有は同一ではない。[公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior)を踏まえ、実project設定・build・API環境を検証記録に残す。
+- 最初のWebhook取引記録が未到着ならサーバー照会だけで元取引IDを推測しない。409 pendingとし、Webhook到着/再送後に同期する。任意の欠落イベントを完全復旧する実装とは扱わない。
+- ASC/Playのプライバシー申告と公開ポリシー反映は未実施。`docs/beta/privacy-store-declarations.md` の課金追記を参照。
+
+## 実装前の調査記録（develop `81386a797`）
 
 - `app/lib/feature/subscription/data/repository/revenue_cat_configurator.dart` は匿名configureのみ。`isConfigured` の確認とconfigureの間に排他がない。
 - 同ディレクトリの `subscription_repository.dart` はdevice登録・identity変更に依存しない。購入・復元ともSDKの `pro` のみで成功を判定する。
@@ -18,63 +67,3 @@
 - `packages/eqmonitor_api/lib/src/clients/subscription_api_client.dart` はGET `/v2/subscription/me` のみ。アプリからの利用も見つからない。
 - `notification_settings_page.dart` は `planConstraints.free` 固定。`is_pro_provider.dart` のSDK由来状態は広告とWidget/App Groupへ伝播する。
 - 既存subscriptionテストはfake repositoryによるNotifierとisPro判定。SDK連携・所有者移行・Webhookは検証していない。
-
-## 実装前に確定する契約（#1837 / #1840）
-
-- **ユーザー決定（2026-09-26）: 同じストアアカウントの複数端末でProを同時利用可能にする。復元で旧端末の権限を解除しない。**
-- したがって #1837/#1838 とbackend #1291の「device ID = 購入所有者」という前提は再設計する。購入所有者と利用deviceを分け、検証済み購入への端末紐付けを管理する案を優先する。
-- RevenueCatの安定した共通App User IDを何から発行するか、アプリログインを必要とするか、ストア復元から安全に同一購入へ紐付ける手順は未決。SDKはストアアカウント識別子を取得できると仮定しない。
-- aliases全員への権限付与、クライアント申告の取引IDだけでの共有、標準TRANSFER後も無条件に旧権限を残す方式で代用しない。backendで購入とdevice本人性を確認する契約が必要。
-- RevenueCat project `proj26b6a297` の本番restore behaviorとSandbox overrideを読み取り確認する。標準値を実設定とみなさない。
-- サーバー再同期API: 認証されたdeviceからRevenueCatへ照会し、検証済みの購読状態を返す契約をbackend #1291と定義する。URL・応答・レート制限は未決。
-- SDKのPro申告やGETのpollingだけで欠落イベントの復旧を済ませない。サーバー照会用の秘密APIキーはアプリへ渡さない。
-- aliasesが複数deviceへ解決される場合、未知ID、TRANSFER前後の到着順、削除済みdeviceの扱いをbackendと一致させる。
-
-## 提案する最小構成（未承認）
-
-既存Repository/Notifier/Mutation、device ID provider、生成済みAPIクライアントを利用する。汎用課金基盤や新しい依存は追加しない。
-
-1. **#1839 + #1842: 商品取得と表示**
-   - 実商品ID・platform・月額packageを検証し、不一致時の別商品フォールバックを撤去する。
-   - 選択した同じpackageのローカライズ価格・期間を表示し、そのpackageを購入へ渡す。再取得で対象が変われば表示も更新する。
-   - 商品未設定/取得中/失敗では購入不可とし、再取得を提供する。所有者契約と独立して着手可能。
-2. **#1838: identityと購入操作の順序保証（共有所有者契約の確定後）**
-   - 登録完了 → device ID取得 → 共有所有者契約に従うRC identity解決 → 一度だけconfigure → 必要なlogIn → identity一致確認 → 購入/復元。device IDを直接RC identityにする案は確定しない。
-   - 既存匿名顧客を維持してlogInし、merge可否を確認する。device切替時の無条件logOut・restoreは行わない。
-   - SDKのidentity変更と購入/復元を共通の直列処理へまとめ、失敗後に再試行可能にする。
-   - 開始時のdevice ID/世代と結果適用時の値を照合する。削除・再登録中は購入を止め、旧結果を新deviceへ反映しない。
-   - `paywall_flow.dart` と購読設定画面にも登録/連携失敗の回復導線を通す。
-3. **backend #1291/#1292/#799 → #1840: 権限同期**
-   - SDK購入状態・backend確認済み権限・同期状態を分ける。購入成立後の同期失敗を購入失敗扱いにして再購入させない。
-   - 購入/復元/匿名移行後に認証済み再同期を要求する。処理中/同期失敗/認証要復旧を表示し、再同期のみ再試行できるようにする。
-   - 通知等サーバー機能の正本はbackend。広告/Widgetは同一identityの期限内SDK確認値を使う案とし、offline有効範囲を承認時に確定する。
-   - CustomerInfo更新・アプリ復帰・有効期限で再評価。初回未確認はProを付与せず、offline/401を失効確定と混同しない。
-4. **#1841 + #1843: 利用制限・申告**
-   - backend確認済み権限とstart APIからFree/Pro制限を選ぶ。失効時の超過地域は削除しない。配信・編集可否の契約を揃える。
-   - device IDと購入情報の対応、削除/保持方針を `docs/beta/privacy-store-declarations.md` に反映する。Console反映は別途記録する。
-5. **#1844: リリース検証**
-   - backend配備・Webhook接続・ストアメタデータ・feature flagを確認してから署名実機で検証する。
-   - 既存 `Main` entitlement・商品・紐付けを保持し、影響を確認する。
-
-## 回帰テストと受け入れ条件
-
-- identity: 登録未完了、configure競合、購入/復元同時実行、logIn失敗→再試行、処理中のdevice変更/削除。
-- 商品: 正しい商品、別商品/platform、packageなし、取得失敗、JPY/別通貨、表示と購入の同一性。
-- 同期: Webhook遅延、移行後のイベント欠落、offline、401、再同期失敗→回復、旧identityの遅延応答。
-- 権限: 通常解約は期限までACTIVE/willRenew=false。猶予・返金・失効を区別し、有効な本番購入をSandbox失効で解除しない。
-- UI: Free→Pro→Free、反映待ち、通知地域上限、非破壊の超過地域、広告/Widgetへの反映。
-- 実機: 新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール、複数端末。端末Bで復元後もA/B双方でProが有効であること、返金/失効が双方へ反映されることを確認する。build/commit/API環境とRC/API/DB/通知の照合結果を残す。
-- 実装時は `app/` で `mise exec -- flutter test test/feature/subscription`、関連device/通知テスト、`mise exec -- flutter analyze` を実行する。
-- 生成が必要なら `mise exec -- dart run build_runner build --delete-conflicting-outputs`。APIクライアントは生成元契約を直して再生成する。
-- 今回は準備文書のみ。Flutterテスト・解析・実機検証は未実施で、実装の正常性は主張しない。
-- 準備文書のcommit時、必要mise `2026.09.12` に対して導入済み `2026.8.16` のためhkフックが起動前に停止した。
-- Markdown対象のhk util `check-merge-conflict` / `check-symlinks` / `detect-private-key` と `gitleaks git --staged --baseline-path .gitleaks.baseline.json` を導入済み実体から実行して通過確認後、この文書commitのみ `HK=0 git commit` で保存する。実装時はmiseの版を解決し、通常フックを使用する。
-
-## 外部情報と確認境界
-
-- backend #1291の9/24コメントは「作業ツリー実装済み・未commit/未配備」。現在の配備済み状態の根拠にはしない。
-- ASC商品状態、Webhook接続、restore behavior、Sandbox override、実購入成功は今回未確認。
-- 既存TODO: `docs/todo/900_auth_subscription_and_ads.md` の089/090/088/150と本記録を併読する。
-- [所有者契約 #1837](https://github.com/YumNumm/EQMonitor/issues/1837)、[backend #1291](https://github.com/YumNumm/eqmonitor-backend/issues/1291)。
-- [公式identity仕様](https://www.revenuecat.com/docs/customers/identifying-customers): 匿名→新custom ID等はmergeするが、匿名aliasを持つ既存IDやcustom ID間のlogInは購入移管しない。
-- [公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior): 標準の移管方式は復元先へ権限を移す。共有方式はlegacyであり、新規の同時利用設計の前提にしない。
