@@ -257,6 +257,7 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
 }
 
 const _buildConfig = BuildConfig(
+  isProFeaturesEnabled: false,
   restApiUrl: '',
   appIdSuffix: '',
   appName: 'EQMonitor',
