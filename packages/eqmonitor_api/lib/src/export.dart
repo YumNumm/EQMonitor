@@ -364,6 +364,7 @@ export 'models/data.dart';
 export 'models/translations.dart';
 export 'models/v2_feeds_admin_request_body.dart';
 export 'models/get_v2_subscription_me_response_union.dart';
+export 'models/post_v2_subscription_sync_response_union.dart';
 export 'models/merged_events.dart';
 export 'models/top_left.dart';
 export 'models/bottom_right.dart';
