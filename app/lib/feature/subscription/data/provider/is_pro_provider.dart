@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -19,9 +20,11 @@ bool isPro(Ref ref) {
     return false;
   }
   final status = ref.watch(subscriptionProvider);
+  if (status.isLoading || status.hasError) return false;
   return switch (status) {
     AsyncData(:final value) => switch (value) {
-      SubscriptionStatusActive() => true,
+      SubscriptionStatusActive(:final expiresAt) =>
+        expiresAt == null || expiresAt.isAfter(clock.now()),
       SubscriptionStatusInactive() => false,
     },
     _ => false,
