@@ -27,7 +27,14 @@ class DeviceAuthTokenInterceptor extends Interceptor {
     final isDeviceMePath =
         options.path == deviceMePath ||
         options.path.startsWith('$deviceMePath/');
-    if (!isDeviceMePath) {
+    final isSubscriptionRequest =
+        (options.method == 'GET' &&
+            options.path ==
+                api.SubscriptionApiClientUrls.getV2SubscriptionMe) ||
+        (options.method == 'POST' &&
+            options.path ==
+                api.SubscriptionApiClientUrls.postV2SubscriptionSync);
+    if (!isDeviceMePath && !isSubscriptionRequest) {
       handler.next(options);
       return;
     }

@@ -1,11 +1,13 @@
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/subscription_sync_banner.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -21,19 +23,28 @@ class SubscriptionSettingsPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainerLow,
       appBar: AppBar(title: const Text('EQMonitor Pro')),
-      body: statusAsync.when(
-        loading: () =>
-            const Center(child: AccessibleCircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text('サブスクリプション情報の取得に失敗しました: $error'),
+      body: Column(
+        children: [
+          const DeviceProvisioningBanner(),
+          const SubscriptionSyncBanner(),
+          Expanded(
+            child: statusAsync.when(
+              skipLoadingOnRefresh: false,
+              loading: () =>
+                  const Center(child: AccessibleCircularProgressIndicator()),
+              error: (error, _) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: const Text('購読情報を取得できませんでした。通信状況を確認して再試行してください。'),
+                ),
+              ),
+              data: (status) => switch (status) {
+                SubscriptionStatusActive() => _ActiveSection(status: status),
+                SubscriptionStatusInactive() => const _InactiveSection(),
+              },
+            ),
           ),
-        ),
-        data: (status) => switch (status) {
-          SubscriptionStatusActive() => _ActiveSection(status: status),
-          SubscriptionStatusInactive() => const _InactiveSection(),
-        },
+        ],
       ),
     );
   }

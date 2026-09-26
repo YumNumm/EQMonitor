@@ -1,8 +1,7 @@
-import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
-import 'package:m3e_core/m3e_core.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -20,6 +19,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_plan_constraints_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
@@ -30,7 +30,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -59,13 +62,6 @@ class _Body extends ConsumerWidget {
     final selectedPreset =
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
-
-    final isProFeaturesEnabled = ref
-        .watch(buildConfigProvider)
-        .isProFeaturesEnabled;
-    final constraints = ref.watch(startProvider).value?.planConstraints.free;
-    final isPro = isProFeaturesEnabled && (constraints?.isPro ?? false);
-    final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
       _,
@@ -125,10 +121,7 @@ class _Body extends ConsumerWidget {
               }
               await Navigator.of(context).push<void>(
                 MaterialPageRoute<void>(
-                  builder: (_) => _CustomNotificationSettingsPage(
-                    isPro: isPro,
-                    maxRegions: maxRegions,
-                  ),
+                  builder: (_) => const _CustomNotificationSettingsPage(),
                 ),
               );
             },
@@ -201,16 +194,12 @@ class _MasterNotificationControl extends StatelessWidget {
 }
 
 class _CustomNotificationSettingsPage extends ConsumerWidget {
-  const new({
-    required this.isPro,
-    required this.maxRegions,
-  });
-
-  final bool isPro;
-  final int maxRegions;
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final constraints = ref.watch(notificationPlanConstraintsProvider);
+    final isPro = ref.watch(isProProvider);
     final earthquakeSettings = ref
         .watch(earthquakeGlobalSettingsProvider)
         .value;
@@ -228,30 +217,57 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('カスタム設定')),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 16, bottom: 24),
-        children: [
-          const SettingsSectionHeader(text: '通知地域'),
-          _SlotListSection(isPro: isPro, maxRegions: maxRegions),
-          const SettingsSectionHeader(text: '通知の種類'),
-          _CustomSettingsSection(
-            isPro: isPro,
-            estimatedIntensityEnabled:
-                earthquakeSettings?.estimatedIntensityEnabled ?? true,
-            onEstimatedIntensityChanged: ({required value}) async {
-              await EarthquakeGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(earthquakeGlobalSettingsProvider.notifier)
-                      .updateSettings(estimatedIntensityEnabled: value);
-                },
-              );
-            },
+      body: constraints.when(
+        skipLoadingOnRefresh: false,
+        skipLoadingOnReload: false,
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
+        error: (_, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                const Text('通知設定の利用条件を確認できませんでした'),
+                M3EFilledButton(
+                  onPressed: () {
+                    ref.invalidate(startProvider);
+                    if (ref.read(buildConfigProvider).isProFeaturesEnabled) {
+                      ref.invalidate(subscriptionProvider);
+                    }
+                  },
+                  child: const Text('再試行'),
+                ),
+              ],
+            ),
           ),
-          const SettingsSectionHeader(text: 'その他の通知'),
-          const _GeneralNotificationSettingsSection(),
-        ],
+        ),
+        data: (plan) => ListView(
+          padding: const EdgeInsets.only(top: 16, bottom: 24),
+          children: [
+            const SettingsSectionHeader(text: '通知地域'),
+            _SlotListSection(maxRegions: plan.maxRegions.toInt()),
+            const SettingsSectionHeader(text: '通知の種類'),
+            _CustomSettingsSection(
+              isPro: isPro,
+              estimatedIntensityEnabled:
+                  earthquakeSettings?.estimatedIntensityEnabled ?? true,
+              onEstimatedIntensityChanged: ({required value}) async {
+                await EarthquakeGlobalSettingsNotifier.updateSettingsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(earthquakeGlobalSettingsProvider.notifier)
+                            .updateSettings(estimatedIntensityEnabled: value);
+                      },
+                    );
+              },
+            ),
+            const SettingsSectionHeader(text: 'その他の通知'),
+            const _GeneralNotificationSettingsSection(),
+          ],
+        ),
       ),
     );
   }
@@ -375,9 +391,7 @@ class _InlineSwitchTile extends StatelessWidget {
 }
 
 class _SlotListSection extends ConsumerWidget {
-  const new({required this.isPro, required this.maxRegions});
-
-  final bool isPro;
+  const new({required this.maxRegions});
   final int maxRegions;
 
   @override
@@ -414,7 +428,7 @@ class _SlotListSection extends ConsumerWidget {
     final isAdding = ref.watch(
       NotificationSlotsNotifier.addRegionMutation,
     ) is MutationPending;
-    final canAddRegion = !isAdding && (isPro || regionSlotCount < maxRegions);
+    final canAddRegion = !isAdding && regionSlotCount < maxRegions;
     ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) async {
       if (next is! MutationError || !context.mounted) {
         return;
@@ -433,7 +447,7 @@ class _SlotListSection extends ConsumerWidget {
       final bool isActive;
       if (slot.slotType == NotificationSlotType.region) {
         regionIndex++;
-        isActive = isPro || regionIndex <= maxRegions;
+        isActive = regionIndex <= maxRegions;
       } else {
         isActive = true;
       }
@@ -446,8 +460,12 @@ class _SlotListSection extends ConsumerWidget {
           onTap: isActive
               ? () async => Navigator.of(context).push<void>(
                   MaterialPageRoute<void>(
-                    builder: (_) =>
-                        SlotDetailPage(slotId: slot.id, isPro: isPro),
+                    builder: (_) => Consumer(
+                      builder: (context, ref, child) => SlotDetailPage(
+                        slotId: slot.id,
+                        isPro: ref.watch(isProProvider),
+                      ),
+                    ),
                   ),
                 )
               : null,
@@ -512,7 +530,7 @@ class _SlotListSection extends ConsumerWidget {
                 : null,
             icon: const Icon(Icons.add),
             label: Text(
-              isPro ? '地域を追加' : '地域を追加（$regionSlotCount/$maxRegions）',
+              '地域を追加（$regionSlotCount/$maxRegions）',
             ),
           ),
         ),

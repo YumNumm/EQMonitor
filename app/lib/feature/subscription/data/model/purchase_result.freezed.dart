@@ -56,11 +56,12 @@ extension PurchaseResultPatterns on PurchaseResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PurchaseResultSuccess value)?  success,TResult Function( PurchaseResultCancelled value)?  cancelled,TResult Function( PurchaseResultFailed value)?  failed,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PurchaseResultSuccess value)?  success,TResult Function( PurchaseResultPending value)?  pending,TResult Function( PurchaseResultCancelled value)?  cancelled,TResult Function( PurchaseResultFailed value)?  failed,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
-return success(_that);case PurchaseResultCancelled() when cancelled != null:
+return success(_that);case PurchaseResultPending() when pending != null:
+return pending(_that);case PurchaseResultCancelled() when cancelled != null:
 return cancelled(_that);case PurchaseResultFailed() when failed != null:
 return failed(_that);case _:
   return orElse();
@@ -80,11 +81,12 @@ return failed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PurchaseResultSuccess value)  success,required TResult Function( PurchaseResultCancelled value)  cancelled,required TResult Function( PurchaseResultFailed value)  failed,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PurchaseResultSuccess value)  success,required TResult Function( PurchaseResultPending value)  pending,required TResult Function( PurchaseResultCancelled value)  cancelled,required TResult Function( PurchaseResultFailed value)  failed,}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess():
-return success(_that);case PurchaseResultCancelled():
+return success(_that);case PurchaseResultPending():
+return pending(_that);case PurchaseResultCancelled():
 return cancelled(_that);case PurchaseResultFailed():
 return failed(_that);}
 }
@@ -100,11 +102,12 @@ return failed(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PurchaseResultSuccess value)?  success,TResult? Function( PurchaseResultCancelled value)?  cancelled,TResult? Function( PurchaseResultFailed value)?  failed,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PurchaseResultSuccess value)?  success,TResult? Function( PurchaseResultPending value)?  pending,TResult? Function( PurchaseResultCancelled value)?  cancelled,TResult? Function( PurchaseResultFailed value)?  failed,}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
-return success(_that);case PurchaseResultCancelled() when cancelled != null:
+return success(_that);case PurchaseResultPending() when pending != null:
+return pending(_that);case PurchaseResultCancelled() when cancelled != null:
 return cancelled(_that);case PurchaseResultFailed() when failed != null:
 return failed(_that);case _:
   return null;
@@ -123,10 +126,11 @@ return failed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  success,TResult Function()?  cancelled,TResult Function( PurchaseFailureReason reason)?  failed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  success,TResult Function()?  pending,TResult Function()?  cancelled,TResult Function( PurchaseFailureReason reason)?  failed,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
-return success();case PurchaseResultCancelled() when cancelled != null:
+return success();case PurchaseResultPending() when pending != null:
+return pending();case PurchaseResultCancelled() when cancelled != null:
 return cancelled();case PurchaseResultFailed() when failed != null:
 return failed(_that.reason);case _:
   return orElse();
@@ -146,10 +150,11 @@ return failed(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  success,required TResult Function()  cancelled,required TResult Function( PurchaseFailureReason reason)  failed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  success,required TResult Function()  pending,required TResult Function()  cancelled,required TResult Function( PurchaseFailureReason reason)  failed,}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess():
-return success();case PurchaseResultCancelled():
+return success();case PurchaseResultPending():
+return pending();case PurchaseResultCancelled():
 return cancelled();case PurchaseResultFailed():
 return failed(_that.reason);}
 }
@@ -165,10 +170,11 @@ return failed(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  success,TResult? Function()?  cancelled,TResult? Function( PurchaseFailureReason reason)?  failed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  success,TResult? Function()?  pending,TResult? Function()?  cancelled,TResult? Function( PurchaseFailureReason reason)?  failed,}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
-return success();case PurchaseResultCancelled() when cancelled != null:
+return success();case PurchaseResultPending() when pending != null:
+return pending();case PurchaseResultCancelled() when cancelled != null:
 return cancelled();case PurchaseResultFailed() when failed != null:
 return failed(_that.reason);case _:
   return null;
@@ -183,7 +189,7 @@ return failed(_that.reason);case _:
 
 class PurchaseResultSuccess implements PurchaseResult {
   const PurchaseResultSuccess();
-  
+
 
 
 
@@ -213,9 +219,41 @@ String toString() {
 /// @nodoc
 
 
+class PurchaseResultPending implements PurchaseResult {
+  const PurchaseResultPending();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseResultPending);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'PurchaseResult.pending()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
 class PurchaseResultCancelled implements PurchaseResult {
   const PurchaseResultCancelled();
-  
+
 
 
 
@@ -247,7 +285,7 @@ String toString() {
 
 class PurchaseResultFailed implements PurchaseResult {
   const PurchaseResultFailed(this.reason);
-  
+
 
  final  PurchaseFailureReason reason;
 

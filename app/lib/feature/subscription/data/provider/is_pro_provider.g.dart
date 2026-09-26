@@ -65,4 +65,4 @@ final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isProHash() => r'cd9d34f2a30f069ce325cb0ba46805338fa46000';
+String _$isProHash() => r'71eeb1d312e6ff3831693febba2a64b39b213cf1';
