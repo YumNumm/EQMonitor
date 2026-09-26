@@ -1,5 +1,3 @@
-import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
-import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,12 +51,9 @@ void main() {
         monthlyProductId: 'expected.product',
       );
 
-      final outcome = await repository.purchaseMonthly();
+      final package = await repository.fetchMonthlyPackage();
 
-      expect(
-        outcome.result,
-        const PurchaseResult.failed(PurchaseFailureReason.planNotFound),
-      );
+      expect(package, isNull);
       expect(purchases, 0);
     },
   );

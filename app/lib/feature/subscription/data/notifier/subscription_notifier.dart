@@ -3,6 +3,7 @@ import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'subscription_notifier.g.dart';
@@ -25,9 +26,9 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   }
 
   static final purchaseMonthlyMutation = Mutation<PurchaseResult>();
-  Future<PurchaseResult> purchaseMonthly() async {
+  Future<PurchaseResult> purchaseMonthly({required rc.Package package}) async {
     final repository = await ref.read(subscriptionRepositoryProvider.future);
-    final outcome = await repository.purchaseMonthly();
+    final outcome = await repository.purchaseMonthly(package: package);
     final status = outcome.status;
     if (status != null) {
       state = AsyncData(status);

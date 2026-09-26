@@ -45,7 +45,7 @@ final class SubscriptionNotifierProvider
 }
 
 String _$subscriptionNotifierHash() =>
-    r'cab59e57f46d96b9fe9b841e5907bb7b644a6f1f';
+    r'9b731dc6504672339f7eaf7070fb5d751b43acfe';
 
 /// サブスクリプション状態を保持する AsyncNotifier。
 ///

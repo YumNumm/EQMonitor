@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/subscription/ui/component/thank_you_dialog.dar
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:url_launcher/url_launcher_string.dart';
 
 part 'paywall_flow.g.dart';
@@ -18,14 +19,18 @@ PaywallFlow paywallFlow(Ref ref) => PaywallFlow();
 /// Paywall / SubscriptionSettings から呼ばれる購入・復元・外部リンクの Flow。
 class PaywallFlow {
   /// 月額プランの購入フロー。結果に応じてダイアログ / SnackBar を出す。
-  Future<void> purchaseMonthly(WidgetRef ref, BuildContext context) async {
+  Future<void> purchaseMonthly(
+    WidgetRef ref,
+    BuildContext context, {
+    required rc.Package package,
+  }) async {
     try {
       final result = await SubscriptionNotifier.purchaseMonthlyMutation.run(
         ref,
         (transaction) async {
           return transaction
               .get(subscriptionProvider.notifier)
-              .purchaseMonthly();
+              .purchaseMonthly(package: package);
         },
       );
       if (!context.mounted) {

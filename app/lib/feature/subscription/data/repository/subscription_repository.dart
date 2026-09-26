@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/subscription/data/model/monthly_subscription_package.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
@@ -30,31 +31,26 @@ class SubscriptionRepository {
     return info.toSubscriptionStatus();
   }
 
-  Future<PurchaseOutcome> purchaseMonthly() async {
-    try {
-      final offerings = await rc.Purchases.getOfferings();
-      final current = offerings.current;
-      final matchingPackages = current == null
-          ? <rc.Package>[]
-          : current.availablePackages
-                .where(
-                  (package) =>
-                      package.storeProduct.identifier == _monthlyProductId &&
-                      package.packageType == rc.PackageType.monthly &&
-                      package.storeProduct.subscriptionPeriod == 'P1M',
-                )
-                .toList();
-      final monthlyPackage = matchingPackages.length == 1
-          ? matchingPackages.single
-          : null;
-      if (monthlyPackage == null) {
-        return const PurchaseOutcome(
-          result: PurchaseResult.failed(PurchaseFailureReason.planNotFound),
-        );
-      }
+  Future<rc.Package?> fetchMonthlyPackage() async {
+    final offerings = await rc.Purchases.getOfferings();
+    final matches = offerings.current?.availablePackages
+        .where(
+          (package) =>
+              package.matchesMonthlyProduct(productId: _monthlyProductId),
+        )
+        .toList();
+    return matches?.length == 1 ? matches?.single : null;
+  }
 
+  Future<PurchaseOutcome> purchaseMonthly({required rc.Package package}) async {
+    if (!package.matchesMonthlyProduct(productId: _monthlyProductId)) {
+      return const PurchaseOutcome(
+        result: PurchaseResult.failed(PurchaseFailureReason.planNotFound),
+      );
+    }
+    try {
       final result = await rc.Purchases.purchase(
-        rc.PurchaseParams.package(monthlyPackage),
+        rc.PurchaseParams.package(package),
       );
       final status = result.customerInfo.toSubscriptionStatus();
       return PurchaseOutcome(

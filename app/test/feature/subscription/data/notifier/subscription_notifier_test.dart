@@ -8,6 +8,9 @@ import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifi
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
+
+import '../../support/subscription_fixtures.dart';
 
 const _buildConfig = BuildConfig(
   restApiUrl: '',
@@ -44,7 +47,9 @@ class FakeSubscriptionRepository extends SubscriptionRepository {
   }
 
   @override
-  Future<PurchaseOutcome> purchaseMonthly() async => purchaseOutcome;
+  Future<PurchaseOutcome> purchaseMonthly({
+    required rc.Package package,
+  }) async => purchaseOutcome;
 
   @override
   Future<PurchaseOutcome> restorePurchases() async => restoreOutcome;
@@ -108,7 +113,7 @@ void main() {
 
         final result = await container
             .read(subscriptionProvider.notifier)
-            .purchaseMonthly();
+            .purchaseMonthly(package: monthlyPackage);
 
         expect(result, const PurchaseResult.success());
         expect(container.read(subscriptionProvider).value, active);
