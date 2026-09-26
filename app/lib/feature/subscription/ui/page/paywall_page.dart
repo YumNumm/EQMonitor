@@ -4,6 +4,11 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/monthly_subscription_package_provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
+import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/subscription_sync_banner.dart';
+import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -15,6 +20,17 @@ class PaywallPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(paywallFlowProvider);
+    final subscription = ref.watch(subscriptionProvider);
+    final canPurchase =
+        !subscription.isLoading &&
+        !subscription.hasError &&
+        subscription.value is SubscriptionStatusInactive &&
+        subscription.value?.syncPhase == SubscriptionSyncPhase.idle;
+    final packageState = ref.watch(monthlySubscriptionPackageProvider);
+    final package = switch (packageState) {
+      AsyncData(:final value) when !packageState.isLoading => value,
+      _ => null,
+    };
     final purchaseState = ref.watch(
       SubscriptionNotifier.purchaseMonthlyMutation,
     );
@@ -53,9 +69,18 @@ class PaywallPage extends ConsumerWidget {
                     style: textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 12),
+                  const DeviceProvisioningBanner(),
+                  const SubscriptionSyncBanner(),
                   const _BenefitsSection(),
                   const SizedBox(height: 12),
-                  const _PlanCard(),
+                  _PlanCard(
+                    packageState: packageState,
+                    onRetry: isBusy
+                        ? null
+                        : () => ref.invalidate(
+                            monthlySubscriptionPackageProvider,
+                          ),
+                  ),
                   const SizedBox(height: 12),
                   M3EButton(
                     style: .filled,
@@ -71,9 +96,13 @@ class PaywallPage extends ConsumerWidget {
                         color: theme.colorScheme.onPrimary,
                       ),
                     ),
-                    onPressed: isBusy
+                    onPressed: isBusy || !canPurchase || package == null
                         ? null
-                        : () async => flow.purchaseMonthly(ref, context),
+                        : () async => flow.purchaseMonthly(
+                            ref,
+                            context,
+                            package: package,
+                          ),
                     child: isPurchasing
                         ? const SizedBox.square(
                             dimension: 20,
@@ -126,7 +155,7 @@ class _BenefitsSection extends StatelessWidget {
   static const _benefits = <_Benefit>[
     _Benefit(
       icon: Icons.notifications_active_rounded,
-      title: '通知対象地域を最大5つに拡張',
+      title: '通知対象地域を追加',
       description: '複数の地点の地震情報をまとめて受信できます',
     ),
     _Benefit(
@@ -213,7 +242,10 @@ class _BenefitRow extends StatelessWidget {
 }
 
 class _PlanCard extends StatelessWidget {
-  const new();
+  const new({required this.packageState, required this.onRetry});
+
+  final AsyncValue<rc.Package?> packageState;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -238,24 +270,28 @@ class _PlanCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: .baseline,
-            textBaseline: .alphabetic,
-            children: [
-              Text(
-                '¥300',
+          if (packageState.isLoading)
+            const AccessibleCircularProgressIndicator()
+          else
+            switch (packageState) {
+              AsyncData(value: final package?) => Text(
+                '${package.storeProduct.priceString} / 月',
                 style: textTheme.headlineLarge?.copyWith(
                   fontFamily: FontFamily.googleSansFlex,
                 ),
               ),
-              Text(
-                '/月',
-                style: textTheme.bodyMedium?.copyWith(
-                  fontFamily: FontFamily.googleSansFlex,
-                ),
+              _ => Column(
+                crossAxisAlignment: .start,
+                children: [
+                  const Text('プラン情報を取得できませんでした。通信状況を確認して再試行してください。'),
+                  M3EButton(
+                    style: .text,
+                    onPressed: onRetry,
+                    child: const Text('再試行'),
+                  ),
+                ],
               ),
-            ],
-          ),
+            },
         ],
       ),
     );
