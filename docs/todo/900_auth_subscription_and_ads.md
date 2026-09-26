@@ -44,6 +44,9 @@
 
 ## 089: 購入状態の正本・identity とアプリ登録
 
+- 2026-09-26決定: 同じストアアカウントの複数端末でProを同時利用可能にする。device IDと購入所有者の1対1前提を見直し、共有所有者・端末紐付け・認証済み再同期の契約を #1837/#1840 とbackend #1291で確定する。
+- 調査結果・実装順序・未確認事項: [#1831実装準備](../knowledge/20260926_revenuecat_1831_preparation.md)。現時点では設計案で、実装・配備・実購入検証は未完了。
+
 - `app/lib/feature/subscription/data/repository/subscription_repository.dart` は RevenueCat の `getCustomerInfo()` を読む。旧089は `GET /v2/subscription/me` を正本とし旧090はSDK優先で矛盾していた。購入直後のWebhook遅延・offline cache・失効反映を含む一つの契約へ決める。
 - `revenue_cat_configurator.dart` は現在匿名 configure。device/user と RevenueCat AppUserID の対応、移行時の alias/transfer、再インストール/restore、複数端末を server 契約と揃えてテストする。`logIn` だけで全移行が成功すると仮定しない。
 - 登録は `app/lib/feature/devices/data/repository/device_repository.dart` の POST `/v2/device`・`/me`、`device_auth_repository.dart` の secure token 保存が実装済み。旧「SharedPreferences に JWT」「migration 不要」は現行に適用しない。
