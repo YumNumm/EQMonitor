@@ -1,3 +1,5 @@
+import '../../support/subscription_fixtures.dart';
+
 import 'package:eqmonitor/feature/subscription/data/repository/subscription_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,6 +51,7 @@ void main() {
       });
       const repository = SubscriptionRepository(
         monthlyProductId: 'expected.product',
+        session: const TestRevenueCatSession(),
       );
 
       final package = await repository.fetchMonthlyPackage();

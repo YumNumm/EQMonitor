@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart'
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/subscription_product_id_provider.dart';
-import 'package:eqmonitor/feature/subscription/data/repository/revenue_cat_configurator.dart';
+import 'package:eqmonitor/feature/subscription/data/repository/revenue_cat_session.dart';
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,24 +15,29 @@ const _entitlementId = 'pro';
 
 @Riverpod(keepAlive: true)
 Future<SubscriptionRepository> subscriptionRepository(Ref ref) async {
-  await const RevenueCatConfigurator().ensureConfigured();
+  final session = await ref.watch(revenueCatSessionProvider.future);
   final monthlyProductId = ref.watch(monthlySubscriptionProductIdProvider);
-  return SubscriptionRepository(monthlyProductId: monthlyProductId);
+  return SubscriptionRepository(
+    monthlyProductId: monthlyProductId,
+    session: session,
+  );
 }
 
 class SubscriptionRepository {
-  const new({required String monthlyProductId})
+  const new({required String monthlyProductId, required this.session})
     : _monthlyProductId = monthlyProductId;
+
+  final RevenueCatSession session;
 
   final String _monthlyProductId;
 
   Future<SubscriptionStatus> fetchStatus() async {
-    final info = await rc.Purchases.getCustomerInfo();
+    final info = await session.run(operation: rc.Purchases.getCustomerInfo);
     return info.toSubscriptionStatus();
   }
 
   Future<rc.Package?> fetchMonthlyPackage() async {
-    final offerings = await rc.Purchases.getOfferings();
+    final offerings = await session.run(operation: rc.Purchases.getOfferings);
     final matches = offerings.current?.availablePackages
         .where(
           (package) =>
@@ -49,8 +54,10 @@ class SubscriptionRepository {
       );
     }
     try {
-      final result = await rc.Purchases.purchase(
-        rc.PurchaseParams.package(package),
+      final result = await session.run(
+        operation: () => rc.Purchases.purchase(
+          rc.PurchaseParams.package(package),
+        ),
       );
       final status = result.customerInfo.toSubscriptionStatus();
       return PurchaseOutcome(
@@ -81,7 +88,7 @@ class SubscriptionRepository {
 
   Future<PurchaseOutcome> restorePurchases() async {
     try {
-      final info = await rc.Purchases.restorePurchases();
+      final info = await session.run(operation: rc.Purchases.restorePurchases);
       final status = info.toSubscriptionStatus();
       return PurchaseOutcome(
         result: status is SubscriptionStatusActive
