@@ -20,7 +20,7 @@
 - 同期失敗・反映待ちを購入成立失敗と混同しない。再試行ボタンは同期のみ実行し、再購入しない。SDK更新・foreground復帰・確認済み期限で再評価する。
 - 初回取得失敗と401ではProを付与しない。同期通信エラーでは同一deviceで既に確認済みの権限を期限までメモリ上で維持可能だが、再起動をまたぐ権限キャッシュは追加しない。更新中は前deviceの権限を使わない。
 - start APIのFree/Pro制限を選び、開いたままの通知設定画面にも反映する。上限超過の保存済み地域は削除しない。制限が不明なら固定数にフォールバックせず再取得を表示する。
-- backend companion: https://github.com/YumNumm/eqmonitor-backend/pull/1297 。認証済みdeviceのサーバー照会結果を、保持済みWebhookの取引・商品・store・environmentと照合して共有を認める。TRANSFERには取引IDがないため、それだけでは復元先の権限を付与しない。取引を特定できるWebhookまたは認証済み同期の照合で付与する。既存Main entitlement・商品は変更しない。
+- backend companion: [#1297（マージ済み）](https://github.com/YumNumm/eqmonitor-backend/pull/1297) と [#1299（検証済み購入のみに共有を限定する修正）](https://github.com/YumNumm/eqmonitor-backend/pull/1299)。認証済みdeviceのサーバー照会結果を、保持済みWebhookの取引・商品・store・environmentと照合して共有を認める。TRANSFERには取引IDがないため、それだけでは復元先の権限を付与しない。取引を特定できるWebhookまたは認証済み同期の照合で付与する。既存Main entitlement・商品は変更しない。
 
 ## 検証コマンド
 
@@ -47,7 +47,7 @@ mise exec -- flutter analyze lib/feature/subscription lib/feature/settings/featu
 
 ## 未実施の受け入れ検証（#1844）
 
-- backend migration・backfill・配備、server RevenueCat secret、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
+- backend #1299 の `is_verified` migration・backfill-dry-run・backfill・配備、server RevenueCat secret、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
 - TestFlight/Play内部テストの新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール。端末Bで復元後もA/B双方がProで、返金/失効が双方へ反映されること。
 - RevenueCatの標準移管とlegacy共有は同一ではない。[公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior)を踏まえ、実project設定・build・API環境を検証記録に残す。
 - 最初のWebhook取引記録が未到着ならサーバー照会だけで元取引IDを推測しない。409 pendingとし、Webhook到着/再送後に同期する。任意の欠落イベントを完全復旧する実装とは扱わない。

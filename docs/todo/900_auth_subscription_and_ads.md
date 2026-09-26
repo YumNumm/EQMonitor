@@ -62,7 +62,7 @@
 
 ## RevenueCat #1831 実装後のリリース確認（2026-09-26）
 
-- [ ] backend PR #1297 のmigration/backfill・配備とRevenueCat server secret/Webhook接続を確認する。
+- [ ] backend PR #1297（マージ済み）と #1299（取引証明の検証修正）のmigration/backfill-dry-run/backfill・配備とRevenueCat server secret/Webhook接続を確認する。
 - [ ] #1844: 実機2台でログインなし復元、双方のPro継続、更新・返金・失効・再インストール・匿名移行を検証する。
 - [ ] 初回Webhook欠落は409 pending。保持済みの検証取引がないケースはWebhook再送で復旧させ、任意のイベント欠落を自動復旧済みと扱わない。
 - [ ] #1843: Console申告・公開ポリシーと購入/顧客ID/照会snapshotの保持期間・削除請求手順を確定する。
