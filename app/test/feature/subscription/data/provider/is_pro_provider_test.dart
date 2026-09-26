@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
@@ -11,8 +13,11 @@ class _StubSubscriptionNotifier extends SubscriptionNotifier {
 
   final SubscriptionStatus _status;
 
+  var refreshing = false;
+
   @override
-  Future<SubscriptionStatus> build() async => _status;
+  Future<SubscriptionStatus> build() async =>
+      refreshing ? Completer<SubscriptionStatus>().future : _status;
 }
 
 BuildConfig _buildConfig({required bool isProFeaturesEnabled}) => BuildConfig(
@@ -54,6 +59,34 @@ void main() {
 
       await container.read(subscriptionProvider.future);
       expect(container.read(isProProvider), isTrue);
+    });
+
+    test('expired confirmation cannot keep Pro while offline', () async {
+      final container = _container(
+        isProFeaturesEnabled: true,
+        status: SubscriptionStatus.active(
+          productId: 'pro',
+          expiresAt: DateTime.utc(2000),
+          syncPhase: SubscriptionSyncPhase.failed,
+        ),
+      );
+      addTearDown(container.dispose);
+      await container.read(subscriptionProvider.future);
+      expect(container.read(isProProvider), isFalse);
+    });
+
+    test('refresh never leaks a previous device entitlement', () async {
+      final container = _container(
+        isProFeaturesEnabled: true,
+        status: const SubscriptionStatus.active(productId: 'pro'),
+      );
+      addTearDown(container.dispose);
+      await container.read(subscriptionProvider.future);
+      (container.read(
+        subscriptionProvider.notifier,
+      ) as _StubSubscriptionNotifier).refreshing = true;
+      container.invalidate(subscriptionProvider);
+      expect(container.read(isProProvider), isFalse);
     });
 
     test('フラグ無効なら active でも false', () async {
