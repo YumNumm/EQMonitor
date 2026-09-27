@@ -1,11 +1,8 @@
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 
-sealed class PushTokenSyncWorkerState {
-  const new();
-
+sealed class const PushTokenSyncWorkerState() {
   const factory absent() = PushTokenSyncWorkerAbsent;
-  const factory syncing({required int attempt}) =
-      PushTokenSyncWorkerSyncing;
+  const factory syncing({required int attempt}) = PushTokenSyncWorkerSyncing;
   const factory waiting({
     required int attempt,
     required DeviceProvisioningException error,
@@ -16,43 +13,26 @@ sealed class PushTokenSyncWorkerState {
     required int attempt,
     required DeviceProvisioningException error,
   }) = PushTokenSyncWorkerFailed;
-  const factory disposed() =
-      PushTokenSyncWorkerDisposed;
+  const factory disposed() = PushTokenSyncWorkerDisposed;
 }
 
-final class PushTokenSyncWorkerAbsent extends PushTokenSyncWorkerState {
-  const new();
-}
+final class const PushTokenSyncWorkerAbsent() extends PushTokenSyncWorkerState;
 
-final class PushTokenSyncWorkerSyncing extends PushTokenSyncWorkerState {
-  const new({required this.attempt});
+final class const PushTokenSyncWorkerSyncing({required final int attempt})
+    extends PushTokenSyncWorkerState;
 
-  final int attempt;
-}
+final class const PushTokenSyncWorkerWaiting({
+  required final int attempt,
+  required final DeviceProvisioningException error,
+  required final DateTime resumeAt,
+}) extends PushTokenSyncWorkerState;
 
-final class PushTokenSyncWorkerWaiting extends PushTokenSyncWorkerState {
-  const new({
-    required this.attempt,
-    required this.error,
-    required this.resumeAt,
-  });
+final class const PushTokenSyncWorkerSynced() extends PushTokenSyncWorkerState;
 
-  final int attempt;
-  final DeviceProvisioningException error;
-  final DateTime resumeAt;
-}
+final class const PushTokenSyncWorkerFailed({
+  required final int attempt,
+  required final DeviceProvisioningException error,
+}) extends PushTokenSyncWorkerState;
 
-final class PushTokenSyncWorkerSynced extends PushTokenSyncWorkerState {
-  const new();
-}
-
-final class PushTokenSyncWorkerFailed extends PushTokenSyncWorkerState {
-  const new({required this.attempt, required this.error});
-
-  final int attempt;
-  final DeviceProvisioningException error;
-}
-
-final class PushTokenSyncWorkerDisposed extends PushTokenSyncWorkerState {
-  const new();
-}
+final class const PushTokenSyncWorkerDisposed()
+    extends PushTokenSyncWorkerState;

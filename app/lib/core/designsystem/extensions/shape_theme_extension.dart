@@ -8,20 +8,18 @@ part 'shape_theme_extension.tailor.dart';
 
 @doubleThemeEncoder
 @tailorMixinComponent
-class ShapeThemeExtension extends ThemeExtension<ShapeThemeExtension>
+class const ShapeThemeExtension({
+  required final double xs,
+  required final double sm,
+  required final double md,
+  required final double lg,
+  required final double xl,
+  required final double button,
+  required final double card,
+  required final double sheet,
+  required final double pill,
+}) extends ThemeExtension<ShapeThemeExtension>
     with _$ShapeThemeExtensionTailorMixin {
-  const new({
-    required this.xs,
-    required this.sm,
-    required this.md,
-    required this.lg,
-    required this.xl,
-    required this.button,
-    required this.card,
-    required this.sheet,
-    required this.pill,
-  });
-
   factory standard() => const ShapeThemeExtension(
     xs: 8,
     sm: 12,
@@ -33,14 +31,4 @@ class ShapeThemeExtension extends ThemeExtension<ShapeThemeExtension>
     sheet: 28,
     pill: 999,
   );
-
-  final double xs;
-  final double sm;
-  final double md;
-  final double lg;
-  final double xl;
-  final double button;
-  final double card;
-  final double sheet;
-  final double pill;
 }

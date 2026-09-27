@@ -30,8 +30,8 @@ import 'package:flutter/foundation.dart';
 /// 窓の深さが非対称**になっている(fix round 2)。
 ///
 /// - 上方向: `entry.z > activeZoom + 1`を破棄する(元の
-///   `docs/knowledge/20260802_kevi_map_renderer_reference.md`
-///   「ジオメトリcache戦略」節の「直近使用zoom+1」をそのまま踏襲)。
+///   `docs/knowledge/map_renderer_references.md`
+///   のKEViを参考にしたcache policy)。
 /// - 下方向: `entry.z < activeZoom - maxParentFallbackSteps`を破棄する。
 ///
 /// 対称な`±1`窓だったfix round 1の実装は、`lookupWithFallback`の祖先
@@ -83,8 +83,8 @@ import 'package:flutter/foundation.dart';
 /// # 子→親fallback
 ///
 /// [lookupWithFallback]は、要求tileが未cacheの場合に
-/// `docs/knowledge/20260805_maplibre_native_renderer_reference.md`
-/// 「tileのライフサイクル」節と同じ順序で代替を探す: まず子4枚
+/// `docs/knowledge/map_renderer_references.md`
+/// のMapLibre Nativeを参考にした順序で代替を探す: まず子4枚
 /// (`CanonicalTileId.children()`)が**全て**cache済みならそれを使い、
 /// 揃わなければ`overscaledZ`を1段ずつ下げるのと同じ意味で
 /// `CanonicalTileId.scaledTo`によるancestorを1段ずつ遡り、最初に
@@ -305,16 +305,11 @@ final class BaseMapTileCache {
 
 /// [BaseMapTileCache.lookupWithFallback]の結果。
 @immutable
-sealed class BaseMapTileFallbackResult {
-  const new();
-}
+sealed class const BaseMapTileFallbackResult();
 
 /// 要求どおりのtileがcache済みだった場合。
-final class BaseMapTileFallbackExact extends BaseMapTileFallbackResult {
-  const new(this.geometry);
-
-  final BaseMapTileGeometry geometry;
-}
+final class const BaseMapTileFallbackExact(final BaseMapTileGeometry geometry)
+    extends BaseMapTileFallbackResult;
 
 /// 要求tileは未cacheだが、`z+1`の子4枚が全てcache済みだった場合。
 final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
@@ -327,20 +322,12 @@ final class BaseMapTileFallbackChildren extends BaseMapTileFallbackResult {
 
 /// 要求tileも子4枚も未cacheで、`stepsUp`段上の祖先[tileId]がcache済み
 /// だった場合。
-final class BaseMapTileFallbackParent extends BaseMapTileFallbackResult {
-  const new(
-    this.geometry, {
-    required this.tileId,
-    required this.stepsUp,
-  });
-
-  final BaseMapTileGeometry geometry;
-  final CanonicalTileId tileId;
-  final int stepsUp;
-}
+final class const BaseMapTileFallbackParent(
+  final BaseMapTileGeometry geometry, {
+  required final CanonicalTileId tileId,
+  required final int stepsUp,
+}) extends BaseMapTileFallbackResult;
 
 /// 要求tile・子4枚・`maxParentSteps`段以内の祖先のいずれもcacheされていない
 /// 場合。
-final class BaseMapTileFallbackMiss extends BaseMapTileFallbackResult {
-  const new();
-}
+final class const BaseMapTileFallbackMiss() extends BaseMapTileFallbackResult;

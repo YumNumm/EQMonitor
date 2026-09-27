@@ -78,17 +78,11 @@ void main() {
   );
 }
 
-final class _Task61BuiltArchive {
-  const new({
-    required this.bytes,
-    required this.descriptor,
-    required this.occupiedTileIds,
-  });
-
-  final Uint8List bytes;
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-  final List<int> occupiedTileIds;
-}
+final class const _Task61BuiltArchive({
+  required final Uint8List bytes,
+  required final SeismicityPmTilesArchiveDescriptor descriptor,
+  required final List<int> occupiedTileIds,
+});
 
 final class _Task61Fixtures {
   static const uuidA = '00000000-0000-4000-8000-00000000000a';

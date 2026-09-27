@@ -6,9 +6,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 
-class EarthquakeActivityFilter {
-  const new();
-
+class const EarthquakeActivityFilter() {
   static const _earthRadiusKm = 6371.0;
 
   List<EarthquakePartialNormal> apply({

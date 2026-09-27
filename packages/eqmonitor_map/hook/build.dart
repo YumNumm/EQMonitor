@@ -18,6 +18,8 @@ Future<void> main(List<String> args) async {
         buildInput: config,
         buildOutput: output,
         manifestFileName: 'shaders/earthquake_overlay.shaderbundle.json',
+        interfaceManifestFileName:
+            'shaders/earthquake_overlay.shaderinterface.json',
         assetMode: TargetShaderBundleAssetMode.dataAssetsRequired,
         glesLanguageVersion: 300,
       );

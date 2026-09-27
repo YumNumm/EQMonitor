@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-final class UserJwtExpiryParser {
-  const new();
-
+final class const UserJwtExpiryParser() {
   static final _segmentPattern = RegExp(r'^[A-Za-z0-9_-]+$');
 
   DateTime? parse(String token) {

@@ -1,9 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,42 +19,46 @@ class ShindoDbStationDetailSheet extends StatelessWidget {
     final periods = record.periods;
 
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Center(
-              child: Container(
-                width: 32,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: context.designSystem.colorTheme.onSurfaceVariant
-                      .withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(2),
+      child: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            sliver: SliverList.list(
+              children: [
+                Center(
+                  child: Container(
+                    width: 32,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: context.designSystem.colorTheme.onSurfaceVariant
+                          .withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
                 ),
-              ),
+                _Header(station: station),
+                const SizedBox(height: 12),
+                _InfoRows(record: record),
+                if (maxAccel != null) ...[
+                  const SizedBox(height: 16),
+                  _MaxAccelTable(
+                    maxAccel: maxAccel,
+                    maxAccelTime: record.maxAccelTime,
+                  ),
+                ],
+                if (periods != null) ...[
+                  const SizedBox(height: 16),
+                  _PeriodsTable(periods: periods),
+                ],
+                const SizedBox(height: 16),
+                const _RelatedLinksCard(),
+                const SizedBox(height: 8),
+              ],
             ),
-            _Header(station: station),
-            const SizedBox(height: 12),
-            _InfoRows(record: record),
-            if (maxAccel != null) ...[
-              const SizedBox(height: 16),
-              _MaxAccelTable(
-                maxAccel: maxAccel,
-                maxAccelTime: record.maxAccelTime,
-              ),
-            ],
-            if (periods != null) ...[
-              const SizedBox(height: 16),
-              _PeriodsTable(periods: periods),
-            ],
-            const SizedBox(height: 16),
-            const _RelatedLinksCard(),
-            const SizedBox(height: 8),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -72,7 +76,7 @@ class _Header extends StatelessWidget {
     final historicalDesc = record.intensityClass.historicalDescription;
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ShindoDbIntensityClassIcon(
           intensityClass: record.intensityClass,
@@ -81,12 +85,12 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 station.name,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontFamily: FontFamily.notoSansJP,
                 ),
               ),
@@ -129,14 +133,14 @@ class _InfoRows extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     return Column(
       children: [
         if (observedAt != null)
           _InfoRow(
             label: '観測時刻',
-            value: dateFormat.format(observedAt.toLocal()),
+            value: observedAt.formatWithTz(
+              DateTimeFormat.yearMonthDayHourMinuteSecond,
+            ),
           ),
         if (observationCount != null)
           _InfoRow(label: '観測回数', value: '$observationCount 回'),
@@ -197,12 +201,12 @@ class _MaxAccelTable extends StatelessWidget {
         gal != null ? '${gal.toStringAsFixed(2)}gal' : '-';
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '最大加速度',
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
@@ -210,26 +214,27 @@ class _MaxAccelTable extends StatelessWidget {
         Table(
           border: TableBorder.all(
             color: context.designSystem.colorTheme.outlineVariant,
+            borderRadius: BorderRadius.circular(context.designSystem.shape.sm),
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultVerticalAlignment: .middle,
           children: [
             TableRow(
               decoration: BoxDecoration(
                 color: context.designSystem.colorTheme.surfaceContainerHighest,
               ),
               children: [
-                _tableHeaderCell('合成', theme),
-                _tableHeaderCell('南北', theme),
-                _tableHeaderCell('東西', theme),
-                _tableHeaderCell('上下', theme),
+                const _TableCell(text: '合成', isHeader: true),
+                const _TableCell(text: '南北', isHeader: true),
+                const _TableCell(text: '東西', isHeader: true),
+                const _TableCell(text: '上下', isHeader: true),
               ],
             ),
             TableRow(
               children: [
-                _tableValueCell(galText(maxAccel.synthesizedGal), theme),
-                _tableValueCell(galText(maxAccel.nsGal), theme),
-                _tableValueCell(galText(maxAccel.ewGal), theme),
-                _tableValueCell(galText(maxAccel.udGal), theme),
+                _TableCell(text: galText(maxAccel.synthesizedGal)),
+                _TableCell(text: galText(maxAccel.nsGal)),
+                _TableCell(text: galText(maxAccel.ewGal)),
+                _TableCell(text: galText(maxAccel.udGal)),
               ],
             ),
           ],
@@ -237,7 +242,7 @@ class _MaxAccelTable extends StatelessWidget {
         if (maxAccelTime case final accelTime?) ...[
           const SizedBox(height: 4),
           Text(
-            '最大加速度時刻: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(accelTime.toLocal())}',
+            '最大加速度時刻: ${accelTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecond)}',
             style: theme.textTheme.labelSmall?.copyWith(
               color: context.designSystem.colorTheme.onSurfaceVariant,
               fontFamily: FontFamily.googleSansCode,
@@ -246,39 +251,6 @@ class _MaxAccelTable extends StatelessWidget {
           ),
         ],
       ],
-    );
-  }
-
-  Widget _tableHeaderCell(String text, ThemeData theme) {
-    return TableCell(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-        child: Center(
-          child: Text(
-            text,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansJP,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _tableValueCell(String text, ThemeData theme) {
-    return TableCell(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-        child: Center(
-          child: Text(
-            text,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontFamily: FontFamily.googleSansCode,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -303,12 +275,12 @@ class _PeriodsTable extends StatelessWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '周期',
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.notoSansJP,
           ),
         ),
@@ -316,8 +288,9 @@ class _PeriodsTable extends StatelessWidget {
         Table(
           border: TableBorder.all(
             color: context.designSystem.colorTheme.outlineVariant,
+            borderRadius: BorderRadius.circular(context.designSystem.shape.sm),
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultVerticalAlignment: .middle,
           columnWidths: const {0: IntrinsicColumnWidth()},
           children: [
             TableRow(
@@ -325,17 +298,17 @@ class _PeriodsTable extends StatelessWidget {
                 color: context.designSystem.colorTheme.surfaceContainerHighest,
               ),
               children: [
-                _headerCell('成分', theme),
-                _headerCell('最大加速度周期', theme),
-                _headerCell('卓越周期', theme),
+                const _TableCell(text: '成分', isHeader: true),
+                const _TableCell(text: '最大加速度周期', isHeader: true),
+                const _TableCell(text: '卓越周期', isHeader: true),
               ],
             ),
             ...rows.map(
               (row) => TableRow(
                 children: [
-                  _headerCell(row.label, theme),
-                  _valueCell(row.component.maxAccelPeriodText ?? '-', theme),
-                  _valueCell(row.component.predominantPeriodText ?? '-', theme),
+                  _TableCell(text: row.label, isHeader: true),
+                  _TableCell(text: row.component.maxAccelPeriodText ?? '-'),
+                  _TableCell(text: row.component.predominantPeriodText ?? '-'),
                 ],
               ),
             ),
@@ -344,33 +317,26 @@ class _PeriodsTable extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _headerCell(String text, ThemeData theme) {
+class _TableCell extends StatelessWidget {
+  const new({required this.text, this.isHeader = false});
+
+  final String text;
+  final bool isHeader;
+
+  @override
+  Widget build(BuildContext context) {
     return TableCell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
         child: Center(
           child: Text(
             text,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.googleSansCode,
-              fontFamilyFallback: const [FontFamily.notoSansJP],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _valueCell(String text, ThemeData theme) {
-    return TableCell(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-        child: Center(
-          child: Text(
-            text,
-            style: theme.textTheme.labelSmall?.copyWith(
+            textAlign: .center,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              fontWeight: isHeader ? .bold : null,
+              color: context.designSystem.colorTheme.onSurface,
               fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: const [FontFamily.notoSansJP],
             ),
@@ -404,7 +370,7 @@ class _RelatedLinksCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
               children: [
@@ -414,12 +380,14 @@ class _RelatedLinksCard extends StatelessWidget {
                   color: context.designSystem.colorTheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  '気象庁ホームページ',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.designSystem.colorTheme.onSurfaceVariant,
-                    fontFamily: FontFamily.notoSansJP,
+                Expanded(
+                  child: Text(
+                    '気象庁ホームページ',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: .bold,
+                      color: context.designSystem.colorTheme.onSurfaceVariant,
+                      fontFamily: FontFamily.notoSansJP,
+                    ),
                   ),
                 ),
               ],

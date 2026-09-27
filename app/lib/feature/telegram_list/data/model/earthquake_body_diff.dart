@@ -50,8 +50,7 @@ abstract class HypocenterDiff with _$HypocenterDiff {
 
   const new _();
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$HypocenterDiffFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$HypocenterDiffFromJson(json);
 
   bool hasMagnitudeChange() =>
       oldMagnitude != null &&

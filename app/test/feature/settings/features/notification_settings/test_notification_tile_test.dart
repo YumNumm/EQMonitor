@@ -1,3 +1,5 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
@@ -38,7 +40,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.byType(TestNotificationSheet), findsNothing);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
     expect(repository.sendCount, 1);
 
     await tester.tap(find.text('テスト通知を送信'));
@@ -50,7 +52,7 @@ void main() {
     repository.complete();
     await tester.pumpAndSettle();
 
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
   });
 
   testWidgets('通常通知を選ぶとSheetを閉じて送信する', (tester) async {

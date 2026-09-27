@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/core/util/nullable_value_requirement.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'map_style_config.freezed.dart';
 part 'map_style_config.g.dart';
@@ -16,8 +16,7 @@ abstract class MapStyleConfig with _$MapStyleConfig {
     @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
   }) = _MapStyleConfig;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$MapStyleConfigFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$MapStyleConfigFromJson(json);
 }
 
 /// マップのスタイルテーマ

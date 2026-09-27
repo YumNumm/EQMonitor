@@ -84,7 +84,7 @@ final MapPackedMeshLayout baseMapLinePackedMeshLayout =
 /// (毎frame詰め直さない)。UI isolateで実行するが、`BaseMapTileDecoder`の
 /// 実測(realistic tileで出力payload約112KB)に照らして`Isolate`越しの
 /// packed payload化は不要と判断済みである
-/// (`docs/todo/840_eqmonitor_map_packed_worker_payload.md`)。
+/// (`docs/todo/950_map_data_pipeline.md`)。
 MapPackedMesh packBaseMapFillMesh(FillMesh mesh) {
   _validateMeshShape(
     positions: mesh.positions,

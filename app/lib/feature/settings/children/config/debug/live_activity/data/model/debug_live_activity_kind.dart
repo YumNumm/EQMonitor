@@ -3,8 +3,7 @@
 /// ネイティブ (`net.yumnumm.eqmonitor/live_activity_debug` MethodChannel) へ渡す
 /// `kind` 文字列は Widget Extension 側の `attributes-type` と対応する。
 enum DebugLiveActivityKind {
-  eew('eew', 'EEW（緊急地震速報）'),
-  shakeDetection('shake_detection', '揺れ検知');
+  eew('eew', 'EEW（緊急地震速報）');
 
   new(this.wireName, this.label);
 

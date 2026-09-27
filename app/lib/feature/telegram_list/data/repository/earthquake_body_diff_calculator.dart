@@ -10,9 +10,7 @@ part 'earthquake_body_diff_calculator.g.dart';
 EarthquakeBodyDiffCalculator earthquakeBodyDiffCalculator(Ref ref) =>
     const EarthquakeBodyDiffCalculator();
 
-class EarthquakeBodyDiffCalculator {
-  const new();
-
+class const EarthquakeBodyDiffCalculator() {
   /// [current] が現報、[previous] が前報の震度地域リスト。
   /// [previous] が null または空の場合は初報扱いで全て [IntensityDiffType.same]。
   List<IntensityRegionDiffEntry> computeIntensityRegionDiff({

@@ -1,8 +1,10 @@
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// スロットの最小震度をドロップダウンで表示する。
@@ -31,10 +33,8 @@ class NotificationMinIntensityField extends StatelessWidget {
       kind: kind,
     );
     final fallback = switch ((slotType, kind)) {
-      (.currentLocation, .eew) =>
-        currentLocationEewMinIntensity,
-      (.currentLocation, .earthquake) =>
-        currentLocationEarthquakeMinIntensity,
+      (.currentLocation, .eew) => currentLocationEewMinIntensity,
+      (.currentLocation, .earthquake) => currentLocationEarthquakeMinIntensity,
       _ => defaultNotificationSlotMinIntensity,
     };
     // 下限導入前に保存された値・選択肢外の値は下限へ引き上げて表示する
@@ -46,23 +46,24 @@ class NotificationMinIntensityField extends StatelessWidget {
           : fallback,
     );
 
-    return DropdownMenu<JmaIntensity>(
-      initialSelection: resolved,
-      enabled: enabled,
-      requestFocusOnTap: false,
+    return SizedBox(
       width: width,
-      onSelected: (next) {
-        if (next != null) {
+      child: ControlledDropdown<JmaIntensity>(
+        enabled: enabled,
+        items: [
+          for (final intensity in options)
+            M3EDropdownItem(
+              value: intensity,
+              label: intensity.minIntensityLabel,
+              selected: intensity == resolved,
+            ),
+        ],
+        onSelectionChanged: (selectedItems) {
+          if (selectedItems.isEmpty) return;
+          final next = selectedItems.first.value;
           onChanged(next);
-        }
-      },
-      dropdownMenuEntries: [
-        for (final intensity in options)
-          DropdownMenuEntry(
-            value: intensity,
-            label: intensity.minIntensityLabel,
-          ),
-      ],
+        },
+      ),
     );
   }
 }

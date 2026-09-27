@@ -1,10 +1,15 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/subscription_sync_banner.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// サブスクリプションの状態確認 / 管理画面。
@@ -18,18 +23,28 @@ class SubscriptionSettingsPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainerLow,
       appBar: AppBar(title: const Text('EQMonitor Pro')),
-      body: statusAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text('サブスクリプション情報の取得に失敗しました: $error'),
+      body: Column(
+        children: [
+          const DeviceProvisioningBanner(),
+          const SubscriptionSyncBanner(),
+          Expanded(
+            child: statusAsync.when(
+              skipLoadingOnRefresh: false,
+              loading: () =>
+                  const Center(child: AccessibleCircularProgressIndicator()),
+              error: (error, _) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: const Text('購読情報を取得できませんでした。通信状況を確認して再試行してください。'),
+                ),
+              ),
+              data: (status) => switch (status) {
+                SubscriptionStatusActive() => _ActiveSection(status: status),
+                SubscriptionStatusInactive() => const _InactiveSection(),
+              },
+            ),
           ),
-        ),
-        data: (status) => switch (status) {
-          SubscriptionStatusActive() => _ActiveSection(status: status),
-          SubscriptionStatusInactive() => const _InactiveSection(),
-        },
+        ],
       ),
     );
   }
@@ -52,11 +67,7 @@ class _ActiveSection extends ConsumerWidget {
     final isRestoring = restoreState is MutationPending;
 
     final expiresAt = status.expiresAt;
-    final expiresLabel = expiresAt == null
-        ? null
-        : '${expiresAt.year.toString().padLeft(4, '0')}/'
-              '${expiresAt.month.toString().padLeft(2, '0')}/'
-              '${expiresAt.day.toString().padLeft(2, '0')}';
+    final expiresLabel = expiresAt?.formatWithTz(.yearMonthDay);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -69,7 +80,7 @@ class _ActiveSection extends ConsumerWidget {
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Row(
                 children: [
@@ -95,18 +106,16 @@ class _ActiveSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FilledButton.tonal(
-          style: FilledButton.styleFrom(
+        M3EFilledButton.tonal(
+          decoration: M3EButtonDecoration.styleFrom(
             minimumSize: const Size.fromHeight(52),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            borderRadius: 20,
           ),
           onPressed: () async => flow.openStoreSubscriptionManagement(),
           child: const Text('サブスクリプションを管理'),
         ),
         const SizedBox(height: 8),
-        TextButton(
+        M3ETextButton(
           onPressed: isRestoring
               ? null
               : () async => flow.restorePurchases(ref, context),
@@ -142,7 +151,7 @@ class _InactiveSection extends ConsumerWidget {
           ),
           padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('現在のプラン', style: textTheme.labelMedium),
               const SizedBox(height: 8),
@@ -157,18 +166,16 @@ class _InactiveSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FilledButton(
-          style: FilledButton.styleFrom(
+        M3EFilledButton(
+          decoration: M3EButtonDecoration.styleFrom(
             minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            borderRadius: 20,
           ),
           onPressed: () async => const PaywallRoute().push<void>(context),
           child: const Text('EQMonitor Pro にアップグレード'),
         ),
         const SizedBox(height: 8),
-        TextButton(
+        M3ETextButton(
           onPressed: isRestoring
               ? null
               : () async => flow.restorePurchases(ref, context),

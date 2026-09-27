@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
@@ -11,9 +12,10 @@ import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_list_by_e
 import 'package:eqmonitor/feature/telegram_list/data/provider/telegram_details_model_provider.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/earthquake_telegram_tile.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 // ---------------------------------------------------------------------------
@@ -73,7 +75,8 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
         children: [
           CachedDataBanner(values: [asyncDetails]),
           Expanded(
-            child: RefreshIndicator(
+            child: M3EPullToRefreshIndicator(
+              onError: Error.throwWithStackTrace,
               onRefresh: () async {
                 ref.invalidate(
                   telegramListByEventIdProvider(eventId),
@@ -226,7 +229,7 @@ class _SectionedList extends StatelessWidget {
           content: Text('読み込みに失敗しました: $error'),
           actions: [
             if (onReload != null)
-              TextButton(onPressed: onReload, child: const Text('再読み込み')),
+              M3ETextButton(onPressed: onReload, child: const Text('再読み込み')),
           ],
         ),
       );
@@ -237,7 +240,7 @@ class _SectionedList extends StatelessWidget {
       widgets.add(
         const Padding(
           padding: EdgeInsets.all(16),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: AccessibleCircularProgressIndicator()),
         ),
       );
     }
@@ -278,11 +281,10 @@ class _SectionedList extends StatelessWidget {
   }
 }
 
-class _SequenceInfo {
-  const new({required this.sequenceNumber, this.previousId});
-  final int sequenceNumber;
-  final String? previousId;
-}
+class const _SequenceInfo({
+  required final int sequenceNumber,
+  final String? previousId,
+});
 
 // ---------------------------------------------------------------------------
 // Section header
@@ -302,7 +304,7 @@ class _SectionHeader extends StatelessWidget {
         title,
         style: theme.textTheme.labelLarge?.copyWith(
           color: context.designSystem.colorTheme.primary,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
     );
@@ -331,7 +333,7 @@ class _EewNavigationCard extends StatelessWidget {
         title: Text(
           '緊急地震速報（$count報）',
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         trailing: const Icon(Icons.chevron_right),
@@ -361,7 +363,7 @@ class _TelegramListSkeleton extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Container(width: 120, height: 14, color: Colors.white),
                     const SizedBox(height: 8),

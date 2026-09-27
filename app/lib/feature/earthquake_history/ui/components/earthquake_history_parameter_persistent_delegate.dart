@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/chip/datasource_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/epicenter_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lat_lng_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/lpgm_intensity_filter_chip.dart';
@@ -16,43 +17,23 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/region_name_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
-class EarthquakeHistoryParameterPersistentDelegate
-    extends SliverPersistentHeaderDelegate {
-  const new({
-    required this.parameter,
-    required this.onChanged,
-  });
-
-  static const double height = 48;
-
-  final EarthquakeHistoryParameter parameter;
-  final void Function(EarthquakeHistoryParameter) onChanged;
+class const EarthquakeHistoryParameterRow({
+  required final EarthquakeHistoryParameter parameter,
+  required final void Function(EarthquakeHistoryParameter) onChanged,
+}) extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(48);
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context) {
     return ColoredBox(
       color: context.designSystem.colorTheme.surface,
       child: _FilterChipBar(parameter: parameter, onChanged: onChanged),
     );
   }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(
-    covariant EarthquakeHistoryParameterPersistentDelegate oldDelegate,
-  ) => parameter != oldDelegate.parameter;
 }
 
 class _FilterChipBar extends ConsumerWidget {
@@ -212,10 +193,19 @@ class _FilterChipBar extends ConsumerWidget {
           },
         ),
       ),
-      // 地域絞り込み中は Datasource(9)/TelegramType(10)/LatLng(11) を含めない
+      (
+        order: 9,
+        isActive: parameter.epicenterCodes?.isNotEmpty ?? false,
+        chip: EpicenterFilterChip(
+          codes: parameter.epicenterCodes,
+          onChanged: (codes) =>
+              onChanged(parameter.copyWith(epicenterCodes: codes)),
+        ),
+      ),
+      // 地域絞り込み中は Datasource/TelegramType/LatLng を含めない
       if (!isRegionFiltered) ...[
         (
-          order: 9,
+          order: 10,
           isActive: parameter.datasource != null,
           chip: DatasourceFilterChip(
             datasource: parameter.datasource,
@@ -225,7 +215,7 @@ class _FilterChipBar extends ConsumerWidget {
         ),
         if (isDebugEnabled)
           (
-            order: 10,
+            order: 11,
             isActive: parameter.telegramTypes != null,
             chip: TelegramTypeFilterChip(
               telegramTypes: parameter.telegramTypes,
@@ -234,7 +224,7 @@ class _FilterChipBar extends ConsumerWidget {
             ),
           ),
         (
-          order: 11,
+          order: 12,
           isActive:
               parameter.latitudeGte != null ||
               parameter.latitudeLte != null ||
@@ -281,7 +271,7 @@ class _FilterChipBar extends ConsumerWidget {
     });
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Row(

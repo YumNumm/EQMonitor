@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/auth/data/repository/native_social_auth_reposi
 import 'package:eqmonitor/feature/auth/ui/components/auth_provider_buttons.dart';
 import 'package:eqmonitor/feature/auth/ui/components/auth_session_summary.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class DebugAuthPage extends HookConsumerWidget {
@@ -120,7 +121,7 @@ class DebugAuthPage extends HookConsumerWidget {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  OutlinedButton.icon(
+                  M3EOutlinedButton.icon(
                     onPressed: actions.jwtRefresh
                         ? () async =>
                               ref.read(debugAuthProvider.notifier).refreshJwt()
@@ -128,7 +129,7 @@ class DebugAuthPage extends HookConsumerWidget {
                     icon: const Icon(Icons.refresh),
                     label: const Text('JWTを更新'),
                   ),
-                  FilledButton.tonalIcon(
+                  M3EFilledButton.tonalIcon(
                     onPressed: actions.userMeVerification
                         ? () async => ref
                               .read(debugAuthProvider.notifier)
@@ -137,7 +138,7 @@ class DebugAuthPage extends HookConsumerWidget {
                     icon: const Icon(Icons.http),
                     label: const Text('GET /v2/user/me'),
                   ),
-                  TextButton.icon(
+                  M3ETextButton.icon(
                     onPressed: actions.signOut
                         ? () async =>
                               ref.read(debugAuthProvider.notifier).signOut()

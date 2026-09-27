@@ -909,7 +909,7 @@ git commit -m "refactor: 起動情報と変更履歴の保存キーを一元化"
 **Files:**
 
 - Modify: `docs/superpowers/specs/2026-06-04-openapi-app-implementation-audit.md`
-- Optional Modify: `docs/todo/091_user_api_app_scope.md`
+- Optional Modify: `docs/todo/900_auth_subscription_and_ads.md`
 
 - [ ] **Step 1: Decide scope**
 
@@ -917,7 +917,7 @@ Confirm whether the app should expose user profile/session/device management UI 
 
 - [ ] **Step 2: Add a scope todo when user management is outside the current release**
 
-Create `docs/todo/091_user_api_app_scope.md`.
+Update `docs/todo/900_auth_subscription_and_ads.md`.
 
 ```markdown
 # User API app scope
@@ -938,7 +938,7 @@ Create `docs/todo/091_user_api_app_scope.md`.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add docs/superpowers/specs/2026-06-04-openapi-app-implementation-audit.md docs/todo/091_user_api_app_scope.md
+git add docs/superpowers/specs/2026-06-04-openapi-app-implementation-audit.md docs/todo/900_auth_subscription_and_ads.md
 git commit -m "docs: User APIのアプリ側スコープを整理"
 ```
 

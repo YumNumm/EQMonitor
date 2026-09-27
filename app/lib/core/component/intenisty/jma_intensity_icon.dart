@@ -84,7 +84,7 @@ class JmaIntensityIcon extends StatelessWidget {
         width: size,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            shape: .circle,
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),

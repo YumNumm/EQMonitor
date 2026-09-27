@@ -20,9 +20,7 @@ import 'package:maplibre/maplibre.dart';
 /// 相対順序はアンカーと追加順で決まる: 塗りは細分区域の境界線の**下**、
 /// 選択枠はスタイルの最前面に追加する。どちらを先に追加しても塗りは境界線の
 /// 下に留まり、選択枠は他レイヤーに埋もれない。
-class IntensityFillLayerBuilder {
-  const new();
-
+class const IntensityFillLayerBuilder() {
   static const sourceId = 'eqmonitor_map';
   static const citySourceLayerId = 'areaInformationCityQuake';
 
@@ -45,7 +43,7 @@ class IntensityFillLayerBuilder {
   ];
 
   static const cityFillOpacity = 0.8;
-  static const selectedCityLineWidth = 3.0;
+  static const selectedCityLineWidth = 2.5;
   static const selectedCityHaloWidth = 6.0;
 
   /// 市区町村ごとの観測史上最大震度の塗り。

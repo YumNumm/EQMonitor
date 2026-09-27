@@ -14,10 +14,7 @@ import 'package:dart_azarashi/src/model/exception.dart';
 /// - その他のヘッダーとデータ
 ///
 /// 参考: https://prioris.jp/gnss/docs/processing/qzqsm/
-class UbloxDecoder {
-  /// Creates a new [UbloxDecoder].
-  const new();
-
+class const UbloxDecoder() {
   /// UBXプリアンブル（同期文字）
   static const ubxPreamble1 = 0xB5;
   static const ubxPreamble2 = 0x62;

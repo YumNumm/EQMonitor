@@ -8,7 +8,7 @@
 
 **Tech Stack:** MapLibre Native, Metal, Bazel, XCFramework, Swift Package Manager, Flutter, GitHub Actions/Releases
 
-**Spec:** `docs/knowledge/20260823_ios_maplibre_metal_clip_mask.md`
+**Spec:** `docs/knowledge/maplibre.md`
 
 ## Global Constraints
 
@@ -86,7 +86,7 @@
 - Modify: `pubspec.lock`
 - Modify: `app/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
 - Modify: `app/ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`
-- Modify: `docs/knowledge/20260823_ios_maplibre_metal_clip_mask.md`
+- Modify: `docs/knowledge/maplibre.md`
 
 **Interfaces:**
 - Consumes: Task 4のflutter-maplibre固定commit、提示されたPMTiles

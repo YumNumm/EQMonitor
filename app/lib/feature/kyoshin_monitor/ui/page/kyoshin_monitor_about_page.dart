@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class KyoshinMonitorAboutPage extends HookConsumerWidget {
   const new({super.key});
@@ -18,7 +19,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               spacing: 8,
               children: [
                 Text(
@@ -85,7 +86,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(title, style: style?.copyWith(fontWeight: FontWeight.bold)),
+      child: Text(title, style: style?.copyWith(fontWeight: .bold)),
     );
   }
 }
@@ -115,10 +116,12 @@ class _InfoCard extends StatelessWidget {
           if (isWarning)
             Center(
               child: FittedBox(
-                fit: BoxFit.scaleDown,
+                fit: .scaleDown,
                 child: Icon(
                   Icons.warning_rounded,
-                  color: designSystem.colorTheme.onErrorContainer.withValues(alpha: 0.2),
+                  color: designSystem.colorTheme.onErrorContainer.withValues(
+                    alpha: 0.2,
+                  ),
                   size: 176,
                 ),
               ),
@@ -126,19 +129,21 @@ class _InfoCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 for (var i = 0; i < items.length; i++) ...[
                   if (i > 0) const SizedBox(height: 8),
                   _InfoItemWidget(
                     item: items[i],
-                    textColor: isWarning ? designSystem.colorTheme.onErrorContainer : null,
+                    textColor: isWarning
+                        ? designSystem.colorTheme.onErrorContainer
+                        : null,
                   ),
                 ],
                 if (onTapMore != null) ...[
                   Align(
                     alignment: Alignment.centerRight,
-                    child: TextButton.icon(
+                    child: M3ETextButton.icon(
                       onPressed: onTapMore,
                       icon: const Icon(Icons.arrow_forward),
                       label: Text(tapMoreText),
@@ -154,12 +159,10 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-class _InfoItem {
-  const new({required this.title, required this.description});
-
-  final String title;
-  final String description;
-}
+class const _InfoItem({
+  required final String title,
+  required final String description,
+});
 
 class _InfoItemWidget extends StatelessWidget {
   const new({required this.item, this.textColor});
@@ -174,7 +177,7 @@ class _InfoItemWidget extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           '• ${item.title}',
@@ -183,9 +186,10 @@ class _InfoItemWidget extends StatelessWidget {
         Text(
           item.description,
           style: textTheme.bodyMedium?.copyWith(
-            color: (textColor ?? designSystem.colorTheme.onSurfaceVariant).withValues(
-              alpha: 0.8,
-            ),
+            color: (textColor ?? designSystem.colorTheme.onSurfaceVariant)
+                .withValues(
+                  alpha: 0.8,
+                ),
           ),
         ),
       ],

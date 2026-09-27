@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:io';
 
 import 'package:eqmonitor/core/api/http_cache_disabled_provider.dart';
@@ -329,6 +331,13 @@ class _DebugWidget extends ConsumerWidget {
                   const DebugShakeDetectionCardRoute().push(context),
             ),
             ListTile(
+              title: const Text('揺れ検知の通知設定'),
+              subtitle: const Text('現在地・全国・細分化地域の通知条件を設定'),
+              leading: const Icon(Icons.notifications_active_outlined),
+              onTap: () async =>
+                  const DebugShakeDetectionSettingsRoute().push(context),
+            ),
+            ListTile(
               title: const Text('揺れ検知を挿入'),
               subtitle: Text(
                 'プリセットをホーム地図・カードへマージ表示',
@@ -398,6 +407,13 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.history),
               onTap: () async =>
                   const DebugNotificationDeliveryLogRoute().push<void>(context),
+            ),
+            ListTile(
+              title: const Text('通知Webhook'),
+              subtitle: const Text('Webhookの発行・一覧表示'),
+              leading: const Icon(Icons.webhook),
+              onTap: () async =>
+                  const DebugNotificationWebhookRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('デバイス管理'),
@@ -486,7 +502,7 @@ class _AppCheckSection extends ConsumerWidget {
               value ?? 'null',
               style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           },
           onTap: () async {
@@ -547,7 +563,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
     final paramAsync = ref.watch(parameterSetProvider);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           title: const Text('パラメータ'),
@@ -556,7 +572,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
               ? const SizedBox(
                   width: 24,
                   height: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: AccessibleCircularProgressIndicator(strokeWidth: 2),
                 )
               : IconButton(
                   icon: const Icon(Icons.refresh),
@@ -590,7 +606,7 @@ class _ParameterDebugSection extends HookConsumerWidget {
             leading: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
             title: Text('読み込み中...'),
           ),
@@ -680,7 +696,7 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
     final notifier = ref.read(backgroundLocationDebugSettingsProvider.notifier);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const ListTile(
           title: Text('バックグラウンド位置情報デバッグ通知'),
@@ -725,7 +741,7 @@ class _StartApiDebugSection extends ConsumerWidget {
     final startValue = startAsync.value;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           title: const Text('Start API'),
@@ -737,13 +753,13 @@ class _StartApiDebugSection extends ConsumerWidget {
             onPressed: () => ref.invalidate(startProvider),
           ),
         ),
-        if (startAsync.isRefreshing) const LinearProgressIndicator(),
+        if (startAsync.isRefreshing) const AccessibleLinearProgressIndicator(),
         switch (startAsync) {
           AsyncLoading() when !startAsync.hasValue => const ListTile(
             leading: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
             title: Text('取得中...'),
           ),

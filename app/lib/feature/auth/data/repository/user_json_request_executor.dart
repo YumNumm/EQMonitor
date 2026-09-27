@@ -3,13 +3,9 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/repository/auth_request_executor.dart';
 
-final class UserJsonRequestExecutor {
-  const new({
-    this.authRequestExecutor = const AuthRequestExecutor(),
-  });
-
-  final AuthRequestExecutor authRequestExecutor;
-
+final class const UserJsonRequestExecutor({
+  final AuthRequestExecutor authRequestExecutor = const AuthRequestExecutor(),
+}) {
   Future<Result<Map<String, dynamic>, AuthFailure>> perform({
     required Dio dio,
     required String method,

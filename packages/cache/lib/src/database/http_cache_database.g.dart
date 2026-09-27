@@ -717,7 +717,16 @@ class $$HttpCacheEntriesTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$HttpCacheEntriesTable, HttpCacheEntryRow>(table),
+                  BaseReferences<
+                    _$CacheDatabase,
+                    $HttpCacheEntriesTable,
+                    HttpCacheEntryRow
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),

@@ -16,9 +16,7 @@ enum CurrentLocationPrecision {
 }
 
 /// 権限の精度と実測の水平精度から、現在地を扱える粒度を決める。
-final class CurrentLocationPrecisionResolver {
-  const new();
-
+final class const CurrentLocationPrecisionResolver() {
   /// - [accuracyStatus] が [LocationAccuracyStatus.precise] でない場合、
   ///   OS が座標自体をぼかすため市区町村は決められない。
   /// - [horizontalAccuracyMeters] が不明（iOS は無効値として負数を返す）または

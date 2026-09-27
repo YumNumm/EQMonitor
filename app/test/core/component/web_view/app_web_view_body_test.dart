@@ -1,9 +1,9 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/web_view/app_web_view_body.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/model/app_theme.dart';
 import 'package:cupertino_ui/cupertino_ui.dart'
     show GlobalCupertinoLocalizations;
-import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_localizations/flutter_localizations.dart'
     as flutter_localizations;
 import 'package:material_ui/material_ui.dart';
@@ -14,14 +14,14 @@ void main() {
     await tester.pumpWidget(_app(status: AppWebViewLoadStatus.loading));
 
     expect(find.byKey(const Key('web-view-content')), findsOneWidget);
-    expect(find.byType(flutter.CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('loadedはWebViewだけを表示する', (tester) async {
     await tester.pumpWidget(_app(status: AppWebViewLoadStatus.loaded));
 
     expect(find.byKey(const Key('web-view-content')), findsOneWidget);
-    expect(find.byType(flutter.CircularProgressIndicator), findsNothing);
+    expect(find.byType(M3ECircularProgressIndicator), findsNothing);
     expect(find.text('ページを読み込めませんでした'), findsNothing);
   });
 
@@ -57,6 +57,8 @@ Widget _app({
     ),
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
+      // 本番と同じく Flutter Material を使う依存の delegate も登録する。
+      // ignore: deprecated_member_use
       flutter_localizations.GlobalMaterialLocalizations.delegate,
       flutter_localizations.GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,

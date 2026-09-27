@@ -1,5 +1,7 @@
 # Spec ② Dartクライアント↔stub 結合テスト — 詳細設計
 
+> 廃止済み: api-stub の廃止に伴い結合テストと専用 CI を削除した。以下は導入時の履歴。
+
 - 日付: 2026-05-30
 - 層: L2
 - 親: [app-server-integration-testing-overview](./2026-05-30-app-server-integration-testing-overview.md)

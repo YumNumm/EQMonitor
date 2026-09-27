@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission.dart';
 import 'package:eqmonitor/core/provider/notification/os_notification_permission_provider.dart';
@@ -127,11 +128,11 @@ class _NotificationPermissionDialog extends StatelessWidget {
       title: Text(title),
       content: Text(body),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('閉じる'),
         ),
-        FilledButton(
+        M3EFilledButton(
           onPressed: () async => onPrimaryAction(),
           child: Text(primaryActionLabel),
         ),

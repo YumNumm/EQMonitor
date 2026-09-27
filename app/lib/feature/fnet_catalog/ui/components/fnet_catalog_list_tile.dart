@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 /// F-netカタログのリストタイル
 class FnetCatalogListTile extends StatelessWidget {
@@ -12,8 +13,6 @@ class FnetCatalogListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: InkWell(
@@ -24,31 +23,33 @@ class FnetCatalogListTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           event.regionName.replaceAll('_', ' '),
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          dateFormat.format(event.originTime.toLocal()),
+                          event.originTime.formatWithTz(
+                            .yearMonthDayHourMinuteSecond,
+                          ),
                           style: theme.textTheme.bodySmall,
                         ),
                       ],
                     ),
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: .end,
                     children: [
                       _MagnitudeChip(
                         label: 'M${event.jmaMagnitude.toStringAsFixed(1)}',
@@ -65,7 +66,7 @@ class FnetCatalogListTile extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   _InfoItem(
                     label: '深さ',
@@ -85,7 +86,9 @@ class FnetCatalogListTile extends StatelessWidget {
     );
   }
 
-  void _showDetails(BuildContext context) => showModalBottomSheet<void>(
+  void _showDetails(BuildContext context) => showM3EModalBottomSheet<void>(
+    useSafeArea: false,
+    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
     builder: (context) => DraggableScrollableSheet(
@@ -120,7 +123,7 @@ class _MagnitudeChip extends StatelessWidget {
         label,
         style: TextStyle(
           color: color,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           fontSize: 16,
         ),
       ),
@@ -154,7 +157,7 @@ class _InfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           label,
@@ -165,7 +168,7 @@ class _InfoItem extends StatelessWidget {
         Text(
           value,
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
+            fontWeight: .w500,
           ),
         ),
       ],
@@ -182,8 +185,6 @@ class _DetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS');
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
@@ -209,12 +210,12 @@ class _DetailSheet extends StatelessWidget {
                 Text(
                   event.regionName.replaceAll('_', ' '),
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '発生時刻: ${dateFormat.format(event.originTime.toLocal())} (UTC)',
+                  '発生時刻: ${event.originTime.formatWithTz(.yearMonthDayHourMinuteSecondMillisecond)} (JST)',
                   style: theme.textTheme.bodyMedium,
                 ),
                 const Divider(height: 32),
@@ -336,12 +337,12 @@ class _Section extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text(
           title,
           style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         const SizedBox(height: 12),
@@ -362,13 +363,13 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 140,
             child: Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: const TextStyle(fontWeight: .w500),
             ),
           ),
           Expanded(child: Text(value)),

@@ -9,9 +9,7 @@ class DioExceptionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = switch (exception.type) {
-      .connectionTimeout ||
-      .sendTimeout ||
-      .receiveTimeout => '接続がタイムアウトしました',
+      .connectionTimeout || .sendTimeout || .receiveTimeout => '接続がタイムアウトしました',
       .badResponse => '不正なレスポンスが返されました',
       .cancel => 'リクエストがキャンセルされました',
       .badCertificate => '証明書のエラーが発生しました',
@@ -23,7 +21,7 @@ class DioExceptionText extends StatelessWidget {
     final errorCodeText = ' (エラーコード: $errorCode)';
     return Text(
       text + errorCodeText,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      style: const TextStyle(fontWeight: .bold),
     );
   }
 }

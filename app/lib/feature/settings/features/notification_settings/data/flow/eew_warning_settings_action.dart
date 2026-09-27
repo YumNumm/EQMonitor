@@ -11,9 +11,7 @@ part 'eew_warning_settings_action.g.dart';
 EewWarningSettingsAction eewWarningSettingsAction(Ref ref) =>
     const EewWarningSettingsAction();
 
-class EewWarningSettingsAction {
-  const new();
-
+class const EewWarningSettingsAction() {
   Future<void> updateCurrentLocation(
     WidgetRef ref, {
     required bool enabled,

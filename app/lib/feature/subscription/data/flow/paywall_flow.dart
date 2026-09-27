@@ -1,13 +1,17 @@
 import 'dart:io' show Platform;
 
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/repository/revenue_cat_session.dart';
 import 'package:eqmonitor/feature/subscription/data/exception/revenue_cat_unavailable_exception.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/subscription/ui/component/thank_you_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:url_launcher/url_launcher_string.dart';
 
 part 'paywall_flow.g.dart';
@@ -18,14 +22,18 @@ PaywallFlow paywallFlow(Ref ref) => PaywallFlow();
 /// Paywall / SubscriptionSettings から呼ばれる購入・復元・外部リンクの Flow。
 class PaywallFlow {
   /// 月額プランの購入フロー。結果に応じてダイアログ / SnackBar を出す。
-  Future<void> purchaseMonthly(WidgetRef ref, BuildContext context) async {
+  Future<void> purchaseMonthly(
+    WidgetRef ref,
+    BuildContext context, {
+    required rc.Package package,
+  }) async {
     try {
       final result = await SubscriptionNotifier.purchaseMonthlyMutation.run(
         ref,
         (transaction) async {
           return transaction
               .get(subscriptionProvider.notifier)
-              .purchaseMonthly();
+              .purchaseMonthly(package: package);
         },
       );
       if (!context.mounted) {
@@ -43,6 +51,13 @@ class PaywallFlow {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.userMessage)),
       );
+    } catch (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Subscription purchase failed');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('購入状況を確認できませんでした。再購入する前に購入情報を同期してください')),
+        );
+      }
     }
   }
 
@@ -72,6 +87,52 @@ class PaywallFlow {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.userMessage)),
       );
+    } catch (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Subscription restore failed');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('購入を復元できませんでした。通信状況とデバイス登録を確認してください')),
+        );
+      }
+    }
+  }
+
+  Future<void> recoverDevice(WidgetRef ref, BuildContext context) async {
+    try {
+      await DeviceProvisioningNotifier.provisionMutation.run(ref, (
+        transaction,
+      ) async {
+        final notifier = transaction.get(deviceProvisioningProvider.notifier);
+        notifier.reset();
+        await notifier.provision();
+      });
+      if (!context.mounted) return;
+      ref.invalidate(revenueCatSessionProvider);
+      ref.invalidate(subscriptionProvider);
+    } catch (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Subscription device recovery failed');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('デバイス登録を確認できませんでした。時間をおいて再試行してください')),
+        );
+      }
+    }
+  }
+
+  Future<void> synchronize(WidgetRef ref, BuildContext context) async {
+    try {
+      await SubscriptionNotifier.synchronizeMutation.run(
+        ref,
+        (transaction) =>
+            transaction.get(subscriptionProvider.notifier).synchronize(),
+      );
+    } catch (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Subscription sync failed');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('購入情報を同期できませんでした。時間をおいて再試行してください')),
+        );
+      }
     }
   }
 
@@ -92,6 +153,13 @@ class PaywallFlow {
         if (popOnSuccess && Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
         }
+      case PurchaseResultPending():
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('購入情報をサーバーへ反映しています。再購入せず、購入情報の同期を再試行してください'),
+          ),
+        );
+        return;
       case PurchaseResultCancelled():
         return;
       case PurchaseResultFailed(:final reason):

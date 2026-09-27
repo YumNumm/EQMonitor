@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -22,7 +23,7 @@ class ThemeSettingsPage extends StatelessWidget {
       appBar: AppBar(title: const Text('テーマ設定')),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             SettingsSectionHeader(text: 'ライト用テーマ'),
             _ModeSection(mode: ThemeBrightnessMode.light),
@@ -91,7 +92,7 @@ class _ModeSection extends ConsumerWidget {
           ),
           Align(
             alignment: .centerRight,
-            child: FilledButton.tonal(
+            child: M3EFilledButton.tonal(
               onPressed: () async =>
                   ThemeEditorRoute(mode: mode.name).push<void>(context),
               child: const Text('編集'),
@@ -166,7 +167,7 @@ class _Swatch extends StatelessWidget {
           height: 24,
           decoration: BoxDecoration(
             color: color,
-            shape: BoxShape.circle,
+            shape: .circle,
             border: Border.all(color: context.designSystem.colorTheme.outline),
           ),
         ),

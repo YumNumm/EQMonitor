@@ -6,7 +6,7 @@
 
 現在の `packages/eqmonitor_map` は foundation / alpha 手前である。PMTiles → MVT decode → Fill/Line mesh → Flutter Scene への縦切りと debug page の `BaseMapView` は存在するが、本番 surface は 11 面すべて `MapLibreMap` を直接 host している。`EqmonitorMapView`、`EqmonitorMapController`、`MapScene`、typed `MapNode`、reconciler は未実装であり、Home Map や EEW 表示面を置き換えられる公開 API ではない。
 
-設計正本 `docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md` は、初期対象を iOS / Android、北固定・真上視点、MapLibre Style JSON 非互換、型付き独自レイヤー、`MapScene` 宣言と `EqmonitorMapView`、typed snapshot/delta、fresh/stale/expired、PMTiles signed sidecar attestation、性能観測基盤を必須としている。このロードマップはその設計を正本とし、`docs/todo/780_eqmonitor_map_maplibre_surface_migrations.md` と `docs/todo/800_eqmonitor_map_deferred_verification.md` の gate を移行順へ展開する。
+設計正本 `docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md` は、初期対象を iOS / Android、北固定・真上視点、MapLibre Style JSON 非互換、型付き独自レイヤー、`MapScene` 宣言と `EqmonitorMapView`、typed snapshot/delta、fresh/stale/expired、PMTiles signed sidecar attestation、性能観測基盤を必須としている。このロードマップはその設計を正本とし、`docs/todo/820_map_renderer_and_migration.md` の gate を移行順へ展開する。
 
 ## EEW 表示面を移行する前に必ず満たす条件
 
@@ -26,7 +26,7 @@ Home Map、Live Monitor、EEW details など EEW を表示する surface は、�
 - labels の leader line policy、重要 label の semantics 対象、Light/Dark の視認性閾値。
 - `lockBearing` 設定/UI の削除タイミング。設計正本と todo 780 は、legacy MapLibre consumer が残る間は維持し、全 surface 移行後に別途承認としている。
 - Performance regression threshold。例: frame build/raster、decode、mesh build、GPU upload、cache memory、event drop の許容値は未決定であり、HUD と benchmark 実装時に product/engineering gate として固定する。
-- Seismicity / Hi-net seismicity の 2D 移行を先に行うか、`docs/todo/650_eqmonitor_map_3d_camera.md` の bearing/pitch/地下表示まで待つか。MapLibre 削除を優先するなら 2D parity で先に移行し、3D は future scope に残す判断が必要。
+- Seismicity / Hi-net seismicity の 2D 移行を先に行うか、`docs/todo/820_map_renderer_and_migration.md` の bearing/pitch/地下表示まで待つか。MapLibre 削除を優先するなら 2D parity で先に移行し、3D は future scope に残す判断が必要。
 
 ## Phased roadmap
 
@@ -333,7 +333,7 @@ Home Map、Live Monitor、EEW details など EEW を表示する surface は、�
 
 - Hi-net Seismicity debug: epicenter point、filter、矩形選択、screen/geographic conversion、analysis panel。
 - Existing MapLibre debug routes / helper usage の棚卸し。
-- `docs/todo/650_eqmonitor_map_3d_camera.md` と `docs/todo/450_eqmonitor_map_future_surface.md` の範囲を、MapLibre removal blocker と future enhancement に分離する。
+- `docs/todo/820_map_renderer_and_migration.md` の3D camera・将来 surfaceの範囲を、MapLibre removal blocker と future enhancement に分離する。
 
 **Exit criteria:**
 
@@ -375,4 +375,3 @@ Home Map、Live Monitor、EEW details など EEW を表示する surface は、�
 ただし、最初の **EEW production migration** は **Home Map** とする。todo 780 と設計正本はいずれも Home Map を初期 renderer の対象としており、Home を避けて Live Monitor や EEW details を先に移すと、結局 Home と同じ EEW dynamic layer / camera / label / current location 契約を別 surface で先に作ることになる。Debug/simple surface を最初に選ぶ案は blast radius は低いが、すでに debug page の `BaseMapView` が存在するため、次に必要なのは本番 controller/lifecycle canary であり、EEW layer の安全性を証明する代替にはならない。
 
 Home Map を最初に直接移行しない理由は、最高 traffic かつ最高 stakes で、未実装の production API、dynamic freshness、labels、attestation、performance regression が同時に露出するためである。したがって順序は、Home 表示範囲 selector で production shell を検証し、その後に Home Map を gated rollout する。
-

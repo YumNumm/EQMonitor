@@ -50,7 +50,7 @@ cd EQMonitor
 > [!NOTE]
 > 本リポジトリは、submoduleとして[`YumNumm/eqmonitor-backend`](https://github.com/YumNumm/eqmonitor-backend)を含んでいます。
 > eqmonitor-backendはPrivate Repositoryであるため、クローンできない場合があります。
-> アプリケーションのビルド時には、submoduleを利用する必要はありません。
+> 通常のアプリテストにバックエンドは不要ですが、公開の `third_party/flutter_scene` submodule は依存解決に必要です。
 > バックエンド実装をオープンソースにする予定はありません。
 
 1. [mise-en-place](https://mise.jdx.dev/)をインストールしてください
@@ -79,27 +79,33 @@ cd EQMonitor
 1. Dart workspaceの依存関係を解決し、[melos](https://melos.invertase.dev/)で各packageをbootstrapします。
 
    ```bash
+   git submodule update --init third_party/flutter_scene
    mise exec -- dart pub get --enforce-lockfile
    mise exec -- dart run melos bootstrap
    ```
 
    - これにより、各パッケージの依存関係が解決されます。
 
-1. `mv environment/.env.example environment/.env.dev` を実行してください。
+1. `environment/.env.example` を `environment/.env.dev` へコピーし、必要な設定値を用意してください。
 
-1. `mise exec -- flutter run` でアプリケーションを起動します。
+1. `app/` から `mise exec -- flutter run --dart-define-from-file=../environment/.env.dev` で起動します。
 
    > [!NOTE]
-   > **iOS**: AppIntent / Widget 用の slim `app/assets/parameters/jma_code_table.json` はリポジトリに同梱済みです。clone 直後でもビルドできます。
-   > **Android / macOS**: 地図・パラメータ一式は git に含めません。ビルド前に backend Release から配置してください（`GH_TOKEN` が必要）:
+   > **iOS**: AppIntent / Widget 用の slim `app/assets/parameters/jma_code_table.json` はリポジトリに同梱済みです。
+   > **同梱 Asset Pack**: 地図・パラメータ一式は git に含めません。ビルド前にリポジトリのルートで公開 R2 配信から配置してください:
    >
    > ```bash
-   > export GH_TOKEN=...
-   > tool/asset_pack/stage_from_release.sh --target android   # または macos / both
+   > mise exec -- tool/asset_pack/stage_from_r2.sh --target bundled
    > ```
    >
-   > 詳細: [`docs/knowledge/20260728_asset_pack_release_staging.md`](./docs/knowledge/20260728_asset_pack_release_staging.md)
+   > 詳細は [知見ガイド](docs/knowledge/README.md) のビルド・配布を参照してください。
 
 ## コントリビューション
 
 [CONTRIBUTING.md](./docs/CONTRIBUTING.md)を参照してください。
+
+## 開発ドキュメント
+
+- [知見ガイド](docs/knowledge/README.md): 分野別の要約、関連資料、改善課題への入口
+- [共通エージェントガイド](.agents/index.md): セットアップ、検証コマンド、開発ルール
+- [テスト方針](docs/knowledge/test_strategy.md): TDD は必須とせず、変更リスクに応じて検証方法を選択

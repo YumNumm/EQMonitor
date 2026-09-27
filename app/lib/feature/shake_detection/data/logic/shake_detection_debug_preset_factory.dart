@@ -4,21 +4,13 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 enum ShakeDetectionDebugPresetId { tokyoMultiLevelGrid }
 
-class ShakeDetectionDebugPresetInfo {
-  const new({
-    required this.id,
-    required this.title,
-    required this.description,
-  });
+class const ShakeDetectionDebugPresetInfo({
+  required final ShakeDetectionDebugPresetId id,
+  required final String title,
+  required final String description,
+});
 
-  final ShakeDetectionDebugPresetId id;
-  final String title;
-  final String description;
-}
-
-class ShakeDetectionDebugPresetFactory {
-  const new();
-
+class const ShakeDetectionDebugPresetFactory() {
   List<ShakeDetectionDebugPresetInfo> get presets => const [
     ShakeDetectionDebugPresetInfo(
       id: ShakeDetectionDebugPresetId.tokyoMultiLevelGrid,

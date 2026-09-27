@@ -33,6 +33,7 @@ abstract class PushNotificationLogEntry with _$PushNotificationLogEntry {
     String? channelId,
     String? apnsPriority,
     String? interruptionLevel,
+    PushNotificationLiveActivityEventType? liveActivityEventType,
   }) = _PushNotificationLogEntry;
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -42,6 +43,8 @@ abstract class PushNotificationLogEntry with _$PushNotificationLogEntry {
 enum PushNotificationDeliveryFramework { fcm, apns }
 
 enum PushNotificationDeliveryResult { ok, ng }
+
+enum PushNotificationLiveActivityEventType { start, update, end }
 
 extension PushNotificationDeliveryFrameworkDisplay
     on PushNotificationDeliveryFramework {
@@ -92,5 +95,11 @@ extension NotificationLogItemApiExtension on api.NotificationLogItem {
         channelId: channelId,
         apnsPriority: apnsPriority,
         interruptionLevel: interruptionLevel,
+        liveActivityEventType: switch (liveActivityEvent) {
+          .start => .start,
+          .update => .update,
+          .end => .end,
+          null => null,
+        },
       );
 }

@@ -23,9 +23,7 @@ final _singleStrongEtag = RegExp(r'^"[\x21\x23-\x7E\x80-\xFF]*"$');
 /// HTTP adapter が重複 `ETag` ヘッダを1つの comma 連結値
 /// (`"old", "new"`)として渡してくる可能性があるため、**単一の** entity-tag で
 /// あることまで検証する。曖昧な snapshot をそのまま受理しない。
-final class MapHttpStrongEtagValidator {
-  const new();
-
+final class const MapHttpStrongEtagValidator() {
   bool isStrong(String value) {
     final trimmed = value.trim();
     if (trimmed.startsWith('W/') || trimmed.startsWith('w/')) {
@@ -50,13 +48,10 @@ final class MapHttpStrongEtagValidator {
 ///
 /// 要求 Range 自体が検証済み archive size の外側、または長さ0の場合は、応答を
 /// 見る前に[ArgumentError]で弾く(呼び出し側のバグ / directory 破損)。
-final class MapHttpRangeResponseValidator {
-  const new({
-    this.etagValidator = const MapHttpStrongEtagValidator(),
-  });
-
-  final MapHttpStrongEtagValidator etagValidator;
-
+final class const MapHttpRangeResponseValidator({
+  final MapHttpStrongEtagValidator etagValidator =
+      const MapHttpStrongEtagValidator(),
+}) {
   String validate({
     required int statusCode,
     required MapRemoteHttpResponseHeaders headers,

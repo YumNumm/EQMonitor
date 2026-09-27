@@ -15,8 +15,7 @@ enum RealtimeSource { eqmonitor, dmdata }
 
 @Freezed()
 sealed class RealtimeEvent with _$RealtimeEvent {
-  const factory ready({required RealtimeSource source}) =
-      RealtimeReadyEvent;
+  const factory ready({required RealtimeSource source}) = RealtimeReadyEvent;
 
   const factory eewUpsert({
     required EewItemWithRelations record,
@@ -57,6 +56,5 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required RealtimeSource source,
   }) = RealtimeEstimatedIntensityUpsertEvent;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$RealtimeEventFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$RealtimeEventFromJson(json);
 }

@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/ui/component/test_notification_kind_buttons.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -42,9 +43,9 @@ void main() {
       ),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
 
-    await tester.tap(find.byType(FilledButton).first);
+    await tester.tap(find.byType(M3EFilledButton).first);
 
     expect(pressedCount, 0);
   });

@@ -73,9 +73,9 @@ Full package suite:
 
 ## TODO recorded
 
-Created `docs/todo/700_eqmonitor_map_line_extrude_projection.md`.
+Follow-up is consolidated in `docs/todo/820_map_renderer_and_migration.md`.
 
-It records that the current Y-flip contract is correct only for the current orthographic, north-locked projection, and that the MapLibre-style matrix-transformed extrude is required before pitch, bearing, or perspective are introduced. It references `docs/knowledge/20260805_maplibre_native_renderer_reference.md`.
+It records that the current Y-flip contract is correct only for the current orthographic, north-locked projection, and that the MapLibre-style matrix-transformed extrude is required before pitch, bearing, or perspective are introduced. It references `docs/knowledge/map_renderer_references.md`.
 
 ## Concerns
 

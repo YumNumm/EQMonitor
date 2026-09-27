@@ -178,12 +178,10 @@ void main() {
     });
 
     test('不足震度明細はchecked-in JMA identityで補完する', () {
-      final draft =
-          factory.create(
-                current: _minimalEarthquake(),
-                type: EarthquakeTelegramType.vxse53,
-              )
-              as EarthquakeVxse53DebugDraft;
+      final draft = factory.create(
+        current: _minimalEarthquake(),
+        type: EarthquakeTelegramType.vxse53,
+      ) as EarthquakeVxse53DebugDraft;
       final region = draft.regions.values.single.single.region;
       final city = draft.intensityTree.values.single.single.cities.single.city;
       final station = draft

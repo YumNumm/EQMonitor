@@ -1,9 +1,11 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class KnetCredentialsSettingsPage extends HookConsumerWidget {
   const new({super.key});
@@ -38,7 +40,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     '防災科研 強震観測網 認証情報',
@@ -63,7 +65,7 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.person),
             ),
-            textInputAction: TextInputAction.next,
+            textInputAction: .next,
             onChanged: (_) => verifyResult.value = null,
           ),
           const SizedBox(height: 12),
@@ -76,14 +78,14 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               prefixIcon: Icon(Icons.lock),
             ),
             obscureText: true,
-            textInputAction: TextInputAction.done,
+            textInputAction: .done,
             onChanged: (_) => verifyResult.value = null,
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: FilledButton.tonal(
+                child: M3EFilledButton.tonal(
                   onPressed: isVerifying.value
                       ? null
                       : () async {
@@ -111,14 +113,16 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: AccessibleCircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
                         )
                       : const Text('認証テスト'),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: FilledButton(
+                child: M3EFilledButton(
                   onPressed: isVerifying.value
                       ? null
                       : () async {
@@ -156,10 +160,10 @@ class KnetCredentialsSettingsPage extends HookConsumerWidget {
               if (data == null) {
                 return const SizedBox.shrink();
               }
-              return OutlinedButton.icon(
+              return M3EOutlinedButton.icon(
                 icon: const Icon(Icons.delete_outline),
                 label: const Text('認証情報を削除'),
-                style: OutlinedButton.styleFrom(
+                decoration: M3EButtonDecoration.styleFrom(
                   foregroundColor: context.designSystem.colorTheme.error,
                 ),
                 onPressed: () async {

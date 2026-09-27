@@ -6,17 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-class _PlainRoute extends GoRouteData {
-  const new();
-
+class const _PlainRoute() extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const Scaffold(body: Text('detail'));
 }
 
-class _MaterialPageRoute extends GoRouteData with MaterialPageMixin {
-  const new();
-
+class const _MaterialPageRoute() extends GoRouteData with MaterialPageMixin {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const Scaffold(body: Text('detail'));

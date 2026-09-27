@@ -19,7 +19,7 @@
 - 上限・budget は呼び出し側が渡す version 付き設定。decoder 内部の隠れた固定 fallback 禁止。
 - 本 Issue は Scene Fill/Line 一般化（#1593）、label asset（#1592）、Home 切替（#1596）を実装しない。
 - Backend / Asset Pack producer は触らない。attestation sidecar 検証は #1592。
-- 本 PR の成功判定は `packages/eqmonitor_map`（と追加 fixture package）の focused analyze/test。共有 Flutter gate が赤い場合は **無条件に baseline 扱いしない**。devices primary constructor / freezed `final` を理由とする waiver は `f0b3bd37`（#1628）で解消済みのため既に無効。現在 waive してよい既知失敗の一覧と判定手順は `docs/knowledge/20260814_stacked_pr_flutter_gate_baseline.md` を正本とし、そこに載っていない赤は回帰として調査する。
+- 本 PR の成功判定は `packages/eqmonitor_map`（と追加 fixture package）の focused analyze/test。共有 Flutter gate が赤い場合は **無条件に baseline 扱いしない**。devices primary constructor / freezed `final` を理由とする waiver は `f0b3bd37`（#1628）で解消済みのため既に無効。現在の切り分け手順は `docs/knowledge/testing.md` を参照し、同じ SDK・cwd・コマンドで base と比較して調査する。過去の失敗一覧を免除根拠にしない。
 - 各タスクの本番+手書き test は 30–100 行目安。生成物は別計上。コミット prefix は英語1語+日本語1行。
 
 ## Baseline（#1589 / #1590 で既にあるもの）
@@ -54,7 +54,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 ---
 
 - [x] **Step 1: Write the failing/pinning tests** for missing tile → `null`, corrupt bytes → typed exception, never empty geometry.
-- [x] **Step 2: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile/verified_source_contract_test.dart)`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。加えて **package ディレクトリから**実行しないと fixture 解決 root がずれる。`docs/todo/700_melos_dart_test_package_filter.md` / CI の `wc-check-dart-test.yaml` 参照）
+- [x] **Step 2: Run** `(cd packages/eqmonitor_map && mise exec -- flutter test test/tile/verified_source_contract_test.dart)`（`eqmonitor_map` は Flutter SDK 依存のため `dart test` は `dart:ui` 解決に失敗する。加えて **package ディレクトリから**実行しないと fixture 解決 root がずれる。`docs/todo/770_tooling_and_test_followups.md` / CI の `wc-check-dart-test.yaml` 参照）
 - [x] **Step 3: Fix only if RED** at the owning boundary.
 - [x] **Step 4: Re-run GREEN**
 - [x] **Step 5: Commit** `test: ローカル verified source 契約をピン留め`
@@ -109,7 +109,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 **Interfaces:**
 - Produces: version 付き `MapTilePipelineBudget`（max in-flight decodes、max cache entries、pin 上限、CPU work units、optional GPU upload bytes/frame）。hidden default なし。
 
-**残要件（review 指摘 P2、未実装）:** 件数だけでなく **retained CPU/GPU byte の集計上限** を持たせる。per-tile decode 上限内でも tile ごとの vertex/index/property/string の実サイズは大きく異なるため、`maxCacheEntries` だけでは Task 14 の「no unbounded growth」を byte 単位で保証できない。`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md` 参照。
+**残要件（review 指摘 P2、未実装）:** 件数だけでなく **retained CPU/GPU byte の集計上限** を持たせる。per-tile decode 上限内でも tile ごとの vertex/index/property/string の実サイズは大きく異なるため、`maxCacheEntries` だけでは Task 14 の「no unbounded growth」を byte 単位で保証できない。`docs/todo/950_map_data_pipeline.md` 参照。
 
 - [x] **Step 1: Write failing construction/validation tests**
 - [x] **Step 2: Run RED**
@@ -183,7 +183,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 - **redirect 方針の強制**: app の事前検証は初期 URL のみ。reader は redirect を無効化するか、host/scheme(https)/回数を検証して allowlist 外・HTTPS→HTTP へ出た時点で fail closed する。controlled redirect fixture で test する。
 
 - [x] **Step 1–5 完了**: `MapRemotePmTilesRandomAccessReader implements PmTilesRandomAccessReader`。HTTP は `dart:io HttpClient`（新規依存なし）。identity / 206 / strong ETag / 厳密 Content-Range / body 長を検証し、初回で strong ETag を pin して以後 `If-Match`。redirect(3xx)は fail closed、snapshot drift は terminal、`(etag,offset,length)` の並行 read を coalesce、直近範囲を `maxCacheBytes` LRU で再利用、close 後は fail closed。実 loopback サーバで 8 ケースを test。
-  - **未対応（別タスクへ送り）**: `sha256` への digest 束縛（上記 P1）は本 reader では未実装。CDN が同一 ETag で別 archive を返すケースの検出は、archive open 後に検証済み範囲の digest を突き合わせる別レイヤーが要る。`docs/todo/815_eqmonitor_map_remote_digest_binding.md` 参照。
+  - **未対応（別タスクへ送り）**: `sha256` への digest 束縛（上記 P1）は本 reader では未実装。CDN が同一 ETag で別 archive を返すケースの検出は、archive open 後に検証済み範囲の digest を突き合わせる別レイヤーが要る。`docs/todo/950_map_data_pipeline.md` 参照。
   - `dart test` ではなく実 HTTP を使うため cancel は「close で in-flight socket を force-close」で表現（Dio の `CancelToken` は使わない＝新規依存を避けた）。
 
 ---
@@ -225,7 +225,7 @@ Worktree: `.worktrees/flutter-scene-map-tile-pipeline`
 byte 上限」は、packed payload 前提の要件であり、Freezed object graph を SendPort で
 そのまま渡す現行方式では **decode 側の `MvtDecodeLimits`（layer/feature/vertex 数の
 上限）が既に同じ役割**を果たしている。将来 packed 化が必要になった場合の残課題は
-`docs/todo/840_eqmonitor_map_packed_worker_payload.md`。
+`docs/todo/950_map_data_pipeline.md`。
 
 - [x] ~~**Step 1: Write failing encode/decode roundtrip tests**~~（Task 10 は実装しない判定）
 - [x] ~~**Step 2: Run RED**~~（Task 10 は実装しない判定）
@@ -252,12 +252,12 @@ byte 上限」は、packed payload 前提の要件であり、Freezed object gra
 追加で狙うのは **per-call `Isolate.run` を永続 worker に替えて isolate 起動コストを
 削る**最適化だが、decoder doc は per-call のコストを `compute` と同等として問題視して
 いない。多数 tile を同時 decode するときの起動コストが実測で問題になって初めて
-永続化する。残課題は `docs/todo/845_eqmonitor_map_persistent_decode_worker.md`。
+永続化する。残課題は `docs/todo/950_map_data_pipeline.md`。
 - incarnation の stale 破棄は `BaseMapTileCache`（`AsyncGenerationToken`）が既に担う。
 - **並行度の制御（backpressure）は別問題で、こちらは未達**。現行の
   `_requestMissingDecodes` は cover 内の欠損 tile 全部へ無制限に `Isolate.run` を
   張る。ここに Task 12 の `MapTileScheduler` を挿すのが Task 15 の主眼
-  （`docs/todo/830_eqmonitor_map_scheduler_wiring.md`）。
+  （`docs/todo/950_map_data_pipeline.md`）。
 
 ---
 
@@ -356,7 +356,7 @@ drain ループにした。UI Isolate decode 禁止は `BaseMapTileDecoder`(`Iso
 - [x] **Step 1: Confirm checklist** identity remote fixture + local verified + cancel/incarnation tests green
 - [x] **Step 2: Confirm no #1592/#1593/#1602 scope leaked**（本 branch の diff は `test/tile/tile_pipeline_contract_test.dart` と README/plan のみ）
 - [x] **Step 3: Push tip**（#1617 / #1616 は develop へマージ済みのため、本 branch の base は `develop`）
-- [x] **Step 4: Record shared Flutter gate failures as baseline**（`docs/knowledge/20260814_stacked_pr_flutter_gate_baseline.md` を正本とする。analyze を弱めない）
+- [x] **Step 4: Record shared Flutter gate failures as baseline**（当時の記録。現行の切り分けは `docs/knowledge/testing.md` に従い、analyze を弱めない）
 - [x] **Step 5: Mark #1591 ready for review only after Tasks 1–15 green**
 
 ## Completion Checklist

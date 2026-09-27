@@ -7,9 +7,7 @@ part 'shake_detection_snapshot_reducer.g.dart';
 ShakeDetectionSnapshotReducer shakeDetectionSnapshotReducer(Ref ref) =>
     const ShakeDetectionSnapshotReducer();
 
-class ShakeDetectionSnapshotReducer {
-  const new();
-
+class const ShakeDetectionSnapshotReducer() {
   ShakeDetectionSnapshot selectNewer({
     required ShakeDetectionSnapshot? current,
     required ShakeDetectionSnapshot incoming,

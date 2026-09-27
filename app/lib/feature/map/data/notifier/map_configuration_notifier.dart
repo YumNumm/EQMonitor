@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_configuration_notifier.g.dart';
@@ -15,12 +14,12 @@ part 'map_configuration_notifier.g.dart';
 class MapConfigurationNotifier extends _$MapConfigurationNotifier {
   @override
   Future<MapConfiguration> build() async {
-    final brightness = ref.watch(brightnessProvider);
+    final brightness = ref.watch(effectiveBrightnessProvider);
     var savedState =
         await _load() ?? const MapConfiguration(theme: MapTheme.system);
     if (savedState.theme == MapTheme.system) {
       savedState = savedState.copyWith(
-        theme: brightness == Brightness.dark ? MapTheme.dark : MapTheme.light,
+        theme: brightness == .dark ? MapTheme.dark : MapTheme.light,
       );
     }
 

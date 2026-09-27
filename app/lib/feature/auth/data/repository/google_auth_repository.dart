@@ -31,9 +31,7 @@ abstract interface class GoogleSignInPlugin {
   Future<String?> authenticateIdToken();
 }
 
-final class GoogleSignInPluginAdapter implements GoogleSignInPlugin {
-  const new();
-
+final class const GoogleSignInPluginAdapter() implements GoogleSignInPlugin {
   @override
   Future<void> initialize({
     required String clientId,
@@ -124,9 +122,7 @@ final class GoogleAuthRepository implements GoogleAuthGateway {
   }
 }
 
-final class GoogleAuthConfiguration {
-  const new();
-
+final class const GoogleAuthConfiguration() {
   static final _clientIdPrefixPattern = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]*$');
 
   static bool isClientId(String value) {

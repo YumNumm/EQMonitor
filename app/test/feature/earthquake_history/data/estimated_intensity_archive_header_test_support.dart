@@ -1,0 +1,28 @@
+import 'package:pmtiles_v3/pmtiles_v3.dart';
+
+const validEstimatedIntensityArchiveHeader = PmTilesV3Header(
+  rootDirectoryOffset: 127,
+  rootDirectoryLength: 1,
+  metadataOffset: 128,
+  metadataLength: 1,
+  leafDirectoriesOffset: 129,
+  leafDirectoriesLength: 0,
+  tileDataOffset: 129,
+  tileDataLength: 1,
+  addressedTilesCount: 1,
+  tileEntriesCount: 1,
+  tileContentsCount: 1,
+  clustered: true,
+  internalCompression: 2,
+  tileCompression: 2,
+  tileType: 1,
+  minZoom: 0,
+  maxZoom: 14,
+  minLongitude: 122,
+  minLatitude: 20,
+  maxLongitude: 154,
+  maxLatitude: 46,
+  centerZoom: 7,
+  centerLongitude: 138,
+  centerLatitude: 33,
+);

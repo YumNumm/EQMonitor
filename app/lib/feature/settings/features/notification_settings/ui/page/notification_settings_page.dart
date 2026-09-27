@@ -1,5 +1,7 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -7,6 +9,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_preset_applier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/action/notification_region_add_action.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_warning_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/info_link.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_min_intensity.dart';
@@ -16,6 +19,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_warning_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_preset_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/provider/notification_plan_constraints_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/info_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_preset_selector.dart';
@@ -23,11 +27,13 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/test_notification_tile.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/per_intensity_sound_settings_page.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/slot_detail_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/sound_interruption_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -56,13 +62,6 @@ class _Body extends ConsumerWidget {
     final selectedPreset =
         ref.watch(notificationPresetProvider).value ??
         NotificationPreset.recommended;
-
-    final isProFeaturesEnabled = ref
-        .watch(buildConfigProvider)
-        .isProFeaturesEnabled;
-    final constraints = ref.watch(startProvider).value?.planConstraints.free;
-    final isPro = isProFeaturesEnabled && (constraints?.isPro ?? false);
-    final maxRegions = constraints?.maxRegions.toInt() ?? 1;
 
     ref.listen(NotificationSlotsNotifier.putCurrentLocationMutation, (
       _,
@@ -122,10 +121,7 @@ class _Body extends ConsumerWidget {
               }
               await Navigator.of(context).push<void>(
                 MaterialPageRoute<void>(
-                  builder: (_) => _CustomNotificationSettingsPage(
-                    isPro: isPro,
-                    maxRegions: maxRegions,
-                  ),
+                  builder: (_) => const _CustomNotificationSettingsPage(),
                 ),
               );
             },
@@ -183,7 +179,7 @@ class _MasterNotificationControl extends StatelessWidget {
                     '通知を受け取る',
                     style: typography.titleMedium.copyWith(
                       color: designSystem.colorTheme.onSurface,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                     ),
                   ),
                 ),
@@ -198,16 +194,12 @@ class _MasterNotificationControl extends StatelessWidget {
 }
 
 class _CustomNotificationSettingsPage extends ConsumerWidget {
-  const new({
-    required this.isPro,
-    required this.maxRegions,
-  });
-
-  final bool isPro;
-  final int maxRegions;
+  const new();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final constraints = ref.watch(notificationPlanConstraintsProvider);
+    final isPro = ref.watch(isProProvider);
     final earthquakeSettings = ref
         .watch(earthquakeGlobalSettingsProvider)
         .value;
@@ -225,30 +217,57 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('カスタム設定')),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 16, bottom: 24),
-        children: [
-          const SettingsSectionHeader(text: '通知地域'),
-          _SlotListSection(isPro: isPro, maxRegions: maxRegions),
-          const SettingsSectionHeader(text: '通知の種類'),
-          _CustomSettingsSection(
-            isPro: isPro,
-            estimatedIntensityEnabled:
-                earthquakeSettings?.estimatedIntensityEnabled ?? true,
-            onEstimatedIntensityChanged: ({required value}) async {
-              await EarthquakeGlobalSettingsNotifier.updateSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(earthquakeGlobalSettingsProvider.notifier)
-                      .updateSettings(estimatedIntensityEnabled: value);
-                },
-              );
-            },
+      body: constraints.when(
+        skipLoadingOnRefresh: false,
+        skipLoadingOnReload: false,
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
+        error: (_, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                const Text('通知設定の利用条件を確認できませんでした'),
+                M3EFilledButton(
+                  onPressed: () {
+                    ref.invalidate(startProvider);
+                    if (ref.read(buildConfigProvider).isProFeaturesEnabled) {
+                      ref.invalidate(subscriptionProvider);
+                    }
+                  },
+                  child: const Text('再試行'),
+                ),
+              ],
+            ),
           ),
-          const SettingsSectionHeader(text: 'その他の通知'),
-          const _GeneralNotificationSettingsSection(),
-        ],
+        ),
+        data: (plan) => ListView(
+          padding: const EdgeInsets.only(top: 16, bottom: 24),
+          children: [
+            const SettingsSectionHeader(text: '通知地域'),
+            _SlotListSection(maxRegions: plan.maxRegions.toInt()),
+            const SettingsSectionHeader(text: '通知の種類'),
+            _CustomSettingsSection(
+              isPro: isPro,
+              estimatedIntensityEnabled:
+                  earthquakeSettings?.estimatedIntensityEnabled ?? true,
+              onEstimatedIntensityChanged: ({required value}) async {
+                await EarthquakeGlobalSettingsNotifier.updateSettingsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(earthquakeGlobalSettingsProvider.notifier)
+                            .updateSettings(estimatedIntensityEnabled: value);
+                      },
+                    );
+              },
+            ),
+            const SettingsSectionHeader(text: 'その他の通知'),
+            const _GeneralNotificationSettingsSection(),
+          ],
+        ),
       ),
     );
   }
@@ -281,14 +300,14 @@ class _CustomSettingsSection extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           _InlineSwitchTile(
             title: '推計震度分布図',
@@ -296,32 +315,38 @@ class _CustomSettingsSection extends StatelessWidget {
             value: estimatedIntensityEnabled,
             onChanged: onEstimatedIntensityChanged,
           ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '通知音・割り込みレベル',
-            subtitle: isPro ? '種類ごとに変更できます' : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const SoundInterruptionSettingsPage(),
-                    ),
-                  )
-                : () async => const ProUpgradeDialogAction().show(context),
-          ),
-          const Divider(height: 1),
-          LockedSettingTile(
-            title: '震度別の音設定',
-            subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
-            locked: !isPro,
-            onTap: isPro
-                ? () => Navigator.of(context).push<void>(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const PerIntensitySoundSettingsPage(),
-                    ),
-                  )
-                : () async => const ProUpgradeDialogAction().show(context),
-          ),
+          // 通知音・割り込みレベルは iOS の通知契約に依存する設定のため、
+          // Android では OS の通知チャンネル設定へ委ねて非表示にする。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '通知音・割り込みレベル',
+              subtitle: isPro
+                  ? '種類ごとに変更できます'
+                  : '通知音・割り込みレベルの変更、続報通知の上書き設定ができます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SoundInterruptionSettingsPage(),
+                      ),
+                    )
+                  : () async => const ProUpgradeDialogAction().show(context),
+            ),
+            const Divider(height: 1),
+            LockedSettingTile(
+              title: '震度別の音設定',
+              subtitle: isPro ? '震度ごとに音と割り込みを変更できます' : 'Proで利用できます',
+              locked: !isPro,
+              onTap: isPro
+                  ? () => Navigator.of(context).push<void>(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PerIntensitySoundSettingsPage(),
+                      ),
+                    )
+                  : () async => const ProUpgradeDialogAction().show(context),
+            ),
+          ],
           const Divider(height: 1),
           LockedSettingTile(
             title: '低精度の緊急地震速報',
@@ -366,9 +391,7 @@ class _InlineSwitchTile extends StatelessWidget {
 }
 
 class _SlotListSection extends ConsumerWidget {
-  const new({required this.isPro, required this.maxRegions});
-
-  final bool isPro;
+  const new({required this.maxRegions});
   final int maxRegions;
 
   @override
@@ -402,7 +425,21 @@ class _SlotListSection extends ConsumerWidget {
     final regionSlotCount = slots
         .where((s) => s.slotType == NotificationSlotType.region)
         .length;
-    final canAddRegion = isPro || regionSlotCount < maxRegions;
+    final isAdding = ref.watch(
+      NotificationSlotsNotifier.addRegionMutation,
+    ) is MutationPending;
+    final canAddRegion = !isAdding && regionSlotCount < maxRegions;
+    ref.listen(NotificationSlotsNotifier.addRegionMutation, (_, next) async {
+      if (next is! MutationError || !context.mounted) {
+        return;
+      }
+      final error = next.error;
+      if (error is DioException && error.response?.statusCode == 402) {
+        await const ProUpgradeDialogAction().show(context);
+      } else {
+        await ref.read(errorDialogActionProvider).show(context, error: error);
+      }
+    });
 
     final tiles = <Widget>[];
     var regionIndex = 0;
@@ -410,7 +447,7 @@ class _SlotListSection extends ConsumerWidget {
       final bool isActive;
       if (slot.slotType == NotificationSlotType.region) {
         regionIndex++;
-        isActive = isPro || regionIndex <= maxRegions;
+        isActive = regionIndex <= maxRegions;
       } else {
         isActive = true;
       }
@@ -423,8 +460,12 @@ class _SlotListSection extends ConsumerWidget {
           onTap: isActive
               ? () async => Navigator.of(context).push<void>(
                   MaterialPageRoute<void>(
-                    builder: (_) =>
-                        SlotDetailPage(slotId: slot.id, isPro: isPro),
+                    builder: (_) => Consumer(
+                      builder: (context, ref, child) => SlotDetailPage(
+                        slotId: slot.id,
+                        isPro: ref.watch(isProProvider),
+                      ),
+                    ),
                   ),
                 )
               : null,
@@ -433,12 +474,12 @@ class _SlotListSection extends ConsumerWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (slotsAsync.isLoading && slots.isEmpty)
           const Padding(
             padding: EdgeInsets.all(24),
-            child: Center(child: CircularProgressIndicator.adaptive()),
+            child: Center(child: AccessibleCircularProgressIndicator()),
           ),
         if (slotsAsync.hasError && !slotsAsync.isLoading)
           Padding(
@@ -457,7 +498,7 @@ class _SlotListSection extends ConsumerWidget {
         if (!hasNationwide)
           Padding(
             padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-            child: FilledButton.tonalIcon(
+            child: M3EFilledButton.tonalIcon(
               onPressed: () async {
                 await NotificationSlotsNotifier.putNationwideMutation.run(ref, (
                   tsx,
@@ -479,19 +520,17 @@ class _SlotListSection extends ConsumerWidget {
           ),
         Padding(
           padding: EdgeInsets.fromLTRB(spacing.lg, spacing.sm, spacing.lg, 0),
-          child: FilledButton.tonalIcon(
+          child: M3EFilledButton.tonalIcon(
             onPressed: canAddRegion
                 ? () async {
-                    await Navigator.of(context).push<void>(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const RegionPickerPage(),
-                      ),
-                    );
+                    await ref
+                        .read(notificationRegionAddActionProvider)
+                        .pickAndAdd(context: context, ref: ref);
                   }
                 : null,
             icon: const Icon(Icons.add),
             label: Text(
-              isPro ? '地域を追加' : '地域を追加（$regionSlotCount/$maxRegions）',
+              '地域を追加（$regionSlotCount/$maxRegions）',
             ),
           ),
         ),
@@ -568,7 +607,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
     final settingsAsync = ref.watch(generalNotificationSettingsProvider);
     final settings = settingsAsync.value;
     if (settings == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     final designSystem = context.designSystem;
@@ -584,14 +623,14 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           InfoNotificationTile(
             title: '北海道・三陸沖後発地震注意情報',
@@ -690,7 +729,7 @@ class _GeneralNotificationSettingsSection extends ConsumerWidget {
             title: const Text('津波通知'),
             subtitle: const Text('現在実装中です。今後のアップデートで利用可能になります。'),
             trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 const ComingSoonBadge(),
                 SizedBox(width: spacing.sm),

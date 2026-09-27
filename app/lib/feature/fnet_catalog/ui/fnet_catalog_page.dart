@@ -1,8 +1,12 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/fnet_catalog/data/notifier/fnet_catalog_notifier.dart';
 import 'package:eqmonitor/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 
 /// F-netカタログページ
 class FnetCatalogPage extends HookConsumerWidget {
@@ -10,7 +14,7 @@ class FnetCatalogPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentYear = DateTime.now().year;
+    final currentYear = DateTime.now().tokyoDateTime.year;
     final selectedYear = useState(currentYear);
     final selectedMonth = useState<int?>(null);
 
@@ -38,7 +42,8 @@ class FnetCatalogPage extends HookConsumerWidget {
           ),
         ),
       ),
-      body: RefreshIndicator(
+      body: M3EPullToRefreshIndicator(
+        onError: Error.throwWithStackTrace,
         onRefresh: () async {
           ref.invalidate(
             fnetCatalogProvider(
@@ -63,13 +68,13 @@ class FnetCatalogPage extends HookConsumerWidget {
                   ),
           AsyncError(:final error) => Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               children: [
                 const Icon(Icons.error_outline, size: 64, color: Colors.red),
                 const SizedBox(height: 16),
                 Text('エラーが発生しました\n$error'),
                 const SizedBox(height: 16),
-                ElevatedButton(
+                M3EElevatedButton(
                   onPressed: () {
                     ref.invalidate(
                       fnetCatalogProvider(
@@ -85,7 +90,7 @@ class FnetCatalogPage extends HookConsumerWidget {
             ),
           ),
           _ => const Center(
-            child: CircularProgressIndicator(),
+            child: AccessibleCircularProgressIndicator(),
           ),
         },
       ),
@@ -108,7 +113,7 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentYear = DateTime.now().year;
+    final currentYear = DateTime.now().tokyoDateTime.year;
     final years = List.generate(10, (index) => currentYear - index);
 
     return Container(
@@ -116,53 +121,55 @@ class _FilterBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: DropdownButtonFormField<int>(
-              initialValue: selectedYear,
-              decoration: const InputDecoration(
-                labelText: '年',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+            child: ControlledDropdown<int>(
+              singleSelect: true,
+              fieldStyle: const M3EDropdownFieldStyle(
+                hintText: '年',
+                padding: EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,
                 ),
               ),
               items: years.map((year) {
-                return DropdownMenuItem(
+                return M3EDropdownItem(
                   value: year,
-                  child: Text('$year年'),
+                  selected: year == selectedYear,
+                  label: '$year年',
                 );
               }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  onYearChanged(value);
-                }
+              onSelectionChanged: (selection) {
+                if (selection.isNotEmpty) onYearChanged(selection.first.value);
               },
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: DropdownButtonFormField<int?>(
-              initialValue: selectedMonth,
-              decoration: const InputDecoration(
-                labelText: '月',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+            child: ControlledDropdown<int?>(
+              singleSelect: true,
+              fieldStyle: const M3EDropdownFieldStyle(
+                hintText: '月',
+                padding: EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,
                 ),
               ),
               items: [
-                const DropdownMenuItem<int?>(
-                  child: Text('全て'),
+                M3EDropdownItem<int?>(
+                  value: null,
+                  label: '全て',
+                  selected: selectedMonth == null,
                 ),
                 ...List.generate(12, (index) => index + 1).map((month) {
-                  return DropdownMenuItem(
+                  return M3EDropdownItem(
                     value: month,
-                    child: Text('$month月'),
+                    selected: month == selectedMonth,
+                    label: '$month月',
                   );
                 }),
               ],
-              onChanged: onMonthChanged,
+              onSelectionChanged: (selection) {
+                if (selection.isNotEmpty) onMonthChanged(selection.first.value);
+              },
             ),
           ),
         ],

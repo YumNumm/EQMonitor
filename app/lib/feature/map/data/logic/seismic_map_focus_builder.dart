@@ -20,9 +20,7 @@ const _minimumCosineLatitude = 0.01;
 
 typedef SeismicMapGeoCoordinate = ({double latitude, double longitude});
 
-class SeismicMapFocusBuilder {
-  const new();
-
+class const SeismicMapFocusBuilder() {
   LngLatBounds forRealtime({
     required LngLatBounds fallbackBounds,
     required List<EewTelegramItem> eews,

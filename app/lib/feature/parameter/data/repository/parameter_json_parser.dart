@@ -11,9 +11,7 @@ part 'parameter_json_parser.g.dart';
 @riverpod
 ParameterJsonParser parameterJsonParser(Ref ref) => const ParameterJsonParser();
 
-final class ParameterJsonParser {
-  const new();
-
+final class const ParameterJsonParser() {
   ParameterSet parseSet({
     required AssetPackManifest manifest,
     required Map<ParameterType, String> parameterJsonByType,

@@ -1,5 +1,8 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/layout/history_detail_scope.dart';
+import 'package:eqmonitor/core/component/scroll/bottom_bouncing_scroll_physics.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -22,39 +25,56 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_hyp
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const new({required this.eventId, super.key});
+  const new({required this.eventId, this.onClose, super.key});
 
   final String eventId;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(earthquakeHistoryDetailsProvider(eventId));
+    final showBackButton = HistoryDetailScope.showBackButtonOf(context);
 
     return switch (detailsState) {
       AsyncError(:final error) => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
+        ),
         body: ErrorCard(
           error: error,
           onReload: () async =>
               ref.refresh(earthquakeHistoryDetailsProvider(eventId)),
         ),
       ),
-      AsyncValue(:final value?) => _LoadedContent(earthquake: value),
+      AsyncValue(:final value?) => _LoadedContent(
+        key: ValueKey(eventId),
+        earthquake: value,
+        onClose: onClose,
+      ),
       _ => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          automaticallyImplyLeading: showBackButton,
+          leading: showBackButton && onClose != null
+              ? BackButton(onPressed: onClose)
+              : null,
+        ),
         body: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
-              const CircularProgressIndicator.adaptive(),
+              const AccessibleCircularProgressIndicator(),
               const SizedBox(height: 8),
               Text(
                 '各地の震度データを取得中...',
                 style: Theme.of(context).textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                    ?.copyWith(fontWeight: .bold),
               ),
             ],
           ),
@@ -65,9 +85,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _LoadedContent extends HookConsumerWidget {
-  const new({required this.earthquake});
+  const new({required this.earthquake, this.onClose, super.key});
 
   final Earthquake earthquake;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -142,7 +163,9 @@ class _LoadedContent extends HookConsumerWidget {
             bottom: false,
             child: BasicModalSheet(
               hasAppBar: false,
+              expandToPane: onClose != null,
               child: SingleChildScrollView(
+                physics: const BottomBouncingScrollPhysics(),
                 child: SafeArea(
                   child: Column(
                     children: [
@@ -204,31 +227,35 @@ class _LoadedContent extends HookConsumerWidget {
                       NearbyEarthquakeCard(earthquake: earthquake),
                       if (telegramCommentLines.isNotEmpty ||
                           earthquake.dataSources.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                for (final line in telegramCommentLines)
-                                  TextSpan(text: '$line\n'),
-                                TextSpan(
-                                  text:
-                                      'データソース: ${earthquake.dataSources.map((e) => switch (e) {
-                                        EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
-                                        EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
-                                      }).join(', ')}',
-                                ),
-                              ],
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color:
-                                      designSystem.colorTheme.onSurfaceVariant,
-                                  fontSize: 11,
-                                ),
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  for (final line in telegramCommentLines)
+                                    TextSpan(text: '$line\n'),
+                                  TextSpan(
+                                    text:
+                                        'データソース: ${earthquake.dataSources.map((e) => switch (e) {
+                                          EarthquakeDataSource.jmaDisasterInformationXml => '気象庁災害情報XML',
+                                          EarthquakeDataSource.jmaIntensityDatabase => '気象庁震度データベース',
+                                        }).join(', ')}',
+                                  ),
+                                ],
+                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: designSystem
+                                        .colorTheme
+                                        .onSurfaceVariant,
+                                    fontSize: 11,
+                                  ),
+                            ),
                           ),
                         ),
                       _TelegramListButton(eventId: earthquake.eventId),
@@ -238,7 +265,8 @@ class _LoadedContent extends HookConsumerWidget {
               ),
             ),
           ),
-          if (Navigator.canPop(context))
+          if (HistoryDetailScope.showBackButtonOf(context) &&
+              (onClose != null || Navigator.canPop(context)))
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -256,7 +284,7 @@ class _LoadedContent extends HookConsumerWidget {
                     ),
                   ),
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
+                  onPressed: onClose ?? () => context.pop(),
                   color: designSystem.colorTheme.primary,
                   padding: const EdgeInsets.all(12),
                 ),
@@ -279,12 +307,12 @@ class _TelegramListButton extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: FilledButton.tonalIcon(
+      child: M3EFilledButton.tonalIcon(
         onPressed: () =>
             TelegramListByEventIdRoute(eventId: eventId).push<void>(context),
         icon: const Icon(Icons.list_alt),
         label: const Text('電文一覧を見る'),
-        style: FilledButton.styleFrom(
+        decoration: M3EButtonDecoration.styleFrom(
           minimumSize: const Size(double.infinity, 48),
           backgroundColor: designSystem.colorTheme.secondaryContainer,
           foregroundColor: designSystem.colorTheme.onSecondaryContainer,

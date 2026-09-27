@@ -27,9 +27,7 @@ class JapanBounds {
   static const center = Geographic(lon: centerLng, lat: centerLat);
 }
 
-class MapZoomCalculator {
-  const new();
-
+class const MapZoomCalculator() {
   /// 日本全国が映るMapOptionsを計算する
   MapOptions japanViewMapOptions({
     required BuildContext context,

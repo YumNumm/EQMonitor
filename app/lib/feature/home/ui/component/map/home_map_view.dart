@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -18,8 +19,8 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_la
 import 'package:eqmonitor/feature/home/ui/component/map/modal/home_map_label_debug_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/connection_status_card.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -59,9 +60,9 @@ class HomeMapView extends ConsumerWidget {
             border: Border.all(color: colorTheme.outlineVariant),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
-              const CircularProgressIndicator.adaptive(),
+              const AccessibleCircularProgressIndicator(),
               SizedBox(height: spacing.md),
               Text('地図を準備しています', style: typography.bodyMedium),
             ],
@@ -240,8 +241,8 @@ class _MapHeader extends ConsumerWidget {
 
     final kyoshinMonitorColumn = Column(
       key: const ValueKey('kyoshin_monitor_status_card'),
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         KyoshinMonitorStatusCard(
           onTap: () async => const HomeMapLayerRoute().push<void>(context),
@@ -275,8 +276,8 @@ class _MapHeader extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(context.designSystem.spacing.sm),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: .spaceBetween,
+        crossAxisAlignment: .start,
         children: [
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),

@@ -1,7 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StatusFilterChip extends StatelessWidget {
   const new({required this.statuses, this.onChanged, super.key});
@@ -21,8 +22,11 @@ class StatusFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<List<TelegramStatus>?>(
-          clipBehavior: Clip.antiAlias,
+        final result = await showM3EModalBottomSheet<List<TelegramStatus>?>(
+          isScrollControlled: false,
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+          clipBehavior: .antiAlias,
           context: context,
           builder: (context) =>
               _StatusFilterModal(currentStatuses: currentStatuses),
@@ -37,7 +41,7 @@ class StatusFilterChip extends StatelessWidget {
               currentStatuses.length == TelegramStatus.values.length
                   ? '全て'
                   : currentStatuses.map((s) => s.label).join(', '),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(initialStatuses),
       selected: !isDefault,
@@ -76,8 +80,8 @@ class _StatusFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -85,7 +89,7 @@ class _StatusFilterModal extends HookWidget {
               child: Text(
                 'ステータス',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -116,13 +120,13 @@ class _StatusFilterModal extends HookWidget {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context)
                           .pop(selectedStatuses.value.toList()),

@@ -27,7 +27,10 @@ Widget _buildTestWidget({
         (ref) async => permission,
       ),
     ],
-    child: MaterialApp(theme: theme, home: Scaffold(body: child)),
+    child: MaterialApp(
+      theme: theme,
+      home: Scaffold(body: child),
+    ),
   );
 }
 

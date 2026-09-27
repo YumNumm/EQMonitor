@@ -9,45 +9,25 @@ import 'support/counting_decoder_worker_factory.dart';
 import 'support/seismicity_benchmark_archive.dart';
 
 /// Correctness-first decode benchmark over Task 65/66 with a real worker.
-final class SeismicityDecodeBenchmarkResult {
-  const new({
-    required this.featureCount,
-    required this.tileCount,
-    required this.chunkCapacity,
-    required this.rawFeatureCount,
-    required this.uniqueFeatureCount,
-    required this.chunkFeatureSum,
-    required this.typedColumnBytes,
-    required this.expectedTypedColumnBytes,
-    required this.workerSpawnCount,
-    required this.archiveCloseCount,
-    required this.elapsed,
-    required this.rssBytes,
-    required this.informationalTimeThreshold,
-    required this.withinTarget,
-    required this.firstHypocenterId,
-    required this.lastHypocenterId,
-    required this.descriptor,
-  });
-
-  final int featureCount;
-  final int tileCount;
-  final int chunkCapacity;
-  final int rawFeatureCount;
-  final int uniqueFeatureCount;
-  final int chunkFeatureSum;
-  final int typedColumnBytes;
-  final int expectedTypedColumnBytes;
-  final int workerSpawnCount;
-  final int archiveCloseCount;
-  final Duration elapsed;
-  final int rssBytes;
-  final Duration? informationalTimeThreshold;
-  final bool? withinTarget;
-  final Uint8List firstHypocenterId;
-  final Uint8List lastHypocenterId;
-  final SeismicityPmTilesArchiveDescriptor descriptor;
-}
+final class const SeismicityDecodeBenchmarkResult({
+  required final int featureCount,
+  required final int tileCount,
+  required final int chunkCapacity,
+  required final int rawFeatureCount,
+  required final int uniqueFeatureCount,
+  required final int chunkFeatureSum,
+  required final int typedColumnBytes,
+  required final int expectedTypedColumnBytes,
+  required final int workerSpawnCount,
+  required final int archiveCloseCount,
+  required final Duration elapsed,
+  required final int rssBytes,
+  required final Duration? informationalTimeThreshold,
+  required final bool? withinTarget,
+  required final Uint8List firstHypocenterId,
+  required final Uint8List lastHypocenterId,
+  required final SeismicityPmTilesArchiveDescriptor descriptor,
+});
 
 Future<SeismicityDecodeBenchmarkResult> runSeismicityDecodeBenchmark({
   required int featureCount,
@@ -173,9 +153,7 @@ Future<SeismicityDecodeBenchmarkResult> runSeismicityDecodeBenchmark({
   );
 }
 
-final class _BenchmarkUuidBytes {
-  const new();
-
+final class const _BenchmarkUuidBytes() {
   bool equal({required Uint8List left, required Uint8List right}) {
     if (left.lengthInBytes != right.lengthInBytes) {
       return false;

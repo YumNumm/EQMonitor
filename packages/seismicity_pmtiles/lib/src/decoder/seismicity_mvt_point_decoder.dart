@@ -9,9 +9,7 @@ typedef SeismicityMvtPoint = ({
   double latitude,
 });
 
-final class SeismicityMvtPointDecoder {
-  const new();
-
+final class const SeismicityMvtPointDecoder() {
   SeismicityMvtPoint decode({
     required List<int> geometry,
     required int z,

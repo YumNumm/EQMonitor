@@ -1,9 +1,12 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_offset_adjustment_notifier.dart';
@@ -40,13 +43,13 @@ class _Body extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     final titleTextStyle = textTheme.titleMedium?.copyWith(
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
     final bodyTextStyle = textTheme.bodySmall?.copyWith(
-      fontWeight: FontWeight.w400,
+      fontWeight: .w400,
       fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
@@ -55,11 +58,11 @@ class _Body extends ConsumerWidget {
 
     return Column(
       spacing: 8,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorTimerNotifier', style: titleTextStyle),
               Text(switch (kyoshinMonitorTimerState) {
@@ -85,6 +88,7 @@ class _Body extends ConsumerWidget {
                       .watch(ntpProvider)
                       .value
                       ?.updatedAt
+                      .tokyoDateTime
                       .toIso8601String(),
                   'effective_offset': ref
                       .watch(kyoshinMonitorImageDelayProvider)
@@ -95,7 +99,7 @@ class _Body extends ConsumerWidget {
                 }),
                 style: bodyTextStyle,
               ),
-              FilledButton(
+              M3EFilledButton(
                 child: Text("Invalidate NTP"),
                 onPressed: () async => ref.invalidate(ntpProvider),
               ),
@@ -104,7 +108,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorTimerStream', style: titleTextStyle),
               Text(switch (ref.watch(kyoshinMonitorTimerStreamProvider)) {
@@ -119,7 +123,7 @@ class _Body extends ConsumerWidget {
           child: () {
             final state = ref.watch(kyoshinMonitorProvider);
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
                   children: [
@@ -168,7 +172,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorMaintenance', style: titleTextStyle),
               Text(switch (ref.watch(kyoshinMonitorMaintenanceProvider)) {
@@ -183,7 +187,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text('KyoshinMonitorSettings', style: titleTextStyle),
               Text(

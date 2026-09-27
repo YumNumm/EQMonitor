@@ -1,9 +1,10 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:material_ui/material_ui.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart' hide ConnectionState;
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
   const new({this.onTap, super.key});
@@ -12,13 +13,11 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latestTime = ref
-        .watch(
-          kyoshinMonitorProvider.select(
-            (v) => v.value?.lastUpdatedAt,
-          ),
-        )
-        ?.toLocal();
+    final latestTime = ref.watch(
+      kyoshinMonitorProvider.select(
+        (v) => v.value?.lastUpdatedAt,
+      ),
+    );
     final status =
         ref.watch(
           kyoshinMonitorProvider.select((v) => v.value?.status),
@@ -26,13 +25,14 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
         KyoshinMonitorStatus.stopped;
 
     final designSystem = context.designSystem;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final dateTextStyle = designSystem.typography.monoMedium.copyWith(
       letterSpacing: -0.5,
     );
 
     return Card.outlined(
-      color: designSystem.colorTheme.surfaceContainerHigh.withValues(alpha: 0.92),
+      color: designSystem.colorTheme.surfaceContainerHigh.withValues(
+        alpha: 0.92,
+      ),
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
@@ -51,7 +51,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
             child: DefaultTextStyle(
               style: dateTextStyle,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   // 現在時刻
                   ...switch (status) {
@@ -66,9 +66,9 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                       [
                         Flexible(
                           child: Text(
-                            DateFormat(
-                              'yyyy/MM/dd HH:mm:ss',
-                            ).format(latestTime),
+                            latestTime.formatWithTz(
+                              DateTimeFormat.yearMonthDayHourMinuteSecond,
+                            ),
                             style: dateTextStyle.copyWith(
                               color: Colors.redAccent,
                             ),
@@ -78,8 +78,8 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                     _ when latestTime != null => [
                       Flexible(
                         child: Text(
-                          dateFormat.format(
-                            latestTime,
+                          latestTime.formatWithTz(
+                            DateTimeFormat.yearMonthDayHourMinuteSecond,
                           ),
                           style: dateTextStyle,
                         ),
@@ -89,7 +89,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                       const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator.adaptive(),
+                        child: AccessibleCircularProgressIndicator(),
                       ),
                     ],
                   },

@@ -251,11 +251,9 @@ class _EarthquakeHistoryFillLayerBody extends HookConsumerWidget {
 const _regionSourceLayerId = 'areaForecastLocalE';
 const _citySourceLayerId = 'areaInformationCityQuake';
 
-class EarthquakeHistoryFillLayerBuilder {
-  const new({required this.modeResolver});
-
-  final EarthquakeHistoryMapLayerModeResolver modeResolver;
-
+class const EarthquakeHistoryFillLayerBuilder({
+  required final EarthquakeHistoryMapLayerModeResolver modeResolver,
+}) {
   List<StyleLayer> build({
     required EarthquakeIntensity intensity,
     required IntensityColors colorModel,

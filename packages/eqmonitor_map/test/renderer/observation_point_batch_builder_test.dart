@@ -3,9 +3,11 @@ import 'dart:ui';
 
 import 'package:eqmonitor_map/src/foundation/frame/map_clock.dart';
 import 'package:eqmonitor_map/src/foundation/frame/map_frame_snapshot.dart';
+import 'package:eqmonitor_map/src/foundation/revision/map_source_identity.dart';
 import 'package:eqmonitor_map/src/geo/map_camera.dart';
 import 'package:eqmonitor_map/src/geo/map_viewport.dart';
 import 'package:eqmonitor_map/src/overlay/earthquake_map_overlay_snapshot.dart';
+import 'package:eqmonitor_map/src/overlay/map_overlay_version_stamp.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch.dart';
 import 'package:eqmonitor_map/src/renderer/observation_point_batch_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +30,18 @@ void main() {
     devicePixelRatio: 3,
   );
 
+  MapOverlayVersionStamp versionStamp({int dataSequence = 3}) =>
+      createMapOverlayVersionStamp(
+        sourceIdentity: createMapSourceIdentity(value: 'event-1'),
+        sourceIncarnation: createMapSourceIncarnation(
+          value: 'incarnation-1',
+        ),
+        dataSequence: dataSequence,
+        dataDigest: 'data-$dataSequence',
+        renderGeneration: dataSequence,
+        renderDigest: 'render-$dataSequence',
+      );
+
   MapFrameSnapshot frame({
     int frameNumber = 0,
     double centerLongitude = 139.7,
@@ -48,7 +62,7 @@ void main() {
   );
 
   EarthquakeMapOverlaySnapshot snapshot({
-    int revision = 3,
+    int dataSequence = 3,
     List<EarthquakeObservationPoint> stations = const [
       EarthquakeObservationPoint(
         id: 'tokyo',
@@ -59,13 +73,15 @@ void main() {
       ),
     ],
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: 'event-1',
-    revision: revision,
+    versionStamp: versionStamp(dataSequence: dataSequence),
     regionToCityZoom: 6,
     stationMinZoom: 6,
     regionStyles: const [],
     cityStyles: const [],
     stations: stations,
+    spriteAtlas: null,
+    sprites: const [],
+    maxSpritePolicyBatches: 1,
   );
 
   test('packs Tokyo Mercator, RGBA, and radius at the 28-byte ABI offsets', () {
@@ -196,7 +212,7 @@ void main() {
   );
 
   test(
-    'same source and revision with changed station color is new generation',
+    'same version stamp with changed station color is new generation',
     () {
       final first = _requireObservationPointBatch(
         buildObservationPointBatch(
@@ -243,14 +259,13 @@ void main() {
       ..setFloat32(0, 0.25, Endian.little);
     final batch = createObservationPointBatch(
       frame: template.frame,
-      sourceId: template.sourceId,
-      snapshotRevision: template.snapshotRevision,
+      versionStamp: template.versionStamp,
       instanceData: callerInstances,
       instanceCount: template.instanceCount,
       frameUniform: callerUniform,
+      batchKey: template.batchKey,
       phasePolicyVersion: template.phasePolicyVersion,
       phase: template.phase,
-      translucentSortPriority: template.translucentSortPriority,
     );
 
     callerInstances[0] = 99;

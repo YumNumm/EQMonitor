@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/challenge_response.dart';
+import '../models/create_device_notification_webhook_request.dart';
 import '../models/create_region_slot_request.dart';
 import '../models/device_location_request.dart';
 import '../models/device_location_response.dart';
@@ -26,8 +27,7 @@ import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
 import '../models/replace_slot_entry.dart';
 import '../models/shake_detection_setting_request.dart';
-import '../models/shake_detection_setting_response.dart';
-import '../models/shake_detection_sub_region_response.dart';
+import '../models/shake_detection_settings_response.dart';
 import '../models/slot_response.dart';
 import '../models/tsunami_region_setting_patch_request.dart';
 import '../models/tsunami_region_setting_request.dart';
@@ -105,20 +105,6 @@ abstract class DeviceApiClient {
   Future<HttpResponse<EewSettingsResponse>> patchV2DeviceMeSettingsEew({
     @Body() required EewSettingsRequest body,
   });
-
-  /// 揺れ検知通知設定一覧を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetection)
-  Future<HttpResponse<List<ShakeDetectionSettingResponse>>> getV2DeviceMeSettingsShakeDetection();
-
-  /// 揺れ検知通知設定を一括更新（全件上書き）
-  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsShakeDetection)
-  Future<HttpResponse<List<ShakeDetectionSettingResponse>>> putV2DeviceMeSettingsShakeDetection({
-    @Body() required List<ShakeDetectionSettingRequest> body,
-  });
-
-  /// 揺れ検知サブ地域マスター一覧を取得
-  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetectionSubRegions)
-  Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>> getV2DeviceMeSettingsShakeDetectionSubRegions();
 
   /// 津波通知設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeSettingsTsunami)
@@ -238,7 +224,9 @@ abstract class DeviceApiClient {
 
   /// 通知 Webhook を作成
   @POST(DeviceApiClientUrls.postV2DeviceMeNotificationWebhooks)
-  Future<HttpResponse<DeviceNotificationWebhookResponse>> postV2DeviceMeNotificationWebhooks();
+  Future<HttpResponse<DeviceNotificationWebhookResponse>> postV2DeviceMeNotificationWebhooks({
+    @Body() required CreateDeviceNotificationWebhookRequest body,
+  });
 
   /// 通知 Webhook の一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceMeNotificationWebhooks)
@@ -255,6 +243,20 @@ abstract class DeviceApiClient {
   Future<HttpResponse<MigrationResponse>> postV2DeviceMeMigrate({
     @Body() required MigrateRequest body,
   });
+
+  /// 揺れ検知通知設定一覧を取得
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetection)
+  Future<HttpResponse<ShakeDetectionSettingsResponse>> getV2DeviceMeSettingsShakeDetection();
+
+  /// 揺れ検知通知設定を一括更新（全件上書き）
+  @PUT(DeviceApiClientUrls.putV2DeviceMeSettingsShakeDetection)
+  Future<HttpResponse<ShakeDetectionSettingsResponse>> putV2DeviceMeSettingsShakeDetection({
+    @Body() required List<ShakeDetectionSettingRequest> body,
+  });
+
+  /// 廃止済み。観測点マスターは Asset Pack を使用してください
+  @GET(DeviceApiClientUrls.getV2DeviceMeSettingsShakeDetectionSubRegions)
+  Future<HttpResponse<void>> getV2DeviceMeSettingsShakeDetectionSubRegions();
 }
 
 
@@ -283,12 +285,6 @@ abstract class DeviceApiClientUrls {
 	static const getV2DeviceMeSettingsEew = "/v2/device/me/settings/eew";
 	/// /v2/device/me/settings/eew
 	static const patchV2DeviceMeSettingsEew = "/v2/device/me/settings/eew";
-	/// /v2/device/me/settings/shake-detection
-	static const getV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
-	/// /v2/device/me/settings/shake-detection
-	static const putV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
-	/// /v2/device/me/settings/shake-detection/sub-regions
-	static const getV2DeviceMeSettingsShakeDetectionSubRegions = "/v2/device/me/settings/shake-detection/sub-regions";
 	/// /v2/device/me/settings/tsunami
 	static const getV2DeviceMeSettingsTsunami = "/v2/device/me/settings/tsunami";
 	/// /v2/device/me/settings/tsunami
@@ -341,5 +337,11 @@ abstract class DeviceApiClientUrls {
 	static const deleteV2DeviceMeNotificationWebhooksId = "/v2/device/me/notification/webhooks/{id}";
 	/// /v2/device/me/migrate
 	static const postV2DeviceMeMigrate = "/v2/device/me/migrate";
+	/// /v2/device/me/settings/shake-detection
+	static const getV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
+	/// /v2/device/me/settings/shake-detection
+	static const putV2DeviceMeSettingsShakeDetection = "/v2/device/me/settings/shake-detection";
+	/// /v2/device/me/settings/shake-detection/sub-regions
+	static const getV2DeviceMeSettingsShakeDetectionSubRegions = "/v2/device/me/settings/shake-detection/sub-regions";
 }
 

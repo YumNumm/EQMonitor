@@ -10,21 +10,12 @@ part of 'subscription_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// サブスクリプション状態を保持する AsyncNotifier。
-///
-/// RevenueCat SDK へのアクセスは [SubscriptionRepository] に集約する。
 
 @ProviderFor(SubscriptionNotifier)
 final subscriptionProvider = SubscriptionNotifierProvider._();
 
-/// サブスクリプション状態を保持する AsyncNotifier。
-///
-/// RevenueCat SDK へのアクセスは [SubscriptionRepository] に集約する。
 final class SubscriptionNotifierProvider
     extends $AsyncNotifierProvider<SubscriptionNotifier, SubscriptionStatus> {
-  /// サブスクリプション状態を保持する AsyncNotifier。
-  ///
-  /// RevenueCat SDK へのアクセスは [SubscriptionRepository] に集約する。
   SubscriptionNotifierProvider._()
     : super(
         from: null,
@@ -45,11 +36,7 @@ final class SubscriptionNotifierProvider
 }
 
 String _$subscriptionNotifierHash() =>
-    r'cab59e57f46d96b9fe9b841e5907bb7b644a6f1f';
-
-/// サブスクリプション状態を保持する AsyncNotifier。
-///
-/// RevenueCat SDK へのアクセスは [SubscriptionRepository] に集約する。
+    r'b1dddb634d1346fe62a9d0df9b1e9c0e81933911';
 
 abstract class _$SubscriptionNotifier
     extends $AsyncNotifier<SubscriptionStatus> {

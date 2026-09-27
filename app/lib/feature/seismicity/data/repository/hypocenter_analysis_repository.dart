@@ -92,9 +92,7 @@ class HypocenterAnalysisRepository implements HypocenterArchiveEventRepository {
   }
 }
 
-class HypocenterBoundsPolygon {
-  const new();
-
+class const HypocenterBoundsPolygon() {
   String encode({required SeismicityBounds bounds}) => [
     '${bounds.minLongitude},${bounds.minLatitude}',
     '${bounds.maxLongitude},${bounds.minLatitude}',

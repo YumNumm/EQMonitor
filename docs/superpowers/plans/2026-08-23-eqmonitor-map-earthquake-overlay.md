@@ -575,7 +575,7 @@ Commit: `feat: 最新地震をFlutter Scene地図へ接続`
 ### Task 10: Asset Pack validation, platform smoke, and knowledge record
 
 **Files:**
-- Create: `docs/knowledge/20260823_eqmonitor_map_earthquake_overlay.md`
+- Modify: `docs/knowledge/map_renderer.md`
 - Create only if unresolved work remains: `docs/todo/{level}_{title}.md`
 
 **Interfaces:**

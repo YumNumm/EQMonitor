@@ -69,7 +69,7 @@ class _JmaLegend extends StatelessWidget {
     }
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       spacing: 4,
       children: [
         for (final level in levels)
@@ -95,7 +95,7 @@ class _LpgmLegend extends StatelessWidget {
     }
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       spacing: 4,
       children: [
         for (final level in levels)
@@ -121,7 +121,7 @@ class _ShindoDbLegend extends StatelessWidget {
     final numericClasses = classes.where((c) => c.colorJmaIntensity != null);
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       spacing: 4,
       children: [
         for (final cls in numericClasses)
@@ -142,7 +142,7 @@ class _ShindoDbLegend extends StatelessWidget {
                   style: TextStyle(
                     color: context.designSystem.colorTheme.onSurface,
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),

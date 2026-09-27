@@ -3,12 +3,8 @@ import 'package:flutter/widgets.dart';
 /// 上端は Clamp、下端は Bounce する [ScrollPhysics]。
 ///
 /// Android / iOS 共通で同じ挙動にする。
-class BottomBouncingScrollPhysics extends BouncingScrollPhysics {
-  const new({
-    super.parent,
-    super.decelerationRate,
-  });
-
+class const BottomBouncingScrollPhysics({super.parent, super.decelerationRate})
+    extends BouncingScrollPhysics {
   @override
   BottomBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
     return BottomBouncingScrollPhysics(

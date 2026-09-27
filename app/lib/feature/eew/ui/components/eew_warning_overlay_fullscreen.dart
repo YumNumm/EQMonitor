@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_arrival_f
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_intensity_formatter.dart';
 import 'package:eqmonitor/feature/eew/ui/formatter/eew_warning_overlay_label_formatter.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EewWarningOverlayFullscreen extends StatelessWidget {
@@ -52,7 +53,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
           child: Material(
             color: colorScheme.errorContainer,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 const EewWarningOverlayTopStripe(),
                 Expanded(
@@ -61,7 +62,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: .stretch,
                         children: [
                           Expanded(
                             child: ListView(
@@ -70,7 +71,7 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                                   displayModel.reportLabel,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: colorScheme.onErrorContainer,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: .w700,
                                   ),
                                 ),
                                 const SizedBox(height: 24),
@@ -103,9 +104,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: OutlinedButton.icon(
+                                child: M3EOutlinedButton.icon(
                                   onPressed: onMinimize,
-                                  style: OutlinedButton.styleFrom(
+                                  decoration: M3EButtonDecoration.styleFrom(
                                     foregroundColor:
                                         colorScheme.onErrorContainer,
                                     side: BorderSide(
@@ -118,9 +119,9 @@ class EewWarningOverlayFullscreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: FilledButton.icon(
+                                child: M3EFilledButton.icon(
                                   onPressed: onClose,
-                                  style: FilledButton.styleFrom(
+                                  decoration: M3EButtonDecoration.styleFrom(
                                     backgroundColor: colorScheme.error,
                                     foregroundColor: colorScheme.onError,
                                   ),
@@ -155,12 +156,12 @@ class _EewWarningHeadline extends StatelessWidget {
     final color = theme.colorScheme.onErrorContainer;
     final headlineStyle = theme.textTheme.headlineMedium?.copyWith(
       color: color,
-      fontWeight: FontWeight.w900,
+      fontWeight: .w900,
       height: 1.25,
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (displayModel.hypocenterHeadline case final headline?)
           Text(headline, style: headlineStyle),
@@ -189,7 +190,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
     return Wrap(
       spacing: 20,
       runSpacing: 16,
-      crossAxisAlignment: WrapCrossAlignment.center,
+      crossAxisAlignment: .center,
       children: [
         ExcludeSemantics(
           child: JmaIntensityIcon(
@@ -199,8 +200,8 @@ class _EewWarningLocalIntensity extends StatelessWidget {
           ),
         ),
         Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Text(
               '現在地の予想震度',
@@ -210,7 +211,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
               '震度$intensityText',
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: color,
-                fontWeight: FontWeight.w800,
+                fontWeight: .w800,
               ),
             ),
             if (arrivalText case final text?)
@@ -218,7 +219,7 @@ class _EewWarningLocalIntensity extends StatelessWidget {
                 text,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: color,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: .w800,
                 ),
               ),
           ],
@@ -249,7 +250,7 @@ class _EewWarningDetails extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             _EewWarningDetailRow(
               label: '現在地域',
@@ -299,7 +300,7 @@ class _EewWarningDetailRow extends StatelessWidget {
             text: value,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
             ),
           ),
         ],

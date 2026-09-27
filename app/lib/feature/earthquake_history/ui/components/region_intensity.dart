@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/expand_traili
 import 'package:eqmonitor/feature/earthquake_history/ui/components/lpgm_station_detail_sheet.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 /// JMA震度階級の各地の震度ツリー表示
 class JmaIntensityContent extends HookWidget {
@@ -42,7 +43,7 @@ class JmaIntensityContent extends HookWidget {
 
     if (intensityTree.isEmpty) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _PreliminaryBadge(),
           if (regions.isEmpty)
@@ -155,7 +156,7 @@ class _PreliminaryBadge extends StatelessWidget {
             '速報',
             style: TextStyle(
               color: context.designSystem.colorTheme.onErrorContainer,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
         ),
@@ -202,7 +203,7 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
       subtitle: Text(
         regionNames,
         maxLines: 4,
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
         style: const TextStyle(fontFamily: FontFamily.notoSansJP, fontSize: 13),
       ),
     );
@@ -233,7 +234,7 @@ class _IntensityLevelSection extends HookWidget {
         .join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -331,7 +332,7 @@ class _LpgmIntensityLevelSection extends HookWidget {
     final regionNames = prefectures.map((e) => e.region.name.ja).join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -531,7 +532,12 @@ class _CityTile extends HookWidget {
                   .map(
                     (station) => ActionChip(
                       label: Text(station.station.name.ja),
-                      onPressed: () => showModalBottomSheet<void>(
+                      onPressed: () => showM3EModalBottomSheet<void>(
+                        isScrollControlled: false,
+                        useSafeArea: false,
+                        style: const M3EBottomSheetStyle(
+                          padding: EdgeInsets.zero,
+                        ),
                         context: context,
                         clipBehavior: Clip.antiAlias,
                         builder: (_) => LpgmStationDetailSheet(
@@ -569,7 +575,7 @@ class _LpgmCityTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -591,9 +597,14 @@ class _LpgmCityTile extends HookWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
-                    onTap: () => showModalBottomSheet<void>(
+                    onTap: () => showM3EModalBottomSheet<void>(
+                      isScrollControlled: false,
+                      useSafeArea: false,
+                      style: const M3EBottomSheetStyle(
+                        padding: EdgeInsets.zero,
+                      ),
                       context: context,
-                      clipBehavior: Clip.antiAlias,
+                      clipBehavior: .antiAlias,
                       builder: (_) => LpgmStationDetailSheet(station: station),
                     ),
                     child: Container(

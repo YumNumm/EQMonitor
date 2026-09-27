@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/home/data/flow/save_home_map_bounds_flow.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -5,10 +6,11 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 現在の表示範囲をホームのカスタム矩形として保存する。
 class HomeMapBoundsSelectorPage extends ConsumerWidget {
@@ -37,7 +39,7 @@ class HomeMapBoundsSelectorPage extends ConsumerWidget {
         body: Center(child: ErrorCard(error: error)),
       ),
       _ => const Scaffold(
-        body: Center(child: CircularProgressIndicator.adaptive()),
+        body: Center(child: AccessibleCircularProgressIndicator()),
       ),
     };
   }
@@ -67,7 +69,7 @@ class _Body extends HookConsumerWidget {
           controllerRef.value = c;
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: M3EExtendedFab(
         onPressed: () async {
           final controller = controllerRef.value;
           if (controller == null) {
@@ -82,7 +84,7 @@ class _Body extends HookConsumerWidget {
               );
         },
         icon: const Icon(Icons.save),
-        label: const Text('この範囲を保存'),
+        label: 'この範囲を保存',
       ),
     );
   }

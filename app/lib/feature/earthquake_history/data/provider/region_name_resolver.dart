@@ -6,9 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'region_name_resolver.g.dart';
 
 /// 地域コードから名称を解決する。
-class RegionNameResolver {
-  const new();
-
+class const RegionNameResolver() {
   /// 見つからなければ null。
   ///
   /// [parameter] JMA 地震パラメータ

@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_int
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_station_detail_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class ShindoDbIntensityContent extends HookWidget {
   const new({required this.tree, super.key});
@@ -82,7 +83,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
         .join(' ');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           dense: true,
@@ -101,7 +102,7 @@ class _ShindoDbIntensityLevelSection extends HookWidget {
           subtitle: Text(
             prefectureNames,
             maxLines: 4,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: const TextStyle(
               fontFamily: FontFamily.notoSansJP,
               fontSize: 13,
@@ -173,7 +174,7 @@ class _ShindoDbPrefectureTile extends HookWidget {
           contentPadding: const EdgeInsets.only(left: 8, right: 8),
           title: Text(
             prefecture.prefecture.name.ja,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
           onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
@@ -209,7 +210,7 @@ class _ShindoDbCityTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -243,7 +244,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
@@ -251,7 +252,7 @@ class _ShindoDbUnresolvedTile extends HookWidget {
           contentPadding: const EdgeInsets.only(left: 8, right: 8),
           title: const Text(
             '市区町村不明',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: .bold),
           ),
           trailing: trailing,
           onTap: () => isExpanded.value = !isExpanded.value,
@@ -282,9 +283,12 @@ class _ShindoDbStationChips extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: () => showModalBottomSheet<void>(
+              onTap: () => showM3EModalBottomSheet<void>(
+                isScrollControlled: false,
+                useSafeArea: false,
+                style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
                 context: context,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: .antiAlias,
                 builder: (_) => ShindoDbStationDetailSheet(station: station),
               ),
               child: Container(

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ThankYouDialog extends StatelessWidget {
@@ -18,7 +19,7 @@ class ThankYouDialog extends StatelessWidget {
         'いただいたご支援は、開発・運営費用に充てさせていただきます。',
       ),
       actions: [
-        FilledButton(
+        M3EFilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('OK'),
         ),

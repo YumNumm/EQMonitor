@@ -107,7 +107,7 @@ final class ActiveColorSetProvider
   }
 }
 
-String _$activeColorSetHash() => r'96a2df8081657ffe1b38d60397ff2e758e497846';
+String _$activeColorSetHash() => r'0a70747ba4559092c378b8bf98dfb55fed313b79';
 
 @ProviderFor(colorSetForBrightness)
 final colorSetForBrightnessProvider = ColorSetForBrightnessFamily._();

@@ -12,9 +12,7 @@ KyoshinMonitorTrimmedMeanCalculator kyoshinMonitorTrimmedMeanCalculator(
 /// 単一サンプルだと 1 回の通信ゆらぎが次の再同期まで残り続けてしまうため、
 /// 外れ値を落としてから平均する。長周期地震動モニタの公式フロントエンドが
 /// 往復時間とサーバ時刻のずれに対して行っているのと同じ処理。
-class KyoshinMonitorTrimmedMeanCalculator {
-  const new();
-
+class const KyoshinMonitorTrimmedMeanCalculator() {
   static const defaultCapacity = 5;
 
   List<Duration> append({

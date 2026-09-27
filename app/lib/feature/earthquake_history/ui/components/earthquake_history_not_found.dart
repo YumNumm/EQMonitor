@@ -12,7 +12,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Icon(
               Icons.search_off_rounded,
@@ -23,7 +23,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             Text(
               '条件を満たす地震情報は見つかりませんでした',
               style: designSystem.typography.titleSmall,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
           ],
         ),
@@ -44,7 +44,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
         padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: .center,
             children: [
               Icon(
                 Icons.search_rounded,
@@ -55,7 +55,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               Text(
                 '全件取得済みです',
                 style: designSystem.typography.titleSmall,
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
@@ -12,14 +13,18 @@ part 'is_pro_provider.g.dart';
 /// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 @Riverpod(keepAlive: true)
 bool isPro(Ref ref) {
-  final isProFeaturesEnabled = ref.watch(buildConfigProvider).isProFeaturesEnabled;
+  final isProFeaturesEnabled = ref
+      .watch(buildConfigProvider)
+      .isProFeaturesEnabled;
   if (!isProFeaturesEnabled) {
     return false;
   }
   final status = ref.watch(subscriptionProvider);
+  if (status.isLoading || status.hasError) return false;
   return switch (status) {
     AsyncData(:final value) => switch (value) {
-      SubscriptionStatusActive() => true,
+      SubscriptionStatusActive(:final expiresAt) =>
+        expiresAt == null || expiresAt.isAfter(clock.now()),
       SubscriptionStatusInactive() => false,
     },
     _ => false,

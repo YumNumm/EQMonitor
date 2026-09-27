@@ -3,9 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 揺れ検知レイヤーの GeoJSON ソースを差分更新する。
-class ShakeDetectionLayerGeoJsonUpdater {
-  const new();
-
+class const ShakeDetectionLayerGeoJsonUpdater() {
   Future<void> updateIfChanged({
     required StyleController styleController,
     required String sourceId,

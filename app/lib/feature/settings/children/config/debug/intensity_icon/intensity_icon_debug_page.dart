@@ -1,4 +1,9 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:typed_data';
+
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -57,7 +62,7 @@ class _SizeSlider extends StatelessWidget {
           children: [
             const Text('サイズ:'),
             Expanded(
-              child: Slider(
+              child: AccessibleSlider(
                 value: size.value,
                 min: 20,
                 max: 120,
@@ -93,7 +98,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -113,11 +118,11 @@ class _Section extends StatelessWidget {
                 ),
               ),
             ),
-            OutlinedButton.icon(
+            M3EOutlinedButton.icon(
               onPressed: onInvalidate,
               icon: const Icon(Icons.refresh, size: 16),
               label: const Text('再レンダリング'),
-              style: OutlinedButton.styleFrom(
+              decoration: M3EButtonDecoration.styleFrom(
                 visualDensity: VisualDensity.compact,
               ),
             ),
@@ -140,12 +145,12 @@ class _JmaIntensityGrid extends ConsumerWidget {
     final asyncData = ref.watch(intensityIconProvider);
 
     return asyncData.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, st) =>
           Text('エラー: $e', style: const TextStyle(color: Colors.red)),
       data: (data) => Table(
         defaultColumnWidth: const IntrinsicColumnWidth(),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        defaultVerticalAlignment: .middle,
         children: [
           TableRow(
             decoration: BoxDecoration(
@@ -207,12 +212,12 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
     final asyncData = ref.watch(intensityIconProvider);
 
     return asyncData.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, st) =>
           Text('エラー: $e', style: const TextStyle(color: Colors.red)),
       data: (data) => Table(
         defaultColumnWidth: const IntrinsicColumnWidth(),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        defaultVerticalAlignment: .middle,
         children: [
           TableRow(
             decoration: BoxDecoration(
@@ -280,7 +285,7 @@ class _RenderedImage extends StatelessWidget {
         child: const Icon(Icons.error_outline, size: 16),
       );
     }
-    return Image.memory(b, width: size, height: size, fit: BoxFit.contain);
+    return Image.memory(b, width: size, height: size, fit: .contain);
   }
 }
 

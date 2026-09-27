@@ -51,23 +51,18 @@ void main() {
   }
 }
 
-final class _ChunkCorruptionCase {
-  const new({required this.name, required this.chunk});
+final class const _ChunkCorruptionCase({
+  required final String name,
+  required final SeismicityPmTilesChunk chunk,
+});
 
-  final String name;
-  final SeismicityPmTilesChunk chunk;
-}
-
-final class _IdentityCorruptionCase {
-  const new({
-    required this.name,
-    required this.mutate,
-  });
-
-  final String name;
-  final SeismicityPmTilesDataset Function(SeismicityPmTilesDataset dataset)
-  mutate;
-}
+final class const _IdentityCorruptionCase({
+  required final String name,
+  required final SeismicityPmTilesDataset Function(
+    SeismicityPmTilesDataset dataset,
+  )
+  mutate,
+});
 
 final class _Task54Fixtures {
   SeismicityPmTilesSource get source => SeismicityPmTilesSource.network(

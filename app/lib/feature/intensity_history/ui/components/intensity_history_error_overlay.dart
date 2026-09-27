@@ -2,17 +2,19 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/error/error_details_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final intensityHistoryErrorOverlayActionProvider =
-    Provider<IntensityHistoryErrorOverlayAction>(
-      (_) => const IntensityHistoryErrorOverlayAction(),
-    );
+part 'intensity_history_error_overlay.g.dart';
 
-class IntensityHistoryErrorOverlayAction {
-  const new();
+@Riverpod(keepAlive: true)
+IntensityHistoryErrorOverlayAction intensityHistoryErrorOverlayAction(
+  Ref ref,
+) => const IntensityHistoryErrorOverlayAction();
 
+class const IntensityHistoryErrorOverlayAction() {
   Future<void> retry(WidgetRef ref) async {
     try {
       ref.invalidate(cityMaxIntensityProvider, asReload: true);
@@ -81,8 +83,8 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               children: [
                 Row(
                   children: [
@@ -96,7 +98,7 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                         '震度情報を更新できません',
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: designSystem.colorTheme.onErrorContainer,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                         ),
                       ),
                     ),
@@ -107,13 +109,13 @@ class IntensityHistoryErrorOverlay extends ConsumerWidget {
                   child: Wrap(
                     spacing: 4,
                     children: [
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () async {
                           await action.retry(ref);
                         },
                         child: const Text('再試行'),
                       ),
-                      TextButton(
+                      M3ETextButton(
                         onPressed: () => action.showDetails(
                           ref: ref,
                           context: context,

@@ -20,17 +20,11 @@ WidgetCurrentLocationLoader widgetCurrentLocationLoader(Ref ref) =>
       ),
     );
 
-class WidgetCurrentLocationLoader {
-  const new({
-    required this.checkPermission,
-    required this.getLastKnownPosition,
-    required this.getCurrentPosition,
-  });
-
-  final Future<LocationPermission> Function() checkPermission;
-  final Future<Position?> Function() getLastKnownPosition;
-  final Future<Position> Function() getCurrentPosition;
-
+class const WidgetCurrentLocationLoader({
+  required final Future<LocationPermission> Function() checkPermission,
+  required final Future<Position?> Function() getLastKnownPosition,
+  required final Future<Position> Function() getCurrentPosition,
+}) {
   Future<WidgetLocationLoadResult> load() async {
     final LocationPermission permission;
     try {

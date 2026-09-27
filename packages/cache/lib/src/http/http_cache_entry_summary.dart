@@ -1,19 +1,9 @@
-class HttpCacheEntrySummary {
-  const new({
-    required this.key,
-    required this.statusCode,
-    required this.eTag,
-    required this.headers,
-    required this.responseType,
-    required this.updatedAtMs,
-    required this.bodySizeBytes,
-  });
-
-  final String key;
-  final int statusCode;
-  final String? eTag;
-  final Map<String, List<String>> headers;
-  final String responseType;
-  final int updatedAtMs;
-  final int bodySizeBytes;
-}
+class const HttpCacheEntrySummary({
+  required final String key,
+  required final int statusCode,
+  required final String? eTag,
+  required final Map<String, List<String>> headers,
+  required final String responseType,
+  required final int updatedAtMs,
+  required final int bodySizeBytes,
+});

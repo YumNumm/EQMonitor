@@ -907,8 +907,8 @@
 **Files:**
 
 - Modify: `packages/eqmonitor_map/README.md`
-- Modify: `docs/todo/800_eqmonitor_map_deferred_verification.md`
-- Create: `docs/knowledge/20260809_flutter_scene_base_map_camera.md`
+- Modify: `docs/todo/820_map_renderer_and_migration.md`
+- Modify: `docs/knowledge/map_renderer.md`
 
 **Interfaces:**
 
@@ -929,7 +929,7 @@
 
 - [ ] **Step 2: deferred verification 文書から完了した残件だけを除く**
 
-  `docs/todo/800_eqmonitor_map_deferred_verification.md` から次だけを削除する。
+  `docs/todo/820_map_renderer_and_migration.md` から次だけを削除する。
 
   - geometry が extent を運ばず renderer が4096固定だった項目。
   - 同一祖先 fallback の重複描画項目。
@@ -938,7 +938,7 @@
 
 - [ ] **Step 3: BaseMap camera 契約を knowledge に記録する**
 
-  `docs/knowledge/20260809_flutter_scene_base_map_camera.md` に次を500行以内で書く。
+  `docs/knowledge/map_renderer.md` に次を簡潔に追記する。
 
   ```markdown
   # BaseMapのFlutter Scene camera契約
@@ -1005,7 +1005,7 @@
 - [ ] **Step 6: 文書commitを作ってpushする**
 
   ```bash
-  git add packages/eqmonitor_map/README.md docs/todo/800_eqmonitor_map_deferred_verification.md docs/knowledge/20260809_flutter_scene_base_map_camera.md
+  git add packages/eqmonitor_map/README.md docs/todo/820_map_renderer_and_migration.md docs/knowledge/map_renderer.md
   git commit -m "Docs: ベースレイヤー残件の検証結果を記録"
   git push
   ```

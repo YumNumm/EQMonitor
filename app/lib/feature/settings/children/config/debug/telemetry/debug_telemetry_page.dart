@@ -1,7 +1,11 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telemetry/data/provider/telemetry_database_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -56,11 +60,11 @@ class DebugTelemetryPage extends HookConsumerWidget {
                   title: const Text('全イベントを削除'),
                   content: Text('${totalCount.value}件のイベントを削除しますか？'),
                   actions: [
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () => Navigator.pop(context, false),
                       child: const Text('キャンセル'),
                     ),
-                    TextButton(
+                    M3ETextButton(
                       onPressed: () => Navigator.pop(context, true),
                       child: const Text('削除'),
                     ),
@@ -76,7 +80,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           _SummaryCard(
             totalCount: totalCount.value,
@@ -85,7 +89,7 @@ class DebugTelemetryPage extends HookConsumerWidget {
           const Divider(height: 1),
           Expanded(
             child: isLoading.value
-                ? const Center(child: CircularProgressIndicator.adaptive())
+                ? const Center(child: AccessibleCircularProgressIndicator())
                 : events.value.isEmpty
                 ? const Center(child: Text('イベントはまだありません'))
                 : ListView.separated(
@@ -119,7 +123,7 @@ class _SummaryCard extends StatelessWidget {
         children: [
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   '合計: $totalCount件',
@@ -175,11 +179,11 @@ class _EventTile extends StatelessWidget {
         event.eventType,
         style: theme.textTheme.bodyMedium?.copyWith(
           fontFamily: 'monospace',
-          fontWeight: FontWeight.w600,
+          fontWeight: .w600,
         ),
       ),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             timeStr,
@@ -195,7 +199,9 @@ class _EventTile extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        await showModalBottomSheet<void>(
+        await showM3EModalBottomSheet<void>(
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+          useSafeArea: false,
           context: context,
           isScrollControlled: true,
           builder: (context) => DraggableScrollableSheet(
@@ -233,11 +239,16 @@ class _EventTile extends StatelessWidget {
                     controller: scrollController,
                     padding: const EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         _DetailRow('ID', '${event.id}'),
                         _DetailRow('Type', event.eventType),
-                        _DetailRow('Time', time.toIso8601String()),
+                        _DetailRow(
+                          'Time',
+                          time.formatWithTz(
+                            .yearMonthDayHourMinuteSecondMillisecond,
+                          ),
+                        ),
                         _DetailRow('Event ID', event.eventId ?? '(null)'),
                         _DetailRow('Synced', event.synced ? 'Yes' : 'No'),
                         const SizedBox(height: 12),
@@ -288,7 +299,7 @@ class _DetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 80,

@@ -10,6 +10,8 @@ import 'rules/avoid_null_assertion_operator.dart';
 import 'rules/avoid_print_call.dart';
 import 'rules/avoid_stateful_widget.dart';
 import 'rules/avoid_top_level_functions.dart';
+import 'rules/prefer_primary_constructor.dart';
+import 'rules/require_riverpod_generator.dart';
 
 final plugin = _EqmonitorLintsPlugin();
 
@@ -26,6 +28,8 @@ class _EqmonitorLintsPlugin extends Plugin {
       AvoidPrintCall(),
       AvoidEqmonitorApiInUi(),
       AvoidMixedDeclarationCategories(),
+      RequireRiverpodGenerator(),
+      PreferPrimaryConstructor(),
     ].forEach(registry.registerLintRule);
   }
 }

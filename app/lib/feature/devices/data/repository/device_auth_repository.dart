@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
@@ -13,14 +14,14 @@ Future<DeviceAuthRepository> deviceAuthRepository(Ref ref) async =>
       onCredentialsWillChange: ref
           .watch(deviceLocationSyncStateRepositoryProvider)
           .clearLastSent,
+      onCredentialsChanged: () => ref.invalidate(deviceIdProvider),
     );
 
-class DeviceAuthRepository {
-  const new(this._preferences, {this.onCredentialsWillChange});
-
-  final PreferencesDataSource<SecureStorageKey> _preferences;
-  final Future<void> Function()? onCredentialsWillChange;
-
+class const DeviceAuthRepository(
+  final PreferencesDataSource<SecureStorageKey> _preferences, {
+  final Future<void> Function()? onCredentialsWillChange,
+  final void Function()? onCredentialsChanged,
+}) {
   Future<String?> readToken() =>
       _preferences.getString(key: SecureStorageKey.deviceToken);
 
@@ -30,10 +31,12 @@ class DeviceAuthRepository {
       key: SecureStorageKey.deviceToken,
       value: token,
     );
+    onCredentialsChanged?.call();
   }
 
   Future<void> clearToken() async {
     await onCredentialsWillChange?.call();
     await _preferences.remove(key: SecureStorageKey.deviceToken);
+    onCredentialsChanged?.call();
   }
 }

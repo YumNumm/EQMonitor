@@ -50,7 +50,7 @@ class AppBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(designSystem.shape.card),
           side: BorderSide(color: designSystem.colorTheme.outlineVariant),
         ),
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -67,13 +67,13 @@ class AppBanner extends StatelessWidget {
                 Icon(icon, color: foregroundColor, size: 20),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text(
                         title,
                         style: typography.bodyMedium.copyWith(
                           color: foregroundColor,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: .w600,
                         ),
                       ),
                       if (description != null && description.isNotEmpty)

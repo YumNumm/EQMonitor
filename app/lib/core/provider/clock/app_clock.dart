@@ -13,8 +13,12 @@ part 'app_clock.g.dart';
 ///   いずれのモードでも整合した時刻基準で動作する。
 @Riverpod(keepAlive: true)
 class AppClock extends _$AppClock {
+  var _latestReplaySession = 0;
+
   @override
   TimeMode build() => const TimeMode.realtime();
+
+  int get latestReplaySession => _latestReplaySession;
 
   /// 現在のモードに応じた「現在時刻」を返す。
   DateTime now() {
@@ -35,8 +39,14 @@ class AppClock extends _$AppClock {
       state = TimeMode.timeShift(offset: offset);
 
   /// リプレイファイル再生へ切り替える。
-  void enterReplay(DateTime currentTime) =>
-      state = TimeMode.replay(currentTime: currentTime);
+  void enterReplay(DateTime currentTime) {
+    final previous = state;
+    _latestReplaySession += 1;
+    state = TimeMode.replay(currentTime: currentTime);
+    if (state == previous) {
+      ref.notifyListeners();
+    }
+  }
 
   /// リプレイ再生中の再生位置を更新する。リプレイ中でない場合は何もしない。
   void updateReplayTime(DateTime currentTime) {

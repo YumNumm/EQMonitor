@@ -1,3 +1,5 @@
 #include "Generated.xcconfig"
 #include "Environment.xcconfig"
 SWIFT_ENABLE_EXPLICIT_MODULES = NO
+// Firebase Analytics SPM requires Objective-C categories to be linked.
+OTHER_LDFLAGS = $(inherited) -ObjC

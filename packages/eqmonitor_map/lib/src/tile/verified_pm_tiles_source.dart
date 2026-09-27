@@ -17,9 +17,7 @@ final _loopbackIpv4 = RegExp(
 /// ための sealed marker。`BaseMapTileRepository`は本型で local/remote を
 /// 網羅的に判別する。sealedのため subtype は本 library(このファイルと
 /// 生成 part)に閉じている。
-sealed class VerifiedTileSource {
-  const new();
-
+sealed class const VerifiedTileSource() {
   /// archiveの実体を区別する識別子。同一URL/pathでも中身が更新された別の
   /// downloadを別物として扱うために使う。
   String get sourceInstanceId;
@@ -30,6 +28,9 @@ sealed class VerifiedTileSource {
   /// [VerifiedTileSourceCacheIdentity.cacheIdentity]だけである。remote で
   /// 照合できない理由は`MapRemotePmTilesRandomAccessReader`の doc を参照。
   String get sha256;
+
+  @override
+  String toString() => 'VerifiedTileSource(identity: redacted)';
 }
 
 /// tile cache の key に使う、**内容で決まる** source identity。
@@ -61,7 +62,7 @@ extension VerifiedTileSourceCacheIdentity on VerifiedTileSource {
 /// downloadなど)を区別するための識別子。`BaseMapTileCache`のcache keyの
 /// 一部として使い、archiveが差し替わった際に古いtileのcacheを暗黙に無効化
 /// する目的だけに使う(値そのものの生成規則はappが決める)。
-@freezed
+@Freezed(toStringOverride: false)
 abstract class VerifiedPmTilesSource
     with _$VerifiedPmTilesSource
     implements VerifiedTileSource {
@@ -89,7 +90,7 @@ abstract class VerifiedPmTilesSource
 /// [createVerifiedRemotePmTilesSource]の検証を迂回して不正な descriptor を
 /// 作れてしまい、remote reader が信頼する https/digest 境界が崩れるため。
 /// 値を変えるときは必ず[createVerifiedRemotePmTilesSource]から作り直す。
-@Freezed(copyWith: false)
+@Freezed(copyWith: false, toStringOverride: false)
 abstract class VerifiedRemotePmTilesSource
     with _$VerifiedRemotePmTilesSource
     implements VerifiedTileSource {

@@ -41,6 +41,8 @@ void main() {
               ),
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
+                // 本番と同じく Flutter Material を使う依存の delegate も登録する。
+                // ignore: deprecated_member_use
                 flutter_localizations.GlobalMaterialLocalizations.delegate,
                 flutter_localizations.GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,

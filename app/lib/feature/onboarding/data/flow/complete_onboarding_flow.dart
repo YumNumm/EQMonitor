@@ -5,20 +5,16 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/start/data/notifier/update_banner_seen_version_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final completeOnboardingFlowProvider = Provider<CompleteOnboardingFlow>(
-  (ref) => const CompleteOnboardingFlow(),
-);
+part 'complete_onboarding_flow.g.dart';
 
-/// オンボーディング完了時の一連の処理をまとめる Flow。
-///
-/// - 完了フラグを永続化する
-/// - 新規ユーザーはアップデートバナーの既読版数を現在版へ初期化し、
-///   初回ホームで「アップデートしました」バナーを表示しない
-/// - ホームへ遷移する
-class CompleteOnboardingFlow {
-  const new();
+@Riverpod(keepAlive: true)
+CompleteOnboardingFlow completeOnboardingFlow(Ref ref) =>
+    const CompleteOnboardingFlow();
 
+/// オンボーディング完了時の一連の処理
+class const CompleteOnboardingFlow() {
   Future<void> complete({
     required WidgetRef ref,
     required BuildContext context,
@@ -27,7 +23,6 @@ class CompleteOnboardingFlow {
       ref,
       (tsx) async => tsx.get(onboardingCompletedProvider.notifier).complete(),
     );
-    // 既読版数の初期化に失敗してもオンボーディング完了・遷移は妨げない。
     try {
       final version = ref.read(packageInfoProvider).version;
       await ref

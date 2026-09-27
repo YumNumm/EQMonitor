@@ -75,9 +75,7 @@ enum AuthEnvironment {
   }
 }
 
-final class AuthEnvironmentUrlMatcher {
-  const new();
-
+final class const AuthEnvironmentUrlMatcher() {
   static bool isExactBaseUrl({
     required String value,
     required String expected,

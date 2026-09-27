@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
@@ -13,7 +14,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_in
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_type_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class EarthquakeSummaryHeader extends StatelessWidget {
   const new({
@@ -69,7 +69,7 @@ class EarthquakeSummaryHeader extends StatelessWidget {
                     item.status.name,
                     style: TextStyle(
                       fontSize: 100,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: .w700,
                       color: colorTheme.onSurfaceVariant.withValues(alpha: 0.2),
                       fontFamily: FontFamily.googleSansCode,
                       letterSpacing: -0.5,
@@ -95,9 +95,9 @@ class _MaxIntensityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
-        const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('最大震度', style: TextStyle(fontWeight: .bold)),
         const SizedBox(height: 4),
         JmaIntensityIcon(
           type: .filled,
@@ -138,12 +138,11 @@ class _EarthquakeInformationBody extends StatelessWidget {
     final isOverseasEvent =
         earthquakeType == EarthquakeType.distant ||
         earthquakeType == EarthquakeType.volcano;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
     final timeText = switch ((item.originTime, item.arrivalTime)) {
       (final DateTime originTime, _) =>
-        '発生時刻: ${dateFormat.format(originTime.toLocal())}',
+        '発生時刻: ${originTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃',
       (_, final DateTime arrivalTime) =>
-        '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
+        '検知時刻: ${arrivalTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}頃',
       _ => null,
     };
     final hypocenterWidget = _HypocenterWidget(
@@ -158,8 +157,8 @@ class _EarthquakeInformationBody extends StatelessWidget {
 
     return Wrap(
       spacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.end,
-      alignment: WrapAlignment.center,
+      crossAxisAlignment: .end,
+      alignment: .center,
       children: [
         const Row(),
         if (isOverseasEvent) ...[
@@ -184,7 +183,17 @@ class _EarthquakeInformationBody extends StatelessWidget {
           hypocenterWidget,
         ],
         const Row(),
-        if (timeText != null) Wrap(children: [Text(timeText)]),
+        if (timeText != null)
+          Text(
+            timeText,
+            style: TextStyle(
+              fontFamily: FontFamily.googleSansCode,
+              fontFamilyFallback: [
+                FontFamily.googleSansFlex,
+                FontFamily.notoSansJP,
+              ],
+            ),
+          ),
       ],
     );
   }
@@ -209,11 +218,14 @@ class _HypocenterWidget extends StatelessWidget {
     final titleMedium = textTheme.titleMedium ?? const TextStyle();
 
     return Row(
-      textBaseline: TextBaseline.ideographic,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: .ideographic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
       children: [
-        Text(label, style: textTheme.labelStyle(bodySmall)),
+        Text(
+          label,
+          style: textTheme.labelStyle(bodySmall),
+        ),
         const SizedBox(width: 4),
         Flexible(
           child: Text.rich(
@@ -293,16 +305,16 @@ class _UnknownInfoWidget extends StatelessWidget {
     final titleLarge = textTheme.titleLarge ?? const TextStyle();
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+      mainAxisSize: .min,
+      crossAxisAlignment: .baseline,
+      textBaseline: .alphabetic,
       children: [
         Text(label, style: textTheme.labelStyle(titleSmall)),
         const SizedBox(width: 4),
         Text(
           value,
           style: titleLarge.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontFamily: FontFamily.googleSansCode,
             fontFamilyFallback: [FontFamily.notoSansJP],
           ),

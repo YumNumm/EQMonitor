@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class TelegramListTile extends StatelessWidget {
   const new({required this.telegram, this.onTap, super.key});
@@ -14,8 +14,6 @@ class TelegramListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final designSystem = context.designSystem;
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-
     final isEew = switch (telegram.type) {
       TelegramType.vxse43 || TelegramType.vxse44 || TelegramType.vxse45 => true,
       _ => false,
@@ -29,11 +27,11 @@ class TelegramListTile extends StatelessWidget {
       title: Text(
         telegram.title,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
       subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           const SizedBox(height: 4),
           _InfoRow(label: '電文種別', value: telegram.type.name.toUpperCase()),
@@ -41,7 +39,9 @@ class TelegramListTile extends StatelessWidget {
             _InfoRow(label: '報数', value: '第$serialNo報'),
           _InfoRow(
             label: '発表時刻',
-            value: dateFormat.format(telegram.pressAt.toLocal()),
+            value: telegram.pressAt.formatWithTz(
+              DateTimeFormat.yearMonthDayHourMinuteSecond,
+            ),
           ),
           _InfoRow(label: '発表元', value: telegram.publishingOffice.join(', ')),
           if (telegram.headline case final headline?) ...[
@@ -53,13 +53,13 @@ class TelegramListTile extends StatelessWidget {
                 fontSize: 12,
               ),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ],
         ],
       ),
       trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           if (onTap != null) ...[
             const SizedBox(width: 8),
@@ -96,10 +96,10 @@ class _InfoRow extends StatelessWidget {
           child: Text(
             value,
             style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: .w500,
               fontSize: 12,
             ),
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ),
       ],

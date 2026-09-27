@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:eqmonitor/feature/region_selection/data/logic/region_map_layers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 CityMaxIntensityEntry _entry(String cityCode, JmaIntensity intensity) =>
@@ -101,6 +102,21 @@ void main() {
         layers.last.layer.paint['line-width'],
         IntensityFillLayerBuilder.selectedCityLineWidth,
       );
+    });
+
+    test('選択枠の本線は地域選択UIと同じ線幅・色にする', () {
+      final outline = builder.buildSelectedCityLine(
+        selectedCityCode: '0110100',
+        lineColor: '#123456',
+        haloColor: '#FFFFFF',
+      ).last.layer;
+      final regionOutline = const RegionMapLayers()
+          .build(color: '#123456', hasEpicenter: false)
+          .singleWhere((layer) => layer.id == 'region-selection-city-line');
+
+      for (final property in ['line-color', 'line-width']) {
+        expect(outline.paint[property], regionOutline.paint[property]);
+      }
     });
 
     test('未選択なら何も返さない', () {

@@ -12,6 +12,5 @@ abstract class StatusColors with _$StatusColors {
     @ColorJsonConverter() required Color warning,
   }) = _StatusColors;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$StatusColorsFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$StatusColorsFromJson(json);
 }

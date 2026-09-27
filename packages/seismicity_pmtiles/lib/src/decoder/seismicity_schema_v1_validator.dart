@@ -14,9 +14,7 @@ const schemaV1Properties = <String>{
   'geometry_clamped',
 };
 
-final class SeismicitySchemaV1Validator {
-  const new();
-
+final class const SeismicitySchemaV1Validator() {
   void validateDescriptor({
     required SeismicityPmTilesArchiveDescriptor descriptor,
   }) {

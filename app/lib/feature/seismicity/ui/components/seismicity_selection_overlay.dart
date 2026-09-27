@@ -29,7 +29,7 @@ class SeismicitySelectionOverlay extends HookWidget {
     return IgnorePointer(
       ignoring: !enabled,
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+        behavior: .opaque,
         onPanStart: (details) => selection.startDrag(details.localPosition),
         onPanUpdate: (details) => selection.updateDrag(details.localPosition),
         onPanEnd: (_) => _handleDragEnd(selection),
@@ -80,12 +80,10 @@ class SeismicitySelectionOverlay extends HookWidget {
   }
 }
 
-class _SelectionPainter extends CustomPainter {
-  const new({required this.start, required this.current});
-
-  final Offset? start;
-  final Offset? current;
-
+class const _SelectionPainter({
+  required final Offset? start,
+  required final Offset? current,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final start = this.start;
@@ -98,13 +96,13 @@ class _SelectionPainter extends CustomPainter {
       rect,
       Paint()
         ..color = const Color(0x332196F3)
-        ..style = PaintingStyle.fill,
+        ..style = .fill,
     );
     canvas.drawRect(
       rect,
       Paint()
         ..color = const Color(0xFF2196F3)
-        ..style = PaintingStyle.stroke
+        ..style = .stroke
         ..strokeWidth = 1.5,
     );
   }

@@ -4,17 +4,18 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final earthquakeHistoryMapPopupActionProvider = Provider(
-  (ref) => const EarthquakeHistoryMapPopupAction(),
-);
+part 'earthquake_history_map_popup.g.dart';
+
+@Riverpod(keepAlive: true)
+EarthquakeHistoryMapPopupAction earthquakeHistoryMapPopupAction(Ref ref) =>
+    const EarthquakeHistoryMapPopupAction();
 
 /// 地震履歴マップの観測点・区域タップ時のポップアップ表示を担う。
-class EarthquakeHistoryMapPopupAction {
-  const new();
-
+class const EarthquakeHistoryMapPopupAction() {
   /// 区域タップ時のポップアップ
   ///
   /// [intensityHistoryRoute] を指定すると「この地域の最大震度履歴」ボタンを表示する。
@@ -25,9 +26,12 @@ class EarthquakeHistoryMapPopupAction {
     required Widget intensityContent,
     IntensityHistoryRoute? intensityHistoryRoute,
   }) {
-    return showModalBottomSheet(
+    return showM3EModalBottomSheet(
+      isScrollControlled: false,
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       builder: (context) => _AreaPopupBody(
         areaName: areaName,
         maxIntensity: maxIntensity,
@@ -93,7 +97,7 @@ class _AreaPopupBody extends StatelessWidget {
             intensityContent,
             if (intensityHistoryRoute case final route?) ...[
               const SizedBox(height: 8),
-              TextButton.icon(
+              M3ETextButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(route.push<void>(context));

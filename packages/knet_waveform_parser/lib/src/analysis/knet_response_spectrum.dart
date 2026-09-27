@@ -1,26 +1,19 @@
 import 'dart:math';
 
 /// 応答スペクトル計算結果
-class ResponseSpectrumResult {
-  const new({
-    required this.periods,
-    required this.sa,
-    required this.sv,
-    required this.sd,
-  });
-
+class const ResponseSpectrumResult({
   /// 周期 T (s)
-  final List<double> periods;
+  required final List<double> periods,
 
   /// 擬似加速度応答スペクトル Sa (gal)
-  final List<double> sa;
+  required final List<double> sa,
 
   /// 擬似速度応答スペクトル Sv (cm/s)
-  final List<double> sv;
+  required final List<double> sv,
 
   /// 変位応答スペクトル Sd (cm)
-  final List<double> sd;
-
+  required final List<double> sd,
+}) {
   /// SI値 (cm/s) — Housner スペクトル強度
   ///
   /// SI = (1/2.4) * ∫[0.1, 2.5] Sv(T, h=0.2) dT

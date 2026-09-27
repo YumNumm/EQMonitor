@@ -1,0 +1,67 @@
+{
+  "pack_version": "0.1.0",
+  "archive_sha256": "e4c259d5f62970c7332e577f7e82403babdede6a339546d5ae11ba8edf040403",
+  "metadata": {
+    "vector_layers": [
+      {
+        "id": "areaEpicenter",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 8,
+        "fields": {
+          "id": "Number"
+        }
+      },
+      {
+        "id": "areaForecastLocalE",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 8,
+        "fields": {
+          "code": "String",
+          "name": "String",
+          "namekana": "String"
+        }
+      },
+      {
+        "id": "areaForecastLocalEew",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 8,
+        "fields": {
+          "code": "String",
+          "name": "String",
+          "namekana": "String"
+        }
+      },
+      {
+        "id": "areaInformationCityQuake",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 8,
+        "fields": {
+          "name": "String",
+          "namekana": "String",
+          "regioncode": "String",
+          "regionname": "String"
+        }
+      },
+      {
+        "id": "countries",
+        "description": "",
+        "minzoom": 0,
+        "maxzoom": 8,
+        "fields": {
+          "ADMIN": "String",
+          "ISO_A2": "String",
+          "ISO_A3": "String"
+        }
+      }
+    ]
+  },
+  "epicenters": {
+    "100": "石狩地方北部",
+    "350": "東京都２３区",
+    "999": "遠地"
+  }
+}

@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft_factory.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_metadata.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_debug_override_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('manual JSON更新はfocusに依存せず可視typed formへ同期する', (tester) async {
@@ -57,7 +58,7 @@ void main() {
     await _scrollTo(tester, const Key('vxse-apply-button'));
     expect(
       tester
-          .widget<FilledButton>(find.byKey(const Key('vxse-apply-button')))
+          .widget<M3EFilledButton>(find.byKey(const Key('vxse-apply-button')))
           .onPressed,
       isNull,
     );
@@ -265,7 +266,7 @@ void main() {
     );
     await tester.tap(find.byKey(const Key('magnitude-type-dropdown')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('unknown').last);
+    await _selectDropdownOption(tester, 'unknown');
     await tester.pumpAndSettle();
 
     final ordinaryDetails = find.byKey(const Key('ordinary-station-details'));
@@ -546,7 +547,7 @@ void main() {
     await _scrollFinderTo(tester, dropdown);
     await tester.tap(dropdown.hitTestable());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('5-').last);
+    await _selectDropdownOption(tester, '5-');
     await tester.pumpAndSettle();
 
     final draft = await _readDraft(tester) as EarthquakeVxse53DebugDraft;
@@ -565,7 +566,7 @@ void main() {
     await _scrollFinderTo(tester, dropdown);
     await tester.tap(dropdown.hitTestable());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('3').last);
+    await _selectDropdownOption(tester, '3');
     await tester.pumpAndSettle();
 
     final draft = await _readDraft(tester) as EarthquakeVxse62DebugDraft;
@@ -765,7 +766,7 @@ void main() {
       await _scrollFinderTo(tester, dropdown);
       await tester.tap(dropdown.hitTestable().first);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('5-').last);
+      await _selectDropdownOption(tester, '5-');
       await tester.pumpAndSettle();
 
       final state = container.read(
@@ -798,7 +799,7 @@ void main() {
     await _scrollToTop(tester);
     await tester.tap(find.byKey(const Key('vxse-type-dropdown')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('VXSE62').last);
+    await _selectDropdownOption(tester, 'VXSE62');
     await tester.pumpAndSettle();
 
     await _scrollTo(tester, const Key('hypocenter-fields'));
@@ -893,7 +894,7 @@ void main() {
 
     expect(find.text('{broken'), findsOneWidget);
     expect(find.text('JSONの形式が正しくありません'), findsOneWidget);
-    final button = tester.widget<FilledButton>(
+    final button = tester.widget<M3EFilledButton>(
       find.byKey(const Key('vxse-apply-button')),
     );
     expect(button.onPressed, isNull);
@@ -983,8 +984,25 @@ Future<void> _selectType(
   await _scrollToTop(tester);
   await tester.tap(find.byKey(const Key('vxse-type-dropdown')));
   await tester.pumpAndSettle();
-  await tester.tap(find.text(type.name.toUpperCase()).last);
+  await _selectDropdownOption(tester, type.name.toUpperCase());
   await tester.pumpAndSettle();
+}
+
+Future<void> _selectDropdownOption(WidgetTester tester, String label) async {
+  final option = find.text(label).hitTestable();
+  await tester.scrollUntilVisible(
+    option,
+    80,
+    scrollable: find
+        .byWidgetPredicate(
+          (widget) =>
+              widget is Scrollable &&
+              widget.axisDirection == AxisDirection.down,
+        )
+        .hitTestable()
+        .last,
+  );
+  await tester.tap(option.last);
 }
 
 Future<EarthquakeVxseDebugDraft> _readDraft(WidgetTester tester) async {
@@ -1006,15 +1024,18 @@ Future<void> _pumpEditor(
 }) => tester.pumpWidget(
   ProviderScope(
     child: MaterialApp(
-      home: MediaQuery(
-        data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
-        child: Scaffold(
-          body: SizedBox(
-            width: width,
-            height: 560,
-            child: EarthquakeVxseDebugEditor(
-              current: current ?? _currentEarthquake(),
-            ),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.linear(textScale),
+        ),
+        child: child ?? const SizedBox.shrink(),
+      ),
+      home: Scaffold(
+        body: SizedBox(
+          width: width,
+          height: 560,
+          child: EarthquakeVxseDebugEditor(
+            current: current ?? _currentEarthquake(),
           ),
         ),
       ),

@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_playback_selection_state.dart';
 import 'package:eqmonitor/feature/tsunami/data/model/tsunami_telegram_with_state.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_playback_selection_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_telegrams_provider.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_legend.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TsunamiTimelineOverlay extends ConsumerWidget {
   const new({required this.tsunamiId, super.key});
@@ -55,7 +56,7 @@ class TsunamiTimelineOverlay extends ConsumerWidget {
               color: designSystem.colorTheme.onSurfaceVariant,
             ),
             maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ),
       ),
@@ -134,7 +135,7 @@ class _ExpandedOverlay extends StatelessWidget {
         border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Row(
             children: [
@@ -142,21 +143,22 @@ class _ExpandedOverlay extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       currentTelegram.title,
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                         color: designSystem.colorTheme.onSurface,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                     Text(
-                      DateFormat('MM/dd HH:mm')
-                          .format(currentTelegram.publishedAt.toLocal()),
+                      currentTelegram.publishedAt.formatWithTz(
+                        DateTimeFormat.monthDayHourMinute,
+                      ),
                       style: TextStyle(
                         fontSize: 11,
                         color: designSystem.colorTheme.onSurfaceVariant,
@@ -275,7 +277,7 @@ class _CollapsedOverlay extends StatelessWidget {
         border: Border.all(color: colorTheme.outlineVariant),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Icon(
             Icons.timeline,
@@ -366,13 +368,25 @@ class _TimeProportionalSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
+    final publishedAt = telegrams[effectiveIndex].telegram.publishedAt;
+    final previous = effectiveIndex > 0
+        ? telegrams[effectiveIndex - 1].telegram.publishedAt
+        : null;
+    final next = effectiveIndex < telegrams.length - 1
+        ? telegrams[effectiveIndex + 1].telegram.publishedAt
+        : null;
+    return Semantics(
+      label: '表示する津波情報の発表時刻',
+      slider: true,
+      value: publishedAt.formatWithTz(DateTimeFormat.hourMinuteSecond),
+      increasedValue: next?.formatWithTz(DateTimeFormat.hourMinuteSecond),
+      decreasedValue: previous?.formatWithTz(DateTimeFormat.hourMinuteSecond),
+      onIncrease: next == null ? null : () => onChanged(effectiveIndex + 1),
+      onDecrease: previous == null ? null : () => onChanged(effectiveIndex - 1),
+      child: M3ESeekbar(
         trackHeight: 4,
-        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-      ),
-      child: Slider(
+        handleRadius: 8,
+        handleShape: M3ESeekbarHandleShape.circle,
         value: _indexToValue(effectiveIndex),
         onChanged: (value) {
           final index = _valueToIndex(value);
@@ -393,23 +407,21 @@ class _TimeMarkers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
-    final format = DateFormat('HH:mm');
-
     if (telegrams.length <= 1) {
       return const SizedBox.shrink();
     }
 
-    final firstTime = format.format(
-      telegrams.first.telegram.publishedAt.toLocal(),
+    final firstTime = telegrams.first.telegram.publishedAt.formatWithTz(
+      DateTimeFormat.hourMinute,
     );
-    final lastTime = format.format(
-      telegrams.last.telegram.publishedAt.toLocal(),
+    final lastTime = telegrams.last.telegram.publishedAt.formatWithTz(
+      DateTimeFormat.hourMinute,
     );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: .spaceBetween,
         children: [
           Text(
             firstTime,

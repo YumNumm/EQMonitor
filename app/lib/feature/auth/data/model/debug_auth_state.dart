@@ -25,19 +25,12 @@ enum DebugAuthSuccessKind {
   signedOut,
 }
 
-final class DebugAuthUserSummary {
-  const new({
-    required this.abbreviatedUserId,
-    required this.maskedEmail,
-  });
+final class const DebugAuthUserSummary({
+  required final String abbreviatedUserId,
+  required final String maskedEmail,
+});
 
-  final String abbreviatedUserId;
-  final String maskedEmail;
-}
-
-final class DebugAuthUserSummaryParser {
-  const new();
-
+final class const DebugAuthUserSummaryParser() {
   Result<DebugAuthUserSummary, AuthFailure> parse(
     Map<String, dynamic> body,
   ) {

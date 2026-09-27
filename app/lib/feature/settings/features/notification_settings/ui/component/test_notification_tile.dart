@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
@@ -22,7 +23,7 @@ class TestNotificationTile extends HookConsumerWidget {
           : const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
       onTap: pendingKind.value != null
           ? null

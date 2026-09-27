@@ -105,12 +105,10 @@ class OverscaledTileId {
 /// world copy(`wrap`)を含む描画位置のID。tile行列(`matrixFor`相当)への
 /// 入力はこのIDになる。
 @immutable
-class UnwrappedTileId {
-  const new({required this.wrap, required this.canonical});
-
-  final int wrap;
-  final CanonicalTileId canonical;
-
+class const UnwrappedTileId({
+  required final int wrap,
+  required final CanonicalTileId canonical,
+}) {
   @override
   bool operator ==(Object other) =>
       other is UnwrappedTileId &&

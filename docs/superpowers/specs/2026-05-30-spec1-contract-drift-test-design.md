@@ -1,5 +1,7 @@
 # Spec ① 契約/drift テスト — 詳細設計
 
+> 廃止済み: #1802 に伴い契約 drift テスト・fixtures・コピー処理を削除した。以下は導入時の履歴。
+
 - 日付: 2026-05-30
 - 層: L1（テストピラミッド最下層）
 - 親: [app-server-integration-testing-overview](./2026-05-30-app-server-integration-testing-overview.md)

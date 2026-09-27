@@ -11,6 +11,7 @@ import 'package:eqmonitor_map/src/tile/earthquake_area_tile_geometry.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decode_limits.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_decoder.dart';
 import 'package:eqmonitor_map/src/tile/mvt/mvt_tile.dart';
+import 'package:eqmonitor_map/src/tile/mvt/polygon_boundary_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -124,54 +125,37 @@ const baseMapLayerSpecs = <BaseMapLayerSpec>[
 /// frame/tileごとに毎回生成するdecode結果であり永続化しないため、
 /// `MvtTile`/`FillMesh`/`LineMesh`と同じ理由でFreezedにはしない。
 @immutable
-sealed class BaseMapTileLayerGeometry {
-  const new({
-    required this.styleLayerId,
-    required this.extent,
-  });
-
-  final String styleLayerId;
+sealed class const BaseMapTileLayerGeometry({
+  required final String styleLayerId,
 
   /// 対応するMVT source layerが存在する場合に、そのlayerが宣言したextent。
   ///
   /// `null`はsparse tileでsource layer自体が欠損している場合のみを表す。
-  final int? extent;
-}
+  required final int? extent,
+});
 
-final class BaseMapTileFillLayerGeometry extends BaseMapTileLayerGeometry {
-  const new({
-    required super.styleLayerId,
-    required super.extent,
-    required this.meshes,
-  });
+final class const BaseMapTileFillLayerGeometry({
+  required super.styleLayerId,
+  required super.extent,
+  required final List<FillMesh> meshes,
+}) extends BaseMapTileLayerGeometry;
 
-  final List<FillMesh> meshes;
-}
-
-final class BaseMapTileLineLayerGeometry extends BaseMapTileLayerGeometry {
-  const new({
-    required super.styleLayerId,
-    required super.extent,
-    required this.meshes,
-  });
-
-  final List<LineMesh> meshes;
-}
+final class const BaseMapTileLineLayerGeometry({
+  required super.styleLayerId,
+  required super.extent,
+  required final List<LineMesh> meshes,
+}) extends BaseMapTileLayerGeometry;
 
 @immutable
-class BaseMapTileGeometry {
-  const new({
-    required this.layers,
-    this.earthquakeAreas = const EarthquakeAreaTileGeometry.empty(),
-  });
-
+class const BaseMapTileGeometry({
   /// [baseMapLayerSpecs]から[BaseMapLayerKind.background]を除いた行と
   /// 同じ順序・同じ件数。
-  final List<BaseMapTileLayerGeometry> layers;
+  required final List<BaseMapTileLayerGeometry> layers,
 
   /// 地震情報のcodeに対応する予報区・市区町村のFill geometry。
-  final EarthquakeAreaTileGeometry earthquakeAreas;
-}
+  final EarthquakeAreaTileGeometry earthquakeAreas =
+      const EarthquakeAreaTileGeometry.empty(),
+});
 
 /// [BaseMapTileDecoder.decode]が使う上限値一式。呼び出し側が明示し、
 /// decoder内部に固定fallbackは置かない(`MvtDecodeLimits`と同じ運用方針)。
@@ -210,9 +194,7 @@ abstract class BaseMapTileDecodeLimits with _$BaseMapTileDecodeLimits {
 /// 計測誤差の範囲(1ms未満)に収まり、`TransferableTypedData`が節約できる
 /// コピー時間よりゾーンコピー自体の分岐・APIの複雑さの方が上回る。
 /// 根拠なく重い機構を入れない(Global Constraints)ため採用しない。
-final class BaseMapTileDecoder {
-  const new();
-
+final class const BaseMapTileDecoder() {
   Future<BaseMapTileGeometry> decode({
     required Uint8List tileBytes,
     required BaseMapTileDecodeLimits limits,
@@ -372,7 +354,9 @@ List<LineMesh> _buildLineMeshes({
         // polygonの外形・穴ringそのものを線として描く(MapLibre GLの
         // line rendererがPolygon地物をline layerでも描画できるのと同じ
         // 挙動)。
-        MvtGeometryType.polygon => _polygonFeatureAsClosedLines(feature),
+        MvtGeometryType.polygon => const PolygonBoundaryBuilder().build(
+          feature: feature,
+        ),
         // Pointは線として描けないため読み飛ばす。
         MvtGeometryType.point => null,
       },
@@ -381,29 +365,4 @@ List<LineMesh> _buildLineMeshes({
     return const [];
   }
   return builder.build(lineFeatures);
-}
-
-/// Polygon地物の各ringを、始点を末尾へ複製した閉じたLineStringへ変換する。
-///
-/// `decodeMvtTile`が返すpolygon ringはMVTの`ClosePath`規則どおり終端の
-/// 重複頂点を持たない(始点=終点の座標は1回しか現れない)。`LineMeshBuilder`
-/// はring先頭・末尾の座標が一致するかどうかで閉路(`isClosed`)を判定する
-/// ([LineMeshBuilder]のdoc comment、`_dedupeRing`参照)ため、始点を末尾へ
-/// 複製しないと最後の1辺(終点→始点)が生成されず境界が閉じない。
-MvtFeature _polygonFeatureAsClosedLines(MvtFeature feature) {
-  final closedRings = <Int32List>[
-    for (final ring in feature.rings) _closeRing(ring),
-  ];
-  return MvtFeature(
-    type: MvtGeometryType.lineString,
-    rings: closedRings,
-    properties: feature.properties,
-  );
-}
-
-Int32List _closeRing(Int32List ring) {
-  final closed = Int32List(ring.length + 2)..setRange(0, ring.length, ring);
-  closed[ring.length] = ring[0];
-  closed[ring.length + 1] = ring[1];
-  return closed;
 }

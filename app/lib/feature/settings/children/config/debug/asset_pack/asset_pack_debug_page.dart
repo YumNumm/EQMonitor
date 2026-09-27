@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/asset_pack/data/model/asset_pack_diagnostics.dart';
@@ -32,7 +33,9 @@ class AssetPackDebugPage extends ConsumerWidget {
         child: ListTileTheme(
           dense: true,
           child: switch (diagnosticsAsync) {
-            AsyncLoading() => const Center(child: CircularProgressIndicator()),
+            AsyncLoading() => const Center(
+              child: AccessibleCircularProgressIndicator(),
+            ),
             AsyncError(:final error) => ListView(
               children: [
                 ListTile(

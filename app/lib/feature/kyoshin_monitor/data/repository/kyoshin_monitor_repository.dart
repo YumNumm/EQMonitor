@@ -15,15 +15,10 @@ KyoshinMonitorRepository kyoshinMonitorRepository(Ref ref) =>
       lpgm: ref.watch(lpgmKyoshinMonitorWebApiDataSourceProvider),
     );
 
-class KyoshinMonitorRepository {
-  const new({
-    required this.kmoni,
-    required this.lpgm,
-  });
-
-  final KyoshinMonitorWebApiDataSource kmoni;
-  final LpgmKyoshinMonitorWebApiDataSource lpgm;
-
+class const KyoshinMonitorRepository({
+  required final KyoshinMonitorWebApiDataSource kmoni,
+  required final LpgmKyoshinMonitorWebApiDataSource lpgm,
+}) {
   Future<Result<KyoshinMonitorTimeSample, Exception>> fetchLatestTime({
     required KyoshinMonitorSource source,
   }) => Result.capture(() async {

@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
@@ -18,10 +20,10 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップのページ。
 ///
@@ -59,7 +61,7 @@ class IntensityHistoryPage extends ConsumerWidget {
       _ => const Scaffold(
         body: Stack(
           children: [
-            Center(child: CircularProgressIndicator.adaptive()),
+            Center(child: AccessibleCircularProgressIndicator()),
             Positioned(
               top: 0,
               left: 0,
@@ -155,7 +157,6 @@ class _MapContent extends HookConsumerWidget {
             ),
           ),
 
-          // フローティングパネル（上部中央）+ キャッシュ表示バナー
           Positioned(
             top: 0,
             left: 0,
@@ -163,14 +164,13 @@ class _MapContent extends HookConsumerWidget {
             child: SafeArea(
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: RegionFloatingPanel(),
-                  ),
+                  RegionFloatingPanel(),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: CachedDataBanner(
-                      values: [ref.watch(cityMaxIntensityProvider)],
+                      values: [
+                        ref.watch(cityMaxIntensityProvider),
+                      ],
                     ),
                   ),
                 ],
@@ -182,7 +182,9 @@ class _MapContent extends HookConsumerWidget {
           const Positioned(
             bottom: 8,
             right: 8,
-            child: SafeArea(child: IntensityHistoryLegend()),
+            child: SafeArea(
+              child: IntensityHistoryLegend(),
+            ),
           ),
 
           const IntensityHistoryLoadingOverlay(),

@@ -4,9 +4,7 @@ import 'dart:typed_data';
 /// テスト用にMVT protobuf bytesを手組みするbuilder。`protobuf`パッケージの
 /// コード生成には頼らず、production側のwire readerと対称な素朴なvarint/
 /// tag encoderだけで組み立てる。
-final class MvtFixtureBuilder {
-  const new();
-
+final class const MvtFixtureBuilder() {
   static const geomTypePoint = 1;
   static const geomTypeLineString = 2;
   static const geomTypePolygon = 3;

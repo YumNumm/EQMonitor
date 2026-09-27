@@ -281,7 +281,7 @@ git commit -m "fix: EEW警報overlayの現在報判定を修正"
 
 **Files:**
 - Modify: `docs/superpowers/specs/2026-07-25-eew-warning-overlay-design.md`
-- Modify: `docs/knowledge/20260725_eew_warning_message_sources.md`
+- Modify: `docs/knowledge/eew_realtime.md`
 - Delete: `docs/todo/950_eew_warning_region_fill_mapping.md`
 
 **Interfaces:**
@@ -330,7 +330,7 @@ status contains only task files plus the user's pre-existing changes.
 - [ ] **Step 4: Commit documentation**
 
 ```bash
-git add docs/superpowers/specs/2026-07-25-eew-warning-overlay-design.md docs/knowledge/20260725_eew_warning_message_sources.md docs/todo/950_eew_warning_region_fill_mapping.md
+git add docs/superpowers/specs/2026-07-25-eew-warning-overlay-design.md docs/knowledge/eew_realtime.md docs/todo/950_eew_warning_region_fill_mapping.md
 git commit -m "docs: EEW現在警報の区域契約を訂正"
 ```
 

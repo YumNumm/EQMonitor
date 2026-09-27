@@ -43,7 +43,7 @@ class EewForecastRegionLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(activeColorSetProvider).intensity;
     final warningAreaSelector = ref.watch(eewWarningAreaSelectorProvider);
-    final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
+    final isDarkMode = Theme.brightnessOf(context) == .dark;
     final intensityFilterUpdater = ref.watch(
       eewForecastRegionIntensityFilterUpdaterProvider,
     );
@@ -74,10 +74,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       ),
       [warningAreaSelector, eew],
     );
-    final warningReportKey = switch (eew) {
-      final event? => (event.eventId, event.serialNo),
-      null => null,
-    };
     final latestWarningCodes = useRef<List<String>>(warningCodes);
     latestWarningCodes.value = warningCodes;
 
@@ -259,7 +255,6 @@ class EewForecastRegionLayer extends HookConsumerWidget {
       [
         styleController,
         displayMode,
-        warningReportKey,
         warningCodes,
       ],
     );

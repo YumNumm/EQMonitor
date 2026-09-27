@@ -21,7 +21,6 @@ Future<List<({String key, String value})>> debugSecureStorageEntries(
   known.sort();
 
   return [
-    for (final key in [...unknown, ...known])
-      (key: key, value: all[key] ?? ''),
+    for (final key in [...unknown, ...known]) (key: key, value: all[key] ?? ''),
   ];
 }

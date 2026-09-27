@@ -283,7 +283,7 @@ git commit -m "fix: 津波詳細レイヤーのGeoJSON更新を分離"
 - Modify: `app/lib/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart`
 - Modify: `app/lib/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart`
 - Modify: `app/lib/feature/home/ui/component/map/layer/shake_detection_layer.dart`
-- Create: `docs/knowledge/20260720_maplibre_layer_lifecycle.md`
+- Modify: `docs/knowledge/maplibre.md`
 
 **Interfaces:**
 - Consumes: `removeMapStyleResources`。
@@ -305,7 +305,7 @@ EEW震源、P/S波、強震モニタ、揺れ検知を含む全該当箇所で l
 
 - [ ] **Step 4: knowledge を記録する**
 
-規約、代表コード、監査用 `rg`、focused test コマンドを `docs/knowledge/20260720_maplibre_layer_lifecycle.md` に記載する。
+規約、代表コード、監査用 `rg`、focused test コマンドを `docs/knowledge/maplibre.md` に記載する。
 
 - [ ] **Step 5: focused tests を実行する**
 
@@ -316,7 +316,7 @@ Expected: PASS。
 - [ ] **Step 6: cleanup 監査をコミットする**
 
 ```bash
-git add app/lib/feature docs/knowledge/20260720_maplibre_layer_lifecycle.md app/test
+git add app/lib/feature docs/knowledge/maplibre.md app/test
 git commit -m "fix: MapLibreレイヤーの破棄を全件独立化"
 ```
 

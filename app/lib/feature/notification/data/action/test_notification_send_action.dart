@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/notification/data/model/test_notification_deli
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,9 +15,7 @@ part 'test_notification_send_action.g.dart';
 TestNotificationSendAction testNotificationSendAction(Ref ref) =>
     const TestNotificationSendAction();
 
-class TestNotificationSendAction {
-  const new();
-
+class const TestNotificationSendAction() {
   Future<bool> handle({
     required WidgetRef ref,
     required BuildContext context,
@@ -34,11 +33,11 @@ class TestNotificationSendAction {
             '周囲の状況を確認してから送信してください。',
           ),
           actions: [
-            TextButton(
+            M3ETextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
               child: const Text('キャンセル'),
             ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: () => Navigator.of(dialogContext).pop(true),
               child: const Text('送信する'),
             ),

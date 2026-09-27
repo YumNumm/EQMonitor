@@ -3,9 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// P波/S波レイヤーの GeoJSON ソースを差分更新する。
-class EewPsWaveLayerGeoJsonUpdater {
-  const new();
-
+class const EewPsWaveLayerGeoJsonUpdater() {
   Future<void> updateIfChanged({
     required StyleController styleController,
     required String pWaveSourceId,

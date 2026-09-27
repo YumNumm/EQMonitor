@@ -11,12 +11,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_repository.g.dart';
 
-final class ShakeDetectionApiException implements Exception {
-  const new({required this.message, this.statusCode});
-
-  final String message;
-  final int? statusCode;
-}
+final class const ShakeDetectionApiException({
+  required final String message,
+  final int? statusCode,
+}) implements Exception;
 
 @Riverpod(keepAlive: true)
 Future<ShakeDetectionRepository> shakeDetectionRepository(Ref ref) async {

@@ -1,11 +1,13 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_entry_model.dart';
 import 'package:eqmonitor/feature/changelog/data/model/changelog_section_model.dart';
 import 'package:eqmonitor/feature/changelog/data/notifier/changelog_notifier.dart';
 import 'package:eqmonitor/feature/changelog/data/provider/changelog_entries_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChangelogPage extends ConsumerWidget {
   const new({super.key});
@@ -18,11 +20,11 @@ class ChangelogPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('変更履歴')),
       body: switch (state) {
         AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         AsyncError(:final error) => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const Icon(Icons.error_outline, size: 48),
               const SizedBox(height: 16),
@@ -31,10 +33,10 @@ class ChangelogPage extends ConsumerWidget {
               Text(
                 error.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
               const SizedBox(height: 16),
-              FilledButton.tonal(
+              M3EFilledButton.tonal(
                 onPressed: () => ref.invalidate(changelogProvider),
                 child: const Text('再試行'),
               ),
@@ -74,20 +76,20 @@ class ChangelogEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = DateFormat('yyyy年MM月dd日').format(entry.date.toLocal());
+    final dateStr = entry.date.formatWithTz(.yearMonthDayJapanese);
     final content = entry.content;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
               Text(
                 'v${entry.version}',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
               const SizedBox(width: 8),
@@ -147,8 +149,8 @@ class _ThemedMarkdownBody extends StatelessWidget {
         h5: textTheme.titleSmall,
         h6: textTheme.titleSmall,
         listBullet: textTheme.bodyMedium,
-        strong: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        em: textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+        strong: textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+        em: textTheme.bodyMedium?.copyWith(fontStyle: .italic),
         a: textTheme.bodyMedium?.copyWith(decoration: TextDecoration.underline),
         code: textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
       ),

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
@@ -16,6 +17,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   testWidgets('詳細シートに近傍地震カードを表示する', (tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     const eventId = 'current';
     final earthquake = Earthquake(
       eventId: eventId,
@@ -52,13 +57,25 @@ void main() {
           theme: ThemeData.light().copyWith(
             extensions: [DesignSystemThemeExtension.light()],
           ),
-          home: const EarthquakeHistoryDetailsPage(eventId: eventId),
+          home: HistoryAdaptiveView(
+            list: const Text('一覧'),
+            detail: EarthquakeHistoryDetailsPage(
+              eventId: eventId,
+              onClose: () {},
+            ),
+            onCloseDetail: () {},
+          ),
         ),
       ),
     );
     await tester.pump();
 
     expect(find.text('この震源の近傍で発生した地震'), findsOneWidget);
+    expect(find.byIcon(Icons.arrow_back), findsNothing);
+
+    tester.view.physicalSize = const Size(600, 900);
+    await tester.pump();
+    expect(find.byIcon(Icons.arrow_back), findsOneWidget);
   });
 }
 

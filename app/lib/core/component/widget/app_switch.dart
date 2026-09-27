@@ -53,7 +53,7 @@ class AppSwitch extends HookWidget {
                 : null,
             child: InkResponse(
               containedInkWell: true,
-              highlightShape: BoxShape.rectangle,
+              highlightShape: .rectangle,
               radius: 28,
               borderRadius: BorderRadius.circular(shape.pill),
               onTap: isEnabled
@@ -123,7 +123,7 @@ class AppSwitch extends HookWidget {
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   color: value ? onThumbColor : offThumbColor,
-                                  shape: BoxShape.circle,
+                                  shape: .circle,
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withValues(
@@ -220,7 +220,7 @@ class AppSwitchListTile extends StatelessWidget {
         null => null,
       },
       trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           for (var index = 0; index < trailingWidgets.length; index++) ...[
             if (index > 0) const SizedBox(width: 8),

@@ -20,6 +20,47 @@ void main() {
     expect(handler.nextOptions, same(options));
   });
 
+  for (final (method, path) in [
+    ('GET', '/v2/subscription/me'),
+    ('POST', '/v2/subscription/sync'),
+  ]) {
+    test('adds bearer token to $method $path', () async {
+      final interceptor = DeviceAuthTokenInterceptor(
+        readToken: () async => 'jwt-1',
+      );
+      final options = RequestOptions(path: path, method: method);
+      final handler = _CapturingRequestHandler();
+
+      await interceptor.onRequest(options, handler);
+
+      expect(options.headers['Authorization'], 'Bearer jwt-1');
+      expect(handler.nextOptions, same(options));
+    });
+  }
+
+  for (final (method, path) in [
+    ('GET', '/v2/subscription/metadata'),
+    ('GET', '/v2/subscription/me/history'),
+    ('POST', '/v2/subscription/sync-extra'),
+    ('POST', '/v2/subscription/sync/history'),
+    ('POST', '/v2/subscription/me'),
+    ('GET', '/v2/subscription/sync'),
+    ('GET', 'https://other.example/v2/subscription/me'),
+  ]) {
+    test('does not read or send token to $method $path', () async {
+      final interceptor = DeviceAuthTokenInterceptor(
+        readToken: () async => fail('Excluded requests must not read tokens'),
+      );
+      final options = RequestOptions(path: path, method: method);
+      final handler = _CapturingRequestHandler();
+
+      await interceptor.onRequest(options, handler);
+
+      expect(options.headers.containsKey('Authorization'), isFalse);
+      expect(handler.nextOptions, same(options));
+    });
+  }
+
   test('does not add bearer token to device registration', () async {
     final interceptor = DeviceAuthTokenInterceptor(
       readToken: () async => 'jwt-1',

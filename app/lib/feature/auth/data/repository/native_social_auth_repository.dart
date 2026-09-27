@@ -238,9 +238,7 @@ final class NativeSocialAuthRepository implements NativeSocialAuthGateway {
   }
 }
 
-final class NativeAuthConfiguration {
-  const new();
-
+final class const NativeAuthConfiguration() {
   static final _appleServiceIdSegmentPattern = RegExp(
     r'^[A-Za-z0-9][A-Za-z0-9-]*$',
   );

@@ -1,8 +1,6 @@
 import 'package:eqmonitor_map/src/foundation/map_node_identity.dart';
 
-sealed class MapNode {
-  const new();
-
+sealed class const MapNode() {
   MapNodeIdentity get identity;
 }
 

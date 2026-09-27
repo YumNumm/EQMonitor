@@ -5,23 +5,16 @@ import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_storage_
 ///
 /// すべて `AssetPackStorageRepository` / `AssetPackRepository` が本番と同じ
 /// 経路で解決した結果であり、表示のために別経路で推測した値は含まない。
-class AssetPackDiagnostics {
-  const new({
-    required this.sourceKind,
-    required this.rootPath,
-    required this.bundledRootPath,
-    required this.manifest,
-  });
-
+class const AssetPackDiagnostics({
   /// いま有効な Pack が同梱版か、R2 からのダウンロード版か。
-  final AssetPackSourceKind sourceKind;
+  required final AssetPackSourceKind sourceKind,
 
   /// 有効な Pack ルートの絶対パス。
-  final String rootPath;
+  required final String rootPath,
 
   /// 同梱 Pack の展開先。[sourceKind] がダウンロード版のときの復帰先でもある。
-  final String bundledRootPath;
+  required final String bundledRootPath,
 
   /// 有効な Pack の `manifest.json`。
-  final AssetPackManifest manifest;
-}
+  required final AssetPackManifest manifest,
+});

@@ -1,8 +1,6 @@
 import 'dart:math' as math;
 
-final class LatLngGridIntervalSelector {
-  const new();
-
+final class const LatLngGridIntervalSelector() {
   static const intervals = <double>[
     90,
     45,

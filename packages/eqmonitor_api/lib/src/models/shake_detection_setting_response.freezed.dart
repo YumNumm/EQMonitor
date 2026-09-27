@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShakeDetectionSettingResponse {
 
- String get id;@JsonKey(includeIfNull: true, name: 'sub_region_id') String? get subRegionId;@JsonKey(includeIfNull: true, name: 'prefecture_code') String? get prefectureCode;@JsonKey(includeIfNull: true, name: 'city_code') String? get cityCode;@JsonKey(name: 'min_level') ShakeDetectionLevel get minLevel;@JsonKey(name: 'is_current_location') bool get isCurrentLocation;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
+ String get id;@JsonKey(name: 'target_type') ShakeDetectionTargetType get targetType;@JsonKey(includeIfNull: true, name: 'region_code') String? get regionCode; bool get enabled;@JsonKey(name: 'min_level') ShakeDetectionLevel get minLevel;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
 /// Create a copy of ShakeDetectionSettingResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $ShakeDetectionSettingResponseCopyWith<ShakeDetectionSettingResponse> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionSettingResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShakeDetectionSettingResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.targetType, targetType) || other.targetType == targetType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,prefectureCode,cityCode,minLevel,isCurrentLocation,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,targetType,regionCode,enabled,minLevel,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShakeDetectionSettingResponse(id: $id, subRegionId: $subRegionId, prefectureCode: $prefectureCode, cityCode: $cityCode, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShakeDetectionSettingResponse(id: $id, targetType: $targetType, regionCode: $regionCode, enabled: $enabled, minLevel: $minLevel, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $ShakeDetectionSettingResponseCopyWith<$Res>  {
   factory $ShakeDetectionSettingResponseCopyWith(ShakeDetectionSettingResponse value, $Res Function(ShakeDetectionSettingResponse) _then) = _$ShakeDetectionSettingResponseCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(includeIfNull: true, name: 'sub_region_id') String? subRegionId,@JsonKey(includeIfNull: true, name: 'prefecture_code') String? prefectureCode,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(name: 'min_level') ShakeDetectionLevel minLevel,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id,@JsonKey(name: 'target_type') ShakeDetectionTargetType targetType,@JsonKey(includeIfNull: true, name: 'region_code') String? regionCode, bool enabled,@JsonKey(name: 'min_level') ShakeDetectionLevel minLevel,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -66,15 +66,14 @@ class _$ShakeDetectionSettingResponseCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionSettingResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? subRegionId = freezed,Object? prefectureCode = freezed,Object? cityCode = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? targetType = null,Object? regionCode = freezed,Object? enabled = null,Object? minLevel = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(ShakeDetectionSettingResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
-as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
-as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,targetType: null == targetType ? _self.targetType : targetType // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionTargetType,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
+as String?,enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -161,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(includeIfNull: true, name: 'sub_region_id')  String? subRegionId, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'target_type')  ShakeDetectionTargetType targetType, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode,  bool enabled, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShakeDetectionSettingResponse() when $default != null:
-return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.targetType,_that.regionCode,_that.enabled,_that.minLevel,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -182,10 +181,10 @@ return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(includeIfNull: true, name: 'sub_region_id')  String? subRegionId, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'target_type')  ShakeDetectionTargetType targetType, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode,  bool enabled, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionSettingResponse():
-return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.targetType,_that.regionCode,_that.enabled,_that.minLevel,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +201,10 @@ return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(includeIfNull: true, name: 'sub_region_id')  String? subRegionId, @JsonKey(includeIfNull: true, name: 'prefecture_code')  String? prefectureCode, @JsonKey(includeIfNull: true, name: 'city_code')  String? cityCode, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'target_type')  ShakeDetectionTargetType targetType, @JsonKey(includeIfNull: true, name: 'region_code')  String? regionCode,  bool enabled, @JsonKey(name: 'min_level')  ShakeDetectionLevel minLevel, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ShakeDetectionSettingResponse() when $default != null:
-return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_that.minLevel,_that.isCurrentLocation,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.targetType,_that.regionCode,_that.enabled,_that.minLevel,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -217,15 +216,14 @@ return $default(_that.id,_that.subRegionId,_that.prefectureCode,_that.cityCode,_
 @JsonSerializable()
 
 class _ShakeDetectionSettingResponse implements ShakeDetectionSettingResponse {
-  const _ShakeDetectionSettingResponse({required this.id, @JsonKey(includeIfNull: true, name: 'sub_region_id') required this.subRegionId, @JsonKey(includeIfNull: true, name: 'prefecture_code') required this.prefectureCode, @JsonKey(includeIfNull: true, name: 'city_code') required this.cityCode, @JsonKey(name: 'min_level') required this.minLevel, @JsonKey(name: 'is_current_location') required this.isCurrentLocation, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _ShakeDetectionSettingResponse({required this.id, @JsonKey(name: 'target_type') required this.targetType, @JsonKey(includeIfNull: true, name: 'region_code') required this.regionCode, required this.enabled, @JsonKey(name: 'min_level') required this.minLevel, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _ShakeDetectionSettingResponse.fromJson(Map<String, dynamic> json) => _$ShakeDetectionSettingResponseFromJson(json);
 
 @override final  String id;
-@override@JsonKey(includeIfNull: true, name: 'sub_region_id') final  String? subRegionId;
-@override@JsonKey(includeIfNull: true, name: 'prefecture_code') final  String? prefectureCode;
-@override@JsonKey(includeIfNull: true, name: 'city_code') final  String? cityCode;
+@override@JsonKey(name: 'target_type') final  ShakeDetectionTargetType targetType;
+@override@JsonKey(includeIfNull: true, name: 'region_code') final  String? regionCode;
+@override final  bool enabled;
 @override@JsonKey(name: 'min_level') final  ShakeDetectionLevel minLevel;
-@override@JsonKey(name: 'is_current_location') final  bool isCurrentLocation;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'updated_at') final  String updatedAt;
 
@@ -242,16 +240,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionSettingResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.subRegionId, subRegionId) || other.subRegionId == subRegionId)&&(identical(other.prefectureCode, prefectureCode) || other.prefectureCode == prefectureCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShakeDetectionSettingResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.targetType, targetType) || other.targetType == targetType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.minLevel, minLevel) || other.minLevel == minLevel)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,subRegionId,prefectureCode,cityCode,minLevel,isCurrentLocation,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,targetType,regionCode,enabled,minLevel,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShakeDetectionSettingResponse(id: $id, subRegionId: $subRegionId, prefectureCode: $prefectureCode, cityCode: $cityCode, minLevel: $minLevel, isCurrentLocation: $isCurrentLocation, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShakeDetectionSettingResponse(id: $id, targetType: $targetType, regionCode: $regionCode, enabled: $enabled, minLevel: $minLevel, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -262,7 +260,7 @@ abstract mixin class _$ShakeDetectionSettingResponseCopyWith<$Res> implements $S
   factory _$ShakeDetectionSettingResponseCopyWith(_ShakeDetectionSettingResponse value, $Res Function(_ShakeDetectionSettingResponse) _then) = __$ShakeDetectionSettingResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(includeIfNull: true, name: 'sub_region_id') String? subRegionId,@JsonKey(includeIfNull: true, name: 'prefecture_code') String? prefectureCode,@JsonKey(includeIfNull: true, name: 'city_code') String? cityCode,@JsonKey(name: 'min_level') ShakeDetectionLevel minLevel,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id,@JsonKey(name: 'target_type') ShakeDetectionTargetType targetType,@JsonKey(includeIfNull: true, name: 'region_code') String? regionCode, bool enabled,@JsonKey(name: 'min_level') ShakeDetectionLevel minLevel,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -279,15 +277,14 @@ class __$ShakeDetectionSettingResponseCopyWithImpl<$Res>
 
 /// Create a copy of ShakeDetectionSettingResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? subRegionId = freezed,Object? prefectureCode = freezed,Object? cityCode = freezed,Object? minLevel = null,Object? isCurrentLocation = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? targetType = null,Object? regionCode = freezed,Object? enabled = null,Object? minLevel = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ShakeDetectionSettingResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,subRegionId: freezed == subRegionId ? _self.subRegionId : subRegionId // ignore: cast_nullable_to_non_nullable
-as String?,prefectureCode: freezed == prefectureCode ? _self.prefectureCode : prefectureCode // ignore: cast_nullable_to_non_nullable
-as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String?,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
-as ShakeDetectionLevel,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,targetType: null == targetType ? _self.targetType : targetType // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionTargetType,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
+as String?,enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,minLevel: null == minLevel ? _self.minLevel : minLevel // ignore: cast_nullable_to_non_nullable
+as ShakeDetectionLevel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));

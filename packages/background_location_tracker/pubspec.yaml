@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  pigeon: ^26.1.5
+  pigeon: ^29.0.2
 
 flutter:
   plugin:

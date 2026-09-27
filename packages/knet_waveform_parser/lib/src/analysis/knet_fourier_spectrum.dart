@@ -2,18 +2,13 @@ import 'dart:math';
 import 'dart:typed_data';
 
 /// フーリエ振幅スペクトル計算結果
-class FourierSpectrumResult {
-  const new({
-    required this.frequencies,
-    required this.amplitudes,
-  });
-
+class const FourierSpectrumResult({
   /// 周波数 (Hz)
-  final List<double> frequencies;
+  required final List<double> frequencies,
 
   /// 振幅 (gal·s = gal/Hz の正規化前)
-  final List<double> amplitudes;
-}
+  required final List<double> amplitudes,
+});
 
 /// 加速度波形のフーリエ振幅スペクトルを計算する (Cooley-Tukey FFT)
 class KnetFourierSpectrum {

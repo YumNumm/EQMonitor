@@ -195,9 +195,7 @@ void main() {
   });
 }
 
-final class _TestModels {
-  const new();
-
+final class const _TestModels() {
   NotificationSlot currentLocationSlot() => const NotificationSlot(
     id: 'slot-cl',
     slotType: NotificationSlotType.currentLocation,
@@ -236,12 +234,12 @@ final class _TestModels {
           if (hasCurrentLocation)
             const ShakeDetectionEntry(
               id: 'current',
-              subRegionId: null,
-              subRegionName: null,
+              regionCode: null,
+              enabled: true,
               minLevel: ShakeDetectionLevel.medium,
-              isCurrentLocation: true,
+              targetType: ShakeDetectionTargetType.currentLocation,
             ),
         ],
-        availableSubRegions: <ShakeDetectionSubRegion>[],
+        requiresReconfiguration: false,
       );
 }

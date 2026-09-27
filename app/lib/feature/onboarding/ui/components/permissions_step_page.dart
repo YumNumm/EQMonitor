@@ -63,7 +63,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
     );
 
     return permissionState.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('権限の確認に失敗しました: $error')),
       data: (state) => Padding(
         padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
@@ -117,8 +117,8 @@ class _PermissionsStepPage extends HookConsumerWidget {
                   children: [
                     const TextSpan(text: '端末の位置情報を利用して、適した通知をお知らせします。\n'),
                     WidgetSpan(
-                      alignment: PlaceholderAlignment.baseline,
-                      baseline: TextBaseline.alphabetic,
+                      alignment: .baseline,
+                      baseline: .alphabetic,
                       child: _InlineTextLink(
                         label: 'EQMonitorにおける位置情報の扱い方',
                         onTap: () => openWebView(title: '位置情報の扱い方'),
@@ -146,7 +146,7 @@ class _PermissionsStepPage extends HookConsumerWidget {
                 SizedBox(height: designSystem.spacing.md),
                 _PermissionActionCard(
                   title: 'アプリを開いていない時の位置情報',
-                  description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意!: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
+                  description: '現在地で緊急地震速報(警報)が発表された時に重大な通知でお知らせします。\n注意: 高速で移動している場合やネットワーク環境が悪い場合、低電力モードにしている場合、前の位置情報で通知が配信される場合があります。\n現在地で揺れを観測した地震情報が発表された場合のみ通知することができます。この後の通知設定で細かく設定できます',
                   isGranted: state.isBackgroundLocationGranted,
                   isSkipped: isBackgroundLocationSkipped.value,
                   isEnabled: !isProcessing && state.isForegroundLocationGranted,
@@ -183,7 +183,7 @@ class _PermissionSection extends StatelessWidget {
     final designSystem = context.designSystem;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         Text(title, style: designSystem.typography.titleLarge),
         if (description case final description?) ...[
@@ -231,13 +231,16 @@ class _PermissionActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final actionButtons = isGranted
-        ? const [Icon(Icons.check), Text('許可しました')]
+        ? const [
+            Icon(Icons.check),
+            Text('許可しました'),
+          ]
         : [
-            TextButton(
+            M3ETextButton(
               onPressed: isSkipped || !isEnabled ? null : onSkip,
               child: Text(isSkipped ? 'スキップしました' : 'スキップ'),
             ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: isSkipped || !isEnabled ? null : onAllow,
               child: const Text('許可する'),
             ),
@@ -317,8 +320,8 @@ class _PermissionDescriptionText extends StatelessWidget {
         children: [
           TextSpan(text: parts.first),
           WidgetSpan(
-            alignment: PlaceholderAlignment.baseline,
-            baseline: TextBaseline.alphabetic,
+            alignment: .baseline,
+            baseline: .alphabetic,
             child: _InlineTextLink(label: label, onTap: onTap),
           ),
           TextSpan(text: parts.length > 1 ? parts[1] : ''),

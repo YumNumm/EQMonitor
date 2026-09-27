@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
@@ -5,6 +7,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_history_map_bounds_calculator.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_map_layer_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_area_filter.dart';
@@ -42,12 +45,14 @@ import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor_map/eqmonitor_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
@@ -65,29 +70,43 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
+    final requiresRegionMap =
+        !showingDb &&
+        ref
+            .watch(earthquakeHistoryMapBoundsCalculatorProvider)
+            .requiresRegionMap(earthquake: earthquake, dbTree: null);
+    final regionMap = requiresRegionMap ? ref.watch(jmaMapProvider) : null;
+    if (requiresRegionMap && regionMap?.value == null) {
+      return switch (regionMap) {
+        AsyncError(:final error) => Center(child: ErrorCard(error: error)),
+        _ => const Center(child: AccessibleCircularProgressIndicator()),
+      };
+    }
 
     return switch (mapConfiguration) {
       AsyncData(value: MapConfiguration(styleString: final styleString?)) =>
         MapOperationQueueScope(
           child: MapLibreEventProvider(
-            child: _MapContent(
-              styleString: styleString,
-              earthquake: earthquake,
-              displayMode: displayMode,
-              showingDb: showingDb,
+            child: LayoutBuilder(
+              builder: (context, constraints) => _MapContent(
+                styleString: styleString,
+                earthquake: earthquake,
+                displayMode: displayMode,
+                showingDb: showingDb,
+                regionMap: regionMap?.value?.areaForecastLocalE,
+                viewportSize: constraints.biggest,
+              ),
             ),
           ),
         ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }
 
 /// 地震履歴地図画面でデバッグ操作を表示するか判定する。
-class EarthquakeHistoryDebuggerVisibility {
-  const new();
-
+class const EarthquakeHistoryDebuggerVisibility() {
   bool shouldShow({
     required bool isDebugBuild,
     required AsyncValue<bool> debugPreference,
@@ -97,17 +116,20 @@ class EarthquakeHistoryDebuggerVisibility {
 class _MapContent extends HookConsumerWidget {
   const new({
     required this.styleString,
+    required this.regionMap,
+    required this.viewportSize,
     required this.earthquake,
     required this.displayMode,
     required this.showingDb,
   });
 
   final String styleString;
+  final JmaMap_JmaMapData? regionMap;
+  final Size viewportSize;
   final Earthquake earthquake;
   final IntensityDisplayMode displayMode;
   final bool showingDb;
 
-  static const _stationLayerId = 'eq-history-station-intensity-circle';
   static const _dbStationLayerId = 'eq-history-shindo-db-station-icon';
   static const _regionSourceLayerId = 'areaForecastLocalE';
   static const _citySourceLayerId = 'areaInformationCityQuake';
@@ -172,11 +194,28 @@ class _MapContent extends HookConsumerWidget {
     final showEstimated = displayMode == IntensityDisplayMode.estimated;
 
     const mapCamera = EarthquakeHistoryMapCamera();
-    final center = mapCamera.initialCenter(earthquake);
-    final zoom = mapCamera.initialZoom(earthquake);
+    var center = mapCamera.initialCenter(earthquake);
+    var zoom = mapCamera.initialZoom(earthquake);
     final (:maxZoom, :gestures) = const HomeMapOptionsBuilder().sharedOptions(
       mapSettings,
     );
+    if (regionMap case final map?) {
+      final fit = mapCamera.initialRegionCamera(
+        earthquake: earthquake,
+        regionMap: map,
+        viewportSize: viewportSize,
+        maxZoom: maxZoom,
+      );
+      if (fit case MapCameraBoundsFitSucceeded(:final camera)) {
+        center = Geographic(
+          lon: camera.centerLongitude,
+          lat: camera.centerLatitude,
+        );
+        zoom = camera.zoom;
+      } else {
+        return const Center(child: Text('地図の表示範囲を取得できませんでした'));
+      }
+    }
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: zoom,
@@ -328,7 +367,10 @@ class _MapContent extends HookConsumerWidget {
         return;
       }
       final (station, _) = result;
-      await showModalBottomSheet<void>(
+      await showM3EModalBottomSheet<void>(
+        isScrollControlled: false,
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
         builder: (_) => ShindoDbStationDetailSheet(station: station),
@@ -336,12 +378,19 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    if (hits.any((h) => h.layerId == _stationLayerId)) {
+    if (hits.any(
+      (h) =>
+          h.layerId ==
+          EarthquakeHistoryStationIntensityLayerBuilder.iconLayerId,
+    )) {
       final stationNode = _findNearestStation(event.point);
       if (stationNode == null) {
         return;
       }
-      await showModalBottomSheet<void>(
+      await showM3EModalBottomSheet<void>(
+        isScrollControlled: false,
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
         clipBehavior: Clip.antiAlias,
         builder: (_) => LpgmStationDetailSheet(
@@ -564,12 +613,12 @@ class _MapControllerCard extends StatelessWidget {
 
     return Card(
       color: colorTheme.surfaceContainerHighest,
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: .hardEdge,
       elevation: 0,
       shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             InkWell(
               onTap: () async {

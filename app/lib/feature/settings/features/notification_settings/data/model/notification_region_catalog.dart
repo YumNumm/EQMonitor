@@ -1,16 +1,10 @@
 import 'dart:collection';
 
-final class NotificationCityOption {
-  const new({
-    required this.code,
-    required this.name,
-    required this.kana,
-  });
-
-  final String code;
-  final String name;
-  final String? kana;
-}
+final class const NotificationCityOption({
+  required final String code,
+  required final String name,
+  required final String? kana,
+});
 
 final class NotificationRegionOption {
   new({

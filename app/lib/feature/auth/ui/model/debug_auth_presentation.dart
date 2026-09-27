@@ -2,9 +2,7 @@ import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_session.dart';
 import 'package:eqmonitor/feature/auth/data/model/debug_auth_state.dart';
 
-final class DebugAuthFailurePresentation {
-  const new();
-
+final class const DebugAuthFailurePresentation() {
   static String code(AuthFailureKind kind) => 'AuthFailureKind.${kind.name}';
 
   static String message(AuthFailureKind kind) => switch (kind) {
@@ -27,9 +25,7 @@ final class DebugAuthFailurePresentation {
   };
 }
 
-final class DebugAuthPresentation {
-  const new();
-
+final class const DebugAuthPresentation() {
   static String sessionStatusLabel({
     required DebugAuthState state,
     required AuthSessionStatus? sessionStatus,

@@ -1,13 +1,13 @@
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final sWaveTravelTimeLookupProvider = Provider<SWaveTravelTimeLookup>(
-  (_) => const SWaveTravelTimeLookup(),
-);
+part 's_wave_travel_time_lookup.g.dart';
 
-class SWaveTravelTimeLookup {
-  const new();
+@Riverpod(keepAlive: true)
+SWaveTravelTimeLookup sWaveTravelTimeLookup(Ref ref) =>
+    const SWaveTravelTimeLookup();
 
+class const SWaveTravelTimeLookup() {
   /// 深さ別テーブルを一度だけ準備し、複数の震央距離に対するS波走時を返す。
   List<double?> lookupAll({
     required TravelTimeTables tables,

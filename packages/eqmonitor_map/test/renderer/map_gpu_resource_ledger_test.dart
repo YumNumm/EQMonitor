@@ -217,11 +217,7 @@ void main() {
 
 /// identity key の検証用。`==` が一致しても別 entry として扱われることを見る。
 @immutable
-final class _EquatableKey {
-  const new(this.value);
-
-  final String value;
-
+final class const _EquatableKey(final String value) {
   @override
   bool operator ==(Object other) =>
       other is _EquatableKey && other.value == value;

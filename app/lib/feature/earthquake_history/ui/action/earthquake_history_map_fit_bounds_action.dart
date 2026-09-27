@@ -14,9 +14,7 @@ EarthquakeHistoryMapFitBoundsAction earthquakeHistoryMapFitBoundsAction(
   Ref ref,
 ) => const EarthquakeHistoryMapFitBoundsAction();
 
-class EarthquakeHistoryMapFitBoundsAction {
-  const new();
-
+class const EarthquakeHistoryMapFitBoundsAction() {
   Future<void> handle({
     required WidgetRef ref,
     required MapController controller,

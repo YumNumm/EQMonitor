@@ -42,9 +42,7 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 /// 反映するコーディネーター。
 ///
 /// [Ref] はコンストラクタではなく各メソッドの引数として受け取る。
-class BackgroundLocationSyncCoordinator {
-  const new();
-
+class const BackgroundLocationSyncCoordinator() {
   Future<void> ensureMonitoring(Ref ref) async {
     try {
       final List<NotificationSlot>? slots = await (() async {
@@ -156,11 +154,6 @@ class BackgroundLocationSyncCoordinator {
 
       final resolver = await ref.read(jmaRegionResolverProvider.future);
       const retry = BackgroundLocationUpdateRetry();
-      // 揺れ検知は市区町村コード (area_information_city) のみ必要。
-      // earthquakeResolution は親 region 解決に失敗すると null になるため、
-      // 揺れ検知用の cityCode は resolver から直接取得する。
-      final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
-
       EarthquakeRegionResolution? resolution;
       try {
         resolution = await retry.run(
@@ -191,24 +184,6 @@ class BackgroundLocationSyncCoordinator {
         resolution: resolution,
       );
 
-      // 揺れ検知 sub_region 更新
-      var didUpdateShake = false;
-      String? shakeError;
-      try {
-        didUpdateShake = await retry.run(
-          action: () => ref
-              .read(shakeDetectionSettingsProvider.notifier)
-              .updateCurrentLocationSubRegion(shakeCityCode),
-        );
-      } on Object catch (e, st) {
-        talker.error(
-          '[BackgroundLocation] update shake location failed',
-          e,
-          st,
-        );
-        shakeError = e.toString();
-      }
-
       if (resolution == null) {
         return false;
       }
@@ -228,12 +203,10 @@ class BackgroundLocationSyncCoordinator {
         cityName: resolution.cityName,
         didUpdateEew: didUpdateEew,
         didUpdateEarthquake: didUpdateEarthquake,
-        didUpdateShake: didUpdateShake,
         eewError: eewError,
         earthquakeError: earthquakeError,
-        shakeError: shakeError,
       );
-      return shakeError == null && didSyncAppGroup;
+      return didSyncAppGroup;
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] applyLocation failed', e, st);
       return false;
@@ -278,10 +251,8 @@ class BackgroundLocationSyncCoordinator {
     required String? cityName,
     required bool didUpdateEew,
     required bool didUpdateEarthquake,
-    required bool didUpdateShake,
     required String? eewError,
     required String? earthquakeError,
-    required String? shakeError,
   }) async {
     try {
       final debugSettings = ref
@@ -361,11 +332,10 @@ class BackgroundLocationSyncCoordinator {
         final summary =
             'EEW:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateEew, error: eewError)} '
             '地震:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateEarthquake, error: earthquakeError)} '
-            '揺れ:${BackgroundLocationDebugStatusMark.mark(didUpdate: didUpdateShake, error: shakeError)}';
+            '揺れ:共通現在地を使用';
         final errors = [
           if (eewError != null) 'EEW: $eewError',
           if (earthquakeError != null) '地震: $earthquakeError',
-          if (shakeError != null) '揺れ: $shakeError',
         ];
         await plugin.show(
           id: notifId,

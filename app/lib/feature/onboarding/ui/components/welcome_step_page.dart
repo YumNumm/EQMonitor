@@ -142,7 +142,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: designSystem.spacing.lg),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SizedBox(height: designSystem.spacing.xxxxl),
           Text(
@@ -177,9 +177,7 @@ class _WelcomeStepPage extends HookConsumerWidget {
 }
 
 /// プロビジョニングの失敗を UI 表示用の文言へ変換する。
-class DeviceProvisioningErrorMessage {
-  const new();
-
+class const DeviceProvisioningErrorMessage() {
   String of(Object error) => switch (error) {
     DeviceProvisioningException(:final userMessage) => userMessage,
     _ => error.toString(),
@@ -234,7 +232,7 @@ class _DeviceProvisioningFailureCard extends StatelessWidget {
           SizedBox(height: designSystem.spacing.sm),
           Align(
             alignment: .centerRight,
-            child: TextButton(onPressed: onRetry, child: const Text('再試行')),
+            child: M3ETextButton(onPressed: onRetry, child: const Text('再試行')),
           ),
         ],
       ),
@@ -261,18 +259,18 @@ class DeviceRegistrationErrorDialogAction {
         title: const Text('デバイスの登録に失敗しました'),
         content: Text(message),
         actions: [
-          TextButton(
+          M3ETextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('閉じる'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () {
               Navigator.of(context).pop();
               onRetry();
             },
             child: const Text('再試行'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () => ref
                 .read(errorDetailsSheetActionProvider)
                 .show(context, error: error, stackTrace: stackTrace),

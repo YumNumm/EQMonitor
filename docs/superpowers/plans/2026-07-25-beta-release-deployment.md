@@ -6,7 +6,8 @@
 
 **Architecture:** beta tag pushを `Deploy App` の正式トリガーにし、イベントから配布matrixを決めるロジックをテスト可能なshell scriptへ分離する。GitHub生成Release NotesはPython sanitizerを通し、変更タイトルだけを無害化して正式な作者メンションを維持する。
 
-**Tech Stack:** GitHub Actions YAML、Bash、Python 3標準ライブラリ、`unittest`、actionlint、mise
+**Tech Stack:** GitHub Actions YAML、Bash、Python 3標準ライブラリ、`unittest`、mise
+
 
 ## Global Constraints
 
@@ -223,14 +224,12 @@ Add `define-matrix` to `deploy-android-google-play.needs`, then use
 - Google認証actionは `token_format: access_token` を出力し、external公開時だけ
   ensure scriptへ渡す。
 
-- [ ] **Step 6: Run focused tests and actionlint**
 
 ```bash
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
-mise exec -- actionlint .github/workflows/*.yaml
 ```
 
-Expected: both commands exit 0 without warnings.
+Expected: the command exits 0 without warnings.
 
 - [ ] **Step 7: Commit and push**
 
@@ -296,12 +295,10 @@ Repair mode:
 
 Install Python through the existing mise configuration before invoking the sanitizer if the ubuntu-slim runner does not expose it through mise.
 
-- [ ] **Step 4: Run contract test, sanitizer tests, and actionlint**
 
 ```bash
 mise exec -- bash scripts/ci/test_create_beta_release_workflow.sh
 mise exec -- python3 -m unittest scripts/release/test_sanitize_release_notes.py -v
-mise exec -- actionlint .github/workflows/*.yaml
 ```
 
 Expected: all commands exit 0.
@@ -317,7 +314,7 @@ git push
 ### Task 4: Operational knowledge and final verification
 
 **Files:**
-- Create: `docs/knowledge/20260725_beta_release_deployment.md`
+- Modify: `docs/knowledge/delivery_ci.md`
 
 **Interfaces:**
 - Documents exact commands and expected GitHub Deployment/store states.
@@ -339,7 +336,6 @@ Document:
 mise exec -- python3 -m unittest scripts/release/test_sanitize_release_notes.py -v
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
 mise exec -- bash scripts/ci/test_create_beta_release_workflow.sh
-mise exec -- actionlint .github/workflows/*.yaml
 git --no-pager diff --check
 ```
 
@@ -348,7 +344,7 @@ Expected: all commands exit 0; no warnings or whitespace errors.
 - [ ] **Step 3: Commit and push knowledge**
 
 ```bash
-git add docs/knowledge/20260725_beta_release_deployment.md
+git add docs/knowledge/delivery_ci.md
 git commit -m "docs: beta外部配布の運用手順を記録"
 git push
 ```
@@ -372,7 +368,7 @@ Open a draft PR from `fix/beta-release-deployment` to `develop`. Include root ca
 **Files:**
 - Modify: `.github/workflows/deploy-app.yaml`
 - Modify: `scripts/ci/test_resolve_deploy_app_policy.sh`
-- Modify: `docs/knowledge/20260725_beta_release_deployment.md`
+- Modify: `docs/knowledge/delivery_ci.md`
 
 **Interfaces:**
 - Consumes: repository contents checked out at the workflow run ref.
@@ -408,13 +404,12 @@ Add the pinned repository checkout action before `Decide which app to deploy`:
 - [x] **Step 4: Record the runner workspace requirement**
 
 Add the failure mode and the rule that repository scripts require checkout to
-`docs/knowledge/20260725_beta_release_deployment.md`.
+`docs/knowledge/delivery_ci.md`.
 
 - [x] **Step 5: Run focused and workflow verification**
 
 ```bash
 mise exec -- bash scripts/ci/test_resolve_deploy_app_policy.sh
-mise exec -- actionlint .github/workflows/*.yaml
 git --no-pager diff --check
 ```
 

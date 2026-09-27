@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/error/error_diagnostics.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
+  setUpAll(tz.initializeTimeZones);
+
   final occurredAt = DateTime.utc(2026, 7, 3, 12, 34, 56);
 
   String subject({
@@ -26,7 +29,7 @@ void main() {
     expect(text, contains('2.6.0'));
     expect(text, contains('4200'));
     expect(text, contains('iOS 26.1'));
-    expect(text, contains('2026-07-03T12:34:56'));
+    expect(text, contains('2026/07/03 21:34:56.000 JST'));
     expect(text, contains('boom'));
   });
 

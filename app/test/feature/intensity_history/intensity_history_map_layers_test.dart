@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
+import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_history_map_layers.dart';
 import 'package:material_ui/material_ui.dart';
@@ -22,7 +23,7 @@ class _ControllableCityMaxIntensityNotifier extends CityMaxIntensityNotifier {
 }
 
 void main() {
-  testWidgets('初回データ取得後に塗りレイヤーをマウントする', (tester) async {
+  testWidgets('初回取得前も選択枠をマウントし塗りデータだけ待機する', (tester) async {
     final container = ProviderContainer(
       retry: (_, _) => null,
       overrides: [
@@ -40,7 +41,11 @@ void main() {
       ),
     );
 
-    expect(find.byType(IntensityFillLayer), findsNothing);
+    expect(find.byType(IntensityFillLayer), findsOneWidget);
+    expect(
+      tester.widget<IntensityFillLayer>(find.byType(IntensityFillLayer)).items,
+      isNull,
+    );
 
     final notifier = container.read(
       cityMaxIntensityProvider.notifier,
@@ -61,9 +66,56 @@ void main() {
     expect(find.byType(IntensityFillLayer), findsOneWidget);
   });
 
-  testWidgets('取得済みデータは再読み込み中と再読み込み失敗時にも保持する', (
-    tester,
-  ) async {
+  testWidgets('初回取得失敗時にも選択枠を維持する', (tester) async {
+    final container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [
+        cityMaxIntensityProvider.overrideWith(
+          _ControllableCityMaxIntensityNotifier.new,
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: IntensityHistoryMapLayers()),
+      ),
+    );
+
+    expect(find.byType(IntensityFillLayer), findsOneWidget);
+    expect(
+      tester.widget<IntensityFillLayer>(find.byType(IntensityFillLayer)).items,
+      isNull,
+    );
+
+    final notifier = container.read(
+      cityMaxIntensityProvider.notifier,
+    ) as _ControllableCityMaxIntensityNotifier;
+    container
+        .read(intensityHistoryControllerProvider.notifier)
+        .selectCity(code: '0110110', name: '札幌市中央区', prefectureName: '北海道');
+    await tester.pump();
+    notifier.requests.last.completeError(
+      Exception('initial fetch failed'),
+      StackTrace.current,
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(IntensityFillLayer), findsOneWidget);
+    expect(
+      tester.widget<IntensityFillLayer>(find.byType(IntensityFillLayer)).items,
+      isNull,
+    );
+    expect(
+      container.read(intensityHistoryControllerProvider).selectedCity?.code,
+      '0110110',
+    );
+  });
+
+  testWidgets('取得済みデータは再読み込み中と再読み込み失敗時にも保持する', (tester) async {
     const initial = CityMaxIntensity(
       aggregatedAt: null,
       items: [

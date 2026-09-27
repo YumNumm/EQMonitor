@@ -96,9 +96,7 @@ class HypocenterPmTilesLayer extends HookWidget {
   }
 }
 
-class HypocenterPmTilesStyleBuilder {
-  const new();
-
+class const HypocenterPmTilesStyleBuilder() {
   HypocenterPmTilesStyleIds idsFor(HypocenterArchive archive) {
     final suffix = '${archive.id.partition.name}-${archive.id.jstLabel}'
         .replaceAll(RegExp('[^a-zA-Z0-9_-]'), '-');
@@ -229,24 +227,13 @@ class HypocenterPmTilesStyleBuilder {
   ];
 }
 
-class HypocenterPmTilesStyleIds {
-  const new({
-    required this.sourceId,
-    required this.clusterLayerId,
-    required this.hypocenterLayerId,
-  });
+class const HypocenterPmTilesStyleIds({
+  required final String sourceId,
+  required final String clusterLayerId,
+  required final String hypocenterLayerId,
+});
 
-  final String sourceId;
-  final String clusterLayerId;
-  final String hypocenterLayerId;
-}
-
-class HypocenterPmTilesLayers {
-  const new({
-    required this.cluster,
-    required this.hypocenter,
-  });
-
-  final CircleStyleLayer cluster;
-  final CircleStyleLayer hypocenter;
-}
+class const HypocenterPmTilesLayers({
+  required final CircleStyleLayer cluster,
+  required final CircleStyleLayer hypocenter,
+});

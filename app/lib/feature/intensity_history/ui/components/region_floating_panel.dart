@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/intensity_history_state.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
@@ -11,7 +12,6 @@ import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_hist
 import 'package:eqmonitor/feature/intensity_history/ui/components/city_detail_modal.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// 市区町村別最大震度マップの上部フローティングパネル。
@@ -40,16 +40,12 @@ class RegionFloatingPanel extends ConsumerWidget {
   }
 }
 
-/// 集計の最終更新時刻。`aggregated_at` が取得できなかった場合は何も出さない。
 class _RefreshedAtLabel extends StatelessWidget {
   const new({
     required this.aggregatedAt,
   });
 
   final DateTime? aggregatedAt;
-
-  /// 集計の最終更新時刻の表示書式。
-  static final _refreshedAtFormat = DateFormat('MM/dd HH:mm');
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +54,7 @@ class _RefreshedAtLabel extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Text(
-      '${_refreshedAtFormat.format(aggregatedAt.toLocal())} 更新',
+      '${aggregatedAt.formatWithTz(.monthDayHourMinute)} 更新',
       maxLines: 1,
       overflow: .ellipsis,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -84,8 +80,8 @@ class _NationwidePanel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .start,
+          mainAxisSize: .min,
           children: [
             Text.rich(
               TextSpan(
@@ -131,13 +127,13 @@ class _CityPanel extends StatelessWidget {
           outer: ImageFilter.blur(
             sigmaX: 8,
             sigmaY: 8,
-            tileMode: TileMode.mirror,
+            tileMode: .mirror,
           ),
           inner: ColorFilter.mode(
             context.designSystem.colorTheme.surfaceContainerLow.withValues(
               alpha: 0.7,
             ),
-            BlendMode.srcATop,
+            .srcATop,
           ),
         ),
         child: Semantics(
@@ -156,7 +152,7 @@ class _CityPanel extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   if (maxIntensity case final maxIntensity?) ...[
                     JmaIntensityIcon(
@@ -168,13 +164,13 @@ class _CityPanel extends StatelessWidget {
                   ],
                   Flexible(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .start,
+                      mainAxisSize: .min,
                       children: [
                         Text(
                           selectedCity.prefectureName,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: context
                                 .designSystem
@@ -185,9 +181,9 @@ class _CityPanel extends StatelessWidget {
                         Text(
                           selectedCity.name,
                           maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         _RefreshedAtLabel(

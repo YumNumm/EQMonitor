@@ -18,9 +18,7 @@ typedef SeismicityDecodedHypocenterProperties = ({
   bool? geometryClamped,
 });
 
-final class SeismicityMvtPropertyDecoder {
-  const new();
-
+final class const SeismicityMvtPropertyDecoder() {
   SeismicityDecodedHypocenterProperties decode({
     required List<int> tags,
     required List<String> keys,

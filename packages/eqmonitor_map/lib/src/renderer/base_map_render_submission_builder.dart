@@ -27,12 +27,16 @@ const baseMapRenderBatchVersion = 1;
 const baseMapRenderBatchKeyVersion = 1;
 
 /// Fill layer群のpipeline key。`assets/base_map_fill.fmat`に対応する。
-final MapRenderPipelineKey baseMapFillPipelineKey =
-    createMapRenderPipelineKey(version: 1, key: 'base-map-fill');
+final MapRenderPipelineKey baseMapFillPipelineKey = createMapRenderPipelineKey(
+  version: 1,
+  key: 'base-map-fill',
+);
 
 /// Line layer群のpipeline key。`assets/base_map_line.fmat`に対応する。
-final MapRenderPipelineKey baseMapLinePipelineKey =
-    createMapRenderPipelineKey(version: 1, key: 'base-map-line');
+final MapRenderPipelineKey baseMapLinePipelineKey = createMapRenderPipelineKey(
+  version: 1,
+  key: 'base-map-line',
+);
 
 /// base map treeのnode key。
 ///
@@ -46,8 +50,9 @@ final MapNodeKey baseMapRenderNodeKey = createMapNodeKey(value: 'base-map');
 /// 戻り値は`styleLayerId`→segmentごとの[MapPackedMesh]。`BaseMapPackedMeshCache`
 /// をそのまま渡す想定だが、builderがcacheの実装へ依存しないようにfunction型で
 /// 受け取る(builderのtestはcacheを組み立てずにfakeを渡せる)。
-typedef BaseMapPackedMeshResolver =
-    Map<String, List<MapPackedMesh>> Function(BaseMapLayerRenderPlan plan);
+typedef BaseMapPackedMeshResolver = Map<String, List<MapPackedMesh>> Function(
+  BaseMapLayerRenderPlan plan,
+);
 
 /// [plans]から`MapRenderSubmission`を組み立てる。
 ///
@@ -96,7 +101,6 @@ List<MapRenderPacket> buildBaseMapRenderPackets({
   required BaseMapPackedMeshResolver packedMeshesFor,
   required double lineHalfWidthLogicalPixels,
 }) {
-  final phase = mapSceneRenderPhasePolicy.rankOf(mapSceneBasePhaseId);
   final tileOrders = <UnwrappedTileId, int>{};
   for (final plan in plans) {
     tileOrders.putIfAbsent(
@@ -120,6 +124,17 @@ List<MapRenderPacket> buildBaseMapRenderPackets({
     }
     final declarationOrder =
         _baseMapDeclarationOrderByStyleLayerId[styleLayerId]!;
+    final phase = mapSceneRenderPhasePolicy.rankOf(
+      switch (spec.kind) {
+        BaseMapLayerKind.background => throw ArgumentError.value(
+          styleLayerId,
+          'plans',
+          'background is not drawable',
+        ),
+        BaseMapLayerKind.fill => mapSceneBaseLandFillPhaseId,
+        BaseMapLayerKind.line => mapSceneBaseAdministrativeLinePhaseId,
+      },
+    );
     final transformInput = plan.transformInput;
     if (transformInput.zoom != frame.camera.zoom) {
       throw ArgumentError.value(

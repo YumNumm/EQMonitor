@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -5,10 +7,10 @@ import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
   const new({super.key});
@@ -49,7 +51,7 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
               ),
               child: const Text(
                 'マップレイヤー',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: .bold),
               ),
             ),
             automaticallyImplyLeading: false,
@@ -86,12 +88,12 @@ class _LocationSettingCards extends ConsumerWidget {
       data: (config) => Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               '現在位置マーカー',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 8),
@@ -155,7 +157,7 @@ class _LocationSettingCards extends ConsumerWidget {
           ],
         ),
       ),
-      loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (error, _) => Center(child: Text('$error')),
     );
   }
@@ -190,10 +192,10 @@ class _LocationCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   Icon(
                     icon,
@@ -208,7 +210,7 @@ class _LocationCard extends StatelessWidget {
                       color: isSelected
                           ? designSystem.colorTheme.onPrimaryContainer
                           : designSystem.colorTheme.onSurfaceVariant,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                     ),
                   ),
                 ],

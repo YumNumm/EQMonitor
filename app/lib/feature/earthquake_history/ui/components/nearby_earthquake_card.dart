@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -15,9 +16,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthq
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NearbyEarthquakeCard extends HookConsumerWidget {
   const new({
@@ -71,12 +73,15 @@ class NearbyEarthquakeCard extends HookConsumerWidget {
     return BorderedContainer(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _NearbyEarthquakeHeader(
             onSettingsPressed: () async {
               final result =
-                  await showModalBottomSheet<NearbyEarthquakeParameter>(
+                  await showM3EModalBottomSheet<NearbyEarthquakeParameter>(
+                    isScrollControlled: false,
+                    useSafeArea: false,
+                    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
                     context: context,
                     builder: (context) => NearbyEarthquakeParameterSheet(
                       initial: parameter.value,
@@ -138,7 +143,7 @@ class _NearbyEarthquakeHeader extends StatelessWidget {
               'この震源の近傍で発生した地震',
               style: Theme.of(
                 context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ).textTheme.titleMedium?.copyWith(fontWeight: .bold),
             ),
           ),
           IconButton(
@@ -188,7 +193,7 @@ class _NearbyEarthquakeLoading extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16),
         child: SizedBox.square(
           dimension: 24,
-          child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+          child: AccessibleCircularProgressIndicator(strokeWidth: 2),
         ),
       ),
     );
@@ -214,7 +219,7 @@ class _NearbyEarthquakeError extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
-          TextButton(onPressed: onRetry, child: const Text('再試行')),
+          M3ETextButton(onPressed: onRetry, child: const Text('再試行')),
         ],
       ),
     );
@@ -277,7 +282,10 @@ class _NearbyEarthquakeList extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: TextButton(onPressed: onShowAll, child: const Text('すべて表示')),
+          child: M3ETextButton(
+            onPressed: onShowAll,
+            child: const Text('すべて表示'),
+          ),
         ),
       ],
     );

@@ -96,8 +96,8 @@ Expected: an absolute path such as `/data/user/0/.../map.pmtiles` becomes `pmtil
 
 **Files:**
 - Modify: `docs/map_spec_v3.md`
-- Modify: `docs/knowledge/20260717_maplibre_platform_pmtiles_assets.md`
-- Verify: `docs/knowledge/20260718_maplibre_pmtiles_file_uri.md`
+- Modify: `docs/knowledge/maplibre.md`
+- Verify: `docs/knowledge/maplibre.md`
 
 **Interfaces:**
 - Consumes: the supported URI contract from Task 2
@@ -177,8 +177,7 @@ git add \
   app/assets/platform/earthquake_tsunami_all.pmtiles \
   app/lib/feature/map/data/repository/base_map_pmtiles_repository.dart \
   docs/map_spec_v3.md \
-  docs/knowledge/20260717_maplibre_platform_pmtiles_assets.md \
-  docs/knowledge/20260718_maplibre_pmtiles_file_uri.md \
+   docs/knowledge/maplibre.md \
   docs/superpowers/plans/2026-07-20-maplibre-basemap-recovery.md
 git commit -m "fix: MapLibreベースマップを復旧"
 ```

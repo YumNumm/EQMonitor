@@ -3,10 +3,7 @@ import 'package:dart_azarashi/src/model/exception.dart';
 import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Decoder for hexadecimal string format messages (63 characters).
-class HexDecoder {
-  /// Creates a new [HexDecoder].
-  const new();
-
+class const HexDecoder() {
   /// Decodes a hexadecimal string message.
   ///
   /// The message should be 63 characters long.

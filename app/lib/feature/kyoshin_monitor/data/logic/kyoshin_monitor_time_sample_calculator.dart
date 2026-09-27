@@ -4,12 +4,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_time_sample_calculator.g.dart';
 
 @riverpod
-KyoshinMonitorTimeSampleCalculator kyoshinMonitorTimeSampleCalculator(Ref ref) =>
-    const KyoshinMonitorTimeSampleCalculator();
+KyoshinMonitorTimeSampleCalculator kyoshinMonitorTimeSampleCalculator(
+  Ref ref,
+) => const KyoshinMonitorTimeSampleCalculator();
 
-class KyoshinMonitorTimeSampleCalculator {
-  const new();
-
+class const KyoshinMonitorTimeSampleCalculator() {
   Duration roundTripTime(KyoshinMonitorTimeSample sample) =>
       sample.receivedAt.difference(sample.sentAt);
 

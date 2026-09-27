@@ -9,9 +9,7 @@ part 'notification_region_catalog_builder.g.dart';
 NotificationRegionCatalogBuilder notificationRegionCatalogBuilder(Ref ref) =>
     const NotificationRegionCatalogBuilder();
 
-final class NotificationRegionCatalogBuilder {
-  const new();
-
+final class const NotificationRegionCatalogBuilder() {
   NotificationRegionCatalog build({
     required JmaCodeTableParameter codeTable,
     required EarthquakeParameter earthquake,

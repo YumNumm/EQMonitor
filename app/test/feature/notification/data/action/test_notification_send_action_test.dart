@@ -1,12 +1,13 @@
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
-import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/notification/data/action/test_notification_send_action.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery_result.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -154,7 +155,7 @@ class _TestApp extends StatelessWidget {
         theme: theme,
         home: Scaffold(
           body: Consumer(
-            builder: (context, ref, child) => FilledButton(
+            builder: (context, ref, child) => M3EFilledButton(
               onPressed: () async {
                 final handled = await ref
                     .read(testNotificationSendActionProvider)

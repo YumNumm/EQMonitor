@@ -22,7 +22,7 @@
 - The current public `/v2/hypocenters/manifest` contract lacks `schema_version`, `data_zoom`, and `archive_revision`. That is a separate backend stacked dependency before app integration. This branch consumes a caller-complete descriptor and must not infer those fields from URL, PMTiles header, or producer constants.
 - Cancellation, schema/type corruption, conflicting duplicate UUIDs, worker failure, descriptor identity mismatch, and count mismatch are typed failures. A finished transfer whose schema version, data zoom, archive revision, or unique count differs from `archive.descriptor` is rejected before publication. The worker protocol has no cancel request: `handle.cancel()` is a client-side terminal action that closes the receive port, kills the isolate, and waits for `exited`/`retired` without worker cooperation. On every success, failure, and cancellation path, the decode operation closes the archive and retires the worker exactly once.
 - No physical-device, simulator, real-network, or E2E run is required. Pure-Dart unit/integration tests and the deterministic 2,000,000-feature harness are required.
-- Generated-file normalization must follow `docs/knowledge/20260708_build_runner_generated_diffs.md`; semantic manual edits to generated files are forbidden.
+- Generated-file normalization must follow `docs/knowledge/code_generation.md`; semantic manual edits to generated files are forbidden.
 - Every task that runs build_runner must immediately run the tracked, file-limited `seismicity_pmtiles_exception.freezed.dart` normalizer, prove with `git diff --no-index --ignore-space-at-eol` that normalization changed only trailing whitespace, inspect semantic generated diffs, and commit every generated output with the source task that caused it. Never defer generated cleanup to the final documentation task.
 
 ## Reference Decisions
@@ -3148,7 +3148,7 @@ git push
 
 **Files:**
 - Modify: `packages/seismicity_pmtiles/README.md`
-- Create: `docs/knowledge/20260809_seismicity_pmtiles_decoder.md`
+- Modify: `docs/knowledge/pmtiles.md`
 
 **Interfaces:**
 - Consumes: completed public API and ownership/schema invariants.
@@ -3164,10 +3164,10 @@ Run:
 
 ```bash
 set -eu
-test -f docs/knowledge/20260809_seismicity_pmtiles_decoder.md
+test -f docs/knowledge/pmtiles.md
 for required in schemaVersion dataZoom archive.descriptor duplicateConflict TransferableTypedData 2000000; do
   rg -q "$required" packages/seismicity_pmtiles/README.md \
-    docs/knowledge/20260809_seismicity_pmtiles_decoder.md
+    docs/knowledge/pmtiles.md
 done
 ```
 
@@ -3196,7 +3196,7 @@ Expected: checks exit 0 and documentation handwritten diff is 30–100 lines.
 
 ```bash
 git add packages/seismicity_pmtiles/README.md \
-  docs/knowledge/20260809_seismicity_pmtiles_decoder.md
+  docs/knowledge/pmtiles.md
 git commit -m "Docs: 震源PMTiles decoder契約を記録"
 git push
 ```
@@ -3204,7 +3204,7 @@ git push
 ### Task 71: Record backend dependency and run the final gate
 
 **Files:**
-- Create: `docs/todo/950_seismicity_manifest_descriptor_fields.md`
+- Modify: `docs/todo/950_map_data_pipeline.md`
 - Do not commit regenerated files here; any generated drift belongs to its originating source task.
 
 **Interfaces:**
@@ -3221,9 +3221,9 @@ Run:
 
 ```bash
 set -eu
-test -f docs/todo/950_seismicity_manifest_descriptor_fields.md
+test -f docs/todo/950_map_data_pipeline.md
 for required in schema_version data_zoom archive_revision OpenAPI; do
-  rg -q "$required" docs/todo/950_seismicity_manifest_descriptor_fields.md
+  rg -q "$required" docs/todo/950_map_data_pipeline.md
 done
 ```
 
@@ -3300,7 +3300,7 @@ Expected: no prohibited hit in changed authored sources, while existing/generate
 
 ```bash
 set -eu
-git add docs/todo/950_seismicity_manifest_descriptor_fields.md
+git add docs/todo/950_map_data_pipeline.md
 git commit -m "Docs: 震源manifest依存を記録"
 git push
 git diff --check feat/seismicity-pmtiles-network-reader...HEAD

@@ -1,6 +1,8 @@
+import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MagnitudeFilterChip extends StatelessWidget {
   const new({this.min, this.max, this.onChanged, super.key});
@@ -22,8 +24,11 @@ class MagnitudeFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result = await showModalBottomSheet<(double?, double?)?>(
-          clipBehavior: Clip.antiAlias,
+        final result = await showM3EModalBottomSheet<(double?, double?)?>(
+          isScrollControlled: false,
+          useSafeArea: false,
+          style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+          clipBehavior: .antiAlias,
           context: context,
           builder: (context) =>
               _MagnitudeFilterModal(currentMin: min, currentMax: max),
@@ -36,7 +41,7 @@ class MagnitudeFilterChip extends StatelessWidget {
           ? const Text('マグニチュード')
           : Text(
               range.toRangeString,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: range.isAllSelected
           ? null
@@ -80,8 +85,8 @@ class _MagnitudeFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -89,20 +94,22 @@ class _MagnitudeFilterModal extends HookWidget {
               child: Text(
                 'マグニチュード',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            RangeSlider(
-              values: RangeValues(min.value, max.value),
+            AccessibleRangeSlider(
+              semanticFormatterCallback: (value) =>
+                  'M${value.toStringAsFixed(1)}',
+              value: RangeValues(min.value, max.value),
               max: 9,
               onChanged: (state) {
                 // 小数第1位以下切り捨て
                 min.value = (state.start * 10).floorToDouble() / 10;
                 max.value = (state.end * 10).floorToDouble() / 10;
               },
-              labels: RangeLabels('M${min.value}', 'M${max.value}'),
+              label: 'M${min.value} ～ M${max.value}',
               divisions:
                   (MagnitudeFilterChip.initialMax -
                           MagnitudeFilterChip.initialMin)
@@ -114,19 +121,19 @@ class _MagnitudeFilterModal extends HookWidget {
               child: Text(
                 (min.value, max.value).toRangeString,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context).pop((min.value, max.value)),
                   child: const Text('完了'),

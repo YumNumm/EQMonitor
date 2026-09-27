@@ -45,7 +45,6 @@ SDK の導入、依存解決、plugin の起動に失敗した場合も、その
 
 - problem matcher JSON が有効な JSON であることを確認する。
 - analyzer の machine 形式が matcher の正規表現に一致することを確認する。
-- `actionlint` で変更後の workflow を検証する。
 - mise 経由で実際の machine 形式の解析を実行し、解析経路を確認する。
 - workflow から Invertase Action と Node 20 一時許可設定が消えていることを検索する。
 

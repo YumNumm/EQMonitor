@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_sheet_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -50,7 +51,7 @@ class HomeFeedSheet extends ConsumerWidget {
             value.items.isEmpty
                 ? const _HomeFeedEmpty()
                 : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     children: [
                       for (final (index, item)
                           in value.items.take(3).indexed) ...[
@@ -72,7 +73,7 @@ class HomeFeedSheet extends ConsumerWidget {
         },
         Align(
           alignment: .centerEnd,
-          child: TextButton(
+          child: M3ETextButton(
             onPressed: () async => const FeedRoute().push<void>(context),
             child: Text('さらに表示'),
           ),
@@ -108,7 +109,7 @@ class _HomeFeedEmpty extends StatelessWidget {
             style: designSystem.typography.bodyMedium.copyWith(
               color: colorTheme.onSurfaceVariant,
             ),
-            textAlign: TextAlign.center,
+            textAlign: .center,
           ),
         ],
       ),
@@ -152,7 +153,7 @@ class _HomeFeedSkeleton extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(spacing.lg, 0, spacing.lg, spacing.sm),
       child: Skeletonizer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             for (var i = 0; i < 3; i++) ...[
               Container(
@@ -213,10 +214,10 @@ class _UnreadFeedBanner extends ConsumerWidget {
                   (item.title ?? item.summary ?? '').replaceAll('◆', ''),
                   style: typography.titleSmall.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
               IconButton(

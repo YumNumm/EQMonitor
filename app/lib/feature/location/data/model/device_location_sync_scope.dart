@@ -6,8 +6,7 @@ part 'device_location_sync_scope.g.dart';
 @freezed
 abstract class DeviceLocationSyncScope with _$DeviceLocationSyncScope {
   const factory({
-    @JsonKey(name: 'apiEndpoint')
-    required String apiEndpoint,
+    @JsonKey(name: 'apiEndpoint') required String apiEndpoint,
   }) = _DeviceLocationSyncScope;
 
   factory fromJson(Map<String, dynamic> json) =>

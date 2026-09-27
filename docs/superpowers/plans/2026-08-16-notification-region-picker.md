@@ -88,7 +88,7 @@ static Future<NotificationRegionSelection?> show(BuildContext context);
 
 ### Task 5: 検証・知見・PR
 
-**Files:** Create `docs/knowledge/20260816_notification_region_map_lifecycle.md`; Modify generated files only as required.
+**Files:** Modify `docs/knowledge/maplibre.md`; Modify generated files only as required.
 
 - [ ] Record catalog source-of-truth and MapLibre isolate/generation/queue lifecycle rules with exact verification commands.
 - [ ] Run targeted tests, `mise exec -- flutter analyze --no-pub`, `git diff --check`, and inspect that `app/lib/feature/intensity_history/` is unchanged.

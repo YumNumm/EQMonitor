@@ -12,41 +12,24 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
-sealed class EarthquakeRealtimeListDecision {
-  const new();
-}
+sealed class const EarthquakeRealtimeListDecision();
 
-final class EarthquakeRealtimeListUpsert
-    extends EarthquakeRealtimeListDecision {
-  const new(this.item);
+final class const EarthquakeRealtimeListUpsert(final EarthquakePartial item)
+    extends EarthquakeRealtimeListDecision;
 
-  final EarthquakePartial item;
-}
+final class const EarthquakeRealtimeListRemove()
+    extends EarthquakeRealtimeListDecision;
 
-final class EarthquakeRealtimeListRemove
-    extends EarthquakeRealtimeListDecision {
-  const new();
-}
+final class const EarthquakeRealtimeListPreserve()
+    extends EarthquakeRealtimeListDecision;
 
-final class EarthquakeRealtimeListPreserve
-    extends EarthquakeRealtimeListDecision {
-  const new();
-}
+final class const EarthquakeRealtimeListRefetch()
+    extends EarthquakeRealtimeListDecision;
 
-final class EarthquakeRealtimeListRefetch
-    extends EarthquakeRealtimeListDecision {
-  const new();
-}
-
-final class EarthquakeRealtimeListReconciler {
-  const new({
-    required this.parameter,
-    required this.repository,
-  });
-
-  final EarthquakeHistoryParameter parameter;
-  final EarthquakeHistoryRepository repository;
-
+final class const EarthquakeRealtimeListReconciler({
+  required final EarthquakeHistoryParameter parameter,
+  required final EarthquakeHistoryRepository repository,
+}) {
   EarthquakeRealtimeListDecision decide({
     required api.Earthquake record,
     required EarthquakePartial? previous,

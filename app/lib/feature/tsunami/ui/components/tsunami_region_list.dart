@@ -9,7 +9,7 @@ import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_stat
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiRegionList extends StatelessWidget {
   const new({required this.tsunami, super.key});
@@ -26,7 +26,7 @@ class TsunamiRegionList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           for (final entry in grouped.entries) ...[
             _WarningGroupHeader(kind: entry.key),
@@ -79,7 +79,7 @@ class _WarningGroupHeader extends StatelessWidget {
           TsunamiWarningColor.displayName(kind),
           style: TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             color: headerColor,
           ),
         ),
@@ -113,7 +113,7 @@ class _ForecastRegionCard extends StatelessWidget {
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -121,7 +121,7 @@ class _ForecastRegionCard extends StatelessWidget {
               region.name,
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.w600,
+                fontWeight: .w600,
                 color: designSystem.colorTheme.onSurface,
               ),
             ),
@@ -183,7 +183,7 @@ class _ForecastDetails extends StatelessWidget {
           );
         } else if (arrivalTime != null) {
           parts.add(
-            '到達予想: ${DateFormat('HH:mm').format(arrivalTime.toLocal())}頃',
+            '到達予想: ${arrivalTime.formatWithTz(DateTimeFormat.hourMinute)}頃',
           );
         }
       }
@@ -221,7 +221,7 @@ class _ObservationExpansion extends HookWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         InkWell(
           onTap: () => expanded.value = !expanded.value,
@@ -250,7 +250,7 @@ class _ObservationExpansion extends HookWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 for (final station in stations)
                   TsunamiObservationStationTile(station: station),

@@ -1,10 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-class LatLngBoundaryJsonConverter
+class const LatLngBoundaryJsonConverter()
     extends JsonConverter<LatLngBoundary, Map<String, dynamic>> {
-  const new();
-
   @override
   LatLngBoundary fromJson(Map<String, dynamic> json) => LatLngBoundary.fromTwo(
     LatLng.fromJson(json['northEast'] as Map<String, dynamic>),
@@ -18,9 +16,8 @@ class LatLngBoundaryJsonConverter
   };
 }
 
-class LatLngJsonConverter extends JsonConverter<LatLng, Map<String, dynamic>> {
-  const new();
-
+class const LatLngJsonConverter()
+    extends JsonConverter<LatLng, Map<String, dynamic>> {
   @override
   LatLng fromJson(Map<String, dynamic> json) => LatLng.fromJson(json);
 

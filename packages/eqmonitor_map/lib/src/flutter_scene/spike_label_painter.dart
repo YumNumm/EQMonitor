@@ -2,33 +2,19 @@ import 'package:eqmonitor_map/src/renderer/spike_screen_projector.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 
-class SpikeLabelPaintLayout {
-  const new({
-    required this.anchor,
-    required this.paintOffset,
-  });
+class const SpikeLabelPaintLayout({
+  required final Offset anchor,
+  required final Offset paintOffset,
+});
 
-  final Offset anchor;
-  final Offset paintOffset;
-}
-
-class SpikeLabelLayout {
-  const new({
-    required this.projectionMatrix,
-    required this.geographicAnchor,
-    required this.logicalSize,
-    required this.devicePixelRatio,
-    required this.label,
-    required this.style,
-  });
-
-  final Matrix4 projectionMatrix;
-  final Vector3 geographicAnchor;
-  final Size logicalSize;
-  final double devicePixelRatio;
-  final String label;
-  final TextStyle style;
-
+class const SpikeLabelLayout({
+  required final Matrix4 projectionMatrix,
+  required final Vector3 geographicAnchor,
+  required final Size logicalSize,
+  required final double devicePixelRatio,
+  required final String label,
+  required final TextStyle style,
+}) {
   SpikeLabelPaintLayout calculate() {
     final homogeneousAnchor = projectionMatrix.transform(
       Vector4(
@@ -64,23 +50,14 @@ class SpikeLabelLayout {
   }
 }
 
-class SpikeLabelPainter extends CustomPainter {
-  const new({
-    required this.projectionMatrix,
-    required this.geographicAnchor,
-    required this.logicalSize,
-    required this.devicePixelRatio,
-    required this.label,
-    required this.style,
-  });
-
-  final Matrix4 projectionMatrix;
-  final Vector3 geographicAnchor;
-  final Size logicalSize;
-  final double devicePixelRatio;
-  final String label;
-  final TextStyle style;
-
+class const SpikeLabelPainter({
+  required final Matrix4 projectionMatrix,
+  required final Vector3 geographicAnchor,
+  required final Size logicalSize,
+  required final double devicePixelRatio,
+  required final String label,
+  required final TextStyle style,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final layout = SpikeLabelLayout(

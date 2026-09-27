@@ -92,8 +92,8 @@ class KyoshinMonitorScale extends StatelessWidget {
       };
     }).toList();
     final labelPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
+      textDirection: .ltr,
+      textAlign: .center,
       textScaler: textScaler,
     );
     var maxLabelWidth = 0.0;
@@ -383,14 +383,14 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     );
     final paint = Paint()
       ..shader = gradient.createShader(gradientRect)
-      ..style = PaintingStyle.fill;
+      ..style = .fill;
 
     canvas.drawRect(gradientRect, paint);
 
     // 目盛りの描画
     final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
+      textDirection: .ltr,
+      textAlign: .center,
       textScaler: textScaler,
     );
 
@@ -398,7 +398,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     final tickPaint = Paint()
       ..color = textColor
       ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
+      ..style = .stroke;
 
     // 目盛りを描画する間隔を決定（震度は1固定）
     final interval = type == KyoshinMonitorScaleType.intensity

@@ -6,21 +6,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_simulation_notifier.g.dart';
 
-class EewSimulationState {
-  const new({
-    required this.reports,
-    required this.currentIndex,
-    required this.isPlaying,
-    required this.startedAt,
-    required this.elapsedBeforeRun,
-  });
-
-  final List<EewTelegramItem> reports;
-  final int currentIndex;
-  final bool isPlaying;
-  final DateTime startedAt;
-  final Duration elapsedBeforeRun;
-
+class const EewSimulationState({
+  required final List<EewTelegramItem> reports,
+  required final int currentIndex,
+  required final bool isPlaying,
+  required final DateTime startedAt,
+  required final Duration elapsedBeforeRun,
+}) {
   int get totalReports => reports.length;
   EewTelegramItem get currentReport => reports[currentIndex];
   bool get isComplete => currentIndex >= reports.length - 1;

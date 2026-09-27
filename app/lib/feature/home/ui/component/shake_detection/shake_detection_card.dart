@@ -1,10 +1,11 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_region_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
   const new({
@@ -36,7 +37,7 @@ class ShakeDetectionCard extends ConsumerWidget {
           side: BorderSide(color: colorTheme.outlineVariant),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
             _ShakeDetectionCardBody(event: event, regionsAsync: regionsAsync),
@@ -60,7 +61,9 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
 
     final bgColor = _headerColorForLevel(event.level);
     final title = _titleForLevel(event.level);
-    final timeStr = DateFormat('HH:mm:ss').format(event.createdAt.toLocal());
+    final timeStr = event.createdAt.formatWithTz(
+      DateTimeFormat.hourMinuteSecond,
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(color: bgColor),
@@ -75,7 +78,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: typography.titleSmall.copyWith(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                   color: Colors.white,
                 ),
               ),
@@ -135,7 +138,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
         vertical: spacing.sm,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             '${event.pointCount}地点で検知',
@@ -145,7 +148,7 @@ class _ShakeDetectionCardBody extends StatelessWidget {
           ),
           if (regionsAsync.isLoading) ...[
             SizedBox(height: spacing.xs),
-            const LinearProgressIndicator(minHeight: 2),
+            const AccessibleLinearProgressIndicator(minHeight: 2),
           ],
           if (regions.isNotEmpty) ...[
             SizedBox(height: spacing.xs),

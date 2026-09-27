@@ -80,20 +80,16 @@ class _OnboardingBottomBar extends StatelessWidget {
                     : const SizedBox.shrink(),
               ),
               Expanded(
-                child: FilledButton(
+                child: M3EFilledButton(
                   onPressed: isNextEnabled && !isProcessing ? onNext : null,
-                  style: FilledButton.styleFrom(
+                  decoration: M3EButtonDecoration.styleFrom(
                     backgroundColor: isProcessing
                         ? designSystem.colorTheme.surfaceContainer
                         : designSystem.colorTheme.primary,
                     foregroundColor: isProcessing
                         ? designSystem.colorTheme.onSurface
                         : designSystem.colorTheme.onInverseSurface,
-                    shape: RoundedSuperellipseBorder(
-                      borderRadius: BorderRadius.circular(
-                        designSystem.shape.button,
-                      ),
-                    ),
+                    borderRadius: designSystem.shape.button,
                     padding: EdgeInsets.symmetric(
                       vertical: designSystem.spacing.md,
                     ),
@@ -105,7 +101,7 @@ class _OnboardingBottomBar extends StatelessWidget {
                           children: [
                             SizedBox.square(
                               dimension: 16,
-                              child: CircularProgressIndicator.adaptive(
+                              child: AccessibleCircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation(
                                   designSystem.colorTheme.onSurfaceVariant,
@@ -151,8 +147,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                         children: [
                           const TextSpan(text: '次へ をタップすることで '),
                           WidgetSpan(
-                            alignment: PlaceholderAlignment.baseline,
-                            baseline: TextBaseline.alphabetic,
+                            alignment: .baseline,
+                            baseline: .alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: '利用規約',
                               onTap: () => const TermOfServiceRoute()
@@ -161,8 +157,8 @@ class _OnboardingBottomBar extends StatelessWidget {
                           ),
                           const TextSpan(text: ' と '),
                           WidgetSpan(
-                            alignment: PlaceholderAlignment.baseline,
-                            baseline: TextBaseline.alphabetic,
+                            alignment: .baseline,
+                            baseline: .alphabetic,
                             child: _OnboardingBottomBarInlineLink(
                               label: 'プライバシーポリシー',
                               onTap: () => const PrivacyPolicyRoute()

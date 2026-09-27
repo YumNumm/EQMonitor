@@ -14,8 +14,7 @@ Future<DeviceAuthTokenInterceptor> deviceAuthTokenInterceptor(Ref ref) async {
 }
 
 class DeviceAuthTokenInterceptor extends Interceptor {
-  new({required Future<String?> Function() readToken})
-    : _readToken = readToken;
+  new({required Future<String?> Function() readToken}) : _readToken = readToken;
 
   final Future<String?> Function() _readToken;
 
@@ -28,7 +27,14 @@ class DeviceAuthTokenInterceptor extends Interceptor {
     final isDeviceMePath =
         options.path == deviceMePath ||
         options.path.startsWith('$deviceMePath/');
-    if (!isDeviceMePath) {
+    final isSubscriptionRequest =
+        (options.method == 'GET' &&
+            options.path ==
+                api.SubscriptionApiClientUrls.getV2SubscriptionMe) ||
+        (options.method == 'POST' &&
+            options.path ==
+                api.SubscriptionApiClientUrls.postV2SubscriptionSync);
+    if (!isDeviceMePath && !isSubscriptionRequest) {
       handler.next(options);
       return;
     }

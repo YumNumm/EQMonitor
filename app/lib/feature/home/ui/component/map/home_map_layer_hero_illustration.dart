@@ -36,7 +36,7 @@ class HomeMapLayerHeroIllustration extends HookWidget {
         borderRadius: BorderRadius.circular(shape.xl),
         border: Border.all(color: colorTheme.outlineVariant),
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: RepaintBoundary(
         child: CustomPaint(
           painter: _HomeMapLayerHeroPainter(
@@ -98,7 +98,7 @@ class _LayerLabelChip extends StatelessWidget {
           label,
           style: typography.labelMedium.copyWith(
             color: context.designSystem.colorTheme.onSurface,
-            fontWeight: FontWeight.w700,
+            fontWeight: .w700,
           ),
         ),
       ),
@@ -106,23 +106,14 @@ class _LayerLabelChip extends StatelessWidget {
   }
 }
 
-class _HomeMapLayerHeroPainter extends CustomPainter {
-  const new({
-    required this.progress,
-    required this.baseColor,
-    required this.layerColor,
-    required this.accentColor,
-    required this.outlineColor,
-    required this.glowColor,
-  });
-
-  final double progress;
-  final Color baseColor;
-  final Color layerColor;
-  final Color accentColor;
-  final Color outlineColor;
-  final Color glowColor;
-
+class const _HomeMapLayerHeroPainter({
+  required final double progress,
+  required final Color baseColor,
+  required final Color layerColor,
+  required final Color accentColor,
+  required final Color outlineColor,
+  required final Color glowColor,
+}) extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width * 0.54, size.height * 0.48);
@@ -132,7 +123,7 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
 
     final shadowPaint = Paint()
       ..color = glowColor
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18);
+      ..maskFilter = const MaskFilter.blur(.normal, 18);
     canvas.drawCircle(
       center.translate(0, 6),
       size.shortestSide * 0.22,
@@ -164,9 +155,9 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
       const Radius.circular(22),
     );
 
-    final fillPaint = Paint()..style = PaintingStyle.fill;
+    final fillPaint = Paint()..style = .fill;
     final strokePaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 1.2;
 
     fillPaint.color = baseColor.withValues(alpha: 0.95);
@@ -185,10 +176,10 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
     canvas.drawRRect(topLayer, strokePaint);
 
     final pathPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 2
       ..color = Colors.white.withValues(alpha: 0.26)
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = .round;
 
     final path = Path()
       ..moveTo(size.width * 0.20, size.height * 0.68)
@@ -206,7 +197,7 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
       );
     canvas.drawPath(path, pathPaint);
 
-    final nodePaint = Paint()..style = PaintingStyle.fill;
+    final nodePaint = Paint()..style = .fill;
     final nodes = <Offset>[
       Offset(size.width * 0.25, size.height * 0.63),
       Offset(size.width * 0.43, size.height * 0.56),
@@ -224,14 +215,14 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
       canvas.drawCircle(
         node,
         10 + localPulse * 10,
-        nodePaint..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+        nodePaint..maskFilter = const MaskFilter.blur(.normal, 10),
       );
       nodePaint.maskFilter = null;
     }
 
     final radarCenter = Offset(size.width * 0.22, size.height * 0.30);
     final radarPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 1.4
       ..color = Colors.white.withValues(alpha: 0.18);
     canvas.drawCircle(radarCenter, 18, radarPaint);
@@ -247,7 +238,7 @@ class _HomeMapLayerHeroPainter extends CustomPainter {
     );
 
     final accentPaint = Paint()
-      ..style = PaintingStyle.fill
+      ..style = .fill
       ..color = accentColor.withValues(alpha: 0.85);
     canvas.drawCircle(
       Offset(size.width * 0.68 + drift * 0.55, size.height * 0.23),

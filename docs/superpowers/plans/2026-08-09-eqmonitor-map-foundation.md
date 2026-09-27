@@ -1419,27 +1419,27 @@ Expected GREEN: core/render/performance inventory/library PASS、format/analyze/
 
 ### Task 51: foundation contract documentation
 
-**Files:** Modify `README.md`; Create `../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`。
+**Files:** Modify `README.md`; Modify `../../docs/knowledge/map_renderer.md`。
 
 **Contract:** 実装範囲、検証command、KEVi/dashmap pinと採用/不採用、caller phase、source isolation、packed compatibility、auto-advance windows、aggregate-first delivery、#1591/#1593/#1595/#1596 owner、device未実施を記録する。
 
 **Sequence (one commit):**
 
-1. knowledge fileを作る前にREDを実行する。Expected RED: file不存在でFAIL。
+1. 当時は文書新規作成前のREDを確認した。現在は統合済みの参照先を確認する。
 ```bash
 cd packages/eqmonitor_map
-rg -n '^## Foundation contract$' ../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+test -f ../../docs/knowledge/map_renderer.md
 ```
-2. README/knowledgeを作成しpackage regressionとdoc markerをGREEN実行する。
+2. README/knowledgeを更新しpackage regressionと参照先の存在確認を実行する。
 ```bash
 cd packages/eqmonitor_map
-rg -n '^## Foundation contract$' ../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+test -f ../../docs/knowledge/map_renderer.md
 mise exec -- dart format --output=none --set-exit-if-changed lib test
 mise exec -- flutter analyze --no-pub
 mise exec -- flutter test --no-pub test/foundation/foundation_public_api_test.dart test/widget/base_map_view_test.dart test/eqmonitor_map_library_test.dart
 cd ../..
 git diff --check
-git add packages/eqmonitor_map/README.md docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+git add packages/eqmonitor_map/README.md docs/knowledge/map_renderer.md
 git commit -m "Docs: 地図foundation運用知見を記録"
 git push
 ```
@@ -1447,18 +1447,18 @@ Expected GREEN: marker/public/BaseMap/library PASS、format/analyze/diff clean�
 
 ### Task 52: final package/BaseMap verification record
 
-**Files:** Modify `../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`。
+**Files:** Modify `../../docs/knowledge/map_renderer.md`。
 
 **Contract:** 欠陥は該当Taskへ戻してそのfile/test/commit境界で直す。このTaskは最終automated evidenceとdevice未実施riskだけを追記する。
 
 **Sequence (one commit):**
 
-1. marker追記前にREDを実行する。Expected RED: marker不存在でFAIL。
+1. 当時はmarker追記前のREDを確認した。現在は旧markerを廃止し、統合先を確認する。
 ```bash
 cd packages/eqmonitor_map
-rg -n '^## Final automated verification$' ../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+test -f ../../docs/knowledge/map_renderer.md
 ```
-2. markerと実行結果欄を追記し、次の全gateを実行する。
+2. 実行結果を記録し、次の全gateを実行する。
 ```bash
 cd packages/eqmonitor_map
 mise exec -- dart run build_runner build --delete-conflicting-outputs
@@ -1469,9 +1469,9 @@ mise exec -- flutter test --no-pub test/widget/base_map_view_test.dart test/tile
 mise exec -- flutter test --no-pub
 cd ../..
 if rg -n "package:(flutter_scene|scene)/" packages/eqmonitor_map/lib/src/foundation packages/eqmonitor_map/lib/src/renderer/map_render_batch_adapter.dart; then exit 1; fi
-rg -n '^## Final automated verification$' docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+test -f docs/knowledge/map_renderer.md
 git diff --check
-git add docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md
+git add docs/knowledge/map_renderer.md
 git commit -m "Test: 地図foundation検証を確定"
 git push
 ```

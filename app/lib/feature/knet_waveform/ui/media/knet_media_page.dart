@@ -19,7 +19,7 @@ class KnetMediaPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             '強震記録 ${formatter.format(eventTime)}',
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
           bottom: const TabBar(
             tabs: [

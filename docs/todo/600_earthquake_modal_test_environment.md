@@ -1,12 +1,10 @@
-# 地震履歴モーダルの表示テストを再実行する
+# 地震履歴モーダルの実機確認
 
-2026-09-27 の作業ツリーでは、既存の次の不整合で一部テストがコンパイルできない。
-
-- `BuildConfig` のコンストラクタ引数・認証設定 getter と呼び出し側の不一致。
-- `flutter_scene` の `waitForPendingGpuSubmissions`、`CullMode`、`FmatType` などとマップアダプターの不一致。
-
-これらを解消後、`app` で次を実行し、実機でマップの観測点・地域タップも確認する。
+2026-09-28: 最新 develop を取り込んだ分離 worktree では、以前の BuildConfig・flutter_scene のコンパイル不整合は再現せず、以下の関連テスト16件が成功した。
 
 ```sh
-mise exec -- flutter test test/feature/earthquake_history/ui/region_intensity_widget_test.dart test/feature/earthquake_history/data/shindo_db_intensity_tree_test.dart
+cd app
+mise exec -- flutter test test/feature/earthquake_history/data/earthquake_intensity_area_filter_test.dart test/feature/earthquake_history/ui/shindo_db_intensity_content_widget_test.dart test/feature/earthquake_history/ui/region_intensity_widget_test.dart test/feature/earthquake_history/data/shindo_db_intensity_tree_test.dart
 ```
+
+残件: 実機でマップの観測点・市区町村・都道府県タップと、詳細・一覧のスクロールを確認する。

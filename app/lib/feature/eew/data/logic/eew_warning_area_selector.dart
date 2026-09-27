@@ -7,9 +7,7 @@ part 'eew_warning_area_selector.g.dart';
 EewWarningAreaSelector eewWarningAreaSelector(Ref ref) =>
     const EewWarningAreaSelector();
 
-class EewWarningAreaSelector {
-  const new();
-
+class const EewWarningAreaSelector() {
   List<String> selectPrefectureCodes({
     required Iterable<EewTelegramItem> events,
   }) => {

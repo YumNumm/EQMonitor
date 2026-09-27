@@ -234,7 +234,7 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 @JsonSerializable()
 
 class _BuildConfig extends BuildConfig with DiagnosticableTreeMixin {
-  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, this.googleServerClientId = '', this.googleIosReversedClientId = '', this.appleServiceId = '', required this.buildTimestamp, required this.buildCommitMessage, required this.revenueCatApiKeyIos, required this.revenueCatApiKeyAndroid, this.isBetaTesting = false, this.isProFeaturesEnabled = false, this.isNativeSocialAuthEnabled = false, this.isShakeDetectionEnabled = true}): super._();
+  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, this.googleServerClientId = '', this.googleIosReversedClientId = '', this.appleServiceId = '', required this.buildTimestamp, required this.buildCommitMessage, required this.revenueCatApiKeyIos, required this.revenueCatApiKeyAndroid, this.isBetaTesting = false, this.isProFeaturesEnabled = true, this.isNativeSocialAuthEnabled = false, this.isShakeDetectionEnabled = true}): super._();
   factory _BuildConfig.fromJson(Map<String, dynamic> json) => _$BuildConfigFromJson(json);
 
 @override final  String restApiUrl;

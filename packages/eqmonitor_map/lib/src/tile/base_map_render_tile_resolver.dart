@@ -4,16 +4,12 @@ import 'package:eqmonitor_map/src/tile/base_map_tile_decoder.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
-final class BaseMapRenderTile {
-  const new({required this.tileId, required this.geometry});
+final class const BaseMapRenderTile({
+  required final UnwrappedTileId tileId,
+  required final BaseMapTileGeometry geometry,
+});
 
-  final UnwrappedTileId tileId;
-  final BaseMapTileGeometry geometry;
-}
-
-final class BaseMapRenderTileResolver {
-  const new();
-
+final class const BaseMapRenderTileResolver() {
   List<BaseMapRenderTile> resolve({
     required List<OverscaledTileId> requestedCover,
     required String sourceInstanceId,

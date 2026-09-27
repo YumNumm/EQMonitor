@@ -6,36 +6,71 @@ import 'package:flutter/foundation.dart';
 /// 地震overlayで描画する区域layer。
 enum EarthquakeAreaLayerMode { region, city }
 
+/// exact cache missについて、呼び出し側が確認済みの理由。
+enum EarthquakeOverlayExactTileMissReason {
+  /// scheduler待ち、実行中、またはまだschedulerへ渡していないcache miss。
+  pending,
+
+  /// PMTiles directoryにcanonical tile entryが存在しない。
+  authoritativeEmpty,
+
+  /// entryは存在したがdecodeまたはschema検証に失敗した。
+  decodeFailure,
+}
+
 /// exact tileの区域geometryを取得した結果。
 @immutable
 sealed class EarthquakeOverlayExactTileResult {
-  const EarthquakeOverlayExactTileResult();
+  const EarthquakeOverlayExactTileResult({
+    required this.tileId,
+    required this.canonicalTileId,
+    required this.sourceInstanceId,
+  });
+
+  final UnwrappedTileId tileId;
+  final CanonicalTileId canonicalTileId;
+  final String sourceInstanceId;
 }
 
-/// 要求されたcanonical tileがcacheにない結果。
-final class EarthquakeOverlayExactTileMiss
+/// exact tileがschedulerまたはdecode待ちの結果。
+final class EarthquakeOverlayExactTilePending
     extends EarthquakeOverlayExactTileResult {
-  const EarthquakeOverlayExactTileMiss();
+  const EarthquakeOverlayExactTilePending({
+    required super.tileId,
+    required super.canonicalTileId,
+    required super.sourceInstanceId,
+  });
+}
+
+/// PMTiles directoryがcanonical tileの不存在を証明した結果。
+final class EarthquakeOverlayExactTileAuthoritativeEmpty
+    extends EarthquakeOverlayExactTileResult {
+  const EarthquakeOverlayExactTileAuthoritativeEmpty({
+    required super.tileId,
+    required super.canonicalTileId,
+    required super.sourceInstanceId,
+  });
+}
+
+/// canonical tileのdecodeまたはschema検証に失敗した結果。
+final class EarthquakeOverlayExactTileDecodeFailure
+    extends EarthquakeOverlayExactTileResult {
+  const EarthquakeOverlayExactTileDecodeFailure({
+    required super.tileId,
+    required super.canonicalTileId,
+    required super.sourceInstanceId,
+  });
 }
 
 /// 要求されたcanonical tileの区域geometry。
 final class EarthquakeOverlayExactTileHit
     extends EarthquakeOverlayExactTileResult {
   const EarthquakeOverlayExactTileHit({
-    required this.tileId,
-    required this.canonicalTileId,
-    required this.sourceInstanceId,
+    required super.tileId,
+    required super.canonicalTileId,
+    required super.sourceInstanceId,
     required this.areaGeometry,
   });
-
-  /// world wrapを含む、描画位置としての要求tile。
-  final UnwrappedTileId tileId;
-
-  /// cache lookupに使用したcanonical tile。
-  final CanonicalTileId canonicalTileId;
-
-  /// cache lookupに使用したsourceの識別子。
-  final String sourceInstanceId;
 
   /// 表示modeで選んだ区域layer。source layer欠損時はextentが`null`になる。
   final EarthquakeAreaTileLayerGeometry areaGeometry;
@@ -50,13 +85,33 @@ EarthquakeOverlayExactTileResult resolveEarthquakeOverlayExactTile({
   required String sourceInstanceId,
   required BaseMapTileCache cache,
   required EarthquakeAreaLayerMode mode,
+  required EarthquakeOverlayExactTileMissReason missReason,
 }) {
   final geometry = cache.get(
     sourceInstanceId: sourceInstanceId,
     tileId: requestedTile.canonical,
   );
   if (geometry == null) {
-    return const EarthquakeOverlayExactTileMiss();
+    return switch (missReason) {
+      EarthquakeOverlayExactTileMissReason.pending =>
+        EarthquakeOverlayExactTilePending(
+          tileId: requestedTile,
+          canonicalTileId: requestedTile.canonical,
+          sourceInstanceId: sourceInstanceId,
+        ),
+      EarthquakeOverlayExactTileMissReason.authoritativeEmpty =>
+        EarthquakeOverlayExactTileAuthoritativeEmpty(
+          tileId: requestedTile,
+          canonicalTileId: requestedTile.canonical,
+          sourceInstanceId: sourceInstanceId,
+        ),
+      EarthquakeOverlayExactTileMissReason.decodeFailure =>
+        EarthquakeOverlayExactTileDecodeFailure(
+          tileId: requestedTile,
+          canonicalTileId: requestedTile.canonical,
+          sourceInstanceId: sourceInstanceId,
+        ),
+    };
   }
   final areaGeometry = switch (mode) {
     EarthquakeAreaLayerMode.region => geometry.earthquakeAreas.forecastRegions,

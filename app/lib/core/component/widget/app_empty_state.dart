@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppEmptyState extends StatelessWidget {
@@ -26,7 +27,7 @@ class AppEmptyState extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Icon(
               icon,
@@ -37,7 +38,7 @@ class AppEmptyState extends StatelessWidget {
             Text(
               message,
               style: designSystem.typography.titleSmall,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             if (description case final description?) ...[
               SizedBox(height: designSystem.spacing.xs),
@@ -46,12 +47,12 @@ class AppEmptyState extends StatelessWidget {
                 style: designSystem.typography.bodySmall.copyWith(
                   color: designSystem.colorTheme.onSurfaceVariant,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ],
             if (action != null && actionLabel != null) ...[
               SizedBox(height: designSystem.spacing.md),
-              TextButton(onPressed: action, child: Text(actionLabel)),
+              M3ETextButton(onPressed: action, child: Text(actionLabel)),
             ],
           ],
         ),

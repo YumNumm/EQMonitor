@@ -6,41 +6,26 @@ const _retryBaseDelay = Duration(seconds: 2);
 const _retryMaxDelay = Duration(seconds: 60);
 const _retryMaxAttempts = 6;
 
-sealed class RetryControllerState {
-  const new();
-}
+sealed class const RetryControllerState();
 
 /// 待機中 — まだ実行していない、または正常完了後。
-final class RetryIdle extends RetryControllerState {
-  const new();
-}
+final class const RetryIdle() extends RetryControllerState;
 
 /// 実行中。
-final class RetryRunning extends RetryControllerState {
-  const new({required this.attempt});
-
-  final int attempt;
-}
+final class const RetryRunning({required final int attempt})
+    extends RetryControllerState;
 
 /// 次の試行まで待機中。
-final class RetryWaiting extends RetryControllerState {
-  const new({
-    required this.attempt,
-    required this.resumeAt,
-    required this.lastError,
-  });
-
-  final int attempt;
-  final DateTime resumeAt;
-  final DeviceProvisioningException lastError;
-}
+final class const RetryWaiting({
+  required final int attempt,
+  required final DateTime resumeAt,
+  required final DeviceProvisioningException lastError,
+}) extends RetryControllerState;
 
 /// 最大試行回数到達、またはリトライ不可エラー。
-final class RetryExhausted extends RetryControllerState {
-  const new({required this.lastError});
-
-  final DeviceProvisioningException lastError;
-}
+final class const RetryExhausted({
+  required final DeviceProvisioningException lastError,
+}) extends RetryControllerState;
 
 /// 指数バックオフで operation を繰り返し実行する制御クラス。
 ///

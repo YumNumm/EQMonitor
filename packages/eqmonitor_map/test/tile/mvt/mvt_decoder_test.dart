@@ -8,9 +8,9 @@
 // maxZoom=7`、`occupiedTileIdsAtZoom`でzoom 6/7の占有tile IDを列挙し、
 // 各tile IDをHilbert曲線の総当たりでz/x/yへ逆変換のうえ`readTile`した。
 // 使ったスクリプトはpmtiles_v3の`PmTilesV3FileRandomAccessReader.open` +
-// `PmTilesV3Archive.open(reader:, limits: const PmTilesV3Limits(
-// maxDirectoryDepth: 3, rootDirectoryWindowLength: 16384))` +
-// `archive.readTile(z:, x:, y:)`を呼ぶだけの一時スクリプトで、
+// `PmTilesV3Archive.open`へdirectory/tileのencoded/decoded byte上限を全て
+// 明示した`PmTilesV3Limits`を渡し、`archive.readTile(z:, x:, y:)`を呼ぶ
+// 一時スクリプトで、
 // コミットはしていない(再現に必要な手順は上記の通り)。
 //
 // - `fixtures/earthquake_tsunami_all_z6_x59_y27.mvt`: z=6, x=59, y=27

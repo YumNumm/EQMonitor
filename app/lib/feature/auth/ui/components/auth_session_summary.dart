@@ -32,7 +32,7 @@ class AuthSessionSummary extends StatelessWidget {
 
     return Card(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           ListTile(
             leading: const Icon(Icons.verified_user_outlined),

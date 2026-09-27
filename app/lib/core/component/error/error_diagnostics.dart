@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 /// エラー詳細シートの「まとめてコピー」で共有する診断テキストを組み立てる。
 class ErrorDiagnosticsBuilder {
@@ -16,7 +17,9 @@ class ErrorDiagnosticsBuilder {
     StackTrace? stackTrace,
   }) {
     final buffer = StringBuffer()
-      ..writeln('発生時刻: ${occurredAt.toIso8601String()}')
+      ..writeln(
+        '発生時刻: ${occurredAt.formatWithTz(.yearMonthDayHourMinuteSecondMillisecond)} JST',
+      )
       ..writeln('アプリバージョン: $appVersion ($buildNumber)')
       ..writeln('OS: $os')
       ..writeln('deviceId: $deviceId')

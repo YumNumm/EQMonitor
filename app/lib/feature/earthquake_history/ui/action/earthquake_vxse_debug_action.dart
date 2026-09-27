@@ -11,9 +11,7 @@ part 'earthquake_vxse_debug_action.g.dart';
 EarthquakeVxseDebugAction earthquakeVxseDebugAction(Ref ref) =>
     const EarthquakeVxseDebugAction();
 
-class EarthquakeVxseDebugAction {
-  const new();
-
+class const EarthquakeVxseDebugAction() {
   void apply({
     required WidgetRef ref,
     required BuildContext context,

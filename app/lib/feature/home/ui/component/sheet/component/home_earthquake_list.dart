@@ -22,7 +22,7 @@ class HomeEarthquakeList extends StatelessWidget {
     final spacing = designSystem.spacing;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         for (final (index, item) in earthquakes.take(3).indexed) ...[
           if (index != 0)

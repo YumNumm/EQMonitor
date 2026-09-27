@@ -17,9 +17,7 @@ part 'intensity_icon_repository.g.dart';
 IntensityIconRepository intensityIconRepository(Ref ref) =>
     const IntensityIconRepository();
 
-final class IntensityIconRepository {
-  const new();
-
+final class const IntensityIconRepository() {
   Future<Uint8List> renderJmaIntensityIcon({
     required JmaIntensity intensity,
     required IntensityIconType type,

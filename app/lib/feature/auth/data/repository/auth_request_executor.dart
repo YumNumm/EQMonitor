@@ -4,13 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/auth/data/model/auth_failure.dart';
 
-final class AuthRequestExecutor {
-  const new({
-    this.failureMapper = const DioAuthFailureMapper(),
-  });
-
-  final DioAuthFailureMapper failureMapper;
-
+final class const AuthRequestExecutor({
+  final DioAuthFailureMapper failureMapper = const DioAuthFailureMapper(),
+}) {
   Future<Result<T, AuthFailure>> capture<T>(
     FutureOr<T> Function() request,
   ) async {
@@ -34,9 +30,7 @@ final class AuthRequestExecutor {
   }
 }
 
-final class DioAuthFailureMapper {
-  const new();
-
+final class const DioAuthFailureMapper() {
   AuthFailure map(DioException exception) {
     if (exception.error case final AuthFailure failure) {
       return failure;

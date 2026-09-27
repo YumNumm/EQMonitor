@@ -7,17 +7,11 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_source.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_asset_loader.dart';
 import 'package:seismicity_pmtiles/src/reader/seismicity_pmtiles_network_random_access_reader.dart';
 
-final class SeismicityRandomAccessReaderFactory {
-  const new({
-    required this.assetLoader,
-    required this.dio,
-    required this.networkMaxCacheBytes,
-  });
-
-  final SeismicityPmTilesAssetLoader assetLoader;
-  final Dio dio;
-  final int networkMaxCacheBytes;
-
+final class const SeismicityRandomAccessReaderFactory({
+  required final SeismicityPmTilesAssetLoader assetLoader,
+  required final Dio dio,
+  required final int networkMaxCacheBytes,
+}) {
   Future<SeismicityPmTilesResult<PmTilesRandomAccessReader>> create({
     required SeismicityPmTilesArchiveDescriptor descriptor,
     required CancelToken cancelToken,

@@ -17,9 +17,9 @@
 
 - [`docs/superpowers/specs/2026-08-02-eqmonitor-map-renderer-design.md`](../specs/2026-08-02-eqmonitor-map-renderer-design.md): 公開境界、座標系、tile pipeline、label、hit test、cache/error、性能観測、段階移行、stacked deliveryを定義します。
 - [`packages/eqmonitor_map/README.md`](../../../packages/eqmonitor_map/README.md): packageの目的、初期スコープ、設計原則、delivery graphを記録します。package自体はまだ作成しません。
-- [`docs/knowledge/20260802_eqmonitor_map_renderer_constraints.md`](../../knowledge/20260802_eqmonitor_map_renderer_constraints.md): 今後の実装で維持する安全・互換性・性能上の制約を記録します。
-- [`docs/knowledge/20260802_kevi_map_renderer_reference.md`](../../knowledge/20260802_kevi_map_renderer_reference.md): KEViから参照した知見と、採用しない境界を固定します。
-- `docs/todo/`の4ファイル: 初期PRに含めないsurface拡張、3D camera、MapLibre surface移行、追加検証を追跡します。
+- [`docs/knowledge/map_renderer.md`](../../knowledge/map_renderer.md): 今後の実装で維持する安全・互換性・性能上の制約を記録します。
+- [`docs/knowledge/map_renderer_references.md`](../../knowledge/map_renderer_references.md): KEViから参照した知見と、採用しない境界を固定します。
+- `docs/todo/820_map_renderer_and_migration.md`: 初期PRに含めないsurface拡張、3D camera、MapLibre surface移行、追加検証を追跡します。
 
 # Architecture / safety highlights
 
@@ -65,10 +65,11 @@ EQMonitor側はこのDesign PRを起点に、次の順でstackします。
 
 # Deferred work
 
-- [`450_eqmonitor_map_future_surface.md`](../../todo/450_eqmonitor_map_future_surface.md): Performance HUD、desktop/Web、線上ラベル、汎用package化
-- [`650_eqmonitor_map_3d_camera.md`](../../todo/650_eqmonitor_map_3d_camera.md): bearing/pitch、透視投影、3D地形、地下震源、断層
-- [`780_eqmonitor_map_maplibre_surface_migrations.md`](../../todo/780_eqmonitor_map_maplibre_surface_migrations.md): Home以外を含む全MapLibre surfaceのparity確認と段階移行
-- [`800_eqmonitor_map_deferred_verification.md`](../../todo/800_eqmonitor_map_deferred_verification.md): Performance HUD、Widget/Golden test、performance benchmark、iOS/Android実機profile/release manual smoke
+- [地図 renderer・画面移行のTODO](../../todo/820_map_renderer_and_migration.md)に以下を集約します。
+  - Performance HUD、desktop/Web、線上ラベル、汎用package化
+  - bearing/pitch、透視投影、3D地形、地下震源、断層
+  - Home以外を含む全MapLibre surfaceのparity確認と段階移行
+  - Widget/Golden test、performance benchmark、iOS/Android実機profile/release manual smoke
 
 これらは本PRで実装・検証済みという意味ではありません。各後続PRでcompile、
 生成、format、analyze、対象test、fixture、実機manual smokeをその時点のscopeに合わせて

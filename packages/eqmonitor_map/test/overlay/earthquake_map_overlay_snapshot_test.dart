@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:eqmonitor_map/eqmonitor_map.dart';
@@ -22,30 +23,116 @@ void main() {
     radiusLogicalPixels: 6.7,
   );
 
+  MapSpriteAtlas spriteAtlas() => createMapSpriteAtlas(
+    identity: createMapSourceIdentity(value: 'sha256:sprites'),
+    width: 1,
+    height: 1,
+    rgbaBytes: Uint8List.fromList(const [255, 255, 255, 255]),
+    regions: const [
+      MapSpriteRegion(
+        id: 'normal',
+        normalizedUv: Rect.fromLTRB(0.5, 0.5, 0.5, 0.5),
+        logicalSize: Size(32, 32),
+      ),
+    ],
+    limits: const MapSpriteAtlasLimits(
+      maxWidth: 1,
+      maxHeight: 1,
+      maxPixelBytes: 4,
+      maxRegions: 1,
+    ),
+  );
+
+  MapPointSpriteFeature sprite({
+    String id = 'hypocenter:event-a',
+    String spriteRegionId = 'normal',
+    double endSize = 0.4,
+  }) => createMapPointSpriteFeature(
+    id: id,
+    longitude: 139.6917,
+    latitude: 35.6895,
+    spriteRegionId: spriteRegionId,
+    sizeScale: createMapZoomLinearRange(
+      startZoom: 3,
+      startValue: 0.15,
+      endZoom: 20,
+      endValue: endSize,
+    ),
+    opacity: createMapZoomStep(
+      thresholdZoom: 8,
+      belowValue: 1,
+      atOrAboveValue: 0.6,
+    ),
+    priority: 10,
+  );
+
+  MapOverlayVersionStamp versionStamp({
+    String sourceIdentity = 'earthquake-20260823',
+    String sourceIncarnation = '019c8f5e-1f00-7000-8000-000000000001',
+    int dataSequence = 42,
+    String dataDigest = 'data-sha256',
+    int renderGeneration = 7,
+    String renderDigest = 'render-sha256',
+  }) => createMapOverlayVersionStamp(
+    sourceIdentity: createMapSourceIdentity(value: sourceIdentity),
+    sourceIncarnation: createMapSourceIncarnation(value: sourceIncarnation),
+    dataSequence: dataSequence,
+    dataDigest: dataDigest,
+    renderGeneration: renderGeneration,
+    renderDigest: renderDigest,
+  );
+
   EarthquakeMapOverlaySnapshot snapshot({
-    String sourceId = 'earthquake-20260823',
-    int revision = 42,
+    MapOverlayVersionStamp? version,
     double regionToCityZoom = 6,
     double stationMinZoom = 6,
     List<EarthquakeAreaStyle> regionStyles = const [regionStyle],
     List<EarthquakeAreaStyle> cityStyles = const [cityStyle],
     List<EarthquakeObservationPoint> stations = const [station],
+    MapSpriteAtlas? atlas,
+    List<MapPointSpriteFeature> sprites = const [],
+    int maxSpritePolicyBatches = 1,
   }) => createEarthquakeMapOverlaySnapshot(
-    sourceId: sourceId,
-    revision: revision,
+    versionStamp: version ?? versionStamp(),
     regionToCityZoom: regionToCityZoom,
     stationMinZoom: stationMinZoom,
     regionStyles: regionStyles,
     cityStyles: cityStyles,
     stations: stations,
+    spriteAtlas: atlas,
+    sprites: sprites,
+    maxSpritePolicyBatches: maxSpritePolicyBatches,
   );
 
-  test('rejects blank source ID after trimming', () {
-    expect(() => snapshot(sourceId: '  '), throwsArgumentError);
+  test('version stamp rejects blank typed identities and digests', () {
+    expect(() => versionStamp(sourceIdentity: '  '), throwsArgumentError);
+    expect(() => versionStamp(sourceIncarnation: '\n'), throwsArgumentError);
+    expect(() => versionStamp(dataDigest: '\t'), throwsArgumentError);
+    expect(() => versionStamp(renderDigest: ' '), throwsArgumentError);
   });
 
-  test('rejects negative revision', () {
-    expect(() => snapshot(revision: -1), throwsArgumentError);
+  test('version stamp rejects negative sequence and generation', () {
+    expect(() => versionStamp(dataSequence: -1), throwsArgumentError);
+    expect(() => versionStamp(renderGeneration: -1), throwsArgumentError);
+  });
+
+  test('version stamp normalizes values and supports value equality', () {
+    final first = versionStamp(
+      sourceIdentity: ' event-a ',
+      sourceIncarnation: ' incarnation-a ',
+      dataDigest: ' data-a ',
+      renderDigest: ' render-a ',
+    );
+    final second = versionStamp(
+      sourceIdentity: 'event-a',
+      sourceIncarnation: 'incarnation-a',
+      dataDigest: 'data-a',
+      renderDigest: 'render-a',
+    );
+
+    expect(first, second);
+    expect(first.hashCode, second.hashCode);
+    expect(snapshot(version: first).versionStamp, first);
   });
 
   test('rejects non-finite zoom values', () {
@@ -221,5 +308,85 @@ void main() {
     expect(() => result.regionStyles.add(regionStyle), throwsUnsupportedError);
     expect(() => result.cityStyles.add(cityStyle), throwsUnsupportedError);
     expect(() => result.stations.add(station), throwsUnsupportedError);
+  });
+
+  test('allows an explicitly bounded snapshot without sprite input', () {
+    final result = snapshot();
+
+    expect(result.spriteAtlas, isNull);
+    expect(result.sprites, isEmpty);
+    expect(result.maxSpritePolicyBatches, 1);
+  });
+
+  test('takes an unmodifiable copy of sprite features', () {
+    final sprites = <MapPointSpriteFeature>[sprite()];
+    final atlas = spriteAtlas();
+    final result = snapshot(atlas: atlas, sprites: sprites);
+
+    sprites.clear();
+
+    expect(result.spriteAtlas, same(atlas));
+    expect(result.sprites.single.id, 'hypocenter:event-a');
+    expect(() => result.sprites.add(sprite()), throwsUnsupportedError);
+  });
+
+  test('rejects sprites when the atlas is absent', () {
+    expect(() => snapshot(sprites: [sprite()]), throwsArgumentError);
+  });
+
+  test('rejects a sprite that references an unknown atlas region', () {
+    expect(
+      () => snapshot(
+        atlas: spriteAtlas(),
+        sprites: [sprite(spriteRegionId: 'missing')],
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('rejects duplicate sprite feature IDs', () {
+    expect(
+      () => snapshot(
+        atlas: spriteAtlas(),
+        sprites: [sprite(), sprite()],
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('requires a positive caller sprite policy batch limit', () {
+    expect(
+      () => snapshot(maxSpritePolicyBatches: 0),
+      throwsArgumentError,
+    );
+    expect(
+      () => snapshot(maxSpritePolicyBatches: -1),
+      throwsArgumentError,
+    );
+  });
+
+  test('rejects policy pair count above the caller batch limit', () {
+    expect(
+      () => snapshot(
+        atlas: spriteAtlas(),
+        sprites: [
+          sprite(id: 'first'),
+          sprite(id: 'second', endSize: 0.5),
+        ],
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('counts equal policy values as one batch pair', () {
+    final result = snapshot(
+      atlas: spriteAtlas(),
+      sprites: [
+        sprite(id: 'first'),
+        sprite(id: 'second'),
+      ],
+    );
+
+    expect(result.sprites, hasLength(2));
   });
 }

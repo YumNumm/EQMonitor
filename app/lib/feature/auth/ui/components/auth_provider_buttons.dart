@@ -1,3 +1,4 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AuthProviderButtons extends StatelessWidget {
@@ -29,17 +30,17 @@ class AuthProviderButtons extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('Nativeサインイン', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
-          FilledButton.icon(
+          M3EFilledButton.icon(
             onPressed: googleEnabled ? onGooglePressed : null,
             icon: const Icon(Icons.login),
             label: const Text('Googleでサインイン'),
           ),
           const SizedBox(height: 8),
-          FilledButton.tonalIcon(
+          M3EFilledButton.tonalIcon(
             onPressed: appleEnabled ? onApplePressed : null,
             icon: const Icon(Icons.apple),
             label: const Text('Appleでサインイン'),
@@ -52,13 +53,13 @@ class AuthProviderButtons extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 8),
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             onPressed: passkeySignInEnabled ? onPasskeySignInPressed : null,
             icon: const Icon(Icons.key),
             label: const Text('Passkeyでサインイン'),
           ),
           const SizedBox(height: 8),
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             onPressed: passkeyRegistrationEnabled
                 ? onPasskeyRegistrationPressed
                 : null,

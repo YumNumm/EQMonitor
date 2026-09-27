@@ -30,7 +30,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == .dark;
     final enqueue = useMapOperationQueue();
     final layerBuilder = useMemoized(
       EarthquakeHistoryHypocenterErrorLayerBuilder.new,
@@ -143,9 +143,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
-  const new();
-
+class const EarthquakeHistoryHypocenterErrorGeoJsonBuilder() {
   String build({required Coordinate? coordinates, required int decimalPlaces}) {
     final polygon = switch (coordinates) {
       CoordinateLatLng() => HypocenterErrorRangeUtil.errorPolygon(
@@ -172,9 +170,7 @@ class EarthquakeHistoryHypocenterErrorGeoJsonBuilder {
   }
 }
 
-class EarthquakeHistoryHypocenterErrorLayerBuilder {
-  const new();
-
+class const EarthquakeHistoryHypocenterErrorLayerBuilder() {
   static const sourceId = 'eq-history-hypocenter-error';
   static const layerId = 'eq-history-hypocenter-error-line';
 

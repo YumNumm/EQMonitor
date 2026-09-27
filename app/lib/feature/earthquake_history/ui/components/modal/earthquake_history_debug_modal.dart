@@ -1,15 +1,20 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_layer_parameter_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeHistoryDebugModal extends ConsumerWidget {
   const new({super.key});
 
   static Future<void> show({required BuildContext context}) =>
-      showModalBottomSheet(
+      showM3EModalBottomSheet(
+        useSafeArea: false,
+        style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
         context: context,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         isScrollControlled: true,
         builder: (context) => const EarthquakeHistoryDebugModal(),
       );
@@ -31,7 +36,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
       builder: (context, scrollController) {
         return switch (param) {
           AsyncLoading() => const Center(
-            child: CircularProgressIndicator.adaptive(),
+            child: AccessibleCircularProgressIndicator(),
           ),
           AsyncError() => const Center(child: Text('レイヤー設定を読み込めませんでした')),
           AsyncData(:final value) => ListView(
@@ -61,16 +66,16 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                     final title = Text(
                       'レイヤーパラメータ (Debug)',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     );
-                    final resetButton = TextButton(
+                    final resetButton = M3ETextButton(
                       onPressed: notifier.reset,
                       child: const Text('レイヤー設定をリセット'),
                     );
                     if (usesStackedHeader) {
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: .stretch,
                         children: [
                           title,
                           Align(
@@ -81,7 +86,10 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                       );
                     }
                     return Row(
-                      children: [Expanded(child: title), resetButton],
+                      children: [
+                        Expanded(child: title),
+                        resetButton,
+                      ],
                     );
                   },
                 ),
@@ -152,22 +160,6 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
                 0,
                 1,
                 (v) => notifier.save(value.copyWith(cityFillOpacity: v)),
-              ),
-
-              _header(context, '観測点サイズ (circle-radius)'),
-              _slider(
-                '最小 (z4)',
-                value.stationCircleRadiusMin,
-                0,
-                20,
-                (v) => notifier.save(value.copyWith(stationCircleRadiusMin: v)),
-              ),
-              _slider(
-                '最大 (z10)',
-                value.stationCircleRadiusMax,
-                0,
-                20,
-                (v) => notifier.save(value.copyWith(stationCircleRadiusMax: v)),
               ),
 
               _header(context, '観測点アイコンサイズ'),
@@ -255,7 +247,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
             child: Text(label, style: const TextStyle(fontSize: 12)),
           ),
           Expanded(
-            child: Slider(
+            child: AccessibleSlider(
               value: value.clamp(min, max),
               min: min,
               max: max,
@@ -269,7 +261,7 @@ class EarthquakeHistoryDebugModal extends ConsumerWidget {
             child: Text(
               value.toStringAsFixed(decimals),
               style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.end,
+              textAlign: .end,
             ),
           ),
         ],

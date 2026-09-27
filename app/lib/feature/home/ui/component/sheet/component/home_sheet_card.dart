@@ -19,15 +19,15 @@ class HomeSheetCard extends StatelessWidget {
     return Card.outlined(
       margin: EdgeInsets.zero,
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: children,
       ),
     );
@@ -35,9 +35,10 @@ class HomeSheetCard extends StatelessWidget {
 }
 
 class HomeSheetCardHeader extends StatelessWidget {
-  const new({required this.title, this.action, super.key});
+  const new({required this.title, this.titleTrailing, this.action, super.key});
 
   final String title;
+  final Widget? titleTrailing;
   final Widget? action;
 
   @override
@@ -58,10 +59,19 @@ class HomeSheetCardHeader extends StatelessWidget {
         spacing: spacing.sm,
         children: [
           Flexible(
-            child: Text(
-              title,
-              style: typography.titleSmall.copyWith(fontWeight: .bold),
-              overflow: .ellipsis,
+            child: Row(
+              mainAxisSize: .min,
+              spacing: spacing.sm,
+              children: [
+                Flexible(
+                  child: Text(
+                    title,
+                    style: typography.titleSmall.copyWith(fontWeight: .bold),
+                    overflow: .ellipsis,
+                  ),
+                ),
+                if (titleTrailing case final trailing?) trailing,
+              ],
             ),
           ),
           if (action case final action?) Flexible(child: action),

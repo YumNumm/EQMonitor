@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/notifier/feed_data_source.dart';
@@ -9,6 +10,7 @@ import 'package:eqmonitor/feature/feed/data/provider/feed_last_read_provider.dar
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_list_tile.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -38,9 +40,12 @@ class FeedPage extends HookConsumerWidget {
     final dataSourceAsync = ref.watch(feedDataSourceProvider);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('お知らせ'),
+      ),
       body: dataSourceAsync.when(
         loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => ErrorCard(
           error: error,
           onReload: () async => ref.invalidate(feedDataSourceProvider),
@@ -58,16 +63,12 @@ class _PagingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return M3EPullToRefreshIndicator(
+      onError: Error.throwWithStackTrace,
       onRefresh: dataSource.refresh,
-      edgeOffset: MediaQuery.paddingOf(context).top + kToolbarHeight,
+      edgeOffset: kToolbarHeight,
       child: CustomScrollView(
         slivers: [
-          const SliverAppBar(
-            pinned: true,
-            centerTitle: false,
-            title: Text('お知らせ'),
-          ),
           SliverPagingList<String?, FeedItem>(
             dataSource: dataSource,
             builder: (context, item, index) => FeedItemListTile(
@@ -78,7 +79,7 @@ class _PagingBody extends StatelessWidget {
               ).push<void>(context),
             ),
             initialLoadingWidget: Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: AccessibleCircularProgressIndicator(),
             ),
             appendLoadingWidget: Skeletonizer(
               child: FeedItemListTile(item: FeedLoadingDummyItem.create('2')),

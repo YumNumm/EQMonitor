@@ -19,22 +19,20 @@ class DesignSystemThemeExtension
   /// テスト用: EQMonitor Default テーマのライトカラーで構築する。
   ///
   /// eqmonitorDefault() は light を必ず設定するファクトリであるという前提。
-  factory light() =>
-      DesignSystemThemeExtension._fromColorTheme(
-        AppTheme.eqmonitorDefault().light.orFailBecause(
-          'AppTheme.eqmonitorDefault() は light を必ず設定する前提のため',
-        ),
-      );
+  factory light() => DesignSystemThemeExtension._fromColorTheme(
+    AppTheme.eqmonitorDefault().light.orFailBecause(
+      'AppTheme.eqmonitorDefault() は light を必ず設定する前提のため',
+    ),
+  );
 
   /// テスト用: EQMonitor Default テーマのダークカラーで構築する。
   ///
   /// eqmonitorDefault() は dark を必ず設定するファクトリであるという前提。
-  factory dark() =>
-      DesignSystemThemeExtension._fromColorTheme(
-        AppTheme.eqmonitorDefault().dark.orFailBecause(
-          'AppTheme.eqmonitorDefault() は dark を必ず設定する前提のため',
-        ),
-      );
+  factory dark() => DesignSystemThemeExtension._fromColorTheme(
+    AppTheme.eqmonitorDefault().dark.orFailBecause(
+      'AppTheme.eqmonitorDefault() は dark を必ず設定する前提のため',
+    ),
+  );
 
   factory _fromColorTheme(
     ThemeColorSet colorTheme,

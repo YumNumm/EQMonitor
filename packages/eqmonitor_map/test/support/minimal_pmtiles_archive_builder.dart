@@ -15,9 +15,7 @@ import 'dart:typed_data';
 ///
 /// header の各 offset は PMTiles v3 spec の固定レイアウトであり、
 /// `pmtiles_v3` の `PmTilesV3HeaderDecoder` が読む位置と一致させている。
-final class MinimalPmTilesArchiveBuilder {
-  const new();
-
+final class const MinimalPmTilesArchiveBuilder() {
   /// PMTiles v3 header は固定長 127 byte。
   static const headerLength = 127;
 
@@ -94,9 +92,7 @@ final class MinimalPmTilesArchiveBuilder {
 ///
 /// リポジトリ規約により top-level 関数もクラス内 private メソッドも使えないため、
 /// 単体で test 可能な公開クラスとして切り出している。
-final class PmTilesVarintEncoder {
-  const new();
-
+final class const PmTilesVarintEncoder() {
   List<int> encode(int value) {
     final output = <int>[];
     var remaining = value;

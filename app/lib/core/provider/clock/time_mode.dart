@@ -14,13 +14,10 @@ sealed class TimeMode with _$TimeMode {
   const factory realtime() = RealtimeTimeMode;
 
   /// `offset` は過去方向（負の [Duration]）を表す。
-  const factory timeShift({required Duration offset}) =
-      TimeShiftTimeMode;
+  const factory timeShift({required Duration offset}) = TimeShiftTimeMode;
 
   /// `currentTime` はリプレイファイル上の現在の再生位置。
-  const factory replay({required DateTime currentTime}) =
-      ReplayTimeMode;
-
+  const factory replay({required DateTime currentTime}) = ReplayTimeMode;
 
   factory fromJson(Map<String, dynamic> json) => _$TimeModeFromJson(json);
 }

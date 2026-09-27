@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SortFilterChip extends StatelessWidget {
   const new({
@@ -29,8 +30,11 @@ class SortFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(EarthquakeSortBy, SortOrder)?>(
-              clipBehavior: Clip.antiAlias,
+            await showM3EModalBottomSheet<(EarthquakeSortBy, SortOrder)?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) => _SortFilterModal(
                 currentSortBy: sortBy,
@@ -44,7 +48,7 @@ class SortFilterChip extends StatelessWidget {
       },
       label: Text(
         '${displaySortBy.label} ${displayOrder.arrow}',
-        style: isDefault ? null : const TextStyle(fontWeight: FontWeight.bold),
+        style: isDefault ? null : const TextStyle(fontWeight: .bold),
       ),
       onDeleted: isDefault ? null : () => onChanged?.call(.eventId, .desc),
       selected: !isDefault,
@@ -88,8 +92,8 @@ class _SortFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -97,7 +101,7 @@ class _SortFilterModal extends HookWidget {
               child: Text(
                 '並び替え',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -127,29 +131,30 @@ class _SortFilterModal extends HookWidget {
             const Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SegmentedButton<SortOrder>(
-                segments: [
+              child: M3EToggleButtonGroup(
+                actions: [
                   for (final order in SortOrder.values)
-                    ButtonSegment(
-                      value: order,
+                    M3EToggleButtonGroupAction(
                       label: Text('${order.label} ${order.arrow}'),
                     ),
                 ],
-                selected: {sortOrder.value},
-                onSelectionChanged: (selected) {
-                  sortOrder.value = selected.first;
+                selectedIndex: SortOrder.values.indexOf(sortOrder.value),
+                onSelectedIndexChanged: (index) {
+                  if (index != null) {
+                    sortOrder.value = SortOrder.values[index];
+                  }
                 },
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () =>
                       Navigator.of(context)
                           .pop((sortBy.value, sortOrder.value)),

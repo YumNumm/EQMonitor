@@ -64,3 +64,14 @@ class BrightnessNotifier extends _$BrightnessNotifier
     super.didChangePlatformBrightness();
   }
 }
+
+@riverpod
+ui.Brightness effectiveBrightness(Ref ref) {
+  final platformBrightness = ref.watch(brightnessProvider);
+  final themeMode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
+  return switch (themeMode) {
+    ThemeMode.light => ui.Brightness.light,
+    ThemeMode.dark => ui.Brightness.dark,
+    ThemeMode.system => platformBrightness,
+  };
+}

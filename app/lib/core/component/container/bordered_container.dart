@@ -26,7 +26,7 @@ class BorderedContainer extends StatelessWidget {
     final designSystem = context.designSystem;
 
     final card = Card(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: elevation,
       color: accentColor ?? designSystem.colorTheme.surfaceContainer,
       shape: RoundedSuperellipseBorder(

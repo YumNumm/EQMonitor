@@ -15,6 +15,5 @@ abstract class MapColors with _$MapColors {
     @ColorJsonConverter() required Color japanLine,
   }) = _MapColors;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$MapColorsFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$MapColorsFromJson(json);
 }

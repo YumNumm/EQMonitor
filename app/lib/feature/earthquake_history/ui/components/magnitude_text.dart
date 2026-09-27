@@ -81,25 +81,24 @@ class MagnitudeText extends StatelessWidget {
         true,
       ),
       EarthquakeMagnitudeUnknown() => ('不明', false),
-      EarthquakeMagnitudeOverM8() => ('8超', true),
+      EarthquakeMagnitudeOverM8() => ('8+', true),
       null => ('調査中', false),
     };
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        if (showM) Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
-        Flexible(
-          child: Text(
-            text,
-            style: textTheme.valueStyle(
-              showM ? textTheme.headlineLarge : textTheme.headlineMedium,
+    return Text.rich(
+      TextSpan(
+        children: [
+          if (showM)
+            TextSpan(
+              text: 'M',
+              style: textTheme.labelStyle(textTheme.titleSmall),
             ),
+          TextSpan(
+            text: text,
+            style: textTheme.valueStyle(textTheme.headlineLarge),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

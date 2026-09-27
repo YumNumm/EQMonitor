@@ -1,11 +1,16 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_download_client_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_movie_seekbar.dart';
 import 'package:video_player/video_player.dart';
 
 /// K-NET all/movie MP4 をストリーミング再生するビュー
@@ -19,7 +24,7 @@ class KnetMovieView extends HookConsumerWidget {
     final clientAsync = ref.watch(knetDownloadClientProvider);
 
     return clientAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: AccessibleCircularProgressIndicator()),
       error: (e, _) => _ErrorView(
         message: 'クライアント初期化エラー: $e',
         onRetry: () =>
@@ -122,16 +127,25 @@ class _MovieTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: DropdownMenu<KnetMovieType>(
-        initialSelection: selected,
-        onSelected: (value) {
-          if (value != null) {
+      child: SizedBox(
+        width: 180,
+        child: ControlledDropdown<KnetMovieType>(
+          singleSelect: true,
+          items:
+              (KnetMovieType.values
+                      .map((t) => M3EDropdownItem(value: t, label: t.label))
+                      .toList())
+                  .map(
+                    (item) => item.copyWith(selected: item.value == selected),
+                  )
+                  .toList(),
+          onSelectionChanged: (selection) {
+            if (selection.isEmpty) return;
+            final value = selection.first.value;
+
             onChanged(value);
-          }
-        },
-        dropdownMenuEntries: KnetMovieType.values
-            .map((t) => DropdownMenuEntry(value: t, label: t.label))
-            .toList(),
+          },
+        ),
       ),
     );
   }
@@ -158,7 +172,7 @@ class _VideoArea extends HookWidget {
 
     final ctrl = controller;
     if (ctrl == null || !isInitialized) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     useListenable(ctrl);
@@ -219,27 +233,21 @@ class _VideoControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total = duration.inMilliseconds;
-    final current = position.inMilliseconds;
-    final sliderValue = total > 0 ? (current / total).clamp(0.0, 1.0) : 0.0;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Row(
               children: [
                 Text(_fmt(position)),
                 Expanded(
-                  child: Slider(
-                    value: sliderValue,
-                    onChanged: (v) {
-                      final seekTo = Duration(
-                        milliseconds: (total * v).toInt(),
-                      );
-                      unawaited(controller.seekTo(seekTo));
+                  child: KnetMovieSeekbar(
+                    position: position,
+                    duration: duration,
+                    onChanged: (seekTo) async {
+                      await controller.seekTo(seekTo);
                     },
                   ),
                 ),
@@ -247,7 +255,7 @@ class _VideoControls extends StatelessWidget {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               children: [
                 IconButton(
                   onPressed: () => unawaited(controller.seekTo(Duration.zero)),
@@ -292,17 +300,17 @@ class _ErrorView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               message,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('再試行'),

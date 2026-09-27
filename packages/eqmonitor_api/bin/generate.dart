@@ -7,8 +7,13 @@ import 'legacy_generated_contract.dart';
 
 void main(List<String> args) async {
   final packageDir = File.fromUri(Platform.script).parent.parent;
+  if (args.isNotEmpty && (args.length != 2 || args.first != '--openapi')) {
+    throw ArgumentError('Usage: generate.dart [--openapi <path>]');
+  }
   final externalOpenapiPath = await File(
-    '${packageDir.path}/../../backend/api/api/openapi.json',
+    args.isEmpty
+        ? '${packageDir.path}/../../backend/api/api/openapi.json'
+        : args[1],
   ).resolveSymbolicLinks();
 
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
@@ -166,6 +171,7 @@ void main(List<String> args) async {
     _patchParameterDataResponseUnionFromJson(libDir);
     _patchTelegramBodyUnionFromJson(libDir);
     _patchEarthquakeHypocentersUnionFromJson(libDir);
+    _patchSubscriptionResponseUnionFromJson(libDir);
   });
 
   await _step('TelegramBody 参照を TelegramBodyUnion に修正', () async {
@@ -213,37 +219,6 @@ void main(List<String> args) async {
 
   await _step('残存 dynamic の検出', () async {
     _validateNoDynamic(libDir);
-  });
-
-  /// 契約 drift テスト用の fixtures を backend submodule からコピーする。
-  ///
-  /// backend 側 `pnpm generate:fixtures` が `api/api-stub/generated/contract-fixtures/`
-  /// に出力した JSON（decision論的・Valibot 検証済みの形）を、テストが読む
-  /// `test/fixtures/contract/` へ取り込む。openapi.json と同じ「submodule 生成物を
-  /// メインリポに取り込む」流儀（app CI は submodule を checkout しないため必須）。
-  await _step('契約 fixtures を submodule からコピー', () async {
-    final srcDir = Directory(
-      '${packageDir.path}/../../backend/api/api-stub/generated/contract-fixtures',
-    );
-    final dstDir = Directory('${packageDir.path}/test/fixtures/contract');
-    if (!srcDir.existsSync()) {
-      stderr.writeln('  contract-fixtures が見つかりません: ${srcDir.path}');
-      return;
-    }
-    if (dstDir.existsSync()) {
-      dstDir.deleteSync(recursive: true);
-    }
-    dstDir.createSync(recursive: true);
-    var count = 0;
-    for (final f in srcDir.listSync().whereType<File>()) {
-      if (!f.path.endsWith('.json')) {
-        continue;
-      }
-      final name = f.uri.pathSegments.last;
-      f.copySync('${dstDir.path}/$name');
-      count++;
-    }
-    stdout.writeln('  copied $count fixtures → ${dstDir.path}');
   });
 
   stdout.writeln('\n✅ コード生成が完了しました');
@@ -1090,6 +1065,42 @@ switch (json['type']) {
         ),
       }''';
   _patchUnionFromJson(file, className: 'TelegramBodyUnion', body: body);
+}
+
+void _patchSubscriptionResponseUnionFromJson(Directory libDir) {
+  final file = File(
+    '${libDir.path}/models/get_v2_subscription_me_response_union.dart',
+  );
+  const body = """
+switch (json['status']) {
+        'ACTIVE' || 'GRACE_PERIOD' =>
+          GetV2SubscriptionMeResponseUnionSubscriptionActiveResponse.fromJson(json),
+        'INACTIVE' =>
+          GetV2SubscriptionMeResponseUnionSubscriptionInactiveResponse.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'status',
+          'Unknown subscription status',
+        ),
+      }""";
+  _patchUnionFromJson(
+    file,
+    className: 'GetV2SubscriptionMeResponseUnion',
+    body: body,
+  );
+
+  // Both endpoints expose the same subscription projection.
+  final syncFile = File(
+    '${libDir.path}/models/post_v2_subscription_sync_response_union.dart',
+  );
+  if (syncFile.existsSync()) {
+    syncFile.writeAsStringSync("""
+// GENERATED CODE - DO NOT MODIFY BY HAND
+import 'get_v2_subscription_me_response_union.dart';
+
+typedef PostV2SubscriptionSyncResponseUnion = GetV2SubscriptionMeResponseUnion;
+""");
+  }
 }
 
 /// Earthquake.hypocenters の datasource 値で variant を判別する。

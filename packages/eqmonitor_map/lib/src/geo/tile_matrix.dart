@@ -6,7 +6,7 @@ import 'package:eqmonitor_map/src/renderer/eqmonitor_orthographic_projection.dar
 import 'package:vector_math/vector_math_64.dart';
 
 /// tile-local座標(0..`extent`)をworld pixel座標へ配置する行列。
-/// `docs/knowledge/20260805_maplibre_native_renderer_reference.md`が記録する
+/// `docs/knowledge/map_renderer_references.md`が記録する
 /// `TransformState::matrixFor`と同じ2段構成で、`translate`のあと`scale`を
 /// 掛ける(vector_mathの`translateByDouble`/`scaleByDouble`は右から掛かる
 /// ため、この呼び出し順で「scaleしてからtranslate」した結果になる)。

@@ -1,13 +1,15 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/feed/data/model/feed_items.dart';
 import 'package:eqmonitor/feature/feed/data/provider/feed_by_source_provider.dart';
 import 'package:eqmonitor/feature/feed/ui/component/feed_item_card.dart';
 import 'package:extensions/extensions.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedDetailsPage extends ConsumerWidget {
@@ -23,13 +25,14 @@ class FeedDetailsPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('お知らせ')),
       body: Column(
         children: [
-          CachedDataBanner(values: [feed]),
+          CachedDataBanner(
+            values: [feed],
+          ),
           Expanded(
-            // 再検証失敗時は stale を表示し続け、失敗はバナーが伝える。
             child: feed.when(
               skipError: true,
               loading: () =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
+                  const Center(child: AccessibleCircularProgressIndicator()),
               error: (error, _) => ErrorCard(
                 error: error,
                 onReload: () async =>
@@ -52,7 +55,9 @@ class FeedDetailsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateStr = DateFormat('yyyy年MM月dd日 HH:mm').format(item.publishedAt);
+    final dateStr = item.publishedAt.formatWithTz(
+      .yearMonthDayHourMinuteJapanese,
+    );
     final rawUrl = item.data.url;
     final url = (rawUrl != null && rawUrl.isNotEmpty)
         ? Uri.tryParse(rawUrl)
@@ -68,7 +73,7 @@ class FeedDetailsBody extends StatelessWidget {
             Text(
               title,
               style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           Row(
@@ -91,10 +96,14 @@ class FeedDetailsBody extends StatelessWidget {
             ],
           ),
           const Divider(),
-          Text(_bodyText(item).toHalfWidth),
+          Text(
+            _removeContactInfo(
+              _bodyText(item),
+            ).toHalfWidth,
+          ),
           if (url != null) ...[
             const SizedBox(height: 24),
-            FilledButton.icon(
+            M3EFilledButton.icon(
               onPressed: () async => launchUrl(url, mode: .externalApplication),
               icon: const Icon(Icons.open_in_new),
               label: const Text('詳細を開く'),
@@ -114,5 +123,15 @@ class FeedDetailsBody extends StatelessWidget {
         text ?? earthquakeInfo?.text ?? item.summary ?? '',
       final data => data.text,
     };
+  }
+
+  /// 本文末尾の問い合わせ先を削除する
+  static String _removeContactInfo(String text) {
+    // `本件問い合わせ先` よりも後ろの文字列を削除する
+    final contactInfoIndex = text.indexOf('本件問い合わせ先');
+    if (contactInfoIndex == -1) {
+      return text;
+    }
+    return text.substring(0, contactInfoIndex);
   }
 }

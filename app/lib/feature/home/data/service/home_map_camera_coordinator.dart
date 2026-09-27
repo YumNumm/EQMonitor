@@ -14,9 +14,7 @@ part 'home_map_camera_coordinator.g.dart';
 enum HomeMapCameraUpdateAction { fitToRealtime, returnToHome, none }
 
 /// リアルタイム描画対象とホーム復帰要求からカメラ更新アクションを解決するクラス
-class HomeMapCameraUpdateActionResolver {
-  const new();
-
+class const HomeMapCameraUpdateActionResolver() {
   HomeMapCameraUpdateAction resolve({
     required bool hasRealtimeTargets,
     required bool isAtHome,

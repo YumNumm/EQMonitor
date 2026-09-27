@@ -23,6 +23,5 @@ abstract class TravelTimeTable with _$TravelTimeTable {
 
 @freezed
 abstract class TravelTimeTables with _$TravelTimeTables {
-  const factory({required List<TravelTimeTable> table}) =
-      _TravelTimeTables;
+  const factory({required List<TravelTimeTable> table}) = _TravelTimeTables;
 }

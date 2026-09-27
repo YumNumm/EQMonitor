@@ -27,10 +27,10 @@ class App extends HookConsumerWidget {
     final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
     final lightColorSet = ref.watch(
-      colorSetForBrightnessProvider(Brightness.light),
+      colorSetForBrightnessProvider(.light),
     );
     final darkColorSet = ref.watch(
-      colorSetForBrightnessProvider(Brightness.dark),
+      colorSetForBrightnessProvider(.dark),
     );
 
     final app = MaterialApp.router(
@@ -43,14 +43,16 @@ class App extends HookConsumerWidget {
       ),
       theme: AppThemeDataBuilder.build(
         colorSet: lightColorSet,
-        brightness: Brightness.light,
+        brightness: .light,
       ),
       darkTheme: AppThemeDataBuilder.build(
         colorSet: darkColorSet,
-        brightness: Brightness.dark,
+        brightness: .dark,
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
+        // Flutter Material を使う依存との互換性のため両方の delegate が必要。
+        // ignore: deprecated_member_use
         flutter_localizations.GlobalMaterialLocalizations.delegate,
         flutter_localizations.GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -62,7 +64,7 @@ class App extends HookConsumerWidget {
 
     if (!kDebugMode && buildConfig.isBetaTesting) {
       result = Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
         child: Banner(
           message: 'BETA',
           location: BannerLocation.topEnd,
@@ -70,7 +72,7 @@ class App extends HookConsumerWidget {
           textStyle: const TextStyle(
             color: Color(0xFF0F141A),
             fontSize: 10,
-            fontWeight: FontWeight.w700,
+            fontWeight: .w700,
             letterSpacing: 0.5,
           ),
           child: result,
@@ -81,7 +83,7 @@ class App extends HookConsumerWidget {
     if (kDebugMode || buildConfig.isBetaTesting) {
       final packageInfo = ref.watch(packageInfoProvider);
       result = Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
         child: Banner(
           message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
           location: BannerLocation.bottomStart,

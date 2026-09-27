@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -8,6 +10,7 @@ import 'package:eqmonitor/feature/asset_pack/data/repository/asset_pack_update_i
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AssetPackUpdateCard extends HookConsumerWidget {
@@ -81,11 +84,11 @@ class _AssetPackAvailableCard extends ConsumerWidget {
     final designSystem = context.designSystem;
     final sizeMiB = entry.archiveSizeBytes / (1024 * 1024);
     return Card.outlined(
-      margin: EdgeInsets.zero,
+      margin: EdgeInsets.only(bottom: designSystem.spacing.md),
       child: ListTile(
         leading: const Icon(Icons.download_for_offline_outlined),
-        title: Text('Asset Pack v${entry.version} を利用できます'),
-        subtitle: Text('ダウンロードサイズ: ${sizeMiB.toStringAsFixed(1)} MiB'),
+        title: Text('新しい地図データ Asset Pack v${entry.version} を利用できます'),
+        subtitle: Text('ダウンロードサイズ: ${sizeMiB.toStringAsFixed(1)} MB'),
         trailing: const Icon(Icons.chevron_right_rounded),
         contentPadding: EdgeInsets.symmetric(
           horizontal: designSystem.spacing.md,
@@ -156,7 +159,7 @@ class _AssetPackConsentDialog extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       'v${change.version} • ${change.section.title}',
@@ -176,11 +179,11 @@ class _AssetPackConsentDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: const Text('あとで'),
         ),
-        FilledButton.icon(
+        M3EFilledButton.icon(
           onPressed: () => Navigator.of(context).pop(true),
           icon: const Icon(Icons.download_rounded),
           label: const Text('ダウンロード'),
@@ -220,7 +223,7 @@ class _AssetPackInstallingCard extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            LinearProgressIndicator(value: determinateProgress),
+            AccessibleLinearProgressIndicator(value: determinateProgress),
             const SizedBox(height: 8),
             Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],

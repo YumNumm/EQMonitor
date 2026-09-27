@@ -24,14 +24,23 @@ void main() {
   });
 
   test('空文字は Failure', () {
-    expect(codec.parse('   '), isA<Failure<Map<String, dynamic>, FormatException>>());
+    expect(
+      codec.parse('   '),
+      isA<Failure<Map<String, dynamic>, FormatException>>(),
+    );
   });
 
   test('不正な JSON は Failure', () {
-    expect(codec.parse('{ not json '), isA<Failure<Map<String, dynamic>, FormatException>>());
+    expect(
+      codec.parse('{ not json '),
+      isA<Failure<Map<String, dynamic>, FormatException>>(),
+    );
   });
 
   test('オブジェクト以外（配列）は Failure', () {
-    expect(codec.parse('[1, 2, 3]'), isA<Failure<Map<String, dynamic>, FormatException>>());
+    expect(
+      codec.parse('[1, 2, 3]'),
+      isA<Failure<Map<String, dynamic>, FormatException>>(),
+    );
   });
 }

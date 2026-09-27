@@ -39,8 +39,8 @@ class LinkifiedText extends StatelessWidget {
                 style: style,
               ),
               LinkUrlTextSegment(:final url) => WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
+                alignment: .baseline,
+                baseline: .alphabetic,
                 child: GestureDetector(
                   onTap: () async {
                     final uri = Uri.tryParse(url);
@@ -58,7 +58,7 @@ class LinkifiedText extends StatelessWidget {
             },
         ],
       ),
-      textAlign: textAlign ?? TextAlign.start,
+      textAlign: textAlign ?? .start,
     );
   }
 }

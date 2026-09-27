@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/cached_data_banner.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/core/component/layout/history_adaptive_view.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
@@ -10,9 +11,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_paging_list.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
@@ -22,14 +25,38 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(body: _SliverListBody(initialParameter: initialParameter));
+    final selectedEventId = useState<String?>(null);
+    final eventId = selectedEventId.value;
+    return Scaffold(
+      body: HistoryAdaptiveView(
+        onCloseDetail: () => selectedEventId.value = null,
+        list: _SliverListBody(
+          initialParameter: initialParameter,
+          selectedEventId: eventId,
+          onSelect: (value) => selectedEventId.value = value,
+        ),
+        detail: eventId == null
+            ? null
+            : EarthquakeHistoryDetailsPage(
+                key: ValueKey(eventId),
+                eventId: eventId,
+                onClose: () => selectedEventId.value = null,
+              ),
+      ),
+    );
   }
 }
 
 class _SliverListBody extends HookConsumerWidget {
-  const new({this.initialParameter});
+  const new({
+    this.initialParameter,
+    required this.selectedEventId,
+    required this.onSelect,
+  });
 
   final EarthquakeHistoryParameter? initialParameter;
+  final String? selectedEventId;
+  final ValueChanged<String> onSelect;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,9 +79,9 @@ class _SliverListBody extends HookConsumerWidget {
         parameter.value.sortOrder == SortOrder.desc;
 
     return PopScope(
-      canPop: isDefaultSort,
+      canPop: selectedEventId != null || isDefaultSort,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) {
+        if (!didPop && selectedEventId == null) {
           parameter.value = parameter.value.copyWith(
             sortBy: EarthquakeSortBy.eventId,
             sortOrder: SortOrder.desc,
@@ -80,6 +107,8 @@ class _SliverListBody extends HookConsumerWidget {
           ),
           data: (dataSource) => _PagingBody(
             dataSource: dataSource,
+            selectedEventId: selectedEventId,
+            onSelect: onSelect,
             parameter: parameter,
             config: config.list,
             onParameterChanged: (result) => parameter.value = result,
@@ -94,6 +123,8 @@ class _SliverListBody extends HookConsumerWidget {
 class _PagingBody extends ConsumerWidget {
   const new({
     required this.dataSource,
+    required this.selectedEventId,
+    required this.onSelect,
     required this.parameter,
     required this.config,
     required this.onParameterChanged,
@@ -101,6 +132,8 @@ class _PagingBody extends ConsumerWidget {
   });
 
   final EarthquakeHistoryDataSource dataSource;
+  final String? selectedEventId;
+  final ValueChanged<String> onSelect;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final EarthquakeHistoryListConfig config;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
@@ -108,55 +141,43 @@ class _PagingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 広告非表示時は広告分の高さを確保しない
-    final adBannerHeight = AdBanner.heightOf(ref);
-
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      edgeOffset:
-          MediaQuery.paddingOf(context).top +
-          kToolbarHeight +
-          adBannerHeight +
-          EarthquakeHistoryParameterPersistentDelegate.height,
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            centerTitle: false,
-            title: const Text('地震履歴'),
-            bottom: adBannerHeight == 0
-                ? null
-                : PreferredSize(
-                    preferredSize: Size.fromHeight(adBannerHeight),
-                    child: const AdBanner(),
-                  ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: EarthquakeHistoryParameterPersistentDelegate(
-              parameter: parameter.value,
-              onChanged: onParameterChanged,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('地震履歴'),
+        bottom: EarthquakeHistoryParameterRow(
+          parameter: parameter.value,
+          onChanged: onParameterChanged,
+        ),
+      ),
+      body: M3EPullToRefreshIndicator(
+        onError: (error, stackTrace) => talker.error(error, stackTrace),
+        hapticFeedback: .medium,
+        onRefresh: onRefresh,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: RevalidatingBanner(
+                isRevalidating: dataSource.isRevalidating,
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: RevalidatingBanner(
-              isRevalidating: dataSource.isRevalidating,
-            ),
-          ),
-          EarthquakeHistoryPagingList(
-            dataSource: dataSource,
-            parameter: parameter.value,
-            config: config,
-          ),
-          SliverToBoxAdapter(
-            child: AppendLoadStateBuilder(
+            EarthquakeHistoryPagingList(
               dataSource: dataSource,
-              builder: (context, hasMore, isLoading) => !hasMore && !isLoading
-                  ? const EarthquakeHistoryAllFetched()
-                  : const SizedBox.shrink(),
+              selectedEventId: selectedEventId,
+              onSelect: onSelect,
+              parameter: parameter.value,
+              config: config,
             ),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: AppendLoadStateBuilder(
+                dataSource: dataSource,
+                builder: (context, hasMore, isLoading) => !hasMore && !isLoading
+                    ? const EarthquakeHistoryAllFetched()
+                    : const SizedBox.shrink(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

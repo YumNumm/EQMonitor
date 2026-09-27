@@ -27,16 +27,15 @@ abstract class ShindoDbStationItem with _$ShindoDbStationItem {
     String? cityCode,
   }) = _ShindoDbStationItem;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      ShindoDbStationItem(
-        code: json['code'] as String,
-        name: json['name'] as String,
-        location: LatLng(
-          (json['latitude'] as num).toDouble(),
-          (json['longitude'] as num).toDouble(),
-        ),
-        cityCode: json['city_code'] as String?,
-      );
+  factory fromJson(Map<String, dynamic> json) => ShindoDbStationItem(
+    code: json['code'] as String,
+    name: json['name'] as String,
+    location: LatLng(
+      (json['latitude'] as num).toDouble(),
+      (json['longitude'] as num).toDouble(),
+    ),
+    cityCode: json['city_code'] as String?,
+  );
 }
 
 extension ShindoDbStationItemExtension on ShindoDbStationItem {

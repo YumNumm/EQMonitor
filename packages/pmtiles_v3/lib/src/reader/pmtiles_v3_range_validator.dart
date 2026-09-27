@@ -1,8 +1,6 @@
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
-final class PmTilesV3RangeValidator {
-  const new();
-
+final class const PmTilesV3RangeValidator() {
   void validate({
     required int offset,
     required int length,

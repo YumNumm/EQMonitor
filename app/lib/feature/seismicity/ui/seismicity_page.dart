@@ -1,6 +1,8 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
@@ -29,11 +31,11 @@ import 'package:eqmonitor/feature/seismicity/ui/components/seismicity_span_selec
 import 'package:eqmonitor/feature/seismicity/ui/layer/hypocenter_pmtiles_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/layer/seismicity_epicenter_layer.dart';
 import 'package:eqmonitor/feature/seismicity/ui/panel/seismicity_analysis_panel.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 地震活動画面(震央分布 + 矩形選択によるM-T図・積算・深さ断面)。
 class SeismicityPage extends HookConsumerWidget {
@@ -158,7 +160,7 @@ class SeismicityPage extends HookConsumerWidget {
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
+                  crossAxisAlignment: .center,
                   children: [
                     SeismicityDataModeSelector(
                       value: mode.value,
@@ -173,11 +175,15 @@ class SeismicityPage extends HookConsumerWidget {
                         onChanged: (value) => span.value = value,
                       )
                     else
-                      OutlinedButton.icon(
+                      M3EOutlinedButton.icon(
                         onPressed: manifest == null
                             ? null
                             : () async {
-                                await showModalBottomSheet<void>(
+                                await showM3EModalBottomSheet<void>(
+                                  useSafeArea: false,
+                                  style: const M3EBottomSheetStyle(
+                                    padding: EdgeInsets.zero,
+                                  ),
                                   context: context,
                                   isScrollControlled: true,
                                   builder: (context) => FractionallySizedBox(
@@ -224,7 +230,7 @@ class SeismicityPage extends HookConsumerWidget {
             ],
           ),
         AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
+        _ => const Center(child: AccessibleCircularProgressIndicator()),
       },
       bottomSheet: bounds == null
           ? null
@@ -258,9 +264,9 @@ class SeismicityPage extends HookConsumerWidget {
                     ),
                   (SeismicityDataMode.allHypocenters, _) => Center(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
-                        CircularProgressIndicator.adaptive(
+                        AccessibleCircularProgressIndicator(
                           value: analysisProgress == null
                               ? null
                               : analysisProgress.totalArchives == 0
@@ -371,7 +377,7 @@ class _MapBody extends HookConsumerWidget {
             child: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: AccessibleCircularProgressIndicator(strokeWidth: 2),
             ),
           ),
         if (mode == SeismicityDataMode.allHypocenters &&
@@ -383,8 +389,8 @@ class _MapBody extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
                   children: [
                     Text(
                       '表示失敗: ${archiveFailures.map((failure) {
@@ -392,7 +398,7 @@ class _MapBody extends HookConsumerWidget {
                         return status == null ? failure.archive.id.jstLabel : '${failure.archive.id.jstLabel} (HTTP $status)';
                       }).join('、')}',
                     ),
-                    TextButton.icon(
+                    M3ETextButton.icon(
                       onPressed: () {
                         for (final failure in archiveFailures) {
                           ref.invalidate(
@@ -434,8 +440,8 @@ class _MapBody extends HookConsumerWidget {
                           vertical: 4,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: .start,
+                          mainAxisSize: .min,
                           children: [
                             const Text('取得失敗のため前回データを表示中'),
                             Text(
@@ -466,8 +472,6 @@ class _MapBody extends HookConsumerWidget {
     );
   }
 
-  static final _generatedAtFormat = DateFormat('yyyy/MM/dd HH:mm');
-
   static String _generatedAtLabel(DateTime generatedAt) =>
-      '${_generatedAtFormat.format(generatedAt.toLocal())} 時点のデータ';
+      '${generatedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)} 時点のデータ';
 }

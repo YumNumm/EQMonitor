@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -6,8 +7,9 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_global_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_global_settings_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 class SoundInterruptionSettingsPage extends HookConsumerWidget {
@@ -181,41 +183,53 @@ class _SoundInterruptionCard extends StatelessWidget {
         children: [
           ListTile(
             title: const Text('通知音'),
-            trailing: DropdownMenu<NotificationSound>(
-              key: ValueKey(sound),
-              initialSelection: sound,
-              requestFocusOnTap: false,
-              onSelected: (selected) async {
-                if (selected != null) {
+            trailing: SizedBox(
+              width: 200,
+              child: ControlledDropdown<NotificationSound>(
+                key: ValueKey(sound),
+                items:
+                    (NotificationSound.values
+                            .map(
+                              (sound) => M3EDropdownItem(
+                                value: sound,
+                                label: sound.displayName,
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) =>
+                              item.copyWith(selected: item.value == (sound)),
+                        )
+                        .toList(),
+                onSelectionChanged: (selectedItems) async {
+                  if (selectedItems.isEmpty) return;
+                  final selected = selectedItems.first.value;
                   await onSoundChanged(selected);
-                }
-              },
-              dropdownMenuEntries: NotificationSound.values
-                  .map(
-                    (sound) => DropdownMenuEntry(
-                      value: sound,
-                      label: sound.displayName,
-                    ),
-                  )
-                  .toList(),
+                },
+              ),
             ),
           ),
           const Divider(height: 1),
           ListTile(
             title: const Text('通知の優先度'),
-            trailing: DropdownMenu<InterruptionLevel>(
-              key: ValueKey(interruptionLevel),
-              initialSelection: interruptionLevel,
-              requestFocusOnTap: false,
-              onSelected: (selected) async {
-                if (selected != null) {
+            trailing: SizedBox(
+              width: 200,
+              child: ControlledDropdown<InterruptionLevel>(
+                key: ValueKey(interruptionLevel),
+                items: [
+                  for (final level in InterruptionLevel.values)
+                    M3EDropdownItem(
+                      value: level,
+                      label: level.label,
+                      selected: level == interruptionLevel,
+                    ),
+                ],
+                onSelectionChanged: (selectedItems) async {
+                  if (selectedItems.isEmpty) return;
+                  final selected = selectedItems.first.value;
                   await onInterruptionLevelChanged(selected);
-                }
-              },
-              dropdownMenuEntries: [
-                for (final level in InterruptionLevel.values)
-                  DropdownMenuEntry(value: level, label: level.label),
-              ],
+                },
+              ),
             ),
           ),
           const Divider(height: 1),

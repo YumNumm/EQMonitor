@@ -14,14 +14,14 @@ class KyoshinMonitorDataTypePage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               spacing: 8,
               children: const [
                 Card(
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         _DataTypeInfo(
                           title: 'リアルタイム震度',
@@ -90,7 +90,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
                 ),
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Icon(Icons.open_in_new, size: 12, color: hyperLinkColor),
                   Text(
@@ -130,11 +130,11 @@ class _DataTypeInfo extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             title,
-            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.titleSmall?.copyWith(fontWeight: .bold),
           ),
           const SizedBox(height: 4),
           Text(

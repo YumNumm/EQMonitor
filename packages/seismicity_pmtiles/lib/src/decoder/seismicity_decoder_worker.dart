@@ -14,10 +14,8 @@ import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_dataset.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_decode_progress.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-final class SeismicityWorkerNoOpTerminalProbe
+final class const SeismicityWorkerNoOpTerminalProbe()
     implements SeismicityWorkerTerminalProbe {
-  const new();
-
   @override
   SeismicityWorkerTerminalCounters get counters => (
     errorCount: 0,

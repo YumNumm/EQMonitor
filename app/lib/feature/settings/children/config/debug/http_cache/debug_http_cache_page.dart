@@ -1,6 +1,9 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:cache/cache.dart';
 import 'package:eqmonitor/core/api/http_cache_size_provider.dart';
 import 'package:eqmonitor/core/util/byte_size_formatter.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_action.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/debug_http_cache_entries_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/http_cache/http_cache_key_display.dart';
@@ -43,13 +46,14 @@ class DebugHttpCachePage extends HookConsumerWidget {
         ],
       ),
       body: entriesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () =>
+            const Center(child: AccessibleCircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Text('取得に失敗しました: $error'),
-              TextButton(
+              M3ETextButton(
                 onPressed: () => ref.invalidate(debugHttpCacheEntriesProvider),
                 child: const Text('再試行'),
               ),
@@ -64,7 +68,7 @@ class DebugHttpCachePage extends HookConsumerWidget {
           );
 
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               _HttpCacheHeader(
                 totalSizeLabel: totalSizeLabel,
@@ -107,7 +111,7 @@ class _HttpCacheHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [Text('総容量: $totalSizeLabel'), Text('件数: $entryCount')],
       ),
     );
@@ -135,10 +139,10 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
     final eTagLabel = entry.eTag ?? 'なし';
     final updatedAtLabel = DateTime.fromMillisecondsSinceEpoch(
       entry.updatedAtMs,
-    ).toLocal().toString();
+    ).formatWithTz(.yearMonthDayHourMinuteSecondMillisecond);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         ListTile(
           title: Text(keyDisplay.urlLabel(key: entry.key)),
@@ -154,7 +158,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 Text('キー: ${entry.key}'),
                 Text('更新: $updatedAtLabel'),
@@ -163,7 +167,7 @@ class _HttpCacheEntryTile extends HookConsumerWidget {
                 Text('eTag: $eTagLabel'),
                 Text('Content-Type: $contentType'),
                 const SizedBox(height: 8),
-                FilledButton(
+                M3EFilledButton(
                   onPressed: () async {
                     await ref
                         .read(debugHttpCacheActionProvider)

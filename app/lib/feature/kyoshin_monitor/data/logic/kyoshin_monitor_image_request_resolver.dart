@@ -11,9 +11,7 @@ KyoshinMonitorImageRequestResolver kyoshinMonitorImageRequestResolver(
   Ref ref,
 ) => const KyoshinMonitorImageRequestResolver();
 
-class KyoshinMonitorImageRequestResolver {
-  const new();
-
+class const KyoshinMonitorImageRequestResolver() {
   KyoshinMonitorImageRequest resolve(KyoshinMonitorSettingsModel settings) =>
       KyoshinMonitorImageRequest(
         layer: settings.realtimeDataType.isLpgm

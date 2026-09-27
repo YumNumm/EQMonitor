@@ -33,13 +33,13 @@ Duration? kyoshinMonitorImageDelay(Ref ref) {
 
   return switch (settings.api.delayAdjustType) {
     .latestJson || .latestJsonMultiple => publishDelay,
-    .imageFetch404DeviceTime ||
-    .imageFetch404Ntp => ref
-        .read(kyoshinMonitorDelayResolverProvider)
-        .imageDelay(
-          publishDelay: publishDelay,
-          adjustment: adjustments[request.delayProfile] ?? Duration.zero,
-          config: config,
-        ),
+    .imageFetch404DeviceTime || .imageFetch404Ntp =>
+      ref
+          .read(kyoshinMonitorDelayResolverProvider)
+          .imageDelay(
+            publishDelay: publishDelay,
+            adjustment: adjustments[request.delayProfile] ?? Duration.zero,
+            config: config,
+          ),
   };
 }

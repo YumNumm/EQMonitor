@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -6,23 +8,25 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_debug_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final earthquakeHistoryDebugSheetActionProvider = Provider(
-  (ref) => const EarthquakeHistoryDebugSheetAction(),
-);
+part 'earthquake_history_debug_sheet.g.dart';
 
-class EarthquakeHistoryDebugSheetAction {
-  const new();
+@Riverpod(keepAlive: true)
+EarthquakeHistoryDebugSheetAction earthquakeHistoryDebugSheetAction(Ref ref) =>
+    const EarthquakeHistoryDebugSheetAction();
 
+class const EarthquakeHistoryDebugSheetAction() {
   Future<void> show({required BuildContext context, required String eventId}) {
     final size = MediaQuery.sizeOf(context);
     if (size.width >= 840) {
       return showDialog<void>(
         context: context,
         builder: (context) => Dialog(
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           child: SizedBox(
             width: math.min(size.width * 0.8, 960),
             height: size.height * 0.9,
@@ -31,9 +35,11 @@ class EarthquakeHistoryDebugSheetAction {
         ),
       );
     }
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      useSafeArea: false,
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
       context: context,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       isScrollControlled: true,
       builder: (context) => FractionallySizedBox(
         heightFactor: 0.9,
@@ -56,7 +62,7 @@ class EarthquakeHistoryDebugSheet extends ConsumerWidget {
         current: value,
       ),
       AsyncError() => const Center(child: Text('地震情報を読み込めませんでした')),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(child: AccessibleCircularProgressIndicator()),
     };
   }
 }
@@ -80,7 +86,7 @@ class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
                 child: Text(
                   '地震詳細 Debug',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),
@@ -102,7 +108,7 @@ class _EarthquakeHistoryDebugSheetContent extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: TextButton(
+                      child: M3ETextButton(
                         key: const Key('earthquake-debug-reset-button'),
                         onPressed: () => ref
                             .read(earthquakeVxseDebugActionProvider)

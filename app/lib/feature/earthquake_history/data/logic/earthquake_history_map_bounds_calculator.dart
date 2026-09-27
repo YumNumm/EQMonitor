@@ -17,9 +17,7 @@ EarthquakeHistoryMapBoundsCalculator earthquakeHistoryMapBoundsCalculator(
 ) => const EarthquakeHistoryMapBoundsCalculator();
 
 /// 地震履歴詳細マップの表示領域に含める座標を算出する。
-class EarthquakeHistoryMapBoundsCalculator {
-  const new();
-
+class const EarthquakeHistoryMapBoundsCalculator() {
   List<EarthquakeHistoryMapPoint> calculate({
     required Earthquake earthquake,
     required JmaMap_JmaMapData? regionMap,

@@ -44,7 +44,7 @@
 - `packages/eqmonitor_map/lib/src/flutter_scene/flutter_scene_map_adapter.dart`
 - `packages/eqmonitor_map/test/renderer/observation_point_batch_builder_test.dart`
 - `packages/eqmonitor_map/test/flutter_scene/flutter_scene_map_adapter_test.dart`
-- `docs/knowledge/20260823_flutter_raw_shader_data_assets_hook.md`
+- `docs/knowledge/map_renderer.md`
 - `third_party/flutter_scene` submodule pointer
 - submodule: `packages/flutter_scene/lib/gpu.dart`
 - submodule: `packages/flutter_scene/test/static_instance_geometry_export_test.dart`

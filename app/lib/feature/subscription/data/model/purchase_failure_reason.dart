@@ -1,4 +1,5 @@
 enum PurchaseFailureReason {
+  operationInProgress,
   planNotFound,
   activationNotConfirmed,
   revenueCatConfiguration,
@@ -9,6 +10,7 @@ enum PurchaseFailureReason {
 
 extension PurchaseFailureReasonMessage on PurchaseFailureReason {
   String get message => switch (this) {
+    PurchaseFailureReason.operationInProgress => '購入または復元の処理が進行中です',
     PurchaseFailureReason.planNotFound => 'プラン情報を取得できませんでした',
     PurchaseFailureReason.activationNotConfirmed =>
       '購入は完了しましたが、Pro プランの有効化を確認できませんでした',

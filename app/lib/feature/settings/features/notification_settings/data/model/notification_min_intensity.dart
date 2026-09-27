@@ -9,9 +9,7 @@ const JmaIntensity currentLocationEarthquakeMinIntensity = JmaIntensity.one;
 const JmaIntensity allMinIntensity = JmaIntensity.zero;
 
 /// スロット種別・通知種別ごとに選べる最小震度を決める。
-class NotificationMinIntensityPolicy {
-  const new();
-
+class const NotificationMinIntensityPolicy() {
   /// 現在地・地域スロットの最小震度の下限。
   ///
   /// 現在地と地域は「自分に関係のある揺れ」を知らせるスロットのため、EEW(予報) は

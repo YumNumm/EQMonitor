@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:m3e_core/m3e_core.dart';
 
 class DatasourceFilterChip extends StatelessWidget {
   const new({this.datasource, this.onChanged, super.key});
@@ -16,8 +17,11 @@ class DatasourceFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<({EarthquakeDataSource? value})?>(
-              clipBehavior: Clip.antiAlias,
+            await showM3EModalBottomSheet<({EarthquakeDataSource? value})?>(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) => _DatasourceFilterModal(current: datasource),
             );
@@ -28,7 +32,7 @@ class DatasourceFilterChip extends StatelessWidget {
       label: datasource != null
           ? Text(
               datasource.label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             )
           : const Text('データソース'),
       onDeleted: isActive ? () => onChanged?.call(null) : null,
@@ -64,8 +68,8 @@ class _DatasourceFilterModal extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -73,7 +77,7 @@ class _DatasourceFilterModal extends StatelessWidget {
               child: Text(
                 'データソース',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),

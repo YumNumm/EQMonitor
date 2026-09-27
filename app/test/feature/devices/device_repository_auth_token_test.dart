@@ -33,11 +33,12 @@ void main() {
     final repository = DeviceAuthRepository(
       preferences,
       onCredentialsWillChange: () async => events.add('location:clear'),
+      onCredentialsChanged: () => events.add('identity:invalidate'),
     );
 
     await repository.saveToken(token: 'secret-device-token');
 
-    expect(events, ['location:clear', 'secure:set']);
+    expect(events, ['location:clear', 'secure:set', 'identity:invalidate']);
     expect(preferences.values.values, contains('secret-device-token'));
   });
 
@@ -48,11 +49,12 @@ void main() {
     final repository = DeviceAuthRepository(
       preferences,
       onCredentialsWillChange: () async => events.add('location:clear'),
+      onCredentialsChanged: () => events.add('identity:invalidate'),
     );
 
     await repository.clearToken();
 
-    expect(events, ['location:clear', 'secure:remove']);
+    expect(events, ['location:clear', 'secure:remove', 'identity:invalidate']);
     expect(preferences.values, isEmpty);
   });
 

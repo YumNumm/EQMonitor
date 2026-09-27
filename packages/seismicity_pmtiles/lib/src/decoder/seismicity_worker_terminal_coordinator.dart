@@ -1,93 +1,54 @@
 import 'package:seismicity_pmtiles/src/decoder/seismicity_worker_terminal_probe.dart';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 
-sealed class SeismicityWorkerTerminalOutcome<T> {
-  const new();
-}
+sealed class const SeismicityWorkerTerminalOutcome<T>();
 
-final class SeismicityWorkerTerminalSuccessOutcome<T>
-    extends SeismicityWorkerTerminalOutcome<T> {
-  const new({required this.value});
+final class const SeismicityWorkerTerminalSuccessOutcome<T>({
+  required final T value,
+}) extends SeismicityWorkerTerminalOutcome<T>;
 
-  final T value;
-}
+final class const SeismicityWorkerTerminalFailureOutcome<T>({
+  required final SeismicityPmTilesException error,
+}) extends SeismicityWorkerTerminalOutcome<T>;
 
-final class SeismicityWorkerTerminalFailureOutcome<T>
-    extends SeismicityWorkerTerminalOutcome<T> {
-  const new({required this.error});
+final class const SeismicityWorkerTerminalCancelledOutcome<T>()
+    extends SeismicityWorkerTerminalOutcome<T>;
 
-  final SeismicityPmTilesException error;
-}
+sealed class const SeismicityWorkerTerminalSignal<T>();
 
-final class SeismicityWorkerTerminalCancelledOutcome<T>
-    extends SeismicityWorkerTerminalOutcome<T> {
-  const new();
-}
+final class const SeismicityWorkerTerminalSuccessSignal<T>({
+  required final T value,
+}) extends SeismicityWorkerTerminalSignal<T>;
 
-sealed class SeismicityWorkerTerminalSignal<T> {
-  const new();
-}
+final class const SeismicityWorkerTerminalFailureSignal<T>({
+  required final SeismicityPmTilesException error,
+}) extends SeismicityWorkerTerminalSignal<T>;
 
-final class SeismicityWorkerTerminalSuccessSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new({required this.value});
+final class const SeismicityWorkerTerminalCrashSignal<T>({
+  required final String message,
+}) extends SeismicityWorkerTerminalSignal<T>;
 
-  final T value;
-}
+final class const SeismicityWorkerTerminalUnexpectedPortCloseSignal<T>()
+    extends SeismicityWorkerTerminalSignal<T>;
 
-final class SeismicityWorkerTerminalFailureSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new({required this.error});
+final class const SeismicityWorkerTerminalGracefulExitSignal<T>()
+    extends SeismicityWorkerTerminalSignal<T>;
 
-  final SeismicityPmTilesException error;
-}
+final class const SeismicityWorkerTerminalCancelSignal<T>()
+    extends SeismicityWorkerTerminalSignal<T>;
 
-final class SeismicityWorkerTerminalCrashSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new({required this.message});
+final class const SeismicityWorkerTerminalCloseSignal<T>()
+    extends SeismicityWorkerTerminalSignal<T>;
 
-  final String message;
-}
-
-final class SeismicityWorkerTerminalUnexpectedPortCloseSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new();
-}
-
-final class SeismicityWorkerTerminalGracefulExitSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new();
-}
-
-final class SeismicityWorkerTerminalCancelSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new();
-}
-
-final class SeismicityWorkerTerminalCloseSignal<T>
-    extends SeismicityWorkerTerminalSignal<T> {
-  const new();
-}
-
-final class SeismicityWorkerTerminalDecision<T> {
-  const new({
-    required this.outcome,
-    required this.completePending,
-    required this.closePort,
-    required this.killIsolate,
-    required this.retire,
-    required this.preserveFailure,
-    required this.probeTransition,
-  });
-
-  final SeismicityWorkerTerminalOutcome<T> outcome;
-  final bool completePending;
-  final bool closePort;
-  final bool killIsolate;
-  final bool retire;
-  final bool preserveFailure;
-  final SeismicityWorkerTerminalTransition? probeTransition;
-}
+final class const SeismicityWorkerTerminalDecision<T>({
+  required final SeismicityWorkerTerminalOutcome<T> outcome,
+  required final bool completePending,
+  required final bool closePort,
+  required final bool killIsolate,
+  required final bool retire,
+  required final bool preserveFailure,
+  required final SeismicityWorkerTerminalTransition? probeTransition,
+});
 
 final class SeismicityWorkerTerminalCoordinator<T> {
   new({required this.probe});

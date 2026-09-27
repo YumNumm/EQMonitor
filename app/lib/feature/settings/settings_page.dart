@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -35,7 +36,9 @@ class SettingsPage extends ConsumerWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('設定')),
+      appBar: AppBar(
+        title: const Text('設定'),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -49,136 +52,186 @@ class SettingsPage extends ConsumerWidget {
                       height: 80,
                       child: Material(
                         borderRadius: BorderRadius.circular(16),
-                        clipBehavior: Clip.antiAlias,
+                        clipBehavior: .antiAlias,
                         elevation: 4,
-                        child: Assets.images.icon.image(fit: BoxFit.contain),
+                        child: Assets.images.icon.image(fit: .contain),
                       ),
                     ),
                   ),
                 ),
                 const _AppVersionInformation(),
                 const AssetPackUpdateCard(),
-                if (isProFeaturesEnabled) ...[
-                  const SettingsSectionHeader(text: 'EQMonitor Pro'),
-                  ListTile(
-                    title: const Text('EQMonitor Pro'),
-                    leading: const Icon(Icons.workspace_premium_outlined),
-                    onTap: () async =>
-                        const SubscriptionSettingsRoute().push<void>(context),
-                  ),
-                ],
-                const SettingsSectionHeader(text: '各種設定'),
-                ListTile(
-                  title: const Text('通知設定'),
-                  leading: const Icon(Icons.notifications_outlined),
-                  onTap: () async =>
-                      const NotificationSettingsRoute().push<void>(context),
-                ),
-                ListTile(
-                  title: const Text('表示設定'),
-                  leading: const Icon(Icons.color_lens),
-                  onTap: () async => const DisplayRoute().push<void>(context),
-                ),
-                ListTile(
-                  title: const Text('地震履歴設定'),
-                  leading: const Icon(Icons.history),
-                  onTap: () async =>
-                      const EarthquakeHistoryConfigRoute().push(context),
-                ),
-                // TODO(YumNumm): 地震活動機能は現在開発中のため非表示
-                // ListTile(
-                //   title: const Text('地震活動'),
-                //   subtitle: const Text('震央分布・M-T図・深さ断面'),
-                //   leading: const Icon(Icons.bubble_chart_outlined),
-                //   onTap: () async =>
-                //       const SeismicityRoute().push<void>(context),
-                // ),
-                ListTile(
-                  title: const Text('ホーム画面ウィジェット'),
-                  leading: const Icon(Icons.widgets_outlined),
-                  onTap: () async =>
-                      const HomeWidgetSettingsRoute().push<void>(context),
-                ),
-                const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
-                ListTile(
-                  title: const Text('変更履歴'),
-                  leading: const Icon(Icons.history_edu_outlined),
-                  onTap: () async => const ChangelogRoute().push<void>(context),
-                ),
-                ListTile(
-                  title: const Text('このアプリケーションについて'),
-                  subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
-                  leading: const Icon(Icons.description),
-                  onTap: () async =>
-                      const AboutThisAppRoute().push<void>(context),
-                ),
-                ListTile(
-                  title: const Text('サーバの稼働状況'),
-                  subtitle: const Text('外部Webサイトへ遷移します'),
-                  leading: const Icon(Icons.network_ping),
-                  onTap: () => launchUrlString(
-                    'https://status.eqmonitor.app/',
-                    mode: LaunchMode.externalApplication,
-                  ),
-                ),
-                ListTile(
-                  title: const Text('問い合わせ'),
-                  leading: const Icon(Icons.contact_support_outlined),
-                  onTap: () async =>
-                      ref.read(openContactProvider).call(ref, context),
-                ),
-                AppSwitchListTile(
-                  title: '広告を非表示',
-                  value: ref.watch(adsOptOutProvider).value ?? false,
-                  onChanged: (_) => AdsOptOutNotifier.saveMutation.run(
-                    ref,
-                    (tsx) async => tsx.get(adsOptOutProvider.notifier).toggle(),
-                  ),
-                ),
-                if (isDeveloperUiEnabled) ...[
-                  const SettingsSectionHeader(text: 'キャッシュ'),
-                  ListTile(
-                    title: const Text('HTTPキャッシュ'),
-                    leading: const Icon(Icons.storage_outlined),
-                    subtitle: Text(
-                      cacheSize.when(
-                        data: const ByteSizeFormatter().format,
-                        loading: () => '計算中…',
-                        error: (_, _) => '取得に失敗しました',
+                if (isProFeaturesEnabled)
+                  Card.outlined(
+                    clipBehavior: .antiAlias,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    color: theme.colorScheme.primaryContainer,
+                    child: InkWell(
+                      onTap: () async => PaywallRoute().push<void>(context),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.workspace_premium_rounded,
+                              color: theme.colorScheme.onPrimaryContainer,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                spacing: 2,
+                                crossAxisAlignment: .start,
+                                children: [
+                                  Text(
+                                    "EQMonitor Pro",
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: .bold,
+                                      fontFamily: FontFamily.googleSansFlex,
+                                      color:
+                                          theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                  Text("Proプランに加入頂くことで、ご利用いただける機能が増えます"),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward_ios_outlined),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: const Text('HTTPキャッシュを削除'),
-                    leading: const Icon(Icons.delete_outline),
-                    onTap: () async {
-                      final messenger = ScaffoldMessenger.of(context);
-                      final store = await ref.read(
-                        httpCacheStoreProvider.future,
-                      );
-                      await store.clearAll();
-                      await store.vacuum();
-                      ref.invalidate(httpCacheSizeProvider);
-                      messenger.showSnackBar(
-                        const SnackBar(content: Text('HTTPキャッシュを削除しました')),
-                      );
-                    },
+                const SettingsSectionHeader(text: '各種設定'),
+                M3ESegmentedColumn(
+                  padding: EdgeInsets.zero,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    ListTile(
+                      title: const Text('通知設定'),
+                      leading: const Icon(Icons.notifications_outlined),
+                      onTap: () async =>
+                          const NotificationSettingsRoute().push<void>(context),
+                    ),
+                    ListTile(
+                      title: const Text('表示設定'),
+                      leading: const Icon(Icons.color_lens),
+                      onTap: () async =>
+                          const DisplayRoute().push<void>(context),
+                    ),
+                    ListTile(
+                      title: const Text('地震履歴設定'),
+                      leading: const Icon(Icons.history),
+                      onTap: () async =>
+                          const EarthquakeHistoryConfigRoute().push(context),
+                    ),
+                    // TODO(YumNumm): 地震活動機能は現在開発中のため非表示
+                    // ListTile(
+                    //   title: const Text('地震活動'),
+                    //   subtitle: const Text('震央分布・M-T図・深さ断面'),
+                    //   leading: const Icon(Icons.bubble_chart_outlined),
+                    //   onTap: () async =>
+                    //       const SeismicityRoute().push<void>(context),
+                    // ),
+                    ListTile(
+                      title: const Text('ホーム画面ウィジェット'),
+                      leading: const Icon(Icons.widgets_outlined),
+                      onTap: () async =>
+                          const HomeWidgetSettingsRoute().push<void>(context),
+                    ),
+                  ],
+                ),
+                const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
+                M3ESegmentedColumn(
+                  padding: EdgeInsets.zero,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    ListTile(
+                      title: const Text('変更履歴'),
+                      leading: const Icon(Icons.history_edu_outlined),
+                      onTap: () async =>
+                          const ChangelogRoute().push<void>(context),
+                    ),
+                    ListTile(
+                      title: const Text('このアプリケーションについて'),
+                      subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
+                      leading: const Icon(Icons.description),
+                      onTap: () async =>
+                          const AboutThisAppRoute().push<void>(context),
+                    ),
+                    ListTile(
+                      title: const Text('サーバの稼働状況'),
+                      subtitle: const Text('外部Webサイトへ遷移します'),
+                      leading: const Icon(Icons.network_ping),
+                      onTap: () => launchUrlString(
+                        'https://status.eqmonitor.app/',
+                        mode: LaunchMode.externalApplication,
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('問い合わせ'),
+                      leading: const Icon(Icons.contact_support_outlined),
+                      onTap: () async =>
+                          ref.read(openContactProvider).call(ref, context),
+                    ),
+                    AppSwitchListTile(
+                      title: '広告を非表示',
+                      value: ref.watch(adsOptOutProvider).value ?? false,
+                      onChanged: (_) => AdsOptOutNotifier.saveMutation.run(
+                        ref,
+                        (tsx) async =>
+                            tsx.get(adsOptOutProvider.notifier).toggle(),
+                      ),
+                    ),
+                  ],
+                ),
+                if (isDeveloperUiEnabled) ...[
+                  const SettingsSectionHeader(text: 'キャッシュ'),
+                  M3ESegmentedColumn(
+                    padding: EdgeInsets.zero,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    children: [
+                      ListTile(
+                        title: const Text('HTTPキャッシュ'),
+                        leading: const Icon(Icons.storage_outlined),
+                        subtitle: Text(
+                          cacheSize.when(
+                            data: const ByteSizeFormatter().format,
+                            loading: () => '計算中…',
+                            error: (_, _) => '取得に失敗しました',
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('HTTPキャッシュを削除'),
+                        leading: const Icon(Icons.delete_outline),
+                        onTap: () async {
+                          final messenger = ScaffoldMessenger.of(context);
+                          final store = await ref.read(
+                            httpCacheStoreProvider.future,
+                          );
+                          await store.clearAll();
+                          await store.vacuum();
+                          ref.invalidate(httpCacheSizeProvider);
+                          messenger.showSnackBar(
+                            const SnackBar(content: Text('HTTPキャッシュを削除しました')),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
-                Center(
-                  child: Text(
-                    'Powered by Flutter',
-                    style: textTheme.bodySmall?.copyWith(
-                      color: context.designSystem.colorTheme.onSurface
-                          .withValues(alpha: 0.8),
-                    ),
-                  ),
-                ),
                 if (isDebugMenuAvailable) ...[
                   if (isDebugEnabled ?? false)
                     Center(
                       child: Text(
-                        'Debug Mode',
+                        'Debug Mode✌️',
                         style: textTheme.bodySmall?.copyWith(
                           color: context.designSystem.colorTheme.onSurface
                               .withValues(alpha: 0.8),
@@ -186,10 +239,16 @@ class SettingsPage extends ConsumerWidget {
                       ),
                     ),
                   const Divider(),
-                  ListTile(
-                    title: const Text('デバッグメニュー'),
-                    leading: const Icon(Icons.bug_report),
-                    onTap: () => const DebugRoute().push<void>(context),
+                  M3ESegmentedColumn(
+                    padding: EdgeInsets.zero,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    children: [
+                      ListTile(
+                        title: const Text('デバッグメニュー'),
+                        leading: const Icon(Icons.bug_report),
+                        onTap: () => const DebugRoute().push<void>(context),
+                      ),
+                    ],
                   ),
                 ],
               ],

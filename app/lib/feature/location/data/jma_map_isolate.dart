@@ -52,25 +52,15 @@ void jmaMapWorkerEntryPoint(JmaMapWorkerArgument argument) {
   });
 }
 
-final class JmaMapWorkerArgument {
-  const new({
-    required this.mainSendPort,
-    required this.mapDataBytesByType,
-  });
+final class const JmaMapWorkerArgument({
+  required final SendPort mainSendPort,
+  required final Map<JmaMapType, Uint8List> mapDataBytesByType,
+});
 
-  final SendPort mainSendPort;
-  final Map<JmaMapType, Uint8List> mapDataBytesByType;
-}
-
-final class JmaMapWorkerStartupError {
-  const new({
-    required this.errorMessage,
-    required this.errorStack,
-  });
-
-  final String errorMessage;
-  final String errorStack;
-}
+final class const JmaMapWorkerStartupError({
+  required final String errorMessage,
+  required final String errorStack,
+});
 
 /// Worker Isolate 内で最近傍地物を計算し、結果を [mainSendPort] へ送信する。
 class JmaMapWorkerCalculator {

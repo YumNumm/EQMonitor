@@ -16,7 +16,9 @@ part 'widget_region_notifier.g.dart';
 class WidgetRegionNotifier extends _$WidgetRegionNotifier {
   @override
   Future<WidgetRegionSelection?> build() async {
-    final dataSource = await ref.read(sharedPreferencesDataSourceProvider.future);
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     final jsonString = await dataSource.getString(
       key: SharedPreferencesKey.widgetRegionSelection,
     );
@@ -36,7 +38,9 @@ class WidgetRegionNotifier extends _$WidgetRegionNotifier {
 
   Future<void> save(WidgetRegionSelection value) async {
     state = AsyncData(value);
-    final dataSource = await ref.read(sharedPreferencesDataSourceProvider.future);
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     await dataSource.setString(
       key: SharedPreferencesKey.widgetRegionSelection,
       value: jsonEncode(value.toJson()),
@@ -45,7 +49,9 @@ class WidgetRegionNotifier extends _$WidgetRegionNotifier {
 
   Future<void> clear() async {
     state = const AsyncData(null);
-    final dataSource = await ref.read(sharedPreferencesDataSourceProvider.future);
+    final dataSource = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     await dataSource.remove(key: SharedPreferencesKey.widgetRegionSelection);
   }
 }

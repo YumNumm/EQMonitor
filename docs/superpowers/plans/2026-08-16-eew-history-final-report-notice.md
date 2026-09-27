@@ -111,7 +111,7 @@ subtitle に `M6.0`、trailing に `#29 (最終)` を表示する。
 **Files:**
 - Modify: `AGENTS.md`
 - Modify: `.cursor/rules/flutter-rules.mdc`
-- Create: `docs/knowledge/20260816_test_strategy.md`
+- Modify: `docs/knowledge/test_strategy.md`
 
 - [ ] **Step 1: 比例的なテスト方針を追記する**
 

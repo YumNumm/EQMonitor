@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_kind.dart';
@@ -6,9 +9,10 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/m
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_sound.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// `_OverrideFormDialog`(StatefulWidget)の振る舞いを、HookWidget化前に固定するテスト。
 void main() {
@@ -20,23 +24,27 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
     expect(find.text('震度別設定を追加'), findsOneWidget);
     expect(
       tester
-          .widget<DropdownButton<JmaIntensity>>(
-            find.byType(DropdownButton<JmaIntensity>),
+          .widget<ControlledDropdown<JmaIntensity>>(
+            find.byType(ControlledDropdown<JmaIntensity>),
           )
+          .items
+          .singleWhere((item) => item.selected)
           .value,
       JmaIntensity.zero,
     );
     expect(
       tester
-          .widget<DropdownButton<NotificationSound>>(
-            find.byType(DropdownButton<NotificationSound>),
+          .widget<ControlledDropdown<NotificationSound>>(
+            find.byType(ControlledDropdown<NotificationSound>),
           )
+          .items
+          .singleWhere((item) => item.selected)
           .value,
       NotificationSound.defaultSound,
     );
@@ -58,7 +66,7 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('キャンセル'));
@@ -75,15 +83,21 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byType(M3EFloatingActionButton));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButton<NotificationSound>));
+    await tester.tap(find.byType(ControlledDropdown<NotificationSound>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('EEW警報音').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(InterruptionLevel.critical.label).last);
+    final criticalOption = find.widgetWithText(
+      RadioListTile<InterruptionLevel>,
+      InterruptionLevel.critical.label,
+    );
+    await tester.ensureVisible(criticalOption);
+    await tester.pumpAndSettle();
+    await tester.tap(criticalOption);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('追加'));
@@ -118,6 +132,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('震度別設定を編集'), findsOneWidget);
+    final intensityDropdown = tester.widget<ControlledDropdown<JmaIntensity>>(
+      find.byType(ControlledDropdown<JmaIntensity>),
+    );
+    expect(intensityDropdown.enabled, isFalse);
+    expect(
+      intensityDropdown.items.singleWhere((item) => item.selected).value,
+      JmaIntensity.three,
+    );
     expect(
       tester
           .widget<RadioGroup<InterruptionLevel>>(
@@ -141,6 +163,80 @@ void main() {
       fake.lastEarthquakeOverrides!.single.interruptionLevel,
       InterruptionLevel.passive,
     );
+  });
+  testWidgets('保存が遅れて失敗しても削除対象と隣の条件を復元する', (tester) async {
+    final overrides = [
+      for (final intensity in [
+        JmaIntensity.one,
+        JmaIntensity.three,
+        JmaIntensity.fiveUpper,
+      ])
+        NotificationOverride(
+          minJmaIntensity: intensity,
+          sound: 'default',
+          interruptionLevel: .active,
+        ),
+    ];
+    final container = await _pumpPage(
+      tester,
+      overrides: overrides,
+      slotId: 'region-1',
+    );
+    addTearDown(container.dispose);
+    final notifier = container.read(
+      notificationSlotsProvider.notifier,
+    ) as _FakeNotificationSlotsNotifier;
+    final gate = Completer<void>();
+    notifier.saveGate = gate;
+    notifier.failSave = true;
+
+    await tester.drag(find.text('震度3以上'), const Offset(-700, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('震度3以上'), findsNothing);
+    gate.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.text('震度1以上'), findsOneWidget);
+    expect(find.text('震度3以上'), findsOneWidget);
+    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(notifier.lastEarthquakeOverrides, isNull);
+    expect(find.textContaining('設定の保存に失敗しました'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('中央の条件だけを識別して削除し隣の通知条件を保持する', (tester) async {
+    final overrides = [
+      for (final intensity in [
+        JmaIntensity.one,
+        JmaIntensity.three,
+        JmaIntensity.fiveUpper,
+      ])
+        NotificationOverride(
+          minJmaIntensity: intensity,
+          sound: 'default',
+          interruptionLevel: .active,
+        ),
+    ];
+    final container = await _pumpPage(
+      tester,
+      overrides: overrides,
+      slotId: 'region-1',
+    );
+    addTearDown(container.dispose);
+    await tester.drag(find.text('震度3以上'), const Offset(-700, 0));
+    await tester.pumpAndSettle();
+
+    final notifier = container.read(
+      notificationSlotsProvider.notifier,
+    ) as _FakeNotificationSlotsNotifier;
+    expect(
+      notifier.lastEarthquakeOverrides?.map((entry) => entry.minJmaIntensity),
+      [JmaIntensity.one, JmaIntensity.fiveUpper],
+    );
+    expect(find.text('震度1以上'), findsOneWidget);
+    expect(find.text('震度3以上'), findsNothing);
+    expect(find.text('震度5+以上'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
 
@@ -195,6 +291,8 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
 
   final NotificationSlot _initial;
   List<NotificationOverride>? lastEarthquakeOverrides;
+  Completer<void>? saveGate;
+  bool failSave = false;
 
   @override
   Future<List<NotificationSlot>> build() async => [_initial];
@@ -212,6 +310,8 @@ class _FakeNotificationSlotsNotifier extends NotificationSlotsNotifier {
     JmaIntensity? earthquakeMinIntensity,
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
+    await saveGate?.future;
+    if (failSave) throw StateError('保存テストエラー');
     lastEarthquakeOverrides = earthquakeOverrides;
     final current = state.value ?? [_initial];
     state = AsyncData([

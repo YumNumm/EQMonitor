@@ -1,4 +1,6 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_dialog.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -17,6 +19,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/com
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/pro_upgrade_dialog.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/override_edit_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
@@ -70,7 +73,7 @@ class SlotDetailPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: slot == null
-          ? const Center(child: CircularProgressIndicator.adaptive())
+          ? const Center(child: AccessibleCircularProgressIndicator())
           : ListView(
               padding: const EdgeInsets.only(top: 16, bottom: 24),
               children: [
@@ -235,14 +238,14 @@ class _NotificationConditionCard extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           ListTile(
             title: const Text('有効'),
@@ -261,23 +264,27 @@ class _NotificationConditionCard extends StatelessWidget {
               onChanged: onMinIntensityChanged,
             ),
           ),
-          const Divider(height: 1),
-          if (isPro)
-            ListTile(
-              title: const Text('震度別設定'),
-              subtitle: overrides.isEmpty
-                  ? const Text('震度ごとに通知をオーバーライドできます')
-                  : Text('${overrides.length}件の設定'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: onOverrideTap,
-            )
-          else
-            LockedSettingTile(
-              title: '震度別設定',
-              subtitle: 'Proで利用できます',
-              locked: true,
-              onTap: () async => const ProUpgradeDialogAction().show(context),
-            ),
+          // 震度別設定は音・割り込みレベルの上書きであり iOS 固有の契約のため、
+          // Android では OS の通知チャンネル設定へ委ねて非表示にする。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            if (isPro)
+              ListTile(
+                title: const Text('震度別設定'),
+                subtitle: overrides.isEmpty
+                    ? const Text('震度ごとに通知をオーバーライドできます')
+                    : Text('${overrides.length}件の設定'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: onOverrideTap,
+              )
+            else
+              LockedSettingTile(
+                title: '震度別設定',
+                subtitle: 'Proで利用できます',
+                locked: true,
+                onTap: () async => const ProUpgradeDialogAction().show(context),
+              ),
+          ],
         ],
       ),
     );
@@ -305,6 +312,7 @@ class _WarningSettingsCard extends StatelessWidget {
     final colorTheme = designSystem.colorTheme;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+    final levels = slotType.eewWarningInterruptionLevels;
 
     return Card.outlined(
       margin: EdgeInsets.fromLTRB(
@@ -314,45 +322,54 @@ class _WarningSettingsCard extends StatelessWidget {
         spacing.md,
       ),
       color: colorTheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       elevation: 0,
       shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: colorTheme.outlineVariant),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           ListTile(
             title: const Text('有効'),
             trailing: AppSwitch(value: enabled, onChanged: onChanged),
             onTap: () => onChanged(!enabled),
           ),
-          const Divider(height: 1),
-          ListTile(
-            enabled: enabled,
-            title: const Text('割り込みレベル'),
-            trailing: DropdownMenu<InterruptionLevel>(
-              initialSelection: interruptionLevel,
+          // 割り込みレベルは iOS の通知契約の設定。Android の重要度は
+          // Notification Channel 側で管理するため、OS の設定へ委ねる。
+          if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+            const Divider(height: 1),
+            ListTile(
               enabled: enabled,
-              requestFocusOnTap: false,
-              width: 180,
-              onSelected: (next) {
-                if (next != null) {
-                  onInterruptionLevelChanged(next);
-                }
-              },
-              dropdownMenuEntries: InterruptionLevel.values
-                  .map(
-                    (level) => DropdownMenuEntry(
-                      value: level,
-                      label: level.label,
-                    ),
-                  )
-                  .toList(),
+              title: const Text('割り込みレベル'),
+              trailing: SizedBox(
+                width: 180,
+                child: ControlledDropdown<InterruptionLevel>(
+                  enabled: enabled,
+                  items: levels
+                      .map(
+                        (level) => M3EDropdownItem(
+                          value: level,
+                          label: level.label,
+                          selected:
+                              level ==
+                              (levels.contains(interruptionLevel)
+                                  ? interruptionLevel
+                                  : levels.last),
+                        ),
+                      )
+                      .toList(),
+                  onSelectionChanged: (selectedItems) {
+                    if (selectedItems.isEmpty) return;
+                    final next = selectedItems.first.value;
+                    onInterruptionLevelChanged(next);
+                  },
+                ),
+              ),
             ),
-          ),
+          ],
           const Divider(height: 1),
           Padding(
             padding: EdgeInsets.all(spacing.md),

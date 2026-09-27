@@ -53,7 +53,8 @@ void main() {
       expect(p.magnitudeLte, 7);
     });
     test('updateIsWarning(false) は null 化(全件表示)', () {
-      final p = const EewListParameter(isWarning: true).updateIsWarning(value: false);
+      final p = const EewListParameter(isWarning: true)
+          .updateIsWarning(value: false);
       expect(p.isWarning, isNull);
     });
     test('updateIsWarning(true) は true', () {

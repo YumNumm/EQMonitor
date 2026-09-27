@@ -49,4 +49,4 @@ final class ChuckProvider extends $FunctionalProvider<Chuck, Chuck, Chuck>
   }
 }
 
-String _$chuckHash() => r'69b6bee677be70b1af17f3a1ba9ec26b9755b7b6';
+String _$chuckHash() => r'964752e7fa782a8411b5cbef2dd532bd6fdc5340';

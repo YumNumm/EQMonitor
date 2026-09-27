@@ -14,7 +14,10 @@ import AppIntents
 struct EarthquakeSnippetView: View {
     let title: String
     let items: [EarthquakeDisplayItem]
-    let reloadIntent: EarthquakeSnippetIntent
+    let fetchedAt: Date
+    let notice: String
+    let wasRefreshed: Bool
+    let reloadIntent: RefreshEarthquakeSnippetIntent
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -38,12 +41,22 @@ struct EarthquakeSnippetView: View {
                 }
 
                 Button(intent: reloadIntent) {
-                    Image(systemName: "arrow.clockwise")
+                    Label("同じ地域を更新", systemImage: "arrow.clockwise")
                         .font(.system(size: 13, weight: .semibold))
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(DesignTokens.brand)
             }
+
+            Text("情報取得: \(fetchedAt.formatted(date: .numeric, time: .standard))")
+                .font(.caption)
+            if !notice.isEmpty {
+                Text(notice).font(.caption)
+            }
+            Text(wasRefreshed
+                 ? "カードのみ更新済み。ショートカットの戻り値は初回取得時の情報です。"
+                 : "更新は同じ地域のカードに反映されます。ショートカットの戻り値は変わりません。")
+                .font(.caption)
 
             if items.isEmpty {
                 Text("条件に合う地震はありません")

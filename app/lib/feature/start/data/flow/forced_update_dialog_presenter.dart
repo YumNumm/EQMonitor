@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/start/data/model/store_url_model.dart';
 import 'package:eqmonitor/feature/start/data/provider/forced_update_info_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -81,11 +82,11 @@ class ForcedUpdateDialogPresenter {
           ),
           actions: [
             if (dismissible)
-              TextButton(
+              M3ETextButton(
                 onPressed: () => Navigator.of(ctx).pop(),
                 child: const Text('閉じる'),
               ),
-            FilledButton(
+            M3EFilledButton(
               onPressed: url != null
                   ? () {
                       unawaited(

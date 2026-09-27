@@ -22,8 +22,7 @@ melos、mise
 line押し出しの加算位置、子→親fallbackの順序、整数zoom cacheと線幅逆補正は、これらに記録した内容を
 そのまま使う。憶測で別方式を導入しない。
 
-- `docs/knowledge/20260805_maplibre_native_renderer_reference.md` (maplibre-native `f1905c52`)
-- `docs/knowledge/20260802_kevi_map_renderer_reference.md` (KyoshinEewViewerIngen `5a2bf513` / `cc5ce50b`)
+- `docs/knowledge/map_renderer_references.md` (maplibre-native `f1905c52`、KyoshinEewViewerIngen `5a2bf513` / `cc5ce50b`)
 
 ## Global Constraints
 
@@ -53,7 +52,7 @@ Task 1の冒頭で次を確認し、満たせない場合はBLOCKEDとして報�
 
 - `mise exec -- flutter config --enable-dart-data-assets`がこのマシンで有効化済みであること。
   未設定だと`Scene.initializeStaticResources()`が失敗し`Flutter Scene is not ready to render.`が
-  出続ける。`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`を参照する。
+  出続ける。`docs/knowledge/map_renderer.md`を参照する。
 - `app/pubspec.yaml`の`flutter.config.enable-native-assets: true`が維持されていること。
 - `packages/eqmonitor_map/pubspec.yaml`のDart SDK制約と`app/pubspec.yaml`の`^3.11.0`が両立すること。
   `packages/eqmonitor_map/example/pubspec.yaml`は`^3.14.0-29.0.dev`を要求しているため、appから
@@ -397,7 +396,7 @@ Flutter Scene初期化がappのビルドで動くことを最初に確定させ�
 - Modify: `app/lib/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_page.dart`
 - Create: `app/lib/feature/settings/children/config/debug/eqmonitor_map/eqmonitor_map_debug_source_provider.dart`
 - Modify: `packages/eqmonitor_map/README.md`
-- Modify: `docs/todo/800_eqmonitor_map_deferred_verification.md`
+- Modify: `docs/todo/820_map_renderer_and_migration.md`
 
 - [ ] `BaseMapView`を公開する。引数は`VerifiedPmTilesSource source`と`MapCamera initialCamera`、
       および`MapBaseLayerLimits limits`だけとする。controllerを外へ公開しない。
@@ -418,7 +417,7 @@ Flutter Scene初期化がappのビルドで動くことを最初に確定させ�
 - [ ] iOSまたはAndroidの実機かsimulatorで、デバッグページを開いてベースレイヤーが描画されること、
       pan/pinch zoomでtileが差し替わること、日本全域から市区町村レベルまでズームできることを確認する。
       確認できた内容と確認できなかった内容をREADMEへ事実として記録する。未確認を確認済みと書かない。
-- [ ] `docs/todo/800_eqmonitor_map_deferred_verification.md`へ、この縦切りで先送りした項目
+- [ ] `docs/todo/820_map_renderer_and_migration.md`へ、この縦切りで先送りした項目
       （properties/feature ID decode、bevel/round join、cap、dash、Douglas-Peucker間引き、
       MVT extent外bufferのscissor、ラベル、remote source、attestation、hit test、性能HUD、
       widget/golden test、6 byte packing）を追記する。

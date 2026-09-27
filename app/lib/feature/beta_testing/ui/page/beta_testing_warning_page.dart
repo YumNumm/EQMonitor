@@ -1,9 +1,10 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _warnings = [
   'ベータテスト中のため、予期しないバグやクラッシュが発生する可能性があります。',
@@ -55,7 +56,7 @@ class _WarningHeader extends StatelessWidget {
         0,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Container(
             width: 64,
@@ -143,7 +144,7 @@ class _WarningCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(designSystem.spacing.lg),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Container(
             width: 28,
@@ -152,14 +153,14 @@ class _WarningCard extends StatelessWidget {
               color: designSystem.colorTheme.status.warning.withValues(
                 alpha: 0.15,
               ),
-              shape: BoxShape.circle,
+              shape: .circle,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: designSystem.typography.labelMedium.copyWith(
                   color: designSystem.colorTheme.status.warning,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: .w700,
                 ),
               ),
             ),
@@ -195,11 +196,11 @@ class _AgreementBottom extends ConsumerWidget {
           designSystem.spacing.xxl,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
+              child: M3EFilledButton(
                 onPressed: () async {
                   await BetaTestingAgreed.agreeMutation.run(
                     ref,
@@ -210,23 +211,19 @@ class _AgreementBottom extends ConsumerWidget {
                     context.go('/');
                   }
                 },
-                style: FilledButton.styleFrom(
+                decoration: M3EButtonDecoration.styleFrom(
                   backgroundColor: designSystem.colorTheme.status.warning,
                   foregroundColor: const Color(0xFF0F141A),
                   padding: EdgeInsets.symmetric(
                     vertical: designSystem.spacing.lg,
                   ),
-                  shape: RoundedSuperellipseBorder(
-                    borderRadius: BorderRadius.circular(
-                      designSystem.shape.button,
-                    ),
-                  ),
+                  borderRadius: designSystem.shape.button,
                 ),
                 child: Text(
                   '同意して利用する',
                   style: designSystem.typography.labelLarge.copyWith(
                     color: const Color(0xFF0F141A),
-                    fontWeight: FontWeight.w700,
+                    fontWeight: .w700,
                   ),
                 ),
               ),
@@ -237,7 +234,7 @@ class _AgreementBottom extends ConsumerWidget {
               style: designSystem.typography.bodySmall.copyWith(
                 color: designSystem.colorTheme.outline,
               ),
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
           ],
         ),

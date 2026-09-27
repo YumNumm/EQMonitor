@@ -148,9 +148,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryHypocenterGeoJsonBuilder {
-  const new();
-
+class const EarthquakeHistoryHypocenterGeoJsonBuilder() {
   String build({required Coordinate? coordinates}) => jsonEncode({
     'type': 'FeatureCollection',
     'features': <Map<String, dynamic>>[
@@ -167,9 +165,7 @@ class EarthquakeHistoryHypocenterGeoJsonBuilder {
   });
 }
 
-class EarthquakeHistoryHypocenterLayerBuilder {
-  const new();
-
+class const EarthquakeHistoryHypocenterLayerBuilder() {
   static const sourceId = 'earthquake-history-hypocenter';
   static const layerId = 'earthquake-history-hypocenter-symbol';
   static const iconId = 'earthquake-history-hypocenter-icon';

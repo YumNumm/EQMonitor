@@ -374,33 +374,22 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 }
 
-sealed class _NotifierRealtimeMutation {
-  const new({required this.sequence});
-
-  final int sequence;
+sealed class const _NotifierRealtimeMutation({required final int sequence}) {
   String get eventId;
 }
 
-final class _NotifierRealtimeUpsert extends _NotifierRealtimeMutation {
-  const new({
-    required super.sequence,
-    required this.record,
-  });
-
-  final api.Earthquake record;
+final class const _NotifierRealtimeUpsert({
+  required super.sequence,
+  required final api.Earthquake record,
+}) extends _NotifierRealtimeMutation {
   @override
   String get eventId => record.eventId;
 }
 
-final class _NotifierRealtimeDelete extends _NotifierRealtimeMutation {
-  const new({
-    required super.sequence,
-    required this.eventId,
-  });
-
-  @override
-  final String eventId;
-}
+final class const _NotifierRealtimeDelete({
+  required super.sequence,
+  @override required final String eventId,
+}) extends _NotifierRealtimeMutation;
 
 class EarthquakeParameterHasNotInitializedException implements Exception;
 

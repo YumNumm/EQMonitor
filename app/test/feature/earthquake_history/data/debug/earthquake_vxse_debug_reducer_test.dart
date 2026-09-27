@@ -754,23 +754,19 @@ void main() {
 
     test('map collapse対象のduplicate comment・city・stationを適用前にrejectする', () {
       final current = _current();
-      final commentDraft =
-          factory.create(
-                current: draftSource,
-                type: EarthquakeTelegramType.vxse53,
-              )
-              as EarthquakeVxse53DebugDraft;
+      final commentDraft = factory.create(
+        current: draftSource,
+        type: EarthquakeTelegramType.vxse53,
+      ) as EarthquakeVxse53DebugDraft;
       final comment = _comment(
         type: EarthquakeTelegramType.vxse53,
         reportedAt: DateTime.utc(2026, 7, 24, 10),
         text: 'duplicate',
       );
-      final vxse62Draft =
-          factory.create(
-                current: draftSource,
-                type: EarthquakeTelegramType.vxse62,
-              )
-              as EarthquakeVxse62DebugDraft;
+      final vxse62Draft = factory.create(
+        current: draftSource,
+        type: EarthquakeTelegramType.vxse62,
+      ) as EarthquakeVxse62DebugDraft;
       final prefecture = vxse62Draft.intensityTree.values.single.single;
       final city = prefecture.cities.single;
       final station = city.stations.single;

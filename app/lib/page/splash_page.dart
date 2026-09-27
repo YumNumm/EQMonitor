@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/fcm/notification_deep_link.dart';
 import 'package:eqmonitor/core/provider/app_links_interaction.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -9,10 +10,10 @@ import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifi
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SplashPage extends HookConsumerWidget {
@@ -72,7 +73,7 @@ class SplashPage extends HookConsumerWidget {
 
     return const Scaffold(
       body: SafeArea(
-        child: Center(child: CircularProgressIndicator.adaptive()),
+        child: Center(child: AccessibleCircularProgressIndicator()),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -27,7 +28,9 @@ class DebugAppGroupPage extends HookConsumerWidget {
         ],
       ),
       body: switch (values) {
-        AsyncLoading() => const Center(child: CircularProgressIndicator()),
+        AsyncLoading() => const Center(
+          child: AccessibleCircularProgressIndicator(),
+        ),
         AsyncError(:final error) => Center(child: Text('エラー: $error')),
         AsyncData(:final value) => _Body(values: value, action: action),
       },

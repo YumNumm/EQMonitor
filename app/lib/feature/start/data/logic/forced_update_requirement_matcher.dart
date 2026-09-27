@@ -2,11 +2,9 @@ import 'package:eqmonitor/feature/start/data/model/required_version_model.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
-class ForcedUpdateRequirementMatcher {
-  const new({required this.packageInfo});
-
-  final PackageInfo packageInfo;
-
+class const ForcedUpdateRequirementMatcher({
+  required final PackageInfo packageInfo,
+}) {
   bool isUpdateRequired(RequiredVersionModel requiredVersion) {
     final versionUpdateRequired = isVersionUpdateRequired(requiredVersion);
     final buildUpdateRequired = isBuildNumberUpdateRequired(requiredVersion);

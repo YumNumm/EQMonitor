@@ -1,11 +1,12 @@
+import 'package:eqmonitor/core/component/expansion/expandable_section.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_catalog.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/shindo_db_intensity_class_icon.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:intl/intl.dart';
 
 class ShindoDbHypocenterInformationCard extends StatelessWidget {
   const new({
@@ -83,9 +84,9 @@ class _MaxIntensityWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
-        const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('最大震度', style: TextStyle(fontWeight: .bold)),
         const SizedBox(height: 4),
         ShindoDbIntensityClassIcon(intensityClass: maxIntensity, size: 60),
       ],
@@ -141,9 +142,9 @@ class _MagnitudeRow extends StatelessWidget {
 
     if (magnitudes.isEmpty) {
       return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
+        mainAxisSize: .min,
+        crossAxisAlignment: .baseline,
+        textBaseline: .alphabetic,
         children: [
           Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
           Text('不明', style: textTheme.valueStyle(textTheme.headlineMedium)),
@@ -153,12 +154,12 @@ class _MagnitudeRow extends StatelessWidget {
 
     final first = magnitudes.first;
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
+          mainAxisSize: .min,
+          crossAxisAlignment: .baseline,
+          textBaseline: .alphabetic,
           children: [
             Text('M', style: textTheme.labelStyle(textTheme.titleSmall)),
             Text(
@@ -196,7 +197,7 @@ class _DepthRow extends StatelessWidget {
     final hasSecondaryInfo = stderr != null || hypocenter.depthIsFree;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Text.rich(
           TextSpan(
@@ -247,13 +248,15 @@ class _OriginTimeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS頃');
     final stderr = stderrSeconds;
 
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: '発生時刻: ${dateFormat.format(originTime.toLocal())}'),
+          TextSpan(
+            text:
+                '発生時刻: ${originTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinuteSecondMillisecond)}頃',
+          ),
           if (stderr != null) TextSpan(text: '±${stderr.toStringAsFixed(1)}秒'),
         ],
         style: theme.textTheme.bodySmall?.copyWith(
@@ -306,9 +309,9 @@ class _DetailsTile extends StatelessWidget {
         .where((h) => h.seq != primary.seq)
         .toList();
 
-    return ExpansionTile(
+    return ExpandableSection(
       title: Text(
-        '詳細',
+        '震源の詳細情報',
         style: theme.textTheme.bodySmall?.copyWith(
           fontFamily: FontFamily.notoSansJP,
         ),
@@ -316,7 +319,6 @@ class _DetailsTile extends StatelessWidget {
       tilePadding: EdgeInsets.zero,
       childrenPadding: const EdgeInsets.only(bottom: 8),
       children: [
-        _InfoRow(label: 'レコード種別', value: primary.recordTypeLabel),
         if (primary.determinationFlagLabel case final label?)
           _InfoRow(label: '決定フラグ', value: label),
         if (primary.evaluationLabel case final label?)
@@ -330,11 +332,6 @@ class _DetailsTile extends StatelessWidget {
         ),
         for (final (i, h) in others.indexed)
           _HypocenterSection(index: i + 2, hypocenter: h),
-        if (catalog.linkMatchConfidence case final confidence?)
-          _InfoRow(
-            label: '照合信頼度',
-            value: '${(confidence * 100).toStringAsFixed(0)}%',
-          ),
       ],
     );
   }
@@ -351,14 +348,14 @@ class _HypocenterSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Text(
             '震源 $index',
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               fontFamily: FontFamily.notoSansJP,
             ),
           ),
@@ -391,7 +388,7 @@ class _InfoRow extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       child: Row(
         children: [
           SizedBox(
@@ -400,7 +397,8 @@ class _InfoRow extends StatelessWidget {
               label,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: context.designSystem.colorTheme.onSurfaceVariant,
-                fontFamily: FontFamily.notoSansJP,
+                fontFamily: FontFamily.googleSansCode,
+                fontFamilyFallback: const [FontFamily.notoSansJP],
               ),
             ),
           ),
@@ -409,7 +407,10 @@ class _InfoRow extends StatelessWidget {
               value,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: const [FontFamily.notoSansJP],
+                fontFamilyFallback: const [
+                  FontFamily.googleSansCode,
+                  FontFamily.notoSansJP,
+                ],
               ),
             ),
           ),

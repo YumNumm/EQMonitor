@@ -1,16 +1,16 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/shindo_db_intensity_tree.dart';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final earthquakeIntensityAreaFilterProvider = Provider(
-  (ref) => const EarthquakeIntensityAreaFilter(),
-);
+part 'earthquake_intensity_area_filter.g.dart';
+
+@Riverpod(keepAlive: true)
+EarthquakeIntensityAreaFilter earthquakeIntensityAreaFilter(Ref ref) =>
+    const EarthquakeIntensityAreaFilter();
 
 /// 地図と同じ地域コードで各地の震度を絞り込む。
-class EarthquakeIntensityAreaFilter {
-  const new();
-
+class const EarthquakeIntensityAreaFilter() {
   Earthquake filterEarthquake({
     required Earthquake earthquake,
     required String code,

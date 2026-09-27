@@ -56,4 +56,4 @@ final class BuildConfigProvider
   }
 }
 
-String _$buildConfigHash() => r'52caff88c9786a39d6963cc826dcaaa386210f2e';
+String _$buildConfigHash() => r'92e7979d13ad18998755a9cd12f250e68eaa1fd4';

@@ -27,7 +27,7 @@ Flutter SceneをGPU描画基盤としてPMTiles/MVTの地物を描画し、ラ�
 `.fmat`が見つからない不具合の修正として追加されました。pubspecの`flutter: config:`は
 マシンごとのglobal設定より優先されます)。未設定/未反映だと`Scene.initializeStaticResources()`
 が失敗し`Flutter Scene is not ready to render.`が出続けます。詳細は
-[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)を参照してください。
+[`docs/knowledge/map_renderer.md`](../../docs/knowledge/map_renderer.md)を参照してください。
 
 ## 初期スコープ
 
@@ -52,7 +52,7 @@ version付きpacked render batch、bounded performance観測だけを所有し�
 描画phaseはcallerが明示し、Flutter Scene/GPU、PMTiles I/O、地震payload、app統合は
 後続issueの境界に残します。contract、参照実装の採否、検証command、未実施の
 platform確認は
-[`docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md`](../../docs/knowledge/20260809_eqmonitor_map_foundation_contracts.md)
+[`docs/knowledge/map_renderer.md`](../../docs/knowledge/map_renderer.md)
 を参照してください。
 
 ## Scene renderer contract (#1593)
@@ -99,14 +99,14 @@ callerが守る契約は次のとおりです。
 > retireの意味は**Dart参照を落としてGC対象にすること**までです。
 > `flutter_scene`の`gpu.DeviceBuffer`は`dispose()`を持たないため、GPUメモリの
 > 解放時期は決定的ではありません
-> ([`docs/todo/820_flutter_scene_batched_instance_slot_clobber.md`](../../docs/todo/820_flutter_scene_batched_instance_slot_clobber.md)
+> ([`docs/todo/820_map_renderer_and_migration.md`](../../docs/todo/820_map_renderer_and_migration.md)
 > と同じ制約)。frames-in-flight世代が保証するのは「in-flightのframeが
 > 参照しているかもしれない参照を落とさない」ことだけです。
 
 **#1593でdevice/simulatorの可視確認は実施していません。** 検証は
 `flutter test`(561件)と`dart analyze . --fatal-infos`(診断0件)のみです。
 GPU可視出力、pinch、background復帰後の再描画は残余platform riskのままです
-([`docs/todo/800_eqmonitor_map_deferred_verification.md`](../../docs/todo/800_eqmonitor_map_deferred_verification.md))。
+([`docs/todo/820_map_renderer_and_migration.md`](../../docs/todo/820_map_renderer_and_migration.md))。
 
 ## Tile pipeline contract
 
@@ -142,10 +142,8 @@ mise exec -- flutter test test/tile
 mise exec -- dart analyze . --fatal-infos
 ```
 
-未対応の残課題は`docs/todo/810_eqmonitor_map_tile_budget_retained_bytes.md`（保持
-byteの集計上限）、`docs/todo/815_eqmonitor_map_remote_digest_binding.md`（remote応答
-の`sha256`束縛）、`docs/todo/830_eqmonitor_map_scheduler_wiring.md`（cover変更時の
-in-flight cancel）です。
+未対応の残課題は`docs/todo/950_map_data_pipeline.md`（保持byteの集計上限、
+remote応答の`sha256`束縛、cover変更時のin-flight cancel）です。
 
 ## 設計原則
 
@@ -184,7 +182,7 @@ Dart Data Assetです。**`packages/eqmonitor_map/example`は独自の`pubspec.y
 example配下でbuildする場合は引き続きmachineごとに1度だけ次を実行してからbuildします。
 未設定の場合`Scene.initializeStaticResources()`が失敗し、
 `Flutter Scene is not ready to render.`が毎frame出力されます。詳細は
-[`docs/knowledge/20260803_flutter_scene_dart_data_assets.md`](../../docs/knowledge/20260803_flutter_scene_dart_data_assets.md)
+[`docs/knowledge/map_renderer.md`](../../docs/knowledge/map_renderer.md)
 を参照してください。
 
 ```bash

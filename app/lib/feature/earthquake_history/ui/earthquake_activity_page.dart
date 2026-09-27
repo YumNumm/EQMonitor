@@ -1,15 +1,18 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_binner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/logic/earthquake_activity_summary_builder.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_bin_interval.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_bin.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_bin_interval.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_activity_query.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/earthquake_activity_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EarthquakeActivityPage extends HookConsumerWidget {
   const new({required this.initialQuery, super.key});
@@ -45,7 +48,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
           padding: const EdgeInsets.all(12),
           children: [
             Text(
-              '基準時刻 ${DateFormat('yyyy/MM/dd HH:mm').format(query.value.baseOriginTime.toLocal())}',
+              '基準時刻 ${query.value.baseOriginTime.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
             ),
             const Text('近接する地震を時空間条件で抽出したもので、前震・余震を断定するものではありません。'),
             const Text('地震履歴に収録された情報を集計しており、観測された全地震ではありません。'),
@@ -99,7 +102,7 @@ class EarthquakeActivityPage extends HookConsumerWidget {
                 ),
                 title: Text(item.hypocenter?.name ?? '震源地不明'),
                 subtitle: Text(
-                  '${DateFormat('yyyy/MM/dd HH:mm').format(item.originTime?.toLocal() ?? query.value.baseOriginTime.toLocal())}  '
+                  '${(item.originTime ?? query.value.baseOriginTime).formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}  '
                   '${switch (item.hypocenter?.magnitude) {
                     EarthquakeMagnitudeValue(:final value) => 'M${value.toStringAsFixed(1)}',
                     EarthquakeMagnitudeOverM8() => 'M8超',
@@ -108,17 +111,17 @@ class EarthquakeActivityPage extends HookConsumerWidget {
                 ),
               ),
             Text(
-              '最終更新 ${DateFormat('yyyy/MM/dd HH:mm').format(value.fetchedAt.toLocal())}',
-              textAlign: TextAlign.end,
+              '最終更新 ${value.fetchedAt.formatWithTz(DateTimeFormat.yearMonthDayHourMinute)}',
+              textAlign: .end,
             ),
           ],
         ),
         AsyncError() => Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const Text('周辺の地震活動を取得できませんでした'),
-              FilledButton(
+              M3EFilledButton(
                 onPressed: () =>
                     ref.invalidate(earthquakeActivityProvider(query.value)),
                 child: const Text('再試行'),
@@ -151,9 +154,9 @@ class _ActivityControls extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
-          OutlinedButton(
+          M3EOutlinedButton(
             onPressed: query.beforeDays >= 30
                 ? null
                 : () => onQueryChanged(
@@ -161,7 +164,7 @@ class _ActivityControls extends StatelessWidget {
                   ),
             child: const Text('前日を表示'),
           ),
-          OutlinedButton(
+          M3EOutlinedButton(
             onPressed: query.afterDays >= 365
                 ? null
                 : () => onQueryChanged(
@@ -169,7 +172,7 @@ class _ActivityControls extends StatelessWidget {
                   ),
             child: const Text('翌日を表示'),
           ),
-          TextButton(
+          M3ETextButton(
             onPressed: () => onQueryChanged(
               query.copyWith(
                 beforeDays: 1,
@@ -180,35 +183,73 @@ class _ActivityControls extends StatelessWidget {
             ),
             child: const Text('初期値に戻す'),
           ),
-          DropdownButton<int>(
-            value: query.radiusKm,
-            items: [25, 50, 100, 200]
-                .map((v) => DropdownMenuItem(value: v, child: Text('半径${v}km')))
-                .toList(),
-            onChanged: (v) {
-              if (v != null) onQueryChanged(query.copyWith(radiusKm: v));
-            },
-          ),
-          if (query.depth != null)
-            DropdownButton<int>(
-              value: query.depthOffsetKm,
-              items: [20, 50, 100, 200]
-                  .map(
-                    (v) => DropdownMenuItem(value: v, child: Text('深さ±${v}km')),
-                  )
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) onQueryChanged(query.copyWith(depthOffsetKm: v));
+          SizedBox(
+            width: 180,
+            child: ControlledDropdown<int>(
+              singleSelect: true,
+              items:
+                  ([25, 50, 100, 200]
+                          .map(
+                            (v) => M3EDropdownItem(value: v, label: '半径${v}km'),
+                          )
+                          .toList())
+                      .map(
+                        (item) => item.copyWith(
+                          selected: item.value == query.radiusKm,
+                        ),
+                      )
+                      .toList(),
+              onSelectionChanged: (selection) {
+                if (selection.isEmpty) return;
+                final v = selection.first.value;
+                onQueryChanged(query.copyWith(radiusKm: v));
               },
             ),
-          DropdownButton<EarthquakeActivityBinInterval>(
-            value: interval,
-            items: EarthquakeActivityBinInterval.values
-                .map((v) => DropdownMenuItem(value: v, child: Text(v.label)))
-                .toList(),
-            onChanged: (v) {
-              if (v != null) onIntervalChanged(v);
-            },
+          ),
+          if (query.depth != null)
+            SizedBox(
+              width: 180,
+              child: ControlledDropdown<int>(
+                singleSelect: true,
+                items:
+                    ([20, 50, 100, 200]
+                            .map(
+                              (v) =>
+                                  M3EDropdownItem(value: v, label: '深さ±${v}km'),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected: item.value == query.depthOffsetKm,
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final v = selection.first.value;
+                  onQueryChanged(query.copyWith(depthOffsetKm: v));
+                },
+              ),
+            ),
+          SizedBox(
+            width: 180,
+            child: ControlledDropdown<EarthquakeActivityBinInterval>(
+              singleSelect: true,
+              items:
+                  (EarthquakeActivityBinInterval.values
+                          .map((v) => M3EDropdownItem(value: v, label: v.label))
+                          .toList())
+                      .map(
+                        (item) =>
+                            item.copyWith(selected: item.value == interval),
+                      )
+                      .toList(),
+              onSelectionChanged: (selection) {
+                if (selection.isEmpty) return;
+                final v = selection.first.value;
+                onIntervalChanged(v);
+              },
+            ),
           ),
         ],
       ),
@@ -250,7 +291,7 @@ class _ActivityChart extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const Text('時間別地震回数'),
             for (final bin in bins)
@@ -263,12 +304,14 @@ class _ActivityChart extends StatelessWidget {
                       SizedBox(
                         width: 72,
                         child: Text(
-                          DateFormat('MM/dd HH:mm').format(bin.start.toLocal()),
+                          bin.start.formatWithTz(
+                            DateTimeFormat.monthDayHourMinute,
+                          ),
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),
                       Expanded(
-                        child: LinearProgressIndicator(
+                        child: AccessibleLinearProgressIndicator(
                           value: bin.totalCount / maximum,
                           minHeight: 12,
                         ),

@@ -2,34 +2,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_map_eew_focus_transition.g.dart';
 
-final class HomeMapEewFocusSession {
-  const new({
-    required this.eventIds,
-    required this.isFocused,
-  });
-
+final class const HomeMapEewFocusSession({
+  required final Set<String> eventIds,
+  required final bool isFocused,
+}) {
   static const initial = HomeMapEewFocusSession(
     eventIds: <String>{},
     isFocused: false,
   );
-
-  final Set<String> eventIds;
-  final bool isFocused;
 }
 
-final class HomeMapEewFocusDecision {
-  const new({
-    required this.session,
-    required this.shouldFocus,
-  });
+final class const HomeMapEewFocusDecision({
+  required final HomeMapEewFocusSession session,
+  required final bool shouldFocus,
+});
 
-  final HomeMapEewFocusSession session;
-  final bool shouldFocus;
-}
-
-class HomeMapEewFocusTransition {
-  const new();
-
+class const HomeMapEewFocusTransition() {
   HomeMapEewFocusDecision sync({
     required HomeMapEewFocusSession previous,
     required Set<String> eventIds,

@@ -13,9 +13,11 @@ class TelegramDetails extends _$TelegramDetails
   @override
   Future<Map<String, TelegramDetailResponse>> build(String eventId) {
     ref.listen(realtimeEventsProvider, (_, next) {
-      if (next case AsyncData(
-        value: RealtimeEarthquakeUpsertEvent(:final record),
-      ) when record.eventId == eventId) {
+      if (next
+          case AsyncData(
+            value: RealtimeEarthquakeUpsertEvent(:final record),
+          )
+          when record.eventId == eventId) {
         ref.invalidateSelf();
       }
     });

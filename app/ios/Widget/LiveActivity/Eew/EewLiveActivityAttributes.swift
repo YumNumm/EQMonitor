@@ -14,7 +14,7 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 }
 
 struct EewContentState: Codable, Hashable {
-    let eventId: String
+    let eventId: String?
     let type: String?
     let hypocenterName: String?
     let magnitude: Double?
@@ -59,7 +59,9 @@ struct EewContentState: Codable, Hashable {
             arrivalDate: location?.arrivalDate,
             depth: depth,
             isLowAccuracyDetection: isPlum == true || isLevel == true
-                || isOnePoint == true
+                || isOnePoint == true,
+            isLocationWarning: location?.isWarning == true,
+            isLocationPlum: location?.isPlum == true
         )
     }
 }
@@ -71,6 +73,64 @@ extension EewLiveActivityAttributes {
 }
 
 // MARK: - Preview Data
+
+extension EewContentState {
+    /// Preview生成時を基準にすることで固定日時による常時0秒表示を避ける。
+    static func designReviewStates(now: Date = Date()) -> [EewContentState] {
+        [
+            designReview(now: now, localIntensity: "6+", locationWarning: true),
+            designReview(now: now, localIntensity: "3"),
+            designReview(now: now, warning: false, localIntensity: "4"),
+            designReview(now: now, warning: false),
+            designReview(now: now, localIntensity: "6+", locationWarning: true, arrival: false),
+            designReview(now: now, localIntensity: nil, locationWarning: true),
+            designReview(now: now, localIntensity: "6+", locationWarning: true, canceled: true),
+            .deepHypocenter,
+            .plum,
+            designReview(now: now, warning: false, localIntensity: "3"),
+            designReview(now: now, localIntensity: "1"),
+            designReview(now: now, localIntensity: "2"),
+        ]
+    }
+
+    private static func designReview(
+        now: Date,
+        warning: Bool = true,
+        localIntensity: String? = nil,
+        locationWarning: Bool = false,
+        arrival: Bool = true,
+        canceled: Bool = false
+    ) -> EewContentState {
+        let formatter = ISO8601DateFormatter()
+        let location: LocationInfo? = localIntensity != nil || locationWarning
+            ? LocationInfo(
+                regionName: "神奈川県東部",
+                forecastIntensity: localIntensity,
+                forecastLpgmIntensity: nil,
+                arrivalTime: arrival ? formatter.string(from: now.addingTimeInterval(31)) : nil,
+                isWarning: locationWarning
+            ) : nil
+        return EewContentState(
+            eventId: "preview-design-review",
+            type: "eew",
+            hypocenterName: "石川県能登地方",
+            magnitude: 5.8,
+            depth: 50,
+            time: formatter.string(from: now.addingTimeInterval(-12)),
+            isOriginTime: true,
+            maxIntensity: warning ? "6+" : "4",
+            serialNo: 32,
+            isFinal: false,
+            isWarning: warning,
+            isCanceled: canceled,
+            headline: warning ? "石川県で地震 北陸で強い揺れ" : "石川県で地震",
+            isPlum: false,
+            isLevel: false,
+            isOnePoint: false,
+            location: location
+        )
+    }
+}
 
 extension EewContentState {
     static let noto32 = EewContentState(
@@ -94,8 +154,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "5-",
             forecastLpgmIntensity: "2",
-            arrivalTime: "2024-01-01T16:12:30+09:00",
-            intensity: nil
+            arrivalTime: "2024-01-01T16:12:30+09:00"
         )
     )
 
@@ -182,8 +241,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "4",
             forecastLpgmIntensity: nil,
-            arrivalTime: nil,
-            intensity: nil
+            arrivalTime: nil
         )
     )
 
@@ -208,8 +266,7 @@ extension EewContentState {
             regionName: "神奈川県東部",
             forecastIntensity: "3",
             forecastLpgmIntensity: nil,
-            arrivalTime: nil,
-            intensity: nil
+            arrivalTime: nil
         )
     )
 
@@ -256,8 +313,7 @@ extension EewContentState {
             regionName: "東京都23区",
             forecastIntensity: "5-",
             forecastLpgmIntensity: "2",
-            arrivalTime: "2024-01-06T16:12:30+09:00",
-            intensity: nil
+            arrivalTime: "2024-01-06T16:12:30+09:00"
         )
     )
 
@@ -288,8 +344,7 @@ extension EewContentState {
                 forecastLpgmIntensity: "2",
                 arrivalTime: formatter.string(
                     from: Date().addingTimeInterval(secondsUntilArrival)
-                ),
-                intensity: nil
+                )
             )
         )
     }
@@ -475,8 +530,7 @@ extension EewContentState {
                 regionName: "富山県東部",
                 forecastIntensity: forecastIntensity,
                 forecastLpgmIntensity: nil,
-                arrivalTime: formatter.string(from: arrivalTime),
-                intensity: nil
+                arrivalTime: formatter.string(from: arrivalTime)
             )
         )
     }
@@ -510,8 +564,7 @@ extension EewContentState {
                 regionName: "東京都23区",
                 forecastIntensity: "2",
                 forecastLpgmIntensity: nil,
-                arrivalTime: formatter.string(from: arrivalTime),
-                intensity: nil
+                arrivalTime: formatter.string(from: arrivalTime)
             )
         )
     }

@@ -6,7 +6,7 @@ on:
       - "*"
   pull_request:
     branches:
-      - "*"
+      - "**"
     types:
       - opened
       - synchronize
@@ -79,7 +79,13 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
-          install_args: ghalint
+          install_args: "ghalint yq"
+
+      - name: Verify Flutter job setup
+        run: python3 scripts/ci/test_flutter_job_setup.py
+
+      - name: Verify mise download retries
+        run: python3 scripts/ci/test_mise_download_retry.py
 
       - name: Run ghalint
         run: |
@@ -165,7 +171,7 @@ jobs:
         with:
           install_args: zizmor
 
-      - name: Run zizmor (GitHub annotations)
+      - name: Run zizmor
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

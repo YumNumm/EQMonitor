@@ -3,15 +3,10 @@ import 'package:nied_api_client/src/hinet/jmalist/model/hinet_jmalist_event.dart
 import 'package:nied_api_client/src/hinet/jmalist/parser/hinet_jmalist_parser.dart';
 
 /// [HinetJmalistApiClient.fetchRange] の進捗。
-class HinetJmalistFetchProgress {
-  const new({
-    required this.completedRequests,
-    required this.totalRequests,
-  });
-
-  final int completedRequests;
-  final int totalRequests;
-}
+class const HinetJmalistFetchProgress({
+  required final int completedRequests,
+  required final int totalRequests,
+});
 
 /// [HinetJmalistApiClient.fetchRange] の途中(あるチャンク)取得に失敗した場合に
 /// 送出される例外。
@@ -20,26 +15,19 @@ class HinetJmalistFetchProgress {
 /// 中断し、それまでに取得済みの [partialResult] と、失敗したチャンクの期間
 /// ([failedFrom]/[failedTo])、元の例外([cause])を保持する。呼び出し側は
 /// 部分結果を破棄せず活用するかどうかを判断できる。
-class HinetJmalistPartialFetchException implements Exception {
-  const new({
-    required this.partialResult,
-    required this.failedFrom,
-    required this.failedTo,
-    required this.cause,
-  });
-
+class const HinetJmalistPartialFetchException({
   /// 失敗するまでに取得できていた結果。
-  final HinetJmalistParseResult partialResult;
+  required final HinetJmalistParseResult partialResult,
 
   /// 失敗したチャンクの開始日(UTC、この日を含む)。
-  final DateTime failedFrom;
+  required final DateTime failedFrom,
 
   /// 失敗したチャンクの終了日(UTC、この日を含む)。
-  final DateTime failedTo;
+  required final DateTime failedTo,
 
   /// 失敗の原因となった元の例外。
-  final Object cause;
-
+  required final Object cause,
+}) implements Exception {
   @override
   String toString() =>
       'HinetJmalistPartialFetchException: '

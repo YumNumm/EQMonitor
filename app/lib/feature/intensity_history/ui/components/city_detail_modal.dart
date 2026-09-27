@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -13,9 +14,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CityDetailModalAction {
   Future<void> show(
@@ -24,10 +26,12 @@ class CityDetailModalAction {
     required String cityName,
     required String prefectureName,
     JmaIntensity? maxIntensity,
-  }) => showModalBottomSheet<void>(
+  }) => showM3EModalBottomSheet<void>(
+    useSafeArea: false,
+    style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
     context: context,
     isScrollControlled: true,
-    clipBehavior: Clip.antiAlias,
+    clipBehavior: .antiAlias,
     builder: (context) => _CityDetailModal(
       cityCode: cityCode,
       cityName: cityName,
@@ -95,7 +99,7 @@ class _CityDetailModal extends HookConsumerWidget {
                 child: Text(
                   '観測した地震',
                   style: Theme.of(context).textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                      ?.copyWith(fontWeight: .bold),
                 ),
               ),
             ),
@@ -189,7 +193,7 @@ class _AreaEarthquakeListSliverGroup extends HookConsumerWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: OutlinedButton.icon(
+              child: M3EOutlinedButton.icon(
                 onPressed: isAppending
                     ? null
                     : () async {
@@ -225,9 +229,9 @@ class _InitialLoadingSliver extends StatelessWidget {
       hasScrollBody: false,
       child: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
-            CircularProgressIndicator.adaptive(),
+            AccessibleCircularProgressIndicator(),
             SizedBox(height: 12),
             Text('地震一覧を読み込んでいます'),
           ],
@@ -274,7 +278,7 @@ class _SummarySection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           if (maxIntensity case final maxIntensity?) ...[
             JmaIntensityIcon(
@@ -286,7 +290,7 @@ class _SummarySection extends StatelessWidget {
           ],
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   prefectureName,
@@ -296,9 +300,9 @@ class _SummarySection extends StatelessWidget {
                 ),
                 Text(
                   cityName,
-                  textAlign: TextAlign.left,
+                  textAlign: .left,
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 Text(

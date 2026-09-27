@@ -3,9 +3,7 @@ import 'dart:typed_data';
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
-final class SeismicityMvtValueDecoder {
-  const new();
-
+final class const SeismicityMvtValueDecoder() {
   static final _float32Buffer = Float32List(1);
 
   String requireString({

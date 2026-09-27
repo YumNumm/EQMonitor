@@ -108,12 +108,10 @@ class JmaRegionResolver {
 }
 
 /// 市区町村コード → 親一次細分化地域コード/名のペア。
-class EarthquakeParentRegion {
-  const new({required this.code, required this.name});
-
-  final int code;
-  final String name;
-}
+class const EarthquakeParentRegion({
+  required final int code,
+  required final String name,
+});
 
 /// `earthquake_param.regions[].cities[]` を走査し、
 /// 市区町村コード → 親一次細分化地域 のルックアップを構築する。

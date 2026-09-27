@@ -1,12 +1,9 @@
+import 'package:eqmonitor/feature/location/data/repository/device_location_consumers_repository.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
-import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
-import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_override.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_slot_draft.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/notification_slot_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,14 +21,8 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     final repo = await ref.watch(notificationSlotRepositoryProvider.future);
     final slots = await repo.getSlots();
     await ref
-        .read(deviceLocationSyncStateRepositoryProvider)
-        .writeAvailability(
-          slots.any(
-                (slot) => slot.slotType == NotificationSlotType.currentLocation,
-              )
-              ? DeviceLocationSyncAvailability.enabled
-              : DeviceLocationSyncAvailability.disabled,
-        );
+        .read(deviceLocationConsumersRepositoryProvider)
+        .updateSlots(slots);
     return slots;
   }
 
@@ -54,21 +45,20 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
-    await ref
-        .read(deviceLocationSyncStateRepositoryProvider)
-        .writeAvailability(DeviceLocationSyncAvailability.enabled);
-    final shakeDetectionState = await (() async {
-      try {
-        return await ref.read(shakeDetectionSettingsProvider.future);
-      } on Object catch (e, st) {
-        talker.error('[NotificationSlots] read shake settings failed', e, st);
-        return null;
-      }
-    })();
-    await const BackgroundLocationMonitoringLifecycle().reconcile(
-      slots: [currentLocationSlot],
-      shakeDetectionState: shakeDetectionState,
-    );
+    await ref.read(deviceLocationConsumersRepositoryProvider).updateSlots([
+      currentLocationSlot,
+    ]);
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == currentLocationSlot.id) currentLocationSlot else slot,
+        if (!previous.any((slot) => slot.id == currentLocationSlot.id))
+          currentLocationSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 
@@ -77,28 +67,9 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
   Future<void> replaceSlots(List<NotificationSlotDraft> slots) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     final replacedSlots = await repo.replaceSlots(slots);
-    final hasCurrentLocation = replacedSlots.any(
-      (slot) => slot.slotType == NotificationSlotType.currentLocation,
-    );
     await ref
-        .read(deviceLocationSyncStateRepositoryProvider)
-        .writeAvailability(
-          hasCurrentLocation
-              ? DeviceLocationSyncAvailability.enabled
-              : DeviceLocationSyncAvailability.disabled,
-        );
-    final shakeDetectionState = await (() async {
-      try {
-        return await ref.read(shakeDetectionSettingsProvider.future);
-      } on Object catch (e, st) {
-        talker.error('[NotificationSlots] read shake settings failed', e, st);
-        return null;
-      }
-    })();
-    await const BackgroundLocationMonitoringLifecycle().reconcile(
-      slots: replacedSlots,
-      shakeDetectionState: shakeDetectionState,
-    );
+        .read(deviceLocationConsumersRepositoryProvider)
+        .updateSlots(replacedSlots);
     ref.invalidateSelf();
   }
 
@@ -109,24 +80,12 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
     await repo.deleteCurrentLocation();
     await ref
-        .read(deviceLocationSyncStateRepositoryProvider)
-        .writeAvailability(DeviceLocationSyncAvailability.disabled);
-    final slotsWithoutCurrentLocation = currentSlots
-        .where((s) => s.slotType != NotificationSlotType.currentLocation)
-        .toList();
-    final shakeDetectionState = await (() async {
-      try {
-        return await ref.read(shakeDetectionSettingsProvider.future);
-      } on Object catch (e, st) {
-        talker.error('[NotificationSlots] read shake settings failed', e, st);
-        return null;
-      }
-    })();
-    const lifecycle = BackgroundLocationMonitoringLifecycle();
-    await lifecycle.reconcile(
-      slots: slotsWithoutCurrentLocation,
-      shakeDetectionState: shakeDetectionState,
-    );
+        .read(deviceLocationConsumersRepositoryProvider)
+        .updateSlots(
+          currentSlots
+              .where((s) => s.slotType != NotificationSlotType.currentLocation)
+              .toList(),
+        );
     ref.invalidateSelf();
   }
 
@@ -141,7 +100,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.putNationwide(
+    final updatedSlot = await repo.putNationwide(
       eewEnabled: eewEnabled,
       eewMinIntensity: eewMinIntensity,
       eewOverrides: eewOverrides,
@@ -149,6 +108,16 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == updatedSlot.id) updatedSlot else slot,
+        if (!previous.any((slot) => slot.id == updatedSlot.id)) updatedSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 
@@ -205,7 +174,7 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
     List<NotificationOverride>? earthquakeOverrides,
   }) async {
     final repo = await ref.read(notificationSlotRepositoryProvider.future);
-    await repo.updateRegion(
+    final updatedSlot = await repo.updateRegion(
       slotId: slotId,
       regionName: regionName,
       cityCode: cityCode,
@@ -217,6 +186,16 @@ class NotificationSlotsNotifier extends _$NotificationSlotsNotifier {
       earthquakeMinIntensity: earthquakeMinIntensity,
       earthquakeOverrides: earthquakeOverrides,
     );
+    // Publish the authoritative write response before a fallible refetch.
+    // Subsequent edits must not resurrect overrides removed by this write.
+    final previous = state.value;
+    if (previous != null) {
+      state = AsyncData([
+        for (final slot in previous)
+          if (slot.id == updatedSlot.id) updatedSlot else slot,
+        if (!previous.any((slot) => slot.id == updatedSlot.id)) updatedSlot,
+      ]);
+    }
     ref.invalidateSelf();
   }
 

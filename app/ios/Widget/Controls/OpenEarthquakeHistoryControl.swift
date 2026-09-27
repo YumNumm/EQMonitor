@@ -17,15 +17,3 @@ struct OpenEarthquakeHistoryControl: ControlWidget {
         .description("EQMonitor の地震履歴を開きます")
     }
 }
-
-/// `OpenURLIntent` は iOS 18 以降。
-@available(iOS 18.0, *)
-struct OpenEarthquakeHistoryIntent: AppIntent {
-    static let title: LocalizedStringResource = "地震履歴を開く"
-    static let openAppWhenRun = true
-
-    func perform() async throws -> some IntentResult & OpensIntent {
-        .result(opensIntent: OpenURLIntent(
-            URL(string: "eqmonitor:///earthquake-history")!))
-    }
-}

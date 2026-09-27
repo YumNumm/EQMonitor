@@ -113,12 +113,11 @@ Release不在、API失敗のいずれもjobを失敗させ、成功扱いには�
 7. サニタイズを2回適用しても結果が変わらない。
 8. 既存Release修復モードでは新しいタグを作らない。
 
-加えて `mise exec -- actionlint .github/workflows/*.yaml` と、追加したfocused testを
-実行する。実際のストア公開はローカルテストでは行わず、修正後のbetaでActions
+追加した focused test を実行する。実際のストア公開はローカルテストでは行わず、修正後のbetaでActions
 run、GitHub Deployments、TestFlight、Firebase、Google Play `external` の状態を
 確認する。
 
 ## 運用知識
 
 betaタグと外部配布の関係、GitHub Deploymentの確認方法、Release Notes内の
-メンション安全化を `docs/knowledge/20260725_beta_release_deployment.md` に記録する。
+メンション安全化を `docs/knowledge/delivery_ci.md` に記録する。

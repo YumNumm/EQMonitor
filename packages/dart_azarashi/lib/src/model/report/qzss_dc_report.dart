@@ -8,29 +8,18 @@ part 'qzss_dc_report.g.dart';
 
 /// Hypocenter coordinates data class.
 @JsonSerializable()
-class HypocenterCoordinates {
-  const new({
-    required this.latNs,
-    required this.latD,
-    required this.latM,
-    required this.latS,
-    required this.lonEw,
-    required this.lonD,
-    required this.lonM,
-    required this.lonS,
-  });
-
+class const HypocenterCoordinates({
+  required final int latNs,
+  required final int latD,
+  required final int latM,
+  required final int latS,
+  required final int lonEw,
+  required final int lonD,
+  required final int lonM,
+  required final int lonS,
+}) {
   factory fromJson(Map<String, dynamic> json) =>
       _$HypocenterCoordinatesFromJson(json);
-
-  final int latNs;
-  final int latD;
-  final int latM;
-  final int latS;
-  final int lonEw;
-  final int lonD;
-  final int lonM;
-  final int lonS;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String get latitude => '${latNs == 0 ? 'N' : 'S'}$latD°$latM\'$latS"';
@@ -536,6 +525,5 @@ sealed class QzssDcReport with _$QzssDcReport {
     int? satellitePrn,
   }) = QzssDcReportDcxUnknown;
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$QzssDcReportFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$QzssDcReportFromJson(json);
 }

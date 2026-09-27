@@ -5,9 +5,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'replay_data.freezed.dart';
 part 'replay_data.g.dart';
 
-sealed class ReplayData {
-  const new({required this.type, required this.time});
-
+sealed class const ReplayData({
+  required final ReplayDataType type,
+  required final DateTime time,
+}) {
   factory fromMsgPack(List<dynamic> data) {
     final type = data[0] as int;
     final body = data[1] as List<dynamic>;
@@ -30,10 +31,6 @@ sealed class ReplayData {
       ReplayDataType.eqMonitorEew => EqMonitorEewReplayData.fromMsgPack(body),
     };
   }
-
-  final ReplayDataType type;
-
-  final DateTime time;
 }
 
 @freezed
@@ -110,17 +107,16 @@ abstract class KyoshinMonitorImageReplayData
   factory fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorImageReplayDataFromJson(json);
 
-  factory fromMsgPack(List<dynamic> data) =>
-      KyoshinMonitorImageReplayData(
-        type: ReplayDataType.kyoshinMonitorImage,
-        time: data[0] as DateTime,
-        images: (data[1] as Map<dynamic, dynamic>).map(
-          (key, value) => MapEntry(
-            ImageType.values[key as int],
-            (value as List<dynamic>).cast<int>(),
-          ),
-        ),
-      );
+  factory fromMsgPack(List<dynamic> data) => KyoshinMonitorImageReplayData(
+    type: ReplayDataType.kyoshinMonitorImage,
+    time: data[0] as DateTime,
+    images: (data[1] as Map<dynamic, dynamic>).map(
+      (key, value) => MapEntry(
+        ImageType.values[key as int],
+        (value as List<dynamic>).cast<int>(),
+      ),
+    ),
+  );
 
   @override
   String toString() =>

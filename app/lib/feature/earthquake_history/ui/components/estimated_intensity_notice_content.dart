@@ -13,8 +13,8 @@ class EstimatedIntensityNoticeContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: .start,
+      mainAxisSize: .min,
       children: [
         _BulletText(
           '推計震度分布図で示すメッシュの震度は、'
@@ -68,7 +68,7 @@ class _BulletText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Text('・', style: style),
         Expanded(child: Text(text, style: style)),

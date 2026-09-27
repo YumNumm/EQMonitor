@@ -287,7 +287,7 @@ git commit -m "Fix: 長周期データの取得レイヤーを地表に制限"
 ### Task 3: 運用知見を記録して全体を検証する
 
 **Files:**
-- Create: `docs/knowledge/20260816_lpgm_monitor_endpoints.md`
+- Modify: `docs/knowledge/kyoshin_time.md`
 
 **Interfaces:**
 - Consumes: 公式サイト JavaScript、HTTP 200/404 の実測、`ingen084/KyoshinMonitorLib` の責務分離。
@@ -336,7 +336,7 @@ Expected: 固定値フォールバック、ランダム値、`print()`、`dynami
 - [ ] **Step 5: 知識ドキュメントをコミットする**
 
 ```bash
-git add docs/knowledge/20260816_lpgm_monitor_endpoints.md
+git add docs/knowledge/kyoshin_time.md
 git commit -m "Docs: LMoni配信経路の運用知識を記録"
 ```
 

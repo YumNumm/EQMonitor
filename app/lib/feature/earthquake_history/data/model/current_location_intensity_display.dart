@@ -28,6 +28,5 @@ sealed class CurrentLocationIntensityDisplay
   }) = CurrentLocationIntensityDisplayResult;
 
   /// 現在地に対応する震度がない。
-  const factory none() =
-      CurrentLocationIntensityDisplayNone;
+  const factory none() = CurrentLocationIntensityDisplayNone;
 }

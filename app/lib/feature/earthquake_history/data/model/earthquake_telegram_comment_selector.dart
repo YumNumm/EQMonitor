@@ -4,9 +4,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:extensions/extensions.dart';
 
 /// 電文コメントの抽出・選択を行う。
-class EarthquakeTelegramCommentSelector {
-  const new();
-
+class const EarthquakeTelegramCommentSelector() {
   /// APIの電文リストからコメント（固定付加文・自由付加文）を持つ電文を抽出する
   List<EarthquakeTelegramComment> extract(
     List<api.EarthquakeTelegram> telegrams,

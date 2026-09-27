@@ -4,8 +4,6 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/model/debug_live_activity_preset.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/data/repository/debug_live_activity_content_builder.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
-import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -151,45 +149,6 @@ void main() {
       expect(map['magnitude'], isNull);
       expect(map['time'], isNull);
       expect(map['maxIntensity'], isNull);
-    });
-  });
-
-  group('shake', () {
-    test('shakeFromPreset は Level を大文字始まりの文字列に変換する', () {
-      final map = builder.shakeFromPreset(
-        preset: DebugShakePreset.strong,
-        eventId: 'shake-1',
-        now: now,
-      );
-
-      expect(map['type'], 'shake_detection');
-      expect(map['level'], 'Strong');
-      final location = map['location'] as Map<String, dynamic>;
-      expect(location['intensity'], 3.2);
-    });
-
-    test('shakeFromEvent は実データを変換する', () {
-      final event = ShakeDetectionEvent(
-        eventId: 'shake-2',
-        serialNo: 3,
-        createdAt: now,
-        updatedAt: now,
-        expiresAt: now,
-        level: ShakeDetectionLevel.stronger,
-        pointCount: 4,
-        minLat: 35,
-        maxLat: 36,
-        minLng: 139,
-        maxLng: 140,
-        changeReasons: const [],
-      );
-
-      final map = builder.shakeFromEvent(event);
-
-      expect(map['eventId'], 'shake-2');
-      expect(map['level'], 'Stronger');
-      expect(map['detectedAt'], '2024-01-01T16:10:00+09:00');
-      expect(map['location'], isNull);
     });
   });
 }

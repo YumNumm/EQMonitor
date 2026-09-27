@@ -8,12 +8,10 @@ typedef EstimatedIntensityRegionStation = ({
 });
 
 /// JMA パラメータから推定震度計算用の観測点インデックスを構築する。
-final class EstimatedIntensityStationIndex {
-  const new({
-    required this.regionStations,
-    required this.calculationPoints,
-  });
-
+final class const EstimatedIntensityStationIndex({
+  required final List<EstimatedIntensityRegionStation> regionStations,
+  required final List<CalculationPoint> calculationPoints,
+}) {
   factory fromEarthquakeParameter(
     EarthquakeParameter earthquake,
   ) {
@@ -45,7 +43,4 @@ final class EstimatedIntensityStationIndex {
       ],
     );
   }
-
-  final List<EstimatedIntensityRegionStation> regionStations;
-  final List<CalculationPoint> calculationPoints;
 }

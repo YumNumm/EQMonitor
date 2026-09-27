@@ -6,9 +6,7 @@ part 'device_id_decoder.g.dart';
 @riverpod
 DeviceIdDecoder deviceIdDecoder(Ref ref) => const DeviceIdDecoder();
 
-final class DeviceIdDecoder {
-  const new();
-
+final class const DeviceIdDecoder() {
   String decode({required String token}) {
     try {
       final payload = JWT.decode(token).payload;

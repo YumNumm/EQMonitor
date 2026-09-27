@@ -19,5 +19,4 @@ class StartupProfiler {
   void measure(String phase, int micros) => _timings[phase] = micros;
 
   Map<String, int> get timingsMicros => Map.unmodifiable(_timings);
-
 }

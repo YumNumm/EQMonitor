@@ -1,6 +1,8 @@
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_apply_mode.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/debug/earthquake_vxse_debug_draft.dart';
@@ -13,15 +15,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magni
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_comment.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_vxse_debug_editor_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/action/earthquake_vxse_debug_action.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_vxse_debug_editor_semantic_key.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _semanticKey = EarthquakeVxseDebugEditorSemanticKey();
 
@@ -77,7 +80,7 @@ class EarthquakeVxseDebugEditor extends HookConsumerWidget {
               const SizedBox(height: 16),
               _JsonEditor(state: state, notifier: notifier),
               const SizedBox(height: 16),
-              FilledButton.icon(
+              M3EFilledButton.icon(
                 key: const Key('vxse-apply-button'),
                 onPressed: state.canApply
                     ? () => ref
@@ -112,7 +115,7 @@ class _SharedReportFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('電文', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -129,9 +132,9 @@ class _SharedReportFields extends StatelessWidget {
                       EarthquakeTelegramType.vxse62,
                     ]
                     .map(
-                      (type) => DropdownMenuItem(
+                      (type) => M3EDropdownItem(
                         value: type,
-                        child: Text(type.name.toUpperCase()),
+                        label: type.name.toUpperCase(),
                       ),
                     )
                     .toList(),
@@ -147,12 +150,12 @@ class _SharedReportFields extends StatelessWidget {
             label: '適用方法',
             items: EarthquakeVxseApplyMode.values
                 .map(
-                  (mode) => DropdownMenuItem(
+                  (mode) => M3EDropdownItem(
                     value: mode,
-                    child: Text(switch (mode) {
+                    label: switch (mode) {
                       .merge => 'マージ',
                       .clearAndApply => '所有フィールドを消去して適用',
-                    }),
+                    },
                   ),
                 )
                 .toList(),
@@ -166,7 +169,7 @@ class _SharedReportFields extends StatelessWidget {
           _ControlledTextFormField(
             fieldKey: const Key('reported-at-field'),
             fieldId: 'reportedAt',
-            value: state.draft.reportedAt.toIso8601String(),
+            value: state.draft.reportedAt.tokyoDateTime.toIso8601String(),
             label: '発表時刻 (ISO 8601)',
             notifier: notifier,
             validation: (value) =>
@@ -181,7 +184,7 @@ class _SharedReportFields extends StatelessWidget {
             items: TelegramStatus.values
                 .map(
                   (status) =>
-                      DropdownMenuItem(value: status, child: Text(status.name)),
+                      M3EDropdownItem(value: status, label: status.name),
                 )
                 .toList(),
             onChanged: (value) {
@@ -263,13 +266,13 @@ class _HypocenterFields extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('震源', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             _ControlledTextFormField(
               fieldId: 'arrivalTime',
-              value: arrivalTime?.toIso8601String() ?? '',
+              value: arrivalTime?.tokyoDateTime.toIso8601String() ?? '',
               label: '検知時刻',
               notifier: notifier,
               validation: (value) =>
@@ -283,7 +286,7 @@ class _HypocenterFields extends StatelessWidget {
             const SizedBox(height: 8),
             _ControlledTextFormField(
               fieldId: 'originTime',
-              value: originTime?.toIso8601String() ?? '',
+              value: originTime?.tokyoDateTime.toIso8601String() ?? '',
               label: '発生時刻',
               notifier: notifier,
               validation: (value) =>
@@ -356,10 +359,8 @@ class _HypocenterFields extends StatelessWidget {
                     label: '座標種別',
                     items: _CoordinateEditorType.values
                         .map(
-                          (value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(value.name),
-                          ),
+                          (value) =>
+                              M3EDropdownItem(value: value, label: value.name),
                         )
                         .toList(),
                     onChanged: (value) {
@@ -388,10 +389,8 @@ class _HypocenterFields extends StatelessWidget {
                     label: 'M種別',
                     items: _MagnitudeEditorType.values
                         .map(
-                          (value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(value.name),
-                          ),
+                          (value) =>
+                              M3EDropdownItem(value: value, label: value.name),
                         )
                         .toList(),
                     onChanged: (value) {
@@ -419,10 +418,8 @@ class _HypocenterFields extends StatelessWidget {
                     label: '深さ種別',
                     items: _DepthEditorType.values
                         .map(
-                          (value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(value.name),
-                          ),
+                          (value) =>
+                              M3EDropdownItem(value: value, label: value.name),
                         )
                         .toList(),
                     onChanged: (value) {
@@ -532,10 +529,8 @@ class _HypocenterFields extends StatelessWidget {
                 label: '地震種別',
                 items: EarthquakeType.values
                     .map(
-                      (value) => DropdownMenuItem(
-                        value: value,
-                        child: Text(value.name),
-                      ),
+                      (value) =>
+                          M3EDropdownItem(value: value, label: value.name),
                     )
                     .toList(),
                 onChanged: (value) {
@@ -593,7 +588,7 @@ class _SeismicIntensityFields extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('震度', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -602,10 +597,8 @@ class _SeismicIntensityFields extends StatelessWidget {
               label: '最大震度',
               items: JmaIntensity.values
                   .map(
-                    (value) => DropdownMenuItem(
-                      value: value,
-                      child: Text(value.label),
-                    ),
+                    (value) =>
+                        M3EDropdownItem(value: value, label: value.label),
                   )
                   .toList(),
               onChanged: (value) {
@@ -673,7 +666,7 @@ class _SeismicIntensityFields extends StatelessWidget {
                 ),
             Align(
               alignment: Alignment.centerLeft,
-              child: TextButton.icon(
+              child: M3ETextButton.icon(
                 key: const Key('ordinary-region-add'),
                 onPressed: () {
                   final code = const EarthquakeVxseDebugDraftIdentityGenerator()
@@ -733,7 +726,7 @@ class _Vxse51PrefectureFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: .stretch,
     children: [
       Text('都道府県', style: Theme.of(context).textTheme.titleSmall),
       for (final entry in prefectures.entries)
@@ -793,7 +786,7 @@ class _Vxse51PrefectureFields extends StatelessWidget {
           ),
       Align(
         alignment: Alignment.centerLeft,
-        child: TextButton.icon(
+        child: M3ETextButton.icon(
           key: const Key('ordinary-prefecture-add'),
           onPressed: () {
             final code = const EarthquakeVxseDebugDraftIdentityGenerator()
@@ -841,7 +834,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: .stretch,
     children: [
       Text('都道府県・市区町村・観測点', style: Theme.of(context).textTheme.titleSmall),
       for (final entry in tree.entries)
@@ -1073,7 +1066,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
       Wrap(
         spacing: 8,
         children: [
-          TextButton.icon(
+          M3ETextButton.icon(
             key: const Key('ordinary-prefecture-add'),
             onPressed: () {
               final code = const EarthquakeVxseDebugDraftIdentityGenerator()
@@ -1105,7 +1098,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
             label: const Text('都道府県'),
           ),
           if (ownsCities)
-            TextButton.icon(
+            M3ETextButton.icon(
               key: const Key('ordinary-city-add'),
               onPressed: () {
                 final values = tree[maxIntensity] ?? const [];
@@ -1144,7 +1137,7 @@ class _OrdinaryTreeFields extends StatelessWidget {
               icon: const Icon(Icons.add),
               label: const Text('市区町村'),
             ),
-          TextButton.icon(
+          M3ETextButton.icon(
             key: const Key('ordinary-station-add'),
             onPressed: () {
               final values = tree[maxIntensity] ?? const [];
@@ -1217,7 +1210,7 @@ class _LpgmFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('長周期地震動', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -1226,8 +1219,7 @@ class _LpgmFields extends StatelessWidget {
             label: '最大長周期地震動階級',
             items: JmaLpgmIntensity.values
                 .map(
-                  (value) =>
-                      DropdownMenuItem(value: value, child: Text(value.label)),
+                  (value) => M3EDropdownItem(value: value, label: value.label),
                 )
                 .toList(),
             onChanged: (value) {
@@ -1293,7 +1285,7 @@ class _LpgmFields extends StatelessWidget {
                       ],
                 }),
               ),
-          TextButton.icon(
+          M3ETextButton.icon(
             key: const Key('lpgm-region-add'),
             onPressed: () {
               final code = const EarthquakeVxseDebugDraftIdentityGenerator()
@@ -1496,7 +1488,7 @@ class _LpgmFields extends StatelessWidget {
           Wrap(
             spacing: 8,
             children: [
-              TextButton.icon(
+              M3ETextButton.icon(
                 key: const Key('lpgm-prefecture-add'),
                 onPressed: () {
                   final code = const EarthquakeVxseDebugDraftIdentityGenerator()
@@ -1526,7 +1518,7 @@ class _LpgmFields extends StatelessWidget {
                 icon: const Icon(Icons.add),
                 label: const Text('地域階級'),
               ),
-              TextButton.icon(
+              M3ETextButton.icon(
                 key: const Key('lpgm-station-add'),
                 onPressed: () {
                   final values =
@@ -1612,7 +1604,7 @@ class _CommentsFields extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Text('コメント', style: Theme.of(context).textTheme.titleMedium),
           for (final (index, comment) in draft.comments.indexed)
@@ -1641,7 +1633,7 @@ class _CommentsFields extends StatelessWidget {
                   if (currentIndex != index) current,
               ]),
             ),
-          TextButton.icon(
+          M3ETextButton.icon(
             key: const Key('comment-add'),
             onPressed: () => notifier.setComments([
               ...draft.comments,
@@ -1694,7 +1686,7 @@ class _JsonEditor extends HookWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('JSON', style: Theme.of(context).textTheme.titleMedium),
             TextField(
@@ -1742,7 +1734,7 @@ class _OrdinaryRegionRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 110,
@@ -1786,19 +1778,31 @@ class _OrdinaryRegionRow extends StatelessWidget {
                 ),
               ),
             ),
-            DropdownButton<JmaIntensity>(
-              key: const Key('ordinary-region-max'),
-              value: region.maxIntensity ?? level,
-              items: JmaIntensity.values
-                  .map(
-                    (value) => DropdownMenuItem(
-                      value: value,
-                      child: Text(value.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
+            SizedBox(
+              width: 180,
+              child: ControlledDropdown<JmaIntensity>(
+                key: const Key('ordinary-region-max'),
+                singleSelect: true,
+                items:
+                    (JmaIntensity.values
+                            .map(
+                              (value) => M3EDropdownItem(
+                                value: value,
+                                label: value.label,
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected:
+                                item.value == (region.maxIntensity ?? level),
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
@@ -1810,8 +1814,8 @@ class _OrdinaryRegionRow extends StatelessWidget {
                     );
                   }
                   onChanged(region.copyWith(maxIntensity: value));
-                }
-              },
+                },
+              ),
             ),
             IconButton(
               key: const Key('ordinary-region-remove'),
@@ -1856,7 +1860,7 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 100,
@@ -1900,30 +1904,44 @@ class _OrdinaryPrefectureRow extends StatelessWidget {
                 ),
               ),
             ),
-            DropdownButton<JmaIntensity>(
-              key: const Key('ordinary-prefecture-max'),
-              value: prefecture.maxIntensity ?? level,
-              items: JmaIntensity.values
-                  .map(
-                    (value) => DropdownMenuItem<JmaIntensity>(
-                      value: value,
-                      child: Text(value.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != level) {
-                  notifier.migrateTypedInputPrefix(
-                    from: fieldPrefix,
-                    to: _semanticKey.withComponent(
-                      prefix: fieldPrefix,
-                      segmentIndex: 1,
-                      value: value?.name ?? level.name,
-                    ),
-                  );
-                }
-                onChanged(prefecture.copyWith(maxIntensity: value));
-              },
+            SizedBox(
+              width: 180,
+              child: ControlledDropdown<JmaIntensity>(
+                key: const Key('ordinary-prefecture-max'),
+                singleSelect: true,
+                items:
+                    (JmaIntensity.values
+                            .map(
+                              (value) => M3EDropdownItem<JmaIntensity>(
+                                value: value,
+                                label: value.label,
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected:
+                                item.value ==
+                                (prefecture.maxIntensity ?? level),
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+                  if (value != level) {
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _semanticKey.withComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 1,
+                        value: value.name,
+                      ),
+                    );
+                  }
+                  onChanged(prefecture.copyWith(maxIntensity: value));
+                },
+              ),
             ),
             IconButton(
               key: const Key('ordinary-prefecture-remove'),
@@ -1968,7 +1986,7 @@ class _OrdinaryCityRow extends StatelessWidget {
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               SizedBox(
                 width: 120,
@@ -2010,18 +2028,31 @@ class _OrdinaryCityRow extends StatelessWidget {
                   ),
                 ),
               ),
-              DropdownButton<JmaIntensity?>(
-                value: city.maxIntensity,
-                items: JmaIntensity.values
-                    .map(
-                      (value) => DropdownMenuItem<JmaIntensity?>(
-                        value: value,
-                        child: Text(value.label),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) =>
-                    onChanged(city.copyWith(maxIntensity: value)),
+              SizedBox(
+                width: 180,
+                child: ControlledDropdown<JmaIntensity?>(
+                  singleSelect: true,
+                  items:
+                      (JmaIntensity.values
+                              .map(
+                                (value) => M3EDropdownItem<JmaIntensity?>(
+                                  value: value,
+                                  label: value.label,
+                                ),
+                              )
+                              .toList())
+                          .map(
+                            (item) => item.copyWith(
+                              selected: item.value == city.maxIntensity,
+                            ),
+                          )
+                          .toList(),
+                  onSelectionChanged: (selection) {
+                    if (selection.isEmpty) return;
+                    final value = selection.first.value;
+                    onChanged(city.copyWith(maxIntensity: value));
+                  },
+                ),
               ),
               IconButton(
                 key: const Key('ordinary-city-remove'),
@@ -2142,7 +2173,7 @@ class _OrdinaryStationRow extends StatelessWidget {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 SizedBox(
                   width: 120,
@@ -2188,20 +2219,34 @@ class _OrdinaryStationRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                DropdownButton<JmaIntensity?>(
-                  value: intensity.maxIntensity,
-                  items: JmaIntensity.values
-                      .map(
-                        (value) => DropdownMenuItem<JmaIntensity?>(
-                          value: value,
-                          child: Text(value.label),
+                SizedBox(
+                  width: 180,
+                  child: ControlledDropdown<JmaIntensity?>(
+                    singleSelect: true,
+                    items:
+                        (JmaIntensity.values
+                                .map(
+                                  (value) => M3EDropdownItem<JmaIntensity?>(
+                                    value: value,
+                                    label: value.label,
+                                  ),
+                                )
+                                .toList())
+                            .map(
+                              (item) => item.copyWith(
+                                selected: item.value == intensity.maxIntensity,
+                              ),
+                            )
+                            .toList(),
+                    onSelectionChanged: (selection) {
+                      if (selection.isEmpty) return;
+                      final value = selection.first.value;
+                      onChanged(
+                        station.copyWith(
+                          intensity: intensity.copyWith(maxIntensity: value),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) => onChanged(
-                    station.copyWith(
-                      intensity: intensity.copyWith(maxIntensity: value),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 if (ownsStationDetails)
@@ -2258,7 +2303,7 @@ class _LpgmRegionRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 120,
@@ -2302,30 +2347,44 @@ class _LpgmRegionRow extends StatelessWidget {
                 ),
               ),
             ),
-            DropdownButton<JmaLpgmIntensity>(
-              value: region.maxLpgmIntensity ?? level,
-              key: const Key('lpgm-region-max'),
-              items: JmaLpgmIntensity.values
-                  .map(
-                    (value) => DropdownMenuItem<JmaLpgmIntensity>(
-                      value: value,
-                      child: Text(value.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != level) {
-                  notifier.migrateTypedInputPrefix(
-                    from: fieldPrefix,
-                    to: _semanticKey.withComponent(
-                      prefix: fieldPrefix,
-                      segmentIndex: 1,
-                      value: value?.name ?? level.name,
-                    ),
-                  );
-                }
-                onChanged(region.copyWith(maxLpgmIntensity: value));
-              },
+            SizedBox(
+              width: 180,
+              child: ControlledDropdown<JmaLpgmIntensity>(
+                key: const Key('lpgm-region-max'),
+                singleSelect: true,
+                items:
+                    (JmaLpgmIntensity.values
+                            .map(
+                              (value) => M3EDropdownItem<JmaLpgmIntensity>(
+                                value: value,
+                                label: value.label,
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected:
+                                item.value ==
+                                (region.maxLpgmIntensity ?? level),
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+                  if (value != level) {
+                    notifier.migrateTypedInputPrefix(
+                      from: fieldPrefix,
+                      to: _semanticKey.withComponent(
+                        prefix: fieldPrefix,
+                        segmentIndex: 1,
+                        value: value.name,
+                      ),
+                    );
+                  }
+                  onChanged(region.copyWith(maxLpgmIntensity: value));
+                },
+              ),
             ),
             IconButton(
               key: const Key('lpgm-region-remove'),
@@ -2370,7 +2429,7 @@ class _LpgmPrefectureRow extends StatelessWidget {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             SizedBox(
               width: 120,
@@ -2397,19 +2456,32 @@ class _LpgmPrefectureRow extends StatelessWidget {
                 },
               ),
             ),
-            DropdownButton<JmaLpgmIntensity>(
-              key: const Key('lpgm-prefecture-max'),
-              value: prefecture.maxLpgmIntensity ?? level,
-              items: JmaLpgmIntensity.values
-                  .map(
-                    (value) => DropdownMenuItem(
-                      value: value,
-                      child: Text(value.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
+            SizedBox(
+              width: 180,
+              child: ControlledDropdown<JmaLpgmIntensity>(
+                key: const Key('lpgm-prefecture-max'),
+                singleSelect: true,
+                items:
+                    (JmaLpgmIntensity.values
+                            .map(
+                              (value) => M3EDropdownItem(
+                                value: value,
+                                label: value.label,
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected:
+                                item.value ==
+                                (prefecture.maxLpgmIntensity ?? level),
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   if (value != level) {
                     notifier.migrateTypedInputPrefix(
                       from: fieldPrefix,
@@ -2421,8 +2493,8 @@ class _LpgmPrefectureRow extends StatelessWidget {
                     );
                   }
                   onChanged(prefecture.copyWith(maxLpgmIntensity: value));
-                }
-              },
+                },
+              ),
             ),
             SizedBox(
               width: 180,
@@ -2487,7 +2559,7 @@ class _LpgmStationRow extends StatelessWidget {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 SizedBox(
                   width: 120,
@@ -2533,20 +2605,37 @@ class _LpgmStationRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                DropdownButton<JmaLpgmIntensity?>(
-                  value: intensity.maxLpgmIntensity,
-                  items: JmaLpgmIntensity.values
-                      .map(
-                        (value) => DropdownMenuItem<JmaLpgmIntensity?>(
-                          value: value,
-                          child: Text(value.label),
+                SizedBox(
+                  width: 180,
+                  child: ControlledDropdown<JmaLpgmIntensity?>(
+                    singleSelect: true,
+                    items:
+                        (JmaLpgmIntensity.values
+                                .map(
+                                  (value) => M3EDropdownItem<JmaLpgmIntensity?>(
+                                    value: value,
+                                    label: value.label,
+                                  ),
+                                )
+                                .toList())
+                            .map(
+                              (item) => item.copyWith(
+                                selected:
+                                    item.value == intensity.maxLpgmIntensity,
+                              ),
+                            )
+                            .toList(),
+                    onSelectionChanged: (selection) {
+                      if (selection.isEmpty) return;
+                      final value = selection.first.value;
+                      onChanged(
+                        station.copyWith(
+                          intensity: intensity.copyWith(
+                            maxLpgmIntensity: value,
+                          ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) => onChanged(
-                    station.copyWith(
-                      intensity: intensity.copyWith(maxLpgmIntensity: value),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 _StationDetailsFields(
@@ -2593,7 +2682,7 @@ class _StationDetailsFields extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         _ControlledTextFormField(
           fieldKey: const Key('station-sva'),
@@ -2630,7 +2719,7 @@ class _StationDetailsFields extends StatelessWidget {
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                crossAxisAlignment: WrapCrossAlignment.center,
+                crossAxisAlignment: .center,
                 children: [
                   SizedBox(
                     width: 90,
@@ -2687,9 +2776,9 @@ class _StationDetailsFields extends StatelessWidget {
                       label: '長周期階級',
                       items: JmaLpgmIntensity.values
                           .map(
-                            (value) => DropdownMenuItem(
+                            (value) => M3EDropdownItem(
                               value: value,
-                              child: Text(value.label),
+                              label: value.label,
                             ),
                           )
                           .toList(),
@@ -2769,7 +2858,7 @@ class _StationDetailsFields extends StatelessWidget {
               ),
             ),
           ),
-        TextButton.icon(
+        M3ETextButton.icon(
           key: const Key('pre-period-add'),
           onPressed: () => onChanged(
             intensity.copyWith(
@@ -2823,7 +2912,7 @@ class _CommentRow extends StatelessWidget {
             _ControlledTextFormField(
               fieldKey: const Key('comment-reported-at'),
               fieldId: '$fieldPrefix.reportedAt',
-              value: comment.reportedAt.toIso8601String(),
+              value: comment.reportedAt.tokyoDateTime.toIso8601String(),
               label: 'コメント発表時刻',
               notifier: notifier,
               validation: (value) =>
@@ -2950,18 +3039,24 @@ class _ControlledDropdown<T> extends StatelessWidget {
 
   final T value;
   final String label;
-  final List<DropdownMenuItem<T>> items;
+  final List<M3EDropdownItem<T>> items;
   final ValueChanged<T?> onChanged;
 
   @override
   Widget build(BuildContext context) => InputDecorator(
     decoration: InputDecoration(labelText: label),
     child: DropdownButtonHideUnderline(
-      child: DropdownButton<T>(
-        value: value,
-        isExpanded: true,
-        items: items,
-        onChanged: onChanged,
+      child: SizedBox(
+        width: 180,
+        child: ControlledDropdown<T>(
+          singleSelect: true,
+          items: (items)
+              .map((item) => item.copyWith(selected: item.value == value))
+              .toList(),
+          onSelectionChanged: (selection) {
+            if (selection.isNotEmpty) onChanged(selection.first.value);
+          },
+        ),
       ),
     ),
   );

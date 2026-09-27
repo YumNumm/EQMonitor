@@ -118,7 +118,6 @@ deploy-ios-firebase-app-distribution (ubuntu-24.04) ← EQMonitor-ios-adhoc.ipa 
 
 ## テスト / 検証
 
-- `actionlint .github/workflows/deploy-app.yaml` がパスすること。
 - pre-commit hooks（gitleaks / zizmor / pinact 等）がパスすること。
 - `ExportOptionsAdHoc.plist` が有効な plist であること（`plutil -lint`）。
 - 実配布の最終確認は develop への push 後の実 CI 実行で行う（ad-hoc IPA 生成・Firebase 配信の成功をログで確認）。

@@ -1,9 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:timezone/timezone.dart';
 
-class TZDateTimeJsonConverter extends JsonConverter<TZDateTime, String> {
-  const new();
-
+class const TZDateTimeJsonConverter()
+    extends JsonConverter<TZDateTime, String> {
   @override
   TZDateTime fromJson(String json) {
     final base = DateTime.parse(json);
@@ -14,9 +13,8 @@ class TZDateTimeJsonConverter extends JsonConverter<TZDateTime, String> {
   String toJson(TZDateTime dateTime) => dateTime.toIso8601String();
 }
 
-class TZDateTimeJstJsonConverter extends JsonConverter<TZDateTime, String> {
-  const new();
-
+class const TZDateTimeJstJsonConverter()
+    extends JsonConverter<TZDateTime, String> {
   @override
   TZDateTime fromJson(String json) {
     final base = DateTime.parse(json);

@@ -35,7 +35,7 @@
 - `app/lib/feature/feed/data/notifier/feed_data_source.dart`: Feed pagingを通常ネットワーク専用にする。
 - `app/lib/feature/feed/ui/page/feed_page.dart`: paging向け再検証バナーを撤去する。
 - `packages/cache/lib/src/http/cache_only_interceptor.dart`: キャッシュ無効時にstoreなしでmissを返すconstructorを提供する。
-- `docs/knowledge/20260727_http_cache_opt_in_scope.md`: 今後のHTTPキャッシュ対象選定ルールを記録する。
+- `docs/knowledge/api_and_data.md`: 今後のHTTPキャッシュ対象選定ルールを記録する。
 
 ---
 
@@ -788,7 +788,7 @@ git commit -m "fix: paging対象からHTTPキャッシュを除外"
 
 **Files:**
 - Create: `app/test/core/provider/http_cache_scope_test.dart`
-- Create: `docs/knowledge/20260727_http_cache_opt_in_scope.md`
+- Modify: `docs/knowledge/api_and_data.md`
 - Verify: `app/test/feature/seismicity/data/provider/seismicity_repository_provider_test.dart`
 
 **Interfaces:**
@@ -876,7 +876,7 @@ Expected: 対象外は0件、許可詳細は1件、GeoJSON専用Dioは `HttpCach
 
 - [ ] **Step 4: 今後の適用判断をknowledgeへ記録する**
 
-`docs/knowledge/20260727_http_cache_opt_in_scope.md` に次を明記する。
+`docs/knowledge/api_and_data.md` に次を明記する。
 
 ```markdown
 # HTTPキャッシュは明示的にオプトインする
@@ -921,7 +921,7 @@ Expected: `No issues found!`、`git diff --check` 出力なし。`backend` と�
 - [ ] **Step 7: 適用範囲テストとknowledgeをコミットする**
 
 ```bash
-git add app/test/core/provider/http_cache_scope_test.dart docs/knowledge/20260727_http_cache_opt_in_scope.md
+git add app/test/core/provider/http_cache_scope_test.dart docs/knowledge/api_and_data.md
 git commit -m "test: HTTPキャッシュ適用範囲を固定"
 ```
 
@@ -947,4 +947,4 @@ Expected: Task 1〜5の実装コミットだけがpushされ、ユーザー所�
 - paging・検索・ユーザー固有・Realtime代表GETのDBエントリ数が0件である。
 - ETag/304、破損復旧、Realtime優先、GeoJSON専用Dioの既存保証が維持される。
 - focused test、analyze、`git diff --check` が成功する。
-- `docs/knowledge/20260727_http_cache_opt_in_scope.md` がcommit・pushされる。
+- `docs/knowledge/api_and_data.md` がcommit・pushされる。

@@ -10,7 +10,8 @@ struct LocationInfo: Codable, Hashable {
     let forecastIntensity: String?
     let forecastLpgmIntensity: String?
     let arrivalTime: String?
-    let intensity: Double?
+    var isWarning: Bool? = nil
+    var isPlum: Bool? = nil
 
     var forecastIntensityValue: IntensityValue? {
         guard let forecastIntensity = forecastIntensity else { return nil }

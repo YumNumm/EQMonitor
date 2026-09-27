@@ -28,14 +28,12 @@ import 'package:vector_math/vector_math.dart' show Vector2;
 /// (`baseMapLineHalfWidthNdc`)へ分割されたため、harnessも新しい経路へ
 /// 付け替えている。**この検証を落とさないこと**: 押し出しの空間と半線幅の
 /// 単位の不一致は、実際に画面全体を線色で塗り潰す不具合として発現した
-/// (`docs/todo/800_eqmonitor_map_deferred_verification.md`)。
-final class LineExtrudeProjectionCase {
-  const new({required this.name, required this.dx, required this.dy});
-
-  final String name;
-  final int dx;
-  final int dy;
-
+/// (`docs/todo/820_map_renderer_and_migration.md`)。
+final class const LineExtrudeProjectionCase({
+  required final String name,
+  required final int dx,
+  required final int dy,
+}) {
   MvtFeature feature() => MvtFeature(
     type: MvtGeometryType.lineString,
     rings: [
@@ -50,12 +48,10 @@ final class LineExtrudeProjectionCase {
   }
 }
 
-final class LineExtrudeProjectionHarness {
-  const new({required this.viewport, required this.halfWidthLogicalPixels});
-
-  final MapViewport viewport;
-  final double halfWidthLogicalPixels;
-
+final class const LineExtrudeProjectionHarness({
+  required final MapViewport viewport,
+  required final double halfWidthLogicalPixels,
+}) {
   Vector2 projectedScreenOffsetFor({
     required LineExtrudeProjectionCase testCase,
   }) {

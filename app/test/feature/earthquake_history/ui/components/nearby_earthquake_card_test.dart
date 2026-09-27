@@ -17,10 +17,11 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/misc.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('震源座標が不明ならカードを表示しない', (tester) async {
@@ -48,7 +49,7 @@ void main() {
     );
 
     expect(find.text('この震源の近傍で発生した地震'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(M3ECircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('取得失敗時は固定文言を表示し、再試行できる', (tester) async {

@@ -7,10 +7,11 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/permission/data/model/permission_state.dart';
 import 'package:eqmonitor/feature/permission/data/notifier/permission_notifier.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   // デバイス登録の状態が確定するまでの間、「次へ」は押せてはならない。
@@ -194,8 +195,8 @@ Future<void> _pumpFrames(WidgetTester tester, {int frames = 40}) async {
   }
 }
 
-FilledButton _nextButton(WidgetTester tester) =>
-    tester.widget<FilledButton>(find.byType(FilledButton).last);
+M3EFilledButton _nextButton(WidgetTester tester) =>
+    tester.widget<M3EFilledButton>(find.byType(M3EFilledButton).last);
 
 Widget _wrap({required DeviceProvisioningNotifier notifier}) {
   final theme = AppThemeDataBuilder.build(

@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/seismicity/data/model/seismicity_span.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SeismicitySpanSelector extends StatelessWidget {
@@ -13,14 +14,27 @@ class SeismicitySpanSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<SeismicitySpan>(
-      segments: const [
-        ButtonSegment(value: SeismicitySpan.p1m, label: Text('1ヶ月')),
-        ButtonSegment(value: SeismicitySpan.p3m, label: Text('3ヶ月')),
-        ButtonSegment(value: SeismicitySpan.p12m, label: Text('12ヶ月')),
+    return M3EToggleButtonGroup(
+      type: M3EButtonGroupType.connected,
+      actions: const [
+        M3EToggleButtonGroupAction(label: Text('1ヶ月')),
+        M3EToggleButtonGroupAction(label: Text('3ヶ月')),
+        M3EToggleButtonGroupAction(label: Text('12ヶ月')),
       ],
-      selected: {value},
-      onSelectionChanged: (selected) => onChanged(selected.single),
+      selectedIndex: (<SeismicitySpan>[
+        SeismicitySpan.p1m,
+        SeismicitySpan.p3m,
+        SeismicitySpan.p12m,
+      ]).indexOf(value),
+      onSelectedIndexChanged: (index) {
+        if (index == null) return;
+        final selected = <SeismicitySpan>[
+          SeismicitySpan.p1m,
+          SeismicitySpan.p3m,
+          SeismicitySpan.p12m,
+        ][index];
+        onChanged(selected);
+      },
     );
   }
 }

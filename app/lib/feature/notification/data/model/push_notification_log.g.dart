@@ -66,6 +66,13 @@ _PushNotificationLogEntry _$PushNotificationLogEntryFromJson(
         'interruption_level',
         (v) => v as String?,
       ),
+      liveActivityEventType: $checkedConvert(
+        'live_activity_event_type',
+        (v) => $enumDecodeNullable(
+          _$PushNotificationLiveActivityEventTypeEnumMap,
+          v,
+        ),
+      ),
     );
     return val;
   },
@@ -81,6 +88,7 @@ _PushNotificationLogEntry _$PushNotificationLogEntryFromJson(
     'channelId': 'channel_id',
     'apnsPriority': 'apns_priority',
     'interruptionLevel': 'interruption_level',
+    'liveActivityEventType': 'live_activity_event_type',
   },
 );
 
@@ -102,6 +110,9 @@ Map<String, dynamic> _$PushNotificationLogEntryToJson(
   'channel_id': instance.channelId,
   'apns_priority': instance.apnsPriority,
   'interruption_level': instance.interruptionLevel,
+  'live_activity_event_type':
+      _$PushNotificationLiveActivityEventTypeEnumMap[instance
+          .liveActivityEventType],
 };
 
 const _$PushNotificationDeliveryFrameworkEnumMap = {
@@ -112,4 +123,10 @@ const _$PushNotificationDeliveryFrameworkEnumMap = {
 const _$PushNotificationDeliveryResultEnumMap = {
   PushNotificationDeliveryResult.ok: 'ok',
   PushNotificationDeliveryResult.ng: 'ng',
+};
+
+const _$PushNotificationLiveActivityEventTypeEnumMap = {
+  PushNotificationLiveActivityEventType.start: 'start',
+  PushNotificationLiveActivityEventType.update: 'update',
+  PushNotificationLiveActivityEventType.end: 'end',
 };

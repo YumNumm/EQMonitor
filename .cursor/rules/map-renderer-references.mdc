@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Map Renderer Reference Rules
 
-`packages/eqmonitor_map` のマップレンダラを実装・デバッグするときは、独自判断で方式を作る前に、必ず以下3つの参照実装と既存の `docs/knowledge/` を確認する。
+`packages/eqmonitor_map` のマップレンダラを実装・デバッグするときは、独自判断で方式を作る前に、以下の使い分けに従って対象分野の参照実装を確認する。要約と固定参照は `docs/knowledge/map_renderer_references.md`、設計契約は `docs/knowledge/map_renderer.md` に集約する。
 
 ## 参照先の使い分け
 
@@ -25,18 +25,15 @@ alwaysApply: false
   - Repository: `maplibre/maplibre-native`
   - License: BSD-2-Clause
   - Commit: `f1905c521577f009c70179fac53e3f4f67a3fa53`
-  - 知見: `docs/knowledge/20260805_maplibre_native_renderer_reference.md`
 - KEVi: https://github.com/ingen084/KyoshinEewViewerIngen/tree/5a2bf513b6b9c93ee06473f70b6d27ee96070b3f
   - Repository: `ingen084/KyoshinEewViewerIngen`
   - License: MIT
   - Commit: `5a2bf513b6b9c93ee06473f70b6d27ee96070b3f`
   - Geometry cache section: `cc5ce50b19e0a68b18bcc3a7caa0df413bd8ed05`
-  - 知見: `docs/knowledge/20260802_kevi_map_renderer_reference.md`
 - dashmap: https://github.com/bdero/dashmap/tree/a6ff92edd999e922f81d26d209d8f589faee3fd0
   - Repository: `bdero/dashmap`
   - License: MIT
   - Commit: `a6ff92edd999e922f81d26d209d8f589faee3fd0`
-  - 知見: `docs/knowledge/20260807_dashmap_flutter_scene_reference.md`
 
 ## 運用ルール
 

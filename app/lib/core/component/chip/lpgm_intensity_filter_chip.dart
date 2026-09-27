@@ -1,7 +1,9 @@
+import 'package:eqmonitor/core/component/slider/accessible_range_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LpgmIntensityFilterChip extends StatelessWidget {
   const new({
@@ -22,8 +24,13 @@ class LpgmIntensityFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(JmaLpgmIntensity?, JmaLpgmIntensity?)?>(
-              clipBehavior: Clip.antiAlias,
+            await showM3EModalBottomSheet<
+              (JmaLpgmIntensity?, JmaLpgmIntensity?)?
+            >(
+              isScrollControlled: false,
+              useSafeArea: false,
+              style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+              clipBehavior: .antiAlias,
               context: context,
               builder: (context) =>
                   _LpgmIntensityFilterModal(currentMin: min, currentMax: max),
@@ -36,7 +43,7 @@ class LpgmIntensityFilterChip extends StatelessWidget {
           ? const Text('長周期')
           : Text(
               _rangeString(min, max),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: .bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(null, null),
       selected: !isDefault,
@@ -104,8 +111,8 @@ class _LpgmIntensityFilterModal extends HookWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(child: sheetBar),
             Padding(
@@ -113,13 +120,15 @@ class _LpgmIntensityFilterModal extends HookWidget {
               child: Text(
                 '長周期地震動階級',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            RangeSlider(
-              values: RangeValues(
+            AccessibleRangeSlider(
+              semanticFormatterCallback: (value) =>
+                  '階級${indexToValue(value.toInt()).label}',
+              value: RangeValues(
                 valueToIndex(min.value).toDouble(),
                 valueToIndex(max.value).toDouble(),
               ),
@@ -128,10 +137,7 @@ class _LpgmIntensityFilterModal extends HookWidget {
                 min.value = indexToValue(state.start.toInt());
                 max.value = indexToValue(state.end.toInt());
               },
-              labels: RangeLabels(
-                '階級${min.value.label}',
-                '階級${max.value.label}',
-              ),
+              label: '階級${min.value.label} ～ 階級${max.value.label}',
               divisions: _values.length - 1,
             ),
             const SizedBox(height: 16),
@@ -139,19 +145,19 @@ class _LpgmIntensityFilterModal extends HookWidget {
               child: Text(
                 LpgmIntensityFilterChip._rangeString(min.value, max.value),
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               children: [
-                TextButton(
+                M3ETextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('キャンセル'),
                 ),
-                TextButton(
+                M3ETextButton(
                   onPressed: () {
                     final isDefault =
                         min.value == _values.first && max.value == _values.last;

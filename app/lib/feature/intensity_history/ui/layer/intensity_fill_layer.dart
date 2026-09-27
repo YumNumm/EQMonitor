@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/hook/use_map_operation_queue.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/theme/provider/app_theme_notifier.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:eqmonitor/core/util/map/replace_map_style_layers.dart';
 import 'package:eqmonitor/feature/intensity_history/data/model/city_max_intensity_entry.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/intensity_history_controller.dart';
+import 'package:eqmonitor/feature/intensity_history/ui/action/intensity_fill_layer_action.dart';
 import 'package:eqmonitor/feature/intensity_history/ui/layer/intensity_fill_layer_builder.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -27,14 +26,15 @@ import 'package:maplibre/maplibre.dart';
 class IntensityFillLayer extends HookConsumerWidget {
   const new({required this.items, super.key});
 
-  final List<CityMaxIntensityEntry> items;
+  final List<CityMaxIntensityEntry>? items;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorSet = ref.watch(activeColorSetProvider);
     final colorModel = colorSet.intensity;
-    final isDarkMode = Theme.brightnessOf(context) == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = colorScheme.brightness == .dark;
 
     final selectedCityCode = ref.watch(
       intensityHistoryControllerProvider.select(
@@ -43,6 +43,7 @@ class IntensityFillLayer extends HookConsumerWidget {
     );
 
     final enqueue = useMapOperationQueue();
+    final action = ref.watch(intensityFillLayerActionProvider);
     const builder = IntensityFillLayerBuilder();
 
     // 塗りを作り直す契機を「震度データの実体が変わったとき」だけに絞るための
@@ -65,18 +66,19 @@ class IntensityFillLayer extends HookConsumerWidget {
     useEffect(
       () {
         final controller = styleController;
-        if (controller == null) {
+        final currentItems = latestItems.value;
+        if (controller == null || currentItems == null) {
           return null;
         }
 
         final layers = builder.buildFill(
-          cityMaxIntensities: latestItems.value,
+          cityMaxIntensities: currentItems,
           colorModel: colorModel,
         );
 
         unawaited(
           enqueue(
-            () => _replace(
+            () => action.replace(
               styleController: controller,
               layerIds: IntensityFillLayerBuilder.fillLayerIds,
               layers: layers,
@@ -87,7 +89,7 @@ class IntensityFillLayer extends HookConsumerWidget {
         return () {
           unawaited(
             enqueue(
-              () => _removeAll(
+              () => action.removeAll(
                 styleController: controller,
                 layerIds: IntensityFillLayerBuilder.fillLayerIds,
               ),
@@ -95,7 +97,7 @@ class IntensityFillLayer extends HookConsumerWidget {
           );
         };
       },
-      [styleController, itemsRevision.value, colorModel, enqueue],
+      [styleController, itemsRevision.value, colorModel, enqueue, action],
     );
 
     useEffect(
@@ -107,13 +109,13 @@ class IntensityFillLayer extends HookConsumerWidget {
 
         final layers = builder.buildSelectedCityLine(
           selectedCityCode: selectedCityCode,
-          lineColor: colorSet.primary.toHexStringRGB(),
+          lineColor: colorScheme.primary.toHexStringRGB(),
           haloColor: isDarkMode ? '#000000' : '#FFFFFF',
         );
 
         unawaited(
           enqueue(
-            () => _replace(
+            () => action.replace(
               styleController: controller,
               layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
               layers: layers,
@@ -124,7 +126,7 @@ class IntensityFillLayer extends HookConsumerWidget {
         return () {
           unawaited(
             enqueue(
-              () => _removeAll(
+              () => action.removeAll(
                 styleController: controller,
                 layerIds: IntensityFillLayerBuilder.selectedCityLineLayerIds,
               ),
@@ -135,50 +137,13 @@ class IntensityFillLayer extends HookConsumerWidget {
       [
         styleController,
         selectedCityCode,
-        colorSet.primary,
+        colorScheme.primary,
         isDarkMode,
         enqueue,
+        action,
       ],
     );
 
     return const SizedBox.shrink();
-  }
-}
-
-/// レイヤーの入れ替え。失敗しても後続の操作を止めない。
-///
-/// `on Exception` ではなく `Object` を捕まえる。`addLayer` が
-/// `Exception` 以外（`TypeError` など）で落ちた場合に、削除だけ済んで追加が
-/// 行われないまま原因も分からない状態になるのを避ける。
-Future<void> _replace({
-  required StyleController styleController,
-  required Iterable<String> layerIds,
-  required Iterable<MapStyleLayerEntry> layers,
-}) async {
-  try {
-    await MapStyleLayerReplacer.replace(
-      styleController: styleController,
-      layerIds: layerIds,
-      layers: layers,
-    );
-  } on Object catch (e, st) {
-    talker.handle(
-      e,
-      st,
-      'IntensityFillLayer: failed to add ${layerIds.join(', ')}',
-    );
-  }
-}
-
-Future<void> _removeAll({
-  required StyleController styleController,
-  required Iterable<String> layerIds,
-}) async {
-  for (final id in layerIds.toList().reversed) {
-    try {
-      await styleController.removeLayer(id);
-    } on Object catch (e, st) {
-      talker.handle(e, st, 'IntensityFillLayer: failed to remove $id');
-    }
   }
 }

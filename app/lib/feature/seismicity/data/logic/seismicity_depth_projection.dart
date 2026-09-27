@@ -7,9 +7,7 @@ enum SeismicityDepthProjectionAxis { latitude, longitude }
 /// 深さ(km) が既知のイベントを、指定軸(緯度/経度)へ投影する。
 ///
 /// 深さ未知のイベントは断面図に描画できないため除外する。
-class SeismicityDepthProjection {
-  const new();
-
+class const SeismicityDepthProjection() {
   List<SeismicityDepthPoint> project({
     required List<SeismicityEvent> events,
     required SeismicityDepthProjectionAxis axis,

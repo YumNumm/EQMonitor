@@ -2,10 +2,8 @@ import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ParameterPointConverter
+class const ParameterPointConverter()
     implements JsonConverter<Point<double>, Map<String, dynamic>> {
-  const new();
-
   @override
   Point<double> fromJson(Map<String, dynamic> json) => Point<double>(
     (json['x'] as num).toDouble(),

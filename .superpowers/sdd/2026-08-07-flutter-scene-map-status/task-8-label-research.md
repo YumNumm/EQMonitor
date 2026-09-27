@@ -360,7 +360,7 @@ Interpretation:
 
 References checked:
 
-- `docs/knowledge/20260805_maplibre_native_renderer_reference.md`
+- `docs/knowledge/map_renderer_references.md`
 - `maplibre/maplibre-native` commit `f1905c521577f009c70179fac53e3f4f67a3fa53`
 - `src/mbgl/renderer/buckets/symbol_bucket.cpp`
 - `src/mbgl/renderer/buckets/symbol_bucket.hpp`

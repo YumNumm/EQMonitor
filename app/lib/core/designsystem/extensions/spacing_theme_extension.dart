@@ -8,19 +8,17 @@ part 'spacing_theme_extension.tailor.dart';
 
 @doubleThemeEncoder
 @tailorMixinComponent
-class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
+class const SpacingThemeExtension({
+  required final double xs,
+  required final double sm,
+  required final double md,
+  required final double lg,
+  required final double xl,
+  required final double xxl,
+  required final double xxxl,
+  required final double xxxxl,
+}) extends ThemeExtension<SpacingThemeExtension>
     with _$SpacingThemeExtensionTailorMixin {
-  const new({
-    required this.xs,
-    required this.sm,
-    required this.md,
-    required this.lg,
-    required this.xl,
-    required this.xxl,
-    required this.xxxl,
-    required this.xxxxl,
-  });
-
   factory standard() => const SpacingThemeExtension(
     xs: 4,
     sm: 8,
@@ -31,13 +29,4 @@ class SpacingThemeExtension extends ThemeExtension<SpacingThemeExtension>
     xxxl: 28,
     xxxxl: 32,
   );
-
-  final double xs;
-  final double sm;
-  final double md;
-  final double lg;
-  final double xl;
-  final double xxl;
-  final double xxxl;
-  final double xxxxl;
 }

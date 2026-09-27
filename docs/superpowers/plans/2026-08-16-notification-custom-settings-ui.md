@@ -360,7 +360,7 @@ git commit -m "Fix: スロット詳細に警報と可変最小震度を統合"
 ### Task 4: Flutter の知見記録と検証
 
 **Files:**
-- Create: `docs/knowledge/20260816_notification_slot_settings.md`
+- Modify: `docs/knowledge/notification_location.md`
 
 **Interfaces:**
 - Consumes: Task 1〜3 の最終仕様
@@ -397,7 +397,7 @@ Expected: tests 0 failures、analyzer error 0、diff-check 0。既知の analyze
 - [ ] **Step 3: 知見をコミットする**
 
 ```bash
-git add docs/knowledge/20260816_notification_slot_settings.md
+git add docs/knowledge/notification_location.md
 git commit -m "Docs: 通知スロット設定の不変条件を記録"
 ```
 

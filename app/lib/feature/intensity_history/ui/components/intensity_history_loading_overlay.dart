@@ -1,6 +1,7 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/feature/intensity_history/data/notifier/city_max_intensity_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IntensityHistoryLoadingOverlay extends ConsumerWidget {
   const new({super.key});
@@ -14,7 +15,7 @@ class IntensityHistoryLoadingOverlay extends ConsumerWidget {
 
     return const Positioned.fill(
       child: IgnorePointer(
-        child: Center(child: CircularProgressIndicator.adaptive()),
+        child: Center(child: AccessibleCircularProgressIndicator()),
       ),
     );
   }

@@ -5,7 +5,6 @@
 **Goal:** archived Invertase Action を、注釈対応の直接的な Dart analyzer 実行へ置換する。
 **Architecture:** リポジトリ管理の GitHub problem matcher が analyzer の標準出力をファイル注釈へ変換する。解析自体は mise で固定した Flutter 同梱 Dart SDK を使用し、既存の `app` スコープと blocking 条件を維持する。
 
-**Tech Stack:** GitHub Actions、Dart analyzer、mise、GitHub problem matcher、actionlint
 
 ## Global Constraints
 
@@ -53,7 +52,6 @@ Expected: matcher は未作成で、workflow から Invertase Action と `checks
 
 ```shell
 jq -e '.problemMatcher | length == 1' .github/problem-matchers/dart-analyzer.json
-mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml
 mise exec -- dart analyze app --fatal-infos --format machine
 ! rg -n "invertase/github-action-dart-analyzer|ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION|checks: write" .github/workflows/wc-check-dart-analyze.yaml
 ```
@@ -70,7 +68,7 @@ git commit -m "CI: Dart解析をproblem matcherへ移行"
 ### Task 2: CI 運用知見と最終検証
 
 **Files:**
-- Create: `docs/knowledge/20260816_github_actions_dart_analyzer_annotations.md`
+- Modify: `docs/knowledge/development_environment.md`
 
 **Interfaces:**
 - Consumes: Task 1 の matcher 登録方式と解析コマンド
@@ -83,7 +81,6 @@ matcher 登録、mise SDK、root からの解析、fatal 条件、権限、検�
 - [ ] **Step 2: 全差分を検証する**
 
 ```shell
-mise exec -- actionlint .github/workflows/wc-check-dart-analyze.yaml
 jq empty .github/problem-matchers/dart-analyzer.json
 git --no-pager diff --check origin/ci/replace-invertase-dart-analyzer...HEAD
 git --no-pager status --short
@@ -94,7 +91,7 @@ Expected: 構文エラーと whitespace error がなく、意図した3ファイ
 - [ ] **Step 3: 知見をコミットして push する**
 
 ```shell
-git add docs/knowledge/20260816_github_actions_dart_analyzer_annotations.md
+git add docs/knowledge/development_environment.md
 git commit -m "Docs: Dart解析注釈のCI運用を記録"
 git push
 ```

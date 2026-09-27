@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
-import 'package:eqmonitor/feature/location/data/repository/device_location_sync_state_repository.dart';
+import 'package:eqmonitor/feature/location/data/repository/device_location_consumers_repository.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,10 +14,7 @@ DeviceLocationMonitoringReconciler deviceLocationMonitoringReconciler(
   Ref ref,
 ) => DeviceLocationMonitoringReconciler(
   afterDeleteAction: () async {
-    await ref
-        .read(deviceLocationSyncStateRepositoryProvider)
-        .writeAvailability(DeviceLocationSyncAvailability.disabled);
-    await const BackgroundLocationMonitoringLifecycle().stop();
+    await ref.read(deviceLocationConsumersRepositoryProvider).reset();
   },
   afterReprovisionAction: () async {
     ref
@@ -40,15 +37,10 @@ DeviceLocationMonitoringReconciler deviceLocationMonitoringReconciler(
   },
 );
 
-final class DeviceLocationMonitoringReconciler {
-  const new({
-    required this.afterDeleteAction,
-    required this.afterReprovisionAction,
-  });
-
-  final DeviceLocationMonitoringAction afterDeleteAction;
-  final DeviceLocationMonitoringAction afterReprovisionAction;
-
+final class const DeviceLocationMonitoringReconciler({
+  required final DeviceLocationMonitoringAction afterDeleteAction,
+  required final DeviceLocationMonitoringAction afterReprovisionAction,
+}) {
   Future<void> afterDelete() => afterDeleteAction();
 
   Future<void> afterReprovision() => afterReprovisionAction();

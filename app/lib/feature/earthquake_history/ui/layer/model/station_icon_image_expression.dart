@@ -1,9 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 
 /// 観測点シンボルレイヤーの `icon-image` 式を表示モードから組み立てる
-class StationIconImageExpressionBuilder {
-  const new();
-
+class const StationIconImageExpressionBuilder() {
   /// GeoJSON feature は以下のプロパティを持つ前提:
   /// - `iconIdFull`: 数字入りアイコンの画像 ID
   /// - `iconIdPlain`: 色のみアイコンの画像 ID

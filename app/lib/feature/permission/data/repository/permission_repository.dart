@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
@@ -17,10 +15,6 @@ PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
   readLocationPermission: Geolocator.checkPermission,
   requestLocationPermission: Geolocator.requestPermission,
   requestAlwaysLocationPermission: () async {
-    if (!Platform.isIOS && !Platform.isMacOS) {
-      return Geolocator.requestPermission();
-    }
-    // iOS では「使用中の許可」がないと「常に許可」を要求できないため、先に要求する
     final permission = await Geolocator.checkPermission();
     if (permission == .denied) {
       final foreground = await Geolocator.requestPermission();
@@ -29,18 +23,15 @@ PermissionRepository permissionRepository(Ref ref) => PermissionRepository(
       }
     }
 
-    Permission.locationAlways.request().ignore();
-
-    const interval = Duration(milliseconds: 100);
-    const timeout = Duration(seconds: 2);
-
-    final stopwatch = Stopwatch()..start();
-    var current = await Geolocator.checkPermission();
-    while (current != .always && stopwatch.elapsed < timeout) {
-      await Future<void>.delayed(interval);
-      current = await Geolocator.checkPermission();
-    }
-    return current;
+    final result = await Permission.locationAlways.request();
+    return switch (result) {
+      .denied => .denied,
+      .permanentlyDenied => .deniedForever,
+      .granted => .always,
+      .limited => .whileInUse,
+      .provisional => .whileInUse,
+      .restricted => .denied,
+    };
   },
   onLocationPermissionGranted: () async {
     ref.invalidate(appGroupSettingsWriterProvider, asReload: true);
@@ -59,7 +50,11 @@ class PermissionRepository({
   _requestAlwaysLocationPermission,
   required final Future<void> Function() _onLocationPermissionGranted,
   required final Future<void> Function() _openNotificationSettings,
+  final Future<void> Function() _openLocationSettings =
+      AppSettings.openAppSettings,
 }) {
+  Future<void> openLocationSettings() => _openLocationSettings();
+
   Future<OsNotificationPermission> getNotificationPermission() async {
     final settings = await _readMessaging().getNotificationSettings();
     return OsNotificationPermission.fromNotificationSettings(settings);
@@ -101,9 +96,7 @@ class PermissionRepository({
 
   Future<bool> requestForegroundLocationPermission() async {
     final permission = await _requestLocationPermission();
-    final isGranted =
-        permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always;
+    final isGranted = permission == .whileInUse || permission == .always;
     if (isGranted) {
       await _onLocationPermissionGranted();
     }
@@ -112,7 +105,7 @@ class PermissionRepository({
 
   Future<bool> requestBackgroundLocationPermission() async {
     final permission = await _requestAlwaysLocationPermission();
-    final isGranted = permission == LocationPermission.always;
+    final isGranted = permission == .always;
     if (isGranted) {
       await _onLocationPermissionGranted();
     }

@@ -21,8 +21,8 @@
 
 **Files:**
 - Inspect: `.cursor/rules/map-renderer-references.mdc`
-- Inspect: `docs/knowledge/20260807_dashmap_flutter_scene_reference.md`
-- Inspect: `docs/todo/700_eqmonitor_map_line_extrude_projection.md`
+- Inspect: `docs/knowledge/map_renderer_references.md`
+- Inspect: `docs/todo/820_map_renderer_and_migration.md`
 - Inspect: `packages/eqmonitor_map/**`
 
 **Interfaces:**
@@ -36,8 +36,8 @@ Run:
 ```bash
 git diff --stat 6df329db^1 6df329db -- \
   .cursor/rules/map-renderer-references.mdc \
-  docs/knowledge/20260807_dashmap_flutter_scene_reference.md \
-  docs/todo/700_eqmonitor_map_line_extrude_projection.md \
+  docs/knowledge/map_renderer_references.md \
+  docs/todo/820_map_renderer_and_migration.md \
   packages/eqmonitor_map
 ```
 

@@ -47,7 +47,7 @@ const baseMapLineMaterialByteLength = 24;
 /// 実質NDC空間にある。以前この事実を見落として半線幅をlogical pixelの生値で
 /// 渡しており、NDCで1.0(可視範囲±1の半分)もの押し出しとなって画面全体を
 /// 線色で塗り潰していた
-/// (`docs/todo/800_eqmonitor_map_deferred_verification.md`)。
+/// (`docs/todo/820_map_renderer_and_migration.md`)。
 ///
 /// **shader内でzoomから再計算しないこと。** `viewProjectionMatrixFor`のY反転・
 /// 平行移動はzoomに依存せず、この値はviewportのlogical sizeだけに依存する。

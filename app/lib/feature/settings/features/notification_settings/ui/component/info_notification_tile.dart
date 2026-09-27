@@ -1,3 +1,5 @@
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
@@ -7,22 +9,23 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 通知項目の補足リンク一覧をボトムシートで表示する。
-class InfoNotificationBottomSheetAction {
-  const new();
-
+class const InfoNotificationBottomSheetAction() {
   Future<void> show(
     BuildContext context, {
     required String title,
     required List<InfoLink> links,
   }) {
-    return showModalBottomSheet<void>(
+    return showM3EModalBottomSheet<void>(
+      style: const M3EBottomSheetStyle(padding: EdgeInsets.zero),
+      isScrollControlled: false,
+      useSafeArea: false,
       context: context,
       builder: (context) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

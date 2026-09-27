@@ -1,7 +1,9 @@
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_parameter.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 震源近傍の地震探索パラメータを調整する BottomSheet
 class NearbyEarthquakeParameterSheet extends HookWidget {
@@ -27,8 +29,8 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Center(
               child: Container(
@@ -45,7 +47,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
             Text(
               '探索パラメータの設定',
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 20),
@@ -78,7 +80,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
                 onChanged: (value) => depthOffset.value = value.round(),
               ),
             const SizedBox(height: 16),
-            FilledButton(
+            M3EFilledButton(
               onPressed: () => Navigator.of(context).pop(
                 NearbyEarthquakeParameter(
                   latitudeOffset: latitudeOffset.value,
@@ -86,7 +88,7 @@ class NearbyEarthquakeParameterSheet extends HookWidget {
                   depthOffset: depthOffset.value,
                 ),
               ),
-              style: FilledButton.styleFrom(
+              decoration: M3EButtonDecoration.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
               child: const Text('適用'),
@@ -121,7 +123,7 @@ class _SliderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Row(
           children: [
@@ -129,13 +131,13 @@ class _SliderRow extends StatelessWidget {
             Text(
               displayText,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 color: context.designSystem.colorTheme.primary,
               ),
             ),
           ],
         ),
-        Slider(
+        AccessibleSlider(
           value: value,
           min: min,
           max: max,

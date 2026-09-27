@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/tsunami/data/model/tsunami_state.dart';
 import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 
 class TsunamiWarningHistoryButton extends HookWidget {
   const new({required this.tsunami, super.key});
@@ -70,7 +70,7 @@ class _HistoryOverlay extends StatelessWidget {
         Positioned.fill(
           child: GestureDetector(
             onTap: onDismiss,
-            behavior: HitTestBehavior.opaque,
+            behavior: .opaque,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
@@ -90,14 +90,14 @@ class _HistoryOverlay extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       title,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -152,17 +152,11 @@ class _HistoryOverlay extends StatelessWidget {
   }
 }
 
-class _WarningTimelineEntry {
-  const new({
-    required this.time,
-    required this.description,
-    required this.isLast,
-  });
-
-  final DateTime time;
-  final String description;
-  final bool isLast;
-}
+class const _WarningTimelineEntry({
+  required final DateTime time,
+  required final String description,
+  required final bool isLast,
+});
 
 class _TimelineEntry extends StatelessWidget {
   const new({required this.entry});
@@ -173,11 +167,13 @@ class _TimelineEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final designSystem = context.designSystem;
     final colorTheme = context.designSystem.colorTheme;
-    final timeStr = DateFormat('yyyy/MM/dd HH:mm').format(entry.time.toLocal());
+    final timeStr = entry.time.formatWithTz(
+      DateTimeFormat.yearMonthDayHourMinute,
+    );
 
     return IntrinsicHeight(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 20,
@@ -188,7 +184,7 @@ class _TimelineEntry extends StatelessWidget {
                   height: 10,
                   margin: const EdgeInsets.only(top: 4),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: .circle,
                     color: entry.isLast
                         ? designSystem.colorTheme.outline
                         : colorTheme.primary,
@@ -217,7 +213,7 @@ class _TimelineEntry extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     '$timeStrごろ',

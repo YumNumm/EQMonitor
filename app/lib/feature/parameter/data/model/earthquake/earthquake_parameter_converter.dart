@@ -90,8 +90,7 @@ extension EarthquakeStationStatusApiConverter on api.EarthquakeStationStatus {
     api.EarthquakeStationStatus.operating => EarthquakeStationStatus.operating,
     api.EarthquakeStationStatus.changed => EarthquakeStationStatus.changed,
     api.EarthquakeStationStatus.valueNew => EarthquakeStationStatus.valueNew,
-    api.EarthquakeStationStatus.abolished =>
-      EarthquakeStationStatus.abolished,
+    api.EarthquakeStationStatus.abolished => EarthquakeStationStatus.abolished,
     api.EarthquakeStationStatus.unknown => EarthquakeStationStatus.unknown,
   };
 }

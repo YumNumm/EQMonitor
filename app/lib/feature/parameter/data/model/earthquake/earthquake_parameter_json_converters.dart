@@ -4,11 +4,9 @@ import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_par
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:json_annotation/json_annotation.dart';
 
-class EarthquakeParameterPrefectureItemJsonConverter
+class const EarthquakeParameterPrefectureItemJsonConverter()
     implements
         JsonConverter<EarthquakeParameterPrefectureItem, Map<String, dynamic>> {
-  const new();
-
   @override
   EarthquakeParameterPrefectureItem fromJson(Map<String, dynamic> json) =>
       api.EarthquakeStationPrefecture.fromJson(json)
@@ -28,11 +26,9 @@ class EarthquakeParameterPrefectureItemJsonConverter
   };
 }
 
-class EarthquakeParameterRegionItemJsonConverter
+class const EarthquakeParameterRegionItemJsonConverter()
     implements
         JsonConverter<EarthquakeParameterRegionItem, Map<String, dynamic>> {
-  const new();
-
   @override
   EarthquakeParameterRegionItem fromJson(Map<String, dynamic> json) =>
       api.EarthquakeStationRegion.fromJson(json)
@@ -53,11 +49,9 @@ class EarthquakeParameterRegionItemJsonConverter
   };
 }
 
-class EarthquakeParameterCityItemJsonConverter
+class const EarthquakeParameterCityItemJsonConverter()
     implements
         JsonConverter<EarthquakeParameterCityItem, Map<String, dynamic>> {
-  const new();
-
   @override
   EarthquakeParameterCityItem fromJson(Map<String, dynamic> json) =>
       api.EarthquakeStationCity.fromJson(json).toEarthquakeParameterCityItem(
@@ -77,11 +71,9 @@ class EarthquakeParameterCityItemJsonConverter
   };
 }
 
-class EarthquakeParameterStationItemJsonConverter
+class const EarthquakeParameterStationItemJsonConverter()
     implements
         JsonConverter<EarthquakeParameterStationItem, Map<String, dynamic>> {
-  const new();
-
   @override
   EarthquakeParameterStationItem fromJson(Map<String, dynamic> json) =>
       api.EarthquakeStation.fromJson(json).toEarthquakeParameterStationItem(

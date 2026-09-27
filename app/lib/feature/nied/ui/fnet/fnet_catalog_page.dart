@@ -1,16 +1,18 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
+import 'package:eqmonitor/core/component/selector/controlled_dropdown.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:m3e_core/m3e_core.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:nied_api_client/nied_api_client.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class FnetCatalogPage extends HookConsumerWidget {
   const new({super.key});
@@ -58,19 +60,19 @@ class _FnetCatalogList extends HookConsumerWidget {
     final snapshot = useFuture(future);
 
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: AccessibleCircularProgressIndicator());
     }
 
     if (snapshot.hasError) {
       return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
             Text('エラーが発生しました\n${snapshot.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
+            M3EElevatedButton(
               onPressed: () {
                 (context as Element).markNeedsBuild();
               },
@@ -90,9 +92,8 @@ class _FnetCatalogList extends HookConsumerWidget {
       );
     }
 
-    final jst = tz.getLocation('Asia/Tokyo');
     final groupedByDate = events.groupListsBy(
-      (e) => Date.fromDateTime(tz.TZDateTime.from(e.originTime, jst)),
+      (e) => Date.fromDateTime(e.originTime.tokyoDateTime),
     );
 
     return CustomScrollView(
@@ -112,7 +113,7 @@ class _FnetCatalogList extends HookConsumerWidget {
                       child: Text(
                         '${entry.key.year}/${entry.key.month}/${entry.key.day}',
                         style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                           color: designSystem.colorTheme.onSurface,
                           fontFamily: FontFamily.googleSansCode,
                         ),
@@ -166,7 +167,7 @@ class _MonthSelector extends StatelessWidget {
               final month => '対象月: ${month.year}年${month.month}月',
             }, style: theme.textTheme.titleSmall),
           ),
-          OutlinedButton.icon(
+          M3EOutlinedButton.icon(
             onPressed: () async {
               final result = await showAdaptiveDialog<Month?>(
                 context: context,
@@ -182,7 +183,7 @@ class _MonthSelector extends StatelessWidget {
           ),
           if (selectedMonth != null) ...[
             const SizedBox(width: 8),
-            OutlinedButton(
+            M3EOutlinedButton(
               onPressed: () => onMonthChanged(null),
               child: const Text('クリア'),
             ),
@@ -224,50 +225,75 @@ class _MonthPickerDialog extends HookWidget {
     return AlertDialog.adaptive(
       title: const Text('年月を選択'),
       content: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Expanded(
-            child: DropdownMenu<int>(
-              initialSelection: selectedYear.value,
-              label: const Text('年'),
-              dropdownMenuEntries: years
-                  .map(
-                    (year) => DropdownMenuEntry(value: year, label: '$year年'),
-                  )
-                  .toList(),
-              onSelected: (value) {
-                if (value != null) {
+            child: SizedBox(
+              width: 180,
+              child: ControlledDropdown<int>(
+                fieldStyle: M3EDropdownFieldStyle(hintText: '年'),
+                singleSelect: true,
+                items:
+                    (years
+                            .map(
+                              (year) =>
+                                  M3EDropdownItem(value: year, label: '$year年'),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected: item.value == selectedYear.value,
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   selectedYear.value = value;
-                }
-              },
+                },
+              ),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: DropdownMenu<int>(
-              initialSelection: selectedMonth.value,
-              label: const Text('月'),
-              dropdownMenuEntries: availableMonths
-                  .map(
-                    (month) =>
-                        DropdownMenuEntry(value: month, label: '$month月'),
-                  )
-                  .toList(),
-              onSelected: (value) {
-                if (value != null) {
+            child: SizedBox(
+              width: 180,
+              child: ControlledDropdown<int>(
+                fieldStyle: M3EDropdownFieldStyle(hintText: '月'),
+                singleSelect: true,
+                items:
+                    (availableMonths
+                            .map(
+                              (month) => M3EDropdownItem(
+                                value: month,
+                                label: '$month月',
+                              ),
+                            )
+                            .toList())
+                        .map(
+                          (item) => item.copyWith(
+                            selected: item.value == selectedMonth.value,
+                          ),
+                        )
+                        .toList(),
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) return;
+                  final value = selection.first.value;
+
                   selectedMonth.value = value;
-                }
-              },
+                },
+              ),
             ),
           ),
         ],
       ),
       actions: [
-        TextButton(
+        M3ETextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
-        TextButton(
+        M3ETextButton(
           onPressed: () {
             Navigator.of(
               context,
@@ -288,22 +314,17 @@ class _EventCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
-    final jst = tz.getLocation('Asia/Tokyo');
-    final originTime = tz.TZDateTime.from(event.originTime, jst);
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               event.regionName,
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
             const SizedBox(height: 8),
@@ -313,9 +334,11 @@ class _EventCard extends HookWidget {
                 fontFamilyFallback: [FontFamily.notoSansJP],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
-                  Text('発生日時: ${dateFormat.format(originTime)} JST'),
+                  Text(
+                    '発生日時: ${event.originTime.formatWithTz(.yearMonthDayHourMinuteSecondHyphen)} JST',
+                  ),
                   Text(
                     'Mj ${event.jmaMagnitude.toStringAsFixed(1)} / Mw ${event.momentMagnitude.toStringAsFixed(1)}',
                   ),

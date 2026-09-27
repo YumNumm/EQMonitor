@@ -495,9 +495,7 @@ final class PasskeyOptionsSchemaValidator {
   }
 }
 
-final class PasskeyBase64UrlValidator {
-  const new();
-
+final class const PasskeyBase64UrlValidator() {
   bool isValid(String value) {
     if (value.isEmpty || !_passkeyBase64UrlPattern.hasMatch(value)) {
       return false;
@@ -510,9 +508,7 @@ final class PasskeyBase64UrlValidator {
   }
 }
 
-final class PasskeyFailureMapper {
-  const new();
-
+final class const PasskeyFailureMapper() {
   Future<Result<T, AuthFailure>> capture<T>(
     Future<T> Function() operation,
   ) async {
@@ -533,7 +529,8 @@ final class PasskeyFailureMapper {
       passkey.PasskeyAuthCancelledException() => AuthFailureKind.cancelled,
       passkey.TimeoutException() => AuthFailureKind.timeout,
       passkey.DeviceNotSupportedException() ||
-      passkey.PasskeyUnsupportedException() =>
+      passkey.PasskeyUnsupportedException() ||
+      passkey.RestoreCredentialUnsupportedException() =>
         AuthFailureKind.passkeyUnsupported,
       passkey.DomainNotAssociatedException() =>
         AuthFailureKind.passkeyDomainAssociation,

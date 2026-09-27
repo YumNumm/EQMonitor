@@ -3,18 +3,17 @@ import 'dart:async';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final eewForecastRegionIntensityFilterUpdaterProvider =
-    Provider<EewForecastRegionIntensityFilterUpdater>(
-      (_) => const EewForecastRegionIntensityFilterUpdater(),
-    );
+part 'eew_forecast_region_intensity_filter_updater.g.dart';
 
-/// EEW震度予報区域レイヤーの震度別 fill layer を管理する。
-class EewForecastRegionIntensityFilterUpdater {
-  const new();
+@Riverpod(keepAlive: true)
+EewForecastRegionIntensityFilterUpdater eewForecastRegionIntensityFilterUpdater(
+  Ref ref,
+) => const EewForecastRegionIntensityFilterUpdater();
 
+class const EewForecastRegionIntensityFilterUpdater() {
   static const _areaFilterBuilder = EewAreaFilterBuilder();
 
   static const List<JmaIntensity> intensityLevels = [
@@ -39,8 +38,8 @@ class EewForecastRegionIntensityFilterUpdater {
   }) async {
     await intensityLevels.map((intensity) {
       final codes = regionMaxIntensities
-          .where((r) => r.intensity == intensity)
-          .map((r) => r.code)
+          .where((region) => region.intensity == intensity)
+          .map((region) => region.code)
           .toList();
       return styleController.updateFilter(
         id: detailLayerId(intensity),

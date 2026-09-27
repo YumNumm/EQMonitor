@@ -93,7 +93,7 @@ P/S 波、揺れ検知、強震モニタ観測点など、初期化 effect と `
 
 ## ドキュメント
 
-今回確立した MapLibre の初期化・更新・破棄規約とテスト方法を `docs/knowledge/20260720_maplibre_layer_lifecycle.md` に残す。
+今回確立した MapLibre の初期化・更新・破棄規約とテスト方法を `docs/knowledge/maplibre.md` に残す。
 
 ## 完了条件
 

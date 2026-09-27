@@ -151,56 +151,31 @@ final class EstimatedIntensityIsolate {
   }
 }
 
-final class _InitMessage {
-  const new(this.points);
+final class const _InitMessage(final List<CalculationPoint> points);
 
-  final List<CalculationPoint> points;
-}
+final class const _InitAck();
 
-final class _InitAck {
-  const new();
-}
+final class const _ComputeSingleMessage({
+  required final int id,
+  required final double jmaMagnitude,
+  required final int depth,
+  required final double lat,
+  required final double lon,
+});
 
-final class _ComputeSingleMessage {
-  const new({
-    required this.id,
-    required this.jmaMagnitude,
-    required this.depth,
-    required this.lat,
-    required this.lon,
-  });
+final class const _ComputeMaxMessage({
+  required final int id,
+  required final List<EstimatedIntensityHypocenterInput> eews,
+});
 
-  final int id;
-  final double jmaMagnitude;
-  final int depth;
-  final double lat;
-  final double lon;
-}
+final class const _ShutdownMessage();
 
-final class _ComputeMaxMessage {
-  const new({required this.id, required this.eews});
-
-  final int id;
-  final List<EstimatedIntensityHypocenterInput> eews;
-}
-
-final class _ShutdownMessage {
-  const new();
-}
-
-final class _ComputeResponseMessage {
-  const new({
-    required this.id,
-    this.intensities,
-    this.errorMessage,
-    this.errorStack,
-  });
-
-  final int id;
-  final List<double>? intensities;
-  final String? errorMessage;
-  final String? errorStack;
-}
+final class const _ComputeResponseMessage({
+  required final int id,
+  final List<double>? intensities,
+  final String? errorMessage,
+  final String? errorStack,
+});
 
 @pragma('vm:entry-point')
 void _workerEntryPoint(SendPort mainSendPort) {

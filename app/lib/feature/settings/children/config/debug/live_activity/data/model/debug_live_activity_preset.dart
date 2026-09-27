@@ -16,16 +16,3 @@ enum DebugEewPreset {
 
   final String label;
 }
-
-/// 揺れ検知 Live Activity のデバッグプリセット。
-enum DebugShakePreset {
-  weaker('微弱な揺れ (Weaker)'),
-  weak('弱い揺れ (Weak)'),
-  medium('揺れ (Medium)'),
-  strong('強い揺れ (Strong)'),
-  stronger('非常に強い揺れ (Stronger)');
-
-  new(this.label);
-
-  final String label;
-}

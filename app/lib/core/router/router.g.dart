@@ -14,6 +14,8 @@ List<RouteBase> get $appRoutes => [
   $onboardingWebViewRoute,
   $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
+  $earthquakeHistorySearchRoute,
+  $regionSelectionRoute,
   $eewHistoryRoute,
   $seismicityRoute,
   $intensityHistoryRoute,
@@ -163,6 +165,72 @@ mixin $EarthquakeHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/earthquake-history');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
+}
+
+RouteBase get $earthquakeHistorySearchRoute => GoRouteData.$route(
+  path: '/earthquake-history/search',
+  hasOverriddenOnExit: false,
+  factory: $EarthquakeHistorySearchRoute._fromState,
+);
+
+mixin $EarthquakeHistorySearchRoute on GoRouteData {
+  static EarthquakeHistorySearchRoute _fromState(GoRouterState state) =>
+      EarthquakeHistorySearchRoute(
+        query: state.uri.queryParameters['query'] ?? '',
+      );
+
+  EarthquakeHistorySearchRoute get _self =>
+      this as EarthquakeHistorySearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/earthquake-history/search',
+    queryParams: {if (_self.query != '') 'query': _self.query},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $regionSelectionRoute => GoRouteData.$route(
+  path: '/region-selection',
+  hasOverriddenOnExit: false,
+  factory: $RegionSelectionRoute._fromState,
+);
+
+mixin $RegionSelectionRoute on GoRouteData {
+  static RegionSelectionRoute _fromState(GoRouterState state) =>
+      RegionSelectionRoute($extra: state.extra as RegionSelectionRequest?);
+
+  RegionSelectionRoute get _self => this as RegionSelectionRoute;
+
+  @override
+  String get location => GoRouteData.$location('/region-selection');
 
   @override
   void go(BuildContext context) => context.go(location, extra: _self.$extra);
@@ -637,6 +705,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugShakeDetectionCardRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'shake-detection-settings',
+          hasOverriddenOnExit: false,
+          factory: $DebugShakeDetectionSettingsRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'shake-detection-insert',
           hasOverriddenOnExit: false,
           factory: $DebugShakeDetectionInsertRoute._fromState,
@@ -665,6 +738,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'notification-delivery-log',
           hasOverriddenOnExit: false,
           factory: $DebugNotificationDeliveryLogRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'notification-webhooks',
+          hasOverriddenOnExit: false,
+          factory: $DebugNotificationWebhookRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'device-admin',
@@ -1332,6 +1410,28 @@ mixin $DebugShakeDetectionCardRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugShakeDetectionSettingsRoute on GoRouteData {
+  static DebugShakeDetectionSettingsRoute _fromState(GoRouterState state) =>
+      const DebugShakeDetectionSettingsRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shake-detection-settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugShakeDetectionInsertRoute on GoRouteData {
   static DebugShakeDetectionInsertRoute _fromState(GoRouterState state) =>
       const DebugShakeDetectionInsertRoute();
@@ -1445,6 +1545,28 @@ mixin $DebugNotificationDeliveryLogRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/notification-delivery-log');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugNotificationWebhookRoute on GoRouteData {
+  static DebugNotificationWebhookRoute _fromState(GoRouterState state) =>
+      const DebugNotificationWebhookRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/notification-webhooks');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2189,4 +2311,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'12a8e497d20d8c53f271343ac80d4f3f6380607d';
+String _$goRouterHash() => r'3a3c1127433ff0858c896f61e43a3f3a6eff0c8e';

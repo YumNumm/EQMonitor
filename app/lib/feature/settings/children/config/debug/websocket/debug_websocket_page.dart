@@ -49,7 +49,7 @@ class DebugWebSocketPage extends HookConsumerWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           _WsStatusCard(wsStatus: wsStatus, rtt: rtt),
           const Divider(height: 1),
@@ -119,7 +119,7 @@ class _WsStatusCard extends HookWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
@@ -203,7 +203,7 @@ class _WsEventCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(displayType, style: theme.textTheme.titleSmall),
                     const SizedBox(height: 4),

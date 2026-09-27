@@ -5,30 +5,47 @@ import 'package:pmtiles_v3/src/archive/pmtiles_v3_directory_entry.dart';
 import 'package:pmtiles_v3/src/archive/pmtiles_v3_tile_id.dart';
 import 'package:pmtiles_v3/src/model/pmtiles_v3_exception.dart';
 
-final class PmTilesV3DirectoryDecoder {
-  const new({
-    this.compressionDecoder = const PmTilesV3CompressionDecoder(),
-    this.tileId = const PmTilesV3TileId(),
-  });
-
+final class const PmTilesV3DirectoryDecoder({
+  final PmTilesV3CompressionDecoder compressionDecoder =
+      const PmTilesV3CompressionDecoder(),
+  final PmTilesV3TileId tileId = const PmTilesV3TileId(),
+}) {
   static const maxSignedInteger = 0x7FFFFFFFFFFFFFFF;
-
-  final PmTilesV3CompressionDecoder compressionDecoder;
-  final PmTilesV3TileId tileId;
 
   List<PmTilesV3DirectoryEntry> decode({
     required Uint8List bytes,
     required int compression,
+    required int maxEncodedBytes,
+    required int maxDecodedBytes,
+    required int maxEntries,
   }) {
-    final decoded = compressionDecoder.decode(
+    if (maxEntries < 0) {
+      throw ArgumentError.value(
+        maxEntries,
+        'maxEntries',
+        'must not be negative',
+      );
+    }
+    final decoded = compressionDecoder.decodeBounded(
       bytes: bytes,
       compression: compression,
+      maxEncodedBytes: maxEncodedBytes,
+      maxDecodedBytes: maxDecodedBytes,
+      encodedResource: PmTilesV3Resource.directoryEncoded,
+      decodedResource: PmTilesV3Resource.directoryDecoded,
     );
     final countResult = decodeVarintAt(bytes: decoded, offset: 0);
     final count = countResult.value;
     if (count <= 0) {
       throw const PmTilesV3Exception.corruptArchive(
         reason: 'A PMTiles directory must contain at least one entry.',
+      );
+    }
+    if (count > maxEntries) {
+      throw PmTilesV3Exception.resourceLimitExceeded(
+        resource: PmTilesV3Resource.directoryEntries,
+        limit: maxEntries,
+        actual: count,
       );
     }
     if (count > (decoded.length - countResult.nextOffset) ~/ 4) {

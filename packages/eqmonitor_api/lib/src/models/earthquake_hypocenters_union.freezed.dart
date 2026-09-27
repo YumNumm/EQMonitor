@@ -24,7 +24,7 @@ EarthquakeHypocentersUnion _$EarthquakeHypocentersUnionFromJson(
           return EarthquakeHypocentersUnionVariant2.fromJson(
             json
           );
-
+        
           default:
             throw CheckedFromJsonException(
   json,
@@ -33,7 +33,7 @@ EarthquakeHypocentersUnion _$EarthquakeHypocentersUnionFromJson(
   'Invalid union type "${json['runtimeType']}"!'
 );
         }
-
+      
 }
 
 /// @nodoc
@@ -102,7 +102,7 @@ as Hypocenter,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $HypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -322,7 +322,7 @@ as Hypocenter,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $HypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -413,7 +413,7 @@ as CatalogHypocenter,
 @override
 @pragma('vm:prefer-inline')
 $HypocenterCopyWith<$Res> get hypocenter {
-
+  
   return $HypocenterCopyWith<$Res>(_self.hypocenter, (value) {
     return _then(_self.copyWith(hypocenter: value));
   });
@@ -422,7 +422,7 @@ $HypocenterCopyWith<$Res> get hypocenter {
 @override
 @pragma('vm:prefer-inline')
 $CatalogHypocenterCopyWith<$Res> get catalog {
-
+  
   return $CatalogHypocenterCopyWith<$Res>(_self.catalog, (value) {
     return _then(_self.copyWith(catalog: value));
   });

@@ -22,7 +22,8 @@ final class ParameterAssetDataSource {
 
   final AssetPackRepository _assetPackRepository;
 
-  Future<AssetPackManifest> readManifest() => _assetPackRepository.readManifest();
+  Future<AssetPackManifest> readManifest() =>
+      _assetPackRepository.readManifest();
 
   Future<String> readParameterJson(ParameterType type) async {
     final file = await _assetPackRepository.resolveAsset(

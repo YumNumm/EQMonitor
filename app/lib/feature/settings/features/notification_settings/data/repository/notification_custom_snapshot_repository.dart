@@ -9,10 +9,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_custom_snapshot_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<NotificationCustomSnapshotRepository> notificationCustomSnapshotRepository(
+Future<NotificationCustomSnapshotRepository>
+notificationCustomSnapshotRepository(
   Ref ref,
 ) async {
-  final dataSource = await ref.watch(sharedPreferencesDataSourceProvider.future);
+  final dataSource = await ref.watch(
+    sharedPreferencesDataSourceProvider.future,
+  );
   return NotificationCustomSnapshotRepository(dataSource);
 }
 
@@ -21,10 +24,11 @@ class NotificationCustomSnapshotRepository {
 
   final SharedPreferencesDataSource _dataSource;
 
-  Future<void> save(NotificationCustomSnapshot snapshot) => _dataSource.setString(
-    key: SharedPreferencesKey.notificationCustomSnapshot,
-    value: jsonEncode(snapshot.toJson()),
-  );
+  Future<void> save(NotificationCustomSnapshot snapshot) =>
+      _dataSource.setString(
+        key: SharedPreferencesKey.notificationCustomSnapshot,
+        value: jsonEncode(snapshot.toJson()),
+      );
 
   /// スキーマ不一致・パース失敗時は null を返し、呼び出し側でフォールバックする。
   Future<NotificationCustomSnapshot?> load() async {

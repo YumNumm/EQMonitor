@@ -121,7 +121,8 @@ Summary)向けの別機構であり、App Store Connect上の質問票は**開�
 | Performance Data | Yes | No | No | Analytics | 既存宣言(Firebase Performance系)。変更なし |
 | Device ID | **Yes** | No(EQMonitorはAdMobにアプリ独自の識別子/個人情報を紐付けていない。ATT未実装につきIDFAへのアクセスも無い) | No(ATT未呼出のためAppleの定義する「トラッキング」には該当しない。将来ATT+パーソナライズ広告を有効化する場合はYesへ見直し必須) | Third-Party Advertising, Analytics | AdMob公式ガイド「App store data disclosure」(`developers.google.com/admob/ios/privacy/data-disclosure`)が、Google Mobile Ads SDKはDevice ID(広告識別子含む)を「third-party advertising and analytics」目的で収集すると明記。ASCの質問票にはアプリ側で明示的にこの回答を入力する必要がある |
 | Advertising Data | **Yes** | 同上(No) | 同上(No、ATT未実装のため) | Third-Party Advertising, Analytics | 同ガイドが、ユーザーに表示した広告の履歴("advertisements the user has seen")を"may be used to power analytics and advertising features"と明記。同様にASCへの明示的な回答が必要 |
-| Purchase History | **Yes** | **No**(`app/lib/feature/subscription/data/repository/revenue_cat_configurator.dart` は `Purchases.configure(PurchasesConfiguration(apiKey))` のみで `appUserID`/`logIn()` を渡しておらず、RevenueCatの匿名App User IDのみを使用。個人を特定する情報とは紐付けていない) | No(RevenueCat自体は購入履歴を他社広告トラッキングに使用しない) | App Functionality, Analytics(**両方選択必須**) | RevenueCat公式ガイド「Apple App Privacy」(`revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy`)が、RevenueCat統合者は"Purchase History"を必ずYesで申告し、"App Functionality"(レシート検証・不正防止・Entitlements)と"Analytics"(Customer History/Charts/Experiments)の両方を選択するよう明記 |
+| Purchase History | **Yes** | **Yes（申告案）**: `revenue_cat_session.dart` が登録済みdevice IDへlogInし、backendでも購入と複数端末を対応付ける。匿名IDのみという旧根拠は適用不可 | No（今回、広告目的の購入情報連携は追加しない） | App Functionality, Analytics | RevenueCat公式Apple App Privacyと下記 #1843 の実装根拠。Console回答は未変更 |
+| User ID（RevenueCat） | **Yes** | **Yes（申告案）** | No | App Functionality, Analytics | custom App User IDとしてサーバー発行device IDを送信。既存Analytics向けUser IDとは別途集約して回答 |
 | Other Diagnostic Data / Product Interaction | Yes(既存宣言のAnalyticsで代替) | No | No | Analytics | Firebase Analytics |
 
 > 上記のDevice ID / Advertising DataのLinked/Tracking回答は、**EQMonitorが現状ATTを
@@ -194,8 +195,8 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
 - [ ] App Store Connect → App → App Privacy → 「Get Started」/ 「Edit」
 - [ ] Location → Precise Location: Yes / Linked to you: No / Used for Tracking: No /
       Purpose: App Functionality
-- [ ] Identifiers → User ID: Yes / Linked to you: No / Tracking: No / Purpose: Analytics
-      (既存回答、変更なし)
+- [ ] Identifiers → User ID: Yes / Linked to you: Yes（課金device ID連携を含む申告案） /
+      Tracking: No / Purpose: App Functionality, Analytics。既存回答との差分を確認する
 - [ ] Diagnostics → Crash Data, Performance Data: Yes / Linked: No / Tracking: No /
       Purpose: Analytics(既存回答、変更なし)
 - [ ] Purchases → **AdMobのGoogle公式ASC回答ガイダンス(`developers.google.com/admob/ios/privacy/data-disclosure`)
@@ -203,8 +204,8 @@ Appleの仕様上、Xcodeのビルド時に生成される「プライバシー�
       (`revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy`)
       に従い、Purchase History を **Collected: Yes** で申告し、
       Purpose に **App Functionality と Analytics の両方**を選択したか確認する
-      (Linked to you は本アプリの匿名App User ID運用に基づき No を選択。
-      §2表・`revenue_cat_configurator.dart`参照)
+      (Linked to you はdevice IDと購入の対応に基づきYesを申告案とする。
+      §2表・末尾の #1843 追記参照。Consoleは未変更)
 - [ ] Identifiers/Usage Data(広告関連) は AdMob公式ASC回答ガイダンス
       (`developers.google.com/admob/ios/privacy/data-disclosure`)に従い、
       Device ID と Advertising Data を **Collected: Yes**、Purpose に
@@ -299,3 +300,16 @@ covered by the app's Analytics/Crash data collection.
 - [ ] 1〜4の全項目を確認し、対応不能/対応保留の項目はIssue化されている
 - [ ] Google Play Console / App Store Connectの申告が完了した日時と担当者を
       本ファイルまたは関連Issueに記録した
+
+
+## #1843 課金device ID連携の変更（2026-09-26）
+
+- コード: `app/lib/feature/subscription/data/repository/revenue_cat_session.dart` が登録済みdevice IDをcustom App User IDとしてRevenueCatへ渡す。EQMonitorアカウントへのログインは必須にしない。
+- 送信するもの: storeの購入・商品・有効期限等の課金情報とdevice ID。サーバーJWTはRevenueCatへ送らない。メールアドレス・氏名のCustomer Attributes追加は行わない。
+- 利用目的: 購入検証、不正防止、複数端末へのPro付与・復元、更新・返金・失効の反映。今回の課金連携を広告ターゲティングには利用しない。
+- backendは検証済み取引、RevenueCat顧客IDとの対応、サーバー照会snapshotを保持する。端末削除では端末権限とその端末向け照会記録を削除するが、他端末の購入復元・イベント再処理に必要な購入/顧客IDの記録は保持する。device削除だけでストア解約やRevenueCat顧客削除が完了したと表示してはいけない。
+- 保持期間・削除請求時のRevenueCat/会計記録の消去範囲は未確定。公開ポリシーの保持・削除条項を運用担当と確定してから配布する。
+- [RevenueCat公式App Privacy](https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy)（2026-09-26確認）はcustom App User ID利用時にUser IDの申告を求める。Linkedの回答は自社/第三者での紐付け実態も含めるため、匿名のみを根拠とした旧No回答を引き継がない。
+- [ ] ASC App PrivacyとPlay Data Safetyにdevice ID・購入情報・利用目的を反映し、公開前に差分を保存する。
+- [ ] 公開プライバシーポリシーのRevenueCat利用・購入共有・保持/削除方針を更新する。
+- **実施状態:** 文書・実装根拠の更新のみ。Consoleの保存/公開および公開サイトの更新は未実施。

@@ -1,4 +1,7 @@
+import 'package:eqmonitor/core/component/slider/accessible_slider.dart';
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_level.dart';
@@ -69,7 +72,7 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
           ),
           _ParamSection(
             title: '検知時刻',
-            child: OutlinedButton(
+            child: M3EOutlinedButton(
               onPressed: () async {
                 final base = createdAt.value;
                 final d = await showDatePicker(
@@ -98,7 +101,9 @@ class DebugShakeDetectionCardPage extends HookConsumerWidget {
                 );
               },
               child: Text(
-                createdAt.value.toLocal().toString(),
+                createdAt.value.formatWithTz(
+                  .yearMonthDayHourMinuteSecondMillisecond,
+                ),
                 style: _paramLabelStyle,
               ),
             ),
@@ -205,12 +210,12 @@ class _ParamSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               title,
               style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
+                  ?.copyWith(fontSize: 11, fontWeight: .w600),
             ),
             const SizedBox(height: 8),
             child,
@@ -248,7 +253,7 @@ class _SliderRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Slider(
+          child: AccessibleSlider(
             value: value.clamp(min, max),
             min: min,
             max: max,

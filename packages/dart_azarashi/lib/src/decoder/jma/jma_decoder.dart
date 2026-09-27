@@ -185,34 +185,18 @@ class JmaDecoder {
 }
 
 /// Common parameters for JMA decoders.
-class JmaCommonParams {
-  const new({
-    required this.sentence,
-    required this.message,
-    required this.nmea,
-    required this.messageHeader,
-    required this.satelliteId,
-    required this.satellitePrn,
-    required this.raw,
-    required this.preamble,
-    required this.version,
-    required this.reportClassification,
-    required this.disasterCategory,
-    required this.reportTime,
-    required this.informationType,
-  });
-
-  final String sentence;
-  final Uint8List message;
-  final String nmea;
-  final String? messageHeader;
-  final int? satelliteId;
-  final int? satellitePrn;
-  final Uint8List raw;
-  final String preamble;
-  final int version;
-  final JmaReportClassification reportClassification;
-  final JmaDisasterCategory disasterCategory;
-  final DateTime reportTime;
-  final JmaInformationType informationType;
-}
+class const JmaCommonParams({
+  required final String sentence,
+  required final Uint8List message,
+  required final String nmea,
+  required final String? messageHeader,
+  required final int? satelliteId,
+  required final int? satellitePrn,
+  required final Uint8List raw,
+  required final String preamble,
+  required final int version,
+  required final JmaReportClassification reportClassification,
+  required final JmaDisasterCategory disasterCategory,
+  required final DateTime reportTime,
+  required final JmaInformationType informationType,
+});

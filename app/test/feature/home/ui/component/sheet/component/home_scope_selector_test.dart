@@ -76,7 +76,7 @@ void main() {
     await tester.tap(find.text('全国'));
     await tester.pumpAndSettle();
 
-    expect(find.text('地域を選び直す'), findsNothing);
+    expect(find.text('地域を再選択'), findsNothing);
   });
 
   testWidgets('onEditRegion があれば地域選び直しの項目から呼び出せる', (tester) async {
@@ -93,7 +93,7 @@ void main() {
 
     await tester.tap(find.text('全国'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('地域を選び直す'));
+    await tester.tap(find.text('地域を再選択'));
     await tester.pumpAndSettle();
 
     expect(edited, 1);

@@ -15,9 +15,7 @@ const kV3MigrationInstanceId = 'v3-device-migration-v1';
 const _kMarkComplete = 'markLocalComplete';
 
 /// v2.6 → v3 device migration workflow のランナー。
-class DeviceMigrationWorkflow {
-  const new();
-
+class const DeviceMigrationWorkflow() {
   /// Runs the v2.6 → v3 device migration as a durable workflow.
   ///
   /// Steps:

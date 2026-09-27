@@ -6,9 +6,7 @@ import 'package:eqmonitor/core/model/environment.dart';
 /// dart-define のないテストでは `Flavor.values.byName('')` で例外になる。
 /// `buildConfigProvider` を読む provider / Widget のテストでは必ず
 /// `buildConfigProvider.overrideWithValue(...)` で差し替えること。
-class BuildConfigFixture {
-  const new();
-
+class const BuildConfigFixture() {
   BuildConfig build({
     Flavor flavor = Flavor.dev,
     bool isBetaTesting = false,

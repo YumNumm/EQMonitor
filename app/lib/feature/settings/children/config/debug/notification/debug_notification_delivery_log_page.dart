@@ -1,15 +1,19 @@
+import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
+import 'package:m3e_core/m3e_core.dart';
+
 import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/logic/notification_delivery_log_detail_builder.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:flutter/services.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
   const new({super.key});
@@ -98,23 +102,23 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
       body: switch (ref.watch(deviceIdProvider)) {
         AsyncError(:final error) => Center(child: Text('端末 ID 取得エラー: $error')),
         AsyncLoading() => const Center(
-          child: CircularProgressIndicator.adaptive(),
+          child: AccessibleCircularProgressIndicator(),
         ),
         AsyncData<String>() => Builder(
           builder: (context) {
             if (loading.value && items.value.isEmpty && error.value == null) {
-              return const Center(child: CircularProgressIndicator.adaptive());
+              return const Center(child: AccessibleCircularProgressIndicator());
             }
             if (error.value != null && items.value.isEmpty) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     children: [
-                      Text(error.value.toString(), textAlign: TextAlign.center),
+                      Text(error.value.toString(), textAlign: .center),
                       const SizedBox(height: 16),
-                      FilledButton.icon(
+                      M3EFilledButton.icon(
                         onPressed: () {
                           refreshTick.value++;
                         },
@@ -127,7 +131,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
               );
             }
             if (items.value.isEmpty) {
-              return RefreshIndicator(
+              return M3EPullToRefreshIndicator(
+                onError: (error, stackTrace) =>
+                    Error.throwWithStackTrace(error, stackTrace),
                 onRefresh: loadFirstPage,
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -146,7 +152,9 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                 ),
               );
             }
-            return RefreshIndicator(
+            return M3EPullToRefreshIndicator(
+              onError: (error, stackTrace) =>
+                  Error.throwWithStackTrace(error, stackTrace),
               onRefresh: loadFirstPage,
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -159,8 +167,8 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       padding: const EdgeInsets.all(16),
                       child: Center(
                         child: loadingMore.value
-                            ? const CircularProgressIndicator.adaptive()
-                            : TextButton.icon(
+                            ? const AccessibleCircularProgressIndicator()
+                            : M3ETextButton.icon(
                                 onPressed: () async {
                                   await loadMore();
                                 },
@@ -177,7 +185,11 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
                       final detail = ref
                           .read(notificationDeliveryLogDetailBuilderProvider)
                           .build(entry: item);
-                      await showModalBottomSheet<void>(
+                      await showM3EModalBottomSheet<void>(
+                        style: const M3EBottomSheetStyle(
+                          padding: EdgeInsets.zero,
+                        ),
+                        useSafeArea: false,
                         context: context,
                         showDragHandle: true,
                         isScrollControlled: true,
@@ -206,13 +218,38 @@ class _NotificationLogTile extends StatelessWidget {
     final colorTheme = context.designSystem.colorTheme;
     final ok = item.result == PushNotificationDeliveryResult.ok;
     final resultColor = ok ? colorTheme.primary : colorTheme.error;
+    final liveActivityEventType = item.liveActivityEventType;
 
     return ListTile(
       title: Text(
         item.title ?? '[タイトルなし]',
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      subtitle: Text(item.body ?? '[本文なし]', maxLines: 4, overflow: .ellipsis),
+      subtitle: Column(
+        mainAxisSize: .min,
+        children: [
+          Expanded(
+            child: Text(
+              item.body ?? '[本文なし]',
+              maxLines: 4,
+              overflow: .ellipsis,
+            ),
+          ),
+          if (liveActivityEventType != null)
+            Text(
+              switch (liveActivityEventType) {
+                PushNotificationLiveActivityEventType.start =>
+                  'Live Activity 開始',
+                PushNotificationLiveActivityEventType.update =>
+                  'Live Activity 更新',
+                PushNotificationLiveActivityEventType.end => 'Live Activity 終了',
+              },
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.designSystem.colorTheme.onSurfaceVariant,
+              ),
+            ),
+        ],
+      ),
       trailing: Icon(
         ok ? Icons.check_circle_outline : Icons.error_outline,
         color: resultColor,
@@ -236,7 +273,7 @@ class _LogDetailSheet extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 8, 8),
@@ -291,7 +328,7 @@ class _LogDetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             row.label,
@@ -302,7 +339,13 @@ class _LogDetailRow extends StatelessWidget {
           const SizedBox(height: 4),
           SelectableText(
             row.value,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontFamily: FontFamily.googleSansCode,
+              fontFamilyFallback: [
+                FontFamily.googleSansFlex,
+                FontFamily.notoSansJP,
+              ],
+            ),
           ),
         ],
       ),

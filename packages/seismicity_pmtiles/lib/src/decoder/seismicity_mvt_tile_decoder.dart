@@ -5,9 +5,7 @@ import 'package:seismicity_pmtiles/src/decoder/seismicity_mvt_property_decoder.d
 import 'package:seismicity_pmtiles/src/model/seismicity_pmtiles_exception.dart';
 import 'package:vector_tile/raw/raw_vector_tile.dart';
 
-final class SeismicityMvtTileDecoder {
-  const new();
-
+final class const SeismicityMvtTileDecoder() {
   int decode({
     required int tileId,
     required int dataZoom,

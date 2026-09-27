@@ -1,11 +1,12 @@
+import 'package:m3e_core/m3e_core.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/data/tsunami_history_data_source.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -37,7 +38,9 @@ class _PagingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return M3EPullToRefreshIndicator(
+      onError: (error, stackTrace) =>
+          Error.throwWithStackTrace(error, stackTrace),
       onRefresh: dataSource.refresh,
       child: CustomScrollView(
         slivers: [
@@ -94,7 +97,7 @@ class _TsunamiListTile extends StatelessWidget {
         : context.designSystem.colorTheme.tertiary;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         ListTile(
           leading: CircleAvatar(
@@ -104,22 +107,22 @@ class _TsunamiListTile extends StatelessWidget {
               statusLabel.substring(0, 1),
               style: theme.textTheme.labelSmall?.copyWith(
                 color: statusColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
               ),
             ),
           ),
           title: Text(
             hypocenterName ?? '震源不明',
             style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               if (originTime != null)
                 Text(
-                  '発生: ${DateFormat('MM/dd HH:mm').format(originTime.toLocal())}',
+                  '発生: ${originTime.formatWithTz(.monthDayHourMinute)}',
                   style: theme.textTheme.bodySmall,
                 ),
               if (magnitude != null)
@@ -130,14 +133,18 @@ class _TsunamiListTile extends StatelessWidget {
               Text(
                 'EventID: ${item.eventIds.join(", ")}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
               Text(
                 '$statusLabel | 地域: ${item.regions.length} | '
                 '電文: ${item.latestTelegrams.length}',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: context.designSystem.colorTheme.onSurface.withValues(alpha: 0.6),
+                  color: context.designSystem.colorTheme.onSurface.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
               ),
             ],
@@ -203,7 +210,7 @@ class _TsunamiListSkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
+          : Column(mainAxisSize: .min, children: tiles),
     );
   }
 }
