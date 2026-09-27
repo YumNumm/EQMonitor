@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/map/ui/map_operation_queue_scope.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:eqmonitor/feature/region_selection/data/logic/latest_map_operation_guard.dart';
 import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart';
+import 'package:eqmonitor/feature/region_selection/data/repository/prefecture_boundary_repository.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_map_metadata_provider.dart';
 import 'package:eqmonitor/feature/region_selection/ui/action/region_selection_map_action.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map_layer.dart';
@@ -36,6 +37,7 @@ class RegionSelectionMap extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final configuration = ref.watch(mapConfigurationProvider);
     final metadata = ref.watch(regionMapMetadataProvider);
+    final prefectures = ref.watch(prefectureBoundaryGeoJsonProvider);
     final worker = kind == .epicenter || kind == .station
         ? null
         : ref.watch(jmaMapIsolateProvider);
@@ -69,12 +71,14 @@ class RegionSelectionMap extends HookConsumerWidget {
         retry.value,
       ],
     );
-    if (configuration.isLoading ||
+    if (prefectures.isLoading ||
+        configuration.isLoading ||
         metadata.isLoading ||
         (worker?.isLoading ?? false)) {
       return const Center(child: AccessibleCircularProgressIndicator());
     }
-    if (configuration.hasError ||
+    if (prefectures.hasError ||
+        configuration.hasError ||
         metadata.hasError ||
         (worker?.hasError ?? false)) {
       return Center(
@@ -84,6 +88,7 @@ class RegionSelectionMap extends HookConsumerWidget {
             const Text('地図を読み込めませんでした。一覧からも選択できます。'),
             M3ETextButton(
               onPressed: () {
+                ref.invalidate(prefectureBoundaryGeoJsonProvider);
                 ref.invalidate(mapConfigurationProvider);
                 ref.invalidate(regionMapMetadataProvider);
                 if (worker?.hasError ?? false) {
@@ -183,7 +188,7 @@ class RegionSelectionMap extends HookConsumerWidget {
               if (styleLoaded.value)
                 RegionSelectionMapLayer(
                   selected: selected,
-                  catalog: catalog,
+                  prefectureGeoJson: prefectures.requireValue,
                   kind: kind,
                   hasEpicenter: hasEpicenter,
                   onReady: () {

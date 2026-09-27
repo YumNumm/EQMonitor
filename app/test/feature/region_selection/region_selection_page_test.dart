@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/region_selection/data/model/region_option.dart
 import 'package:eqmonitor/feature/region_selection/data/model/region_selection_request.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_catalog_provider.dart';
 import 'package:eqmonitor/feature/region_selection/data/provider/region_map_metadata_provider.dart';
+import 'package:eqmonitor/feature/region_selection/data/repository/prefecture_boundary_repository.dart';
 import 'package:eqmonitor/feature/region_selection/ui/component/region_selection_map.dart';
 import 'package:eqmonitor/feature/region_selection/ui/page/region_selection_page.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,42 @@ const cities = [
 ];
 
 void main() {
+  testWidgets('都道府県境界の読み込み失敗は再試行できる', (tester) async {
+    var attempts = 0;
+    await tester.pumpWidget(
+      ProviderScope(
+        retry: (_, _) => null,
+        overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith((ref) async {
+            if (++attempts == 1) throw const FormatException('invalid gzip');
+            return '{"type":"FeatureCollection","features":[]}';
+          }),
+          mapConfigurationProvider.overrideWith(_MapConfiguration.new),
+          regionMapMetadataProvider.overrideWith(
+            (ref) async => const RegionMapMetadata(layers: []),
+          ),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: RegionSelectionMap(
+              kind: .epicenter,
+              catalog: const [],
+              selected: const [],
+              onSelected: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('再試行'), findsOneWidget);
+    await tester.tap(find.text('再試行'));
+    await tester.pumpAndSettle();
+    expect(attempts, 2);
+    expect(find.textContaining('Asset Packを更新'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('旧packの地図と一覧を切り替えても選択を保持し、古いcallbackは解除済み項目を戻さない', (
     tester,
   ) async {
@@ -42,6 +79,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           regionCatalogProvider().overrideWith((ref) async => [first, second]),
           mapConfigurationProvider.overrideWith(_MapConfiguration.new),
           regionMapMetadataProvider.overrideWith(
@@ -87,6 +127,9 @@ void main() {
       ProviderScope(
         retry: (_, _) => null,
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           mapConfigurationProvider.overrideWith(_MapConfiguration.new),
           regionMapMetadataProvider.overrideWith(
             (ref) async => const RegionMapMetadata(layers: []),
@@ -126,6 +169,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           regionCatalogProvider().overrideWith((ref) async => cities),
         ],
         child: MaterialApp(
@@ -157,6 +203,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           regionCatalogProvider().overrideWith(
             (ref) async => [prefecture, ...cities],
           ),
@@ -196,6 +245,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           regionCatalogProvider().overrideWith((ref) async => cities),
         ],
         child: MaterialApp(
@@ -228,6 +280,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          prefectureBoundaryGeoJsonProvider.overrideWith(
+            (ref) async => '{"type":"FeatureCollection","features":[]}',
+          ),
           regionCatalogProvider().overrideWith((ref) => completer.future),
         ],
         child: const MaterialApp(
