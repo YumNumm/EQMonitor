@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -5,8 +6,8 @@ import 'package:eqmonitor/core/theme/model/intensity_colors.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LpgmStationDetailSheet extends ConsumerWidget {
@@ -23,9 +24,8 @@ class LpgmStationDetailSheet extends ConsumerWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Center(
               child: Container(
@@ -71,6 +71,10 @@ class _Header extends ConsumerWidget {
 
     return Row(
       children: [
+        if (intensity?.maxIntensity case final jmaIntensity?) ...[
+          JmaIntensityIcon(intensity: jmaIntensity, type: .filled, size: 44),
+          const SizedBox(width: 12),
+        ],
         if (maxLpgmIntensity != null) ...[
           JmaLpgmIntensityIcon(
             intensity: maxLpgmIntensity,
@@ -244,13 +248,11 @@ class _RelatedLinksCard extends StatelessWidget {
   static const List<({String title, String url})> _links = [
     (
       title: '長周期地震動階級および長周期地震動階級関連解説表について',
-      url:
-          'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_level.html',
+      url: 'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_level.html',
     ),
     (
       title: '固有周期と建物の関係について',
-      url:
-          'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_period.html',
+      url: 'https://www.jma.go.jp/jma/kishou/know/jishin/ltpgm_explain/about_period.html',
     ),
   ];
 
