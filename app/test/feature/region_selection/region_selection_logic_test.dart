@@ -193,14 +193,13 @@ void main() {
     );
   });
 
-  test('地図の震央filterは数値id、都道府県は所属市区町村を使う', () {
+  test('地図の震央filterは数値id、都道府県は都道府県コードを使う', () {
     const layers = RegionMapLayers();
     expect(
       layers
           .selectionLayer(
             kind: .epicenter,
             selected: [epicenter],
-            catalog: [epicenter],
           )
           .filter,
       [
@@ -215,17 +214,16 @@ void main() {
     expect(
       layers
           .selectionLayer(
-            kind: .city,
+            kind: .prefecture,
             selected: [tokyo],
-            catalog: [city, otherCity],
           )
           .filter,
       [
         'in',
-        ['get', 'regioncode'],
+        ['get', 'code'],
         [
           'literal',
-          [city.code],
+          [tokyo.code],
         ],
       ],
     );
