@@ -119,12 +119,6 @@ GoRouter goRouter(Ref ref) => GoRouter(
     if (debugRouteRedirect != null) {
       return debugRouteRedirect;
     }
-    if (!buildConfig.isProFeaturesEnabled &&
-        state.matchedLocation.startsWith(
-          const SubscriptionSettingsRoute().location,
-        )) {
-      return const HomeRoute().location;
-    }
     if (!buildConfig.isShakeDetectionEnabled &&
         state.matchedLocation.startsWith(
           const ShakeDetectionSettingsRoute().location,

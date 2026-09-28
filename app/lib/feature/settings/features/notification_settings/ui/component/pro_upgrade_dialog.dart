@@ -1,8 +1,6 @@
 import 'package:m3e_core/m3e_core.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// Pro プランへのアップグレード案内ダイアログの表示を担う。
 class const ProUpgradeDialogAction() {
@@ -14,28 +12,11 @@ class const ProUpgradeDialogAction() {
   }
 }
 
-class _ProUpgradeDialog extends ConsumerWidget {
+class _ProUpgradeDialog extends StatelessWidget {
   const new();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isProFeaturesEnabled = ref
-        .watch(buildConfigProvider)
-        .isProFeaturesEnabled;
-
-    if (!isProFeaturesEnabled) {
-      return AlertDialog(
-        title: const Text('現在ご利用いただけません'),
-        content: const Text('このビルドでは、EQMonitor Pro は利用できません。'),
-        actions: [
-          M3ETextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('閉じる'),
-          ),
-        ],
-      );
-    }
-
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Proプランが必要です'),
       content: const Text('この機能を利用するにはProプランへのアップグレードが必要です。'),

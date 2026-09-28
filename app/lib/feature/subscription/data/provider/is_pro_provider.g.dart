@@ -13,8 +13,6 @@ part of 'is_pro_provider.dart';
 /// Pro ユーザーかどうかを返す。
 ///
 /// [subscriptionProvider] を watch し、active なら true。
-/// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
-/// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 
 @ProviderFor(isPro)
 final isProProvider = IsProProvider._();
@@ -22,16 +20,12 @@ final isProProvider = IsProProvider._();
 /// Pro ユーザーかどうかを返す。
 ///
 /// [subscriptionProvider] を watch し、active なら true。
-/// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
-/// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
 
 final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Pro ユーザーかどうかを返す。
   ///
   /// [subscriptionProvider] を watch し、active なら true。
-  /// ただし [BuildConfig.isProFeaturesEnabled] が false のビルドでは、Pro 機能を
-  /// 一時的に無効化しているため、購読状態に関わらず常に false を返す。
   IsProProvider._()
     : super(
         from: null,
@@ -65,4 +59,4 @@ final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isProHash() => r'71eeb1d312e6ff3831693febba2a64b39b213cf1';
+String _$isProHash() => r'f9df95402989718da5a4c6433a3de58b8fec69c0';

@@ -4,5 +4,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'environment.g.dart';
 
 @Riverpod(keepAlive: true)
-model.BuildConfig buildConfig(Ref ref) =>
-    model.BuildConfig.fromEnvironment().copyWith(isProFeaturesEnabled: true);
+model.BuildConfig buildConfig(Ref ref) => model.BuildConfig.fromEnvironment();

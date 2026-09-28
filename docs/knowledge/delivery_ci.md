@@ -41,7 +41,11 @@
   iOSは `deploy-ios-external`、Androidは `android-track == external` が判定条件。
 - `BuildConfig.isDeveloperUiEnabled` は `!(isBetaTesting && flavor == prod)`。
   prod betaのdebug導線は抑止され、App Check等の確認経路もこれを考慮する。
-- `IS_PRO_FEATURES_ENABLED` は既定false。Pro判定・課金UI・subscription routeのゲートを揃える。
+- Proの購入・復元・設定導線は常時有効。有料権限はバックエンド確認値で判定する。
+- RevenueCatの公開SDKキーは、GitHub secret `AGE_KEY` → SOPS `.env.json` →
+  `DART_DEFINE_PRODUCTION` → `environment/.env.prod` → `--dart-define-from-file` で供給する。
+  iOS/Androidとも同じproduction defineを使う。ローカルの環境ファイルとは別管理。
+  2026-09-29に暗号化設定の両SDKキーがRevenueCat登録値と一致することを確認済み。
 - Google Playの `external` はpublish前に `scripts/release/ensure_google_play_track.sh` で作成する。
   `CLOSED_TESTING` / `DEFAULT` のtrack作成後、Consoleでテスター・フィードバック先を別途設定する。
   外部配布失敗を `internal` への自動フォールバックで隠さない。

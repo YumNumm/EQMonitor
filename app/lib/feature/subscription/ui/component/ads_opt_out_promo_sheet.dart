@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/ads/data/flow/ads_opt_out_flow.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -28,9 +27,6 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final colorTheme = context.designSystem.colorTheme;
     final flow = ref.watch(adsOptOutFlowProvider);
-    final isProFeaturesEnabled = ref
-        .watch(buildConfigProvider)
-        .isProFeaturesEnabled;
 
     return SafeArea(
       top: false,
@@ -68,17 +64,15 @@ class AdsOptOutPromoSheet extends ConsumerWidget {
               style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
-            if (isProFeaturesEnabled) ...[
-              M3EFilledButton(
-                decoration: M3EButtonDecoration.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  borderRadius: 20,
-                ),
-                onPressed: () async => flow.showPaywall(ref, context),
-                child: const Text('EQMonitor Pro を見る'),
+            M3EFilledButton(
+              decoration: M3EButtonDecoration.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                borderRadius: 20,
               ),
-              const SizedBox(height: 8),
-            ],
+              onPressed: () async => flow.showPaywall(ref, context),
+              child: const Text('EQMonitor Pro を見る'),
+            ),
+            const SizedBox(height: 8),
             M3EOutlinedButton(
               decoration: M3EButtonDecoration.styleFrom(
                 minimumSize: const Size.fromHeight(52),

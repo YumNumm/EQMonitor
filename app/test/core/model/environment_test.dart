@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 BuildConfig _buildConfig({
   required Flavor flavor,
   required bool isBetaTesting,
-  bool isProFeaturesEnabled = false,
   bool isShakeDetectionEnabled = true,
 }) => BuildConfig(
   restApiUrl: '',
@@ -20,7 +19,6 @@ BuildConfig _buildConfig({
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
   isBetaTesting: isBetaTesting,
-  isProFeaturesEnabled: isProFeaturesEnabled,
   isShakeDetectionEnabled: isShakeDetectionEnabled,
 );
 
@@ -68,7 +66,7 @@ void main() {
   });
 
   group('BuildConfig defaults', () {
-    test('isProFeaturesEnabled は既定で false', () {
+    test('isBetaTesting は既定で false', () {
       const config = BuildConfig(
         restApiUrl: '',
         appIdSuffix: '',
@@ -83,7 +81,6 @@ void main() {
         revenueCatApiKeyIos: '',
         revenueCatApiKeyAndroid: '',
       );
-      expect(config.isProFeaturesEnabled, isFalse);
       expect(config.isBetaTesting, isFalse);
     });
 

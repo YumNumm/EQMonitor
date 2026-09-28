@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/model/environment.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
@@ -20,39 +18,18 @@ class _StubSubscriptionNotifier extends SubscriptionNotifier {
       refreshing ? Completer<SubscriptionStatus>().future : _status;
 }
 
-BuildConfig _buildConfig({required bool isProFeaturesEnabled}) => BuildConfig(
-  restApiUrl: '',
-  appIdSuffix: '',
-  appName: 'EQMonitor',
-  commitInformation: 'test',
-  flavor: Flavor.dev,
-  wsApiUrl: '',
-  googleIosClientId: '',
-  googleAndroidClientId: '',
-  buildTimestamp: '',
-  buildCommitMessage: '',
-  revenueCatApiKeyIos: '',
-  revenueCatApiKeyAndroid: '',
-  isProFeaturesEnabled: isProFeaturesEnabled,
-);
-
 ProviderContainer _container({
-  required bool isProFeaturesEnabled,
   required SubscriptionStatus status,
 }) => ProviderContainer(
   overrides: [
-    buildConfigProvider.overrideWithValue(
-      _buildConfig(isProFeaturesEnabled: isProFeaturesEnabled),
-    ),
     subscriptionProvider.overrideWith(() => _StubSubscriptionNotifier(status)),
   ],
 );
 
 void main() {
   group('isProProvider', () {
-    test('フラグ有効かつ active なら true', () async {
+    test('active なら true', () async {
       final container = _container(
-        isProFeaturesEnabled: true,
         status: const SubscriptionStatus.active(productId: 'pro_monthly'),
       );
       addTearDown(container.dispose);
@@ -63,7 +40,6 @@ void main() {
 
     test('expired confirmation cannot keep Pro while offline', () async {
       final container = _container(
-        isProFeaturesEnabled: true,
         status: SubscriptionStatus.active(
           productId: 'pro',
           expiresAt: DateTime.utc(2000),
@@ -77,7 +53,6 @@ void main() {
 
     test('refresh never leaks a previous device entitlement', () async {
       final container = _container(
-        isProFeaturesEnabled: true,
         status: const SubscriptionStatus.active(productId: 'pro'),
       );
       addTearDown(container.dispose);
@@ -89,20 +64,8 @@ void main() {
       expect(container.read(isProProvider), isFalse);
     });
 
-    test('フラグ無効なら active でも false', () async {
+    test('inactive なら false', () async {
       final container = _container(
-        isProFeaturesEnabled: false,
-        status: const SubscriptionStatus.active(productId: 'pro_monthly'),
-      );
-      addTearDown(container.dispose);
-
-      await container.read(subscriptionProvider.future);
-      expect(container.read(isProProvider), isFalse);
-    });
-
-    test('フラグ有効でも inactive なら false', () async {
-      final container = _container(
-        isProFeaturesEnabled: true,
         status: const SubscriptionStatus.inactive(),
       );
       addTearDown(container.dispose);

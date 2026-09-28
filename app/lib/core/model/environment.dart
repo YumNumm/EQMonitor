@@ -30,7 +30,6 @@ abstract class BuildConfig with _$BuildConfig {
     required String revenueCatApiKeyIos,
     required String revenueCatApiKeyAndroid,
     @Default(false) bool isBetaTesting,
-    @Default(true) bool isProFeaturesEnabled,
     @Default(false) bool isNativeSocialAuthEnabled,
     @Default(true) bool isShakeDetectionEnabled,
   }) = _BuildConfig;
@@ -64,7 +63,6 @@ abstract class BuildConfig with _$BuildConfig {
       'REVENUECAT_API_KEY_ANDROID',
     ),
     isBetaTesting: const bool.fromEnvironment('IS_BETA_TESTING'),
-    isProFeaturesEnabled: const bool.fromEnvironment('IS_PRO_FEATURES_ENABLED'),
     isNativeSocialAuthEnabled: const bool.fromEnvironment(
       'IS_NATIVE_SOCIAL_AUTH_ENABLED',
     ),
