@@ -21,10 +21,10 @@ struct EQMonitorShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: GetEarthquakesNearMeIntent(),
             phrases: [
-                "\(.applicationName)で現在地の地震を確認",
-                "\(.applicationName)で近くの地震を見る",
+                "\(.applicationName)で保存地域の地震を確認",
+                "\(.applicationName)で保存地域の地震を見る",
             ],
-            shortTitle: "現在地の地震",
+            shortTitle: "保存地域の地震",
             systemImageName: "location"
         )
     }

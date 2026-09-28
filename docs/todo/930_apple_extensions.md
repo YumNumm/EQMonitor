@@ -8,7 +8,9 @@ Issue: <https://github.com/YumNumm/EQMonitor/issues/1794>。対象: `app/ios/App
 
 - 署名実機で「EQMonitorで最新の地震を確認」、Snippet 表示/明示更新、Pro失効、保存地域変更、オフライン音声を確認する。メタデータ生成や Swift テストだけで登録成功とは判断しない。
 - Control Center の「最新の地震を確認」「地震履歴を開く」を起動済み/終了状態から実タップし、履歴が開くことを確認する。
-- `deeplink.eqmonitor.app` の DNS/AASA と実機導線を復旧・検証してから、Widget/Snippet の既存カスタムスキーム OpenURLIntent を Universal Link へ移行する（2026-09-10 の記録では名前解決失敗）。
+- Snippetの「アプリで開く」と各地震行を実タップし、foreground Intent経由で対象の詳細へ遷移することを確認する。履歴を閉じずに別の履歴・検索リンクを続けて実行する場合も確認する。
+- Snippetの最大10件表示と長い地域名を、小さい画面幅・大きな文字サイズで確認する。ヘッダーの操作ボタンや下端が切れないかは未検証。
+- Universal Linkへの移行は、`deeplink.eqmonitor.app` のDNS/AASAと実機導線を復旧・検証してから行う（2026-09-10の記録では名前解決失敗）。Widgetは`Link`、Snippetはforeground Intentで既存カスタムスキームを開く。
 - 保存地域を将来「現在地」と扱うなら、Flutter の全保存経路で観測日時を共有し、取得失敗・期限切れ・権限取消の契約とテストを追加する。現行は保存地域のまま扱う。
 - Flutter 履歴の時刻表示を `originTimePrecision` に従わせ、日時精度別の回帰テストを追加する。
 - Swift の元スキーマにない旧 Live Activity 操作5件を整理し、限定生成から全生成へ戻す。下記800と合わせて契約を照合する。
