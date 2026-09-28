@@ -45,7 +45,7 @@
 ## 089: 購入状態の正本・identity とアプリ登録
 
 - 2026-09-26決定: 同じストアアカウントの複数端末でProを同時利用可能にする。device IDと購入所有者の1対1前提を見直し、共有所有者・端末紐付け・認証済み再同期の契約を #1837/#1840 とbackend #1291で確定する。
-- 現行の実装契約と未確認事項: [#1831実装契約](../knowledge/20260926_revenuecat_1831_preparation.md)。アプリ・backend実装済み。配備・実購入検証は未完了。
+- 現行の実装契約と未確認事項: [#1831実装契約](../knowledge/20260926_revenuecat_1831_preparation.md)。アプリ・backend実装と両環境のAPI配備は完了。RevenueCat側のWebhook登録・実送信と実購入検証は未完了。
 
 - バックエンド確認値を正本とし、登録済みdevice IDでSDKのidentityを合わせる実装は完了。購入直後のWebhook遅延、再インストール/restore、複数端末の共有を実ストアで確認する。
 - 登録は `app/lib/feature/devices/data/repository/device_repository.dart` の POST `/v2/device`・`/me`、`device_auth_repository.dart` の secure token 保存が実装済み。旧「SharedPreferences に JWT」「migration 不要」は現行に適用しない。
@@ -59,10 +59,12 @@
 - 完了条件: 重複/順不同Webhook、期限/grace/失効、revoke、購入復元/identity移行、通知設定と配信制限、challenge再使用を契約テストで固定し、OpenAPI再生成と app E2E が一致する。
 
 
-## RevenueCat #1831 実装後のリリース確認（2026-09-26）
+## RevenueCat #1831 実装後のリリース確認（2026-09-29）
 
-- [ ] backend PR #1297（マージ済み）と #1299（取引証明の検証修正）のmigration/backfill-dry-run/backfill・配備とRevenueCat server secret/Webhook接続を確認する。
-- 2026-09-29確認: 本番APIは2.7.0。develop/productionとも購入共有用3テーブルがなく、必要な3 migrationは未適用。両環境の `eqmonitor-revenuecat-secrets` はSealedSecretの復号・値一致を確認済み。API Podには未注入。接続前にDB・API・通知処理を更新する。
+- [ ] RevenueCat側のWebhookを登録する。現在0件。Chromeのフォームにname/URL・両environment・全apps・全eventsを準備済み。Authorizationの手入力・保存後、RevenueCatからの実送信を確認する。
+- [ ] productionのnotification-resolverで実イベント処理を確認する。`0.22.3` のHealthy・consumer poll・lag/pending 0は確認済みだが、実イベントは0件。developはreplicas 0のため実動作未検証。
+- [ ] RevenueCatのrestore behaviorとSandbox overrideの実設定を確認する。
+- DB migration・backfill、API `2.8.0` 配備、Secret注入、合成TESTの受信・重複処理・認証拒否は確認済み。詳細と検証範囲は [#1831実装契約](../knowledge/20260926_revenuecat_1831_preparation.md) を参照する。
 - [ ] iOS月額商品の審査画像を実画面に差し替える。説明・グループ表示名・プライバシーURL・購入/復元の審査メモは適用済みで、`READY_TO_SUBMIT` を確認。審査画像はツールの白紙fallbackのため要差し替え。審査提出は未実施。価格は変更せず、日本でiOS 300円、Android 320円（2026-09-29ストア照会）。
 - [ ] #1844: 実機2台でログインなし復元、双方のPro継続、更新・返金・失効・再インストール・匿名移行を検証する。
 - [ ] 初回Webhook欠落は409 pending。保持済みの検証取引がないケースはWebhook再送で復旧させ、任意のイベント欠落を自動復旧済みと扱わない。

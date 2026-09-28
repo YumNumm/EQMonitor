@@ -1,7 +1,7 @@
 # RevenueCat #1831 実装契約・検証手順
 
 更新日: 2026-09-29。親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
-状態: アプリ・backendのPR実装。iOS商品のメタデータ適用とクラスタのSealedSecret作成は完了。API配備・Webhook接続・実購入検証は未実施。
+状態: アプリ・backend実装、iOS商品のメタデータ適用、両環境のDB migration・backfillとAPI配備は完了。Webhook受信処理を検証済み。RevenueCat側のWebhook登録・実送信と実購入検証は未完了。
 
 ## 確定した仕様
 
@@ -38,40 +38,39 @@ mise exec -- flutter analyze lib/feature/subscription lib/feature/settings/featu
 - 生成: `mise exec -- dart run build_runner build --delete-conflicting-outputs`。build-filter利用時も対象外のtracked生成物が削除される場合があるため、生成後の `git --no-pager diff --name-status` を確認し、無関係な削除を含めない。
 - repoはmise `2026.09.12` 以上が必要。今回の環境では署名元releaseのchecksumを照合したtask-local mise `2026.9.14` を使い、`MISE_AUTO_INSTALL=false` で無関係なgcloud/codemagicの自動導入を避け、通常commit hookを実行した。
 
-## 今回の自動検証結果
+## 実装時の自動検証結果（2026-09-26）
 
 - アプリの購読・device・通知設定・広告・App Group・認証interceptor: 294成功、既存の3失敗。
 - 3失敗は独立したdevelop `81386a797` でも同じ結果（該当2ファイルは6成功/3失敗）。プリセット確認ダイアログの本文1件、slot詳細の警報見出し2件の期待文言が一致しない。今回の変更による失敗はない。
 - 購読テスト47件（上記に含む）とAPI packageテスト26件はすべて成功。変更対象のアプリ静的解析は指摘なし。
 - SDK初期化・認証変更・同時操作、購入後の反映待ち/通信失敗/401と再試行、復元元Proの維持、期限切れ、価格未取得/失敗/大文字サイズ、Free→Pro→Free・超過地域保持を検証。
-- 実ストアでの購入成立や通知配信を保証する結果ではない。以下の実機・配備確認は未実施。
+- 実ストアでの購入成立や通知配信を保証する結果ではない。実機での受け入れ検証は別途必要。配備・外部設定の確認状況は次節を参照する。
 
 ## 配布・ストアの設定確認（2026-09-29）
 
 - 配布用SOPS設定のiOS/Android公開SDKキーがRevenueCatの登録値と一致する。供給経路は [配布CI](delivery_ci.md) を参照。実機内のキーと購入結果は別途確認する。
 - iOS月額商品は説明、グループ表示名 `EQMonitor Pro`、プライバシーURL `https://eqmonitor.app/privacy_policy`、購入・復元の審査メモを適用し、`READY_TO_SUBMIT` を確認した。価格は変更していない。審査画像は白紙fallbackのため実画面に差し替えてから提出する。審査提出は未実施。
-- backendのdevelop/production両namespaceで `eqmonitor-revenuecat-secrets` のSealedSecretが `Synced=True`。API v1サーバーキーと環境別Webhook Secretの値一致を確認済み。API Podへの注入とWebhook送信設定は未実施。
+- backendのdevelop/production両namespaceで `eqmonitor-revenuecat-secrets` のSealedSecretが `Synced=True`。API v1サーバーキーと環境別Webhook Secretの値一致、両環境のAPI Pod内で両キーが非空であることを確認済み。
+- develop/production両DBで、購入共有用3テーブルと `is_verified` を含む3 migrationを適用済み。両環境のmigration journalは86件。backfillのdry-run・本適用は完了し、変更対象は0件だった。
+- 両環境のAPIは `2.8.0`、image digestは `sha256:531f462dff31480ba9e9dabb88f4bcf3d67c6e1f1867a24dfea9749b0ec22450`。各2 PodがReady、restart 0。source `01fa007ff` のビルドと一致する。
+- productionのAPI RolloutはHealthy、stable/currentはともに `656c7ffff5`。Analysisは6回成功・失敗0。ただし通常promote後に `Full promotion requested` も観測したため、5分pauseを2段階とも完走した結果とは扱わない。両環境のArgo CDはSynced/Healthy。
+- productionのnotification-resolver `0.22.3` はHealthy、1/1 Ready、restart 0。consumerのpollとlag/pending 0を確認したが、実イベント処理は0件。developはreplicas 0で実動作未検証。
+- 両環境のWebhook受信処理へ合成TESTを送信し、初回200・重複200・不正Bearer 401を確認した。DBのprocessed記録は各環境1件。これは受信処理・認証・重複処理の検証であり、RevenueCatからの実送信確認ではない。
+- RevenueCat側のWebhook登録は0件。Chromeの登録フォームにはname/URL・両environment・全apps・全eventsを準備済みだが、Authorizationの手入力と保存が必要。登録後のRevenueCat実送信を別途確認する。
 - フラグ削除に関連する既存テスト64件が成功し、app全体の静的解析は指摘なし。
 
 ## 未実施の受け入れ検証（#1844）
 
-- backend #1299 の `is_verified` migration・backfill-dry-run・backfill・配備、API PodへのRevenueCat Secret注入、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
+- RevenueCat側のWebhook登録・実送信、restore behaviorとSandbox overrideの実設定確認。
+- productionのnotification-resolverによる実イベント処理。developのresolverはreplicas 0のため、必要な検証時に実動作を確認する。
 - TestFlight/Play内部テストの新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール。端末Bで復元後もA/B双方がProで、返金/失効が双方へ反映されること。
 - RevenueCatの標準移管とlegacy共有は同一ではない。[公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior)を踏まえ、実project設定・build・API環境を検証記録に残す。
 - 最初のWebhook取引記録が未到着ならサーバー照会だけで元取引IDを推測しない。409 pendingとし、Webhook到着/再送後に同期する。任意の欠落イベントを完全復旧する実装とは扱わない。
 - ASC/Playのプライバシー申告と公開ポリシー反映は未実施。`docs/beta/privacy-store-declarations.md` の課金追記を参照。
 
-## 実装前の調査記録（develop `81386a797`）
+## 変更時に維持する実装境界
 
-- `app/lib/feature/subscription/data/repository/revenue_cat_configurator.dart` は匿名configureのみ。`isConfigured` の確認とconfigureの間に排他がない。
-- 同ディレクトリの `subscription_repository.dart` はdevice登録・identity変更に依存しない。購入・復元ともSDKの `pro` のみで成功を判定する。
-- 商品ID一致packageがなければ `current.monthly` を購入するため、設定ミスを隠す。
-- `app/lib/feature/subscription/data/provider/subscription_product_id_provider.dart` のiOS定数は `net.yumnumm.eqmonitor.pro.monthly`。
-- #1839の9/24のASC確認記録は `net.yumnumm.eqmontior.pro.monthly`。今回ストア実設定は再確認していない。
-- `app/lib/feature/subscription/ui/page/paywall_page.dart` は価格 `¥300` 固定。表示時と購入時のpackageを共有していない。
-- `app/lib/core/provider/device_id.dart` は既存JWTからdevice IDを取得する。これだけをawaitしても登録処理の完了待ちにはならない。
-- `device_provisioning_notifier.dart` のbuildは登録要否を返す。実登録は `provision()`。購入側から別の登録処理を重複起動しない。
-- `subscription_notifier.dart` はkeepAlive。更新listener・復帰時更新・期限再評価・旧identity結果の破棄がない。
-- `packages/eqmonitor_api/lib/src/clients/subscription_api_client.dart` はGET `/v2/subscription/me` のみ。アプリからの利用も見つからない。
-- `notification_settings_page.dart` は `planConstraints.free` 固定。`is_pro_provider.dart` のSDK由来状態は広告とWidget/App Groupへ伝播する。
-- 既存subscriptionテストはfake repositoryによるNotifierとisPro判定。SDK連携・所有者移行・Webhookは検証していない。
+- `device_provisioning_notifier.dart` のbuildは登録要否を返し、実登録は `provision()` が行う。`device_id.dart` の既存JWT読取だけで登録完了とみなさず、購入側から登録処理を重複起動しない。
+- RevenueCat SDKの初期化・identity照合・操作は `revenue_cat_session.dart` とRepositoryに集約する。NotifierやUIからSDKの状態だけでPro権限を付与しない。
+- `subscription_product_id_provider.dart` の商品IDはストア登録値と一致させる。Paywallは取得したpackageの価格を表示し、商品不一致時にmonthly packageへフォールバックしない。
+- 過去の実装前調査と移行経緯はGit履歴と親Issue #1831を参照する。
