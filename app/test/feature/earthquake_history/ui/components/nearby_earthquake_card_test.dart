@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthquakes_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/nearby_earthquake_card.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/misc.dart';
@@ -112,7 +113,7 @@ Future<void> _pumpCard(
 }) async {
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [override],
+      overrides: [isProProvider.overrideWithValue(true), override],
       retry: (_, _) => null,
       child: MaterialApp(
         theme: ThemeData.light().copyWith(

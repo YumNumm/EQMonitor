@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/nearby_earthquake_query.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nearby_earthquakes_provider.g.dart';
@@ -10,9 +11,11 @@ Future<List<EarthquakePartial>> nearbyEarthquakes(
   Ref ref,
   NearbyEarthquakeQuery query,
 ) async {
+  if (!ref.watch(isProProvider)) return const [];
   final repository = await ref.watch(
     earthquakeHistoryRepositoryProvider.future,
   );
+  if (!ref.mounted || !ref.read(isProProvider)) return const [];
   final response = await repository.fetchEarthquakeList(
     limit: 6,
     latitudeGte: query.latitudeGte,
@@ -24,6 +27,7 @@ Future<List<EarthquakePartial>> nearbyEarthquakes(
     sortBy: query.sortBy,
     sortOrder: query.sortOrder,
   );
+  if (!ref.mounted || !ref.read(isProProvider)) return const [];
   return response.items
       .where((item) => item.earthquake.eventId != query.excludeEventId)
       .take(5)

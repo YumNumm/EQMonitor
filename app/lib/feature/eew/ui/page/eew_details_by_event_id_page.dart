@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:eqmonitor/feature/eew/ui/hook/eew_estimated_regions_stale_cache_hook.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/pro_feature_gate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
@@ -23,8 +24,23 @@ import 'package:maplibre/maplibre.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EewDetailsByEventIdPage extends HookConsumerWidget {
+class EewDetailsByEventIdPage extends StatelessWidget {
   const new({required this.eventId, this.onClose, super.key});
+
+  final String eventId;
+  final VoidCallback? onClose;
+
+  @override
+  Widget build(BuildContext context) => ProFeatureGate(
+    title: '緊急地震速報の履歴',
+    isPage: true,
+    onClose: onClose,
+    child: _EewDetailsByEventIdContent(eventId: eventId, onClose: onClose),
+  );
+}
+
+class _EewDetailsByEventIdContent extends HookConsumerWidget {
+  const new({required this.eventId, this.onClose});
 
   final String eventId;
   final VoidCallback? onClose;
