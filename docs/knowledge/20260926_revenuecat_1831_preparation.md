@@ -1,7 +1,7 @@
 # RevenueCat #1831 実装契約・検証手順
 
 更新日: 2026-09-29。親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
-状態: アプリ・backend実装、iOS商品のメタデータ適用、両環境のDB migration・backfillとAPI配備は完了。Webhook受信処理を検証済み。RevenueCat側のWebhook登録・実送信と実購入検証は未完了。
+状態: アプリ・backend実装、iOS商品のメタデータ適用、両環境のDB migration・backfillとAPI配備は完了。RevenueCat側のWebhook登録と、本番へのテストイベント実送信・DB処理記録を確認済み。実購入検証は未完了。
 
 ## 確定した仕様
 
@@ -56,12 +56,14 @@ mise exec -- flutter analyze lib/feature/subscription lib/feature/settings/featu
 - productionのAPI RolloutはHealthy、stable/currentはともに `656c7ffff5`。Analysisは6回成功・失敗0。ただし通常promote後に `Full promotion requested` も観測したため、5分pauseを2段階とも完走した結果とは扱わない。両環境のArgo CDはSynced/Healthy。
 - productionのnotification-resolver `0.22.3` はHealthy、1/1 Ready、restart 0。consumerのpollとlag/pending 0を確認したが、実イベント処理は0件。developはreplicas 0で実動作未検証。
 - 両環境のWebhook受信処理へ合成TESTを送信し、初回200・重複200・不正Bearer 401を確認した。DBのprocessed記録は各環境1件。これは受信処理・認証・重複処理の検証であり、RevenueCatからの実送信確認ではない。
-- RevenueCat側のWebhook登録は0件。Chromeの登録フォームにはname/URL・両environment・全apps・全eventsを準備済みだが、Authorizationの手入力と保存が必要。登録後のRevenueCat実送信を別途確認する。
+- RevenueCatのWebhook `EQMonitor Production`（integration `whintgra1c409752b`）は `https://v2.api.eqmonitor.app/webhooks/revenuecat` に登録済み。environment/app/event_typesはすべてnullで、両environment・全apps・全eventsが対象。
+- RevenueCat画面のSend Test Eventは `2026-09-28T20:06:16Z` にResponse 200。event ID `175B3905-C7AA-4980-BC75-71C637ADFD2F` の本番DB processed記録が1件であることを確認した。実送信経路の確認であり、実購入・復元や通知配信の検証ではない。
+- RevenueCat画面でHMAC署名が有効であることを確認した。backendは既存のBearer認証で受理しており、HMAC署名検証を確認した結果とは扱わない。
 - フラグ削除に関連する既存テスト64件が成功し、app全体の静的解析は指摘なし。
 
 ## 未実施の受け入れ検証（#1844）
 
-- RevenueCat側のWebhook登録・実送信、restore behaviorとSandbox overrideの実設定確認。
+- RevenueCatのrestore behaviorとSandbox overrideの実設定確認。
 - productionのnotification-resolverによる実イベント処理。developのresolverはreplicas 0のため、必要な検証時に実動作を確認する。
 - TestFlight/Play内部テストの新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール。端末Bで復元後もA/B双方がProで、返金/失効が双方へ反映されること。
 - RevenueCatの標準移管とlegacy共有は同一ではない。[公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior)を踏まえ、実project設定・build・API環境を検証記録に残す。
