@@ -1,7 +1,7 @@
 # RevenueCat #1831 実装契約・検証手順
 
-更新日: 2026-09-26。親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
-状態: アプリ・backendのPR実装。配備・ストア設定変更・実購入検証は未実施。
+更新日: 2026-09-29。親Issue: https://github.com/YumNumm/EQMonitor/issues/1831
+状態: アプリ・backendのPR実装。iOS商品のメタデータ適用とクラスタのSealedSecret作成は完了。API配備・Webhook接続・実購入検証は未実施。
 
 ## 確定した仕様
 
@@ -9,6 +9,7 @@
 - ユーザー決定: EQMonitorアカウントへのログインは不要。ストア購入の復元だけで利用する。
 - アプリのRevenueCat App User IDにはサーバー登録済みdevice IDを使う。購入と利用deviceはbackendで別に管理し、SDKのTRANSFERによる権限移動をそのままアプリの権限喪失にしない。
 - 通知・広告・WidgetのPro判定はすべて認証済みbackend確認値を正本にする。SDKだけのactive値では付与しない。
+- Proの購入・復元・設定導線は常時有効とし、ビルド時の機能フラグを持たない。
 
 ## 実装と安全条件
 
@@ -42,12 +43,19 @@ mise exec -- flutter analyze lib/feature/subscription lib/feature/settings/featu
 - アプリの購読・device・通知設定・広告・App Group・認証interceptor: 294成功、既存の3失敗。
 - 3失敗は独立したdevelop `81386a797` でも同じ結果（該当2ファイルは6成功/3失敗）。プリセット確認ダイアログの本文1件、slot詳細の警報見出し2件の期待文言が一致しない。今回の変更による失敗はない。
 - 購読テスト47件（上記に含む）とAPI packageテスト26件はすべて成功。変更対象のアプリ静的解析は指摘なし。
-- SDK初期化・認証変更・同時操作、購入後の反映待ち/通信失敗/401と再試行、復元元Proの維持、期限切れ、feature flag off、価格未取得/失敗/大文字サイズ、Free→Pro→Free・超過地域保持を検証。
+- SDK初期化・認証変更・同時操作、購入後の反映待ち/通信失敗/401と再試行、復元元Proの維持、期限切れ、価格未取得/失敗/大文字サイズ、Free→Pro→Free・超過地域保持を検証。
 - 実ストアでの購入成立や通知配信を保証する結果ではない。以下の実機・配備確認は未実施。
+
+## 配布・ストアの設定確認（2026-09-29）
+
+- 配布用SOPS設定のiOS/Android公開SDKキーがRevenueCatの登録値と一致する。供給経路は [配布CI](delivery_ci.md) を参照。実機内のキーと購入結果は別途確認する。
+- iOS月額商品は説明、グループ表示名 `EQMonitor Pro`、プライバシーURL `https://eqmonitor.app/privacy_policy`、購入・復元の審査メモを適用し、`READY_TO_SUBMIT` を確認した。価格は変更していない。審査画像は白紙fallbackのため実画面に差し替えてから提出する。審査提出は未実施。
+- backendのdevelop/production両namespaceで `eqmonitor-revenuecat-secrets` のSealedSecretが `Synced=True`。API v1サーバーキーと環境別Webhook Secretの値一致を確認済み。API Podへの注入とWebhook送信設定は未実施。
+- フラグ削除に関連する既存テスト64件が成功し、app全体の静的解析は指摘なし。
 
 ## 未実施の受け入れ検証（#1844）
 
-- backend #1299 の `is_verified` migration・backfill-dry-run・backfill・配備、server RevenueCat secret、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
+- backend #1299 の `is_verified` migration・backfill-dry-run・backfill・配備、API PodへのRevenueCat Secret注入、Webhook接続、restore behaviorとSandbox overrideの実設定確認。
 - TestFlight/Play内部テストの新規購入、更新、自動更新停止、失効、復元、匿名移行、再インストール。端末Bで復元後もA/B双方がProで、返金/失効が双方へ反映されること。
 - RevenueCatの標準移管とlegacy共有は同一ではない。[公式restore仕様](https://www.revenuecat.com/docs/projects/restore-behavior)を踏まえ、実project設定・build・API環境を検証記録に残す。
 - 最初のWebhook取引記録が未到着ならサーバー照会だけで元取引IDを推測しない。409 pendingとし、Webhook到着/再送後に同期する。任意の欠落イベントを完全復旧する実装とは扱わない。

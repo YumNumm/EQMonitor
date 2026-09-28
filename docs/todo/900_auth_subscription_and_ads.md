@@ -22,10 +22,10 @@
 - `docs/beta/ios-testflight-checklist.md` を、Console の Verified requests 確認へ集約するか、debug UI に依存しない検証導線へ更新する。必要なら FLAVOR=dev の検証用配布手順を定義する。
 - 完了条件: 通常の BETA×prod ビルドで実施可能な手順に沿って App Check の検証結果を記録する。
 
-## 150: Pro 再有効化
+## 150: Pro 配布後の動作確認
 
-- `app/lib/core/model/environment.dart` の `IS_PRO_FEATURES_ENABLED`、環境ファイル、`.github/workflows/deploy-app.yaml` と RevenueCat の iOS/Android API key を揃える。
-- 完了条件: 以下089/090の契約・Sandbox検証後に、Paywall、購入/復元、広告非表示、通知のPro項目、任意地域Widget/App Group同期、`/subscription/*` の遷移を確認して有効化する。server の `planConstraints` / HTTP 402 は client flag だけで変わらない。
+- Pro機能の導線は常時有効。配布用SOPS設定の両SDKキーは2026-09-29にRevenueCat登録値との一致を確認済み。
+- 完了条件: 以下089/090の契約・Sandbox検証後に、Paywall、購入/復元、広告非表示、通知のPro項目、任意地域Widget/App Group同期、`/subscription/*` の遷移を署名実機で確認する。有料権限はserver確認値を正本とする。
 
 ## 091: User API の一般ユーザー向け scope
 
@@ -45,10 +45,9 @@
 ## 089: 購入状態の正本・identity とアプリ登録
 
 - 2026-09-26決定: 同じストアアカウントの複数端末でProを同時利用可能にする。device IDと購入所有者の1対1前提を見直し、共有所有者・端末紐付け・認証済み再同期の契約を #1837/#1840 とbackend #1291で確定する。
-- 調査結果・実装順序・未確認事項: [#1831実装準備](../knowledge/20260926_revenuecat_1831_preparation.md)。現時点では設計案で、実装・配備・実購入検証は未完了。
+- 現行の実装契約と未確認事項: [#1831実装契約](../knowledge/20260926_revenuecat_1831_preparation.md)。アプリ・backend実装済み。配備・実購入検証は未完了。
 
-- `app/lib/feature/subscription/data/repository/subscription_repository.dart` は RevenueCat の `getCustomerInfo()` を読む。旧089は `GET /v2/subscription/me` を正本とし旧090はSDK優先で矛盾していた。購入直後のWebhook遅延・offline cache・失効反映を含む一つの契約へ決める。
-- `revenue_cat_configurator.dart` は現在匿名 configure。device/user と RevenueCat AppUserID の対応、移行時の alias/transfer、再インストール/restore、複数端末を server 契約と揃えてテストする。`logIn` だけで全移行が成功すると仮定しない。
+- バックエンド確認値を正本とし、登録済みdevice IDでSDKのidentityを合わせる実装は完了。購入直後のWebhook遅延、再インストール/restore、複数端末の共有を実ストアで確認する。
 - 登録は `app/lib/feature/devices/data/repository/device_repository.dart` の POST `/v2/device`・`/me`、`device_auth_repository.dart` の secure token 保存が実装済み。旧「SharedPreferences に JWT」「migration 不要」は現行に適用しない。
 - 残る確認: challenge 登録の必要性/隠し導線、認証失効時の復旧、keychain再インストール、Android再登録、offline Paywall、非対応platformの案内。採用したフローにテストを追加する。
 
@@ -63,6 +62,8 @@
 ## RevenueCat #1831 実装後のリリース確認（2026-09-26）
 
 - [ ] backend PR #1297（マージ済み）と #1299（取引証明の検証修正）のmigration/backfill-dry-run/backfill・配備とRevenueCat server secret/Webhook接続を確認する。
+- 2026-09-29確認: 本番APIは2.7.0。develop/productionとも購入共有用3テーブルがなく、必要な3 migrationは未適用。両環境の `eqmonitor-revenuecat-secrets` はSealedSecretの復号・値一致を確認済み。API Podには未注入。接続前にDB・API・通知処理を更新する。
+- [ ] iOS月額商品の審査画像を実画面に差し替える。説明・グループ表示名・プライバシーURL・購入/復元の審査メモは適用済みで、`READY_TO_SUBMIT` を確認。審査画像はツールの白紙fallbackのため要差し替え。審査提出は未実施。価格は変更せず、日本でiOS 300円、Android 320円（2026-09-29ストア照会）。
 - [ ] #1844: 実機2台でログインなし復元、双方のPro継続、更新・返金・失効・再インストール・匿名移行を検証する。
 - [ ] 初回Webhook欠落は409 pending。保持済みの検証取引がないケースはWebhook再送で復旧させ、任意のイベント欠落を自動復旧済みと扱わない。
 - [ ] #1843: Console申告・公開ポリシーと購入/顧客ID/照会snapshotの保持期間・削除請求手順を確定する。
