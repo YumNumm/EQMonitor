@@ -16,15 +16,32 @@ import 'package:eqmonitor/feature/earthquake_history/data/provider/nearby_earthq
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_sort_chips.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/nearby_earthquake_parameter_sheet.dart';
+import 'package:eqmonitor/feature/subscription/ui/component/pro_feature_gate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-class NearbyEarthquakeCard extends HookConsumerWidget {
+class NearbyEarthquakeCard extends StatelessWidget {
+  const new({required this.earthquake, super.key});
+
+  final Earthquake earthquake;
+
+  @override
+  Widget build(BuildContext context) {
+    if (earthquake.hypocenter?.coordinates is! CoordinateLatLng) {
+      return const SizedBox.shrink();
+    }
+    return ProFeatureGate(
+      title: 'この震源の近傍で発生した地震',
+      child: _NearbyEarthquakeContent(earthquake: earthquake),
+    );
+  }
+}
+
+class _NearbyEarthquakeContent extends HookConsumerWidget {
   const new({
     required this.earthquake,
-    super.key,
   });
 
   final Earthquake earthquake;

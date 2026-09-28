@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/debug/data/provider/debug_menu_availability_pr
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/data/contact/contact_action.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:m3e_core/m3e_core.dart';
 import 'package:material_ui/material_ui.dart';
@@ -26,6 +27,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isPro = ref.watch(isProProvider);
     final isDebugEnabled = ref.watch(debugProvider).value;
     final isDebugMenuAvailable = ref.watch(isDebugMenuAvailableProvider);
     final buildConfig = ref.watch(buildConfigProvider);
@@ -68,7 +70,9 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   color: theme.colorScheme.primaryContainer,
                   child: InkWell(
-                    onTap: () async => PaywallRoute().push<void>(context),
+                    onTap: () async => isPro
+                        ? const SubscriptionSettingsRoute().push<void>(context)
+                        : const PaywallRoute().push<void>(context),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8,
@@ -87,14 +91,20 @@ class SettingsPage extends ConsumerWidget {
                               crossAxisAlignment: .start,
                               children: [
                                 Text(
-                                  "EQMonitor Pro",
+                                  isPro
+                                      ? 'EQMonitor Pro（加入中）'
+                                      : 'EQMonitor Pro',
                                   style: textTheme.titleMedium?.copyWith(
                                     fontWeight: .bold,
                                     fontFamily: FontFamily.googleSansFlex,
                                     color: theme.colorScheme.onPrimaryContainer,
                                   ),
                                 ),
-                                Text("Proプランに加入頂くことで、ご利用いただける機能が増えます"),
+                                Text(
+                                  isPro
+                                      ? 'プランを管理'
+                                      : 'Proプランに加入頂くことで、ご利用いただける機能が増えます',
+                                ),
                               ],
                             ),
                           ),

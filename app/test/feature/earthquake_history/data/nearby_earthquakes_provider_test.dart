@@ -19,6 +19,7 @@ import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/model/shindo_db/shindo_db_stations_parameter.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,6 +38,7 @@ void main() {
     );
     final container = ProviderContainer(
       overrides: [
+        isProProvider.overrideWithValue(true),
         earthquakeHistoryRepositoryProvider.overrideWith(
           (ref) async => repository,
         ),
@@ -80,6 +82,7 @@ void main() {
     final repository = _SpyEarthquakeHistoryRepository(items: const []);
     final container = ProviderContainer(
       overrides: [
+        isProProvider.overrideWithValue(true),
         earthquakeHistoryRepositoryProvider.overrideWith(
           (ref) async => repository,
         ),

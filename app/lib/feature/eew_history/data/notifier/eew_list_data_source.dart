@@ -10,6 +10,7 @@ import 'package:eqmonitor/core/util/date_time_format.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew_history/data/model/eew_list_parameter.dart';
 import 'package:eqmonitor/feature/eew_history/data/repository/eew_list_repository.dart';
+import 'package:eqmonitor/feature/subscription/data/provider/is_pro_provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,7 +22,13 @@ Future<EewListDataSource> eewListDataSource(
   Ref ref,
   EewListParameter parameter,
 ) async {
+  if (!ref.watch(isProProvider)) {
+    throw StateError('Pro access is required for EEW history');
+  }
   final repository = await ref.watch(eewListRepositoryProvider.future);
+  if (!ref.mounted || !ref.read(isProProvider)) {
+    throw StateError('Pro access is required for EEW history');
+  }
   final dataSource = EewListDataSource(
     repository: repository,
     parameter: parameter,
@@ -36,6 +43,7 @@ Future<EewListDataSource> eewListDataSource(
         cursor: null,
         limit: 10,
       );
+      if (!ref.mounted || !ref.read(isProProvider)) return;
       dataSource.upsertItems(result.items);
     }
 
