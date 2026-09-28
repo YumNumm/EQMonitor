@@ -181,33 +181,6 @@ void main() {
     },
   );
 
-  testWidgets('flag off keeps Free settings without loading subscription', (
-    tester,
-  ) async {
-    await pumpNotificationSettings(
-      tester,
-      platform: TargetPlatform.iOS,
-      isPro: true,
-      proFeaturesEnabled: false,
-    );
-    await tester.tap(find.byTooltip('カスタム設定'));
-    await tester.pumpAndSettle();
-    final container = ProviderScope.containerOf(
-      tester.element(
-        find.byType(NotificationSettingsPage, skipOffstage: false),
-      ),
-    );
-    expect(
-      container
-          .read(notificationPlanConstraintsProvider)
-          .requireValue
-          .maxRegions,
-      1,
-    );
-    expect(container.exists(subscriptionProvider), isFalse);
-    expect(find.text('地域を追加（0/1）'), findsOneWidget);
-  });
-
   testWidgets('Android hides sound and per-intensity settings', (tester) async {
     await pumpCustomSettings(
       tester,
@@ -275,7 +248,6 @@ Future<void> pumpNotificationSettings(
   WidgetTester tester, {
   required TargetPlatform platform,
   required bool isPro,
-  bool proFeaturesEnabled = true,
   Future<SubscriptionStatus>? initialSubscription,
   Future<SubscriptionStatus>? Function()? loadSubscription,
   Future<api.StartResponse>? Function()? loadStart,
@@ -287,7 +259,7 @@ Future<void> pumpNotificationSettings(
     ProviderScope(
       overrides: [
         buildConfigProvider.overrideWithValue(
-          _buildConfig.copyWith(isProFeaturesEnabled: proFeaturesEnabled),
+          _buildConfig,
         ),
         subscriptionProvider.overrideWith(
           () => _FakeSubscriptionNotifier(

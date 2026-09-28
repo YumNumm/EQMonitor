@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/component/error/error_dialog.dart';
 import 'package:eqmonitor/core/component/progress/accessible_progress_indicator.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/notification/data/notifier/general_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -232,9 +231,7 @@ class _CustomNotificationSettingsPage extends ConsumerWidget {
                 M3EFilledButton(
                   onPressed: () {
                     ref.invalidate(startProvider);
-                    if (ref.read(buildConfigProvider).isProFeaturesEnabled) {
-                      ref.invalidate(subscriptionProvider);
-                    }
+                    ref.invalidate(subscriptionProvider);
                   },
                   child: const Text('再試行'),
                 ),

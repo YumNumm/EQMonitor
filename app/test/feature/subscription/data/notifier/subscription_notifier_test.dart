@@ -33,7 +33,6 @@ const buildConfig = BuildConfig(
   buildCommitMessage: '',
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
-  isProFeaturesEnabled: true,
 );
 const inactive = SubscriptionStatus.inactive();
 const active = SubscriptionStatus.active(productId: 'pro');
@@ -327,34 +326,6 @@ void main() {
     );
     expect(repository.purchases, 0);
   });
-  test(
-    'disabled feature never initializes repositories or purchases',
-    () async {
-      container.dispose();
-      container = ProviderContainer(
-        overrides: [
-          buildConfigProvider.overrideWithValue(
-            buildConfig.copyWith(isProFeaturesEnabled: false),
-          ),
-          subscriptionRepositoryProvider.overrideWith(
-            (ref) => throw StateError('must not initialize'),
-          ),
-        ],
-      );
-      expect(await container.read(subscriptionProvider.future), inactive);
-      final notifier = container.read(subscriptionProvider.notifier);
-      expect(
-        await notifier.purchaseMonthly(package: monthlyPackage),
-        const PurchaseResult.cancelled(),
-      );
-      expect(
-        await notifier.restorePurchases(),
-        const PurchaseResult.cancelled(),
-      );
-      await notifier.synchronize();
-    },
-  );
-
   testWidgets('expiry schedules a server refresh without a UI action', (
     tester,
   ) async {

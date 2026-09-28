@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_outcome.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
@@ -30,9 +29,6 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       _generation++;
       _expiryTimer?.cancel();
     });
-    if (!ref.watch(buildConfigProvider).isProFeaturesEnabled) {
-      return const SubscriptionStatus.inactive();
-    }
     final repository = await ref.watch(subscriptionRepositoryProvider.future);
     if (!ref.mounted) return const SubscriptionStatus.inactive();
     final server = await ref.watch(subscriptionServerRepositoryProvider.future);
@@ -85,9 +81,6 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     required Future<PurchaseOutcome> Function(SubscriptionRepository) purchase,
     required bool skipWhenActive,
   }) async {
-    if (!ref.read(buildConfigProvider).isProFeaturesEnabled) {
-      return const PurchaseResult.cancelled();
-    }
     if (_busy)
       return const PurchaseResult.failed(
         PurchaseFailureReason.operationInProgress,
@@ -152,7 +145,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   static final synchronizeMutation = Mutation<void>();
   Future<void> synchronize() async {
-    if (!ref.read(buildConfigProvider).isProFeaturesEnabled || _busy) return;
+    if (_busy) return;
     _busy = true;
     final generation = _generation;
     final previous = state.value ?? const SubscriptionStatus.inactive();

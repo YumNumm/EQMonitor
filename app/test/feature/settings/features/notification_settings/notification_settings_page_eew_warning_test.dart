@@ -19,6 +19,8 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/n
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/notification_slots_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
+import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +35,9 @@ void main() {
       ProviderScope(
         overrides: [
           buildConfigProvider.overrideWithValue(_buildConfig),
+          subscriptionProvider.overrideWithBuild(
+            (_, _) async => const SubscriptionStatus.inactive(),
+          ),
           firebaseMessagingProvider.overrideWithValue(
             _FakeFirebaseMessaging(
               _notificationSettings(
@@ -257,7 +262,6 @@ class _FakeEewWarningConfigNotifier extends EewWarningConfigNotifier {
 }
 
 const _buildConfig = BuildConfig(
-  isProFeaturesEnabled: false,
   restApiUrl: '',
   appIdSuffix: '',
   appName: 'EQMonitor',

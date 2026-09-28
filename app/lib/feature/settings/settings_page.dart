@@ -30,7 +30,6 @@ class SettingsPage extends ConsumerWidget {
     final isDebugMenuAvailable = ref.watch(isDebugMenuAvailableProvider);
     final buildConfig = ref.watch(buildConfigProvider);
     final isDeveloperUiEnabled = buildConfig.isDeveloperUiEnabled;
-    final isProFeaturesEnabled = buildConfig.isProFeaturesEnabled;
     final cacheSize = ref.watch(httpCacheSizeProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -61,53 +60,51 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 const _AppVersionInformation(),
                 const AssetPackUpdateCard(),
-                if (isProFeaturesEnabled)
-                  Card.outlined(
-                    clipBehavior: .antiAlias,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    color: theme.colorScheme.primaryContainer,
-                    child: InkWell(
-                      onTap: () async => PaywallRoute().push<void>(context),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.workspace_premium_rounded,
-                              color: theme.colorScheme.onPrimaryContainer,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                spacing: 2,
-                                crossAxisAlignment: .start,
-                                children: [
-                                  Text(
-                                    "EQMonitor Pro",
-                                    style: textTheme.titleMedium?.copyWith(
-                                      fontWeight: .bold,
-                                      fontFamily: FontFamily.googleSansFlex,
-                                      color:
-                                          theme.colorScheme.onPrimaryContainer,
-                                    ),
+                Card.outlined(
+                  clipBehavior: .antiAlias,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  color: theme.colorScheme.primaryContainer,
+                  child: InkWell(
+                    onTap: () async => PaywallRoute().push<void>(context),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.workspace_premium_rounded,
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              spacing: 2,
+                              crossAxisAlignment: .start,
+                              children: [
+                                Text(
+                                  "EQMonitor Pro",
+                                  style: textTheme.titleMedium?.copyWith(
+                                    fontWeight: .bold,
+                                    fontFamily: FontFamily.googleSansFlex,
+                                    color: theme.colorScheme.onPrimaryContainer,
                                   ),
-                                  Text("Proプランに加入頂くことで、ご利用いただける機能が増えます"),
-                                ],
-                              ),
+                                ),
+                                Text("Proプランに加入頂くことで、ご利用いただける機能が増えます"),
+                              ],
                             ),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios_outlined),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward_ios_outlined),
+                        ],
                       ),
                     ),
                   ),
+                ),
                 const SettingsSectionHeader(text: '各種設定'),
                 M3ESegmentedColumn(
                   padding: EdgeInsets.zero,

@@ -10,7 +10,6 @@ class const BuildConfigFixture() {
   BuildConfig build({
     Flavor flavor = Flavor.dev,
     bool isBetaTesting = false,
-    bool isProFeaturesEnabled = false,
     bool isShakeDetectionEnabled = true,
   }) => BuildConfig(
     restApiUrl: '',
@@ -26,7 +25,6 @@ class const BuildConfigFixture() {
     revenueCatApiKeyIos: '',
     revenueCatApiKeyAndroid: '',
     isBetaTesting: isBetaTesting,
-    isProFeaturesEnabled: isProFeaturesEnabled,
     isShakeDetectionEnabled: isShakeDetectionEnabled,
   );
 }

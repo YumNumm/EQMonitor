@@ -40,19 +40,10 @@ Future<void> _pumpSettings(
 }
 
 void main() {
-  testWidgets('Pro 無効時は EQMonitor Pro セクションを表示しない', (tester) async {
+  testWidgets('EQMonitor Pro セクションを常に表示する', (tester) async {
     await _pumpSettings(
       tester,
-      buildConfig: _buildConfig(isProFeaturesEnabled: false),
-    );
-
-    expect(find.text('EQMonitor Pro'), findsNothing);
-  });
-
-  testWidgets('Pro 有効時は EQMonitor Pro セクションを表示する', (tester) async {
-    await _pumpSettings(
-      tester,
-      buildConfig: _buildConfig(isProFeaturesEnabled: true),
+      buildConfig: _buildConfig(),
     );
 
     expect(find.text('EQMonitor Pro'), findsWidgets);
@@ -65,7 +56,7 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('Powered by Flutter'),
+      find.text('HTTPキャッシュ'),
       300,
       scrollable: find.byType(Scrollable),
     );
@@ -80,7 +71,7 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('Powered by Flutter'),
+      find.text('広告を非表示'),
       300,
       scrollable: find.byType(Scrollable),
     );
@@ -92,7 +83,6 @@ void main() {
 BuildConfig _buildConfig({
   Flavor flavor = Flavor.dev,
   bool isBetaTesting = false,
-  bool isProFeaturesEnabled = false,
 }) => BuildConfig(
   restApiUrl: '',
   appIdSuffix: '',
@@ -107,7 +97,6 @@ BuildConfig _buildConfig({
   revenueCatApiKeyIos: '',
   revenueCatApiKeyAndroid: '',
   isBetaTesting: isBetaTesting,
-  isProFeaturesEnabled: isProFeaturesEnabled,
 );
 
 final _packageInfo = PackageInfo(
